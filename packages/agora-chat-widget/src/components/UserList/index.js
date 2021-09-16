@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Tag, Tooltip } from 'antd';
 import { ROLE } from '../../contants';
+import { transI18n } from '~ui-kit';
 import { setUserMute, removeUserMute } from '../../api/mute';
 import _ from 'lodash';
 import avatarUrl from '../../themes/img/avatar-big@2x.png';
@@ -29,26 +30,32 @@ export const UserList = ({ roomUserList }) => {
       {roomUserList.length > 0 &&
         roomUserList.map((item, key) => {
           const showMuteIcon = muteList && muteList.includes(item.id);
-          const isTeacher =
-            item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
+          const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
+          const isAssistant = item?.ext && JSON.parse(item?.ext).role === ROLE.assistant.id;
           return (
             <div className="user-list" key={key}>
               <div className="user-info">
-                <img
-                  src={item?.avatarurl || avatarUrl}
-                  className="user-avatar"
-                />
+                <img src={item?.avatarurl || avatarUrl} className="user-avatar" />
                 <span className="user-text">{item?.nickname || item?.id}</span>
                 {isTeacher && (
                   <Tag className="user-tag teacher-tag">
-                    <span className="teacher-text">{ROLE.teacher.tag}</span>
+                    <span className="teacher-text">{transI18n('chat.teacher')}</span>
+                  </Tag>
+                )}
+                {isAssistant && (
+                  <Tag className="user-tag teacher-tag">
+                    <span className="teacher-text">{transI18n('chat.assistant')}</span>
                   </Tag>
                 )}
               </div>
-              {!isTeacher && (
+              {!isTeacher && !isAssistant && (
                 <Tooltip
                   placement="leftBottom"
-                  overlay={muteList.includes(item.id) ? '解除禁言' : ' 禁言 '}>
+                  overlay={
+                    muteList.includes(item.id)
+                      ? `${transI18n('chat.remove_mute')}`
+                      : `${transI18n('chat.mute')}`
+                  }>
                   <div className="mute-icon">
                     <img
                       src={showMuteIcon ? muteOff : muteNo}

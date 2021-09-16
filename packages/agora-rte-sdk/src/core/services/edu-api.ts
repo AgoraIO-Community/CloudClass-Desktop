@@ -137,10 +137,7 @@ export class AgoraEduApi extends ApiBase {
     this.latestTime = 0;
     this.lastUserListTime = 0;
     this.lastStreamListTime = 0;
-    this.prefix = `${this.sdkDomain}/scene/apps/%app_id`.replace(
-      '%app_id',
-      this.appId,
-    );
+    this.prefix = `${this.sdkDomain}/scene/apps/%app_id`.replace('%app_id', this.appId);
   }
 
   // constructor(
@@ -292,11 +289,7 @@ export class AgoraEduApi extends ApiBase {
     });
   }
 
-  async updatePublishStream(
-    roomId: string,
-    streamId: string,
-    stream: EduStream,
-  ) {
+  async updatePublishStream(roomId: string, streamId: string, stream: EduStream) {
     return await this.fetch({
       url: `/v1/rooms/${roomId}/streams/${streamId}`,
       method: 'PUT',
@@ -304,11 +297,7 @@ export class AgoraEduApi extends ApiBase {
     });
   }
 
-  async removePublishStream(
-    roomId: string,
-    streamId: string,
-    stream: EduStream,
-  ) {
+  async removePublishStream(roomId: string, streamId: string, stream: EduStream) {
     return await this.fetch({
       url: `/v1/rooms/${roomId}/streams/${streamId}`,
       method: 'DELETE',
@@ -359,14 +348,7 @@ export class AgoraEduApi extends ApiBase {
     });
     const statusCode = resp['__status'];
     const { code } = resp;
-    rteReportService.reportHttp(
-      'joinRoom',
-      'http',
-      'entry',
-      statusCode,
-      statusCode === 200,
-      code,
-    );
+    rteReportService.reportHttp('joinRoom', 'http', 'entry', statusCode, statusCode === 200, code);
 
     return resp.data;
   }
@@ -416,9 +398,7 @@ export class AgoraEduApi extends ApiBase {
       updateTime = data.ts;
       const userList = data.list.reduce((acc: any[], userItem: any) => {
         const { streams, ...userAttrs } = userItem;
-        const targetIndex = acc.findIndex(
-          (it: any) => it.userUuid === userAttrs.userUuid,
-        );
+        const targetIndex = acc.findIndex((it: any) => it.userUuid === userAttrs.userUuid);
         if (targetIndex !== -1) {
           // update stream lists
           acc[targetIndex] = userAttrs;
@@ -433,17 +413,15 @@ export class AgoraEduApi extends ApiBase {
 
       const streamList = data.list.reduce((acc, item) => {
         const newStreams = item.streams;
-        const combineLatestStreamIndexList = newStreams.map(
-          (newStream: any, index: number) => {
-            let oldStreamIndex = acc.findIndex(
-              (stream: any) => stream.streamUuid === newStream.streamUuid,
-            );
-            return {
-              oldStreamIndex: oldStreamIndex,
-              newStreamIndex: index,
-            };
-          },
-        );
+        const combineLatestStreamIndexList = newStreams.map((newStream: any, index: number) => {
+          let oldStreamIndex = acc.findIndex(
+            (stream: any) => stream.streamUuid === newStream.streamUuid,
+          );
+          return {
+            oldStreamIndex: oldStreamIndex,
+            newStreamIndex: index,
+          };
+        });
 
         if (!combineLatestStreamIndexList.length) {
           EduLogger.warn(
@@ -452,10 +430,7 @@ export class AgoraEduApi extends ApiBase {
             combineLatestStreamIndexList,
           );
         }
-        for (let {
-          oldStreamIndex,
-          newStreamIndex,
-        } of combineLatestStreamIndexList) {
+        for (let { oldStreamIndex, newStreamIndex } of combineLatestStreamIndexList) {
           if (oldStreamIndex !== -1) {
             acc[oldStreamIndex] = newStreams[newStreamIndex];
           } else {
@@ -489,9 +464,7 @@ export class AgoraEduApi extends ApiBase {
       nextId = data.nextId;
       const userList = data.list.reduce((acc: any[], userItem: any) => {
         const { streams, ...userAttrs } = userItem;
-        const targetIndex = acc.findIndex(
-          (it: any) => it.userUuid === userAttrs.userUuid,
-        );
+        const targetIndex = acc.findIndex((it: any) => it.userUuid === userAttrs.userUuid);
         if (targetIndex !== -1) {
           // update stream lists
           acc[targetIndex] = userAttrs;
@@ -506,17 +479,15 @@ export class AgoraEduApi extends ApiBase {
 
       const streamList = data.list.reduce((acc, item) => {
         const newStreams = item.streams;
-        const combineLatestStreamIndexList = newStreams.map(
-          (newStream: any, index: number) => {
-            let oldStreamIndex = acc.findIndex(
-              (stream: any) => stream.streamUuid === newStream.streamUuid,
-            );
-            return {
-              oldStreamIndex: oldStreamIndex,
-              newStreamIndex: index,
-            };
-          },
-        );
+        const combineLatestStreamIndexList = newStreams.map((newStream: any, index: number) => {
+          let oldStreamIndex = acc.findIndex(
+            (stream: any) => stream.streamUuid === newStream.streamUuid,
+          );
+          return {
+            oldStreamIndex: oldStreamIndex,
+            newStreamIndex: index,
+          };
+        });
 
         if (!combineLatestStreamIndexList.length) {
           EduLogger.warn(
@@ -525,10 +496,7 @@ export class AgoraEduApi extends ApiBase {
             combineLatestStreamIndexList,
           );
         }
-        for (let {
-          oldStreamIndex,
-          newStreamIndex,
-        } of combineLatestStreamIndexList) {
+        for (let { oldStreamIndex, newStreamIndex } of combineLatestStreamIndexList) {
           if (oldStreamIndex !== -1) {
             acc[oldStreamIndex] = newStreams[newStreamIndex];
           } else {
@@ -644,10 +612,7 @@ export class AgoraEduApi extends ApiBase {
         uuid: get(entryRoomData, 'room.roomInfo.roomUuid'),
         muteChat: {
           audience: get(entryRoomData, 'room.roomState.muteChat.audience'),
-          broadcaster: get(
-            entryRoomData,
-            'room.roomState.muteChat.broadcaster',
-          ),
+          broadcaster: get(entryRoomData, 'room.roomState.muteChat.broadcaster'),
           host: get(entryRoomData, 'room.roomState.muteChat.host'),
         },
         muteVideo: {
@@ -821,10 +786,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async updateCourseState(params: {
-    roomUuid: string;
-    courseState: EduCourseState;
-  }) {
+  async updateCourseState(params: { roomUuid: string; courseState: EduCourseState }) {
     let res = await this.fetch({
       url: `/v1/rooms/${params.roomUuid}/states/${params.courseState}`,
       method: 'PUT',
@@ -880,11 +842,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async allowStudentChatByRole(args: {
-    enable: boolean;
-    roomUuid: string;
-    roles: string[];
-  }) {
+  async allowStudentChatByRole(args: { enable: boolean; roomUuid: string; roles: string[] }) {
     const muteChat = {};
     args.roles.reduce((acc: any, key: string) => {
       acc[key] = +args.enable;
@@ -901,11 +859,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async stopShareScreen(
-    roomUuid: string,
-    streamUuid: string,
-    userUuid: string,
-  ) {
+  async stopShareScreen(roomUuid: string, streamUuid: string, userUuid: string) {
     await this.deleteBizStream({
       roomUuid: roomUuid,
       streamUuid: streamUuid,
@@ -913,11 +867,7 @@ export class AgoraEduApi extends ApiBase {
     });
   }
 
-  async allowRemoteStudentChat({
-    roomUuid,
-    userUuid,
-    muteChat,
-  }: any): Promise<any> {
+  async allowRemoteStudentChat({ roomUuid, userUuid, muteChat }: any): Promise<any> {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}`,
       method: 'PUT',
@@ -936,11 +886,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async inviteUserPublishStream({
-    roomUuid,
-    userUuid,
-    streamUuid,
-  }: RemoteMediaParams) {
+  async inviteUserPublishStream({ roomUuid, userUuid, streamUuid }: RemoteMediaParams) {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
       method: 'PUT',
@@ -952,11 +898,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async remoteStartStudentCamera({
-    roomUuid,
-    userUuid,
-    streamUuid,
-  }: RemoteMediaParams) {
+  async remoteStartStudentCamera({ roomUuid, userUuid, streamUuid }: RemoteMediaParams) {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
       method: 'PUT',
@@ -968,11 +910,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async remoteCloseStudentStream({
-    roomUuid,
-    userUuid,
-    streamUuid,
-  }: RemoteMediaParams) {
+  async remoteCloseStudentStream({ roomUuid, userUuid, streamUuid }: RemoteMediaParams) {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
       method: 'DELETE',
@@ -981,11 +919,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async remoteStopStudentCamera({
-    roomUuid,
-    userUuid,
-    streamUuid,
-  }: RemoteMediaParams) {
+  async remoteStopStudentCamera({ roomUuid, userUuid, streamUuid }: RemoteMediaParams) {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
       method: 'PUT',
@@ -997,11 +931,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async remoteStartStudentMicrophone({
-    roomUuid,
-    userUuid,
-    streamUuid,
-  }: RemoteMediaParams) {
+  async remoteStartStudentMicrophone({ roomUuid, userUuid, streamUuid }: RemoteMediaParams) {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
       method: 'PUT',
@@ -1013,11 +943,7 @@ export class AgoraEduApi extends ApiBase {
     return res.data;
   }
 
-  async remoteStopStudentMicrophone({
-    roomUuid,
-    userUuid,
-    streamUuid,
-  }: RemoteMediaParams) {
+  async remoteStopStudentMicrophone({ roomUuid, userUuid, streamUuid }: RemoteMediaParams) {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
       method: 'PUT',
@@ -1113,11 +1039,7 @@ export class AgoraEduApi extends ApiBase {
    * @param roomUuid 房间id
    * @param userUuid 用户id
    */
-  async batchRemoveUserAttributes(
-    roomUuid: string,
-    userUuid: string,
-    cause?: CauseType,
-  ) {
+  async batchRemoveUserAttributes(roomUuid: string, userUuid: string, cause?: CauseType) {
     let res = await this.fetch({
       url: `/v1/rooms/${roomUuid}/users/${userUuid}/properties`,
       method: 'DELETE',
@@ -1169,10 +1091,7 @@ export class AgoraEduApi extends ApiBase {
    * 批量移除流属性
    * @param streamUuid
    */
-  async batchRemoveStreamAttributes(
-    streams: BatchStreamAttribute[],
-    cause?: CauseType,
-  ) {
+  async batchRemoveStreamAttributes(streams: BatchStreamAttribute[], cause?: CauseType) {
     let res = await this.fetch({
       url: `/v1/rooms/${this.roomUuid}/streams`,
       method: 'DELETE',
@@ -1189,10 +1108,7 @@ export class AgoraEduApi extends ApiBase {
    * @param streamUuid
    * @param properties
    */
-  async batchUpdateStreamAttributes(
-    streams: EduStreamAttribute[],
-    cause?: CauseType,
-  ) {
+  async batchUpdateStreamAttributes(streams: EduStreamAttribute[], cause?: CauseType) {
     let res = await this.fetch({
       url: `/v1/rooms/${this.roomUuid}/streams`,
       method: 'put',

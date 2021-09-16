@@ -1,16 +1,7 @@
 import WebIM from '../utils/WebIM';
 import store from '../redux/store';
-import {
-  roomAllMute,
-  roomUserMute,
-  isUserMute,
-} from '../redux/actions/roomAction';
-import {
-  SET_ALL_MUTE,
-  REMOVE_ALL_MUTE,
-  MUTE_USER,
-  UNMUTE_USER,
-} from '../contants';
+import { roomAllMute, roomUserMute, isUserMute } from '../redux/actions/roomAction';
+import { SET_ALL_MUTE, REMOVE_ALL_MUTE, MUTE_USER, UNMUTE_USER } from '../contants';
 import { sendCmdMsg } from './message';
 
 /*

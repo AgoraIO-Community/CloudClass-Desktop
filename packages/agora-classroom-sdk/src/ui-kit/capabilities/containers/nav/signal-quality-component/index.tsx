@@ -5,21 +5,19 @@ import { IconTypes, Popover, SvgImg } from '~ui-kit';
 import { SignalContent } from '~ui-kit/components/biz-header/signal-content';
 
 const SIGNAL_QUALITY_ICONS: { [key: string]: string } = {
-  excellent: 'good-signal',
+  excellent: 'normal-signal',
   good: 'normal-signal',
   bad: 'bad-signal',
   unknown: 'unknown-signal',
 };
 
-export const SingalQualityComponent = observer(() => {
+export const SignalQualityComponent = observer(() => {
   const { isNative } = useMediaContext();
 
   const monitor = useClassroomStatsContext();
 
   return (
-    <Popover
-      content={<SignalContent {...monitor} isNative={isNative} />}
-      placement="bottomLeft">
+    <Popover content={<SignalContent {...monitor} isNative={isNative} />} placement="bottomLeft">
       <div className={`biz-signal-quality ${monitor.networkQuality}`}>
         <SvgImg
           className="cursor-pointer"

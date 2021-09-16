@@ -88,15 +88,7 @@ export enum LocalAudioErrorEnum {
 //   'down',
 // ]
 
-const networkQualityLevel = [
-  'unknown',
-  'excellent',
-  'good',
-  'bad',
-  'bad',
-  'bad',
-  'bad',
-];
+const networkQualityLevel = ['unknown', 'excellent', 'good', 'bad', 'bad', 'bad', 'bad'];
 
 const networkQualities: { [key: string]: string } = {
   excellent: 'network-good',
@@ -145,12 +137,10 @@ export class MediaStore {
   cpuUsage: number = 0;
 
   @observable
-  localVideoState: LocalVideoStreamState =
-    LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED;
+  localVideoState: LocalVideoStreamState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED;
 
   @observable
-  localAudioState: LocalAudioStreamState =
-    LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_STOPPED;
+  localAudioState: LocalAudioStreamState = LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_STOPPED;
 
   @observable
   _delay: number = 0;
@@ -215,32 +205,21 @@ export class MediaStore {
 
   private remoteMaxPacketLoss(audioStats: any = {}, videoStats: any = {}) {
     const mixSignalStatus: any[] = [];
-    uniq([...Object.keys(audioStats), ...Object.keys(videoStats)]).forEach(
-      (item) => {
-        const videoStatsItem = videoStats[item] || {};
-        const audioStatsItem = audioStats[item] || {};
-        const {
-          packetLossRate: videoLossRate,
-          receiveDelay: videoReceiveDelay,
-        } = videoStatsItem;
-        const {
-          packetLossRate: audioLossRate,
-          receiveDelay: audioReceiveDelay,
-        } = audioStatsItem;
-        const packetLossRate = Math.max(videoLossRate || 0, audioLossRate || 0);
-        const receiveDelay = Math.max(
-          videoReceiveDelay || 0,
-          audioReceiveDelay || 0,
-        );
-        mixSignalStatus.push({
-          audioStats: { ...audioStatsItem },
-          videoStats: { ...videoStatsItem },
-          uid: +item,
-          packetLossRate,
-          receiveDelay,
-        });
-      },
-    );
+    uniq([...Object.keys(audioStats), ...Object.keys(videoStats)]).forEach((item) => {
+      const videoStatsItem = videoStats[item] || {};
+      const audioStatsItem = audioStats[item] || {};
+      const { packetLossRate: videoLossRate, receiveDelay: videoReceiveDelay } = videoStatsItem;
+      const { packetLossRate: audioLossRate, receiveDelay: audioReceiveDelay } = audioStatsItem;
+      const packetLossRate = Math.max(videoLossRate || 0, audioLossRate || 0);
+      const receiveDelay = Math.max(videoReceiveDelay || 0, audioReceiveDelay || 0);
+      mixSignalStatus.push({
+        audioStats: { ...audioStatsItem },
+        videoStats: { ...videoStatsItem },
+        uid: +item,
+        packetLossRate,
+        receiveDelay,
+      });
+    });
     return mixSignalStatus;
   }
   private appStore: EduScenarioAppStore;
@@ -336,17 +315,11 @@ export class MediaStore {
       this.updateRxTxLostRate(evt.rxPacketLossRate, evt.txPacketLossRate);
     });
     this.mediaService.on('track-ended', (evt: any) => {
-      if (
-        evt.tag === 'cameraTestRenderer' &&
-        this.appStore.pretestStore.cameraRenderer
-      ) {
+      if (evt.tag === 'cameraTestRenderer' && this.appStore.pretestStore.cameraRenderer) {
         this.appStore.pretestStore.cameraRenderer.stop();
         this.appStore.pretestStore.resetCameraTrack();
       }
-      if (
-        evt.tag === 'cameraRenderer' &&
-        this.appStore.sceneStore.cameraRenderer
-      ) {
+      if (evt.tag === 'cameraRenderer' && this.appStore.sceneStore.cameraRenderer) {
         this.appStore.sceneStore.cameraRenderer.stop();
         this.appStore.sceneStore.resetCameraTrack();
         eduSDKApi
@@ -362,17 +335,11 @@ export class MediaStore {
           });
       }
 
-      if (
-        evt.tag === 'microphoneTestTrack' &&
-        this.appStore.pretestStore.cameraRenderer
-      ) {
+      if (evt.tag === 'microphoneTestTrack' && this.appStore.pretestStore.cameraRenderer) {
         this.appStore.pretestStore.resetMicrophoneTrack();
         this.totalVolume = 0;
       }
-      if (
-        evt.tag === 'microphoneTrack' &&
-        this.appStore.sceneStore._microphoneTrack!
-      ) {
+      if (evt.tag === 'microphoneTrack' && this.appStore.sceneStore._microphoneTrack!) {
         this.appStore.sceneStore.resetMicrophoneTrack();
         eduSDKApi
           .reportMicState({
@@ -500,21 +467,12 @@ export class MediaStore {
       let downlinkNetworkQuality = +evt.downlinkNetworkQuality;
       let uplinkNetworkQuality = +evt.uplinkNetworkQuality;
       let qualityStr = defaultQuality;
-      let value = Math.max(downlinkNetworkQuality, uplinkNetworkQuality);
+      const value = uplinkNetworkQuality;
+      // let value = Math.max(downlinkNetworkQuality, uplinkNetworkQuality);
       qualityStr = networkQualityLevel[value];
-      // BizLogger.info('[web] network-quality value', value, qualityStr)
-      // if (downlinkNetworkQuality <= uplinkNetworkQuality) {
-      //   qualityStr = networkQualityLevel[downlinkNetworkQuality]
-      // } else {
-      //   qualityStr = networkQualityLevel[uplinkNetworkQuality]
-      // }
       this.updateNetworkQuality(qualityStr || defaultQuality);
-      this.updateRxNetworkQuality(
-        networkQualityLevel[downlinkNetworkQuality] || defaultQuality,
-      );
-      this.updateTxNetworkQuality(
-        networkQualityLevel[uplinkNetworkQuality] || defaultQuality,
-      );
+      this.updateRxNetworkQuality(networkQualityLevel[downlinkNetworkQuality] || defaultQuality);
+      this.updateTxNetworkQuality(networkQualityLevel[uplinkNetworkQuality] || defaultQuality);
       const {
         remotePacketLoss: { audioStats, videoStats },
         localPacketLoss,
@@ -525,9 +483,7 @@ export class MediaStore {
       }
       this._delay = evt.rtt;
       this.updateNetworkPacketLostRate(localPacketLoss);
-      this.updateSignalStatusWithRemoteUser(
-        this.userSignalStatus(mixSignalStatus),
-      );
+      this.updateSignalStatusWithRemoteUser(this.userSignalStatus(mixSignalStatus));
     });
     this.mediaService.on('connection-state-change', (evt: any) => {
       BizLogger.info('connection-state-change', JSON.stringify(evt));
@@ -536,10 +492,7 @@ export class MediaStore {
       const { state, msg } = evt;
       console.log('[RTE] localVideoStateChanged', evt);
       this.localVideoState = state;
-      if (
-        this.localVideoState ===
-        LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED
-      ) {
+      if (this.localVideoState === LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_FAILED) {
         this.pretestNotice.next({
           type: 'error',
           info: 'pretest.device_not_working',
@@ -555,10 +508,7 @@ export class MediaStore {
       const { state, msg } = evt;
       console.log('[RTE] localAudioStateChanged', evt);
       this.localAudioState = state;
-      if (
-        this.localAudioState ===
-        LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED
-      ) {
+      if (this.localAudioState === LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_FAILED) {
         this.pretestNotice.next({
           type: 'error',
           info: 'pretest.device_not_working',
@@ -624,19 +574,10 @@ export class MediaStore {
         const [roomJoined, teacherStreamInfo, roomInfo] = JSON.parse(data);
         if (roomJoined && teacherStreamInfo && roomInfo) {
           const { userRole } = roomInfo;
-          const {
-            userUuid,
-            streamUuid,
-            micDevice,
-            cameraDevice,
-            hasAudio,
-            hasVideo,
-          } = teacherStreamInfo;
+          const { userUuid, streamUuid, micDevice, cameraDevice, hasAudio, hasVideo } =
+            teacherStreamInfo;
           if (userUuid && streamUuid && userRole !== 'student') {
-            if (
-              (!!hasAudio && micDevice === 0) ||
-              (!!hasVideo && cameraDevice === 0)
-            ) {
+            if ((!!hasAudio && micDevice === 0) || (!!hasVideo && cameraDevice === 0)) {
               this.appStore.fireToast('pretest.teacher_device_may_not_work');
             }
           }
@@ -696,16 +637,10 @@ export class MediaStore {
         }
 
         if (roomJoined && roomUuid && userUuid && cameraEduStream) {
-          if (
-            localCameraDeviceState === 0 &&
-            !!cameraEduStream.hasVideo === true
-          ) {
+          if (localCameraDeviceState === 0 && !!cameraEduStream.hasVideo === true) {
             this.appStore.fireToast('pretest.device_not_working');
           }
-          if (
-            localMicrophoneDeviceState === 0 &&
-            !!cameraEduStream.hasAudio === true
-          ) {
+          if (localMicrophoneDeviceState === 0 && !!cameraEduStream.hasAudio === true) {
             this.appStore.fireToast('pretest.device_not_working');
           }
         }
@@ -755,14 +690,10 @@ export class MediaStore {
 
   reset() {
     this.cpuUsage = 0;
-    this.localVideoState =
-      LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED;
-    this.localAudioState =
-      LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_STOPPED;
+    this.localVideoState = LocalVideoStreamState.LOCAL_VIDEO_STREAM_STATE_STOPPED;
+    this.localAudioState = LocalAudioStreamState.LOCAL_AUDIO_STREAM_STATE_STOPPED;
     this.remoteUsersRenderer = [];
-    EduLogger.info(
-      `[agora-apaas] [media#renderers] reset clear remoteUsersRenderer`,
-    );
+    EduLogger.info(`[agora-apaas] [media#renderers] reset clear remoteUsersRenderer`);
     this.networkQuality = 'unknown';
     this.autoplay = false;
     this.totalVolume = 0;
@@ -790,18 +721,13 @@ export class MediaStore {
   @action
   resetRoomState() {
     this.remoteUsersRenderer = [];
-    EduLogger.info(
-      `[agora-apaas] [media#renderers] resetRoomState clear remoteUsersRenderer`,
-    );
+    EduLogger.info(`[agora-apaas] [media#renderers] resetRoomState clear remoteUsersRenderer`);
     this.networkQuality = 'unknown';
     this.autoplay = false;
     this._delay = 0;
   }
 
-  enableMediaEncryption(
-    enabled: boolean,
-    config: MediaEncryptionConfig,
-  ): number {
+  enableMediaEncryption(enabled: boolean, config: MediaEncryptionConfig): number {
     return this.mediaService.enableMediaEncryptionConfig(enabled, config);
   }
 }

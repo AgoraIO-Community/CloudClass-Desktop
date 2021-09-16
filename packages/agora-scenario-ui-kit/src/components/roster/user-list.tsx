@@ -47,23 +47,14 @@ export interface StudentRosterProfile {
   isLocal: boolean;
 }
 
-export type StudentRosterActionTypes =
-  | 'cameraEnabled'
-  | 'micEnabled'
-  | 'kickOut'
-  | 'chat'
-  | string;
+export type StudentRosterActionTypes = 'cameraEnabled' | 'micEnabled' | 'kickOut' | 'chat' | string;
 
-export type StudentRosterColumnKey =
-  | 'cameraEnabled'
-  | 'micEnabled'
-  | 'kickOut'
-  | 'chat'
-  | 'name';
+export type StudentRosterColumnKey = 'cameraEnabled' | 'micEnabled' | 'kickOut' | 'chat' | 'name';
 
 export type StudentRosterProps = {
   isDraggable: boolean;
   columns?: StudentRosterColumn[];
+  excludeColumns?: StudentRosterColumnKey[];
   title?: string;
   dataSource?: StudentRosterProfile[];
   teacherName: string;
@@ -82,9 +73,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       return (
         <div className="student-username">
           <span title={profile.name}>{profile.name}</span>
-          {profile.onPodium ? (
-            <img src={PodiumSvg} style={{ marginLeft: 2 }} />
-          ) : null}
+          {profile.onPodium ? <img src={PodiumSvg} style={{ marginLeft: 2 }} /> : null}
         </div>
       );
     },
@@ -94,15 +83,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     name: 'student.camera',
     action: 'camera',
     render: (_, profile, hover, userType, onClick) => {
-      const {
-        cameraEnabled,
-        cameraDevice,
-        online,
-        onPodium,
-        hasStream,
-        isLocal,
-        uid,
-      } = profile;
+      const { cameraEnabled, cameraDevice, online, onPodium, hasStream, isLocal, uid } = profile;
       return (
         <MediaIcon
           {...getMediaIconProps({
@@ -126,15 +107,7 @@ const defaultStudentColumns: StudentRosterColumn[] = [
     name: 'student.microphone',
     action: 'mic',
     render: (_, profile, hover, userType, onClick) => {
-      const {
-        micEnabled,
-        micDevice,
-        online,
-        onPodium,
-        hasStream,
-        isLocal,
-        uid,
-      } = profile;
+      const { micEnabled, micDevice, online, onPodium, hasStream, isLocal, uid } = profile;
       return (
         <MediaIcon
           {...getMediaIconProps({
@@ -153,28 +126,24 @@ const defaultStudentColumns: StudentRosterColumn[] = [
       );
     },
   },
-  // {
-  //   key: 'chat',
-  //   name: 'roster.chat',
-  //   action: 'chat',
-  //   render: (_, profile, canOperate, userType, onClick) => {
-  //     const {
-  //       operateStatus,
-  //       chatStatus,
-  //       type,
-  //     } = getChatState(profile, canOperate);
-  //     const cls = classnames({
-  //       ["icon-hover"]: canOperate,
-  //       ["icon-disable"]: !canOperate,
-  //       ["icon-flex"]: 1,
-  //     })
-  //     return (
-  //       <div className={cls} onClick={onClick}>
-  //         <i className={chatStatus}></i>
-  //       </div>
-  //     )
-  //   },
-  // },
+  {
+    key: 'chat',
+    name: 'roster.chat',
+    action: 'chat',
+    render: (_, profile, canOperate, userType, onClick) => {
+      const { operateStatus, chatStatus, type } = getChatState(profile, canOperate);
+      const cls = classnames({
+        ['icon-hover']: canOperate,
+        ['icon-disable']: !canOperate,
+        ['icon-flex']: 1,
+      });
+      return (
+        <div className={cls} onClick={onClick}>
+          <i className={chatStatus}></i>
+        </div>
+      );
+    },
+  },
   {
     key: 'kickOut',
     name: 'student.operation',
@@ -199,6 +168,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
   localUserUuid,
   dataSource = [],
   columns = defaultStudentColumns,
+  excludeColumns = [],
   // userType,
   userType = 'student',
   onClose = () => console.log('onClose'),
@@ -207,18 +177,15 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
 }) => {
   const studentList = studentListSort(dataSource);
 
-  const cols = columns.filter(
-    ({ visibleRoles = [] }: any) =>
-      visibleRoles.length === 0 || visibleRoles.includes(userType),
-  );
+  const cols = columns
+    .filter((item: StudentRosterColumn) => !excludeColumns.includes(item.key))
+    .filter(
+      ({ visibleRoles = [] }: any) => visibleRoles.length === 0 || visibleRoles.includes(userType),
+    );
 
   const DraggableContainer = useCallback(
     ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {
-      return isDraggable ? (
-        <Draggable cancel={cancel}>{children}</Draggable>
-      ) : (
-        <>{children}</>
-      );
+      return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>;
     },
     [isDraggable],
   );
@@ -235,9 +202,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
             }}
           />
         </div>
-        <div className="main-title">
-          {title ?? transI18n('roster.user_list')}
-        </div>
+        <div className="main-title">{title ?? transI18n('roster.user_list')}</div>
         <div className="roster-container">
           <div className="search-header roster-header">
             <div className="search-teacher-name">
@@ -276,9 +241,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                         <span
                           title={data[col.key]}
                           className={`${idx === 0 ? 'roster-username' : ''} ${
-                            canOperate(userType, localUserUuid, data, col)
-                              ? 'action'
-                              : ''
+                            canOperate(userType, localUserUuid, data, col) ? 'action' : ''
                           }`}
                           style={{
                             paddingLeft: idx !== 0 ? 0 : 25,
@@ -290,10 +253,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                                 canOperate(userType, localUserUuid, data, col),
                                 userType as any,
                                 canOperate(userType, localUserUuid, data, col)
-                                  ? () =>
-                                      col.action &&
-                                      onClick &&
-                                      onClick(col.action, data.uid)
+                                  ? () => col.action && onClick && onClick(col.action, data.uid)
                                   : undefined,
                               )
                             : (data as any)[col.key]}
@@ -310,10 +270,7 @@ export const StudentRoster: React.FC<StudentRosterProps> = ({
                                 canOperate(userType, localUserUuid, data, col),
                                 userType as any,
                                 canOperate(userType, localUserUuid, data, col)
-                                  ? () =>
-                                      col.action &&
-                                      onClick &&
-                                      onClick(col.action, data.uid)
+                                  ? () => col.action && onClick && onClick(col.action, data.uid)
                                   : undefined,
                               )
                             : (data as any)[col.key]}

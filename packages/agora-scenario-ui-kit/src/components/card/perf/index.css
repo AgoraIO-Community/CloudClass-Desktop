@@ -1,0 +1,17 @@
+.perf-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-con {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(116px, 1fr));
+  background-color: #fff;
+  color: #444;
+}
+
+.grid-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(5px, 1fr));
+}

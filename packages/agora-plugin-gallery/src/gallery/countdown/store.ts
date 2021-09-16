@@ -60,12 +60,7 @@ export class PluginStore {
 
   @action
   onReceivedProps(properties: any, cause: any) {
-    const {
-      startTime: sStartTime,
-      duration: sDuration,
-      state,
-      pauseTime: sPauseTime,
-    } = properties;
+    const { startTime: sStartTime, duration: sDuration, state, pauseTime: sPauseTime } = properties;
     const startTime = parseInt(sStartTime) * 1000;
     const pauseTime = parseInt(sPauseTime) * 1000;
     const duration = parseInt(sDuration) * 1000;

@@ -3,11 +3,7 @@ import ReactDOM from 'react-dom';
 // import { App } from '@/infra/monolithic/app';
 import { isElectron } from '@/infra/utils';
 import { EduManager } from 'agora-rte-sdk';
-import {
-  AppStoreInitParams,
-  CoreContextProvider,
-  eduSDKApi,
-} from 'agora-edu-core';
+import { AppStoreInitParams, CoreContextProvider, eduSDKApi } from 'agora-edu-core';
 import { GlobalStorage } from '@/infra/utils';
 
 //@ts-ignore
@@ -123,9 +119,7 @@ const App = () => {
               name="integration[shop_name]"
               id="integration_shop_name"
             />
-            <p className="text-red text-xs hidden">
-              Please fill out this field.
-            </p>
+            <p className="text-red text-xs hidden">Please fill out this field.</p>
           </div>
           <div className="mb-3 md:space-y-2 w-full text-xs">
             <label className="font-semibold text-gray-600 py-2">AppID</label>
@@ -138,14 +132,10 @@ const App = () => {
               name="integration[shop_name]"
               id="integration_shop_name"
             />
-            <p className="text-red text-xs hidden">
-              Please fill out this field.
-            </p>
+            <p className="text-red text-xs hidden">Please fill out this field.</p>
           </div>
           <div className="mb-3 md:space-y-2 w-full text-xs">
-            <label className="font-semibold text-gray-600 py-2">
-              Room Uuid
-            </label>
+            <label className="font-semibold text-gray-600 py-2">Room Uuid</label>
             <input
               value={roomUuid}
               onChange={(e) => setRoomUuid(e.currentTarget.value)}
@@ -155,14 +145,10 @@ const App = () => {
               name="integration[shop_name]"
               id="integration_shop_name"
             />
-            <p className="text-red text-xs hidden">
-              Please fill out this field.
-            </p>
+            <p className="text-red text-xs hidden">Please fill out this field.</p>
           </div>
           <div className="mb-3 md:space-y-2 w-full text-xs">
-            <label className="font-semibold text-gray-600 py-2">
-              User Uuid
-            </label>
+            <label className="font-semibold text-gray-600 py-2">User Uuid</label>
             <input
               value={userUuid}
               onChange={(e) => setUserUuid(e.currentTarget.value)}
@@ -172,14 +158,10 @@ const App = () => {
               name="integration[shop_name]"
               id="integration_shop_name"
             />
-            <p className="text-red text-xs hidden">
-              Please fill out this field.
-            </p>
+            <p className="text-red text-xs hidden">Please fill out this field.</p>
           </div>
         </div>
-        <button
-          className="bg-blue-500 text-white py-2 px-8"
-          onClick={onInitialize}>
+        <button className="bg-blue-500 text-white py-2 px-8" onClick={onInitialize}>
           init
         </button>
       </div>

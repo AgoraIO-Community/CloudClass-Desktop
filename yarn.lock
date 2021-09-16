@@ -1836,6 +1836,11 @@
     gud "^1.0.0"
     warning "^4.0.3"
 
+"@hyrious/xml-js@1.6.14":
+  version "1.6.14"
+  resolved "https://registry.nlark.com/@hyrious/xml-js/download/@hyrious/xml-js-1.6.14.tgz#82685fb5063f9d3d15b82802acad75bac45cf2c5"
+  integrity sha1-gmhftQY/nT0VuCgCrK11usRc8sU=
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -2867,10 +2872,10 @@
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha512-smL1iufVg8XxsvO1GzLD4NZf3wFTev7FRIiHlIYDCjIgTS7/Yq6N2n8JMh2ZDjYi1nMBxDstkQPxZOEOpc/N8g==
 
-"@netless/video-js-plugin@0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@netless/video-js-plugin/-/video-js-plugin-0.3.2.tgz#e88e9bc87e3a45f14c12768239b2a369ade30ef8"
-  integrity sha512-YVa11in8f5M30xxJhU3Fy8QnypyiZDZ4UmKhSyOFliReXE3gzO3vx4hJfuNC72V+cHcRPT3l8zxDvsEWCWKXAw==
+"@netless/video-js-plugin@0.3.8":
+  version "0.3.8"
+  resolved "https://registry.nlark.com/@netless/video-js-plugin/download/@netless/video-js-plugin-0.3.8.tgz#d4b1ecab19890fa9d5502706f5d86c04379678d0"
+  integrity sha1-1LHsqxmJD6nVUCcG9dhsBDeWeNA=
 
 "@netless/white-audio-plugin2@2.0.5":
   version "2.0.5"
@@ -6134,6 +6139,45 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
+agora-classroom-sdk@1.1.2-rc.3:
+  version "1.1.2-rc.3"
+  resolved "https://registry.nlark.com/agora-classroom-sdk/download/agora-classroom-sdk-1.1.2-rc.3.tgz#6d89c435b1c509310d9217e08f216483aa28d26c"
+  integrity sha1-bYnENbHFCTENkhfgjyFkg6oo0mw=
+  dependencies:
+    "@netless/fetch-progress" "0.0.1"
+    "@netless/iframe-bridge" "2.1.4"
+    "@tailwindcss/forms" "0.2.1"
+    "@types/react-transition-group" "4.4.1"
+    "@zip.js/zip.js" "2.2.22"
+    adm-zip "0.4.14"
+    agora-access-token "2.0.4"
+    animate.css "4.1.1"
+    bowser "1.9.4"
+    broadcast-channel "^3.7.0"
+    classnames "2.2.6"
+    fetch-progress "1.3.0"
+    i18next "20.1.0"
+    jszip "3.6.0"
+    mobx "5.15.4"
+    mobx-react "6.3.1"
+    pinyinlite "1.2.1"
+    rc-notification "4.4.0"
+    rc-select "12.1.6"
+    rc-slider "9.7.1"
+    rc-tabs "11.7.3"
+    rc-tooltip "5.1.1"
+    rc-trigger "5.2.3"
+    rc-util "5.8.1"
+    react "17.0.0"
+    react-dom "17.0.0"
+    react-draggable "4.4.3"
+    react-i18next "11.8.12"
+    react-router "5.2.0"
+    react-select "4.3.0"
+    react-transition-group "4.4.1"
+    workbox-range-requests "6.1.2"
+    workbox-strategies "6.1.1"
+
 agora-electron-sdk@3.4.6-build.722:
   version "3.4.6-build.722"
   resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-3.4.6-build.722.tgz#90760a8a6b37a35049bc98bec933d98002d88490"
@@ -6152,10 +6196,10 @@ agora-electron-sdk@3.4.6-build.722:
     yuv-buffer "^1.0.0"
     yuv-canvas "^1.2.1"
 
-agora-rtc-sdk-ng@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.5.0.tgz#3d4ea890fe2f18df4d398298424c76ac985c4bd7"
-  integrity sha512-A93m5xkPkqnCx4J768FSj6mcgeaKkDCDUJVi+nnOSANlJ9GN75Bn6SleNwkbEB47PuecBnWqNBwrzuII2fDIkw==
+agora-rtc-sdk-ng@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.nlark.com/agora-rtc-sdk-ng/download/agora-rtc-sdk-ng-4.7.0.tgz#c9179b9dc8a38bc38aedc0d4f48d153babe079bb"
+  integrity sha1-yRebnciji8OK7cDU9I0VO6vgebs=
 
 agora-rtm-sdk@1.4.2:
   version "1.4.2"
@@ -6969,7 +7013,7 @@ atob-lite@^2.0.0:
   resolved "https://registry.yarnpkg.com/atob-lite/-/atob-lite-2.0.0.tgz#0fef5ad46f1bd7a8502c65727f0367d5ee43d696"
   integrity sha1-D+9a1G8b16hQLGVyfwNn1e5D1pY=
 
-atob@^2.1.0, atob@^2.1.2:
+atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
@@ -9195,6 +9239,11 @@ core-js@^2.4.0, core-js@^2.6.5:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
+core-js@^3.15.2:
+  version "3.16.2"
+  resolved "https://registry.nlark.com/core-js/download/core-js-3.16.2.tgz?cache=0&sync_timestamp=1629206158334&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcore-js%2Fdownload%2Fcore-js-3.16.2.tgz#3f485822889c7fc48ef463e35be5cc2a4a01a1f4"
+  integrity sha1-P0hYIoicf8SO9GPjW+XMKkoBofQ=
+
 core-util-is@1.0.2, core-util-is@^1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -10713,10 +10762,10 @@ duplexify@^3.4.2, duplexify@^3.5.0, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-easemob-websdk@^3.6.0:
+easemob-websdk@3.6.3:
   version "3.6.3"
-  resolved "https://registry.nlark.com/easemob-websdk/download/easemob-websdk-3.6.3.tgz#08741aa30623fe36dbda1f181001bb73124e0676"
-  integrity sha1-CHQaowYj/jbb2h8YEAG7cxJOBnY=
+  resolved "https://registry.yarnpkg.com/easemob-websdk/-/easemob-websdk-3.6.3.tgz#08741aa30623fe36dbda1f181001bb73124e0676"
+  integrity sha512-6sdbcQyHt1GVoYZhXAX+ZyxhHKZl3Pwiu6oLYM7L5F+w5aJy/nCSuFYO30oVzH/kg5dt93+VgNcpGvj5VVspoQ==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -26861,17 +26910,18 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.13.11:
-  version "2.13.11"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.11.tgz#70455ca04a8ca28f16e7cac33d82bb9915883c47"
-  integrity sha512-24opNfLd0JinJAOcyyOfG4q7X78o+dq5vLtwCsgzqYONqWp2WQOZtJzopB2uUSSW2YEbYQCglz+wmr9FWuv/Yg==
+white-web-sdk@2.13.16:
+  version "2.13.16"
+  resolved "https://registry.nlark.com/white-web-sdk/download/white-web-sdk-2.13.16.tgz#ec83ad622d017adeb6641bb7e8b9f7bd35a5edf5"
+  integrity sha1-7IOtYi0Bet62ZBu36Ln3vTWl7fU=
   dependencies:
+    "@hyrious/xml-js" "1.6.14"
     "@netless/canvas-polyfill" "^0.0.4"
-    atob "^2.1.0"
+    atob "^2.1.2"
     bezier-js "^2.4.4"
     color "^3.1.0"
+    core-js "^3.15.2"
     detect-it "^3.0.5"
-    es6-symbol "^3.1.1"
     eventemitter3 "^4.0.7"
     mathjs "6.6.5"
     mobx "^4.15.7"
@@ -26886,7 +26936,6 @@ white-web-sdk@2.13.11:
     textarea-caret-ts "^4.1.0"
     url-parse "^1.4.0"
     uuid "^7.0.3"
-    xml-js "^1.6.11"
 
 wide-align@^1.1.0:
   version "1.1.3"

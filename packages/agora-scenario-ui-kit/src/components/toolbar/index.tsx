@@ -67,10 +67,7 @@ export const Toolbar: FC<ToolbarProps> = ({
     }
     const onWindowSizeChange = debounce(() => {
       if (animContainer.current) {
-        let maxHeight = +animContainer.current.style.maxHeight.replace(
-          'px',
-          '',
-        );
+        let maxHeight = +animContainer.current.style.maxHeight.replace('px', '');
         setReachEnd(maxHeight !== animContainer.current.clientHeight);
       }
     }, 200);
@@ -85,8 +82,7 @@ export const Toolbar: FC<ToolbarProps> = ({
     let current = toolbarScrollEl.current;
     const onScrollToolbar = debounce(() => {
       if (current) {
-        const bottom =
-          current.scrollHeight - current.scrollTop === current.clientHeight;
+        const bottom = current.scrollHeight - current.scrollTop === current.clientHeight;
         setReachEnd(!bottom);
       }
     }, 50);
@@ -137,26 +133,18 @@ export const Toolbar: FC<ToolbarProps> = ({
           onClick={() => {
             toolbarEl.current &&
               toolbarEl.current.parentElement &&
-              toolbarEl.current.parentElement.classList.remove(
-                'toolbar-anim-hide',
-              );
+              toolbarEl.current.parentElement.classList.remove('toolbar-anim-hide');
             toolbarEl.current &&
               toolbarEl.current.parentElement &&
-              toolbarEl.current.parentElement.classList.remove(
-                'toolbar-anim-show',
-              );
+              toolbarEl.current.parentElement.classList.remove('toolbar-anim-show');
             if (opened) {
               toolbarEl.current &&
                 toolbarEl.current.parentElement &&
-                toolbarEl.current.parentElement.classList.add(
-                  'toolbar-anim-hide',
-                );
+                toolbarEl.current.parentElement.classList.add('toolbar-anim-hide');
             } else {
               toolbarEl.current &&
                 toolbarEl.current.parentElement &&
-                toolbarEl.current.parentElement.classList.add(
-                  'toolbar-anim-show',
-                );
+                toolbarEl.current.parentElement.classList.add('toolbar-anim-show');
             }
             animTimer.current && clearTimeout(animTimer.current);
             animTimer.current = setTimeout(() => {
@@ -169,13 +157,7 @@ export const Toolbar: FC<ToolbarProps> = ({
             }, 300);
           }}>
           <img
-            src={
-              menus[
-                `${opened ? 'unfold' : 'fold'}-${
-                  menuHover ? 'hover' : 'absent'
-                }`
-              ]
-            }
+            src={menus[`${opened ? 'unfold' : 'fold'}-${menuHover ? 'hover' : 'absent'}`]}
             alt="menu"
           />
         </div>
@@ -193,11 +175,7 @@ export const Toolbar: FC<ToolbarProps> = ({
       </div>
       <div
         className={
-          reachEnd
-            ? opened
-              ? 'toolbar-shadow'
-              : 'toolbar-shadow hidden'
-            : 'toolbar-shadow hidden'
+          reachEnd ? (opened ? 'toolbar-shadow' : 'toolbar-shadow hidden') : 'toolbar-shadow hidden'
         }></div>
     </div>
   );

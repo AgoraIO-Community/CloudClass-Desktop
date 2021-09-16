@@ -7,25 +7,16 @@ export interface ChatMessageProps extends Message {
   isOwn: boolean;
 }
 
-export const ChatMessage: FC<ChatMessageProps> = ({
-  isOwn,
-  username,
-  content,
-  role,
-}) => {
+export const ChatMessage: FC<ChatMessageProps> = ({ isOwn, username, content, role }) => {
   return (
     <div className="chat-message">
       <div className={`chat-message-${isOwn ? 'right' : 'left'}`}>
         <div
           className="chat-message-username"
-          title={
-            username + (role === '3' ? `(${transI18n('role.assistant')})` : '')
-          }>
+          title={username + (role === '3' ? `(${transI18n('role.assistant')})` : '')}>
           {username} {role === '3' ? `(${transI18n('role.assistant')})` : ''}
         </div>
-        <div className={`chat-message-content ${isOwn ? 'blue' : 'ghost'}`}>
-          {content}
-        </div>
+        <div className={`chat-message-content ${isOwn ? 'blue' : 'ghost'}`}>{content}</div>
       </div>
     </div>
   );

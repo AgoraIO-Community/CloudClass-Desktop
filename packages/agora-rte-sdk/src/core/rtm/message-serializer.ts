@@ -1,10 +1,5 @@
 import { get } from 'lodash';
-import {
-  EduCustomMessage,
-  EduStreamData,
-  EduTextMessage,
-  EduUserData,
-} from '../../interfaces';
+import { EduCustomMessage, EduStreamData, EduTextMessage, EduUserData } from '../../interfaces';
 import { EduLogger } from '../logger';
 import { GenericErrorWrapper } from '../utils/generic-error';
 import { EduStreamRawData, RawUserData, UsersStreamData } from './constants';
@@ -122,101 +117,91 @@ export class MessageSerializer {
     EduLogger.info('[serializer] getUserStreams: ', data);
     let eduStreams: EduStreamData[] = [];
     const dataOnlineUsers = data?.onlineUsers ?? [];
-    const rawOnlineUsers = dataOnlineUsers.reduce(
-      (acc: unknown[], it: RawUserData) => {
-        acc.push({
+    const rawOnlineUsers = dataOnlineUsers.reduce((acc: unknown[], it: RawUserData) => {
+      acc.push({
+        userUuid: it.userUuid,
+        userName: it.userName,
+        role: it.role,
+        // isChatAllowed: it.muteChat,
+        // muteChat: it.muteChat,
+        userProperties: it.userProperties,
+        streamUuid: it.streamUuid,
+        updateTime: it.updateTime,
+        state: it.state,
+        type: it.type,
+      });
+
+      const rawStreams = this.extractStreamsFromUser(it);
+
+      EduLogger.info(
+        '[serializer] getUsersStreams, extractRawStreams: ',
+        JSON.stringify(rawStreams),
+      );
+
+      const tmpStreams = rawStreams.map((stream: any) => ({
+        streamUuid: stream.streamUuid,
+        streamName: stream.streamName,
+        videoSourceType: stream.videoSourceType,
+        audioSourceType: stream.audioSourceType,
+        videoState: stream.videoState,
+        audioState: stream.audioState,
+        userInfo: {
           userUuid: it.userUuid,
           userName: it.userName,
           role: it.role,
-          // isChatAllowed: it.muteChat,
-          // muteChat: it.muteChat,
-          userProperties: it.userProperties,
-          streamUuid: it.streamUuid,
-          updateTime: it.updateTime,
-          state: it.state,
-          type: it.type,
-        });
+        },
+        state: stream.state,
+      }));
 
-        const rawStreams = this.extractStreamsFromUser(it);
-
-        EduLogger.info(
-          '[serializer] getUsersStreams, extractRawStreams: ',
-          JSON.stringify(rawStreams),
-        );
-
-        const tmpStreams = rawStreams.map((stream: any) => ({
-          streamUuid: stream.streamUuid,
-          streamName: stream.streamName,
-          videoSourceType: stream.videoSourceType,
-          audioSourceType: stream.audioSourceType,
-          videoState: stream.videoState,
-          audioState: stream.audioState,
-          userInfo: {
-            userUuid: it.userUuid,
-            userName: it.userName,
-            role: it.role,
-          },
-          state: stream.state,
-        }));
-
-        eduStreams = eduStreams.concat(EduStreamData.fromArray(tmpStreams));
-        return acc;
-      },
-      [],
-    );
+      eduStreams = eduStreams.concat(EduStreamData.fromArray(tmpStreams));
+      return acc;
+    }, []);
 
     const dataOfflineUsers = data?.offlineUsers ?? [];
-    const rawOfflineUsers = dataOfflineUsers.reduce(
-      (acc: unknown[], it: RawUserData) => {
-        acc.push({
+    const rawOfflineUsers = dataOfflineUsers.reduce((acc: unknown[], it: RawUserData) => {
+      acc.push({
+        userUuid: it.userUuid,
+        userName: it.userName,
+        role: it.role,
+        // isChatAllowed: it.muteChat,
+        // muteChat: it.muteChat,
+        userProperties: it.userProperties,
+        streamUuid: it.streamUuid,
+        updateTime: it.updateTime,
+        state: it.state,
+        type: it.type,
+      });
+
+      const rawStreams = this.extractStreamsFromUser(it);
+
+      EduLogger.info(
+        '[serializer] rawOfflineUsers getUsersStreams, extractRawStreams: ',
+        JSON.stringify(rawStreams),
+      );
+
+      const tmpStreams = rawStreams.map((stream: any) => ({
+        streamUuid: stream.streamUuid,
+        streamName: stream.streamName,
+        videoSourceType: stream.videoSourceType,
+        audioSourceType: stream.audioSourceType,
+        videoState: stream.videoState,
+        audioState: stream.audioState,
+        userInfo: {
           userUuid: it.userUuid,
           userName: it.userName,
           role: it.role,
-          // isChatAllowed: it.muteChat,
-          // muteChat: it.muteChat,
-          userProperties: it.userProperties,
-          streamUuid: it.streamUuid,
-          updateTime: it.updateTime,
-          state: it.state,
-          type: it.type,
-        });
-
-        const rawStreams = this.extractStreamsFromUser(it);
-
-        EduLogger.info(
-          '[serializer] rawOfflineUsers getUsersStreams, extractRawStreams: ',
-          JSON.stringify(rawStreams),
-        );
-
-        const tmpStreams = rawStreams.map((stream: any) => ({
-          streamUuid: stream.streamUuid,
-          streamName: stream.streamName,
-          videoSourceType: stream.videoSourceType,
-          audioSourceType: stream.audioSourceType,
-          videoState: stream.videoState,
-          audioState: stream.audioState,
-          userInfo: {
-            userUuid: it.userUuid,
-            userName: it.userName,
-            role: it.role,
-          },
-          state: stream.state,
-        }));
-        eduStreams = eduStreams.concat(EduStreamData.fromArray(tmpStreams));
-        return acc;
-      },
-      [],
-    );
+        },
+        state: stream.state,
+      }));
+      eduStreams = eduStreams.concat(EduStreamData.fromArray(tmpStreams));
+      return acc;
+    }, []);
 
     const onlineUsers = EduUserData.fromArray(rawOnlineUsers);
     const offlineUsers = EduUserData.fromArray(rawOfflineUsers);
 
-    const onlineStreams = eduStreams.filter(
-      (it: EduStreamData) => it.state !== 0,
-    );
-    const offlineStreams = eduStreams.filter(
-      (it: EduStreamData) => it.state === 0,
-    );
+    const onlineStreams = eduStreams.filter((it: EduStreamData) => it.state !== 0);
+    const offlineStreams = eduStreams.filter((it: EduStreamData) => it.state === 0);
 
     EduLogger.info('[EduUsersStreams] onlineUsers: ', onlineUsers);
     EduLogger.info('[EduUsersStreams] offlineUsers: ', offlineUsers);

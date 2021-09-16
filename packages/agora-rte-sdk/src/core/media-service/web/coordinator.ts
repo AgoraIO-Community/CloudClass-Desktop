@@ -24,14 +24,8 @@ export type StreamSubscribeOptions = {
 
 export class AgoraWebStreamCoordinator extends EventEmitter {
   eduStreams: Map<string, EduStreamData> = new Map<string, EduStreamData>();
-  rtcVideoStreams: Map<string, IAgoraRTCRemoteUser> = new Map<
-    string,
-    IAgoraRTCRemoteUser
-  >();
-  rtcAudioStreams: Map<string, IAgoraRTCRemoteUser> = new Map<
-    string,
-    IAgoraRTCRemoteUser
-  >();
+  rtcVideoStreams: Map<string, IAgoraRTCRemoteUser> = new Map<string, IAgoraRTCRemoteUser>();
+  rtcAudioStreams: Map<string, IAgoraRTCRemoteUser> = new Map<string, IAgoraRTCRemoteUser>();
   subscribeOptions: StreamSubscribeOptions = {};
 
   queueTasks: StreamUpdateTask[] = [];
@@ -71,17 +65,13 @@ export class AgoraWebStreamCoordinator extends EventEmitter {
 
   addEduStreams(streams: EduStreamData[]) {
     let snapshot = this.beginUpdate();
-    streams.forEach((stream) =>
-      this.eduStreams.set(stream.stream.streamUuid, stream),
-    );
+    streams.forEach((stream) => this.eduStreams.set(stream.stream.streamUuid, stream));
     this.endUpdate(snapshot);
   }
 
   removeEduStreams(streams: EduStreamData[]) {
     let snapshot = this.beginUpdate();
-    streams.forEach((stream) =>
-      this.eduStreams.delete(stream.stream.streamUuid),
-    );
+    streams.forEach((stream) => this.eduStreams.delete(stream.stream.streamUuid));
     this.endUpdate(snapshot);
   }
 
@@ -94,12 +84,8 @@ export class AgoraWebStreamCoordinator extends EventEmitter {
   makeSnapshot(): StreamSnapshot {
     return {
       eduStreams: new Map<string, EduStreamData>(this.eduStreams),
-      rtcVideoStreams: new Map<string, IAgoraRTCRemoteUser>(
-        this.rtcVideoStreams,
-      ),
-      rtcAudioStreams: new Map<string, IAgoraRTCRemoteUser>(
-        this.rtcAudioStreams,
-      ),
+      rtcVideoStreams: new Map<string, IAgoraRTCRemoteUser>(this.rtcVideoStreams),
+      rtcAudioStreams: new Map<string, IAgoraRTCRemoteUser>(this.rtcAudioStreams),
       subscribeOptions: Object.assign({}, this.subscribeOptions),
     };
   }
@@ -117,88 +103,54 @@ export class AgoraWebStreamCoordinator extends EventEmitter {
     let onlineVideoStreams: string[] = [];
     let onlineAudioStreams: string[] = [];
     snapshot.eduStreams.forEach((stream) => {
-      if (
-        stream.stream.hasVideo &&
-        snapshot.rtcVideoStreams.has(stream.stream.streamUuid)
-      ) {
+      if (stream.stream.hasVideo && snapshot.rtcVideoStreams.has(stream.stream.streamUuid)) {
         onlineVideoStreams.push(stream.stream.streamUuid);
       }
-      if (
-        stream.stream.hasAudio &&
-        snapshot.rtcAudioStreams.has(stream.stream.streamUuid)
-      ) {
+      if (stream.stream.hasAudio && snapshot.rtcAudioStreams.has(stream.stream.streamUuid)) {
         onlineAudioStreams.push(stream.stream.streamUuid);
       }
     });
-    let {
-      includeAudioStreams,
-      includeVideoStreams,
-      excludeAudioStreams,
-      excludeVideoStreams,
-    } = snapshot.subscribeOptions;
+    let { includeAudioStreams, includeVideoStreams, excludeAudioStreams, excludeVideoStreams } =
+      snapshot.subscribeOptions;
     if (includeVideoStreams) {
       let includeVideoStreamsMap: Map<string, boolean> = new Map();
       includeVideoStreams.map((streamUuid) => {
         includeVideoStreamsMap.set(streamUuid, true);
       });
-      onlineVideoStreams = onlineVideoStreams.filter((s) =>
-        includeVideoStreamsMap.has(s),
-      );
+      onlineVideoStreams = onlineVideoStreams.filter((s) => includeVideoStreamsMap.has(s));
     } else if (excludeVideoStreams) {
       let excludeVideoStreamsMap: Map<string, boolean> = new Map();
       excludeVideoStreams.map((streamUuid) => {
         excludeVideoStreamsMap.set(streamUuid, true);
       });
-      onlineVideoStreams = onlineVideoStreams.filter(
-        (s) => !excludeVideoStreamsMap.has(s),
-      );
+      onlineVideoStreams = onlineVideoStreams.filter((s) => !excludeVideoStreamsMap.has(s));
     }
     if (includeAudioStreams) {
       let includeAudioStreamsMap: Map<string, boolean> = new Map();
       includeAudioStreams.map((streamUuid) => {
         includeAudioStreamsMap.set(streamUuid, true);
       });
-      onlineAudioStreams = onlineAudioStreams.filter((s) =>
-        includeAudioStreamsMap.has(s),
-      );
+      onlineAudioStreams = onlineAudioStreams.filter((s) => includeAudioStreamsMap.has(s));
     } else if (excludeAudioStreams) {
       let excludeAudioStreamsMap: Map<string, boolean> = new Map();
       excludeAudioStreams.map((streamUuid) => {
         excludeAudioStreamsMap.set(streamUuid, true);
       });
-      onlineAudioStreams = onlineAudioStreams.filter(
-        (s) => !excludeAudioStreamsMap.has(s),
-      );
+      onlineAudioStreams = onlineAudioStreams.filter((s) => !excludeAudioStreamsMap.has(s));
     }
     return { onlineVideoStreams, onlineAudioStreams };
   }
 
   diffSnapshots(oldSnapshot: StreamSnapshot, newSnapshot: StreamSnapshot) {
-    let {
-      onlineVideoStreams: oldOnlineVideoStreams,
-      onlineAudioStreams: oldOnlineAudioStreams,
-    } = this.getOnlineStreams(oldSnapshot);
-    let {
-      onlineVideoStreams: newOnlineVideoStreams,
-      onlineAudioStreams: newOnlineAudioStreams,
-    } = this.getOnlineStreams(newSnapshot);
+    let { onlineVideoStreams: oldOnlineVideoStreams, onlineAudioStreams: oldOnlineAudioStreams } =
+      this.getOnlineStreams(oldSnapshot);
+    let { onlineVideoStreams: newOnlineVideoStreams, onlineAudioStreams: newOnlineAudioStreams } =
+      this.getOnlineStreams(newSnapshot);
 
-    let offlineVideoStreams = difference(
-      oldOnlineVideoStreams,
-      newOnlineVideoStreams,
-    );
-    let onlineVideoStreams = difference(
-      newOnlineVideoStreams,
-      oldOnlineVideoStreams,
-    );
-    let offlineAudioStreams = difference(
-      oldOnlineAudioStreams,
-      newOnlineAudioStreams,
-    );
-    let onlineAudioStreams = difference(
-      newOnlineAudioStreams,
-      oldOnlineAudioStreams,
-    );
+    let offlineVideoStreams = difference(oldOnlineVideoStreams, newOnlineVideoStreams);
+    let onlineVideoStreams = difference(newOnlineVideoStreams, oldOnlineVideoStreams);
+    let offlineAudioStreams = difference(oldOnlineAudioStreams, newOnlineAudioStreams);
+    let onlineAudioStreams = difference(newOnlineAudioStreams, oldOnlineAudioStreams);
 
     console.log(
       `[StreamCoordinator] diff ${JSON.stringify({
@@ -267,12 +219,8 @@ export class AgoraWebStreamCoordinator extends EventEmitter {
   processSnapshotsUpdate = (task: StreamUpdateTask) => {
     return new Promise<void>((resolve, reject) => {
       let { oldSnapshot, newSnapshot } = task;
-      let {
-        offlineVideoStreams,
-        offlineAudioStreams,
-        onlineVideoStreams,
-        onlineAudioStreams,
-      } = this.diffSnapshots(oldSnapshot, newSnapshot);
+      let { offlineVideoStreams, offlineAudioStreams, onlineVideoStreams, onlineAudioStreams } =
+        this.diffSnapshots(oldSnapshot, newSnapshot);
       let promises: Promise<boolean>[] = [];
 
       offlineVideoStreams.forEach((streamUuid) => {

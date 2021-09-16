@@ -178,6 +178,7 @@ export interface EduConfiguration {
   cameraEncoderConfigurations?: EduVideoEncoderConfiguration;
   scenarioType?: EduRoomTypeEnum;
   userRole?: EduRoleTypeEnum;
+  latencyLevel?: 1 | 2;
 }
 
 export interface EduClassroomConfiguration extends EduConfiguration {
@@ -485,8 +486,7 @@ export class EduUserData {
   }
 
   updateUser(args: Partial<EduUserAttrs>) {
-    const { updateTime, state, streamUuid, rtcToken, screenRtcToken, ...user } =
-      args;
+    const { updateTime, state, streamUuid, rtcToken, screenRtcToken, ...user } = args;
     // if (args.hasOwnProperty('user')) {
     this._user = user as any;
     // }
@@ -586,9 +586,7 @@ export class EduUserData {
   static combineLatest(list: any[]): EduUserData[] {
     const array = this.fromArray(list);
     return array.reduce((acc: EduUserData[], it: EduUserData) => {
-      const idx = acc.findIndex(
-        (t: EduUserData) => t.user.userUuid === it.user.userUuid,
-      );
+      const idx = acc.findIndex((t: EduUserData) => t.user.userUuid === it.user.userUuid);
       if (idx !== -1) {
         acc[idx] = it;
       } else {
@@ -794,9 +792,7 @@ export class EduStreamData {
   static combineLatest(list: any[]): EduStreamData[] {
     const array = this.fromArray(list);
     return array.reduce((acc: EduStreamData[], it: EduStreamData) => {
-      const idx = acc.findIndex(
-        (t: EduStreamData) => t.stream.streamUuid === it.stream.streamUuid,
-      );
+      const idx = acc.findIndex((t: EduStreamData) => t.stream.streamUuid === it.stream.streamUuid);
       if (idx !== -1) {
         acc[idx] = it;
       } else {
@@ -830,15 +826,9 @@ declare function event_update_classroom(
   fromClassroom: EduClassroom,
 ): void;
 
-declare function event_user_message(
-  textMessage: EduTextMessage,
-  fromClassroom: EduClassroom,
-): void;
+declare function event_user_message(textMessage: EduTextMessage, fromClassroom: EduClassroom): void;
 
-declare function event_room_message(
-  textMessage: EduTextMessage,
-  fromClassroom: EduClassroom,
-): void;
+declare function event_room_message(textMessage: EduTextMessage, fromClassroom: EduClassroom): void;
 
 declare function event_connection_state_changed(
   state: ConnectionState,
@@ -874,21 +864,12 @@ declare function event_remote_stream_removed(
 
 declare function event_local_first_frame_render(state: VideoRenderState): void;
 
-declare function event_remote_first_frame_render(
-  state: VideoRenderState,
-  uid: string,
-): void;
+declare function event_remote_first_frame_render(state: VideoRenderState, uid: string): void;
 export interface IEduClassroomManager {
   // emit once
-  once(
-    event: 'user-init-online',
-    listener: typeof event_user_init_online,
-  ): void;
+  once(event: 'user-init-online', listener: typeof event_user_init_online): void;
 
-  on(
-    event: 'remote-user-joined',
-    listener: typeof event_remote_user_joined,
-  ): void;
+  on(event: 'remote-user-joined', listener: typeof event_remote_user_joined): void;
   on(event: 'remote-user-left', listener: typeof event_remote_user_left): void;
 
   // message
@@ -896,42 +877,21 @@ export interface IEduClassroomManager {
   on(event: 'user-message', listener: typeof event_user_message): void;
 
   // stream
-  once(
-    event: 'remote-stream-init-online',
-    listener: typeof event_remote_stream_init_online,
-  ): void;
+  once(event: 'remote-stream-init-online', listener: typeof event_remote_stream_init_online): void;
 
-  on(
-    event: 'remote-stream-added',
-    listener: typeof event_remote_stream_added,
-  ): void;
-  on(
-    event: 'remote-stream-updated',
-    listener: typeof event_remote_stream_updated,
-  ): void;
-  on(
-    event: 'remote-stream-removed',
-    listener: typeof event_remote_stream_removed,
-  ): void;
+  on(event: 'remote-stream-added', listener: typeof event_remote_stream_added): void;
+  on(event: 'remote-stream-updated', listener: typeof event_remote_stream_updated): void;
+  on(event: 'remote-stream-removed', listener: typeof event_remote_stream_removed): void;
 
   // class room
   on(event: 'update-classroom', listener: typeof event_update_classroom): void;
 
   // state
   on(event: 'network-quality', listener: typeof event_network_quality): void;
-  on(
-    event: 'connection-state-change',
-    listener: typeof event_connection_state_changed,
-  ): void;
+  on(event: 'connection-state-change', listener: typeof event_connection_state_changed): void;
 
-  on(
-    event: 'local-video-state-update',
-    listener: typeof event_local_first_frame_render,
-  ): void;
-  on(
-    event: 'remote-video-state-update',
-    listener: typeof event_local_first_frame_render,
-  ): void;
+  on(event: 'local-video-state-update', listener: typeof event_local_first_frame_render): void;
+  on(event: 'remote-video-state-update', listener: typeof event_local_first_frame_render): void;
 
   getLocalUser(): EduUserData;
   // getClassroomInfo(): EduClassroomInfo;

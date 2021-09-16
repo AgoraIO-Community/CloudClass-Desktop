@@ -1,13 +1,6 @@
 import { useWatch } from '~ui-kit/utilities/hooks';
 import classnames from 'classnames';
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Card, Icon, Popover, t, Tooltip } from '~components';
 import { BaseHandsUpProps, HandsUpState, StudentInfo } from './types';
@@ -66,9 +59,7 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
     }
   });
 
-  const coVideoList = studentList.filter(
-    (student: StudentInfo) => !student.coVideo,
-  );
+  const coVideoList = studentList.filter((student: StudentInfo) => !student.coVideo);
 
   const content = useCallback(() => {
     return <StudentsHandsUpList onClick={onClick} students={coVideoList} />;
@@ -194,8 +185,16 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
           <div className="student-item" key={index}>
             <span className="student-name">{item?.userName}</span>
             <span className="operation-icon-wrap">
-              <SvgImg type="checked" onClick={() => onClick('confirm', item)} />
-              <SvgImg type="close" onClick={() => onClick('cancel', item)} />
+              <SvgImg
+                type="checked"
+                onClick={() => onClick('confirm', item)}
+                className="icon-wrap-svg checked"
+              />
+              <SvgImg
+                type="refuse"
+                onClick={() => onClick('cancel', item)}
+                className="icon-wrap-svg"
+              />
             </span>
           </div>
         ))}

@@ -1,8 +1,4 @@
-import {
-  CSSMotionProps,
-  MotionEventHandler,
-  MotionEndEventHandler,
-} from 'rc-motion';
+import { CSSMotionProps, MotionEventHandler, MotionEndEventHandler } from 'rc-motion';
 
 // ================== Collapse Motion ==================
 const getCollapsedHeight: MotionEventHandler = () => ({
@@ -33,11 +29,7 @@ const collapseMotion: CSSMotionProps = {
   motionDeadline: 500,
 };
 
-const getTransitionName = (
-  rootPrefixCls: string,
-  motion: string,
-  transitionName?: string,
-) => {
+const getTransitionName = (rootPrefixCls: string, motion: string, transitionName?: string) => {
   if (transitionName !== undefined) {
     return transitionName;
   }

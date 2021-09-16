@@ -1,11 +1,7 @@
 import { Chat, Icon } from '~components';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import {
-  useChatContext,
-  useGlobalContext,
-  useRoomContext,
-} from 'agora-edu-core';
+import { useChatContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
 import { useCallback, useEffect } from 'react';
 import { get } from 'lodash';
 import { useUIStore } from '@/infra/hooks';
@@ -43,8 +39,7 @@ export const RoomChat = observer(() => {
 
   const refreshMessageList = useCallback(
     async (args: any) => {
-      const res =
-        nextId !== 'last' && (await getHistoryChatMessage({ nextId, sort: 0 }));
+      const res = nextId !== 'last' && (await getHistoryChatMessage({ nextId, sort: 0 }));
       if (isMounted.current) {
         setNextID(get(res, 'nextId', 'last'));
       }

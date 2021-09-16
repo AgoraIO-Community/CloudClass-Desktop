@@ -27,11 +27,7 @@ export type AgoraExtAppContext = {
 };
 
 export type AgoraExtAppHandle = {
-  updateRoomProperty: (
-    properties: any,
-    common: any,
-    cause: any,
-  ) => Promise<void>;
+  updateRoomProperty: (properties: any, common: any, cause: any) => Promise<void>;
   deleteRoomProperties: (properties: string[], cause: any) => Promise<void>;
 };
 
@@ -41,11 +37,7 @@ export interface IAgoraExtApp {
   appName: string;
   width: number;
   height: number;
-  extAppDidLoad(
-    dom: Element,
-    ctx: AgoraExtAppContext,
-    handle: AgoraExtAppHandle,
-  ): void;
+  extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void;
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void;
   extAppWillUnload(): void;
 }
@@ -82,6 +74,7 @@ export interface IAgoraWidget {
   widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, widgetProps: any): void;
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void;
   widgetWillUnload(): void;
+  // TODO: sendMessage -> widget to outer, widgetDidReceiveMessage -> outer to widget
 }
 
 export type AgoraConvertedFile = {
@@ -186,6 +179,7 @@ export type AppStoreConfigParams = {
   userFlexProperties?: { [key: string]: any };
   mediaOptions?: MediaOptions;
   boardOptions?: BoardOptions;
+  latencyLevel?: 1 | 2;
 };
 
 export type LanguageEnum = 'en' | 'zh';
@@ -260,6 +254,7 @@ export type LaunchOption = {
   widgets?: { [key: string]: IAgoraWidget };
   userFlexProperties?: { [key: string]: any }; //用户自订属性
   mediaOptions?: MediaOptions;
+  latencyLevel?: 1 | 2;
 };
 
 export type AgoraEduSDKConfigParams = {
@@ -316,10 +311,7 @@ export type OssExistsFileInfo = {
   findInfo: string; //查询信息
 };
 
-export type PPTProgressListener = (
-  phase: PPTProgressPhase,
-  percent: number,
-) => void;
+export type PPTProgressListener = (phase: PPTProgressPhase, percent: number) => void;
 
 export enum PPTProgressPhase {
   Checking, //检测

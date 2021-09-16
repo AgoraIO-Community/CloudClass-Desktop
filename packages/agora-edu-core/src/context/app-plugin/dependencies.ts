@@ -1,10 +1,4 @@
-import {
-  WhiteWebSdk,
-  DeviceType,
-  createPlugins,
-  ViewMode,
-  ApplianceNames,
-} from 'white-web-sdk';
+import { WhiteWebSdk, DeviceType, createPlugins, ViewMode, ApplianceNames } from 'white-web-sdk';
 import { videoPlugin } from '@netless/white-video-plugin';
 import { audioPlugin } from '@netless/white-audio-plugin';
 

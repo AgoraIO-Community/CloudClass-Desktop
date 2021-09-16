@@ -206,7 +206,10 @@ input.indeterminate:indeterminate {
 }
 
 .cloud-wrap .table-container {
-  height: 400px;
+  height: 453px;
+}
+.cloud-wrap .table-container.upload-table-container {
+  height: 403px;
 }
 
 .cloud-wrap .table-container-upload .placeholder {

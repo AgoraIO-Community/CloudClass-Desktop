@@ -1,10 +1,6 @@
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import AgoraRTM from 'agora-rtm-sdk';
-import {
-  EduPeerMessageCmdType,
-  EduTextMessage,
-  EduCustomMessage,
-} from '../interfaces';
+import { EduPeerMessageCmdType, EduTextMessage, EduCustomMessage } from '../interfaces';
 import { MessageSerializer } from './../core/rtm/message-serializer';
 import { EduLogger } from './../core/logger';
 import { EventEmitter } from 'events';
@@ -79,6 +75,7 @@ export class EduManager extends EventEmitter {
       },
       scenarioType: this.config.scenarioType,
       userRole: this.config.userRole,
+      latencyLevel: this.config.latencyLevel ?? 2,
     };
     if (buildOption.platform === 'electron') {
       buildOption.electronLogPath = {
@@ -181,8 +178,7 @@ export class EduManager extends EventEmitter {
   get streamCoordinator(): AgoraWebStreamCoordinator | undefined {
     let sdkWrapper = this.mediaService.sdkWrapper;
     if (sdkWrapper instanceof AgoraWebRtcWrapper) {
-      return (this.mediaService.sdkWrapper as AgoraWebRtcWrapper)
-        .streamCoordinator;
+      return (this.mediaService.sdkWrapper as AgoraWebRtcWrapper).streamCoordinator;
     }
     return undefined;
   }
@@ -253,8 +249,7 @@ export class EduManager extends EventEmitter {
               data,
               requestId,
             );
-            const textMessage: EduTextMessage =
-              MessageSerializer.getEduPeerTextMessage(data);
+            const textMessage: EduTextMessage = MessageSerializer.getEduPeerTextMessage(data);
             this.emit('user-chat-message', {
               message: textMessage,
             });
@@ -266,8 +261,7 @@ export class EduManager extends EventEmitter {
               `subscribe custom，PeerMessage.${EduPeerMessageCmdType.customMessage}: `,
               data,
             );
-            const customMessage: EduCustomMessage =
-              MessageSerializer.getEduCustomMessage(data);
+            const customMessage: EduCustomMessage = MessageSerializer.getEduCustomMessage(data);
             EduLogger.info(`custom peer message, user-message`, customMessage);
             this.emit('user-message', {
               message: customMessage,
@@ -277,9 +271,7 @@ export class EduManager extends EventEmitter {
         }
         // this.fire('MessageFromPeer', evt)
       });
-      EduLogger.debug(
-        `rtm login userUuid: ${userUuid}, rtmToken: ${rtmToken} success`,
-      );
+      EduLogger.debug(`rtm login userUuid: ${userUuid}, rtmToken: ${rtmToken} success`);
       await rtmWrapper.login({
         userUuid,
         rtmToken,

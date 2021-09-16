@@ -27,10 +27,7 @@ export const Docs = () => (
     </div>
     <div className="mt-4">
       <Card width={258} height={113}>
-        <Loading
-          hasLoadingGif={false}
-          loadingText="课件加载中，请稍候…"
-          hasProgress></Loading>
+        <Loading hasLoadingGif={false} loadingText="课件加载中，请稍候…" hasProgress></Loading>
       </Card>
     </div>
     <div className="mt-4">
@@ -50,10 +47,7 @@ export const Docs = () => (
           loadingText="课件加载中，请稍候…"
           hasProgress
           currentProgress={99}
-          footer={[
-            <Button type="secondary">跳过</Button>,
-            <Button>确定</Button>,
-          ]}></Loading>
+          footer={[<Button type="secondary">跳过</Button>, <Button>确定</Button>]}></Loading>
       </Card>
     </div>
     <div className="mt-4">

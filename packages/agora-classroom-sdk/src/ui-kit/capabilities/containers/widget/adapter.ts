@@ -1,9 +1,5 @@
 import { useUIStore } from '@/infra/hooks';
-import {
-  useChatContext,
-  useGlobalContext,
-  useRoomContext,
-} from 'agora-edu-core';
+import { useChatContext, useGlobalContext, useRoomContext } from 'agora-edu-core';
 import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
 

@@ -5,11 +5,10 @@ export class ZoomController extends EventEmitter {
   private static readonly syncDuration: number = 200;
 
   private static readonly dividingRule: ReadonlyArray<number> = Object.freeze([
-    0.10737418240000011, 0.13421772800000012, 0.16777216000000014,
-    0.20971520000000016, 0.26214400000000015, 0.3276800000000002,
-    0.4096000000000002, 0.5120000000000001, 0.6400000000000001, 0.8, 1, 1.26,
-    1.5876000000000001, 2.000376, 2.5204737600000002, 3.1757969376000004,
-    4.001504141376, 5.041895218133761, 6.352787974848539, 8.00451284830916, 10,
+    0.10737418240000011, 0.13421772800000012, 0.16777216000000014, 0.20971520000000016,
+    0.26214400000000015, 0.3276800000000002, 0.4096000000000002, 0.5120000000000001,
+    0.6400000000000001, 0.8, 1, 1.26, 1.5876000000000001, 2.000376, 2.5204737600000002,
+    3.1757969376000004, 4.001504141376, 5.041895218133761, 6.352787974848539, 8.00451284830916, 10,
   ]);
 
   private tempRuleIndex?: number;
@@ -43,14 +42,8 @@ export class ZoomController extends EventEmitter {
       const point = dividingRule[i];
       const nextPoint = dividingRule[i + 1];
 
-      const begin =
-        prePoint === undefined
-          ? Number.MIN_SAFE_INTEGER
-          : (prePoint + point) / 2;
-      const end =
-        nextPoint === undefined
-          ? Number.MAX_SAFE_INTEGER
-          : (nextPoint + point) / 2;
+      const begin = prePoint === undefined ? Number.MIN_SAFE_INTEGER : (prePoint + point) / 2;
+      const end = nextPoint === undefined ? Number.MAX_SAFE_INTEGER : (nextPoint + point) / 2;
 
       if (scale >= begin && scale <= end) {
         return i;

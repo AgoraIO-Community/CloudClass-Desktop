@@ -1,11 +1,5 @@
 import classnames from 'classnames';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Subject } from 'rxjs';
 import { Button } from '~components/button';
@@ -46,8 +40,8 @@ export interface PretestProps extends BaseProps {
   onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
   onChangeAudioVolume?: (deviceType: string, value: number) => void;
   onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
-  videoComponent?: React.ReactElement;
-  volumeComponent?: React.ReactElement;
+  videoComponent?: any;
+  volumeComponent?: Function;
   pretestChannel: Subject<any>;
   isBeauty?: boolean;
   onSelectBeauty?: (isBeauty: boolean) => void;
@@ -74,7 +68,7 @@ const PretestComponent: React.FC<PretestProps> = ({
   microphoneError = false,
   className,
   videoComponent,
-  volumeComponent,
+  volumeComponent = () => {},
   onSelectMirror = (isMirror) => {},
   onChangeDevice = (deviceType, value) => {},
   onChangeAudioVolume = (deviceType, value) => {},
@@ -145,18 +139,13 @@ const PretestComponent: React.FC<PretestProps> = ({
     i18n: false,
   }));
 
-  const [noticeMessage, setMessage] = useState<
-    { id: string; type: 'video' | 'audio' }[]
-  >([]);
+  const [noticeMessage, setMessage] = useState<{ id: string; type: 'video' | 'audio' }[]>([]);
 
-  const removeMessages = (id: any) =>
-    setMessage((list) => list.filter((it: any) => it.id !== id));
+  const removeMessages = (id: any) => setMessage((list) => list.filter((it: any) => it.id !== id));
 
   const [toastQueue, setToastQueue] = useState<any[]>([]);
 
-  const [activeBeauty, setActiveBeauty] = useState<
-    'whitening' | 'buffing' | 'ruddy'
-  >('whitening');
+  const [activeBeauty, setActiveBeauty] = useState<'whitening' | 'buffing' | 'ruddy'>('whitening');
 
   const removeToast = (id: any) => {
     setToastQueue((oldArray) => oldArray.filter((it: any) => it.id !== id));
@@ -255,17 +244,12 @@ const PretestComponent: React.FC<PretestProps> = ({
   return (
     <div className={cls} {...restProps}>
       <div className="pretest-toast">
-        <PretestToastContainer
-          toastQueue={toastQueue}
-          removeToast={removeToast}
-        />
+        <PretestToastContainer toastQueue={toastQueue} removeToast={removeToast} />
       </div>
       <div className="pretest-left" style={{ width: 318 }}>
         <div className="device-choose">
           <div className="device-title">
-            <span className="device-title-text">
-              {transI18n('media.camera')}
-            </span>
+            <span className="device-title-text">{transI18n('media.camera')}</span>
             <div
               style={{
                 display: 'flex',
@@ -310,13 +294,9 @@ const PretestComponent: React.FC<PretestProps> = ({
               }}
               options={cameraOptions}></Select>
           </div>
-          <div
-            style={{
-              position: 'relative',
-              width: 320,
-              height: 180,
-            }}>
-            {videoComponent && React.cloneElement(videoComponent, {}, null)}
+          <div className="pretest-video-wrap">
+            {/* {videoComponent && React.cloneElement(videoComponent, {}, null)} */}
+            {videoComponent && videoComponent()}
             {isNative && isBeauty ? (
               <div className="beauty-operation-wrap">
                 <div className="beauty-operation-top">
@@ -372,9 +352,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                         setActiveBeauty(item as any);
                       }}>
                       <Icon type={item as any} useSvg size={18} />
-                      <div className="operation-item-desc">
-                        {transI18n(`media.${item}`)}
-                      </div>
+                      <div className="operation-item-desc">{transI18n(`media.${item}`)}</div>
                     </div>
                   ))}
                 </div>
@@ -386,9 +364,7 @@ const PretestComponent: React.FC<PretestProps> = ({
       <div className="pretest-right">
         <div className="device-choose">
           <div className="device-title">
-            <span className="device-title-text">
-              {transI18n('media.microphone')}
-            </span>
+            <span className="device-title-text">{transI18n('media.microphone')}</span>
           </div>
           <div className="select-section">
             <NoticeContainer
@@ -404,9 +380,7 @@ const PretestComponent: React.FC<PretestProps> = ({
           </div>
           {isNative ? (
             <div className="device-volume">
-              <span className="device-text">
-                {transI18n('media.microphone_volume')}
-              </span>
+              <span className="device-text">{transI18n('media.microphone_volume')}</span>
               <Slider
                 min={0}
                 max={100}
@@ -421,14 +395,12 @@ const PretestComponent: React.FC<PretestProps> = ({
           )}
           <div className="device-volume-test">
             <SvgImg type="microphone-on-outline" style={{ color: '#0073FF' }} />
-            {volumeComponent && React.cloneElement(volumeComponent, {}, null)}
+            {volumeComponent()}
           </div>
         </div>
         <div className="device-choose">
           <div className="device-title">
-            <span className="device-title-text">
-              {transI18n('media.speaker')}
-            </span>
+            <span className="device-title-text">{transI18n('media.speaker')}</span>
           </div>
           <Select
             value={speakerId}
@@ -453,11 +425,7 @@ const PretestComponent: React.FC<PretestProps> = ({
           )}
           <div className="device-volume-test">
             <SvgImg type="speaker" style={{ color: '#0073FF' }} />
-            <Volume
-              currentVolume={testLevel}
-              maxLength={33}
-              style={{ marginLeft: 6 }}
-            />
+            <Volume currentVolume={testLevel} maxLength={33} style={{ marginLeft: 6 }} />
             <Button
               disabled={disable}
               type="secondary"

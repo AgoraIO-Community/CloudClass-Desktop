@@ -25,11 +25,7 @@ export const Layout: FC<LayoutProps> = ({
   );
 };
 
-export const Header: FC<BaseProps> = ({
-  className,
-  children,
-  ...restProps
-}) => {
+export const Header: FC<BaseProps> = ({ className, children, ...restProps }) => {
   const cls = classnames({
     [`layout-header`]: 1,
     [`${className}`]: !!className,
@@ -54,11 +50,7 @@ export const Aside: FC<BaseProps> = ({ className, children, ...restProps }) => {
   );
 };
 
-export const Content: FC<BaseProps> = ({
-  className,
-  children,
-  ...restProps
-}) => {
+export const Content: FC<BaseProps> = ({ className, children, ...restProps }) => {
   const cls = classnames({
     [`layout-content`]: 1,
     [`${className}`]: !!className,

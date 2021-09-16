@@ -64,8 +64,7 @@ export const MessageList: FC<MessageListProps> = ({
       chatHistoryRef.current && handleScrollDown(chatHistoryRef.current);
     }
     if (scrollDirection.current === 'top' && chatHistoryRef.current) {
-      const position =
-        chatHistoryRef?.current.scrollHeight - currentHeight.current;
+      const position = chatHistoryRef?.current.scrollHeight - currentHeight.current;
       chatHistoryRef.current.scrollTo(0, position);
     }
   }, [messages.length, chatHistoryRef.current, scrollDirection.current]);
@@ -83,9 +82,7 @@ export const MessageList: FC<MessageListProps> = ({
     }
   };
 
-  const handleKeypress = async (
-    event: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
+  const handleKeypress = async (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter') {
       if (event.ctrlKey) {
         event.currentTarget.value += '\n';

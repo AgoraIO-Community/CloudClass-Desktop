@@ -26,13 +26,9 @@ export interface PlacementsConfig {
   autoAdjustOverflow?: boolean | AdjustOverflow;
 }
 
-export function getOverflowOptions(
-  autoAdjustOverflow?: boolean | AdjustOverflow,
-) {
+export function getOverflowOptions(autoAdjustOverflow?: boolean | AdjustOverflow) {
   if (typeof autoAdjustOverflow === 'boolean') {
-    return autoAdjustOverflow
-      ? autoAdjustOverflowEnabled
-      : autoAdjustOverflowDisabled;
+    return autoAdjustOverflow ? autoAdjustOverflowEnabled : autoAdjustOverflowDisabled;
   }
   return {
     ...autoAdjustOverflowDisabled,

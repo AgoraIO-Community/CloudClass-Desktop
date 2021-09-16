@@ -171,8 +171,7 @@ export const zh = {
     failed_to_end_screen_sharing: '结束屏幕共享失败',
     failed_to_initiate_screen_sharing_to_remote: '向远端发起屏幕共享失败',
     failed_to_enable_screen_sharing: '开启屏幕共享失败',
-    failed_to_enable_screen_sharing_permission_denied:
-      '开启屏幕共享失败！请先授权屏幕共享权限！',
+    failed_to_enable_screen_sharing_permission_denied: '开启屏幕共享失败！请先授权屏幕共享权限！',
     failed_to_send_chat: '发送聊天失败',
     failed_to_translate_chat: '翻译聊天失败',
     failed_to_send_reward: '发送奖励失败',
@@ -289,6 +288,7 @@ export const zh = {
     teacher_device_may_not_work: '老师视频可能出现问题！',
   },
   'biz-header': {
+    perf: 'Perf',
     setting: '设置',
     exit: '退出',
     recording: '录制中',

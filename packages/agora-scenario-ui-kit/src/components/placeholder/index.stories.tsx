@@ -1,10 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import {
-  Placeholder,
-  CameraPlaceHolder,
-  BoardPlaceHolder,
-} from '~components/placeholder';
+import { Placeholder, CameraPlaceHolder, BoardPlaceHolder } from '~components/placeholder';
 
 const meta: Meta = {
   title: 'Components/Placeholder',
@@ -18,42 +14,25 @@ type DocsProps = {
 export const Docs = ({ placeholderDesc }: DocsProps) => (
   <>
     <div className="mt-4">
-      <Placeholder placeholderDesc={placeholderDesc} />
+      <Placeholder />
     </div>
     <div className="mt-4">
-      <Placeholder
-        placeholderDesc={placeholderDesc}
-        placeholderType="cameraBroken"
-        backgroundColor="#F9F9FC"
-      />
+      <Placeholder placeholderType="noFile" />
     </div>
     <div className="mt-4">
-      <Placeholder
-        placeholderDesc={placeholderDesc}
-        placeholderType="cameraClose"
-        backgroundColor="#F9F9FC"
-      />
+      <Placeholder placeholderType="noQuestion" />
     </div>
     <div className="mt-4">
-      <Placeholder
-        placeholderDesc={placeholderDesc}
-        placeholderType="noBody"
-        backgroundColor="#F9F9FC"
-      />
+      <CameraPlaceHolder state="loading" />
     </div>
     <div className="mt-4">
-      <Placeholder
-        placeholderDesc={placeholderDesc}
-        placeholderType=""
-        backgroundColor="#F9F9FC"
-      />
+      <CameraPlaceHolder state="broken" />
+    </div>
+    <div className="mt-4">
+      <CameraPlaceHolder state="muted" />
     </div>
     <div className="mt-4">
       <CameraPlaceHolder state="disabled" />
-      {/* <Placeholder
-                placeholderDesc={placeholderDesc}
-                placeholderType="noFile"
-            /> */}
     </div>
     <div
       className="mt-4"

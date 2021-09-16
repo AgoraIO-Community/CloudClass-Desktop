@@ -15,11 +15,12 @@ import {
 } from '~ui-kit';
 
 export const DownloadContainer = observer(() => {
-  const { downloadList, openCloudResource, startDownload, deleteSingle } =
+  const { downloadList, openCloudResource, startDownload, deleteSingle, refreshCloudResources } =
     useCloudDriveContext();
 
-  const onResourceClick = async (id: string) => {
+  const onResourceClick = async (id: string, taskUuid: string) => {
     await openCloudResource(id);
+    await startDownload(taskUuid);
   };
 
   return (
@@ -33,18 +34,15 @@ export const DownloadContainer = observer(() => {
       <Table className="table-container">
         {downloadList.length ? (
           downloadList.map(
-            (
-              { id, name, progress, size, type, taskUuid, download }: any,
-              idx: number,
-            ) => (
+            ({ id, name, progress, size, type, taskUuid, download }: any, idx: number) => (
               <Row height={10} border={1} key={`${id}${idx}`}>
                 <Col
                   style={{ cursor: 'pointer', paddingLeft: 19 }}
                   onClick={() => {
-                    onResourceClick(id);
+                    onResourceClick(id, taskUuid);
                   }}>
                   <SvgImg type={type} style={{ marginRight: '6px' }} />
-                  <Inline className="filename" color="#191919">
+                  <Inline className="filename" color="#191919" title={name}>
                     {name}
                   </Inline>
                 </Col>
@@ -58,10 +56,7 @@ export const DownloadContainer = observer(() => {
                   </Inline>
                 </Col>
                 <Col>
-                  <Row
-                    className="btn-group no-padding"
-                    gap={10}
-                    style={{ paddingRight: 10 }}>
+                  <Row className="btn-group no-padding" gap={10} style={{ paddingRight: 10 }}>
                     {!download ? (
                       <Button
                         style={{ fontSize: 12 }}
@@ -78,10 +73,7 @@ export const DownloadContainer = observer(() => {
                         )}
                       </Button>
                     ) : (
-                      <Button
-                        style={{ fontSize: 12 }}
-                        type="secondary"
-                        disabled={progress === 100}>
+                      <Button style={{ fontSize: 12 }} type="secondary" disabled={progress === 100}>
                         {transI18n('cloud.downloading')}
                       </Button>
                     )}

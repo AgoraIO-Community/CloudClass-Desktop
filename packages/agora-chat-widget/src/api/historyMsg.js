@@ -19,15 +19,11 @@ export const getHistoryMessages = (roomId) => {
         const { action, id } = val;
         if (action == 'DEL') {
           deleteMsgId.push(msgId);
-          store.dispatch(
-            messageAction(val, { showNotice: false, isHistory: true }),
-          );
+          store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
         } else if (deleteMsgId.includes(id)) {
           return;
         } else {
-          store.dispatch(
-            messageAction(val, { showNotice: false, isHistory: true }),
-          );
+          store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
         }
       });
     },

@@ -3,10 +3,8 @@ import { useSelector } from 'react-redux';
 import { Switch, Tooltip, Input, Button, message, Modal } from 'antd';
 import { MSG_TYPE } from '../../contants';
 import store from '../../redux/store';
-import {
-  messageAction,
-  showEmojiAction,
-} from '../../redux/actions/messageAction';
+import { transI18n } from '~ui-kit';
+import { messageAction, showEmojiAction } from '../../redux/actions/messageAction';
 import { setAllmute, removeAllmute } from '../../api/mute';
 import { Emoji } from '../../utils/emoji';
 
@@ -87,8 +85,8 @@ export const InputMsg = ({ isTeacher }) => {
   const sendTextMessage = () => (e) => {
     e.preventDefault();
     // 消息为空不发送
-    if (content === '') {
-      message.error(`消息内容不能为空！`);
+    if (content.match(/^\s*$/)) {
+      message.error(transI18n('chat.enter_content_is_empty'));
       return;
     }
     let id = WebIM.conn.getUniqueId(); // 生成本地消息id
@@ -115,7 +113,7 @@ export const InputMsg = ({ isTeacher }) => {
       fail: function (err) {
         console.log('fail>>>', err);
         if (err.type === 501) {
-          message.error('消息内容包含敏感词，请重新发送！');
+          message.error(transI18n('chat.message_incloud_illegal_content'));
         }
       },
     };
@@ -134,7 +132,7 @@ export const InputMsg = ({ isTeacher }) => {
           <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
           {isTeacher && (
             <div>
-              <span className="all-mute-text">全体禁言</span>
+              <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
               <Switch
                 size="small"
                 checked={isAllMute}
@@ -146,7 +144,7 @@ export const InputMsg = ({ isTeacher }) => {
           )}
         </div>
         <Input.TextArea
-          placeholder="请输入消息"
+          placeholder={transI18n('chat.enter_contents')}
           className="input-chat"
           autoFocus
           onChange={(e) => changeMsg(e)}
@@ -155,11 +153,8 @@ export const InputMsg = ({ isTeacher }) => {
           ref={inputRef}
         />
         <div className="input-btn">
-          <Button
-            type="primary"
-            className="send-btn"
-            onClick={sendTextMessage()}>
-            发送
+          <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
+            {transI18n('chat.send')}
           </Button>
         </div>
       </div>

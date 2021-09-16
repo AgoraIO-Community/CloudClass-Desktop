@@ -20,11 +20,9 @@ import { VideoList } from '~capabilities/containers/video-player';
 import { Widget } from '~capabilities/containers/widget';
 import { Aside, Content, Layout } from '~components/layout';
 import { LoadingPptContainer } from '~capabilities/containers/loading/loading-ppt';
+import { RootBox } from '~ui-kit';
 
 export const OneToOneScenario = observer(() => {
-  const { initCourseWareProgress, initCourseWareLoading } =
-    useCloudDriveContext();
-
   const { isFullScreen } = useGlobalContext();
 
   const { widgets } = useWidgetContext();
@@ -59,47 +57,43 @@ export const OneToOneScenario = observer(() => {
   const className = 'normal';
 
   return (
-    <Layout
-      className={cls}
-      direction="col"
-      style={{
-        height: '100vh',
-      }}>
-      <NavigationBar />
-      <Layout className="horizontal">
-        <Content>
-          <WhiteboardContainer>
-            <ScreenSharePlayerContainer />
-          </WhiteboardContainer>
-        </Content>
-        <Aside
-          className={classnames({
-            'one-class-aside': 1,
-            'one-class-aside-full': isFullScreen,
-          })}>
-          <VideoList />
-          {chatroomId ? (
-            <Widget
-              key={chatroomId}
-              className="chat-panel"
-              widgetComponent={chatWidget}
-              widgetProps={{ chatroomId, orgName, appName }}
-            />
-          ) : (
-            <Widget
-              key={chatroomId}
-              className="chat-panel chat-border"
-              widgetComponent={chatWidget}
-            />
-          )}
-        </Aside>
+    <RootBox>
+      <Layout className={cls} direction="col">
+        <NavigationBar />
+        <Layout className="horizontal">
+          <Content>
+            <WhiteboardContainer>
+              <ScreenSharePlayerContainer />
+            </WhiteboardContainer>
+          </Content>
+          <Aside
+            className={classnames({
+              'one-class-aside': 1,
+              'one-class-aside-full': isFullScreen,
+            })}>
+            <VideoList />
+            {chatroomId ? (
+              <Widget
+                key={chatroomId}
+                className="chat-panel"
+                widgetComponent={chatWidget}
+                // TODO: the same design as native mobile
+                widgetProps={{ chatroomId, orgName, appName, isFullScreen }}
+              />
+            ) : (
+              <Widget
+                key={chatroomId}
+                className="chat-panel chat-border"
+                widgetComponent={chatWidget}
+              />
+            )}
+          </Aside>
+        </Layout>
+        <LoadingPptContainer />
+        <DialogContainer />
+        <LoadingContainer loading={isJoiningRoom} />
+        {/* <ToastContainer /> */}
       </Layout>
-      <LoadingPptContainer
-        initCourseWareProgress={initCourseWareProgress}
-        initCourseWareLoading={initCourseWareLoading}></LoadingPptContainer>
-      <DialogContainer />
-      <LoadingContainer loading={isJoiningRoom} />
-      <ToastContainer />
-    </Layout>
+    </RootBox>
   );
 });

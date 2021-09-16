@@ -213,37 +213,22 @@ export declare interface IAgoraRTCModule {
 
   changePlaybackVolume(volume: number): void;
 
-  enableMediaEncryptionConfig(
-    enabled: boolean,
-    config: MediaEncryptionConfig,
-  ): void;
+  enableMediaEncryptionConfig(enabled: boolean, config: MediaEncryptionConfig): void;
 
   // muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any>
 
   // muteRemoteAudioByClient(client: any, uid: string, val: boolean): Promise<any>
 
   on(event: 'error', listener: (err: any) => void): void;
-  on(
-    event: 'audio-device-changed',
-    listener: typeof event_device_changed,
-  ): void;
-  on(
-    event: 'video-device-changed',
-    listener: typeof event_device_changed,
-  ): void;
+  on(event: 'audio-device-changed', listener: typeof event_device_changed): void;
+  on(event: 'video-device-changed', listener: typeof event_device_changed): void;
   on(event: 'user-joined', listener: (evt: any) => void): void;
   on(event: 'user-left', listener: (evt: any) => void): void;
   on(event: 'user-info-updated', listener: (evt: any) => void): void;
   on(event: 'token-privilege-will-expire', listener: (evt: any) => void): void;
   on(event: 'token-privilege-did-expire', listener: (evt: any) => void): void;
-  on(
-    event: 'connection-state-change',
-    listener: (state: any, reason: any) => void,
-  ): void;
-  on(
-    event: 'stream-fallback',
-    listener: (state: any, reason: any) => void,
-  ): void;
+  on(event: 'connection-state-change', listener: (state: any, reason: any) => void): void;
+  on(event: 'stream-fallback', listener: (state: any, reason: any) => void): void;
   on(event: 'network-quality', listener: (stats: any) => void): void;
   on(event: 'volume-indicator', listener: (result: any[]) => void): void;
 }
@@ -264,6 +249,7 @@ export declare interface RTCProviderInitParams {
     logPath: string;
     videoSourceLogPath: string;
   };
+  latencyLevel?: 1 | 2;
 }
 
 export declare interface StartScreenShareParams {

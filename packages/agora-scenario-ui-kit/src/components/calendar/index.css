@@ -108,9 +108,7 @@
   margin-top: 0;
 }
 
-.react-datepicker-popper[data-placement^='bottom']
-  .ag-calendar
-  .react-datepicker__triangle {
+.react-datepicker-popper[data-placement^='bottom'] .ag-calendar .react-datepicker__triangle {
   margin-top: 0;
   border: 0;
 }
@@ -136,8 +134,7 @@
 }
 
 .ag-calendar .react-datepicker__day--selected.react-datepicker__day--today,
-.ag-calendar
-  .react-datepicker__day--selected.react-datepicker__day--today:hover {
+.ag-calendar .react-datepicker__day--selected.react-datepicker__day--today:hover {
   background-color: #357bf6;
   border-radius: 100%;
   box-shadow: none;

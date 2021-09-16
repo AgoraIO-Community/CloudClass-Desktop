@@ -9,7 +9,7 @@ import {
 import Draggable from 'react-draggable';
 import { Dependencies } from './dependencies';
 import { eduSDKApi } from 'agora-edu-core';
-import { Modal, transI18n } from '~ui-kit';
+import { Modal, transI18n, Z_INDEX_CONST } from '~ui-kit';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 // import { transI18n } from '~components/i18n';
 
@@ -28,15 +28,7 @@ export const AppPluginItem = observer(
     const ref = useRef<HTMLDivElement | null>(null);
     const { contextInfo } = useAppPluginContext();
 
-    const {
-      userUuid,
-      userName,
-      userRole,
-      roomName,
-      roomUuid,
-      roomType,
-      language,
-    } = contextInfo;
+    const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo;
 
     useEffect(() => {
       if (ref.current) {
@@ -59,11 +51,7 @@ export const AppPluginItem = observer(
             language: language,
           },
           {
-            updateRoomProperty: async (
-              properties: any,
-              common: any,
-              cause: {},
-            ) => {
+            updateRoomProperty: async (properties: any, common: any, cause: {}) => {
               return await eduSDKApi.updateExtAppProperties(
                 roomUuid,
                 app.appIdentifier,
@@ -92,17 +80,9 @@ export const AppPluginItem = observer(
         handle=".modal-title"
         defaultPosition={{
           x: window.innerWidth / 2 - app.width / 2,
-          y: window.innerHeight / 2 - app.height / 2 - 100,
+          y: window.innerHeight / 2 - app.height / 2,
         }}
-        bounds={['countdown'].includes(app.appName) ? '.whiteboard' : 'body'}
-        positionOffset={{
-          x: 0,
-          y: ['countdown'].includes(app.appName)
-            ? studentStreams.length
-              ? 40 + 170
-              : 40
-            : 0,
-        }}>
+        bounds={'body'}>
         <Modal
           title={transI18n(`${app.appName}.appName`)}
           width={app.width}
@@ -124,12 +104,8 @@ export const AppPluginItem = observer(
 );
 
 export const AppPluginContainer = observer(() => {
-  const {
-    activeAppPlugins,
-    appPluginProperties,
-    onShutdownAppPlugin,
-    contextInfo,
-  } = useAppPluginContext();
+  const { activeAppPlugins, appPluginProperties, onShutdownAppPlugin, contextInfo } =
+    useAppPluginContext();
   const { roomInfo } = useRoomContext();
   const closable = roomInfo.userRole === EduRoleTypeEnum.teacher; // 老师能关闭， 学生不能关闭
   return (
@@ -140,34 +116,32 @@ export const AppPluginContainer = observer(() => {
         top: 0,
         width: 0,
         height: 0,
-        zIndex: 999,
+        zIndex: Z_INDEX_CONST.zIndexExtApp,
       }}>
-      {Array.from(activeAppPlugins.values()).map(
-        (app: IAgoraExtApp, idx: number) => (
-          <AppPluginItem
-            key={app.appIdentifier}
-            app={app}
-            properties={appPluginProperties(app)}
-            closable={closable}
-            onCancel={async () => {
-              await eduSDKApi.updateExtAppProperties(
-                contextInfo.roomUuid,
-                app.appIdentifier,
-                {
-                  state: '0',
-                  startTime: '0',
-                  pauseTime: '0',
-                  duration: '0',
-                },
-                {
-                  state: 0,
-                },
-                {},
-              );
-              onShutdownAppPlugin(app.appIdentifier);
-            }}></AppPluginItem>
-        ),
-      )}
+      {Array.from(activeAppPlugins.values()).map((app: IAgoraExtApp, idx: number) => (
+        <AppPluginItem
+          key={app.appIdentifier}
+          app={app}
+          properties={appPluginProperties(app)}
+          closable={closable}
+          onCancel={async () => {
+            await eduSDKApi.updateExtAppProperties(
+              contextInfo.roomUuid,
+              app.appIdentifier,
+              {
+                state: '0',
+                startTime: '0',
+                pauseTime: '0',
+                duration: '0',
+              },
+              {
+                state: 0,
+              },
+              {},
+            );
+            onShutdownAppPlugin(app.appIdentifier);
+          }}></AppPluginItem>
+      ))}
     </div>
   );
 });

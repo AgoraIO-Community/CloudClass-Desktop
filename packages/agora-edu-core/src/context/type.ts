@@ -7,19 +7,11 @@ import {
 } from 'agora-rte-sdk';
 import { Subject } from 'rxjs';
 import { Room } from 'white-web-sdk';
-import {
-  AppStoreInitParams,
-  CourseWareItem,
-  LanguageEnum,
-  RoomInfo,
-} from '../api/declare';
+import { AppStoreInitParams, CourseWareItem, LanguageEnum, RoomInfo } from '../api/declare';
 import { MaterialDataResource } from '../services/upload-service';
 import { StorageCourseWareItem } from '../types';
 
-export type DeviceErrorCallback = (evt: {
-  type: 'video' | 'audio';
-  error: boolean;
-}) => void;
+export type DeviceErrorCallback = (evt: { type: 'video' | 'audio'; error: boolean }) => void;
 
 export type Resource = {
   file: {
@@ -87,10 +79,7 @@ export type ChatContext = {
    * @param name 名称
    * @version v1.1.0
    */
-  getHistoryChatMessage: (data: {
-    nextId: string;
-    sort: number;
-  }) => Promise<any>;
+  getHistoryChatMessage: (data: { nextId: string; sort: number }) => Promise<any>;
   /**
    * 消息列表
    * @version v1.1.0
@@ -261,16 +250,63 @@ export type VolumeContext = {
    * @version v1.1.2
    */
   microphoneLevel: number;
+  speakers: any;
 };
 export type PretestContext = {
+  /**
+   * 是否开启美颜
+   * @version v1.1.5
+   */
   isBeauty: boolean;
+  /**
+   * 设置是否开启美颜
+   * @param isBeauty 是否开启
+   * @version v1.1.5
+   */
   setBeauty: (isBeauty: boolean) => void;
+  /**
+   * 当前美白数值
+   * @version v1.1.5
+   */
   whitening: number;
+  /**
+   * 当前磨皮数值
+   * @version v1.1.5
+   */
   buffing: number;
+  /**
+   * 当前红润数值
+   * @version v1.1.5
+   */
   ruddy: number;
+  /**
+   * 设置美白
+   * @param whitening 美白数值
+   * @version v1.1.5
+   */
   setWhitening: (whitening: number) => void;
+  /**
+   * 设置磨皮
+   * @param buffing 磨皮数值
+   * @version v1.1.5
+   */
   setBuffing: (buffing: number) => void;
+  /**
+   * 设置红润
+   * @param ruddy 红润数值
+   * @version v1.1.5
+   */
   setRuddy: (ruddy: number) => void;
+  /**
+   * 调用rtc设置美颜功能。
+   * @param object {
+   *  lighteningLevel = 70,
+   *  rednessLevel = 10,
+   *  smoothnessLevel = 50,
+   *  isBeauty = true,
+   * }
+   * @version v1.1.5
+   */
   setBeautyEffectOptions: any;
   /**
    * 摄像头是否错误
@@ -348,9 +384,7 @@ export type PretestContext = {
    * 开启麦克风
    * @version v1.1.0
    */
-  startPretestMicrophone: (payload: {
-    enableRecording: boolean;
-  }) => Promise<void>;
+  startPretestMicrophone: (payload: { enableRecording: boolean }) => Promise<void>;
   /**
    * 关闭麦克风
    * @version v1.1.0
@@ -368,6 +402,12 @@ export type PretestContext = {
    * @version v1.1.0
    */
   changeTestMicrophone: (deviceId: string) => Promise<void>;
+  /**
+   * 切换扬声器
+   * @param deviceId 扬声器设备ID
+   * @version v1.1.5
+   */
+  changeTestSpeaker: (deviceId: string) => Promise<void>;
   /**
    * 改变麦克风设备的音量
    * @param value 麦克采集的音量
@@ -429,10 +469,7 @@ export type ScreenShareContext = {
    * @param type 分享类型, 默认为窗口
    * @version v1.1.2
    */
-  startNativeScreenShareBy: (
-    windowId: number,
-    type?: ScreenShareType,
-  ) => Promise<void>;
+  startNativeScreenShareBy: (windowId: number, type?: ScreenShareType) => Promise<void>;
   /**
    * 当前是否允许屏幕共享
    * @version v1.1.2
@@ -442,6 +479,7 @@ export type ScreenShareContext = {
 export type RoomContext = {
   /**
    * 是否成功加入了房间
+   * @version v1.1.5
    */
   joined: boolean;
   /**
@@ -560,11 +598,7 @@ export type RoomContext = {
    * @param streamUuid 查询目标用户流Uuid
    * @version v1.1.2
    */
-  queryCameraDeviceState: (
-    userList: EduUser[],
-    userUuid: string,
-    streamUuid: string,
-  ) => any;
+  queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
   /**
    * 查询麦克风设备状态
    * @param userList 查询的用户列表
@@ -572,11 +606,7 @@ export type RoomContext = {
    * @param streamUuid 查询目标用户流Uuid
    * @version v1.1.2
    */
-  queryMicrophoneDeviceState: (
-    userList: EduUser[],
-    userUuid: string,
-    streamUuid: string,
-  ) => any;
+  queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
   /**
    * 是否正在加载房间
    * @version v1.1.2
@@ -597,13 +627,25 @@ export type RoomContext = {
    * @version v1.1.2
    */
   flexRoomProperties: any;
-  setCarouselState: any;
   /**
-   * startCarousel
+   * 开启轮播功能
+   * @param range 轮播范围
+   * @param type 轮播顺序类型
+   * @param interval 轮播时间间隔
+   * @version v1.1.5
    */
-  startCarousel: () => Promise<any>;
+  startCarousel: ({
+    range,
+    type,
+    interval,
+  }: {
+    range: number;
+    type: number;
+    interval: number;
+  }) => Promise<any>;
   /**
-   * stopCarousel
+   * 停止轮播
+   * @version v1.1.5
    */
   stopCarousel: () => Promise<any>;
 };
@@ -670,18 +712,26 @@ export type GlobalContext = {
    * @version v1.1.0
    */
   dialogEventObserver: Subject<any>;
+  /**
+   * region区域
+   * @version v1.1.5
+   */
+  region: string;
 };
 export type BoardContext = {
   /**
    * 白板连接状态
+   * @version v1.1.5
    */
   boardConnectionState: string;
   /**
    * 加入白板
+   * @version v1.1.5
    */
   joinBoard: () => Promise<any>;
   /**
    * 离开白板
+   * @version v1.1.5
    */
   leaveBoard: () => Promise<any>;
   /**
@@ -1005,10 +1055,7 @@ export type UserListContext = {
    * @param whiteboardGranted 给与/不给与权限
    * @version v1.1.2
    */
-  toggleWhiteboardPermission: (
-    userUuid: string,
-    whiteboardGranted: boolean,
-  ) => Promise<any>;
+  toggleWhiteboardPermission: (userUuid: string, whiteboardGranted: boolean) => Promise<any>;
   /**
    * 切换视频开关
    * @param userUuid 用户uuid
@@ -1359,6 +1406,11 @@ export type MediaContext = {
    */
   changeMicrophone: (deviceId: string) => Promise<void>;
   /**
+   * 切换扬声器
+   * @version v1.1.2
+   */
+  changeSpeaker: (deviceId: string) => Promise<void>;
+  /**
    * 设置扬声器设备音量，仅electron
    * @version v1.1.2
    */
@@ -1370,15 +1422,17 @@ export type MediaContext = {
   changeMicrophoneVolume: (v: number) => Promise<void>;
   /**
    * 设置视频加密
-   * @version v1.1.4
+   * @version v1.1.5
    */
   enableMediaEncryption(enabled: boolean, config: any): number;
   /**
    * 获取麦克风采集声音的音量
+   * @version v1.1.5
    */
   getAudioRecordingVolume: () => number;
   /**
    * 获取扬声器播放声音的音量
+   * @version v1.1.5
    */
   getAudioPlaybackVolume: () => number;
 };

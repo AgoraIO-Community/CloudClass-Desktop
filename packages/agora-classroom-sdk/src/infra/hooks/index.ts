@@ -13,9 +13,7 @@ export const useHomeStore = (): HomeStore => {
 export type HomeContext = Record<string, HomeStore>;
 
 export type AudienceParams = Record<string, any>;
-export const useAudienceParams = (
-  params?: string,
-): string | { [key: string]: any } | null => {
+export const useAudienceParams = (params?: string): string | { [key: string]: any } | null => {
   const searchString = location.href.split('?').pop();
   const urlParams = new URLSearchParams(searchString);
   const audienceParams: Record<string, any> = {};

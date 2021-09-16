@@ -1,10 +1,6 @@
 import { Meta } from '@storybook/react';
 import React, { useCallback, useState, useEffect } from 'react';
-import {
-  HandsUpManager,
-  HandsUpSender,
-  HandsUpState,
-} from '~components/hands-up';
+import { HandsUpManager, HandsUpSender, HandsUpState } from '~components/hands-up';
 import { StudentInfo } from './types';
 
 const meta: Meta = {
@@ -42,15 +38,11 @@ export const Docs = ({ handsUpState }: any) => {
   const handleUpdateList = useCallback(
     (type: string, info: StudentInfo) => {
       if (type === 'confirm') {
-        updateList(
-          list.filter((stu: StudentInfo) => stu.userUuid !== info?.userUuid),
-        );
+        updateList(list.filter((stu: StudentInfo) => stu.userUuid !== info?.userUuid));
       }
 
       if (type === 'cancel') {
-        updateList(
-          list.filter((stu: StudentInfo) => stu.userUuid !== info?.userUuid),
-        );
+        updateList(list.filter((stu: StudentInfo) => stu.userUuid !== info?.userUuid));
       }
     },
     [list, updateList],

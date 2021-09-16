@@ -1,11 +1,7 @@
 .react-countdown-component {
   display: flex;
   justify-content: center;
-  --a: linear-gradient(
-    to bottom,
-    #e8ecf0 0%,
-    #f5f7f9 50%
-  ); /** 上卡片背景颜色 **/
+  --a: linear-gradient(to bottom, #e8ecf0 0%, #f5f7f9 50%); /** 上卡片背景颜色 **/
   --b: rgba(16, 21, 26, 0.05); /** 中间线的颜色**/
   --c: linear-gradient(to bottom, #f5f7f9, #ffffff); /** 下卡片背景颜色 **/
   --boxWidth: 120px;
@@ -85,8 +81,8 @@
   line-height: var(--boxHeight);
   margin: 0 0.05em;
   border-radius: 0.25em;
-  box-shadow: 0 20px 30px -10px rgba(76, 99, 119, 0.1),
-    inset 0 -1px 0 0 rgba(76, 99, 119, 0.3), inset 0 1px 0 0 #fff;
+  box-shadow: 0 20px 30px -10px rgba(76, 99, 119, 0.1), inset 0 -1px 0 0 rgba(76, 99, 119, 0.3),
+    inset 0 1px 0 0 #fff;
 }
 
 .react-countdown-component .time-box:before {

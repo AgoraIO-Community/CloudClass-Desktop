@@ -2,8 +2,7 @@ const threadLoader = require('thread-loader');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // const config = require('dotenv').config().parsed
 
@@ -16,9 +15,7 @@ const packageInfo = require('./package.json');
 
 const babelConfig = packageInfo.babel;
 
-console.log(
-  `run edu-core webpack isProd ${isProd}, NODE_ENV: ${process.env.NODE_ENV}`,
-);
+console.log(`run edu-core webpack isProd ${isProd}, NODE_ENV: ${process.env.NODE_ENV}`);
 
 module.exports = {
   entry: {

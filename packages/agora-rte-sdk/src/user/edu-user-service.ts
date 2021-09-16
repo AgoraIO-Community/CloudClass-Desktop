@@ -19,11 +19,7 @@ import {
 } from '../interfaces';
 import { EduClassroomDataController } from '../room/edu-classroom-data-controller';
 import { EduClassroomManager } from '../room/edu-classroom-manager';
-import {
-  defaultOperatorUser,
-  OperatorUser,
-  defaultCause,
-} from './../room/types';
+import { defaultOperatorUser, OperatorUser, defaultCause } from './../room/types';
 
 export interface EduModelViewOption {
   dom: HTMLElement;
@@ -135,12 +131,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       },
       updateTime: res.ts,
     });
-    this.data.upsertLocalStream(
-      'main',
-      screenStreamData,
-      defaultOperatorUser,
-      defaultCause,
-    );
+    this.data.upsertLocalStream('main', screenStreamData, defaultOperatorUser, defaultCause);
     return {
       streamUuid: res.streamUuid,
       rtcToken: res.rtcToken,
@@ -157,11 +148,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
       '[EDU-STATE] unpublish stream remove local stream, streamUuid: ',
       stream.streamUuid,
     );
-    this.data.removeLocalStream(
-      stream.streamUuid,
-      defaultOperatorUser,
-      defaultCause,
-    );
+    this.data.removeLocalStream(stream.streamUuid, defaultOperatorUser, defaultCause);
   }
 
   async sendRoomMessage(message: string) {
@@ -186,10 +173,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
     });
   }
 
-  async sendUserChatMessage(
-    message: string,
-    remoteUser: EduUser,
-  ): Promise<any> {
+  async sendUserChatMessage(message: string, remoteUser: EduUser): Promise<any> {
     await this.apiService.sendUserChatMessage({
       message,
       remoteUser,
@@ -198,11 +182,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
   }
 
   public async updateRoomProperties2(properties: any, cause?: CauseType) {
-    await this.apiService.batchUpdateRoomAttributes(
-      this.roomUuid,
-      properties,
-      cause,
-    );
+    await this.apiService.batchUpdateRoomAttributes(this.roomUuid, properties, cause);
   }
 
   public async updateRoomProperties(record: Record<string, any>) {
@@ -253,22 +233,17 @@ export class EduUserService extends EventEmitter implements IEduUserService {
   }
 
   public async startShareScreen() {
-    if (
-      this.screenStream &&
-      this.screenStream.stream &&
-      this.screenStream.stream.streamUuid
-    ) {
-      const { rtcToken, streamUuid, ts } =
-        await this.apiService.upsertBizStream({
-          roomUuid: this.roomUuid,
-          userUuid: this.localUserUuid,
-          streamName: this.screenStream.stream.streamName,
-          streamUuid: this.screenStream.stream.streamUuid,
-          videoSourceType: this.screenStream.stream.videoSourceType,
-          audioSourceType: this.screenStream.stream.audioSourceType,
-          videoState: true,
-          audioState: false,
-        } as any);
+    if (this.screenStream && this.screenStream.stream && this.screenStream.stream.streamUuid) {
+      const { rtcToken, streamUuid, ts } = await this.apiService.upsertBizStream({
+        roomUuid: this.roomUuid,
+        userUuid: this.localUserUuid,
+        streamName: this.screenStream.stream.streamName,
+        streamUuid: this.screenStream.stream.streamUuid,
+        videoSourceType: this.screenStream.stream.videoSourceType,
+        audioSourceType: this.screenStream.stream.audioSourceType,
+        videoState: true,
+        audioState: false,
+      } as any);
       const screenStreamData = new EduStreamData({
         state: 1,
         streamUuid: streamUuid,
@@ -285,12 +260,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         },
         updateTime: ts,
       });
-      this.data.upsertLocalStream(
-        'screen',
-        screenStreamData,
-        defaultOperatorUser,
-        defaultCause,
-      );
+      this.data.upsertLocalStream('screen', screenStreamData, defaultOperatorUser, defaultCause);
     } else {
       const stream: EduStreamData = new EduStreamData({
         state: 1,
@@ -317,17 +287,11 @@ export class EduUserService extends EventEmitter implements IEduUserService {
         videoSourceType: EduVideoSourceType.screen,
         audioSourceType: EduAudioSourceType.mic,
       };
-      const { rtcToken, streamUuid, ts } =
-        await this.apiService.upsertBizStream(params);
+      const { rtcToken, streamUuid, ts } = await this.apiService.upsertBizStream(params);
       stream.setRtcToken(rtcToken);
       stream.updateStreamUuid(streamUuid);
       stream.updateTime(ts);
-      this.data.upsertLocalStream(
-        'screen',
-        stream,
-        defaultOperatorUser,
-        defaultCause,
-      );
+      this.data.upsertLocalStream('screen', stream, defaultOperatorUser, defaultCause);
     }
   }
 
@@ -409,12 +373,8 @@ export class EduUserService extends EventEmitter implements IEduUserService {
     // const prevVideoState = +this.localStream.stream.hasVideo
     // const curAudioState = args.hasOwnProperty('audioState') ? +args['audioState']: prevAudioState
     // const curVideoState = args.hasOwnProperty('videoState') ? +args['videoState'] : prevVideoState
-    const videoState: any = args.hasOwnProperty('videoState')
-      ? +args.videoState
-      : undefined;
-    const audioState: any = args.hasOwnProperty('audioState')
-      ? +args.audioState
-      : undefined;
+    const videoState: any = args.hasOwnProperty('videoState') ? +args.videoState : undefined;
+    const audioState: any = args.hasOwnProperty('audioState') ? +args.audioState : undefined;
     const params = {
       videoSourceType: this.localStream.stream.videoSourceType,
       audioSourceType: this.localStream.stream.audioSourceType,
@@ -549,10 +509,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
    * 批量更新流属性
    * @param streams
    */
-  public async batchUpdateStreamAttributes(
-    streams: EduStreamAttribute[],
-    cause?: CauseType,
-  ) {
+  public async batchUpdateStreamAttributes(streams: EduStreamAttribute[], cause?: CauseType) {
     await this.apiService.batchUpdateStreamAttributes(streams, cause);
   }
 
@@ -560,10 +517,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
    * 批量移除流属性
    * @param streams
    */
-  public async batchRemoveStreamAttributes(
-    streams: BatchStreamAttribute[],
-    cause?: CauseType,
-  ) {
+  public async batchRemoveStreamAttributes(streams: BatchStreamAttribute[], cause?: CauseType) {
     await this.apiService.batchRemoveStreamAttributes(streams, cause);
   }
 
@@ -587,11 +541,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
    * @param properties
    */
   public async batchRemoveUserAttributes(userUuid: string, cause?: CauseType) {
-    await this.apiService.batchRemoveUserAttributes(
-      this.roomUuid,
-      userUuid,
-      cause,
-    );
+    await this.apiService.batchRemoveUserAttributes(this.roomUuid, userUuid, cause);
   }
 
   /**
@@ -599,11 +549,7 @@ export class EduUserService extends EventEmitter implements IEduUserService {
    * @param properties
    */
   public async batchUpdateRoomAttributes(properties: any, cause?: CauseType) {
-    await this.apiService.batchUpdateRoomAttributes(
-      this.roomUuid,
-      properties,
-      cause,
-    );
+    await this.apiService.batchUpdateRoomAttributes(this.roomUuid, properties, cause);
   }
 
   /**

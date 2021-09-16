@@ -8,15 +8,9 @@ import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AgoraEduEvent, AgoraEduSDK, scenarioRoomPath } from '../../api';
-import {
-  ClassRoom,
-  ClassRoomAbstractStore,
-  controller,
-} from '../../api/controller';
-
-//@ts-ignore
-window.controller = controller;
+import { AgoraEduEvent, AgoraEduSDK } from '../../api';
+import { ClassRoom, ClassRoomAbstractStore } from '../../api/controller';
+import { transI18n } from '~ui-kit';
 
 const ChatWidgetFactory = (region: string) => {
   if (region.toUpperCase() === 'CN') {
@@ -44,54 +38,52 @@ export const LaunchPage = observer(() => {
   const mountLaunch = useCallback(
     async (dom: any) => {
       if (dom) {
-        AgoraEduSDK.setParameters(
-          JSON.stringify({
-            'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
-            reportUrl: `${REACT_APP_REPORT_URL}`,
-            reportQos: `${REACT_APP_REPORT_QOS}`,
-            reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
-            'edu.routesMap': {
-              pretestPath: '/pretest',
-              defaultRoutePath: scenarioRoomPath[0],
-              routesPath: scenarioRoomPath,
-            },
-          }),
-        );
+        // TODO: guarantee using default sdkDomain in production SDK_DOMAIN
+        if (`${REACT_APP_AGORA_APP_SDK_DOMAIN}`.match('api.agora.io')) {
+          AgoraEduSDK.setParameters(
+            JSON.stringify({
+              reportUrl: `${REACT_APP_REPORT_URL}`,
+              reportQos: `${REACT_APP_REPORT_QOS}`,
+              reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
+            }),
+          );
+        } else {
+          // TODO: guarantee test env using customize sdkDomain
+          AgoraEduSDK.setParameters(
+            JSON.stringify({
+              'edu.apiUrl': `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+              reportUrl: `${REACT_APP_REPORT_URL}`,
+              reportQos: `${REACT_APP_REPORT_QOS}`,
+              reportV1Url: `${REACT_APP_V1_REPORT_URL}`,
+            }),
+          );
+        }
         AgoraEduSDK.config({
           appId: launchOption.appId ?? `${REACT_APP_AGORA_APP_ID}`,
           region: launchOption.region ?? 'CN',
         });
         // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
         // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
-        const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`;
-        if (appCertificate) {
-          launchOption.rtmToken = RtmTokenBuilder.buildToken(
-            `${REACT_APP_AGORA_APP_ID}`,
-            appCertificate,
-            launchOption.userUuid,
-            RtmRole.Rtm_User,
-            0,
-          );
-        }
+        // const appCertificate = `${REACT_APP_AGORA_APP_CERTIFICATE}`;
+        // if (appCertificate) {
+        //   launchOption.rtmToken = RtmTokenBuilder.buildToken(
+        //     `${REACT_APP_AGORA_APP_ID}`,
+        //     appCertificate,
+        //     launchOption.userUuid,
+        //     RtmRole.Rtm_User,
+        //     0,
+        //   );
+        // }
 
-        launchOption.extApps = [
-          new AgoraExtAppCountDown(launchOption.language as any),
-        ];
+        launchOption.extApps = [new AgoraExtAppCountDown(launchOption.language as any)];
         const genH5Scenes = (size: number) => {
-          return new Array(size)
-            .fill(1)
-            .map((_, index) => ({ name: `${index + 1}` }));
+          return new Array(size).fill(1).map((_, index) => ({ name: `${index + 1}` }));
         };
 
-        const size = 10;
+        const size = 14;
 
         roomRef.current = await AgoraEduSDK.launch(dom, {
           ...launchOption,
-          widgets: {
-            ...{
-              chat: ChatWidgetFactory(launchOption.region!),
-            },
-          },
           // boardOptions: {
           //   userPayload: {
           //     cursorName: ""
@@ -103,10 +95,8 @@ export const LaunchPage = observer(() => {
             : `https://webdemo.agora.io/flexible-classroom/record_page`,
           courseWareList: [
             {
-              resourceName: 'H5课件',
-              resourceUuid: `h5${MD5(
-                'https://demo-h5.netless.group/dist2020/',
-              )}`,
+              resourceName: transI18n('whiteboard.h5-courseWare'),
+              resourceUuid: `h5${MD5('https://demo-h5.netless.group/dist2020/')}`,
               ext: 'h5',
               url: 'https://demo-h5.netless.group/dist2020/',
               conversion: {
@@ -127,7 +117,7 @@ export const LaunchPage = observer(() => {
             },
             {
               isActive: true,
-              resourceName: 'test课件',
+              resourceName: transI18n('whiteboard.test-courseWare'),
               resourceUuid: `h5${MD5(
                 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
               )}1`,

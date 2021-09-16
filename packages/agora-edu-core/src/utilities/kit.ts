@@ -6,9 +6,6 @@ import MD5 from 'js-md5';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { ApplianceNames, Room } from 'white-web-sdk';
-import { agoraCaches } from './cache';
-import OSS from 'ali-oss';
-import { get } from 'lodash';
 
 const OSS_PREFIX = '';
 
@@ -42,25 +39,14 @@ export interface UserAttrs {
 
 export const resolveFileInfo = (file: any) => {
   const fileName = encodeURI(file.name);
-  const fileType = fileName.substring(
-    fileName.length,
-    fileName.lastIndexOf('.'),
-  );
+  const fileType = fileName.substring(fileName.length, fileName.lastIndexOf('.'));
   return {
     fileName,
     fileType,
   };
 };
 
-const level = [
-  'unknown',
-  'excellent',
-  'good',
-  'poor',
-  'bad',
-  'very bad',
-  'down',
-];
+const level = ['unknown', 'excellent', 'good', 'poor', 'bad', 'very bad', 'down'];
 
 export function NetworkQualityEvaluation(evt: {
   downlinkNetworkQuality: number;
@@ -72,8 +58,7 @@ export function NetworkQualityEvaluation(evt: {
 }
 
 export function CustomBtoa(input: any) {
-  let keyStr =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  let keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   let output = '';
   let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
   let i = 0;
@@ -93,11 +78,7 @@ export function CustomBtoa(input: any) {
     } else if (isNaN(chr3)) {
       enc4 = 64;
     }
-    output +=
-      keyStr.charAt(enc1) +
-      keyStr.charAt(enc2) +
-      keyStr.charAt(enc3) +
-      keyStr.charAt(enc4);
+    output += keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
   }
   return output;
 }
@@ -155,9 +136,7 @@ export class CustomStorage {
   }
 
   getLanguage() {
-    const language = this.read(this.languageKey)
-      ? this.read(this.languageKey)
-      : navigator.language;
+    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
     return language;
   }
 
@@ -168,9 +147,7 @@ export class CustomStorage {
         count: 0,
         messages: [],
       };
-    const messages = channelMessages.filter(
-      (it: any) => it.message_type === 'group_message',
-    );
+    const messages = channelMessages.filter((it: any) => it.message_type === 'group_message');
     const chatMessages = messages.reduce((collect: any[], value: any) => {
       const payload = value.payload;
       const json = JSON.parse(payload);
@@ -254,8 +231,7 @@ export const getImageSize = (imageInnerSize: BaseImageSize): BaseImageSize => {
     width: window.innerWidth,
     height: window.innerHeight,
   };
-  const widthHeightProportion: number =
-    imageInnerSize.width / imageInnerSize.height;
+  const widthHeightProportion: number = imageInnerSize.width / imageInnerSize.height;
   const maxSize: number = 960;
   if (
     (imageInnerSize.width > maxSize && windowSize.width > maxSize) ||
@@ -273,10 +249,7 @@ export const getImageSize = (imageInnerSize: BaseImageSize): BaseImageSize => {
       };
     }
   } else {
-    if (
-      imageInnerSize.width > windowSize.width ||
-      imageInnerSize.height > windowSize.height
-    ) {
+    if (imageInnerSize.width > windowSize.width || imageInnerSize.height > windowSize.height) {
       if (widthHeightProportion > 1) {
         return {
           width: windowSize.width,
@@ -305,9 +278,7 @@ export type FetchImageResult = {
   url: string;
 };
 
-export const fetchNetlessImageByUrl = async (
-  url: string,
-): Promise<FetchImageResult> => {
+export const fetchNetlessImageByUrl = async (url: string): Promise<FetchImageResult> => {
   try {
     const res = await fetch(url);
     const blob = await res.blob();
@@ -343,10 +314,7 @@ export const fetchNetlessImageByUrl = async (
   }
 };
 
-export const netlessInsertImageOperation = async (
-  room: Room,
-  imageFile: NetlessImageFile,
-) => {
+export const netlessInsertImageOperation = async (room: Room, imageFile: NetlessImageFile) => {
   const { x, y } = await room.convertToPointInWorld({
     x: imageFile.coordinateX,
     y: imageFile.coordinateY,
@@ -425,56 +393,13 @@ export const getDeviceLabelFromStorage = (type: string) => {
   return mediaDeviceStorage[type];
 };
 
-export const startDownload = async (
-  isNative: boolean,
-  taskUuid: string,
-  callback: (progress: number) => any,
-) => {
-  // if (isNative) {
-  //   const controller = new AbortController();
-  //     const resourcesHost = "convertcdn.netless.link";
-  //     const signal = controller.signal;
-  //     const zipUrl = `https://${resourcesHost}/dynamicConvert/${taskUuid}.zip`;
-  //     const res = await fetch(zipUrl, {
-  //         method: "get",
-  //         signal: signal,
-  //     }).then(fetchProgress({
-  //         onProgress: (progress: any) => {
-  //           if (progress.hasOwnProperty('percentage')) {
-  //             callback(get(progress, 'percentage'))
-  //           }
-  //         },
-  //     }));
-  //   console.log("native端 课件下载完成")
-  // } else {
-  await agoraCaches.startDownload(
-    taskUuid,
-    (progress: number, controller: any) => {
-      callback(progress);
-    },
-  );
-  console.log('web端 课件下载完成');
-  // }
-};
-
-export const showOriginText = (
-  userRole: EduRoleTypeEnum,
-  messageFromRole: string,
-): boolean => {
-  const fromStudent = ['broadcaster', 'invisible', 'audience'].includes(
-    messageFromRole,
-  );
+export const showOriginText = (userRole: EduRoleTypeEnum, messageFromRole: string): boolean => {
+  const fromStudent = ['broadcaster', 'invisible', 'audience'].includes(messageFromRole);
   const fromTeacher = ['host', 'assistant'].includes(messageFromRole);
-  if (
-    [EduRoleTypeEnum.invisible, EduRoleTypeEnum.student].includes(userRole) &&
-    fromStudent
-  ) {
+  if ([EduRoleTypeEnum.invisible, EduRoleTypeEnum.student].includes(userRole) && fromStudent) {
     return true;
   }
-  if (
-    [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(userRole) &&
-    fromTeacher
-  ) {
+  if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(userRole) && fromTeacher) {
     return true;
   }
   return false;
@@ -489,10 +414,7 @@ export const showMaskText = (text: string, sensitiveWords: string[]) => {
   return text;
 };
 
-export const filterChatText = (
-  userRole: EduRoleTypeEnum,
-  message: EduTextMessage,
-) => {
+export const filterChatText = (userRole: EduRoleTypeEnum, message: EduTextMessage) => {
   const fromUser = message.fromUser;
   const chatText = message.message;
   if (showOriginText(userRole, fromUser.role)) {
@@ -504,10 +426,7 @@ export const filterChatText = (
 
 export type BytesType = number | string;
 
-export const fileSizeConversionUnit = (
-  fileBytes: BytesType,
-  decimalPoint?: number,
-) => {
+export const fileSizeConversionUnit = (fileBytes: BytesType, decimalPoint?: number) => {
   const bytes = +fileBytes;
   if (bytes == 0) return '- -';
   const k = 1000,
@@ -523,9 +442,7 @@ export class BizLogger {
 
   private static get currentTime(): string {
     const date = new Date();
-    return `${
-      date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()
-    }`;
+    return `${date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()}`;
   }
 
   static setLogLevel(enabled: boolean) {
@@ -571,17 +488,13 @@ export class BizLogger {
       },
       INFO: {
         call: () => {
-          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },
       ERROR: {
         call: () => {
-          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },
@@ -596,11 +509,9 @@ export class BizLogger {
   }
 }
 
-export const isElectron =
-  window.isElectron || window.agoraBridge ? true : false;
+export const isElectron = window.isElectron || window.agoraBridge ? true : false;
 
-export const platform =
-  window.isElectron || window.agoraBridge ? 'electron' : 'web';
+export const platform = window.isElectron || window.agoraBridge ? 'electron' : 'web';
 
 BizLogger.info(`CURRENT RUNTIME: ${platform}`);
 
@@ -641,9 +552,7 @@ export const registerWorker = (workerPath: string) => {
   }
 };
 
-export const useStorageSWContext = (
-  workerPath: string = './serviceWorker.js',
-) => {
+export const useStorageSWContext = (workerPath: string = './serviceWorker.js') => {
   useEffect(() => {
     registerWorker(workerPath);
   }, [registerWorker, workerPath]);
@@ -653,11 +562,10 @@ export class ZoomController extends EventEmitter {
   private static readonly syncDuration: number = 200;
 
   private static readonly dividingRule: ReadonlyArray<number> = Object.freeze([
-    0.10737418240000011, 0.13421772800000012, 0.16777216000000014,
-    0.20971520000000016, 0.26214400000000015, 0.3276800000000002,
-    0.4096000000000002, 0.5120000000000001, 0.6400000000000001, 0.8, 1, 1.26,
-    1.5876000000000001, 2.000376, 2.5204737600000002, 3.1757969376000004,
-    4.001504141376, 5.041895218133761, 6.352787974848539, 8.00451284830916, 10,
+    0.10737418240000011, 0.13421772800000012, 0.16777216000000014, 0.20971520000000016,
+    0.26214400000000015, 0.3276800000000002, 0.4096000000000002, 0.5120000000000001,
+    0.6400000000000001, 0.8, 1, 1.26, 1.5876000000000001, 2.000376, 2.5204737600000002,
+    3.1757969376000004, 4.001504141376, 5.041895218133761, 6.352787974848539, 8.00451284830916, 10,
   ]);
 
   private tempRuleIndex?: number;
@@ -691,14 +599,8 @@ export class ZoomController extends EventEmitter {
       const point = dividingRule[i];
       const nextPoint = dividingRule[i + 1];
 
-      const begin =
-        prePoint === undefined
-          ? Number.MIN_SAFE_INTEGER
-          : (prePoint + point) / 2;
-      const end =
-        nextPoint === undefined
-          ? Number.MAX_SAFE_INTEGER
-          : (nextPoint + point) / 2;
+      const begin = prePoint === undefined ? Number.MIN_SAFE_INTEGER : (prePoint + point) / 2;
+      const end = nextPoint === undefined ? Number.MAX_SAFE_INTEGER : (nextPoint + point) / 2;
 
       if (scale >= begin && scale <= end) {
         return i;

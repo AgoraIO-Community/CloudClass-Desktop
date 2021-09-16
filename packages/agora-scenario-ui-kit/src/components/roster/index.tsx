@@ -14,14 +14,7 @@ import './index.css';
 
 export * from './user-list';
 
-export type ActionTypes =
-  | 'podium'
-  | 'whiteboard'
-  | 'camera'
-  | 'mic'
-  | 'kickOut'
-  | 'chat'
-  | string;
+export type ActionTypes = 'podium' | 'whiteboard' | 'camera' | 'mic' | 'kickOut' | 'chat' | string;
 
 export enum MediaDeviceState {
   not_available = 0,
@@ -82,6 +75,10 @@ export interface RosterProps extends ModalProps {
    */
   columns?: Column[];
   /**
+   * 排除列
+   */
+  excludeColumns?: ColumnKey[];
+  /**
    * 数据源
    */
   dataSource?: Profile[];
@@ -119,6 +116,7 @@ export interface RosterProps extends ModalProps {
 export const Roster: FC<RosterProps> = ({
   teacherName,
   columns = defaultColumns,
+  excludeColumns = [],
   dataSource = [],
   onClick,
   onClose = () => console.log('onClose'),
@@ -188,18 +186,16 @@ export const Roster: FC<RosterProps> = ({
 
   const studentList = studentListSort(dataSource);
 
-  const cols = columns.filter(
-    ({ visibleRoles = [] }: Column) =>
-      visibleRoles.length === 0 || visibleRoles.includes(userType),
-  );
+  const cols = columns
+    .filter((col: Column) => !excludeColumns.includes(col.key))
+    .filter(
+      ({ visibleRoles = [] }: Column) =>
+        visibleRoles.length === 0 || visibleRoles.includes(userType),
+    );
 
   const DraggableContainer = useCallback(
     ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {
-      return isDraggable ? (
-        <Draggable cancel={cancel}>{children}</Draggable>
-      ) : (
-        <>{children}</>
-      );
+      return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>;
     },
     [isDraggable],
   );
@@ -216,9 +212,7 @@ export const Roster: FC<RosterProps> = ({
   };
 
   const blurTimesFn = (e: any) => {
-    let result = Number(
-      e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi, ''),
-    );
+    let result = Number(e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi, ''));
     if (result < 10) {
       result = 10;
     }
@@ -238,9 +232,7 @@ export const Roster: FC<RosterProps> = ({
             }}
           />
         </div>
-        <div className="main-title">
-          {title ?? transI18n('roster.user_list')}
-        </div>
+        <div className="main-title">{title ?? transI18n('roster.user_list')}</div>
         <div className="roster-container">
           <div className="search-header roster-header">
             <div className="search-teacher-name">
@@ -258,9 +250,7 @@ export const Roster: FC<RosterProps> = ({
                     checked={carouselProps.isOpenCarousel}
                     onChange={carouselProps.changeCarousel}
                   />
-                  <span className="carousel-desc">
-                    {transI18n('roster.shift')}
-                  </span>
+                  <span className="carousel-desc">{transI18n('roster.shift')}</span>
                 </div>
                 <div className="disable-flag" style={{ width: 105 }}>
                   <Select
@@ -299,11 +289,7 @@ export const Roster: FC<RosterProps> = ({
                 <div className="carousel-frequency">
                   <span className="">{transI18n('roster.order_every')}</span>
                   <div className="carousel-frequency-input">
-                    <Input
-                      value={currentTimes}
-                      onChange={changeTimesFn}
-                      onBlur={blurTimesFn}
-                    />
+                    <Input value={currentTimes} onChange={changeTimesFn} onBlur={blurTimesFn} />
                   </div>
                   <span className="">{transI18n('roster.seconds')}</span>
                 </div>
@@ -346,10 +332,7 @@ export const Roster: FC<RosterProps> = ({
                           }}
                           onClick={
                             canOperate(userType, localUserUuid, data, col)
-                              ? () =>
-                                  col.action &&
-                                  onClick &&
-                                  onClick(col.action, data.uid)
+                              ? () => col.action && onClick && onClick(col.action, data.uid)
                               : undefined
                           }>
                           {(data as any)[col.key]}
@@ -366,10 +349,7 @@ export const Roster: FC<RosterProps> = ({
                                 canOperate(userType, localUserUuid, data, col),
                                 userType,
                                 canOperate(userType, localUserUuid, data, col)
-                                  ? () =>
-                                      col.action &&
-                                      onClick &&
-                                      onClick(col.action, data.uid)
+                                  ? () => col.action && onClick && onClick(col.action, data.uid)
                                   : undefined,
                               )
                             : (data as any)[col.key]}

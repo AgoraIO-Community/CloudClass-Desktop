@@ -50,20 +50,20 @@
 }
 .biz-signal-quality.popover-open {
 }
-.biz-signal-quality.excellent {
-  color: #0bad69;
+.biz-signal-quality.excellent path {
+  fill: #0bad69;
 }
 
-.biz-signal-quality.good {
-  color: #f5b723;
+.biz-signal-quality.good path {
+  fill: #f5b723;
 }
 
-.biz-signal-quality.bad {
-  color: #f04c36;
+.biz-signal-quality.bad path {
+  fill: #f04c36;
 }
 
-.biz-signal-quality.unknown {
-  color: #666;
+.biz-signal-quality.unknown path {
+  fill: #bdbdca;
 }
 
 .biz-signal-content-row {

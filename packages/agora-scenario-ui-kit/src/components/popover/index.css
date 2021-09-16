@@ -50,8 +50,8 @@
   background-color: #fff;
   background-clip: padding-box;
   border-radius: 2px;
-  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.15) \9;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
 }
@@ -60,8 +60,8 @@
     /* IE10+ */
   }
   .popover-inner {
-    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
   }
 }
 .popover-title {

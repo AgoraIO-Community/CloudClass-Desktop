@@ -9,31 +9,20 @@ import { setUserMute, removeUserMute } from './api/mute';
 
 // import './index.css'
 
-export const HXChatRoom = ({ pluginStore, sendMsg, onReceivedMsg }) => {
+export const HXChatRoom = ({ pluginStore }) => {
   return (
     // <React.StrictMode>
     <Provider store={store}>
       <MemoryRouter>
-        <App
-          pluginStore={pluginStore}
-          sendMsg={sendMsg}
-          onReceivedMsg={onReceivedMsg}
-        />
+        <App pluginStore={pluginStore} />
       </MemoryRouter>
     </Provider>
     // </React.StrictMode>
   );
 };
 
-export const renderHXChatRoom = (dom, pluginStore, sendMsg, onReceivedMsg) => {
-  ReactDOM.render(
-    <HXChatRoom
-      pluginStore={pluginStore}
-      sendMsg={sendMsg}
-      onReceivedMsg={onReceivedMsg}
-    />,
-    dom,
-  );
+export const renderHXChatRoom = (dom, pluginStore) => {
+  ReactDOM.render(<HXChatRoom pluginStore={pluginStore} />, dom);
 };
 
 // 单人禁言

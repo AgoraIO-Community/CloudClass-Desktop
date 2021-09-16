@@ -2,9 +2,7 @@ import { ReactNode } from 'react';
 
 export type RenderFunction = () => ReactNode;
 
-export const getRenderPropValue = (
-  propValue?: ReactNode | RenderFunction,
-): ReactNode => {
+export const getRenderPropValue = (propValue?: ReactNode | RenderFunction): ReactNode => {
   if (!propValue) {
     return null;
   }

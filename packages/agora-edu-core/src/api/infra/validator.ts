@@ -1,11 +1,4 @@
-import {
-  isArray,
-  isBoolean,
-  isEmpty,
-  isFunction,
-  isNumber,
-  isString,
-} from 'lodash';
+import { isArray, isBoolean, isEmpty, isFunction, isNumber, isString } from 'lodash';
 import { AgoraEduSDKConfigParams, LaunchOption } from '../declare';
 import { EduRoleTypeEnum } from 'agora-rte-sdk';
 
@@ -98,15 +91,11 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
       EduRoleTypeEnum.teacher,
     ].includes(option.roleType)
   ) {
-    throw new AgoraSDKError(
-      `${option.roleType}, roleType parameter is invalid`,
-    );
+    throw new AgoraSDKError(`${option.roleType}, roleType parameter is invalid`);
   }
 
   if (![0, 2, 4].includes(option.roomType)) {
-    throw new AgoraSDKError(
-      `${option.roomType}, roomType parameter is invalid`,
-    );
+    throw new AgoraSDKError(`${option.roomType}, roomType parameter is invalid`);
   }
 
   if (isEmpty(option.roomName)) {
@@ -129,13 +118,8 @@ export const checkLaunchOption = (dom: Element, option: LaunchOption) => {
     throw new AgoraSDKError('courseWareList parameter should be valid array');
   }
 
-  if (
-    option.personalCourseWareList &&
-    !isArray(option.personalCourseWareList)
-  ) {
-    throw new AgoraSDKError(
-      'personalCourseWareList parameter should be valid array',
-    );
+  if (option.personalCourseWareList && !isArray(option.personalCourseWareList)) {
+    throw new AgoraSDKError('personalCourseWareList parameter should be valid array');
   }
 
   // if (option.userUuid && option.userUuid.length > 89) {

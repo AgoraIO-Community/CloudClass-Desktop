@@ -9,6 +9,9 @@ export const zh = {
     converting: '转换中',
     'disconnect-img-alt': '白板未连接',
     'disconnect-btn': '重新连接',
+    'courseWare-loading': '课件加载中，请稍候…',
+    'h5-courseWare': 'H5课件',
+    'test-courseWare': 'test课件',
   },
   screen_share: '屏幕共享',
   kick: {
@@ -181,8 +184,7 @@ export const zh = {
     failed_to_end_screen_sharing: '结束屏幕共享失败',
     failed_to_initiate_screen_sharing_to_remote: '向远端发起屏幕共享失败',
     failed_to_enable_screen_sharing: '开启屏幕共享失败',
-    failed_to_enable_screen_sharing_permission_denied:
-      '开启屏幕共享失败！请先授权屏幕共享权限！',
+    failed_to_enable_screen_sharing_permission_denied: '开启屏幕共享失败！请先授权屏幕共享权限！',
     failed_to_send_chat: '发送聊天失败',
     failed_to_translate_chat: '翻译聊天失败',
     failed_to_send_reward: '发送奖励失败',
@@ -227,6 +229,9 @@ export const zh = {
     reward_limit: '奖杯已全部发完',
     chat_enable: '禁言模式开启',
     chat_disable: '禁言模式关闭',
+    upload_failure: '上传失败',
+    download_success: '下载成功',
+    download_failure: '下载失败',
   },
   end_class_confirm: '确定要结束教室吗？',
   notice: {
@@ -263,6 +268,7 @@ export const zh = {
     operation: '操作',
     updated_at: '修改时间',
     publicResources: '公共资源',
+    deleteTip: '确认删除所选文件吗？',
     personalResources: '我的资源',
     downloadResources: '下载资源',
     upload: '上传',
@@ -298,11 +304,13 @@ export const zh = {
     detect_new_device: '检测到新设备，请使用！',
     camera_move_out: '摄像头被拔出，无法显示视频！',
     mic_move_out: '麦克风被拔出！',
+    device_move_out: '设备被拔出！',
     device_not_working: '设备未正常工作！',
     detect_new_device_in_room: '检测到新设备，请点击“设置”后，选择新设备。',
     teacher_device_may_not_work: '老师视频可能出现问题！',
   },
   'biz-header': {
+    perf: 'Perf',
     setting: '设置',
     exit: '退出',
     recording: '录制中',
@@ -416,5 +424,8 @@ export const zh = {
     seconds: '秒',
     start: '开始',
     restart: '重新开始',
+  },
+  confirm: {
+    delete: '删除提示',
   },
 };

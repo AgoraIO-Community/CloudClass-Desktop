@@ -10,15 +10,7 @@ import {
   PrepareScreenShareParams,
 } from 'agora-rte-sdk';
 import { isEmpty, get } from 'lodash';
-import {
-  observable,
-  action,
-  autorun,
-  toJS,
-  computed,
-  reaction,
-  runInAction,
-} from 'mobx';
+import { observable, action, autorun, toJS, computed, reaction, runInAction } from 'mobx';
 import { EduBoardService } from '../services/edu-board-service';
 import { EduRecordService } from '../services/edu-record-service';
 import { eduSDKApi } from '../services/edu-sdk-api';
@@ -168,9 +160,7 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
 
   @computed
   get activeExtApps(): IAgoraExtApp[] {
-    return this.allExtApps.filter((app) =>
-      this.activeExtAppIds.includes(app.appIdentifier),
-    );
+    return this.allExtApps.filter((app) => this.activeExtAppIds.includes(app.appIdentifier));
   }
 
   @observable
@@ -204,16 +194,14 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
   @observable
   lifeCycleState: APaaSInternalState = APaaSInternalState.Idle;
 
-  constructor(
-    params: AppStoreInitParams,
-    dom: HTMLElement,
-    appController: any,
-  ) {
+  constructor(params: AppStoreInitParams, dom: HTMLElement, appController: any) {
     super();
     appController.subscribe({
       onControllerDestroy: this.destroy,
     });
     this.appController = appController;
+    //@ts-ignore
+    window.globalStore = this;
     this.lifeCycleState = super.getLifeCycleState();
     reaction(
       () => this.lifeCycleState,
@@ -248,9 +236,9 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations:
-          this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
+        latencyLevel: config.latencyLevel ?? 2,
       });
     } else {
       this.eduManager = new EduManager({
@@ -266,9 +254,9 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
         rtmArea: config.rtmArea,
         sdkDomain: sdkDomain,
         scenarioType: roomInfoParams?.roomType,
-        cameraEncoderConfigurations:
-          this.params.config.mediaOptions?.cameraEncoderConfiguration,
+        cameraEncoderConfigurations: this.params.config.mediaOptions?.cameraEncoderConfiguration,
         userRole: roomInfoParams?.userRole,
+        latencyLevel: config.latencyLevel ?? 2,
       });
     }
 
@@ -471,6 +459,7 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
   @action.bound
   async releaseRoom() {
     try {
+      await this.sceneStore.stopRTCSharing();
       await this.roomStore.leave();
       reportService.stopHB();
       reportServiceV2.reportApaasUserQuit(new Date().getTime(), 0);
@@ -478,10 +467,7 @@ export class EduScenarioAppStore extends APaaSLifeCycle {
     } catch (err) {
       this.resetStates();
       const exception = GenericErrorWrapper(err);
-      reportServiceV2.reportApaasUserQuit(
-        new Date().getTime(),
-        err.code || err.message,
-      );
+      reportServiceV2.reportApaasUserQuit(new Date().getTime(), err.code || err.message);
       throw exception;
     }
   }

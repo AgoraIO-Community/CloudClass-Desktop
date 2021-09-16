@@ -23,9 +23,6 @@ export const CoreContextProvider = ({
     () => new EduScenarioAppStore(params, dom, controller),
   );
 
-  //@ts-ignore
-  window.globalStore = store;
-
   return <CoreContext.Provider value={store}>{children}</CoreContext.Provider>;
 };
 
@@ -46,5 +43,4 @@ export const useSceneStore = () => useCoreContext().sceneStore;
 
 export const useWidgetStore = () => useCoreContext().widgetStore;
 
-export const useSmallClassStore = () =>
-  useCoreContext().roomStore.smallClassStore;
+export const useSmallClassStore = () => useCoreContext().roomStore.smallClassStore;

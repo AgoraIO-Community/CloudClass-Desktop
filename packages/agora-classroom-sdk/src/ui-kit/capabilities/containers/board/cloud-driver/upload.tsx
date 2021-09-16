@@ -24,17 +24,28 @@ export interface UploadContainerProps {
 
 export const UploadContainer: React.FC<UploadContainerProps> = observer(
   ({ handleUpdateCheckedItems }) => {
-    const { openCloudResource, personalResources } = useCloudDriveContext();
+    const { openCloudResource, personalResources, startDownload } = useCloudDriveContext();
 
     const { updateChecked } = useUIStore();
 
-    const [checkMap, setCheckMap] = React.useState<Record<string, any>>({});
+    const [checkMap, setCheckMap] = React.useState<Record<string, any>>({}); // TODO：多选的值类型建议用数组结构，待优化
 
     React.useEffect(() => {
-      handleUpdateCheckedItems(
-        Object.keys(checkMap).filter((it) => !!checkMap[it]),
-      );
+      handleUpdateCheckedItems(Object.keys(checkMap).filter((it) => !!checkMap[it]));
     }, [checkMap, handleUpdateCheckedItems]);
+
+    /**
+     * 列表长度变化时，需要同步check的状态（删除的时候）
+     */
+    React.useEffect(() => {
+      const oldCheckMap = { ...checkMap };
+      for (let key of Object.keys(checkMap)) {
+        if (personalResources.findIndex((it) => it.id === key) === -1) {
+          delete oldCheckMap[key];
+        }
+      }
+      setCheckMap(oldCheckMap);
+    }, [personalResources.length]);
 
     const items = React.useMemo(() => {
       return personalResources.map((it: any) => ({
@@ -53,9 +64,7 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(
 
     const isSelectAll: any = React.useMemo(() => {
       const selected = items.filter((item: any) => !!item.checked);
-      return items.length > 0 && selected.length === items.length
-        ? true
-        : false;
+      return items.length > 0 && selected.length === items.length ? true : false;
     }, [items, checkMap]);
 
     const handleSelectAll = useCallback(
@@ -104,8 +113,9 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(
       [items, checkMap],
     );
 
-    const onResourceClick = async (resourceUuid: string) => {
+    const onResourceClick = async (resourceUuid: string, taskUuid: string) => {
       await openCloudResource(resourceUuid);
+      await startDownload(taskUuid);
     };
 
     return (
@@ -121,13 +131,10 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(
           <Col>{transI18n('cloud.size')}</Col>
           <Col>{transI18n('cloud.updated_at')}</Col>
         </TableHeader>
-        <Table className="table-container ">
+        <Table className="table-container upload-table-container">
           {items.length ? (
             items.map(
-              (
-                { id, name, size, updateTime, type, checked }: any,
-                idx: number,
-              ) => (
+              ({ id, name, size, updateTime, type, checked, taskUuid }: any, idx: number) => (
                 <Row height={10} border={1} key={idx}>
                   <Col style={{ paddingLeft: 19 }} width={9}>
                     <CheckBox
@@ -140,10 +147,10 @@ export const UploadContainer: React.FC<UploadContainerProps> = observer(
                   <Col
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      onResourceClick(id);
+                      onResourceClick(id, taskUuid);
                     }}>
                     <SvgImg type={type} style={{ marginRight: '6px' }} />
-                    <Inline className="filename" color="#191919">
+                    <Inline className="filename" color="#191919" title={name}>
                       {name}
                     </Inline>
                   </Col>

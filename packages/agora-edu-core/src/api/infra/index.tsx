@@ -5,9 +5,16 @@ import { AgoraEduSDKConfigParams, LaunchOption } from '../declare';
 import { CoreContextProvider } from '../../context/core';
 import { globalConfigs } from '../../utilities/config';
 import { eduSDKApi } from '../../services/edu-sdk-api';
-import { controller } from './controller';
 import { checkConfigParams, checkLaunchOption } from './validator';
 // import { setRoutesMap, defaultRoutePath } from "./resolver"
+// @ts-ignore
+import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
+import { MainController } from './controller';
+
+const controller = new MainController();
+
+// //@ts-ignore
+// window.AgCtrl = controller;
 
 export type AgoraEduBoardScene = SceneDefinition;
 
@@ -18,6 +25,13 @@ export type AgoraEduCourseWare = {
   scenes: AgoraEduBoardScene[];
   url: string;
   type: string;
+};
+
+export const ChatWidgetFactory = (region: string) => {
+  if (region.toUpperCase() === 'CN') {
+    return new AgoraHXChatWidget();
+  }
+  return new AgoraChatWidget();
 };
 
 type SDKConfig = {
@@ -32,8 +46,7 @@ const sdkConfig: SDKConfig = {
 
 const getLiveRoomPath = (roomType: number) => {
   return (
-    globalConfigs.routesMap.routesPath[roomType]?.path ??
-    globalConfigs.routesMap.defaultRoutePath
+    globalConfigs.routesMap.routesPath[roomType]?.path ?? globalConfigs.routesMap.defaultRoutePath
   );
 };
 
@@ -56,7 +69,7 @@ export class AgoraEduCoreSDK {
 
     Object.assign(sdkConfig.configParams, params);
 
-    globalConfigs.setRegion(params.region ?? 'GLOBAL');
+    globalConfigs.setRegion(params.region ?? 'CN');
 
     console.log('# set config ', sdkConfig.configParams, ' params ', params);
     // globalConfigs should only be copied here
@@ -74,7 +87,7 @@ export class AgoraEduCoreSDK {
         globalConfigs.setRoutesMap(json['edu.routesMap']);
       }
       if (json['edu.apiUrl']) {
-        globalConfigs.setSDKDomain(json['edu.apiUrl']);
+        globalConfigs.setSdkDomainTemplate(json['edu.apiUrl']);
       }
       if (json['reportUrl'] && json['reportQos'] && json['reportV1Url']) {
         globalConfigs.setReportConfig({
@@ -106,11 +119,7 @@ export class AgoraEduCoreSDK {
    * @param dom DOM元素
    * @param option LaunchOption
    */
-  static async launch(
-    dom: HTMLElement,
-    option: LaunchOption,
-    children: ReactChild,
-  ) {
+  static async launch(dom: HTMLElement, option: LaunchOption, children: ReactChild) {
     console.log('launch ', dom, ' option ', option);
 
     if (controller.appController.hasCalled) {
@@ -134,6 +143,17 @@ export class AgoraEduCoreSDK {
 
       if (option.pretest) {
         mainPath = globalConfigs.routesMap.pretestPath;
+      }
+
+      // TODO: find better way to handle default widgets
+      if (option.widgets) {
+        if (!option.widgets.chat) {
+          option.widgets.chat = ChatWidgetFactory(globalConfigs._region);
+        }
+      } else {
+        option.widgets = {
+          chat: ChatWidgetFactory(globalConfigs._region),
+        };
       }
 
       const params = {
@@ -161,9 +181,9 @@ export class AgoraEduCoreSDK {
           recordUrl: option.recordUrl!,
           extApps: option.extApps,
           widgets: option.widgets,
-          // widgets: {...{'chat':new AgoraChatWidget()}, ...option.widgets},
           userFlexProperties: option.userFlexProperties,
           mediaOptions: option.mediaOptions,
+          latencyLevel: option.latencyLevel ?? 2,
         },
         language: option.language,
         startTime: option.startTime,
@@ -182,10 +202,7 @@ export class AgoraEduCoreSDK {
         pretest: option.pretest,
       };
       controller.appController.create(
-        <CoreContextProvider
-          params={params}
-          dom={dom}
-          controller={controller.appController}>
+        <CoreContextProvider params={params} dom={dom} controller={controller.appController}>
           {children}
         </CoreContextProvider>,
         dom,

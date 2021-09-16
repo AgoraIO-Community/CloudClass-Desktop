@@ -8,6 +8,9 @@ export class PluginStore {
   @observable
   globalContext: any = {};
 
+  @observable
+  chatContext: any = {};
+
   constructor(ctx: AgoraWidgetContext, props: any) {
     this.context = ctx;
     this.props = props;

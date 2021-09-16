@@ -23,6 +23,7 @@ export const useMediaContext = (): MediaContext => {
     changeMicrophone,
     changeSpeakerVolume,
     changeMicrophoneVolume,
+    changeSpeaker,
   } = pretestStore;
 
   const changeDevice = useCallback(
@@ -75,6 +76,7 @@ export const useMediaContext = (): MediaContext => {
     changeMicrophoneVolume,
     changeCamera,
     changeMicrophone,
+    changeSpeaker,
     enableMediaEncryption,
     getAudioRecordingVolume: pretestStore.getAudioRecordingVolume,
     getAudioPlaybackVolume: pretestStore.getAudioPlaybackVolume,

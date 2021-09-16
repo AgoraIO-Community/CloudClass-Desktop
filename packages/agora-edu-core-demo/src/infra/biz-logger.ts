@@ -4,9 +4,7 @@ export class BizLogger {
 
   private static get currentTime(): string {
     const date = new Date();
-    return `${
-      date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()
-    }`;
+    return `${date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()}`;
   }
 
   static setLogLevel(enabled: boolean) {
@@ -52,17 +50,13 @@ export class BizLogger {
       },
       INFO: {
         call: () => {
-          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #99CC99; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },
       ERROR: {
         call: () => {
-          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(
-            args,
-          ) as any;
+          loggerArgs = [prefix, 'color: #B22222; font-weight: bold;'].concat(args) as any;
           (console as any).log.apply(console, loggerArgs);
         },
       },

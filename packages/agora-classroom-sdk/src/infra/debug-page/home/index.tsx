@@ -22,9 +22,7 @@ export const HomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>('');
   const [duration, setDuration] = useState<number>(30);
   const [startDate, setStartDate] = useState<Date>(new Date());
-  const [language, setLanguage] = useState<string>(
-    sessionStorage.getItem('language') || 'en',
-  );
+  const [language, setLanguage] = useState<string>(sessionStorage.getItem('language') || 'zh');
   const [region, setRegion] = useState<AgoraRegion>(homeStore.region);
   const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
@@ -127,9 +125,7 @@ export const HomePage = observer(() => {
 
   const history = useHistory();
 
-  const [courseWareList, updateCourseWareList] = useState<any[]>(
-    storage.getCourseWareSaveList(),
-  );
+  const [courseWareList, updateCourseWareList] = useState<any[]>(storage.getCourseWareSaveList());
   const SDKVersion = window.isElectron
     ? // @ts-ignore
       window.rtcEngine.getVersion().version
@@ -169,18 +165,32 @@ export const HomePage = observer(() => {
       language={language}
       onChangeLanguage={onChangeLanguage}
       onClick={async () => {
-        homeApi.setRegion(region, `${REACT_APP_AGORA_APP_SDK_DOMAIN}`);
+        const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`.match('api.agora.io')
+          ? 'https://api-solutions.%region%.agoralab.co'
+          : REACT_APP_AGORA_APP_SDK_DOMAIN;
+        homeApi.setRegion(region, domain);
         let { rtmToken, appId } = await homeApi.login(userUuid);
         console.log('## rtm Token', rtmToken);
+        const cameraEncoderConfiguration =
+          EduSceneType.SceneMedium === scenario
+            ? {
+                width: 160,
+                height: 120,
+                bitrate: 65,
+                frameRate: 15,
+              }
+            : {
+                width: 320,
+                height: 240,
+                frameRate: 15,
+                bitrate: 1000,
+              };
         let config: HomeLaunchOption = {
           // rtmUid: userUuid,
           appId,
           pretest: true,
           courseWareList: courseWareList.slice(0, 1),
-          personalCourseWareList: courseWareList.slice(
-            1,
-            courseWareList.length,
-          ),
+          personalCourseWareList: courseWareList.slice(1, courseWareList.length),
           language: language as LanguageEnum,
           userUuid: `${userUuid}`,
           rtmToken,
@@ -193,13 +203,9 @@ export const HomePage = observer(() => {
           region,
           duration: duration * 60,
           mediaOptions: {
-            cameraEncoderConfiguration: {
-              width: 320,
-              height: 240,
-              frameRate: 15,
-              bitrate: 1000,
-            },
+            cameraEncoderConfiguration,
           },
+          latencyLevel: 2,
         };
         if (encryptionKey && encryptionMode) {
           config!.mediaOptions!.encryptionConfig = {

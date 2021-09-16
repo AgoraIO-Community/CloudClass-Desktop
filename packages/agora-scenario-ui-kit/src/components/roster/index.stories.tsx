@@ -14,8 +14,7 @@ const meta: Meta = {
   title: 'Components/Roster',
   component: Roster,
   args: {
-    onClick: (action: ActionTypes, uid: string | number) =>
-      console.log(action, uid),
+    onClick: (action: ActionTypes, uid: string | number) => console.log(action, uid),
     teacherName: 'Lily Chou',
     role: 'teacher', // teacher和student的icon不同
     localUserUuid: 'webzzz2',
@@ -51,9 +50,7 @@ export const Docs: Story<RosterProps> = ({ dataSource, ...restProps }) => {
   const handleClick = useCallback(
     (action: string, uid: any) => {
       const newList = list.map((item) =>
-        item.uid === uid
-          ? { ...item, ...handleActionState(item, action) }
-          : { ...item },
+        item.uid === uid ? { ...item, ...handleActionState(item, action) } : { ...item },
       );
       updateList(newList);
     },
@@ -139,18 +136,13 @@ Docs.parameters = {
   layout: 'fullscreen',
 };
 
-export const DocsUserList: Story<StudentRosterProps> = ({
-  dataSource,
-  ...restProps
-}) => {
+export const DocsUserList: Story<StudentRosterProps> = ({ dataSource, ...restProps }) => {
   const [list, updateList] = useState<Profile[]>(dataSource!);
 
   const handleClick = useCallback(
     (action: string, uid: any) => {
       const newList = list.map((item) =>
-        item.uid === uid
-          ? { ...item, ...handleActionState(item, action) }
-          : { ...item },
+        item.uid === uid ? { ...item, ...handleActionState(item, action) } : { ...item },
       );
       updateList(newList);
     },

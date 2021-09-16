@@ -32,6 +32,7 @@ export interface ModalProps extends BaseProps {
   modalType?: 'normal' | 'back';
   children?: React.ReactNode;
   btnId?: string;
+  topLevel?: boolean;
 }
 
 type ModalType = FC<ModalProps> & {
@@ -58,6 +59,7 @@ export const Modal: ModalType = ({
   hasMask = true,
   maskClosable = false,
   btnId,
+  topLevel = false,
   ...restProps
 }) => {
   if (component) {
@@ -70,6 +72,8 @@ export const Modal: ModalType = ({
     [`modal`]: 1,
     [`back-modal`]: modalType === 'back',
     [`${className}`]: !!className,
+    // TODO: workaround solution, need redesign, control modal level
+    [`top-level-modal`]: topLevel,
   });
 
   const contentCls = classnames({
@@ -79,11 +83,7 @@ export const Modal: ModalType = ({
 
   const modalJsx = (
     <div className={cls} {...restProps} style={{ ...style, width }}>
-      <div
-        className={[
-          'modal-title',
-          modalType === 'back' ? 'back-modal-title' : '',
-        ].join(' ')}>
+      <div className={['modal-title', modalType === 'back' ? 'back-modal-title' : ''].join(' ')}>
         {modalType === 'normal' ? (
           <>
             <div className="modal-title-text">{title}</div>

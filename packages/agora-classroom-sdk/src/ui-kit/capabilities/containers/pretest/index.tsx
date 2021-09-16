@@ -7,31 +7,19 @@ import {
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import {
-  Button,
-  MediaDeviceState,
-  Modal,
-  Pretest,
-  t,
-  transI18n,
-} from '~ui-kit';
+import { Button, MediaDeviceState, Modal, Pretest, t, transI18n, CameraPlaceHolder } from '~ui-kit';
 import { RendererPlayer } from '~utilities/renderer-player';
 import { Volume } from '~components/volume';
 import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer } from '~capabilities/containers/toast';
 
-const VolumeIndicationView = observer(() => {
+const VolumeIndicationView: React.FC<any> = observer(() => {
   const { microphoneLevel } = useVolumeContext();
   // const {
   // microphoneLevel
   // } = usePretestContext()
 
-  return (
-    <Volume
-      currentVolume={microphoneLevel}
-      maxLength={48}
-      style={{ marginLeft: 6 }}
-    />
-  );
+  return <Volume currentVolume={microphoneLevel} maxLength={48} style={{ marginLeft: 6 }} />;
 });
 
 export const PretestContainer = observer(() => {
@@ -41,6 +29,7 @@ export const PretestContainer = observer(() => {
     cameraList,
     microphoneList,
     speakerList,
+    speakerId,
     cameraId,
     microphoneId,
     isMirror,
@@ -50,6 +39,7 @@ export const PretestContainer = observer(() => {
     installPretest,
     changeTestCamera,
     changeTestMicrophone,
+    changeTestSpeaker,
     stopPretestCamera,
     stopPretestMicrophone,
     pretestNoticeChannel,
@@ -65,20 +55,19 @@ export const PretestContainer = observer(() => {
     setBeautyEffectOptions,
   } = usePretestContext();
 
-  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume } =
-    useMediaContext();
+  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume } = useMediaContext();
 
   const VideoPreviewPlayer = useCallback(() => {
     return (
       <RendererPlayer
-        className="camera-placeholder camera-muted-placeholder"
         style={{ width: 320, height: 180 }}
         mirror={isMirror}
         key={cameraId}
         id="stream-player"
         track={pretestCameraRenderer}
-        preview={true}
-      />
+        preview={true}>
+        <CameraPlaceHolder state="muted" />
+      </RendererPlayer>
     );
   }, [pretestCameraRenderer, cameraId, isMirror]);
 
@@ -94,18 +83,15 @@ export const PretestContainer = observer(() => {
   useEffect(() => {
     installPretest(handleError);
     // {"isBeauty":true,"lighteningLevel":61,"rednessLevel":61,"smoothnessLevel":76}
-    const beautyEffectOptionsStr = window.localStorage.getItem(
-      'beautyEffectOptions',
-    );
-    const { isBeauty, lighteningLevel, rednessLevel, smoothnessLevel } =
-      beautyEffectOptionsStr
-        ? JSON.parse(beautyEffectOptionsStr)
-        : {
-            isBeauty: false,
-            lighteningLevel: 70,
-            rednessLevel: 10,
-            smoothnessLevel: 50,
-          };
+    const beautyEffectOptionsStr = window.localStorage.getItem('beautyEffectOptions');
+    const { isBeauty, lighteningLevel, rednessLevel, smoothnessLevel } = beautyEffectOptionsStr
+      ? JSON.parse(beautyEffectOptionsStr)
+      : {
+          isBeauty: false,
+          lighteningLevel: 70,
+          rednessLevel: 10,
+          smoothnessLevel: 50,
+        };
     setBeauty(isBeauty);
     setWhitening(lighteningLevel);
     setBuffing(smoothnessLevel);
@@ -127,6 +113,10 @@ export const PretestContainer = observer(() => {
       }
       case 'microphone': {
         await changeTestMicrophone(value);
+        break;
+      }
+      case 'speaker': {
+        await changeTestSpeaker(value);
         break;
       }
     }
@@ -231,10 +221,10 @@ export const PretestContainer = observer(() => {
           microphoneList={microphoneList}
           microphoneId={microphoneId}
           speakerList={speakerList}
-          speakerId={speakerList[0].deviceId}
+          speakerId={speakerId}
           isNative={isNative}
-          videoComponent={<VideoPreviewPlayer />}
-          volumeComponent={<VolumeIndicationView />}
+          videoComponent={VideoPreviewPlayer}
+          volumeComponent={() => <VolumeIndicationView />}
           isBeauty={isBeauty}
           onSelectBeauty={handleBeauty}
           whitening={whitening}
@@ -245,6 +235,7 @@ export const PretestContainer = observer(() => {
           microphoneVolume={microphoneVolume}
         />
       </Modal>
+      {/* <ToastContainer /> */}
     </div>
   );
 });

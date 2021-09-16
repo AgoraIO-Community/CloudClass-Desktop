@@ -61,6 +61,8 @@
         appId,
         userRole,
         translateLanguage,
+        region,
+        language,
       } = useParams(window.location);
 
       // const options = paramsObject
@@ -76,6 +78,7 @@
       AgoraEduSDK.config({
         appId,
         cachePath: undefined,
+        region: region ? region : 'CN',
       });
       AgoraEduSDK.launch(document.querySelector('#root1'), {
         userUuid,
@@ -87,13 +90,13 @@
         pretest: false,
         rtmUid,
         rtmToken,
-        language: 'zh',
+        language,
         startTime,
         duration,
         recordUrl,
         appId,
         userRole,
-        translateLanguage: 'zh',
+        // translateLanguage: language,
         courseWareList: [],
         listener: (evt, args) => {
           console.log('evt', evt, args);

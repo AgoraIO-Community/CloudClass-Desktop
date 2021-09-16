@@ -84,9 +84,7 @@ export const Docs: FC<ChatProps> = (props) => {
   const [collapse, setCollapse] = useState(true);
 
   const [messages, updateMessages] = useState<any[]>([]);
-  const [conversations, updateConversations] = useState<any[]>(
-    meta.args.conversations,
-  );
+  const [conversations, updateConversations] = useState<any[]>(meta.args.conversations);
 
   const newMessageList = () => {
     if (!count) return [];
@@ -143,9 +141,7 @@ export const Docs: FC<ChatProps> = (props) => {
           showCloseIcon={true}
           onConversationText={(conversation, val) => setText(val)}
           onConversationSend={(conversation) => {
-            let idx = conversations
-              .map((c) => c.userUuid)
-              .indexOf(conversation.userUuid);
+            let idx = conversations.map((c) => c.userUuid).indexOf(conversation.userUuid);
             if (idx !== -1) {
               let copy = [...conversations];
               copy[idx].messages = conversations[idx].messages.concat([
@@ -164,14 +160,10 @@ export const Docs: FC<ChatProps> = (props) => {
             setText('');
           }}
           onConversationPullFresh={(conversation) => {
-            let idx = conversations
-              .map((c) => c.userUuid)
-              .indexOf(conversation.userUuid);
+            let idx = conversations.map((c) => c.userUuid).indexOf(conversation.userUuid);
             if (idx !== -1) {
               let copy = [...conversations];
-              copy[idx].messages = newMessageList().concat(
-                conversations[idx].messages,
-              );
+              copy[idx].messages = newMessageList().concat(conversations[idx].messages);
               updateConversations(copy);
             }
           }}

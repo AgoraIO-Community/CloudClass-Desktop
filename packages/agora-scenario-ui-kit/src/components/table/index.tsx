@@ -12,12 +12,7 @@ export interface TableBaseProps extends BaseProps {
 
 export interface TableProps extends TableBaseProps {}
 
-export const Table: React.FC<TableProps> = ({
-  className,
-  children,
-  align,
-  ...restProps
-}) => {
+export const Table: React.FC<TableProps> = ({ className, children, align, ...restProps }) => {
   const cls = classnames({
     [`table-flex-container`]: 1,
     [`${className}`]: !!className,
@@ -34,13 +29,7 @@ export interface ColProps extends TableBaseProps {
   width?: 9 | 20;
 }
 
-export const Col: React.FC<ColProps> = ({
-  children,
-  className,
-  align,
-  width,
-  ...restProps
-}) => {
+export const Col: React.FC<ColProps> = ({ children, className, align, width, ...restProps }) => {
   const cls = classnames({
     'table-col-item': 1,
     [`${className}`]: !!className,
@@ -88,16 +77,18 @@ export interface ItemFontColorProps extends BaseProps {
   children: any;
   color?: string;
   width?: number;
+  title?: string;
 }
 
 export const Inline: React.FC<ItemFontColorProps> = ({
   children,
   color,
   width,
+  title = '',
   ...restProps
 }) => {
   return (
-    <span className="inline" style={{ color: color, width }} {...restProps}>
+    <span className="inline" style={{ color: color, width }} title={title} {...restProps}>
       {children}
     </span>
   );
@@ -105,10 +96,7 @@ export const Inline: React.FC<ItemFontColorProps> = ({
 
 export interface RowProps extends TableBaseProps {}
 
-export const TableHeader: React.FC<RowProps> = ({
-  className,
-  ...restProps
-}) => {
+export const TableHeader: React.FC<RowProps> = ({ className, ...restProps }) => {
   const cls = classnames({
     'table-header': 1,
   });
@@ -140,18 +128,11 @@ export const CheckBox: React.FC<CheckBoxProps> = ({
   };
 
   const handleChange = (evt: React.SyntheticEvent<HTMLInputElement>) => {
-    indeterminate &&
-      (evt.currentTarget.indeterminate = !evt.currentTarget.checked);
+    indeterminate && (evt.currentTarget.indeterminate = !evt.currentTarget.checked);
     onChange && onChange(evt);
   };
 
   return (
-    <input
-      ref={mountDom}
-      onChange={handleChange}
-      type="checkbox"
-      className={cls}
-      {...restProps}
-    />
+    <input ref={mountDom} onChange={handleChange} type="checkbox" className={cls} {...restProps} />
   );
 };

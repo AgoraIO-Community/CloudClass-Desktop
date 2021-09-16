@@ -5,14 +5,14 @@
 
 .ant-tabs-tab {
   /* 宽度自定义 */
-  width: 70px !important;
+  /* width: 70px !important; */
   justify-content: center;
   padding: 14px !important;
   margin: 0 !important;
 }
 
 .ant-tabs-tab-btn {
-  width: 35px !important;
+  /* width: 35px !important; */
   height: 18px !important;
   font-size: 13px !important;
   font-family: 'PingFangSC-Regular', ' PingFang SC' !important;
@@ -24,7 +24,7 @@
 
 .ant-tabs-ink-bar-animated {
   /* 宽度自定义 */
-  width: 70px !important;
+  /* width: 70px !important; */
   height: 2px !important;
   background: #357bf6 !important;
   border-radius: 1px !important;

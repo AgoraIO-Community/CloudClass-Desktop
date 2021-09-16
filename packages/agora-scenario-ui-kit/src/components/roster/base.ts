@@ -3,12 +3,7 @@ const pinyinlite = require('pinyinlite/index_common');
 
 export type ProfileRole = 'student' | 'teacher' | 'assistant' | 'invisible';
 
-export const canOperate = (
-  role: any,
-  localUid: string,
-  data: any,
-  col: any,
-): boolean => {
+export const canOperate = (role: any, localUid: string, data: any, col: any): boolean => {
   //任何角色的星星不可点击
   if (col.key === 'stars') {
     return false;
@@ -16,9 +11,7 @@ export const canOperate = (
 
   if (['assistant', 'teacher'].includes(role)) {
     //授权上台、白板、离开始终可点击
-    if (
-      ['onPodium', 'whiteboardGranted', 'kickOut', 'chat'].includes(col.key)
-    ) {
+    if (['onPodium', 'whiteboardGranted', 'kickOut', 'chat'].includes(col.key)) {
       return true;
     }
     //摄像头、麦克风 当该用户上台时可点击，下台时不可点击
@@ -49,8 +42,7 @@ export const getChatState = (profile: any, canOperate: boolean) => {
   const type = !!profile.chatEnabled === true ? 'message-on' : defaultType;
 
   const operateStatus = canOperate ? 'operate-status' : 'un-operate-status';
-  let chatStatus =
-    !!profile.chatEnabled === true ? 'can-discussion-svg' : 'no-discussion-svg';
+  let chatStatus = !!profile.chatEnabled === true ? 'can-discussion-svg' : 'no-discussion-svg';
   if (!canOperate) {
     const studentIconClass = {
       'can-discussion-svg': 'stu-can-discussion-svg',
@@ -91,9 +83,7 @@ export const getCameraState = (profile: any, canOperate: boolean) => {
     },
   };
   const deviceMap = deviceStatus[device];
-  const cameraStatus = profile.cameraEnabled
-    ? deviceMap['active']
-    : deviceMap['inactive'];
+  const cameraStatus = profile.cameraEnabled ? deviceMap['active'] : deviceMap['inactive'];
   return {
     type: type as IconTypes,
     operateStatus: operateStatus,
@@ -127,9 +117,7 @@ export const getMicrophoneState = (profile: any, canOperate: boolean) => {
     },
   };
   const deviceMap = deviceStatus[device];
-  const microphoneStatus = profile.micEnabled
-    ? deviceMap['active']
-    : deviceMap['inactive'];
+  const microphoneStatus = profile.micEnabled ? deviceMap['active'] : deviceMap['inactive'];
   return {
     type: type as IconTypes,
     operateStatus: operateStatus,
@@ -150,9 +138,7 @@ interface PublicProfile {
   onPodium: boolean;
 }
 
-export const studentListSort = <T extends PublicProfile>(
-  list: Array<T>,
-): Array<T> => {
+export const studentListSort = <T extends PublicProfile>(list: Array<T>): Array<T> => {
   if (list.length === 0) {
     return [];
   }

@@ -44,15 +44,6 @@ task('cleanup', () => {
 });
 
 task('release:web', series('prepare', 'build:demo:web', 'cleanup'));
-task(
-  'release:electron:win',
-  series('prepare', 'build:demo:electron:win', 'cleanup'),
-);
-task(
-  'release:electron:mac',
-  series('prepare', 'build:demo:electron:mac', 'cleanup'),
-);
-task(
-  'release:classroom:sdk',
-  series('prepare', 'build:classroom:sdk', 'cleanup'),
-);
+task('release:electron:win', series('prepare', 'build:demo:electron:win', 'cleanup'));
+task('release:electron:mac', series('prepare', 'build:demo:electron:mac', 'cleanup'));
+task('release:classroom:sdk', series('prepare', 'build:classroom:sdk', 'cleanup'));

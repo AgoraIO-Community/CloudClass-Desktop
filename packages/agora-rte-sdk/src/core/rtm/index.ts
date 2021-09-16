@@ -158,22 +158,16 @@ export class RTMWrapper extends EventEmitter {
     let channel = null;
     EduLogger.info('[rtm]  wrapper init');
     try {
-      client.on(
-        'ConnectionStateChanged',
-        (newState: string, reason: string) => {
-          EduLogger.info('[rtm] [Wrapper] ConnectionStateChanged');
-          this.prevConnectionState = this.connectionState;
-          this.connectionState = newState;
-          this.emit('ConnectionStateChanged', { newState, reason });
-        },
-      );
-      client.on(
-        'MessageFromPeer',
-        (message: any, peerId: string, props: any) => {
-          EduLogger.info('[rtm] [Wrapper] MessageFromPeer');
-          this.emit('MessageFromPeer', { message, peerId, props });
-        },
-      );
+      client.on('ConnectionStateChanged', (newState: string, reason: string) => {
+        EduLogger.info('[rtm] [Wrapper] ConnectionStateChanged');
+        this.prevConnectionState = this.connectionState;
+        this.connectionState = newState;
+        this.emit('ConnectionStateChanged', { newState, reason });
+      });
+      client.on('MessageFromPeer', (message: any, peerId: string, props: any) => {
+        EduLogger.info('[rtm] [Wrapper] MessageFromPeer');
+        this.emit('MessageFromPeer', { message, peerId, props });
+      });
       await client.login({ uid: config.uid, token: config.token });
       this._client = client;
       this.channels[config.channelName] = channel;
@@ -215,24 +209,21 @@ export class RTMWrapper extends EventEmitter {
 
   private async _join(channel: any, bus: any, config: any) {
     try {
-      channel.on(
-        'ChannelMessage',
-        (message: any, memberId: string, messagePros: any) => {
-          EduLogger.info('[rtm] ChannelMessage', message);
-          bus.emit('ChannelMessage', {
-            channelName: config.channelName,
-            message,
-            memberId,
-            messagePros,
-          });
-          // this.emit('ChannelMessage', {
-          //   channelName: config.channelName,
-          //   message,
-          //   memberId,
-          //   messagePros,
-          // })
-        },
-      );
+      channel.on('ChannelMessage', (message: any, memberId: string, messagePros: any) => {
+        EduLogger.info('[rtm] ChannelMessage', message);
+        bus.emit('ChannelMessage', {
+          channelName: config.channelName,
+          message,
+          memberId,
+          messagePros,
+        });
+        // this.emit('ChannelMessage', {
+        //   channelName: config.channelName,
+        //   message,
+        //   memberId,
+        //   messagePros,
+        // })
+      });
       channel.on('MemberJoined', (memberId: string) => {
         bus.emit('MemberJoined', {
           channelName: config.channelName,
@@ -292,11 +283,7 @@ export class RTMWrapper extends EventEmitter {
     });
   }
 
-  async sendPeerMessage(
-    peerId: string,
-    message: any,
-    options: any,
-  ): Promise<boolean> {
+  async sendPeerMessage(peerId: string, message: any, options: any): Promise<boolean> {
     let result = await this.client.sendMessageToPeer(message, peerId, {
       enableHistoricalMessaging: options.enableHistoricalMessaging,
     });

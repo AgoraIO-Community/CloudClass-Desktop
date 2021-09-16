@@ -15,14 +15,7 @@ import {
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { get } from 'lodash';
-import {
-  action,
-  computed,
-  IReactionDisposer,
-  observable,
-  reaction,
-  runInAction,
-} from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { EduScenarioAppStore } from '.';
@@ -33,12 +26,7 @@ import { eduSDKApi } from '../services/edu-sdk-api';
 import { reportService } from '../services/report';
 import { RoomApi } from '../services/room-api';
 import { UploadService } from '../services/upload-service';
-import {
-  ChatConversation,
-  ChatMessage,
-  DeviceStateEnum,
-  QuickTypeEnum,
-} from '../types';
+import { ChatConversation, ChatMessage, DeviceStateEnum, QuickTypeEnum } from '../types';
 import { escapeExtAppIdentifier } from '../utilities/ext-app';
 import { BizLogger } from '../utilities/kit';
 import { EduClassroomStateEnum, SimpleInterval } from './scene';
@@ -456,10 +444,7 @@ export class RoomStore extends SimpleInterval {
         return {
           classState: 'end-class',
           duration: this.classroomSchedule
-            ? Math.max(
-                this.calibratedTime - this.classroomSchedule.startTime,
-                0,
-              )
+            ? Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0)
             : -1,
         };
     }
@@ -482,16 +467,10 @@ export class RoomStore extends SimpleInterval {
     if (this.classroomSchedule) {
       switch (this.sceneStore.classState) {
         case EduClassroomStateEnum.beforeStart:
-          duration = Math.max(
-            this.classroomSchedule.startTime - this.calibratedTime,
-            0,
-          );
+          duration = Math.max(this.classroomSchedule.startTime - this.calibratedTime, 0);
           break;
         case EduClassroomStateEnum.start:
-          duration = Math.max(
-            this.calibratedTime - this.classroomSchedule.startTime,
-            0,
-          );
+          duration = Math.max(this.calibratedTime - this.classroomSchedule.startTime, 0);
           break;
         case EduClassroomStateEnum.end:
           duration = Math.max(
@@ -594,9 +573,7 @@ export class RoomStore extends SimpleInterval {
   @computed
   get isTeacher(): boolean {
     if (
-      [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(
-        this.appStore.roomInfo.userRole,
-      )
+      [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)
     ) {
       return true;
     }
@@ -787,9 +764,7 @@ export class RoomStore extends SimpleInterval {
     let { userRole, userUuid, userName } = this.roomInfo;
     if (userRole === EduRoleTypeEnum.student) {
       // for student always return single conversation
-      let conversation =
-        this.roomChatConversations.filter((c) => c.userUuid === userUuid)[0] ||
-        {};
+      let conversation = this.roomChatConversations.filter((c) => c.userUuid === userUuid)[0] || {};
 
       return [
         {
@@ -807,8 +782,7 @@ export class RoomStore extends SimpleInterval {
           })),
           timestamp:
             (conversation.messages || []).length > 0
-              ? conversation.messages[conversation.messages.length - 1]
-                  .timestamp
+              ? conversation.messages[conversation.messages.length - 1].timestamp
               : 0,
         },
       ];
@@ -816,9 +790,7 @@ export class RoomStore extends SimpleInterval {
       // otherwise return the whole list
       return this.roomChatConversations.map((c) => {
         let messageTs =
-          ((c.messages || []).length > 0
-            ? c.messages[c.messages.length - 1].timestamp
-            : 0) || 0;
+          ((c.messages || []).length > 0 ? c.messages[c.messages.length - 1].timestamp : 0) || 0;
         let convTs = c.timestamp || 0;
         return {
           userName: c.userName,
@@ -862,9 +834,7 @@ export class RoomStore extends SimpleInterval {
   }
 
   getConversation(userUuid: string) {
-    let idx = this.roomChatConversations
-      .map((c) => c.userUuid)
-      .indexOf(userUuid);
+    let idx = this.roomChatConversations.map((c) => c.userUuid).indexOf(userUuid);
     return idx === -1 ? null : this.roomChatConversations[idx];
   }
 
@@ -952,14 +922,10 @@ export class RoomStore extends SimpleInterval {
           break;
         case EduClassroomStateEnum.start:
           //距离下课的时间
-          let durationToEnd =
-            this.classroomSchedule.duration * 1000 - this.classTimeDuration;
+          let durationToEnd = this.classroomSchedule.duration * 1000 - this.classTimeDuration;
           let dDurationToEnd = dayjs.duration(durationToEnd);
           [5, 1].forEach((min) => {
-            if (
-              dDurationToEnd.minutes() === min &&
-              dDurationToEnd.seconds() === 0
-            ) {
+            if (dDurationToEnd.minutes() === min && dDurationToEnd.seconds() === 0) {
               this.appStore.fireToast(
                 'toast.time_interval_between_end',
                 { reason: durationToEnd },
@@ -971,17 +937,13 @@ export class RoomStore extends SimpleInterval {
         case EduClassroomStateEnum.end:
           //距离教室关闭的时间 注意: closeDelay undefined null 改为0
           let durationToClose =
-            Number(this.classroomSchedule.closeDelay || 0) * 1000 -
-            this.classTimeDuration;
+            Number(this.classroomSchedule.closeDelay || 0) * 1000 - this.classTimeDuration;
           console.log('checkClassroomNotification', {
             closeDelay: Number(this.classroomSchedule.closeDelay || 0),
             durationToClose,
           });
           let dDurationToClose = dayjs.duration(durationToClose);
-          if (
-            dDurationToClose.minutes() === 1 &&
-            dDurationToClose.seconds() === 0
-          ) {
+          if (dDurationToClose.minutes() === 1 && dDurationToClose.seconds() === 0) {
             this.appStore.fireToast('toast.time_interval_between_close', {
               reason: durationToClose,
             });
@@ -1097,10 +1059,7 @@ export class RoomStore extends SimpleInterval {
     try {
       this.joining = true;
       this.disposers.push(
-        reaction(
-          () => this.sceneStore.classState,
-          this.onClassStateChanged.bind(this),
-        ),
+        reaction(() => this.sceneStore.classState, this.onClassStateChanged.bind(this)),
       );
 
       this.startJoining();
@@ -1139,10 +1098,7 @@ export class RoomStore extends SimpleInterval {
         region: region,
         userProperties: this.appStore.params.config.userFlexProperties,
       });
-      EduLogger.info(
-        '## classroom ##: checkIn:  ',
-        JSON.stringify(checkInResult),
-      );
+      EduLogger.info('## classroom ##: checkIn:  ', JSON.stringify(checkInResult));
       this.timeShift = checkInResult.ts - dayjs().valueOf();
       this.classroomSchedule = {
         startTime: checkInResult.startTime,
@@ -1170,76 +1126,68 @@ export class RoomStore extends SimpleInterval {
         .catch((err) => {
           const error = GenericErrorWrapper(err);
           BizLogger.warn(`${error}`);
-          this.appStore.isNotInvisible &&
-            this.appStore.fireToast('toast.failed_to_join_board');
+          this.appStore.isNotInvisible && this.appStore.fireToast('toast.failed_to_join_board');
         });
       this.stopJoining();
 
       // logout will clean up eduManager events, so we need to put the listener here
-      this.eduManager.on(
-        'ConnectionStateChanged',
-        async ({ newState, reason }) => {
-          EduLogger.info(' RTM ConnectionStateChanged ', newState);
-          if (newState === 'ABORTED' && reason === 'REMOTE_LOGIN') {
-            await this.appStore.releaseRoom();
-            this.appStore.fireToast('toast.classroom_remote_join');
-            this.noticeQuitRoomWith(QuickTypeEnum.Kick);
-          }
-          if (
-            newState === 'CONNECTED' &&
-            reason === 'LOGIN_SUCCESS' &&
-            reportServiceV2.reportUserParams.uid
-          ) {
-            reportServiceV2.reportApaasUserReconnect(new Date().getTime(), 0);
-          }
-          if (this.eduManager._rtmWrapper) {
-            const prevConnectionState =
-              this.eduManager._rtmWrapper.prevConnectionState;
-            if (
-              prevConnectionState === 'RECONNECTING' &&
-              newState === 'CONNECTED'
-            ) {
-              eduSDKApi
-                .reportCameraState({
-                  roomUuid: roomUuid,
-                  userUuid: this.appStore.roomInfo.userUuid,
-                  state: +this.appStore.sceneStore.localCameraDeviceState,
-                })
-                .catch((err) => {
-                  BizLogger.info(
-                    `[demo] action in report native device camera state failed, reason: ${err}`,
-                  );
-                })
-                .then(() => {
-                  BizLogger.info(`[CAMERA] report camera device not working`);
-                });
-              eduSDKApi
-                .reportMicState({
-                  roomUuid: roomUuid,
-                  userUuid: this.appStore.roomInfo.userUuid,
-                  state: +this.appStore.sceneStore.localMicrophoneDeviceState,
-                })
-                .catch((err) => {
-                  BizLogger.info(
-                    `[demo] action in report native device camera state failed, reason: ${err}`,
-                  );
-                })
-                .then(() => {
-                  BizLogger.info(`[CAMERA] report mic device not working`);
-                });
-              if (this.appStore.roomStore.isJoiningRoom) {
-                this.appStore.roomStore.stopJoining();
-              }
-            }
-            if (newState === 'RECONNECTING') {
-              if (!this.appStore.roomStore.isJoiningRoom) {
-                this.appStore.roomStore.startJoining();
-              }
+      this.eduManager.on('ConnectionStateChanged', async ({ newState, reason }) => {
+        EduLogger.info(' RTM ConnectionStateChanged ', newState);
+        if (newState === 'ABORTED' && reason === 'REMOTE_LOGIN') {
+          await this.appStore.releaseRoom();
+          this.appStore.fireToast('toast.classroom_remote_join');
+          this.noticeQuitRoomWith(QuickTypeEnum.Kick);
+        }
+        if (
+          newState === 'CONNECTED' &&
+          reason === 'LOGIN_SUCCESS' &&
+          reportServiceV2.reportUserParams.uid
+        ) {
+          reportServiceV2.reportApaasUserReconnect(new Date().getTime(), 0);
+        }
+        if (this.eduManager._rtmWrapper) {
+          const prevConnectionState = this.eduManager._rtmWrapper.prevConnectionState;
+          if (prevConnectionState === 'RECONNECTING' && newState === 'CONNECTED') {
+            eduSDKApi
+              .reportCameraState({
+                roomUuid: roomUuid,
+                userUuid: this.appStore.roomInfo.userUuid,
+                state: +this.appStore.sceneStore.localCameraDeviceState,
+              })
+              .catch((err) => {
+                BizLogger.info(
+                  `[demo] action in report native device camera state failed, reason: ${err}`,
+                );
+              })
+              .then(() => {
+                BizLogger.info(`[CAMERA] report camera device not working`);
+              });
+            eduSDKApi
+              .reportMicState({
+                roomUuid: roomUuid,
+                userUuid: this.appStore.roomInfo.userUuid,
+                state: +this.appStore.sceneStore.localMicrophoneDeviceState,
+              })
+              .catch((err) => {
+                BizLogger.info(
+                  `[demo] action in report native device camera state failed, reason: ${err}`,
+                );
+              })
+              .then(() => {
+                BizLogger.info(`[CAMERA] report mic device not working`);
+              });
+            if (this.appStore.roomStore.isJoiningRoom) {
+              this.appStore.roomStore.stopJoining();
             }
           }
-          reportService.updateConnectionState(newState);
-        },
-      );
+          if (newState === 'RECONNECTING') {
+            if (!this.appStore.roomStore.isJoiningRoom) {
+              this.appStore.roomStore.startJoining();
+            }
+          }
+        }
+        reportService.updateConnectionState(newState);
+      });
 
       this.eduManager.on('user-chat-message', (evt: any) => {
         const { message: textMessage } = evt;
@@ -1361,6 +1309,7 @@ export class RoomStore extends SimpleInterval {
                 `[demo] tag: ${tag}, [${Date.now()}], main stream closed local-stream-removed, `,
                 JSON.stringify(evt),
               );
+              await this.appStore.mediaService.setRtcRole('audience');
             }
             BizLogger.info('[demo] local-stream-removed emit done', evt);
           } catch (err) {
@@ -1369,8 +1318,6 @@ export class RoomStore extends SimpleInterval {
             BizLogger.error(`${error}`);
           }
         });
-        // todo 当前移出本地流，说明已经不是主播了，则RTC角色应设置为audience
-        await this.appStore.mediaService.setRtcRole('audience');
       });
       // 本地流更新
       roomManager.on('local-stream-updated', async (evt: any) => {
@@ -1383,16 +1330,14 @@ export class RoomStore extends SimpleInterval {
           }
           const tag = uuidv4();
           BizLogger.info(
-            `[demo] tag: ${tag}, seq[${
-              evt.seqId
-            }] time: ${Date.now()} local-stream-updated, `,
+            `[demo] tag: ${tag}, seq[${evt.seqId}] time: ${Date.now()} local-stream-updated, `,
             JSON.stringify(evt),
           );
           if (evt.type === 'main') {
             if (this.isAssistant) {
               return;
             }
-            //todo 这里已加入RTC，监测到本地流发生流变化，说明当前用户的RCT角色应设置为host
+            //TODO: The role must be set before publishing and subscribing， Follow-up should encapsulate a complete setRole, subscribe, publish process, can not rely on the developer to grasp the calling sequence。
             await this.appStore.mediaService.setRtcRole('host');
             const localStream = roomManager.getLocalStreamData();
             BizLogger.info(
@@ -1421,21 +1366,16 @@ export class RoomStore extends SimpleInterval {
                 this.sceneStore.joiningRTC,
               );
               if (this.sceneStore._cameraEduStream) {
-                if (
-                  !!localStream.stream.hasVideo !==
-                  !!this.sceneStore._cameraEduStream.hasVideo
-                ) {
+                if (!!localStream.stream.hasVideo !== !!this.sceneStore._cameraEduStream.hasVideo) {
                   console.log(
                     '### [demo] localStream.stream.hasVideo ',
                     localStream.stream.hasVideo,
                     'this.sceneStore._cameraEduStream.hasVideo ',
                     this.sceneStore._cameraEduStream.hasVideo,
                   );
-                  this.sceneStore._cameraEduStream.hasVideo =
-                    !!localStream.stream.hasVideo;
+                  this.sceneStore._cameraEduStream.hasVideo = !!localStream.stream.hasVideo;
                   if (causeCmd !== 501) {
-                    const i18nRole =
-                      operator.role === 'host' ? 'teacher' : 'assistant';
+                    const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant';
                     const operation = this.sceneStore._cameraEduStream.hasVideo
                       ? 'co_video.remote_open_camera'
                       : 'co_video.remote_close_camera';
@@ -1452,21 +1392,16 @@ export class RoomStore extends SimpleInterval {
                   //   action: 'video'
                   // }
                 }
-                if (
-                  !!localStream.stream.hasAudio !==
-                  !!this.sceneStore._cameraEduStream.hasAudio
-                ) {
+                if (!!localStream.stream.hasAudio !== !!this.sceneStore._cameraEduStream.hasAudio) {
                   console.log(
                     '### [demo] localStream.stream.hasAudio ',
                     localStream.stream.hasAudio,
                     'this.sceneStore._cameraEduStream.hasAudio ',
                     this.sceneStore._cameraEduStream.hasAudio,
                   );
-                  this.sceneStore._cameraEduStream.hasAudio =
-                    !!localStream.stream.hasAudio;
+                  this.sceneStore._cameraEduStream.hasAudio = !!localStream.stream.hasAudio;
                   if (causeCmd !== 501) {
-                    const i18nRole =
-                      operator.role === 'host' ? 'teacher' : 'assistant';
+                    const i18nRole = operator.role === 'host' ? 'teacher' : 'assistant';
                     const operation = this.sceneStore._cameraEduStream.hasAudio
                       ? 'co_video.remote_open_microphone'
                       : 'co_video.remote_close_microphone';
@@ -1677,8 +1612,7 @@ export class RoomStore extends SimpleInterval {
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
             if (
               this.sceneStore.screenShareStreamList.find(
-                (it: EduStream) =>
-                  it.videoSourceType === EduVideoSourceType.screen,
+                (it: EduStream) => it.videoSourceType === EduVideoSourceType.screen,
               )
             ) {
               this.sceneStore.sharing = true;
@@ -1701,8 +1635,7 @@ export class RoomStore extends SimpleInterval {
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
             if (
               this.sceneStore.screenShareStreamList.find(
-                (it: EduStream) =>
-                  it.videoSourceType === EduVideoSourceType.screen,
+                (it: EduStream) => it.videoSourceType === EduVideoSourceType.screen,
               )
             ) {
               this.sceneStore.sharing = true;
@@ -1721,8 +1654,7 @@ export class RoomStore extends SimpleInterval {
           if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {
             if (
               this.sceneStore.screenShareStreamList.find(
-                (it: EduStream) =>
-                  it.videoSourceType === EduVideoSourceType.screen,
+                (it: EduStream) => it.videoSourceType === EduVideoSourceType.screen,
               )
             ) {
               this.sceneStore.sharing = true;
@@ -1780,43 +1712,25 @@ export class RoomStore extends SimpleInterval {
           }
 
           // update scene store
-          if (
-            newClassState !== undefined &&
-            this.sceneStore.classState !== newClassState
-          ) {
+          if (newClassState !== undefined && this.sceneStore.classState !== newClassState) {
             this.sceneStore.classState = newClassState;
             if (this.sceneStore.classState === 1) {
-              this.sceneStore.startTime = get(
-                classroom,
-                'roomStatus.startTime',
-                0,
-              );
+              this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0);
               this.addInterval(
                 'timer',
                 () => {
-                  this.appStore.updateTime(
-                    +get(classroom, 'roomStatus.startTime', 0),
-                  );
+                  this.appStore.updateTime(+get(classroom, 'roomStatus.startTime', 0));
                 },
                 ms,
               );
             } else {
-              this.sceneStore.startTime = get(
-                classroom,
-                'roomStatus.startTime',
-                0,
-              );
+              this.sceneStore.startTime = get(classroom, 'roomStatus.startTime', 0);
               BizLogger.info('end time', this.sceneStore.startTime);
               this.delInterval('timer');
             }
           }
-          const isStudentChatAllowed =
-            classroom?.roomStatus?.isStudentChatAllowed ?? true;
-          console.log(
-            '## isStudentChatAllowed , ',
-            isStudentChatAllowed,
-            classroom,
-          );
+          const isStudentChatAllowed = classroom?.roomStatus?.isStudentChatAllowed ?? true;
+          console.log('## isStudentChatAllowed , ', isStudentChatAllowed, classroom);
           this.sceneStore._canChatting = isStudentChatAllowed;
           this.chatIsBanned(isStudentChatAllowed);
         });
@@ -1929,10 +1843,7 @@ export class RoomStore extends SimpleInterval {
       const localStreamData = roomManager.data.localStreamData;
 
       const canPublishRTC = (localStreamData: any, sceneType: any): boolean => {
-        const canPublishRTCRoles = [
-          EduRoleTypeEnum.teacher,
-          EduRoleTypeEnum.student,
-        ];
+        const canPublishRTCRoles = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.student];
         if (sceneType === 0) {
           if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
             return true;
@@ -1957,39 +1868,25 @@ export class RoomStore extends SimpleInterval {
           streamUuid: mainStream.streamUuid,
           streamName: '',
           hasVideo:
-            localStreamData && localStreamData.stream
-              ? localStreamData.stream.hasVideo
-              : true,
+            localStreamData && localStreamData.stream ? localStreamData.stream.hasVideo : true,
           hasAudio:
-            localStreamData && localStreamData.stream
-              ? localStreamData.stream.hasAudio
-              : true,
+            localStreamData && localStreamData.stream ? localStreamData.stream.hasAudio : true,
           userInfo: {} as EduUser,
         });
         EduLogger.info('toast.publish_business_flow_successfully');
         // this.appStore.isNotInvisible && this.appStore.fireToast(t('toast.publish_business_flow_successfully'))
-        this.sceneStore._cameraEduStream =
-          this.roomManager.userService.localStream.stream;
+        this.sceneStore._cameraEduStream = this.roomManager.userService.localStream.stream;
         try {
           // await this.sceneStore.prepareCamera()
           // await this.sceneStore.prepareMicrophone()
           if (this.sceneStore._cameraEduStream) {
             if (this.sceneStore._cameraEduStream.hasVideo) {
-              this.appStore.sceneStore.setOpeningCamera(
-                true,
-                this.roomInfo.userUuid,
-              );
+              this.appStore.sceneStore.setOpeningCamera(true, this.roomInfo.userUuid);
               try {
                 await this.sceneStore.unmuteLocalCamera();
-                this.appStore.sceneStore.setOpeningCamera(
-                  false,
-                  this.roomInfo.userUuid,
-                );
+                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid);
               } catch (err) {
-                this.appStore.sceneStore.setOpeningCamera(
-                  false,
-                  this.roomInfo.userUuid,
-                );
+                this.appStore.sceneStore.setOpeningCamera(false, this.roomInfo.userUuid);
                 throw err;
               }
             } else {
@@ -2014,8 +1911,7 @@ export class RoomStore extends SimpleInterval {
         }
       }
 
-      const roomProperties = roomManager.getClassroomInfo()
-        .roomProperties as any;
+      const roomProperties = roomManager.getClassroomInfo().roomProperties as any;
 
       //@ts-ignore
       this.roomProperties = roomProperties;
@@ -2116,8 +2012,7 @@ export class RoomStore extends SimpleInterval {
       if (this.classroomSchedule) {
         // classroomSchedule must already exists
         let durationToClose =
-          Number(this.classroomSchedule.closeDelay || 0) * 1000 -
-          this.classTimeDuration;
+          Number(this.classroomSchedule.closeDelay || 0) * 1000 - this.classTimeDuration;
         console.log('onClassStateChanged', {
           closeDelay: Number(this.classroomSchedule.closeDelay || 0),
           durationToClose,
@@ -2284,10 +2179,7 @@ export class RoomStore extends SimpleInterval {
 
   handleCause(
     operator: unknown,
-    {
-      oldRoomProperties,
-      newRoomProperties,
-    }: { oldRoomProperties: any; newRoomProperties: any },
+    { oldRoomProperties, newRoomProperties }: { oldRoomProperties: any; newRoomProperties: any },
   ) {
     const actionOperator = operator as CauseOperator;
     const { cmd, data } = actionOperator;
@@ -2298,9 +2190,7 @@ export class RoomStore extends SimpleInterval {
         switch (data.actionType) {
           case CoVideoActionType.studentHandsUp: {
             if (
-              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-                this.roomInfo.userRole,
-              )
+              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)
             ) {
               this.appStore.fireToast('co_video.received_student_hands_up');
             }
@@ -2318,13 +2208,8 @@ export class RoomStore extends SimpleInterval {
           // }
           case CoVideoActionType.teacherRefuse: {
             if ([EduRoleTypeEnum.student].includes(this.roomInfo.userRole)) {
-              const includedRemoveProgress: ProgressUserInfo[] =
-                data?.removeProgress ?? [];
-              if (
-                includedRemoveProgress.find(
-                  (it) => it.userUuid === this.roomInfo.userUuid,
-                )
-              ) {
+              const includedRemoveProgress: ProgressUserInfo[] = data?.removeProgress ?? [];
+              if (includedRemoveProgress.find((it) => it.userUuid === this.roomInfo.userUuid)) {
                 this.appStore.fireToast('co_video.received_teacher_refused');
               }
             }
@@ -2333,9 +2218,7 @@ export class RoomStore extends SimpleInterval {
           }
           case CoVideoActionType.studentCancel: {
             if (
-              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-                this.roomInfo.userRole,
-              )
+              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)
             ) {
               this.appStore.fireToast('co_video.received_student_cancel');
             }
@@ -2434,18 +2317,12 @@ export class RoomStore extends SimpleInterval {
           }
 
           let options: StreamSubscribeOptions = {
-            includeAudioStreams:
-              includeAudioStreams.length > 0 ? includeAudioStreams : undefined,
-            includeVideoStreams:
-              includeVideoStreams.length > 0 ? includeVideoStreams : undefined,
-            excludeAudioStreams:
-              excludeAudioStreams.length > 0 ? excludeAudioStreams : undefined,
-            excludeVideoStreams:
-              excludeVideoStreams.length > 0 ? excludeVideoStreams : undefined,
+            includeAudioStreams: includeAudioStreams.length > 0 ? includeAudioStreams : undefined,
+            includeVideoStreams: includeVideoStreams.length > 0 ? includeVideoStreams : undefined,
+            excludeAudioStreams: excludeAudioStreams.length > 0 ? excludeAudioStreams : undefined,
+            excludeVideoStreams: excludeVideoStreams.length > 0 ? excludeVideoStreams : undefined,
           };
-          this.appStore.eduManager.streamCoordinator.updateSubscribeOptions(
-            options,
-          );
+          this.appStore.eduManager.streamCoordinator.updateSubscribeOptions(options);
         }
       }
     } else if (cmd === 601) {
@@ -2473,25 +2350,24 @@ export class RoomStore extends SimpleInterval {
 
   @action.bound
   async updateFlexProperties(properties: any, cause: any) {
-    return await eduSDKApi.updateFlexProperties(
-      this.roomInfo.roomUuid,
-      properties,
-      cause,
-    );
+    return await eduSDKApi.updateFlexProperties(this.roomInfo.roomUuid, properties, cause);
   }
 
   @action.bound
-  setCarouselState(key: 'state' | 'type' | 'range' | 'interval', value: any) {
-    this.roomProperties.carousel[key] = value;
-  }
-
-  @action.bound
-  async startCarousel() {
+  async startCarousel({
+    range,
+    type,
+    interval,
+  }: {
+    range: number;
+    type: number;
+    interval: number;
+  }) {
     await eduSDKApi.startCarousel({
       roomUuid: this.roomInfo.roomUuid,
-      range: this.roomProperties.carousel.range,
-      type: this.roomProperties.carousel.type,
-      interval: this.roomProperties.carousel.interval,
+      range,
+      type,
+      interval,
       count: 6,
     });
   }

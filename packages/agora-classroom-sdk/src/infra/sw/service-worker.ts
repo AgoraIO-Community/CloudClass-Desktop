@@ -1,20 +1,11 @@
 import { precacheAndRoute } from 'workbox-precaching';
 import { RangeRequestsPlugin } from 'workbox-range-requests';
 import { CacheFirst } from 'workbox-strategies/CacheFirst';
-import {
-  NetworkFirst,
-  NetworkFirstOptions,
-} from 'workbox-strategies/NetworkFirst';
+import { NetworkFirst, NetworkFirstOptions } from 'workbox-strategies/NetworkFirst';
 import { registerRoute } from 'workbox-routing/registerRoute';
 import { agoraCaches, CacheResourceType } from '../web-download.file';
 import { StrategyHandler } from 'workbox-strategies/StrategyHandler';
-import {
-  ZipReader,
-  BlobReader,
-  BlobWriter,
-  getMimeType,
-  configure,
-} from '@zip.js/zip.js';
+import { ZipReader, BlobReader, BlobWriter, getMimeType, configure } from '@zip.js/zip.js';
 import { BroadcastChannel } from 'broadcast-channel';
 
 configure({
@@ -42,11 +33,7 @@ if ('BroadcastChannel' in self) {
 
 const channel = new BroadcastChannel('onFetchProgress');
 
-const onProgress = (payload: {
-  loaded: number;
-  total: number;
-  url: string;
-}) => {
+const onProgress = (payload: { loaded: number; total: number; url: string }) => {
   const progressSize = Math.ceil((payload.loaded / payload.total) * 100);
   // swLog(" loaded ", payload.loaded, " total ", payload.total, " progressSize ", progressSize)
   channel.postMessage({
@@ -83,9 +70,7 @@ class PreFetchZipStrategy extends NetworkFirst {
           },
         }),
       );
-      const cacheType = request.url.match(/dynamic/i)
-        ? 'dynamicConvert'
-        : 'staticConvert';
+      const cacheType = request.url.match(/dynamic/i) ? 'dynamicConvert' : 'staticConvert';
       await this.handleZipFile(newResponse, cacheType);
       return result;
     } catch (err) {
@@ -105,14 +90,12 @@ class PreFetchZipStrategy extends NetworkFirst {
     return await this.cacheResources(entry, type);
   }
 
-  public cacheResources = (
-    entries: any,
-    type: CacheResourceType,
-  ): Promise<void> => {
+  public cacheResources = (entries: any, type: CacheResourceType): Promise<void> => {
     return new Promise((fulfill, reject) => {
-      return Promise.allSettled(
-        entries.map((data: any) => this.cacheEntry(data, type)),
-      ).then(fulfill as any, reject);
+      return Promise.allSettled(entries.map((data: any) => this.cacheEntry(data, type))).then(
+        fulfill as any,
+        reject,
+      );
     });
   };
 
@@ -130,20 +113,14 @@ class PreFetchZipStrategy extends NetworkFirst {
     return getMimeType(filename);
   };
 
-  public getLocation = (
-    filename?: string,
-    type?: CacheResourceType,
-  ): string => {
+  public getLocation = (filename?: string, type?: CacheResourceType): string => {
     if (filename) {
       return `https://${resourcesHost}/${type}/${filename}`;
     }
     return `https://${resourcesHost}/dynamicConvert/${filename}`;
   };
 
-  public cacheEntry = async (
-    entry: any,
-    type: CacheResourceType,
-  ): Promise<void> => {
+  public cacheEntry = async (entry: any, type: CacheResourceType): Promise<void> => {
     if (entry.directory) {
       return Promise.resolve();
     }
@@ -182,9 +159,7 @@ const netlessZipResourcesPattern = new RegExp(
 
 registerRoute(netlessZipResourcesPattern, cacheZipResourceHandler, 'GET');
 
-const resourcePattern = new RegExp(
-  '^https://convertcdn.netless.link/(static|dynamic)Convert',
-);
+const resourcePattern = new RegExp('^https://convertcdn.netless.link/(static|dynamic)Convert');
 
 const cacheFirst = new CacheFirst({ cacheName });
 const cacheRangeFile = new CacheFirst({
@@ -201,18 +176,14 @@ const cacheRangeFileHandler = async (options: any) => {
 };
 
 registerRoute(({ url }: any) => {
-  const res =
-    url.href.match(resourcePattern) &&
-    url.href.match(/\.(mp4|mp3|flv|avi|wav)$/i);
+  const res = url.href.match(resourcePattern) && url.href.match(/\.(mp4|mp3|flv|avi|wav)$/i);
   // swLog("static large file url", url.href, " hints ", res, " url ", url)
   return res;
 }, cacheRangeFileHandler);
 
 registerRoute(
   ({ url }: any) => {
-    const res =
-      url.href.match(resourcePattern) &&
-      !url.href.match(/\.(mp4|mp3|flv|avi|wav|zip)$/i);
+    const res = url.href.match(resourcePattern) && !url.href.match(/\.(mp4|mp3|flv|avi|wav|zip)$/i);
     // swLog("static assets file url", url.href, " hints ", res, " url ", url)
     return res;
   },

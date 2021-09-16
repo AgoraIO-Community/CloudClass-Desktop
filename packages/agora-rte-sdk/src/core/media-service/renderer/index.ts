@@ -272,11 +272,7 @@ export class RemoteUserRenderer extends UserRenderer {
         //@ts-ignore
         this.electron.client.setupViewContentMode(+this.uid, 1, this.channel);
       }
-      let electron_renderer: any = this.electron.client._getRenderers(
-        1,
-        +this.uid,
-        this.channel,
-      );
+      let electron_renderer: any = this.electron.client._getRenderers(1, +this.uid, this.channel);
       const remote_renderer = this;
       if (electron_renderer && electron_renderer[0]) {
         electron_renderer = electron_renderer[0];
@@ -294,10 +290,9 @@ export class RemoteUserRenderer extends UserRenderer {
                   VideoRenderState.FirstFrameRendered,
                 ]);
                 setTimeout(() => {
-                  remote_renderer.updateVideoRenderState.apply(
-                    remote_renderer,
-                    [VideoRenderState.Playing],
-                  );
+                  remote_renderer.updateVideoRenderState.apply(remote_renderer, [
+                    VideoRenderState.Playing,
+                  ]);
                 }, 0);
                 method.apply(context, args);
                 // @ts-ignore
@@ -306,10 +301,7 @@ export class RemoteUserRenderer extends UserRenderer {
                 delete electron_renderer._drawFrame;
               };
             };
-            electron_renderer.drawFrame = proxy(
-              electron_renderer,
-              electron_renderer['drawFrame'],
-            );
+            electron_renderer.drawFrame = proxy(electron_renderer, electron_renderer['drawFrame']);
           }
         }
       }

@@ -50,9 +50,7 @@ const doGzip = async () => {
     if (logFileExists) {
       zip.addLocalFile(window.logPath);
     }
-    const videoSourceLogFileExists = fs.existsSync(
-      window.setNodeAddonVideoSourceLogPath,
-    );
+    const videoSourceLogFileExists = fs.existsSync(window.setNodeAddonVideoSourceLogPath);
     if (videoSourceLogFileExists) {
       zip.addLocalFile(window.videoSourceLogPath);
     }

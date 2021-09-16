@@ -1,12 +1,5 @@
 import classnames from 'classnames';
-import React, {
-  FC,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,19 +14,30 @@ import { SvgImg } from '../svg-img';
 import './index.css';
 import { VolumeIndicator } from './volume-indicator';
 import { observer } from 'mobx-react';
+import { COLOR_RULES } from '../../utilities/style-config';
 
-// TODO: 优化音量条
-export const StreamVolumeIndicator = observer(
-  ({ streamUuid }: { streamUuid: any }) => {
-    const speakers = new Map<any, any>();
+export const CustomizeVolumeIndicator = ({
+  streamUuid,
+  volume,
+}: {
+  streamUuid: any;
+  volume: number;
+}) => {
+  return <VolumeIndicator volume={volume} />;
+};
 
-    const speaker = speakers.get(+streamUuid);
+// // TODO: 优化音量条
+// export const StreamVolumeIndicator = observer(
+//   ({ streamUuid }: { streamUuid: any }) => {
+//     const speakers = new Map<any, any>();
 
-    const currentVolume = speaker ?? 0;
+//     const speaker = speakers.get(+streamUuid);
 
-    return <VolumeIndicator volume={currentVolume} />;
-  },
-);
+//     const currentVolume = speaker ?? 0;
+
+//     return <VolumeIndicator volume={currentVolume} />;
+//   },
+// );
 
 export interface BaseVideoPlayerProps {
   /**
@@ -69,6 +73,10 @@ export interface BaseVideoPlayerProps {
    * 是否展示star，默认 false
    */
   hideStars?: boolean;
+  /**
+   * 视频流类型 老师流 teacher 学生流 student
+   */
+  streamRoleType?: String;
   /**
    * hover 时控制条 展示的位置
    */
@@ -129,6 +137,8 @@ export interface BaseVideoPlayerProps {
   cameraDevice?: number;
   micDevice?: number;
   showGranted?: boolean;
+  roomType?: string;
+  renderVolumeIndicator?: typeof CustomizeVolumeIndicator;
 }
 
 type VideoPlayerType = BaseVideoPlayerProps & BaseProps;
@@ -182,7 +192,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   username,
   micEnabled,
   streamUuid,
-  // micVolume,
+  micVolume = 0,
   cameraEnabled,
   whiteboardGranted,
   isHost = false,
@@ -199,6 +209,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   isLocal = false,
   isOnPodium = false,
   userType = 'student',
+  streamRoleType = 'teacher',
   micDevice = 1,
   cameraDevice = 1,
   onCameraClick,
@@ -210,6 +221,8 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
   hidePrivateChat = true,
   showGranted = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  renderVolumeIndicator = CustomizeVolumeIndicator,
+  roomType,
   ...restProps
 }) => {
   const [animList, setAnimList] = useState<AnimSvga[]>([]);
@@ -299,7 +312,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                 <SvgImg
                   canHover={canHoverHideOffAllPodium}
                   style={{
-                    color: canHoverHideOffAllPodium ? '#357BF6' : '#BDBDCA',
+                    color: canHoverHideOffAllPodium
+                      ? COLOR_RULES.activeColor
+                      : COLOR_RULES.deactiveColor,
                   }}
                   type="invite-to-podium"
                   size={22}
@@ -315,7 +330,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                   canHover
                   type="invite-to-podium"
                   className={isOnPodium ? 'podium' : 'no_podium'}
-                  style={{ color: '#357BF6' }}
+                  style={{ color: COLOR_RULES.activeColor }}
                   size={22}
                   onClick={() => onOffPodiumClick(uid)}
                 />
@@ -324,14 +339,14 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           )}
           {hideBoardGranted ? null : (
             <Tooltip
-              title={
-                whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')
-              }
+              title={whiteboardGranted ? t('Close Whiteboard') : t('Open Whiteboard')}
               placement={placement}>
               <span>
                 <SvgImg
                   type="no-authorized"
-                  style={{ color: whiteboardGranted ? '#357BF6' : '#7B88A0' }}
+                  style={{
+                    color: whiteboardGranted ? COLOR_RULES.activeColor : COLOR_RULES.deactiveColor,
+                  }}
                   onClick={() => onWhiteboardClick(uid)}
                   size={22}
                   canHover
@@ -349,25 +364,17 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
                     onSendStar(uid);
                   }}
                   size={22}
-                  style={{ color: '#7B88A0' }}
+                  style={{ color: COLOR_RULES.activeColor }}
                 />
               </span>
             </Tooltip>
           )}
           {hidePrivateChat ? null : (
             <Tooltip
-              title={
-                privateCallEnabled
-                  ? t('Close Private Call')
-                  : t('Open Private Call')
-              }
+              title={privateCallEnabled ? t('Close Private Call') : t('Open Private Call')}
               placement={placement}>
               <div
-                className={
-                  privateCallEnabled
-                    ? 'private-call-active'
-                    : 'private-call-default'
-                }
+                className={privateCallEnabled ? 'private-call-active' : 'private-call-default'}
                 onClick={() => {
                   onPrivateChat(uid);
                 }}></div>
@@ -376,6 +383,14 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         </>
       ) : null}
     </div>
+  );
+  // teacher and assistant can see stars, student can see stars if stars > 0 and big class can not see stars
+  const isShowStarNum = useMemo(
+    () =>
+      (stars > 0 || ['teacher', 'assistant'].includes(userType)) &&
+      streamRoleType !== 'teacher' &&
+      roomType !== 'big-class',
+    [stars, userType, streamRoleType, roomType],
   );
   return (
     <Popover
@@ -391,14 +406,9 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
         {placeholder ? <>{placeholder}</> : null}
         {animList.length
           ? animList.map((item) => (
-              <div
-                key={item.id}
-                className="center-reward"
-                style={{ width: 200, height: 200 }}>
+              <div key={item.id} className="center-reward">
                 <SvgaPlayer
                   type="reward"
-                  width={200}
-                  height={200}
                   audio="reward"
                   duration={2000}
                   onClose={() => onClose(item.id)}
@@ -407,18 +417,18 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
             ))
           : ''}
         <div className="top-right-info">
-          {stars > 0 ? (
+          {isShowStarNum ? (
             <>
-              <SvgImg className="stars" type="star" canHover />
+              <SvgImg className="stars" type="star" />
               <span className="stars-label">x{stars}</span>
             </>
           ) : null}
         </div>
         <div className="bottom-left-info">
           <div>
-            {micEnabled && micDevice === 1 ? (
-              <StreamVolumeIndicator streamUuid={streamUuid} />
-            ) : null}
+            {micEnabled && micDevice === 1
+              ? renderVolumeIndicator({ volume: micVolume, streamUuid })
+              : null}
             <MediaIcon
               className={micStateCls}
               {...getMediaIconProps({
@@ -442,9 +452,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({
           </span>
         </div>
         <div className="bottom-right-info">
-          {whiteboardGranted && showGranted ? (
-            <div className="bottom-right-granted"></div>
-          ) : null}
+          {whiteboardGranted && showGranted ? <div className="bottom-right-granted"></div> : null}
         </div>
       </div>
     </Popover>
@@ -516,6 +524,7 @@ export interface VideoMarqueeListProps {
    * 轮播功能开启轮播需要隐藏箭头
    */
   openCarousel?: boolean;
+  roomType?: 'mid-class' | 'big-class';
 }
 
 export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
@@ -531,6 +540,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
   userType,
   openCarousel = false,
   onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+  roomType = 'mid-class',
 }) => {
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -540,9 +550,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     (direction: 'left' | 'right') => {
       const videoContainer = videoContainerRef.current;
       if (!videoContainer) return;
-      const videoDOM = videoContainer.querySelector(
-        '.video-item',
-      ) as HTMLDivElement;
+      const videoDOM = videoContainer.querySelector('.video-item') as HTMLDivElement;
       if (!videoDOM) return;
       const offsetWidth = videoDOM.offsetWidth;
       if (direction === 'left') {
@@ -555,12 +563,9 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     [videoContainerRef.current],
   );
 
-  const checkTargetScrollElementSatisfied = (
-    target: HTMLDivElement,
-  ): boolean => {
+  const checkTargetScrollElementSatisfied = (target: HTMLDivElement): boolean => {
     // const targetOffsetWidth = target.offsetWidth
-    const videoItems: NodeListOf<HTMLDivElement> =
-      target.querySelectorAll('.video-item');
+    const videoItems: NodeListOf<HTMLDivElement> = target.querySelectorAll('.video-item');
     if (videoItems && videoItems.length && videoItems[0].offsetWidth) {
       return videoItems.length >= 6;
     }
@@ -575,9 +580,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
       videoContainerParentRef.current = _dom!;
 
       if (videoContainerRef.current && videoContainerParentRef.current) {
-        const satisfied = checkTargetScrollElementSatisfied(
-          videoContainerRef.current,
-        );
+        const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current);
         if (satisfied) {
           videoContainerRef.current.classList.add('show-scroll');
         } else {
@@ -602,9 +605,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
 
   const attachVideoItem = useCallback(() => {
     if (videoContainerRef.current) {
-      const satisfied = checkTargetScrollElementSatisfied(
-        videoContainerRef.current,
-      );
+      const satisfied = checkTargetScrollElementSatisfied(videoContainerRef.current);
       if (satisfied) {
         videoContainerRef.current.classList.add('show-scroll');
       } else {
@@ -613,8 +614,13 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
     }
   }, [videoContainerRef.current]);
 
+  const cls = classnames({
+    'marque-video-container': 1,
+    [`${roomType}`]: 1,
+  });
+
   return (
-    <div className="marque-video-container">
+    <div className={cls}>
       <>
         <CSSTransition
           in={!!teacherStreams[0]?.uid}
@@ -623,6 +629,7 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
           <div className="video-item" ref={attachVideoItem}>
             {teacherStreams[0] && (
               <VideoPlayer
+                streamRoleType="teacher"
                 hideStars={hideStars}
                 {...teacherStreams[0]}
                 userType={userType}
@@ -635,7 +642,8 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
                 }}
                 onPrivateChat={async () => {
                   await onPrivateChat(teacherStreams[0].uid);
-                }}></VideoPlayer>
+                }}
+                roomType={roomType}></VideoPlayer>
             )}
           </div>
         </CSSTransition>
@@ -652,37 +660,35 @@ export const VideoMarqueeList: React.FC<VideoMarqueeListProps> = ({
               </span>
             </div>
           ) : null}
-          <TransitionGroup
-            id="animation-group"
-            className="video-list video-container">
+          <TransitionGroup id="animation-group" className="video-list video-container">
             {/* <div className="video-container" ref={mountDOM}> */}
-            {videoStreamList.map(
-              (videoStream: BaseVideoPlayerProps, idx: number) => (
-                <CSSTransition
-                  key={`student-${videoStream.uid}`}
-                  // key={videoStream.uid}
-                  timeout={500}
-                  classNames="video-player-animates">
-                  <div className="video-item" key={idx} ref={attachVideoItem}>
-                    <VideoPlayer
-                      hideStars={hideStars}
-                      {...videoStream}
-                      // showGranted={true}
-                      userType={userType}
-                      onCameraClick={onCameraClick}
-                      onMicClick={onMicClick}
-                      onOffPodiumClick={onOffPodiumClick}
-                      onWhiteboardClick={onWhiteboardClick}
-                      onSendStar={async () => {
-                        await onSendStar(videoStream.uid);
-                      }}
-                      onPrivateChat={async () => {
-                        await onPrivateChat(videoStream.uid);
-                      }}></VideoPlayer>
-                  </div>
-                </CSSTransition>
-              ),
-            )}
+            {videoStreamList.map((videoStream: BaseVideoPlayerProps, idx: number) => (
+              <CSSTransition
+                key={`student-${videoStream.uid}`}
+                // key={videoStream.uid}
+                timeout={500}
+                classNames="video-player-animates">
+                <div className="video-item" ref={attachVideoItem}>
+                  <VideoPlayer
+                    streamRoleType="student"
+                    hideStars={hideStars}
+                    {...videoStream}
+                    // showGranted={true}
+                    userType={userType}
+                    onCameraClick={onCameraClick}
+                    onMicClick={onMicClick}
+                    onOffPodiumClick={onOffPodiumClick}
+                    onWhiteboardClick={onWhiteboardClick}
+                    onSendStar={async () => {
+                      await onSendStar(videoStream.uid);
+                    }}
+                    onPrivateChat={async () => {
+                      await onPrivateChat(videoStream.uid);
+                    }}
+                    roomType={roomType}></VideoPlayer>
+                </div>
+              </CSSTransition>
+            ))}
             {/* </div> */}
           </TransitionGroup>
           {!openCarousel ? (
@@ -706,72 +712,71 @@ export interface MidClassVideoMarqueeListProps extends VideoMarqueeListProps {
   teacherStream: any;
 }
 
-export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> =
-  ({
-    teacherStream,
-    videoStreamList = [],
-    hideStars,
-    onCameraClick,
-    onMicClick,
-    onOffPodiumClick,
-    onWhiteboardClick,
-    onSendStar,
-    userType,
-    onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
-  }) => {
-    return (
-      <div className="mid-class-carousel">
-        <div className="carousel-item video-teacher">
-          <VideoPlayer
-            {...teacherStream}
-            controlPlacement={'bottom'}
-            placement={'bottom'}></VideoPlayer>
-        </div>
-        <div className="video-students">
-          {videoStreamList.length > 6 ? (
-            <div className="left-container scroll-btn">
-              <span className="offset">
-                <Icon type="backward"></Icon>
-              </span>
-            </div>
-          ) : null}
-          {videoStreamList.length
-            ? videoStreamList.map((videoStream, index) => (
-                <div
-                  className={['carousel-item', `video-student`].join(' ')}
-                  key={index}
-                  onAnimationEnd={(e: any) => {
-                    e.target.style.opacity = 1;
-                    e.target.style.width = 204 + 'px';
-                  }}>
-                  <VideoPlayer
-                    {...videoStream}
-                    controlPlacement={'bottom'}
-                    placement={'bottom'}
-                    hideStars={hideStars}
-                    showGranted={true}
-                    userType={userType}
-                    onCameraClick={onCameraClick}
-                    onMicClick={onMicClick}
-                    onOffPodiumClick={onOffPodiumClick}
-                    onWhiteboardClick={onWhiteboardClick}
-                    onSendStar={async () => {
-                      await onSendStar(videoStream.uid);
-                    }}
-                    onPrivateChat={async () => {
-                      await onPrivateChat(videoStream.uid);
-                    }}></VideoPlayer>
-                </div>
-              ))
-            : null}
-          {videoStreamList.length > 6 ? (
-            <div className="right-container scroll-btn">
-              <span className="offset">
-                <Icon type="forward"></Icon>
-              </span>
-            </div>
-          ) : null}
-        </div>
+export const MidClassVideoMarqueeList: React.FC<MidClassVideoMarqueeListProps> = ({
+  teacherStream,
+  videoStreamList = [],
+  hideStars,
+  onCameraClick,
+  onMicClick,
+  onOffPodiumClick,
+  onWhiteboardClick,
+  onSendStar,
+  userType,
+  onPrivateChat = (uid: string | number) => console.log('onPrivateChat', uid),
+}) => {
+  return (
+    <div className="mid-class-carousel">
+      <div className="carousel-item video-teacher">
+        <VideoPlayer
+          {...teacherStream}
+          controlPlacement={'bottom'}
+          placement={'bottom'}></VideoPlayer>
       </div>
-    );
-  };
+      <div className="video-students">
+        {videoStreamList.length > 6 ? (
+          <div className="left-container scroll-btn">
+            <span className="offset">
+              <Icon type="backward"></Icon>
+            </span>
+          </div>
+        ) : null}
+        {videoStreamList.length
+          ? videoStreamList.map((videoStream, index) => (
+              <div
+                className={['carousel-item', `video-student`].join(' ')}
+                key={index}
+                onAnimationEnd={(e: any) => {
+                  e.target.style.opacity = 1;
+                  e.target.style.width = 204 + 'px';
+                }}>
+                <VideoPlayer
+                  {...videoStream}
+                  controlPlacement={'bottom'}
+                  placement={'bottom'}
+                  hideStars={hideStars}
+                  showGranted={true}
+                  userType={userType}
+                  onCameraClick={onCameraClick}
+                  onMicClick={onMicClick}
+                  onOffPodiumClick={onOffPodiumClick}
+                  onWhiteboardClick={onWhiteboardClick}
+                  onSendStar={async () => {
+                    await onSendStar(videoStream.uid);
+                  }}
+                  onPrivateChat={async () => {
+                    await onPrivateChat(videoStream.uid);
+                  }}></VideoPlayer>
+              </div>
+            ))
+          : null}
+        {videoStreamList.length > 6 ? (
+          <div className="right-container scroll-btn">
+            <span className="offset">
+              <Icon type="forward"></Icon>
+            </span>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+};

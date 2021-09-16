@@ -40,6 +40,15 @@
   height: auto !important;
   width: 210px !important;
   max-height: 290px !important;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hands-up-card::-webkit-scrollbar {
+  width: 0;
+  display: none;
 }
 
 .hands-up .unread-count {
@@ -158,8 +167,12 @@
   justify-content: space-between;
 }
 
-.operation-icon-wrap div.use-svg {
+.operation-icon-wrap .icon-wrap-svg {
   cursor: pointer;
+}
+
+.icon-wrap-svg.checked path {
+  fill: #357bf6;
 }
 
 .customize-dialog-popover .popover-inner {

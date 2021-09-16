@@ -5,3 +5,4 @@ dist
 lib
 *.lock
 package-lock.json
+tsconfig.json

@@ -60,12 +60,7 @@ export class ReportService extends ApiBase {
     this.prefix = `${this.sdkDomain}`;
   }
 
-  initReportParams(params: {
-    sid: string;
-    rid: string;
-    appId: string;
-    uid: string;
-  }) {
+  initReportParams(params: { sid: string; rid: string; appId: string; uid: string }) {
     this.sid = params.sid;
     this.rid = params.rid;
     this.appId = params.appId;
@@ -152,13 +147,7 @@ export class ReportService extends ApiBase {
   }
 
   buildHBParams() {
-    return this.buildBaseParams(
-      'flexibleClass',
-      'apaas',
-      'online_user',
-      { count: 1 },
-      {},
-    );
+    return this.buildBaseParams('flexibleClass', 'apaas', 'online_user', { count: 1 }, {});
   }
 
   get apiPath() {
@@ -221,10 +210,7 @@ export class ReportService extends ApiBase {
   }
 
   startTick(event: string, category: string, api?: string) {
-    this.tickerMap.set(
-      this.tickerKey(event, category, api),
-      new Date().getTime(),
-    );
+    this.tickerMap.set(this.tickerKey(event, category, api), new Date().getTime());
   }
 
   startHB() {
@@ -250,19 +236,11 @@ export class ReportService extends ApiBase {
     return 0;
   }
 
-  async reportEC(
-    event: string,
-    category: string,
-    optional?: ReportPointOptionalParams,
-  ) {
+  async reportEC(event: string, category: string, optional?: ReportPointOptionalParams) {
     return this.report(event, category, { count: 1 }, optional);
   }
 
-  async reportElapse(
-    event: string,
-    category: string,
-    optional?: ReportPointOptionalParams,
-  ) {
+  async reportElapse(event: string, category: string, optional?: ReportPointOptionalParams) {
     return this.report(
       event,
       category,
@@ -289,8 +267,7 @@ export class ReportService extends ApiBase {
 }
 
 export const reportService = new ReportService({
-  sdkDomain:
-    'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
+  sdkDomain: 'https://api-test.agora.io/cn/v1.0/projects/%app_id%/app-dev-report',
   appId: '',
   rtmToken: '',
   rtmUid: '',

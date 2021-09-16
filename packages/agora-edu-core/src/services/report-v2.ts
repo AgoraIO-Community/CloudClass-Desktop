@@ -159,11 +159,7 @@ export class ReportServiceV2 extends ApiBase {
     let buffer = ScreenShareEnd.encode(message).finish();
     return this.Uint8ToBase64(buffer);
   }
-  protected buildBaseParams(
-    id: number,
-    src: string,
-    payload: string,
-  ): ReportParams {
+  protected buildBaseParams(id: number, src: string, payload: string): ReportParams {
     const qos = this.qos;
     const ts = Math.floor(new Date().getTime() / 1000);
     const sign = md5(`payload=${payload}&src=${src}&ts=${ts}`);
@@ -290,12 +286,7 @@ export class ReportServiceV2 extends ApiBase {
     const res = await this.request({
       path: `/v2/report`,
       method: 'POST',
-      data: this.buildApaasUserJoinParams(
-        'apaas',
-        this.reportUserParams,
-        lts,
-        errorCode,
-      ),
+      data: this.buildApaasUserJoinParams('apaas', this.reportUserParams, lts, errorCode),
     });
     return res.data;
   }
@@ -306,12 +297,7 @@ export class ReportServiceV2 extends ApiBase {
     const res = await this.request({
       path: `/v2/report`,
       method: 'POST',
-      data: this.buildApaasUserQuitParams(
-        'apaas',
-        this.reportUserParams,
-        lts,
-        errorCode,
-      ),
+      data: this.buildApaasUserQuitParams('apaas', this.reportUserParams, lts, errorCode),
     });
     return res.data;
   }
@@ -322,12 +308,7 @@ export class ReportServiceV2 extends ApiBase {
     const res = await this.request({
       path: `/v2/report`,
       method: 'POST',
-      data: this.buildApaasUserReconnectParams(
-        'apaas',
-        this.reportUserParams,
-        lts,
-        errorCode,
-      ),
+      data: this.buildApaasUserReconnectParams('apaas', this.reportUserParams, lts, errorCode),
     });
     return res.data;
   }
@@ -338,12 +319,7 @@ export class ReportServiceV2 extends ApiBase {
     const res = await this.request({
       path: `/v2/report`,
       method: 'POST',
-      data: this.buildScreenShareStartParams(
-        'apaas',
-        this.reportUserParams,
-        lts,
-        errorCode,
-      ),
+      data: this.buildScreenShareStartParams('apaas', this.reportUserParams, lts, errorCode),
     });
     return res.data;
   }
@@ -354,12 +330,7 @@ export class ReportServiceV2 extends ApiBase {
     const res = await this.request({
       path: `/v2/report`,
       method: 'POST',
-      data: this.buildScreenShareEndParams(
-        'apaas',
-        this.reportUserParams,
-        lts,
-        errorCode,
-      ),
+      data: this.buildScreenShareEndParams('apaas', this.reportUserParams, lts, errorCode),
     });
     return res.data;
   }

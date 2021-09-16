@@ -8,17 +8,16 @@ export type ScreenShareContainerProps = {
   setWindowId: (newValue: any) => void;
 };
 
-export const ScreenShareContainer: React.FC<ScreenShareContainerProps> =
-  observer((props) => {
-    const { nativeAppWindowItems } = useScreenShareContext();
+export const ScreenShareContainer: React.FC<ScreenShareContainerProps> = observer((props) => {
+  const { nativeAppWindowItems } = useScreenShareContext();
 
-    return (
-      <ScreenShare
-        onActiveItem={(id: any) => {
-          props.setWindowId(id);
-        }}
-        currentActiveId={props.windowId}
-        screenShareTitle={'screen share'}
-        windowItems={nativeAppWindowItems}></ScreenShare>
-    );
-  });
+  return (
+    <ScreenShare
+      onActiveItem={(id: any) => {
+        props.setWindowId(id);
+      }}
+      currentActiveId={props.windowId}
+      screenShareTitle={'screen share'}
+      windowItems={nativeAppWindowItems}></ScreenShare>
+  );
+});

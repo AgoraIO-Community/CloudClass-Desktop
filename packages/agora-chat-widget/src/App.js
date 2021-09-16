@@ -3,18 +3,11 @@ import i18n from 'i18next';
 import { useSelector } from 'react-redux';
 import WebIM, { initIMSDK } from './utils/WebIM';
 import store from './redux/store';
+import { transI18n } from '~ui-kit';
 import { propsAction, isShowChat } from './redux/actions/propsAction';
 import { statusAction, clearStore } from './redux/actions/userAction';
-import {
-  messageAction,
-  showRedNotification,
-} from './redux/actions/messageAction';
-import {
-  roomAllMute,
-  roomUsers,
-  isUserMute,
-  announcementNotice,
-} from './redux/actions/roomAction';
+import { messageAction, showRedNotification } from './redux/actions/messageAction';
+import { roomAllMute, roomUsers, isUserMute, announcementNotice } from './redux/actions/roomAction';
 import { loginIM } from './api/login';
 import { setUserInfo, getUserInfo } from './api/userInfo';
 import { joinRoom, getAnnouncement } from './api/chatroom';
@@ -22,29 +15,29 @@ import { getRoomWhileList } from './api/mute';
 import _ from 'lodash';
 import { Chat } from './components/Chat';
 import { message } from 'antd';
-import { LOGIN_SUCCESS, CHAT_TABS_KEYS } from './contants';
+import { ROOM_TYPE, CHAT_TABS_KEYS } from './contants';
 import showChat_icon from './themes/img/chat.png';
 import im_CN from './locales/zh_CN';
 import im_US from './locales/en_US';
 import './App.css';
 import 'antd/dist/antd.css';
 const App = function (props) {
+  // 白板全屏状态下，控制IMChat
+  const { isFullScreen } = props.pluginStore.globalContext;
   const state = useSelector((state) => state);
   const showChat = state?.showChat;
   const showRed = state?.showRed;
   const showAnnouncementNotice = state?.showAnnouncementNotice;
+  const isSmallClass = state?.propsData?.roomType === ROOM_TYPE.smallClass;
   i18n.addResourceBundle('zh', 'translation', im_CN);
   i18n.addResourceBundle('en', 'translation', im_US);
+
   useEffect(() => {
     let im_Data = props.pluginStore;
     let im_Data_Props = _.get(im_Data, 'props', '');
     let im_Data_RoomInfo = _.get(im_Data, 'context.roomInfo', '');
     let im_Data_UserInfo = _.get(im_Data, 'context.localUserInfo', '');
-    let new_IM_Data = _.assign(
-      im_Data_Props,
-      im_Data_RoomInfo,
-      im_Data_UserInfo,
-    );
+    let new_IM_Data = _.assign(im_Data_Props, im_Data_RoomInfo, im_Data_UserInfo);
     let appkey = im_Data_Props.orgName + '#' + im_Data_Props.appName;
     store.dispatch(propsAction(new_IM_Data));
     if (appkey) {
@@ -67,7 +60,7 @@ const App = function (props) {
       onOpened: () => {
         console.log('onOpened>>>');
         store.dispatch(statusAction(true));
-        message.success(LOGIN_SUCCESS);
+        message.success(transI18n('chat.login_success'));
         setUserInfo();
         joinRoom();
       },
@@ -85,7 +78,7 @@ const App = function (props) {
       onError: (err) => {
         console.log('onError>>>', err);
         if (err.type === 16) {
-          return message.error('请重新登陆！');
+          return message.error(transI18n('chat.login_again'));
         }
         if (err.type === 604) return;
         const type = JSON.parse(_.get(err, 'data.data')).error_description;
@@ -133,8 +126,7 @@ const App = function (props) {
       },
       onPresence: (message) => {
         console.log('onPresence>>>', message);
-        const activeTabKey =
-          store.getState().isTabKey !== CHAT_TABS_KEYS.notice;
+        const activeTabKey = store.getState().isTabKey !== CHAT_TABS_KEYS.notice;
         if (new_IM_Data.chatroomId !== message.gid) {
           return;
         }
@@ -203,25 +195,30 @@ const App = function (props) {
   return (
     <div>
       {showChat ? (
-        <div className="app">
-          <Chat onReceivedMsg={props.onReceivedMsg} sendMsg={props.sendMsg} />
-        </div>
+        isSmallClass ? (
+          <div
+            className="app"
+            style={{
+              width: isFullScreen ? '300px' : '340px',
+              display: isFullScreen ? 'none' : 'block',
+            }}>
+            <Chat />
+          </div>
+        ) : (
+          <div className="app" style={{ width: '300px', display: isFullScreen ? 'none' : 'block' }}>
+            <Chat />
+          </div>
+        )
       ) : (
         <div className="chat">
           <div
             className="show-chat-icon"
             onClick={() => {
               // 展开聊天
-              props.onReceivedMsg &&
-                props.onReceivedMsg({
-                  isShowChat: true,
-                });
               onChangeModal();
             }}>
             <img src={showChat_icon} />
-            {(showRed || showAnnouncementNotice) && (
-              <div className="chat-notice"></div>
-            )}
+            {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
           </div>
         </div>
       )}

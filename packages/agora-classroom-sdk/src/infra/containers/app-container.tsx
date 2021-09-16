@@ -3,21 +3,11 @@ import { HomeStore } from '@/infra/stores/app/home';
 import { BizPageRouter } from '@/infra/types';
 import { ToastContainer } from '~capabilities/containers/toast';
 import { AppPluginContainer } from '~capabilities/containers/ext-app';
-import {
-  AppStoreConfigParams,
-  AppStoreInitParams,
-  useStorageSWContext,
-} from 'agora-edu-core';
+import { AppStoreConfigParams, AppStoreInitParams, useStorageSWContext } from 'agora-edu-core';
 import { I18nProvider } from '~ui-kit';
 import { RoomParameters } from '../api/declare';
 import { Provider } from 'mobx-react';
-import {
-  HashRouter,
-  MemoryRouter,
-  Redirect,
-  Route,
-  Switch,
-} from 'react-router-dom';
+import { HashRouter, MemoryRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 export interface RouteContainerProps {
   routes: BizPageRouter[];
@@ -76,11 +66,7 @@ export const RoomContainer = (props: RoomContainerParams) => {
   return (
     <I18nProvider language={props.language}>
       <MemoryRouter>
-        <RouteContainer
-          routes={props.routes}
-          mainPath={props.mainPath}
-          inRoom={true}
-        />
+        <RouteContainer routes={props.routes} mainPath={props.mainPath} inRoom={true} />
       </MemoryRouter>
     </I18nProvider>
   );
@@ -104,16 +90,9 @@ type GenAppContainerProps = {
   basename?: string;
 };
 
-type GenAppComponentProps = Pick<
-  AppContainerComponentProps,
-  'routes' | 'basename'
->;
+type GenAppComponentProps = Pick<AppContainerComponentProps, 'routes' | 'basename'>;
 
-export const GenAppContainer = ({
-  globalId,
-  resetRoomInfo,
-  ...config
-}: GenAppContainerProps) => {
+export const GenAppContainer = ({ globalId, resetRoomInfo, ...config }: GenAppContainerProps) => {
   const appStore = new HomeStore({
     config: config.appConfig,
     roomInfoParams: config.roomConfig,
@@ -124,7 +103,5 @@ export const GenAppContainer = ({
   });
   //@ts-ignore
   window[globalId] = appStore;
-  return (props: GenAppComponentProps) => (
-    <AppContainer {...props} store={appStore} />
-  );
+  return (props: GenAppComponentProps) => <AppContainer {...props} store={appStore} />;
 };

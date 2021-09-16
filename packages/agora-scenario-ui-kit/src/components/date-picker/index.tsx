@@ -21,11 +21,7 @@ export interface DatePickerProps extends BaseProps {
   onChangeDate?: (date: Date) => void;
 }
 
-export const DatePicker: FC<DatePickerProps> = ({
-  className,
-  onChangeDate,
-  ...restProps
-}) => {
+export const DatePicker: FC<DatePickerProps> = ({ className, onChangeDate, ...restProps }) => {
   let today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);

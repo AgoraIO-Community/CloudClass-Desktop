@@ -45,17 +45,13 @@ export const Calendar: FC<CalendarProps> = ({
   const hourRef = useRef<HTMLButtonElement | null>(null);
   const minuteRef = useRef<HTMLButtonElement | null>(null);
 
-  const onSelectHour = (
-    evt: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  const onSelectHour = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     let hour = Number(evt.currentTarget.dataset.hour || '1');
     setSelectedHour(hour);
     onChange && onChange(constructResult(startDate, hour, selectedMinute));
   };
 
-  const onSelectMinute = (
-    evt: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  const onSelectMinute = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     let minute = Number(evt.currentTarget.dataset.minute || '0');
     setSelectedMinute(minute);
     onChange && onChange(constructResult(startDate, selectedHour, minute));
@@ -79,8 +75,7 @@ export const Calendar: FC<CalendarProps> = ({
           let d: Date = date as Date;
           setSelectedMonth(dayjs(d).month());
           setStartDate(d);
-          onChange &&
-            onChange(constructResult(d, selectedHour, selectedMinute));
+          onChange && onChange(constructResult(d, selectedHour, selectedMinute));
         }}
         onMonthChange={(date: Date) => setSelectedMonth(dayjs(date).month())}
         // showTimeSelect
@@ -98,16 +93,8 @@ export const Calendar: FC<CalendarProps> = ({
           <div className="ag-calendar-header">
             {dayjs(date).format('YYYY年MM月')}
             <div className="ag-calendar-header-btn-groups">
-              <SvgImg
-                className="rotated"
-                type="backward"
-                onClick={() => decreaseMonth()}
-              />
-              <SvgImg
-                className="rotated"
-                type="forward"
-                onClick={() => increaseMonth()}
-              />
+              <SvgImg className="rotated" type="backward" onClick={() => decreaseMonth()} />
+              <SvgImg className="rotated" type="forward" onClick={() => increaseMonth()} />
             </div>
           </div>
         )}
@@ -117,11 +104,7 @@ export const Calendar: FC<CalendarProps> = ({
           let today = dayjs();
 
           const equalDate = (d1: dayjs.Dayjs, d2: dayjs.Dayjs) => {
-            return (
-              d1.date() === d2.date() &&
-              d1.month() === d2.month() &&
-              d1.year() === d2.year()
-            );
+            return d1.date() === d2.date() && d1.month() === d2.month() && d1.year() === d2.year();
           };
 
           d.month() !== selectedMonth && classes.push('out-scoped');
@@ -152,9 +135,7 @@ export const Calendar: FC<CalendarProps> = ({
               <button
                 data-minute={idx}
                 ref={selectedMinute === idx ? minuteRef : null}
-                className={
-                  selectedMinute === idx ? 'selected w-full' : 'w-full'
-                }
+                className={selectedMinute === idx ? 'selected w-full' : 'w-full'}
                 onClick={onSelectMinute}>
                 {`${idx}`.padStart(2, '0')}
               </button>

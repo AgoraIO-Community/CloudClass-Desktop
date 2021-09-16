@@ -43,10 +43,7 @@ export class GenericError extends Error {
   }
 }
 
-export const GenericErrorWrapper = (
-  err: any,
-  extra?: GenericErrorExtraOptions,
-): GenericError => {
+export const GenericErrorWrapper = (err: any, extra?: GenericErrorExtraOptions): GenericError => {
   if (err instanceof GenericError) {
     return err;
   }

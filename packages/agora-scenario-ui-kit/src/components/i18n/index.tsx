@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import i18n from 'i18next';
 import { isEmpty } from 'lodash';
-import {
-  I18nextProvider,
-  initReactI18next,
-  useTranslation,
-} from 'react-i18next';
+import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next';
 import { en } from '~utilities/translate/en';
 import { zh } from '~utilities/translate/zh';
 
@@ -125,17 +121,14 @@ export class CustomStorage {
   }
 
   getLanguage() {
-    const language = this.read(this.languageKey)
-      ? this.read(this.languageKey)
-      : navigator.language;
+    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
     return language;
   }
 }
 
 export const storage = new CustomStorage();
 
-export const getLanguage = () =>
-  storage.getLanguage().match(/zh/) ? 'zh' : 'en';
+export const getLanguage = () => (storage.getLanguage().match(/zh/) ? 'zh' : 'en');
 
 export const transI18n = (text: string, options?: any) => {
   let content = i18n.t(text);
@@ -152,10 +145,7 @@ type I18nProvider = {
   language: string;
 };
 
-export const I18nProvider: React.FC<I18nProvider> = ({
-  children,
-  language,
-}) => {
+export const I18nProvider: React.FC<I18nProvider> = ({ children, language }) => {
   useEffect(() => {
     i18n.changeLanguage(language);
   }, [language]);

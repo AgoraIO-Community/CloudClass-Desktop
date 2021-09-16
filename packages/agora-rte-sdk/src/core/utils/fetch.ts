@@ -35,10 +35,7 @@ export async function Fetch(
     };
 
     function fetchRequest() {
-      return fetch(input, init)
-        .then(onResponse)
-        .catch(onError)
-        .catch(rescueError);
+      return fetch(input, init).then(onResponse).catch(onError).catch(rescueError);
     }
 
     fetchRequest();
@@ -50,11 +47,7 @@ export async function Fetch(
   });
 }
 
-export async function AgoraFetch(
-  input: RequestInfo,
-  init?: RequestInit,
-  retryCount: number = 0,
-) {
+export async function AgoraFetch(input: RequestInfo, init?: RequestInit, retryCount: number = 0) {
   try {
     return await Fetch(input, init, retryCount);
   } catch (err) {

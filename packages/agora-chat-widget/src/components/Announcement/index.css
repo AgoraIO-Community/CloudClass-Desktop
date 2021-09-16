@@ -5,6 +5,7 @@
 .no-show-icon {
   margin-top: 3px;
   overflow-y: scroll;
+  overflow-x: hidden;
   position: absolute;
   width: 100%;
   height: calc(100% - 50px);
@@ -80,7 +81,7 @@
 }
 
 .more-message {
-  width: 121px;
+  /* width: 121px; */
   height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
@@ -112,10 +113,11 @@
   white-space: pre-wrap;
   height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .update-content {
-  width: 26px;
+  /* width: 26px; */
   height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
@@ -146,7 +148,7 @@
 }
 
 .btn-text {
-  width: 38px;
+  /* width: 38px; */
   height: 20px;
   font-size: 14px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';

@@ -80,10 +80,7 @@ export type OssExistsFileInfo = {
   findInfo: string; //查询信息
 };
 
-export type PPTProgressListener = (
-  phase: PPTProgressPhase,
-  percent: number,
-) => void;
+export type PPTProgressListener = (phase: PPTProgressPhase, percent: number) => void;
 
 export enum PPTProgressPhase {
   Checking, //检测

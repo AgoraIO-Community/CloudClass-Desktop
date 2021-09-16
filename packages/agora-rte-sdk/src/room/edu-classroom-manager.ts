@@ -5,11 +5,7 @@ import { EduLogger } from '../core/logger';
 import { AgoraEduApi } from '../core/services/edu-api';
 import { EventEmitter } from 'events';
 import { EduManager } from '../manager';
-import {
-  OperatorUser,
-  EduClassroomManagerEventHandlers,
-  ListenerCallbackType,
-} from './types';
+import { OperatorUser, EduClassroomManagerEventHandlers, ListenerCallbackType } from './types';
 import {
   EduStreamData,
   EduUserData,
@@ -58,18 +54,14 @@ export class EduClassroomManager {
 
   on<EventName extends keyof EduClassroomManagerEventHandlers>(
     eventName: EventName,
-    listener: (
-      args: ListenerCallbackType<EduClassroomManagerEventHandlers[EventName]>,
-    ) => any,
+    listener: (args: ListenerCallbackType<EduClassroomManagerEventHandlers[EventName]>) => any,
   ): void {
     this.bus.on(eventName, listener);
   }
 
   off<EventName extends keyof EduClassroomManagerEventHandlers>(
     eventName: EventName,
-    listener: (
-      args: ListenerCallbackType<EduClassroomManagerEventHandlers[EventName]>,
-    ) => any,
+    listener: (args: ListenerCallbackType<EduClassroomManagerEventHandlers[EventName]>) => any,
   ): void {
     this.bus.off(eventName, listener);
   }
@@ -113,16 +105,11 @@ export class EduClassroomManager {
   }
 
   get data(): EduClassroomDataController {
-    return this.eduManager._dataBuffer[
-      this.rawRoomUuid
-    ] as EduClassroomDataController;
+    return this.eduManager._dataBuffer[this.rawRoomUuid] as EduClassroomDataController;
   }
 
   private async prepareRoomJoin(args: any) {
-    EduLogger.info(
-      '[EDU-STATE] [ClassRoom Manager] [breakout] params ',
-      args.userRole,
-    );
+    EduLogger.info('[EDU-STATE] [ClassRoom Manager] [breakout] params ', args.userRole);
     let joinRoomData = await this.apiService.joinRoom({
       roomUuid: args.roomUuid,
       userRole: args.userRole,
@@ -157,9 +144,7 @@ export class EduClassroomManager {
   }
 
   private async _join(params: any) {
-    EduLogger.debug(
-      `[EDU-STATE] [ClassRoom Manager] join classroom ${this.roomUuid}`,
-    );
+    EduLogger.debug(`[EDU-STATE] [ClassRoom Manager] join classroom ${this.roomUuid}`);
     const roomParams = {
       ...params,
       roomUuid: this.roomUuid,
@@ -202,10 +187,7 @@ export class EduClassroomManager {
             data,
           };
 
-          EduLogger.debug(
-            '[EDU-STATE] [ClassRoom Manager] appendBuffer in Raw Message ',
-            obj,
-          );
+          EduLogger.debug('[EDU-STATE] [ClassRoom Manager] appendBuffer in Raw Message ', obj);
 
           this.data.appendBuffer({
             seqId: sequence,
@@ -306,15 +288,13 @@ export class EduClassroomManager {
   }
 
   getStudentCount(): number {
-    return this.data.userList.filter(
-      (it: EduUserData) => it.user.role === EduRoleType.student,
-    ).length;
+    return this.data.userList.filter((it: EduUserData) => it.user.role === EduRoleType.student)
+      .length;
   }
 
   getTeacherCount(): number {
-    return this.data.userList.filter(
-      (it: EduUserData) => it.user.role === EduRoleType.teacher,
-    ).length;
+    return this.data.userList.filter((it: EduUserData) => it.user.role === EduRoleType.teacher)
+      .length;
   }
 
   get studentList(): EduUser[] {

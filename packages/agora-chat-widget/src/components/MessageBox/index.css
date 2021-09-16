@@ -1,9 +1,9 @@
 .message-box {
   margin-top: 3px;
   overflow-y: scroll;
+  overflow-x: hidden;
   position: absolute;
   width: 100%;
-  height: calc(100% - 200px);
   /* z-index: 8888; */
 }
 
@@ -47,7 +47,7 @@
 }
 
 .msg-text {
-  margin: 3px 8px 0 0;
+  margin: 8px 8px 0 0;
   max-width: 60%;
   min-height: 20px;
   padding: 6px 8px;
@@ -100,7 +100,7 @@
   width: auto;
   background: #f9f9fc;
   border-radius: 4px;
-  margin: 8px 40px;
+  margin: 25px 40px;
 }
 
 .delete-btn {

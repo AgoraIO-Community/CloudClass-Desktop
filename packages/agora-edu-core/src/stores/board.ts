@@ -7,7 +7,7 @@ import {
   GenericErrorWrapper,
 } from 'agora-rte-sdk';
 import OSS from 'ali-oss';
-import { cloneDeep, isEmpty, uniqBy } from 'lodash';
+import { cloneDeep, isEmpty, isNumber, uniqBy } from 'lodash';
 import { action, computed, observable, runInAction, reaction } from 'mobx';
 import { ReactEventHandler } from 'react';
 import { IframeWrapper, IframeBridge } from '@netless/iframe-bridge';
@@ -24,7 +24,7 @@ import {
 } from 'white-web-sdk';
 import { AgoraConvertedFile, CourseWareItem } from '../api/declare';
 import { reportService } from '../services/report';
-import { transDataToResource } from '../services/upload-service';
+import { MaterialDataResource, transDataToResource } from '../services/upload-service';
 import { EduScenarioAppStore as EduScenarioAppStore } from './index';
 import { DownloadFileStatus, StorageCourseWareItem } from '../types';
 import { BoardClient } from '../utilities/board-client';
@@ -81,17 +81,15 @@ export type { Resource };
 
 const transformConvertedListToScenes = (taskProgress: any) => {
   if (taskProgress && taskProgress.convertedFileList) {
-    return taskProgress.convertedFileList.map(
-      (item: AgoraConvertedFile, index: number) => ({
-        name: `${index + 1}`,
-        componentCount: 1,
-        ppt: {
-          width: item.ppt.width,
-          height: item.ppt.height,
-          src: item.ppt.src,
-        },
-      }),
-    );
+    return taskProgress.convertedFileList.map((item: AgoraConvertedFile, index: number) => ({
+      name: `${index + 1}`,
+      componentCount: 1,
+      ppt: {
+        width: item.ppt.width,
+        height: item.ppt.height,
+        src: item.ppt.src,
+      },
+    }));
   }
   return [];
 };
@@ -130,10 +128,7 @@ export enum BoardFrontSizeType {
 
 export const resolveFileInfo = (file: any) => {
   const fileName = encodeURI(file.name);
-  const fileType = fileName.substring(
-    fileName.length,
-    fileName.lastIndexOf('.'),
-  );
+  const fileType = fileName.substring(fileName.length, fileName.lastIndexOf('.'));
   return {
     fileName,
     fileType,
@@ -327,12 +322,24 @@ export class BoardStore extends ZoomController {
         const { ready, hasPermission, role } = JSON.parse(data);
         if (ready) {
           if (role === EduRoleTypeEnum.student) {
-            if (hasPermission) {
-              this.room.setViewMode(ViewMode.Freedom);
-            } else {
-              this.room.setViewMode(ViewMode.Follower);
-            }
+            this.room.setViewMode(hasPermission ? ViewMode.Freedom : ViewMode.Follower);
           }
+        }
+      },
+    );
+    reaction(
+      () =>
+        JSON.stringify({
+          hasPermission: this.hasPermission,
+          role: this.userRole,
+        }),
+      (data: string) => {
+        const { hasPermission, role } = JSON.parse(data);
+        if (role === EduRoleTypeEnum.student) {
+          const notice = hasPermission
+            ? 'toast.teacher_accept_whiteboard'
+            : 'toast.teacher_cancel_whiteboard';
+          this.appStore.fireToast(notice);
         }
       },
     );
@@ -381,11 +388,7 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  async init(info: {
-    boardId: string;
-    boardToken: string;
-    boardRegion: string;
-  }) {
+  async init(info: { boardId: string; boardToken: string; boardRegion: string }) {
     this.boardRegion = info.boardRegion;
     await this.join({
       boardId: info.boardId,
@@ -465,34 +468,23 @@ export class BoardStore extends ZoomController {
 
   @computed
   get resourcesList(): Resource[] {
-    return [this._boardItem].concat(
-      this._resourcesList.filter((it: any) => it.show === true),
-    );
+    return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true));
   }
 
   @action.bound
   changeSceneItem(resourceUuid: string) {
     let targetPath = resourceUuid;
-    if (
-      resourceUuid === '/init' ||
-      resourceUuid === '/' ||
-      resourceUuid === 'init'
-    ) {
+    if (resourceUuid === '/init' || resourceUuid === '/' || resourceUuid === 'init') {
       targetPath = 'init';
-    } else if (
-      resourceUuid === '/screenShare' ||
-      resourceUuid === 'screenShare'
-    ) {
+    } else if (resourceUuid === '/screenShare' || resourceUuid === 'screenShare') {
       targetPath = 'screenShare';
     } else {
       targetPath = `/${resourceUuid}`;
     }
 
     const currentPage =
-      this.resourcesList.find((item) => item.resourceUuid === resourceUuid)
-        ?.currentPage ?? 0;
-    const sceneIsChanged =
-      targetPath !== this.room.state.sceneState.contextPath;
+      this.resourcesList.find((item) => item.resourceUuid === resourceUuid)?.currentPage ?? 0;
+    const sceneIsChanged = targetPath !== this.room.state.sceneState.contextPath;
     if (sceneIsChanged) {
       if (targetPath === 'init') {
         if (currentPage === 0) {
@@ -503,19 +495,15 @@ export class BoardStore extends ZoomController {
       } else if (targetPath === 'screenShare') {
         this.room.setScenePath(`/${targetPath}`);
       } else {
-        const targetResource = this.allResources.find(
-          (item) => item.id === resourceUuid,
-        );
+        const targetResource = this.allResources.find((item) => item.id === resourceUuid);
         if (targetResource) {
           if (targetResource.ext === 'h5') {
-            this.insertH5(targetResource.url, targetResource.id);
+            this.insertH5(targetResource.url, targetResource.id, currentPage);
             if (targetPath === 'screenShare') {
               eduSDKApi
-                .selectShare(
-                  this.appStore.roomInfo.roomUuid,
-                  this.appStore.roomInfo.userUuid,
-                  { selected: 1 },
-                )
+                .selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {
+                  selected: 1,
+                })
                 .then(() => {
                   EduLogger.info(
                     `select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`,
@@ -529,11 +517,9 @@ export class BoardStore extends ZoomController {
                 });
             } else {
               eduSDKApi
-                .selectShare(
-                  this.appStore.roomInfo.roomUuid,
-                  this.appStore.roomInfo.userUuid,
-                  { selected: 0 },
-                )
+                .selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {
+                  selected: 0,
+                })
                 .then(() => {
                   EduLogger.info(
                     `select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`,
@@ -545,6 +531,16 @@ export class BoardStore extends ZoomController {
                     `select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}, error: ${error}`,
                   );
                 });
+              //@ts-ignore
+              const currentCameraState =
+                //@ts-ignore
+                this.room.state.globalState.cameraState[this.getCurrentContextPath()];
+              //切换tab到h5课件时，使用h5之前记录的缩放比例,若之前不存在则自适应缩放比例
+              if (currentCameraState) {
+                this.updateScale(currentCameraState.scale);
+              } else {
+                this.moveCamera();
+              }
             }
             return;
           }
@@ -556,11 +552,9 @@ export class BoardStore extends ZoomController {
 
     if (targetPath === 'screenShare') {
       eduSDKApi
-        .selectShare(
-          this.appStore.roomInfo.roomUuid,
-          this.appStore.roomInfo.userUuid,
-          { selected: 1 },
-        )
+        .selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {
+          selected: 1,
+        })
         .then(() => {
           EduLogger.info(
             `select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`,
@@ -574,11 +568,9 @@ export class BoardStore extends ZoomController {
         });
     } else {
       eduSDKApi
-        .selectShare(
-          this.appStore.roomInfo.roomUuid,
-          this.appStore.roomInfo.userUuid,
-          { selected: 0 },
-        )
+        .selectShare(this.appStore.roomInfo.roomUuid, this.appStore.roomInfo.userUuid, {
+          selected: 0,
+        })
         .then(() => {
           EduLogger.info(
             `select share, roomUuid: ${this.appStore.roomInfo.roomUuid}, userUuid: ${this.appStore.roomInfo.userUuid}`,
@@ -637,9 +629,7 @@ export class BoardStore extends ZoomController {
   }
 
   findResourcePage(resourceName: string) {
-    const resource = this.resourcesList.find(
-      (it: any) => it.resourceName === resourceName,
-    );
+    const resource = this.resourcesList.find((it: any) => it.resourceName === resourceName);
     if (resource) {
       return resource.currentPage;
     }
@@ -669,8 +659,7 @@ export class BoardStore extends ZoomController {
 
   @computed
   get bizScreenShare() {
-    const selectedShare =
-      this.appStore.roomStore?.roomProperties?.screen?.selected ?? false;
+    const selectedShare = this.appStore.roomStore?.roomProperties?.screen?.selected ?? false;
     return !!selectedShare;
   }
 
@@ -687,22 +676,14 @@ export class BoardStore extends ZoomController {
     if (this.isBoardScreenShare) {
       showZoomControl = false;
     } else {
-      if (
-        [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-          roomInfo.userRole,
-        )
-      ) {
+      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
         showZoomControl = true;
       } else {
         showZoomControl = this.hasPermission;
       }
     }
     // TODO: need refactor
-    if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-        roomInfo.userRole,
-      )
-    ) {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
       return [true, showZoomControl];
     } else if (
       roomInfo.roomType === EduRoomType.SceneType1v1 &&
@@ -710,10 +691,9 @@ export class BoardStore extends ZoomController {
     ) {
       return [this.hasPermission, showZoomControl];
     } else if (
-      [
-        EduRoomType.SceneTypeMiddleClass,
-        EduRoomType.SceneTypeBigClass,
-      ].includes(roomInfo.roomType) &&
+      [EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(
+        roomInfo.roomType,
+      ) &&
       roomInfo.userRole === EduRoleTypeEnum.student
     ) {
       return [true, showZoomControl];
@@ -779,10 +759,7 @@ export class BoardStore extends ZoomController {
         await this.appStore.sceneStore.stopRTCSharing();
         reportServiceV2.reportScreenShareEnd(new Date().getTime(), 0);
       } catch (error) {
-        reportServiceV2.reportScreenShareEnd(
-          new Date().getTime(),
-          error.code || error.message,
-        );
+        reportServiceV2.reportScreenShareEnd(new Date().getTime(), error.code || error.message);
       }
       this.removeScreenShareScene();
     } else {
@@ -811,9 +788,7 @@ export class BoardStore extends ZoomController {
     const isRootDir = ['init', '/', '', '/init'].includes(resourceUuid);
     if (isRootDir) {
       const materialList = this.globalState?.materialList ?? [];
-      const pptItem = materialList.find(
-        (it) => it.resourceUuid === resourceUuid,
-      );
+      const pptItem = materialList.find((it) => it.resourceUuid === resourceUuid);
       if (pptItem) {
         await this.startDownload(pptItem.resourceUuid);
       }
@@ -858,9 +833,7 @@ export class BoardStore extends ZoomController {
     const sceneState = this.room.state.sceneState;
     const name = this.getResourcePath(sceneState.contextPath);
 
-    const courseWare = this.courseWareList.find(
-      (item: any) => item.resourceName === name,
-    );
+    const courseWare = this.courseWareList.find((item: any) => item.resourceName === name);
     if (courseWare) {
       this.updateBoardSceneItems(
         {
@@ -909,10 +882,7 @@ export class BoardStore extends ZoomController {
           show: true,
           resourceName: 'init',
         };
-      } else if (
-        resourceUuid === 'screenShare' ||
-        resourceUuid === '/screenShare'
-      ) {
+      } else if (resourceUuid === 'screenShare' || resourceUuid === '/screenShare') {
         if (resource) {
           newList.push({
             file: {
@@ -929,9 +899,7 @@ export class BoardStore extends ZoomController {
           });
         }
       } else {
-        const rawResource = this.allResources.find(
-          (it) => it.id === resourceUuid,
-        );
+        const rawResource = this.allResources.find((it) => it.id === resourceUuid);
         const taskUuid = rawResource ? rawResource!.taskUuid : '';
         newList.push({
           file: {
@@ -952,15 +920,18 @@ export class BoardStore extends ZoomController {
   }
 
   updateLocalSceneState() {
-    this.resourceUuid = this.getResourcePath(
-      this.room.state.sceneState.contextPath,
-    );
+    this.resourceUuid = this.getResourcePath(this.room.state.sceneState.contextPath);
   }
 
   updateCourseWareList() {
     const globalState = this.globalState;
     this.courseWareList = globalState.dynamicTaskUuidList ?? [];
-    this._personalResources = globalState.materialList ?? [];
+    const materialList = globalState.materialList ?? [];
+    this._personalResources = materialList.filter((it) => {
+      return this.publicResources.every((item) => {
+        return item.id !== it.resourceUuid;
+      });
+    });
   }
 
   @observable
@@ -1094,9 +1065,9 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  setGrantPermission(v: boolean) {
+  async setGrantPermission(v: boolean) {
+    await this.setWritable(v);
     this._grantPermission = v;
-    this.setWritable(v);
   }
 
   @action.bound
@@ -1107,23 +1078,24 @@ export class BoardStore extends ZoomController {
   @action.bound
   async aClassJoinBoard(params: any) {
     const { role, ...data } = params;
-    const identity = [
-      EduRoleTypeEnum.teacher /*, EduRoleTypeEnum.assistant*/,
-    ].includes(role)
+    const identity = [EduRoleTypeEnum.teacher /*, EduRoleTypeEnum.assistant*/].includes(role)
       ? 'host'
       : 'guest';
-    const enable = [
-      EduRoleTypeEnum.teacher,
-      EduRoleTypeEnum.assistant,
-    ].includes(role);
+    const enable = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role);
     this._boardClient = new BoardClient({
       identity,
       appIdentifier: this.appStore.params.config.agoraNetlessAppId,
       enable,
     });
     this.boardClient.on('onPhaseChanged', (state: any) => {
+      this.boardConnectionState = state;
       if (state === 'disconnected') {
         this.online = false;
+      } else if (state === 'connected') {
+        // 重连成功后老师重新设置白板的模式
+        if (identity === 'host') {
+          this.room?.setViewMode(ViewMode.Broadcaster);
+        }
       }
     });
     this.boardClient.on('onMemberStateChanged', (state: any) => {});
@@ -1142,10 +1114,7 @@ export class BoardStore extends ZoomController {
         this.isFullScreen = state.globalState?.isFullScreen ?? false;
         this.updateBoardState(state.globalState);
       }
-      if (
-        state.broadcastState &&
-        state.broadcastState?.broadcasterId === undefined
-      ) {
+      if (state.broadcastState && state.broadcastState?.broadcasterId === undefined) {
         if (this.room) {
           this.scaleToFit();
         }
@@ -1161,7 +1130,7 @@ export class BoardStore extends ZoomController {
       if (state.sceneState) {
         this.updatePageHistory();
         this.autoFetchDynamicTask();
-        this.moveCamera();
+        // this.moveCamera();
       }
       if (state.sceneState || state.globalState) {
         this.updateLocalResourceList();
@@ -1253,12 +1222,6 @@ export class BoardStore extends ZoomController {
       return true;
     }
     return false;
-  }
-
-  syncLocalPersonalCourseWareList() {
-    this.room.setGlobalState({
-      materialList: this.internalResources.map(transformMaterialList),
-    });
   }
 
   resetBoardPath() {
@@ -1362,6 +1325,8 @@ export class BoardStore extends ZoomController {
   @observable
   shape: string = 'pencil';
 
+  // TODO: setTool condition is loose structure, consider re-couple with room.setMemberState
+  // steps: re-structure and isolate ui state with biz state
   @action.bound
   setTool(tool: string) {
     if (!this.boardRoomIsAvailable) return;
@@ -1393,6 +1358,7 @@ export class BoardStore extends ZoomController {
       case ApplianceNames.ellipse:
       case ApplianceNames.straight:
       case ApplianceNames.arrow:
+      case ApplianceNames.laserPointer:
       case ApplianceNames.selector: {
         const room = this.room;
         if (room.isWritable) {
@@ -1414,8 +1380,13 @@ export class BoardStore extends ZoomController {
             [ApplianceNames.arrow]: 'arrow',
             [ApplianceNames.selector]: 'selection',
             [ApplianceNames.clicker]: 'clicker',
+            [ApplianceNames.laserPointer]: 'laser',
           };
 
+          if (tool === 'color') {
+            // 选择颜色工具时，高亮显示还是之前的那个工具
+            return;
+          }
           if (selector[tool]) {
             this.selector = selector[tool];
           } else {
@@ -1674,18 +1645,7 @@ export class BoardStore extends ZoomController {
     this.grantUsers = globalState?.grantUsers ?? [];
     const grantUsers = this.grantUsers;
     if (grantUsers && Array.isArray(grantUsers)) {
-      const hasPermission = grantUsers.includes(this.localUserUuid)
-        ? true
-        : false;
-      if (
-        this.userRole === EduRoleTypeEnum.student &&
-        hasPermission !== this.hasPermission
-      ) {
-        const notice = hasPermission
-          ? 'toast.teacher_accept_whiteboard'
-          : 'toast.teacher_cancel_whiteboard';
-        this.appStore.fireToast(notice);
-      }
+      const hasPermission = grantUsers.includes(this.localUserUuid) ? true : false;
       this.setGrantUsers(grantUsers);
       if (this.userRole === EduRoleTypeEnum.student) {
         this.setGrantPermission(hasPermission);
@@ -1756,9 +1716,14 @@ export class BoardStore extends ZoomController {
     const allTools = this.allTools;
     const { userRole, roomType } = this.appStore.roomInfo;
     if (roomType === EduRoomType.SceneType1v1) {
-      const oneToOneTools = allTools.filter(
+      let oneToOneTools = allTools.filter(
         (item: ToolItem) => !['student_list', 'register'].includes(item.value),
       );
+      if (this.isBoardScreenShare) {
+        oneToOneTools = oneToOneTools.filter(
+          (item: ToolItem) => !['blank-page'].includes(item.value),
+        );
+      }
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return oneToOneTools.filter(
           (item: ToolItem) => !['blank-page', 'tools'].includes(item.value),
@@ -1766,15 +1731,13 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
         return oneToOneTools.filter(
-          (item: ToolItem) =>
-            !['blank-page', 'cloud', 'tools'].includes(item.value),
+          (item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value),
         );
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
           return oneToOneTools.filter(
-            (item: ToolItem) =>
-              !['blank-page', 'cloud', 'tools'].includes(item.value),
+            (item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value),
           );
         } else {
           return [];
@@ -1783,9 +1746,12 @@ export class BoardStore extends ZoomController {
       return oneToOneTools;
     }
     if (roomType === EduRoomType.SceneTypeBigClass) {
-      const bigClassTools = allTools.filter(
-        (item: ToolItem) => !['register'].includes(item.value),
-      );
+      let bigClassTools = allTools.filter((item: ToolItem) => !['register'].includes(item.value));
+      if (this.isBoardScreenShare) {
+        bigClassTools = bigClassTools.filter(
+          (item: ToolItem) => !['blank-page'].includes(item.value),
+        );
+      }
       if ([EduRoleTypeEnum.assistant].includes(userRole)) {
         return bigClassTools.filter(
           (item: ToolItem) => !['blank-page', 'tools'].includes(item.value),
@@ -1793,49 +1759,44 @@ export class BoardStore extends ZoomController {
       }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
         return bigClassTools.filter(
-          (item: ToolItem) =>
-            !['blank-page', 'cloud', 'tools'].includes(item.value),
+          (item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value),
         );
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
           return bigClassTools.filter(
-            (item: ToolItem) =>
-              !['blank-page', 'cloud', 'tools'].includes(item.value),
+            (item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value),
           );
         } else {
-          return bigClassTools.filter(
-            (item: ToolItem) => item.value === 'student_list',
-          );
+          return bigClassTools.filter((item: ToolItem) => item.value === 'student_list');
         }
       }
       return bigClassTools;
     }
     if (roomType === EduRoomType.SceneTypeMiddleClass) {
-      const midClassTools = allTools.filter(
+      let midClassTools = allTools.filter(
         (item: ToolItem) => !['student_list'].includes(item.value),
       );
-      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
-        return midClassTools.filter(
-          (item: ToolItem) => !['tools'].includes(item.value),
+      if (this.isBoardScreenShare) {
+        midClassTools = midClassTools.filter(
+          (item: ToolItem) => !['blank-page'].includes(item.value),
         );
+      }
+      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
+        return midClassTools.filter((item: ToolItem) => !['tools'].includes(item.value));
       }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
         return midClassTools.filter(
-          (item: ToolItem) =>
-            !['blank-page', 'cloud', 'tools'].includes(item.value),
+          (item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value),
         );
       }
       if ([EduRoleTypeEnum.student].includes(userRole)) {
         if (this.hasPermission) {
           return midClassTools.filter(
-            (item: ToolItem) =>
-              !['blank-page', 'cloud', 'tools'].includes(item.value),
+            (item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value),
           );
         } else {
-          return midClassTools.filter((item: ToolItem) =>
-            ['register'].includes(item.value),
-          );
+          return midClassTools.filter((item: ToolItem) => ['register'].includes(item.value));
         }
       }
       return midClassTools;
@@ -1920,7 +1881,8 @@ export class BoardStore extends ZoomController {
 
   async setWritable(v: boolean) {
     if (this.online && this.room) {
-      await this.room.setWritable(v);
+      const timeout = new Promise((resolve) => setTimeout(resolve, 5000));
+      await Promise.race([this.room.setWritable(v), timeout]);
 
       if (this.userRole === EduRoleTypeEnum.student) {
         if (this.room.isWritable) {
@@ -1964,11 +1926,7 @@ export class BoardStore extends ZoomController {
 
   @computed
   get hasPermission(): boolean {
-    if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-        this.userRole,
-      )
-    ) {
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.userRole)) {
       return true;
     }
     return this._grantPermission as boolean;
@@ -2013,15 +1971,13 @@ export class BoardStore extends ZoomController {
     BizLogger.info('mounted', dom, this.boardClient && this.boardClient.room);
     if (this.boardClient && this.boardClient.room) {
       this.boardClient.room.bindHtmlElement(dom);
-      this.resizeObserver = new ResizeObserver(
-        (entries: ResizeObserverEntry[]) => {
-          if (this.online && this.room) {
-            this.room.moveCamera({ centerX: 0, centerY: 0 });
-            this.moveCamera();
-            this.room.refreshViewSize();
-          }
-        },
-      );
+      this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+        if (this.online && this.room) {
+          this.room.moveCamera({ centerX: 0, centerY: 0 });
+          this.moveCamera();
+          this.room.refreshViewSize();
+        }
+      });
       this.resizeObserver.observe(dom);
     }
   }
@@ -2120,9 +2076,7 @@ export class BoardStore extends ZoomController {
         userUuid: this.appStore.roomInfo.userUuid,
       });
       const materialList = this.globalState?.materialList ?? [];
-      const newList = materialList.filter(
-        (e: any) => !resourceUuids.includes(e.resourceUuid),
-      );
+      const newList = materialList.filter((e: any) => !resourceUuids.includes(e.resourceUuid));
       const newRoomScenes = this.globalState?.roomScenes ?? [];
       let includeRoomScenes = false;
       for (const key of resourceUuids) {
@@ -2130,15 +2084,17 @@ export class BoardStore extends ZoomController {
         //@ts-ignore
         delete newRoomScenes[key];
       }
+      // 如果删除文件中是课件类型，则需要重置到白板tab
+      if (resourceUuids.includes(this.activeSceneName)) {
+        this.room.setScenePath('');
+      }
       this.room.setGlobalState({
         materialList: newList,
         roomScenes: {
           ...newRoomScenes,
         },
       });
-      if (includeRoomScenes) {
-        this.room.setScenePath('');
-      }
+
       this._personalResources = this._personalResources.filter(
         (e) => !resourceUuids.includes(e.resourceUuid),
       );
@@ -2149,18 +2105,17 @@ export class BoardStore extends ZoomController {
   }
 
   @action.bound
-  async putCourseResource(resourceUuid: string) {
-    const resource: any = this.allResources.find(
-      (it: any) => it.id === resourceUuid,
-    );
+  async putCourseResource(resourceUuid: string, currentPage: number = 0) {
+    const resource = this.allResources.find((it: any) => it.id === resourceUuid);
     if (resource) {
-      const scenes = resource.scenes;
+      const scenes = resource.scenes!;
+      const firstPath = scenes[currentPage].name;
       this.updateBoardSceneItems(
         {
           scenes,
           resourceName: resource.name,
           resourceUuid: resource.id,
-          page: 0,
+          page: currentPage,
           taskUuid: resource.taskUuid,
         },
         false,
@@ -2173,8 +2128,8 @@ export class BoardStore extends ZoomController {
           [`${resourceUuid}`]: {
             contextPath: `/${resource.id}/`,
             index: 0,
-            sceneName: resource.scenes[0].name,
-            scenePath: `/${resource.id}/${resource.scenes[0].name}`,
+            sceneName: firstPath,
+            scenePath: `/${resource.id}/${firstPath}`,
             totalPage: scenes.length,
             resourceName: resource.name,
             resourceUuid: resourceUuid,
@@ -2182,13 +2137,28 @@ export class BoardStore extends ZoomController {
           },
         },
       });
-      const sceneExists =
-        resource.id && this.room.entireScenes()[`/${resource.id}`];
+      this.addMaterial({
+        resourceName: resource.name,
+        resourceUuid,
+        ext: resource.ext,
+        url: resource.url,
+        conversion: {
+          type: '',
+        },
+        size: isNumber(resource.size) ? resource.size : 0,
+        updateTime: resource.updateTime,
+        scenes: resource.scenes as SceneDefinition[],
+        convert: true,
+        taskUuid: resource.taskUuid,
+        taskToken: '',
+        taskProgress: resource.taskProgress,
+      });
+      const sceneExists = resource.id && this.room.entireScenes()[`/${resource.id}`];
       if (sceneExists) {
-        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`);
+        this.room.setScenePath(`/${resource.id}/${firstPath}`);
       } else {
-        this.room.putScenes(`/${resource.id}`, resource.scenes);
-        this.room.setScenePath(`/${resource.id}/${resource.scenes[0].name}`);
+        this.room.putScenes(`/${resource.id}`, scenes);
+        this.room.setScenePath(`/${resource.id}/${firstPath}`);
       }
     }
   }
@@ -2234,17 +2204,13 @@ export class BoardStore extends ZoomController {
   iframe: IframeBridge = null as any;
 
   @action.bound
-  async insertH5(url: string, resourceUuid: string) {
+  async insertH5(url: string, resourceUuid: string, currentPage: number = 0) {
     const bridge = this.boardClient.bridge;
     const scenePath = `/${resourceUuid}`;
     const room = this.room;
     // const iframe = this.iframeList.get(scenePath)
     const iframe = this.iframe;
-    if (
-      [EduRoleTypeEnum.assistant, EduRoleTypeEnum.assistant].includes(
-        this.appStore.userRole,
-      )
-    ) {
+    if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.assistant].includes(this.appStore.userRole)) {
       // TODO: workaround.
       // Cause probably is readonly state, so the IframeBridge cannot operate.
       await this.room.setWritable(true);
@@ -2263,7 +2229,7 @@ export class BoardStore extends ZoomController {
         });
         //@ts-ignore
         this.iframe = oldIframe;
-        this.putCourseResource(resourceUuid);
+        this.putCourseResource(resourceUuid, currentPage);
         return;
       }
       const iframe = await IframeBridge.insert({
@@ -2275,7 +2241,7 @@ export class BoardStore extends ZoomController {
         useClicker: true,
       });
       this.iframe = iframe;
-      this.putCourseResource(resourceUuid);
+      this.putCourseResource(resourceUuid, currentPage);
     } else {
       iframe?.setAttributes({
         url: url,
@@ -2284,7 +2250,7 @@ export class BoardStore extends ZoomController {
         displaySceneDir: `${scenePath}`,
         useClicker: true,
       });
-      this.putCourseResource(resourceUuid);
+      this.putCourseResource(resourceUuid, currentPage);
       // room.setScenePath(scenePath)
     }
     // if (bridge) {
@@ -2380,9 +2346,7 @@ export class BoardStore extends ZoomController {
   @action.bound
   async putSceneByResourceUuid(uuid: string) {
     try {
-      const resource: any = this.allResources.find(
-        (resource: any) => resource.id === uuid,
-      );
+      const resource: any = this.allResources.find((resource: any) => resource.id === uuid);
       if (!resource) {
         console.log('未找到uuid相关的课件', uuid);
       }
@@ -2398,6 +2362,8 @@ export class BoardStore extends ZoomController {
       }
       if (['h5'].includes(resource.type)) {
         await this.insertH5(resource.url, uuid);
+        //添加h5课件时，自适应缩放比例
+        this.moveCamera();
       }
     } catch (err) {
       throw err;
@@ -2409,6 +2375,20 @@ export class BoardStore extends ZoomController {
     return await this.appStore.uploadService.getFileInQueryMaterial({
       roomUuid: this.appStore.roomInfo.roomUuid,
       resourceName: fileName,
+    });
+  }
+
+  addMaterial(resourceRecord: CourseWareItem) {
+    const materialList = this.globalState?.materialList ?? [];
+    this.room.setGlobalState({
+      materialList: uniqBy(
+        materialList.concat([
+          {
+            ...resourceRecord,
+          },
+        ]),
+        'resourceUuid',
+      ),
     });
   }
 
@@ -2429,21 +2409,13 @@ export class BoardStore extends ZoomController {
       if (this.isCancel) {
         return;
       }
-      const materialList = this.globalState?.materialList ?? [];
-      this.room.setGlobalState({
-        materialList: uniqBy(
-          materialList.concat([
-            {
-              ...res,
-            } as CourseWareItem,
-          ]),
-          'resourceUuid',
-        ),
-      });
+      this.addMaterial(res as CourseWareItem);
       this.fileLoading = false;
     } catch (err) {
       console.error(err);
       this.fileLoading = false;
+      this.appStore.fireToast(`toast.upload_failure`);
+      throw err;
     }
   }
 
@@ -2504,10 +2476,7 @@ export class BoardStore extends ZoomController {
 
   @action.bound
   moveCamera() {
-    if (
-      !isEmpty(this.room.state.sceneState.scenes) &&
-      !this.room.state.sceneState.scenes[0].ppt
-    ) {
+    if (!isEmpty(this.room.state.sceneState.scenes) && !this.room.state.sceneState.scenes[0].ppt) {
       this.room.moveCamera({
         centerX: 0,
         centerY: 0,
@@ -2547,9 +2516,7 @@ export class BoardStore extends ZoomController {
   upsertResources(items: CourseWareItem[]) {
     for (let item of items) {
       this._resourcesMap.set(item.resourceUuid, item);
-      const exists = this.allResources.find(
-        (resource: any) => resource.id === item.resourceUuid,
-      );
+      const exists = this.allResources.find((resource: any) => resource.id === item.resourceUuid);
       if (!exists) {
         this._extraResources.push(item);
       }
@@ -2580,12 +2547,16 @@ export class BoardStore extends ZoomController {
   async openInitCourseWare() {
     const courseWare = this.initCourseWare;
     if (courseWare) {
-      this.initCourseWareLoading = true;
-      await this.putSceneByResourceUuid(courseWare.id);
-      await agoraCaches.deleteTaskUUID(courseWare.taskUuid);
-      await this.refreshState();
-      await this.startDownload(courseWare.taskUuid);
-      this.initCourseWareLoading = false;
+      try {
+        this.initCourseWareLoading = true;
+        await this.putSceneByResourceUuid(courseWare.id);
+        await agoraCaches.deleteTaskUUID(courseWare.taskUuid);
+        await this.refreshState();
+        await this.startDownload(courseWare.taskUuid);
+        this.initCourseWareLoading = false;
+      } catch (error) {
+        this.initCourseWareLoading = false;
+      }
     }
   }
 
@@ -2609,9 +2580,7 @@ export class BoardStore extends ZoomController {
 
   @computed
   get allResources() {
-    return this.publicResources
-      .concat(this.personalResources)
-      .concat(this.extraResources);
+    return this.publicResources.concat(this.personalResources).concat(this.extraResources);
   }
 
   @computed
@@ -2619,9 +2588,7 @@ export class BoardStore extends ZoomController {
     return (
       +(
         this.courseWareList.filter(
-          (e) =>
-            this.progressMap[e.taskUuid] &&
-            this.progressMap[e.taskUuid] === 100,
+          (e) => this.progressMap[e.taskUuid] && this.progressMap[e.taskUuid] === 100,
         ).length / this.courseWareList.length
       ).toFixed(2) * 100
     );
@@ -2653,22 +2620,16 @@ export class BoardStore extends ZoomController {
       const res = await agoraCaches.hasTaskUUID(item.taskUuid);
       item.progress = res === true ? 100 : 0;
       this.progressMap[item.taskUuid] = item.progress;
-      item.status =
-        res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached;
+      item.status = res === true ? DownloadFileStatus.Cached : DownloadFileStatus.NotCached;
     }
     this.downloadList = newCourseWareList;
   }
 
   @action.bound
   updateDownloadById(taskUuid: string, props: Partial<StorageCourseWareItem>) {
-    const list = this.downloadList;
-    const idx = list.findIndex(
-      (item: StorageCourseWareItem) => item.taskUuid === taskUuid,
+    this.downloadList = this.downloadList.map((item: StorageCourseWareItem) =>
+      item.taskUuid === taskUuid ? { ...item, props } : item,
     );
-    const item = list[idx];
-    Object.assign(item, props);
-    const newList = cloneDeep(list);
-    this.downloadList = newList;
   }
 
   @action.bound
@@ -2683,32 +2644,35 @@ export class BoardStore extends ZoomController {
       this.updateDownloadById(taskUuid, {
         download: true,
       });
-      await agoraCaches.startDownload(
-        taskUuid,
-        (progress: number, controller: any) => {
-          const newProgress = this.progressMap[taskUuid] ?? 0;
-          if (progress >= newProgress) {
-            if (taskUuid === this.initCourseWare.taskUuid) {
-              this.initCourseWareProgress = progress;
-            }
-            const info: any = {
-              progress,
-            };
-            if (info.progress === 100) {
-              Object.assign(info, {
-                download: true,
-              });
-            }
-
-            this.updateDownloadById(taskUuid, info);
-            this.progressMap[taskUuid] = progress;
+      const resourceExists = this.allResources.find((it) => it.taskUuid === taskUuid);
+      if (!resourceExists || (resourceExists && resourceExists.ext === 'h5')) {
+        return;
+      }
+      const type: string = resourceExists.ext === 'pptx' ? 'dynamicConvert' : 'staticConvert';
+      await agoraCaches.startDownload(taskUuid, type, (progress: number, controller: any) => {
+        const newProgress = this.progressMap[taskUuid] ?? 0;
+        if (progress >= newProgress) {
+          if (taskUuid === this.initCourseWare.taskUuid) {
+            this.initCourseWareProgress = progress;
           }
-          this.controller = controller;
-        },
-      );
+          const info: any = {
+            progress,
+          };
+          if (info.progress === 100) {
+            Object.assign(info, {
+              download: true,
+            });
+          }
+
+          this.updateDownloadById(taskUuid, info);
+          this.progressMap[taskUuid] = progress;
+        }
+        this.controller = controller;
+      });
       EduLogger.info(`下载完成.... taskUuid: ${taskUuid}`);
     } catch (err) {
       EduLogger.info(`下载失败.... taskUuid: ${taskUuid}, ${err}`);
+      throw err;
     }
   }
 
@@ -2717,7 +2681,10 @@ export class BoardStore extends ZoomController {
     try {
       await this.internalDownload(taskUuid);
       await this.refreshState();
+      // this.appStore.fireToast(`toast.download_success`);
     } catch (err) {
+      this.appStore.fireToast(`toast.download_failure`);
+      await this.refreshState();
       throw GenericErrorWrapper(err);
     }
   }

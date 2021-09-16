@@ -42,8 +42,7 @@ export const HandsUpManagerContainer = observer(() => {
 export const HandsUpReceiverContainer = observer(() => {
   const { addToast } = useUIStore();
 
-  const { handsUpState, studentHandsUp, studentCancelHandsUp, teacherUuid } =
-    useHandsUpContext();
+  const { handsUpState, studentHandsUp, studentCancelHandsUp, teacherUuid } = useHandsUpContext();
 
   const handleClick = async () => {
     switch (handsUpState) {

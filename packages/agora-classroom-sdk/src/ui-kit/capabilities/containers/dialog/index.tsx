@@ -1,5 +1,6 @@
 import { BusinessExceptions } from '@/infra/biz-error';
 import { useUIStore } from '@/infra/hooks';
+import { useMounted } from '@/ui-kit/utilities/hooks';
 import {
   useBoardContext,
   useRecordingContext,
@@ -8,11 +9,13 @@ import {
   useScreenShareContext,
   useCloudDriveContext,
   useGlobalContext,
+  useMediaContext,
 } from 'agora-edu-core';
 import { GenericError, GenericErrorWrapper } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
+import Draggable from 'react-draggable';
 import { CloudDriverContainer } from '~capabilities/containers/board/cloud-driver';
 import {
   UserListContainer,
@@ -20,120 +23,117 @@ import {
 } from '~capabilities/containers/board/user-list';
 import { ScreenShareContainer } from '~capabilities/containers/screen-share';
 import { SettingContainer } from '~capabilities/containers/setting';
-import { Button, Modal, t, transI18n } from '~ui-kit';
+import { Button, MemoryPerf, MemoryPerfProps, Modal, ResourceInfo, t, transI18n } from '~ui-kit';
 
 export type BaseDialogProps = {
   id: string;
 };
 
-export const KickDialog: React.FC<
-  BaseDialogProps & { userUuid: string; roomUuid: string }
-> = observer(({ id, userUuid, roomUuid }) => {
-  const { removeDialog } = useUIStore();
-  const { roomInfo, kickOutOnce, kickOutBan } = useRoomContext();
+export const KickDialog: React.FC<BaseDialogProps & { userUuid: string; roomUuid: string }> =
+  observer(({ id, userUuid, roomUuid }) => {
+    const { removeDialog } = useUIStore();
+    const { roomInfo, kickOutOnce, kickOutBan } = useRoomContext();
 
-  const [type, setType] = useState<string>('kicked_once');
+    const [type, setType] = useState<string>('kicked_once');
 
-  const onOK = useCallback(async () => {
-    if (type === 'kicked_once') {
-      await kickOutOnce(userUuid, roomInfo.roomUuid);
-      removeDialog(id);
-    }
-    if (type === 'kicked_ban') {
-      await kickOutBan(userUuid, roomInfo.roomUuid);
-      removeDialog(id);
-    }
-  }, [type, id, userUuid, roomInfo.roomUuid, kickOutOnce, kickOutBan]);
-
-  return (
-    <Modal
-      width={300}
-      title={transI18n('kick.kick_out_student')}
-      onOk={onOK}
-      onCancel={() => {
+    const onOK = useCallback(async () => {
+      if (type === 'kicked_once') {
+        await kickOutOnce(userUuid, roomInfo.roomUuid);
         removeDialog(id);
-      }}
-      footer={[
-        <Button type={'secondary'} action="cancel">
-          {t('toast.cancel')}
-        </Button>,
-        <Button type={'primary'} action="ok">
-          {t('toast.confirm')}
-        </Button>,
-      ]}>
-      <div className="radio-container">
-        <label className="customize-radio">
-          <input
-            type="radio"
-            name="kickType"
-            value="kicked_once"
-            checked={type === 'kicked_once'}
-            onChange={() => setType('kicked_once')}
-          />
-          <span className="ml-2">{transI18n('radio.kicked_once')}</span>
-        </label>
-        <label className="customize-radio">
-          <input
-            type="radio"
-            name="kickType"
-            value="kicked_ban"
-            onChange={() => setType('kicked_ban')}
-          />
-          <span className="ml-2">{transI18n('radio.ban')}</span>
-        </label>
-      </div>
-    </Modal>
-  );
-});
+      }
+      if (type === 'kicked_ban') {
+        await kickOutBan(userUuid, roomInfo.roomUuid);
+        removeDialog(id);
+      }
+    }, [type, id, userUuid, roomInfo.roomUuid, kickOutOnce, kickOutBan]);
+
+    return (
+      <Modal
+        width={300}
+        title={transI18n('kick.kick_out_student')}
+        onOk={onOK}
+        onCancel={() => {
+          removeDialog(id);
+        }}
+        footer={[
+          <Button type={'secondary'} action="cancel">
+            {t('toast.cancel')}
+          </Button>,
+          <Button type={'primary'} action="ok">
+            {t('toast.confirm')}
+          </Button>,
+        ]}>
+        <div className="radio-container">
+          <label className="customize-radio">
+            <input
+              type="radio"
+              name="kickType"
+              value="kicked_once"
+              checked={type === 'kicked_once'}
+              onChange={() => setType('kicked_once')}
+            />
+            <span className="ml-2">{transI18n('radio.kicked_once')}</span>
+          </label>
+          <label className="customize-radio">
+            <input
+              type="radio"
+              name="kickType"
+              value="kicked_ban"
+              onChange={() => setType('kicked_ban')}
+            />
+            <span className="ml-2">{transI18n('radio.ban')}</span>
+          </label>
+        </div>
+      </Modal>
+    );
+  });
 
 export const SettingDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   return <SettingContainer id={id} />;
 });
 
-export const CloudDriverDialog: React.FC<BaseDialogProps> = observer(
-  ({ id }) => {
+export const CloudDriverDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+  const { removeDialog } = useUIStore();
+  return (
+    <CloudDriverContainer
+      onClose={() => {
+        removeDialog(id);
+      }}
+    />
+  );
+});
+
+export const GenericErrorDialog: React.FC<BaseDialogProps & { error: GenericError }> = observer(
+  ({ id, error }) => {
     const { removeDialog } = useUIStore();
+
+    const { destroyRoom } = useRoomContext();
+
+    const onCancel = async () => {
+      removeDialog(id);
+      await destroyRoom();
+    };
+
+    const onOk = async () => {
+      removeDialog(id);
+      await destroyRoom();
+    };
+
     return (
-      <CloudDriverContainer
-        onClose={() => {
-          removeDialog(id);
-        }}
-      />
+      <Modal
+        onOk={onOk}
+        onCancel={onCancel}
+        footer={[
+          <Button type={'primary'} action="ok">
+            {transI18n('toast.confirm')}
+          </Button>,
+        ]}
+        title={BusinessExceptions.getErrorTitle(error)}>
+        {BusinessExceptions.getErrorText(error)}
+      </Modal>
     );
   },
 );
-
-export const GenericErrorDialog: React.FC<
-  BaseDialogProps & { error: GenericError }
-> = observer(({ id, error }) => {
-  const { removeDialog } = useUIStore();
-
-  const { destroyRoom } = useRoomContext();
-
-  const onCancel = async () => {
-    removeDialog(id);
-    await destroyRoom();
-  };
-
-  const onOk = async () => {
-    removeDialog(id);
-    await destroyRoom();
-  };
-
-  return (
-    <Modal
-      onOk={onOk}
-      onCancel={onCancel}
-      footer={[
-        <Button type={'primary'} action="ok">
-          {transI18n('toast.confirm')}
-        </Button>,
-      ]}
-      title={BusinessExceptions.getErrorTitle(error)}>
-      {BusinessExceptions.getErrorText(error)}
-    </Modal>
-  );
-});
 
 export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   const { setTool, room, hasPermission } = useBoardContext();
@@ -155,35 +155,32 @@ export const UserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
   return <UserListContainer onClose={onCancel} />;
 });
 
-export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(
-  ({ id }) => {
-    const { setTool, room, hasPermission } = useBoardContext();
+export const StudentUserListDialog: React.FC<BaseDialogProps> = observer(({ id }) => {
+  const { setTool, room, hasPermission } = useBoardContext();
 
-    const { removeDialog } = useUIStore();
+  const { removeDialog } = useUIStore();
 
-    const onCancel = useCallback(() => {
-      if (room) {
-        if (hasPermission) {
-          const tool = room.state.memberState.currentApplianceName;
-          setTool(tool);
-        } else {
-          setTool('reset');
-        }
+  const onCancel = useCallback(() => {
+    if (room) {
+      if (hasPermission) {
+        const tool = room.state.memberState.currentApplianceName;
+        setTool(tool);
+      } else {
+        setTool('reset');
       }
-      removeDialog(id);
-    }, [room, removeDialog, setTool, hasPermission]);
+    }
+    removeDialog(id);
+  }, [room, removeDialog, setTool, hasPermission]);
 
-    return <StudentUserListContainer onClose={onCancel} />;
-  },
-);
+  return <StudentUserListContainer onClose={onCancel} />;
+});
 
 export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
   const { removeScreenShareWindow } = useRoomContext();
 
   const { removeDialog } = useUIStore();
 
-  const { startNativeScreenShareBy, customScreenSharePickerType } =
-    useScreenShareContext();
+  const { startNativeScreenShareBy, customScreenSharePickerType } = useScreenShareContext();
 
   const [shareId, setShareId] = useState<any>('');
 
@@ -210,7 +207,7 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
         <Button type={'secondary'} action="cancel">
           {t('toast.cancel')}
         </Button>,
-        <Button type={'primary'} action="ok">
+        <Button type={'primary'} action="ok" disabled={!shareId}>
           {t('toast.confirm')}
         </Button>,
       ]}
@@ -220,39 +217,39 @@ export const OpenShareScreen: React.FC<BaseDialogProps> = observer(({ id }) => {
   );
 });
 
-export const CloseConfirm: React.FC<
-  BaseDialogProps & { resourceUuid: string }
-> = observer(({ id, resourceUuid }) => {
-  const { removeDialog } = useUIStore();
+export const CloseConfirm: React.FC<BaseDialogProps & { resourceUuid: string }> = observer(
+  ({ id, resourceUuid }) => {
+    const { removeDialog } = useUIStore();
 
-  const { closeMaterial } = useCloudDriveContext();
+    const { closeMaterial } = useCloudDriveContext();
 
-  const onOK = async () => {
-    await closeMaterial(resourceUuid);
-    removeDialog(id);
-  };
+    const onOK = async () => {
+      await closeMaterial(resourceUuid);
+      removeDialog(id);
+    };
 
-  const onCancel = () => {
-    removeDialog(id);
-  };
+    const onCancel = () => {
+      removeDialog(id);
+    };
 
-  return (
-    <Modal
-      onOk={onOK}
-      onCancel={onCancel}
-      footer={[
-        <Button type={'secondary'} action="cancel">
-          {t('toast.cancel')}
-        </Button>,
-        <Button type={'primary'} action="ok">
-          {t('toast.confirm')}
-        </Button>,
-      ]}
-      title={t('toast.close_ppt')}>
-      <p>{t('toast.sure_close_ppt')}</p>
-    </Modal>
-  );
-});
+    return (
+      <Modal
+        onOk={onOK}
+        onCancel={onCancel}
+        footer={[
+          <Button type={'secondary'} action="cancel">
+            {t('toast.cancel')}
+          </Button>,
+          <Button type={'primary'} action="ok">
+            {t('toast.confirm')}
+          </Button>,
+        ]}
+        title={t('toast.close_ppt')}>
+        <p>{t('toast.sure_close_ppt')}</p>
+      </Modal>
+    );
+  },
+);
 
 export const KickEnd: React.FC<BaseDialogProps> = observer(({ id }) => {
   const { removeDialog } = useUIStore();
@@ -415,18 +412,14 @@ export const Exit: React.FC<BaseDialogProps> = observer(({ id }) => {
   );
 });
 
-export const Record: React.FC<BaseDialogProps & { starting: boolean }> =
-  observer(({ id, starting }) => {
+export const Record: React.FC<BaseDialogProps & { starting: boolean }> = observer(
+  ({ id, starting }) => {
     const { removeDialog, addToast } = useUIStore();
     const { startRecording, stopRecording } = useRecordingContext();
 
-    const recordingTitle = starting
-      ? 'toast.stop_recording.title'
-      : 'toast.start_recording.title';
+    const recordingTitle = starting ? 'toast.stop_recording.title' : 'toast.start_recording.title';
 
-    const recordingContent = starting
-      ? 'toast.stop_recording.body'
-      : 'toast.start_recording.body';
+    const recordingContent = starting ? 'toast.stop_recording.body' : 'toast.start_recording.body';
 
     return (
       <Modal
@@ -465,7 +458,8 @@ export const Record: React.FC<BaseDialogProps & { starting: boolean }> =
         </p>
       </Modal>
     );
-  });
+  },
+);
 
 export const DialogContainer: React.FC<any> = observer(() => {
   const { dialogQueue, addDialog } = useUIStore();
@@ -476,8 +470,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
     'kicked-end': () => addDialog(KickedEnd),
     'room-end-notice': () => addDialog(RoomEndNotice),
     'kick-end': () => addDialog(KickEnd),
-    'generic-error-dialog': (props: any) =>
-      addDialog(GenericErrorDialog, { ...props }),
+    'generic-error-dialog': (props: any) => addDialog(GenericErrorDialog, { ...props }),
   };
 
   useEffect(() => {
@@ -506,5 +499,172 @@ export const DialogContainer: React.FC<any> = observer(() => {
         </div>
       ))}
     </div>
+  );
+});
+
+export const Confirm: React.FC<BaseDialogProps & { onOk: any; title: string; content: string }> =
+  observer(({ id, onOk, title, content }) => {
+    const { removeDialog } = useUIStore();
+    const handleOnOK = useCallback(async () => {
+      onOk();
+      removeDialog(id);
+    }, [id]);
+
+    return (
+      <Modal
+        width={300}
+        title={title}
+        onOk={handleOnOK}
+        onCancel={() => {
+          removeDialog(id);
+        }}
+        footer={[
+          <Button type={'secondary'} action="cancel">
+            {t('toast.cancel')}
+          </Button>,
+          <Button type={'primary'} action="ok">
+            {t('toast.confirm')}
+          </Button>,
+        ]}>
+        <p>{content}</p>
+      </Modal>
+    );
+  });
+
+type MemoryPerfState = {
+  isNative: boolean;
+  rss?: number;
+  heapTotal: number;
+  heapUsed: number;
+  external?: number;
+  images?: ResourceInfo;
+  scripts?: ResourceInfo;
+  cssStyleSheets?: ResourceInfo;
+  xslStyleSheets?: ResourceInfo;
+  fonts?: ResourceInfo;
+  other?: ResourceInfo;
+};
+
+export const MemoryPerfContainer = observer(({ onClose }: any) => {
+  const onOK = async () => {
+    // removeDialog(id);
+    onClose();
+  };
+
+  const onCancel = () => {
+    // removeDialog(id);
+    onClose();
+  };
+
+  const isMounted = useMounted();
+
+  const defaultResourceInfo: ResourceInfo = {
+    count: 0,
+    size: 0,
+    liveSize: 0,
+  };
+
+  const { isNative } = useMediaContext();
+
+  const [perfState, updatePerfInfo] = useState<MemoryPerfState>({
+    isNative: isNative,
+    rss: 0,
+    heapTotal: 0,
+    heapUsed: 0,
+    external: 0,
+    images: defaultResourceInfo,
+    scripts: defaultResourceInfo,
+    cssStyleSheets: defaultResourceInfo,
+    xslStyleSheets: defaultResourceInfo,
+    fonts: defaultResourceInfo,
+    other: defaultResourceInfo,
+  });
+
+  function toMb(bytes: number) {
+    return (bytes / (1000.0 * 1000)).toFixed(2);
+  }
+
+  const getMemoryForElectron = () => {
+    const { webFrame } = window.require('electron');
+    const result = {};
+    const memoryAccelerator = Object.entries(window.process.memoryUsage()).reduce(
+      (acc: object, item: [string, any]) => {
+        const [key, value] = item;
+        acc[key] = value / (1000.0 * 1000);
+        return acc;
+      },
+      result,
+    );
+
+    const webFrameAccelerator = Object.entries(webFrame.getResourceUsage()).reduce(
+      (acc: any, element: [string, any]) => {
+        const [key, value] = element;
+        const item = value as ResourceInfo;
+        acc[key] = {
+          count: item.count,
+          size: toMb(item.size),
+          liveSize: toMb(item.liveSize),
+        };
+        return acc;
+      },
+      result,
+    );
+
+    const finalResult = {
+      isNative: true,
+      ...memoryAccelerator,
+      ...webFrameAccelerator,
+    };
+
+    return finalResult as MemoryPerfState;
+  };
+
+  const getMemoryForWeb = () => {
+    //@ts-ignore
+    const { memory } = window.performance;
+    const finalResult = {
+      isNative: false,
+      heapTotal: memory.totalJSHeapSize / (1000.0 * 1000),
+      heapUsed: memory.usedJSHeapSize / (1000.0 * 1000),
+    };
+    return finalResult as MemoryPerfState;
+  };
+
+  useEffect(() => {
+    if (isNative) {
+      const timer = setInterval(() => {
+        if (isMounted) {
+          updatePerfInfo(getMemoryForElectron());
+        }
+      }, 300);
+      return () => clearInterval(timer);
+    } else {
+      const timer = setInterval(() => {
+        if (isMounted) {
+          updatePerfInfo(getMemoryForWeb());
+        }
+      }, 300);
+      return () => clearInterval(timer);
+    }
+  }, [updatePerfInfo]);
+
+  return (
+    <Draggable>
+      <Modal
+        width={'auto'}
+        hasMask={false}
+        closable={true}
+        onOk={onOK}
+        onCancel={onCancel}
+        topLevel={true}
+        footer={[
+          <Button type={'primary'} action="ok">
+            {t('toast.confirm')}
+          </Button>,
+        ]}
+        title={t('biz-header.perf')}>
+        <MemoryPerf title="Node App Memory Usage" {...perfState} />
+      </Modal>
+    </Draggable>
   );
 });

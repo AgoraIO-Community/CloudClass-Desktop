@@ -14,9 +14,7 @@ export const useAppPluginContext = () => {
   };
 
   const onShutdownAppPlugin = (id: any) => {
-    appStore.activeExtAppIds = appStore.activeExtAppIds.filter(
-      (appId) => appId !== id,
-    );
+    appStore.activeExtAppIds = appStore.activeExtAppIds.filter((appId) => appId !== id);
   };
 
   const appPluginProperties = (app: IAgoraExtApp) => {

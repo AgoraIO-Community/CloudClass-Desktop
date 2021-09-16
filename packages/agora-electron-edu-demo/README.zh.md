@@ -37,8 +37,7 @@ AgoraEduSDK.launch(
     language: 'en', //语言 ‘zh’中文 ‘en‘英文
     personalCourseWareList: [],
     pretest: true, // 推荐默认开启设备预检
-    recordUrl:
-      'https://webdemo.agora.io/flexible-classroom/test/20210428_811/#/record',
+    recordUrl: 'https://webdemo.agora.io/flexible-classroom/test/20210428_811/#/record',
     region: 'CN', //区域
     roleType: 1, //角色类型
     roomName: 'demoedupaas', //房间名称

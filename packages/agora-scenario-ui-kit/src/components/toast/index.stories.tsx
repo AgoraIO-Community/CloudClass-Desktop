@@ -24,13 +24,7 @@ type DocsProps = {
   toastType: any;
 };
 
-export const Docs = ({
-  success,
-  error,
-  warning,
-  toastText,
-  toastType = 'success',
-}: DocsProps) => {
+export const Docs = ({ success, error, warning, toastText, toastType = 'success' }: DocsProps) => {
   const [visible, setVisible] = useState(true);
   return (
     <>

@@ -181,14 +181,8 @@ interface IAgoraRtcChannel {
   id: string;
   on(event: 'userJoined', listener: (uid: number) => void): void;
   on(event: 'userOffline', listener: (uid: number) => void): void;
-  on(
-    event: 'channelError',
-    listener: (error: number, message: string) => void,
-  ): void;
-  on(
-    event: 'channelWarning',
-    listener: (warn: number, message: string) => void,
-  ): void;
+  on(event: 'channelError', listener: (error: number, message: string) => void): void;
+  on(event: 'channelWarning', listener: (warn: number, message: string) => void): void;
   on(event: 'joinChannelSuccess', listener: (...args: any[]) => void): void;
   off(event: string, listener: Function): void;
   removeAllListeners(): void;
@@ -205,8 +199,7 @@ interface SubChannelClient {
 }
 
 export function CustomBtoa(input: any) {
-  let keyStr =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  let keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   let output = '';
   let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
   let i = 0;
@@ -226,19 +219,12 @@ export function CustomBtoa(input: any) {
     } else if (isNaN(chr3)) {
       enc4 = 64;
     }
-    output +=
-      keyStr.charAt(enc1) +
-      keyStr.charAt(enc2) +
-      keyStr.charAt(enc3) +
-      keyStr.charAt(enc4);
+    output += keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
   }
   return output;
 }
 
-export class AgoraElectronRTCWrapper
-  extends EventEmitter
-  implements IElectronRTCWrapper
-{
+export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRTCWrapper {
   client!: IAgoraRtcEngine;
   logPath: string;
   videoSourceLogPath: string;
@@ -324,6 +310,11 @@ export class AgoraElectronRTCWrapper
         convertNativeAreaCode(`${options.area}`),
       );
     }
+    window.addEventListener('beforeunload', () => {
+      //@ts-ignore
+      const release = window.rtcEngine.release();
+      console.log('release rtcEngine ', release);
+    });
     if (ret < 0) {
       throw GenericErrorWrapper({
         message: `AgoraRtcEngine initialize with APPID: ${this.appId} failured`,
@@ -370,10 +361,7 @@ export class AgoraElectronRTCWrapper
       this.client.setVideoEncoderConfiguration(
         //@ts-ignore
         new CEFVideoEncoderConfiguration(
-          new CEFVideoDimensions(
-            videoEncoderConfiguration.width,
-            videoEncoderConfiguration.height,
-          ),
+          new CEFVideoDimensions(videoEncoderConfiguration.width, videoEncoderConfiguration.height),
           videoEncoderConfiguration.frameRate,
         ),
       );
@@ -391,25 +379,14 @@ export class AgoraElectronRTCWrapper
       // })
     }
   }
-  muteRemoteVideoByClient(
-    client: any,
-    uid: string,
-    val: boolean,
-  ): Promise<any> {
+  muteRemoteVideoByClient(client: any, uid: string, val: boolean): Promise<any> {
     throw new Error('Method not implemented.');
   }
-  muteRemoteAudioByClient(
-    client: any,
-    uid: string,
-    val: boolean,
-  ): Promise<any> {
+  muteRemoteAudioByClient(client: any, uid: string, val: boolean): Promise<any> {
     throw new Error('Method not implemented.');
   }
 
-  public setAddonLogPath(payload: {
-    logPath: string;
-    videoSourceLogPath: string;
-  }) {
+  public setAddonLogPath(payload: { logPath: string; videoSourceLogPath: string }) {
     this.logPath = payload.logPath;
     this.videoSourceLogPath = payload.videoSourceLogPath;
   }
@@ -441,9 +418,7 @@ export class AgoraElectronRTCWrapper
   releaseAllClient() {
     EduLogger.info('call electron media service releaseAllClient');
     if (this.client) {
-      EduLogger.info(
-        'call electron media service main client removeAllListeners',
-      );
+      EduLogger.info('call electron media service main client removeAllListeners');
       this.client.removeAllListeners();
     }
     this.releaseSubChannels();
@@ -572,8 +547,8 @@ export class AgoraElectronRTCWrapper
     this.client.on('networkquality', (...args: any[]) => {
       // EduLogger.info("network-quality, uid: ", args[0], " downlinkNetworkQuality: ", args[1], " uplinkNetworkQuality ", args[2])
       this.fire('network-quality', {
-        downlinkNetworkQuality: args[1],
-        uplinkNetworkQuality: args[2],
+        downlinkNetworkQuality: args[2],
+        uplinkNetworkQuality: args[1],
         cpuUsage: this.cpuUsage,
         //TODO: delay case need use last mile, not rtt
         rtt: this.lastMileDelay,
@@ -587,61 +562,55 @@ export class AgoraElectronRTCWrapper
         },
       });
     });
-    this.client.on(
-      'remoteVideoStateChanged',
-      (uid: number, state: number, reason: any) => {
-        EduLogger.info('remoteVideoStateChanged ', reason, uid);
-        if (reason === 5) {
-          this.fire('user-unpublished', {
-            user: {
-              uid: +uid,
-            },
-            mediaType: 'video',
-          });
-        }
+    this.client.on('remoteVideoStateChanged', (uid: number, state: number, reason: any) => {
+      EduLogger.info('remoteVideoStateChanged ', reason, uid);
+      if (reason === 5) {
+        this.fire('user-unpublished', {
+          user: {
+            uid: +uid,
+          },
+          mediaType: 'video',
+        });
+      }
 
-        if (reason === 6) {
-          this.fire('user-published', {
-            user: {
-              uid: +uid,
-            },
-            mediaType: 'video',
-          });
-        }
-      },
-    );
-    this.client.on(
-      'remoteAudioStateChanged',
-      (uid: number, state: number, reason: any) => {
-        EduLogger.info('remoteAudioStateChanged ', reason, uid);
+      if (reason === 6) {
+        this.fire('user-published', {
+          user: {
+            uid: +uid,
+          },
+          mediaType: 'video',
+        });
+      }
+    });
+    this.client.on('remoteAudioStateChanged', (uid: number, state: number, reason: any) => {
+      EduLogger.info('remoteAudioStateChanged ', reason, uid);
 
-        // remote user disable audio
-        if (reason === 5) {
-          this.fire('user-unpublished', {
-            user: {
-              uid,
-            },
-            mediaType: 'audio',
-          });
-        }
+      // remote user disable audio
+      if (reason === 5) {
+        this.fire('user-unpublished', {
+          user: {
+            uid,
+          },
+          mediaType: 'audio',
+        });
+      }
 
-        if (reason === 6) {
-          EduLogger.info('user-published audio', uid);
-          // this.fire('user-published', {
-          //   user: {
-          //     uid,
-          //   },
-          //   mediaType: 'audio',
-          // })
-        }
-        // this.fire('user-info-updated', {
-        //   uid,
-        //   msg: reason,
-        //   type: 'audio',
-        //   state
+      if (reason === 6) {
+        EduLogger.info('user-published audio', uid);
+        // this.fire('user-published', {
+        //   user: {
+        //     uid,
+        //   },
+        //   mediaType: 'audio',
         // })
-      },
-    );
+      }
+      // this.fire('user-info-updated', {
+      //   uid,
+      //   msg: reason,
+      //   type: 'audio',
+      //   state
+      // })
+    });
     this.client.on('joinedchannel', (channel: string, uid: number) => {
       EduLogger.info('joinedchannel', uid);
     });
@@ -678,15 +647,12 @@ export class AgoraElectronRTCWrapper
     this.client.on('tokenPrivilegeDidExpire', () => {
       this.fire('token-privilege-did-expire');
     });
-    this.client.on(
-      'localPublishFallbackToAudioOnly',
-      (isFallbackOrRecover: any) => {
-        this.fire('stream-fallback', {
-          uid: convertUid(this.localUid),
-          isFallbackOrRecover,
-        });
-      },
-    );
+    this.client.on('localPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
+      this.fire('stream-fallback', {
+        uid: convertUid(this.localUid),
+        isFallbackOrRecover,
+      });
+    });
     this.client.on(
       'remoteSubscribeFallbackToAudioOnly',
       (uid: any, isFallbackOrRecover: boolean) => {
@@ -877,82 +843,72 @@ export class AgoraElectronRTCWrapper
         });
       },
     );
-    this.client.on(
-      'RemoteVideoStateChanged',
-      (uid: number, state: number, reason: any) => {
-        EduLogger.info(
-          '[agora-apaas] cef platform remoteVideoStateChanged ',
-          reason,
-          uid,
-        );
-        if ([5, 7, 8].includes(reason)) {
-          this.fire('user-unpublished', {
-            user: {
-              uid: convertUid(uid),
-            },
-            mediaType: 'video',
-            caller: {
-              name: 'RemoteVideoStateChanged',
-              uid,
-              state,
-              reason,
-            },
-          });
-        }
+    this.client.on('RemoteVideoStateChanged', (uid: number, state: number, reason: any) => {
+      EduLogger.info('[agora-apaas] cef platform remoteVideoStateChanged ', reason, uid);
+      if ([5, 7, 8].includes(reason)) {
+        this.fire('user-unpublished', {
+          user: {
+            uid: convertUid(uid),
+          },
+          mediaType: 'video',
+          caller: {
+            name: 'RemoteVideoStateChanged',
+            uid,
+            state,
+            reason,
+          },
+        });
+      }
 
-        if ([6, 9].includes(reason)) {
-          this.fire('user-published', {
-            user: {
-              uid: convertUid(uid),
-            },
-            mediaType: 'video',
-            caller: {
-              name: 'RemoteVideoStateChanged',
-              uid,
-              state,
-              reason,
-            },
-          });
-        }
-      },
-    );
-    this.client.on(
-      'RemoteAudioStateChanged',
-      (uid: number, state: number, reason: any) => {
-        console.log('remoteAudioStateChanged ', reason, uid);
+      if ([6, 9].includes(reason)) {
+        this.fire('user-published', {
+          user: {
+            uid: convertUid(uid),
+          },
+          mediaType: 'video',
+          caller: {
+            name: 'RemoteVideoStateChanged',
+            uid,
+            state,
+            reason,
+          },
+        });
+      }
+    });
+    this.client.on('RemoteAudioStateChanged', (uid: number, state: number, reason: any) => {
+      console.log('remoteAudioStateChanged ', reason, uid);
 
-        // remote user disable audio
-        if (reason === 5) {
-          // this.fire('user-unpublished', {
-          //   user: {
-          //     uid: convertUid(uid),
-          //   },
-          //   mediaType: 'audio',
-          //   caller: {
-          //     name: 'RemoteAudioStateChanged',
-          //     reason,
-          //     state,
-          //   }
-          // })
-        }
-
-        if (reason === 6) {
-          // console.log('user-published audio', uid)
-          // this.fire('user-published', {
-          //   user: {
-          //     uid,
-          //   },
-          //   mediaType: 'audio',
-          // })
-        }
-        // this.fire('user-info-updated', {
-        //   uid,
-        //   msg: reason,
-        //   type: 'audio',
-        //   state
+      // remote user disable audio
+      if (reason === 5) {
+        // this.fire('user-unpublished', {
+        //   user: {
+        //     uid: convertUid(uid),
+        //   },
+        //   mediaType: 'audio',
+        //   caller: {
+        //     name: 'RemoteAudioStateChanged',
+        //     reason,
+        //     state,
+        //   }
         // })
-      },
-    );
+      }
+
+      if (reason === 6) {
+        // console.log('user-published audio', uid)
+        // this.fire('user-published', {
+        //   user: {
+        //     uid,
+        //   },
+        //   mediaType: 'audio',
+        // })
+      }
+      // this.fire('user-info-updated', {
+      //   uid,
+      //   msg: reason,
+      //   type: 'audio',
+      //   state
+      // })
+    });
     this.client.on('JoinChannelSuccess', (channel: string, uid: number) => {
       console.log('joinedchannel', uid);
     });
@@ -985,15 +941,12 @@ export class AgoraElectronRTCWrapper
     this.client.on('tokenPrivilegeDidExpire', () => {
       this.fire('token-privilege-did-expire');
     });
-    this.client.on(
-      'LocalPublishFallbackToAudioOnly',
-      (isFallbackOrRecover: any) => {
-        this.fire('stream-fallback', {
-          uid: convertUid(this.localUid),
-          isFallbackOrRecover,
-        });
-      },
-    );
+    this.client.on('LocalPublishFallbackToAudioOnly', (isFallbackOrRecover: any) => {
+      this.fire('stream-fallback', {
+        uid: convertUid(this.localUid),
+        isFallbackOrRecover,
+      });
+    });
     this.client.on(
       'RemoteSubscribeFallbackToAudioOnly',
       (uid: any, isFallbackOrRecover: boolean) => {
@@ -1028,11 +981,7 @@ export class AgoraElectronRTCWrapper
         });
       };
       const handleUserOffline = (uid: number, elapsed: number) => {
-        EduLogger.info(
-          'ELECTRON user-unpublished channel ',
-          uid,
-          option.channel,
-        );
+        EduLogger.info('ELECTRON user-unpublished channel ', uid, option.channel);
         this.fire('user-unpublished', {
           user: {
             uid: convertUid(uid),
@@ -1051,27 +1000,13 @@ export class AgoraElectronRTCWrapper
         handleJoinSuccess,
       };
       EduLogger.info(`ELECTRON subChannel joinChannelSuccess: ${subChannel}`);
-      subChannel.on(
-        'joinChannelSuccess',
-        this._subClient[option.channel].handleJoinSuccess,
-      );
+      subChannel.on('joinChannelSuccess', this._subClient[option.channel].handleJoinSuccess);
       EduLogger.info(`ELECTRON subChannel userJoined: ${subChannel}`);
-      subChannel.on(
-        'userJoined',
-        this._subClient[option.channel].handleUserOnline,
-      );
+      subChannel.on('userJoined', this._subClient[option.channel].handleUserOnline);
       EduLogger.info(`ELECTRON subChannel userOffline: ${subChannel}`);
-      subChannel.on(
-        'userOffline',
-        this._subClient[option.channel].handleUserOffline,
-      );
+      subChannel.on('userOffline', this._subClient[option.channel].handleUserOffline);
       subChannel.setClientRole(1);
-      let ret = subChannel.joinChannel(
-        option.token,
-        option.info,
-        option.uid,
-        {} as any,
-      );
+      let ret = subChannel.joinChannel(option.token, option.info, option.uid, {} as any);
       EduLogger.info(`ELECTRON joinChannel: ret: ${ret}`);
     } catch (err) {
       throw GenericErrorWrapper(err);
@@ -1086,18 +1021,8 @@ export class AgoraElectronRTCWrapper
     try {
       //设置为RTC为直播模式
       this.client.setChannelProfile(1);
-      let ret = this.client.joinChannel(
-        option.token,
-        option.channel,
-        option.info,
-        option.uid,
-      );
-      EduLogger.info(
-        'electron.joinChannel ',
-        ret,
-        ` params: `,
-        JSON.stringify(option),
-      );
+      let ret = this.client.joinChannel(option.token, option.channel, option.info, option.uid);
+      EduLogger.info('electron.joinChannel ', ret, ` params: `, JSON.stringify(option));
       if (ret < 0) {
         throw GenericErrorWrapper({
           message: `joinSubChannel failure`,
@@ -1118,12 +1043,7 @@ export class AgoraElectronRTCWrapper
       const subChannel = this._subClient[channelName];
       if (subChannel) {
         let ret = subChannel.client.leaveChannel();
-        EduLogger.info(
-          'ELECTRON leaveSubChannel ',
-          ret,
-          ' channelName ',
-          channelName,
-        );
+        EduLogger.info('ELECTRON leaveSubChannel ', ret, ' channelName ', channelName);
         subChannel.client.off('userJoined', subChannel.handleUserOnline);
         subChannel.client.off('userOffline', subChannel.handleUserOffline);
         delete this._subClient[channelName];
@@ -1236,9 +1156,7 @@ export class AgoraElectronRTCWrapper
     // }
   }
 
-  async prepareScreenShare(
-    params: PrepareScreenShareParams = {},
-  ): Promise<any> {
+  async prepareScreenShare(params: PrepareScreenShareParams = {}): Promise<any> {
     try {
       //@ts-ignore
       let items =
@@ -1317,18 +1235,11 @@ export class AgoraElectronRTCWrapper
         if (this.videoSourceLogPath) {
           this.client.videoSourceSetLogFile(this.videoSourceLogPath);
           window.setNodeAddonVideoSourceLogPath = this.videoSourceLogPath;
-          EduLogger.info(
-            `[electron-log-path] set videoSourceLogPath: ${this.videoSourceLogPath}`,
-          );
+          EduLogger.info(`[electron-log-path] set videoSourceLogPath: ${this.videoSourceLogPath}`);
         }
         const handleVideoSourceJoin = (uid: number) => {
           this.client.off('videoSourceJoinedSuccess', handleVideoSourceJoin);
-          EduLogger.info(
-            'startScreenShare#options uid, ',
-            uid,
-            '  options',
-            options,
-          );
+          EduLogger.info('startScreenShare#options uid, ', uid, '  options', options);
           if (options.type === ScreenShareType.Window) {
             this.client.videoSourceStartScreenCaptureByWindow(
               options.shareId as number,
@@ -1380,30 +1291,24 @@ export class AgoraElectronRTCWrapper
   async stopScreenShare(): Promise<any> {
     const stopScreenSharePromise = new Promise((resolve, reject) => {
       const handleVideoSourceLeaveChannel = (evt: any) => {
-        this.client.off(
-          'videoSourceLeaveChannel',
-          handleVideoSourceLeaveChannel,
-        );
+        this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel);
         const release = this.client.videoSourceRelease();
         EduLogger.info(' videoSourceLeave Channel', release);
         setTimeout(resolve, 1);
       };
       try {
-        this.client.on(
-          'videoSourceLeaveChannel',
-          handleVideoSourceLeaveChannel,
-        );
+        this.client.on('videoSourceLeaveChannel', handleVideoSourceLeaveChannel);
         let ret = this.client.videoSourceLeave();
+        if (ret < 0) {
+          this.client.videoSourceRelease();
+        }
         EduLogger.info('stopScreenShare leaveSubChannel', ret);
         // wait(8000).catch((err: any) => {
         //   this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel)
         //   reject(err)
         // })
       } catch (err) {
-        this.client.off(
-          'videoSourceLeaveChannel',
-          handleVideoSourceLeaveChannel,
-        );
+        this.client.off('videoSourceLeaveChannel', handleVideoSourceLeaveChannel);
         reject(err);
       }
     });

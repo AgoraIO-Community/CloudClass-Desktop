@@ -52,11 +52,9 @@ export class BoardClient extends EventEmitter {
     super();
     this.appIdentifier = config.appIdentifier;
     this.whiteboardDependencies = config.dependencies.get('white-web-sdk');
-    const whiteVideoPlugin =
-      config.dependencies.get('@netless/white-video-plugin') || {};
+    const whiteVideoPlugin = config.dependencies.get('@netless/white-video-plugin') || {};
     const { videoPlugin } = whiteVideoPlugin;
-    const whiteAudioPlugin =
-      config.dependencies.get('@netless/white-audio-plugin') || {};
+    const whiteAudioPlugin = config.dependencies.get('@netless/white-audio-plugin') || {};
     const { audioPlugin } = whiteAudioPlugin;
     this.initPlugins(config.identity, videoPlugin, audioPlugin);
     this.init();

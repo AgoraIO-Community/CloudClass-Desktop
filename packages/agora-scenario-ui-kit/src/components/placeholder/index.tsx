@@ -2,17 +2,11 @@ import React, { FC } from 'react';
 import './index.css';
 import classnames from 'classnames';
 import { BaseProps } from '~components/interface/base-props';
-import emptyHistory from './assets/empty-history.png';
-import cameraBroken from './assets/camera-broken.png';
-import cameraClose from './assets/camera-close.png';
-import noBody from './assets/no-body.png';
-import noFile from './assets/no-file.png';
-import cameraDisabled from './assets/camera-disabled.png';
-import noQuestion from './assets/noquestion.svg';
 import { SvgImg } from '../svg-img';
 import boardDisconnected from './assets/board-disconnected.png';
 import { transI18n } from '~components/i18n';
 import { Button } from '~components/button';
+import { Z_INDEX_RULES } from '~utilities/style-config';
 
 type PlaceholderType =
   | 'emptyHistory'
@@ -22,16 +16,6 @@ type PlaceholderType =
   | 'noFile'
   | 'cameraDisabled'
   | 'noQuestion';
-
-const placeholderImgDict = {
-  emptyHistory,
-  cameraBroken,
-  cameraClose,
-  noBody,
-  noFile,
-  cameraDisabled,
-  noQuestion,
-};
 
 const svgTypeDict = {
   emptyHistory: 'placeholder-no-message',
@@ -73,17 +57,9 @@ export const Placeholder: FC<PlaceholderProps> = ({
   return (
     <div className={cls} {...restProps} style={{ backgroundColor }}>
       <div>
-        {/* <img src={placeholderImgDict[placeholderType]} alt="no messages" /> */}
-        <SvgImg
-          type={svgTypeDict[placeholderType]}
-          size={svgSizeDict[placeholderType]}
-        />
+        <SvgImg type={svgTypeDict[placeholderType]} size={svgSizeDict[placeholderType]} />
       </div>
-      {placeholderDesc ? (
-        <div className="placeholder-desc">{placeholderDesc}</div>
-      ) : (
-        ''
-      )}
+      {placeholderDesc ? <div className="placeholder-desc">{placeholderDesc}</div> : ''}
     </div>
   );
 };
@@ -93,6 +69,7 @@ const cameraSvgTypeDict = {
   broken: 'placeholder-camera-broken',
   muted: 'placeholder-camera-off',
   disabled: 'placeholder-camera-disabled',
+  none: 'placeholder-no-body',
 };
 
 const cameraSvgSizeDict = {
@@ -100,16 +77,26 @@ const cameraSvgSizeDict = {
   broken: 90,
   muted: 90,
   disabled: 90,
+  none: 90,
+};
+
+const cameraSvgZIndex = {
+  loading: Z_INDEX_RULES.zIndexCameraPlaceholderLoading,
+  broken: Z_INDEX_RULES.zIndexCameraPlaceholderBroken,
+  muted: Z_INDEX_RULES.zIndexCameraPlaceholderMuted,
+  disabled: Z_INDEX_RULES.zIndexCameraPlaceholderDisabled,
+  none: Z_INDEX_RULES.zIndexCameraPlaceholderNone,
 };
 
 export interface CameraPlaceHolderProps extends BaseProps {
-  state?: 'loading' | 'broken' | 'muted' | 'disabled';
+  state?: 'loading' | 'broken' | 'muted' | 'disabled' | 'none';
+  placeholderSize?: number;
   children?: React.ReactNode;
 }
 
 export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
-  children,
   state = 'loading',
+  placeholderSize = 0,
   className,
 }) => {
   const cls = classnames({
@@ -119,9 +106,15 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
   });
 
   return (
-    <div className={cls}>
-      {/* {children} */}
-      <SvgImg type={cameraSvgTypeDict[state]} size={cameraSvgSizeDict[state]} />
+    <div
+      className={cls}
+      style={{
+        zIndex: cameraSvgZIndex[state],
+      }}>
+      <SvgImg
+        type={cameraSvgTypeDict[state]}
+        size={placeholderSize ? placeholderSize : cameraSvgSizeDict[state]}
+      />
     </div>
   );
 };
@@ -140,10 +133,7 @@ export const BoardPlaceHolder: React.FC<BoardPlaceHolderProps> = ({
   });
   return (
     <div className={cls}>
-      <img
-        src={boardDisconnected}
-        alt={transI18n('whiteboard.disconnect-img-alt')}
-      />
+      <img src={boardDisconnected} alt={transI18n('whiteboard.disconnect-img-alt')} />
       <Button className="reconnect-btn" onClick={onReconnectClick}>
         {transI18n('whiteboard.disconnect-btn')}
       </Button>
