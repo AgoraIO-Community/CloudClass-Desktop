@@ -2699,10 +2699,10 @@
   resolved "https://registry.nlark.com/@netless/white-video-plugin/download/@netless/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha1-yn7LwT6c128mVuLdPpRvl/CXCK8=
 
-"@netless/window-manager@0.1.64-canary.1":
-  version "0.1.64-canary.1"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.64-canary.1.tgz#037138a680bdc1e5035ca9c1b0c167acb8edac58"
-  integrity sha512-WQ4v6wq/6FsQXXvJhv0iniq1KExN3WtV8gQG72X5czxbFP77d1U7+/d2wi9d//IQvmjmGk6UhfggTHMX6q4fcQ==
+"@netless/window-manager@0.1.63":
+  version "0.1.63"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.1.63.tgz#d4894c3bae2defd32e65b3c20889972516d55156"
+  integrity sha512-YJPZMx5sM3OPFENOhYg7H4V4YP/ip2H9Yo25+5pEZDCyhHWAWqCGWd4p0B2RGEshynlT0fEMdMpcCDNBKgiTkw==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/app-docs-viewer" "^0.1.20"
@@ -26188,12 +26188,11 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.14.1:
-  version "2.14.1"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.14.1.tgz#397abb1bddeca7c9dbd38962ddd97bf8d4d73bf1"
-  integrity sha512-LvoVM1gbMtk8qyAc/Xsv8J+Gpc7tYhAqaSaF5J+2qY/+GYHPIUHzUUXug8oHMC8jjCV0MKHbwzMyTlTy6uBeog==
+white-web-sdk@2.13.20:
+  version "2.13.20"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.20.tgz#da1b5175c0c8ca37c323a90d0b6e93c365e94217"
+  integrity sha512-zpN66Jtvc/mY1pFcJDMBRsqH3BU5hFxNn/g0+xyPlN5OBIaIDMxzg2rPPcIbjNp/aZ0Zc1+XTk1iU8O3mlQGmg==
   dependencies:
-    "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"
     "@netless/xml-js" "1.6.15"
     atob "^2.1.2"
@@ -26209,6 +26208,7 @@ white-web-sdk@2.14.1:
     query-string "5"
     react "^16.8.0"
     react-dom "^16.8.0"
+    resize-observer-polyfill "^1.5.1"
     spark-md5 "^3.0.0"
     textarea-caret-ts "^4.1.0"
     url-parse "^1.4.0"
