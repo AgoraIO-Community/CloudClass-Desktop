@@ -1038,7 +1038,8 @@ export class BoardStore extends ZoomController {
       //   this.reset()
       // }
       // network is broken, reconnecting
-      if(state === 'reconnecting') {
+      // or user leaves classroom
+      if(state === 'reconnecting' || state === 'disconnected') {
         this.online = false
       }
       if(state === 'connected' && this.prevPhase === 'reconnecting') {
