@@ -1031,8 +1031,15 @@ export class BoardStore extends ZoomController {
     const enable = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)
     this._boardClient = this.boardClient || new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId, enable})
     this.boardClient.on('onPhaseChanged', (state: any) => {
-      if (state === 'disconnected') {
-        this.reset()
+      // diconnected event
+      // will delay on mac, weird behavior
+      // work as expected on windows
+      // if(state === 'disconnected') {
+      //   this.reset()
+      // }
+      // network is broken, reconnecting
+      if(state === 'reconnecting') {
+        this.online = false
       }
       if(state === 'connected' && this.prevPhase === 'reconnecting') {
         // restore strokeColor when whiteboard reconnected
