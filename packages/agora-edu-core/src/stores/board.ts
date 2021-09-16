@@ -300,6 +300,8 @@ export class BoardStore extends ZoomController {
   @observable
   isBoardStateInLoading: boolean = false
 
+  prevPhase?: string
+
   constructor(appStore: EduScenarioAppStore) {
     super(0);
     this.appStore = appStore
@@ -1027,15 +1029,16 @@ export class BoardStore extends ZoomController {
     const {role, ...data} = params
     const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
     const enable = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId, enable})
+    this._boardClient = this.boardClient || new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId, enable})
     this.boardClient.on('onPhaseChanged', (state: any) => {
       if (state === 'disconnected') {
-        this.online = false
+        this.reset()
       }
-      if(state === 'connected' && this.room) {
-        // restore strokeColor when connected and reconnected
+      if(state === 'connected' && this.prevPhase === 'reconnecting') {
+        // restore strokeColor when whiteboard reconnected
         this.room.setMemberState({ strokeColor: ['r', 'g', 'b'].map(k => this.strokeColor[k]) })
       }
+      this.prevPhase = state
     })
     this.boardClient.on('onMemberStateChanged', (state: any) => {
     })
