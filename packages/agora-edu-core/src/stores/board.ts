@@ -982,14 +982,15 @@ export class BoardStore extends ZoomController {
   async aClassJoinBoard(params: any) {
     const {role, ...data} = params
     const identity = [EduRoleTypeEnum.teacher/*, EduRoleTypeEnum.assistant*/].includes(role) ? 'host' : 'guest'
-    this._boardClient = new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
+    this._boardClient = this._boardClient || new BoardClient({identity, appIdentifier: this.appStore.params.config.agoraNetlessAppId})
     this.boardClient.on('onPhaseChanged', (state: RoomPhase) => {
       this.boardConnectionState = state
       if (state === 'disconnected') {
-        this.online = false
+        this.reset()
       }
       // TODO: workaround to fix reconnected state invalid
       if (state === RoomPhase.Connected) {
+        this.whiteBoardContainer && this.boardClient.room?.bindHtmlElement(this.whiteBoardContainer)
         if (identity === 'host') {
           this.boardClient.room?.setViewMode(ViewMode.Broadcaster)
         }
