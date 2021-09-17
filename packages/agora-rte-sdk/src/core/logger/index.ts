@@ -4,10 +4,124 @@ import Dexie from "dexie";
 import LogWorker from 'worker-loader?inline=true&fallback=false!./log.worker';
 import { EduLogLevel } from "./interfaces";
 import { LogUpload } from "../services/log-upload";
+import { promisify } from "util";
+
 
 const flat = (arr: any[]) => {
   return arr.reduce((arr, elem) => arr.concat(elem), []);
 };
+
+export class ElectronLoggerUtilities {
+  logFolderCleaned: boolean = false
+  static checkEnvironment() {
+    if(!window.isElectron || !window.require) {
+      throw new Error(`[logger] api only available in electron env`)
+    }
+  }
+
+  cleanFolder(uploadsDir:string, age: number){
+    return new Promise<void>((resolve, reject) => {
+      ElectronLoggerUtilities.checkEnvironment()
+      const fs = window.require('fs')
+      const path = window.require('path')
+      // this is to prevent webpack from resolving rimraf module which will leads to an error
+      const rimraf = window.require('rimraf')
+
+      //@ts-ignore
+      fs.readdir(uploadsDir, function (err, files) {
+        if (err) {
+          return reject(err)
+        }
+        //@ts-ignore
+        files.forEach(function (file, index) {
+          //@ts-ignore
+          fs.stat(path.join(uploadsDir, file), function (err, stat) {
+            var endTime, now;
+            if (err) {
+              return console.error(err);
+            }
+            now = new Date().getTime();
+            endTime = new Date(stat.ctime).getTime() + age;
+            if (now > endTime) {
+              //@ts-ignore
+              return rimraf(path.join(uploadsDir, file), function (err) {
+                if (err) {
+                  return console.error(err);
+                }
+                console.log(`[preload] successfully deleted ${file}`);
+              });
+            } else {
+              console.log(`[preload] skip file ${file}`)
+            }
+          });
+        });
+        resolve()
+      });
+    })
+  }
+
+  async cleanLogFolder(logFolder: string) {
+    if (!this.logFolderCleaned) {
+      // clean up once only
+      this.logFolderCleaned = true
+      // clean up files which are older than 3 days
+      try {
+        await this.cleanFolder(logFolder, 1000 * 3600 * 24 * 3)
+        console.info(`[preload] clean folder success`)
+      } catch(e) {
+        console.error(`[preload] clean folder failed: ${e}`)
+      }
+    }
+  }
+
+  static prepareLogPaths() {
+    this.checkEnvironment()
+
+    const os = window.require('os')
+    const path = window.require('path')
+    const appPath = path.join(os.homedir(), 'electron-logs')
+    const logFolder = path.join(appPath, 'logs')
+  
+    window.defaultLogFolder = logFolder
+    console.log(`[log] default logpath set to ${logFolder}`)
+  }
+
+  async prepareLogUpload() {
+    try {
+      const os = window.require('os')
+      const path = window.require('path')
+      const AdmZip = window.require('adm-zip')
+      const fs = window.require('fs')
+  
+      const tmpFolder = path.join(os.tmpdir(), 'electron-logs')
+      if(!window.defaultLogFolder) {
+        ElectronLoggerUtilities.prepareLogPaths()
+      }
+      let logFolder = window.defaultLogFolder
+  
+      if(!logFolder) {
+        throw new Error(`[log] no log path exists`)
+      }
+      await this.cleanLogFolder(logFolder)
+      
+      let tmpZipPath = path.join(tmpFolder, 'agora_sdk.log.zip')
+  
+      const zip = new AdmZip();
+      const logFolderExists = fs.existsSync(logFolder)
+      if (logFolderExists) {
+        await zip.addLocalFolderPromise(logFolder)
+        console.log(`[log] add folder ${logFolder}`)
+      }
+      await zip.writeZipPromise(tmpZipPath)
+      let res = await promisify(fs.readFile)(tmpZipPath)
+      console.log(`[log] zip log files success ${tmpZipPath}`)
+      return res
+    } catch (err) {
+      console.error('[log] zip log files failed, ', err)
+      throw err
+    }
+  }
+}
 
 export class EduLogger {
   static logLevel: EduLogLevel = EduLogLevel.Debug
@@ -90,6 +204,8 @@ export class EduLogger {
 
   static logUploader: LogUpload
 
+  static electronUtilities?: ElectronLoggerUtilities
+
   static init(appId: string) {
     this.logUploader = new LogUpload({
       appId,
@@ -98,6 +214,10 @@ export class EduLogger {
     if (!this.thread) {
       this.thread = new LogWorker()
       this.debugLog();
+    }
+
+    if(window.isElectron) {
+      this.electronUtilities = new ElectronLoggerUtilities()
     }
   }
 
@@ -127,16 +247,15 @@ export class EduLogger {
 
   static async uploadElectronLog(roomId: any) {
     //@ts-ignore
-    if (window.doGzip) {
       //@ts-ignore
-      let file = await window.doGzip();
+      let file = await this.electronUtilities?.prepareLogUpload();
       const res = await this.logUploader.uploadZipLogFile(
         roomId,
         file
       )
       return res;
-    }
   }
+
 
   // 当前时间戳
   static get ts(): number {

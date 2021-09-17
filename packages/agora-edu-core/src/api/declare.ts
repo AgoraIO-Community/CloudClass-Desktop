@@ -37,7 +37,7 @@ export interface IAgoraExtApp {
   customHeader?: JSX.Element
   extAppDidLoad(dom:Element, ctx:AgoraExtAppContext, handle:AgoraExtAppHandle): void
   extAppRoomPropertiesDidUpdate(properties:any, cause: any): void
-  extAppWillUnload(): void
+  extAppWillUnload(): Promise<boolean>
   remoteSynchronized?: boolean
 }
 

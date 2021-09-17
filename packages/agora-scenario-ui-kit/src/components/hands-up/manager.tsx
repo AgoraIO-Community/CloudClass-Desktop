@@ -3,6 +3,7 @@ import classnames from "classnames";
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { Card, Icon, Popover, t, Tooltip } from "~components";
+import { checked, close } from '../icon/svg'
 import { BaseHandsUpProps, HandsUpState, StudentInfo } from "./types";
 
 export type HandleUpClick = (action: 'confirm' | 'cancel', student: StudentInfo) => Promise<void> | void;
@@ -92,11 +93,11 @@ export const HandsUpManager: FC<HandsUpManagerProps> = ({
           >
             {/* {unreadCount ? (<div className="unread-count"><span>{unreadCount < 10 ? unreadCount : '...'}</span></div>) : ""} */}
             <div className="hands-box-line">
-              <Icon 
-                size={28} 
-                onClick={handleClick} 
-                type={processUserCount ?(popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'} 
-                color={processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']} 
+              <Icon
+                size={28}
+                onClick={handleClick}
+                type={processUserCount ? (popoverVisible ? 'hands-up' : (state === 'default' ? 'hands-up-student' : 'hands-up')) : 'hands-up-student'}
+                color={processUserCount ? (popoverVisible ? '#639AFA' : (stateColorDict[state])) : stateColorDict['default']}
               />
               <span className={'hands-apply-inline-box'}>{processUserCount} / {onlineUserCount}</span>
             </div>
@@ -175,16 +176,22 @@ export const StudentsHandsUpList: FC<StudentsHandsUpListProps> = ({
             <div className="student-item" key={index}>
               <span className="student-name">{item?.userName}</span>
               <span className="operation-icon-wrap">
-                <Icon 
+                {/* <Icon 
                   type="checked"
                   useSvg
                   onClick={() => onClick("confirm", item)}
-                />
-                <Icon 
+                /> */}
+                <div style={{ cursor: 'pointer' }} onClick={() => onClick('confirm', item) } >
+                  {checked}
+                </div>
+                {/* <Icon 
                   type="close" 
                   useSvg
                   onClick={() => onClick("cancel", item)}
-                />
+                /> */}
+                <div style={{ cursor: 'pointer' }} onClick={() => onClick("cancel", item)}>
+                  {close}
+                </div>
               </span>
             </div>
           ))

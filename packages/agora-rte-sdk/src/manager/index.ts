@@ -2,7 +2,7 @@ import AgoraRTC from 'agora-rtc-sdk-ng';
 import AgoraRTM from 'agora-rtm-sdk';
 import { EduPeerMessageCmdType, EduTextMessage, EduCustomMessage } from '../interfaces';
 import { MessageSerializer } from './../core/rtm/message-serializer';
-import { EduLogger } from './../core/logger';
+import { EduLogger, ElectronLoggerUtilities } from './../core/logger';
 import { EventEmitter } from 'events';
 import { RTMWrapper } from './../core/rtm/index';
 import { MediaService } from '../core/media-service';
@@ -77,6 +77,11 @@ export class EduManager extends EventEmitter {
       }
     }
     if (buildOption.platform === 'electron') {
+      try {
+        ElectronLoggerUtilities.prepareLogPaths()
+      } catch(e) {
+        console.error(`[logger] prepareLogPaths failed, ${e}`)
+      }
       let logFolder = this.config.logDirectoryPath || window.defaultLogFolder 
       if(logFolder) {
         buildOption.electronLogPath = {
@@ -162,9 +167,9 @@ export class EduManager extends EventEmitter {
     this.isElectron = true
   }
   
-  static async uploadLog(roomUuid: string): Promise<any> {
-    return await EduLogger.enableUpload(roomUuid, this.isElectron)
-  }
+  // static async uploadLog(roomUuid: string): Promise<any> {
+  //   return await EduLogger.enableUpload(roomUuid, this.isElectron)
+  // }
 
   private async prepareLogin(userUuid: string) {
     let res = await this.apiService.login(userUuid)
