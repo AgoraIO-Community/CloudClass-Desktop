@@ -32,7 +32,7 @@ export const InputMsg = ({ isTeacher }) => {
     const state = useSelector(state => state)
     const loginUser = state?.loginUser;
     const roomId = state?.room.info.id;
-    const roleType = state?.propsData?.roleType;
+    const roleType = state?.loginUserInfo.ext;
     const roomUuid = state?.propsData.roomUuid;
     const userAvatarUrl = state?.loginUserInfo.avatarurl;
     const userNickName = state?.loginUserInfo.nickname;
@@ -101,7 +101,7 @@ export const InputMsg = ({ isTeacher }) => {
             ext: {
                 msgtype: MSG_TYPE.common,   // 消息类型
                 roomUuid: roomUuid,
-                role: roleType,
+                role: JSON.parse(roleType).role,
                 avatarUrl: userAvatarUrl || '',
                 nickName: userNickName,
             },                         // 扩展消息
