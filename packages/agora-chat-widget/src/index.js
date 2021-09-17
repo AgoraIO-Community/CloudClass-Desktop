@@ -6,6 +6,7 @@ import App from './App';
 import { MemoryRouter } from 'react-router-dom'
 import { logoutChatroom } from './api/chatroom'
 import { setUserMute, removeUserMute } from './api/mute'
+import { clearStore } from './redux/actions/userAction'
 
 import './index.css'
 export const HXChatRoom = ({pluginStore, sendMsg, onReceivedMsg}) => {
@@ -49,5 +50,9 @@ export const getMuteList = () => {
 
 
 export const logout = () => {
+    const isLoginIM = store.getState()?.isLogin;
+    if (!isLoginIM) {
+        store.dispatch(clearStore({}))
+    }
     logoutChatroom()
 }
