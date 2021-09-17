@@ -27,8 +27,9 @@ export const ShowAnnouncement = () => {
     const state = useSelector(state => state);
     const roomId = state.room.info.id;
     const Announcement = state.room.announcement;
-    const roleType = state?.propsData?.roleType;
-    const isTeacher = roleType === ROLE.teacher.id;
+    const roleType = state?.loginUserInfo.ext;
+    // 在propsData 取值
+    const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
 
     const callback = () => {
         hideModal()
