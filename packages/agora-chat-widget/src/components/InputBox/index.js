@@ -22,10 +22,10 @@ const UserMute = () => {
 
 export const InputBox = () => {
     const state = useSelector(state => state)
-    const roleType = state?.loginUserInfo.ext;
+    const roleType = state?.propsData?.roleType;
     const isAllMute = state?.room.allMute;
     const isUserMute = state?.room.isUserMute;
-    let isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+    let isTeacher = roleType === ROLE.teacher.id;
     return <div className="input-box">
         {!isTeacher && isAllMute && <AllMute />}
         {!isTeacher && !isAllMute && isUserMute && <UserMute />}
