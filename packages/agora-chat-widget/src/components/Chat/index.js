@@ -36,15 +36,14 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
     const announcement = _.get(state, 'room.announcement', '')
     const showRed = _.get(state, 'showRed')
     const showAnnouncementNotice = _.get(state, 'showAnnouncementNotice')
-    const roleType = _.get(state, 'loginUserInfo.ext', '')
+    const roleType = _.get(state, 'propsData.roleType', '')
     const roomUsers = _.get(state, 'room.roomUsers', [])
     const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {})
     const showMinimizeBtn = sendMsg?.showMinimizeBtn
     const width = sendMsg?.width
     const height = sendMsg?.height
 
-    // 直接在 propsData 中取值
-    const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+    const isTeacher = roleType === ROLE.teacher.id;
     useEffect(() => {
         // 加载成员信息
         let _speakerTeacher = []
