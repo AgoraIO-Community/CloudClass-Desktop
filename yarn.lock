@@ -5964,10 +5964,10 @@ agora-access-token@2.0.4:
     crc-32 "1.2.0"
     cuint "0.2.2"
 
-agora-electron-sdk@3.4.6-build.811:
-  version "3.4.6-build.811"
-  resolved "https://registry.nlark.com/agora-electron-sdk/download/agora-electron-sdk-3.4.6-build.811.tgz#67730b1aeb519e638b4567251f69ed046ecbe635"
-  integrity sha1-Z3MLGutRnmOLRWclH2ntBG7L5jU=
+agora-electron-sdk@3.5.0-rc.3-build.907:
+  version "3.5.0-rc.3-build.907"
+  resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-3.5.0-rc.3-build.907.tgz#434e0954ac41917f7c88461aa9237329cae24880"
+  integrity sha512-Qf8kF70mE0Z4TFkdWhUjvDyG0r57/ID+A0tRGfeOVTUs0dKsGwUEuiroXYERGiKNS2wcXb846fpJtHlYXxnThg==
   dependencies:
     download "^7.1.0"
     extract-zip "^1.6.7"
