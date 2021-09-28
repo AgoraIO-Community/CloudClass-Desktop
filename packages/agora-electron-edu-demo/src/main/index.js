@@ -1,6 +1,8 @@
 const { app, BrowserWindow } = require('electron');
 const { format: formatUrl} = require('url')
 
+app.commandLine.appendSwitch('max-active-webgl-contexts','30')
+
 const path = require('path');
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
