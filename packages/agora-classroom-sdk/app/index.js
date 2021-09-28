@@ -5,6 +5,8 @@ const { ipcMain } = electron;
 
 const { crashReporter } = require('electron');
 
+electron.app.commandLine.appendSwitch('max-active-webgl-contexts','30')
+
 // const bt = require('backtrace-node');
 
 // workaround for resizable issue in mac os
