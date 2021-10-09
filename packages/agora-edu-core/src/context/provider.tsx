@@ -537,10 +537,6 @@ export const useRecordingContext = (): RecordingContext => {
     roomUuid
   } = useSceneStore()
 
-  const {
-    recordProperties
-  } = useRoomStore();
-
   const appStore = useCoreContext()
 
   async function startRecording() {
@@ -562,7 +558,6 @@ export const useRecordingContext = (): RecordingContext => {
     isRecording,
     startRecording,
     stopRecording,
-    recordProperties
   }
 }
 

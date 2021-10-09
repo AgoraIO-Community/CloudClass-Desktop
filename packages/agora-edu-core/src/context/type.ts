@@ -1042,25 +1042,6 @@ export type RecordingContext = {
      * @version v1.1.0
      */
     stopRecording: () => Promise<void>,
-    /**
-     * 录制的状态
-     * @param reason 原因：2.正常停止 4.超时待重试 5. 重试次数达到上限后仍未成功，退出录制（默认最多重试2次）
-     * @param recordId
-     * @param resourceId
-     * @param sid
-     * @param startTime
-     * @param state 1:开始 0:结束
-     * @param roomType
-     */
-    recordProperties: {
-        reason?: number
-        recordId?: string
-        resourceId?: string
-        sid?: string
-        startTime?: number
-        state?: number
-        roomType?: number
-    }
 }
 export type HandsUpContext = {
     /**

@@ -297,12 +297,6 @@ export class RoomStore extends SimpleInterval {
   }
 
   @computed
-  get recordProperties(){
-    console.warn("recoredProperies",get(this.roomProperties, 'record', {}));
-    return get(this.roomProperties, 'record', {});
-  }
-
-  @computed
   get flexProperties() {
     return get(this.roomProperties, 'flexProps', {})
   }
