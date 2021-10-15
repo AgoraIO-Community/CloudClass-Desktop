@@ -5,6 +5,7 @@ import { ROLE, MSG_TYPE } from '../../contants';
 import { transI18n } from '~ui-kit';
 import store from '../../redux/store';
 import { messageAction } from '../../redux/actions/messageAction';
+import { dateFormat } from '../../utils';
 import renderEmoji from '../../utils/renderEmoji';
 import delete_icon from '../../themes/img/delete.png';
 import './index.css';
@@ -70,13 +71,14 @@ export const TextMsg = ({ item }) => {
   };
 
   return (
-    <div className="msg">
+    <div>
       {sender && (
         <div>
           <div className="msg-user-me">
+            <span className="msg-time">{dateFormat(Number(item.time), 'H:i:s')}</span>
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
-            <span>{userNickName}</span>
+            <span className="msg-from-name">{userNickName}</span>
             <img src={useAvatarUrl} className="msg-avatar" />
           </div>
           {isTeacher ? (
@@ -100,9 +102,10 @@ export const TextMsg = ({ item }) => {
         <div>
           <div className="msg-user-other">
             <img src={useAvatarUrl} className="msg-avatar" />
-            <span>{userNickName}</span>
+            <span className="msg-from-name">{userNickName}</span>
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
+            <span className="msg-time">{dateFormat(Number(item.time), 'H:i:s')}</span>
           </div>
           {isTeacher && (
             <>

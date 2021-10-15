@@ -43,6 +43,7 @@ const enUS = {
     delete_comfirm: 'Delete Comfirm',
     delete_content: 'Are you sure to delete this bulletin?',
     you: 'you',
+    have_new_msgs: 'You have news',
   },
 };
 
