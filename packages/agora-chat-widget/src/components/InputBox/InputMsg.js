@@ -124,7 +124,8 @@ export const InputMsg = ({ isTeacher }) => {
         WebIM.conn.send(msg.body);
     }
 
-
+    // 3-assistant
+    const disableChat = [3].includes(roleType)
 
     return <>
         <div>
@@ -143,6 +144,7 @@ export const InputMsg = ({ isTeacher }) => {
                 </div>}
             </div>
             <Input.TextArea
+                disabled={disableChat}
                 placeholder="请输入消息"
                 className="input-chat"
                 autoFocus
@@ -152,7 +154,7 @@ export const InputMsg = ({ isTeacher }) => {
                 ref={inputRef}
             />
             <div className="input-btn">
-                <Button type="primary" shape="round" onClick={sendTextMessage()}>发送</Button>
+                <Button disabled={disableChat} type="primary" shape="round" onClick={sendTextMessage()}>发送</Button>
             </div>
         </div>
         <Modal

@@ -42,6 +42,20 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
     const showMinimizeBtn = sendMsg?.showMinimizeBtn
     const width = sendMsg?.width
     const height = sendMsg?.height
+  
+    const roomUsersCount = roomUserList.some(user => {
+        const { ext } = user;
+        if (ext) {
+           let role = JSON.parse(ext).role
+           if(role === ROLE.assistant.id) {
+               return true
+           }else {
+               return false
+           }
+        }else {
+            return false
+        }
+    }) ? roomUserList.length - 1 : roomUserList.length
 
     const isTeacher = roleType === ROLE.teacher.id;
     useEffect(() => {
@@ -130,7 +144,7 @@ export const Chat = ({ onReceivedMsg, sendMsg }) => {
                 <MessageBox />
                 <InputBox />
             </TabPane>
-            {isTeacher && <TabPane tab={roomUsers.length > 0 ? `成员(${roomUsers.length})` : "成员"} key={CHAT_TABS_KEYS.user}>
+            {isTeacher && <TabPane tab={roomUsers.length > 0 ? `成员(${roomUsersCount})` : "成员"} key={CHAT_TABS_KEYS.user}>
                 <UserList roomUserList={roomUserList} />
             </TabPane>}
             <TabPane tab={<div>

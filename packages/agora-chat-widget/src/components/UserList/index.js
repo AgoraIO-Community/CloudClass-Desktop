@@ -24,9 +24,23 @@ export const UserList = ({ roomUserList }) => {
     // 改成枚举
     const muteList = state?.room.muteList;
 
+    const userList = roomUserList.filter(user => {
+        const { ext } = user;
+         if (ext) {
+            let role = JSON.parse(ext).role
+            if(role === ROLE.assistant.id) {
+                return false
+            }else {
+                return true
+            }
+         }else {
+             return true
+         }
+    })
+
     return <div className="user">
         {
-            roomUserList.length > 0 && roomUserList.map((item, key) => {
+            roomUserList.length > 0 && userList.map((item, key) => {
                 const showMuteIcon = muteList && muteList.includes(item.id);
                 const { ext } = item;
                 let role;

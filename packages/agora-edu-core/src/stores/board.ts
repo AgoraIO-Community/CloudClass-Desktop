@@ -661,20 +661,20 @@ export class BoardStore extends ZoomController {
     if (this.isBoardScreenShare) {
       showZoomControl = false
     } else {
-      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+      if ([EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
         showZoomControl = true
       } else {
         showZoomControl = this.hasPermission
       }
     }
     // TODO: need refactor
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
+    if ([EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
       return [true, showZoomControl]
     }
     else if (roomInfo.roomType === EduRoomType.SceneType1v1 && roomInfo.userRole === EduRoleTypeEnum.student) {
       return [this.hasPermission, showZoomControl]
     }
-    else if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && roomInfo.userRole === EduRoleTypeEnum.student) {
+    else if ([EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomInfo.roomType) && [EduRoleTypeEnum.student, EduRoleTypeEnum.assistant].includes(roomInfo.userRole)) {
       return [true, showZoomControl]
     }
     else {
@@ -1669,13 +1669,13 @@ export class BoardStore extends ZoomController {
     }
     if (roomType === EduRoomType.SceneTypeMiddleClass) {
       const midClassTools = allTools.filter((item: ToolItem) => !['student_list'].includes(item.value))
-      if ([EduRoleTypeEnum.assistant].includes(userRole)) {
-        return midClassTools.filter((item: ToolItem) => !['tools'].includes(item.value))
-      }
+      // if ([EduRoleTypeEnum.assistant].includes(userRole)) {
+      //   return midClassTools.filter((item: ToolItem) => !['tools'].includes(item.value))
+      // }
       if ([EduRoleTypeEnum.invisible].includes(userRole)) {
         return midClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
       }
-      if ([EduRoleTypeEnum.student].includes(userRole)) {
+      if ([EduRoleTypeEnum.student, EduRoleTypeEnum.assistant].includes(userRole)) {
         if (this.hasPermission) {
           return midClassTools.filter((item: ToolItem) => !['blank-page', 'cloud', 'tools'].includes(item.value))
         } else {
@@ -1799,7 +1799,7 @@ export class BoardStore extends ZoomController {
 
   @computed
   get hasPermission(): boolean {
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.userRole)) {
+    if ([EduRoleTypeEnum.teacher].includes(this.userRole)) {
       return true
     }
     return this._grantPermission as boolean

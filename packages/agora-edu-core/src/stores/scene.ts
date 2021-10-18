@@ -296,7 +296,7 @@ export class SceneStore extends SimpleInterval {
 
   @computed
   get isHost(): boolean {
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+    if ([EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
       return true
     }
     return false
@@ -1674,7 +1674,7 @@ export class SceneStore extends SimpleInterval {
   get sceneVideoConfig() {
     const roomType = this.roomInfo?.roomType ?? 1
     const userRole = this.roomInfo?.userRole ?? EduRoleTypeEnum.invisible
-    const isHost = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)
+    const isHost = [EduRoleTypeEnum.teacher].includes(userRole)
 
     const config = {
       hideOffPodium: [EduRoomType.SceneTypeMiddleClass, EduRoomType.SceneTypeBigClass].includes(roomType) ? false : true,
@@ -1962,7 +1962,7 @@ export class SceneStore extends SimpleInterval {
    * @param userUuid string
    */
   hideControl(userUuid: string): boolean {
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(this.roomInfo.userRole)) {
+    if ([EduRoleTypeEnum.teacher].includes(this.roomInfo.userRole)) {
       return false
     }
 

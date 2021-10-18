@@ -12,6 +12,10 @@ export const ROLE = {
     student: {
         id: 2,
         tag: '学生'
+    },
+    assistant: {
+        id: 3,
+        tag: '助教'
     }
 }
 

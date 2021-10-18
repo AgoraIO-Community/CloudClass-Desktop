@@ -145,7 +145,7 @@ export const UserListContainer: React.FC<UserListContainerProps> = observer((pro
     }, [keyword, rosterUserList])
 
     const userType = useMemo(() => {
-        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
+        if ([EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
             return 'teacher'
         }
         return 'student'
@@ -336,7 +336,7 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
     }, [dataList, roomInfo.roomUuid, roomInfo.userRole])
 
     const userType = useMemo(() => {
-        if ([EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
+        if ([EduRoleTypeEnum.teacher].includes(roomInfo.userRole)) {
             return 'teacher'
         }
         return 'student'
