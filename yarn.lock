@@ -1836,6 +1836,11 @@
     comment-json "^4.1.0"
     find-up "^4.1.0"
 
+"@juggle/resize-observer@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.nlark.com/@juggle/resize-observer/download/@juggle/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
+  integrity sha1-tQp4FwnIHhBwEAQhQ0DyVHWhcaA=
+
 "@lerna/add@3.21.0":
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.21.0.tgz#27007bde71cc7b0a2969ab3c2f0ae41578b4577b"
@@ -2672,6 +2677,11 @@
   version "1.2.23"
   resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha512-8Qvz1NcBhGb+2S9FYy9Xuln0/82q+Bn0EluXxM+BDw/aimhkN1QWxGl++ZysztZ60vzn18vl7p4cJuF2cfslIQ==
+
+"@netless/xml-js@1.6.15":
+  version "1.6.15"
+  resolved "https://registry.npmmirror.com/@netless/xml-js/download/@netless/xml-js-1.6.15.tgz#46516d547b21149bcca732bb199d664791b3240a"
+  integrity sha1-RlFtVHshFJvMpzK7GZ1mR5GzJAo=
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -8941,6 +8951,11 @@ core-js@^2.4.0, core-js@^2.6.5:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
+core-js@^3.15.2:
+  version "3.19.1"
+  resolved "https://registry.npmmirror.com/core-js/download/core-js-3.19.1.tgz#f6f173cae23e73a7d88fa23b6e9da329276c6641"
+  integrity sha1-9vFzyuI+c6fYj6I7bp2jKSdsZkE=
+
 core-util-is@1.0.2, core-util-is@^1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -10406,8 +10421,10 @@ duplexify@^3.4.2, duplexify@^3.5.0, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"easemob-websdk@file:packages/easemob-websdk":
-  version "3.5.2"
+easemob-websdk@3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmmirror.com/easemob-websdk/download/easemob-websdk-3.6.3.tgz#08741aa30623fe36dbda1f181001bb73124e0676"
+  integrity sha1-CHQaowYj/jbb2h8YEAG7cxJOBnY=
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -11276,10 +11293,10 @@ eventemitter3@^3.1.0:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
   integrity sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==
 
-eventemitter3@^4.0.0:
+eventemitter3@^4.0.0, eventemitter3@^4.0.7:
   version "4.0.7"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
-  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+  resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  integrity sha1-Lem2j2Uo1WRO9cWVJqG0oHMGFp8=
 
 events@^3.0.0, events@^3.3.0:
   version "3.3.0"
@@ -16378,10 +16395,10 @@ math-random@^1.0.1:
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.4.tgz#5dd6943c938548267016d4e34f057583080c514c"
   integrity sha512-rUxjysqif/BZQH2yhd5Aaq7vXMSx9NdEsQcyA07uEzIvxgI7zIr33gGsh+RU0/XjmQpCW7RsVof1vlkvQVCK5A==
 
-mathjs@^6.2.2:
+mathjs@6.6.5, mathjs@^6.2.2:
   version "6.6.5"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-6.6.5.tgz#6bbad1fa3ac09e8f7106ef64af8d3908f877b8e8"
-  integrity sha512-jvRqk7eoEHBcx/lskmy05m+8M7xDHAJcJzRJoqIsqExtlTHPDQO0Zv85g5F0rasDAXF+DLog/70hcqCJijSzPQ==
+  resolved "https://registry.npmmirror.com/mathjs/download/mathjs-6.6.5.tgz?cache=0&sync_timestamp=1635952929468&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fmathjs%2Fdownload%2Fmathjs-6.6.5.tgz#6bbad1fa3ac09e8f7106ef64af8d3908f877b8e8"
+  integrity sha1-a7rR+jrAno9xBu9kr405CPh3uOg=
   dependencies:
     complex.js "^2.0.11"
     decimal.js "^10.2.0"
@@ -16892,6 +16909,11 @@ mobx-react-lite@^2.2.0:
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-2.2.2.tgz#87c217dc72b4e47b22493daf155daf3759f868a6"
   integrity sha512-2SlXALHIkyUPDsV4VTKVR9DW7K3Ksh1aaIv3NrNJygTbhXe2A9GrcKHZ2ovIiOp/BXilOcTYemfHHZubP431dg==
 
+mobx-react-lite@^3.2.0:
+  version "3.2.2"
+  resolved "https://registry.npmmirror.com/mobx-react-lite/download/mobx-react-lite-3.2.2.tgz#cee5f09e6b0e4d2705d87276baf1de74d997fa33"
+  integrity sha1-zuXwnmsOTScF2HJ2uvHedNmX+jM=
+
 mobx-react@6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-6.3.1.tgz#204f9756e42e19d91cb6598837063b7e7de87c52"
@@ -16907,6 +16929,13 @@ mobx-react@^5.4.4:
     hoist-non-react-statics "^3.0.0"
     react-lifecycles-compat "^3.0.2"
 
+mobx-react@^7.2.0:
+  version "7.2.1"
+  resolved "https://registry.npmmirror.com/mobx-react/download/mobx-react-7.2.1.tgz#e9d4c04dc63d05e1139ce773f5fee7a5b4cb7c78"
+  integrity sha1-6dTATcY9BeETnOdz9f7npbTLfHg=
+  dependencies:
+    mobx-react-lite "^3.2.0"
+
 mobx@5.15.4:
   version "5.15.4"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.4.tgz#9da1a84e97ba624622f4e55a0bf3300fb931c2ab"
@@ -16916,6 +16945,11 @@ mobx@^4.15.7:
   version "4.15.7"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-4.15.7.tgz#933281268c3b4658b6cf2526e872cf78ea48ab95"
   integrity sha512-X4uQvuf2zYKHVO5kRT5Utmr+J9fDnRgxWWnSqJ4oiccPTQU38YG+/O3nPmOhUy4jeHexl7XJJpWDBgEnEfp+8w==
+
+mobx@^6.3.2:
+  version "6.3.7"
+  resolved "https://registry.npmmirror.com/mobx/download/mobx-6.3.7.tgz?cache=0&sync_timestamp=1636632352841&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fmobx%2Fdownload%2Fmobx-6.3.7.tgz#9ed85561e86da45141134c8fa20cf5f9c7246c3d"
+  integrity sha512-X7yU7eOEyxIBk4gjIi2UIilwdw48gXh0kcZ5ex3Rc+COJsJmJ4SNpf42uYea3aUqb1hedTv5xzJrq5Q55p0P5g==
 
 modern-normalize@^1.0.0:
   version "1.1.0"
@@ -26272,31 +26306,31 @@ white-web-sdk@2.12.14:
     uuid "^7.0.3"
     xml-js "^1.6.11"
 
-white-web-sdk@2.13.9:
-  version "2.13.9"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.13.9.tgz#7dad32c77b5d4d4a234fff85b31dd756fcc68732"
-  integrity sha512-DDt2RpK6LpyY7mn76rFpEa1qdPGRuowqs25tkxS5v8LBBZ3V1KjW/l46i4P63hXHf3wp+/pYBzrA1lQ1RaYRjQ==
+white-web-sdk@2.15.7:
+  version "2.15.7"
+  resolved "https://registry.npmmirror.com/white-web-sdk/download/white-web-sdk-2.15.7.tgz#1ab7115386b2a8c86a3987402a4ba682d9542dcf"
+  integrity sha512-4Td54+0FvC6FxNT8lzcz2zm1ctknjFSNDXtCVfm/fm1Bx76biipQrLG/86rMTpbn3diZZFOmTLoeYx7nWPaMFw==
   dependencies:
+    "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"
-    atob "^2.1.0"
+    "@netless/xml-js" "1.6.15"
+    atob "^2.1.2"
     bezier-js "^2.4.4"
     color "^3.1.0"
+    core-js "^3.15.2"
     detect-it "^3.0.5"
-    es6-symbol "^3.1.1"
-    mathjs "^6.2.2"
-    mobx "^4.15.7"
-    mobx-react "^5.4.4"
-    numeric "^1.2.6"
+    eventemitter3 "^4.0.7"
+    mathjs "6.6.5"
+    mobx "^6.3.2"
+    mobx-react "^7.2.0"
     protobufjs "^6.11.2"
     query-string "5"
     react "^16.8.0"
     react-dom "^16.8.0"
-    resize-observer-polyfill "^1.5.1"
     spark-md5 "^3.0.0"
     textarea-caret-ts "^4.1.0"
     url-parse "^1.4.0"
     uuid "^7.0.3"
-    xml-js "^1.6.11"
 
 wide-align@^1.1.0:
   version "1.1.3"

@@ -18,7 +18,8 @@ const App = observer(() => {
     })
     client.join({
       uuid: "<netless room uuid>",
-      roomToken: "<netless roomToken>"
+      roomToken: "<netless roomToken>",
+      uid: ''
     }).then(() => {
       let container = document.getElementById("netless-white") as HTMLDivElement
       if(container) {

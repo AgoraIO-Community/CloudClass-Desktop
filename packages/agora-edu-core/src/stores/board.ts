@@ -349,7 +349,8 @@ export class BoardStore extends ZoomController {
         isWritable: true,
         disableDeviceInputs: true,
         disableCameraTransform: true,
-        disableAutoResize: false
+        disableAutoResize: false,
+        uid: this.appStore.roomStore.roomInfo.userUuid
       })
     }
   }
@@ -368,7 +369,8 @@ export class BoardStore extends ZoomController {
         isWritable: true,
         disableDeviceInputs: true,
         disableCameraTransform: true,
-        disableAutoResize: false
+        disableAutoResize: false,
+        uid: this.appStore.roomStore.roomInfo.userUuid
       })
       const grantUsers = this.globalState?.grantUsers ?? []
       const follow = this.globalState?.follow ?? false
@@ -889,7 +891,8 @@ export class BoardStore extends ZoomController {
     boardToken: string,
     disableDeviceInputs: boolean,
     disableCameraTransform: boolean,
-    disableAutoResize: boolean
+    disableAutoResize: boolean,
+    uid: string
   }) {
     // REPORT
     reportService.startTick('joinRoom', 'board', 'join')
@@ -901,7 +904,7 @@ export class BoardStore extends ZoomController {
         isWritable: true,
         disableDeviceInputs: true,
         disableCameraTransform: true,
-        disableAutoResize: false
+        disableAutoResize: false,
       })
       reportService.reportElapse('joinRoom', 'board', {api:'join', result: true})
     } catch(e) {
@@ -962,7 +965,7 @@ export class BoardStore extends ZoomController {
           animationMode: AnimationMode.Immediately,
         });
       }
-      this.scale = this.room.state.zoomScale
+      this.scale = this.room.state.cameraState.scale
     }
   }
   
@@ -1076,6 +1079,7 @@ export class BoardStore extends ZoomController {
       disableNewPencil: false,
     //   wrappedComponents: [IframeWrapper],
     //   invisiblePlugins: [IframeBridge]
+      uid: this.appStore.roomStore.roomInfo.userUuid,
       ...this.appStore.params.config.boardOptions
     })
     cursorAdapter.setRoom(this.boardClient.room)
