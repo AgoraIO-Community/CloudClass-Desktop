@@ -255,11 +255,11 @@ export const useRoomContext = (): RoomContext => {
     // ui context?
     removeScreenShareWindow,
     roomProperties,
-    queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
-      return sceneStore.queryCameraDeviceState(userList, userUuid, streamUuid)
+    queryCameraDeviceState: (userUuid: string, streamUuid: string) => {
+      return sceneStore.queryCameraDeviceState(userUuid, streamUuid)
     },
-    queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => {
-      return sceneStore.queryMicDeviceState(userList, userUuid, streamUuid)
+    queryMicrophoneDeviceState: (userUuid: string, streamUuid: string) => {
+      return sceneStore.queryMicDeviceState(userUuid, streamUuid)
     },
     isJoiningRoom,
     updateFlexRoomProperties: updateFlexProperties,
@@ -508,7 +508,7 @@ export const useUserListContext = (): UserListContext => {
     userProperties: {}
   }
 
-  const userList = appStore.sceneStore.userList
+  const userList = appStore.sceneStore.fullUserList
 
   return {
     localUserUuid: localUserInfo.userUuid,
@@ -544,7 +544,7 @@ export const useRecordingContext = (): RecordingContext => {
   const appStore = useCoreContext()
 
   async function startRecording() {
-    await eduSDKApi.updateRecordingState({
+    return eduSDKApi.updateRecordingState({
       roomUuid,
       state: 1,
       url: appStore.params.config.recordUrl

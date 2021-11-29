@@ -60,7 +60,7 @@ export class SmallClassStore {
 
   @computed
   get onlineUserCount () {
-    return this.sceneStore.userList.filter((it) => ['audience'].includes(it.role)).length
+    return this.sceneStore.audienceList.size
   }
 
   @computed
@@ -75,7 +75,7 @@ export class SmallClassStore {
 
   @computed
   get teacherInfo(): EduUser | undefined {
-    return this.roomStore.sceneStore.userList.find((user: EduUser) => user.role === 'host')
+    return this.roomStore.sceneStore.teacher
   }
 
   @computed
@@ -101,8 +101,8 @@ export class SmallClassStore {
           isLocal: false,
           online: this.appStore.sceneStore.queryUserIsOnline(acceptedUser.userUuid),
           onPodium: true,
-          micDevice: this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(this.appStore.sceneStore.userList, acceptedUser.userUuid, get(stream, 'streamUuid', '')),
-          cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(this.appStore.sceneStore.userList, acceptedUser.userUuid, get(stream, 'streamUuid', '')),
+          micDevice: this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(acceptedUser.userUuid, get(stream, 'streamUuid', '')),
+          cameraDevice: this.appStore.sceneStore.queryRemoteCameraDeviceState(acceptedUser.userUuid, get(stream, 'streamUuid', '')),
           account: get(user, 'name', ''),
           userUuid: acceptedUser.userUuid,
           streamUuid: get(stream, 'streamUuid', ''),
@@ -245,16 +245,16 @@ export class SmallClassStore {
   @computed
   get studentsMap() {
     if (this.roomInfo.roomType === EduSceneType.SceneLarge) {
-      const map = {}
-      return this.sceneStore.userList.reduce((acc: any, user: EduUser) => {
-        acc[user.userUuid] = {
+      const map:Record<string,any> = {}
+      this.sceneStore.fullUserList.forEach((user: EduUser, key:string) => {
+        map[user.userUuid] = {
           uid: user.userUuid,
           name: user.userName,
           role: user.role,
           userProperties: user.userProperties
         }
-        return acc;
-      }, map)
+      })
+      return map
     } else {
       const studentsMap = get(this.roomStore, 'roomProperties.students', {})
       return studentsMap
@@ -372,8 +372,8 @@ export class SmallClassStore {
 
     const isLocal = user.userUuid === this.roomInfo.userUuid
 
-    const micDevice = isLocal ? this.appStore.sceneStore.localMicrophoneDeviceState : this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(this.appStore.sceneStore.userList, user.userUuid, get(stream, 'streamUuid', ''))
-    const cameraDevice = isLocal ? this.appStore.sceneStore.localCameraDeviceState : this.appStore.sceneStore.queryRemoteCameraDeviceState(this.appStore.sceneStore.userList, user.userUuid, get(stream, 'streamUuid', ''))
+    const micDevice = isLocal ? this.appStore.sceneStore.localMicrophoneDeviceState : this.appStore.sceneStore.queryRemoteMicrophoneDeviceState(user.userUuid, get(stream, 'streamUuid', ''))
+    const cameraDevice = isLocal ? this.appStore.sceneStore.localCameraDeviceState : this.appStore.sceneStore.queryRemoteCameraDeviceState(user.userUuid, get(stream, 'streamUuid', ''))
 
     return {
       isLocal: isLocal,
@@ -400,7 +400,7 @@ export class SmallClassStore {
   @computed
   get localUserRosterInfo(): RosterUserInfo {
     const localUserUuid = this.roomStore.roomInfo.userUuid 
-    const user = this.roomStore.sceneStore.userList.find((user: EduUser) => user.userUuid === localUserUuid)
+    const user = this.roomStore.sceneStore.fullUserList.get(localUserUuid)
     if (user) {
       const stream = this.roomStore.sceneStore
         .streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
@@ -426,56 +426,69 @@ export class SmallClassStore {
     }
   }
 
-  @computed
-  get studentInfoList() {
-    return this.roomStore.sceneStore.userList
-    // return Object.keys(this.studentsMap).reduce((acc: any[], userUuid: string) => {
-    //   const user = this.roomStore.sceneStore.userList.find((user) => user.userUuid === userUuid)
-    //   if (user) {
-    //     acc.push(user)
-    //   } else {
-    //     acc.push({userUuid: userUuid, userName: this.studentsMap[userUuid]?.name ?? ''})
-    //   }
-    //   return acc;
-    // }, [])
-  }
+  // @computed
+  // get studentInfoList() {
+  //   return this.roomStore.sceneStore.userList
+  //   // return Object.keys(this.studentsMap).reduce((acc: any[], userUuid: string) => {
+  //   //   const user = this.roomStore.sceneStore.userList.find((user) => user.userUuid === userUuid)
+  //   //   if (user) {
+  //   //     acc.push(user)
+  //   //   } else {
+  //   //     acc.push({userUuid: userUuid, userName: this.studentsMap[userUuid]?.name ?? ''})
+  //   //   }
+  //   //   return acc;
+  //   // }, [])
+  // }
+
+  // @computed
+  // get bigClassUserList() {
+  //   const localUserUuid = this.roomStore.roomInfo.userUuid    
+  //   const userList = this.sceneStore.userList
+  //     .filter((user: EduUser) => ['audience', 'broadcaster'].includes(user.role))
+  //     .filter((user: EduUser) => user.userUuid !== localUserUuid)
+  //     .reduce((acc: any[], user: EduUser) => {
+  //       const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
+  //       const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
+  //       acc.push(rosterUser)
+  //       return acc
+  //     }, [])
+
+  //   if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
+  //     return [this.localUserRosterInfo].concat(userList)
+  //   }
+  //   return userList
+  // }
 
   @computed
-  get bigClassUserList() {
+  get rosterUserMap() {
+    let map = new Map<string, RosterUserInfo>()
     const localUserUuid = this.roomStore.roomInfo.userUuid    
-    const userList = this.sceneStore.userList
-      .filter((user: EduUser) => ['audience', 'broadcaster'].includes(user.role))
-      .filter((user: EduUser) => user.userUuid !== localUserUuid)
-      .reduce((acc: any[], user: EduUser) => {
-        const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
-        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
-        acc.push(rosterUser)
-        return acc
-      }, [])
-
+    this.sceneStore.audienceList.forEach((user:EduUser, key:string) => {
+      if(user.userUuid === localUserUuid) return
+      const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
+      const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
+      map.set(key, rosterUser)
+    })
     if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return [this.localUserRosterInfo].concat(userList)
+      map.set(this.localUserRosterInfo.uid, this.localUserRosterInfo)
     }
-    return userList
-  }
+    return map
+  }  
 
   @computed
   get rosterUserList() {
+    let userlist:RosterUserInfo[] = []
     const localUserUuid = this.roomStore.roomInfo.userUuid    
-    const userList = this.studentInfoList
-      .filter((user: EduUser) => ['audience'].includes(user.role))
-      .filter((user: EduUser) => user.userUuid !== localUserUuid)
-      .reduce((acc: RosterUserInfo[], user: EduUser) => {
-        const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
-        const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
-        acc.push(rosterUser)
-        return acc
-      }, [])
-
+    this.sceneStore.audienceList.forEach((user:EduUser, key:string) => {
+      if(user.userUuid === localUserUuid) return
+      const stream = this.roomStore.sceneStore.streamList.find((stream: EduStream) => stream.userInfo.userUuid === user.userUuid && stream.videoSourceType === EduVideoSourceType.camera)
+      const rosterUser = this.transformRosterUserInfo(user, this.roomInfo.userRole, stream)
+      userlist.push(rosterUser)
+    })
     if (this.roomInfo.userRole === EduRoleTypeEnum.student) {
-      return [this.localUserRosterInfo].concat(userList)
+      return [this.localUserRosterInfo].concat(userlist)
     }
-    return userList
+    return userlist
   }
 
   reset() {

@@ -1,7 +1,7 @@
-import { EduAudioSourceType, EduLogger, EduRoleTypeEnum, EduRoomType, EduSceneType, EduStream, EduTextMessage, EduUser, EduVideoSourceType, GenericErrorWrapper, OperatorUser, StreamSubscribeOptions, AgoraElectronRTCWrapper } from "agora-rte-sdk"
+import { EduAudioSourceType, EduLogger, EduRoleTypeEnum, EduRoomType, EduRoomTypeEnum, EduSceneType, EduStream, EduTextMessage, EduUser, EduVideoSourceType, GenericErrorWrapper, OperatorUser, StreamSubscribeOptions, AgoraElectronRTCWrapper } from "agora-rte-sdk"
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import { get } from "lodash"
+import { get, debounce } from "lodash"
 import { action, computed, IReactionDisposer, IReactionPublic, IValueDidChange, observable, observe, reaction, runInAction } from "mobx"
 import { Subject } from "rxjs"
 import { v4 as uuidv4 } from 'uuid'
@@ -19,6 +19,7 @@ import { BizLogger } from "../utilities/kit"
 import { EduClassroomStateEnum, EduMediaStream, SimpleInterval } from "./scene"
 import { SmallClassStore } from "./small-class"
 import { reportServiceV2 } from "../services/report-v2"
+// import request from "agora-classroom-sdk/src/infra/api/request";
 // import packageJson from "../../package.json"
 const packageJson = require('../../package.json')
 
@@ -325,7 +326,8 @@ export class RoomStore extends SimpleInterval {
       timestamp: item.ts,
       isOwn: item.sender,
       content: item.text,
-      role: item.role
+      role: item.role,
+      // sensitiveWords: item.sensitiveWords
     }))
   }
 
@@ -566,10 +568,6 @@ export class RoomStore extends SimpleInterval {
         }
       })
 
-      if (this.isTeacher || this.isAssistant) {
-        const sensitiveWords = get(result, 'sensitiveWords', [])
-      }
-
       return {
         id: this.userUuid,
         ts,
@@ -578,6 +576,7 @@ export class RoomStore extends SimpleInterval {
         sender: true,
         messageId: result.messageId,
         fromRoomName: this.roomInfo.userName,
+        // sensitiveWords: sensitiveWords
       }
     } catch (err) {
       this.appStore.fireToast(
@@ -627,6 +626,7 @@ export class RoomStore extends SimpleInterval {
 
   @action.bound
   setMessageList(messageList: ChatMessage[]) {
+    console.log('setMessageList', messageList);
     this.roomChatMessages = messageList
   }
 
@@ -678,7 +678,8 @@ export class RoomStore extends SimpleInterval {
           role: item.fromUser.role,
           messageId: item.messageId,
           sender: item.fromUser.userUuid === this.roomInfo.userUuid,
-          account: item.fromUser.userName
+          account: item.fromUser.userName,
+          sensitiveWords: item.sensitiveWords,
         } as ChatMessage)
 
       })
@@ -1022,7 +1023,7 @@ export class RoomStore extends SimpleInterval {
       return EduRoleTypeEnum.invisible
     } else if (userRole === 'assistant') {
       return EduRoleTypeEnum.assistant
-    } else if (userRole === 'teacher') {
+    } else if (['teacher', 'host'].includes(userRole)) {
       return EduRoleTypeEnum.teacher
     }
     return EduRoleTypeEnum.student
@@ -1121,7 +1122,7 @@ export class RoomStore extends SimpleInterval {
       this.tickClassroom()
 
       this.sceneStore._canChatting = checkInResult.muteChat ? false : true
-      this.sceneStore.recordState = !!checkInResult.isRecording
+      this.sceneStore.recordState = !!checkInResult.recordState // 修复没有isRecording字段
       this.sceneStore.classState = checkInResult.state
       this.appStore.boardStore.setCheckInResult(checkInResult)
       this.appStore.boardStore.init({
@@ -1149,24 +1150,26 @@ export class RoomStore extends SimpleInterval {
         if (this.eduManager._rtmWrapper) {
           const prevConnectionState = this.eduManager._rtmWrapper.prevConnectionState
           if (prevConnectionState === 'RECONNECTING' && newState === 'CONNECTED') {
-            eduSDKApi.reportCameraState({
-              roomUuid: roomUuid,
-              userUuid: this.appStore.roomInfo.userUuid,
-              state: +this.appStore.sceneStore.localCameraDeviceState
-            }).catch((err) => {
-              BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
-            }).then(() => {
-              BizLogger.info(`[CAMERA] report camera device not working`)
-            })
-            eduSDKApi.reportMicState({
-              roomUuid: roomUuid,
-              userUuid: this.appStore.roomInfo.userUuid,
-              state: +this.appStore.sceneStore.localMicrophoneDeviceState
-            }).catch((err) => {
-              BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
-            }).then(() => {
-              BizLogger.info(`[CAMERA] report mic device not working`)
-            })
+            if (this.roomInfo.roomType !== EduRoomTypeEnum.RoomBigClass) {
+              eduSDKApi.reportCameraState({
+                roomUuid: roomUuid,
+                userUuid: this.appStore.roomInfo.userUuid,
+                state: +this.appStore.sceneStore.localCameraDeviceState
+              }).catch((err) => {
+                BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+              }).then(() => {
+                BizLogger.info(`[CAMERA] report camera device not working`)
+              })
+              eduSDKApi.reportMicState({
+                roomUuid: roomUuid,
+                userUuid: this.appStore.roomInfo.userUuid,
+                state: +this.appStore.sceneStore.localMicrophoneDeviceState
+              }).catch((err) => {
+                BizLogger.info(`[demo] action in report native device camera state failed, reason: ${err}`)
+              }).then(() => {
+                BizLogger.info(`[CAMERA] report mic device not working`)
+              })
+            }
             if (this.appStore.roomStore.isJoiningRoom) {
               this.appStore.roomStore.stopJoining()
             }
@@ -1229,7 +1232,7 @@ export class RoomStore extends SimpleInterval {
       })
       // 本地用户更新
       roomManager.on('local-user-updated', (evt: any) => {
-        this.sceneStore.userList = roomManager.getFullUserList()
+        this.sceneStore.fullUserList = roomManager.getFullUserList()
         const cause = evt.cause
         if (cause) {
           if (cause.cmd === 6) {
@@ -1379,15 +1382,15 @@ export class RoomStore extends SimpleInterval {
         })
       })
       // 远端人加入
-      roomManager.on('remote-user-added', (evt: any) => {
+      roomManager.on('remote-user-added', debounce((evt: any) => {
         runInAction(() => {
-          this.sceneStore.userList = roomManager.getFullUserList()
+          this.sceneStore.fullUserList = roomManager.getFullUserList()
         })
         BizLogger.info("remote-user-added", evt)
-      })
+      }, 1000))
       // 远端人更新
       roomManager.on('remote-user-updated', (evt: any) => {
-        this.sceneStore.userList = roomManager.getFullUserList()
+        this.sceneStore.fullUserList = roomManager.getFullUserList()
         const cause = evt.cause
         if (cause) {
           if (cause.cmd === 6) {
@@ -1409,16 +1412,17 @@ export class RoomStore extends SimpleInterval {
         }
         // runInAction(() => {
         //   this.sceneStore.userList = roomManager.getFullUserList()
+        //   this.sceneStore.fullUserList = roomManager.getFullUserList()
         // })
         BizLogger.info("remote-user-updated", evt)
       })
       // 远端人移除
-      roomManager.on('remote-user-removed', (evt: any) => {
+      roomManager.on('remote-user-removed', debounce((evt: any) => {
         runInAction(() => {
-          this.sceneStore.userList = roomManager.getFullUserList()
+          this.sceneStore.fullUserList = roomManager.getFullUserList()
         })
         BizLogger.info("remote-user-removed", evt)
-      })
+      }, 1000))
       // 远端流加入
       roomManager.on('remote-stream-added', (evt: any) => {
         const {stream} = evt
@@ -1548,6 +1552,8 @@ export class RoomStore extends SimpleInterval {
 
         const chatMessage = message.message
 
+        const sensitiveWords = message.sensitiveWords
+
         this.addChatMessage({
           id: fromUser.userUuid,
           ts: message.timestamp,
@@ -1555,7 +1561,8 @@ export class RoomStore extends SimpleInterval {
           text: chatMessage,
           account: fromUser.userName,
           role: `${this.getRoleEnumValue(fromUser.role)}`,
-          isOwn: false
+          isOwn: false,
+          sensitiveWords: sensitiveWords
         })
         // if (this.appStore.roomStore.chatCollapse) {
         //   this.incrementUnreadMessageCount()
@@ -1706,7 +1713,7 @@ export class RoomStore extends SimpleInterval {
       //@ts-ignore
       this.roomProperties = roomProperties
 
-      this.sceneStore.userList = roomManager.getFullUserList()
+      this.sceneStore.fullUserList = roomManager.getFullUserList()
       const streamList = roomManager.getFullStreamList()
       this.sceneStore.updateStreamList(streamList)
       if (this.roomInfo.userRole !== EduRoleTypeEnum.teacher) {

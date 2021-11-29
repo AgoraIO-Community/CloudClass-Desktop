@@ -91,7 +91,7 @@ export const BigClassScenario = observer(() => {
               'pin-right': 1
             })}
           >
-            <HandsUpContainer />
+            {/* <HandsUpContainer /> */}
           </div>
         </Content>
         <Aside className={classnames({

@@ -40,9 +40,9 @@ export interface EduClassroomManagerEventHandlers {
   'remote-stream-added': (evt: {stream: EduStream, operator: OperatorUser, cause: CauseType}) => void,
   'remote-stream-removed': (evt: {stream: EduStream, operator: OperatorUser, cause: CauseType}) => void,
   'remote-stream-updated': (evt: {stream: EduStream, operator: OperatorUser, cause: CauseType}) => void,
-  'remote-user-added': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
-  'remote-user-removed': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
-  'remote-user-updated': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}) => void,
+  'remote-user-added': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}[]) => void,
+  'remote-user-removed': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}[]) => void,
+  'remote-user-updated': (evt: {user: EduUserData, operator: OperatorUser, cause: CauseType}[]) => void,
   'classroom-property-updated': (evt: {classroom: ClassRoomProperties, operator: OperatorUser, cause: CauseType}) => void,
   /**
    * room chat message event

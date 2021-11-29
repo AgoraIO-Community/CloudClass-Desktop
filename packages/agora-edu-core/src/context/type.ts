@@ -568,7 +568,7 @@ export type RoomContext = {
      * @param streamUuid 查询目标用户流Uuid
      * @version v1.1.2
      */
-    queryCameraDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
+     queryCameraDeviceState: (/*userList: EduUser[], */userUuid: string, streamUuid: string) => any;
     /**
      * 查询麦克风设备状态
      * @param userList 查询的用户列表
@@ -576,7 +576,7 @@ export type RoomContext = {
      * @param streamUuid 查询目标用户流Uuid
      * @version v1.1.2
      */
-    queryMicrophoneDeviceState: (userList: EduUser[], userUuid: string, streamUuid: string) => any;
+     queryMicrophoneDeviceState: (/*userList: EduUser[], */userUuid: string, streamUuid: string) => any;
     /**
      * 是否正在加载房间
      * @version v1.1.2
@@ -971,7 +971,7 @@ export type UserListContext = {
      * 当前课堂内的所有用户列表
      * @version v1.1.0
      */
-    userList: EduUser[],
+    userList: Map<string, EduUser>,
     /**
      * 同意举手的用户列表
      * @version v1.1.0

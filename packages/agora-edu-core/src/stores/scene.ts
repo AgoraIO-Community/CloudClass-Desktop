@@ -156,12 +156,59 @@ export class SceneStore extends SimpleInterval {
   waitingShare: boolean = false
 
 
+  // @observable
+  // userList: EduUser[] = []
+
   @observable
-  userList: EduUser[] = []
+  fullUserList: Map<string, EduUser> = new Map<string, EduUser>()
 
   @computed
-  get teacher() {
-    return this.userList.find((user: EduUser) => user.role === EduRoleType.teacher)
+  get teacherList() : Map<string, EduUser> {
+    let map = new Map<string, EduUser>()
+    this.fullUserList.forEach((user:EduUser, key) => {
+      if(user.role === EduRoleType.teacher) {
+        map.set(key, user)
+      }
+    })
+    return map
+  }
+
+  @computed
+  get studentList(): Map<string, EduUser> {
+    let map = new Map<string, EduUser>()
+    this.fullUserList.forEach((user:EduUser, key) => {
+      if([EduRoleType.student].includes(user.role)) {
+        map.set(key, user)
+      }
+    })
+    return map
+  }
+
+  @computed
+  get studentAudienceList(): Map<string, EduUser> {
+    let map = new Map<string, EduUser>()
+    this.fullUserList.forEach((user:EduUser, key) => {
+      if([EduRoleType.student, EduRoleType.audience].includes(user.role)) {
+        map.set(key, user)
+      }
+    })
+    return map
+  }
+
+  @computed
+  get audienceList(): Map<string, EduUser> {
+    let map = new Map<string, EduUser>()
+    this.fullUserList.forEach((user:EduUser, key) => {
+      if([EduRoleType.audience].includes(user.role)) {
+        map.set(key, user)
+      }
+    })
+    return map
+  }
+
+  @computed
+  get teacher():EduUser | undefined {
+    return Array.from(this.teacherList.values())[0]
   }
 
   @observable
@@ -221,7 +268,7 @@ export class SceneStore extends SimpleInterval {
     if (this._canChatting) {
       if (this.appStore.roomInfo.userRole === EduRoleTypeEnum.student) {
         const userUuid = this.roomInfo.userUuid
-        const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
+        const user = this.fullUserList.get(userUuid)
         if (user) {
           return !(!!get(user, 'userProperties.mute.muteChat', 0))
         }
@@ -266,7 +313,7 @@ export class SceneStore extends SimpleInterval {
     this.cameraLock = false
     this.microphoneLock = false
     this.waitingShare = false
-    this.userList = []
+    this.fullUserList = new Map<string, EduUser>()
     this._streamList = []    
     this.unreadMessageCount = 0
     this.joined = false
@@ -546,7 +593,7 @@ export class SceneStore extends SimpleInterval {
         this.openingStudentCamera = value
       }
     } else {
-      const user = this.userList.find((it: EduUser) => it.userUuid === userUuid)
+      const user = this.fullUserList.get(userUuid)
       if (user) {
         if (['broadcaster', 'audience'].includes(user.role)) {
           this.openingStudentCamera = value
@@ -566,7 +613,7 @@ export class SceneStore extends SimpleInterval {
         this.closingStudentCamera = value
       }
     } else {
-      const user = this.userList.find((it: EduUser) => it.userUuid === userUuid)
+      const user = this.fullUserList.get(userUuid)
       if (user) {
         if (['broadcaster', 'audience'].includes(user.role)) {
           this.closingStudentCamera = value
@@ -586,7 +633,7 @@ export class SceneStore extends SimpleInterval {
         this.loadingStudentMicrophone = value
       }
     } else {
-      const user = this.userList.find((it: EduUser) => it.userUuid === userUuid)
+      const user = this.fullUserList.get(userUuid)
       if (user) {
         if (['broadcaster', 'audience'].includes(user.role)) {
           this.loadingStudentMicrophone = value
@@ -1100,7 +1147,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   get teacherUuid(): string {
-    const teacher = this.userList.find((it: EduUser) => it.role === EduRoleType.teacher)
+    const teacher = this.teacher
     if (teacher) {
       return teacher.userUuid
     }
@@ -1296,24 +1343,24 @@ export class SceneStore extends SimpleInterval {
     return DeviceStateEnum.Available
   }
 
-  queryCameraDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
+  queryCameraDeviceState(userUuid: string, streamUuid: string) {
     if (this.roomInfo.userUuid === userUuid) {
       return this.localCameraDeviceState
     } else {
-      return this.queryRemoteCameraDeviceState(userList, userUuid, streamUuid)
+      return this.queryRemoteCameraDeviceState(userUuid, streamUuid)
     }
   }
 
-  queryMicDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
+  queryMicDeviceState(userUuid: string, streamUuid: string) {
     if (this.roomInfo.userUuid === userUuid) {
       return this.localMicrophoneDeviceState
     } else {
-      return this.queryRemoteMicrophoneDeviceState(userList, userUuid, streamUuid)
+      return this.queryRemoteMicrophoneDeviceState(userUuid, streamUuid)
     }
   }
 
-  queryRemoteCameraDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
-    const user = userList.find((it: EduUser) => it.userUuid === userUuid)
+  queryRemoteCameraDeviceState(userUuid: string, streamUuid: string) {
+    const user = this.fullUserList.get(userUuid)
     if (!user) {
       return DeviceStateEnum.Disabled
     } else {
@@ -1331,8 +1378,8 @@ export class SceneStore extends SimpleInterval {
     }
   }
 
-  queryRemoteMicrophoneDeviceState(userList: EduUser[], userUuid: string, streamUuid: string) {
-    const user = userList.find((it: EduUser) => it.userUuid === userUuid)
+  queryRemoteMicrophoneDeviceState(userUuid: string, streamUuid: string) {
+    const user = this.fullUserList.get(userUuid)
     if (!user) {
       return DeviceStateEnum.Disabled
     } else {
@@ -1402,7 +1449,7 @@ export class SceneStore extends SimpleInterval {
       }
     }
 
-    if (this.queryRemoteCameraDeviceState(this.userList, userUuid, stream.streamUuid) === DeviceStateEnum.Disabled) {
+    if (this.queryRemoteCameraDeviceState(userUuid, stream.streamUuid) === DeviceStateEnum.Disabled) {
       return {
         holderState: 'disabled',
         text: `placeholder.disabled`
@@ -1462,7 +1509,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   queryLocalCameraDevice(userUuid: string) {
-    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    const user = this.fullUserList.get(userUuid)
     if (user && user.userProperties) {
       return get(user.userProperties, 'devices.camera', 1)
     }
@@ -1470,7 +1517,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   queryLocalMicDevice(userUuid: string) {
-    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    const user = this.fullUserList.get(userUuid)
     if (user && user.userProperties) {
       return get(user.userProperties, 'devices.microphone', 1)
     }
@@ -1520,7 +1567,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   queryCamIssue(userUuid: string): boolean {
-    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    const user = this.fullUserList.get(userUuid)
     if (user && user.userProperties) {
       return !!get(user.userProperties, 'devices.camera', 1) === false
     }
@@ -1528,7 +1575,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   queryCamDisabled(userUuid: string): boolean {
-    const user = this.userList.find((item: EduUser) => item.userUuid === userUuid)
+    const user = this.fullUserList.get(userUuid)
     if (user && user.userProperties) {
       return get(user.userProperties, 'devices.camera', 1) === 2
     }
@@ -1570,7 +1617,7 @@ export class SceneStore extends SimpleInterval {
   }
 
   queryUserIsOnline(userUuid: string) {
-    const user = this.userList.find((user: EduUser) => user.userUuid === userUuid)
+    const user = this.fullUserList.get(userUuid)
     if (!user) {
       return false
     }
@@ -1645,8 +1692,8 @@ export class SceneStore extends SimpleInterval {
         onPodium: true,
         hasStream: !!teacherStream,
         isLocal: false,
-        cameraDevice: this.queryRemoteCameraDeviceState(this.userList, user.userUuid, teacherStream.streamUuid),
-        micDevice: this.queryRemoteMicrophoneDeviceState(this.userList, user.userUuid, teacherStream.streamUuid),
+        cameraDevice: this.queryRemoteCameraDeviceState(user.userUuid, teacherStream.streamUuid),
+        micDevice: this.queryRemoteMicrophoneDeviceState(user.userUuid, teacherStream.streamUuid),
       } as any
     }
     return {
@@ -1711,8 +1758,8 @@ export class SceneStore extends SimpleInterval {
     return roomType
   }
 
-  private getUserBy(userUuid: string): EduUser {
-    return this.userList.find((it: EduUser) => it.userUuid === userUuid) as EduUser
+  private getUserBy(userUuid: string): EduUser | undefined {
+    return this.fullUserList.get(userUuid)
   }
 
   private getStreamBy(userUuid: string): EduStream {
@@ -1740,9 +1787,9 @@ export class SceneStore extends SimpleInterval {
       } as any
     } else {
       return this.screenShareStreamList.reduce((acc: EduMediaStream[], stream: EduStream) => {
-        const teacher = this.userList.find((user: EduUser) => user.role === 'host')
+        const teacher = this.teacher
         if (stream.videoSourceType !== EduVideoSourceType.screen 
-          || !teacher 
+          || !teacher
           || stream.userInfo.userUuid !== teacher.userUuid) {
           return acc;
         } else {
@@ -1818,7 +1865,7 @@ export class SceneStore extends SimpleInterval {
   get studentStreams(): EduMediaStream[] {
     let streamList = this.streamList.reduce(
       (acc: EduMediaStream[], stream: EduStream) => {
-        const user = this.userList.find((user: EduUser) => (user.userUuid === stream.userInfo.userUuid && ['broadcaster', 'audience'].includes(user.role)))
+        const user = this.studentAudienceList.get(stream.userInfo.userUuid)
         if (!user || this.isLocalStream(stream)) return acc;
         const props = this.getRemotePlaceHolderProps(user.userUuid, 'student')
         const volumeLevel = this.getFixAudioVolume(+stream.streamUuid)
@@ -1837,8 +1884,8 @@ export class SceneStore extends SimpleInterval {
           whiteboardGranted: this.appStore.boardStore.checkUserPermission(`${user.userUuid}`),
           online: this.queryUserIsOnline(user.userUuid),
           onPodium: this.queryUserIsOnPodium(stream.streamUuid),
-          cameraDevice: this.queryRemoteCameraDeviceState(this.userList, user.userUuid, stream.streamUuid),
-          micDevice: this.queryRemoteMicrophoneDeviceState(this.userList, user.userUuid, stream.streamUuid),
+          cameraDevice: this.queryRemoteCameraDeviceState(user.userUuid, stream.streamUuid),
+          micDevice: this.queryRemoteMicrophoneDeviceState(user.userUuid, stream.streamUuid),
           isLocal: false,
           hasStream: !!stream,
         } as any)
@@ -1994,7 +2041,7 @@ export class SceneStore extends SimpleInterval {
     } else {
       if (this.roomManager?.userService) {
         const targetStream = this.streamList.find((it: EduStream) => it.userInfo.userUuid === userUuid)
-        const targetUser = this.userList.find((it: EduUser) => it.userUuid === targetStream?.userInfo.userUuid)
+        const targetUser = this.fullUserList.get(targetStream?.userInfo.userUuid || "")
         if (targetUser) {
           await this.roomManager?.userService.teacherCloseStream(targetUser)
           await this.roomManager?.userService.remoteCloseStudentStream(targetStream as EduStream)

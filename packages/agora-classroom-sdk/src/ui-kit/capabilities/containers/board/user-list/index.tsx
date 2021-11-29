@@ -210,23 +210,6 @@ export const StudentUserListContainer: React.FC<UserListContainerProps> = observ
         return true
       }
 
-    function transformRosterUserInfo(user: any, role: any, stream: any, onPodium: boolean, userList: EduUser[]) {
-        return {
-            name: user.userName,
-            uid: user.userUuid,
-            micEnabled: stream?.hasAudio ?? false,
-            cameraEnabled: stream?.hasVideo ?? false,
-            onPodium: onPodium,
-            micDevice: queryMicrophoneDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
-            cameraDevice: queryCameraDeviceState(userList, user?.userUuid ?? '', stream?.streamUuid ?? ''),
-            online: userList.find((it: EduUser) => it.userUuid === user.userUuid),
-            hasStream: !!stream,
-            chatEnabled: !get(user, 'userProperties.mute.muteChat', 0),
-            disabled: checkDisable(user, role),
-            userType: ['assistant', 'teacher'].includes(role) ? 'teacher' : 'student'
-        }
-    }
-
     const acceptedIds = acceptedUserList.map((user: any) => user.userUuid)
 
     const {
