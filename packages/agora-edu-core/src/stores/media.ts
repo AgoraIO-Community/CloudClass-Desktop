@@ -7,6 +7,7 @@ import { BizLogger } from '../utilities/biz-logger';
 import { eduSDKApi } from '../services/edu-sdk-api';
 import { EduScenarioAppStore } from './index';
 import { MediaDeviceState } from './constants';
+import { RtcConnectionState } from '../types';
 
 const delay = 2000
 
@@ -14,7 +15,6 @@ type LocalPacketLoss = {
   audioStats: { audioLossRate: number },
   videoStats: { videoLossRate: number }
 }
-
 
 export enum DeviceChangedDeviceType {
   UNKNOWN_AUDIO_DEVICE = -1,
@@ -105,6 +105,9 @@ const networkQualities: { [key: string]: string } = {
 }
 
 export class MediaStore {
+
+  @observable
+  rtcConnectionState: RtcConnectionState = RtcConnectionState.DISCONNECTED;
 
   @observable
   autoplay: boolean = false;
@@ -429,6 +432,7 @@ export class MediaStore {
     })
     this.mediaService.on('connection-state-change', (evt: any) => {
       BizLogger.info('connection-state-change', JSON.stringify(evt))
+      this.rtcConnectionState = evt.curState;
     })
     this.mediaService.on('localVideoStateChanged', (evt: any) => {
       const {state, msg} = evt

@@ -79,7 +79,7 @@ export class MediaService extends EventEmitter implements IMediaService {
     })
     this.sdkWrapper.on('connection-state-change', (curState: any) => {
       EduLogger.info("[media-service] connection-state-change ", curState)
-      this.fire('connection-state-change', { curState })
+      this.fire('connection-state-change', curState)
     })
     this.sdkWrapper.on('volume-indication', (evt: any) => {
       this.fire('volume-indication', evt)

@@ -10,7 +10,8 @@ export const useClassroomStatsContext = (): ClassroomStatsContext => {
         txPacketLossRate,
         rxPacketLossRate,
         rxNetworkQuality,
-        txNetworkQuality
+        txNetworkQuality,
+        rtcConnectionState,
     } = useMediaStore();
 
     return {
@@ -22,6 +23,7 @@ export const useClassroomStatsContext = (): ClassroomStatsContext => {
         rxPacketLossRate,
         rxNetworkQuality,
         txNetworkQuality,
+        rtcConnectionState,
     }
 }
 

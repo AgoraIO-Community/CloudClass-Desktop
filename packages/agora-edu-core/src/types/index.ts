@@ -1,6 +1,21 @@
 import { SceneDefinition } from "white-web-sdk"
 import { CourseWareItem, LanguageEnum } from "../api/declare"
 
+export enum RtcConnectionState {
+  //已经断开链接
+  DISCONNECTED = 'DISCONNECTED',
+  //链接中
+  CONNECTING = 'CONNECTING',
+  //重连中
+  RECONNECTING = 'RECONNECTING',
+  //已链接
+  CONNECTED = 'CONNECTED', 
+  //断开链接中 web端特有状态
+  DISCONNECTING = 'DISCONNECTING',
+  //链接失败 electron端特有状态
+  FAIL_CONNECT = 'FAIL_CONNECT'
+}
+
 export enum DeviceStateEnum {
   Frozen = 0,
   Available = 1,

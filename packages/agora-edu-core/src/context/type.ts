@@ -2,7 +2,7 @@ import { UserRenderer, LocalUserRenderer, EduUser, EduStream, EduRoleTypeEnum } 
 import { AnimationMode, ApplianceNames, MemberState, Room, SceneDefinition, ViewMode } from 'white-web-sdk';
 import { AppStoreInitParams, LanguageEnum, RoomInfo } from '../api/declare'
 import { BehaviorSubject, Subject } from 'rxjs';
-import { StorageCourseWareItem } from "../types"
+import { StorageCourseWareItem, RtcConnectionState } from "../types"
 import { MaterialDataResource } from "../services/upload-service"
 import { RosterUserInfo } from '../stores/small-class';
 import { ScreenShareType } from 'agora-rte-sdk';
@@ -1573,5 +1573,10 @@ export type ClassroomStatsContext = {
      * 上行网络质量
      * @version v1.3.0
      */
-    txNetworkQuality: string
+    txNetworkQuality: string,
+    /**
+     * rtc链接状态
+     * @version v1.4.0
+     */
+    rtcConnectionState: RtcConnectionState,
 }

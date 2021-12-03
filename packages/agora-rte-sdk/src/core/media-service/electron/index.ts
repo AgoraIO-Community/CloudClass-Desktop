@@ -519,8 +519,25 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
       })
     })
     this.client.on('connectionStateChanged', (state: any, reason: any) => {
+      let curState = state;
+      switch(state) {
+        case 1:
+          curState = 'DISCONNECTED';
+          break;
+        case 2:
+          curState = 'CONNECTING';
+          break;
+        case 3:
+          curState = 'CONNECTED';
+          break;
+        case 4:
+          curState = 'RECONNECTING';
+          break;
+        case 5:
+          curState = 'FAIL_CONNECT';
+      }
       this.fire('connection-state-change', {
-        curState: state,
+        curState,
         reason
       })
     })
