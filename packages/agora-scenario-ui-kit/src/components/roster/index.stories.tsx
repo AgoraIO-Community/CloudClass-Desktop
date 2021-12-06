@@ -1,14 +1,6 @@
 import { Meta, Story } from '@storybook/react';
-import React, { FC, useCallback, useMemo, useState } from 'react';
-import {
-  ActionTypes,
-  Profile,
-  Roster,
-  RosterProps,
-  StudentRosterProps,
-  StudentRoster,
-} from '~components/roster';
-import { defaultColumns } from './default-columns';
+import React, { useState } from 'react';
+import { ActionTypes, Roster, RosterProps } from './';
 
 const meta: Meta = {
   title: 'Components/Roster',
@@ -44,47 +36,7 @@ const meta: Meta = {
   },
 };
 
-export const Docs: Story<RosterProps> = ({ dataSource, ...restProps }) => {
-  const [list, updateList] = useState<Profile[]>(dataSource!);
-
-  const handleClick = useCallback(
-    (action: string, uid: any) => {
-      const newList = list.map((item) =>
-        item.uid === uid ? { ...item, ...handleActionState(item, action) } : { ...item },
-      );
-      updateList(newList);
-    },
-    [list, updateList],
-  );
-
-  const handleActionState = (item: Profile, action: string) => {
-    switch (action) {
-      case 'podium': {
-        item.onPodium = !item.onPodium;
-        break;
-      }
-      case 'whiteboard': {
-        item.whiteboardGranted = !item.whiteboardGranted;
-        break;
-      }
-      case 'camera': {
-        item.cameraEnabled = !item.cameraEnabled;
-        // item.cameraDevice = (item.cameraDevice + 1) % 3
-        break;
-      }
-      case 'mic': {
-        item.micEnabled = !item.micEnabled;
-        // item.micDevice = (item.micDevice + 1) % 3
-        break;
-      }
-      case 'chat': {
-        item.chatEnabled = !item.chatEnabled;
-        break;
-      }
-    }
-    return item;
-  };
-
+export const Docs: Story<RosterProps> = ({ ...restProps }) => {
   const [carouselState, setCarouselState] = useState<any>({
     modeValue: 1,
     randomValue: 1,
@@ -93,11 +45,7 @@ export const Docs: Story<RosterProps> = ({ dataSource, ...restProps }) => {
 
   return (
     <Roster
-      userType="student"
-      dataSource={list}
-      columns={defaultColumns}
       {...restProps}
-      carousel
       carouselProps={{
         modeValue: carouselState.modeValue,
         changeModeValue: (value: any) => {
@@ -127,62 +75,6 @@ export const Docs: Story<RosterProps> = ({ dataSource, ...restProps }) => {
           console.log('stopCarousel');
         },
       }}
-      onClick={handleClick}
-    />
-  );
-};
-
-Docs.parameters = {
-  layout: 'fullscreen',
-};
-
-export const DocsUserList: Story<StudentRosterProps> = ({ dataSource, ...restProps }) => {
-  const [list, updateList] = useState<Profile[]>(dataSource!);
-
-  const handleClick = useCallback(
-    (action: string, uid: any) => {
-      const newList = list.map((item) =>
-        item.uid === uid ? { ...item, ...handleActionState(item, action) } : { ...item },
-      );
-      updateList(newList);
-    },
-    [list, updateList],
-  );
-
-  const handleActionState = (item: Profile, action: string) => {
-    switch (action) {
-      case 'camera': {
-        item.cameraEnabled = !item.cameraEnabled;
-        break;
-      }
-      case 'mic': {
-        item.micEnabled = !item.micEnabled;
-        break;
-      }
-    }
-    return item;
-  };
-
-  const [keyword, setKeyword] = useState<string>('');
-
-  const dataList = useMemo(() => {
-    return list.filter((item: any) => item.name.includes(keyword));
-  }, [keyword, list]);
-
-  const handleChange = useCallback(
-    (value: any) => {
-      setKeyword(value);
-    },
-    [list, setKeyword],
-  );
-
-  return (
-    <StudentRoster
-      onChange={handleChange}
-      dataSource={dataList}
-      {...restProps}
-      onClick={handleClick}
-      userType="student"
     />
   );
 };

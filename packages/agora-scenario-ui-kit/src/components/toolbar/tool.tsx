@@ -1,6 +1,6 @@
 import React, { FC, ReactEventHandler } from 'react';
 import { t } from '~components/i18n';
-import { Icon, IconTypes } from '~components/icon';
+import { IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
 import { SvgImg } from '~components/svg-img';
 
@@ -40,10 +40,19 @@ export const Tool: FC<ToolProps> = (props) => {
       {Component ? (
         <Component isActive={isActive} hover={hover} onClick={handleToolClick} />
       ) : (
-        <Tooltip title={t(label)} placement="bottom" overlayClassName="translated-tooltip">
-          <div className={`tool ${isActive ? 'active' : ''}`}>
+        <Tooltip
+          title={t(label)}
+          placement="bottomLeft"
+          overlayClassName="translated-tooltip"
+          align={{
+            offset: [30, 0],
+          }}>
+          <div className={`tool`}>
             {icon ? (
-              <SvgImg type={icon} onClick={() => handleToolClick && handleToolClick(value)} />
+              <SvgImg
+                type={isActive ? icon + '-active' : icon}
+                onClick={() => handleToolClick && handleToolClick(value)}
+              />
             ) : null}
           </div>
         </Tooltip>

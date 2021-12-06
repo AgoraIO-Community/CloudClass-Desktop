@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { Button } from '~components/button';
 import { t, transI18n } from '~components/i18n';
 import { Icon } from '~components/icon';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Select } from '~components/select';
 import { Slider } from '~components/slider';
 import { CheckBox } from '~components/table';

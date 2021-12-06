@@ -1,13 +1,12 @@
-import { BizPagePath, BizPageRouter } from '@/infra/types';
-import { HomePage } from '@/infra/debug-page/home';
-import { LaunchPage } from '@/infra/debug-page/launch';
+import { BizPageRouter } from '@/infra/types';
+import { HomePage } from '@/infra/pages/home';
+import { LaunchPage } from '@/infra/pages/launch';
 import { OneToOneScenario } from '~capabilities/scenarios/1v1';
 import { PretestScenarioPage } from '~capabilities/scenarios/pretest';
-import { EduRoomTypeEnum } from 'agora-edu-core';
 import * as React from 'react';
 import { MidClassScenario } from '~capabilities/scenarios/mid-class';
 import { BigClassScenario } from '~capabilities/scenarios/big-class';
-import { RecordPage } from '../debug-page/record';
+import { RecordPage } from '../pages/record';
 
 export type AppRouteComponent = {
   path: string;
@@ -54,10 +53,6 @@ export const routesMap: Record<string, AppRouteComponent> = {
   //   path: '/incognito',
   //   component: () => PageSFC(IncognitoPage)
   // },
-  [BizPageRouter.PretestPage]: {
-    path: '/pretest',
-    component: () => PageSFC(PretestScenarioPage),
-  },
   [BizPageRouter.TestHomePage]: {
     path: '/',
     component: () => PageSFC(HomePage),

@@ -19,7 +19,7 @@
 
 .layout-header {
   @apply flex flex-row justify-between items-center border-b border-gray-100 w-full;
-  flex: 0 0 44px;
+  flex: 0 0 27px;
 }
 
 .layout-aside {
@@ -29,5 +29,5 @@
   border-left: none;
   @apply overflow-hidden;
   gap: 4px;
-  transform: translateX(2px);
+  margin-left: 2px;
 }

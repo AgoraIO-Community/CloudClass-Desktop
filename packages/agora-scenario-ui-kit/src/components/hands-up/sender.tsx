@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '~components/card';
 import { Icon } from '~components/icon';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { SvgImg } from '../svg-img';
 
 export interface HandsUpSenderProps extends BaseProps {

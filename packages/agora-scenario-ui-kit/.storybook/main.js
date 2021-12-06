@@ -12,6 +12,9 @@ const disableEsLint = (e) => {
 };
 
 module.exports = {
+  typescript: {
+    reactDocgen: 'react-docgen',
+  },
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
     '@storybook/addon-links',
@@ -60,10 +63,10 @@ module.exports = {
       ],
       include: path.resolve(__dirname, '../'),
     });
-    config.module.rules.push({
-      test: /\.js$/,
-      loader: require.resolve('@open-wc/webpack-import-meta-loader'),
-    });
+    // config.module.rules.push({
+    //   test: /\.js$/,
+    //   loader: require.resolve('@open-wc/webpack-import-meta-loader'),
+    // });
     // config.module.rules.push({
     //   test: /\.(svg)$/,
     //   exclude: path.resolve(__dirname, "../src/icons"),

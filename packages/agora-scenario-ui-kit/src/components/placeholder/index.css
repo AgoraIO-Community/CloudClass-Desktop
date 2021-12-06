@@ -1,5 +1,5 @@
 .placeholder {
-  @apply w-full h-full flex flex-col items-center justify-center pt-36 pb-36;
+  @apply w-full h-full flex flex-col items-center justify-center;
 }
 
 .placeholder-desc {
@@ -19,7 +19,14 @@
   align-items: center;
   border: 1px solid #ececf1;
   background-color: #f9f9fc;
+  flex-direction: column;
 }
+
+.camera-placeholder span {
+  color: #677386;
+  font-size: 12px;
+}
+
 .pretest .camera-placeholder {
   position: absolute;
 }

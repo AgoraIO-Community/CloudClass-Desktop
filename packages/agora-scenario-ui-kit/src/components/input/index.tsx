@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useState } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Button } from '~components/button';
 import './index.css';
 import { transI18n } from '../i18n';

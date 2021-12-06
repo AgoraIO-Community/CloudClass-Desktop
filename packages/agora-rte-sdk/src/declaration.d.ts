@@ -1,14 +1,11 @@
+import AgoraRtcEngine from 'agora-electron-sdk';
+
 interface Window {
-  logPath: string;
-  videoSourceLogPath: string;
   platform: string;
   isElectron: boolean;
-  setNodeAddonLogPath: string;
-  setNodeAddonVideoSourceLogPath: string;
-  ipc: {
-    once(event: string, callback: (...args: any) => void): void;
-  };
-  getCachePath: (callback: (path: string) => void) => void;
+  rtcEngine: AgoraRtcEngine;
+  webkitAudioContext: AudioContext;
 }
 
-declare type IAgoraRtcEngine = any;
+declare module 'async-await-retry';
+declare module 'web-audio-peak-meter';

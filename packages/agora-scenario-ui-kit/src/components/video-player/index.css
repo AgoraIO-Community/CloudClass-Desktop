@@ -59,6 +59,17 @@
   max-width: 71px;
 }
 
+.username2 {
+  @apply text-white font-medium;
+  font-size: 12px;
+  /* letter-spacing: -0.41px; */
+  text-shadow: 0 1px 2px rgb(13 29 61 / 80%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
+}
+
 .whiteboard-state {
   color: #ffe72e;
   font-size: 18px !important;

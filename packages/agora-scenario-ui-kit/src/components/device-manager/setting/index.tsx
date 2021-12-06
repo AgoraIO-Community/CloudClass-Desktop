@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Select } from '~components/select';
 import { Slider } from '~components/slider';
 import './index.css';
 import { t, transI18n } from '~components/i18n';
 import { CheckBox } from '~ui-kit/components/table';
 interface DeviceProps {
-  deviceId: string;
+  value: string;
   label: string;
 }
 
@@ -28,9 +28,11 @@ export interface SettingProps extends BaseProps {
   whitening?: number;
   buffing?: number;
   ruddy?: number;
-  onChangeDevice?: (deviceType: string, value: string) => void | Promise<void>;
-  onChangeAudioVolume?: (deviceType: string, value: number) => void;
-  onSelectDevice?: (deviceType: string, value: string) => void | Promise<void>;
+  onChangeDevice?: (
+    deviceType: 'camera' | 'microphone' | 'speaker',
+    value: string,
+  ) => void | Promise<void>;
+  onChangeAudioVolume?: (deviceType: 'microphone' | 'speaker', value: number) => void;
   onSelectBeauty?: (isBeauty: boolean) => void;
   onChangeBeauty?: (beautyType: string, value: number) => void;
   onSelectMirror?: (isMirror: boolean) => void;
@@ -55,7 +57,6 @@ export const Setting: FC<SettingProps> = ({
   ruddy = 10,
   onChangeDevice = (deviceType, value) => {},
   onChangeAudioVolume = (deviceType, value) => {},
-  onSelectDevice = (deviceType, value) => {},
   onSelectBeauty = (isBeauty) => {},
   onChangeBeauty = (beautyType, value) => {},
   onSelectMirror = (isMirror) => {},
@@ -68,17 +69,17 @@ export const Setting: FC<SettingProps> = ({
   });
   const cameraOptions = cameraList.map((item) => ({
     label: item.label,
-    value: item.deviceId,
+    value: item.value,
     i18n: false,
   }));
   const microphoneOptions = microphoneList.map((item) => ({
     label: item.label,
-    value: item.deviceId,
+    value: item.value,
     i18n: false,
   }));
   const speakerOptions = speakerList.map((item) => ({
     label: item.label,
-    value: item.deviceId,
+    value: item.value,
     i18n: false,
   }));
   return (

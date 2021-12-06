@@ -1,0 +1,70 @@
+.video-player {
+  /* @apply relative flex items-center justify-center; */
+  height: 168px;
+  width: 300px;
+  background: transparent;
+  border-radius: 4px;
+  color: #fff;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin: 2px 2px 2px 0;
+}
+
+.video-player-overlay {
+  position: relative;
+}
+
+.video-player-overlay .top-right-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.video-player-overlay .bottom-left-info {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 8px;
+}
+
+.video-player-overlay .bottom-left-info .volume-indicators {
+  margin-left: 0;
+}
+
+.video-player-overlay .bottom-right-info {
+  position: absolute;
+  bottom: 5px;
+  right: 0;
+  padding: 0 8px;
+}
+
+.video-player-overlay .camera-placeholder {
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ececf1;
+  /* border: 0; */
+  background-color: #f9f9fc;
+}
+
+.stream-player-enter {
+  width: 0;
+  opacity: 0;
+  animation: show 0.5s linear 1 forwards;
+}
+.stream-player-enter-active {
+  margin-right: 0 !important;
+}
+
+.stream-player-exit {
+  animation: hide 0.5s linear 1 forwards;
+}

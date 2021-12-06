@@ -1,7 +1,4 @@
 const { ipcRenderer: ipc, app } = require('electron');
-
-const AgoraRtcEngine = require('agora-electron-sdk').default;
-
 const child_process = require('child_process');
 
 const { promisify } = require('util');
@@ -13,11 +10,11 @@ const fs = require('fs');
 
 const platform = process.platform;
 
-const rtcEngine = new AgoraRtcEngine();
+// const rtcEngine = new AgoraRtcEngine();
 
 window.isElectron = true;
 
-window.rtcEngine = rtcEngine;
+// window.rtcEngine = rtcEngine;
 window.ipc = ipc;
 window.path = path;
 

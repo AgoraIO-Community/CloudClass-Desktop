@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { list } from '~utilities';
+import './index.css';
 
 export interface VolumeIndicatorProps {
   volume?: number;

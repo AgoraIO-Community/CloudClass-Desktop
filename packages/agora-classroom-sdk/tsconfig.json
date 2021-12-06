@@ -34,5 +34,5 @@
   "exclude": [
     "node_modules",
     "**/*/*.stories.tsx"
-  ]
+  ],
 }

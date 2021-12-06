@@ -1,6 +1,7 @@
 import { GlobalStorage } from '../../utils';
-import { LaunchOption, AgoraRegion } from 'agora-edu-core';
-import { autorun, observable } from 'mobx';
+import { autorun, observable, action } from 'mobx';
+import { LaunchOption } from '@/infra/api';
+import { EduRegion } from 'agora-edu-core';
 
 export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   appId: string;
@@ -18,13 +19,14 @@ export class HomeStore {
   launchOption!: HomeLaunchOption;
 
   @observable
-  region: AgoraRegion = 'CN';
+  region: EduRegion = EduRegion.CN;
 
   regionKey: string = regionKey;
   launchKey: string = launchKey;
+  sdkDomain: string = '';
 
-  constructor(context: any) {
-    this.region = GlobalStorage.read(this.regionKey) || this.region;
+  constructor() {
+    this.setRegion(GlobalStorage.read(this.regionKey) || this.region);
     this.launchOption = GlobalStorage.read(this.launchKey) || {};
     autorun(() => {
       const data = this.region;
@@ -32,6 +34,11 @@ export class HomeStore {
     });
   }
 
+  @action setRegion(region: EduRegion) {
+    this.region = region;
+  }
+
+  @action
   setLaunchConfig(payload: HomeLaunchOption) {
     this.launchOption = payload;
     if (payload.region) {

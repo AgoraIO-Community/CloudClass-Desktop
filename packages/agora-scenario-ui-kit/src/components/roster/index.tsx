@@ -1,368 +1,113 @@
-import React, { FC, ReactNode, useCallback, useState } from 'react';
-import Draggable from 'react-draggable';
-import { t, transI18n } from '~components/i18n';
-import SearchSvg from '~components/icon/assets/svg/search.svg';
-import { Input } from '~components/input';
-import { ModalProps } from '~components/modal';
-import { Select } from '~components/select';
-import { CheckBox, Col, Row, Table, TableHeader } from '~components/table';
-import { Search } from '../input';
-import { SvgImg } from '../svg-img';
-import { canOperate, studentListSort } from './base';
-import { defaultColumns } from './default-columns';
 import './index.css';
 
-export * from './user-list';
+export { Roster } from './roster';
 
-export type ActionTypes = 'podium' | 'whiteboard' | 'camera' | 'mic' | 'kickOut' | 'chat' | string;
+export { RosterTable } from './table';
 
-export enum MediaDeviceState {
-  not_available = 0,
-  available = 1,
-}
+export type Operation = 'podium' | 'grant-board' | 'camera' | 'microphone' | 'kick' | 'chat';
+
+export type SupportedFunction = 'carousel' | 'search' | 'kick' | 'grant-board' | 'podium' | 'stars';
 
 export type ColumnKey =
   | 'name'
-  | 'onPodium'
-  | 'whiteboardGranted'
-  | 'cameraEnabled'
-  | 'micEnabled'
+  | 'isOnPodium'
+  | 'isBoardGranted'
+  | 'isChatMuted'
+  | 'cameraState'
+  | 'microphoneState'
   | 'stars'
-  | 'chat'
-  | 'kickOut';
+  | 'kick';
 
-export interface Profile {
+export type Column = {
+  key: ColumnKey;
+  order: number;
+  name: string;
+  render: (profile: Profile) => JSX.Element;
+  operation?: Operation;
+};
+
+export enum DeviceState {
+  enabled,
+  disabled,
+  unavailable,
+}
+
+export const cameraIconType = {
+  [DeviceState.enabled]: 'camera',
+  [DeviceState.disabled]: 'camera-off',
+  [DeviceState.unavailable]: 'camera',
+};
+
+export const microphoneIconType = {
+  [DeviceState.enabled]: 'microphone-on-outline',
+  [DeviceState.disabled]: 'microphone-off-outline',
+  [DeviceState.unavailable]: 'microphone-on-outline',
+};
+
+export type Profile = {
   uid: string | number;
   name: string;
-  onPodium: boolean;
-  canCoVideo: boolean;
-  whiteboardGranted: boolean;
-  canGrantBoard: boolean;
-  cameraEnabled: boolean;
-  micEnabled: boolean;
-  cameraDevice: boolean;
-  micDevice: boolean;
+  isOnPodium: boolean;
+  isBoardGranted: boolean;
+  isChatMuted: boolean;
+  cameraState: DeviceState;
+  microphoneState: DeviceState;
   stars: number;
-  online: boolean;
-  userType: string;
-  hasStream: boolean;
-  isLocal: boolean;
-  // onlineState: boolean;
-}
+  operations: Operation[];
+};
 
-export interface Column {
-  key: ColumnKey;
-  name: string;
-  action?: ActionTypes;
-  visibleRoles?: string[];
-  render?: (
-    text: string,
-    profile: Profile,
-    canOperate: boolean,
-    userType: string,
-    onClick: any,
-  ) => ReactNode;
-}
+export type CarouselProps = {
+  times: string;
+  isOpenCarousel: boolean;
+  mode: string;
+  randomValue: string;
+  onTimesChange: (times: string, eventType: 'change' | 'blur') => void;
+  onOpenCarousel: (isOpen: boolean) => void;
+  onModeChange: (mode: string) => void;
+  onRandomValueChange: (randomValue: string) => void;
+};
 
-export interface RosterProps extends ModalProps {
+export type RosterProps = {
+  /**
+   * 是否可拖拽
+   */
   isDraggable?: boolean;
   /**
-   * 老师姓名
+   * 房主姓名
    */
-  teacherName: string;
-  /**
-   * 表头有默认值
-   */
-  columns?: Column[];
-  /**
-   * 排除列
-   */
-  excludeColumns?: ColumnKey[];
-  /**
-   * 数据源
-   */
-  dataSource?: Profile[];
-  /**
-   * 自己的userUuid
-   */
-  localUserUuid: string;
-  // /**
-  //  * 当前用户角色
-  //  */
-  // userType: ProfileRole;
-  /**
-   * 老师端或学生端人员列表标记
-   */
-  userType?: 'teacher' | 'student';
-  /**
-   * col 点击的回调，是否可以点击，取决于 column 中配置 action 与否和 dataSource 数据中配置 canTriggerAction
-   */
-  onClick?: (action: ActionTypes, uid: string | number) => void;
-  /**
-   * onClose
-   */
-  onClose?: () => void;
-  onChange: (evt: any) => void;
-  /**
-   * 开启轮播
-   */
-  carousel: boolean;
+  hostname: string;
   /**
    * 轮播相关配置项
    */
-  carouselProps: any;
-}
+  carouselProps: CarouselProps;
+  /**
+   * 可选功能
+   */
+  functions?: Array<SupportedFunction>;
+  /**
+   * 点击右上角关闭按钮
+   */
+  onClose: () => void;
+  /**
+   * 搜索关键字
+   */
+  keyword: string;
+  /**
+   * 关键字搜索变化
+   */
+  onKeywordChange: (evt: any) => void;
+  /**
+   * 标题
+   */
+  title?: string;
 
-export const Roster: FC<RosterProps> = ({
-  teacherName,
-  columns = defaultColumns,
-  excludeColumns = [],
-  dataSource = [],
-  onClick,
-  onClose = () => console.log('onClose'),
-  localUserUuid,
-  title,
-  isDraggable = true,
-  carousel = false,
-  carouselProps,
-  userType = 'student', // 只有老师可以开启轮播以及查找学生
-  onChange,
-}) => {
-  // const CarouselMenu = React.memo(({ modeValue, changeModeValue, randomValue, changeRandomValue, times, changeTimes, isOpenCarousel, changeCarousel }: any) => {
-  //   return (
-  //     <div className="carousel-menu">
-  //       <div className="carousel-flag">
-  //         <CheckBox
-  //           style={{ width: 12, height: 12 }}
-  //           checked={isOpenCarousel}
-  //           onChange={changeCarousel}
-  //         />
-  //         <span className="carousel-desc">{transI18n('roster.shift')}</span>
-  //       </div>
-  //       <div className="disable-flag" style={{ width: 105 }}>
-  //         <Select
-  //           value={modeValue}
-  //           options={[
-  //             {
-  //               label: transI18n('roster.everyone'),
-  //               value: 'all'
-  //             },
-  //             {
-  //               label: transI18n('roster.available'),
-  //               value: 'available'
-  //             }
-  //           ]}
-  //           onChange={changeModeValue}
-  //         />
-  //       </div>
-  //       <div className="student-order">
-  //         <span>{transI18n('roster.students_in')}</span>
-  //         <Select
-  //           className="order-select"
-  //           value={randomValue}
-  //           options={[
-  //             {
-  //               label: transI18n('roster.sequence'),
-  //               value: 'sort'
-  //             },
-  //             {
-  //               label: transI18n('roster.random'),
-  //               value: 'random'
-  //             }
-  //           ]}
-  //           onChange={changeRandomValue}
-  //         />
-  //       </div>
-  //       <div className="carousel-frequency">
-  //         <span className="">{transI18n('roster.order_every')}</span>
-  //         <div className="carousel-frequency-input">
-  //           <Input type='number' value={times} onChange={changeTimes} />
-  //         </div>
-  //         <span className="">{transI18n('roster.seconds')}</span>
-  //       </div>
-  //     </div>
-  //   )
-  // })
+  /**
+   * 拖动区域所在范围dom的class
+   */
+  bounds?: string;
 
-  const studentList = studentListSort(dataSource);
-
-  const cols = columns
-    .filter((col: Column) => !excludeColumns.includes(col.key))
-    .filter(
-      ({ visibleRoles = [] }: Column) =>
-        visibleRoles.length === 0 || visibleRoles.includes(userType),
-    );
-
-  const DraggableContainer = useCallback(
-    ({ children, cancel }: { children: React.ReactChild; cancel: string }) => {
-      return isDraggable ? <Draggable cancel={cancel}>{children}</Draggable> : <>{children}</>;
-    },
-    [isDraggable],
-  );
-
-  const [currentTimes, setCurrentTimes] = useState(carouselProps.times);
-
-  const changeTimesFn = (e: any) => {
-    let result = e.target.value.replace(/\D+/g, '');
-    if (Number(result) > 99) {
-      result = 99;
-    }
-    setCurrentTimes(result);
-    carouselProps.changeTimes(result);
-  };
-
-  const blurTimesFn = (e: any) => {
-    let result = Number(e.target.value.replace(/\D+/g, '').replace(/\b(0+)/gi, ''));
-    if (result < 10) {
-      result = 10;
-    }
-    setCurrentTimes(result);
-    carouselProps.changeTimes(result);
-  };
-
-  return (
-    <DraggableContainer cancel={'.search-header'}>
-      <div className="agora-board-resources roster-wrap" style={{ width: 755 }}>
-        <div className="btn-pin">
-          <SvgImg
-            type="close"
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              onClose();
-            }}
-          />
-        </div>
-        <div className="main-title">{title ?? transI18n('roster.user_list')}</div>
-        <div className="roster-container">
-          <div className="search-header roster-header">
-            <div className="search-teacher-name">
-              <label>{t('roster.teacher_name')}</label>
-              <span title={teacherName} className="roster-username">
-                {teacherName}
-              </span>
-            </div>
-            {/* {carousel && <CarouselMenu {...carouselProps} />} */}
-            {carousel && (
-              <div className="carousel-menu">
-                <div className="carousel-flag">
-                  <CheckBox
-                    style={{ width: 12, height: 12 }}
-                    checked={carouselProps.isOpenCarousel}
-                    onChange={carouselProps.changeCarousel}
-                  />
-                  <span className="carousel-desc">{transI18n('roster.shift')}</span>
-                </div>
-                <div className="disable-flag" style={{ width: 105 }}>
-                  <Select
-                    value={carouselProps.modeValue}
-                    options={[
-                      {
-                        label: transI18n('roster.everyone'),
-                        value: 1,
-                      },
-                      {
-                        label: transI18n('roster.available'),
-                        value: 2,
-                      },
-                    ]}
-                    onChange={carouselProps.changeModeValue}
-                  />
-                </div>
-                <div className="student-order">
-                  <span>{transI18n('roster.students_in')}</span>
-                  <Select
-                    className="order-select"
-                    value={carouselProps.randomValue}
-                    options={[
-                      {
-                        label: transI18n('roster.sequence'),
-                        value: 1,
-                      },
-                      {
-                        label: transI18n('roster.random'),
-                        value: 2,
-                      },
-                    ]}
-                    onChange={carouselProps.changeRandomValue}
-                  />
-                </div>
-                <div className="carousel-frequency">
-                  <span className="">{transI18n('roster.order_every')}</span>
-                  <div className="carousel-frequency-input">
-                    <Input value={currentTimes} onChange={changeTimesFn} onBlur={blurTimesFn} />
-                  </div>
-                  <span className="">{transI18n('roster.seconds')}</span>
-                </div>
-              </div>
-            )}
-            {userType === 'teacher' ? (
-              <div style={{ marginTop: carousel ? 5 : 0 }}>
-                <Search
-                  onSearch={onChange}
-                  prefix={<img src={SearchSvg} />}
-                  inputPrefixWidth={32}
-                  placeholder={transI18n('scaffold.search')}
-                />
-              </div>
-            ) : null}
-          </div>
-          <Table className="roster-table">
-            <TableHeader>
-              {cols.map((col) => (
-                <Col key={col.key} style={{ justifyContent: 'center' }}>
-                  {transI18n(col.name)}
-                </Col>
-              ))}
-            </TableHeader>
-            <Table className="table-container">
-              {studentList?.map((data: Profile) => (
-                <Row className={'border-bottom-width-1'} key={data.uid}>
-                  {cols.map((col: Column, idx: number) => (
-                    <Col
-                      key={col.key}
-                      style={{
-                        justifyContent: idx !== 0 ? 'center' : 'flex-start',
-                      }}>
-                      {idx === 0 ? (
-                        <span
-                          className={`${idx === 0 ? 'roster-username' : ''}`}
-                          title={(data as any)[col.key]}
-                          style={{
-                            paddingLeft: 25,
-                          }}
-                          onClick={
-                            canOperate(userType, localUserUuid, data, col)
-                              ? () => col.action && onClick && onClick(col.action, data.uid)
-                              : undefined
-                          }>
-                          {(data as any)[col.key]}
-                        </span>
-                      ) : (
-                        <span
-                          style={{
-                            paddingLeft: 0,
-                          }}>
-                          {col.render
-                            ? col.render(
-                                (data as any)[col.key],
-                                data,
-                                canOperate(userType, localUserUuid, data, col),
-                                userType,
-                                canOperate(userType, localUserUuid, data, col)
-                                  ? () => col.action && onClick && onClick(col.action, data.uid)
-                                  : undefined,
-                              )
-                            : (data as any)[col.key]}
-                        </span>
-                      )}
-                    </Col>
-                  ))}
-                </Row>
-              ))}
-            </Table>
-          </Table>
-        </div>
-      </div>
-    </DraggableContainer>
-  );
+  /**
+   * 组件拖动顶部的初始偏移量
+   */
+  offsetTop?: number;
 };

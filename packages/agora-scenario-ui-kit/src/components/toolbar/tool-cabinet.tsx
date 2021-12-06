@@ -29,7 +29,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
 }) => {
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
   const handleClick = (cabinetId: string) => {
-    setPopoverVisible(!popoverVisible);
+    setPopoverVisible(false);
     onClick && onClick(cabinetId);
   };
   const content = useCallback(

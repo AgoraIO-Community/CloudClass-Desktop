@@ -2,7 +2,7 @@
 /// <reference types="./sdk/education/interface/index.d.ts" />
 
 declare module '*.css';
-
+declare module '*.svga';
 declare module '*.json';
 declare module '*.mp3';
 declare module '*.mp4';
@@ -33,6 +33,7 @@ declare const REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: string;
 declare const REACT_APP_REPORT_URL: string;
 declare const REACT_APP_REPORT_QOS: number;
 declare const REACT_APP_V1_REPORT_URL: string;
+declare const REACT_APP_AGORA_APP_SDK_DOMAIN_COLLECTION: string;
 interface CustomGlobalUtils {
   platform: string;
   isElectron: boolean;

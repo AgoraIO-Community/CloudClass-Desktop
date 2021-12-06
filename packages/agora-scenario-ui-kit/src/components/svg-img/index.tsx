@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { BaseProps } from '~components/interface/base-props';
+import { FC } from 'react';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 
 import './index.css';
 
@@ -7,13 +7,14 @@ import { getPath, getViewBox } from './svg-dict';
 
 import classnames from 'classnames';
 
-export interface SvgImgProps extends BaseProps {
+export type SvgImgProps = BaseProps & {
   type: string;
+  color?: string;
   size?: number;
   prefixClass?: string;
   canHover?: boolean;
   onClick?: any;
-}
+};
 
 export const SvgImg: FC<SvgImgProps> = ({
   type,
@@ -23,6 +24,7 @@ export const SvgImg: FC<SvgImgProps> = ({
   onClick,
   className,
   style,
+  color,
 }) => {
   const cls = classnames({
     [`svg-img`]: 1,
@@ -40,7 +42,7 @@ export const SvgImg: FC<SvgImgProps> = ({
       xmlnsXlink="http://www.w3.org/1999/xlink"
       onClick={onClick}
       style={style}>
-      {getPath(type, { className: type })}
+      {getPath(type, { className: type, color })}
     </svg>
   );
 };

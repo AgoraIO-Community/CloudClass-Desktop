@@ -1,16 +1,14 @@
 import React, { FC, useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Tool, ToolItem } from './tool';
-import unfoldAbsent from './assets/icon-close.svg';
-import foldAbsent from './assets/icon-open.svg';
-import unfoldHover from './assets/icon-close-hover.svg';
-import foldHover from './assets/icon-open-hover.svg';
+import unfoldAbsent from './assets/close-default.svg';
+import foldAbsent from './assets/open-default.svg';
+import unfoldHover from './assets/close-hover.svg';
+import foldHover from './assets/open-hover.svg';
 import './index.css';
 import { useMounted } from '~ui-kit/utilities/hooks';
 import { debounce } from 'lodash';
-
-export { Colors } from './colors';
 
 export { Pens } from './pens';
 
@@ -102,11 +100,12 @@ export const Toolbar: FC<ToolbarProps> = ({
   const maxHeight =
     // toolbar items height accumulation
     // margin bottom 10 * 10
-    (28 + 10) * tools.length +
+    (25 + 10) * tools.length +
     // top button
-    42 +
+    // 42 +
     // shadow extra
-    10;
+    14 +
+    4;
 
   return (
     <div
@@ -117,17 +116,21 @@ export const Toolbar: FC<ToolbarProps> = ({
       }}
       ref={animContainer}
       onAnimationEnd={() => {
-        const animEl = animContainer.current;
-        if (animEl && animEl.classList.contains('toolbar-anim-hide')) {
-          animEl.style.left = '0px';
-        }
-        if (animEl && animEl.classList.contains('toolbar-anim-show')) {
-          animEl.style.left = '15px';
-        }
+        // const animEl = animContainer.current;
+        // if (animEl && animEl.classList.contains('toolbar-anim-hide')) {
+        //   animEl.style.left = '0px';
+        // }
+        // if (animEl && animEl.classList.contains('toolbar-anim-show')) {
+        //   animEl.style.left = '15px';
+        // }
       }}>
       <div className={cls} style={style} ref={toolbarEl}>
         <div
           className={`menu ${opened ? 'unfold' : 'fold'}`}
+          style={{
+            left: opened ? 34 : 0,
+            // zIndex: opened ? -1 : 0,
+          }}
           onMouseEnter={() => setMenuHover(true)}
           onMouseLeave={() => setMenuHover(false)}
           onClick={() => {
@@ -154,7 +157,8 @@ export const Toolbar: FC<ToolbarProps> = ({
               setOpened(!opened);
               onOpenedChange && onOpenedChange(!opened);
               animTimer.current && clearTimeout(animTimer.current);
-            }, 300);
+              //0.5s * 0.5
+            }, 250);
           }}>
           <img
             src={menus[`${opened ? 'unfold' : 'fold'}-${menuHover ? 'hover' : 'absent'}`]}

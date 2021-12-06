@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Progress } from '~components/progress';
 import { Icon } from '~components/icon';
 import { transI18n } from '../i18n';
@@ -10,7 +10,7 @@ import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
 import { SvgImg } from '~ui-kit';
 
-interface UploadItem {
+export interface UploadItem {
   iconType?: string;
   fileName?: string;
   fileSize?: string;
@@ -29,6 +29,11 @@ export interface LoadingProps extends BaseProps {
   noCloseBtn?: boolean;
 }
 
+export interface CircleLoadingProps extends BaseProps {
+  width?: string;
+  height?: string;
+}
+
 export const Loading: FC<LoadingProps> = ({
   hasLoadingGif = true,
   loadingText = '',
@@ -38,6 +43,7 @@ export const Loading: FC<LoadingProps> = ({
   uploadItemList = [],
   className,
   onClick,
+  noCloseBtn,
   ...restProps
 }) => {
   const cls = classnames({
@@ -78,7 +84,12 @@ export const Loading: FC<LoadingProps> = ({
               <div>
                 {item.uploadComplete ? (
                   <div className="loading-progress">
-                    <img src={circleLoadingGif} alt="upload success gif" width="20" height="20" />
+                    <Progress
+                      width={60}
+                      type="download"
+                      progress={item.currentProgress as number}
+                    />
+                    <span className="upload-pending-text">{item.currentProgress}%</span>
                     <span className="upload-success-text">
                       {transI18n('whiteboard.converting')}
                     </span>
@@ -95,7 +106,7 @@ export const Loading: FC<LoadingProps> = ({
                 )}
               </div>
               <div>
-                {restProps.noCloseBtn ? (
+                {noCloseBtn ? (
                   ''
                 ) : (
                   <SvgImg
@@ -128,4 +139,8 @@ export const Loading: FC<LoadingProps> = ({
       )}
     </div>
   );
+};
+
+export const CircleLoading: FC<CircleLoadingProps> = ({ width = '60', height = '60' }) => {
+  return <img src={circleLoadingGif} width={width} height={height} style={{}} alt="loading gif" />;
 };

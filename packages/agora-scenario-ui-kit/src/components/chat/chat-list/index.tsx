@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
-import { Placeholder } from '~components/placeholder';
-import { t, transI18n } from '~components/i18n';
+import { Placeholder, t, transI18n } from '../../../components';
 import { ChatEvent, Conversation } from '../interface';
 import './index.css';
 

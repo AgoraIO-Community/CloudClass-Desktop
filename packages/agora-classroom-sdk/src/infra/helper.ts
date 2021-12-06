@@ -1,6 +1,3 @@
-import OSS from 'ali-oss';
-import { get } from 'lodash';
-
 const OSS_PREFIX = '';
 
 export function getOSSUrl(mediaUrl: string): string {

@@ -1,11 +1,11 @@
 import React, { EventHandler, FC, SyntheticEvent } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import './index.css';
 
 export interface ButtonProps extends BaseProps {
   type?: 'primary' | 'secondary' | 'ghost' | 'danger';
-  size?: 'sm' | 'lg';
+  size?: 'xs' | 'sm' | 'lg';
   disabled?: boolean;
   action?: string;
   onClick?: EventHandler<SyntheticEvent<HTMLButtonElement>>;

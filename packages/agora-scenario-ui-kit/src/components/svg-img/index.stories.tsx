@@ -459,6 +459,76 @@ export const Docs = ({ size, fill }: DocsProps) => (
         <SvgImg type={'refuse'} size={size} />
         <p>refuse</p>
       </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'pen-active'} size={size} />
+        <p>pen-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'square-active'} size={size} />
+        <p>square-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'circle-active'} size={size} />
+        <p>circle-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'line-active'} size={size} />
+        <p>line-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'clicker-active'} size={size} />
+        <p>clicker-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'cloud-active'} size={size} />
+        <p>cloud-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'eraser-active'} size={size} />
+        <p>eraser-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'register-active'} size={size} />
+        <p>register-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'tools-active'} size={size} />
+        <p>tools-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'select-active'} size={size} />
+        <p>select-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'text-active'} size={size} />
+        <p>text-active</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'share-default'} size={size} />
+        <p>share-default</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'share-hover'} size={size} />
+        <p>share-hover</p>
+      </div>
+
+      <div className="svg-story-div">
+        <SvgImg type={'placeholder-not-present'} size={size} />
+        <p>placeholder-not-present</p>
+      </div>
     </div>
   </>
 );

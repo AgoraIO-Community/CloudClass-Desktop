@@ -1,241 +1,380 @@
-import {
-  useGlobalContext,
-  useMediaContext,
-  usePretestContext,
-  useVolumeContext,
-} from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
-import { Button, MediaDeviceState, Modal, Pretest, t, transI18n, CameraPlaceHolder } from '~ui-kit';
-import { RendererPlayer } from '~utilities/renderer-player';
-import { Volume } from '~components/volume';
-import { v4 as uuidv4 } from 'uuid';
-import { ToastContainer } from '~capabilities/containers/toast';
+import './index.css';
+import { CameraPlaceHolder, Modal, SvgImg } from '~ui-kit';
+import classnames from 'classnames';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
+import { Button } from '~ui-kit/components/button';
+import { transI18n } from '~ui-kit/components/i18n';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { Select } from '~ui-kit/components/select';
+import { CheckBox } from '~ui-kit/components/table';
+import { Toast } from '~ui-kit/components/toast';
+import { useMounted, useTimeout } from '~ui-kit/utilities/hooks';
+import { Volume } from '~ui-kit/components/volume';
+import PretestAudio from './assets/pretest-audio.mp3';
+import './index.css';
+import { EduClassroomConfig } from 'agora-edu-core';
+import { AgoraRteRuntimePlatform } from 'agora-rte-sdk';
+import { useStore } from '~hooks/use-edu-stores';
 
-const VolumeIndicationView: React.FC<any> = observer(() => {
-  const { microphoneLevel } = useVolumeContext();
-  // const {
-  // microphoneLevel
-  // } = usePretestContext()
+declare global {
+  interface Window {
+    process: {
+      resourcesPath: string;
+    };
+  }
+}
 
-  return <Volume currentVolume={microphoneLevel} maxLength={48} style={{ marginLeft: 6 }} />;
+declare const NODE_ENV: string;
+
+const LocalAudioVolumeIndicator: React.FC<any> = observer(() => {
+  const { pretestUIStore } = useStore();
+  const { localVolume } = pretestUIStore;
+
+  return <Volume currentVolume={localVolume} maxLength={48} style={{ marginLeft: 6 }} />;
 });
 
-export const PretestContainer = observer(() => {
+export const PretestVideoPlayerLocalCameraPlaceholder = observer(() => {
+  const { pretestUIStore } = useStore();
+  const { localCameraPlaceholder } = pretestUIStore;
+  return (
+    <CameraPlaceHolder style={{ position: 'absolute', top: 0 }} state={localCameraPlaceholder} />
+  );
+});
+
+export const MicrophoneSelect = observer(() => {
   const {
-    cameraError,
-    microphoneError,
-    cameraList,
-    microphoneList,
-    speakerList,
-    speakerId,
-    cameraId,
-    microphoneId,
-    isMirror,
-    setMirror,
-    changeTestSpeakerVolume,
-    changeTestMicrophoneVolume,
-    installPretest,
-    changeTestCamera,
-    changeTestMicrophone,
-    changeTestSpeaker,
-    stopPretestCamera,
-    stopPretestMicrophone,
-    pretestNoticeChannel,
-    pretestCameraRenderer,
-    isBeauty,
-    setBeauty,
-    whitening,
-    buffing,
-    ruddy,
-    setWhitening,
-    setBuffing,
-    setRuddy,
-    setBeautyEffectOptions,
-  } = usePretestContext();
+    pretestUIStore: { setRecordingDevice, currentRecordingDeviceId, recordingDevicesList },
+  } = useStore();
 
-  const { isNative, getAudioRecordingVolume, getAudioPlaybackVolume } = useMediaContext();
+  return (
+    <Select
+      value={currentRecordingDeviceId}
+      onChange={(value) => {
+        setRecordingDevice(value);
+      }}
+      options={recordingDevicesList}></Select>
+  );
+});
 
-  const VideoPreviewPlayer = useCallback(() => {
-    return (
-      <RendererPlayer
-        style={{ width: 320, height: 180 }}
-        mirror={isMirror}
-        key={cameraId}
-        id="stream-player"
-        track={pretestCameraRenderer}
-        preview={true}>
-        <CameraPlaceHolder state="muted" />
-      </RendererPlayer>
-    );
-  }, [pretestCameraRenderer, cameraId, isMirror]);
+export const CameraSelect = observer(() => {
+  const {
+    pretestUIStore: { setCameraDevice, currentCameraDeviceId, cameraDevicesList },
+  } = useStore();
 
-  const handleError = (evt: any) => {
-    pretestNoticeChannel.next({
-      type: 'error',
-      info: transI18n(evt.info),
-      kind: 'toast',
-      id: uuidv4(),
-    });
-  };
+  return (
+    <Select
+      value={currentCameraDeviceId}
+      onChange={(value) => {
+        setCameraDevice(value);
+      }}
+      options={cameraDevicesList}></Select>
+  );
+});
 
-  useEffect(() => {
-    installPretest(handleError);
-    // {"isBeauty":true,"lighteningLevel":61,"rednessLevel":61,"smoothnessLevel":76}
-    const beautyEffectOptionsStr = window.localStorage.getItem('beautyEffectOptions');
-    const { isBeauty, lighteningLevel, rednessLevel, smoothnessLevel } = beautyEffectOptionsStr
-      ? JSON.parse(beautyEffectOptionsStr)
-      : {
-          isBeauty: false,
-          lighteningLevel: 70,
-          rednessLevel: 10,
-          smoothnessLevel: 50,
-        };
-    setBeauty(isBeauty);
-    setWhitening(lighteningLevel);
-    setBuffing(smoothnessLevel);
-    setRuddy(rednessLevel);
-    if (isBeauty) {
-      setBeautyEffectOptions({
-        lighteningLevel,
-        rednessLevel,
-        smoothnessLevel,
-      });
+export const PlaybackSelect = observer(() => {
+  const {
+    pretestUIStore: { setPlaybackDevice, currentPlaybackDeviceId, playbackDevicesList },
+  } = useStore();
+
+  return (
+    <Select
+      value={currentPlaybackDeviceId}
+      onChange={(value) => {
+        setPlaybackDevice(value);
+      }}
+      options={playbackDevicesList}></Select>
+  );
+});
+
+const VideoDeviceNotification = observer(() => {
+  const { pretestUIStore } = useStore();
+  const { videoToastQueue, removeToast } = pretestUIStore;
+  return <NoticeContainer list={videoToastQueue} removeToast={removeToast} />;
+});
+
+const AudioRecordingDeviceNotification = observer(() => {
+  const { pretestUIStore } = useStore();
+  const { audioRecordingToastQueue, removeToast } = pretestUIStore;
+  return <NoticeContainer list={audioRecordingToastQueue} removeToast={removeToast} />;
+});
+
+const AudioPlaybackDeviceNotification = observer(() => {
+  const { pretestUIStore } = useStore();
+  const { audioPlaybackToastQueue, removeToast } = pretestUIStore;
+  return <NoticeContainer list={audioPlaybackToastQueue} removeToast={removeToast} />;
+});
+
+const NoticeContainer = observer((props: any) => {
+  return props.list.map((it: any) => (
+    <DeviceNotice
+      key={it.id}
+      title={transI18n('pretest.detect_new_device')}
+      close={() => {
+        props.removeToast(it.id);
+      }}></DeviceNotice>
+  ));
+});
+
+const DeviceNotice = (props: any) => {
+  const mounted = useMounted();
+
+  useTimeout(() => {
+    props.close && props.close();
+  }, 2500);
+
+  const [animated, setAnimate] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    if (mounted) {
+      setAnimate(true);
     }
   }, []);
 
-  const onChangeDevice = async (type: string, value: any) => {
-    switch (type) {
-      case 'camera': {
-        await changeTestCamera(value);
-        break;
-      }
-      case 'microphone': {
-        await changeTestMicrophone(value);
-        break;
-      }
-      case 'speaker': {
-        await changeTestSpeaker(value);
-        break;
-      }
+  return (
+    <CSSTransition
+      in={animated}
+      onEntered={() => {
+        setAnimate(!animated);
+        console.log('onEnter');
+      }}
+      // unmountOnExit
+      timeout={3000}
+      classNames="popover-transition">
+      <div className="popover-section">
+        <div className="popover-notice">
+          {props.title}
+          <div className="popover-triangle"></div>
+        </div>
+      </div>
+    </CSSTransition>
+  );
+};
+
+const PlaybackTestPlayer = observer(() => {
+  const { rteEngineConfig } = EduClassroomConfig.shared;
+  const {
+    pretestUIStore: {
+      startPlaybackDeviceTest,
+      stopPlaybackDeviceTest,
+      localPlaybackTestVolume,
+      disable,
+    },
+  } = useStore();
+  let url = PretestAudio;
+
+  useEffect(() => {
+    if (rteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+      let isProduction = NODE_ENV === 'production';
+      const path = window.require('path');
+      url = isProduction
+        ? `${window.process.resourcesPath}/pretest-audio.mp3`
+        : path.resolve('./assets/pretest-audio.mp3');
     }
-  };
+    return stopPlaybackDeviceTest;
+  }, []);
 
-  const onChangeAudioVolume = async (type: string, value: any) => {
-    switch (type) {
-      case 'speaker': {
-        await changeTestSpeakerVolume(value);
-        break;
-      }
-      case 'microphone': {
-        await changeTestMicrophoneVolume(value);
-        break;
-      }
+  return (
+    <div className="device-volume-test">
+      <SvgImg type="speaker" style={{ color: '#0073FF' }} />
+      <Volume currentVolume={localPlaybackTestVolume} maxLength={33} style={{ marginLeft: 6 }} />
+      <Button
+        disabled={disable}
+        type="secondary"
+        style={{ marginLeft: 10 }}
+        onClick={() => {
+          startPlaybackDeviceTest(url);
+        }}>
+        {transI18n('media.test_speaker')}
+      </Button>
+    </div>
+  );
+});
+
+const PretestNotificationCenter = observer(() => {
+  const { pretestUIStore } = useStore();
+  const { errorToastQueue, removeToast } = pretestUIStore;
+
+  return (
+    <div className="pretest-toast">
+      <div style={{ justifyContent: 'center', display: 'flex' }}>
+        {errorToastQueue.map((value: any, idx: number) => (
+          <Toast
+            style={{ position: 'absolute', top: 50 * (idx + 1), zIndex: 9999 }}
+            key={`${value.id}`}
+            type={value.type}
+            closeToast={() => {
+              removeToast(`${value.id}`);
+            }}>
+            {transI18n(value.info)}
+          </Toast>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+export const TrackPlayer = observer(() => {
+  const {
+    pretestUIStore: { setupLocalVideo, isMirror },
+  } = useStore();
+
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      setupLocalVideo(ref.current, isMirror);
     }
-  };
+  }, [ref, isMirror]);
 
-  const onChangeBeauty = (type: string, value: any) => {
-    switch (type) {
-      case 'whitening':
-        setWhitening(value);
-        break;
-      case 'buffing':
-        setBuffing(value);
-        break;
-      case 'ruddy':
-        setRuddy(value);
-        break;
-    }
-    setBeautyEffectOptions({
-      lighteningLevel: whitening,
-      rednessLevel: ruddy,
-      smoothnessLevel: buffing,
-    });
-    window.localStorage.setItem(
-      'beautyEffectOptions',
-      JSON.stringify({
-        isBeauty,
-        lighteningLevel: whitening,
-        rednessLevel: ruddy,
-        smoothnessLevel: buffing,
-      }),
-    );
-  };
+  return <div style={{ width: '100%', height: '100%' }} ref={ref}></div>;
+});
 
-  const global = useGlobalContext();
+export const CameraPreviewPlayer = observer(() => {
+  const { pretestUIStore } = useStore();
+  const { localCameraOff } = pretestUIStore;
 
-  const history = useHistory();
+  return (
+    <>
+      <PretestVideoPlayerLocalCameraPlaceholder />
+      {!localCameraOff ? <TrackPlayer /> : null}
+    </>
+  );
+});
 
-  const handleOk = () => {
-    stopPretestCamera();
-    stopPretestMicrophone();
-    history.push(global?.params?.roomPath ?? '/classroom/1v1');
-  };
+export const CameraMirrorCheckBox = observer(() => {
+  const {
+    pretestUIStore: { setMirror, isMirror },
+  } = useStore();
 
-  const handleMirror = () => {
-    setMirror(!isMirror);
-  };
+  return (
+    <CheckBox
+      style={{ width: 12, height: 12 }}
+      checked={isMirror}
+      onChange={(e: any) => {
+        setMirror(e.target.checked);
+      }}
+    />
+  );
+});
 
-  const handleBeauty = () => {
-    setBeautyEffectOptions({
-      isBeauty: !isBeauty,
-      lighteningLevel: whitening,
-      rednessLevel: ruddy,
-      smoothnessLevel: buffing,
-    });
-    window.localStorage.setItem(
-      'beautyEffectOptions',
-      JSON.stringify({
-        isBeauty: !isBeauty,
-        lighteningLevel: whitening,
-        rednessLevel: ruddy,
-        smoothnessLevel: buffing,
-      }),
-    );
-    setBeauty(!isBeauty);
-  };
+const CameraMirrorCheckBoxContainer = () => {
+  return (
+    <span className="device-mirror-box">
+      <CameraMirrorCheckBox />
+      <span className="camera-mode" style={{ marginLeft: 5 }}>
+        {transI18n('media.mirror')}
+      </span>
+    </span>
+  );
+};
 
-  const [speakerVolume] = useState<number>(getAudioPlaybackVolume());
-  const [microphoneVolume] = useState<number>(getAudioRecordingVolume());
+const CameraDeviceManager = () => {
+  return (
+    <div className="device-choose">
+      <div className="device-title">
+        <span className="device-title-text">{transI18n('media.camera')}</span>
+        <div
+          style={{
+            display: 'flex',
+          }}>
+          <CameraMirrorCheckBoxContainer />
+        </div>
+      </div>
+      <div className="select-section">
+        <VideoDeviceNotification />
+        <CameraSelect />
+      </div>
+      <div className="pretest-video-wrap">
+        <CameraPreviewPlayer />
+      </div>
+    </div>
+  );
+};
+
+const RecordingDeviceManager = () => {
+  const {
+    pretestUIStore: { startRecordingDeviceTest, stopRecordingDeviceTest },
+  } = useStore();
+  useEffect(() => {
+    startRecordingDeviceTest(500);
+    return stopRecordingDeviceTest;
+  });
+
+  return (
+    <div className="device-choose">
+      <div className="device-title">
+        <span className="device-title-text">{transI18n('media.microphone')}</span>
+      </div>
+      <div className="select-section">
+        <AudioRecordingDeviceNotification />
+        <MicrophoneSelect />
+      </div>
+      <div className="device-volume-test">
+        <SvgImg type="microphone-on-outline" style={{ color: '#0073FF' }} />
+        <LocalAudioVolumeIndicator />
+      </div>
+    </div>
+  );
+};
+
+const PlayoutDeviceManager = () => {
+  return (
+    <div className="device-choose">
+      <div className="device-title">
+        <span className="device-title-text">{transI18n('media.speaker')}</span>
+      </div>
+      <div className="select-section">
+        <AudioPlaybackDeviceNotification />
+        <PlaybackSelect />
+      </div>
+      <PlaybackTestPlayer />
+    </div>
+  );
+};
+
+export interface PretestProps extends BaseProps {
+  className?: string;
+  onOK?: () => void;
+}
+
+export const RoomPretest: React.FC<PretestProps> = ({ className, onOK, ...restProps }) => {
+  const cls = classnames({
+    [`pretest`]: 1,
+    [`${className}`]: !!className,
+  });
 
   return (
     <div className="fixed-container">
       <Modal
-        title={t('pretest.settingTitle')}
+        title={transI18n('pretest.settingTitle')}
         width={720}
-        footer={[<Button action="ok">{t('pretest.finishTest')}</Button>]}
-        onOk={handleOk}
+        footer={[<Button action="ok">{transI18n('pretest.finishTest')}</Button>]}
+        onOk={onOK}
         onCancel={() => {}}
         btnId="device_assert">
-        <Pretest
-          //@ts-ignore
-          pretestChannel={pretestNoticeChannel}
-          speakerTestUrl={'https://webdemo.agora.io/pretest_audio.mp3'}
-          isMirror={isMirror}
-          onChangeDevice={onChangeDevice}
-          onChangeAudioVolume={onChangeAudioVolume}
-          onSelectMirror={handleMirror}
-          cameraList={cameraList}
-          cameraId={cameraId}
-          microphoneList={microphoneList}
-          microphoneId={microphoneId}
-          speakerList={speakerList}
-          speakerId={speakerId}
-          isNative={isNative}
-          videoComponent={VideoPreviewPlayer}
-          volumeComponent={() => <VolumeIndicationView />}
-          isBeauty={isBeauty}
-          onSelectBeauty={handleBeauty}
-          whitening={whitening}
-          buffing={buffing}
-          ruddy={ruddy}
-          onChangeBeauty={onChangeBeauty}
-          speakerVolume={speakerVolume}
-          microphoneVolume={microphoneVolume}
-        />
+        <div className={cls} {...restProps}>
+          <PretestNotificationCenter />
+          <div className="pretest-left" style={{ width: 318 }}>
+            <CameraDeviceManager />
+          </div>
+          <div className="pretest-right">
+            <RecordingDeviceManager />
+            <PlayoutDeviceManager />
+          </div>
+        </div>
       </Modal>
-      {/* <ToastContainer /> */}
     </div>
   );
-});
+};
+
+export type RoomPretestContainerProps = {
+  onOK?: () => void;
+};
+
+export const RoomPretestContainer: React.FC<RoomPretestContainerProps> = (
+  { onOK } = { onOK: () => console.log('handle on ok') },
+) => {
+  return <RoomPretest onOK={onOK} />;
+};

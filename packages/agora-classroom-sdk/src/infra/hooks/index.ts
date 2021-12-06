@@ -3,7 +3,7 @@ import { MobXProviderContext } from 'mobx-react';
 import { createContext, useContext } from 'react';
 import { UIStore } from '@/infra/stores/app/ui';
 
-export const UIContext = createContext<UIStore>(null as unknown as UIStore);
+export const UIContext = createContext<UIStore>(new UIStore());
 
 export const useHomeStore = (): HomeStore => {
   const context = useContext<HomeContext>(MobXProviderContext);
@@ -14,7 +14,7 @@ export type HomeContext = Record<string, HomeStore>;
 
 export type AudienceParams = Record<string, any>;
 export const useAudienceParams = (params?: string): string | { [key: string]: any } | null => {
-  const searchString = location.href.split('?').pop();
+  const searchString = window.location.href.split('?').pop();
   const urlParams = new URLSearchParams(searchString);
   const audienceParams: Record<string, any> = {};
   if (!params) {

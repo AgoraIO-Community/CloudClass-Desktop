@@ -1,11 +1,30 @@
-import { EduSDKLogger } from './edu-sdk-logger';
+import Dexie, { Table } from 'dexie';
 
-let logDB: EduSDKLogger | null = null;
-export const openDB = () => {
-  if (!logDB) {
-    logDB = new EduSDKLogger();
-  }
-  return logDB;
+const DATABASE_NAME = `AgoraLogger`;
+const TABLE_NAME = `logs`;
+
+type Timestamp = number;
+
+type LogSchema = {
+  content: string;
+  created_at: Timestamp;
+  timestamp: string;
 };
 
-export const db = openDB();
+export class LoggerDB extends Dexie {
+  logs: Table<LogSchema, number>;
+
+  constructor() {
+    super(DATABASE_NAME);
+    this.openDatabase();
+    this.logs = this.table(TABLE_NAME);
+  }
+
+  openDatabase() {
+    this.version(1).stores({
+      logs: '++id, content, created_at',
+    });
+  }
+}
+
+export const db = new LoggerDB();

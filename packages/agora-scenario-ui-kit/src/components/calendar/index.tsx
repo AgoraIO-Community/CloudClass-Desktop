@@ -8,13 +8,12 @@ import React, {
   useEffect,
 } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '../../components/interface/base-props';
 import './index.css';
 import RcDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.min.css';
 import dayjs from 'dayjs';
-import { Icon } from '~components';
-import { SvgImg } from '~components/svg-img';
+import { Icon, SvgImg } from '../../components';
 
 export interface CalendarProps extends BaseProps {
   className?: string;

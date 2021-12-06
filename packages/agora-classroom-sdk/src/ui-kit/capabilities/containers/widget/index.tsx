@@ -1,48 +1,35 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
+import { Radio } from 'antd';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
-import { IAgoraWidget, useAppPluginContext } from 'agora-edu-core';
-import './index.css';
-import { Dependencies } from '../ext-app/dependencies';
-import { Adapter } from './adapter';
 import { observer } from 'mobx-react';
+import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
+import { Button } from '~ui-kit';
+import { useStore } from '~hooks/use-edu-stores';
+import './index.css';
+interface BaseProps {
+  style?: CSSProperties;
+  className?: any;
+  id?: string;
+}
 
 export interface WidgetProps extends BaseProps {
-  widgetComponent: IAgoraWidget;
+  widgetComponent: any;
   widgetProps?: any;
 }
 
 export const Widget: FC<WidgetProps> = observer(
   ({ className, widgetComponent, widgetProps = {}, ...restProps }) => {
     const ref = useRef<HTMLDivElement | null>(null);
-    const { contextInfo } = useAppPluginContext();
-
-    const { userUuid, userName, userRole, roomName, roomUuid, roomType, language } = contextInfo;
-
-    const { events, actions } = Adapter();
-    const context = {
-      // properties: properties,
-      events,
-      actions,
-      dependencies: Dependencies,
-      localUserInfo: {
-        userUuid: userUuid,
-        userName: userName,
-        roleType: userRole,
-      },
-      roomInfo: {
-        roomName,
-        roomUuid,
-        roomType,
-      },
-      language: language,
-    };
-
+    const uiStore = useStore();
+    widgetProps = { ...widgetProps, uiStore };
     useEffect(() => {
       if (ref.current && widgetComponent) {
         // only run for very first time
-        widgetComponent.widgetDidLoad(ref.current, context, widgetProps);
+        widgetComponent.widgetDidLoad(ref.current, widgetProps);
       }
+      return () => {
+        widgetComponent.widgetWillUnload();
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, widgetComponent]);
 
@@ -52,3 +39,31 @@ export const Widget: FC<WidgetProps> = observer(
     return <div ref={ref} className={cls} {...restProps}></div>;
   },
 );
+
+export const WidgetOuter: FC<any> = observer(() => {
+  const [visible, setVisible] = useState(false);
+  const [chatValue, setChatValue] = useState('hxchat');
+
+  const onChange = (e: any) => {
+    setChatValue(e.target.value);
+  };
+
+  return !visible ? (
+    <>
+      <Radio.Group onChange={onChange} value={chatValue}>
+        <Radio value="agora">agora chat</Radio>
+        <Radio value="hxchat">hxchat</Radio>
+      </Radio.Group>
+      <Button onClick={(_) => setVisible((pre) => !pre)}>join chat</Button>
+    </>
+  ) : (
+    <>
+      {chatValue === 'agora' && (
+        <Widget widgetComponent={new AgoraChatWidget()} key="chat-widge" className="chat-panel" />
+      )}
+      {chatValue === 'hxchat' && (
+        <Widget widgetComponent={new AgoraHXChatWidget()} key="chat-widge" className="chat-panel" />
+      )}
+    </>
+  );
+});

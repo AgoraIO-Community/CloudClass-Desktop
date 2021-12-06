@@ -1,15 +1,16 @@
-import React, { FC } from 'react';
-import { transI18n } from '~components/i18n';
+import React, { CSSProperties, FC } from 'react';
+import { transI18n } from '../../../components';
 import { Message } from '../interface';
 import './index.css';
 
 export interface ChatMessageProps extends Message {
   isOwn: boolean;
+  style?: CSSProperties;
 }
 
-export const ChatMessage: FC<ChatMessageProps> = ({ isOwn, username, content, role }) => {
+export const ChatMessage: FC<ChatMessageProps> = ({ isOwn, username, content, role, style }) => {
   return (
-    <div className="chat-message">
+    <div className="chat-message" style={style ? style : {}}>
       <div className={`chat-message-${isOwn ? 'right' : 'left'}`}>
         <div
           className="chat-message-username"

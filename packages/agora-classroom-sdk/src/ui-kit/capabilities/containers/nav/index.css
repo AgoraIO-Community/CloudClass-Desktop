@@ -1,0 +1,133 @@
+/* FIXME: etxtract colors to tailwind config */
+
+td.biz-col {
+  font-size: 13px;
+  display: table-cell;
+  font-weight: 400;
+  vertical-align: middle;
+}
+
+td.biz-col.label {
+  padding-right: 2px;
+}
+
+td.biz-col.value {
+  padding-left: 2px;
+}
+
+td.biz-col.value.left {
+  padding-right: 7px;
+}
+
+td.biz-col.label.right {
+  padding-left: 7px;
+}
+
+.biz-header {
+  background: white;
+  /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
+  padding: 0 15px 0 8px;
+  border-top: 0px;
+  border: 1px solid #ececf1;
+}
+
+.biz-header-title-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.biz-subtitle .line:first-child {
+  padding-right: 8px;
+}
+
+.biz-header-title-wrap > div {
+  padding: 0 19px;
+  border-color: #d2d2e2;
+}
+
+.biz-header-title {
+  color: #191919;
+  font-size: 13px;
+}
+
+.header-actions {
+  display: flex;
+}
+
+.header-actions > svg {
+  margin-left: 27px;
+  font-size: 24px;
+  color: #3f5c8f;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* 因为 iconfont icon设计不合规无法对齐 特此 hack */
+.biz-signal-quality {
+  text-align: center;
+  width: 40px;
+}
+.biz-signal-quality.excellent path {
+  fill: #0bad69;
+}
+
+.biz-signal-quality.good path {
+  fill: #f5b723;
+}
+
+.biz-signal-quality.bad path {
+  fill: #f04c36;
+}
+
+.biz-signal-quality.unknown path {
+  fill: #bdbdca;
+}
+
+.biz-signal-content-row {
+  display: flex;
+  justify-content: space-between;
+}
+.biz-signal-content-row.margin-top-9 {
+  margin-top: 9px;
+}
+
+.biz-signal-content-row > .padding-right-27 {
+  padding-right: 27px;
+}
+
+.biz-col {
+  font-size: 13px;
+  font-weight: 400;
+  display: flex;
+}
+
+.biz-col > label {
+  color: #586376;
+}
+
+.biz-col > span {
+  color: #191919;
+}
+.biz-col > span {
+  color: #191919;
+}
+.biz-col > .label-info-list {
+  color: #191919;
+}
+.biz-col > .label-info-list > span {
+  color: #191919;
+}
+.biz-col > .right-gap {
+  margin-right: 5px;
+}
+.biz-col > .left-gap {
+  margin-left: 5px;
+}
+.fr {
+  float: right;
+}

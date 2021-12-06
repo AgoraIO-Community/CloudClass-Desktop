@@ -1,70 +1,88 @@
-import React, { useLayoutEffect, useRef, useEffect } from 'react';
-import type { AgoraWidgetHandle, AgoraWidgetContext, IAgoraWidget } from 'agora-edu-core';
-import { observer, Provider } from 'mobx-react';
-import ReactDOM from 'react-dom';
-import { PluginStore } from './store';
-import { usePluginStore } from './hooks';
-import { get, set } from 'lodash';
 //@ts-ignore
 // const hx = require()
 import * as hx from 'agora-chat-widget';
+import {
+  ClassroomState,
+  EduClassroomConfig,
+  EduClassroomUIStore,
+  EduRoomTypeEnum,
+  IAgoraWidget,
+} from 'agora-edu-core';
+import { set } from 'lodash';
+import { observer } from 'mobx-react';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 
 type AppProps = {
   orgName: string;
   appName: string;
+  uiStore: EduClassroomUIStore;
 };
 
 const App: React.FC<AppProps> = observer((props) => {
-  const pluginStore = usePluginStore();
-  const { localUserInfo, roomInfo } = pluginStore.context;
-  const chatroomId = get(pluginStore.props, 'chatroomId');
-  const orgName = get(pluginStore.props, 'orgName');
-  const appName = get(pluginStore.props, 'appName');
+  const { uiStore, ...resetProps } = props;
+  const [minimize, toggleChatMinimize] = useState<boolean>(false);
+  const isFullScreen = false; // todo from uistore
+  const isJoined =
+    uiStore.classroomStore.connectionStore.classroomState === ClassroomState.Connected;
 
-  const { events, actions } = pluginStore.context;
+  const localUserInfo = {
+    userUuid: EduClassroomConfig.shared.sessionInfo.userUuid,
+    userName: EduClassroomConfig.shared.sessionInfo.userName,
+    roleType: EduClassroomConfig.shared.sessionInfo.role,
+  };
+  const roomInfo = {
+    roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+    roomName: EduClassroomConfig.shared.sessionInfo.roomName,
+    roomType: EduClassroomConfig.shared.sessionInfo.roomType,
+  };
+
+  const context = {
+    localUserInfo,
+    roomInfo,
+  };
+  const globalContext = {
+    isFullScreen,
+    showChat: [EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomBigClass].includes(
+      EduClassroomConfig.shared.sessionInfo.roomType,
+    ),
+    isShowMiniIcon: ![EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomBigClass].includes(
+      EduClassroomConfig.shared.sessionInfo.roomType,
+    ),
+  };
+
+  const chatroomId = uiStore.classroomStore.roomStore.imConfig?.chatRoomId;
+  const appName = uiStore.classroomStore.roomStore.imConfig?.appName;
+  const orgName = uiStore.classroomStore.roomStore.imConfig?.orgName;
 
   useEffect(() => {
-    events.chat.subscribe((state: any) => {
-      pluginStore.chatContext = state;
-    });
-    events.global.subscribe((state: any) => {
-      pluginStore.globalContext = state;
-    });
-    return () => {
-      events.global.unsubscribe();
-    };
-  }, []);
-
-  const { chatCollapse } = pluginStore.chatContext;
-
-  const { isJoined, isFullScreen } = pluginStore.globalContext;
-
-  const { toggleChatMinimize } = actions.chat;
-
-  useEffect(() => {
-    if ((isFullScreen && !chatCollapse) || (!isFullScreen && chatCollapse)) {
+    if ((isFullScreen && !minimize) || (!isFullScreen && minimize)) {
       // 第一个条件 点击全屏默认聊天框最小化
       // 第二个条件，全屏幕最小化后，点击恢复（非全屏），恢复聊天框
-      toggleChatMinimize();
+      toggleChatMinimize((pre: boolean) => !pre);
     }
   }, [isFullScreen]);
 
   set(
-    pluginStore,
+    uiStore,
     'props.imAvatarUrl',
     'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png',
   );
   // set(pluginStore, 'props.imUserName', userName);
 
+  const hxStore = {
+    context,
+    globalContext,
+    props: { ...resetProps, chatroomId, appName, orgName },
+  };
   const domRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (domRef.current && isJoined) {
+    if (domRef.current && isJoined && chatroomId) {
       //@ts-ignore
-      console.log('store-----', pluginStore);
-      hx.renderHXChatRoom(domRef.current, pluginStore);
+      hx.renderHXChatRoom(domRef.current, hxStore);
     }
-  }, [domRef.current, isJoined, isFullScreen]);
+  }, [domRef.current, isJoined, isFullScreen, chatroomId]);
 
   return (
     <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>
@@ -75,20 +93,12 @@ const App: React.FC<AppProps> = observer((props) => {
 
 export class AgoraHXChatWidget implements IAgoraWidget {
   widgetId = 'io.agora.widget.hx.chatroom';
-  store?: PluginStore;
 
   constructor() {}
 
-  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, props: any): void {
-    this.store = new PluginStore(ctx, props);
-    console.log('widgetDidLoad', props);
+  widgetDidLoad(dom: Element, props: any): void {
     // hx.renderHXChatRoom(dom)
-    ReactDOM.render(
-      <Provider store={this.store}>
-        <App {...props} />
-      </Provider>,
-      dom,
-    );
+    ReactDOM.render(<App {...props} />, dom);
   }
   // TODO: uncertain
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {}

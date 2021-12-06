@@ -1,17 +1,9 @@
-import { ApiBase, ApiBaseInitializerParams } from './base';
+import { ApiBase } from 'agora-rte-sdk';
 
-type LoginParams = {
-  roomUuid: string;
-  rtmUid: string;
-  role: string;
+export type ApiBaseInitializerParams = {
+  sdkDomain: string;
+  appId: string;
 };
-
-type LoginResult = Promise<{
-  rtmToken: string;
-  userUuid: string;
-}>;
-
-type ConfigParams = Pick<ApiBaseInitializerParams, 'sdkDomain' | 'appId'>;
 
 function getHomeApiRegion(region: string) {
   const map: Record<string, string> = {
@@ -23,12 +15,20 @@ function getHomeApiRegion(region: string) {
   return map[region] || 'bj2';
 }
 
+const urlTpl = `%sdkDomain%/edu/v2/users/%userUuid%/token`;
+
 export class HomeApi extends ApiBase {
-  region: string;
-  constructor(params: ApiBaseInitializerParams) {
-    super(params);
-    this.prefix = `${this.sdkDomain}/edu`.replace('%app_id%', this.appId);
-    this.region = 'CN';
+  static shared = new HomeApi();
+  private _params: ApiBaseInitializerParams = {
+    sdkDomain: '',
+    appId: '',
+  };
+  private _region: string;
+
+  constructor() {
+    super();
+    this.pathPrefix = `${this._params.sdkDomain}/edu`.replace('%app_id%', this._params.appId);
+    this._region = 'CN';
   }
 
   async login(userUuid: string): Promise<{
@@ -37,34 +37,30 @@ export class HomeApi extends ApiBase {
     appId: string;
   }> {
     const res = await this.fetch({
-      url: `/v2/users/${userUuid}/token`,
+      full_url: this.getFullURL().replace('%userUuid%', userUuid),
       method: 'GET',
     });
+
     return res.data;
   }
 
-  updateConfig(params: ConfigParams) {
-    this.appId = params.appId;
-    // this.sdkDomain = params.sdkDomain
-    // this.prefix = `${this.sdkDomain}/edu`.replace("%app_id", this.appId)
+  setAppId(appId: string) {
+    this._params.appId = appId;
   }
 
   setRegion(region: string, sdkDomain: string) {
-    this.region = region;
-    this.setSDKDomain(sdkDomain);
+    this._region = region;
+    this._params.sdkDomain = sdkDomain;
   }
 
-  setSDKDomain(sdkDomainParams: string) {
-    const prefixRegion = getHomeApiRegion(this.region);
-    const sdkDomain = `${sdkDomainParams}/edu`.replace('%region%', prefixRegion);
-    this.sdkDomain = sdkDomain;
-    this.prefix = this.sdkDomain;
+  setSDKDomain(sdkDomain: string) {
+    this._params.sdkDomain = sdkDomain;
+  }
+
+  private getFullURL() {
+    return urlTpl
+      .replace('%sdkDomain%', this._params.sdkDomain || '')
+      .replace('%region%', this._region || '')
+      .replace('%appId%', this._params.appId || '');
   }
 }
-
-export const homeApi = new HomeApi({
-  sdkDomain: ``,
-  appId: ``,
-  rtmToken: '',
-  rtmUid: '',
-});

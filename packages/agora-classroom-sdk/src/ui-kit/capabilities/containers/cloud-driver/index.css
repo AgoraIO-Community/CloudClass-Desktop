@@ -1,0 +1,7 @@
+.bottom-col {
+  position: absolute;
+  bottom: 8px;
+  align-items: center;
+  align-self: center;
+  max-height: 40px;
+}

@@ -51,3 +51,6 @@ packages/agora-edu-core/docs
 packages/agora-edu-core/src/protobuf/index.*
 electron_deps/
 packages/agora-classroom-sdk/agoraAddonlog.txt
+.env.local.yarn
+.yarn/
+.vscode/

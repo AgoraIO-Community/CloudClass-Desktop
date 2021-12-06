@@ -1,69 +1,57 @@
-import {
-  EduTextMessage,
-  EduCustomMessage,
-  EduStream,
-  EduUser,
-  EduStreamData,
-  EduUserData,
-} from './../../interfaces/index';
 import { EventEmitter } from 'events';
-import AgoraRTM from 'agora-rtm-sdk';
-import { RtmLogLevel } from './constants';
-import { get } from 'lodash';
-import { EduLogger } from '../logger';
-import { GenericErrorWrapper } from '../utils/generic-error';
-import { rteReportService } from '../services/report-service';
+import AgoraRTM, {
+  RtmStatusCode,
+  RtmChannel,
+  RtmClient,
+  RtmMessage,
+  RtmTextMessage,
+} from 'agora-rtm-sdk';
+import { Logger } from '../logger';
+import { AgoraRteEngineConfig, AgoraRteLogLevel } from '../../configs';
+import { ReportService } from '../services/report';
+import { AGRteErrorCode, RteErrorCenter } from '../utils/error';
+import { AgoraRteEventType } from '../processor/channel-msg/handler';
+// import { rteReportService } from '../services/report-service';
 
 //@ts-ignore
-AgoraRTM.setParameter({
-  RECONNECTING_AP_INTERVAL: 2000,
-  RECONNECTING_AP_NUM: 1,
-  DISABLE_MESSAGE_COMPRESSION: true,
-});
+// TODO
+// AgoraRTM.setParameter({
+//   RECONNECTING_AP_INTERVAL: 2000,
+//   RECONNECTING_AP_NUM: 1,
+//   DISABLE_MESSAGE_COMPRESSION: true,
+// });
 
-// const logFilter = ENABLE_LOG ? AgoraRTM.LOG_FILTER_DEBUG : AgoraRTM.LOG_FILTER_OFF;
-//@ts-ignore
-const logFilter = AgoraRTM.LOG_FILTER_DEBUG;
-
-export enum StepPhase {
-  isFinished = 1,
+export enum AgoraRtmConnectionState {
+  DISCONNECTED = 'DISCONNECTED',
+  CONNECTING = 'CONNECTING',
+  CONNECTED = 'CONNECTED',
+  RECONNECTING = 'RECONNECTING',
+  ABORTED = 'ABORTED',
 }
 
-interface RTMWrapperInitConfig {
-  logLevel: typeof RtmLogLevel[0];
-  uploadLog: boolean;
-  appId: string;
-  channelName: string;
-  uid: string;
-  token: string;
+interface AGRtmManagerInitConfig {
+  uploadLog?: boolean;
 }
 
-export class RTMWrapper extends EventEmitter {
-  public localUid?: string;
+const isTextMessage = (message: any): message is RtmTextMessage => {
+  return message.text !== undefined;
+};
 
-  public logged?: boolean;
+export class AGRtmManager extends EventEmitter {
+  public connectionState: AgoraRtmConnectionState = AgoraRtmConnectionState.DISCONNECTED;
 
-  public connectionState: string = 'DISCONNECTED';
-
-  public prevConnectionState: string = '';
+  public prevConnectionState: AgoraRtmConnectionState = AgoraRtmConnectionState.DISCONNECTED;
 
   public channels: Record<string, any> = {};
 
-  public _client?: ReturnType<typeof AgoraRTM.createInstance>;
+  private _client?: ReturnType<typeof AgoraRTM.createInstance>;
 
-  public _streamList: EduStream[] = [];
-  public _userList: EduUser[] = [];
-
-  constructor(public readonly agoraRtm: typeof AgoraRTM) {
+  constructor() {
     super();
-    this.localUid = undefined;
-    this.logged = false;
-    this.connectionState = 'DISCONNECTED';
-    this.prevConnectionState = '';
+    this.connectionState = AgoraRtmConnectionState.DISCONNECTED;
+    this.prevConnectionState = AgoraRtmConnectionState.DISCONNECTED;
     this.channels = {};
     this._client = undefined;
-    this._streamList = [];
-    this._userList = [];
   }
 
   get client(): ReturnType<typeof AgoraRTM.createInstance> {
@@ -72,6 +60,134 @@ export class RTMWrapper extends EventEmitter {
 
   get sessionId(): string {
     return (this.client as any).context.sid;
+  }
+
+  get logFilter() {
+    let logFilter = AgoraRTM.LOG_FILTER_INFO;
+    const logLevel = AgoraRteEngineConfig.shared.logLevel;
+    switch (logLevel) {
+      case AgoraRteLogLevel.WARN:
+        logFilter = AgoraRTM.LOG_FILTER_WARNING;
+        break;
+      case AgoraRteLogLevel.OFF:
+        logFilter = AgoraRTM.LOG_FILTER_OFF;
+        break;
+      case AgoraRteLogLevel.ERROR:
+        logFilter = AgoraRTM.LOG_FILTER_ERROR;
+        break;
+    }
+    return logFilter;
+  }
+
+  async login(token: string, uid: string, configs: AGRtmManagerInitConfig) {
+    let client;
+    try {
+      AgoraRTM.setArea({ areaCodes: [AgoraRteEngineConfig.shared.rtmRegion] });
+      client = AgoraRTM.createInstance(AgoraRteEngineConfig.shared.appId, {
+        enableLogUpload: configs.uploadLog,
+        logFilter: this.logFilter,
+      });
+      Logger.info('[rtm] wrapper init');
+      client.on(
+        'ConnectionStateChanged',
+        (newState: RtmStatusCode.ConnectionState, reason: RtmStatusCode.ConnectionChangeReason) => {
+          Logger.info('[rtm] [Wrapper] ConnectionStateChanged', newState, reason);
+          this.prevConnectionState = this.connectionState;
+          this.connectionState = newState as unknown as AgoraRtmConnectionState;
+          this.emit(AgoraRteEventType.RtmConnectionStateChanged, { newState, reason });
+        },
+      );
+      client.on('MessageFromPeer', (message: RtmMessage, peerId: string, props: any) => {
+        if (isTextMessage(message)) {
+          Logger.debug(`[rtm] [Wrapper] MessageFromPeer ${message.text}`);
+          this.emit('MessageFromPeer', { message: message.text, peerId, props });
+        }
+      });
+      await client.login({ uid, token });
+      this._client = client;
+    } catch (e) {
+      //cleanup
+      this._destroyRtm(client);
+      RteErrorCenter.shared.handleThrowableError(AGRteErrorCode.RTM_ERR_LOGIN_FAIL, e as Error);
+    }
+  }
+
+  public createObserverChannel(channelName: string): [RtmChannel, EventEmitter] {
+    const client = this.client;
+    return [client.createChannel(channelName), new EventEmitter()];
+  }
+
+  public async join(channel: RtmChannel, bus: EventEmitter, channelName: string) {
+    try {
+      // REPORT
+      ReportService.shared.startTick('joinRoom', 'rtm', 'joinChannel');
+      if (this.channels[channelName] === channel) {
+        // channel exists, skip join
+        return Logger.warn(
+          `[rtm] skip channel ${channelName} join as the channel is already joined`,
+        );
+      }
+
+      channel.on('ChannelMessage', (message: any, memberId: string, messagePros: any) => {
+        console.log('channel message');
+        bus.emit('ChannelMessage', {
+          channelName,
+          message,
+          memberId,
+          messagePros,
+        });
+      });
+      channel.on('MemberJoined', (memberId: string) => {
+        bus.emit('MemberJoined', {
+          channelName,
+          memberId,
+        });
+      });
+      channel.on('MemberLeft', (memberId: string) => {
+        bus.emit('MemberLeft', {
+          channelName,
+          memberId,
+        });
+      });
+      channel.on('MemberCountUpdated', (memberCount: number) => {
+        bus.emit('MemberCountUpdated', {
+          channelName,
+          memberCount: memberCount,
+        });
+      });
+
+      await channel.join();
+      this.channels[channelName] = channel;
+      ReportService.shared.reportElapse('joinRoom', 'rtm', {
+        api: 'joinChannel',
+        result: true,
+      });
+    } catch (err) {
+      ReportService.shared.reportElapse('joinRoom', 'rtm', {
+        api: 'joinChannel',
+        result: false,
+        //TODO
+        errCode: `${(err as Error).message}`,
+      });
+      RteErrorCenter.shared.handleThrowableError(AGRteErrorCode.RTM_ERR_JOIN_FAILED, err as Error);
+    }
+  }
+
+  public async leave(channelName: string) {
+    try {
+      const channel = this.channels[channelName];
+      if (channel) {
+        await channel.leave();
+        channel.removeAllListeners();
+        delete this.channels[channelName];
+      }
+    } catch (err) {
+      // don't throw errors for leave failure
+      RteErrorCenter.shared.handleNonThrowableError(
+        AGRteErrorCode.RTM_ERR_LEAVE_FAILED,
+        err as Error,
+      );
+    }
   }
 
   private releaseChannels() {
@@ -87,193 +203,41 @@ export class RTMWrapper extends EventEmitter {
     this._client && this.release(this._client);
   }
 
+  release(eventClient: any) {
+    eventClient.removeAllListeners();
+    Logger.info('[AGRtmManager]  eventClient removeAllListeners ');
+  }
+
   reset() {
-    this.localUid = undefined;
-    this.logged = false;
-    this.connectionState = 'DISCONNECTED';
-    this.prevConnectionState = '';
+    this.connectionState = AgoraRtmConnectionState.DISCONNECTED;
+    this.prevConnectionState = AgoraRtmConnectionState.DISCONNECTED;
     this.releaseClient();
     this.releaseChannels();
     this.channels = {};
     if (this.client) {
       this.client.removeAllListeners();
-      EduLogger.info('[rtmWrapper] removeAllListeners');
+      Logger.info('[AGRtmManager] removeAllListeners');
     }
     this._client = undefined;
     this.removeAllListeners();
-    EduLogger.info('[rtmWrapper] self removeAllListeners');
-    this._streamList = [];
-    this._userList = [];
+    Logger.info('[AGRtmManager] self removeAllListeners');
   }
 
-  addStream(stream: EduStream) {
-    this._streamList.push(stream);
-  }
-
-  updateStream(stream: EduStream) {
-    const streamIndex = this._streamList.findIndex(
-      (t: EduStream) => t.streamUuid === stream.streamUuid,
-    );
-    const targetStream = this._streamList[streamIndex];
-    if (targetStream && targetStream) {
-      this._streamList[streamIndex];
-    }
-  }
-
-  resetDataList() {
-    this._streamList = [];
-    this._userList = [];
-  }
-
-  release(eventClient: any) {
-    eventClient.removeAllListeners();
-    EduLogger.info('[rtmWrapper]  eventClient removeAllListeners ');
-  }
-
-  async login(config: any) {
-    const client = this.agoraRtm.createInstance(config.appId, {
-      enableLogUpload: config.uploadLog,
-      logFilter: logFilter,
-    });
-    client.on('ConnectionStateChanged', (newState: string, reason: string) => {
-      this.prevConnectionState = this.connectionState;
-      this.connectionState = newState;
-      this.emit('ConnectionStateChanged', { newState, reason });
-    });
-    client.on('MessageFromPeer', (message: any, peerId: string, props: any) => {
-      this.emit('MessageFromPeer', { message, peerId, props });
-    });
-    await client.login({
-      uid: config.userUuid,
-      token: config.rtmToken,
-    });
-    this._client = client;
-  }
-
-  async init(config: RTMWrapperInitConfig) {
-    const client = this.agoraRtm.createInstance(config.appId, {
-      enableLogUpload: config.uploadLog,
-      logFilter: logFilter,
-    });
-    let channel = null;
-    EduLogger.info('[rtm]  wrapper init');
+  private _destroyRtm(client?: RtmClient) {
     try {
-      client.on('ConnectionStateChanged', (newState: string, reason: string) => {
-        EduLogger.info('[rtm] [Wrapper] ConnectionStateChanged');
-        this.prevConnectionState = this.connectionState;
-        this.connectionState = newState;
-        this.emit('ConnectionStateChanged', { newState, reason });
-      });
-      client.on('MessageFromPeer', (message: any, peerId: string, props: any) => {
-        EduLogger.info('[rtm] [Wrapper] MessageFromPeer');
-        this.emit('MessageFromPeer', { message, peerId, props });
-      });
-      await client.login({ uid: config.uid, token: config.token });
-      this._client = client;
-      this.channels[config.channelName] = channel;
-      this.logged = true;
-    } catch (err) {
-      if (client) {
-        await client.logout();
-      }
-      this.reset();
-      throw GenericErrorWrapper(err);
-    }
-  }
-
-  public createObserverChannel(config: any): any[] {
-    const client = this.client;
-    return [client.createChannel(config.channelName), new EventEmitter()];
-  }
-
-  private _channels: Record<string, any> = {};
-
-  public async join(channel: any, bus: any, config: any) {
-    try {
-      // REPORT
-      rteReportService.startTick('joinRoom', 'rtm', 'joinChannel');
-      await this._join(channel, bus, config);
-      rteReportService.reportElapse('joinRoom', 'rtm', {
-        api: 'joinChannel',
-        result: true,
-      });
+      client?.logout();
     } catch (e) {
-      rteReportService.reportElapse('joinRoom', 'rtm', {
-        api: 'joinChannel',
-        result: false,
-        errCode: `${e.code || e.message}`,
-      });
-      throw e;
+      // don't throw errors for destroy failure
+      RteErrorCenter.shared.handleNonThrowableError(
+        AGRteErrorCode.RTM_ERR_DESTROY_FAILED,
+        e as Error,
+      );
     }
   }
 
-  private async _join(channel: any, bus: any, config: any) {
-    try {
-      channel.on('ChannelMessage', (message: any, memberId: string, messagePros: any) => {
-        EduLogger.info('[rtm] ChannelMessage', message);
-        bus.emit('ChannelMessage', {
-          channelName: config.channelName,
-          message,
-          memberId,
-          messagePros,
-        });
-        // this.emit('ChannelMessage', {
-        //   channelName: config.channelName,
-        //   message,
-        //   memberId,
-        //   messagePros,
-        // })
-      });
-      channel.on('MemberJoined', (memberId: string) => {
-        bus.emit('MemberJoined', {
-          channelName: config.channelName,
-          memberId,
-        });
-      });
-      channel.on('MemberLeft', (memberId: string) => {
-        bus.emit('MemberLeft', {
-          channelName: config.channelName,
-          memberId,
-        });
-      });
-      channel.on('MemberCountUpdated', (memberCount: number) => {
-        bus.emit('MemberCountUpdated', {
-          channelName: config.channelName,
-          memberCount: memberCount,
-        });
-      });
-      await channel.join();
-      this.channels[config.channelName] = channel;
-    } catch (err) {
-      throw GenericErrorWrapper(err);
-    }
-  }
-
-  public async leave(config: any) {
-    try {
-      const channel = this.channels[config.channelName];
-      if (channel) {
-        await channel.leave();
-        channel.removeAllListeners();
-        delete this.channels[config.channelName];
-      }
-    } catch (err) {
-      throw GenericErrorWrapper(err);
-    }
-  }
-
-  public async destroyRtm() {
-    if (this.client) {
-      await this.client.logout();
-    }
-    for (let channelName of Object.keys(this.channels)) {
-      if (this.channels[channelName]) {
-        this.channels[channelName].removeAllListeners();
-        EduLogger.info('[rtmWrapper]  removeAllListeners ', channelName);
-        this.channels[channelName] = undefined;
-      }
-    }
-    this.reset();
+  public destroyRtm() {
+    this._destroyRtm(this._client);
+    this._client = undefined;
   }
 
   async sendChannelMessage(channelName: string, message: any, options: any) {
@@ -290,5 +254,3 @@ export class RTMWrapper extends EventEmitter {
     return result.hasPeerReceived;
   }
 }
-
-export { RtmLogLevel } from './constants';

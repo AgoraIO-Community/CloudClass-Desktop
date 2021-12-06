@@ -96,6 +96,12 @@
 .icon-countdown.countdown {
   background-image: url('./assets/svg/icon-countdown.svg');
 }
+.icon-answer.answer {
+  background-image: url('./assets/svg/icon-answer.svg');
+}
+.icon-vote.vote {
+  background-image: url('./assets/svg/icon-vote.svg');
+}
 .icon-whitening.whitening {
   background-image: url('./assets/svg/whitening.svg');
 }
@@ -104,6 +110,12 @@
 }
 .icon-ruddy.ruddy {
   background-image: url('./assets/svg/ruddy.svg');
+}
+.icon-hands-up-before.hands-up-before {
+  background-image: url('./assets/svg/icon-hands-up-before.svg');
+}
+.icon-hands-up-active.hands-up-active {
+  background-image: url('./assets/svg/icon-hands-up-active.svg');
 }
 
 /* .can-hover .icon-microphone-on-outline,
@@ -138,6 +150,13 @@
 .prefix-microphone-off-outline.rtc-state-available,
 .prefix-camera-off.rtc-state-available {
   cursor: pointer !important;
+}
+
+.icon-cursor-default.prefix-microphone-on-outline.rtc-state-available,
+.icon-cursor-default.prefix-camera.rtc-state-available,
+.icon-cursor-default.prefix-microphone-off-outline.rtc-state-available,
+.icon-cursor-default.prefix-camera-off.rtc-state-available {
+  cursor: default !important;
 }
 
 .prefix-microphone-on-outline.rtc-state-not-available,

@@ -31,14 +31,14 @@ export const Docs: FC<ToolbarProps> = (props) => {
   );
   const tools: ToolItem[] = [
     {
-      value: 'clicker',
-      label: '鼠标',
-      icon: 'clicker',
-    },
-    {
       value: 'selection',
       label: '选择',
       icon: 'select',
+    },
+    {
+      value: 'clicker',
+      label: '鼠标',
+      icon: 'clicker',
     },
     {
       value: 'pen',
@@ -66,32 +66,22 @@ export const Docs: FC<ToolbarProps> = (props) => {
       label: '橡皮',
       icon: 'eraser',
     },
-    {
-      value: 'color',
-      label: '颜色',
-      icon: 'color',
-      component: () => {
-        return (
-          <Colors
-            value="color"
-            label="颜色"
-            icon="color"
-            activeColor={activeColor}
-            onClick={(color) => updateColor(color)}
-          />
-        );
-      },
-    },
-    {
-      value: 'blank-page',
-      label: '新增空白页',
-      icon: 'blank-page',
-    },
-    {
-      value: 'hand',
-      label: '举手',
-      icon: 'hand',
-    },
+    // {
+    //   value: 'color',
+    //   label: '颜色',
+    //   icon: 'color',
+    //   component: () => {
+    //     return (
+    //       <Colors
+    //         value="color"
+    //         label="颜色"
+    //         icon="color"
+    //         activeColor={activeColor}
+    //         onClick={(color) => updateColor(color)}
+    //       />
+    //     );
+    //   },
+    // },
     {
       value: 'cloud',
       label: '云盘',
@@ -99,11 +89,6 @@ export const Docs: FC<ToolbarProps> = (props) => {
       component: () => {
         return <CloudDisk value="cloud" label="云盘" icon="cloud" />;
       },
-    },
-    {
-      value: 'follow',
-      label: '视角跟随',
-      icon: 'follow',
     },
     {
       value: 'tools',

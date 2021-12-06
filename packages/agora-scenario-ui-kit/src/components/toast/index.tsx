@@ -1,6 +1,6 @@
 import React, { CSSProperties, FC, useCallback, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Icon } from '~components/icon';
 import { IconTypes } from '~components/icon/icon-types';
 import Notification from 'rc-notification';

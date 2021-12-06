@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React, { FC } from 'react';
 import { Icon } from '~components/icon';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { SvgImg } from '~ui-kit';
 import './index.css';
 

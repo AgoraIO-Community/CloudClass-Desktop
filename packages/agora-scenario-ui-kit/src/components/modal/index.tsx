@@ -1,10 +1,12 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Icon } from '~components/icon';
 import Notification from 'rc-notification';
 import './index.css';
 import { SvgImg } from '../svg-img';
+import { OverlayWrap } from '../overlay-wrap';
+import { AutoSizer } from 'react-virtualized';
 export interface ModalProps extends BaseProps {
   /** 宽度 */
   width?: string | number;
@@ -33,6 +35,7 @@ export interface ModalProps extends BaseProps {
   children?: React.ReactNode;
   btnId?: string;
   topLevel?: boolean;
+  animate?: boolean;
 }
 
 type ModalType = FC<ModalProps> & {
@@ -60,6 +63,7 @@ export const Modal: ModalType = ({
   maskClosable = false,
   btnId,
   topLevel = false,
+  animate = true,
   ...restProps
 }) => {
   if (component) {
@@ -133,7 +137,9 @@ export const Modal: ModalType = ({
     </div>
   );
 
-  return hasMask ? <div className="modal-mask">{modalJsx}</div> : modalJsx;
+  const resultJsx = animate ? <OverlayWrap>{modalJsx}</OverlayWrap> : modalJsx;
+
+  return hasMask ? <div className="modal-mask">{resultJsx}</div> : resultJsx;
 };
 
 Modal.show = ({

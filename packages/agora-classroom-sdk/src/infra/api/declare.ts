@@ -1,4 +1,5 @@
 import { EduRoleTypeEnum } from 'agora-edu-core';
+import { AgoraEduClassroomEvent } from 'agora-edu-core';
 
 export type AgoraRegion = Uppercase<AgoraRegionString>;
 
@@ -9,7 +10,7 @@ export const regionMap = {
   NA: 'us-sv',
 } as const;
 
-export type AgoraRegionString = 'cn' | 'ap' | 'na';
+export type AgoraRegionString = 'cn' | 'ap' | 'na' | 'eu';
 
 export type RoomConfigProps<T> = {
   store: T;
@@ -20,11 +21,11 @@ export interface RoomComponentConfigProps<T> {
   dom: Element;
 }
 
-export enum AgoraEduEvent {
-  ready = 1,
-  destroyed = 2,
-  clicked = 3,
-}
+// export enum AgoraEduEvent {
+//   ready = 1,
+//   destroyed = 2,
+//   clicked = 3,
+// }
 
 export type AgoraEduSDKConfigParams = {
   appId: string;
@@ -40,7 +41,7 @@ export interface RoomParameters {
   roomType: number;
 }
 
-export type ListenerCallback = (evt: AgoraEduEvent) => void;
+export type ListenerCallback = (evt: AgoraEduClassroomEvent, ...args: any[]) => void;
 
 export type PPTDataType = {
   active: boolean;

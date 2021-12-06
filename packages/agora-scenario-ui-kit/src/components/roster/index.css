@@ -251,7 +251,7 @@
   color: #f04c36;
 }
 .roster-table .un-operate-status {
-  color: #bdbdca;
+  color: #bdbdca !important;
 }
 
 .search-teacher-name {

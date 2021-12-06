@@ -1,19 +1,19 @@
 import 'promise-polyfill/src/polyfill';
-import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { PluginStore } from './store';
 import { usePluginStore } from './hooks';
 import { Provider, observer } from 'mobx-react';
-import type { IAgoraExtApp, AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core';
+import {
+  IAgoraExtApp,
+  AgoraExtAppContext,
+  AgoraExtAppHandle,
+  EduRoleTypeEnum,
+} from 'agora-edu-core';
 import { Button, Countdown, Input, transI18n, I18nProvider, changeLanguage, Icon } from '~ui-kit';
 import classnames from 'classnames';
-import { EduRoleTypeEnum } from 'agora-rte-sdk';
-// import { I18nProvider, transI18n, changeLanguage } from '../../gallery-ui-kit/components/i18n'
 
 const App = observer(() => {
   const pluginStore = usePluginStore();
-
-  useEffect(() => {}, []);
 
   return (
     <div
@@ -111,20 +111,26 @@ const App = observer(() => {
 });
 
 export class AgoraExtAppCountDown implements IAgoraExtApp {
+  // should be final
+  static store = new PluginStore();
   appIdentifier = 'io.agora.countdown';
-  appName = 'countdown';
+  appName = transI18n('cabinet.countdown.appName');
   icon = (<Icon type="countdown" useSvg size={24} />);
   width = 258;
   height = 168; // 开始倒计时后高度为 55
-
+  minWidth = 258;
+  minHeight = 168;
   store?: PluginStore;
 
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language);
+    this.appName = transI18n('cabinet.countdown.appName');
   }
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
-    this.store = new PluginStore(ctx, handle);
+    this.store = AgoraExtAppCountDown.store;
+    this.store.resetContextAndHandle(ctx, handle);
+
     this.height = this.store.showSetting ? 168 : 55;
     ReactDOM.render(
       <I18nProvider language={this.language}>
@@ -139,10 +145,12 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     this.height = this.store?.showSetting ? 168 : 55;
     this.store?.onReceivedProps(properties, cause);
   }
-  extAppWillUnload(): void {
+  async extAppWillUnload(): Promise<boolean> {
     // TODO: 后续应该讲UI的逻辑抽离出来，ext app不应该和UI逻辑强耦合
     if (this.store!.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
       this.height = 168;
     }
+    // this.store?.reset();
+    return Promise.resolve(true);
   }
 }

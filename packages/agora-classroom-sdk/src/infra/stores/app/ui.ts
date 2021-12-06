@@ -1,8 +1,6 @@
-import { BehaviorSubject } from 'rxjs';
 import { isEmpty } from 'lodash';
-import { action, computed, observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import { EduRoleTypeEnum } from 'agora-edu-core';
 
 export type ToastType = {
   id: string;
@@ -46,18 +44,6 @@ export class UIStore {
   updateChecked(v: boolean) {
     this.checked = v;
   }
-
-  // constructor() {
-  // reaction(() => JSON.stringify([
-  //   this.chatCollapse
-  // ]) , (data: string) => {
-  //   const [chatCollapse] = JSON.parse(data)
-  //   if (!chatCollapse) {
-  //     // 已经缩小的chat组件，点击后需要清空消息数
-  //     this.appStore.roomStore.resetUnreadMessageCount()
-  //   }
-  // })
-  // }
 
   @action.bound
   resetStateQueue() {
@@ -114,15 +100,5 @@ export class UIStore {
     this.visibleSetting = false;
     this.checked = false;
     this.resetStateQueue();
-  }
-
-  eduRole2UIRole(role: EduRoleTypeEnum): 'teacher' | 'student' | 'assistant' {
-    if (role === EduRoleTypeEnum.teacher) {
-      return 'teacher';
-    }
-    if (role === EduRoleTypeEnum.assistant) {
-      return 'assistant';
-    }
-    return 'student';
   }
 }

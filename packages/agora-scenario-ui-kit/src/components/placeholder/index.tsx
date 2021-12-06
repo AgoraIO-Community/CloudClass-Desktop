@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import './index.css';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { SvgImg } from '../svg-img';
 import boardDisconnected from './assets/board-disconnected.png';
 import { transI18n } from '~components/i18n';
@@ -70,6 +70,7 @@ const cameraSvgTypeDict = {
   muted: 'placeholder-camera-off',
   disabled: 'placeholder-camera-disabled',
   none: 'placeholder-no-body',
+  notpresent: 'placeholder-not-present',
 };
 
 const cameraSvgSizeDict = {
@@ -78,6 +79,7 @@ const cameraSvgSizeDict = {
   muted: 90,
   disabled: 90,
   none: 90,
+  notpresent: 80,
 };
 
 const cameraSvgZIndex = {
@@ -89,15 +91,18 @@ const cameraSvgZIndex = {
 };
 
 export interface CameraPlaceHolderProps extends BaseProps {
-  state?: 'loading' | 'broken' | 'muted' | 'disabled' | 'none';
+  state?: 'loading' | 'broken' | 'muted' | 'disabled' | 'none' | 'notpresent';
+  text?: string;
   placeholderSize?: number;
   children?: React.ReactNode;
 }
 
 export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
   state = 'loading',
+  text,
   placeholderSize = 0,
   className,
+  style,
 }) => {
   const cls = classnames({
     [`camera-placeholder`]: 1,
@@ -110,11 +115,13 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
       className={cls}
       style={{
         zIndex: cameraSvgZIndex[state],
+        ...style,
       }}>
       <SvgImg
         type={cameraSvgTypeDict[state]}
         size={placeholderSize ? placeholderSize : cameraSvgSizeDict[state]}
       />
+      <span>{text}</span>
     </div>
   );
 };
@@ -126,13 +133,14 @@ export interface BoardPlaceHolderProps extends BaseProps {
 export const BoardPlaceHolder: React.FC<BoardPlaceHolderProps> = ({
   onReconnectClick,
   className,
+  style,
 }) => {
   const cls = classnames({
     [`board-placeholder`]: 1,
     [`${className}`]: !!className,
   });
   return (
-    <div className={cls}>
+    <div className={cls} style={{ ...style }}>
       <img src={boardDisconnected} alt={transI18n('whiteboard.disconnect-img-alt')} />
       <Button className="reconnect-btn" onClick={onReconnectClick}>
         {transI18n('whiteboard.disconnect-btn')}

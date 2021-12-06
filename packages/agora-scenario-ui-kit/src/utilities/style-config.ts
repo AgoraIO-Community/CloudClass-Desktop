@@ -74,7 +74,7 @@ export const Z_INDEX_RULES: {
   zIndexCameraPlaceholderBroken: 0,
   zIndexCameraPlaceholderMuted: 0,
   zIndexCameraPlaceholderDisabled: 0,
-  zIndexCameraPlaceholderNone: -1,
+  zIndexCameraPlaceholderNone: 0,
 } as const;
 
 /**

@@ -1,18 +1,18 @@
-import WebIM from '../utils/WebIM';
 import { message } from 'antd';
-import store from '../redux/store';
+import { transI18n } from '~ui-kit';
+import { ROLE } from '../contants';
 import {
+  announcementStatus,
+  roomAllMute,
+  roomAnnouncement,
   roomInfo,
   roomUsers,
-  roomAnnouncement,
-  roomAllMute,
-  announcementStatus,
 } from '../redux/actions/roomAction';
-import { transI18n } from '~ui-kit';
-import { JOIN_ROOM_SUCCESS, ROLE } from '../contants';
-import { getUserInfo } from './userInfo';
+import store from '../redux/store';
+import WebIM from '../utils/WebIM';
 import { getHistoryMessages } from './historyMsg';
 import { getRoomWhileList, isChatRoomWhiteUser } from './mute';
+import { getUserInfo } from './userInfo';
 
 // 加入聊天室
 export const joinRoom = async () => {

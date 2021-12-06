@@ -1,4 +1,4 @@
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
 
 export type HandsUpState = 'default' | 'actived';
 

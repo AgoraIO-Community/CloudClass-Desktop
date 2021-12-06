@@ -1,92 +1,81 @@
-import { AREA_CODE } from './../media-service/interfaces/index';
-import { GenericErrorWrapper } from '../utils/generic-error';
+// import { AgoraRteEngineConfig } from '../../configs';
+import { AgoraRteEngineConfig, AgoraRteServiceConfig } from '../../configs';
+import { AGRteErrorCode, RteErrorCenter, AGError } from '../utils/error';
 import { HttpClient } from '../utils/http-client';
-import { AgoraFetchParams } from '../../interfaces';
 
-export type ApiInitParams = {
-  userToken: string;
-  sdkDomain: string;
-  appId: string;
-  rtmToken: string;
-  rtmUid: string;
-  prefix: string;
-  roomUuid: string;
-};
+export interface AgoraFetchParams {
+  host?: string;
+  path?: string;
+  method: string;
+  data?: any;
+  full_url?: string;
+  type?: string;
+  headers?: Record<string, string | number>;
+  pathPrefix?: string;
+  query?: Object;
+}
 
-export type ApiBaseInitializerParams = {
-  sdkDomain: string;
-  appId: string;
-  rtmToken: string;
-  rtmUid: string;
-};
+export class ApiBase {
+  //instance level defaults
+  host?: string;
+  pathPrefix?: string;
+  headers?: AgoraRteServiceConfig;
 
-export abstract class ApiBase {
-  protected rtmToken: string = '';
-  protected rtmUid: string = '';
-  protected appId: string = '';
-  protected sdkDomain: string = '';
-  protected userToken: string = '';
-
-  protected prefix!: string;
-
-  constructor(params: ApiBaseInitializerParams) {
-    this.appId = params.appId;
-    this.sdkDomain = params.sdkDomain;
-    this.rtmToken = params.rtmToken;
-    this.rtmUid = params.rtmUid;
-  }
-
-  updateRtmConfig(info: { rtmUid: string; rtmToken: string }) {
-    this.rtmUid = info.rtmUid;
-    this.rtmToken = info.rtmToken;
-  }
-
-  // 接口请求
   async fetch(params: AgoraFetchParams) {
-    const { method, token, data, full_url, url, restToken } = params;
+    const { method, data, full_url, path, query = {} } = params;
+    const { host, pathPrefix } = AgoraRteEngineConfig.shared.service;
     const opts: any = {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-agora-token': this.rtmToken,
-        'x-agora-uid': this.rtmUid,
-      },
+      headers: Object.assign(
+        {},
+        AgoraRteEngineConfig.shared.service.headers,
+        this.headers,
+        params.headers,
+      ),
     };
+
+    let queryparams = Object.entries(query)
+      .filter(([, value]) => !!value)
+      .map(([name, value]) => `${name}=${value}`);
+    let querystring = queryparams.length > 0 ? `?${queryparams.join('&')}` : '';
+
     if (data) {
       opts.body = JSON.stringify(data);
     }
-    if (token) {
-      opts.headers['token'] = token;
-    } else {
-      if (this.userToken) {
-        opts.headers['token'] = this.userToken;
-      }
-    }
 
-    if (restToken) {
-      delete opts.headers['x-agora-token'];
-      delete opts.headers['x-agora-uid'];
-      Object.assign(opts.headers, {
-        authorization: `Basic ${restToken}`,
-      });
-    }
-    let resp: any;
+    let resp: Response | undefined;
     if (full_url) {
       resp = await HttpClient(`${full_url}`, opts);
     } else {
-      resp = await HttpClient(`${this.prefix}${url}`, opts);
+      resp = await HttpClient(
+        `${params.host || this.host || host}${
+          params.pathPrefix || this.pathPrefix || pathPrefix || ''
+        }${path}${querystring}`,
+        opts,
+      );
     }
-    if (resp.code !== 0) {
-      if (resp.code === undefined) {
+
+    //HttpClient will throw error if resp is empty, so resp is always valid here
+    const respJson = await resp!.json();
+    const code = +respJson['code'];
+    if (code !== 0) {
+      if (isNaN(code)) {
         // code is not available when server is not properly return response
-        throw GenericErrorWrapper({ message: resp.error });
+        return RteErrorCenter.shared.handleThrowableError(
+          AGRteErrorCode.RTE_ERR_RESTFUL_SERVICE_ERR,
+          new AGError(AGRteErrorCode.RTE_ERR_RESTFUL_SERVICE_ERR, new Error(respJson['msg']), {
+            servCode: -1,
+          }),
+        );
       } else {
-        throw GenericErrorWrapper(
-          { message: resp.message || resp.msg },
-          { errCode: `${resp.code}` },
+        return RteErrorCenter.shared.handleThrowableError(
+          AGRteErrorCode.RTE_ERR_RESTFUL_SERVICE_ERR,
+          new AGError(AGRteErrorCode.RTE_ERR_RESTFUL_SERVICE_ERR, new Error(respJson['msg']), {
+            servCode: code,
+          }),
         );
       }
     }
-    return resp;
+    return respJson;
   }
 }

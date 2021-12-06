@@ -105,11 +105,11 @@
 
 .chat-history {
   width: 100%;
-  padding-bottom: 18px;
+  /* padding-bottom: 18px; */
   overflow-y: auto;
   width: 100%;
   position: absolute;
-  padding-top: 18px;
+  /* padding-top: 18px; */
 }
 
 .chat-history > .chat-message:first-child {
@@ -141,6 +141,9 @@
 
 .conversation.chat-history {
   height: calc(100% - 120px - 48px);
+}
+.conversation.no-header.chat-history {
+  height: calc(100% - 120px);
 }
 
 .chat-texting {
@@ -243,4 +246,9 @@
 
 .simple-chat .chat-history {
   margin-top: 44px;
+}
+.small-class-chat-fixed {
+  width: 300px !important;
+  height: 500px !important;
+  border: 1px solid #ececf1 !important;
 }

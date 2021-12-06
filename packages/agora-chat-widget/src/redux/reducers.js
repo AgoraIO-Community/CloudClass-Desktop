@@ -3,6 +3,7 @@ import { CHAT_TABS_KEYS } from '../contants';
 let defaultState = {
   propsData: {}, // props 值
   showChat: true, // 控制Chat
+  isShowMiniIcon: true, // 控制最小化icon
   isLogin: false, // 登陆状态
   loginUser: '', // 当前登陆ID
   loginUserInfo: {}, // 当前登陆账号的用户属性
@@ -182,6 +183,11 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         showAnnouncementNotice: data,
+      };
+    case 'MINI_ICON_STATUE':
+      return {
+        ...state,
+        isShowMiniIcon: data,
       };
     default:
       break;

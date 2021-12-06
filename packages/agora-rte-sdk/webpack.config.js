@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const packageJson = require('./package.json');
 
 const path = require('path');
 
@@ -57,43 +58,8 @@ module.exports = {
     ],
   },
   plugins: [
-    // new MiniCssExtractPlugin(),
-    // new webpack.DefinePlugin({
-    //   REACT_APP_AGORA_RECORDING_OSS_URL: JSON.stringify(config.REACT_APP_AGORA_RECORDING_OSS_URL),
-    //   REACT_APP_AGORA_GTM_ID: JSON.stringify(config.REACT_APP_AGORA_GTM_ID),
-    //   REACT_APP_BUILD_VERSION: JSON.stringify(config.REACT_APP_BUILD_VERSION),
-    //   REACT_APP_NETLESS_APP_ID: JSON.stringify(config.REACT_APP_NETLESS_APP_ID),
-    //   REACT_APP_AGORA_APP_ID: JSON.stringify(config.REACT_APP_AGORA_APP_ID),
-    //   REACT_APP_AGORA_CUSTOMER_ID: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_ID),
-    //   REACT_APP_AGORA_CUSTOMER_CERTIFICATE: JSON.stringify(config.REACT_APP_AGORA_CUSTOMER_CERTIFICATE),
-    //   REACT_APP_AGORA_APP_TOKEN: JSON.stringify(config.REACT_APP_AGORA_APP_TOKEN),
-    //   REACT_APP_AGORA_LOG: JSON.stringify(config.REACT_APP_AGORA_LOG),
-    //   REACT_APP_AGORA_APP_SDK_DOMAIN: JSON.stringify(config.REACT_APP_AGORA_APP_SDK_DOMAIN),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: JSON.stringify(""),
-    //   REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: JSON.stringify(""),
-    //   // 'process': 'utils'
-    // }),
-    // new HardSourceWebpackPlugin({
-    //   root: process.cwd(),
-    //   directories: [],
-    //   environmentHash: {
-    //     root: process.cwd(),
-    //     directories: [],
-    //     files: [
-    //       'package.json',
-    //       'package-lock.json',
-    //       'yarn.lock',
-    //       '.env',
-    //       '.env.local',
-    //       'env.local',
-    //       'config-overrides.js',
-    //       'webpack.config.js',
-    //       'tsconfig.json',
-    //     ],
-    //   }
-    // })
+    new webpack.DefinePlugin({
+      RTE_SDK_VERSION: JSON.stringify(packageJson.version),
+    }),
   ],
 };

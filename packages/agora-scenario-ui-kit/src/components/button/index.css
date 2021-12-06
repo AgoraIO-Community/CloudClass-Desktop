@@ -44,6 +44,12 @@
   @apply text-secondary-active bg-white border-secondary-active border;
 }
 
+.btn-xs {
+  width: 80px;
+  height: 24px;
+  font-size: 12px;
+}
+
 .btn-sm {
   width: 80px;
   height: 30px;
@@ -64,6 +70,7 @@
   @apply disabled:opacity-50 pointer-events-none;
 }
 
+.btn.btn-xs[disabled],
 .btn.btn-sm[disabled] {
   background-color: #ffffff;
   border: 1px solid #c2c2c8;

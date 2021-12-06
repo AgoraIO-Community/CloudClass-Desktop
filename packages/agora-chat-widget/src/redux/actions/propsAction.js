@@ -6,3 +6,6 @@ export const propsAction = (data) => {
 export const isShowChat = (data) => {
   return { type: 'IS_SHOW_CHAT', data };
 };
+export const isShowMiniIcon = (data) => {
+  return { type: 'MINI_ICON_STATUE', data };
+};

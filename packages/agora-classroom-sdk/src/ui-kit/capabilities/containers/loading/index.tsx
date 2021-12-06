@@ -1,13 +1,11 @@
-import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { observer } from 'mobx-react';
 import { Card, Loading } from '~ui-kit';
-import { FC } from 'react';
+import { useStore } from '~hooks/use-edu-stores';
+import './index.css';
 
-export interface LoadingProps extends BaseProps {
-  loading: boolean;
-}
-
-export const LoadingContainer: FC<LoadingProps> = observer(({ loading }) => {
+export const LoadingContainer = observer(() => {
+  const { layoutUIStore } = useStore();
+  const { loading } = layoutUIStore;
   return loading ? <PageLoading /> : null;
 });
 

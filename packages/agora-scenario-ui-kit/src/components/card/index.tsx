@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, EventHandler } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '../../components/interface/base-props';
 import './index.css';
 
 export interface CardProps extends BaseProps {
@@ -8,6 +8,10 @@ export interface CardProps extends BaseProps {
   height?: number;
   borderRadius?: number | string;
   children?: React.ReactNode;
+  onMouseDown?: EventHandler<any>;
+  onMouseUp?: EventHandler<any>;
+  onMouseLeave?: EventHandler<any>;
+  onScroll?: EventHandler<any>;
 }
 
 export const Card: FC<CardProps> = ({

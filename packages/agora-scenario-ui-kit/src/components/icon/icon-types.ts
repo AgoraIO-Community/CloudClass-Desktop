@@ -72,4 +72,8 @@ export type IconTypes =
   | 'teacher-authorized'
   | 'whitening'
   | 'buffing'
-  | 'ruddy';
+  | 'ruddy'
+  | 'hands-up-before'
+  | 'hands-up-active'
+  | 'answer'
+  | 'vote';

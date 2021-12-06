@@ -1,1 +1,1 @@
-export type SvgaTypes = 'reward' | 'hands-up';
+export type SvgaTypes = 'reward';

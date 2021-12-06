@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es6",
+    "module": "esnext",
     "outDir": "lib",
     "rootDir": "src",
-    "lib": ["dom", "es2017", "DOM.Iterable", "WebWorker"],
+    "lib": ["dom", "esnext", "DOM.Iterable", "webworker"],
     "moduleResolution": "node",
     "importHelpers": true,
     "declaration": true,
@@ -20,7 +20,9 @@
     "emitDeclarationOnly": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
+    "downlevelIteration": true,
     "allowJs": false
   },
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "es", "lib", "build", "examples"]
 }

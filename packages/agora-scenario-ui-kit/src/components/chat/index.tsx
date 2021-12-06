@@ -1,7 +1,6 @@
 import React, { FC, useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Affix, AffixProps } from '../affix';
-import { Icon } from '../icon';
 import { ChatMin } from './chat-min';
 import './index.css';
 import { ChatEvent, ChatListType, Conversation, Message } from './interface';

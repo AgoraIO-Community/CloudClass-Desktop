@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
-import { Tooltip } from '~components';
-import { Header } from '~components/layout';
 import { transI18n } from '../i18n';
 import './index.css';
-import { SvgImg } from '~components/svg-img';
+import { SvgImg, Header, Tooltip } from '../../components';
 export interface MonitorInfo {
   /**
    * CPU 使用率, 单位: %

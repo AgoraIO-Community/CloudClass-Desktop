@@ -43,6 +43,7 @@ const im_CN = {
     delete_comfirm: '删除确认',
     delete_content: '确认删除此公告？',
     you: '您',
+    mute_by_system: '您不能发言',
   },
 };
 export default im_CN;

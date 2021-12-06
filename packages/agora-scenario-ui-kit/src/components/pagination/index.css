@@ -1,0 +1,31 @@
+.agora-pagination {
+}
+
+.agora-pagination .rc-pagination-prev,
+.rc-pagination-item,
+.rc-pagination-next {
+  background: #ffffff;
+  border-radius: 6px;
+}
+
+.agora-pagination .rc-pagination-prev .rc-pagination-item-link,
+.rc-pagination-next .rc-pagination-item-link {
+  border-radius: 6px;
+  color: #000;
+}
+
+.agora-pagination .rc-pagination-item a {
+  color: #000;
+}
+
+.agora-pagination .rc-pagination-item-active {
+  background: #4da1ff;
+}
+.agora-pagination .rc-pagination-item-active a {
+  color: white;
+}
+
+.agora-pagination .rc-pagination-jump-prev button,
+.rc-pagination-jump-next button {
+  /* color: #ffffff; */
+}

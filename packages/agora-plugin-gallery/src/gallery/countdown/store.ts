@@ -1,9 +1,8 @@
-import { action, observable, computed, runInAction } from 'mobx';
+import { action, observable } from 'mobx';
 import type { AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core';
 export class PluginStore {
-  context: AgoraExtAppContext;
-  handle: AgoraExtAppHandle;
-
+  context!: AgoraExtAppContext;
+  handle!: AgoraExtAppHandle;
   @observable
   result?: number = 0;
   @observable
@@ -13,7 +12,7 @@ export class PluginStore {
   @observable
   play?: boolean = true;
 
-  constructor(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
+  resetContextAndHandle(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
     if (ctx.properties) {
       const { startTime: sStartTime, duration: sDuration } = ctx.properties;
       const startTime = parseInt(sStartTime) * 1000;
@@ -55,7 +54,7 @@ export class PluginStore {
       roomProperties['pauseTime'] = `0`;
       roomProperties['duration'] = `0`;
     }
-    await this.handle.updateRoomProperty(roomProperties, commonProperties, {});
+    await this.handle.updateRoomProperties(roomProperties, commonProperties, {});
   };
 
   @action

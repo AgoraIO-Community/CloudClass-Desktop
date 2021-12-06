@@ -1,0 +1,141 @@
+.answer-modal span {
+  cursor: pointer;
+  user-select: none;
+}
+.answer-items {
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 4px;
+  border: 1px solid #eeeef7;
+  padding: 9px 12px;
+}
+.answer-items span {
+  width: 50px;
+  height: 50px;
+  border-radius: 18px;
+  border: 1px solid #eeeef7;
+  font-size: 24px;
+  color: #bdbdca;
+  line-height: 50px;
+  text-align: center;
+  margin: 10px 13px;
+  box-shadow: 0px -1px 3px 0px rgba(255, 255, 255, 0.5);
+}
+
+.answer-submit {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.answer-submit span {
+  width: 30px;
+  height: 30px;
+}
+
+.answer-submit .btn {
+  width: auto;
+  margin: 0 20px;
+  padding: 0 17px;
+  min-width: 90px;
+}
+
+.answer-table {
+  height: 200px;
+  border-radius: 4px;
+  border: 1px solid #eeeef7;
+  overflow: hidden;
+}
+
+.answer-table .table-container .table-row-item .table-col-item {
+  height: 40px;
+}
+.answer-info {
+  margin: 30px 0 0px 110px;
+}
+.answer-info-line {
+  height: 18px;
+  line-height: 18px;
+  font-size: 13px;
+  margin: 10px 0 0;
+}
+.answer-table .table-header {
+  padding-left: 0;
+}
+.answer-info-tab {
+  color: #7b88a0;
+}
+.answer-info-value {
+  color: #191919;
+}
+.answer-dialog {
+  padding: 0;
+}
+.answer-dialog .icon-close {
+  font-size: 24px !important;
+  color: #a7a7ca !important;
+}
+.answer-dialog .modal-content {
+  padding: 20px 14px 29px;
+}
+.answer-dialog .modal-title {
+  padding-right: 18px;
+}
+.answer-dialog button:disabled {
+  background: #c0d6ff !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  opacity: 1 !important;
+}
+
+.answer-table .table-container::-webkit-scrollbar {
+  width: 13px;
+}
+.answer-table .table-container::-webkit-scrollbar-thumb {
+  background: #e7e7f3;
+  border-radius: 999px;
+  background-image: -webkit-linear-gradient(
+    0deg,
+    #eeeef7 7.7%,
+    #ffffff 7.7%,
+    #ffffff 23.1%,
+    transparent 23.1%,
+    transparent 76.9%,
+    #ffffff 76.9%,
+    #ffffff
+  );
+}
+.answer-table .table-container::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 0px 0px 5px 0px;
+  border-left: 1px solid #eeeef7;
+}
+
+.answer-role-student .answer-items {
+  padding: 10px 5px 0;
+  border: 0;
+  margin-bottom: -20px;
+}
+
+.answer-role-student .answer-items span {
+  margin: 0 15px 20px;
+}
+
+.answer-role-student .answer-info {
+  margin: 15px 0 0 100px;
+}
+
+.answer-language-en .answer-info {
+  margin-left: 85px;
+}
+
+.answer-change .answer-submit .btn {
+  border: 1px solid #357bf6;
+  color: #357bf6;
+  background-color: transparent;
+}
+
+.answer-change .answer-items span {
+  opacity: 0.5;
+  pointer-events: none;
+}

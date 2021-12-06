@@ -1,158 +1,76 @@
-import { Chat, SimpleChat, I18nProvider } from '~ui-kit';
-import * as React from 'react';
-import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
+import {
+  ChatEvent,
+  ChatListType,
+  ClassroomState,
+  Conversation,
+  EduClassroomConfig,
+  EduClassroomUIStore,
+  EduRoomTypeEnum,
+  IAgoraWidget,
+  MessageItem,
+} from 'agora-edu-core';
+import { AgoraRteEngineConfig } from 'agora-rte-sdk';
+import classnames from 'classnames';
 import { get } from 'lodash';
-import type { AgoraWidgetHandle, IAgoraWidget } from 'agora-edu-core';
-import { PluginStore } from './store';
-import { usePluginStore } from './hooks';
-import { Provider, observer } from 'mobx-react';
-import { AgoraWidgetContext } from 'agora-edu-core';
+import { observer } from 'mobx-react';
+import * as React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ChatEvent, ChatListType, Conversation } from '~ui-kit/components/chat/interface';
-// import { ChatEvent, ChatListType, Conversation, Message } from '~ui-kit';
-// import { I18nProvider } from './components/i18n';
+import { ChatNew, I18nProvider, SimpleChatNew } from '~ui-kit';
+import { Context } from './chatContext';
+import { WidgetChatUIStore } from './chatStore';
 
 const App = observer(() => {
-  const pluginStore = usePluginStore();
-
-  const { events, actions } = pluginStore.context;
-
-  useEffect(() => {
-    events.chat.subscribe((state: any) => {
-      pluginStore.chatContext = state;
-    });
-    events.global.subscribe((state: any) => {
-      pluginStore.globalContext = state;
-    });
-  }, []);
-
-  const { unreadMessageCount, messageList, chatCollapse, canChatting, isHost, conversationList } =
-    pluginStore.chatContext;
-
-  const { isFullScreen, joined } = pluginStore.globalContext;
+  const defaultMinimize =
+    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass ||
+    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass;
+  const chatContext = React.useContext(Context);
+  const uiStore = chatContext.uiStore as EduClassroomUIStore;
+  const widgetStore = chatContext.widgetStore as WidgetChatUIStore;
+  const loading = uiStore.layoutUIStore.loading;
+  const [minimize, toggleChatMinimize] = useState(defaultMinimize);
+  const {
+    roomChatMessages: messageList,
+    unmuted: canChatting,
+    isHost,
+    convertedConversationList: conversationList,
+    unreadMessageCount,
+    unReadCount,
+  } = widgetStore;
 
   const {
-    getHistoryChatMessage,
-    muteChat,
-    unmuteChat,
-    toggleChatMinimize,
-    sendMessage,
-    addChatMessage,
-    sendMessageToConversation,
-    addConversationChatMessage,
-    getConversationList,
-    getConversationHistoryChatMessage,
-  } = actions.chat;
+    sendText: handleSendText,
+    onCanChattingChange,
+    refreshMessageList,
+    refreshConversationList,
+    refreshConversationMessageList,
+    updateActiveTab,
+    unreadConversationCountFn,
+  } = widgetStore;
 
   useEffect(() => {
-    if ((isFullScreen && !chatCollapse) || (!isFullScreen && chatCollapse)) {
-      // 第一个条件 点击全屏默认聊天框最小化
-      // 第二个条件，全屏幕最小化后，点击恢复（非全屏），恢复聊天框
-      toggleChatMinimize();
-    }
-  }, [isFullScreen]);
-
-  const [nextMsgId, setNextID] = useState('');
-  const [nextClId, setNextClID] = useState('');
-  const [nextConvMsgId, setNextConvMsgID] = useState({});
-
-  const isMounted = useRef<boolean>(true);
-
-  const refreshMessageList = useCallback(async () => {
-    const res = nextMsgId !== 'last' && (await getHistoryChatMessage({ nextMsgId, sort: 0 }));
-    if (isMounted.current) {
-      setNextID(get(res, 'nextId', 'last'));
-    }
-  }, [nextMsgId, setNextID, isMounted.current]);
-
-  const refreshConversationList = useCallback(async () => {
-    const res = nextClId !== 'last' && (await getConversationList({ nextClId, sort: 0 }));
-    if (isMounted.current) {
-      setNextClID(get(res, 'nextId', 'last'));
-    }
-  }, [nextClId, setNextClID, isMounted.current]);
-
-  const refreshConversationMessageList = useCallback(
-    async (conversation: Conversation) => {
-      let nextId = nextConvMsgId[conversation.userUuid];
-      const res =
-        nextId !== 'last' &&
-        (await getConversationHistoryChatMessage({
-          nextId,
-          sort: 0,
-          studentUuid: conversation.userUuid,
-        }));
-
-      if (isMounted.current) {
-        setNextConvMsgID({
-          ...nextConvMsgId,
-          [conversation.userUuid]: get(res, 'nextId') || 'last',
-        });
-      }
-    },
-    [nextConvMsgId, setNextConvMsgID, isMounted.current],
-  );
-
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, [isMounted]);
-
-  const onCanChattingChange = async (canChatting: boolean) => {
-    if (canChatting) {
-      await muteChat();
-    } else {
-      await unmuteChat();
-    }
-  };
-
-  const [text, setText] = useState<string>('');
-
-  const handleSendText = useCallback(
-    async (evt: ChatEvent): Promise<void> => {
-      if (!text.trim()) return;
-      const textMessage = text;
-      setText('');
-
-      if (evt.type === 'room') {
-        const message = await sendMessage(textMessage);
-        addChatMessage(message);
-      } else if (evt.type === 'conversation' && evt.conversation) {
-        const message = await sendMessageToConversation(textMessage, evt.conversation.userUuid);
-        addConversationChatMessage(message, evt.conversation);
-      }
-    },
-    [text, setText],
-  );
-
-  useEffect(() => {
+    if (loading) return;
     refreshMessageList();
-    if (!joined) return;
-    if (pluginStore.context.localUserInfo.roleType === 1) {
+    if (EduClassroomConfig.shared.sessionInfo.role === 1) {
       // refresh conv list for teacher
       refreshConversationList();
     }
-  }, [joined]);
+  }, [loading]);
 
   return (
     <div id="netless-white" style={{ display: 'flex', width: '100%', height: '100%' }}>
-      {pluginStore.context.roomInfo.roomType === 0 ? (
+      {EduClassroomConfig.shared.sessionInfo.roomType === 0 ? (
         // display simple chat for 1v1
-        <SimpleChat
+        <SimpleChatNew
           className="simple-chat"
-          collapse={false}
+          collapse={minimize}
           onCanChattingChange={onCanChattingChange}
           canChatting={canChatting}
           isHost={isHost}
-          uid={pluginStore.context.localUserInfo.userUuid}
-          messages={messageList}
-          chatText={text}
-          onText={(_: ChatEvent, textValue: string) => {
-            setText(textValue);
-          }}
+          uid={EduClassroomConfig.shared.sessionInfo.userUuid}
+          messages={messageList.map((message: MessageItem) => message.toMessage())}
           onCollapse={() => {
-            // toggleChatMinimize()
+            toggleChatMinimize((pre) => !pre);
           }}
           onSend={handleSendText}
           showCloseIcon={false}
@@ -162,24 +80,22 @@ const App = observer(() => {
           unreadCount={unreadMessageCount}
         />
       ) : (
-        <Chat
-          className="small-class-chat"
-          collapse={false}
+        <ChatNew
+          className={classnames('small-class-chat', { 'small-class-chat-fixed': !minimize })}
+          collapse={minimize}
           onCanChattingChange={onCanChattingChange}
           canChatting={canChatting}
           isHost={isHost}
-          uid={pluginStore.context.localUserInfo.userUuid}
-          messages={pluginStore.convertedMessageList}
-          conversations={pluginStore.convertedConversationList}
-          chatText={text}
-          onText={(evt: ChatEvent, textValue: string) => {
-            setText(textValue);
-          }}
+          uid={EduClassroomConfig.shared.sessionInfo.userUuid}
+          messages={widgetStore.convertedMessageList}
+          unReadMessageCount={unReadCount}
+          unreadConversationCountFn={unreadConversationCountFn}
+          activeTab={widgetStore.activeTab}
           onCollapse={() => {
-            toggleChatMinimize();
+            toggleChatMinimize((pre) => !pre);
           }}
           onSend={handleSendText}
-          showCloseIcon={false}
+          showCloseIcon={defaultMinimize}
           onPullRefresh={(evt: ChatEvent) => {
             if (evt.type === 'conversation' && evt.conversation) {
               refreshConversationMessageList(evt.conversation);
@@ -190,12 +106,13 @@ const App = observer(() => {
             }
           }}
           onChangeActiveTab={(activeTab: ChatListType, conversation?: Conversation) => {
-            pluginStore.updateActiveTab(activeTab, conversation);
+            updateActiveTab(activeTab, conversation);
           }}
           unreadCount={unreadMessageCount}
           singleConversation={
-            pluginStore.context.localUserInfo.roleType === 2 ? conversationList[0] : undefined
+            EduClassroomConfig.shared.sessionInfo.role === 2 ? conversationList[0] : undefined
           }
+          conversations={conversationList}
         />
       )}
     </div>
@@ -205,24 +122,20 @@ const App = observer(() => {
 export class AgoraChatWidget implements IAgoraWidget {
   widgetId = 'io.agora.widget.chat';
 
-  store?: PluginStore;
-
   constructor() {}
 
-  widgetDidLoad(dom: Element, ctx: AgoraWidgetContext, props: any): void {
-    this.store = new PluginStore(ctx);
+  widgetDidLoad(dom: Element, props: any): void {
+    const widgetStore = new WidgetChatUIStore(props.uiStore);
+    const language = AgoraRteEngineConfig.shared.language;
     ReactDOM.render(
-      <Provider store={this.store}>
-        <I18nProvider language={ctx.language}>
-          <App {...props} />
+      <Context.Provider value={{ uiStore: props.uiStore, widgetStore }}>
+        <I18nProvider language={language}>
+          <App />
         </I18nProvider>
-      </Provider>,
+      </Context.Provider>,
       dom,
     );
   }
-  // TODO: uncertain
-  widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {
-    this.store?.onReceivedProps(properties, cause);
-  }
+
   widgetWillUnload(): void {}
 }

@@ -65,15 +65,15 @@ export const Home: React.FC<HomeProps> = ({
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
   const scenarioOptions = [
-    { label: t('home.roomType_1v1'), value: '1v1' },
-    { label: t('home.roomType_interactiveSmallClass'), value: 'mid-class' },
-    { label: t('home.roomType_interactiveBigClass'), value: 'big-class' },
+    { label: transI18n('home.roomType_1v1'), value: '1v1' },
+    { label: transI18n('home.roomType_interactiveSmallClass'), value: 'mid-class' },
+    { label: transI18n('home.roomType_interactiveBigClass'), value: 'big-class' },
   ];
   const roleOptions = [
-    { label: t('home.role_teacher'), value: 'teacher' },
-    { label: t('home.role_student'), value: 'student' },
-    { label: t('home.role_assistant'), value: 'assistant' },
-    { label: t('home.role_audience'), value: 'incognito' },
+    { label: transI18n('home.role_teacher'), value: 'teacher' },
+    { label: transI18n('home.role_student'), value: 'student' },
+    { label: transI18n('home.role_assistant'), value: 'assistant' },
+    { label: transI18n('home.role_audience'), value: 'incognito' },
   ];
   const languageOptions = [
     { label: '中文', value: 'zh' },
@@ -325,7 +325,7 @@ export const Home: React.FC<HomeProps> = ({
                 options={roleOptions}></Select>
             </Col>
           </Row>
-          <Row className="home-row-item">
+          {/* <Row className="home-row-item">
             <Col>
               <Select
                 prefix={
@@ -367,7 +367,7 @@ export const Home: React.FC<HomeProps> = ({
                 maxLength={20}
               />
             </Col>
-          </Row>
+          </Row> */}
           {debug ? (
             <Row className="home-row-item">
               <Col>

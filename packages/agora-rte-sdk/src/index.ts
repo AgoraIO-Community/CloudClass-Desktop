@@ -1,102 +1,54 @@
-export { PeerInviteEnum } from './user/edu-user-service';
+export { AgoraRteEngine } from './core/engine';
+export { AgoraRteScene } from './scene';
+export type { AgoraRteSceneJoinRTCOptions } from './scene';
 export {
-  EduRoleType,
-  EduChannelMessageCmdType,
-  EduCourseState,
-  EduClassroomStateType,
-  EduAudioSourceType,
-  EduVideoSourceType,
-  EduStreamAction,
-  EduPeerMessageCmdType,
-  EduRoleTypeEnum,
-  EduRoomTypeEnum,
-  EduUserStateType,
-  NetworkQuality,
-  EduSceneType,
-  EduClassroomType,
-  EduUserData,
-  EduStreamData,
-} from './interfaces';
-
+  AgoraRteEngineConfig,
+  AgoraRteLogLevel,
+  AgoraRteRuntimePlatform,
+  RteLanguage,
+  AgoraRegion,
+} from './configs';
+export type { AgoraComponentRegion } from './configs';
+export type { AgoraRteServiceConfig } from './configs';
+export { AgoraRtcVideoCanvas, AgoraRtcLocalVideoCanvas } from './core/rtc/canvas';
+export { AgoraRteEventType } from './core/processor/channel-msg/handler';
+export { AgoraStream, AgoraRoom, AgoraUser } from './core/processor/channel-msg/struct';
+export type { AgoraRteOperator } from './core/processor/channel-msg/struct';
+export { AGRtcConnectionType } from './core/rtc/channel';
+export { ApiBase } from './core/services/base';
+export { Logger } from './core/logger';
+export { AbstractErrorCenter, AGError, AGErrorWrapper } from './core/utils/error';
+export { retryAttempt } from './core/utils/utils';
+export { Log, Lodash, bound } from './core/decorator';
+export type { Injectable } from './core/decorator';
 export {
-  EnumChatState,
-  EduRoomType,
-  EnumVideoState,
-  EnumAudioState,
-  EnumOnlineState,
-} from './core/services/interface';
-
-export { rteReportService } from './core/services/report-service';
-
-export { EduLogger } from './core/logger/index';
-export { EduManager } from './manager/index';
-export { GenericError, GenericErrorWrapper } from './core/utils/generic-error';
-export { AgoraElectronRTCWrapper } from './core/media-service/electron/index';
-export { AgoraWebRtcWrapper } from './core/media-service/web/index';
-export type { StreamSubscribeOptions } from './core/media-service/web/coordinator';
-export { VideoRenderState } from './core/media-service/renderer/index';
-
+  AgoraRteVideoSourceType,
+  AgoraRteAudioSourceType,
+  AgoraRteMediaTrackState,
+  AgoraRteMediaPublishState,
+  AgoraRteMediaTrack,
+  AgoraRteCameraVideoTrack,
+  AgoraRteMicrophoneAudioTrack,
+  AgoraRteScreenShareTrack,
+} from './core/media/track';
+export { AgoraMediaControlEventType, AgoraMediaControl } from './core/media/control';
+export type { AgoraFromUser } from './core/processor/channel-msg/struct';
+export * from './core/rtc/type';
+export { Scheduler, ActionWhenTaskFail } from './core/schedule';
+export { Duration } from './core/schedule/scheduler';
+export {
+  AGNetworkQuality,
+  AGLocalTrackState,
+  RtcState,
+  AGMediaEncryptionMode,
+} from './core/rtc/type';
 export type {
-  LocalUserRenderer,
-  UserRenderer,
-  RemoteUserRenderer,
-} from './core/media-service/renderer/index';
-export type { EduClassroomManager } from './room/edu-classroom-manager';
-export type { OperatorUser } from './room/types';
-
-export type {
-  EduConfiguration,
-  EduTextMessage,
-  EduRoomAttrs,
-  EduClassroomConfiguration,
-  EduClassroomManagerInit,
-  EduClassroomParams,
-  InitClassroomManagerConfig,
-  EduClassroomMediaOptions,
-  EduClassroomJoinOptions,
-  EduClassroomSubscribeOption,
-  ClassroomStateParams,
-  UserQueryParams,
-  StreamQueryParams,
-  AgoraFetchParams,
-  PeerMessageParams,
-  ChannelMessageParams,
-  EduClassroomInfo,
-  InitEduRoomParams,
-  EduClassroomStatus,
-  EduClassroomAttrs,
-  EduClassroom,
-  EduRenderConfig,
-  EduStreamConfig,
-  EduVideoEncoderConfiguration,
-  EduUserInfo,
-  EduShareScreenConfig,
-  EduStreamParams,
-  EduUserAttrs,
-  StreamType,
-  DeleteStreamType,
-} from './interfaces';
-export type { EduStream, EduUser } from './interfaces';
-export type { EduUserService } from './user/edu-user-service';
-export type { IMediaRenderer } from './core/media-service/renderer';
-export { ScreenShareType } from './core/media-service/interfaces';
-export type {
-  StartScreenShareParams,
-  PrepareScreenShareParams,
-  CameraOption,
-  MediaEncryptionConfig,
-} from './core/media-service/interfaces';
-export type { MediaService } from './core/media-service';
-export type {
-  RoomResponseData,
-  EntryRoomParams,
-  EntryRequestParams,
-  AgoraEduUser,
-  AgoraEduStream,
-  EduJoinRoomParams,
-  SyncRoomRequestParams,
-  UserStreamResponseData,
-  UserStreamList,
-  JoinRoomResponseData,
-  EduClassroomInitOption,
-} from './core/services/interface';
+  NetworkStats,
+  AGRtcDeviceInfo,
+  AGMediaEncryptionConfig,
+  AGScreenShareDevice,
+} from './core/rtc/type';
+export type { AGRtcConfig } from './core/rtc/adapter/index';
+export { AGEventEmitter } from './core/utils/events';
+export { AgoraRteConnectionState } from './type';
+export type { MediaOptions } from './type';

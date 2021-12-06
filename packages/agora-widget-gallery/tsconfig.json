@@ -4,7 +4,8 @@
     "outDir": "lib",
     "target": "es6",
     "paths": {
-      "agora-chat-widget": ["../agora-chat-widget/src"]
+      "agora-chat-widget": ["../agora-chat-widget/src"],
+      "agora-edu-core": ["../agora-edu-core/src"]
     },
     "experimentalDecorators": true,
     "module": "commonjs",

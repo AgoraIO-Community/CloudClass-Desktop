@@ -1,0 +1,136 @@
+.students-hands-up .card {
+  @apply block overflow-y-scroll;
+}
+
+.students-hands-up .student-item {
+  width: 100%;
+  padding: 4px 10px 4px 16px;
+  @apply box-border flex justify-between items-center;
+  border-bottom: 1px solid #eeeef7;
+  height: 41px;
+}
+
+.hands-up {
+  cursor: pointer;
+}
+
+.hands-up .card {
+  position: relative;
+}
+
+.student-box .student-name,
+.student-item .student-name {
+  font-size: 14px;
+  color: #586376;
+  width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.students-hands-up .hands-up-card {
+  width: 210px !important;
+  height: 246px !important;
+  overflow: scroll;
+}
+
+.card-hands-up-active {
+  background-color: #0273ff;
+}
+
+.hands-box-line {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hands-up-count {
+  padding: 2px 5px;
+  background: red;
+  color: #fff;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateX(50%);
+  border-radius: 16px;
+  font-size: 12px;
+  height: 16px;
+  line-height: 12px;
+  text-align: center;
+}
+
+.hands-up-sender {
+  cursor: pointer;
+}
+
+.hands-up-manager:not(.can-not-hover):hover i::before {
+  content: '\e696';
+  color: #639afa;
+}
+
+.operation-icon-wrap {
+  display: flex;
+  width: 24px;
+  justify-content: space-between;
+}
+
+.operation-icon-wrap div.use-svg {
+  cursor: pointer;
+}
+
+.customize-dialog-popover .popover-inner {
+  border-radius: 12px;
+}
+
+.hands-up-tip {
+  position: absolute;
+  padding: 0 10px;
+  height: 28px;
+  background: #ffffff;
+  box-shadow: 0px 2px 6px 0px rgb(47 65 146 / 15%);
+  border: 1px solid #e1e1ea;
+  text-align: center;
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #191919;
+  line-height: 28px;
+  border-radius: 4px;
+  white-space: nowrap;
+  left: -110px;
+}
+.hands-up-tip::before {
+  content: '';
+  display: block;
+  height: 0;
+  width: 0;
+  border-left: solid 8px #e1e1ea;
+  border-top: solid 8px transparent;
+  border-bottom: solid 8px transparent;
+  position: absolute;
+  right: -8px;
+  top: 5px;
+}
+.hands-up-tip::after {
+  content: '';
+  display: block;
+  height: 0;
+  width: 0;
+  border-left: solid 6px white;
+  border-top: solid 6px transparent;
+  border-bottom: solid 6px transparent;
+  position: absolute;
+  right: -6px;
+  top: 7px;
+}
+
+.hands-up-ing {
+  height: 100%;
+  width: 100%;
+  border-radius: 100%;
+  background-color: #0273ff;
+  color: #ffffff;
+  text-align: center;
+  line-height: 40px;
+  user-select: none;
+}

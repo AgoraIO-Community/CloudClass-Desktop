@@ -1,40 +1,22 @@
-import { UIContext } from '@/infra/hooks';
-import { UIStore } from '@/infra/stores/app/ui';
-import { AgoraEduCoreSDK, LaunchOption } from 'agora-edu-core';
-import { EduRoomTypeEnum } from 'agora-edu-core';
-import 'promise-polyfill/src/polyfill';
-import { ReactChild, useState } from 'react';
-import { LiveRoom } from '../monolithic/live-room';
-import { BizPagePath } from '../types';
-
-export const UIContextProvider = ({ children }: { children: ReactChild }) => {
-  const [store] = useState<UIStore>(() => new UIStore());
-
-  return <UIContext.Provider value={store}>{children}</UIContext.Provider>;
-};
-
-export interface AliOSSBucket {
-  key: string;
-  secret: string;
-  name: string;
-  folder: string;
-  cdn: string;
-}
-
-export interface WhiteboardOSSConfig {
-  bucket: AliOSSBucket;
-}
-
-export interface ApplicationConfigParameters {
-  gtmId: string;
-  agora: {
-    appId: string;
-    whiteboardAppId: string;
-  };
-  appToken: string;
-  enableLog: boolean;
-  ossConfig?: WhiteboardOSSConfig;
-}
+import { Scenarios } from '@/ui-kit/capabilities/scenarios';
+import {
+  EduRoomTypeEnum,
+  EduClassroomConfig,
+  EduRoleTypeEnum,
+  CourseWareList,
+  EduRegion,
+  EduLanguage,
+  EduRtcConfig,
+  EduMediaEncryptionMode,
+  IAgoraExtApp,
+  EduEventCenter,
+  AgoraEduClassroomEvent,
+  IAgoraWidget,
+} from 'agora-edu-core';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { ListenerCallback } from './declare';
+import { EduContext } from '../contexts';
+import { MediaOptions } from 'agora-rte-sdk';
 
 export type LanguageEnum = 'en' | 'zh';
 export type TranslateEnum =
@@ -53,16 +35,162 @@ export type TranslateEnum =
   | 'de'
   | 'ar';
 
-const devicePath = '/pretest';
-export class AgoraEduSDK extends AgoraEduCoreSDK {
+export type ConfigParams = {
+  appId: string;
+  region?: string;
+};
+
+/**
+ * LaunchOption 接口
+ */
+export type LaunchOption = {
+  userUuid: string; // 用户uuid
+  userName: string; // 用户昵称
+  roomUuid: string; // 房间uuid
+  roleType: EduRoleTypeEnum; // 角色
+  roomType: EduRoomTypeEnum; // 房间类型
+  roomName: string; // 房间名称
+  listener: ListenerCallback; // launch状态
+  pretest: boolean; // 开启设备检测
+  // rtmUid: string
+  rtmToken: string; // rtmToken
+  language: LanguageEnum; // 国际化
+  startTime: number; // 房间开始时间
+  duration: number; // 课程时长
+  courseWareList: CourseWareList; // 课件列表
+  recordUrl?: string; // 回放页地址
+  extApps?: IAgoraExtApp[]; // app插件
+  region?: EduRegion;
+  widgets?: { [key: string]: IAgoraWidget };
+  userFlexProperties?: { [key: string]: any }; //用户自订属性
+  mediaOptions?: MediaOptions;
+  latencyLevel?: 1 | 2;
+};
+
+export { AgoraEduClassroomEvent } from 'agora-edu-core';
+
+export class AgoraEduSDK {
+  private static _config: any = {};
+  private static appId = '';
+  //default use GLOBAL region(including CN)
+  private static region: EduRegion = EduRegion.CN;
+  private static convertLanguage(lang: LanguageEnum): EduLanguage {
+    switch (lang) {
+      case 'zh':
+        return EduLanguage.zh;
+      case 'en':
+        return EduLanguage.en;
+    }
+  }
+  private static convertRegion(region: string): EduRegion {
+    switch (region) {
+      case 'CN':
+        return EduRegion.CN;
+      case 'AS':
+        return EduRegion.AP;
+      case 'EU':
+        return EduRegion.EU;
+      case 'NA':
+        return EduRegion.NA;
+    }
+    return region as EduRegion;
+  }
+  private static convertMediaOptions(opts?: MediaOptions): EduRtcConfig {
+    let config: EduRtcConfig = {};
+    if (opts) {
+      let { cameraEncoderConfiguration, screenShareEncoderConfiguration, encryptionConfig } = opts;
+      if (cameraEncoderConfiguration) {
+        config.defaultCameraEncoderConfigurations = {
+          ...cameraEncoderConfiguration,
+        };
+      }
+      if (screenShareEncoderConfiguration) {
+        config.defaultScreenEncoderConfigurations = {
+          ...screenShareEncoderConfiguration,
+        };
+      }
+      if (encryptionConfig) {
+        config.encryption = {
+          mode: encryptionConfig.mode as unknown as EduMediaEncryptionMode,
+          key: encryptionConfig.key,
+        };
+      }
+    }
+    return config;
+  }
+
+  static setParameters(params: string) {
+    const { host } = (JSON.stringify(params) as any) || {};
+    AgoraEduSDK._config.host = host;
+  }
+
+  static config(config: ConfigParams) {
+    this.appId = config.appId;
+    if (config.region) {
+      this.region = this.convertRegion(config.region);
+    }
+  }
+
   static async launch(dom: HTMLElement, option: LaunchOption): Promise<any> {
-    return await super.launch(
-      dom,
-      option,
-      <UIContextProvider>
-        <LiveRoom />
-      </UIContextProvider>,
+    EduContext.reset();
+    const {
+      pretest,
+      userUuid,
+      userName,
+      roleType,
+      rtmToken,
+      roomUuid,
+      roomName,
+      roomType,
+      courseWareList,
+      duration,
+    } = option;
+
+    const sessionInfo = {
+      userUuid,
+      userName,
+      role: roleType,
+      roomUuid,
+      roomName,
+      roomType,
+      duration,
+      flexProperties: {},
+      token: rtmToken,
+    };
+
+    const config = new EduClassroomConfig(
+      this.appId,
+      sessionInfo,
+      option.recordUrl || '',
+      {
+        language: AgoraEduSDK.convertLanguage(option.language),
+        region: AgoraEduSDK.region,
+        rtcConfigs: AgoraEduSDK.convertMediaOptions(option.mediaOptions),
+      },
+      option.widgets,
+      option.extApps,
     );
+
+    config.ignoreUrlRegionPrefix = true;
+
+    if (AgoraEduSDK._config.host) {
+      config.host = AgoraEduSDK._config.host;
+    }
+
+    if (courseWareList) {
+      config.setCourseWareList(courseWareList);
+    }
+
+    EduClassroomConfig.setConfig(config);
+
+    EduEventCenter.shared.onClassroomEvents((event: AgoraEduClassroomEvent, ...args) => {
+      if (event === AgoraEduClassroomEvent.destroyed) {
+        unmountComponentAtNode(dom);
+      }
+      option.listener(event, ...args);
+    });
+
+    render(<Scenarios pretest={pretest} roomType={sessionInfo.roomType} />, dom);
   }
 }
 
