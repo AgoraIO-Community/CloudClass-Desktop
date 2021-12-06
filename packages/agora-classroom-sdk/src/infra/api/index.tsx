@@ -182,8 +182,8 @@ export class AgoraEduSDK {
       config.setCourseWareList(courseWareList);
     }
 
-    config.rteEngineConfig.debugI18n = true;
-    setDebugI18n(config.rteEngineConfig.debugI18n);
+    // config.rteEngineConfig.debugI18n = true;
+    // setDebugI18n(config.rteEngineConfig.debugI18n);
 
     EduClassroomConfig.setConfig(config);
 
