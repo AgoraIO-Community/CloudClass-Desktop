@@ -1,13 +1,17 @@
+import {
+  StreamUIStore,
+  EduStreamTool,
+  EduClassroomConfig,
+  EduStreamToolCategory,
+  EduRoleTypeEnum,
+  EduStreamUI,
+  iterateSet,
+} from 'agora-edu-core';
 import { AGError, AgoraRteMediaPublishState } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { EduClassroomConfig } from '../../../configs';
-import { EduRoleTypeEnum } from '../../../type';
-import { iterateSet } from '../../../utils/collection';
-import { transI18n } from '../common/i18n';
-import { StreamIconColor, StreamUIStore } from '../common/stream';
-import { EduStreamUI } from '../common/stream/struct';
-import { EduStreamTool, EduStreamToolCategory } from '../common/stream/tool';
+import { transI18n } from '~ui-kit';
+import { StreamIconColor } from 'agora-edu-core';
 
 export class LectureRoomStreamUIStore extends StreamUIStore {
   @computed get localStreamTools(): EduStreamTool[] {

@@ -1,11 +1,16 @@
+import {
+  EduClassroomConfig,
+  EduRoleTypeEnum,
+  EduStreamTool,
+  EduStreamToolCategory,
+  EduStreamUI,
+  StreamIconColor,
+  StreamUIStore,
+  transI18n,
+} from 'agora-edu-core';
 import { AGError, AgoraRteMediaPublishState } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { EduClassroomConfig, EduRoleTypeEnum } from '../../..';
-import { transI18n } from '../common/i18n';
-import { StreamIconColor, StreamUIStore } from '../common/stream';
-import { EduStreamUI } from '../common/stream/struct';
-import { EduStreamTool, EduStreamToolCategory } from '../common/stream/tool';
 
 export class InteractiveRoomStreamUIStore extends StreamUIStore {
   private _gapInPx = 8;

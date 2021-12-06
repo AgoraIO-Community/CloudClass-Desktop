@@ -1,4 +1,4 @@
-import { GlobalStorage } from '../../utils';
+import { GlobalStorage } from '../utils';
 import { autorun, observable, action } from 'mobx';
 import { LaunchOption } from '@/infra/api';
 import { EduRegion } from 'agora-edu-core';

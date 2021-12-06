@@ -1,7 +1,7 @@
-import { HomeStore } from '@/infra/stores/app/home';
+import { HomeStore } from '@/infra/stores/home';
 import { MobXProviderContext } from 'mobx-react';
 import { createContext, useContext } from 'react';
-import { UIStore } from '@/infra/stores/app/ui';
+import { UIStore } from '@/infra/stores/ui';
 
 export const UIContext = createContext<UIStore>(new UIStore());
 

@@ -108,7 +108,7 @@ export const Track: React.FC<TrackSyncingProps> = observer(
             },
           },
         }[syncOn]),
-      [syncOn],
+      [syncOn, trackId, setTrackById],
     );
 
     useLayoutEffect(() => {

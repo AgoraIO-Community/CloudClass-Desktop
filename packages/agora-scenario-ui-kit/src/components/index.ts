@@ -32,6 +32,6 @@ export * from './svg-img';
 export * from './root-box';
 export * from './card/perf';
 export * from './pagination';
-export { SimpleChatNew, ChatNew } from './chatNew';
+export { SimpleChatNew, ChatNew } from './chat-new';
 export * from './overlay-wrap';
 export * from './sound-player';

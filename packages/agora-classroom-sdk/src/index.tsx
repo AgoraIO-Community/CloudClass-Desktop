@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'mobx-react';
 import { routesMap } from '@/infra/router';
-import { HomeStore } from '@/infra/stores/app/home';
+import { HomeStore } from '@/infra/stores/home';
 import { BizPageRouter } from './infra/types';
 import { GlobalStorage } from './infra/utils';
 

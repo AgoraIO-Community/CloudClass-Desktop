@@ -1,7 +1,7 @@
 import { computed } from 'mobx';
-import { RosterUIStore } from '../common/roster';
+import { RosterUIStore } from 'agora-edu-core';
 
-export class EduLectureRosterUIStore extends RosterUIStore {
+export class LectureRosterUIStore extends RosterUIStore {
   @computed
   get rosterFunctions() {
     const { canKickOut, canSearchInRoster } = this;

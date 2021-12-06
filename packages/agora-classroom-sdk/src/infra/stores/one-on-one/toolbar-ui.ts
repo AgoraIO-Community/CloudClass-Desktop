@@ -1,6 +1,6 @@
+import { EduClassroomConfig } from 'agora-edu-core';
 import { computed } from 'mobx';
-import { EduClassroomConfig } from '../../../configs';
-import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from '../common/toolbar-ui';
+import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from 'agora-edu-core';
 
 export class OneToOneToolbarUIStore extends ToolbarUIStore {
   get teacherTools(): ToolbarItem[] {

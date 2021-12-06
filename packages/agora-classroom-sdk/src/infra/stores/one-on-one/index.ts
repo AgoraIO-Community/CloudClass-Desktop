@@ -1,6 +1,5 @@
+import { EduClassroomStore, EduClassroomUIStore } from 'agora-edu-core';
 import { AgoraRteLogLevel, Log } from 'agora-rte-sdk';
-import { EduClassroomStore } from '../../domain/common';
-import { EduClassroomUIStore } from '../common';
 import { OneToOneStreamUIStore } from './stream-ui';
 import { OneToOneToolbarUIStore } from './toolbar-ui';
 

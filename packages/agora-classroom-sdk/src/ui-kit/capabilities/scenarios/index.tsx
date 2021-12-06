@@ -6,7 +6,6 @@ import { RoomPretestContainer } from '~containers/pretest';
 import { OneToOneScenario } from './1v1';
 import { MidClassScenario } from './mid-class';
 import { BigClassScenario } from './big-class';
-import './index.css';
 
 export type ScenariosProps = {
   pretest: boolean;

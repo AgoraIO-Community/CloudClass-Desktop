@@ -2,7 +2,6 @@ import { BizPageRouter } from '@/infra/types';
 import { HomePage } from '@/infra/pages/home';
 import { LaunchPage } from '@/infra/pages/launch';
 import { OneToOneScenario } from '~capabilities/scenarios/1v1';
-import { PretestScenarioPage } from '~capabilities/scenarios/pretest';
 import * as React from 'react';
 import { MidClassScenario } from '~capabilities/scenarios/mid-class';
 import { BigClassScenario } from '~capabilities/scenarios/big-class';

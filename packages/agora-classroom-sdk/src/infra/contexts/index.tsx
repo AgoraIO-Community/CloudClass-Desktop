@@ -1,5 +1,6 @@
 import React from 'react';
-import { EduRoomTypeEnum, EduStoreFactory, EduUIStoreFactory } from 'agora-edu-core';
+import { EduRoomTypeEnum, EduStoreFactory } from 'agora-edu-core';
+import { EduUIStoreFactory } from './ui-store-factory';
 
 export class EduContext {
   private static _shareContext?: React.Context<any>;

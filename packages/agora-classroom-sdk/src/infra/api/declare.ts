@@ -21,12 +21,6 @@ export interface RoomComponentConfigProps<T> {
   dom: Element;
 }
 
-// export enum AgoraEduEvent {
-//   ready = 1,
-//   destroyed = 2,
-//   clicked = 3,
-// }
-
 export type AgoraEduSDKConfigParams = {
   appId: string;
   region?: string;

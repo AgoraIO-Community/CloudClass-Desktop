@@ -1,5 +1,4 @@
-import { EduClassroomStore } from '../../domain/common';
-import { EduClassroomUIStore } from '../common';
+import { EduClassroomStore, EduClassroomUIStore } from 'agora-edu-core';
 import { InteractiveRoomStreamUIStore } from './stream-ui';
 
 export class EduInteractiveUIClassStore extends EduClassroomUIStore {
