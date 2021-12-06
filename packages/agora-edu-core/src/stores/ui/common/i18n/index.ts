@@ -26,7 +26,12 @@ class I18nTranslate {
     return I18nTranslate.shared._transI18n(text, options);
   }
 
-  static shared: I18nTranslate;
+  static shared?: I18nTranslate;
+
+  static destroy() {
+    delete I18nTranslate.shared;
+    I18nTranslate.shared = undefined;
+  }
 
   private _i18nInstance: any;
   constructor() {
@@ -55,3 +60,4 @@ class I18nTranslate {
 }
 
 export const transI18n = I18nTranslate.transI18n;
+export const destoryI18n = I18nTranslate.destroy;

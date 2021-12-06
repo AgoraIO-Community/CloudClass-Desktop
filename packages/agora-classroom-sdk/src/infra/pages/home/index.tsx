@@ -6,14 +6,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { LanguageEnum } from '@/infra/api';
 import { HomeLaunchOption } from '@/infra/stores/app/home';
-import {
-  EduClassroomConfig,
-  EduRegion,
-  EduRoleTypeEnum,
-  EduRoomTypeEnum,
-  HomeApi,
-} from 'agora-edu-core';
+import { EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { MessageDialog } from './message-dialog';
+import { HomeApi } from './home-api';
 
 export const HomePage = observer(() => {
   const homeStore = useHomeStore();

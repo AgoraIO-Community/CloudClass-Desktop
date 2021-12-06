@@ -13,7 +13,7 @@ import { LayoutUIStore } from './layout';
 import { EduUIStoreBase } from './base';
 import { TrackUIStore } from './layout/track';
 import { ExtAppUIStore } from './ext-app';
-import { transI18n } from './i18n';
+import { destoryI18n, transI18n } from './i18n';
 import { NotificationUIStore } from './notification-ui';
 import { PretestUIStore } from './pretest';
 import { LeaveReason } from '../../domain/common/connection';
@@ -166,6 +166,8 @@ export class EduClassroomUIStore {
         }
       }
     });
+
+    destoryI18n();
 
     this.classroomStore.destroy();
   }

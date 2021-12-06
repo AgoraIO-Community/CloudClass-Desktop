@@ -20,7 +20,7 @@ export class AGRtcManager {
   private _channels: Map<string, AGRtcChannel> = new Map<string, AGRtcChannel>();
 
   constructor(configs?: AGRtcConfig) {
-    this._adapter = RtcAdapterFactory.getAdapter(AgoraRteEngineConfig.shared.platform, configs);
+    this._adapter = RtcAdapterFactory.getAdapter(AgoraRteEngineConfig.platform, configs);
   }
 
   getRtcChannel(channelName: string): AGRtcChannel {

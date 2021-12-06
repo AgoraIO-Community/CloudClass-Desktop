@@ -14,8 +14,7 @@ import { useMounted, useTimeout } from '~ui-kit/utilities/hooks';
 import { Volume } from '~ui-kit/components/volume';
 import PretestAudio from './assets/pretest-audio.mp3';
 import './index.css';
-import { EduClassroomConfig } from 'agora-edu-core';
-import { AgoraRteRuntimePlatform } from 'agora-rte-sdk';
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { useStore } from '~hooks/use-edu-stores';
 
 declare global {
@@ -153,7 +152,6 @@ const DeviceNotice = (props: any) => {
 };
 
 const PlaybackTestPlayer = observer(() => {
-  const { rteEngineConfig } = EduClassroomConfig.shared;
   const {
     pretestUIStore: {
       startPlaybackDeviceTest,
@@ -165,7 +163,7 @@ const PlaybackTestPlayer = observer(() => {
   let url = PretestAudio;
 
   useEffect(() => {
-    if (rteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+    if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       let isProduction = NODE_ENV === 'production';
       const path = window.require('path');
       url = isProduction

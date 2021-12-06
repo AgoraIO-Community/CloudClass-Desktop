@@ -5,7 +5,7 @@ describe('AgoraRteEngineConfig', () => {
     const appId = 'appId';
     const config = new AgoraRteEngineConfig(appId);
     expect(config.appId).toEqual(appId);
-    expect(config.logLevel).toEqual(AgoraRteLogLevel.INFO);
+    expect(AgoraRteEngineConfig.logLevel).toEqual(AgoraRteLogLevel.INFO);
     expect(config.language).toEqual(RteLanguage.zh);
   });
 });

@@ -54,7 +54,9 @@ function App() {
   const onJoin = () => {
     let config = new AgoraRteEngineConfig(import.meta.env.VITE_REACT_APP_AGORA_APP_ID);
     config.service.host = import.meta.env.VITE_REACT_APP_AGORA_APP_SDK_DOMAIN;
-    config.logLevel = import.meta.env.DEV ? AgoraRteLogLevel.VERBOSE : AgoraRteLogLevel.INFO;
+    AgoraRteEngineConfig.logLevel = import.meta.env.DEV
+      ? AgoraRteLogLevel.VERBOSE
+      : AgoraRteLogLevel.INFO;
     let engine = AgoraRteEngine.createWithConfig(config);
 
     const user = users[idx];

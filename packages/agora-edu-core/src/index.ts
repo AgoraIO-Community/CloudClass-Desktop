@@ -33,7 +33,6 @@ export { checkMinutesThrough } from './utils/time';
 export * from './utils/collection';
 
 export { EduEventCenter } from './event-center';
-export * from './services/home-api';
 export { AGServiceErrorCode } from './services/error';
 
 export { EduStoreFactory } from './stores';

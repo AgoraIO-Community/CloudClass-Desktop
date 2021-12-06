@@ -77,6 +77,8 @@ export class EduClassroomConfig {
     this._widgets = widgets;
     this._extApps = extApps;
 
+    AgoraRteEngineConfig.setConfig(this._rteEngineConfig);
+
     Logger.info(
       `[Core] core configurations initialized, rte: v${AgoraRteEngine.getVersion()}, core: ${EduClassroomConfig.getVersion()}`,
     );
@@ -136,7 +138,6 @@ export class EduClassroomConfig {
     if (this.sessionInfo) {
       this._rteEngineConfig.token = this.sessionInfo.token;
     }
-    this._rteEngineConfig.logLevel = AgoraRteLogLevel.VERBOSE;
     return this._rteEngineConfig;
   }
 

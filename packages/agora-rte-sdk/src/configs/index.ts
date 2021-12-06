@@ -52,19 +52,32 @@ export interface AgoraRteOptions {
 }
 
 export class AgoraRteEngineConfig {
-  static shared: AgoraRteEngineConfig = new AgoraRteEngineConfig('');
+  private static _config?: AgoraRteEngineConfig;
+  static get shared(): AgoraRteEngineConfig {
+    if (!this._config) {
+      return RteErrorCenter.shared.handleThrowableError(
+        AGRteErrorCode.RTE_ERR_CONFIG_NOT_READY,
+        new Error(`classroom config not ready`),
+      );
+    }
+    return this._config;
+  }
+  static setConfig(config: AgoraRteEngineConfig) {
+    this._config = config;
+  }
   appId: string;
   service: AgoraRteServiceConfig = {};
   rtcConfigs: AGRtcConfig = {};
   logFilePath?: string;
-  logLevel: AgoraRteLogLevel;
-  readonly platform: AgoraRteRuntimePlatform = window.isElectron
+  static logLevel: AgoraRteLogLevel = AgoraRteLogLevel.INFO;
+  static readonly platform: AgoraRteRuntimePlatform = window.isElectron
     ? AgoraRteRuntimePlatform.Electron
     : AgoraRteRuntimePlatform.Web;
   userId: string = '';
   token: string = '';
   ignoreUrlRegionPrefix = false;
   language: RteLanguage = RteLanguage.zh;
+  debugI18n: boolean = false;
   region: AgoraRegion = AgoraRegion.CN;
   private _rtcRegion?: AREAS;
   private _rtmRegion?: RtmStatusCode.AreaCode;
@@ -73,7 +86,6 @@ export class AgoraRteEngineConfig {
 
   constructor(appId: string, opts?: AgoraRteOptions) {
     this.appId = appId;
-    this.logLevel = AgoraRteLogLevel.INFO;
     if (opts) {
       if (opts.language) {
         this.language = opts.language;

@@ -35,7 +35,7 @@ export class Logger {
   }
 
   private static log(logLevel: AgoraRteLogLevel, ...args: any[]) {
-    const globalLogLevel = AgoraRteEngineConfig.shared.logLevel;
+    const globalLogLevel = AgoraRteEngineConfig.logLevel;
 
     if (logLevel > globalLogLevel) {
       return;

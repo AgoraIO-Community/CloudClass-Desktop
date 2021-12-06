@@ -64,7 +64,7 @@ export class AGRtmManager extends EventEmitter {
 
   get logFilter() {
     let logFilter = AgoraRTM.LOG_FILTER_INFO;
-    const logLevel = AgoraRteEngineConfig.shared.logLevel;
+    const logLevel = AgoraRteEngineConfig.logLevel;
     switch (logLevel) {
       case AgoraRteLogLevel.WARN:
         logFilter = AgoraRTM.LOG_FILTER_WARNING;

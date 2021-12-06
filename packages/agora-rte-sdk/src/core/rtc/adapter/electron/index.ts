@@ -51,7 +51,7 @@ let IAgoraRtcEngine: AgoraRtcEngine = class A {};
 try {
   IAgoraRtcEngine = require('agora-electron-sdk').default;
 } catch (e) {
-  if (AgoraRteEngineConfig.shared.platform === AgoraRteRuntimePlatform.Electron) {
+  if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
     Logger.warn(`load electron sdk failed: ${e}`);
   }
 }

@@ -13,6 +13,7 @@ import {
   AgoraEduClassroomEvent,
   IAgoraWidget,
 } from 'agora-edu-core';
+import { setDebugI18n } from '~ui-kit';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
 import { EduContext } from '../contexts';
@@ -180,6 +181,9 @@ export class AgoraEduSDK {
     if (courseWareList) {
       config.setCourseWareList(courseWareList);
     }
+
+    config.rteEngineConfig.debugI18n = true;
+    setDebugI18n(config.rteEngineConfig.debugI18n);
 
     EduClassroomConfig.setConfig(config);
 

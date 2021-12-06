@@ -1,19 +1,10 @@
 import { ApiBase } from 'agora-rte-sdk';
+import axios from 'axios';
 
 export type ApiBaseInitializerParams = {
   sdkDomain: string;
   appId: string;
 };
-
-function getHomeApiRegion(region: string) {
-  const map: Record<string, string> = {
-    CN: 'bj2',
-    AP: 'sg3sbm',
-    NA: 'sv3sbm',
-    EU: 'fr3sbm',
-  };
-  return map[region] || 'bj2';
-}
 
 const urlTpl = `%sdkDomain%/edu/v2/users/%userUuid%/token`;
 
@@ -36,12 +27,12 @@ export class HomeApi extends ApiBase {
     userUuid: string;
     appId: string;
   }> {
-    const res = await this.fetch({
-      full_url: this.getFullURL().replace('%userUuid%', userUuid),
-      method: 'GET',
-    });
-
-    return res.data;
+    // const res = await this.fetch({
+    //   full_url: this.getFullURL().replace('%userUuid%', userUuid),
+    //   method: 'GET',
+    // });
+    const { data } = await axios.get(this.getFullURL().replace('%userUuid%', userUuid));
+    return data.data;
   }
 
   setAppId(appId: string) {

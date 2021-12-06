@@ -7,8 +7,11 @@ import { zh } from '~utilities/translate/zh';
 
 export const t = (text: string) => {
   const { t: translate } = useTranslation();
-  return translate(text);
+  let content = translate(text);
+  return debugI18n ? `%%${content}%%` : content;
 };
+
+let debugI18n = false;
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -66,6 +69,10 @@ i18n
 
 export const changeLanguage = (language: string) => {
   i18n.changeLanguage(language);
+};
+
+export const setDebugI18n = (debug: boolean) => {
+  debugI18n = debug;
 };
 
 //@ts-ignore
@@ -137,7 +144,7 @@ export const transI18n = (text: string, options?: any) => {
       content = content.replace(`{${k}}`, options[k] || '');
     });
   }
-  return content;
+  return debugI18n ? `%%${content}%%` : content;
 };
 
 type I18nProvider = {
@@ -148,7 +155,7 @@ type I18nProvider = {
 export const I18nProvider: React.FC<I18nProvider> = ({ children, language }) => {
   useEffect(() => {
     i18n.changeLanguage(language);
-  }, [language]);
+  }, [language, debugI18n]);
 
   return (
     <I18nextProvider i18n={i18n}>

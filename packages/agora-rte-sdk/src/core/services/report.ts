@@ -66,9 +66,7 @@ export class ReportService extends ApiBase {
   }
 
   get platform() {
-    return AgoraRteEngineConfig.shared.platform === AgoraRteRuntimePlatform.Electron
-      ? 'electron'
-      : 'web';
+    return AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron ? 'electron' : 'web';
   }
 
   buildBaseParams(

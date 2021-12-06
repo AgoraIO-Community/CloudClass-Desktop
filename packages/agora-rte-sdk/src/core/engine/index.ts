@@ -36,7 +36,7 @@ export class AgoraRteEngine extends AGEventEmitter {
     super();
     // there will be only 1 rte engine exist at same time
     // so it's safe to overwrite the config directly into global shared variable
-    AgoraRteEngineConfig.shared = config;
+    AgoraRteEngineConfig.setConfig(config);
     Logger.setupConsoleHijack();
     this._apiService = new AgoraRteService();
     this._logService = new AgoraLogService();
@@ -83,7 +83,7 @@ export class AgoraRteEngine extends AGEventEmitter {
   }
 
   static getRtcVersion() {
-    return AgoraRteEngineConfig.shared.platform === AgoraRteRuntimePlatform.Electron
+    return AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron
       ? RtcAdapterElectron.getRtcVersion()
       : RtcAdapterWeb.getRtcVersion();
   }
