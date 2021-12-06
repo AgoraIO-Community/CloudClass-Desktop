@@ -148,10 +148,12 @@ export class RoomStore extends EduStoreBase {
         state !== undefined && (this.classroomSchedule.state = state);
       }
       if (key === 'carousel') {
-        this.carousel.interval = get(roomProperties, 'carousel.interval', 10);
-        this.carousel.range = get(roomProperties, 'carousel.range', 1);
-        this.carousel.type = get(roomProperties, 'carousel.type', 1);
-        this.carousel.state = get(roomProperties, 'carousel.state', 0);
+        this.carousel = {
+          interval: get(roomProperties, 'carousel.interval', 10),
+          range: get(roomProperties, 'carousel.range', 1),
+          type: get(roomProperties, 'carousel.type', 1),
+          state: get(roomProperties, 'carousel.state', 0),
+        };
       }
       if (key === 'screen') {
         this.screenShareStreamUuid = get(roomProperties, 'screen.streamUuid');

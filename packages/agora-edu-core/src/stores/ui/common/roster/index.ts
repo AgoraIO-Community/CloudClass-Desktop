@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, when } from 'mobx';
 import {
   AGError,
   AGLocalTrackState,
@@ -16,8 +16,23 @@ import { EduClassroomConfig, EduRoleTypeEnum } from '../../../..';
 import { AGServiceErrorCode } from '../../../../services/error';
 
 export class RosterUIStore extends EduUIStoreBase {
+  private _disposers: IReactionDisposer[] = [];
   onInstall() {
-    this.initialize();
+    // update carousel when room properties change
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.roomStore.carousel,
+        (carousel) => {
+          const props = {
+            isOpenCarousel: !!carousel?.state,
+            mode: `${carousel?.range || 1}`,
+            randomValue: `${carousel?.type || 1}`,
+            times: typeof carousel?.interval === 'undefined' ? '10' : `${carousel.interval}`,
+          };
+          this.updateCarousel(props);
+        },
+      ),
+    );
   }
 
   /** Observables */
@@ -33,21 +48,6 @@ export class RosterUIStore extends EduUIStoreBase {
   };
 
   /** Methods */
-  private initialize() {
-    // update carousel when room properties change
-    reaction(
-      () => this.classroomStore.roomStore.carousel,
-      (carousel) => {
-        const props = {
-          isOpenCarousel: !!carousel?.state,
-          mode: `${carousel?.range || 1}`,
-          randomValue: `${carousel?.type || 1}`,
-          times: typeof carousel?.interval === 'undefined' ? '10' : `${carousel.interval}`,
-        };
-        this.updateCarousel(props);
-      },
-    );
-  }
 
   @Lodash.debounced(500, { trailing: true })
   private startCarousel(start: boolean) {
@@ -399,5 +399,7 @@ export class RosterUIStore extends EduUIStoreBase {
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
 
-  onDestroy() {}
+  onDestroy() {
+    this._disposers.forEach((disposer) => disposer());
+  }
 }
