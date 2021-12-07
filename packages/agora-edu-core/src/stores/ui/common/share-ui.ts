@@ -61,6 +61,9 @@ export class EduShareUIStore {
   addToast(desc: string, type?: 'success' | 'error' | 'warning') {
     const id = uuidv4();
     this.toastQueue.push({ id, desc, type });
+    if (this.toastQueue.length > 3) {
+      this.toastQueue = this.toastQueue.splice(1, this.toastQueue.length);
+    }
     return id;
   }
 
