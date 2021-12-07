@@ -1,4 +1,5 @@
-import { Button, Input, message, Modal, Switch } from 'antd';
+import { Input, message, Modal, Switch } from 'antd';
+import { Button } from '../button';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { transI18n } from '~ui-kit';

@@ -1,5 +1,5 @@
 .btn {
-  @apply cursor-pointer text-base rounded-full;
+  @apply cursor-pointer text-base rounded-full relative overflow-hidden;
 }
 
 .btn-primary {
@@ -75,4 +75,34 @@
   background-color: #ffffff;
   border: 1px solid #c2c2c8;
   color: #c2c2c8;
+}
+
+.ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: scale(250);
+  }
+}
+
+.circle {
+  position: absolute;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: ripple 0.75s 1;
+  top: 50%;
+  left: 50%;
 }
