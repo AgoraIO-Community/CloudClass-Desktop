@@ -12,3 +12,4 @@ export { CameraPlaceholderType } from './common/type';
 export { ToolbarUIStore } from './common/toolbar-ui';
 export { RosterUIStore } from './common/roster';
 export { StreamIconColor } from './common/stream';
+export { BoardUIStore } from './common/board-ui';

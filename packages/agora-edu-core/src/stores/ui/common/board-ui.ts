@@ -4,14 +4,10 @@ import { EduUIStoreBase } from './base';
 import { EduRoomTypeEnum, WhiteboardState } from '../../..';
 import { EduClassroomStore } from '../../domain';
 import { EduShareUIStore } from './share-ui';
-import { CloudDriveResource } from '../../domain/common/cloud-drive/struct';
-
 export class BoardUIStore extends EduUIStoreBase {
-  private _heightRatios = {
-    [EduRoomTypeEnum.Room1v1Class]: 1,
-    [EduRoomTypeEnum.RoomSmallClass]: 59 / 72,
-    [EduRoomTypeEnum.RoomBigClass]: 59 / 72,
-  };
+  protected heightRatio = 1;
+  protected aspectRatio = 9 / 16;
+
   onInstall() {}
   // computed
   @computed
@@ -29,9 +25,8 @@ export class BoardUIStore extends EduUIStoreBase {
 
   get boardHeight() {
     const { roomType } = this.classroomStore.roomStore;
-    const heightRatio = this._heightRatios[roomType];
     const viewportHeight = this.shareUIStore.classroomViewportSize.height;
-    const height = heightRatio * viewportHeight;
+    const height = this.heightRatio * viewportHeight;
 
     if (roomType === EduRoomTypeEnum.Room1v1Class) {
       return height - this.shareUIStore.navBarHeight;
@@ -75,7 +70,7 @@ export class BoardUIStore extends EduUIStoreBase {
   @bound
   async mount(dom: HTMLDivElement) {
     try {
-      await this.classroomStore.boardStore.mount(dom);
+      await this.classroomStore.boardStore.mount(dom, { containerSizeRatio: this.aspectRatio });
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }

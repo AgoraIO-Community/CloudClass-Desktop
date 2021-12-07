@@ -1,5 +1,6 @@
 import { EduClassroomStore, EduClassroomUIStore } from 'agora-edu-core';
 import { AgoraRteLogLevel, Log } from 'agora-rte-sdk';
+import { OneToOneBoardUIStore } from './board-ui';
 import { OneToOneStreamUIStore } from './stream-ui';
 import { OneToOneToolbarUIStore } from './toolbar-ui';
 
@@ -9,6 +10,7 @@ export class Edu1v1ClassUIStore extends EduClassroomUIStore {
     super(store);
     this._streamUIStore = new OneToOneStreamUIStore(store, this.shareUIStore);
     this._toolbarUIStore = new OneToOneToolbarUIStore(store, this.shareUIStore);
+    this._boardUIStore = new OneToOneBoardUIStore(store, this.shareUIStore);
   }
   initialize() {
     super.initialize();

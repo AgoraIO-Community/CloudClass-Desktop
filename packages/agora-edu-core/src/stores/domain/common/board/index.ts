@@ -3,7 +3,7 @@ import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomStore } from '..';
 import { EduClassroomConfig } from '../../../../configs';
-import { BuiltinApps, WindowManager } from '@netless/window-manager';
+import { BuiltinApps, MountParams, WindowManager } from '@netless/window-manager';
 import {
   fetchNetlessImageByUrl,
   rgbToHexColor,
@@ -134,8 +134,8 @@ export class BoardStore extends EduStoreBase {
     this.setRoom(undefined);
   };
 
-  mount = (dom: HTMLDivElement) => {
-    const { sessionInfo } = EduClassroomConfig.shared;
+  mount = (dom: HTMLDivElement, options: Pick<MountParams, 'containerSizeRatio'> = {}) => {
+    // const { sessionInfo } = EduClassroomConfig.shared;
     this._whiteBoardContainer = dom;
     WindowManager.mount({
       cursor: true,
@@ -143,7 +143,8 @@ export class BoardStore extends EduStoreBase {
       container: dom,
       // collectorContainer: document.querySelector('#window-manager-collector') as HTMLElement,
       chessboard: false,
-      containerSizeRatio: 0.461,
+      // containerSizeRatio: options.containerSizeRatio || 0.461,
+      containerSizeRatio: options.containerSizeRatio,
     })
       .then((manager) => {
         this._windowManager = manager;
