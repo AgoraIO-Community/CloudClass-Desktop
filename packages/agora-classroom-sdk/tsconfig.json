@@ -10,7 +10,7 @@
       "esnext",
       "webworker"
     ],
-    "outDir": ".demo",
+    "outDir": "lib",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,

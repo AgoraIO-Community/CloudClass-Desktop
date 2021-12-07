@@ -1,7 +1,6 @@
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const webpackMerge = require('webpack-merge');
-const { InjectManifest } = require('workbox-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -9,16 +8,14 @@ const baseConfig = require('./webpack.base');
 const { ROOT_PATH } = require('./utils/index');
 const packageJson = require('../package.json');
 
-const { swSrcPath = '' } = packageJson;
-
 const config = {
   mode: 'production',
   entry: {
-    edu_sdk: './src/infra/api/index.tsx',
+    ['agora-edu-core']: './src/index.ts',
   },
   output: {
     publicPath: '',
-    filename: '[name].bundle.js',
+    filename: 'index.js',
     libraryTarget: 'umd',
     path: path.resolve(ROOT_PATH, 'lib'),
     clean: true,

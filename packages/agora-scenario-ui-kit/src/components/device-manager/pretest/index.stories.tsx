@@ -84,7 +84,7 @@ const ChildrenWrap = () => {
           console.log(deviceType, value);
           changeAudioVolumeFnDict[deviceType](value);
         }}
-        videoComponent={<VideoPreviewPlayer />}
+        videoComponent={VideoPreviewPlayer}
       />
     </>
   );
@@ -109,7 +109,7 @@ const PretestContainer = () => {
           onCancel={hideModal}>
           <Pretest
             isMirror={false}
-            videoComponent={<VideoPreviewPlayer />}
+            videoComponent={VideoPreviewPlayer}
             cameraList={cameraList}
             cameraId={cameraList[0].deviceId}
             microphoneList={microphoneList}

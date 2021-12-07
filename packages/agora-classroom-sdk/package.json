@@ -103,14 +103,14 @@
     "electron:build": "npm run electron:copy:web && npm run electron:copy:electron",
     "dev": "webpack serve --config ./webpack/webpack.dev.js",
     "s": "yarn dev",
-    "build:types": "tsc -p ./ts.release.json && tsc-alias -p ts.release.json",
+    "build:types": "tsc -p tsconfig.json",
     "build": "webpack --config ./webpack/webpack.prod.js",
     "test": "",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "pack:mac": "electron-builder --mac",
     "pack:win": "electron-builder --win",
     "bundle:npm": "webpack --config ./webpack/webpack.pack.js",
-    "pack:npm": "run-s bundle:npm",
+    "pack:npm": "run-s bundle:npm build:types",
     "doc": "typedoc --o"
   },
   "eslintConfig": {

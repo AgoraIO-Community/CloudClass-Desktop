@@ -50,51 +50,6 @@ export const Docs = () => (
           footer={[<Button type="secondary">跳过</Button>, <Button>确定</Button>]}></Loading>
       </Card>
     </div>
-    <div className="mt-4">
-      <Modal title="上传" width={450}>
-        <Loading
-          hasLoadingGif={false}
-          uploadItemList={[
-            {
-              iconType: 'format-pdf',
-              fileName: 'pdf文件',
-              fileSize: '2.4M',
-              uploadComplete: false,
-              currentProgress: 10,
-            },
-            {
-              iconType: 'format-pdf',
-              fileName: 'pdf文件',
-              fileSize: '2.4M',
-              uploadComplete: false,
-              currentProgress: 90,
-            },
-          ]}
-        />
-      </Modal>
-    </div>
-    <div className="mt-4">
-      <Modal title="上传" width={450}>
-        <Loading
-          onClick={action('onClick')}
-          hasLoadingGif={false}
-          uploadItemList={[
-            {
-              iconType: 'format-pdf',
-              fileName: 'pdf文件33333333',
-              fileSize: '1.3M',
-              uploadComplete: true,
-            },
-            {
-              iconType: 'format-ppt',
-              fileName: 'ppt文件',
-              fileSize: '1.3M',
-              uploadComplete: true,
-            },
-          ]}
-        />
-      </Modal>
-    </div>
   </>
 );
 
