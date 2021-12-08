@@ -7,6 +7,8 @@ import { AGEduErrorCode, EduErrorCenter } from '../utils/error';
 import { AgoraRteOptions } from 'agora-rte-sdk/src/configs';
 import { IAgoraExtApp, IAgoraWidget } from '..';
 
+declare const EDU_SDK_VERSION: string;
+
 export interface WhiteboardConfigs {
   boardAppId: string;
   boardId: string;

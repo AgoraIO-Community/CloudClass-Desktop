@@ -65,7 +65,7 @@ export class MessageItem {
       id: this.messageId,
       uid: this.id,
       userName: this.userName,
-      role: this.role, //TODO
+      role: `${this.role}`, //TODO
       timestamp: this.ts,
       content: this.content,
       isOwn: this.isOwn,

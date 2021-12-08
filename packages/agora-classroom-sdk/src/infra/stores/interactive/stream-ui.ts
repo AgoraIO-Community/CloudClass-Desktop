@@ -24,7 +24,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
   }
 
   @computed
-  get carouselStreams() {
+  get carouselStreams(): EduStreamUI[] {
     const { acceptedList } = this.classroomStore.roomStore;
 
     const streams = [];

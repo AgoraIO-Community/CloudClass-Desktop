@@ -10,30 +10,8 @@ declare module '*.png';
 declare module '*.gif';
 declare module '*.jpg';
 
-declare const AGORA_APAAS_BRANCH_PATH: string;
-declare const REACT_APP_AGORA_APP_RECORD_URL: string;
-declare const REACT_APP_AGORA_RESTFULL_TOKEN: string;
-declare const REACT_APP_AGORA_APP_SDK_DOMAIN: string;
-declare const REACT_APP_AGORA_APP_SDK_LOG_SECRET: string;
-declare const REACT_APP_BUILD_VERSION: string;
-declare const REACT_APP_PUBLISH_DATE: string;
-declare const REACT_APP_AGORA_GTM_ID: string;
-declare const REACT_APP_AGORA_APP_ID: string;
-declare const REACT_APP_AGORA_APP_CERTIFICATE: string;
-declare const REACT_APP_NETLESS_APP_ID: string;
-declare const REACT_APP_AGORA_CUSTOMER_ID: string;
-declare const REACT_APP_AGORA_CUSTOMER_CERTIFICATE: string;
-declare const REACT_APP_AGORA_APP_TOKEN: string;
-declare const REACT_APP_AGORA_LOG: string;
-declare const REACT_APP_YOUR_OWN_OSS_BUCKET_KEY: string;
-declare const REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET: string;
-declare const REACT_APP_YOUR_OWN_OSS_BUCKET_NAME: string;
-declare const REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE: string;
-declare const REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER: string;
-declare const REACT_APP_REPORT_URL: string;
-declare const REACT_APP_REPORT_QOS: number;
-declare const REACT_APP_V1_REPORT_URL: string;
-declare const REACT_APP_AGORA_APP_SDK_DOMAIN_COLLECTION: string;
+declare module 'async-await-retry';
+
 interface CustomGlobalUtils {
   platform: string;
   isElectron: boolean;

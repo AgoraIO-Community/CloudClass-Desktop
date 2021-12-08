@@ -61,7 +61,8 @@
     "webpack-dev-server": "4.2.1",
     "webpack-merge": "5.8.0",
     "webpackbar": "5.0.0-3",
-    "worker-loader": "3.0.8"
+    "worker-loader": "3.0.8",
+    "dotenv-webpack": "7.0.3"
   },
   "agora_electron": {
     "electron_version": "12.0.0",

@@ -70,7 +70,7 @@ export interface ChatProps extends AffixProps {
   /**
    * 未读房间消息
    */
-  unReadMessageCount?: boolean;
+  unReadMessageCount?: number;
   /**
    *
    */

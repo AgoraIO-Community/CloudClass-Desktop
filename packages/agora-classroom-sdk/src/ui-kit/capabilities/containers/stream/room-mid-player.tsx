@@ -1,10 +1,11 @@
 import { observer } from 'mobx-react';
 import { useInteractiveUIStores } from '~hooks/use-edu-stores';
 import { StreamPlayer } from '.';
-import { EduInteractiveUIClassStore } from 'agora-edu-core';
+import { EduStreamUI } from 'agora-edu-core';
 import { useMemo } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useDebounce } from '~ui-kit/utilities/hooks';
+import { EduInteractiveUIClassStore } from '@/infra/stores/interactive';
 
 export const RoomMidStreamsContainer = observer(() => {
   return (
@@ -56,7 +57,7 @@ export const CarouselGroup = observer(() => {
 
   return (
     <TransitionGroup className="flex overflow-hidden" style={{ width }}>
-      {carouselStreams.map((stream, idx) => (
+      {carouselStreams.map((stream: EduStreamUI, idx: number) => (
         <CSSTransition
           key={`${stream.stream.streamUuid}`}
           timeout={ANIMATION_DELAY}

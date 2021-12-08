@@ -182,13 +182,13 @@ export class ReportService extends ApiBase {
   }
 
   startHB() {
-    if (AgoraRteEngine.engine.connectionState === AgoraRtmConnectionState.CONNECTED) {
-      this.reportHB();
-    }
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.startHB();
-    }, HB_RATE);
+    // if (AgoraRteEngine.engine.connectionState === AgoraRtmConnectionState.CONNECTED) {
+    //   this.reportHB();
+    // }
+    // clearTimeout(this.timer);
+    // this.timer = setTimeout(() => {
+    //   this.startHB();
+    // }, HB_RATE);
   }
 
   stopHB() {

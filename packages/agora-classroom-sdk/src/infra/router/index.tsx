@@ -5,7 +5,7 @@ import { OneToOneScenario } from '~capabilities/scenarios/1v1';
 import * as React from 'react';
 import { MidClassScenario } from '~capabilities/scenarios/mid-class';
 import { BigClassScenario } from '~capabilities/scenarios/big-class';
-import { RecordPage } from '../pages/record';
+// import { RecordPage } from '../pages/record';
 
 export type AppRouteComponent = {
   path: string;
@@ -39,10 +39,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
   //   path: '/incognito/small',
   //   component: () => PageSFC(SmallClassRoom)
   // },
-  [BizPageRouter.TestRecordPage]: {
-    path: '/record',
-    component: () => PageSFC(RecordPage),
-  },
+  // [BizPageRouter.TestRecordPage]: {
+  //   path: '/record',
+  //   component: () => PageSFC(RecordPage),
+  // },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
     component: () => PageSFC(LaunchPage),

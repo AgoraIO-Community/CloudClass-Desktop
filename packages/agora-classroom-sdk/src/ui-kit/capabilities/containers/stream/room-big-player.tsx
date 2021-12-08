@@ -2,7 +2,8 @@ import { useMemo, useRef, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useLectureUIStores } from '~hooks/use-edu-stores';
 import { StreamPlayer, StreamPlaceholder } from '.';
-import { EduLectureUIStore, EduRoleTypeEnum } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduStreamUI } from 'agora-edu-core';
+import { EduLectureUIStore } from '@/infra/stores/lecture';
 
 export const RoomBigTeacherStreamContainer = observer(({ children }: any) => {
   const [videoPlayerHeight, setVideoPlayerHeight] = useState(0);
@@ -50,7 +51,7 @@ export const RoomBigStudentStreamsContainer = observer(() => {
   return (
     <div className="flex-grow">
       <div className="h-full flex justify-center items-center">
-        {carouselStreams.map((stream, idx) => (
+        {carouselStreams.map((stream: EduStreamUI, idx: number) => (
           <div
             style={{ marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2 }}
             key={stream.stream.streamUuid}>

@@ -38,3 +38,4 @@ export { AGServiceErrorCode } from './services/error';
 export { EduStoreFactory } from './stores';
 export * from './stores/domain';
 export * from './stores/ui';
+export { MessageItem } from './stores/domain/common/message/struct';

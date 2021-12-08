@@ -5,10 +5,15 @@ import { observer } from 'mobx-react';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { LanguageEnum } from '@/infra/api';
-import { HomeLaunchOption } from '@/infra/stores/app/home';
+import { HomeLaunchOption } from '@/infra/stores/home';
 import { EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { MessageDialog } from './message-dialog';
 import { HomeApi } from './home-api';
+
+const REACT_APP_AGORA_APP_TOKEN_DOMAIN_COLLECTION =
+  process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN_COLLECTION;
+const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
+const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
 export const HomePage = observer(() => {
   const homeStore = useHomeStore();
@@ -128,7 +133,7 @@ export const HomePage = observer(() => {
   let collection: any = {};
 
   try {
-    collection = JSON.parse(`${REACT_APP_AGORA_APP_SDK_DOMAIN_COLLECTION}`);
+    collection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN_COLLECTION}`);
   } catch (e) {
     console.warn(`no collection found, dynamic region may not work.`);
   }
@@ -168,29 +173,26 @@ export const HomePage = observer(() => {
         onChangeLanguage={onChangeLanguage}
         onClick={async () => {
           const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-          let domainByRegion = ``;
-          switch (region) {
-            case 'CN':
-              domainByRegion = collection['prod_cn'];
-              break;
-            case 'AP':
-              domainByRegion = collection['prod_ap'];
-              break;
-            case 'NA':
-              domainByRegion = collection['prod_na'];
-              break;
-            case 'EU':
-              domainByRegion = collection['prod_eu'];
-              break;
+          let tokenDomain = ``;
+          if (collection) {
+            switch (region) {
+              case 'CN':
+                tokenDomain = collection['prod_cn'];
+                break;
+              case 'AP':
+                tokenDomain = collection['prod_ap'];
+                break;
+              case 'NA':
+                tokenDomain = collection['prod_na'];
+                break;
+              case 'EU':
+                tokenDomain = collection['prod_eu'];
+                break;
+            }
           }
 
-          if (!domainByRegion) {
-            HomeApi.shared.setRegion(region, domain);
-            homeStore.sdkDomain = domain;
-          } else {
-            HomeApi.shared.setSDKDomain(domainByRegion);
-            homeStore.sdkDomain = domainByRegion;
-          }
+          HomeApi.shared.domain = tokenDomain;
+          homeStore.sdkDomain = domain;
           let { rtmToken, appId } = await HomeApi.shared.login(userUuid);
           console.log('## rtm Token', rtmToken);
 

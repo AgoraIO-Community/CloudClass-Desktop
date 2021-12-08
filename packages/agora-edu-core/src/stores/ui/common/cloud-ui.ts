@@ -121,9 +121,10 @@ export class CloudUIStore extends EduUIStoreBase {
     try {
       await this.classroomStore.boardStore.openResource(resource);
     } catch (e) {
+      let error = e as AGError;
       this.shareUIStore.addGenericErrorDialog(e as AGError);
-      if (e.codeList && e.codeList.length) {
-        const code = e.codeList[e.codeList.length - 1];
+      if (error.codeList && error.codeList.length) {
+        const code = error.codeList[error.codeList.length - 1];
         if (
           code == AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_CONVERSION_CONVERTING &&
           _lastFetchPersonalResourcesOptions

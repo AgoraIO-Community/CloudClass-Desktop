@@ -1,5 +1,5 @@
+//@ts-ignore
 import { default as externalRetry } from 'async-await-retry';
-
 class Retry {
   private fn: Function;
   private args: any[];

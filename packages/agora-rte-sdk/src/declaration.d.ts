@@ -7,5 +7,4 @@ interface Window {
   webkitAudioContext: AudioContext;
 }
 
-declare module 'async-await-retry';
 declare module 'web-audio-peak-meter';

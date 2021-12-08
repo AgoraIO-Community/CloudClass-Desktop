@@ -256,13 +256,6 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.awardAnims.filter((anim) => anim.userUuid === stream.fromUser.userUuid);
   });
 
-  streamVideoVisibility = computedFn((stream: EduStreamUI): boolean => {
-    if (stream.stream.isLocal) {
-      return this.localCameraPlaceholder !== CameraPlaceholderType.none;
-    }
-    return this.remoteCameraPlaceholderMap();
-  });
-
   @computed get localStreamTools(): EduStreamTool[] {
     let tools: EduStreamTool[] = [];
     tools = tools.concat([

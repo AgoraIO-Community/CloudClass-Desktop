@@ -5,7 +5,9 @@
     "target": "es6",
     "paths": {
       "agora-chat-widget": ["../agora-chat-widget/src"],
-      "agora-edu-core": ["../agora-edu-core/src"]
+      "agora-edu-core": ["../agora-edu-core/src"],
+      "~ui-kit": ["../agora-scenario-ui-kit/src"],
+      "~ui-kit/*": ["../agora-scenario-ui-kit/src/*"],
     },
     "experimentalDecorators": true,
     "module": "commonjs",

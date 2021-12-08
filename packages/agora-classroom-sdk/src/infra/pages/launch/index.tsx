@@ -9,6 +9,8 @@ import { useHistory } from 'react-router-dom';
 import { AgoraEduSDK, AgoraEduClassroomEvent } from '../../api';
 import { transI18n } from '~ui-kit';
 
+const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
+
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
 
@@ -42,13 +44,13 @@ export const LaunchPage = observer(() => {
       ];
 
       launchOption.widgets = { chat: new AgoraHXChatWidget() };
+      const { protocol, hostname, pathname, port } = global.location;
+      const recordUrl = `${protocol}//${hostname}${port ? ':' + port : ''}${pathname}`;
 
       await AgoraEduSDK.launch(dom, {
         ...launchOption,
         // TODO:  Here you need to pass in the address of the recording page posted by the developer himself
-        recordUrl: AGORA_APAAS_BRANCH_PATH
-          ? `https://webdemo.agora.io/flexible-classroom/${AGORA_APAAS_BRANCH_PATH}/record_page`
-          : `https://webdemo.agora.io/flexible-classroom/record_page`,
+        recordUrl,
         courseWareList: [
           {
             isActive: true,
