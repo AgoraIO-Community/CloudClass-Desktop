@@ -4,6 +4,7 @@ const webpackMerge = require('webpack-merge');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
+const dotenv = require('dotenv-webpack');
 
 const baseConfig = require('./webpack.base');
 const { ROOT_PATH } = require('./utils/index');
@@ -73,6 +74,9 @@ const config = {
     ],
   },
   plugins: [
+    new dotenv({
+      path: './.env',
+    }),
     new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production'),
     }),

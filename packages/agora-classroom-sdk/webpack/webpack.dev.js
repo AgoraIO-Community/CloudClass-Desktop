@@ -5,6 +5,7 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const { PUBLIC_PATH, DEFAULT_PORT, ROOT_PATH, DIST_PATH } = require('./utils/index');
 const webpack = require('webpack');
+const dotenv = require('dotenv-webpack');
 
 const entry = path.resolve(ROOT_PATH, './src/index.tsx');
 const template = path.resolve(ROOT_PATH, './public/index.html');
@@ -67,6 +68,9 @@ const config = {
     },
   },
   plugins: [
+    new dotenv({
+      path: './.env.dev',
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: template,

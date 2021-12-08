@@ -7,6 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const webpack = require('webpack');
+const dotenv = require('dotenv-webpack');
 
 const { ROOT_PATH } = require('./utils/index');
 const packageJson = require('../package.json');
@@ -79,6 +80,9 @@ const config = {
     },
   },
   plugins: [
+    new dotenv({
+      path: './.env',
+    }),
     new MiniCssExtractPlugin({
       filename: 'static/[name].[contenthash].css',
     }),

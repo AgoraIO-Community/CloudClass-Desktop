@@ -3,7 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 const dayjs = require('dayjs');
 const webpackbar = require('webpackbar');
-const dotenv = require('dotenv-webpack');
 const packageJson = require('../package.json');
 const { env } = process;
 
@@ -181,7 +180,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new dotenv(),
     new webpackbar(),
     new webpack.DefinePlugin({
       RTE_SDK_VERSION: JSON.stringify(rteVersion),

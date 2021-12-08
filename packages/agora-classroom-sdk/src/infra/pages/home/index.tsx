@@ -10,8 +10,7 @@ import { EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 
 import { MessageDialog } from './message-dialog';
 import { HomeApi } from './home-api';
 
-const REACT_APP_AGORA_APP_TOKEN_DOMAIN_COLLECTION =
-  process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN_COLLECTION;
+const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
@@ -130,12 +129,17 @@ export const HomePage = observer(() => {
 
   const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
 
-  let collection: any = {};
+  let token_domain: string = '';
+  let token_domain_collection: any = {};
 
   try {
-    collection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN_COLLECTION}`);
+    if (typeof `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}` === 'string') {
+      token_domain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
+    } else {
+      token_domain_collection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
+    }
   } catch (e) {
-    console.warn(`no collection found, dynamic region may not work.`);
+    console.warn(`read token service host failed`);
   }
 
   return language !== '' ? (
@@ -173,25 +177,24 @@ export const HomePage = observer(() => {
         onChangeLanguage={onChangeLanguage}
         onClick={async () => {
           const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-          let tokenDomain = ``;
-          if (collection) {
+          if (!token_domain && token_domain_collection) {
             switch (region) {
               case 'CN':
-                tokenDomain = collection['prod_cn'];
+                token_domain = token_domain_collection['prod_cn'];
                 break;
               case 'AP':
-                tokenDomain = collection['prod_ap'];
+                token_domain = token_domain_collection['prod_ap'];
                 break;
               case 'NA':
-                tokenDomain = collection['prod_na'];
+                token_domain = token_domain_collection['prod_na'];
                 break;
               case 'EU':
-                tokenDomain = collection['prod_eu'];
+                token_domain = token_domain_collection['prod_eu'];
                 break;
             }
           }
 
-          HomeApi.shared.domain = tokenDomain;
+          HomeApi.shared.domain = token_domain;
           homeStore.sdkDomain = domain;
           let { rtmToken, appId } = await HomeApi.shared.login(userUuid);
           console.log('## rtm Token', rtmToken);
