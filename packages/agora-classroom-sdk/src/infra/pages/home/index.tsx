@@ -198,7 +198,7 @@ export const HomePage = observer(() => {
 
           let config: HomeLaunchOption = {
             appId,
-            pretest: false,
+            pretest: true,
             courseWareList: courseWareList.slice(0, 1),
             language: language as LanguageEnum,
             userUuid: `${userUuid}`,
@@ -207,8 +207,7 @@ export const HomePage = observer(() => {
             roomType: scenario,
             roomName: `${roomName}`,
             userName: userName,
-            // roleType: role,
-            roleType: EduRoleTypeEnum.invisible,
+            roleType: role,
             startTime: Date.now(),
             region,
             duration: duration * 60,

@@ -9,6 +9,8 @@ import { useHistory } from 'react-router-dom';
 import { AgoraEduSDK, AgoraEduClassroomEvent } from '../../api';
 import { transI18n } from '~ui-kit';
 
+declare const CLASSROOM_SDK_VERSION: string;
+
 const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
 
 export const LaunchPage = observer(() => {
@@ -44,8 +46,7 @@ export const LaunchPage = observer(() => {
       ];
 
       launchOption.widgets = { chat: new AgoraHXChatWidget() };
-      const { protocol, hostname, pathname, port } = global.location;
-      const recordUrl = `${protocol}//${hostname}${port ? ':' + port : ''}${pathname}`;
+      const recordUrl = `https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
 
       await AgoraEduSDK.launch(dom, {
         ...launchOption,

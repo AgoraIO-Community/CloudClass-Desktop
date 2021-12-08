@@ -18,6 +18,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
 import { EduContext } from '../contexts';
 import { MediaOptions } from 'agora-rte-sdk';
+import { AgoraHXChatWidget } from 'agora-widget-gallery';
 
 export type LanguageEnum = 'en' | 'zh';
 export type TranslateEnum =
@@ -173,7 +174,10 @@ export class AgoraEduSDK {
           },
         },
       },
-      option.widgets,
+      {
+        ...{ chat: new AgoraHXChatWidget() },
+        ...option.widgets,
+      },
       option.extApps,
     );
 
