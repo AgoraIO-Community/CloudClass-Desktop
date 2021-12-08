@@ -28,7 +28,7 @@ import { AGWebAudioPlayer } from './player';
 import { Log } from '../../../decorator/log';
 import { Injectable } from '../../../decorator/type';
 import { AgoraRteEngineConfig } from '../../../../configs';
-import { ChannelProfile, ClientRole } from '../../../../type';
+import { ClientRole } from '../../../../type';
 
 export interface RtcAdapterWebConfig {
   codec: SDK_CODEC;
@@ -39,8 +39,14 @@ export interface RtcAdapterWebConfig {
 export class RtcAdapterWeb extends RtcAdapterBase {
   protected logger!: Injectable.Logger;
   private _channels: Map<string, RtcChannelAdapterBase> = new Map<string, RtcChannelAdapterBase>();
-  private _vdm: RtcVideoDeviceManagerWeb = new RtcVideoDeviceManagerWeb(this);
-  private _adm: RtcAudioDeviceManagerWeb = new RtcAudioDeviceManagerWeb(this);
+  private _vdm: RtcVideoDeviceManagerWeb = new RtcVideoDeviceManagerWeb(
+    this,
+    AgoraRteEngineConfig.shared.rtcConfigs.noDevicePermission,
+  );
+  private _adm: RtcAudioDeviceManagerWeb = new RtcAudioDeviceManagerWeb(
+    this,
+    AgoraRteEngineConfig.shared.rtcConfigs.noDevicePermission,
+  );
   readonly cameraThread: AgoraRteCameraThread = new AgoraRteCameraThread();
   readonly micThread: AgoraRteMicrophoneThread = new AgoraRteMicrophoneThread();
   readonly screenThread: AgoraRteScreenShareThread = new AgoraRteScreenShareThread();

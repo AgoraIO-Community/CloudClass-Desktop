@@ -166,7 +166,12 @@ export class AgoraEduSDK {
       {
         language: AgoraEduSDK.convertLanguage(option.language),
         region: AgoraEduSDK.region,
-        rtcConfigs: AgoraEduSDK.convertMediaOptions(option.mediaOptions),
+        rtcConfigs: {
+          ...AgoraEduSDK.convertMediaOptions(option.mediaOptions),
+          ...{
+            noDevicePermission: roleType === EduRoleTypeEnum.invisible,
+          },
+        },
       },
       option.widgets,
       option.extApps,

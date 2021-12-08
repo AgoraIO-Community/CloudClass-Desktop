@@ -9,15 +9,15 @@ import { RtcAudioDeviceManagerBase, RtcVideoDeviceManagerBase } from '../base';
 import to from 'await-to-js';
 import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
 import { RtcAdapterWeb } from '.';
-import { AgoraMediaControlEventType } from '../../../..';
+import { AgoraMediaControlEventType } from '../../../media/control';
 
 export class RtcVideoDeviceManagerWeb extends RtcVideoDeviceManagerBase {
   private _deviceInfo: Map<string, AGRtcDeviceInfo> = new Map<string, AGRtcDeviceInfo>();
   private _deviceIds: Set<string> = new Set<string>();
 
-  constructor(private readonly adapter: RtcAdapterWeb) {
+  constructor(private readonly adapter: RtcAdapterWeb, noDevicePermission?: boolean) {
     super();
-    this._initializeDeviceList();
+    this._initializeDeviceList(noDevicePermission);
   }
 
   onLocalVideoTrackStateChanged(cb: LocalVideoTrackStateEvent): number {
@@ -62,8 +62,8 @@ export class RtcVideoDeviceManagerWeb extends RtcVideoDeviceManagerBase {
     this.emit(AgoraMediaControlEventType.cameraListChanged, add, newDevices, allDevices);
   }
 
-  private async _initializeDeviceList() {
-    let [err, devices] = await to(AgoraRTC.getCameras());
+  private async _initializeDeviceList(noDevicePermission?: boolean) {
+    let [err, devices] = await to(AgoraRTC.getCameras(noDevicePermission));
     err &&
       RteErrorCenter.shared.handleThrowableError(AGRteErrorCode.RTC_ERR_VDM_GET_DEVICES_FAIL, err);
     if (devices) {
@@ -106,10 +106,10 @@ export class RtcAudioDeviceManagerWeb extends RtcAudioDeviceManagerBase {
   private _playbackDeviceInfo: Map<string, AGRtcDeviceInfo> = new Map<string, AGRtcDeviceInfo>();
   private _playbackDeviceIds: Set<string> = new Set<string>();
 
-  constructor(private readonly adapter: RtcAdapterWeb) {
+  constructor(private readonly adapter: RtcAdapterWeb, noDevicePermission?: boolean) {
     super();
-    this._initializeDeviceList();
-    this._initializePlaybackDeviceList();
+    this._initializeDeviceList(noDevicePermission);
+    this._initializePlaybackDeviceList(noDevicePermission);
   }
 
   onLocalAudioPlaybackTestVolumeChanged(cb: LocalAudioPlaybackVolumeIndicatorEvent): number {
@@ -191,8 +191,8 @@ export class RtcAudioDeviceManagerWeb extends RtcAudioDeviceManagerBase {
     this.emit(AgoraMediaControlEventType.recordingDeviceListChanged, add, newDevices, allDevices);
   }
 
-  private async _initializePlaybackDeviceList() {
-    let [err, devices] = await to(AgoraRTC.getPlaybackDevices());
+  private async _initializePlaybackDeviceList(noDevicePermission?: boolean) {
+    let [err, devices] = await to(AgoraRTC.getPlaybackDevices(noDevicePermission));
     err &&
       RteErrorCenter.shared.handleThrowableError(
         AGRteErrorCode.RTC_ERR_ADM_GET_PLAYBACK_DEVICES_FAIL,
@@ -231,8 +231,8 @@ export class RtcAudioDeviceManagerWeb extends RtcAudioDeviceManagerBase {
     };
   }
 
-  private async _initializeDeviceList() {
-    let [err, devices] = await to(AgoraRTC.getMicrophones());
+  private async _initializeDeviceList(noDevicePermission?: boolean) {
+    let [err, devices] = await to(AgoraRTC.getMicrophones(noDevicePermission));
     err &&
       RteErrorCenter.shared.handleThrowableError(
         AGRteErrorCode.RTC_ERR_ADM_GET_RECORD_DEVICES_FAIL,

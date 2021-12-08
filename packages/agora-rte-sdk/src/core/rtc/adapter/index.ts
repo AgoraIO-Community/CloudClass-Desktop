@@ -10,6 +10,7 @@ export interface AGRtcConfig {
   defaultScreenEncoderConfigurations?: AGVideoEncoderConfigurations;
   encryption?: AGMediaEncryptionConfig;
   channelProfile?: ChannelProfile;
+  noDevicePermission?: boolean;
 
   // web specific configs
   web?: RtcAdapterWebConfig;
