@@ -1,5 +1,4 @@
 import React, { useCallback, FC, useState } from 'react';
-import { Icon } from '~components/icon';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';

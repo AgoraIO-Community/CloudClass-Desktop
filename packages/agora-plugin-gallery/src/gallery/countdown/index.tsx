@@ -115,7 +115,7 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
   static store = new PluginStore();
   appIdentifier = 'io.agora.countdown';
   appName = transI18n('cabinet.countdown.appName');
-  icon = (<Icon type="countdown" useSvg size={24} />);
+  icon = 'countdown';
   width = 258;
   height = 168; // 开始倒计时后高度为 55
   minWidth = 258;

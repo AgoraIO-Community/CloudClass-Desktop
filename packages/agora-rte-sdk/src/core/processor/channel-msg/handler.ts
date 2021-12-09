@@ -284,12 +284,12 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
     if (!user) {
       return this.logger.warn(`user ${userUuid} not exists, update property failed`);
     }
-    user.userProperties = this._mergeProperties(user.userProperties.toJS(), changeProperties);
+    user.setUserProperties(this._mergeProperties(user.userProperties.toJS(), changeProperties));
 
     this.emit(
       AgoraRteEventType.UserPropertyUpdated,
       userUuid,
-      user.userProperties,
+      user.userProperties.toObject(),
       operator,
       cause,
     );

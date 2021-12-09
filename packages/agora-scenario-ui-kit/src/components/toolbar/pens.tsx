@@ -1,6 +1,4 @@
-import { useMounted } from '~ui-kit/utilities/hooks';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { Icon } from '~components/icon';
+import { FC, useCallback, useState } from 'react';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';

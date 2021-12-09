@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { BaseWaveArmProps } from './types';
-import { Card, Icon } from '~components';
+import { Card, SvgImg } from '~components';
 import { transI18n } from '~ui-kit';
 import { useInterval } from '@/infra/hooks/utilites';
 
@@ -160,7 +160,7 @@ export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}>
       {!countDownNum ? (
-        <Icon type="hands-up-before" useSvg size={24} />
+        <SvgImg type="hands-up-before" size={24} />
       ) : (
         <div className="hands-up-ing">{countDownNum}</div>
       )}

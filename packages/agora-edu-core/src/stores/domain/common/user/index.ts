@@ -6,6 +6,7 @@ import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AgoraEduInteractionEvent, EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { RteRole2EduRole } from '../../../../utils';
+import Immutable from 'immutable';
 
 //for users
 export class UserStore extends EduStoreBase {
@@ -17,6 +18,9 @@ export class UserStore extends EduStoreBase {
   @observable studentList: Map<string, EduUser> = new Map<string, EduUser>();
 
   @observable assistantList: Map<string, EduUser> = new Map<string, EduUser>();
+
+  @observable
+  rewards: Map<string, number> = new Map<string, number>();
 
   @observable
   private _localUser?: EduUser;
@@ -65,6 +69,11 @@ export class UserStore extends EduStoreBase {
             this.assistantList.set(user.userUuid, userItem);
           }
           this.users.set(user.userUuid, userItem);
+
+          const reward = user.userProperties.get('reward');
+          if (reward) {
+            this.rewards.set(user.userUuid, reward.count || 0);
+          }
         });
       });
     });
@@ -115,6 +124,18 @@ export class UserStore extends EduStoreBase {
         });
       });
     });
+
+    scene.on(
+      AgoraRteEventType.UserPropertyUpdated,
+      (userUuid: string, userProperties: any, operator: any, cause: any) => {
+        const { reward } = userProperties;
+        if (reward) {
+          runInAction(() => {
+            this.rewards.set(userUuid, reward.count || 0);
+          });
+        }
+      },
+    );
   }
 
   onInstall() {

@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useEffect } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Tool, ToolItem } from './tool';
@@ -11,8 +11,6 @@ import { useMounted } from '~ui-kit/utilities/hooks';
 import { debounce } from 'lodash';
 
 export { Pens } from './pens';
-
-export { CloudDisk } from './cloud-disk';
 
 export { ToolCabinet } from './tool-cabinet';
 

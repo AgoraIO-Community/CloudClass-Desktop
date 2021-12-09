@@ -94,6 +94,10 @@ export class AgoraUser {
     this.userProperties = Immutable.Map(data.userProperties);
   }
 
+  setUserProperties(userProperties: any) {
+    this.userProperties = Immutable.Map(userProperties);
+  }
+
   toString() {
     return this.userUuid;
   }

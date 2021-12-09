@@ -62,30 +62,24 @@ export class StreamUIStore extends EduUIStoreBase {
         },
       },
     );
-    computed(() => this.classroomStore.roomStore.studentReward).observe(
-      ({ newValue, oldValue }) => {
-        if (!oldValue || !newValue) {
-          //ignore first appliance
-          return;
+    computed(() => this.classroomStore.userStore.rewards).observe(({ newValue, oldValue }) => {
+      let anims: { id: string; userUuid: string }[] = [];
+      Object.keys(newValue).forEach((userUuid) => {
+        let previousReward = 0;
+        if (oldValue) {
+          previousReward = oldValue.get(userUuid) || 0;
         }
-        let anims: { id: string; userUuid: string }[] = [];
-        Object.keys(newValue).forEach((userUuid) => {
-          let previousReward = 0;
-          if (oldValue) {
-            previousReward = oldValue[userUuid] || 0;
-          }
-          let reward = newValue[userUuid] || 0;
-          if (reward > previousReward) {
-            anims.push({ id: uuidv4(), userUuid: userUuid });
-          }
+        let reward = newValue.get(userUuid) || 0;
+        if (reward > previousReward) {
+          anims.push({ id: uuidv4(), userUuid: userUuid });
+        }
+      });
+      if (anims.length > 0) {
+        runInAction(() => {
+          this.awardAnims = this.awardAnims.concat(anims);
         });
-        if (anims.length > 0) {
-          runInAction(() => {
-            this.awardAnims = this.awardAnims.concat(anims);
-          });
-        }
-      },
-    );
+      }
+    });
     this._autorunDisposer = autorun(() => {
       let streamUuid = this.classroomStore.roomStore.screenShareStreamUuid || '';
       let token = this.classroomStore.streamStore.shareStreamTokens.get(streamUuid);
@@ -248,7 +242,7 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   awards = computedFn((stream: EduStreamUI): number => {
-    let reward = (this.classroomStore.roomStore.studentReward || {})[stream.fromUser.userUuid];
+    let reward = this.classroomStore.userStore.rewards.get(stream.fromUser.userUuid);
     return reward || 0;
   });
 

@@ -1,6 +1,6 @@
 import { AgoraRteEventType, bound, Scheduler } from 'agora-rte-sdk';
 import get from 'lodash/get';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
@@ -61,9 +61,6 @@ export class RoomStore extends EduStoreBase {
     range: 1,
     interval: 10,
   };
-
-  @observable
-  studentReward?: Record<string, number>;
 
   @observable
   waveArmList: HandUpProgress[] = [];
@@ -164,18 +161,9 @@ export class RoomStore extends EduStoreBase {
         const appName = get(roomProperties, 'im.huanxin.appName', '');
         this.imConfig = { chatRoomId, orgName, appName };
       }
-      if (key === 'students') {
-        const students = get(roomProperties, 'students', {});
-        let rewards: Record<string, number> = {};
-        Object.keys(students).forEach((userUuid: string) => {
-          rewards[userUuid] = students[userUuid].reward || 0;
-        });
-        this.studentReward = rewards;
-      }
       if (key === 'muteChat') {
         this.chatMuted = !!get(roomProperties, 'muteChat', 0);
       }
-
       if (key === 'extApps') {
         this.extAppProperties = get(roomProperties, `extApps`, {});
       }

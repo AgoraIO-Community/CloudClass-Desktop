@@ -225,7 +225,7 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
   appIdentifier = 'io.agora.answer';
   appName = transI18n('cabinet.answer.appName');
   className = 'answer-dialog';
-  icon = (<Icon type="answer" useSvg size={24} />);
+  icon = 'answer';
   width = 380;
   height = 150; // 超过4个选项高度为220
   store?: PluginStore;

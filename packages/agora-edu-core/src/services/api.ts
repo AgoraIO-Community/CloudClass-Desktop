@@ -266,7 +266,7 @@ export class EduApiService extends ApiBase {
     }>;
   }) {
     const res = await this.fetch({
-      path: `/v2/rooms/${params.roomUuid}/rewards`,
+      path: `/v3/rooms/${params.roomUuid}/rewards`,
       method: 'POST',
       data: {
         rewardDetails: params.rewards,

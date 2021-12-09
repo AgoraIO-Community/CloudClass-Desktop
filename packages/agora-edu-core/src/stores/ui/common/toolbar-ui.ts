@@ -214,8 +214,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
     const apps = Object.values(extApps).map(({ appIdentifier, icon, appName }) => ({
       id: appIdentifier,
-      icon: icon,
-      iconType: '',
+      iconType: typeof icon === 'string' ? icon : '',
+      icon: typeof icon === 'string' ? null : icon,
       name: appName,
     }));
 

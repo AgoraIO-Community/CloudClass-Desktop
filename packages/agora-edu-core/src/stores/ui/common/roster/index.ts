@@ -260,14 +260,15 @@ export class RosterUIStore extends EduUIStoreBase {
   get userList() {
     const { list } = iterateMap(this.classroomStore.userStore.studentList, {
       onMap: (userUuid: string, { userName }) => {
-        const { acceptedList, chatMuted, studentReward = {} } = this.classroomStore.roomStore;
+        const { acceptedList, chatMuted } = this.classroomStore.roomStore;
+        const { rewards } = this.classroomStore.userStore;
         const { grantUsers } = this.classroomStore.boardStore;
         const uid = userUuid;
         const name = userName;
 
         const isOnPodium = acceptedList.some(({ userUuid: uid }) => userUuid === uid);
         const isBoardGranted = grantUsers.has(userUuid);
-        const stars = studentReward[userUuid] || 0;
+        const stars = rewards.get(userUuid) || 0;
         const isChatMuted = chatMuted;
         const operations: Operation[] = [];
         let cameraState = DeviceState.unavailable;
