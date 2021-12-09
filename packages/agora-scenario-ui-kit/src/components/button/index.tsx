@@ -7,7 +7,7 @@ type ButtonType = 'primary' | 'secondary' | 'ghost' | 'danger';
 
 function createRipple(container: HTMLDivElement, y: number, x: number, type: ButtonType) {
   const circleElement = document.createElement('div');
-  circleElement.className = 'circle';
+  circleElement.className = 'ripple-circle';
   circleElement.style.top = y + 'px';
   circleElement.style.left = x + 'px';
   circleElement.style.background = type === 'primary' ? 'rgba(38, 99, 208, 1)' : '#fff';

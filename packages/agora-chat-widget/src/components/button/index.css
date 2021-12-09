@@ -134,7 +134,7 @@
   }
 }
 
-.circle {
+.btn .ripple-circle {
   position: absolute;
   border: 1px solid transparent;
   border-radius: 50%;

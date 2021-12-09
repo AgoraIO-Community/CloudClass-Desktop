@@ -22,7 +22,7 @@ export const PublicResourcesContainer = observer(() => {
         <Col>{transI18n('cloud.size')}</Col>
         <Col>{transI18n('cloud.updated_at')}</Col>
       </TableHeader>
-      <Table className="table-container" style={{ flex: 1, minHeight: 0 }}>
+      <Table className="table-container">
         {publicResources.size > 0 ? (
           [...publicResources].map(
             ([key, { resourceName, updateTime, size, resourceUuid }]: [

@@ -4,11 +4,23 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateY(20px);
-  opacity: 0;
 }
-.overlay-wrap.opened {
+
+.overlay-wrap-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.overlay-wrap-enter-active {
+  opacity: 1;
+  transform: translateY(0px);
+  transition: 300ms;
+}
+.overlay-wrap-exit {
   transform: translateY(0px);
   opacity: 1;
+}
+.overlay-wrap-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: 300ms;
 }

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Icon } from '~components/icon';
@@ -85,6 +85,14 @@ export const Modal: ModalType = ({
     [`${contentClassName}`]: !!contentClassName,
   });
 
+  const [opened, setOpened] = useState(false);
+  const [eventSource, setEventSource] =
+    useState<{ action: 'ok' | 'cancel'; event: React.MouseEvent<HTMLElement> }>();
+
+  useEffect(() => {
+    setOpened(true);
+  }, []);
+
   const modalJsx = (
     <div className={cls} {...restProps} style={{ ...style, width }}>
       <div className={['modal-title', modalType === 'back' ? 'back-modal-title' : ''].join(' ')}>
@@ -95,7 +103,8 @@ export const Modal: ModalType = ({
               <div
                 className="modal-title-close"
                 onClick={(e: React.MouseEvent<HTMLElement>) => {
-                  onCancel(e);
+                  setEventSource({ action: 'cancel', event: e });
+                  setOpened(false);
                 }}>
                 <SvgImg type="close" size={20} style={{ color: '#586376' }} />
               </div>
@@ -110,7 +119,8 @@ export const Modal: ModalType = ({
               style={{ cursor: 'pointer' }}
               className="back-icon"
               onClick={(e: React.MouseEvent<HTMLElement>) => {
-                onCancel(e);
+                setEventSource({ action: 'cancel', event: e });
+                setOpened(false);
               }}>
               <SvgImg type="backward" style={{ color: '#586376' }} />
             </div>
@@ -127,8 +137,8 @@ export const Modal: ModalType = ({
               {React.cloneElement(item, {
                 onClick: (e: React.MouseEvent<HTMLElement>) => {
                   const { action } = item.props;
-                  action === 'ok' && onOk && onOk(e);
-                  action === 'cancel' && onCancel && onCancel(e);
+                  setEventSource({ action, event: e });
+                  setOpened(false);
                 },
               })}
             </div>
@@ -137,7 +147,18 @@ export const Modal: ModalType = ({
     </div>
   );
 
-  const resultJsx = animate ? <OverlayWrap>{modalJsx}</OverlayWrap> : modalJsx;
+  const resultJsx = animate ? (
+    <OverlayWrap
+      opened={opened}
+      onExited={() => {
+        eventSource?.action === 'ok' && onOk && onOk(eventSource.event);
+        eventSource?.action === 'cancel' && onCancel && onCancel(eventSource.event);
+      }}>
+      {modalJsx}
+    </OverlayWrap>
+  ) : (
+    modalJsx
+  );
 
   return hasMask ? <div className="modal-mask">{resultJsx}</div> : resultJsx;
 };
