@@ -134,12 +134,11 @@ export class EduClassroomUIStore {
   }
 
   join() {
-    const { joinClassroom, joinRTC, joinWhiteboard } = this.classroomStore.connectionStore;
+    const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
 
     joinClassroom()
       .then(() => {
         joinRTC().catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-        joinWhiteboard().catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
       })
       .catch((e) => {
         if (AGError.isOf(e, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {

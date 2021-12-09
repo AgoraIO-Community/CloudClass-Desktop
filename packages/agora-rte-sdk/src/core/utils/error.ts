@@ -24,7 +24,7 @@ export class AGError extends Error {
     return this._extra?.servCode;
   }
 
-  static isOf(e: Error, ...codes: number[]) {
+  static isOf(e: Error, ...codes: (number | string)[]) {
     if (!(e instanceof AGError)) return false;
     return codes.includes(e.servCode);
   }

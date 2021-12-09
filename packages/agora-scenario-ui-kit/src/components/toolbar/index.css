@@ -222,17 +222,6 @@
   background-color: #f9f9fc;
 }
 
-.expand-tools .cabinet-item div.use-svg {
-  position: relative;
-  transform: translateY(5px);
-  margin-bottom: 12px;
-}
-
-.expand-tools .cabinet-item:hover div.use-svg {
-  left: -999px;
-  filter: drop-shadow(#191919 999px 0);
-}
-
 .customize-dialog-popover .popover-inner-content {
   padding-left: 10px;
   display: inline-flex;

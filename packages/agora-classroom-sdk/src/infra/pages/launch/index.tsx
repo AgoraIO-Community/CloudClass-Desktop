@@ -31,7 +31,7 @@ export const LaunchPage = observer(() => {
     if (dom) {
       AgoraEduSDK.setParameters(
         JSON.stringify({
-          host: homeStore.sdkDomain,
+          host: homeStore.launchOption.sdkDomain,
         }),
       );
 

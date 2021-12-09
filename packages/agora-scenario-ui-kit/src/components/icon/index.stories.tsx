@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Icon, SvgIcon, SvgH5Icon } from '~components/icon';
+import { Icon } from './';
 
 const meta: Meta = {
   title: 'Components/Icon',
@@ -407,22 +407,6 @@ export const IconSvg = () => {
             setIsRecording(!isRecording);
           }}
           hover={true}
-        />
-      </div>
-    </>
-  );
-};
-
-export const IconSvgH5 = () => {
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-  return (
-    <>
-      <div>
-        <SvgIcon
-          type="h5"
-          onClick={() => {
-            setIsRecording(!isRecording);
-          }}
         />
       </div>
     </>

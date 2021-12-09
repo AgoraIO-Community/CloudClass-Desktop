@@ -6,11 +6,27 @@ import './index.css';
 import 'video.js/dist/video-js.css';
 import '@netless/window-manager/dist/style.css';
 import { WhiteboardToolbar } from '~containers/toolbar';
+import { useEffect } from 'react';
 
 export const WhiteboardContainer = observer(({ children }: any) => {
   const { boardUIStore } = useStore();
-  const { readyToMount, mount, unmount, rejoinWhiteboard, connectionLost, boardHeight } =
-    boardUIStore;
+  const {
+    readyToMount,
+    mount,
+    unmount,
+    rejoinWhiteboard,
+    connectionLost,
+    boardHeight,
+    joinWhiteboardWhenConfigReady,
+    leaveWhiteboard,
+  } = boardUIStore;
+
+  useEffect(() => {
+    joinWhiteboardWhenConfigReady();
+    return () => {
+      leaveWhiteboard();
+    };
+  }, [leaveWhiteboard, joinWhiteboardWhenConfigReady]);
 
   const boardContainer = useMemo(
     () => (
@@ -24,7 +40,7 @@ export const WhiteboardContainer = observer(({ children }: any) => {
           }
         }}></div>
     ),
-    [],
+    [mount, unmount],
   );
 
   return (

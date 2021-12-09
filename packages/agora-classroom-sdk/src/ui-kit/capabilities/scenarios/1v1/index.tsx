@@ -6,7 +6,7 @@ import { LoadingContainer } from '~containers/loading';
 import { NavigationBarContainer } from '~containers/nav';
 import { Aside, Content, Layout } from '~components/layout';
 import { ScreenShareContainer } from '~containers/screen-share';
-import { Room1v1StreamsContainer } from '~containers/stream';
+import { Room1v1StreamsContainer } from '~containers/stream/room-1v1-player';
 import { ChatWidget } from '~containers/widget/chat-widget';
 import Room from '../room';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';

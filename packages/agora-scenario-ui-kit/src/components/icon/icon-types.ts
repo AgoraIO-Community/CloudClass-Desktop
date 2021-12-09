@@ -73,7 +73,5 @@ export type IconTypes =
   | 'whitening'
   | 'buffing'
   | 'ruddy'
-  | 'hands-up-before'
-  | 'hands-up-active'
   | 'answer'
   | 'vote';

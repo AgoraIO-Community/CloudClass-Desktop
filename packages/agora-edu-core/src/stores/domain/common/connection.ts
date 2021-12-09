@@ -137,22 +137,11 @@ export class ConnectionStore extends EduStoreBase {
       retryAttempt(async () => {
         this.setClassroomState(ClassroomState.Connecting);
         const { sessionInfo } = EduClassroomConfig.shared;
-        const config = await this.classroomStore.api.getConfig();
-        const { netless = {} } = config;
         const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo, {
           videoState: this.classroomStore.mediaStore.disableLocalVideoByDefault ? 0 : 1,
           audioState: this.classroomStore.mediaStore.disableLocalAudioByDefault ? 0 : 1,
         });
-        const {
-          board = {},
-          state = 0,
-          startTime,
-          duration,
-          closeDelay = 0,
-          rtcRegion,
-          rtmRegion,
-        } = data;
-        const { boardId, boardRegion, boardToken } = board;
+        const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion } = data;
         this.setCheckInData({
           clientServerTime: ts,
           classRoomSchedule: {
@@ -165,12 +154,6 @@ export class ConnectionStore extends EduStoreBase {
           rtmRegion,
         });
 
-        EduClassroomConfig.shared.setWhiteboardConfig({
-          boardAppId: netless.appId,
-          boardId,
-          boardRegion,
-          boardToken,
-        });
         await engine.login(sessionInfo.token, sessionInfo.userUuid);
         const scene = engine.createAgoraRteScene(sessionInfo.roomUuid);
 

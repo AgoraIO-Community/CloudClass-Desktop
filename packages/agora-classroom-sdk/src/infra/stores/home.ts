@@ -1,12 +1,12 @@
 import { GlobalStorage } from '../utils';
-import { autorun, observable, action } from 'mobx';
+import { autorun, observable, action, toJS } from 'mobx';
 import { LaunchOption } from '@/infra/api';
 import { EduRegion } from 'agora-edu-core';
 
 export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   appId: string;
+  sdkDomain: string;
 };
-
 const regionKey = `home_store_demo_launch_region`;
 const launchKey = `home_store_demo_launch_options`;
 
@@ -21,20 +21,16 @@ export class HomeStore {
   @observable
   region: EduRegion = EduRegion.CN;
 
-  regionKey: string = regionKey;
-  launchKey: string = launchKey;
-  sdkDomain: string = '';
-
   constructor() {
-    this.setRegion(GlobalStorage.read(this.regionKey) || this.region);
-    this.launchOption = GlobalStorage.read(this.launchKey) || {};
+    this.setRegion(GlobalStorage.read(regionKey) || this.region);
+    this.launchOption = GlobalStorage.read(launchKey) || {};
     autorun(() => {
-      const data = this.region;
-      GlobalStorage.save(this.regionKey, data);
+      GlobalStorage.save(regionKey, toJS(this.region));
     });
   }
 
-  @action setRegion(region: EduRegion) {
+  @action
+  setRegion(region: EduRegion) {
     this.region = region;
   }
 
@@ -44,14 +40,13 @@ export class HomeStore {
     if (payload.region) {
       this.region = payload.region;
     }
-    GlobalStorage.save(this.regionKey, this.region);
-    GlobalStorage.save(this.launchKey, this.launchOption);
+    GlobalStorage.save(regionKey, toJS(this.region));
+    GlobalStorage.save(launchKey, this.launchOption);
   }
 
   clear() {
     clearHomeOption();
-    //@ts-ignore
-    this.region = GlobalStorage.read(this.regionKey) || 'NA';
-    this.launchOption = GlobalStorage.read(this.launchKey) || {};
+    this.region = GlobalStorage.read(regionKey) || 'NA';
+    this.launchOption = GlobalStorage.read(launchKey) || {};
   }
 }

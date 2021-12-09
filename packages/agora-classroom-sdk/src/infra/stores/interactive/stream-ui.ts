@@ -13,10 +13,14 @@ import { computed } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
 export class InteractiveRoomStreamUIStore extends StreamUIStore {
+  // 1 teacher + 6 students
+  private _carouselShowCount = 7;
+
   private _gapInPx = 8;
 
   get videoStreamSize() {
-    const width = this.shareUIStore.classroomViewportSize.width / 7 - this._gapInPx;
+    const width =
+      this.shareUIStore.classroomViewportSize.width / this._carouselShowCount - this._gapInPx;
 
     const height = (9 / 16) * width;
 

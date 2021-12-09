@@ -20,7 +20,7 @@ export class EduApiService extends ApiBase {
     const { roomUuid, userUuid, role, roomName, roomType, userName, flexProperties, duration } =
       session;
     let { data, ts } = await this.fetch({
-      path: `/v2/rooms/${roomUuid}/users/${userUuid}`,
+      path: `/v3/rooms/${roomUuid}/users/${userUuid}`,
       method: 'PUT',
       data: {
         duration: duration,

@@ -122,7 +122,7 @@ export class AgoraEduSDK {
   }
 
   static setParameters(params: string) {
-    const { host } = (JSON.parse(params) as any) || {};
+    const { host } = JSON.parse(params) || {};
     AgoraEduSDK._config.host = host;
   }
 

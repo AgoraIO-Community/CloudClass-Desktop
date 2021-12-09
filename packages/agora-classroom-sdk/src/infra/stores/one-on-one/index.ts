@@ -12,7 +12,4 @@ export class Edu1v1ClassUIStore extends EduClassroomUIStore {
     this._toolbarUIStore = new OneToOneToolbarUIStore(store, this.shareUIStore);
     this._boardUIStore = new OneToOneBoardUIStore(store, this.shareUIStore);
   }
-  initialize() {
-    super.initialize();
-  }
 }

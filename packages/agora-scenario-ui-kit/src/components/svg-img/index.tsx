@@ -1,11 +1,8 @@
 import { FC } from 'react';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-
-import './index.css';
-
-import { getPath, getViewBox } from './svg-dict';
-
 import classnames from 'classnames';
+import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { getPath, getViewBox } from './svg-dict';
+import './index.css';
 
 export type SvgImgProps = BaseProps & {
   type: string;

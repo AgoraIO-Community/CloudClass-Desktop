@@ -23,7 +23,6 @@ export * from './button/icon-btn';
 export * from './progress';
 export * from './placeholder';
 export * from './tooltip';
-export * from './hands-up';
 export * from './svga-player';
 export * from 'react-draggable';
 export * from './input';

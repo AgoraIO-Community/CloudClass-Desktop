@@ -1,13 +1,17 @@
 const bound = (proto: any, propertyName: string, descriptor: PropertyDescriptor) => {
   let value = descriptor.value;
+  let funCache: typeof value = null;
   return {
     configurable: true,
     enumerable: false,
     get() {
-      return value.bind(this);
+      if (!funCache) {
+        funCache = value.bind(this);
+      }
+      return funCache;
     },
     set(v: any) {
-      value = v;
+      funCache = v.bind(this);
     },
   };
 };

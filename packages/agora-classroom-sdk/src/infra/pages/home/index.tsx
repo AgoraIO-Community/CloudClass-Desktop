@@ -129,13 +129,13 @@ export const HomePage = observer(() => {
 
   const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
 
-  let token_domain: string = '';
-  let token_domain_collection: any = {};
+  let tokenDomain: string = '';
+  let tokenDomainCollection: any = {};
 
   try {
-    token_domain_collection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
+    tokenDomainCollection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
   } catch (e) {
-    token_domain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
+    tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
   }
 
   return language !== '' ? (
@@ -173,30 +173,30 @@ export const HomePage = observer(() => {
         onChangeLanguage={onChangeLanguage}
         onClick={async () => {
           const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-          if (!token_domain && token_domain_collection) {
+          if (!tokenDomain && tokenDomainCollection) {
             switch (region) {
               case 'CN':
-                token_domain = token_domain_collection['prod_cn'];
+                tokenDomain = tokenDomainCollection['prod_cn'];
                 break;
               case 'AP':
-                token_domain = token_domain_collection['prod_ap'];
+                tokenDomain = tokenDomainCollection['prod_ap'];
                 break;
               case 'NA':
-                token_domain = token_domain_collection['prod_na'];
+                tokenDomain = tokenDomainCollection['prod_na'];
                 break;
               case 'EU':
-                token_domain = token_domain_collection['prod_eu'];
+                tokenDomain = tokenDomainCollection['prod_eu'];
                 break;
             }
           }
 
-          HomeApi.shared.domain = token_domain;
-          homeStore.sdkDomain = domain;
+          HomeApi.shared.domain = tokenDomain;
           let { rtmToken, appId } = await HomeApi.shared.login(userUuid);
           console.log('## rtm Token', rtmToken);
 
           let config: HomeLaunchOption = {
             appId,
+            sdkDomain: domain,
             pretest: true,
             courseWareList: courseWareList.slice(0, 1),
             language: language as LanguageEnum,

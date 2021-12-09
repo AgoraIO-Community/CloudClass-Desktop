@@ -59,12 +59,88 @@
 .stream-player-enter {
   width: 0;
   opacity: 0;
-  animation: show 0.5s linear 1 forwards;
+  animation: carousel-show 0.5s linear 1 forwards;
 }
 .stream-player-enter-active {
   margin-right: 0 !important;
 }
 
 .stream-player-exit {
-  animation: hide 0.5s linear 1 forwards;
+  animation: carousel-hide 0.5s linear 1 forwards;
+}
+
+@keyframes carousel-show {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  to {
+    opacity: 1;
+    width: calc((100vw / 7) - 4px);
+  }
+}
+
+@keyframes carousel-hide {
+  from {
+    opacity: 1;
+    width: calc((100vw / 7) - 4px);
+  }
+  to {
+    opacity: 0;
+    width: 0;
+  }
+}
+
+.carousel-prev,
+.carousel-next {
+  position: absolute;
+  width: 30px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  border-radius: 2px;
+}
+
+.carousel-next {
+  right: 0;
+}
+
+.carousel-nav-enter {
+  opacity: 0;
+  animation: carousel-nav-show 0.2s linear 1 forwards;
+}
+
+.carousel-nav-enter-done {
+  opacity: 1;
+}
+
+.carousel-nav-exit {
+  animation: carousel-nav-hide 0.2s linear 1 forwards;
+  opacity: 0;
+}
+
+.carousel-nav-exit-done {
+  opacity: 0;
+}
+
+@keyframes carousel-nav-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes carousel-nav-hide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

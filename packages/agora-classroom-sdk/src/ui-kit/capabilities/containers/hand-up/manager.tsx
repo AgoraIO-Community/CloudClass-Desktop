@@ -1,7 +1,7 @@
-import { FC, useCallback, useState, useEffect } from 'react';
+import { FC, useCallback, useState, useEffect, useMemo } from 'react';
 import { BaseWaveArmProps, UserWaveArmInfo } from './types';
 import classnames from 'classnames';
-import { Card, Icon, Popover } from '~components';
+import { Card, Popover, SvgImg } from '~components';
 import { throttle } from 'lodash';
 import { useInterval } from '@/infra/hooks/utilites';
 
@@ -63,7 +63,8 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
           borderRadius={borderRadius}
           className={twinkleFlag ? 'card-hands-up-active' : ''}>
           <div className="hands-box-line">
-            <Icon type={twinkleFlag ? 'hands-up-active' : 'hands-up-before'} useSvg size={24} />
+            <SvgImg type={twinkleFlag ? 'hands-up-active' : 'hands-up-before'} size={24} />
+            {/* <Icon type={twinkleFlag ? 'hands-up-active' : 'hands-up-before'} useSvg size={24} /> */}
           </div>
           {waveArmCount ? (
             <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
@@ -93,22 +94,23 @@ export const StudentsWaveArmList: FC<StudentsWaveArmListProps> = ({
 
   const [pagesList, setPagesList] = useState<Array<Array<UserWaveArmInfo>>>([[]]);
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(7);
+  const [pageSize] = useState<number>(7);
   const [totalPagesCount, setTotalPagesCount] = useState<number>(0);
   const [showWaveArmList, setShowWaveArmList] = useState<UserWaveArmInfo[]>([]);
 
-  const handlerScroll = useCallback(
-    throttle((event: Event) => {
-      const targetDom: Element = event.target as Element;
-      const scrollTop = targetDom.scrollTop;
-      const scrollHeight = targetDom.scrollHeight;
-      const clientHeight = targetDom.clientHeight;
-      if (scrollTop + clientHeight === scrollHeight) {
-        if (pageIndex < totalPagesCount) {
-          setPageIndex(pageIndex + 1);
+  const handlerScroll = useMemo(
+    () =>
+      throttle((event: Event) => {
+        const targetDom: Element = event.target as Element;
+        const scrollTop = targetDom.scrollTop;
+        const scrollHeight = targetDom.scrollHeight;
+        const clientHeight = targetDom.clientHeight;
+        if (scrollTop + clientHeight === scrollHeight) {
+          if (pageIndex < totalPagesCount) {
+            setPageIndex(pageIndex + 1);
+          }
         }
-      }
-    }, 100),
+      }, 100),
     [pageIndex, totalPagesCount],
   );
 
@@ -143,14 +145,21 @@ export const StudentsWaveArmList: FC<StudentsWaveArmListProps> = ({
             <span className="student-name">{item?.userName}</span>
             <span className="operation-icon-wrap">
               {item.onPodium ? (
-                <Icon type="on-podium" color="#357bf6" />
+                <SvgImg type="on-podium" color="#357bf6" />
               ) : (
-                <Icon
+                // <Icon type="on-podium" color="#357bf6" />
+                <SvgImg
                   type="invite-to-podium"
                   color="#7b89a0"
-                  hover={true}
                   onClick={() => onClick(item.userUuid)}
+                  canHover
                 />
+                // <Icon
+                //   type="invite-to-podium"
+                //   color="#7b89a0"
+                //   hover={true}
+                //   onClick={() => onClick(item.userUuid)}
+                // />
               )}
             </span>
           </div>

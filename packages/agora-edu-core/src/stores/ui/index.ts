@@ -13,3 +13,13 @@ export { ToolbarUIStore } from './common/toolbar-ui';
 export { RosterUIStore } from './common/roster';
 export { StreamIconColor } from './common/stream';
 export { BoardUIStore } from './common/board-ui';
+
+export { CloudUIStore } from './common/cloud-ui';
+export { DeviceSettingUIStore } from './common/device-setting';
+export { ExtAppUIStore } from './common/ext-app';
+export { HandUpUIStore } from './common/hand-up';
+export { LayoutUIStore } from './common/layout';
+export { TrackUIStore } from './common/layout/track';
+export { NavigationBarUIStore } from './common/nav-ui';
+export { NotificationUIStore } from './common/notification-ui';
+export { EduShareUIStore } from './common/share-ui';

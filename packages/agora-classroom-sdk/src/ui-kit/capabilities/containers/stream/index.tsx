@@ -80,7 +80,7 @@ export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
       if (ref.current) {
         setupLocalVideo(stream, ref.current, isMirror);
       }
-    }, [ref.current, stream, isMirror]);
+    }, [stream, isMirror, setupLocalVideo]);
 
     return <div style={style} className={className} ref={ref}></div>;
   },
@@ -98,7 +98,7 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
       if (ref.current) {
         setupRemoteVideo(stream, ref.current);
       }
-    }, [ref.current, stream]);
+    }, [stream, setupRemoteVideo]);
 
     return <div style={style} className={className} ref={ref}></div>;
   },
@@ -339,39 +339,3 @@ export const StreamPlayer = observer(
     );
   },
 );
-
-const Room1v1TeacherStream = observer(({ stream }: { stream?: EduStreamUI }) => {
-  return (
-    <>
-      {stream ? (
-        <StreamPlayer stream={stream}></StreamPlayer>
-      ) : (
-        <StreamPlaceholder role={EduRoleTypeEnum.teacher} />
-      )}
-    </>
-  );
-});
-
-const Room1v1StudentStream = observer(({ stream }: { stream?: EduStreamUI }) => {
-  return (
-    <>
-      {stream ? (
-        <StreamPlayer stream={stream}></StreamPlayer>
-      ) : (
-        <StreamPlaceholder role={EduRoleTypeEnum.student} />
-      )}
-    </>
-  );
-});
-
-export const Room1v1StreamsContainer = observer(({ children }: any) => {
-  const { streamUIStore } = useStore();
-  const { teacherCameraStream, studentCameraStream } = streamUIStore;
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Room1v1TeacherStream stream={teacherCameraStream} />
-      <Room1v1StudentStream stream={studentCameraStream} />
-    </div>
-  );
-});
