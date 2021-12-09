@@ -6,7 +6,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 const { PUBLIC_PATH, DEFAULT_PORT, ROOT_PATH, DIST_PATH } = require('./utils/index');
 const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
-const ESLintPlugin = require('eslint-webpack-plugin');
 
 const entry = path.resolve(ROOT_PATH, './src/index.tsx');
 const template = path.resolve(ROOT_PATH, './public/index.html');
@@ -80,7 +79,6 @@ const config = {
     new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('development'),
     }),
-    new ESLintPlugin(),
   ],
 };
 
