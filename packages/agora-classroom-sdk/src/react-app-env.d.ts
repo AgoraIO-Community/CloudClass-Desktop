@@ -1,4 +1,3 @@
-/// <reference types="react-scripts" />
 /// <reference types="./sdk/education/interface/index.d.ts" />
 
 declare module '*.css';
@@ -116,4 +115,4 @@ declare module '@netless/zip' {
   export = content;
 }
 
-declare var zip: any;
+declare const zip: any;
