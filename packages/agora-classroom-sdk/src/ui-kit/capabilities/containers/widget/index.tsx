@@ -6,6 +6,7 @@ import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
 import { Button } from '~ui-kit';
 import { useStore } from '~hooks/use-edu-stores';
 import './index.css';
+import { AgoraRteEngineConfig } from 'agora-rte-sdk';
 interface BaseProps {
   style?: CSSProperties;
   className?: any;
@@ -21,7 +22,8 @@ export const Widget: FC<WidgetProps> = observer(
   ({ className, widgetComponent, widgetProps = {}, ...restProps }) => {
     const ref = useRef<HTMLDivElement | null>(null);
     const uiStore = useStore();
-    widgetProps = { ...widgetProps, uiStore };
+    const language = AgoraRteEngineConfig.shared.language;
+    widgetProps = { ...widgetProps, language, uiStore };
     useEffect(() => {
       if (ref.current && widgetComponent) {
         // only run for very first time

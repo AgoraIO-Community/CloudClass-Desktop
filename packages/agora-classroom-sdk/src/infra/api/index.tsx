@@ -13,12 +13,11 @@ import {
   AgoraEduClassroomEvent,
   IAgoraWidget,
 } from 'agora-edu-core';
-import { setDebugI18n } from '~ui-kit';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
 import { EduContext } from '../contexts';
 import { MediaOptions } from 'agora-rte-sdk';
-import { AgoraHXChatWidget } from 'agora-widget-gallery';
+import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
 
 export type LanguageEnum = 'en' | 'zh';
 export type TranslateEnum =
@@ -70,6 +69,9 @@ export type LaunchOption = {
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
+
+const ChatFactory = (region: EduRegion = EduRegion.CN) =>
+  region === EduRegion.CN ? new AgoraHXChatWidget() : new AgoraChatWidget();
 
 export class AgoraEduSDK {
   private static _config: any = {};
@@ -175,7 +177,7 @@ export class AgoraEduSDK {
         },
       },
       {
-        ...{ chat: new AgoraHXChatWidget() },
+        chat: ChatFactory(this.region),
         ...option.widgets,
       },
       option.extApps,

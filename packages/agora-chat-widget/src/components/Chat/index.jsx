@@ -11,7 +11,8 @@ import { isShowChat } from '../../redux/actions/propsAction';
 import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction';
 import { transI18n } from '~ui-kit';
 import { announcementNotice } from '../../redux/actions/roomAction';
-import minimize from '../../themes/img/minimize.png';
+// import minimize from '../../themes/img/minimize.png';
+import minimize from '../../themes/svg/minimize.svg';
 import notice from '../../themes/img/notice.png';
 import _ from 'lodash';
 
@@ -109,7 +110,7 @@ export const Chat = () => {
   };
   return (
     <div>
-      <Tabs onChange={onTabChange} activeKey={tabKey} tabBarStyle={{ margin: '2px' }}>
+      <Tabs onChange={onTabChange} activeKey={tabKey}>
         <TabPane
           tab={
             <div>

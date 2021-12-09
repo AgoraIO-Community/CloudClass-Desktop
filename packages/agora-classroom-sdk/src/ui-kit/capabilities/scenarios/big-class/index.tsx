@@ -16,6 +16,7 @@ import { ExtAppContainer } from '~containers/ext-app';
 import { ChatWidget } from '~containers/widget/chat-widget';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
+import { BigRosterBtn } from '../../containers/roster';
 
 export const BigClassScenario = observer(() => {
   // layout
@@ -32,7 +33,10 @@ export const BigClassScenario = observer(() => {
               <WhiteboardContainer>
                 <ScreenShareContainer />
               </WhiteboardContainer>
-              <HandsUpContainer />
+              <Aside className="aisde-fixed">
+                <BigRosterBtn />
+                <HandsUpContainer />
+              </Aside>
             </Content>
             <Aside>
               <RoomBigTeacherStreamContainer />

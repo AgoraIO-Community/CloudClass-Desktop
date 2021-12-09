@@ -13,6 +13,7 @@ import { ChatWidget } from '~containers/widget/chat-widget';
 import { ExtAppContainer } from '~containers/ext-app';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
+import { MidRosterBtn } from '../../containers/roster';
 
 export const MidClassScenario = observer(() => {
   // layout
@@ -28,6 +29,7 @@ export const MidClassScenario = observer(() => {
             <ScreenShareContainer />
           </WhiteboardContainer>
           <Aside className="aisde-fixed">
+            <MidRosterBtn />
             <HandsUpContainer />
             <ChatWidget />
           </Aside>

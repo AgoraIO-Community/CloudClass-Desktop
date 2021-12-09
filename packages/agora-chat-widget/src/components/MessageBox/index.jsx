@@ -34,7 +34,7 @@ export const MessageBox = () => {
           className="message-box"
           id="chat-messages"
           style={{
-            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 178px)',
+            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 158px)',
           }}>
           <div>
             {msgs &&
@@ -54,7 +54,7 @@ export const MessageBox = () => {
         <div
           className="message-box no-box"
           style={{
-            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 178px)',
+            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 158px)',
           }}>
           <div className="no-msgs">
             <img src={noMessage_icon} />

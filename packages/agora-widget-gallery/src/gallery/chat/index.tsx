@@ -127,10 +127,9 @@ export class AgoraChatWidget implements IAgoraWidget {
 
   widgetDidLoad(dom: Element, props: any): void {
     const widgetStore = new WidgetChatUIStore(props.uiStore);
-    const language = AgoraRteEngineConfig.shared.language;
     ReactDOM.render(
       <Context.Provider value={{ uiStore: props.uiStore, widgetStore }}>
-        <I18nProvider language={language}>
+        <I18nProvider language={props.language}>
           <App />
         </I18nProvider>
       </Context.Provider>,

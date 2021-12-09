@@ -7,10 +7,9 @@
   /* 宽度自定义 */
   /* width: 70px !important; */
   justify-content: center;
-  padding: 14px !important;
+  padding: 12px !important;
   margin: 0 !important;
 }
-
 .ant-tabs-tab-btn {
   /* width: 35px !important; */
   height: 18px !important;
@@ -21,7 +20,18 @@
   line-height: 18px !important;
   text-align: center !important;
 }
-
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #191919 !important;
+}
+/* .chat-icon .ant-switch {
+  background-color: #E2E2EE;
+} */
+.ant-switch.chat-switch {
+  background: #e2e2ee;
+}
+.chat-switch.ant-switch-checked {
+  background-color: #1890ff;
+}
 .ant-tabs-ink-bar-animated {
   /* 宽度自定义 */
   /* width: 70px !important; */
@@ -33,11 +43,10 @@
 .mini-icon {
   /* 宽度自定义 */
   position: absolute;
-  right: 2px;
+  right: 15px;
   top: 10px;
   cursor: pointer;
   width: 24px;
-  border: 1px dashed #ececf1;
 }
 
 .notice {

@@ -2,12 +2,14 @@ import { Input, message, Modal, Switch } from 'antd';
 import { Button } from '../button';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import classnames from 'classnames';
 import { transI18n } from '~ui-kit';
 import { removeAllmute, setAllmute } from '../../api/mute';
 import { MSG_TYPE } from '../../contants';
 import { messageAction, showEmojiAction } from '../../redux/actions/messageAction';
 import store from '../../redux/store';
-import emojiIcon from '../../themes/img/emoji.png';
+// import emojiIcon from '../../themes/img/emoji.png';
+import emojiIcon from '../../themes/svg/emoji.svg';
 import { Emoji } from '../../utils/emoji';
 import './index.css';
 
@@ -41,6 +43,8 @@ export const InputMsg = ({ isTeacher }) => {
   const [content, setContent] = useState('');
   // 输入框焦点
   const inputRef = useRef(null);
+
+  const [visibleTextArea, setVisible] = useState(false);
 
   // 显示表情框
   const showEmoji = () => {
@@ -120,6 +124,15 @@ export const InputMsg = ({ isTeacher }) => {
     msg.set(option);
     setContent('');
     WebIM.conn.send(msg.body);
+    setVisible(false);
+  };
+
+  const handleTextAreavisible = () => {
+    setVisible(true);
+  };
+
+  const handleTextareaBlur = () => {
+    setVisible(false);
   };
 
   return (
@@ -134,7 +147,7 @@ export const InputMsg = ({ isTeacher }) => {
             <div>
               <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
               <Switch
-                size="small"
+                className="chat-switch"
                 checked={isAllMute}
                 onClick={() => {
                   onChangeMute(isAllMute);
@@ -143,16 +156,25 @@ export const InputMsg = ({ isTeacher }) => {
             </div>
           )}
         </div>
-        <Input.TextArea
-          placeholder={transI18n('chat.enter_contents')}
-          className="input-chat"
-          autoFocus
-          onChange={(e) => changeMsg(e)}
-          value={content}
-          onPressEnter={sendTextMessage()}
-          ref={inputRef}
-        />
+        {visibleTextArea && (
+          <Input.TextArea
+            placeholder={transI18n('chat.enter_contents')}
+            className="input-chat"
+            autoFocus
+            onChange={(e) => changeMsg(e)}
+            onBlur={handleTextareaBlur}
+            value={content}
+            onPressEnter={sendTextMessage()}
+            ref={inputRef}
+          />
+        )}
+
         <div className="input-btn">
+          <div
+            className={classnames('input-btn-placeholder', { visibleContent: visibleTextArea })}
+            onClick={handleTextAreavisible}>
+            {transI18n('chat.enter_contents')}
+          </div>
           <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
             {transI18n('chat.send')}
           </Button>

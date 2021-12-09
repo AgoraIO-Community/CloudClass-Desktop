@@ -142,7 +142,7 @@ export class EduShareUIStore {
         ...props,
         onClose: () => {
           this.removeDialog(id);
-          if (props.onClose) props.onClose();
+          if (props?.onClose) props.onClose();
         },
       },
     });

@@ -292,11 +292,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
         icon: 'tools',
         category: ToolbarItemCategory.Cabinet,
       },
-      {
-        value: 'register',
-        label: 'scaffold.user_list',
-        icon: 'register',
-      },
     ];
   }
 
@@ -309,13 +304,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
     if (!whiteboardAuthorized) {
       //allowed to view user list only if not granted
-      return [
-        {
-          value: 'register',
-          label: 'scaffold.user_list',
-          icon: 'register',
-        },
-      ];
+      return [];
     }
 
     return [
@@ -355,11 +344,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
       //   //   return <ColorsContainer {...props} />;
       //   // },
       // }),
-      {
-        value: 'register',
-        label: 'scaffold.user_list',
-        icon: 'register',
-      },
     ];
   }
 

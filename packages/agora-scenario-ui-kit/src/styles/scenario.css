@@ -151,8 +151,6 @@ body,
   transition: 0.5s;
   margin-right: 0;
   min-width: unset;
-  right: 10px;
-  bottom: 10px;
   z-index: 201;
   height: unset;
   position: absolute;
@@ -181,6 +179,9 @@ body,
 .aisde-fixed .show-chat-icon {
   position: initial;
 }
+.big-class-room .aisde-fixed {
+  bottom: 96px;
+}
 .displayNone {
   display: none;
 }
@@ -189,7 +190,9 @@ body,
   display: inline-block !important;
 }
 
-.mid-class-room .telebox-collector,
+.mid-class-room .telebox-collector {
+  right: 170px !important;
+}
 .big-class-room .telebox-collector {
   right: 124px !important;
 }
@@ -199,12 +202,12 @@ body,
   flex-direction: column;
 }
 
-.big-class-room .hands-up-manager,
+/* .big-class-room .hands-up-manager,
 .big-class-room .hands-up-sender {
   position: absolute;
   bottom: 20px;
   right: 20px;
-}
+} */
 
 .teacher-stream-container .video-player-overlay {
   display: flex;

@@ -1,6 +1,6 @@
 .message-box {
   margin-top: 3px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: absolute;
   width: 100%;
@@ -14,14 +14,14 @@
 }
 
 .msg {
-  margin: 25px 5px;
+  margin: 10px 5px;
 }
 
 .msg-tag {
   margin-left: 8px !important;
   border-radius: 8px !important;
-  opacity: 0.3 !important;
-  border: 1px solid #abb1ba !important;
+  border: 1px solid rgba(171, 177, 186, 0.3) !important;
+  color: #586376 !important;
 }
 
 .msg-user-other {
@@ -101,6 +101,9 @@
   background: #f9f9fc;
   border-radius: 4px;
   margin: 25px 40px;
+  padding: 4px;
+  font-size: 13px;
+  color: #191919;
 }
 
 .delete-btn {

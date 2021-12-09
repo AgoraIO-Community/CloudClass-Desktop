@@ -208,7 +208,7 @@ const App = function (props) {
             className="app w-full"
             style={{
               width: isFullScreen ? '300px' : '340px',
-              height: '500px',
+              height: '530px',
               display: isFullScreen ? 'none' : 'block',
             }}>
             <Chat />
