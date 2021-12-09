@@ -133,13 +133,9 @@ export const HomePage = observer(() => {
   let token_domain_collection: any = {};
 
   try {
-    if (typeof `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}` === 'string') {
-      token_domain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
-    } else {
-      token_domain_collection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
-    }
+    token_domain_collection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
   } catch (e) {
-    console.warn(`read token service host failed`);
+    token_domain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
   }
 
   return language !== '' ? (
