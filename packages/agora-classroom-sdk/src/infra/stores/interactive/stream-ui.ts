@@ -218,11 +218,15 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
               style: {
                 color: whiteboardAuthorized ? StreamIconColor.active : StreamIconColor.deactive,
               },
-              onClick: () => {
+              onClick: async () => {
                 try {
                   whiteboardAuthorized
-                    ? this.classroomStore.boardStore.revokePermission(stream.fromUser.userUuid)
-                    : this.classroomStore.boardStore.grantPermission(stream.fromUser.userUuid);
+                    ? await this.classroomStore.boardStore.revokePermission(
+                        stream.fromUser.userUuid,
+                      )
+                    : await this.classroomStore.boardStore.grantPermission(
+                        stream.fromUser.userUuid,
+                      );
                 } catch (e) {
                   this.shareUIStore.addGenericErrorDialog(e as AGError);
                 }

@@ -1,8 +1,8 @@
 import { EduStoreBase } from '../base';
 import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
-import { EduClassroomStore } from '..';
+import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
+import get from 'lodash/get';
 import { BuiltinApps, MountParams, WindowManager } from '@netless/window-manager';
 import {
   fetchNetlessImageByUrl,
@@ -35,15 +35,13 @@ import { AgoraEduInteractionEvent, Color } from '../../../../type';
 import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../../../type';
 import { EduEventCenter } from '../../../../event-center';
 import SlideApp from '@netless/app-slide';
-import { AGError, AgoraRteLogLevel, bound, Log } from 'agora-rte-sdk';
+import { AGError, AgoraRteLogLevel, bound, AgoraRteEventType } from 'agora-rte-sdk';
 
 const DEFAULT_COLOR: Color = {
   r: 252,
   g: 58,
   b: 63,
 };
-
-type AGGlobalState = GlobalState & { grantUsers?: string[] };
 
 export class BoardStore extends EduStoreBase {
   // ------ observables  -----------
@@ -96,23 +94,12 @@ export class BoardStore extends EduStoreBase {
         disableDeviceInputs,
         disableCameraTransform,
       });
-
       // set viewMode
       room.setViewMode(viewMode);
       //@ts-ignore
       window.room = room;
-
       this.restoreWhiteboardMemberStateTo(room);
-
       this.setRoom(room);
-
-      // readin globalstate data, this must comes after setRoom
-      let globalState = room.state.globalState as AGGlobalState;
-      if (globalState.grantUsers) {
-        runInAction(() => {
-          this.grantUsers = new Set(globalState.grantUsers);
-        });
-      }
     } catch (e) {
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_BOARD_JOIN_FAILED,
@@ -171,17 +158,48 @@ export class BoardStore extends EduStoreBase {
   };
 
   @bound
-  grantPermission(userUuid: string) {
-    let newSet = new Set(this.grantUsers);
-    newSet.add(userUuid);
-    this.room.setGlobalState({ grantUsers: Array.from(newSet) });
+  async grantPermission(userUuid: string) {
+    const { sessionInfo } = EduClassroomConfig.shared;
+    const grantUsers = [...this.grantUsers, userUuid];
+    try {
+      await this.api.setWidgetInfo({
+        roomUuid: sessionInfo.roomUuid,
+        widgetUuid: 'netlessBoard',
+        data: {
+          extra: {
+            grantUsers,
+          },
+        },
+      });
+    } catch (err) {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_BOARD_SET_PERMISSION_FAILED,
+        err as Error,
+      );
+    }
   }
 
   @bound
-  revokePermission(userUuid: string) {
-    let newSet = new Set(this.grantUsers);
-    newSet.delete(userUuid);
-    this.room.setGlobalState({ grantUsers: Array.from(newSet) });
+  async revokePermission(userUuid: string) {
+    const { sessionInfo } = EduClassroomConfig.shared;
+    let grantUsers = [...this.grantUsers];
+    grantUsers = grantUsers.filter((item) => item !== userUuid);
+    try {
+      await this.api.setWidgetInfo({
+        roomUuid: sessionInfo.roomUuid,
+        widgetUuid: 'netlessBoard',
+        data: {
+          extra: {
+            grantUsers,
+          },
+        },
+      });
+    } catch (err) {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_BOARD_SET_PERMISSION_FAILED,
+        err as Error,
+      );
+    }
   }
 
   @action.bound
@@ -342,6 +360,26 @@ export class BoardStore extends EduStoreBase {
     };
   }
 
+  @action.bound
+  private handleRoomPropertiesChange(
+    changedRoomProperties: string[],
+    roomProperties: any,
+    operator: any,
+    cause: any,
+  ) {
+    changedRoomProperties.forEach((key) => {
+      if (key === 'widgets') {
+        if (cause.cmd == 10 && cause?.data?.widgetUuid == 'netlessBoard') {
+          const netlessBoard = get(roomProperties, `widgets.netlessBoard`, {});
+          const grantUsers = netlessBoard?.extra?.grantUsers;
+          if (grantUsers) {
+            this.grantUsers = new Set(grantUsers);
+          }
+        }
+      }
+    });
+  }
+
   // ----------  other -------------
   private _whiteBoardContainer?: HTMLElement;
   private _room?: Room;
@@ -368,14 +406,7 @@ export class BoardStore extends EduStoreBase {
     onPhaseChanged: (phase: RoomPhase) => {
       this.classroomStore.connectionStore.setWhiteboardState(phase);
     },
-    onRoomStateChanged: (state: Partial<RoomState>) => {
-      runInAction(() => {
-        let globalState = state.globalState as AGGlobalState | undefined;
-        if (globalState && globalState.grantUsers) {
-          this.grantUsers = new Set(globalState.grantUsers);
-        }
-      });
-    },
+    onRoomStateChanged: (state: Partial<RoomState>) => {},
     onCatchErrorWhenAppendFrame: (userId: number, error: Error) => {},
     onCatchErrorWhenRender: (error: Error) => {},
   };
@@ -474,6 +505,17 @@ export class BoardStore extends EduStoreBase {
 
   onInstall() {
     let { sessionInfo } = EduClassroomConfig.shared;
+    let store = this.classroomStore;
+    this._disposers.push(
+      reaction(
+        () => store.connectionStore.scene,
+        (scene) => {
+          if (scene) {
+            scene.on(AgoraRteEventType.RoomPropertyUpdated, this.handleRoomPropertiesChange);
+          }
+        },
+      ),
+    );
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
