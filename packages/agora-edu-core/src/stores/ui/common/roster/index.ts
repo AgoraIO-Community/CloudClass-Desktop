@@ -118,10 +118,7 @@ export class RosterUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  async clickRowAction(
-    operation: Operation,
-    profile: { uid: string | number; isOnPodium: boolean },
-  ) {
+  clickRowAction(operation: Operation, profile: { uid: string | number; isOnPodium: boolean }) {
     const { addDialog, addGenericErrorDialog } = this.shareUIStore;
     const { roomUuid } = this.classroomStore.roomStore;
     const { grantUsers, grantPermission, revokePermission } = this.classroomStore.boardStore;
@@ -165,9 +162,9 @@ export class RosterUIStore extends EduUIStoreBase {
 
         try {
           if (grantUsers.has(userUuid)) {
-            await revokePermission(userUuid);
+            revokePermission(userUuid);
           } else {
-            await grantPermission(userUuid);
+            grantPermission(userUuid);
           }
         } catch (e) {
           addGenericErrorDialog(e as AGError);

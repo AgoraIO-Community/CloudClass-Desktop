@@ -514,20 +514,4 @@ export class EduApiService extends ApiBase {
     });
     return res.data;
   }
-
-  async setWidgetInfo(params: {
-    roomUuid: string;
-    widgetUuid: string;
-    data: {
-      extra: any;
-    };
-  }) {
-    const res = await this.fetch({
-      path: `/v2/rooms/${params.roomUuid}/widgets/${params.widgetUuid}`,
-      pathPrefix: `/edu/apps/${AgoraRteEngineConfig.shared.appId}`,
-      method: 'PUT',
-      data: params.data,
-    });
-    return res.data;
-  }
 }
