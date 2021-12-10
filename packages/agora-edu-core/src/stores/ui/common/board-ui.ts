@@ -1,47 +1,18 @@
-import { action, computed, observable, reaction, when, runInAction, IReactionDisposer } from 'mobx';
-import { AGError, AgoraRteEventType, bound } from 'agora-rte-sdk';
-import { get } from 'lodash';
+import { action, computed, when, IReactionDisposer } from 'mobx';
+import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import { EduRoomTypeEnum, WhiteboardState } from '../../..';
 import { EduClassroomStore } from '../../domain';
 import { EduShareUIStore } from './share-ui';
-import { EduClassroomConfig, WhiteboardConfigs } from '../../../configs';
 
 export class BoardUIStore extends EduUIStoreBase {
-  private _disposer: IReactionDisposer[] = [];
   private _timeoutForConfig = 10000;
   private _joinDisposer?: IReactionDisposer;
-  @observable
-  configReady = false;
 
   protected heightRatio = 1;
   protected aspectRatio = 9 / 16;
 
-  onInstall() {
-    this._disposer.push(
-      reaction(
-        () => this.classroomStore.connectionStore.scene,
-        (scene) => {
-          if (scene) {
-            scene.on(
-              AgoraRteEventType.RoomPropertyUpdated,
-              (changedRoomProperties: string[], roomProperties: any) => {
-                changedRoomProperties.forEach((key) => {
-                  const configs = get(roomProperties, 'board.info') as WhiteboardConfigs;
-                  if (key === 'board' && configs) {
-                    EduClassroomConfig.shared.setWhiteboardConfig(configs);
-                    runInAction(() => {
-                      this.configReady = true;
-                    });
-                  }
-                });
-              },
-            );
-          }
-        },
-      ),
-    );
-  }
+  onInstall() {}
 
   // computed
   @computed
@@ -75,12 +46,16 @@ export class BoardUIStore extends EduUIStoreBase {
 
   @action.bound
   joinWhiteboardWhenConfigReady() {
-    this._joinDisposer = when(() => this.configReady, this.joinWhiteboard, {
-      timeout: this._timeoutForConfig,
-      onError: (e) => {
-        this.shareUIStore.addGenericErrorDialog(e as AGError);
+    this._joinDisposer = when(
+      () => this.classroomStore.boardStore.configReady,
+      this.joinWhiteboard,
+      {
+        timeout: this._timeoutForConfig,
+        onError: (e) => {
+          this.shareUIStore.addGenericErrorDialog(e as AGError);
+        },
       },
-    });
+    );
   }
 
   @bound
@@ -132,7 +107,5 @@ export class BoardUIStore extends EduUIStoreBase {
     }
   }
 
-  onDestroy() {
-    this._disposer.forEach((disposer) => disposer());
-  }
+  onDestroy() {}
 }

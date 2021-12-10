@@ -1,20 +1,32 @@
 const bound = (proto: any, propertyName: string, descriptor: PropertyDescriptor) => {
   let value = descriptor.value;
-  let cacheMap = new WeakMap<Object, typeof value>();
+
   return {
     configurable: true,
     enumerable: false,
-    get() {
-      if (!cacheMap.has(this)) {
-        cacheMap.set(this, value.bind(this));
+    get(this: { __cacheMap: WeakMap<Object, typeof value> }) {
+      let cacheMap = this.__cacheMap;
+      if (!cacheMap) {
+        cacheMap = new WeakMap<Object, typeof value>();
+        this.__cacheMap = cacheMap;
       }
 
-      const cache = cacheMap.get(this);
+      if (!cacheMap.has(value)) {
+        cacheMap.set(value, value.bind(this));
+      }
+
+      const cache = cacheMap.get(value);
 
       return cache;
     },
-    set(v: any) {
-      cacheMap.set(this, v.bind(this));
+    set(this: { __cacheMap: WeakMap<Object, typeof value> }, v: any) {
+      let cacheMap = this.__cacheMap;
+      if (!cacheMap) {
+        cacheMap = new WeakMap<Object, typeof value>();
+        this.__cacheMap = cacheMap;
+      }
+
+      cacheMap.set(v, v.bind(this));
     },
   };
 };

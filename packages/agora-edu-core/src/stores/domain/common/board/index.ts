@@ -1,7 +1,7 @@
 import { EduStoreBase } from '../base';
 import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
-import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
-import { EduClassroomConfig } from '../../../../configs';
+import { action, computed, observable, reaction } from 'mobx';
+import { EduClassroomConfig, WhiteboardConfigs } from '../../../../configs';
 import get from 'lodash/get';
 import { BuiltinApps, MountParams, WindowManager } from '@netless/window-manager';
 import {
@@ -21,7 +21,6 @@ import {
   Room,
   JoinRoomParams,
   RoomCallbacks,
-  GlobalState,
 } from 'white-web-sdk';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { WhiteboardTool } from './type';
@@ -32,10 +31,10 @@ import {
   CloudDriveResource,
 } from '../cloud-drive/struct';
 import { AgoraEduInteractionEvent, Color } from '../../../../type';
-import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../../../type';
+import { EduRoleTypeEnum } from '../../../../type';
 import { EduEventCenter } from '../../../../event-center';
 import SlideApp from '@netless/app-slide';
-import { AGError, AgoraRteLogLevel, bound, AgoraRteEventType } from 'agora-rte-sdk';
+import { bound, AgoraRteEventType } from 'agora-rte-sdk';
 
 const DEFAULT_COLOR: Color = {
   r: 252,
@@ -50,6 +49,7 @@ export class BoardStore extends EduStoreBase {
   @observable strokeWidth: number = 5;
   @observable ready: boolean = false;
   @observable grantUsers: Set<string> = new Set<string>();
+  @observable configReady = false;
 
   // ---------- computeds --------
   @computed
@@ -369,6 +369,19 @@ export class BoardStore extends EduStoreBase {
   ) {
     changedRoomProperties.forEach((key) => {
       if (key === 'widgets') {
+        const configs = get(roomProperties, 'widgets.netlessBoard.extra');
+
+        if (configs) {
+          const { boardAppId, boardId, boardRegion, boardToken } = configs;
+          EduClassroomConfig.shared.setWhiteboardConfig({
+            boardAppId,
+            boardId,
+            boardRegion,
+            boardToken,
+          });
+          this.configReady = true;
+        }
+
         if (cause.cmd == 10 && cause?.data?.widgetUuid == 'netlessBoard') {
           const netlessBoard = get(roomProperties, `widgets.netlessBoard`, {});
           const grantUsers = netlessBoard?.extra?.grantUsers;
