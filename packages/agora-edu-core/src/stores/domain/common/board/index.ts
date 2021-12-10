@@ -1,6 +1,6 @@
 import { EduStoreBase } from '../base';
 import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { BuiltinApps, MountParams, WindowManager } from '@netless/window-manager';
 import {
@@ -34,7 +34,8 @@ import { AgoraEduInteractionEvent, Color } from '../../../../type';
 import { EduRoleTypeEnum } from '../../../../type';
 import { EduEventCenter } from '../../../../event-center';
 import SlideApp from '@netless/app-slide';
-import { bound } from 'agora-rte-sdk';
+import { AgoraRteEventType, bound } from 'agora-rte-sdk';
+import get from 'lodash/get';
 
 const DEFAULT_COLOR: Color = {
   r: 252,
@@ -347,6 +348,31 @@ export class BoardStore extends EduStoreBase {
   private _room?: Room;
   private _windowManager?: WindowManager;
 
+  @action.bound
+  private handleRoomPropertiesChange(
+    changedRoomProperties: string[],
+    roomProperties: any,
+    operator: any,
+    cause: any,
+  ) {
+    changedRoomProperties.forEach((key) => {
+      if (key === 'widgets') {
+        const configs = get(roomProperties, 'widgets.netlessBoard.extra');
+
+        if (configs) {
+          const { boardAppId, boardId, boardRegion, boardToken } = configs;
+          EduClassroomConfig.shared.setWhiteboardConfig({
+            boardAppId,
+            boardId,
+            boardRegion,
+            boardToken,
+          });
+          this.configReady = true;
+        }
+      }
+    });
+  }
+
   private restoreWhiteboardMemberStateTo(room: Room) {
     if (room.isWritable) {
       room.setMemberState({
@@ -474,6 +500,17 @@ export class BoardStore extends EduStoreBase {
 
   onInstall() {
     let { sessionInfo } = EduClassroomConfig.shared;
+    let store = this.classroomStore;
+    this._disposers.push(
+      reaction(
+        () => store.connectionStore.scene,
+        (scene) => {
+          if (scene) {
+            scene.on(AgoraRteEventType.RoomPropertyUpdated, this.handleRoomPropertiesChange);
+          }
+        },
+      ),
+    );
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
