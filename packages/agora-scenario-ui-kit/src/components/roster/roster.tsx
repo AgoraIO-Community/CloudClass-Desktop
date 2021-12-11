@@ -102,13 +102,24 @@ export const Roster: FC<RosterProps> = ({
             {/* table */}
             <Table className="roster-table">
               <TableHeader>
-                {cols.map(({ key, name }, idx) => {
+                {cols.map(({ key, name, width }, idx) => {
                   const isFirstColumn = idx === 0;
                   return (
                     <Col
                       key={key}
                       className={isFirstColumn ? 'justfy-start' : 'justify-center'}
-                      style={{ paddingLeft: isFirstColumn ? 25 : 0 }}>
+                      style={
+                        width
+                          ? {
+                              paddingLeft: isFirstColumn ? 25 : 0,
+                              flexBasis: width,
+                              flexGrow: 0,
+                              flexShrink: 0,
+                            }
+                          : {
+                              paddingLeft: isFirstColumn ? 25 : 0,
+                            }
+                      }>
                       {transI18n(name)}
                     </Col>
                   );

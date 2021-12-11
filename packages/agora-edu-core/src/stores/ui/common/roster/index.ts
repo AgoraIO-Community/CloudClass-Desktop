@@ -1,7 +1,7 @@
 import { action, computed, IReactionDisposer, observable, reaction, when } from 'mobx';
 import {
   AGError,
-  AGLocalTrackState,
+  AgoraRteMediaSourceState,
   AgoraRteAudioSourceType,
   AgoraRteMediaPublishState,
   AgoraRteVideoSourceType,
@@ -125,7 +125,7 @@ export class RosterUIStore extends EduUIStoreBase {
     const { localUser, kickOutOnceOrBan } = this.classroomStore.userStore;
     const { enableLocalVideo, enableLocalAudio, localCameraTrackState, localMicTrackState } =
       this.classroomStore.mediaStore;
-    const { updateLocalPublishState, updateRemotePublishState } = this.classroomStore.streamStore;
+    const { updateRemotePublishState } = this.classroomStore.streamStore;
     const { onPodium, offPodium } = this.classroomStore.handUpStore;
 
     switch (operation) {
@@ -175,16 +175,8 @@ export class RosterUIStore extends EduUIStoreBase {
         // mute or unmute video
         const userUuid = profile.uid as string;
         if (localUser.userUuid === userUuid) {
-          const isEnabled = localCameraTrackState === AGLocalTrackState.started;
+          const isEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
           enableLocalVideo(!isEnabled);
-          updateLocalPublishState({
-            videoState: isEnabled
-              ? AgoraRteMediaPublishState.Unpublished
-              : AgoraRteMediaPublishState.Published,
-          }).catch((e) => {
-            enableLocalVideo(isEnabled);
-            addGenericErrorDialog(e);
-          });
         } else {
           const mainStream = this.getMainStream(userUuid);
           const isPublished = mainStream?.videoState === AgoraRteMediaPublishState.Published;
@@ -203,16 +195,8 @@ export class RosterUIStore extends EduUIStoreBase {
         // mute or unmute audio
         const userUuid = profile.uid as string;
         if (localUser.userUuid === userUuid) {
-          const isEnabled = localMicTrackState === AGLocalTrackState.started;
+          const isEnabled = localMicTrackState === AgoraRteMediaSourceState.started;
           enableLocalAudio(!isEnabled);
-          updateLocalPublishState({
-            audioState: isEnabled
-              ? AgoraRteMediaPublishState.Unpublished
-              : AgoraRteMediaPublishState.Published,
-          }).catch((e) => {
-            enableLocalAudio(isEnabled);
-            addGenericErrorDialog(e);
-          });
         } else {
           const mainStream = this.getMainStream(userUuid);
           const isPublished = mainStream?.audioState === AgoraRteMediaPublishState.Published;
@@ -258,6 +242,7 @@ export class RosterUIStore extends EduUIStoreBase {
 
   @computed
   get userList() {
+    const { mediaStore } = this.classroomStore;
     const { list } = iterateMap(this.classroomStore.userStore.studentList, {
       onMap: (userUuid: string, { userName }) => {
         const { acceptedList, chatMuted } = this.classroomStore.roomStore;
@@ -300,14 +285,26 @@ export class RosterUIStore extends EduUIStoreBase {
         const mainStream = this.getMainStream(userUuid);
 
         if (mainStream) {
-          const isCameraAvailCanMute =
-            mainStream.videoState === AgoraRteMediaPublishState.Published;
+          if (mainStream.isLocal) {
+            cameraState =
+              mediaStore.localCameraTrackState === AgoraRteMediaSourceState.started
+                ? DeviceState.disabled
+                : DeviceState.enabled;
 
-          const isMicAvailCanMute = mainStream.audioState === AgoraRteMediaPublishState.Published;
+            microphoneState =
+              mediaStore.localMicTrackState === AgoraRteMediaSourceState.started
+                ? DeviceState.disabled
+                : DeviceState.enabled;
+          } else {
+            const isCameraAvailCanMute =
+              mainStream.videoState === AgoraRteMediaPublishState.Published;
 
-          cameraState = isCameraAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
+            const isMicAvailCanMute = mainStream.audioState === AgoraRteMediaPublishState.Published;
 
-          microphoneState = isMicAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
+            cameraState = isCameraAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
+
+            microphoneState = isMicAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
+          }
         }
 
         return {

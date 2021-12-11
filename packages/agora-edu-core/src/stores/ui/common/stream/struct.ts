@@ -1,4 +1,4 @@
-import { AgoraFromUser, AgoraRteMediaPublishState } from 'agora-rte-sdk';
+import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from '../../../..';
 import { RteRole2EduRole } from '../../../../utils';
 import { CameraPlaceholderType } from '../type';
@@ -9,21 +9,18 @@ export class EduStreamUI {
   }
 
   get micIconType() {
-    //TODO device state
-    return this.audioMuted ? 'microphone-off' : 'microphone-on';
+    if (
+      this.stream.audioSourceState === AgoraRteMediaSourceState.started &&
+      this.stream.audioState === AgoraRteMediaPublishState.Published
+    ) {
+      return 'microphone-on';
+    }
+    return 'microphone-off';
   }
 
   get micIconClass() {
     //TODO device state
     return 'available';
-  }
-
-  get videoMuted(): boolean {
-    return this.stream.videoState === AgoraRteMediaPublishState.Unpublished;
-  }
-
-  get audioMuted(): boolean {
-    return this.stream.audioState === AgoraRteMediaPublishState.Unpublished;
   }
 
   get fromUser(): AgoraFromUser {

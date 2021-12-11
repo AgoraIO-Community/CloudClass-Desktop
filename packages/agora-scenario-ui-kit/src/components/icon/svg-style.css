@@ -1,0 +1,131 @@
+.icon-assistant-authorized.assistant-authorized {
+  background-image: url('./assets/svg/teacher-granted-active.svg');
+}
+.icon-teacher-authorized.teacher-authorized {
+  background-image: url('./assets/svg/teacher-granted-active.svg');
+}
+.icon-teacher-whiteboard.teacher-whiteboard {
+  background-image: url('./assets/svg/teacher-granted-default.svg');
+}
+.icon-student-authorized.student-authorized {
+  background-image: url('./assets/svg/student-granted-active.svg');
+}
+.icon-student-whiteboard.student-whiteboard {
+  background-image: url('./assets/svg/student-granted-default.svg');
+}
+
+.icon-recording.recording {
+  background-image: url('./assets/svg/recording.svg');
+}
+.icon-share-screen.share-screen {
+  background-image: url('./assets/svg/share-screen.svg');
+}
+.icon-checked.checked {
+  background-image: url('./assets/svg/icon-accept.svg');
+}
+.icon-close.close {
+  background-image: url('./assets/svg/icon-refuse.svg');
+}
+.icon-countdown.countdown {
+  background-image: url('./assets/svg/icon-countdown.svg');
+}
+.icon-answer.answer {
+  background-image: url('./assets/svg/icon-answer.svg');
+}
+.icon-vote.vote {
+  background-image: url('./assets/svg/icon-vote.svg');
+}
+.icon-whitening.whitening {
+  background-image: url('./assets/svg/whitening.svg');
+}
+.icon-buffing.buffing {
+  background-image: url('./assets/svg/buffing.svg');
+}
+.icon-ruddy.ruddy {
+  background-image: url('./assets/svg/ruddy.svg');
+}
+
+.icon-board-granted {
+  background-image: url('./assets/svg/board-granted.svg');
+  background-size: 100%;
+}
+
+.icon-board-not-granted {
+  background-image: url('./assets/svg/board-not-granted.svg');
+  background-size: 100%;
+}
+
+.icon-camera-disabled {
+  background-image: url('./assets/svg/camera-disabled.svg');
+  background-size: 100%;
+}
+
+.icon-camera-enabled {
+  background-image: url('./assets/svg/camera-enabled.svg');
+  background-size: 100%;
+}
+.icon-camera-inactive {
+  background-image: url('./assets/svg/camera-inactive.svg');
+  background-size: 100%;
+}
+.icon-kick-out {
+  background-image: url('./assets/svg/kick-out.svg');
+  background-size: 100%;
+}
+.icon-kick-out-hover {
+  background-image: url('./assets/svg/kick-out-hover.svg');
+  background-size: 100%;
+}
+.icon-mic-disabled {
+  background-image: url('./assets/svg/mic-disabled.svg');
+  background-size: 100%;
+}
+.icon-mic-enabled {
+  background-image: url('./assets/svg/mic-enabled.svg');
+  background-size: 100%;
+}
+.icon-mic-inactive {
+  background-image: url('./assets/svg/mic-inactive.svg');
+  background-size: 100%;
+}
+.icon-not-on-podium {
+  background-image: url('./assets/svg/not-on-podium.svg');
+  background-size: 100%;
+}
+.icon-on-podium {
+  background-image: url('./assets/svg/on-podium.svg');
+  background-size: 100%;
+}
+.icon-reward {
+  background-image: url('./assets/svg/reward.svg');
+  background-size: 100%;
+}
+.icon-reward-hover {
+  background-image: url('./assets/svg/reward-hover.svg');
+  background-size: 100%;
+}
+
+.icon-stream-camera-disabled {
+  background-image: url('./assets/svg/stream-camera-disabled.svg');
+  background-size: 100%;
+}
+.icon-stream-camera-enabled {
+  background-image: url('./assets/svg/stream-camera-enabled.svg');
+  background-size: 100%;
+}
+.icon-stream-camera-inactive {
+  background-image: url('./assets/svg/stream-camera-inactive.svg');
+  background-size: 100%;
+}
+.icon-stream-mic-disabled {
+  background-image: url('./assets/svg/stream-mic-disabled.svg');
+  background-size: 100%;
+}
+.icon-stream-mic-enabled {
+  background-image: url('./assets/svg/stream-mic-enabled.svg');
+  background-size: 100%;
+}
+.icon-stream-mic-inactive {
+  background-image: url('./assets/svg/stream-mic-inactive.svg');
+  background-size: 100%;
+}

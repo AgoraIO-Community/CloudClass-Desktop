@@ -24,7 +24,6 @@ export type { Injectable } from './core/decorator';
 export {
   AgoraRteVideoSourceType,
   AgoraRteAudioSourceType,
-  AgoraRteMediaTrackState,
   AgoraRteMediaPublishState,
   AgoraRteMediaTrack,
   AgoraRteCameraVideoTrack,
@@ -38,7 +37,7 @@ export { Scheduler, ActionWhenTaskFail } from './core/schedule';
 export { Duration } from './core/schedule/scheduler';
 export {
   AGNetworkQuality,
-  AGLocalTrackState,
+  AgoraRteMediaSourceState,
   RtcState,
   AGMediaEncryptionMode,
 } from './core/rtc/type';

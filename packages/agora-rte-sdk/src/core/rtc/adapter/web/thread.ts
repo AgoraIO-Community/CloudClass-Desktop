@@ -1,7 +1,7 @@
 import { AgoraRteThread } from '../../../utils/thread';
 import { AgoraRtcVideoCanvas } from '../../canvas';
 import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
-import { AGLocalTrackState, AGRenderMode } from '../../type';
+import { AgoraRteMediaSourceState, AGRenderMode } from '../../type';
 import AgoraRTC, {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -15,11 +15,7 @@ import AgoraRTC, {
 } from 'agora-rtc-sdk-ng';
 import { AgoraMediaControlEventType } from '../../../media/control';
 import { Log } from '../../../decorator/log';
-import {
-  AgoraRteAudioSourceType,
-  AgoraRteMediaTrackState,
-  AgoraRteVideoSourceType,
-} from '../../../media/track';
+import { AgoraRteAudioSourceType, AgoraRteVideoSourceType } from '../../../media/track';
 import { AgoraRteEngineConfig } from '../../../../configs';
 import { Scheduler } from '../../../schedule';
 import { bound } from '../../../decorator/bound';
@@ -31,12 +27,15 @@ export class AgoraRteMediaTrackThread extends AgoraRteThread {
 @Log.attach({ proxyMethods: false })
 export class AgoraRteCameraThread extends AgoraRteMediaTrackThread {
   canvas?: AgoraRtcVideoCanvas;
-  trackState: AGLocalTrackState = AGLocalTrackState.stopped;
+  trackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
   cameraEnable: boolean = false;
   private _deviceId?: string;
   private _deviceChanged: boolean = false;
 
-  private setCameraTrackState(state: AGLocalTrackState, reason?: string) {
+  private setCameraTrackState(state: AgoraRteMediaSourceState, reason?: string) {
+    if (this.trackState === state) {
+      return;
+    }
     this.trackState = state;
     this.emit(
       AgoraMediaControlEventType.trackStateChanged,
@@ -74,7 +73,7 @@ export class AgoraRteCameraThread extends AgoraRteMediaTrackThread {
 
         if (!this.track) {
           this.logger.debug(`starting camera...`);
-          this.setCameraTrackState(AGLocalTrackState.starting);
+          this.setCameraTrackState(AgoraRteMediaSourceState.starting);
           try {
             let { rtcConfigs } = AgoraRteEngineConfig.shared;
             let { defaultCameraEncoderConfigurations } = rtcConfigs;
@@ -95,15 +94,15 @@ export class AgoraRteCameraThread extends AgoraRteMediaTrackThread {
               this.logger.warn(`camera track ended`);
               this.track?.close();
               this.track = undefined;
-              this.setCameraTrackState(AGLocalTrackState.stopped);
+              this.setCameraTrackState(AgoraRteMediaSourceState.stopped);
             });
-            this.setCameraTrackState(AGLocalTrackState.started);
+            this.setCameraTrackState(AgoraRteMediaSourceState.started);
           } catch (e) {
             RteErrorCenter.shared.handleNonThrowableError(
               AGRteErrorCode.RTC_ERR_CAM_ERR,
               e as Error,
             );
-            this.setCameraTrackState(AGLocalTrackState.error);
+            this.setCameraTrackState(AgoraRteMediaSourceState.error);
             break;
           }
 
@@ -111,7 +110,7 @@ export class AgoraRteCameraThread extends AgoraRteMediaTrackThread {
         }
         if (this.track && this.canvas && this.canvas.view) {
           (this.track as ICameraVideoTrack).play(this.canvas.view);
-          this.setCameraTrackState(AGLocalTrackState.started);
+          this.setCameraTrackState(AgoraRteMediaSourceState.started);
         }
 
         if (
@@ -129,7 +128,7 @@ export class AgoraRteCameraThread extends AgoraRteMediaTrackThread {
           this.track.stop();
           this.track.close();
           this.track = undefined;
-          this.setCameraTrackState(AGLocalTrackState.stopped);
+          this.setCameraTrackState(AgoraRteMediaSourceState.stopped);
           this.logger.debug(`camera stopped`);
         }
         if (!this.track) {
@@ -148,10 +147,13 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
   micEnable: boolean = false;
   private _recordingDeviceId?: string;
   private _recordingDeviceChanged: boolean = false;
-  trackState: AGLocalTrackState = AGLocalTrackState.stopped;
+  trackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
   private _volumePollingTask?: Scheduler.Task;
 
-  setMicTrackState(state: AGLocalTrackState, reason?: string) {
+  setMicTrackState(state: AgoraRteMediaSourceState, reason?: string) {
+    if (this.trackState === state) {
+      return;
+    }
     this.trackState = state;
     this.emit(
       AgoraMediaControlEventType.trackStateChanged,
@@ -161,13 +163,15 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
     );
 
     //start volume detection when start mic recording
-    if (state === AGLocalTrackState.started) {
+    if (state === AgoraRteMediaSourceState.started) {
       if (!this._volumePollingTask) {
         this._volumePollingTask = Scheduler.shared.addPollingTask(() => {
-          this.emit(
-            AgoraMediaControlEventType.localAudioVolume,
-            (this.track as ILocalAudioTrack).getVolumeLevel(),
-          );
+          if (this.track) {
+            this.emit(
+              AgoraMediaControlEventType.localAudioVolume,
+              (this.track as ILocalAudioTrack).getVolumeLevel(),
+            );
+          }
         }, Scheduler.Duration.second(0.5));
       }
     } else {
@@ -196,7 +200,7 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
                 AGRteErrorCode.RTC_ERR_MIC_ERR,
                 err as Error,
               );
-              this.setMicTrackState(AGLocalTrackState.error);
+              this.setMicTrackState(AgoraRteMediaSourceState.error);
               break;
             }
           }
@@ -205,7 +209,7 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
 
         if (!this.track) {
           this.logger.debug(`starting mic...`);
-          this.setMicTrackState(AGLocalTrackState.starting);
+          this.setMicTrackState(AgoraRteMediaSourceState.starting);
           try {
             this.track = await AgoraRTC.createMicrophoneAudioTrack({
               microphoneId: this._recordingDeviceId,
@@ -214,15 +218,15 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
               this.logger.warn(`mic track ended`);
               this.track?.close();
               this.track = undefined;
-              this.setMicTrackState(AGLocalTrackState.stopped);
+              this.setMicTrackState(AgoraRteMediaSourceState.stopped);
             });
-            this.setMicTrackState(AGLocalTrackState.started);
+            this.setMicTrackState(AgoraRteMediaSourceState.started);
           } catch (e) {
             RteErrorCenter.shared.handleNonThrowableError(
               AGRteErrorCode.RTC_ERR_MIC_ERR,
               e as Error,
             );
-            this.setMicTrackState(AGLocalTrackState.error);
+            this.setMicTrackState(AgoraRteMediaSourceState.error);
             break;
           }
 
@@ -238,7 +242,7 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
           this.track.stop();
           this.track.close();
           this.track = undefined;
-          this.setMicTrackState(AGLocalTrackState.stopped);
+          this.setMicTrackState(AgoraRteMediaSourceState.stopped);
         }
         if (!this.track) {
           // ok to sleep
@@ -257,7 +261,7 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
   audioTrack?: ILocalTrack;
   withAudio: boolean = false;
   screenEnable: boolean = false;
-  trackState: AGLocalTrackState = AGLocalTrackState.stopped;
+  trackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
 
   get playing() {
     return (
@@ -267,7 +271,10 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
     );
   }
 
-  setScreenShareTrackState(state: AGLocalTrackState, reason?: string) {
+  setScreenShareTrackState(state: AgoraRteMediaSourceState, reason?: string) {
+    if (this.trackState === state) {
+      return;
+    }
     this.trackState = state;
     this.emit(
       AgoraMediaControlEventType.trackStateChanged,
@@ -283,7 +290,7 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
       if (this.screenEnable) {
         if (!this.track) {
           this.logger.debug(`starting screenshare...`);
-          this.setScreenShareTrackState(AGLocalTrackState.starting);
+          this.setScreenShareTrackState(AgoraRteMediaSourceState.starting);
           try {
             let { rtcConfigs } = AgoraRteEngineConfig.shared;
             let { defaultScreenEncoderConfigurations } = rtcConfigs;
@@ -311,15 +318,15 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
               this.logger.warn(`camera track ended`);
               this.track?.close();
               this.track = undefined;
-              this.setScreenShareTrackState(AGLocalTrackState.stopped);
+              this.setScreenShareTrackState(AgoraRteMediaSourceState.stopped);
             });
-            this.setScreenShareTrackState(AGLocalTrackState.started);
+            this.setScreenShareTrackState(AgoraRteMediaSourceState.started);
           } catch (e) {
             RteErrorCenter.shared.handleNonThrowableError(
               AGRteErrorCode.RTC_ERR_SCREEN_SHARE_ERR,
               e as Error,
             );
-            this.setScreenShareTrackState(AGLocalTrackState.error);
+            this.setScreenShareTrackState(AgoraRteMediaSourceState.error);
             break;
           }
 
@@ -342,7 +349,7 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
           this.track.close();
           this.track = undefined;
           this.logger.debug(`screenshare stopped`);
-          this.setScreenShareTrackState(AGLocalTrackState.stopped);
+          this.setScreenShareTrackState(AgoraRteMediaSourceState.stopped);
         }
 
         if (this.audioTrack) {
@@ -390,8 +397,8 @@ export class AgoraRtePublishThread extends AgoraRteThread {
   }
 
   @bound
-  handleTrackStateChanged(state: AgoraRteMediaTrackState) {
-    if (state === AgoraRteMediaTrackState.Started) {
+  handleTrackStateChanged(state: AgoraRteMediaSourceState) {
+    if (state === AgoraRteMediaSourceState.started) {
       // auto run publish thread when track started/restarted
       this.run();
     }

@@ -1,11 +1,12 @@
-import { AGLocalTrackState, bound, Logger } from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, bound, Logger } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 import { EduClassroomStore } from '../../../domain';
 import { EduUIStoreBase } from '../base';
 import { EduShareUIStore } from '../share-ui';
 import { CameraPlaceholderType } from '../type';
 import { v4 as uuidv4 } from 'uuid';
-import { DEVICEID_DISABLED } from '../pretest';
+import { DEVICE_DISABLE } from '../../../domain/common/media';
+import { transI18n } from '../i18n';
 
 export type SettingToast = {
   id: string;
@@ -28,14 +29,14 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
 
   @computed get cameraDevicesList() {
     return this.classroomStore.mediaStore.videoCameraDevices.map((item) => ({
-      label: item.devicename,
+      label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
       value: item.deviceid,
     }));
   }
 
   @computed get recordingDevicesList() {
     return this.classroomStore.mediaStore.audioRecordingDevices.map((item) => ({
-      label: item.devicename,
+      label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
       value: item.deviceid,
     }));
   }
@@ -63,20 +64,20 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return this.classroomStore.mediaStore.localPlaybackTestVolume * 100;
   }
 
-  @computed get localCameraTrackState(): AGLocalTrackState {
+  @computed get localCameraTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localCameraTrackState;
   }
 
-  @computed get localMicTrackState(): AGLocalTrackState {
+  @computed get localMicTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localMicTrackState;
   }
 
   @computed get localCameraOff() {
-    return this.localCameraTrackState !== AGLocalTrackState.started;
+    return this.localCameraTrackState !== AgoraRteMediaSourceState.started;
   }
 
   @computed get localMicOff() {
-    return this.localMicTrackState !== AGLocalTrackState.started;
+    return this.localMicTrackState !== AgoraRteMediaSourceState.started;
   }
 
   @computed get localMicIconType() {
@@ -86,16 +87,16 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @computed get localCameraPlaceholder(): CameraPlaceholderType {
     let placeholder = CameraPlaceholderType.none;
     switch (this.localCameraTrackState) {
-      case AGLocalTrackState.started:
+      case AgoraRteMediaSourceState.started:
         placeholder = CameraPlaceholderType.none;
         break;
-      case AGLocalTrackState.starting:
+      case AgoraRteMediaSourceState.starting:
         placeholder = CameraPlaceholderType.loading;
         break;
-      case AGLocalTrackState.stopped:
+      case AgoraRteMediaSourceState.stopped:
         placeholder = CameraPlaceholderType.muted;
         break;
-      case AGLocalTrackState.error:
+      case AgoraRteMediaSourceState.error:
         placeholder = CameraPlaceholderType.broken;
         break;
     }

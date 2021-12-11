@@ -183,11 +183,10 @@ export class AgoraEduSDK {
       option.extApps,
     );
 
-    config.ignoreUrlRegionPrefix = true;
-
     if (AgoraEduSDK._config.host) {
       config.host = AgoraEduSDK._config.host;
     }
+    config.ignoreUrlRegionPrefix = config.host.includes('dev') || config.host.includes('pre');
 
     if (courseWareList) {
       config.setCourseWareList(courseWareList);

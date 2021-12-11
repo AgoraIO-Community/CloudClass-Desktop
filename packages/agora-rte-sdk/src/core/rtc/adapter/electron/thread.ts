@@ -2,7 +2,7 @@ import { AgoraRteThread } from '../../../utils/thread';
 import { Logger } from '../../../logger';
 import { AgoraRtcVideoCanvas } from '../../canvas';
 import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
-import { AGLocalTrackState } from '../../type';
+import { AgoraRteMediaSourceState } from '../../type';
 import { AgoraMediaControlEventType } from '../../../media/control';
 import { RtcAdapterElectron } from '.';
 import {
@@ -18,7 +18,7 @@ import { AgoraRteEngineConfig } from '../../../../configs';
 export class AgoraRteElectronCameraThread extends AgoraRteThread {
   protected logger!: Injectable.Logger;
   canvas?: AgoraRtcVideoCanvas;
-  trackState: AGLocalTrackState = AGLocalTrackState.stopped;
+  trackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
   cameraEnable: boolean = false;
   private _adapter: RtcAdapterElectron;
   currentCanvas?: AgoraRtcVideoCanvas;
@@ -29,7 +29,10 @@ export class AgoraRteElectronCameraThread extends AgoraRteThread {
     this._adapter = adapter;
   }
 
-  private setCameraTrackState(state: AGLocalTrackState, reason?: string) {
+  private setCameraTrackState(state: AgoraRteMediaSourceState, reason?: string) {
+    if (this.trackState === state) {
+      return;
+    }
     this.trackState = state;
     this.emit(
       AgoraMediaControlEventType.trackStateChanged,
@@ -46,7 +49,7 @@ export class AgoraRteElectronCameraThread extends AgoraRteThread {
         let streamState = this.videoStreamState;
         if (streamState === 0 || streamState === 3) {
           this.logger.debug(`starting camera...`);
-          this.setCameraTrackState(AGLocalTrackState.starting);
+          this.setCameraTrackState(AgoraRteMediaSourceState.starting);
 
           let callback;
 
@@ -83,19 +86,19 @@ export class AgoraRteElectronCameraThread extends AgoraRteThread {
                 }
               });
             }
-            this.setCameraTrackState(AGLocalTrackState.started);
+            this.setCameraTrackState(AgoraRteMediaSourceState.started);
             callback && this._adapter.rtcEngine.off('localVideoStateChanged', callback);
             this.logger.debug(`camera started.`);
           } catch (e) {
-            this.setCameraTrackState(AGLocalTrackState.error);
+            this.setCameraTrackState(AgoraRteMediaSourceState.error);
             callback && this._adapter.rtcEngine.off('localVideoStateChanged', callback);
             break;
           }
-        } else if (this.trackState !== AGLocalTrackState.started) {
-          this.setCameraTrackState(AGLocalTrackState.started);
+        } else if (this.trackState !== AgoraRteMediaSourceState.started) {
+          this.setCameraTrackState(AgoraRteMediaSourceState.started);
         }
 
-        if (this.trackState === AGLocalTrackState.started) {
+        if (this.trackState === AgoraRteMediaSourceState.started) {
           if (!this.currentCanvas && this.canvas) {
             this._adapter.rtcEngine.setupLocalVideo(this.canvas.view);
             this.currentCanvas = this.canvas;
@@ -115,16 +118,16 @@ export class AgoraRteElectronCameraThread extends AgoraRteThread {
           break;
         }
       } else {
-        if (this.trackState !== AGLocalTrackState.stopped) {
+        if (this.trackState !== AgoraRteMediaSourceState.stopped) {
           this.logger.debug(`stopping camera...`);
           this._adapter.rtcEngine.enableLocalVideo(false);
           if (this.currentCanvas && this.currentCanvas.view) {
             this.currentCanvas.view.style.visibility = 'hidden';
           }
-          this.setCameraTrackState(AGLocalTrackState.stopped);
+          this.setCameraTrackState(AgoraRteMediaSourceState.stopped);
           this.logger.debug(`camera stopped`);
         }
-        if (this.trackState === AGLocalTrackState.stopped) {
+        if (this.trackState === AgoraRteMediaSourceState.stopped) {
           // ok to sleep
           break;
         }

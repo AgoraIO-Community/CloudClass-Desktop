@@ -25,12 +25,6 @@
   white-space: nowrap;
 }
 
-.reward {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .roster-wrap .main-title {
   position: relative;
   display: inline-flex;
@@ -120,81 +114,6 @@
   height: 40px;
 }
 
-.roster-table .table-container .table-row-item svg {
-  font-size: 22px;
-}
-
-.roster-table .muted {
-  color: #f04c36;
-}
-
-.roster-table .un-muted {
-  color: #0073ff;
-}
-
-.roster-table .disabled {
-  color: #979797 !important;
-}
-
-.roster-table .camera-enabled,
-.roster-table .mic-enabled {
-  color: #0073ff;
-}
-
-.whiteboard-granted-svg,
-.podium-svg {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 22px 22px;
-  padding: 15px;
-  cursor: pointer;
-}
-
-.whiteboard-granted-svg:hover,
-.podium-svg:hover {
-  background-color: #f0f0f7;
-}
-
-.roster-table .whiteboard-granted {
-  background-image: url('../icon/assets/svg/teacher-granted-active.svg');
-}
-
-.roster-table .whiteboard-no_granted {
-  background-image: url('../icon/assets/svg/teacher-granted-default.svg');
-}
-
-.roster-table .student-granted {
-  background-image: url('../icon/assets/svg/student-granted-active.svg');
-}
-
-.roster-table .student-no_granted {
-  background-image: url('../icon/assets/svg/student-granted-default.svg');
-}
-
-.roster-table .on-podium {
-  background-image: url('../icon/assets/svg/teacher-on-podium.svg');
-}
-
-.roster-table .off-podium {
-  background-image: url('../icon/assets/svg/teacher-off-podium.svg');
-}
-
-.roster-table .student-on-podium {
-  background-image: url('../icon/assets/svg/student-on-podium.svg');
-}
-
-.roster-table .student-off-podium {
-  background-image: url('../icon/assets/svg/student-off-podium.svg');
-}
-
-.roster-table .camera-disabled,
-.roster-table .mic-disabled {
-  color: #f04c36;
-}
-
 .roster-table .star {
   color: #979797;
 }
@@ -210,48 +129,10 @@
   color: #7b88a0;
 }
 
-.roster-table .kick-out {
-  @apply rounded-full text-center cursor-pointer inline-block;
-  color: #7b88a0;
-  height: 32px;
-  width: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.roster-table .camera-enabled,
-.roster-table .mic-enabled {
-  @apply rounded-full text-center cursor-pointer inline-block;
-  height: 32px;
-  width: 32px;
-}
-
-.roster-table .camera-enabled:hover,
-.roster-table .mic-enabled:hover {
-  background-color: #e7e7f3;
-}
-
 .roster-table .inline-flex {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.roster-table .operate-status {
-  color: #979797;
-}
-.roster-table .un-active {
-  color: #979797;
-}
-.roster-table .icon-active {
-  color: #0073ff;
-}
-.roster-table .media-un-active {
-  color: #f04c36;
-}
-.roster-table .un-operate-status {
-  color: #bdbdca !important;
 }
 
 .search-teacher-name {
@@ -314,4 +195,12 @@
 .carousel-frequency-input {
   width: 70px;
   margin: 0 6px;
+}
+
+.roster-row-hover {
+  background: #f9f9fc;
+}
+.roster-col-hover {
+  background: #e8f0ff;
+  cursor: pointer;
 }

@@ -16,7 +16,7 @@ export {
 export { RteLanguage } from 'agora-rte-sdk';
 export type { AgoraRteOperator, AGRtcConfig as EduRtcConfig } from 'agora-rte-sdk';
 
-export { EduClassroomConfig } from './configs';
+export { EduClassroomConfig } from './configs/index';
 
 export {
   ClassroomState,

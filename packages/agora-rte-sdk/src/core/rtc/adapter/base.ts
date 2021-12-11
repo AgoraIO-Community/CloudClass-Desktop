@@ -4,7 +4,7 @@ import { AGEventEmitter } from '../../utils/events';
 import { AgoraRtcVideoCanvas } from '../canvas';
 import { AGRtcConnectionType } from '../channel';
 import {
-  AGLocalTrackState,
+  AgoraRteMediaSourceState,
   AGRtcDeviceInfo,
   AGScreenShareDevice,
   AGScreenShareType,
@@ -13,12 +13,12 @@ import {
 } from '../type';
 
 export type LocalVideoTrackStateEvent = (
-  state: AGLocalTrackState,
+  state: AgoraRteMediaSourceState,
   type: AgoraRteVideoSourceType,
 ) => void;
 
 export type LocalAudioTrackStateEvent = (
-  state: AGLocalTrackState,
+  state: AgoraRteMediaSourceState,
   type: AgoraRteAudioSourceType,
 ) => void;
 

@@ -53,6 +53,7 @@ export class AgoraRteEngine extends AGEventEmitter {
   }
 
   static destroy() {
+    Logger.info(`rte engine destroy`);
     this._engine?.logout();
     this._engine = undefined;
   }

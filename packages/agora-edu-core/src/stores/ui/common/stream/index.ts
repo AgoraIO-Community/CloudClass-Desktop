@@ -1,6 +1,6 @@
 import {
   AGError,
-  AGLocalTrackState,
+  AgoraRteMediaSourceState,
   AgoraRteMediaPublishState,
   AgoraRteVideoSourceType,
   AGRenderMode,
@@ -42,22 +42,22 @@ export class StreamUIStore extends EduUIStoreBase {
   onInstall() {
     reaction(
       () => this.classroomStore.mediaStore.localScreenShareTrackState,
-      (state: AGLocalTrackState) => {
+      (state: AgoraRteMediaSourceState) => {
         // auto publish/unpublish when screenshare track started/stopped
         if (
-          state === AGLocalTrackState.started &&
+          state === AgoraRteMediaSourceState.started &&
           this.classroomStore.roomStore.screenShareStreamUuid === undefined
         ) {
           this.publishScreenShare();
         } else if (
-          state === AGLocalTrackState.stopped &&
+          state === AgoraRteMediaSourceState.stopped &&
           this.classroomStore.roomStore.screenShareStreamUuid !== undefined
         ) {
           this.unpublishScreenShare();
         }
       },
       {
-        equals: (oldValue: AGLocalTrackState, newValue: AGLocalTrackState) => {
+        equals: (oldValue: AgoraRteMediaSourceState, newValue: AgoraRteMediaSourceState) => {
           return oldValue === newValue;
         },
       },
@@ -86,7 +86,8 @@ export class StreamUIStore extends EduUIStoreBase {
       if (
         token &&
         streamUuid &&
-        this.classroomStore.mediaStore.localScreenShareTrackState === AGLocalTrackState.started
+        this.classroomStore.mediaStore.localScreenShareTrackState ===
+          AgoraRteMediaSourceState.started
       ) {
         if (this.classroomStore.connectionStore.rtcSubState === RtcState.Idle) {
           this.classroomStore.connectionStore.joinRTC({
@@ -213,24 +214,26 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.classroomStore.mediaStore.localMicAudioVolume * 100;
   }
 
-  @computed get localCameraTrackState(): AGLocalTrackState {
+  @computed get localCameraTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localCameraTrackState;
   }
 
-  @computed get localMicTrackState(): AGLocalTrackState {
+  @computed get localMicTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localMicTrackState;
   }
 
   @computed get localScreenShareOff() {
-    return this.classroomStore.mediaStore.localScreenShareTrackState !== AGLocalTrackState.started;
+    return (
+      this.classroomStore.mediaStore.localScreenShareTrackState !== AgoraRteMediaSourceState.started
+    );
   }
 
   @computed get localCameraOff() {
-    return this.localCameraTrackState !== AGLocalTrackState.started;
+    return this.localCameraTrackState !== AgoraRteMediaSourceState.started;
   }
 
   @computed get localMicOff() {
-    return this.localMicTrackState !== AGLocalTrackState.started;
+    return this.localMicTrackState !== AgoraRteMediaSourceState.started;
   }
 
   @computed get isMirror() {
@@ -250,60 +253,191 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.awardAnims.filter((anim) => anim.userUuid === stream.fromUser.userUuid);
   });
 
+  localCameraTool = computedFn((): EduStreamTool => {
+    return new EduStreamTool(
+      EduStreamToolCategory.camera,
+      this.localCameraOff ? 'stream-camera-disabled' : 'stream-camera-enabled',
+      this.localCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
+      {
+        //i can always control myself
+        interactable: true,
+        hoverIconType: 'stream-camera-disabled',
+        onClick: async () => {
+          try {
+            this.toggleLocalVideo();
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+    );
+  });
+
+  localMicTool = computedFn((): EduStreamTool => {
+    return new EduStreamTool(
+      EduStreamToolCategory.microphone,
+      this.localMicOff ? 'stream-mic-disabled' : 'stream-mic-enabled',
+      this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
+      {
+        //host can control, or i can control myself
+        interactable: true,
+        hoverIconType: 'stream-mic-disabled',
+        onClick: async () => {
+          try {
+            this.toggleLocalAudio();
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+    );
+  });
+
+  localPodiumTool = computedFn((): EduStreamTool => {
+    const { acceptedList } = this.classroomStore.roomStore;
+    return new EduStreamTool(
+      EduStreamToolCategory.podium_all,
+      'not-on-podium',
+      transI18n('Clear Podiums'),
+      {
+        interactable: !!this.studentStreams.size,
+        hoverIconType: 'on-podium',
+        onClick: async () => {
+          try {
+            await this.classroomStore.handUpStore.offPodiumAll();
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+    );
+  });
+
+  remoteCameraTool = computedFn((stream: EduStreamUI): EduStreamTool => {
+    let videoMuted = stream.stream.videoState === AgoraRteMediaPublishState.Unpublished;
+    let videoSourceStopped = stream.stream.videoSourceState === AgoraRteMediaSourceState.stopped;
+    return new EduStreamTool(
+      EduStreamToolCategory.camera,
+      videoSourceStopped
+        ? 'stream-camera-inactive'
+        : videoMuted
+        ? 'stream-camera-enabled'
+        : 'stream-camera-disabled',
+      videoSourceStopped
+        ? transI18n('Camera Not Available')
+        : videoMuted
+        ? transI18n('Open Camera')
+        : transI18n('Close Camera'),
+      {
+        //can interact when source is not stopped
+        interactable: !videoSourceStopped,
+        style: {},
+        onClick: () => {
+          this.classroomStore.streamStore
+            .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+              videoState: videoMuted
+                ? AgoraRteMediaPublishState.Published
+                : AgoraRteMediaPublishState.Unpublished,
+            })
+            .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+        },
+      },
+    );
+  });
+
+  remoteMicTool = computedFn((stream: EduStreamUI): EduStreamTool => {
+    let audioMuted = stream.stream.audioState === AgoraRteMediaPublishState.Unpublished;
+    let audioSourceStopped = stream.stream.audioSourceState === AgoraRteMediaSourceState.stopped;
+    return new EduStreamTool(
+      EduStreamToolCategory.microphone,
+      audioSourceStopped
+        ? 'stream-mic-inactive'
+        : audioMuted
+        ? 'stream-mic-enabled'
+        : 'stream-mic-disabled',
+      audioSourceStopped
+        ? transI18n('Microphone Not Available')
+        : audioMuted
+        ? transI18n('Open Microphone')
+        : transI18n('Close Microphone'),
+      {
+        //can interact when source is not stopped
+        interactable: !audioSourceStopped,
+        style: {},
+        onClick: async () => {
+          this.classroomStore.streamStore
+            .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
+              audioState: audioMuted
+                ? AgoraRteMediaPublishState.Published
+                : AgoraRteMediaPublishState.Unpublished,
+            })
+            .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+        },
+      },
+    );
+  });
+
+  remotePodiumTool = computedFn((stream: EduStreamUI): EduStreamTool => {
+    return new EduStreamTool(
+      EduStreamToolCategory.podium,
+      'not-on-podium',
+      transI18n('Clear Podium'),
+      {
+        interactable: true,
+        style: {},
+        hoverIconType: 'on-podium',
+        onClick: async () => {
+          try {
+            await this.classroomStore.handUpStore.offPodium(stream.fromUser.userUuid);
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+    );
+  });
+
+  remoteWhiteboardTool = computedFn((stream: EduStreamUI): EduStreamTool => {
+    const whiteboardAuthorized = this.whiteboardGrantUsers.has(stream.fromUser.userUuid);
+    return new EduStreamTool(
+      EduStreamToolCategory.whiteboard,
+      whiteboardAuthorized ? 'board-granted' : 'board-not-granted',
+      whiteboardAuthorized ? transI18n('Close Whiteboard') : transI18n('Open Whiteboard'),
+      {
+        interactable: true,
+        style: {},
+        hoverIconType: 'board-granted',
+        onClick: () => {
+          try {
+            whiteboardAuthorized
+              ? this.classroomStore.boardStore.revokePermission(stream.fromUser.userUuid)
+              : this.classroomStore.boardStore.grantPermission(stream.fromUser.userUuid);
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+    );
+  });
+
+  remoteRewardTool = computedFn((stream: EduStreamUI): EduStreamTool => {
+    return new EduStreamTool(EduStreamToolCategory.star, 'reward', transI18n('Star'), {
+      interactable: true,
+      style: {},
+      hoverIconType: 'reward-hover',
+      onClick: () => {
+        this.classroomStore.roomStore
+          .sendRewards(EduClassroomConfig.shared.sessionInfo.roomUuid, [
+            { userUuid: stream.fromUser.userUuid, changeReward: 1 },
+          ])
+          .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+      },
+    });
+  });
+
   @computed get localStreamTools(): EduStreamTool[] {
     let tools: EduStreamTool[] = [];
-    tools = tools.concat([
-      new EduStreamTool(
-        EduStreamToolCategory.camera,
-        this.localCameraOff ? 'camera' : 'camera-off',
-        this.localCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
-        {
-          //i can always control myself
-          interactable: true,
-          style: {
-            color: this.localCameraOff ? StreamIconColor.active : StreamIconColor.activeWarn,
-          },
-          onClick: async () => {
-            try {
-              const targetState = this.localCameraOff
-                ? AgoraRteMediaPublishState.Published
-                : AgoraRteMediaPublishState.Unpublished;
-              this.toggleLocalVideo();
-              await this.classroomStore.streamStore.updateLocalPublishState({
-                videoState: targetState,
-              });
-            } catch (e) {
-              this.shareUIStore.addGenericErrorDialog(e as AGError);
-            }
-          },
-        },
-      ),
-      new EduStreamTool(
-        EduStreamToolCategory.microphone,
-        this.localMicOff ? 'microphone-on-outline' : 'microphone-off-outline',
-        this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
-        {
-          //host can control, or i can control myself
-          interactable: true,
-          style: {
-            color: this.localMicOff ? StreamIconColor.active : StreamIconColor.activeWarn,
-          },
-          onClick: async () => {
-            try {
-              const targetState = this.localMicOff
-                ? AgoraRteMediaPublishState.Published
-                : AgoraRteMediaPublishState.Unpublished;
-              this.toggleLocalAudio();
-              await this.classroomStore.streamStore.updateLocalPublishState({
-                audioState: targetState,
-              });
-            } catch (e) {
-              this.shareUIStore.addGenericErrorDialog(e as AGError);
-            }
-          },
-        },
-      ),
-    ]);
+    tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
     return tools;
   }
@@ -313,90 +447,10 @@ export class StreamUIStore extends EduUIStoreBase {
       EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
       EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant;
     let tools: EduStreamTool[] = [];
-    let videoMuted = stream.stream.videoState === AgoraRteMediaPublishState.Unpublished;
-    let audioMuted = stream.stream.audioState === AgoraRteMediaPublishState.Unpublished;
     if (iAmHost) {
-      tools = tools.concat([
-        new EduStreamTool(
-          EduStreamToolCategory.camera,
-          videoMuted ? 'camera' : 'camera-off',
-          videoMuted ? transI18n('Open Camera') : transI18n('Close Camera'),
-          {
-            //host can control
-            interactable: iAmHost,
-            style: {
-              color: videoMuted ? StreamIconColor.active : StreamIconColor.activeWarn,
-            },
-            onClick: () => {
-              this.classroomStore.streamStore
-                .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-                  videoState: videoMuted
-                    ? AgoraRteMediaPublishState.Published
-                    : AgoraRteMediaPublishState.Unpublished,
-                })
-                .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-            },
-          },
-        ),
-        new EduStreamTool(
-          EduStreamToolCategory.microphone,
-          audioMuted ? 'microphone-on-outline' : 'microphone-off-outline',
-          audioMuted ? transI18n('Open Microphone') : transI18n('Close Microphone'),
-          {
-            //host can control, or i can control myself
-            interactable: iAmHost,
-            style: {
-              color: audioMuted ? StreamIconColor.active : StreamIconColor.activeWarn,
-            },
-            onClick: async () => {
-              this.classroomStore.streamStore
-                .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
-                  audioState: audioMuted
-                    ? AgoraRteMediaPublishState.Published
-                    : AgoraRteMediaPublishState.Unpublished,
-                })
-                .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-            },
-          },
-        ),
-      ]);
+      tools = tools.concat([this.remoteCameraTool(stream), this.remoteMicTool(stream)]);
       if (stream.role === EduRoleTypeEnum.student) {
-        const whiteboardAuthorized = this.whiteboardGrantUsers.has(stream.fromUser.userUuid);
-        tools = tools.concat([
-          new EduStreamTool(
-            EduStreamToolCategory.whiteboard,
-            whiteboardAuthorized ? 'authorized' : 'no-authorized',
-            whiteboardAuthorized ? transI18n('Close Whiteboard') : transI18n('Open Whiteboard'),
-            {
-              interactable: true,
-              style: {
-                color: whiteboardAuthorized ? StreamIconColor.active : StreamIconColor.deactive,
-              },
-              onClick: () => {
-                try {
-                  whiteboardAuthorized
-                    ? this.classroomStore.boardStore.revokePermission(stream.fromUser.userUuid)
-                    : this.classroomStore.boardStore.grantPermission(stream.fromUser.userUuid);
-                } catch (e) {
-                  this.shareUIStore.addGenericErrorDialog(e as AGError);
-                }
-              },
-            },
-          ),
-          new EduStreamTool(EduStreamToolCategory.star, 'star-outline', transI18n('Star'), {
-            interactable: true,
-            style: {
-              color: StreamIconColor.active,
-            },
-            onClick: () => {
-              this.classroomStore.roomStore
-                .sendRewards(EduClassroomConfig.shared.sessionInfo.roomUuid, [
-                  { userUuid: stream.fromUser.userUuid, changeReward: 1 },
-                ])
-                .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-            },
-          }),
-        ]);
+        tools = tools.concat([this.remoteWhiteboardTool(stream), this.remoteRewardTool(stream)]);
       }
     }
     return tools;
@@ -406,33 +460,36 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.localMicOff ? 'microphone-off' : 'microphone-on';
   }
 
-  notPresentText(role: EduRoleTypeEnum): string {
-    return role === EduRoleTypeEnum.teacher
-      ? transI18n('stream.placeholder.notpresent.teacher')
-      : transI18n('stream.placeholder.notpresent.student');
-  }
+  // notPresentText(role: EduRoleTypeEnum): string {
+  //   return role === EduRoleTypeEnum.teacher
+  //     ? transI18n('stream.placeholder.notpresent.teacher')
+  //     : transI18n('stream.placeholder.notpresent.student');
+  // }
 
-  getCameraPlaceholderText(type: CameraPlaceholderType): string {
-    switch (type) {
-      case CameraPlaceholderType.loading:
-      case CameraPlaceholderType.none:
-        return transI18n('stream.placeholder.loading');
-      case CameraPlaceholderType.muted:
-        return transI18n('stream.placeholder.muted');
-      case CameraPlaceholderType.broken:
-        return transI18n('stream.placeholder.broken');
-    }
-    return '';
-  }
+  // getCameraPlaceholderText(type: CameraPlaceholderType): string {
+  //   switch (type) {
+  //     case CameraPlaceholderType.loading:
+  //     case CameraPlaceholderType.none:
+  //       return transI18n('stream.placeholder.loading');
+  //     case CameraPlaceholderType.muted:
+  //       return transI18n('stream.placeholder.muted');
+  //     case CameraPlaceholderType.broken:
+  //       return transI18n('stream.placeholder.broken');
+  //   }
+  //   return '';
+  // }
 
-  cameraPlaceholderText = computedFn((stream: EduStreamUI): string => {
-    return this.getCameraPlaceholderText(this.cameraPlaceholder(stream));
-  });
+  // cameraPlaceholderText = computedFn((stream: EduStreamUI): string => {
+  // return this.getCameraPlaceholderText(this.cameraPlaceholder(stream));
+  // });
 
   cameraPlaceholder = computedFn((stream: EduStreamUI): CameraPlaceholderType => {
     let placeholder = CameraPlaceholderType.none;
     if (!stream.stream.isLocal) {
-      if (stream.stream.videoState === AgoraRteMediaPublishState.Published) {
+      if (
+        stream.stream.videoState === AgoraRteMediaPublishState.Published &&
+        stream.stream.videoSourceState === AgoraRteMediaSourceState.started
+      ) {
         placeholder = CameraPlaceholderType.none;
       } else {
         placeholder = CameraPlaceholderType.muted;
@@ -441,16 +498,16 @@ export class StreamUIStore extends EduUIStoreBase {
     } else {
       let placeholder = CameraPlaceholderType.none;
       switch (this.localCameraTrackState) {
-        case AGLocalTrackState.started:
+        case AgoraRteMediaSourceState.started:
           placeholder = CameraPlaceholderType.none;
           break;
-        case AGLocalTrackState.starting:
+        case AgoraRteMediaSourceState.starting:
           placeholder = CameraPlaceholderType.loading;
           break;
-        case AGLocalTrackState.stopped:
+        case AgoraRteMediaSourceState.stopped:
           placeholder = CameraPlaceholderType.muted;
           break;
-        case AGLocalTrackState.error:
+        case AgoraRteMediaSourceState.error:
           placeholder = CameraPlaceholderType.broken;
           break;
       }

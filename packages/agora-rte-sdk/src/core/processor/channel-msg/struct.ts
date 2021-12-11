@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import { AgoraRteMediaSourceState } from '../../..';
 import { Logger } from '../../logger';
 import {
   AgoraRteAudioSourceType,
@@ -111,6 +112,8 @@ export interface IAgoraStreamData {
   audioSourceType: AgoraRteAudioSourceType;
   videoState: AgoraRteMediaPublishState;
   audioState: AgoraRteMediaPublishState;
+  videoSourceState: AgoraRteMediaSourceState;
+  audioSourceState: AgoraRteMediaSourceState;
 }
 
 export class AgoraStream {
@@ -125,6 +128,8 @@ export class AgoraStream {
   audioSourceType: AgoraRteAudioSourceType;
   videoState: AgoraRteMediaPublishState;
   audioState: AgoraRteMediaPublishState;
+  videoSourceState: AgoraRteMediaSourceState;
+  audioSourceState: AgoraRteMediaSourceState;
 
   previous?: AgoraStream;
 
@@ -136,6 +141,24 @@ export class AgoraStream {
     this.audioSourceType = data.audioSourceType;
     this.videoState = data.videoState;
     this.audioState = data.audioState;
+    this.videoSourceState = data.videoSourceState;
+    this.audioSourceState = data.audioSourceState;
+
+    [
+      'streamUuid',
+      'fromUser',
+      'videoSourceType',
+      'audioSourceType',
+      'videoState',
+      'audioState',
+      'videoSourceState',
+      'audioSourceState',
+    ].forEach((key) => {
+      let value = (data as any)[key];
+      if (value === undefined) {
+        Logger.warn(`stream key ${key} is unexpectedly undefined`);
+      }
+    });
 
     if (!this.fromUser) {
       Logger.error(`[stream-data-struct] stream must has owner info`);

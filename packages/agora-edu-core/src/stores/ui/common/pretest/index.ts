@@ -1,4 +1,4 @@
-import { AGLocalTrackState, AGRtcDeviceInfo, bound, Log, Logger } from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, AGRtcDeviceInfo, bound, Log, Logger } from 'agora-rte-sdk';
 import { action, computed, Lambda, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomStore } from '../../../domain';
 import { EduUIStoreBase } from '../base';
@@ -8,8 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { differenceWith } from 'lodash';
 import { ClassroomState } from '../../../..';
 import { transI18n } from '../i18n';
-
-export const DEVICEID_DISABLED = 'disabled';
+import { DEVICE_DISABLE } from '../../../domain/common/media';
 
 export type PretestToast = {
   id: string;
@@ -28,7 +27,7 @@ export class PretestUIStore extends EduUIStoreBase {
       ({ newValue, oldValue }) => {
         if (this.classroomStore.connectionStore.classroomState !== ClassroomState.Idle) return;
         // 避免初始化阶段触发新设备的弹窗通知
-        if (oldValue && oldValue.length > 0) {
+        if (oldValue && oldValue.length > 1) {
           if (newValue.length > oldValue.length) {
             this.addToast({
               type: 'video',
@@ -59,7 +58,7 @@ export class PretestUIStore extends EduUIStoreBase {
     ).observe(({ newValue, oldValue }) => {
       if (this.classroomStore.connectionStore.classroomState !== ClassroomState.Idle) return;
       // 避免初始化阶段触发新设备的弹窗通知
-      if (oldValue && oldValue.length > 0) {
+      if (oldValue && oldValue.length > 1) {
         if (newValue.length > oldValue.length) {
           this.addToast({
             type: 'audio_recording',
@@ -132,21 +131,17 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   @computed get cameraDevicesList() {
-    return this.classroomStore.mediaStore.videoCameraDevices
-      .map((item) => ({
-        label: item.devicename,
-        value: item.deviceid,
-      }))
-      .concat([{ label: transI18n('disabled'), value: DEVICEID_DISABLED }]);
+    return this.classroomStore.mediaStore.videoCameraDevices.map((item) => ({
+      label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
+      value: item.deviceid,
+    }));
   }
 
   @computed get recordingDevicesList() {
-    return this.classroomStore.mediaStore.audioRecordingDevices
-      .map((item) => ({
-        label: item.devicename,
-        value: item.deviceid,
-      }))
-      .concat([{ label: transI18n('disabled'), value: DEVICEID_DISABLED }]);
+    return this.classroomStore.mediaStore.audioRecordingDevices.map((item) => ({
+      label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
+      value: item.deviceid,
+    }));
   }
 
   @computed get playbackDevicesList() {
@@ -157,15 +152,11 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   @computed get currentCameraDeviceId(): string {
-    return this.classroomStore.mediaStore.disableLocalVideoByDefault
-      ? DEVICEID_DISABLED
-      : this.classroomStore.mediaStore.cameraDeviceId ?? DEVICEID_DISABLED;
+    return this.classroomStore.mediaStore.cameraDeviceId ?? '';
   }
 
   @computed get currentRecordingDeviceId(): string {
-    return this.classroomStore.mediaStore.disableLocalAudioByDefault
-      ? DEVICEID_DISABLED
-      : this.classroomStore.mediaStore.recordingDeviceId ?? DEVICEID_DISABLED;
+    return this.classroomStore.mediaStore.recordingDeviceId ?? '';
   }
 
   @computed get currentPlaybackDeviceId(): string {
@@ -180,20 +171,20 @@ export class PretestUIStore extends EduUIStoreBase {
     return this.classroomStore.mediaStore.localPlaybackTestVolume * 100;
   }
 
-  @computed get localCameraTrackState(): AGLocalTrackState {
+  @computed get localCameraTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localCameraTrackState;
   }
 
-  @computed get localMicTrackState(): AGLocalTrackState {
+  @computed get localMicTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localMicTrackState;
   }
 
   @computed get localCameraOff() {
-    return this.localCameraTrackState !== AGLocalTrackState.started;
+    return this.localCameraTrackState !== AgoraRteMediaSourceState.started;
   }
 
   @computed get localMicOff() {
-    return this.localMicTrackState !== AGLocalTrackState.started;
+    return this.localMicTrackState !== AgoraRteMediaSourceState.started;
   }
 
   @computed get localMicIconType() {
@@ -203,16 +194,16 @@ export class PretestUIStore extends EduUIStoreBase {
   @computed get localCameraPlaceholder(): CameraPlaceholderType {
     let placeholder = CameraPlaceholderType.none;
     switch (this.localCameraTrackState) {
-      case AGLocalTrackState.started:
+      case AgoraRteMediaSourceState.started:
         placeholder = CameraPlaceholderType.none;
         break;
-      case AGLocalTrackState.starting:
+      case AgoraRteMediaSourceState.starting:
         placeholder = CameraPlaceholderType.loading;
         break;
-      case AGLocalTrackState.stopped:
+      case AgoraRteMediaSourceState.stopped:
         placeholder = CameraPlaceholderType.muted;
         break;
-      case AGLocalTrackState.error:
+      case AgoraRteMediaSourceState.error:
         placeholder = CameraPlaceholderType.broken;
         break;
     }
@@ -283,28 +274,12 @@ export class PretestUIStore extends EduUIStoreBase {
 
   @action.bound
   setCameraDevice(id: string) {
-    if (id === DEVICEID_DISABLED) {
-      //note we should NOT change cameraDevice here
-      this.classroomStore.mediaStore.disableLocalVideoByDefault = true;
-      this.classroomStore.mediaStore.enableLocalVideo(false);
-    } else {
-      this.classroomStore.mediaStore.disableLocalVideoByDefault = false;
-      this.classroomStore.mediaStore.setCameraDevice(id);
-      this.classroomStore.mediaStore.enableLocalVideo(true);
-    }
+    this.classroomStore.mediaStore.setCameraDevice(id);
   }
 
   @action.bound
   setRecordingDevice(id: string) {
-    if (id === DEVICEID_DISABLED) {
-      //note we should NOT change recordingDevice here
-      this.classroomStore.mediaStore.disableLocalAudioByDefault = true;
-      this.classroomStore.mediaStore.enableLocalAudio(false);
-    } else {
-      this.classroomStore.mediaStore.disableLocalAudioByDefault = false;
-      this.classroomStore.mediaStore.setRecordingDevice(id);
-      this.classroomStore.mediaStore.enableLocalAudio(true);
-    }
+    this.classroomStore.mediaStore.setRecordingDevice(id);
   }
 
   @bound

@@ -1,9 +1,8 @@
 import {
-  AgoraRtcVideoCanvas,
   AgoraRteAudioSourceType,
   AgoraRteEngine,
   AGRtcDeviceInfo,
-  AGLocalTrackState,
+  AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
   AgoraRtcLocalVideoCanvas,
   AgoraMediaControl,
@@ -11,11 +10,17 @@ import {
   AGScreenShareDevice,
   AGScreenShareType,
   bound,
+  Logger,
+  Log,
 } from 'agora-rte-sdk';
-import { action, computed, Lambda, observable, reaction, runInAction } from 'mobx';
+import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
+import { ClassroomState } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
 
+export const DEVICE_DISABLE = 'DEVICE_DISABLE';
+
+@Log.attach({ proxyMethods: false })
 export class MediaStore extends EduStoreBase {
   private readonly _disposers = new Set<Lambda>();
 
@@ -38,21 +43,13 @@ export class MediaStore extends EduStoreBase {
   playbackDeviceId?: string;
 
   @observable
-  localCameraTrackState: AGLocalTrackState = AGLocalTrackState.stopped;
+  localCameraTrackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
 
   @observable
-  localMicTrackState: AGLocalTrackState = AGLocalTrackState.stopped;
+  localMicTrackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
 
   @observable
-  localScreenShareTrackState: AGLocalTrackState = AGLocalTrackState.stopped;
-
-  //the default video state when stream is created in room
-  @observable
-  disableLocalVideoByDefault: boolean = false;
-
-  //the default audio state when stream is created in room
-  @observable
-  disableLocalAudioByDefault: boolean = false;
+  localScreenShareTrackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
 
   /**
    * range from [0,1]
@@ -181,6 +178,22 @@ export class MediaStore extends EduStoreBase {
     this.playbackDeviceId = id;
   };
 
+  @computed get cameraAccessors() {
+    return {
+      classroomState: this.classroomStore.connectionStore.classroomState,
+      cameraDeviceId: this.cameraDeviceId,
+      localCameraStreamUuid: this.classroomStore.streamStore.localCameraStreamUuid,
+    };
+  }
+
+  @computed get micAccessors() {
+    return {
+      classroomState: this.classroomStore.connectionStore.classroomState,
+      recordingDeviceId: this.recordingDeviceId,
+      localCameraStreamUuid: this.classroomStore.streamStore.localMicStreamUuid,
+    };
+  }
+
   onInstall() {
     let store = this.classroomStore;
     reaction(
@@ -193,7 +206,9 @@ export class MediaStore extends EduStoreBase {
             AgoraMediaControlEventType.cameraListChanged,
             (_added: boolean, _newDevices: AGRtcDeviceInfo[], allDevices: AGRtcDeviceInfo[]) => {
               runInAction(() => {
-                this.videoCameraDevices = allDevices;
+                this.videoCameraDevices = allDevices.concat([
+                  { deviceid: DEVICE_DISABLE, devicename: '' },
+                ]);
               });
             },
           );
@@ -211,7 +226,9 @@ export class MediaStore extends EduStoreBase {
             AgoraMediaControlEventType.recordingDeviceListChanged,
             (_added: boolean, _newDevices: AGRtcDeviceInfo[], allDevices: AGRtcDeviceInfo[]) => {
               runInAction(() => {
-                this.audioRecordingDevices = allDevices;
+                this.audioRecordingDevices = allDevices.concat([
+                  { deviceid: DEVICE_DISABLE, devicename: '' },
+                ]);
               });
             },
           );
@@ -224,7 +241,7 @@ export class MediaStore extends EduStoreBase {
 
           mediaControl.on(
             AgoraMediaControlEventType.localVideoTrackChanged,
-            (state: AGLocalTrackState, type: AgoraRteVideoSourceType, reason?: string) => {
+            (state: AgoraRteMediaSourceState, type: AgoraRteVideoSourceType, reason?: string) => {
               runInAction(() => {
                 if (type === AgoraRteVideoSourceType.Camera) {
                   this.localCameraTrackState = state;
@@ -238,7 +255,7 @@ export class MediaStore extends EduStoreBase {
 
           mediaControl.on(
             AgoraMediaControlEventType.localAudioTrackChanged,
-            (state: AGLocalTrackState, type: AgoraRteAudioSourceType, reason?: string) => {
+            (state: AgoraRteMediaSourceState, type: AgoraRteAudioSourceType, reason?: string) => {
               runInAction(() => {
                 if (type === AgoraRteAudioSourceType.Mic) {
                   this.localMicTrackState = state;
@@ -258,122 +275,152 @@ export class MediaStore extends EduStoreBase {
           );
 
           runInAction(() => {
-            this.videoCameraDevices = mediaControl.getVideoCameraList();
-            this.audioRecordingDevices = mediaControl.getAudioRecordingList();
+            this.videoCameraDevices = mediaControl
+              .getVideoCameraList()
+              .concat([{ deviceid: DEVICE_DISABLE, devicename: '' }]);
+            this.audioRecordingDevices = mediaControl
+              .getAudioRecordingList()
+              .concat([{ deviceid: DEVICE_DISABLE, devicename: '' }]);
             this.audioPlaybackDevices = mediaControl.getAudioPlaybackList();
           });
+
+          reaction(
+            () => this.cameraAccessors,
+            () => {
+              if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
+                // if idle, e.g. pretest
+                if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
+                  const track = this.mediaControl.createCameraVideoTrack();
+                  track.setDeviceId(this.cameraDeviceId);
+                  this.enableLocalVideo(true);
+                } else {
+                  //if no device selected, disable device
+                  this.enableLocalVideo(false);
+                }
+              } else if (
+                this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
+              ) {
+                // once connected, should follow stream
+                if (!this.classroomStore.streamStore.localCameraStreamUuid) {
+                  // if no local stream
+                  this.enableLocalVideo(false);
+                } else {
+                  if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
+                    const track = this.mediaControl.createCameraVideoTrack();
+                    track.setDeviceId(this.cameraDeviceId);
+                    this.enableLocalVideo(true);
+                  } else {
+                    this.enableLocalVideo(false);
+                  }
+                }
+              }
+            },
+          );
+
+          reaction(
+            () => this.micAccessors,
+            () => {
+              if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
+                // if idle, e.g. pretest
+                if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
+                  const track = this.mediaControl.createMicrophoneAudioTrack();
+                  track.setRecordingDevice(this.recordingDeviceId);
+                  this.enableLocalAudio(true);
+                } else {
+                  //if no device selected, disable device
+                  this.enableLocalAudio(false);
+                }
+              } else if (
+                this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
+              ) {
+                // once connected, should follow stream
+                if (!this.classroomStore.streamStore.localMicStreamUuid) {
+                  // if no local stream
+                  this.enableLocalAudio(false);
+                } else {
+                  if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
+                    const track = this.mediaControl.createMicrophoneAudioTrack();
+                    track.setRecordingDevice(this.recordingDeviceId);
+                    this.enableLocalAudio(true);
+                  } else {
+                    this.enableLocalAudio(false);
+                  }
+                }
+              }
+            },
+          );
+
+          reaction(
+            () => this.playbackDeviceId,
+            () => {
+              //TODO set playback device support
+            },
+          );
+
+          // 处理视频设备变动
+          const videoDisposer = computed(() => this.videoCameraDevices).observe(
+            ({ newValue, oldValue }) => {
+              // 避免初始化阶段触发新设备的弹窗通知
+              if (oldValue && oldValue.length > 1) {
+                let inOldList = oldValue.find((v) => v.deviceid === this.cameraDeviceId);
+                let inNewList = newValue.find((v) => v.deviceid === this.cameraDeviceId);
+                if ((inOldList && !inNewList) || this.cameraDeviceId === DEVICE_DISABLE) {
+                  //change to first device if there's any
+                  newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+                }
+              } else {
+                // initailize, pick the first device
+                newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+              }
+            },
+          );
+
+          this._disposers.add(videoDisposer);
+
+          // 处理录音设备变动
+          const audioRecordingDisposer = computed(() => this.audioRecordingDevices).observe(
+            ({ newValue, oldValue }) => {
+              // 避免初始化阶段触发新设备的弹窗通知
+              if (oldValue && oldValue.length > 1) {
+                let inOldList = oldValue.find((v) => v.deviceid === this.recordingDeviceId);
+                let inNewList = newValue.find((v) => v.deviceid === this.recordingDeviceId);
+                if ((inOldList && !inNewList) || this.recordingDeviceId === DEVICE_DISABLE) {
+                  //change to first device if there's any
+                  newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+                }
+              } else {
+                // initailize, pick the first device
+                newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+              }
+            },
+          );
+
+          this._disposers.add(audioRecordingDisposer);
+
+          // 处理扬声器设备变动
+          const playbackDisposer = computed(() => this.audioPlaybackDevices).observe(
+            ({ newValue, oldValue }) => {
+              // 避免初始化阶段触发新设备的弹窗通知
+              if (oldValue && oldValue.length > 0) {
+                let inOldList = oldValue.find((v) => v.deviceid === this.playbackDeviceId);
+                let inNewList = newValue.find((v) => v.deviceid === this.playbackDeviceId);
+                if (inOldList && !inNewList) {
+                  //change to first device if there's any
+                  newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
+                }
+              } else {
+                // initailize, pick the first device
+                newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
+              }
+            },
+          );
+
+          this._disposers.add(playbackDisposer);
         } else {
           //clean up
         }
       },
     );
-
-    reaction(
-      () => this.cameraDeviceId,
-      () => {
-        if (this.cameraDeviceId) {
-          const track = this.mediaControl.createCameraVideoTrack();
-          track.setDeviceId(this.cameraDeviceId);
-          this.enableLocalVideo(true);
-        } else {
-          //if no device selected, disable device
-          this.enableLocalVideo(false);
-        }
-      },
-    );
-
-    reaction(
-      () => this.recordingDeviceId,
-      () => {
-        if (this.recordingDeviceId) {
-          const track = this.mediaControl.createMicrophoneAudioTrack();
-          track.setRecordingDevice(this.recordingDeviceId);
-          this.enableLocalAudio(true);
-        } else {
-          //if no device selected, disable device
-          this.enableLocalAudio(false);
-        }
-      },
-    );
-
-    reaction(
-      () => this.playbackDeviceId,
-      () => {
-        //TODO set playback device support
-      },
-    );
-
-    // 处理视频设备变动
-    const videoDisposer = computed(() => this.classroomStore.mediaStore.videoCameraDevices).observe(
-      ({ newValue, oldValue }) => {
-        // 避免初始化阶段触发新设备的弹窗通知
-        if (oldValue && oldValue.length > 0) {
-          let inOldList = oldValue.find(
-            (v) => v.deviceid === this.classroomStore.mediaStore.cameraDeviceId,
-          );
-          let inNewList = newValue.find(
-            (v) => v.deviceid === this.classroomStore.mediaStore.cameraDeviceId,
-          );
-          if (inOldList && !inNewList) {
-            //change to first device if there's any
-            newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
-          }
-        } else {
-          // initailize, pick the first device
-          newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
-        }
-      },
-    );
-
-    this._disposers.add(videoDisposer);
-
-    // 处理录音设备变动
-    const audioRecordingDisposer = computed(
-      () => this.classroomStore.mediaStore.audioRecordingDevices,
-    ).observe(({ newValue, oldValue }) => {
-      // 避免初始化阶段触发新设备的弹窗通知
-      if (oldValue && oldValue.length > 0) {
-        let inOldList = oldValue.find(
-          (v) => v.deviceid === this.classroomStore.mediaStore.recordingDeviceId,
-        );
-        let inNewList = newValue.find(
-          (v) => v.deviceid === this.classroomStore.mediaStore.recordingDeviceId,
-        );
-        if (inOldList && !inNewList) {
-          //change to first device if there's any
-          newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
-        }
-      } else {
-        // initailize, pick the first device
-        newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
-      }
-    });
-
-    this._disposers.add(audioRecordingDisposer);
-
-    // 处理扬声器设备变动
-    const playbackDisposer = computed(
-      () => this.classroomStore.mediaStore.audioPlaybackDevices,
-    ).observe(({ newValue, oldValue }) => {
-      // 避免初始化阶段触发新设备的弹窗通知
-      if (oldValue && oldValue.length > 0) {
-        let inOldList = oldValue.find(
-          (v) => v.deviceid === this.classroomStore.mediaStore.playbackDeviceId,
-        );
-        let inNewList = newValue.find(
-          (v) => v.deviceid === this.classroomStore.mediaStore.playbackDeviceId,
-        );
-        if (inOldList && !inNewList) {
-          //change to first device if there's any
-          newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
-        }
-      } else {
-        // initailize, pick the first device
-        newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
-      }
-    });
-
-    this._disposers.add(playbackDisposer);
   }
 
   @bound

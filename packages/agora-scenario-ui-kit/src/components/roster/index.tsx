@@ -22,8 +22,9 @@ export type Column = {
   key: ColumnKey;
   order: number;
   name: string;
-  render: (profile: Profile) => JSX.Element;
+  render: (profile: Profile, hovered: boolean) => JSX.Element;
   operation?: Operation;
+  width?: number | string;
 };
 
 export enum DeviceState {
@@ -33,15 +34,15 @@ export enum DeviceState {
 }
 
 export const cameraIconType = {
-  [DeviceState.enabled]: 'camera',
-  [DeviceState.disabled]: 'camera-off',
-  [DeviceState.unavailable]: 'camera',
+  [DeviceState.enabled]: 'camera-enabled',
+  [DeviceState.disabled]: 'camera-disabled',
+  [DeviceState.unavailable]: 'camera-inactive',
 };
 
 export const microphoneIconType = {
-  [DeviceState.enabled]: 'microphone-on-outline',
-  [DeviceState.disabled]: 'microphone-off-outline',
-  [DeviceState.unavailable]: 'microphone-on-outline',
+  [DeviceState.enabled]: 'mic-enabled',
+  [DeviceState.disabled]: 'mic-disabled',
+  [DeviceState.unavailable]: 'mic-inactive',
 };
 
 export type Profile = {

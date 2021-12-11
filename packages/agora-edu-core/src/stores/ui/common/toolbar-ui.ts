@@ -1,4 +1,4 @@
-import { AGLocalTrackState, AGScreenShareType, bound } from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, AGScreenShareType, bound } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomConfig, EduRoleTypeEnum, WhiteboardTool } from '../../..';
 import { CustomBtoa } from '../../../utils';
@@ -46,9 +46,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
   onInstall() {
     reaction(
       () => this.classroomStore.mediaStore.localScreenShareTrackState,
-      (state: AGLocalTrackState) => {
+      (state: AgoraRteMediaSourceState) => {
         runInAction(() => {
-          this._screenSharing = state === AGLocalTrackState.started;
+          this._screenSharing = state === AgoraRteMediaSourceState.started;
         });
       },
     );

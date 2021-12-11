@@ -1,5 +1,6 @@
 import { observable, action, computed } from 'mobx';
 import {
+  AgoraRteMediaSourceState,
   AgoraComponentRegion,
   AgoraRteEngine,
   AgoraRteEventType,
@@ -137,10 +138,7 @@ export class ConnectionStore extends EduStoreBase {
       retryAttempt(async () => {
         this.setClassroomState(ClassroomState.Connecting);
         const { sessionInfo } = EduClassroomConfig.shared;
-        const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo, {
-          videoState: this.classroomStore.mediaStore.disableLocalVideoByDefault ? 0 : 1,
-          audioState: this.classroomStore.mediaStore.disableLocalAudioByDefault ? 0 : 1,
-        });
+        const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
         const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion } = data;
         this.setCheckInData({
           clientServerTime: ts,
@@ -178,9 +176,10 @@ export class ConnectionStore extends EduStoreBase {
           streamId: '0',
         });
       }, [])
-        .fail(() => {
+        .fail(({ error }: { error: Error }) => {
           EduClassroomConfig.shared.setWhiteboardConfig(undefined);
           this.setScene(undefined);
+          this.logger.error(error.message);
           return true;
         })
         .abort(() => {

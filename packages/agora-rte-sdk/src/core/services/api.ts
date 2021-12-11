@@ -1,6 +1,6 @@
 import { ApiBase } from './base';
 import { ReportService } from './report';
-import { AgoraRteEngineConfig } from '../..';
+import { AgoraRteMediaSourceState, AgoraRteEngineConfig } from '../..';
 import {
   AgoraRteAudioSourceType,
   AgoraRteMediaPublishState,
@@ -51,17 +51,11 @@ export class AgoraRteService extends ApiBase {
   async entryRoom(params: EntryRequestParams): Promise<any> {
     // REPORT
     ReportService.shared.startTick('joinRoom', 'http', 'entry');
-    const data = {
-      userName: params.userName,
-      role: params.role,
-      streamUuid: params.streamUuid,
-      // autoPublish: +params.autoPublish
-    };
 
     let resp = await this.fetch({
       path: `/v1/rooms/${params.roomUuid}/users/${params.userUuid}/entry`,
       method: 'POST',
-      data: data,
+      data: params,
     });
     const statusCode = resp['__status'];
     const { code } = resp;
@@ -223,6 +217,28 @@ export class AgoraRteService extends ApiBase {
     return await this.fetch({
       path: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
       method: 'DELETE',
+    });
+  }
+
+  async updateDeviceState(
+    roomUuid: string,
+    userUuid: string,
+    streamUuid: string,
+    {
+      videoSourceState,
+      audioSourceState,
+    }: {
+      videoSourceState?: AgoraRteMediaSourceState;
+      audioSourceState?: AgoraRteMediaSourceState;
+    },
+  ) {
+    return await this.fetch({
+      path: `/v1/rooms/${roomUuid}/users/${userUuid}/streams/${streamUuid}`,
+      method: 'PATCH',
+      data: {
+        videoSourceState: videoSourceState,
+        audioSourceState: audioSourceState,
+      },
     });
   }
 

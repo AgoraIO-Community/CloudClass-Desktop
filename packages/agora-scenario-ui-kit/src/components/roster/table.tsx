@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import classNames from 'classnames';
 import { Column, Profile } from '~components/roster';
 import { Col, Row, Table } from '~components/table';
 import { Operation, SupportedFunction } from '~ui-kit';
@@ -8,6 +9,63 @@ type RosterTableProps = {
   list: Profile[];
   functions?: Array<SupportedFunction>;
   onActionClick?: (operation: Operation, profile: Profile) => void;
+};
+
+export const InteractiveCol = ({
+  col,
+  index: idx,
+  data,
+  onClick,
+}: {
+  col: Column;
+  index: number;
+  data: Profile;
+  onClick: (operation: Operation, profile: Profile) => void;
+}) => {
+  const [hovered, setHovered] = useState(false);
+
+  const isFirstColumn = idx === 0;
+
+  const props = isFirstColumn
+    ? {
+        title: data[col.key],
+        className: 'roster-username',
+        style: { paddingLeft: 25 },
+      }
+    : null;
+
+  const handleClick = () => {
+    if (col.operation && data.operations.includes(col.operation)) {
+      onClick(col.operation, data);
+    }
+  };
+
+  const colCls = classNames(!isFirstColumn ? 'justify-center' : 'justify-start');
+
+  return (
+    <Col
+      key={col.key}
+      className={colCls}
+      hoverClass={!isFirstColumn ? 'roster-col-hover' : ''}
+      onMouseEnter={() => {
+        setHovered(true);
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+      }}
+      onClick={handleClick}
+      style={
+        col.width
+          ? {
+              flexBasis: col.width,
+              flexGrow: 0,
+              flexShrink: 0,
+            }
+          : {}
+      }>
+      <span {...props}>{col.render(data, hovered)}</span>
+    </Col>
+  );
 };
 
 export const RosterTable: React.FC<RosterTableProps> = ({
@@ -20,37 +78,10 @@ export const RosterTable: React.FC<RosterTableProps> = ({
   return (
     <Table className="table-container">
       {list.map((data: Profile) => (
-        <Row className={'border-bottom-width-1'} key={data.uid}>
-          {cols.map((col: Column, idx: number) => {
-            const isFirstColumn = idx === 0;
-            const canOperate = data.operations[col.key];
-
-            const props = isFirstColumn
-              ? {
-                  title: data[col.key],
-                  className: `roster-username ${canOperate ? 'action' : ''}`,
-                  style: { paddingLeft: 25 },
-                }
-              : null;
-
-            const handleClick = () => {
-              if (col.operation && data.operations.includes(col.operation)) {
-                onActionClick(col.operation, data);
-              }
-            };
-
-            return (
-              <Col
-                key={col.key}
-                style={{
-                  justifyContent: !isFirstColumn ? 'center' : 'flex-start',
-                }}>
-                <span {...props} onClick={handleClick}>
-                  {col.render(data)}
-                </span>
-              </Col>
-            );
-          })}
+        <Row className="border-bottom-width-1" key={data.uid} hoverClass="roster-row-hover">
+          {cols.map((col: Column, idx: number) => (
+            <InteractiveCol data={data} onClick={onActionClick} col={col} index={idx} />
+          ))}
         </Row>
       ))}
     </Table>

@@ -1,5 +1,3 @@
-import { AGRteErrorCode, RteErrorCenter } from './error';
-
 export const HttpClient = async (url: string, opts: any): Promise<Response | undefined> => {
   return new Promise((resolve, reject) => {
     const controller = new AbortController();
@@ -12,10 +10,11 @@ export const HttpClient = async (url: string, opts: any): Promise<Response | und
         return resolve(fetchResponse);
       })
       .catch((e) => {
-        RteErrorCenter.shared.handleThrowableError(
-          AGRteErrorCode.RTE_ERR_RESTFUL_HTTP_CLIENT_ERR,
-          e as Error,
-        );
+        if (e.code === 20) {
+          reject(new Error(`request timed out`));
+        } else {
+          reject(e);
+        }
       })
       .finally(() => {
         clearTimeout(timeoutId);

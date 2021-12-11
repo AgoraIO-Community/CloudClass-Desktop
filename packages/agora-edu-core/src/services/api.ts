@@ -13,10 +13,7 @@ export class EduApiService extends ApiBase {
     return res.data;
   }
 
-  async checkIn(
-    session: EduSessionInfo,
-    defaultStreamState: { videoState: number; audioState: number },
-  ): Promise<any> {
+  async checkIn(session: EduSessionInfo): Promise<any> {
     const { roomUuid, userUuid, role, roomName, roomType, userName, flexProperties, duration } =
       session;
     let { data, ts } = await this.fetch({
@@ -29,7 +26,6 @@ export class EduApiService extends ApiBase {
         roomType: roomType,
         userName: userName,
         userProperties: flexProperties,
-        stream: defaultStreamState,
       },
     });
     return { data, ts };

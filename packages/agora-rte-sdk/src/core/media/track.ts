@@ -1,4 +1,5 @@
-import { AGScreenShareType } from '../..';
+import { debounce } from 'lodash';
+import { AgoraRteMediaSourceState, AGScreenShareType } from '../..';
 import { AGRtcManager } from '../rtc';
 import { AgoraRtcVideoCanvas } from '../rtc/canvas';
 
@@ -14,11 +15,6 @@ export enum AgoraRteAudioSourceType {
   Mix = 2,
 }
 
-export enum AgoraRteMediaTrackState {
-  Stopped = 0,
-  Started = 1,
-}
-
 export enum AgoraRteMediaPublishState {
   Unpublished = 0,
   Published = 1,
@@ -27,7 +23,6 @@ export enum AgoraRteMediaPublishState {
 export abstract class AgoraRteMediaTrack {
   videoSourceType: AgoraRteVideoSourceType = AgoraRteVideoSourceType.None;
   audioSourceType: AgoraRteAudioSourceType = AgoraRteAudioSourceType.None;
-  state: AgoraRteMediaTrackState = AgoraRteMediaTrackState.Stopped;
   protected rtc: AGRtcManager;
 
   constructor(
@@ -35,11 +30,9 @@ export abstract class AgoraRteMediaTrack {
     {
       videoSourceType,
       audioSourceType,
-      state,
     }: {
       videoSourceType?: AgoraRteVideoSourceType;
       audioSourceType?: AgoraRteAudioSourceType;
-      state?: AgoraRteMediaTrackState;
     },
   ) {
     this.rtc = rtc;
@@ -48,9 +41,6 @@ export abstract class AgoraRteMediaTrack {
     }
     if (audioSourceType) {
       this.audioSourceType = audioSourceType;
-    }
-    if (state) {
-      this.state = state;
     }
   }
 
@@ -75,12 +65,10 @@ export class AgoraRteCameraVideoTrack extends AgoraRteMediaTrack {
   setVideoEncoderConfiguration() {}
 
   start() {
-    this.state = AgoraRteMediaTrackState.Started;
     return this.rtc.enableLocalVideo(true);
   }
 
   stop() {
-    this.state = AgoraRteMediaTrackState.Stopped;
     return this.rtc.enableLocalVideo(false);
   }
 }
@@ -99,12 +87,10 @@ export class AgoraRteMicrophoneAudioTrack extends AgoraRteMediaTrack {
   }
 
   start() {
-    this.state = AgoraRteMediaTrackState.Started;
     return this.rtc.enableLocalAudio(true);
   }
 
   stop() {
-    this.state = AgoraRteMediaTrackState.Stopped;
     return this.rtc.enableLocalAudio(false);
   }
 }
@@ -119,17 +105,14 @@ export class AgoraRteScreenShareTrack extends AgoraRteMediaTrack {
   }
 
   start() {
-    this.state = AgoraRteMediaTrackState.Started;
     return this.rtc.startScreenCapture();
   }
 
   startWithParams(id?: string, type?: AGScreenShareType) {
-    this.state = AgoraRteMediaTrackState.Started;
     return this.rtc.startScreenCapture(id, type);
   }
 
   stop() {
-    this.state = AgoraRteMediaTrackState.Stopped;
     return this.rtc.stopScreenCapture();
   }
 }

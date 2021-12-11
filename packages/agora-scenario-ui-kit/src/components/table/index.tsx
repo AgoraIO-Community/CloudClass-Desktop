@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import './index.css';
 
@@ -8,6 +8,9 @@ export interface TableBaseProps extends BaseProps {
   children?: any;
   align?: 'center' | 'start' | 'end' | 'between' | 'around' | 'evenly';
   onClick?: (evt: any) => Promise<void> | void;
+  hoverClass?: string;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 export interface TableProps extends TableBaseProps {}
@@ -29,15 +32,37 @@ export interface ColProps extends TableBaseProps {
   width?: 9 | 20;
 }
 
-export const Col: React.FC<ColProps> = ({ children, className, align, width, ...restProps }) => {
+export const Col: React.FC<ColProps> = ({
+  children,
+  className,
+  align,
+  width,
+  hoverClass,
+  onMouseEnter,
+  onMouseLeave,
+  ...restProps
+}) => {
+  const [hovered, setHovered] = useState(false);
   const cls = classnames({
     'table-col-item': 1,
     [`${className}`]: !!className,
     [`justify-${align}`]: !!align,
     [`flex-width-${width}`]: !!width,
+    [hoverClass!]: hovered,
   });
+
   return (
-    <div className={cls} {...restProps}>
+    <div
+      className={cls}
+      {...restProps}
+      onMouseEnter={() => {
+        setHovered(true);
+        if (onMouseEnter) onMouseEnter();
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+        if (onMouseLeave) onMouseLeave();
+      }}>
       {children}
     </div>
   );
@@ -56,8 +81,12 @@ export const Row: React.FC<RowProps> = ({
   gap,
   align,
   height,
+  hoverClass,
+  onMouseEnter,
+  onMouseLeave,
   ...restProps
 }) => {
+  const [hovered, setHovered] = useState(false);
   const cls = classnames({
     'table-row-item': 1,
     [`${className}`]: !!className,
@@ -65,9 +94,20 @@ export const Row: React.FC<RowProps> = ({
     [`border-bottom-width-${border}`]: !!border,
     [`table-row-x-${height}`]: !!height,
     [`item-gap-${gap}`]: !!gap,
+    [hoverClass!]: hovered,
   });
   return (
-    <div className={cls} {...restProps}>
+    <div
+      className={cls}
+      {...restProps}
+      onMouseEnter={() => {
+        setHovered(true);
+        if (onMouseEnter) onMouseEnter();
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+        if (onMouseLeave) onMouseLeave();
+      }}>
       {children}
     </div>
   );

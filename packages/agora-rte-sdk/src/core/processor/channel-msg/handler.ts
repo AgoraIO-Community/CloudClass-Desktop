@@ -323,6 +323,8 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
       streamName,
       videoSourceType,
       audioSourceType,
+      videoSourceState,
+      audioSourceState,
       videoState,
       audioState,
       operator,
@@ -336,6 +338,8 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
       audioSourceType,
       videoState,
       audioState,
+      videoSourceState,
+      audioSourceState,
     });
     const eventType = this._processStreamEvent(action, stream);
     this.emit(eventType, [stream], operator);

@@ -69,7 +69,7 @@ export class AgoraRteEngineConfig {
   service: AgoraRteServiceConfig = {};
   rtcConfigs: AGRtcConfig = {};
   logFilePath?: string;
-  static logLevel: AgoraRteLogLevel = AgoraRteLogLevel.INFO;
+  static logLevel: AgoraRteLogLevel = AgoraRteLogLevel.DEBUG;
   static readonly platform: AgoraRteRuntimePlatform = window.isElectron
     ? AgoraRteRuntimePlatform.Electron
     : AgoraRteRuntimePlatform.Web;

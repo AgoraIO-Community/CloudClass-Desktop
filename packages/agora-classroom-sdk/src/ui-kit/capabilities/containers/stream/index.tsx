@@ -13,6 +13,7 @@ import {
   Tooltip,
   VolumeIndicator,
   SoundPlayer,
+  SvgIcon,
 } from '~ui-kit';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
@@ -45,9 +46,6 @@ export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) =>
 
 export const StreamPlaceholder = observer(
   ({ role, className, style }: { role: EduRoleTypeEnum; className?: any; style?: any }) => {
-    const {
-      streamUIStore: { notPresentText },
-    } = useStore();
     const cls = classnames({
       [`video-player`]: 1,
       [`${className}`]: !!className,
@@ -56,7 +54,7 @@ export const StreamPlaceholder = observer(
     return (
       // <StreamPlayerOverlay stream={stream}>
       <div style={style} className={cls}>
-        <CameraPlaceHolder state={CameraPlaceholderType.notpresent} text={notPresentText(role)} />
+        <CameraPlaceHolder state={CameraPlaceholderType.notpresent} text={''} />
       </div>
       // </StreamPlayerOverlay>
     );
@@ -128,9 +126,10 @@ const LocalStreamPlayerTools = observer(() => {
       {localStreamTools.map((tool, key) => (
         <Tooltip key={key} title={tool.toolTip} placement={toolbarPlacement}>
           <span>
-            <SvgImg
+            <SvgIcon
               canHover={tool.interactable}
               style={tool.style}
+              hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
               onClick={tool.interactable ? tool.onClick : () => {}}
@@ -153,9 +152,10 @@ const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) =
       {toolList.map((tool) => (
         <Tooltip title={tool.toolTip} placement={toolbarPlacement}>
           <span>
-            <SvgImg
+            <SvgIcon
               canHover={tool.interactable}
               style={tool.style}
+              hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
               onClick={tool.onClick}
@@ -206,12 +206,12 @@ const StreamPlayerOverlayLocalMicIcon = observer(({ className }: { className: st
 
 const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
-  const { cameraPlaceholderText, cameraPlaceholder } = streamUIStore;
+  const { cameraPlaceholder } = streamUIStore;
   return (
     <CameraPlaceHolder
       style={{ position: 'absolute', top: 0 }}
       state={cameraPlaceholder(stream)}
-      text={cameraPlaceholderText(stream)}
+      text={''}
     />
   );
 });

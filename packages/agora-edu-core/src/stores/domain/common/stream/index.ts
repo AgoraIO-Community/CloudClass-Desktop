@@ -1,16 +1,18 @@
 import {
   AgoraRtcVideoCanvas,
+  AgoraRteAudioSourceType,
   AgoraRteEngine,
   AgoraRteEventType,
   AgoraRteMediaPublishState,
   AgoraRteOperator,
   AgoraRteScene,
+  AgoraRteVideoSourceType,
   AgoraStream,
   AGRenderMode,
   bound,
   Logger,
 } from 'agora-rte-sdk';
-import { observable, reaction, runInAction } from 'mobx';
+import { computed, observable, reaction, runInAction } from 'mobx';
 import { AgoraEduInteractionEvent, EduRoleTypeEnum } from '../../../../type';
 import { EduClassroomConfig } from '../../../../configs';
 import { RteRole2EduRole } from '../../../../utils';
@@ -31,6 +33,33 @@ export class StreamStore extends EduStoreBase {
   //actions
 
   //computes
+  @computed get localCameraStreamUuid(): string | undefined {
+    let {
+      sessionInfo: { userUuid },
+    } = EduClassroomConfig.shared;
+    let streamUuids = this.streamByUserUuid.get(userUuid) || new Set();
+    for (const streamUuid of streamUuids) {
+      let stream = this.streamByStreamUuid.get(streamUuid);
+      if (stream && stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
+        return stream.streamUuid;
+      }
+    }
+    return undefined;
+  }
+
+  @computed get localMicStreamUuid(): string | undefined {
+    let {
+      sessionInfo: { userUuid },
+    } = EduClassroomConfig.shared;
+    let streamUuids = this.streamByUserUuid.get(userUuid) || new Set();
+    for (const streamUuid of streamUuids) {
+      let stream = this.streamByStreamUuid.get(streamUuid);
+      if (stream && stream.audioSourceType === AgoraRteAudioSourceType.Mic) {
+        return stream.streamUuid;
+      }
+    }
+    return undefined;
+  }
 
   //others
   setupLocalVideo = (stream: EduStream, dom: HTMLElement, mirror: boolean = false) => {

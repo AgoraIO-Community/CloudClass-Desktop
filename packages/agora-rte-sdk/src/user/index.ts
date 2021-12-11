@@ -1,10 +1,17 @@
-import { AgoraRtcVideoCanvas, AgoraRteEngine, AgoraRteScene, AGRtcConnectionType } from '..';
+import debounce from 'lodash/debounce';
+import { bound } from '../core/decorator/bound';
+import { AgoraRteEngine } from '../core/engine';
+import { Logger } from '../core/logger';
 import {
+  AgoraRteAudioSourceType,
   AgoraRteMediaPublishState,
-  AgoraRteMediaTrack,
   AgoraRteVideoSourceType,
 } from '../core/media/track';
 import { AGRtcManager } from '../core/rtc';
+import { AgoraRtcVideoCanvas } from '../core/rtc/canvas';
+import { AGRtcConnectionType } from '../core/rtc/channel';
+import { AgoraRteMediaSourceState } from '../core/rtc/type';
+import { AgoraRteScene } from '../scene';
 
 export class AgoraRteLocalUser {
   readonly userUuid: string;
@@ -49,6 +56,48 @@ export class AgoraRteLocalUser {
     this.rtcToken = rtcToken;
     this._rtc = rtc;
     this._scene = scene;
+    this._addEventHandler();
+  }
+
+  private _addEventHandler() {
+    const debouncedSyncVideo = debounce(this._syncVideoSourceState, 500);
+    const debouncedSyncAudio = debounce(this._syncAudioSourceState, 500);
+    this._rtc.onLocalVideoTrackStateChanged(
+      (state: AgoraRteMediaSourceState, type: AgoraRteVideoSourceType) => {
+        if (type === AgoraRteVideoSourceType.Camera) {
+          // camera change
+          if (state !== AgoraRteMediaSourceState.starting) {
+            debouncedSyncVideo(state);
+          }
+        }
+      },
+    );
+    this._rtc.onLocalAudioTrackStateChanged(
+      (state: AgoraRteMediaSourceState, type: AgoraRteAudioSourceType) => {
+        if (type === AgoraRteAudioSourceType.Mic) {
+          // mic change
+          if (state !== AgoraRteMediaSourceState.starting) {
+            debouncedSyncAudio(state);
+          }
+        }
+      },
+    );
+  }
+
+  @bound
+  private _syncVideoSourceState(state: AgoraRteMediaSourceState) {
+    Logger.info(`sync video state ${state}`);
+    this.updateLocalMediaState({
+      videoSourceState: state,
+    });
+  }
+
+  @bound
+  private _syncAudioSourceState(state: AgoraRteMediaSourceState) {
+    Logger.info(`sync audio state ${state}`);
+    this.updateLocalMediaState({
+      audioSourceState: state,
+    });
   }
 
   async setSceneProperties(properties: any, cause: any) {
@@ -83,6 +132,31 @@ export class AgoraRteLocalUser {
       properties,
       cause,
     });
+  }
+
+  async updateLocalMediaState(
+    {
+      videoSourceState,
+      audioSourceState,
+    }: {
+      videoSourceState?: AgoraRteMediaSourceState;
+      audioSourceState?: AgoraRteMediaSourceState;
+    },
+    connectionType?: AGRtcConnectionType,
+  ) {
+    return await AgoraRteEngine.engine
+      .getApiService()
+      .updateDeviceState(
+        this.sceneId,
+        this.userUuid,
+        connectionType && connectionType === AGRtcConnectionType.sub
+          ? this.subStream?.streamUuid || '0'
+          : this.streamUuid,
+        {
+          videoSourceState,
+          audioSourceState,
+        },
+      );
   }
 
   async updateLocalMediaStream(

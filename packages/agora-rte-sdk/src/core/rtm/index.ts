@@ -129,7 +129,6 @@ export class AGRtmManager extends EventEmitter {
       }
 
       channel.on('ChannelMessage', (message: any, memberId: string, messagePros: any) => {
-        console.log('channel message');
         bus.emit('ChannelMessage', {
           channelName,
           message,

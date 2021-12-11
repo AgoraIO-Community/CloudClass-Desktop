@@ -3,6 +3,7 @@ import {
   AgoraRteAudioSourceType,
   AgoraRteEngine,
   AgoraRteMediaPublishState,
+  AgoraRteMediaSourceState,
   AgoraRteScene,
   AgoraRteVideoSourceType,
   AgoraStream,
@@ -18,6 +19,8 @@ export class EduStream {
   audioSourceType: AgoraRteAudioSourceType;
   videoState: AgoraRteMediaPublishState;
   audioState: AgoraRteMediaPublishState;
+  videoSourceState: AgoraRteMediaSourceState;
+  audioSourceState: AgoraRteMediaSourceState;
 
   private readonly _scene: AgoraRteScene;
 
@@ -29,6 +32,8 @@ export class EduStream {
     this.audioSourceType = stream.audioSourceType;
     this.videoState = stream.videoState;
     this.audioState = stream.audioState;
+    this.videoSourceState = stream.videoSourceState;
+    this.audioSourceState = stream.audioSourceState;
     this._scene = scene;
   }
 

@@ -14,11 +14,11 @@ export interface NetworkStats {
   delay?: number;
 }
 
-export enum AGLocalTrackState {
-  stopped,
-  starting,
-  started,
-  error,
+export enum AgoraRteMediaSourceState {
+  stopped = 0,
+  starting = 2,
+  started = 1,
+  error = -1,
 }
 
 export enum RtcState {

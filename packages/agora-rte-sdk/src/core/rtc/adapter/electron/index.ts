@@ -16,7 +16,7 @@ import { AGEventEmitter } from '../../../utils/events';
 import { AgoraRtcVideoCanvas } from '../../canvas';
 import { AGRtcConnectionType } from '../../channel';
 import {
-  AGLocalTrackState,
+  AgoraRteMediaSourceState,
   AGScreenShareDevice,
   AGScreenShareType,
   NetworkStats,
@@ -212,7 +212,7 @@ export class RtcAdapterElectron extends RtcAdapterBase {
         );
         this._screenEventBus.emit(
           AgoraMediaControlEventType.trackStateChanged,
-          AGLocalTrackState.started,
+          AgoraRteMediaSourceState.started,
           AgoraRteVideoSourceType.ScreenShare,
         );
       } else if (type === AGScreenShareType.Window) {
@@ -237,7 +237,7 @@ export class RtcAdapterElectron extends RtcAdapterBase {
         );
         this._screenEventBus.emit(
           AgoraMediaControlEventType.trackStateChanged,
-          AGLocalTrackState.started,
+          AgoraRteMediaSourceState.started,
           AgoraRteVideoSourceType.ScreenShare,
         );
       }
@@ -248,7 +248,7 @@ export class RtcAdapterElectron extends RtcAdapterBase {
     this.rtcEngine.stopScreenCapture2();
     this._screenEventBus.emit(
       AgoraMediaControlEventType.trackStateChanged,
-      AGLocalTrackState.stopped,
+      AgoraRteMediaSourceState.stopped,
       AgoraRteVideoSourceType.ScreenShare,
     );
     return 0;
@@ -301,14 +301,14 @@ export class RtcAdapterElectron extends RtcAdapterBase {
       if (state === 0) {
         this.emit(
           AgoraMediaControlEventType.localAudioTrackChanged,
-          AGLocalTrackState.stopped,
+          AgoraRteMediaSourceState.stopped,
           AgoraRteAudioSourceType.Mic,
         );
       }
       if (state === 2 || state === 1) {
         this.emit(
           AgoraMediaControlEventType.localAudioTrackChanged,
-          AGLocalTrackState.started,
+          AgoraRteMediaSourceState.started,
           AgoraRteAudioSourceType.Mic,
         );
       }

@@ -9,6 +9,7 @@ export enum EduStreamToolCategory {
 
 export class EduStreamTool {
   iconType: string;
+  hoverIconType?: string;
   style?: Record<string, string | number>;
   interactable: boolean = false;
   toolTip: string;
@@ -23,12 +24,14 @@ export class EduStreamTool {
       style?: Record<string, string | number>;
       interactable?: boolean;
       onClick?: () => void;
+      hoverIconType?: string;
     },
   ) {
     this.category = category;
     this.iconType = iconType;
     this.toolTip = toolTip;
     if (options) {
+      options.hoverIconType && (this.hoverIconType = options.hoverIconType);
       options.style && (this.style = options.style);
       options.interactable && (this.interactable = options.interactable);
       options.onClick && (this.onClick = options.onClick);
