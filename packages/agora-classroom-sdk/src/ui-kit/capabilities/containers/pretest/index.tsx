@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import './index.css';
-import { CameraPlaceHolder, Modal, SvgImg } from '~ui-kit';
+import { CameraPlaceHolder, Icon, Modal, SvgImg, Tooltip } from '~ui-kit';
 import classnames from 'classnames';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
@@ -14,8 +14,9 @@ import { useMounted, useTimeout } from '~ui-kit/utilities/hooks';
 import { Volume } from '~ui-kit/components/volume';
 import PretestAudio from './assets/pretest-audio.mp3';
 import './index.css';
-import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { useStore } from '~hooks/use-edu-stores';
+import { Slider } from '~ui-kit/components/slider';
+import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 
 declare global {
   interface Window {
@@ -26,6 +27,11 @@ declare global {
 }
 
 declare const NODE_ENV: string;
+interface IBeautySiderProps {
+  value: number;
+  className?: string;
+  onChange: (value: number) => void;
+}
 
 const LocalAudioVolumeIndicator: React.FC<any> = observer(() => {
   const { pretestUIStore } = useStore();
@@ -86,6 +92,61 @@ export const PlaybackSelect = observer(() => {
       options={playbackDevicesList}></Select>
   );
 });
+
+const BeautyControllerBar = observer(() => {
+  if (EduRteEngineConfig.platform !== EduRteRuntimePlatform.Electron) return null;
+  const {
+    pretestUIStore: {
+      isBeauty,
+      activeBeautyType,
+      setActiveBeautyType,
+      activeBeautyValue,
+      setActiveBeautyValue,
+      activeBeautyTypeClassName,
+      activeBeautyTypeIcon,
+    },
+  } = useStore();
+
+  return (
+    <CSSTransition in={isBeauty} timeout={300} unmountOnExit classNames="beauty-bar-animate">
+      <div className="beauty-bar">
+        <div className="beauty-bar-left">
+          {['whitening', 'buffing', 'ruddy'].map((item: any) => (
+            <Tooltip
+              title={transI18n(`media.${item}`)}
+              placement="top"
+              color="rgba(0,0,0,0.6)"
+              overlayInnerStyle={{ color: '#fff' }}>
+              <Icon
+                className={classnames('beauty-type-icon')}
+                type={activeBeautyTypeIcon(item)}
+                key={item}
+                size={22}
+                onClick={() => setActiveBeautyType(item as BeautyType)}
+              />
+            </Tooltip>
+          ))}
+        </div>
+        <BeautySider value={activeBeautyValue} onChange={setActiveBeautyValue} />
+      </div>
+    </CSSTransition>
+  );
+});
+
+const BeautySider: React.FC<IBeautySiderProps> = ({ value, className, onChange }) => {
+  return (
+    <div className={classnames('beauty-bar-right', className)}>
+      <Slider
+        className="beauty-bar-silder"
+        min={0}
+        max={100}
+        value={value}
+        step={1}
+        onChange={onChange}></Slider>
+      <span className="beauty-show-number">{value}</span>
+    </div>
+  );
+};
 
 const VideoDeviceNotification = observer(() => {
   const { pretestUIStore } = useStore();
@@ -163,7 +224,7 @@ const PlaybackTestPlayer = observer(() => {
   let url = PretestAudio;
 
   useEffect(() => {
-    if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+    if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
       let isProduction = NODE_ENV === 'production';
       const path = window.require('path');
       url = isProduction
@@ -257,9 +318,24 @@ export const CameraMirrorCheckBox = observer(() => {
   );
 });
 
+const BeautyCheckBox = observer(() => {
+  const {
+    pretestUIStore: { setBeauty, isBeauty },
+  } = useStore();
+  return (
+    <CheckBox
+      style={{ width: 12, height: 12 }}
+      checked={isBeauty}
+      onChange={(e: any) => {
+        setBeauty(e.target.checked);
+      }}
+    />
+  );
+});
+
 const CameraMirrorCheckBoxContainer = () => {
   return (
-    <span className="device-mirror-box">
+    <span className="media-choice-box">
       <CameraMirrorCheckBox />
       <span className="camera-mode" style={{ marginLeft: 5 }}>
         {transI18n('media.mirror')}
@@ -268,15 +344,24 @@ const CameraMirrorCheckBoxContainer = () => {
   );
 };
 
+const BeautyCheckBoxContainer = () => {
+  return EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron ? (
+    <span className="media-choice-box">
+      <BeautyCheckBox />
+      <span className="beauty-mode" style={{ marginLeft: 5 }}>
+        {transI18n('media.beauty')}
+      </span>
+    </span>
+  ) : null;
+};
+
 const CameraDeviceManager = () => {
   return (
     <div className="device-choose">
       <div className="device-title">
         <span className="device-title-text">{transI18n('media.camera')}</span>
-        <div
-          style={{
-            display: 'flex',
-          }}>
+        <div className="media-choice">
+          <BeautyCheckBoxContainer />
           <CameraMirrorCheckBoxContainer />
         </div>
       </div>
@@ -286,6 +371,7 @@ const CameraDeviceManager = () => {
       </div>
       <div className="pretest-video-wrap">
         <CameraPreviewPlayer />
+        <BeautyControllerBar />
       </div>
     </div>
   );

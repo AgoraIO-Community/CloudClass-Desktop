@@ -10,6 +10,8 @@ import {
   AGScreenShareDevice,
   AGScreenShareType,
   bound,
+  BeautyEffect,
+  lighteningLevel,
   Logger,
   Log,
 } from 'agora-rte-sdk';
@@ -65,11 +67,20 @@ export class MediaStore extends EduStoreBase {
 
   @observable isMirror: boolean = false;
 
+  @observable isBeauty: boolean = false;
+
   @observable disable: boolean = false;
 
   @observable audioVolumeLevel: number = 0;
 
   @observable isAudioPlaying: boolean = false;
+
+  @observable beautyEffectOptions: BeautyEffect = {
+    lighteningContrastLevel: lighteningLevel.low,
+    lighteningLevel: 0.7,
+    rednessLevel: 0.1,
+    smoothnessLevel: 0.5,
+  };
 
   // @observable localMicrophoneErrorReason: AgoraRteAudioErrorType = AgoraRteAudioErrorType.None;
   // @observable localCameraErrorReason: AgoraRteVideoErrorType = AgoraRteVideoErrorType.None;
@@ -90,6 +101,11 @@ export class MediaStore extends EduStoreBase {
   @action
   setMirror = (v: boolean) => {
     this.isMirror = v;
+  };
+
+  @action
+  setBeauty = (v: boolean) => {
+    this.isBeauty = v;
   };
 
   setupLocalVideo = (dom: HTMLElement, mirror: boolean) => {
@@ -176,6 +192,10 @@ export class MediaStore extends EduStoreBase {
   @action
   setPlaybackDevice = (id: string) => {
     this.playbackDeviceId = id;
+  };
+  @action
+  setBeautyEffect = (options: BeautyEffect) => {
+    this.beautyEffectOptions = options;
   };
 
   @computed get cameraAccessors() {
@@ -284,77 +304,89 @@ export class MediaStore extends EduStoreBase {
             this.audioPlaybackDevices = mediaControl.getAudioPlaybackList();
           });
 
-          reaction(
-            () => this.cameraAccessors,
-            () => {
-              if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
-                // if idle, e.g. pretest
-                if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
-                  const track = this.mediaControl.createCameraVideoTrack();
-                  track.setDeviceId(this.cameraDeviceId);
-                  this.enableLocalVideo(true);
-                } else {
-                  //if no device selected, disable device
-                  this.enableLocalVideo(false);
-                }
-              } else if (
-                this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
-              ) {
-                // once connected, should follow stream
-                if (!this.classroomStore.streamStore.localCameraStreamUuid) {
-                  // if no local stream
-                  this.enableLocalVideo(false);
-                } else {
+          this._disposers.add(
+            autorun(() => {
+              this.mediaControl.setBeautyEffectOptions(this.isBeauty, this.beautyEffectOptions);
+            }),
+          );
+
+          this._disposers.add(
+            reaction(
+              () => this.cameraAccessors,
+              () => {
+                if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
+                  // if idle, e.g. pretest
                   if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
                     const track = this.mediaControl.createCameraVideoTrack();
                     track.setDeviceId(this.cameraDeviceId);
                     this.enableLocalVideo(true);
                   } else {
+                    //if no device selected, disable device
                     this.enableLocalVideo(false);
                   }
+                } else if (
+                  this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
+                ) {
+                  // once connected, should follow stream
+                  if (!this.classroomStore.streamStore.localCameraStreamUuid) {
+                    // if no local stream
+                    this.enableLocalVideo(false);
+                  } else {
+                    if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
+                      const track = this.mediaControl.createCameraVideoTrack();
+                      track.setDeviceId(this.cameraDeviceId);
+                      this.enableLocalVideo(true);
+                    } else {
+                      this.enableLocalVideo(false);
+                    }
+                  }
                 }
-              }
-            },
+              },
+            ),
           );
 
-          reaction(
-            () => this.micAccessors,
-            () => {
-              if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
-                // if idle, e.g. pretest
-                if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
-                  const track = this.mediaControl.createMicrophoneAudioTrack();
-                  track.setRecordingDevice(this.recordingDeviceId);
-                  this.enableLocalAudio(true);
-                } else {
-                  //if no device selected, disable device
-                  this.enableLocalAudio(false);
-                }
-              } else if (
-                this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
-              ) {
-                // once connected, should follow stream
-                if (!this.classroomStore.streamStore.localMicStreamUuid) {
-                  // if no local stream
-                  this.enableLocalAudio(false);
-                } else {
+          this._disposers.add(
+            reaction(
+              () => this.micAccessors,
+              () => {
+                if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
+                  // if idle, e.g. pretest
                   if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
                     const track = this.mediaControl.createMicrophoneAudioTrack();
                     track.setRecordingDevice(this.recordingDeviceId);
                     this.enableLocalAudio(true);
                   } else {
+                    //if no device selected, disable device
                     this.enableLocalAudio(false);
                   }
+                } else if (
+                  this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
+                ) {
+                  // once connected, should follow stream
+                  if (!this.classroomStore.streamStore.localMicStreamUuid) {
+                    // if no local stream
+                    this.enableLocalAudio(false);
+                  } else {
+                    if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
+                      const track = this.mediaControl.createMicrophoneAudioTrack();
+                      track.setRecordingDevice(this.recordingDeviceId);
+                      this.enableLocalAudio(true);
+                    } else {
+                      this.enableLocalAudio(false);
+                    }
+                  }
                 }
-              }
-            },
+              },
+            ),
           );
 
-          reaction(
-            () => this.playbackDeviceId,
-            () => {
-              //TODO set playback device support
-            },
+          this._disposers.add(
+            reaction(
+              () => this.playbackDeviceId,
+              () => {
+                //TODO set playback device support
+              },
+            ),
           );
 
           // 处理视频设备变动
@@ -425,6 +457,8 @@ export class MediaStore extends EduStoreBase {
 
   @bound
   onDestroy() {
+    this.setCameraDevice(DEVICE_DISABLE);
+    this.setRecordingDevice(DEVICE_DISABLE);
     for (const disposer of this._disposers) {
       disposer();
     }

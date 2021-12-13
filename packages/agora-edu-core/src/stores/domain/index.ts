@@ -20,6 +20,7 @@ export { ClassState, RecordStatus } from './common/room/type';
 
 export type { ChatEvent, ChatListType, IConversation, Conversation } from './common/message/type';
 export type { IAgoraWidget, AgoraWidgetContext } from './common/widget/type';
+export { BeautyType } from './common/media/type';
 
 export type {
   AgoraExtAppContext,

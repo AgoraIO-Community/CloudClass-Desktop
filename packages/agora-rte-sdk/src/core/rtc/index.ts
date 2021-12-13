@@ -11,7 +11,7 @@ import {
 } from './adapter/base';
 import { AgoraRtcVideoCanvas } from './canvas';
 import { AGRtcChannel } from './channel';
-import { AGRtcDeviceInfo, AGScreenShareDevice, AGScreenShareType } from './type';
+import { AGRtcDeviceInfo, AGScreenShareDevice, AGScreenShareType, BeautyEffect } from './type';
 
 @Log.attach({ level: AgoraRteLogLevel.DEBUG })
 export class AGRtcManager {
@@ -152,6 +152,10 @@ export class AGRtcManager {
 
   onLocalAudioVolume(cb: (volume: number) => void): number {
     return this._adapter.getAudioDeviceManager().onLocalAudioVolume(cb);
+  }
+
+  setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
+    return this._adapter.setBeautyEffectOptions(enable, options);
   }
 
   destroy(): number {

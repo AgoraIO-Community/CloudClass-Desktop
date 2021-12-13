@@ -8,6 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { differenceWith } from 'lodash';
 import { ClassroomState } from '../../../..';
 import { transI18n } from '../i18n';
+import { BeautyType } from '../../../domain';
+import { computedFn } from 'mobx-utils';
+
 import { DEVICE_DISABLE } from '../../../domain/common/media';
 
 export type PretestToast = {
@@ -109,6 +112,8 @@ export class PretestUIStore extends EduUIStoreBase {
 
   @observable
   toastQueue: PretestToast[] = [];
+
+  @observable activeBeautyType: BeautyType = BeautyType.buffing;
 
   @computed
   get videoToastQueue() {
@@ -220,6 +225,42 @@ export class PretestUIStore extends EduUIStoreBase {
   get isMirror() {
     return this.classroomStore.mediaStore.isMirror;
   }
+  @computed
+  get isBeauty() {
+    return this.classroomStore.mediaStore.isBeauty;
+  }
+
+  @computed
+  get whiteningValue() {
+    return Math.ceil(this.classroomStore.mediaStore.beautyEffectOptions.lighteningLevel * 100);
+  }
+  @computed
+  get ruddyValue() {
+    return Math.ceil(this.classroomStore.mediaStore.beautyEffectOptions.rednessLevel * 100);
+  }
+  @computed
+  get buffingValue() {
+    return Math.ceil(this.classroomStore.mediaStore.beautyEffectOptions.smoothnessLevel * 100);
+  }
+
+  @computed
+  get activeBeautyValue() {
+    switch (this.activeBeautyType) {
+      case BeautyType.buffing:
+        return this.buffingValue;
+      case BeautyType.ruddy:
+        return this.ruddyValue;
+      case BeautyType.whitening:
+        return this.whiteningValue;
+    }
+  }
+
+  activeBeautyTypeClassName = computedFn((item) =>
+    item === this.activeBeautyType ? 'type-active' : '',
+  );
+  activeBeautyTypeIcon = computedFn((item) =>
+    this.activeBeautyType === item ? `${item}-active` : item,
+  );
 
   @action.bound
   addToast(toast: AddToastArgs) {
@@ -240,6 +281,11 @@ export class PretestUIStore extends EduUIStoreBase {
   @bound
   setMirror(v: boolean) {
     this.classroomStore.mediaStore.setMirror(v);
+  }
+
+  @bound
+  setBeauty(v: boolean) {
+    this.classroomStore.mediaStore.setBeauty(v);
   }
 
   @bound
@@ -280,6 +326,36 @@ export class PretestUIStore extends EduUIStoreBase {
   @action.bound
   setRecordingDevice(id: string) {
     this.classroomStore.mediaStore.setRecordingDevice(id);
+  }
+
+  @action.bound
+  setActiveBeautyType(value: BeautyType) {
+    this.activeBeautyType = value;
+  }
+
+  @bound
+  setActiveBeautyValue(value: number) {
+    let transformValue = Number((value / 100).toFixed(2));
+    switch (this.activeBeautyType) {
+      case BeautyType.buffing:
+        this.classroomStore.mediaStore.setBeautyEffect({
+          ...this.classroomStore.mediaStore.beautyEffectOptions,
+          smoothnessLevel: transformValue,
+        });
+        break;
+      case BeautyType.ruddy:
+        this.classroomStore.mediaStore.setBeautyEffect({
+          ...this.classroomStore.mediaStore.beautyEffectOptions,
+          rednessLevel: transformValue,
+        });
+        break;
+      case BeautyType.whitening:
+        this.classroomStore.mediaStore.setBeautyEffect({
+          ...this.classroomStore.mediaStore.beautyEffectOptions,
+          lighteningLevel: transformValue,
+        });
+        break;
+    }
   }
 
   @bound

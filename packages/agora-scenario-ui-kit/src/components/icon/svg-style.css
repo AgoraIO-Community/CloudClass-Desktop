@@ -129,3 +129,49 @@
   background-image: url('./assets/svg/stream-mic-inactive.svg');
   background-size: 100%;
 }
+
+.icon-whitening {
+  background-image: url('./assets/svg/whitening.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-whitening:hover {
+  background-image: url('./assets/svg/whitening-hover.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-whitening-active {
+  background-image: url('./assets/svg/whitening-active.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-buffing {
+  background-image: url('./assets/svg/buffing.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-buffing-active {
+  background-image: url('./assets/svg/buffing-active.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-buffing:hover {
+  background-image: url('./assets/svg/buffing-hover.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-ruddy {
+  background-image: url('./assets/svg/ruddy.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-ruddy-active {
+  background-image: url('./assets/svg/ruddy-active.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-ruddy:hover {
+  background-image: url('./assets/svg/ruddy-hover.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}

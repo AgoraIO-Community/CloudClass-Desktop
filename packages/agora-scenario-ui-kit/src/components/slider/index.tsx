@@ -11,6 +11,7 @@ const { Handle } = RCSlider;
 type tooltipPositionProps = 'top' | 'bottom' | '';
 export interface SliderProps extends BaseProps {
   defaultValue?: number;
+  value?: number;
   disabled?: boolean;
   max?: number;
   min?: number;
@@ -21,6 +22,7 @@ export interface SliderProps extends BaseProps {
 
 export const Slider: FC<SliderProps> = ({
   defaultValue = 0,
+  value = 0,
   disabled = false,
   max = 100,
   min = 0,
@@ -54,6 +56,7 @@ export const Slider: FC<SliderProps> = ({
     <div className={cls} {...restProps}>
       <RCSlider
         defaultValue={defaultValue}
+        value={value}
         disabled={disabled}
         max={max}
         min={min}

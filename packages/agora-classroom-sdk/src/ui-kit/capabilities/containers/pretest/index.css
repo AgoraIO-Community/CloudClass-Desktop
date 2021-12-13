@@ -2,12 +2,17 @@
   @apply flex justify-center;
   position: relative;
 }
-
-.device-mirror-box,
-.device-beauty-box {
+.media-choice {
+  display: flex;
+}
+.media-choice > .media-choice-box {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 23px;
+}
+.media-choice-box:last-child {
+  margin-right: 0;
 }
 
 .pretest .select {
@@ -197,4 +202,88 @@
   margin-left: 4px;
   font-size: 12px;
   color: #ffffff;
+}
+
+.beauty-bar {
+  display: flex;
+  width: 100%;
+  height: 22px;
+  padding: 0 12px;
+  background-color: transparent;
+  flex-direction: row;
+  transform: translate3d(0, -30px, 0);
+}
+
+.beauty-bar-animate-enter {
+  transform: translate3d(0, 0px, 0);
+}
+.beauty-bar-animate-enter-active {
+  transform: translate3d(0, -30px, 0);
+  transition: transform 300ms;
+}
+.beauty-bar-animate-exit {
+  transform: translate3d(0, -30px, 0);
+}
+.beauty-bar-animate-exit-active {
+  transform: translate3d(0, 0px, 0);
+  transition: transform 300ms;
+}
+
+.beauty-bar-left {
+  display: flex;
+  flex: 1;
+}
+.beauty-type-icon {
+  margin-right: 15px;
+}
+.beauty-type-icon:last-child {
+  margin-right: 0;
+}
+.beauty-type-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 22px;
+  background-color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.beauty-bar-right {
+  width: 150px;
+  padding: 0 7px;
+  display: flex;
+  align-items: center;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.3);
+}
+.beauty-bar-silder {
+  flex: 1;
+}
+.beauty-bar-silder .rc-slider-rail {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.beauty-bar-silder .rc-slider-track {
+  background-color: rgba(255, 255, 255);
+}
+.beauty-bar-silder .rc-slider-step,
+.beauty-bar-silder .rc-slider-rail,
+.beauty-bar-silder .rc-slider-track {
+  height: 2px;
+}
+.beauty-bar-silder .rc-slider-handle {
+  width: 11px;
+  height: 11px;
+  border-color: transparent;
+}
+.beauty-bar-silder .rc-slider-handle:active {
+  border-color: transparent;
+  box-shadow: none;
+}
+.beauty-show-number {
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.beauty-tooltip {
+  color: #fff;
 }

@@ -19,6 +19,7 @@ import {
   AgoraRteMediaSourceState,
   AGScreenShareDevice,
   AGScreenShareType,
+  BeautyEffect,
   NetworkStats,
   RtcState,
 } from '../../type';
@@ -272,6 +273,10 @@ export class RtcAdapterElectron extends RtcAdapterBase {
   onLocalScreenShareTrackStateChanged(cb: LocalVideoTrackStateEvent): number {
     this._screenEventBus.on(AgoraMediaControlEventType.trackStateChanged, cb);
     return 0;
+  }
+
+  setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
+    return this.rtcEngine.setBeautyEffectOptions(enable, options);
   }
 
   destroy(): number {

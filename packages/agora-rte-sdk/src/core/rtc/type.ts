@@ -88,3 +88,14 @@ export enum AGRenderMode {
   fit,
   fill,
 }
+export enum lighteningLevel {
+  low = 0,
+  normal = 1,
+  height = 2,
+}
+export interface BeautyEffect {
+  lighteningContrastLevel: lighteningLevel; // 对比度
+  lighteningLevel: number; // 亮度
+  rednessLevel: number; // 红润度
+  smoothnessLevel: number; // 平滑度
+}

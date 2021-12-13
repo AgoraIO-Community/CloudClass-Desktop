@@ -12,6 +12,7 @@ export interface IconProps extends BaseProps {
   type: IconTypes;
   size?: number;
   color?: string;
+  onClick?: () => void;
 }
 
 export const Icon: FC<IconProps> = ({ type, className, style, size, color, ...restProps }) => {

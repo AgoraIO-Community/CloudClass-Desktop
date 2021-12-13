@@ -5,7 +5,7 @@ import {
   AgoraRteMicrophoneAudioTrack,
   AgoraRteScreenShareTrack,
 } from './track';
-import { AGRtcDeviceInfo, AGScreenShareDevice } from '../..';
+import { AGRtcDeviceInfo, AGScreenShareDevice, BeautyEffect } from '../../';
 
 export enum AgoraMediaControlEventType {
   cameraListChanged = 'camera-list-changed',
@@ -126,5 +126,8 @@ export class AgoraMediaControl extends AGEventEmitter {
 
   stopAudioPlaybackDeviceTest() {
     return this._rtc.stopAudioPlaybackDeviceTest();
+  }
+  setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
+    return this._rtc.setBeautyEffectOptions(enable, options);
   }
 }

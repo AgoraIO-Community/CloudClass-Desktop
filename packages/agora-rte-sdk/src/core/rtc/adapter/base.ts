@@ -8,6 +8,7 @@ import {
   AGRtcDeviceInfo,
   AGScreenShareDevice,
   AGScreenShareType,
+  BeautyEffect,
   NetworkStats,
   RtcState,
 } from '../type';
@@ -111,6 +112,7 @@ export abstract class RtcAdapterBase extends AGEventEmitter {
   abstract onLocalAudioVolume(cb: (volume: number) => void): number;
   abstract onLocalScreenShareTrackStateChanged(cb: LocalVideoTrackStateEvent): number;
   abstract destroy(): number;
+  abstract setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number;
   static getRtcVersion(): string {
     return '';
   }

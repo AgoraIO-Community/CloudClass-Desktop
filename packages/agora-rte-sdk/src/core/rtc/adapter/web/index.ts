@@ -216,6 +216,11 @@ export class RtcAdapterWeb extends RtcAdapterBase {
     return 0;
   }
 
+  setBeautyEffectOptions(enable: boolean, options: object): number {
+    this.logger.warn(`web platform does not support this`);
+    return 0;
+  }
+
   destroy(): number {
     //leave channels if not yet
     this._channels.forEach((channel) => channel.leave());

@@ -12,6 +12,8 @@ export {
   RteLanguage as EduLanguage,
   AgoraRegion as EduRegion,
   AGMediaEncryptionMode as EduMediaEncryptionMode,
+  AgoraRteEngineConfig as EduRteEngineConfig,
+  AgoraRteRuntimePlatform as EduRteRuntimePlatform,
 } from 'agora-rte-sdk';
 export { RteLanguage } from 'agora-rte-sdk';
 export type { AgoraRteOperator, AGRtcConfig as EduRtcConfig } from 'agora-rte-sdk';
