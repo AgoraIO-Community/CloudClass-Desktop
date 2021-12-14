@@ -12,18 +12,18 @@ export const ClassStatusComponent = observer(() => {
 
 export const SignalContent = observer(() => {
   const { navigationBarUIStore } = useStore();
-  const { networkQualityLabel, delay, packetLoss, cpuValue, cpuLabel } = navigationBarUIStore;
+  const { networkQualityLabel, delay, packetLoss, cpuLabel } = navigationBarUIStore;
   return (
     <>
       <table>
         <tr>
-          <td className="biz-col label left">{'Status'}:</td>
+          <td className="biz-col label left">{transI18n('signal.status')}:</td>
           <td className="biz-col value left">{networkQualityLabel}</td>
-          <td className="biz-col label right">{'Delay'}:</td>
+          <td className="biz-col label right">{transI18n('signal.delay')}:</td>
           <td className="biz-col value right">{delay}</td>
         </tr>
         <tr>
-          <td className="biz-col label left">{'Loss'}:</td>
+          <td className="biz-col label left">{transI18n('signal.lose')}:</td>
           <td className="biz-col value left">{packetLoss}</td>
           <td className="biz-col label right">{'CPU'}:</td>
           <td className="biz-col value right">{cpuLabel}</td>

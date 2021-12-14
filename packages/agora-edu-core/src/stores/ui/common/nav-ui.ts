@@ -232,14 +232,14 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   get networkQualityLabel(): string {
     switch (this.networkQuality) {
       case AGNetworkQuality.good:
-        return 'Good';
+        return transI18n('nav.signal_good');
       case AGNetworkQuality.great:
-        return 'Excellent';
+        return transI18n('nav.signal_excellent');
       case AGNetworkQuality.poor:
       case AGNetworkQuality.bad:
-        return 'Bad';
+        return transI18n('nav.signal_bad');
     }
-    return `Unknown`;
+    return transI18n('nav.signal_unknown');
   }
 
   @computed
@@ -279,9 +279,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   @computed
   get delay() {
     if (this.classroomStore.statisticsStore.delay === undefined) {
-      return '-- ms';
+      return `-- ${transI18n('nav.ms')}`;
     }
-    return `${this.classroomStore.statisticsStore.delay} ms`;
+    return `${this.classroomStore.statisticsStore.delay} ${transI18n('nav.ms')}`;
   }
 
   //@action

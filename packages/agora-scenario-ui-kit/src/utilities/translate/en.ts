@@ -364,11 +364,13 @@ export const en = {
     hours: 'hours',
     minutes: 'minutes',
     seconds: 'seconds',
+    ms: 'ms',
     short: {
       hours: 'hrs',
       minutes: 'mins',
       seconds: 'secs',
     },
+    signal_excellent: 'Excellent',
     signal_good: 'Good',
     signal_weak: 'Weak',
     signal_bad: 'Bad',
