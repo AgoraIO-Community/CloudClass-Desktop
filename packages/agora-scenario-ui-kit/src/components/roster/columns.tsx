@@ -3,7 +3,7 @@ import { SvgImg } from '..';
 import { Column, Profile, cameraIconType, microphoneIconType } from './index';
 
 const Icon = ({ type }: { type: string }) => {
-  return <SvgImg type={type} className="cursor-pointer" />;
+  return <SvgImg type={type} />;
 };
 
 export const defaultColumns: Column[] = [
@@ -70,6 +70,7 @@ export const starsColumn: Column = {
   key: 'stars',
   order: 6,
   name: 'roster.reward',
+  operation: 'star',
   render: (profile: Profile, hovered) => {
     return (
       <div className="star-wrap">

@@ -4,4 +4,11 @@ export enum DeviceState {
   unavailable,
 }
 
-export type Operation = 'podium' | 'grant-board' | 'camera' | 'microphone' | 'kick' | 'chat';
+export type Operation =
+  | 'podium'
+  | 'grant-board'
+  | 'camera'
+  | 'microphone'
+  | 'kick'
+  | 'chat'
+  | 'star';

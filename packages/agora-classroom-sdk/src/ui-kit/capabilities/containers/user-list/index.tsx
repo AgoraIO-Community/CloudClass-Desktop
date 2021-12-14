@@ -32,9 +32,21 @@ export const RosterContainer: FC<RosterContainerProps> = observer(({ onClose }) 
   );
 });
 
-const RosterTableContainer: FC<{}> = observer(() => {
+const RosterTableContainer: FC<unknown> = observer(() => {
   const { rosterUIStore } = useStore();
-  const { rosterFunctions: functions, userList, clickRowAction } = rosterUIStore;
+  const {
+    rosterFunctions: functions,
+    userList,
+    clickRowAction,
+    isColumnsInteractive,
+  } = rosterUIStore;
 
-  return <RosterTable list={userList} functions={functions} onActionClick={clickRowAction} />;
+  return (
+    <RosterTable
+      list={userList}
+      functions={functions}
+      onActionClick={clickRowAction}
+      columnInteractive={isColumnsInteractive}
+    />
+  );
 });

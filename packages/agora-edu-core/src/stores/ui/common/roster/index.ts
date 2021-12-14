@@ -120,7 +120,7 @@ export class RosterUIStore extends EduUIStoreBase {
   @action.bound
   clickRowAction(operation: Operation, profile: { uid: string | number; isOnPodium: boolean }) {
     const { addDialog, addGenericErrorDialog } = this.shareUIStore;
-    const { roomUuid } = this.classroomStore.roomStore;
+    const { roomUuid, userUuid, sendRewards } = this.classroomStore.roomStore;
     const { grantUsers, grantPermission, revokePermission } = this.classroomStore.boardStore;
     const { localUser, kickOutOnceOrBan } = this.classroomStore.userStore;
     const { enableLocalVideo, enableLocalAudio, localCameraTrackState, localMicTrackState } =
@@ -210,6 +210,16 @@ export class RosterUIStore extends EduUIStoreBase {
         }
         break;
       }
+      case 'star': {
+        // send stars
+        sendRewards(roomUuid, [
+          {
+            userUuid,
+            changeReward: 1,
+          },
+        ]).catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+        break;
+      }
       case 'kick': {
         const onOk = (ban: boolean) => {
           kickOutOnceOrBan(profile.uid as string, ban).catch((e) => addGenericErrorDialog(e));
@@ -241,8 +251,12 @@ export class RosterUIStore extends EduUIStoreBase {
   }
 
   @computed
+  get isColumnsInteractive() {
+    return this.classroomStore.roomStore.userRole === EduRoleTypeEnum.teacher;
+  }
+
+  @computed
   get userList() {
-    const { mediaStore } = this.classroomStore;
     const { list } = iterateMap(this.classroomStore.userStore.studentList, {
       onMap: (userUuid: string, { userName }) => {
         const { acceptedList, chatMuted } = this.classroomStore.roomStore;
@@ -278,6 +292,9 @@ export class RosterUIStore extends EduUIStoreBase {
           operations.push('microphone');
         }
 
+        if (this.canSendRewards) {
+          operations.push('star');
+        }
         // disabled: user has not publish streams
         // enabled: user has published streams
         // unavailable: user has no streams
@@ -285,26 +302,14 @@ export class RosterUIStore extends EduUIStoreBase {
         const mainStream = this.getMainStream(userUuid);
 
         if (mainStream) {
-          if (mainStream.isLocal) {
-            cameraState =
-              mediaStore.localCameraTrackState === AgoraRteMediaSourceState.started
-                ? DeviceState.disabled
-                : DeviceState.enabled;
+          const isCameraAvailCanMute =
+            mainStream.videoState === AgoraRteMediaPublishState.Published;
 
-            microphoneState =
-              mediaStore.localMicTrackState === AgoraRteMediaSourceState.started
-                ? DeviceState.disabled
-                : DeviceState.enabled;
-          } else {
-            const isCameraAvailCanMute =
-              mainStream.videoState === AgoraRteMediaPublishState.Published;
+          const isMicAvailCanMute = mainStream.audioState === AgoraRteMediaPublishState.Published;
 
-            const isMicAvailCanMute = mainStream.audioState === AgoraRteMediaPublishState.Published;
+          cameraState = isCameraAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
 
-            cameraState = isCameraAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
-
-            microphoneState = isMicAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
-          }
+          microphoneState = isMicAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
         }
 
         return {
@@ -393,6 +398,11 @@ export class RosterUIStore extends EduUIStoreBase {
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
   get canSearchInRoster() {
+    const { sessionInfo } = EduClassroomConfig.shared;
+    return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
+  }
+
+  get canSendRewards() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }

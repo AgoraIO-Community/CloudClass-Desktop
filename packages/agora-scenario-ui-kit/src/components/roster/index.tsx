@@ -4,7 +4,14 @@ export { Roster } from './roster';
 
 export { RosterTable } from './table';
 
-export type Operation = 'podium' | 'grant-board' | 'camera' | 'microphone' | 'kick' | 'chat';
+export type Operation =
+  | 'podium'
+  | 'grant-board'
+  | 'camera'
+  | 'microphone'
+  | 'kick'
+  | 'chat'
+  | 'star';
 
 export type SupportedFunction = 'carousel' | 'search' | 'kick' | 'grant-board' | 'podium' | 'stars';
 
@@ -34,14 +41,14 @@ export enum DeviceState {
 }
 
 export const cameraIconType = {
-  [DeviceState.enabled]: 'camera-enabled',
-  [DeviceState.disabled]: 'camera-disabled',
+  [DeviceState.enabled]: 'camera-disabled',
+  [DeviceState.disabled]: 'camera-enabled',
   [DeviceState.unavailable]: 'camera-inactive',
 };
 
 export const microphoneIconType = {
-  [DeviceState.enabled]: 'mic-enabled',
-  [DeviceState.disabled]: 'mic-disabled',
+  [DeviceState.enabled]: 'mic-disabled',
+  [DeviceState.disabled]: 'mic-enabled',
   [DeviceState.unavailable]: 'mic-inactive',
 };
 

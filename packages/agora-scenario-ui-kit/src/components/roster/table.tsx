@@ -9,6 +9,7 @@ type RosterTableProps = {
   list: Profile[];
   functions?: Array<SupportedFunction>;
   onActionClick?: (operation: Operation, profile: Profile) => void;
+  columnInteractive?: boolean;
 };
 
 export const InteractiveCol = ({
@@ -16,11 +17,13 @@ export const InteractiveCol = ({
   index: idx,
   data,
   onClick,
+  interactive,
 }: {
   col: Column;
   index: number;
   data: Profile;
   onClick: (operation: Operation, profile: Profile) => void;
+  interactive: boolean;
 }) => {
   const [hovered, setHovered] = useState(false);
 
@@ -42,17 +45,24 @@ export const InteractiveCol = ({
 
   const colCls = classNames(!isFirstColumn ? 'justify-center' : 'justify-start');
 
+  const interactiveEvents = interactive
+    ? {
+        onMouseEnter: () => {
+          setHovered(true);
+        },
+        onMouseLeave: () => {
+          setHovered(false);
+        },
+      }
+    : {};
+
+  const hoverClass = interactive && !isFirstColumn ? 'roster-col-hover' : '';
+
   return (
     <Col
       key={col.key}
       className={colCls}
-      hoverClass={!isFirstColumn ? 'roster-col-hover' : ''}
-      onMouseEnter={() => {
-        setHovered(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
+      hoverClass={hoverClass}
       onClick={handleClick}
       style={
         col.width
@@ -62,7 +72,8 @@ export const InteractiveCol = ({
               flexShrink: 0,
             }
           : {}
-      }>
+      }
+      {...interactiveEvents}>
       <span {...props}>{col.render(data, hovered)}</span>
     </Col>
   );
@@ -72,6 +83,7 @@ export const RosterTable: React.FC<RosterTableProps> = ({
   list = [],
   functions = [],
   onActionClick = () => {},
+  columnInteractive = false,
 }) => {
   const cols = useColumns(functions);
 
@@ -80,7 +92,13 @@ export const RosterTable: React.FC<RosterTableProps> = ({
       {list.map((data: Profile) => (
         <Row className="border-bottom-width-1" key={data.uid} hoverClass="roster-row-hover">
           {cols.map((col: Column, idx: number) => (
-            <InteractiveCol data={data} onClick={onActionClick} col={col} index={idx} />
+            <InteractiveCol
+              data={data}
+              onClick={onActionClick}
+              col={col}
+              index={idx}
+              interactive={columnInteractive}
+            />
           ))}
         </Row>
       ))}
