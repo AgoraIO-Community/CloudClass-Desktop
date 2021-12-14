@@ -82,6 +82,9 @@ export class MediaStore extends EduStoreBase {
     smoothnessLevel: 0.5,
   };
 
+  private _previousCameraId?: string;
+  private _previousRecordingId?: string;
+
   // @observable localMicrophoneErrorReason: AgoraRteAudioErrorType = AgoraRteAudioErrorType.None;
   // @observable localCameraErrorReason: AgoraRteVideoErrorType = AgoraRteVideoErrorType.None;
 
@@ -138,7 +141,41 @@ export class MediaStore extends EduStoreBase {
     this.mediaControl.stopAudioRecordingDeviceTest();
   };
 
-  enableLocalVideo = (value: boolean) => {
+  enableLocalVideo(value: boolean) {
+    if (value) {
+      // open device
+      if (this._previousCameraId) {
+        this.setCameraDevice(this._previousCameraId);
+      } else {
+        this.setCameraDevice(this.videoCameraDevices[0].deviceid);
+      }
+    } else {
+      // close device
+      if (this.cameraDeviceId !== DEVICE_DISABLE) {
+        this._previousCameraId = this.cameraDeviceId;
+        this.setCameraDevice(DEVICE_DISABLE);
+      }
+    }
+  }
+
+  enableLocalAudio(value: boolean) {
+    if (value) {
+      // open device
+      if (this._previousRecordingId) {
+        this.setRecordingDevice(this._previousRecordingId);
+      } else {
+        this.setRecordingDevice(this.audioRecordingDevices[0].deviceid);
+      }
+    } else {
+      // close device
+      if (this.recordingDeviceId !== DEVICE_DISABLE) {
+        this._previousRecordingId = this.recordingDeviceId;
+        this.setRecordingDevice(DEVICE_DISABLE);
+      }
+    }
+  }
+
+  private _enableLocalVideo = (value: boolean) => {
     const track = this.mediaControl.createCameraVideoTrack();
     if (value) {
       track.start();
@@ -148,7 +185,7 @@ export class MediaStore extends EduStoreBase {
     return;
   };
 
-  enableLocalAudio = (value: boolean) => {
+  private _enableLocalAudio = (value: boolean) => {
     const track = this.mediaControl.createMicrophoneAudioTrack();
     if (value) {
       track.start();
@@ -319,10 +356,10 @@ export class MediaStore extends EduStoreBase {
                   if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
                     const track = this.mediaControl.createCameraVideoTrack();
                     track.setDeviceId(this.cameraDeviceId);
-                    this.enableLocalVideo(true);
+                    this._enableLocalVideo(true);
                   } else {
                     //if no device selected, disable device
-                    this.enableLocalVideo(false);
+                    this._enableLocalVideo(false);
                   }
                 } else if (
                   this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
@@ -330,14 +367,14 @@ export class MediaStore extends EduStoreBase {
                   // once connected, should follow stream
                   if (!this.classroomStore.streamStore.localCameraStreamUuid) {
                     // if no local stream
-                    this.enableLocalVideo(false);
+                    this._enableLocalVideo(false);
                   } else {
                     if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
                       const track = this.mediaControl.createCameraVideoTrack();
                       track.setDeviceId(this.cameraDeviceId);
-                      this.enableLocalVideo(true);
+                      this._enableLocalVideo(true);
                     } else {
-                      this.enableLocalVideo(false);
+                      this._enableLocalVideo(false);
                     }
                   }
                 }
@@ -354,10 +391,10 @@ export class MediaStore extends EduStoreBase {
                   if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
                     const track = this.mediaControl.createMicrophoneAudioTrack();
                     track.setRecordingDevice(this.recordingDeviceId);
-                    this.enableLocalAudio(true);
+                    this._enableLocalAudio(true);
                   } else {
                     //if no device selected, disable device
-                    this.enableLocalAudio(false);
+                    this._enableLocalAudio(false);
                   }
                 } else if (
                   this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
@@ -365,14 +402,14 @@ export class MediaStore extends EduStoreBase {
                   // once connected, should follow stream
                   if (!this.classroomStore.streamStore.localMicStreamUuid) {
                     // if no local stream
-                    this.enableLocalAudio(false);
+                    this._enableLocalAudio(false);
                   } else {
                     if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
                       const track = this.mediaControl.createMicrophoneAudioTrack();
                       track.setRecordingDevice(this.recordingDeviceId);
-                      this.enableLocalAudio(true);
+                      this._enableLocalAudio(true);
                     } else {
-                      this.enableLocalAudio(false);
+                      this._enableLocalAudio(false);
                     }
                   }
                 }

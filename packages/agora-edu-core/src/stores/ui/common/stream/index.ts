@@ -485,34 +485,22 @@ export class StreamUIStore extends EduUIStoreBase {
 
   cameraPlaceholder = computedFn((stream: EduStreamUI): CameraPlaceholderType => {
     let placeholder = CameraPlaceholderType.none;
-    if (!stream.stream.isLocal) {
-      if (
-        stream.stream.videoState === AgoraRteMediaPublishState.Published &&
-        stream.stream.videoSourceState === AgoraRteMediaSourceState.started
-      ) {
-        placeholder = CameraPlaceholderType.none;
-      } else {
-        placeholder = CameraPlaceholderType.muted;
-      }
-      return placeholder;
-    } else {
-      let placeholder = CameraPlaceholderType.none;
-      switch (this.localCameraTrackState) {
-        case AgoraRteMediaSourceState.started:
-          placeholder = CameraPlaceholderType.none;
-          break;
-        case AgoraRteMediaSourceState.starting:
-          placeholder = CameraPlaceholderType.loading;
-          break;
-        case AgoraRteMediaSourceState.stopped:
-          placeholder = CameraPlaceholderType.muted;
-          break;
-        case AgoraRteMediaSourceState.error:
-          placeholder = CameraPlaceholderType.broken;
-          break;
-      }
-      return placeholder;
+
+    const deviceDisabled = stream.stream.videoSourceState === AgoraRteMediaSourceState.stopped;
+
+    if (deviceDisabled) {
+      return CameraPlaceholderType.disabled;
     }
+
+    if (
+      stream.stream.videoState === AgoraRteMediaPublishState.Published &&
+      stream.stream.videoSourceState === AgoraRteMediaSourceState.started
+    ) {
+      placeholder = CameraPlaceholderType.none;
+    } else {
+      placeholder = CameraPlaceholderType.muted;
+    }
+    return placeholder;
   });
 
   @computed get toolbarPlacement(): 'left' | 'bottom' {

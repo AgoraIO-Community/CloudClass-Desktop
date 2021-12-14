@@ -113,7 +113,7 @@ const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) 
   const { streamUIStore } = useStore();
   const { streamVolumes } = streamUIStore;
 
-  let volumePercentage = streamVolumes.get(stream.stream.streamUuid) || 0;
+  const volumePercentage = streamVolumes.get(stream.stream.streamUuid) || 0;
 
   return <VolumeIndicator volume={volumePercentage * 10} />;
 });
@@ -146,7 +146,7 @@ const LocalStreamPlayerTools = observer(() => {
 const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
   const { remoteStreamTools, toolbarPlacement } = streamUIStore;
-  let toolList = remoteStreamTools(stream);
+  const toolList = remoteStreamTools(stream);
   return toolList.length > 0 ? (
     <div className={`video-player-tools`}>
       {toolList.map((tool) => (
