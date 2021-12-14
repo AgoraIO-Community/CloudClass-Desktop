@@ -331,16 +331,6 @@ export class MediaStore extends EduStoreBase {
             },
           );
 
-          runInAction(() => {
-            this.videoCameraDevices = mediaControl
-              .getVideoCameraList()
-              .concat([{ deviceid: DEVICE_DISABLE, devicename: '' }]);
-            this.audioRecordingDevices = mediaControl
-              .getAudioRecordingList()
-              .concat([{ deviceid: DEVICE_DISABLE, devicename: '' }]);
-            this.audioPlaybackDevices = mediaControl.getAudioPlaybackList();
-          });
-
           this._disposers.add(
             autorun(() => {
               this.mediaControl.setBeautyEffectOptions(this.isBeauty, this.beautyEffectOptions);
@@ -426,70 +416,81 @@ export class MediaStore extends EduStoreBase {
             ),
           );
 
-          // 处理视频设备变动
-          const videoDisposer = computed(() => this.videoCameraDevices).observe(
-            ({ newValue, oldValue }) => {
-              // 避免初始化阶段触发新设备的弹窗通知
-              if (oldValue && oldValue.length > 1) {
-                let inOldList = oldValue.find((v) => v.deviceid === this.cameraDeviceId);
-                let inNewList = newValue.find((v) => v.deviceid === this.cameraDeviceId);
-                if ((inOldList && !inNewList) || this.cameraDeviceId === DEVICE_DISABLE) {
-                  //change to first device if there's any
-                  newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
-                }
-              } else {
-                // initailize, pick the first device
-                newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
-              }
-            },
-          );
-
-          this._disposers.add(videoDisposer);
-
-          // 处理录音设备变动
-          const audioRecordingDisposer = computed(() => this.audioRecordingDevices).observe(
-            ({ newValue, oldValue }) => {
-              // 避免初始化阶段触发新设备的弹窗通知
-              if (oldValue && oldValue.length > 1) {
-                let inOldList = oldValue.find((v) => v.deviceid === this.recordingDeviceId);
-                let inNewList = newValue.find((v) => v.deviceid === this.recordingDeviceId);
-                if ((inOldList && !inNewList) || this.recordingDeviceId === DEVICE_DISABLE) {
-                  //change to first device if there's any
-                  newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
-                }
-              } else {
-                // initailize, pick the first device
-                newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
-              }
-            },
-          );
-
-          this._disposers.add(audioRecordingDisposer);
-
-          // 处理扬声器设备变动
-          const playbackDisposer = computed(() => this.audioPlaybackDevices).observe(
-            ({ newValue, oldValue }) => {
-              // 避免初始化阶段触发新设备的弹窗通知
-              if (oldValue && oldValue.length > 0) {
-                let inOldList = oldValue.find((v) => v.deviceid === this.playbackDeviceId);
-                let inNewList = newValue.find((v) => v.deviceid === this.playbackDeviceId);
-                if (inOldList && !inNewList) {
-                  //change to first device if there's any
-                  newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
-                }
-              } else {
-                // initailize, pick the first device
-                newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
-              }
-            },
-          );
-
-          this._disposers.add(playbackDisposer);
+          // this must come last after event listener is registered
+          runInAction(() => {
+            this.videoCameraDevices = mediaControl
+              .getVideoCameraList()
+              .concat([{ deviceid: DEVICE_DISABLE, devicename: '' }]);
+            this.audioRecordingDevices = mediaControl
+              .getAudioRecordingList()
+              .concat([{ deviceid: DEVICE_DISABLE, devicename: '' }]);
+            this.audioPlaybackDevices = mediaControl.getAudioPlaybackList();
+          });
         } else {
           //clean up
         }
       },
     );
+
+    // 处理视频设备变动
+    const videoDisposer = computed(() => this.videoCameraDevices).observe(
+      ({ newValue, oldValue }) => {
+        // 避免初始化阶段触发新设备的弹窗通知
+        if (oldValue && oldValue.length > 1) {
+          let inOldList = oldValue.find((v) => v.deviceid === this.cameraDeviceId);
+          let inNewList = newValue.find((v) => v.deviceid === this.cameraDeviceId);
+          if ((inOldList && !inNewList) || this.cameraDeviceId === DEVICE_DISABLE) {
+            //change to first device if there's any
+            newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+          }
+        } else {
+          // initailize, pick the first device
+          newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+        }
+      },
+    );
+
+    this._disposers.add(videoDisposer);
+
+    // 处理录音设备变动
+    const audioRecordingDisposer = computed(() => this.audioRecordingDevices).observe(
+      ({ newValue, oldValue }) => {
+        // 避免初始化阶段触发新设备的弹窗通知
+        if (oldValue && oldValue.length > 1) {
+          let inOldList = oldValue.find((v) => v.deviceid === this.recordingDeviceId);
+          let inNewList = newValue.find((v) => v.deviceid === this.recordingDeviceId);
+          if ((inOldList && !inNewList) || this.recordingDeviceId === DEVICE_DISABLE) {
+            //change to first device if there's any
+            newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+          }
+        } else {
+          // initailize, pick the first device
+          newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+        }
+      },
+    );
+
+    this._disposers.add(audioRecordingDisposer);
+
+    // 处理扬声器设备变动
+    const playbackDisposer = computed(() => this.audioPlaybackDevices).observe(
+      ({ newValue, oldValue }) => {
+        // 避免初始化阶段触发新设备的弹窗通知
+        if (oldValue && oldValue.length > 0) {
+          let inOldList = oldValue.find((v) => v.deviceid === this.playbackDeviceId);
+          let inNewList = newValue.find((v) => v.deviceid === this.playbackDeviceId);
+          if (inOldList && !inNewList) {
+            //change to first device if there's any
+            newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
+          }
+        } else {
+          // initailize, pick the first device
+          newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
+        }
+      },
+    );
+
+    this._disposers.add(playbackDisposer);
   }
 
   @bound
