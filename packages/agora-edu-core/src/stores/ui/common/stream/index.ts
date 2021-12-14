@@ -321,8 +321,8 @@ export class StreamUIStore extends EduUIStoreBase {
       videoSourceStopped
         ? 'stream-camera-inactive'
         : videoMuted
-        ? 'stream-camera-enabled'
-        : 'stream-camera-disabled',
+        ? 'stream-camera-disabled'
+        : 'stream-camera-enabled',
       videoSourceStopped
         ? transI18n('Camera Not Available')
         : videoMuted
@@ -332,6 +332,7 @@ export class StreamUIStore extends EduUIStoreBase {
         //can interact when source is not stopped
         interactable: !videoSourceStopped,
         style: {},
+        hoverIconType: 'stream-camera-disabled',
         onClick: () => {
           this.classroomStore.streamStore
             .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
@@ -353,8 +354,8 @@ export class StreamUIStore extends EduUIStoreBase {
       audioSourceStopped
         ? 'stream-mic-inactive'
         : audioMuted
-        ? 'stream-mic-enabled'
-        : 'stream-mic-disabled',
+        ? 'stream-mic-disabled'
+        : 'stream-mic-enabled',
       audioSourceStopped
         ? transI18n('Microphone Not Available')
         : audioMuted
@@ -363,6 +364,7 @@ export class StreamUIStore extends EduUIStoreBase {
       {
         //can interact when source is not stopped
         interactable: !audioSourceStopped,
+        hoverIconType: 'stream-mic-disabled',
         style: {},
         onClick: async () => {
           this.classroomStore.streamStore
