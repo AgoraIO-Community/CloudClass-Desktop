@@ -1135,8 +1135,10 @@ export class AgoraElectronRTCWrapper extends EventEmitter implements IElectronRT
     try {
       //@ts-ignore
       let items = params.type === ScreenShareType.Screen ? this.client.getScreenDisplaysInfo() : this.client.getScreenWindowsInfo()
-      const noImageSize = items.filter((it: any) => !it.image).length
-      if (noImageSize) {
+      // filter out items that have no preview image
+      items = items.filter((it: any) => it.image)
+
+      if(!items.length) {
         throw {code: 'ELECTRON_PERMISSION_DENIED'}
       }
       if(params.type === ScreenShareType.Screen){

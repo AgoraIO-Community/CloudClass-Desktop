@@ -1,7 +1,7 @@
 import { reportServiceV2 } from "../services/report-v2"
 class GlobalConfigs {
-  sdkDomain: string = 'https://api.agora.io/%region%'
-  reportDomain: string = 'https://api.agora.io'
+  sdkDomain: string = 'https://api.sd-rtn.com/%region%'
+  reportDomain: string = 'https://api.sd-rtn.com'
   logDomain: string = 'https://api-solutions.agoralab.co'
   appId: string = '';
 
