@@ -210,6 +210,11 @@ export class BoardStore {
     toolTip: true,
     iconTooltipText: t('tool.disk'),
   },
+  {
+    itemName: 'screen-share',
+    toolTip: true,
+    iconTooltipText: t('tool.screen_share'),
+  },
 ]
 
   static items: any = [
@@ -528,6 +533,15 @@ export class BoardStore {
     scenePath: '/init'
   }
 
+  @observable
+  currentPath: string = '';
+
+  @computed
+  get isBoardScreenShare() {
+    const matchedShareScreen = this.currentPath.match(/screenShare/i);
+    return !!matchedShareScreen;
+  }
+
   @computed
   get resourcesList(): any[] {
     return [this._boardItem].concat(this._resourcesList.filter((it: any) => it.show === true))
@@ -551,6 +565,8 @@ export class BoardStore {
         } else {
           this.room.setScenePath(`/${currentPage}`)
         }
+      } else if (targetPath === '/screenShare') {
+        this.room.setScenePath(`${targetPath}`);
       } else {
         const targetResource = this.allResources.find((item => item.name === resourceName))
         if (targetResource) {
@@ -641,25 +657,65 @@ export class BoardStore {
     return 0
   }
 
-  closeMaterial(resourceName: string) {
+  @computed
+  get canSharingScreen() {
+    if (this.userRole === EduRoleTypeEnum.teacher) {
+      if (
+        !this.appStore.sceneStore.screenShareStream ||
+        (this.appStore.sceneStore.screenShareStream &&
+          !this.appStore.sceneStore.screenShareStream.renderer)
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  removeScreenShareScene() {
+    const screenSharePath = 'screenShare';
+    const roomScenes = (this.room.state.globalState as any).roomScenes;
+    const restRoomScenes = { ...roomScenes, [`${screenSharePath}`]: undefined };
+    const room = this.room;
+    room.setGlobalState({
+      roomScenes: {
+        ...restRoomScenes,
+      },
+    });
+
+    const sharePath = `/${screenSharePath}`;
+    const hasScreenShare = room.entireScenes()[sharePath];
+    if (hasScreenShare) {
+      room.removeScenes(sharePath);
+    }
+
+    room.setScenePath('');
+  }
+
+  @action.bound
+  async closeMaterial(resourceName: string) {
     const currentSceneState = this.room.state.sceneState
     const roomScenes = (this.room.state.globalState as any).roomScenes
-    this.room.setGlobalState({
-      roomScenes: {
-        ...roomScenes,
-        [`${resourceName}`]: {
-          contextPath: currentSceneState.contextPath,
-          index: currentSceneState.index,
-          sceneName: currentSceneState.sceneName,
-          scenePath: currentSceneState.scenePath,
-          totalPage: currentSceneState.scenes.length,
-          resourceName: resourceName,
-          show: false,
+    if (resourceName.match(/screenShare/i)) {
+      await this.appStore.sceneStore.stopWebSharing();
+      this.removeScreenShareScene();
+    } else {
+      this.room.setGlobalState({
+        roomScenes: {
+          ...roomScenes,
+          [`${resourceName}`]: {
+            contextPath: currentSceneState.contextPath,
+            index: currentSceneState.index,
+            sceneName: currentSceneState.sceneName,
+            scenePath: currentSceneState.scenePath,
+            totalPage: currentSceneState.scenes.length,
+            resourceName: resourceName,
+            show: false,
+          }
         }
-      }
-    })
-    // const resourceName = this.resourcesList.find((it: any) => it.resou)
-    this.room.setScenePath('')
+      })
+      // const resourceName = this.resourcesList.find((it: any) => it.resou)
+      this.room.setScenePath('')
+    }
   }
 
   async autoFetchDynamicTask() {
@@ -729,6 +785,7 @@ export class BoardStore {
         taskUuid: courseWare.taskUuid,
       }, false)
     }
+    this.currentPath = this.room.state.sceneState.contextPath;
     EduLogger.info(`[WhiteState] end updatePageHistory`)
   }
 
@@ -756,7 +813,23 @@ export class BoardStore {
           scenePath: resource.scenePath,
           resourceName: 'init',
         }
-      } else {
+      } else if (resourceName === 'screenShare' || resourceName === '/screenShare') {
+        if (resource) {
+          newList.push({
+            file: {
+              name: resourceName,
+              type: 'screen_share',
+            },
+            resourceUuid: resourceName,
+            resourceName: resourceName,
+            taskUuid: '',
+            currentPage: resource.index,
+            totalPage: resource.totalPage,
+            scenePath: resource?.scenePath,
+            show: resource.show,
+          });
+        }
+      }  else {
         // TODO: 需要调整, 不用resourceName
         const rawResource = this.allResources.find((it: any) => it.name === resourceName)
         const taskUuid = rawResource ? rawResource!.taskUuid  : ''
@@ -963,6 +1036,10 @@ export class BoardStore {
       EduLogger.info("[aClass Board] whiteboard locked..")
     }
 
+    if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
+      this.removeScreenShareScene();
+    }
+
     EduLogger.info("[aClass Board] prepare scenes..")
     this.loadRoomScenes()
     this.loadContextPath()
@@ -972,6 +1049,7 @@ export class BoardStore {
     this.autoFetchDynamicTask()
     this.pptAutoFullScreen()
     this.moveCamera()
+    this.currentPath = this.room.state.sceneState.contextPath;
     EduLogger.info("[aClass Board] prepare scenes done..")
     EduLogger.info("[aClass Board] aClassInit all finished..")
   }
@@ -2323,6 +2401,45 @@ export class BoardStore {
       this.room.putScenes(`/${resource.name}`, resource.scenes)
       this.room.setScenePath(`/${resource.name}/${resource.scenes[0].name}`)
     }
+  }
+
+  @action.bound
+  setScreenShareScenePath() {
+    const screenSharePath = 'screenShare';
+    const room = this.room;
+    const sharePath = `/${screenSharePath}`;
+    const hasScreenShare = room.entireScenes()[sharePath];
+    if (hasScreenShare) {
+      room.removeScenes(sharePath);
+    }
+    const roomScenes = (this.room.state.globalState as any).roomScenes;
+    const currentSceneState = this.room.state.sceneState;
+    room.setGlobalState({
+      currentSceneInfo: {
+        contextPath: currentSceneState.contextPath,
+        index: currentSceneState.index,
+        sceneName: currentSceneState.sceneName,
+        scenePath: currentSceneState.scenePath,
+        totalPage: currentSceneState.scenes.length,
+        resourceUuid: `${screenSharePath}`,
+        resourceName: `${screenSharePath}`,
+      },
+      roomScenes: {
+        ...roomScenes,
+        [`${screenSharePath}`]: {
+          contextPath: currentSceneState.contextPath,
+          index: currentSceneState.index,
+          sceneName: currentSceneState.sceneName,
+          scenePath: currentSceneState.scenePath,
+          totalPage: currentSceneState.scenes.length,
+          resourceUuid: `${screenSharePath}`,
+          resourceName: `${screenSharePath}`,
+          show: true,
+        },
+      },
+    });
+    room.putScenes(sharePath, [{ name: '0' }]);
+    room.setScenePath(sharePath);
   }
 
   async putImage(url: string) {

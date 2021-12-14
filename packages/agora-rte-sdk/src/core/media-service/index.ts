@@ -12,6 +12,8 @@ import { reportService } from '../services/report-service';
 export class MediaService extends EventEmitter implements IMediaService {
   sdkWrapper!: RTCWrapperProvider;
 
+  webSdkWrapper!: AgoraWebRtcWrapper;
+
   cameraTestRenderer?: LocalUserRenderer;
 
   cameraRenderer?: LocalUserRenderer;
@@ -63,6 +65,17 @@ export class MediaService extends EventEmitter implements IMediaService {
         appId: rtcProvider.appId
       })
     }
+
+    this.webSdkWrapper = new AgoraWebRtcWrapper({
+      uploadLog: true,
+      agoraWebSdk: rtcProvider.webAgoraSdk,
+      webConfig: {
+        mode: 'live',
+        codec: rtcProvider.codec,
+        role: 'host',
+      },
+      appId: rtcProvider.appId
+    })
     this.sdkWrapper.on('watch-rtt', (evt: any) => {
       this.fire('watch-rtt', evt)
     })
@@ -713,8 +726,16 @@ export class MediaService extends EventEmitter implements IMediaService {
       })
     }
     if (this.isElectron) {
-      let items = await this.electron.prepareScreenShare()
-      return items
+      // let items = await this.electron.prepareScreenShare()
+      // return items
+      await this.webSdkWrapper.prepareScreenShare({...params, shareAudio: 'disable',})
+      this.screenRenderer = new LocalUserRenderer({
+        context: this,
+        uid: 0,
+        channel: 0,
+        videoTrack: this.webSdkWrapper.screenVideoTrack as ITrack,
+        sourceType: 'screen',
+      })
     }
   }
 
@@ -723,14 +744,15 @@ export class MediaService extends EventEmitter implements IMediaService {
       await this.sdkWrapper.startScreenShare(option)
     }
     if (this.isElectron) {
-      await this.sdkWrapper.startScreenShare(option)
-      this.screenRenderer = new LocalUserRenderer({
-        context: this,
-        uid: 0,
-        channel: 0,
-        videoTrack: undefined,
-        sourceType: 'screen',
-      })
+      // await this.sdkWrapper.startScreenShare(option)
+      // this.screenRenderer = new LocalUserRenderer({
+      //   context: this,
+      //   uid: 0,
+      //   channel: 0,
+      //   videoTrack: undefined,
+      //   sourceType: 'screen',
+      // })
+      await this.webSdkWrapper.startScreenShare(option)
     }
   }
 
@@ -739,7 +761,8 @@ export class MediaService extends EventEmitter implements IMediaService {
       await this.sdkWrapper.stopScreenShare()
     }
     if (this.isElectron) {
-      await this.sdkWrapper.stopScreenShare()
+      // await this.sdkWrapper.stopScreenShare()
+      await this.webSdkWrapper.stopScreenShare()
     }
   }
 

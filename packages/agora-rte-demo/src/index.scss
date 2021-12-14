@@ -17,9 +17,14 @@ html, body, #root {
 }
 
 .screen-sharing {
+  display: none;
   video {
     object-fit: contain !important;
   }
+}
+
+.screen-sharing.screen-share-active{
+  display: block;
 }
 
 .flex-row {

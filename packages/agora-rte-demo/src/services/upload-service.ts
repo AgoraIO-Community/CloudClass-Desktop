@@ -125,6 +125,7 @@ export type UploadConversionType = {
 export type FetchStsTokenResult = {
   bucketName: string,
   callbackBody: string,
+  callbackHost: string,
   callbackContentType: string,
   ossKey: string,
   accessKeyId: string,
@@ -290,7 +291,7 @@ export class UploadService extends ApiBase {
 
     if (res.code !== 0) {
       throw GenericErrorWrapper(new Error(res.msg || res.message), {errCode: res.code})
-    })
+    }
     // const resources = res.data.map(transDataToResource)
 
     return res.data
@@ -357,6 +358,7 @@ export class UploadService extends ApiBase {
           },
           {
             callbackBody: ossConfig.callbackBody,
+            callbackHost: ossConfig.callbackHost,
             contentType: ossConfig.callbackContentType,
             roomUuid: payload.roomUuid,
             // userUuid: payload.userUuid,
@@ -430,6 +432,7 @@ export class UploadService extends ApiBase {
            {
              callbackBody: ossConfig.callbackBody,
              contentType: ossConfig.callbackContentType,
+             callbackHost: ossConfig.callbackHost,
              roomUuid: payload.roomUuid,
              userUuid: payload.userUuid,
              appId: this.appId
@@ -460,7 +463,8 @@ export class UploadService extends ApiBase {
 
   async addFileToOss(ossClient: OSS, key: string, file: File, onProgress: CallableFunction, ossParams: any) {
 
-    const prefix = `${globalConfigs.logDomain}`
+    // const prefix = `${globalConfigs.logDomain}`
+    const prefix = ossParams.callbackHost;
     // TODO: 生产环境需要更替地址
     const callbackUrl = `${prefix}/edu/apps/${ossParams.appId}/v1/rooms/${ossParams.roomUuid}/resources/callback`
 

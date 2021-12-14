@@ -9,7 +9,8 @@ type LoginParams = {
 
 type LoginResult = Promise<{
   rtmToken: string,
-  userUuid: string
+  userUuid: string,
+  appId: string
 }>
 
 export class HomeApi extends ApiBase {

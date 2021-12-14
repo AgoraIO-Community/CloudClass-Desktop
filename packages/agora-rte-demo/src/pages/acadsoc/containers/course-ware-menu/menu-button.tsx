@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, ButtonBase, IconButton } from '@material-ui/core'
 import styles from './style.module.scss'
 import CloseIcon from '@material-ui/icons/Close';
+import { t } from '@/i18n';
 
 type ResourceMenuProps = {
   active: number,
@@ -31,7 +32,7 @@ export const CourseWareMenu: React.FC<ResourceMenuProps> = (
     <div className={styles.courseMenu}>
         {items.map((it, key: number) => (
           <MenuButton key={key}
-            name={it.file.name}
+            name={it.file.name === 'screenShare' ? t('tool.screen_share') : it.file.name}
             showClose={key === 0 ? false : true}
             className={`${styles.courseMenuItem} ${active === key ? styles.active : ''}`}
             onClick={() => {

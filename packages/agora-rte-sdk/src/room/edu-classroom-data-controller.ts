@@ -1332,7 +1332,11 @@ export class EduClassroomDataController {
       'main': {
         streamUuid: mainStreamUuid,
         rtcToken: mainRtcToken,
-      }
+      },
+      screen: {
+        streamUuid: '',
+        rtcToken: '',
+      },
     }
     if (roomData) {
       rawLocalStreams.reduce((acc: any, item: any) => {

@@ -25,6 +25,9 @@ import { CourseWareMenuContainer } from './course-ware-menu'
 import { NetworkDisk } from './disk'
 import { EduRoleTypeEnum } from 'agora-rte-sdk'
 import { BoardProgress } from '@/components/netless-board/loading'
+import { ScreenSharing } from '@/components/screen-sharing'
+import { debounce } from 'lodash'
+import { dialogManager } from 'agora-aclass-ui-kit'
 import "video.js/dist/video-js.css";
 
 const StrokeListPanel = observer(() => {
@@ -118,7 +121,7 @@ export const EduWhiteBoard = observer(() => {
       totalPage={boardStore.totalPage}
       showScale={true}
       scale={Math.ceil(boardStore.scale * 100)}
-      toolY={20}
+      toolY={5}
       toolX={5}
       controlY={10}
       controlX={10}
@@ -142,6 +145,9 @@ export const EduWhiteBoard = observer(() => {
       {
         ready ? 
         <div id="netless" style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%'}} ref={mountToDOM} ></div> : null
+      }
+      {
+        <ScreenSharing />
       }
     </EducationBoard>
   )
@@ -394,7 +400,7 @@ export const EducationBoard = observer((props: any) => {
 
   const toolItems = useBoardStore().toolItems
 
-  const onClickTool = useCallback((type: string) => {
+  const onClickTool = useCallback(debounce(async (type: string) => {
     if (!boardStore.boardClient) {
       return
     }
@@ -435,24 +441,53 @@ export const EducationBoard = observer((props: any) => {
         boardStore.setOpenDisk()
         break;
       }
+      case 'screen-share': {
+        if(boardStore.canSharingScreen){
+          if(sceneStore.isElectron){
+            dialogManager.show({
+              title: '',
+              text: t(`aclass.sure_open_share_screen`),
+              showConfirm: true,
+              showCancel: true,
+              confirmText: t(`aclass.confirm_open`),
+              visible: true,
+              cancelText: t(`aclass.cancel_close`),
+              onConfirm: async () => {
+                await sceneStore.startOrStopSharing();
+              },
+              onCancel: () => {
+                
+              }
+            })
+          }else{
+            await sceneStore.startOrStopSharing();
+          }
+        }
+        break;
+      }
     }
     boardStore.currentActiveToolItem = type
-  }, [boardStore.boardClient])
+  }, 200), [boardStore.boardClient])
 
   const appStore = useAppStore()
 
   const getBoardItemsBy = useCallback((role: EduRoleTypeEnum) => {
+    let toolItemsTemp = toolItems;
+    // if(sceneStore.isElectron){
+    //   const removeItem = ['screen-share'];
+    //   toolItemsTemp = toolItems.filter((it)=>!removeItem.includes(it.itemName))
+    // }
     switch (role) {
       case EduRoleTypeEnum.student: {
         const removeItem = ['new-page', 'clear', 'disk']
-        return toolItems.filter((item: IToolItem) => !removeItem.includes(item.itemName))
+        return toolItemsTemp.filter((item: IToolItem) => !removeItem.includes(item.itemName))
       }
       case EduRoleTypeEnum.invisible:
       case EduRoleTypeEnum.teacher: {
-        return toolItems
+        return toolItemsTemp
       }
       case EduRoleTypeEnum.assistant: {
-        return toolItems.filter((item: IToolItem) => item.itemName === 'disk')
+        return toolItemsTemp.filter((item: IToolItem) => item.itemName === 'disk')
       }
     }
     return []

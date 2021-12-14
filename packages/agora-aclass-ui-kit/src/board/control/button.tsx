@@ -20,6 +20,7 @@ import Move from '../assets/move.png'
 import Clear from '../assets/clear.png'
 import Upload from '../assets/upload.png'
 import Disk from '../assets/disk.png'
+import ShareScreen from '../assets/share_screen.png'
 import { ControlButtonIcon, CustomizeIconBtn } from '../../button'
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { makeStyles } from '@material-ui/styles'
@@ -66,6 +67,7 @@ const buttonsMap = {
   'upload': (props: any) => <CustomizeIconBtn icon={Upload} style={{...defaultStyle, ...props.style}} />,
   'clear': (props: any) => <CustomizeIconBtn icon={Clear} style={{...defaultStyle, ...props.style}} />,
   'disk': (props: any) => <CustomizeIconBtn icon={Disk} style={{...defaultStyle, ...props.style}} />,
+  'screen-share': (props: any) => <CustomizeIconBtn icon={ShareScreen} style={{...defaultStyle, ...props.style}} />,
   'moveCamera': (props: any) => <CustomizeIconBtn icon={MoveCamera} style={{...defaultStyle, ...props.style}} />,
 }
 

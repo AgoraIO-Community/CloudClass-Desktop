@@ -10,6 +10,7 @@ interface RendererPlayerProps {
   style?: React.CSSProperties
   children?: any,
   placeholderComponent?: React.ReactElement
+  type?: string
 }
 
 export const RendererPlayer = (props: RendererPlayerProps) => {
@@ -18,7 +19,7 @@ export const RendererPlayer = (props: RendererPlayerProps) => {
 
   useEffect(() => {
     if (ref.current && props.track) {
-      props.track.play && props.track.play(ref.current, props.fitMode)
+      props.track.play && props.track.play(ref.current, props.fitMode, props.type)
     }
     return () => props.track && props.track.stop && props.track.stop(props.preview)
   }, [ref, props.track, props.fitMode, props.preview])

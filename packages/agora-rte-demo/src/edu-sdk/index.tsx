@@ -59,7 +59,9 @@ const sdkConfig: SDKConfig = {
     // rtmUid: '',
   },
   sdkDomain: 'https://api.agora.io',
+  // sdkDomain: 'https://api-solutions-dev.bj2.agoralab.co',
   reportDomain: 'https://api.agora.io',
+  // reportDomain: 'https://api-solutions-dev.bj2.agoralab.co',
   logDomain: 'https://api-solutions.agoralab.co'
 }
 

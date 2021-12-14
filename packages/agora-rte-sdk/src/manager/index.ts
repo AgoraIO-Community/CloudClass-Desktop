@@ -62,6 +62,7 @@ export class EduManager extends EventEmitter {
       platform: this.config.platform,
       cefClient: this.config.cefClient,
       agoraSdk: AgoraRTC,
+      webAgoraSdk: AgoraRTC,
       codec: this.config.codec ? this.config.codec : 'vp8',
       appId: this.config.appId
     }

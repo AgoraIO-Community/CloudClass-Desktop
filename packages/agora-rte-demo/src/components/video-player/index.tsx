@@ -6,7 +6,7 @@ import { RendererPlayer } from '../media-player'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
 import { useTimeout } from '../toast'
-import starsUrl from '../../assets/stars.gif';
+// import starsUrl from '../../assets/stars.gif';
 
 type VideoPlayerProps = {
   className?: string
@@ -26,6 +26,7 @@ type VideoPlayerProps = {
   // showReward?: boolean
   showMediaBtn?: boolean
   rewardNum?: number
+  type?: string
   handleClickVideo?: (userUuid: string, isLocal: boolean) => void
   handleClickAudio?: (userUuid: string, isLocal: boolean) => void
 }
@@ -112,7 +113,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = React.memo((props: any) =
     handleClickVideo,
     handleClickAudio,
     rewardNum,
-    showHover
+    showHover,
+    type = '',
   } = props
 
   const sceneStore = useSceneStore()
@@ -151,7 +153,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = React.memo((props: any) =
 
     return (
       <div className="stars-effect">
-        <img src={`${starsUrl}?${Date.now()}`}></img>
+        <img src={`${''}?${Date.now()}`}></img>
       </div>
     )
   }
@@ -193,9 +195,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = React.memo((props: any) =
         </div>
       }
       { share ? 
-        <RendererPlayer key={renderer && renderer.videoTrack ? renderer.videoTrack.getTrackId() : ''} track={renderer} id={streamUuid} fitMode={true} className="rtc-video" /> :
+        <RendererPlayer key={renderer && renderer.videoTrack ? renderer.videoTrack.getTrackId() : ''} track={renderer} id={streamUuid} fitMode={true} className="rtc-video" type={type}/> :
         <>
-          { renderer && video ? <RendererPlayer key={renderer && renderer.videoTrack ? renderer.videoTrack.getTrackId() : ''} track={renderer} id={streamUuid} className="rtc-video" /> : null}
+          { renderer && video ? <RendererPlayer key={renderer && renderer.videoTrack ? renderer.videoTrack.getTrackId() : ''} track={renderer} id={streamUuid} className="rtc-video" type={type}/> : null}
         </>
       }
       { 

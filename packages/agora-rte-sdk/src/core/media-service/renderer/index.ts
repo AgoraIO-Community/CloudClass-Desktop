@@ -30,7 +30,7 @@ export interface IMediaRenderer {
   channel: any;
   videoTrack?: ITrack;
 
-  play(dom: HTMLElement, fit?: boolean): void;
+  play(dom: HTMLElement, fit?: boolean, type?: string): void;
   stop(isPreview?: boolean): void;
 }
 
@@ -99,13 +99,12 @@ export class LocalUserRenderer extends UserRenderer {
     this.local = true
   }
 
-  play(dom: HTMLElement, fit?: boolean): void {
-    // clear flag when re-play
+  play(dom: HTMLElement, fit?: boolean, type?: string): void {
     clearInterval(this.fpsTimer)
     this.renderFrameRate = 0
     this.previousFrame = 0
     this.freezeCount = 0
-    if (this.isWeb) {
+    if (this.isWeb || type==='screen-share') {
       if (this.videoTrack) {
         this.videoTrack.play(dom)
         console.log("played remote this.videoTrack trackId: ", this.videoTrack.getTrackId(), " dom ", dom.id, " videoTrack", this.videoTrack)
@@ -123,7 +122,7 @@ export class LocalUserRenderer extends UserRenderer {
         }, 1000)
       }
     }
-    if (this.isElectron) {
+    if (this.isElectron && type !== 'screen-share') {
       // @ts-ignore
       if (this.sourceType === 'default') {
         // TODO: cef
@@ -234,7 +233,7 @@ export class RemoteUserRenderer extends UserRenderer {
     this.channel = config.channel
   }
 
-  play(dom: HTMLElement, fit?: boolean) {
+  play(dom: HTMLElement, fit?: boolean, type?: string) {
     if (this.isWeb) {
       if (this.videoTrack) {
         this.videoTrack.play(dom)
@@ -262,6 +261,10 @@ export class RemoteUserRenderer extends UserRenderer {
           this.el.style.width = '100%'
           this.el.style.objectFit = 'cover'
           this.el.style.transform = 'rotateY(180deg) scale(1.0)'
+          if(type === 'screen-share'){
+            this.el.style.objectFit = 'contain'
+            this.el.style.transform = ''
+          }
           dom.appendChild(this.el)
           //@ts-ignore
           this.electron.client.setupRemoteVideo(this.el, +this.uid)

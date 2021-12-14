@@ -727,9 +727,12 @@ export class SceneStore extends SimpleInterval {
     this.resetMicrophoneTrack()
   }
 
-  @action
+  @action.bound
   async stopWebSharing() {
     try {
+      if(this.waitingShare){
+        return ;
+      }
       this.waitingShare = true
       if (this._screenVideoRenderer) {
         await this.mediaService.stopScreenShare()
@@ -744,19 +747,25 @@ export class SceneStore extends SimpleInterval {
     } catch(err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_end_screen_sharing') + `${err.message}`)
     } finally {
-      this.waitingShare = false
+      setTimeout(()=>{
+        this.waitingShare = false
+      },200)
     }
   }
 
-  @action
+  @action.bound
   async startWebSharing() {
     try {
+      if(this.waitingShare){
+        return;
+      }
       this.waitingShare = true
       await this.mediaService.prepareScreenShare({
         shareAudio: 'auto',
         encoderConfig: '720p'
       })
       await this.roomManager?.userService.startShareScreen()
+      this.appStore.boardStore.setScreenShareScenePath();
       const params: any = {
         channel: this.roomUuid,
         uid: +this.roomManager?.userService.screenStream.stream.streamUuid,
@@ -786,26 +795,30 @@ export class SceneStore extends SimpleInterval {
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)
     } finally {
-      this.waitingShare = false
+      setTimeout(()=>{
+        this.waitingShare = false
+      }, 200);
     }
   }
 
   async startOrStopSharing() {
-    if (this.isWeb) {
-      if (this.sharing) {
-        await this.stopWebSharing()
-      } else {
-        await this.startWebSharing()
+    // if (this.isWeb) {
+      if(this.roomManager){
+        if (this.sharing) {
+          await this.stopWebSharing()
+        } else {
+          await this.startWebSharing()
+        }
       }
-    }
+    // }
 
-    if (this.isElectron) {
-      if (this.sharing) {
-        await this.stopNativeSharing()
-      } else {
-        await this.showScreenShareWindowWithItems()
-      }
-    }
+    // if (this.isElectron) {
+    //   if (this.sharing) {
+    //     await this.stopNativeSharing()
+    //   } else {
+    //     await this.showScreenShareWindowWithItems()
+    //   }
+    // }
   }
 
   @action

@@ -208,6 +208,9 @@ export class AppStore implements ClassRoomAbstractStore {
   waitingShare: boolean = false
 
   @observable
+  isStartSetSharing: boolean = false
+
+  @observable
   _screenVideoRenderer?: LocalUserRenderer = undefined;
 
   @observable
@@ -511,6 +514,10 @@ export class AppStore implements ClassRoomAbstractStore {
   @action
   async stopWebSharing() {
     try {
+      if(this.isStartSetSharing){
+        return;
+      }
+      this.isStartSetSharing = true;
       this.waitingShare = true
       if (this._screenVideoRenderer) {
         await this.mediaService.stopScreenShare()
@@ -522,9 +529,11 @@ export class AppStore implements ClassRoomAbstractStore {
         this._screenEduStream = undefined
       }
       this.sharing = false
+      this.isStartSetSharing = false;
     } catch(err) {
       this.uiStore.addToast(t('toast.failed_to_end_screen_sharing') + `${err.message}`)
     } finally {
+      this.isStartSetSharing = false;
       this.waitingShare = false
     }
   }
@@ -532,12 +541,17 @@ export class AppStore implements ClassRoomAbstractStore {
   @action
   async startWebSharing() {
     try {
+      if(this.isStartSetSharing){
+        return ;
+      }
+      this.isStartSetSharing = true;
       this.waitingShare = true
       await this.mediaService.prepareScreenShare({
         shareAudio: 'auto',
         encoderConfig: '720p'
       })
       await this.roomManager?.userService.startShareScreen()
+      this.boardStore.setScreenShareScenePath();
       const streamUuid = this.roomManager!.userService.screenStream.stream.streamUuid
       const params: any = {
         channel: this.roomManager?.roomUuid,
@@ -553,7 +567,9 @@ export class AppStore implements ClassRoomAbstractStore {
       this._screenEduStream = this.roomManager?.userService.screenStream.stream
       this._screenVideoRenderer = this.mediaService.screenRenderer
       this.sharing = true
+      this.isStartSetSharing = false;
     } catch (err) {
+      this.isStartSetSharing = false;
       if (this.mediaService.screenRenderer) {
         this.mediaService.screenRenderer.stop()
         this.mediaService.screenRenderer = undefined
@@ -697,6 +713,7 @@ export class AppStore implements ClassRoomAbstractStore {
   @action
   async releaseRoom() {
     try {
+      await this.sceneStore.stopWebSharing();
       await this.acadsocStore.leave()
       reportService.stopHB()
       this.resetStates()

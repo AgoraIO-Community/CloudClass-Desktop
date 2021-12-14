@@ -159,6 +159,7 @@ export declare interface IAgoraRTCModule {
 export declare interface RTCProviderInitParams {
   cefClient: any
   agoraSdk: any
+  webAgoraSdk: any
   platform: string
   codec: string
   appId: string
