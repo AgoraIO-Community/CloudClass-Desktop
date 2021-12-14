@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import ReactSelect from 'react-select';
-
+import { CSSTransition } from 'react-transition-group';
 import './index.css';
 import { transI18n } from '~components/i18n';
 
@@ -39,6 +39,10 @@ export const Select: FC<SelectProps> = ({
     value: item.value,
   }));
 
+  const timerRef = useRef<null | ReturnType<typeof setTimeout>>(null);
+
+  const [showOption, setShowOpton] = useState<boolean>(defaultMenuIsOpen);
+
   const cls = classnames({
     [`select`]: 1,
     [`${className}`]: !!className,
@@ -53,14 +57,36 @@ export const Select: FC<SelectProps> = ({
         placeholder={placeholder}
         options={wrappedOptions}
         isSearchable={isSearchable}
-        // @ts-ignore
-        onChange={(option: SelectOption) => {
-          onChange && onChange(option.value);
+        onMenuClose={() => {
+          timerRef.current && clearTimeout(timerRef.current);
+          timerRef.current = setTimeout(() => {
+            setShowOpton(false);
+          }, 100);
         }}
-        defaultMenuIsOpen={defaultMenuIsOpen}
-        maxMenuHeight={maxMenuHeight}
+        onMenuOpen={() => {
+          setShowOpton(true);
+        }}
         {...restProps}
       />
+      <CSSTransition in={showOption} timeout={180} className="options-container" unmountOnExit>
+        <div>
+          {wrappedOptions.map((item) => {
+            return (
+              <div
+                key={item.value}
+                className={classnames({
+                  'option-item': 1,
+                  'is-select': item.value === value,
+                })}
+                onClick={() => {
+                  onChange && onChange(item.value);
+                }}>
+                {item.label}
+              </div>
+            );
+          })}
+        </div>
+      </CSSTransition>
     </div>
   );
 };

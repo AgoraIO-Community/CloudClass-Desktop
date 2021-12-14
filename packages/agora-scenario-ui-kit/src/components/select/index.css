@@ -1,7 +1,64 @@
 .react-select-container {
   position: relative;
 }
+.options-container {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  background: #ffffff;
+  box-shadow: 0px 2px 4px 0px rgb(0 0 0 / 15%);
+  border-radius: 4px;
+  border: 1px solid #e2e2f0;
+  transform-origin: top;
+  right: 0;
+  top: 48px;
+}
+.options-container.enter {
+  animation: selectOptionOpen 220ms;
+}
+.options-container.exit {
+  animation: selectOptionClose 220ms;
+}
 
+@keyframes selectOptionOpen {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes selectOptionClose {
+  from {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  to {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+}
+
+.options-container .option-item {
+  height: 34px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #586376;
+  line-height: 34px;
+  text-indent: 14px;
+}
+.options-container .option-item.is-select {
+  color: #357bf6;
+}
+.options-container .option-item:hover {
+  background: #f9f9fc;
+}
 .react-select-container .select-prefix {
   display: flex;
   justify-content: center;
@@ -18,6 +75,9 @@
   color: #7b88a0 !important;
   font-size: 14px !important;
   margin-left: 1px !important;
+}
+.react-select__single-value {
+  color: #191919 !important;
 }
 .react-select__single-value,
 .react-select__option {
@@ -56,6 +116,8 @@
 
 .react-select__menu {
   z-index: 10 !important;
+  overflow: hidden;
+  display: none !important;
 }
 
 .react-select-prefix .react-select__value-container {
@@ -70,6 +132,10 @@
   transform: rotate(0deg);
   transition: 150ms;
   -webkit-transition: 150ms;
+  background: url('../../icons/svg/arrow-icon.svg') center;
+}
+.react-select__indicators svg path {
+  display: none;
 }
 
 .react-select__control--menu-is-open .react-select__indicators svg {

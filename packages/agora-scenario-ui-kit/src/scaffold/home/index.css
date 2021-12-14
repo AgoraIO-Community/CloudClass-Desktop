@@ -178,6 +178,11 @@
   width: 131px;
 }
 
+.language-en-div .options-container,
+.language-zh-div .options-container {
+  width: 131px;
+}
+
 .region-en-div .react-select__menu {
   left: 16px;
 }
