@@ -63,7 +63,8 @@ export class RtcAdapterElectron extends RtcAdapterBase {
   private _vdm: RtcVideoDeviceManagerElectron;
   private _adm: RtcAudioDeviceManagerElectron;
   //@ts-ignore
-  static rtcEngine: AgoraRtcEngine = new IAgoraRtcEngine();
+  static rtcEngine: AgoraRtcEngine;
+  private static version?: { version: string; build: number };
   private _channels: Map<string, RtcChannelAdapterBase> = new Map<string, RtcChannelAdapterBase>();
   private _configs: RtcAdapterElectronConfig = {};
   private _screenEventBus: AGEventEmitter = new AGEventEmitter();
@@ -83,6 +84,10 @@ export class RtcAdapterElectron extends RtcAdapterBase {
 
   constructor() {
     super();
+    if (!RtcAdapterElectron.rtcEngine) {
+      //@ts-ignore
+      RtcAdapterElectron.rtcEngine = new IAgoraRtcEngine();
+    }
     let res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId);
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
@@ -282,15 +287,28 @@ export class RtcAdapterElectron extends RtcAdapterBase {
   destroy(): number {
     let res = this.rtcEngine.release();
     //@ts-ignore
-    RtcAdapterElectron.rtcEngine = new IAgoraRtcEngine();
+    RtcAdapterElectron.rtcEngine = undefined;
     return res;
   }
 
   static getRtcVersion(): string {
-    let { version, build } = RtcAdapterElectron.rtcEngine.getVersion() as unknown as {
-      version: string;
-      build: number;
-    };
+    if (!this.version) {
+      let rtcEngine = this.rtcEngine;
+      if (!rtcEngine) {
+        //@ts-ignore
+        rtcEngine = new IAgoraRtcEngine();
+      }
+      this.version = rtcEngine.getVersion() as unknown as {
+        version: string;
+        build: number;
+      };
+      if (!this.rtcEngine) {
+        //release if not exist before
+        rtcEngine.release();
+      }
+    }
+
+    let { version, build } = this.version;
     return `${version}.${build}`;
   }
 
