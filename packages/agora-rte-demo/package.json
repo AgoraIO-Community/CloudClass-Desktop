@@ -106,7 +106,10 @@
     "pack:mac": "npm run electron:build && electron-builder --mac",
     "pack:win": "npm run electron:build && electron-builder --win",
     "pack:npm": "cross-env NODE_ENV=production BABEL_NODE=production webpack --mode='production'",
-    "doc": "typedoc --o"
+    "doc": "typedoc --o",
+    "protojs": "pbjs -r apaas -t json-module -w commonjs -o src/protobuf/index.js  src/protobuf/messages/*.proto",
+    "protots": "pbjs -t static-module src/protobuf/messages/*.proto | pbts -o src/protobuf/index.d.ts -",
+    "proto": "run-s protojs protots"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -190,6 +193,7 @@
     "node-sass": "4.12.0",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "progress-bar-webpack-plugin": "2.1.0",
+    "protobufjs": "6.11.2",
     "promise-polyfill": "8.2.0",
     "purify-css": "1.2.5",
     "purifycss-webpack": "0.7.0",

@@ -5,6 +5,7 @@ import { reportService } from "./report-service";
 type ConfigResult = {
   customerId: string,
   customerCertificate: string,
+  vid: number,
   netless: {
     appId: string
     token: string,

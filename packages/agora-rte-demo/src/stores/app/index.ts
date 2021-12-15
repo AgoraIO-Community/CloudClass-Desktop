@@ -42,6 +42,7 @@ import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
 import { HomeStore } from './home';
 import { StatisticsStore } from './statistics';
 import { APIStore } from './api';
+import { reportServiceV2 } from '../../services/report-v2'
 
 type RoomInfoParams = {
   roomName: string
@@ -53,6 +54,7 @@ type RoomInfoParams = {
 }
 
 export type AppStoreConfigParams = {
+  vid?: number
   agoraAppId: string
   agoraNetlessAppId: string
   // agoraRestFullToken: string
@@ -716,9 +718,11 @@ export class AppStore implements ClassRoomAbstractStore {
       await this.sceneStore.stopWebSharing();
       await this.acadsocStore.leave()
       reportService.stopHB()
+      reportServiceV2.reportApaasUserQuit(new Date().getTime(), 0);
       this.resetStates()
     } catch (err) {
       this.resetStates()
+      reportServiceV2.reportApaasUserQuit(new Date().getTime(), err.code || err.message);
       const exception = GenericErrorWrapper(err)
       throw exception
     }

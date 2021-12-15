@@ -40,3 +40,4 @@ packages/agora-rte-demo/alcass/
 packages/agora-rte-demo/aclass_app/
 packages/agora-rte-demo/akasuo/
 packages/agora-rte-demo/yarn-error.log
+packages/agora-rte-demo/src/protobuf/index.*

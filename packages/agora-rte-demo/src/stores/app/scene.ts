@@ -12,6 +12,7 @@ import { get } from 'lodash';
 import { t } from '@/i18n';
 import { BizLogger } from '@/utils/biz-logger';
 import { CameraOption } from 'agora-rte-sdk/lib/core/media-service/interfaces';
+import { reportServiceV2 } from '../../services/report-v2'
 
 const delay = 2000
 
@@ -744,8 +745,10 @@ export class SceneStore extends SimpleInterval {
         this._screenEduStream = undefined
       }
       this.sharing = false
+      reportServiceV2.reportScreenShareEnd(new Date().getTime(),0)
     } catch(err) {
       this.appStore.uiStore.addToast(t('toast.failed_to_end_screen_sharing') + `${err.message}`)
+      reportServiceV2.reportScreenShareEnd(new Date().getTime(), err.code || err.message)
     } finally {
       setTimeout(()=>{
         this.waitingShare = false
@@ -778,6 +781,7 @@ export class SceneStore extends SimpleInterval {
       this._screenEduStream = this.roomManager?.userService.screenStream.stream
       this._screenVideoRenderer = this.mediaService.screenRenderer
       this.sharing = true
+      reportServiceV2.reportScreenShareStart(new Date().getTime(),0)
     } catch (err) {
       if (this.mediaService.screenRenderer) {
         this.mediaService.screenRenderer.stop()
@@ -791,6 +795,7 @@ export class SceneStore extends SimpleInterval {
           this.appStore.uiStore.addToast(t('toast.failed_to_enable_screen_sharing') + ` code: ${err.code}, msg: ${err.message}`)
         }
       }
+      reportServiceV2.reportScreenShareStart(new Date().getTime(), err.code || err.message)
       BizLogger.info('SCREEN-SHARE ERROR ', err)
       const error = GenericErrorWrapper(err)
       BizLogger.warn(`${error}`)

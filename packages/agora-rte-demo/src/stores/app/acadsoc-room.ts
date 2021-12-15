@@ -35,6 +35,8 @@ import { filterChatText } from '@/utils/utils';
 import { controller } from '@/edu-sdk/controller'
 import { TimeFormatType } from './statistics';
 import { storage } from '@/utils/custom-storage';
+import { reportServiceV2 } from "../../services/report-v2"
+const packageJson = require('../../../package.json')
 
 dayjs.extend(duration)
 
@@ -771,6 +773,9 @@ export class AcadsocRoomStore extends SimpleInterval {
           this.appStore.uiStore.addToast(t('toast.classroom_remote_join'))
           this.noticeQuitRoomWith(QuickTypeEnum.Kick)
         }
+        if(newState === "CONNECTED" && reason === "LOGIN_SUCCESS" && reportServiceV2.reportUserParams.uid){
+          reportServiceV2.reportApaasUserReconnect(new Date().getTime(), 0);
+        }
         reportService.updateConnectionState(newState)
       })
 
@@ -1035,7 +1040,7 @@ export class AcadsocRoomStore extends SimpleInterval {
       })
       const userRole = EduRoleTypeEnum[this.roomInfo.userRole]
       const { sceneType } = this.getStudentConfig()
-      await roomManager.join({
+      const userAndRoomData = await roomManager.join({
         userRole: EduRoleType[userRole],
         roomUuid,
         userName: `${this.roomInfo.userName}`,
@@ -1178,10 +1183,48 @@ export class AcadsocRoomStore extends SimpleInterval {
         BizLogger.info(`[CAMERA] report camera device not working`)
       })
 
+      let reportUserParams = {
+        vid: this.appStore.params.config.vid!,
+        ver: packageJson.version,
+        scenario: 'education',
+        uid: this.userUuid,
+        userName: this.appStore.roomInfo.userName,
+        /**
+         * rtc流id
+         */
+        streamUid: +`${mainStream.streamUuid}`,
+        /**
+         * rtc流id
+         */
+        streamSuid: `${mainStream.streamUuid}`,
+        /**
+         * apaas角色
+         */
+        role: ""+this.appStore.userRole,
+        /**
+         * rtc sid
+         */
+        streamSid: this.eduManager.rtcSid,
+        /**
+         * rtm sid
+         */
+        rtmSid: this.eduManager.rtmSid,
+        /**
+         * apaas房间id，与rtc/rtm channelName相同
+         */
+        roomId: this.roomInfo.roomUuid,
+        /**
+         * 房间创建的时间戳
+         */
+         roomCreateTs: userAndRoomData!.room!.createTime,
+      };
+      reportServiceV2.initReportUserParams(reportUserParams);
+      reportServiceV2.reportApaasUserJoin(new Date().getTime(), 0);
       
     } catch (err) {
       this.eduManager.removeAllListeners()
       this.appStore.uiStore.stopLoading()
+      reportServiceV2.reportApaasUserJoin(new Date().getTime(), err.message);
       eduSDKApi.reportCameraState({
         roomUuid: this.roomInfo.roomUuid,
         userUuid: this.roomInfo.userUuid,

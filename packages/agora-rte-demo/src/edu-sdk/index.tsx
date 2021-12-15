@@ -14,6 +14,7 @@ import { checkConfigParams, checkDiskOption, checkLaunchOption, checkReplayOptio
 import {globalConfigs} from '@/utils/configs'
 import { retry } from '@/utils/utils';
 import { get } from 'lodash';
+import { reportServiceV2 } from '../services/report-v2'
 export interface AliOSSBucket {
   key: string
   secret: string
@@ -42,6 +43,8 @@ type SDKConfig = {
   sdkDomain: string,
   reportDomain: string
   logDomain: string
+  reportV2Qos: number,
+  reportV2Url: string
 }
 
 const sdkConfig: SDKConfig = {
@@ -61,6 +64,8 @@ const sdkConfig: SDKConfig = {
   sdkDomain: 'https://api.agora.io',
   // sdkDomain: 'https://api-solutions-dev.bj2.agoralab.co',
   reportDomain: 'https://api.agora.io',
+  reportV2Qos: 1,
+  reportV2Url: 'https://rest-argus-ad.agoralab.co',
   // reportDomain: 'https://api-solutions-dev.bj2.agoralab.co',
   logDomain: 'https://api-solutions.agoralab.co'
 }
@@ -222,6 +227,7 @@ export class AgoraEduSDK {
     globalConfigs.sdkDomain = sdkConfig.sdkDomain
     globalConfigs.logDomain = sdkConfig.logDomain
     globalConfigs.appId = sdkConfig.configParams.appId
+    reportServiceV2.initReportConfig({sdkDomain: sdkConfig.reportV2Url, qos: sdkConfig.reportV2Qos});
   }
 
   static _launchTime = 0
@@ -278,6 +284,7 @@ export class AgoraEduSDK {
 
       const store = new AppStore({
         config: {
+          vid: data.vid,
           agoraAppId: sdkConfig.configParams.appId,
           agoraNetlessAppId: data.netless.appId,
           enableLog: true,

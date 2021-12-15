@@ -106,8 +106,9 @@ export class EduClassroomManager extends EventEmitter {
     try {
       // REPORT
       reportService.startTick('joinRoom', 'end')
-      await this._join(params)
+      let data = await this._join(params)
       reportService.reportElapse('joinRoom', 'end', {result: true})
+      return data;
     } catch(e) {
       reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.code || e.message}`})
       throw e
@@ -183,6 +184,7 @@ export class EduClassroomManager extends EventEmitter {
       this._userService = new EduUserService(this)
       EduLogger.debug(`join classroom ${this.roomUuid} success`)
     }
+    return joinRoomData;
   }
 
   async leave() {
