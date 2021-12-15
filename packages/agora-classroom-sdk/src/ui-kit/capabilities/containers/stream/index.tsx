@@ -1,19 +1,18 @@
 import { CameraPlaceholderType, EduRoleTypeEnum, EduStream, EduStreamUI } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import React, { CSSProperties, ReactNode, useEffect, useRef } from 'react';
+import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
 import './index.css';
 import {
   CameraPlaceHolder,
   Popover,
-  StreamIcon,
   SvgaPlayer,
   SvgImg,
   Tooltip,
-  VolumeIndicator,
   SoundPlayer,
   SvgIcon,
+  AudioVolume,
 } from '~ui-kit';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
@@ -27,7 +26,7 @@ export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) =>
     <div className="center-reward">
       {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
         return (
-          <React.Fragment>
+          <React.Fragment key={anim.id}>
             <SvgaPlayer
               key={anim.id}
               style={{ position: 'absolute' }}
@@ -45,7 +44,7 @@ export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) =>
 });
 
 export const StreamPlaceholder = observer(
-  ({ role, className, style }: { role: EduRoleTypeEnum; className?: any; style?: any }) => {
+  ({ className, style }: { role: EduRoleTypeEnum; className?: string; style?: CSSProperties }) => {
     const cls = classnames({
       [`video-player`]: 1,
       [`${className}`]: !!className,
@@ -102,20 +101,19 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
   },
 );
 
-const LocalStreamPlayerVolume = observer(() => {
-  const { streamUIStore } = useStore();
-  const { localVolume, localMicOff } = streamUIStore;
-
-  return localMicOff ? null : <VolumeIndicator volume={localVolume * 10} />;
-});
-
-const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
+const StreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
   const { streamVolumes } = streamUIStore;
 
   const volumePercentage = streamVolumes.get(stream.stream.streamUuid) || 0;
 
-  return <VolumeIndicator volume={volumePercentage * 10} />;
+  return (
+    <AudioVolume
+      isMicMuted={stream.isMicMuted}
+      currentVolume={volumePercentage * 10}
+      className={stream.micIconType}
+    />
+  );
 });
 
 const LocalStreamPlayerTools = observer(() => {
@@ -149,8 +147,8 @@ const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) =
   const toolList = remoteStreamTools(stream);
   return toolList.length > 0 ? (
     <div className={`video-player-tools`}>
-      {toolList.map((tool) => (
-        <Tooltip title={tool.toolTip} placement={toolbarPlacement}>
+      {toolList.map((tool, idx) => (
+        <Tooltip key={`${idx}`} title={tool.toolTip} placement={toolbarPlacement}>
           <span>
             <SvgIcon
               canHover={tool.interactable}
@@ -198,12 +196,6 @@ const StreamPlayerOverlayAwardNo = observer(({ stream }: { stream: EduStreamUI }
   );
 });
 
-const StreamPlayerOverlayLocalMicIcon = observer(({ className }: { className: string }) => {
-  const { streamUIStore } = useStore();
-  const { localMicIconType } = streamUIStore;
-  return <StreamIcon className={className} size={18} iconType={localMicIconType} />;
-});
-
 const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
   const { cameraPlaceholder } = streamUIStore;
@@ -224,22 +216,6 @@ const StreamPlayerOverlayName = observer(({ stream }: { stream: EduStreamUI }) =
   );
 });
 
-const StreamPlayerOverlayMicState = observer(({ stream }: { stream: EduStreamUI }) => {
-  const micStateCls = classnames({
-    [`mic-state`]: 1,
-    [`rtc-state-${stream.micIconClass}`]: 1,
-  });
-  return (
-    <>
-      {stream.stream.isLocal ? (
-        <StreamPlayerOverlayLocalMicIcon className={micStateCls} />
-      ) : (
-        <StreamIcon className={micStateCls} size={18} iconType={stream.micIconType} />
-      )}
-    </>
-  );
-});
-
 const StreamPlayerOverlay = observer(
   ({
     stream,
@@ -247,7 +223,7 @@ const StreamPlayerOverlay = observer(
     children,
   }: {
     stream: EduStreamUI;
-    className?: any;
+    className?: string;
     children: ReactNode;
   }) => {
     const { streamUIStore } = useStore();
@@ -287,12 +263,7 @@ const StreamPlayerOverlay = observer(
                 flexDirection: 'column',
                 alignItems: 'center',
               }}>
-              {stream.stream.isLocal ? (
-                <LocalStreamPlayerVolume />
-              ) : (
-                <RemoteStreamPlayerVolume stream={stream} />
-              )}
-              <StreamPlayerOverlayMicState stream={stream} />
+              <StreamPlayerVolume stream={stream} />
             </div>
             <StreamPlayerOverlayName stream={stream} />
           </div>
@@ -312,7 +283,7 @@ export const StreamPlayer = observer(
     style: css,
   }: {
     stream: EduStreamUI;
-    className?: any;
+    className?: string;
     style?: CSSProperties;
   }) => {
     const { streamUIStore } = useStore();

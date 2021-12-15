@@ -17,6 +17,9 @@ export const PensContainer = observer((props: PensContainerProps) => {
     strokeWidth,
     changeStroke,
     changeHexColor,
+    defaultPens,
+    defaultColors,
+    paletteMap,
   } = toolbarUIStore;
 
   const mapLineSelectorToLabel: Record<string, string> = {
@@ -28,6 +31,9 @@ export const PensContainer = observer((props: PensContainerProps) => {
 
   return (
     <Pens
+      pens={defaultPens}
+      colors={defaultColors}
+      paletteMap={paletteMap}
       value="pen"
       label={t(mapLineSelectorToLabel[selectedPenTool])}
       icon="pen"

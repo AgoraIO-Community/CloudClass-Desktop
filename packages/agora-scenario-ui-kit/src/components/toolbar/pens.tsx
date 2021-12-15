@@ -4,40 +4,6 @@ import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
 import { SvgImg } from '~components/svg-img';
 import { Slider } from '~components/slider';
-
-const defaultPens = ['pen', 'square', 'circle', 'line'];
-
-const defaultColors = [
-  '#ffffff',
-  '#9b9b9b',
-  '#4a4a4a',
-  '#000000',
-  '#fc3a3f',
-  '#f5a623',
-  '#f8e71c',
-  '#7ed321',
-  '#9013fe',
-  '#50e3c2',
-  '#0073ff',
-  '#ffc8e2',
-];
-
-const defaultActiveColor = '#7b88a0';
-
-export const hexToRgbaString = (hex: string, opacity: number): string => {
-  return (
-    'rgba(' +
-    parseInt('0x' + hex.slice(1, 3)) +
-    ',' +
-    parseInt('0x' + hex.slice(3, 5)) +
-    ',' +
-    parseInt('0x' + hex.slice(5, 7)) +
-    ',' +
-    opacity +
-    ')'
-  );
-};
-
 export interface PensProps extends ToolItem {
   pens?: string[];
   activePen?: string;
@@ -49,36 +15,38 @@ export interface PensProps extends ToolItem {
   colorSliderMax?: number;
   colorSliderDefault?: number;
   colorSliderStep?: number;
+  paletteMap?: Record<string, string>;
   onColorClick?: (value: string) => void;
   onSliderChange?: (value: any) => void;
 }
 
 export const Pens: FC<PensProps> = ({
   label,
-  pens = defaultPens,
+  pens = ['pen'],
   activePen = 'pen',
   isActive = false,
   onClick,
-  colors = defaultColors,
-  activeColor = defaultActiveColor,
+  colors = ['#7b88a0'],
+  activeColor = '#7b88a0',
   colorSliderMin = 0,
   colorSliderMax = 100,
   colorSliderDefault = 50,
   colorSliderStep = 1,
+  paletteMap = {},
   onColorClick,
   onSliderChange,
 }) => {
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
 
   const handleClick = (pen: string) => {
-    // setPopoverVisible(!popoverVisible);
     onClick && onClick(pen);
   };
 
   const handleColorClick = (color: string) => {
-    // setPopoverVisible(!popoverVisible);
     onColorClick && onColorClick(color);
   };
+
+  const activePaletteColor = paletteMap[activeColor] || activeColor;
 
   const content = useCallback(
     () => (
@@ -86,9 +54,8 @@ export const Pens: FC<PensProps> = ({
         {pens.map((pen) => (
           <div key={pen} onClick={() => handleClick(pen)} className="expand-tool pen">
             <SvgImg
-              color={activePen === pen ? activeColor : defaultActiveColor}
+              color={activePaletteColor}
               type={activePen === pen ? pen + '-active' : pen}
-              // className={activePen === pen ? 'active' : ''}
               canHover
             />
             <div
@@ -112,17 +79,12 @@ export const Pens: FC<PensProps> = ({
             key={color}
             onClick={() => handleColorClick(color)}
             className="expand-tool color"
-            style={{
-              border:
-                activeColor === color
-                  ? `1px solid ${color === '#ffffff' ? '#E1E1EA' : color}`
-                  : 'none', // 选中的才有边框颜色
-            }}>
+            style={{ border: activeColor === color ? `1px solid ${activePaletteColor}` : 'none' }}>
             <div
               className="circle"
               style={{
                 backgroundColor: color,
-                border: color === '#ffffff' ? '1px solid #E1E1EA' : 'none',
+                border: `1px solid ${paletteMap[color] || 'transparent'}`,
               }}
             />
           </div>
@@ -155,8 +117,8 @@ export const Pens: FC<PensProps> = ({
             handleClickTool(activePen);
           }}>
           <SvgImg
-            color={isActive ? activeColor : defaultActiveColor}
-            type={(activePen + (isActive ? '-active' : '')) as any}
+            color={activePaletteColor}
+            type={(activePen + '-active') as any}
             className={isActive ? 'active' : ''}
           />
           <SvgImg type="triangle-down" className="triangle-icon" style={{ position: 'absolute' }} />

@@ -55,3 +55,4 @@ packages/agora-classroom-sdk/agoraAddonlog.txt
 .env.local.yarn
 .yarn/
 .vscode/
+.env.prod

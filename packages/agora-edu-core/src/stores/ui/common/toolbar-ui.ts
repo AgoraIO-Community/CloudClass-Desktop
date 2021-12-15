@@ -43,6 +43,24 @@ export class ToolbarItem {
 }
 
 export class ToolbarUIStore extends EduUIStoreBase {
+  readonly defaultColors: string[] = [
+    '#ffffff',
+    '#9b9b9b',
+    '#4a4a4a',
+    '#000000',
+    '#fc3a3f',
+    '#f5a623',
+    '#f8e71c',
+    '#7ed321',
+    '#9013fe',
+    '#50e3c2',
+    '#0073ff',
+    '#ffc8e2',
+  ];
+  readonly defaultPens: string[] = ['pen', 'square', 'circle', 'line'];
+  readonly paletteMap: Record<string, string> = {
+    '#ffffff': '#E1E1EA',
+  };
   onInstall() {
     reaction(
       () => this.classroomStore.mediaStore.localScreenShareTrackState,

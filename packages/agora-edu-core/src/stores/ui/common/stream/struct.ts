@@ -9,6 +9,10 @@ export class EduStreamUI {
   }
 
   get micIconType() {
+    const deviceDisabled = this.stream.audioSourceState === AgoraRteMediaSourceState.stopped;
+    if (deviceDisabled) {
+      return 'microphone-disabled';
+    }
     if (
       this.stream.audioSourceState === AgoraRteMediaSourceState.started &&
       this.stream.audioState === AgoraRteMediaPublishState.Published
@@ -18,9 +22,8 @@ export class EduStreamUI {
     return 'microphone-off';
   }
 
-  get micIconClass() {
-    //TODO device state
-    return 'available';
+  get isMicMuted() {
+    return this.micIconType.endsWith('off') || this.micIconType.endsWith('disabled');
   }
 
   get fromUser(): AgoraFromUser {

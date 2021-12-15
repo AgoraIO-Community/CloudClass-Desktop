@@ -144,3 +144,11 @@
     opacity: 0;
   }
 }
+
+.audio-volume.microphone-disabled {
+  --main-color: #fff;
+}
+
+.audio-volume.microphone-off {
+  --main-color: red;
+}

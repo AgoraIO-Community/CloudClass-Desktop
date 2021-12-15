@@ -34,3 +34,4 @@ export * from './pagination';
 export { SimpleChatNew, ChatNew } from './chat-new';
 export * from './overlay-wrap';
 export * from './sound-player';
+export * from './volume';

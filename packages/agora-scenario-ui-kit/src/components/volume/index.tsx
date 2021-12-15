@@ -43,3 +43,32 @@ export const Volume: FC<VolumeProps> = ({
     </div>
   );
 };
+
+export interface AudioVolumeProps extends BaseProps {
+  isMicMuted?: boolean;
+  currentVolume?: number;
+}
+
+export const AudioVolume: FC<AudioVolumeProps> = ({
+  isMicMuted = false,
+  currentVolume = 0,
+  className,
+  ...restProps
+}) => {
+  const cls = classnames({
+    [`audio-volume`]: 1,
+    [`off`]: isMicMuted,
+    [`${className}`]: !!className,
+  });
+  return (
+    <div className={cls} {...restProps}>
+      {isMicMuted ? <div className="off-line"></div> : null}
+      <div className={'audio-volume-container'}>
+        {!isMicMuted && currentVolume > 0 ? (
+          <div className="audio-volume-main" style={{ height: currentVolume + '%' }}></div>
+        ) : null}
+      </div>
+      <div className={'half-circle-board'}></div>
+    </div>
+  );
+};
