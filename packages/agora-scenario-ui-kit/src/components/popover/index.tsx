@@ -27,7 +27,11 @@ export const Popover = React.forwardRef<unknown, PopoverProps>(
         prefixCls={prefixCls}
         ref={ref as any}
         overlay={getOverlay(prefixCls)}
-        transitionName={getTransitionName(rootPrefixCls, 'zoom-big', otherProps.transitionName)}
+        transitionName={getTransitionName(
+          rootPrefixCls,
+          'zoom-big-fast',
+          otherProps.transitionName,
+        )}
       />
     );
   },

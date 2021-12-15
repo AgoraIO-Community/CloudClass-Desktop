@@ -20,13 +20,11 @@
   top: 0;
   bottom: 0;
   margin: auto;
+  transition: 0.5s;
 }
 
 .toolbar .menu.fold {
-  /* width: 42px;
-  height: 42px;
-  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
-  border-radius: 0px 21px 21px 0px; */
+  opacity: 1;
 }
 
 .toolbar .menu img {
@@ -39,10 +37,11 @@
 }
 
 .toolbar .menu.unfold {
-  /* width: 42px;
-  height: 42px;
-  box-shadow: none;
-  border-radius: none; */
+  opacity: 0;
+}
+
+.toolbar:hover .menu.unfold {
+  opacity: 1;
 }
 
 .toolbar > .tools {

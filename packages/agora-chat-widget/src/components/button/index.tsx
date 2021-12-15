@@ -43,13 +43,10 @@ export const Button: FC<ButtonProps> = ({
     const buttonElement = buttonRef.current;
     const rippleElement = rippleRef.current;
     const mousedownFn = (e: MouseEvent) => {
-      if (e.target && rippleElement) {
-        createRipple(
-          rippleElement,
-          e.pageY - (e.target as HTMLElement).getBoundingClientRect().top,
-          e.pageX - (e.target as HTMLElement).getBoundingClientRect().left,
-          type,
-        );
+      const y = e.pageY - (buttonElement as HTMLElement).getBoundingClientRect().top;
+      const x = e.pageX - (buttonElement as HTMLElement).getBoundingClientRect().left;
+      if (buttonElement && rippleElement) {
+        createRipple(rippleElement, y, x, type);
       }
     };
     if (animate && buttonElement && rippleElement) {
