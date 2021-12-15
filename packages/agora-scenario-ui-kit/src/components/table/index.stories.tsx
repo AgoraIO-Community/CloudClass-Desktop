@@ -3,12 +3,13 @@ import { Meta } from '@storybook/react';
 import React, { useCallback, useMemo } from 'react';
 import { Button, Modal } from '~components';
 import { Icon, IconBox } from '~components/icon';
-import { CheckBox, Col, Inline, Row, Table, TableHeader } from '~components/table';
+import { Col, Inline, Row, Table, TableHeader } from '~components/table';
 import { Progress } from '~components/progress';
 import { formatFileSize } from '~utilities';
 import { Tabs, TabPane } from '~components/tabs';
 import { Placeholder } from '~components/placeholder';
 import { Loading } from '~components/loading';
+import { CheckBox } from '~components/checkbox';
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -252,7 +253,7 @@ const CheckList = ({ size, progress }: UploadListProps) => {
           <CheckBox
             checked={isSelectAll}
             indeterminate={isSelectAll ? false : hasSelected}
-            onClick={handleSelectAll}></CheckBox>
+            onChange={handleSelectAll}></CheckBox>
         </Col>
         <Col>文件</Col>
         {/* <Col></Col> */}
@@ -266,7 +267,7 @@ const CheckList = ({ size, progress }: UploadListProps) => {
               <Col width={9}>
                 <CheckBox
                   className="checkbox"
-                  onClick={(evt: any) => {
+                  onChange={(evt: any) => {
                     changeChecked(id, evt.currentTarget.checked);
                   }}
                   checked={checked}></CheckBox>

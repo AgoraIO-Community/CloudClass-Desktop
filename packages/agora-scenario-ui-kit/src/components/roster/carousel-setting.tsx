@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { CheckBox } from '~components/table';
+import { CheckBox } from '~components/checkbox';
 import { Input } from '~components/input';
 import { Select } from '../select';
 import { transI18n } from '../i18n';
@@ -27,11 +27,7 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
   return (
     <div className="carousel-menu">
       <div className="carousel-flag">
-        <CheckBox
-          style={{ width: 12, height: 12 }}
-          checked={isOpenCarousel}
-          onChange={openEventTransform}
-        />
+        <CheckBox checked={isOpenCarousel} onChange={openEventTransform} />
         <span className="carousel-desc">{transI18n('roster.shift')}</span>
       </div>
       <div className="disable-flag" style={{ width: 105 }}>

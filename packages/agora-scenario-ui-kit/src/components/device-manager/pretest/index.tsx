@@ -8,7 +8,7 @@ import { Icon } from '~components/icon';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Select } from '~components/select';
 import { Slider } from '~components/slider';
-import { CheckBox } from '~components/table';
+import { CheckBox } from '~components/checkbox';
 import { Toast } from '~components/toast';
 import { useMounted, useTimeout } from '~utilities/hooks';
 import { Volume } from '~components/volume';
@@ -257,7 +257,6 @@ const PretestComponent: React.FC<PretestProps> = ({
               {isNative ? (
                 <span className="device-beauty-box" style={{ marginRight: 7 }}>
                   <CheckBox
-                    style={{ width: 12, height: 12 }}
                     checked={isBeauty}
                     onChange={(e: any) => {
                       onSelectBeauty(e.target.checked);
@@ -270,7 +269,6 @@ const PretestComponent: React.FC<PretestProps> = ({
               ) : null}
               <span className="device-mirror-box">
                 <CheckBox
-                  style={{ width: 12, height: 12 }}
                   checked={isMirror}
                   onChange={(e: any) => {
                     onSelectMirror(e.target.checked);

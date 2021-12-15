@@ -60,7 +60,6 @@ export const InteractiveCol = ({
 
   return (
     <Col
-      key={col.key}
       className={colCls}
       hoverClass={hoverClass}
       onClick={handleClick}
@@ -96,6 +95,7 @@ export const RosterTable: React.FC<RosterTableProps> = ({
               data={data}
               onClick={onActionClick}
               col={col}
+              key={col.key}
               index={idx}
               interactive={columnInteractive}
             />

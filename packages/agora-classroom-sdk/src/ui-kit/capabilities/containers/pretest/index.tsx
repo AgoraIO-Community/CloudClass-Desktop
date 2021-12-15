@@ -8,7 +8,7 @@ import { Button } from '~ui-kit/components/button';
 import { transI18n } from '~ui-kit/components/i18n';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Select } from '~ui-kit/components/select';
-import { CheckBox } from '~ui-kit/components/table';
+import { CheckBox } from '~ui-kit/components/checkbox';
 import { Toast } from '~ui-kit/components/toast';
 import { useMounted, useTimeout } from '~ui-kit/utilities/hooks';
 import { Volume } from '~ui-kit/components/volume';
@@ -309,7 +309,6 @@ export const CameraMirrorCheckBox = observer(() => {
 
   return (
     <CheckBox
-      style={{ width: 12, height: 12 }}
       checked={isMirror}
       onChange={(e: any) => {
         setMirror(e.target.checked);

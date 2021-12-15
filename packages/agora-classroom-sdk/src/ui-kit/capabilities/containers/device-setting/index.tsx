@@ -11,7 +11,6 @@ export const CameraMirrorCheckBox = observer(() => {
 
   return (
     <CheckBox
-      style={{ width: 12, height: 12 }}
       checked={isMirror}
       onChange={(e: any) => {
         setMirror(e.target.checked);

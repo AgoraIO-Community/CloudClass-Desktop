@@ -5,7 +5,7 @@ import { Select } from '~components/select';
 import { Slider } from '~components/slider';
 import './index.css';
 import { t, transI18n } from '~components/i18n';
-import { CheckBox } from '~ui-kit/components/table';
+import { CheckBox } from '~ui-kit/components/checkbox';
 interface DeviceProps {
   value: string;
   label: string;
@@ -101,7 +101,6 @@ export const Setting: FC<SettingProps> = ({
                   marginRight: 7,
                 }}>
                 <CheckBox
-                  style={{ width: 12, height: 12 }}
                   checked={isBeauty}
                   onChange={(e: any) => {
                     onSelectBeauty(e.target.checked);
@@ -118,7 +117,6 @@ export const Setting: FC<SettingProps> = ({
                 alignItems: 'center',
               }}>
               <CheckBox
-                style={{ width: 12, height: 12 }}
                 checked={isMirror}
                 onChange={(e: any) => {
                   onSelectMirror(e.target.checked);

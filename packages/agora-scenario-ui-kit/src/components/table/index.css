@@ -198,12 +198,12 @@ input.indeterminate:indeterminate {
   color: #191919 !important;
 }
 
-.cloud-wrap input[type='checkbox'] {
+/* .cloud-wrap input[type='checkbox'] {
   width: 16px;
   height: 16px;
   border-radius: 3px;
   border: 1px solid #b4bada;
-}
+} */
 
 .cloud-wrap .table-container {
   height: 453px;

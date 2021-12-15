@@ -1,4 +1,9 @@
-import { AgoraRteMediaSourceState, AGScreenShareType, bound } from 'agora-rte-sdk';
+import {
+  AgoraRteMediaSourceState,
+  AGScreenShareDevice,
+  AGScreenShareType,
+  bound,
+} from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomConfig, EduRoleTypeEnum, WhiteboardTool } from '../../..';
 import { CustomBtoa } from '../../../utils';
@@ -124,6 +129,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
             //supported, show picker first
             let displays = this.classroomStore.mediaStore.getDisplayDevices();
             let windows = this.classroomStore.mediaStore.getWindowDevices();
+
+            const haveImage = ({ image }: AGScreenShareDevice) => !!image;
+
+            displays = displays.filter(haveImage);
+            windows = windows.filter(haveImage);
 
             displays = displays.map((d, idx) => {
               return {

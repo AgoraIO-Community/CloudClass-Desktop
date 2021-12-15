@@ -182,7 +182,8 @@ export const PersonalResourcesContainer = observer(() => {
             <CheckBox
               checked={isPersonalResSelectedAll}
               indeterminate={isPersonalResSelectedAll ? false : hasSelectedPersonalRes}
-              onClick={onClickSelectAll}></CheckBox>
+              onChange={onClickSelectAll}
+            />
           </Col>
           <Col>{transI18n('cloud.fileName')}</Col>
           <Col></Col>
@@ -204,9 +205,9 @@ export const PersonalResourcesContainer = observer(() => {
                   <Col style={{ paddingLeft: 19 }} width={9}>
                     <CheckBox
                       key={resourceUuid}
-                      className="checkbox"
-                      onClick={() => onItemCheckClick(resourceUuid, checked)}
-                      checked={checked}></CheckBox>
+                      onChange={() => onItemCheckClick(resourceUuid, checked)}
+                      checked={checked}
+                    />
                   </Col>
                   <Col style={{ cursor: 'pointer' }} onClick={() => onClickCol(resourceUuid)}>
                     <SvgImg type={fileNameToType(resourceName)} style={{ marginRight: '6px' }} />

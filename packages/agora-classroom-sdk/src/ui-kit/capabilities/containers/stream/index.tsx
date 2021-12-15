@@ -28,7 +28,6 @@ export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) =>
         return (
           <React.Fragment key={anim.id}>
             <SvgaPlayer
-              key={anim.id}
               style={{ position: 'absolute' }}
               url={RewardSVGA}
               onFinish={() => {
