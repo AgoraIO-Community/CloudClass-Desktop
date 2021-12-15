@@ -102,14 +102,19 @@ textarea {
   outline: none !important;
   resize: none !important;
   border: none !important;
-  min-height: 70px !important;
+  min-height: unset !important;
+  transition: all 0.3s ease !important;
+}
+.input-chat::-webkit-input-placeholder {
+  position: relative;
+  top: 10px;
 }
 
 .input-btn {
   display: flex;
-  flex-direction: row;
   padding: 13px 8px;
-  align-items: center;
+  align-items: flex-end;
+  flex-direction: column;
 }
 .input-btn-placeholder {
   flex: 1;
@@ -117,15 +122,23 @@ textarea {
   font-size: 13px;
   cursor: text;
 }
-.visibleContent {
-  visibility: hidden;
-}
 
 .send-btn {
+  position: absolute;
+  right: 8px;
+  bottom: 13px;
   width: 80px;
   height: 30px !important;
   background: #357bf6;
   border-radius: 15px !important;
+}
+.input-chating-status {
+  height: 70px !important;
+  margin-bottom: 70px !important;
+}
+.input-chating-status::-webkit-input-placeholder {
+  position: relative;
+  top: unset;
 }
 
 /* .input-area-enter {

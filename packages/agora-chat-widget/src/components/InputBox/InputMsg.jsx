@@ -44,11 +44,12 @@ export const InputMsg = ({ isTeacher }) => {
   // 输入框焦点
   const inputRef = useRef(null);
 
-  const [visibleTextArea, setVisible] = useState(false);
+  const [inputStatus, setInputStatus] = useState(false);
 
   // 显示表情框
   const showEmoji = () => {
     store.dispatch(showEmojiAction(true));
+    inputRef.current.onFocus();
   };
   // 隐藏表情框
   const handleCancel = () => {
@@ -124,24 +125,18 @@ export const InputMsg = ({ isTeacher }) => {
     msg.set(option);
     setContent('');
     WebIM.conn.send(msg.body);
-    setVisible(false);
+    setInputStatus(false);
+    inputRef.current.blur();
   };
 
-  const handleTextAreavisible = () => {
-    setVisible(true);
-  };
-
-  const handleTextareaBlur = () => {
-    setVisible(false);
+  const handleTextareFoucs = () => {
+    setInputStatus(true);
   };
 
   return (
     <>
       <div>
         <div className="chat-icon">
-          {/* <Tooltip title="表情">
-                    
-                </Tooltip> */}
           <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
           {isTeacher && (
             <div>
@@ -156,29 +151,18 @@ export const InputMsg = ({ isTeacher }) => {
             </div>
           )}
         </div>
-        {visibleTextArea && (
-          <Input.TextArea
-            placeholder={transI18n('chat.enter_contents')}
-            className="input-chat"
-            autoFocus
-            onChange={(e) => changeMsg(e)}
-            onBlur={handleTextareaBlur}
-            value={content}
-            onPressEnter={sendTextMessage()}
-            ref={inputRef}
-          />
-        )}
-
-        <div className="input-btn">
-          <div
-            className={classnames('input-btn-placeholder', { visibleContent: visibleTextArea })}
-            onClick={handleTextAreavisible}>
-            {transI18n('chat.enter_contents')}
-          </div>
-          <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
-            {transI18n('chat.send')}
-          </Button>
-        </div>
+        <Input.TextArea
+          placeholder={transI18n('chat.enter_contents')}
+          className={classnames('input-chat', { 'input-chating-status': inputStatus })}
+          onChange={(e) => changeMsg(e)}
+          onFocus={handleTextareFoucs}
+          value={content}
+          onPressEnter={sendTextMessage()}
+          ref={inputRef}
+        />
+        <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
+          {transI18n('chat.send')}
+        </Button>
       </div>
       <Modal
         visible={isShowEmoji}

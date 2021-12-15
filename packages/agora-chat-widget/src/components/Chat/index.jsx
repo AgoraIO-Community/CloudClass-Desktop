@@ -53,7 +53,7 @@ export const Chat = () => {
           val = roomUsersInfo[item];
         }
         let newVal;
-        let role = val && JSON.parse(val?.ext).role;
+        let role = val && val.ext && JSON.parse(val.ext).role;
         switch (role) {
           case 1:
             newVal = _.assign(val, { id: item });
@@ -68,8 +68,6 @@ export const Chat = () => {
             _assistant.push(newVal);
             break;
           default:
-            newVal = _.assign(val, { id: item });
-            _student.push(newVal);
             break;
         }
       });
