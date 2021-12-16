@@ -22,4 +22,8 @@ export class EduEventCenter extends AGEventEmitter {
   onInteractionEvents(cb: (type: AgoraEduInteractionEvent, ...args: any[]) => void) {
     this.on(AgoraEduEventType.interactionEvents, cb);
   }
+
+  offInteractionEvents(cb: (type: AgoraEduInteractionEvent, ...args: any[]) => void) {
+    this.off(AgoraEduEventType.interactionEvents, cb);
+  }
 }

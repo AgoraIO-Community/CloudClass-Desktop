@@ -163,6 +163,9 @@ export enum AgoraEduInteractionEvent {
   RewardReceived = 8,
   TeacherTurnOnMyCam = 9,
   TeacherTurnOffMyCam = 10,
+  CurrentCamUnplugged = 11,
+  CurrentMicUnplugged = 12,
+  CurrentSpeakerUnplugged = 13,
 }
 
 export type ConfirmDialogAction = 'ok' | 'cancel';

@@ -6,7 +6,7 @@ import { EduShareUIStore } from '../share-ui';
 import { CameraPlaceholderType, DeviceStateChangedReason } from '../type';
 import { v4 as uuidv4 } from 'uuid';
 import { differenceWith } from 'lodash';
-import { ClassroomState } from '../../../..';
+import { AgoraEduInteractionEvent, ClassroomState, EduEventCenter } from '../../../..';
 import { transI18n } from '../i18n';
 import { BeautyType } from '../../../domain';
 import { computedFn } from 'mobx-utils';
@@ -28,7 +28,6 @@ export class PretestUIStore extends EduUIStoreBase {
     // 处理视频设备变动
     const videoDisposer = computed(() => this.classroomStore.mediaStore.videoCameraDevices).observe(
       ({ newValue, oldValue }) => {
-        if (this.classroomStore.connectionStore.classroomState !== ClassroomState.Idle) return;
         // 避免初始化阶段触发新设备的弹窗通知
         if (oldValue && oldValue.length > 1) {
           if (newValue.length > oldValue.length) {
@@ -36,18 +35,6 @@ export class PretestUIStore extends EduUIStoreBase {
               type: 'video',
               info: DeviceStateChangedReason.newDeviceDetected,
             });
-          } else {
-            //device removed
-            let removed = this._getDiffDeviceIds(oldValue, newValue);
-            if (
-              removed.includes(this.classroomStore.mediaStore.cameraDeviceId || '') ||
-              this.classroomStore.mediaStore.cameraDeviceId
-            ) {
-              this.addToast({
-                type: 'error',
-                info: DeviceStateChangedReason.cameraUnplugged,
-              });
-            }
           }
         }
       },
@@ -59,7 +46,6 @@ export class PretestUIStore extends EduUIStoreBase {
     const audioRecordingDisposer = computed(
       () => this.classroomStore.mediaStore.audioRecordingDevices,
     ).observe(({ newValue, oldValue }) => {
-      if (this.classroomStore.connectionStore.classroomState !== ClassroomState.Idle) return;
       // 避免初始化阶段触发新设备的弹窗通知
       if (oldValue && oldValue.length > 1) {
         if (newValue.length > oldValue.length) {
@@ -67,15 +53,6 @@ export class PretestUIStore extends EduUIStoreBase {
             type: 'audio_recording',
             info: DeviceStateChangedReason.newDeviceDetected,
           });
-        } else {
-          //device removed
-          let removed = this._getDiffDeviceIds(oldValue, newValue);
-          if (removed.includes(this.classroomStore.mediaStore.recordingDeviceId || '')) {
-            this.addToast({
-              type: 'error',
-              info: DeviceStateChangedReason.micUnplugged,
-            });
-          }
         }
       }
     });
@@ -86,7 +63,6 @@ export class PretestUIStore extends EduUIStoreBase {
     const playbackDisposer = computed(
       () => this.classroomStore.mediaStore.audioPlaybackDevices,
     ).observe(({ newValue, oldValue }) => {
-      if (this.classroomStore.connectionStore.classroomState !== ClassroomState.Idle) return;
       // 避免初始化阶段触发新设备的弹窗通知
       if (oldValue && oldValue.length > 0) {
         if (newValue.length > oldValue.length) {
@@ -94,20 +70,37 @@ export class PretestUIStore extends EduUIStoreBase {
             type: 'audio_playback',
             info: DeviceStateChangedReason.newDeviceDetected,
           });
-        } else {
-          //device removed
-          let removed = this._getDiffDeviceIds(oldValue, newValue);
-          if (removed.includes(this.classroomStore.mediaStore.playbackDeviceId || '')) {
-            this.addToast({
-              type: 'error',
-              info: DeviceStateChangedReason.playbackUnplugged,
-            });
-          }
         }
       }
     });
 
     this._disposers.add(playbackDisposer);
+
+    EduEventCenter.shared.onInteractionEvents(this._handleInteractionEvents);
+  }
+
+  @bound
+  private _handleInteractionEvents(type: AgoraEduInteractionEvent) {
+    switch (type) {
+      case AgoraEduInteractionEvent.CurrentCamUnplugged:
+        this.addToast({
+          type: 'error',
+          info: DeviceStateChangedReason.cameraUnplugged,
+        });
+        break;
+      case AgoraEduInteractionEvent.CurrentMicUnplugged:
+        this.addToast({
+          type: 'error',
+          info: DeviceStateChangedReason.micUnplugged,
+        });
+        break;
+      case AgoraEduInteractionEvent.CurrentSpeakerUnplugged:
+        this.addToast({
+          type: 'error',
+          info: DeviceStateChangedReason.playbackUnplugged,
+        });
+        break;
+    }
   }
 
   @observable
@@ -381,6 +374,7 @@ export class PretestUIStore extends EduUIStoreBase {
 
   @bound
   onDestroy() {
+    EduEventCenter.shared.offInteractionEvents(this._handleInteractionEvents);
     for (const disposer of this._disposers) {
       disposer();
     }

@@ -17,7 +17,7 @@ import {
 } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
-import { EduClassroomConfig } from '../../../..';
+import { AgoraEduInteractionEvent, EduClassroomConfig, EduEventCenter } from '../../../..';
 import { ClassroomState } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
@@ -444,6 +444,11 @@ export class MediaStore extends EduStoreBase {
           if ((inOldList && !inNewList) || this.cameraDeviceId === DEVICE_DISABLE) {
             //change to first device if there's any
             newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+            if (inOldList && !inNewList) {
+              EduEventCenter.shared.emitInteractionEvents(
+                AgoraEduInteractionEvent.CurrentCamUnplugged,
+              );
+            }
           }
         } else {
           // initailize, pick the first device
@@ -464,6 +469,11 @@ export class MediaStore extends EduStoreBase {
           if ((inOldList && !inNewList) || this.recordingDeviceId === DEVICE_DISABLE) {
             //change to first device if there's any
             newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+            if (inOldList && !inNewList) {
+              EduEventCenter.shared.emitInteractionEvents(
+                AgoraEduInteractionEvent.CurrentMicUnplugged,
+              );
+            }
           }
         } else {
           // initailize, pick the first device
@@ -482,6 +492,11 @@ export class MediaStore extends EduStoreBase {
           if (inOldList && !inNewList) {
             //change to first device if there's any
             newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
+            if (inOldList && !inNewList) {
+              EduEventCenter.shared.emitInteractionEvents(
+                AgoraEduInteractionEvent.CurrentSpeakerUnplugged,
+              );
+            }
           }
         } else {
           // initailize, pick the first device
