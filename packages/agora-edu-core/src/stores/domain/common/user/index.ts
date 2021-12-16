@@ -137,7 +137,9 @@ export class UserStore extends EduStoreBase {
         const { reward } = userProperties;
         if (reward) {
           runInAction(() => {
-            this.rewards.set(userUuid, reward.count || 0);
+            const newRewards = new Map(this.rewards);
+            newRewards.set(userUuid, reward.count || 0);
+            this.rewards = newRewards;
           });
         }
       },

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import { BoardPlaceHolder } from '~ui-kit';
 import './index.css';
@@ -8,7 +8,7 @@ import '@netless/window-manager/dist/style.css';
 import { WhiteboardToolbar } from '~containers/toolbar';
 import { useEffect } from 'react';
 
-export const WhiteboardContainer = observer(({ children }: any) => {
+export const WhiteboardContainer: FC = observer(({ children }) => {
   const { boardUIStore } = useStore();
   const {
     readyToMount,

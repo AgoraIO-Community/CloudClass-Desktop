@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, observable, reaction, when } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import {
   AGError,
   AgoraRteMediaSourceState,
@@ -214,7 +214,7 @@ export class RosterUIStore extends EduUIStoreBase {
         // send stars
         sendRewards(roomUuid, [
           {
-            userUuid,
+            userUuid: profile.uid as string,
             changeReward: 1,
           },
         ]).catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));

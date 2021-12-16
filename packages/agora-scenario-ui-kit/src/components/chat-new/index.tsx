@@ -229,7 +229,7 @@ export const ChatNew: FC<ChatProps> = ({
         </div>
 
         <Tabs
-          className={collapse ? 'displayNone' : ''}
+          className={collapse ? 'hidden' : ''}
           onChange={(activeKey: string) => {
             if (activeKey === '0') {
               onChangeActiveTab && onChangeActiveTab('room');

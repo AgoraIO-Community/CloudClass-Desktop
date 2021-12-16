@@ -65,7 +65,7 @@ export class StreamUIStore extends EduUIStoreBase {
     );
     computed(() => this.classroomStore.userStore.rewards).observe(({ newValue, oldValue }) => {
       let anims: { id: string; userUuid: string }[] = [];
-      Object.keys(newValue).forEach((userUuid) => {
+      for (const [userUuid] of newValue) {
         let previousReward = 0;
         if (oldValue) {
           previousReward = oldValue.get(userUuid) || 0;
@@ -74,7 +74,7 @@ export class StreamUIStore extends EduUIStoreBase {
         if (reward > previousReward) {
           anims.push({ id: uuidv4(), userUuid: userUuid });
         }
-      });
+      }
       if (anims.length > 0) {
         runInAction(() => {
           this.awardAnims = this.awardAnims.concat(anims);
