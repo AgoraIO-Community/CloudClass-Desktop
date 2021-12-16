@@ -1,7 +1,6 @@
 import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from '../../../..';
 import { RteRole2EduRole } from '../../../../utils';
-import { CameraPlaceholderType } from '../type';
 export class EduStreamUI {
   readonly stream: EduStream;
   constructor(stream: EduStream) {

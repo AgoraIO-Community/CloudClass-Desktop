@@ -1,6 +1,6 @@
 import { CameraPlaceholderType, EduRoleTypeEnum, EduStream, EduStreamUI } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef } from 'react';
+import React, { CSSProperties, ReactNode, useEffect, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
 import './index.css';
@@ -100,7 +100,20 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
   },
 );
 
-const StreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
+const LocalStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
+  const { streamUIStore } = useStore();
+  const { localVolume } = streamUIStore;
+
+  return (
+    <AudioVolume
+      isMicMuted={stream.isMicMuted}
+      currentVolume={Math.floor(localVolume * 10)}
+      className={stream.micIconType}
+    />
+  );
+});
+
+const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
   const { streamVolumes } = streamUIStore;
 
@@ -109,7 +122,7 @@ const StreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
   return (
     <AudioVolume
       isMicMuted={stream.isMicMuted}
-      currentVolume={volumePercentage * 10}
+      currentVolume={Math.floor(volumePercentage * 10)}
       className={stream.micIconType}
     />
   );
@@ -262,7 +275,11 @@ const StreamPlayerOverlay = observer(
                 flexDirection: 'column',
                 alignItems: 'center',
               }}>
-              <StreamPlayerVolume stream={stream} />
+              {stream.stream.isLocal ? (
+                <LocalStreamPlayerVolume stream={stream} />
+              ) : (
+                <RemoteStreamPlayerVolume stream={stream} />
+              )}
             </div>
             <StreamPlayerOverlayName stream={stream} />
           </div>
