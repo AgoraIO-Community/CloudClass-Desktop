@@ -18,6 +18,7 @@ import { NotificationUIStore } from './notification-ui';
 import { PretestUIStore } from './pretest';
 import { LeaveReason } from '../../domain/common/connection';
 import { AGServiceErrorCode } from '../../../services/error';
+import { LogReporter } from '../../../log-reporter';
 
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class EduClassroomUIStore {
@@ -129,6 +130,9 @@ export class EduClassroomUIStore {
     const { initialize } = this.classroomStore.connectionStore;
 
     initialize();
+
+    LogReporter.enableLogReport();
+
     //@ts-ignore
     window.globalStore = this;
   }

@@ -198,6 +198,7 @@ export class ConnectionStore extends EduStoreBase {
     }
 
     this.setClassroomState(ClassroomState.Connected);
+    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.ready);
   }
 
   @bound

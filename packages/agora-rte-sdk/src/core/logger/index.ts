@@ -1,11 +1,13 @@
+import dayjs from 'dayjs';
+import { upperCase, escape } from 'lodash';
 //@ts-ignore
 import LogWorker from 'worker-loader?inline=fallback!./log.worker';
 import { AgoraRteEngineConfig, AgoraRteLogLevel } from '../../configs';
 import { db } from './db';
-
 export interface LogFileCollection {
   electron?: File;
   web?: File;
+  clean: () => void;
 }
 
 export class Logger {
@@ -41,10 +43,7 @@ export class Logger {
       return;
     }
 
-    const date = new Date();
-    const currentTime = `${date.toTimeString().split(' ')[0] + ':' + date.getMilliseconds()}`;
-
-    const prefix = `${currentTime} AgoraEdu-SDK [${logLevel}]: `;
+    const prefix = `AgoraEdu-SDK [${logLevel}]: `;
 
     let loggerArgs: any[] = [];
 
@@ -90,11 +89,21 @@ export class Logger {
   static setupConsoleHijack() {
     console.log(`[logger] setup hijack..`);
     const thread = this.logger.thread as any;
+
+    const formatLog = (level: string, msg: string) => {
+      // `{date} {time} [threadName] [traceId] {level} {package} {method} {line}: {msg}`
+      return `${dayjs().format('YYYY-MM-DD HH:mm:ss')} ${upperCase(level || 'unknown')} ${escape(
+        msg,
+      )}`;
+    };
+
     function proxy(context: any, method: any) {
       return function (...args: any[]) {
+        const formatted = formatLog(method.name, args.join(' '));
+
         thread.postMessage({
           type: 'log',
-          data: args.join(','),
+          data: formatted,
         });
         method.apply(context, args);
       };
@@ -112,8 +121,14 @@ export class Logger {
 
   async collectLogs(): Promise<LogFileCollection> {
     // TODO performance enhancement needed
+    let lastObjectIndex = -1;
 
-    let collection: LogFileCollection = {};
+    let collection: LogFileCollection = {
+      clean: async () => {
+        const count = await db.logs.where('id').belowOrEqual(lastObjectIndex).delete();
+        console.log(`[logger] delete ${count} logs`);
+      },
+    };
     //@ts-ignore
     if (window.doGzip) {
       //@ts-ignore
@@ -122,11 +137,14 @@ export class Logger {
     }
 
     let logs: any[] = [];
+
     await db.logs.each((e: any) => logs.push(e));
-    const logsStr = logs
-      .map((e: any) => JSON.parse(e.content))
-      .map((e: any) => (Array.isArray(e) ? e[0] : e))
-      .join('\n');
+
+    if (logs.length) {
+      lastObjectIndex = logs[logs.length - 1].id;
+    }
+
+    const logsStr = logs.map((e: any) => e.content).join('\n');
 
     const now = +Date.now();
     const file = new File([logsStr], `${now}`);

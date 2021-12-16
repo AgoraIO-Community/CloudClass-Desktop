@@ -1,6 +1,6 @@
+import debounce from 'lodash/debounce';
 import { db } from './db';
 import { Mutex } from './mutex';
-import debounce from 'lodash/debounce';
 
 console.log(`[log worker] log worker initialzied`);
 

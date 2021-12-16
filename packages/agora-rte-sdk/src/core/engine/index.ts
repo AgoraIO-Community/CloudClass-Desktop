@@ -117,17 +117,22 @@ export class AgoraRteEngine extends AGEventEmitter {
     let files: LogFileCollection = await Logger.logger.collectLogs();
     if (files.electron) {
       [err] = await to(this._logService.uploadZipLogFile(roomId, files.electron));
-      RteErrorCenter.shared.handleNonThrowableError(
-        AGRteErrorCode.RTE_ERR_ELECTRON_LOG_UPLOAD_ERR,
-        err as Error,
-      );
+      if (err) {
+        RteErrorCenter.shared.handleNonThrowableError(
+          AGRteErrorCode.RTE_ERR_ELECTRON_LOG_UPLOAD_ERR,
+          err as Error,
+        );
+      }
     }
     if (files.web) {
       [err] = await to(this._logService.uploadLogFile(roomId, files.web));
-      RteErrorCenter.shared.handleNonThrowableError(
-        AGRteErrorCode.RTE_ERR_WEB_LOG_UPLOAD_ERR,
-        err as Error,
-      );
+      if (err) {
+        RteErrorCenter.shared.handleNonThrowableError(
+          AGRteErrorCode.RTE_ERR_WEB_LOG_UPLOAD_ERR,
+          err as Error,
+        );
+      }
     }
+    files.clean();
   }
 }
