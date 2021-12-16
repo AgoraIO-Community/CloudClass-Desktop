@@ -44,7 +44,7 @@ export const zh = {
   roster: {
     chat: '禁言',
     teacher_name: '教师姓名：',
-    user_list: '人员列表',
+    user_list: '花名册',
     student_name: '姓名',
     student_co_video: '上下台',
     close_student_co_video: '你已下台，暂时不能进行互动了哦',

@@ -43,8 +43,8 @@ export const en = {
   },
   roster: {
     chat: 'Mute Chat',
-    teacher_name: 'Teacher：',
-    user_list: 'User List',
+    teacher_name: 'Teacher:',
+    user_list: 'Roster',
     student_name: 'Name',
     student_co_video: 'CoVideo',
     close_student_co_video: 'You are not on stage now and you can not interact with others',
