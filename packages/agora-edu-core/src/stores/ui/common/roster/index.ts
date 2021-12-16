@@ -80,7 +80,10 @@ export class RosterUIStore extends EduUIStoreBase {
         [propKey]: val,
       });
 
-      if (propKey === 'isOpenCarousel') {
+      // update carousel when conditions changed & carousel state is open
+      const shouldRestartCarousel = propKey === 'isOpenCarousel' || this.carousel.isOpenCarousel;
+
+      if (shouldRestartCarousel) {
         this.startCarousel(val as unknown as boolean);
       }
     };
