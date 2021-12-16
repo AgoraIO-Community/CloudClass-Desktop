@@ -65,6 +65,7 @@ export const en = {
     seconds: 'seconds',
   },
   hands_up: 'Hands Up',
+  hands_up_tip: 'Press and hold down',
   co_video: {
     remote_open_camera: 'Your camera has been turned on',
     remote_open_microphone: 'Your mic has been turned on',

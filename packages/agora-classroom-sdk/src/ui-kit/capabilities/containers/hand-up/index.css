@@ -61,6 +61,7 @@
 
 .hands-up-sender {
   cursor: pointer;
+  position: relative;
 }
 
 .hands-up-manager:not(.can-not-hover):hover i::before {
@@ -93,7 +94,7 @@
   line-height: 28px;
   border-radius: 4px;
   white-space: nowrap;
-  left: -110px;
+  right: 50px;
 }
 .hands-up-tip::before {
   content: '';

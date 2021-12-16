@@ -65,6 +65,7 @@ export const zh = {
     seconds: '秒',
   },
   hands_up: '举手',
+  hands_up_tip: '举手请长按',
   co_video: {
     remote_open_camera: '摄像头已打开',
     remote_open_microphone: '你可以发言了',
