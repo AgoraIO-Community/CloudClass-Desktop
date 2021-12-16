@@ -124,6 +124,10 @@ export class RoomStore extends EduStoreBase {
     cause: any,
   ) {
     changedRoomProperties.forEach((key) => {
+      if (key === 'compatibleVersion') {
+        const compatibleVersion = get(roomProperties, 'compatibleVersion', []);
+        EduClassroomConfig.shared.setCompatibleVersions(compatibleVersion);
+      }
       if (key === 'record') {
         this.recordStatus = get(roomProperties, 'record.state', RecordStatus.stopped);
       }

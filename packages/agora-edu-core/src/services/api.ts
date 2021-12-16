@@ -510,4 +510,17 @@ export class EduApiService extends ApiBase {
     });
     return res.data;
   }
+
+  async reportMicCameraStateLeagcy(payload: {
+    roomUuid: string;
+    userUuid: string;
+    data: any;
+  }): Promise<any> {
+    const res = await this.fetch({
+      path: `/v2/rooms/${payload.roomUuid}/users/${payload.userUuid}/device`,
+      method: 'PUT',
+      data: payload.data,
+    });
+    return res.data;
+  }
 }

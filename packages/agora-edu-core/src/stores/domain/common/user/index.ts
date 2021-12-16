@@ -6,7 +6,8 @@ import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AgoraEduInteractionEvent, EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { RteRole2EduRole } from '../../../../utils';
-import Immutable from 'immutable';
+import { Reward } from '../room/type';
+import { forEach } from 'lodash';
 
 //for users
 export class UserStore extends EduStoreBase {
@@ -46,6 +47,12 @@ export class UserStore extends EduStoreBase {
         AGEduErrorCode.EDU_ERR_KICK_OUT_FAIL,
         error as Error,
       );
+    }
+  }
+
+  private handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
+    if (changedRoomProperties.includes('students') && roomProperties['students']) {
+      this.rewards = new Map(Object.entries(roomProperties['students']));
     }
   }
 
@@ -136,6 +143,8 @@ export class UserStore extends EduStoreBase {
         }
       },
     );
+
+    scene.on(AgoraRteEventType.RoomPropertyUpdated, this.handleRoomPropertiesChange);
   }
 
   onInstall() {

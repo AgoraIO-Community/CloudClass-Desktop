@@ -15,7 +15,9 @@ import {
   Logger,
   Log,
 } from 'agora-rte-sdk';
+import { isEmpty } from 'lodash';
 import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
+import { EduClassroomConfig } from '../../../..';
 import { ClassroomState } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
@@ -470,8 +472,6 @@ export class MediaStore extends EduStoreBase {
       },
     );
 
-    this._disposers.add(audioRecordingDisposer);
-
     // 处理扬声器设备变动
     const playbackDisposer = computed(() => this.audioPlaybackDevices).observe(
       ({ newValue, oldValue }) => {
@@ -490,7 +490,37 @@ export class MediaStore extends EduStoreBase {
       },
     );
 
+    this._disposers.add(audioRecordingDisposer);
     this._disposers.add(playbackDisposer);
+    this._disposers.add(playbackDisposer);
+
+    reaction(
+      () => this.localCameraTrackState,
+      () => {
+        const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
+        !isEmpty(EduClassroomConfig.shared.compatibleVersions) &&
+          this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
+          this.classroomStore.api.reportMicCameraStateLeagcy({
+            userUuid,
+            roomUuid,
+            data: { video: this.localCameraTrackState },
+          });
+      },
+    );
+
+    reaction(
+      () => this.localMicTrackState,
+      () => {
+        const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
+        !isEmpty(EduClassroomConfig.shared.compatibleVersions) &&
+          this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
+          this.classroomStore.api.reportMicCameraStateLeagcy({
+            userUuid,
+            roomUuid,
+            data: { audio: this.localMicTrackState },
+          });
+      },
+    );
   }
 
   @bound

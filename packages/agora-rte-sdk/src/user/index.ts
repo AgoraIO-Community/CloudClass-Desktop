@@ -203,7 +203,6 @@ export class AgoraRteLocalUser {
         publishAudio,
       });
   }
-
   async deleteLocalMediaStream() {
     return await AgoraRteEngine.engine
       .getApiService()

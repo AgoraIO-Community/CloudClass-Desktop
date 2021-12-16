@@ -43,6 +43,7 @@ export class EduClassroomConfig {
   private _courseWareList?: CloudDriveResource[];
   private _widgets: { [key: string]: IAgoraWidget } = {};
   private _extApps: ReadonlyArray<IAgoraExtApp> = [];
+  private _compatibleVersions: string[] = [];
   boardDefaults: WhiteboardDefaults = { scale: 1.2 };
   //by default use https://api.agora.io
   host: string = 'https://api.agora.io';
@@ -100,6 +101,14 @@ export class EduClassroomConfig {
 
   setWhiteboardConfig(config?: WhiteboardConfigs) {
     this._boardConfig = config;
+  }
+
+  setCompatibleVersions(compatibleVersions: string[]) {
+    this._compatibleVersions = compatibleVersions;
+  }
+
+  get compatibleVersions() {
+    return this._compatibleVersions;
   }
 
   get whiteboardConfig(): WhiteboardConfigs {
