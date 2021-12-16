@@ -81,7 +81,7 @@ export class NotificationUIStore extends EduUIStoreBase {
       }
       // teacher turn off my mic
       if (event === AgoraEduInteractionEvent.TeacherTurnOffMyMic) {
-        this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.mic'));
+        this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.mic'), 'error');
       }
       // teacher turn on my mic
       if (event === AgoraEduInteractionEvent.TeacherTurnOnMyCam) {
@@ -89,7 +89,7 @@ export class NotificationUIStore extends EduUIStoreBase {
       }
       // teacher turn off my mic
       if (event === AgoraEduInteractionEvent.TeacherTurnOffMyCam) {
-        this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'));
+        this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');
       }
       // teacher grant permission
       if (event === AgoraEduInteractionEvent.TeacherGrantPermission) {
@@ -97,7 +97,7 @@ export class NotificationUIStore extends EduUIStoreBase {
       }
       // teacher revoke permission
       if (event === AgoraEduInteractionEvent.TeacherRevokePermission) {
-        this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
+        this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'), 'error');
       }
       // user accpeted to stage
       if (event === AgoraEduInteractionEvent.UserAcceptToStage) {

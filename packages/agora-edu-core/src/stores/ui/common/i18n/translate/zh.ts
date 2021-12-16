@@ -458,8 +458,8 @@ export const zh = {
     display: '屏幕{reason}',
   },
   toast2: {
-    'teacher.turn.off.my.mic': '老师已关闭你的麦克风',
-    'teacher.turn.on.my.mic': '老师已打开你的麦克风',
+    'teacher.turn.off.my.mic': '老师已关闭你的麦克风，你暂时不能发言了',
+    'teacher.turn.on.my.mic': '老师已打开你的麦克风，你可以开始发言了',
     'teacher.turn.off.my.cam': '老师已关闭你的摄像头',
     'teacher.turn.on.my.cam': '老师已打开你的摄像头',
     'teacher.grant.permission': '你已被老师授权，请使用白板工具互动',
