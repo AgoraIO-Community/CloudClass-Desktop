@@ -1,5 +1,4 @@
 .chat-panel {
-  @apply bg-white;
   position: relative;
   flex: 1;
   border-radius: 4px;
