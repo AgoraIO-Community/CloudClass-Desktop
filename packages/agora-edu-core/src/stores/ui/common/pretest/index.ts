@@ -366,12 +366,6 @@ export class PretestUIStore extends EduUIStoreBase {
     this.classroomStore.mediaStore.setupLocalVideo(dom, mirror);
   }
 
-  private _getDiffDeviceIds(v1: AGRtcDeviceInfo[], v2: AGRtcDeviceInfo[]) {
-    let idsv1 = v1.map((d) => d.deviceid);
-    let idsv2 = v2.map((d) => d.deviceid);
-    return differenceWith(idsv1, idsv2);
-  }
-
   @bound
   onDestroy() {
     EduEventCenter.shared.offInteractionEvents(this._handleInteractionEvents);

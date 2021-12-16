@@ -52,6 +52,9 @@
   color: #586376;
   line-height: 34px;
   text-indent: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .options-container .option-item.is-select {
   color: #357bf6;
