@@ -169,7 +169,7 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   @computed get localVolume(): number {
-    return this.classroomStore.mediaStore.localMicAudioVolume * 100;
+    return this.localMicOff ? 0 : this.classroomStore.mediaStore.localMicAudioVolume * 100;
   }
 
   @computed get localPlaybackTestVolume(): number {
