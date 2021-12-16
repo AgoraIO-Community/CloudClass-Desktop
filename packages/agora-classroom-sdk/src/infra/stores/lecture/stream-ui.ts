@@ -43,69 +43,10 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   @computed get localStreamTools(): EduStreamTool[] {
     const { sessionInfo } = EduClassroomConfig.shared;
     let tools: EduStreamTool[] = [];
-    tools = tools.concat([
-      new EduStreamTool(
-        EduStreamToolCategory.camera,
-        this.localCameraOff ? 'camera' : 'camera-off',
-        this.localCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
-        {
-          //i can always control myself
-          interactable: true,
-          style: {
-            color: this.localCameraOff ? StreamIconColor.active : StreamIconColor.activeWarn,
-          },
-          onClick: async () => {
-            try {
-              this.toggleLocalVideo();
-            } catch (e) {
-              this.shareUIStore.addGenericErrorDialog(e as AGError);
-            }
-          },
-        },
-      ),
-      new EduStreamTool(
-        EduStreamToolCategory.microphone,
-        this.localMicOff ? 'microphone-on-outline' : 'microphone-off-outline',
-        this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
-        {
-          //host can control, or i can control myself
-          interactable: true,
-          style: {
-            color: this.localMicOff ? StreamIconColor.active : StreamIconColor.activeWarn,
-          },
-          onClick: async () => {
-            try {
-              this.toggleLocalAudio();
-            } catch (e) {
-              this.shareUIStore.addGenericErrorDialog(e as AGError);
-            }
-          },
-        },
-      ),
-    ]);
+    tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
     if (sessionInfo.role === EduRoleTypeEnum.teacher) {
-      const { acceptedList } = this.classroomStore.roomStore;
-      tools.push(
-        new EduStreamTool(
-          EduStreamToolCategory.podium_all,
-          'invite-to-podium',
-          transI18n('Clear Podiums'),
-          {
-            interactable: !!this.studentStreams.size,
-            style: {
-              color: acceptedList.length > 0 ? StreamIconColor.active : StreamIconColor.deactive,
-            },
-            onClick: async () => {
-              try {
-                await this.classroomStore.handUpStore.offPodiumAll();
-              } catch (e) {
-                this.shareUIStore.addGenericErrorDialog(e as AGError);
-              }
-            },
-          },
-        ),
-      );
+      tools.push(this.localPodiumTool());
     }
 
     return tools;
@@ -122,14 +63,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
       tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
       if (stream.role === EduRoleTypeEnum.student) {
-        tools = tools.concat([
-          this.remoteWhiteboardTool(stream),
-          this.remoteRewardTool(stream),
-          this.remotePodiumTool(stream),
-        ]);
-      }
-      if (stream.role === EduRoleTypeEnum.teacher) {
-        tools.push(this.localPodiumTool());
+        tools = tools.concat([this.remotePodiumTool(stream)]);
       }
     }
 
