@@ -381,7 +381,7 @@ const RecordingDeviceManager = () => {
     pretestUIStore: { startRecordingDeviceTest, stopRecordingDeviceTest },
   } = useStore();
   useEffect(() => {
-    startRecordingDeviceTest(500);
+    startRecordingDeviceTest();
     return stopRecordingDeviceTest;
   });
 

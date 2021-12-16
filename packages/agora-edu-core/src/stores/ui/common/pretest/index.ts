@@ -299,8 +299,8 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   @bound
-  startRecordingDeviceTest(indicateInterval: number) {
-    this.classroomStore.mediaStore.startRecordingDeviceTest(indicateInterval);
+  startRecordingDeviceTest() {
+    this.classroomStore.mediaStore.startRecordingDeviceTest(500);
   }
 
   @bound
@@ -326,6 +326,11 @@ export class PretestUIStore extends EduUIStoreBase {
   @action.bound
   setRecordingDevice(id: string) {
     this.classroomStore.mediaStore.setRecordingDevice(id);
+    if (id === DEVICE_DISABLE) {
+      this.stopRecordingDeviceTest();
+    } else {
+      this.startRecordingDeviceTest();
+    }
   }
 
   @action.bound
