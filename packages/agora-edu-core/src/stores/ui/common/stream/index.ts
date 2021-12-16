@@ -29,6 +29,7 @@ import { CameraPlaceholderType } from '../type';
 import { EduStreamUI } from './struct';
 import { EduStreamTool, EduStreamToolCategory } from './tool';
 import { v4 as uuidv4 } from 'uuid';
+import { AGServiceErrorCode } from '../../../../services/error';
 
 export enum StreamIconColor {
   active = '#357bf6',
@@ -306,7 +307,15 @@ export class StreamUIStore extends EduUIStoreBase {
           try {
             await this.classroomStore.handUpStore.offPodiumAll();
           } catch (e) {
-            this.shareUIStore.addGenericErrorDialog(e as AGError);
+            if (
+              !AGError.isOf(
+                e,
+                AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+                AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+              )
+            ) {
+              this.shareUIStore.addGenericErrorDialog(e as AGError);
+            }
           }
         },
       },
@@ -392,7 +401,15 @@ export class StreamUIStore extends EduUIStoreBase {
           try {
             await this.classroomStore.handUpStore.offPodium(stream.fromUser.userUuid);
           } catch (e) {
-            this.shareUIStore.addGenericErrorDialog(e as AGError);
+            if (
+              !AGError.isOf(
+                e,
+                AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+                AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+              )
+            ) {
+              this.shareUIStore.addGenericErrorDialog(e as AGError);
+            }
           }
         },
       },
