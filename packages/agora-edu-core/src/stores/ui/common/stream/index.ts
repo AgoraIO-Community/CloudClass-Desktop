@@ -14,7 +14,6 @@ import {
   autorun,
   computed,
   IReactionDisposer,
-  Lambda,
   observable,
   reaction,
   runInAction,
@@ -310,7 +309,7 @@ export class StreamUIStore extends EduUIStoreBase {
           } catch (e) {
             if (
               !AGError.isOf(
-                e,
+                e as Error,
                 AGServiceErrorCode.SERV_PROCESS_CONFLICT,
                 AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
               )
@@ -404,7 +403,7 @@ export class StreamUIStore extends EduUIStoreBase {
           } catch (e) {
             if (
               !AGError.isOf(
-                e,
+                e as Error,
                 AGServiceErrorCode.SERV_PROCESS_CONFLICT,
                 AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
               )
@@ -479,29 +478,6 @@ export class StreamUIStore extends EduUIStoreBase {
   @computed get localMicIconType() {
     return this.localMicOff ? 'microphone-off' : 'microphone-on';
   }
-
-  // notPresentText(role: EduRoleTypeEnum): string {
-  //   return role === EduRoleTypeEnum.teacher
-  //     ? transI18n('stream.placeholder.notpresent.teacher')
-  //     : transI18n('stream.placeholder.notpresent.student');
-  // }
-
-  // getCameraPlaceholderText(type: CameraPlaceholderType): string {
-  //   switch (type) {
-  //     case CameraPlaceholderType.loading:
-  //     case CameraPlaceholderType.none:
-  //       return transI18n('stream.placeholder.loading');
-  //     case CameraPlaceholderType.muted:
-  //       return transI18n('stream.placeholder.muted');
-  //     case CameraPlaceholderType.broken:
-  //       return transI18n('stream.placeholder.broken');
-  //   }
-  //   return '';
-  // }
-
-  // cameraPlaceholderText = computedFn((stream: EduStreamUI): string => {
-  // return this.getCameraPlaceholderText(this.cameraPlaceholder(stream));
-  // });
 
   cameraPlaceholder = computedFn((stream: EduStreamUI): CameraPlaceholderType => {
     let placeholder = CameraPlaceholderType.none;

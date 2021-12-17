@@ -78,8 +78,6 @@ class CMDHandler {
       this.handleHandup(operator, data, changedProperties);
     } else if (cmd === 7) {
       this.handleExtAppEvents(data, changedProperties);
-    } else if (cmd === 1101) {
-      this.handleReward(data, changedProperties);
     }
     this.handleUpdateTrackState(changedProperties);
   }
@@ -113,51 +111,8 @@ class CMDHandler {
           }
           break;
         }
-        //   case CoVideoAction.studentHandsUp: {
-        //     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)) {
-        //       // this.toast('co_video.received_student_hands_up');
-        //     }
-        //     break;
-        //   }
-        //   case CoVideoAction.teacherRefuse: {
-        //     if ([EduRoleTypeEnum.student].includes(userRole)) {
-        //       const includedRemoveProgress: Progress[] = data?.removeProgress ?? [];
-        //       if (includedRemoveProgress.find((it) => it.userUuid === userUuid)) {
-        //         // this.toast('co_video.received_teacher_refused');
-        //       }
-        //     }
-        //     break;
-        //   }
-        //   case CoVideoAction.studentCancel: {
-        //     if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)) {
-        //       // this.toast('co_video.received_student_cancel');
-        //     }
-        //     break;
-        //   }
       }
     }
-  }
-
-  private handleReward(data: Cause['data'], changedProperties: any) {
-    let rewardData = data as any;
-    let userUuids = Object.keys(data);
-    let userNames: string[] = [];
-
-    userUuids.forEach((uid) => {
-      if (!rewardData[uid]) {
-        return;
-      }
-
-      const user = this._delegate.getUserById(uid);
-
-      if (user) {
-        userNames.push(user.userName);
-      }
-    });
-    EduEventCenter.shared.emitInteractionEvents(
-      AgoraEduInteractionEvent.RewardReceived,
-      userNames.join(','),
-    );
   }
 
   private handleExtAppEvents(data: Cause['data'], changedProperties: any) {

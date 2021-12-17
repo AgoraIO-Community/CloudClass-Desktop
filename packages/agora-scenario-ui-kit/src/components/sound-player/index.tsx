@@ -9,13 +9,13 @@ export const SoundPlayer: FC<Props> = ({ url }: Props) => {
 
   useEffect(() => {
     const audioElement = new Audio(url);
-    audioElement.onended = () => {};
     audioElement.play();
     audioRef.current = audioElement;
 
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current = null;
       }
     };
   }, []);

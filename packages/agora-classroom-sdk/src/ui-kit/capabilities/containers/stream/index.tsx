@@ -26,17 +26,18 @@ export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) =>
     <div className="center-reward">
       {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
         return (
-          <React.Fragment key={anim.id}>
-            <SvgaPlayer
-              style={{ position: 'absolute' }}
-              url={RewardSVGA}
-              onFinish={() => {
-                removeAward(anim.id);
-              }}
-            />
-            <SoundPlayer url={RewardSound} />
-          </React.Fragment>
+          <SvgaPlayer
+            key={anim.id}
+            style={{ position: 'absolute' }}
+            url={RewardSVGA}
+            onFinish={() => {
+              removeAward(anim.id);
+            }}></SvgaPlayer>
         );
+      })}
+
+      {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
+        return <SoundPlayer url={RewardSound} key={anim.id} />;
       })}
     </div>
   );

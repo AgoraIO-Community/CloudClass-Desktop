@@ -101,23 +101,6 @@ export const useTimeout = (fn: CallableFunction, delay: number) => {
   }, [timer]);
 };
 
-export const useAudioPlayer = (url: string) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useUnMount(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-  });
-
-  useEffect(() => {
-    const audioElement = new Audio(url);
-    audioElement.onended = () => {};
-    audioElement.play();
-    audioRef.current = audioElement;
-  }, [audioRef]);
-};
-
 export const usePrevious = <Type>(value: Type) => {
   const previousValue = useRef<Type>(value);
 
