@@ -1,6 +1,6 @@
 import { action, computed, reaction } from 'mobx';
 import dayjs from 'dayjs';
-import { Scheduler } from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, AGRteTrackErrorReason, Scheduler } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import { ClassState } from '../../domain/common/room/type';
@@ -110,6 +110,10 @@ export class NotificationUIStore extends EduUIStoreBase {
       // reward received
       if (event === AgoraEduInteractionEvent.RewardReceived) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.reward', { reason: args }));
+      }
+      // capture screen permission denied received
+      if (event === AgoraEduInteractionEvent.CaptureScreenPermissionDenied) {
+        this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'error');
       }
     });
   }

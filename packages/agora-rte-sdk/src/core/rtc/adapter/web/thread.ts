@@ -1,7 +1,7 @@
 import { AgoraRteThread } from '../../../utils/thread';
 import { AgoraRtcVideoCanvas } from '../../canvas';
 import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
-import { AgoraRteMediaSourceState, AGRenderMode } from '../../type';
+import { AgoraRteMediaSourceState, AGRenderMode, AGRteTrackErrorReason } from '../../type';
 import AgoraRTC, {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -19,6 +19,16 @@ import { AgoraRteAudioSourceType, AgoraRteVideoSourceType } from '../../../media
 import { AgoraRteEngineConfig } from '../../../../configs';
 import { Scheduler } from '../../../schedule';
 import { bound } from '../../../decorator/bound';
+
+function resolveErrorCode(e: unknown): AGRteTrackErrorReason {
+  const error: { code: string } = e as any;
+
+  if (error.code === 'PERMISSION_DENIED') {
+    return AGRteTrackErrorReason.PermissionDenied;
+  }
+
+  return AGRteTrackErrorReason.Unknown;
+}
 
 export class AgoraRteMediaTrackThread extends AgoraRteThread {
   track?: ILocalTrack;
@@ -271,7 +281,7 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
     );
   }
 
-  setScreenShareTrackState(state: AgoraRteMediaSourceState, reason?: string) {
+  setScreenShareTrackState(state: AgoraRteMediaSourceState, reason?: number) {
     if (this.trackState === state) {
       return;
     }
@@ -326,7 +336,7 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
               AGRteErrorCode.RTC_ERR_SCREEN_SHARE_ERR,
               e as Error,
             );
-            this.setScreenShareTrackState(AgoraRteMediaSourceState.error);
+            this.setScreenShareTrackState(AgoraRteMediaSourceState.error, resolveErrorCode(e));
             break;
           }
 

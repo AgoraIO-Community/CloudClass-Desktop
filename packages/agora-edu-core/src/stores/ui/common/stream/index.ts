@@ -7,6 +7,7 @@ import {
   AGRtcConnectionType,
   bound,
   RtcState,
+  AGRteTrackErrorReason,
 } from 'agora-rte-sdk';
 import {
   action,

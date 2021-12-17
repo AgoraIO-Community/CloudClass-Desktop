@@ -475,5 +475,7 @@ export const en = {
       'The teacher has invited you to stage，you can interact with others now',
     'teacher.revoke.onpodium': 'You are not on stage now and you can not interact with others',
     'teacher.reward': 'Congratulations to {reason} for getting a star',
+    screen_permission_denied:
+      'Before using screen sharing, please turn on the screenshot permission',
   },
 };

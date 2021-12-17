@@ -14,11 +14,12 @@ import {
   lighteningLevel,
   Logger,
   Log,
+  AGRteTrackErrorReason,
 } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
-import { AgoraEduInteractionEvent, EduClassroomConfig, EduEventCenter } from '../../../..';
-import { ClassroomState } from '../../../../type';
+import { AgoraEduInteractionEvent, ClassroomState } from '../../../../type';
+import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
 
@@ -300,13 +301,18 @@ export class MediaStore extends EduStoreBase {
 
           mediaControl.on(
             AgoraMediaControlEventType.localVideoTrackChanged,
-            (state: AgoraRteMediaSourceState, type: AgoraRteVideoSourceType, reason?: string) => {
+            (state: AgoraRteMediaSourceState, type: AgoraRteVideoSourceType, reason?: number) => {
               runInAction(() => {
                 if (type === AgoraRteVideoSourceType.Camera) {
                   this.localCameraTrackState = state;
                   // this.localCameraErrorReason = reason;
                 } else if (type === AgoraRteVideoSourceType.ScreenShare) {
                   this.localScreenShareTrackState = state;
+                  if (reason === AGRteTrackErrorReason.PermissionDenied) {
+                    EduEventCenter.shared.emitInteractionEvents(
+                      AgoraEduInteractionEvent.CaptureScreenPermissionDenied,
+                    );
+                  }
                 }
               });
             },

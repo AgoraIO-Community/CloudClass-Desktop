@@ -166,6 +166,7 @@ export enum AgoraEduInteractionEvent {
   CurrentCamUnplugged = 11,
   CurrentMicUnplugged = 12,
   CurrentSpeakerUnplugged = 13,
+  CaptureScreenPermissionDenied = 14,
 }
 
 export type ConfirmDialogAction = 'ok' | 'cancel';

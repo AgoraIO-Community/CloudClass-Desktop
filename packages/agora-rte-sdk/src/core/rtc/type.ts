@@ -6,6 +6,11 @@ export enum AGNetworkQuality {
   great = 4,
 }
 
+export enum AGRteTrackErrorReason {
+  Unknown,
+  PermissionDenied,
+}
+
 export interface NetworkStats {
   packetLoss?: number;
   networkQuality?: AGNetworkQuality;
