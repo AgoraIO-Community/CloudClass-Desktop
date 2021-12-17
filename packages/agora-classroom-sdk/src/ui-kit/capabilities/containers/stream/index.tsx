@@ -15,6 +15,7 @@ import {
   AudioVolume,
 } from '~ui-kit';
 import RewardSVGA from './assets/svga/reward.svga';
+import WaveArmSVGA from './assets/svga/hands-up.svga';
 import RewardSound from './assets/audio/reward.mp3';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
@@ -221,6 +222,12 @@ const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamU
   );
 });
 
+const StreamPlaceholderWaveArmPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
+  const { streamUIStore } = useStore();
+  const { isWaveArm } = streamUIStore;
+  return isWaveArm(stream) ? <div className="wave-arm-placeholder"></div> : null;
+});
+
 const StreamPlayerOverlayName = observer(({ stream }: { stream: EduStreamUI }) => {
   return (
     <span title={stream.stream.fromUser.userName} className="username2">
@@ -287,6 +294,7 @@ const StreamPlayerOverlay = observer(
           <div className="bottom-right-info">
             <StreamPlayerWhiteboardGranted stream={stream} />
           </div>
+          <StreamPlaceholderWaveArmPlaceholder stream={stream} />
         </div>
       </Popover>
     );

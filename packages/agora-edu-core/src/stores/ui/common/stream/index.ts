@@ -245,6 +245,12 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.classroomStore.boardStore.grantUsers;
   }
 
+  isWaveArm = computedFn((stream: EduStreamUI): boolean => {
+    return this.classroomStore.roomStore.waveArmList.some(
+      (it) => it.userUuid === stream.fromUser.userUuid,
+    );
+  });
+
   awards = computedFn((stream: EduStreamUI): number => {
     let reward = this.classroomStore.userStore.rewards.get(stream.fromUser.userUuid);
     return reward || 0;
