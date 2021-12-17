@@ -246,6 +246,7 @@ export const zh = {
     upload_failure: '上传失败',
     download_success: '下载成功',
     download_failure: '下载失败',
+    resource_already_opened: '课件已经打开',
   },
   end_class_confirm: '确定要结束教室吗？',
   notice: {

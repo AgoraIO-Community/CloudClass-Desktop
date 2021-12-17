@@ -1,15 +1,13 @@
 import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
-import { EduClassroomStore } from '../../domain';
-import { EduShareUIStore } from './share-ui';
+import { transI18n } from './i18n';
 import {
   CloudDriveCourseResource,
   CloudDriveResource,
 } from '../../domain/common/cloud-drive/struct';
 import { CloudDrivePagingOption } from '../../domain/common/cloud-drive/type';
 import { AGEduErrorCode } from '../../../utils/error';
-import { delay } from 'lodash';
 
 interface UploadItem {
   iconType?: string;

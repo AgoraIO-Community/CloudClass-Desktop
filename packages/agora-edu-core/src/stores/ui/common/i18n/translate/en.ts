@@ -252,6 +252,7 @@ export const en = {
     upload_failure: 'Upload Failure',
     download_success: 'Download Success',
     download_failure: 'Download Failure',
+    resource_already_opened: 'This resource is already opened',
   },
   end_class_confirm: 'Are sure end classroom',
   notice: {

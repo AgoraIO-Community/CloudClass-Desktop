@@ -224,10 +224,25 @@ export class BoardStore extends EduStoreBase {
 
   @action.bound
   async openResource(resource: CloudDriveResource) {
+    const curResources = Object.values(this.windowManager?.apps || []);
     if (resource instanceof CloudDriveCourseResource) {
+      const opened = curResources.find(({ options }) => options?.title === resource.resourceName);
+      if (opened) {
+        EduErrorCenter.shared.handleThrowableError(
+          AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
+          Error('resource already opened'),
+        );
+      }
       await this.putCourseResource(resource);
     }
     if (resource instanceof CloudDriveMediaResource) {
+      const opened = curResources.find(({ options }) => options?.title === resource.url);
+      if (opened) {
+        EduErrorCenter.shared.handleThrowableError(
+          AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
+          Error('resource already opened'),
+        );
+      }
       await this.putMediaResource(resource);
     }
     if (resource instanceof CloudDriveImageResource) {
