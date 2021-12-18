@@ -135,17 +135,20 @@ export class BoardStore extends EduStoreBase {
     this.setRoom(undefined);
   };
 
-  mount = (dom: HTMLDivElement, options: Pick<MountParams, 'containerSizeRatio'> = {}) => {
+  mount = (
+    dom: HTMLDivElement,
+    options: Pick<MountParams, 'containerSizeRatio' | 'collectorContainer'> = {},
+  ) => {
     // const { sessionInfo } = EduClassroomConfig.shared;
     this._whiteBoardContainer = dom;
     WindowManager.mount({
       cursor: true,
       room: this.room,
       container: dom,
-      // collectorContainer: document.querySelector('#window-manager-collector') as HTMLElement,
       chessboard: false,
       // containerSizeRatio: options.containerSizeRatio || 0.461,
-      containerSizeRatio: options.containerSizeRatio,
+      // containerSizeRatio: options.containerSizeRatio,
+      ...options,
     })
       .then((manager) => {
         this._windowManager = manager;

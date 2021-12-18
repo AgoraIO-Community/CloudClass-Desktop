@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react';
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import { BoardPlaceHolder } from '~ui-kit';
 import './index.css';
 import 'video.js/dist/video-js.css';
 import '@netless/window-manager/dist/style.css';
 import { WhiteboardToolbar } from '~containers/toolbar';
-import { useEffect } from 'react';
 
 export const WhiteboardContainer: FC = observer(({ children }) => {
   const { boardUIStore } = useStore();
@@ -62,4 +61,15 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
       ) : null}
     </div>
   );
+});
+
+export const CollectorContainer = observer(() => {
+  const { boardUIStore } = useStore();
+  const domRef = useRef(null);
+
+  useEffect(() => {
+    if (domRef.current) boardUIStore.setCollectorContainer = domRef.current;
+  }, []);
+
+  return <div id="window-manager-collector" ref={domRef}></div>;
 });

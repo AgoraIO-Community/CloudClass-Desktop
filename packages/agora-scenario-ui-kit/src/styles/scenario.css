@@ -184,11 +184,10 @@ body,
   display: inline-block !important;
 }
 
-.mid-class-room .telebox-collector {
-  right: 170px !important;
-}
-.big-class-room .telebox-collector {
-  right: 124px !important;
+#window-manager-collector .telebox-collector {
+  position: unset !important;
+  right: unset !important;
+  bottom: unset !important;
 }
 
 .big-class-room .big-class-main {

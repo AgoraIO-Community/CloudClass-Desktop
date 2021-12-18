@@ -12,6 +12,7 @@ import Room from '../room';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { ExtAppContainer } from '~containers/ext-app';
 import { ToastContainer } from '~containers/toast';
+import { CollectorContainer } from '~containers/board';
 
 export const OneToOneScenario = observer(() => {
   const layoutCls = classnames('edu-room');
@@ -26,6 +27,9 @@ export const OneToOneScenario = observer(() => {
               <WhiteboardContainer>
                 <ScreenShareContainer />
               </WhiteboardContainer>
+              <Aside className="aisde-fixed">
+                <CollectorContainer />
+              </Aside>
             </Content>
             <Aside>
               <Room1v1StreamsContainer />

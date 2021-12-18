@@ -12,6 +12,8 @@ export class BoardUIStore extends EduUIStoreBase {
   protected heightRatio = 1;
   protected aspectRatio = 9 / 16;
 
+  private _collectorContainer: HTMLElement | undefined = undefined;
+
   onInstall() {}
 
   // computed
@@ -38,6 +40,10 @@ export class BoardUIStore extends EduUIStoreBase {
     }
 
     return height;
+  }
+
+  set setCollectorContainer(collectorContainer: HTMLElement) {
+    this._collectorContainer = collectorContainer;
   }
 
   constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
@@ -92,7 +98,10 @@ export class BoardUIStore extends EduUIStoreBase {
   @bound
   async mount(dom: HTMLDivElement) {
     try {
-      await this.classroomStore.boardStore.mount(dom, { containerSizeRatio: this.aspectRatio });
+      const options = this._collectorContainer
+        ? { containerSizeRatio: this.aspectRatio, collectorContainer: this._collectorContainer }
+        : { containerSizeRatio: this.aspectRatio };
+      await this.classroomStore.boardStore.mount(dom, options);
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }

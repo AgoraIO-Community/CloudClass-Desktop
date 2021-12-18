@@ -7,6 +7,7 @@ import { LoadingContainer } from '~containers/loading';
 import { ScreenShareContainer } from '~containers/screen-share';
 import Room from '../room';
 import { RoomMidStreamsContainer } from '~containers/stream/room-mid-player';
+import { CollectorContainer } from '~containers/board';
 import { WhiteboardContainer } from '~containers/board';
 import { FixedAspectRatioRootBox } from '~containers/root-box';
 import { ChatWidget } from '~containers/widget/chat-widget';
@@ -29,6 +30,7 @@ export const MidClassScenario = observer(() => {
             <ScreenShareContainer />
           </WhiteboardContainer>
           <Aside className="aisde-fixed">
+            <CollectorContainer />
             <MidRosterBtn />
             <HandsUpContainer />
             <ChatWidget />
