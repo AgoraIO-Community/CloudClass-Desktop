@@ -1,8 +1,10 @@
 import { CameraPlaceholderType, EduRoleTypeEnum, EduStream, EduStreamUI } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import React, { CSSProperties, ReactNode, useEffect, useRef } from 'react';
+import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { useDebounce } from '~ui-kit/utilities/hooks';
 import './index.css';
 import {
   CameraPlaceHolder,
@@ -335,6 +337,49 @@ export const StreamPlayer = observer(
           <RemoteTrackPlayer className={cls} style={style} stream={stream.stream} />
         )}
       </StreamPlayerOverlay>
+    );
+  },
+);
+
+const ANIMATION_DELAY = 500;
+
+export const CarouselGroup = observer(
+  ({
+    videoWidth,
+    videoHeight,
+    gap,
+    carouselStreams,
+  }: {
+    videoWidth: number;
+    videoHeight: number;
+    carouselStreams: EduStreamUI[];
+    gap: number;
+  }) => {
+    const videoStreamStyle = useMemo(
+      () => ({
+        width: videoWidth,
+        height: videoHeight,
+      }),
+      [videoWidth, videoHeight],
+    );
+
+    const fullWith = (videoWidth + gap) * carouselStreams.length - gap + 2;
+
+    const width = useDebounce(carouselStreams.length ? fullWith : 0, ANIMATION_DELAY);
+
+    return (
+      <TransitionGroup className="flex overflow-hidden" style={{ width }}>
+        {carouselStreams.map((stream: EduStreamUI, idx: number) => (
+          <CSSTransition
+            key={`${stream.stream.streamUuid}`}
+            timeout={ANIMATION_DELAY}
+            classNames="stream-player">
+            <div style={{ marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2 }}>
+              <StreamPlayer stream={stream} style={videoStreamStyle}></StreamPlayer>
+            </div>
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
     );
   },
 );

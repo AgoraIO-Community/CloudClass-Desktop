@@ -2,13 +2,9 @@ import {
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduStreamTool,
-  EduStreamToolCategory,
   EduStreamUI,
-  StreamIconColor,
   StreamUIStore,
-  transI18n,
 } from 'agora-edu-core';
-import { AGError, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
@@ -33,14 +29,14 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
 
     const streams = [];
 
-    for (let student of acceptedList) {
-      let streamUuids =
+    for (const student of acceptedList) {
+      const streamUuids =
         this.classroomStore.streamStore.streamByUserUuid.get(student.userUuid) || new Set();
 
-      for (let streamUuid of streamUuids) {
-        let stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+      for (const streamUuid of streamUuids) {
+        const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
         if (stream) {
-          let uiStream = new EduStreamUI(stream);
+          const uiStream = new EduStreamUI(stream);
 
           streams.push(uiStream);
         }

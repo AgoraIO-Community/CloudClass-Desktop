@@ -49,6 +49,12 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
     return tools;
   }
 
+  @computed
+  get carouselStreams() {
+    const list = Array.from(this.studentStreams);
+    return list.slice(this.carouselPosition, this.carouselPosition + this._carouselShowCount);
+  }
+
   remoteStreamTools = computedFn((stream: EduStreamUI): EduStreamTool[] => {
     const { sessionInfo } = EduClassroomConfig.shared;
     const iAmHost =
@@ -85,19 +91,11 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
     return { width, height };
   }
 
-  get carouselStreams() {
-    const { list } = iterateSet(super.studentStreams, {
-      onMap: (stream) => stream,
-    });
-
-    return list.slice(this.carouselPosition, this.carouselPosition + this._carouselShowCount);
-  }
-
   get gap() {
     return this._gapInPx;
   }
 
-  get canNav() {
+  get scrollable() {
     return super.studentStreams.size > this._carouselShowCount;
   }
 

@@ -1,12 +1,11 @@
-import { useMemo, useRef, useState, FC, Fragment } from 'react';
+import { useRef, useState, FC, Fragment, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { useLectureUIStores } from '~hooks/use-edu-stores';
-import { StreamPlayer, StreamPlaceholder } from '.';
-import { EduRoleTypeEnum, EduStreamUI } from 'agora-edu-core';
+import { CSSTransition } from 'react-transition-group';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { EduLectureUIStore } from '@/infra/stores/lecture';
 import { SvgImg } from '~ui-kit';
-import { CSSTransition } from 'react-transition-group';
-import { useCallback } from 'react';
+import { StreamPlayer, StreamPlaceholder, CarouselGroup } from '.';
 
 export const RoomBigTeacherStreamContainer = observer(() => {
   const { streamUIStore } = useLectureUIStores() as EduLectureUIStore;
@@ -48,17 +47,9 @@ export const NavGroup: FC<{ onNext: () => void; onPrev: () => void; visible: boo
 
 export const RoomBigStudentStreamsContainer = observer(() => {
   const { streamUIStore } = useLectureUIStores() as EduLectureUIStore;
-  const { carouselStreams, studentVideoStreamSize, gap, carouselNext, carouselPrev, canNav } =
+  const { studentVideoStreamSize, carouselNext, carouselPrev, scrollable, gap, carouselStreams } =
     streamUIStore;
   const [navigationVisible, setNavigationVisible] = useState(false);
-
-  const videoStreamStyle = useMemo(
-    () => ({
-      width: studentVideoStreamSize.width,
-      height: studentVideoStreamSize.height,
-    }),
-    [studentVideoStreamSize.width, studentVideoStreamSize.height],
-  );
 
   const mouseHandler = useCallback(
     (visible) => () => {
@@ -73,18 +64,15 @@ export const RoomBigStudentStreamsContainer = observer(() => {
       onMouseEnter={mouseHandler(true)}
       onMouseLeave={mouseHandler(false)}
       style={{ marginTop: 2, marginBottom: 2, height: studentVideoStreamSize.height }}>
-      {canNav && (
+      {scrollable && (
         <NavGroup visible={navigationVisible} onPrev={carouselPrev} onNext={carouselNext} />
       )}
-      <div className="h-full flex justify-center items-center">
-        {carouselStreams.map((stream: EduStreamUI, idx: number) => (
-          <div
-            style={{ marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2 }}
-            key={stream.stream.streamUuid}>
-            <StreamPlayer stream={stream} style={videoStreamStyle}></StreamPlayer>
-          </div>
-        ))}
-      </div>
+      <CarouselGroup
+        gap={gap}
+        videoWidth={studentVideoStreamSize.width}
+        videoHeight={studentVideoStreamSize.height}
+        carouselStreams={carouselStreams}
+      />
     </div>
   );
 });

@@ -103,6 +103,7 @@
   cursor: pointer;
   opacity: 0;
   border-radius: 2px;
+  z-index: 10;
 }
 
 .carousel-next {
