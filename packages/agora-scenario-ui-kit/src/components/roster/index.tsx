@@ -13,6 +13,8 @@ export type Operation =
   | 'chat'
   | 'star';
 
+export type Operations = Partial<Record<Operation, { interactable: boolean }>>;
+
 export type SupportedFunction = 'carousel' | 'search' | 'kick' | 'grant-board' | 'podium' | 'stars';
 
 export type ColumnKey =
@@ -35,21 +37,28 @@ export type Column = {
 };
 
 export enum DeviceState {
+  // published
   enabled,
+  // unpublished
   disabled,
+  // not on podium
   unavailable,
+  // on podium but device is unauthorized
+  unauthorized,
 }
 
 export const cameraIconType = {
-  [DeviceState.enabled]: 'camera-disabled',
-  [DeviceState.disabled]: 'camera-enabled',
+  [DeviceState.enabled]: 'camera-enabled',
+  [DeviceState.disabled]: 'camera-disabled',
   [DeviceState.unavailable]: 'camera-inactive',
+  [DeviceState.unauthorized]: 'camera-forbidden',
 };
 
 export const microphoneIconType = {
-  [DeviceState.enabled]: 'mic-disabled',
-  [DeviceState.disabled]: 'mic-enabled',
+  [DeviceState.enabled]: 'mic-enabled',
+  [DeviceState.disabled]: 'mic-disabled',
   [DeviceState.unavailable]: 'mic-inactive',
+  [DeviceState.unauthorized]: 'mic-forbidden',
 };
 
 export type Profile = {
@@ -61,7 +70,7 @@ export type Profile = {
   cameraState: DeviceState;
   microphoneState: DeviceState;
   stars: number;
-  operations: Operation[];
+  operations: Operations;
 };
 
 export type CarouselProps = {

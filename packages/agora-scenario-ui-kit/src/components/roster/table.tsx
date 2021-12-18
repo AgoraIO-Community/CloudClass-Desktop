@@ -9,7 +9,6 @@ type RosterTableProps = {
   list: Profile[];
   functions?: Array<SupportedFunction>;
   onActionClick?: (operation: Operation, profile: Profile) => void;
-  columnInteractive?: boolean;
 };
 
 export const InteractiveCol = ({
@@ -17,27 +16,28 @@ export const InteractiveCol = ({
   index: idx,
   data,
   onClick,
-  interactive,
 }: {
   col: Column;
   index: number;
   data: Profile;
   onClick: (operation: Operation, profile: Profile) => void;
-  interactive: boolean;
 }) => {
+  const operation = data.operations[col.operation as Operation];
+  const interactable = operation?.interactable;
   const [hovered, setHovered] = useState(false);
 
   const isFirstColumn = idx === 0;
 
   const handleClick = () => {
-    if (col.operation && data.operations.includes(col.operation)) {
-      onClick(col.operation, data);
+    const operation = data.operations[col.operation as Operation];
+    if (operation?.interactable) {
+      onClick(col.operation as Operation, data);
     }
   };
 
   const colCls = classNames(!isFirstColumn ? 'justify-center' : 'justify-start');
 
-  const interactiveEvents = interactive
+  const interactiveEvents = interactable
     ? {
         onMouseEnter: () => {
           setHovered(true);
@@ -48,7 +48,7 @@ export const InteractiveCol = ({
       }
     : {};
 
-  const hoverClass = interactive && !isFirstColumn ? 'roster-col-hover' : '';
+  const hoverClass = interactable && !isFirstColumn ? 'roster-col-hover' : '';
 
   return (
     <Col
@@ -74,7 +74,6 @@ export const RosterTable: React.FC<RosterTableProps> = ({
   list = [],
   functions = [],
   onActionClick = () => {},
-  columnInteractive = false,
 }) => {
   const cols = useColumns(functions);
 
@@ -89,7 +88,6 @@ export const RosterTable: React.FC<RosterTableProps> = ({
               col={col}
               key={col.key}
               index={idx}
-              interactive={columnInteractive}
             />
           ))}
         </Row>

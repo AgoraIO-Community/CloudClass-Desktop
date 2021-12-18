@@ -11,7 +11,7 @@ import { toLower } from 'lodash';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share-ui';
 import { iterateMap } from '../../../../utils/collection';
-import { DeviceState, Operation } from './type';
+import { Operations, DeviceState, Operation } from './type';
 import { EduClassroomConfig, EduRoleTypeEnum } from '../../../..';
 import { AGServiceErrorCode } from '../../../../services/error';
 import { transI18n } from '../i18n';
@@ -114,6 +114,10 @@ export class RosterUIStore extends EduUIStoreBase {
     return null;
   }
 
+  private shouldBlockMediaAction(deviceState: DeviceState) {
+    return [DeviceState.unauthorized, DeviceState.unavailable].includes(deviceState);
+  }
+
   /** Actions */
   @action.bound
   updateCarousel(carousel: RosterUIStore['carousel']) {
@@ -126,7 +130,15 @@ export class RosterUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  clickRowAction(operation: Operation, profile: { uid: string | number; isOnPodium: boolean }) {
+  clickRowAction(
+    operation: Operation,
+    profile: {
+      uid: string | number;
+      isOnPodium: boolean;
+      cameraState: DeviceState;
+      microphoneState: DeviceState;
+    },
+  ) {
     const { addDialog, addGenericErrorDialog } = this.shareUIStore;
     const { roomUuid, userUuid, sendRewards } = this.classroomStore.roomStore;
     const { grantUsers, grantPermission, revokePermission } = this.classroomStore.boardStore;
@@ -261,11 +273,6 @@ export class RosterUIStore extends EduUIStoreBase {
   }
 
   @computed
-  get isColumnsInteractive() {
-    return this.classroomStore.roomStore.userRole === EduRoleTypeEnum.teacher;
-  }
-
-  @computed
   get userList() {
     const { list } = iterateMap(this.classroomStore.userStore.studentList, {
       onMap: (userUuid: string, { userName }) => {
@@ -279,32 +286,9 @@ export class RosterUIStore extends EduUIStoreBase {
         const isBoardGranted = grantUsers.has(userUuid);
         const stars = rewards.get(userUuid) || 0;
         const isChatMuted = chatMuted;
-        const operations: Operation[] = [];
         let cameraState = DeviceState.unavailable;
         let microphoneState = DeviceState.unavailable;
 
-        if (this.canOperatePodium) {
-          operations.push('podium');
-        }
-
-        if (this.canMuteChat) {
-          operations.push('chat');
-        }
-
-        if (this.canGrantWhiteboardPermissions) {
-          operations.push('grant-board');
-        }
-        if (this.canKickOut) {
-          operations.push('kick');
-        }
-        if (this.canOperateMedia) {
-          operations.push('camera');
-          operations.push('microphone');
-        }
-
-        if (this.canSendRewards) {
-          operations.push('star');
-        }
         // disabled: user has not publish streams
         // enabled: user has published streams
         // unavailable: user has no streams
@@ -317,10 +301,33 @@ export class RosterUIStore extends EduUIStoreBase {
 
           const isMicAvailCanMute = mainStream.audioState === AgoraRteMediaPublishState.Published;
 
-          cameraState = isCameraAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
+          cameraState = isCameraAvailCanMute ? DeviceState.enabled : DeviceState.disabled;
 
-          microphoneState = isMicAvailCanMute ? DeviceState.disabled : DeviceState.enabled;
+          microphoneState = isMicAvailCanMute ? DeviceState.enabled : DeviceState.disabled;
+
+          const isCameraUnauthorized =
+            mainStream.videoSourceState === AgoraRteMediaSourceState.stopped;
+          const isMicUnauthorized =
+            mainStream.audioSourceState === AgoraRteMediaSourceState.stopped;
+
+          cameraState = isCameraUnauthorized ? DeviceState.unauthorized : cameraState;
+
+          microphoneState = isMicUnauthorized ? DeviceState.unauthorized : microphoneState;
         }
+
+        const operations: Operations = {
+          podium: { interactable: this.canOperatePodium },
+          chat: { interactable: this.canMuteChat },
+          kick: { interactable: this.canKickOut },
+          camera: {
+            interactable: this.canOperateMedia && !this.shouldBlockMediaAction(cameraState),
+          },
+          microphone: {
+            interactable: this.canOperateMedia && !this.shouldBlockMediaAction(microphoneState),
+          },
+          star: { interactable: this.canSendRewards },
+          'grant-board': { interactable: this.canGrantWhiteboardPermissions },
+        };
 
         return {
           uid,

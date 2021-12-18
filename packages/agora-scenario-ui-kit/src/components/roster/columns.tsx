@@ -40,7 +40,14 @@ export const defaultColumns: Column[] = [
     operation: 'camera',
     render: (profile: Profile) => {
       const iconType = cameraIconType[profile.cameraState];
-      return <Icon type={iconType} canClick={profile.cameraState !== DeviceState.unavailable} />;
+      return (
+        <Icon
+          type={iconType}
+          canClick={
+            ![DeviceState.unauthorized, DeviceState.unavailable].includes(profile.cameraState)
+          }
+        />
+      );
     },
     width: '80px',
   },
@@ -51,7 +58,14 @@ export const defaultColumns: Column[] = [
     operation: 'microphone',
     render: (profile: Profile) => {
       const iconType = microphoneIconType[profile.microphoneState];
-      return <Icon type={iconType} canClick={profile.cameraState !== DeviceState.unavailable} />;
+      return (
+        <Icon
+          type={iconType}
+          canClick={
+            ![DeviceState.unauthorized, DeviceState.unavailable].includes(profile.microphoneState)
+          }
+        />
+      );
     },
     width: '80px',
   },

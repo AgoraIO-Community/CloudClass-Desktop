@@ -68,6 +68,10 @@
   background-image: url('./assets/svg/camera-inactive.svg');
   background-size: 100%;
 }
+.icon-camera-forbidden {
+  background-image: url('./assets/svg/camera-forbidden.svg');
+  background-size: 100%;
+}
 .icon-kick-out {
   background-image: url('./assets/svg/kick-out.svg');
   background-size: 100%;
@@ -86,6 +90,10 @@
 }
 .icon-mic-inactive {
   background-image: url('./assets/svg/mic-inactive.svg');
+  background-size: 100%;
+}
+.icon-mic-forbidden {
+  background-image: url('./assets/svg/mic-forbidden.svg');
   background-size: 100%;
 }
 .icon-not-on-podium {

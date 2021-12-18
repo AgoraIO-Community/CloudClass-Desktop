@@ -1,7 +1,12 @@
 export enum DeviceState {
+  // published
   enabled,
+  // unpublished
   disabled,
+  // not on podium
   unavailable,
+  // on podium but device is unauthorized
+  unauthorized,
 }
 
 export type Operation =
@@ -12,3 +17,5 @@ export type Operation =
   | 'kick'
   | 'chat'
   | 'star';
+
+export type Operations = Partial<Record<Operation, { interactable: boolean }>>;
