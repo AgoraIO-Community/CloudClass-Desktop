@@ -22,6 +22,7 @@ export const Roster: FC<RosterProps> = ({
   children,
   offsetTop,
   bounds,
+  width,
 }) => {
   const DraggableContainer = useCallback(
     ({
@@ -63,7 +64,7 @@ export const Roster: FC<RosterProps> = ({
   return (
     <OverlayWrap opened={opened} onExited={onClose}>
       <DraggableContainer handle=".main-title" bounds={bounds} offsetTop={offsetTop}>
-        <div className="agora-board-resources roster-wrap" style={{ width: 755 }}>
+        <div className="agora-board-resources roster-wrap" style={{ width }}>
           {/* close icon */}
           <div className="btn-pin">
             <SvgImg

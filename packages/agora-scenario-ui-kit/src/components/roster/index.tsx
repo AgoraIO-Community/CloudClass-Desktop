@@ -77,6 +77,10 @@ export type CarouselProps = {
 
 export type RosterProps = {
   /**
+   * 组件宽度
+   */
+  width?: number;
+  /**
    * 是否可拖拽
    */
   isDraggable?: boolean;

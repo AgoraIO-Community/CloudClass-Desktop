@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { CloudDriverContainer } from '~containers/cloud-driver';
 import { RoomDeviceSettingContainer } from '~containers/device-setting';
 import { useStore } from '~hooks/use-edu-stores';
-import { RosterContainer } from '../user-list';
+import { RosterContainer } from '../roster/user-list';
 import { Confirm } from './confirm';
 import { GenericErrorDialog } from './error-generic';
 import { KickOut } from './kick-out';
@@ -35,7 +35,7 @@ export type BaseDialogProps = {
   id: string;
 };
 
-export const DialogContainer: React.FC<any> = observer(() => {
+export const DialogContainer: React.FC<unknown> = observer(() => {
   const { shareUIStore } = useStore();
   const { dialogQueue } = shareUIStore;
 
@@ -45,7 +45,7 @@ export const DialogContainer: React.FC<any> = observer(() => {
 
   return (
     <div className={cls}>
-      {dialogQueue.map(({ id, category, props }: any) => (
+      {dialogQueue.map(({ id, category, props }) => (
         <div key={id} className="fixed-container">
           {getDialog(category, id, props)}
         </div>

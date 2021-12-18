@@ -15,10 +15,13 @@ export const RosterContainer: FC<RosterContainerProps> = observer(({ onClose }) 
     searchKeyword,
     rosterFunctions: functions,
     carouselProps,
+    uiOverrides,
   } = rosterUIStore;
 
+  const { width } = uiOverrides;
   return (
     <Roster
+      width={width}
       bounds=".track-bounds"
       offsetTop={27}
       hostname={teacherName}

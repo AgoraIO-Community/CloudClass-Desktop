@@ -42,7 +42,7 @@ export const defaultColumns: Column[] = [
       const iconType = cameraIconType[profile.cameraState];
       return <Icon type={iconType} canClick={profile.cameraState !== DeviceState.unavailable} />;
     },
-    width: '12%',
+    width: '80px',
   },
   {
     key: 'microphoneState',
@@ -53,7 +53,7 @@ export const defaultColumns: Column[] = [
       const iconType = microphoneIconType[profile.microphoneState];
       return <Icon type={iconType} canClick={profile.cameraState !== DeviceState.unavailable} />;
     },
-    width: '12%',
+    width: '80px',
   },
 ];
 
@@ -68,7 +68,7 @@ export const podiumColumn: Column = {
 
     return <Icon type={iconType} />;
   },
-  width: '12%',
+  width: '80px',
 };
 
 export const grantBoardColumn: Column = {
@@ -81,7 +81,7 @@ export const grantBoardColumn: Column = {
     const iconType = isActive || hovered ? 'board-granted' : 'board-not-granted';
     return <Icon type={iconType} />;
   },
-  width: '12%',
+  width: '80px',
 };
 
 export const starsColumn: Column = {
@@ -96,7 +96,7 @@ export const starsColumn: Column = {
       </Icon>
     );
   },
-  width: '12%',
+  width: '80px',
 };
 
 export const kickOutColumn: Column = {
@@ -107,5 +107,5 @@ export const kickOutColumn: Column = {
   render: (profile: Profile, hovered) => {
     return <Icon type={hovered ? 'kick-out-hover' : 'kick-out'} />;
   },
-  width: '12%',
+  width: '80px',
 };

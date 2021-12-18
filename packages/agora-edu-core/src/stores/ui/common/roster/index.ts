@@ -17,6 +17,10 @@ import { AGServiceErrorCode } from '../../../../services/error';
 import { transI18n } from '../i18n';
 
 export class RosterUIStore extends EduUIStoreBase {
+  uiOverrides = {
+    width: 640,
+  };
+
   private _disposers: IReactionDisposer[] = [];
   onInstall() {
     // update carousel when room properties change

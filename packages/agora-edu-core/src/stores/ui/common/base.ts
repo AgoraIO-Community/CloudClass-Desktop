@@ -4,6 +4,7 @@ import { EduShareUIStore } from './share-ui';
 
 export abstract class EduUIStoreBase {
   protected logger!: Injectable.Logger;
+  protected uiOverrides: Object = {};
   readonly classroomStore: EduClassroomStore;
   readonly shareUIStore: EduShareUIStore;
 

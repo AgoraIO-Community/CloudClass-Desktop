@@ -2,6 +2,7 @@
 
 declare module '*.css';
 declare module '*.svga';
+declare module '*.svg';
 declare module '*.json';
 declare module '*.mp3';
 declare module '*.mp4';
@@ -31,7 +32,7 @@ interface CustomGlobalUtils {
   file: File;
 }
 
-declare interface Window extends CustomGlobalUtils {}
+type Window = CustomGlobalUtils;
 
 interface RtmTextMessage {
   text: string;
