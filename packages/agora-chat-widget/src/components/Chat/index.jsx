@@ -34,6 +34,7 @@ export const Chat = () => {
   const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {});
   const showChat = _.get(state, 'showChat');
   const showMIniIcon = _.get(state, 'isShowMiniIcon');
+  const configUIVisible = _.get(state, 'configUIVisible');
   const isTabKey = state?.isTabKey;
   // 直接在 propsData 中取值
   const isTeacher =
@@ -130,7 +131,7 @@ export const Chat = () => {
           <MessageBox />
           <InputBox />
         </TabPane>
-        {isTeacher && (
+        {configUIVisible.memebers && isTeacher && (
           <TabPane
             tab={
               roomUserList.length > 0
@@ -141,16 +142,18 @@ export const Chat = () => {
             <UserList roomUserList={roomUserList} />
           </TabPane>
         )}
-        <TabPane
-          tab={
-            <div>
-              {showAnnouncementNotice && <div className="red-notice"></div>}
-              {transI18n('chat.announcement')}
-            </div>
-          }
-          key={CHAT_TABS_KEYS.notice}>
-          <Announcement />
-        </TabPane>
+        {configUIVisible.announcement && (
+          <TabPane
+            tab={
+              <div>
+                {showAnnouncementNotice && <div className="red-notice"></div>}
+                {transI18n('chat.announcement')}
+              </div>
+            }
+            key={CHAT_TABS_KEYS.notice}>
+            <Announcement />
+          </TabPane>
+        )}
       </Tabs>
       {showMIniIcon && (
         <div className="mini-icon">

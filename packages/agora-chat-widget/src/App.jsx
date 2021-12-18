@@ -7,7 +7,13 @@ import { transI18n } from '~ui-kit';
 import { propsAction, isShowChat, isShowMiniIcon } from './redux/actions/propsAction';
 import { statusAction, clearStore } from './redux/actions/userAction';
 import { messageAction, showRedNotification } from './redux/actions/messageAction';
-import { roomAllMute, roomUsers, isUserMute, announcementNotice } from './redux/actions/roomAction';
+import {
+  roomAllMute,
+  roomUsers,
+  isUserMute,
+  announcementNotice,
+  setVisibleUI,
+} from './redux/actions/roomAction';
 import { loginIM } from './api/login';
 import { setUserInfo, getUserInfo } from './api/userInfo';
 import { joinRoom, getAnnouncement } from './api/chatroom';
@@ -27,6 +33,7 @@ const App = function (props) {
     isFullScreen,
     showChat: globalShowChat,
     isShowMiniIcon: miniIconStatus,
+    configUIVisible,
   } = props.pluginStore.globalContext;
   const state = useSelector((state) => state);
   const showChat = state?.showChat;
@@ -48,6 +55,7 @@ const App = function (props) {
     store.dispatch(propsAction(new_IM_Data));
     store.dispatch(isShowChat(globalShowChat));
     store.dispatch(isShowMiniIcon(miniIconStatus));
+    store.dispatch(setVisibleUI(configUIVisible));
     if (appkey) {
       initIMSDK(appkey);
     }

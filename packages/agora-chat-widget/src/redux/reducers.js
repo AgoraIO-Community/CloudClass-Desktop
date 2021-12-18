@@ -22,6 +22,11 @@ let defaultState = {
   announcementStatus: true, // 公告编辑状态
   showEmoji: false, // 表情面板显示/隐藏
   showAnnouncementNotice: false, //公告更新提示
+  configUIVisible: {
+    memebers: true, // 成员 tab
+    announcement: true, //公告 tab
+    allMute: true, // 全体禁言按钮
+  },
 };
 const reducer = (state = defaultState, action) => {
   const { type, data } = action;
@@ -188,6 +193,11 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         isShowMiniIcon: data,
+      };
+    case 'SET_VISIBLE_UI':
+      return {
+        ...state,
+        configUIVisible: { ...state.configUIVisible, ...data },
       };
     default:
       break;

@@ -41,6 +41,7 @@ const App: React.FC<AppProps> = observer((props) => {
     localUserInfo,
     roomInfo,
   };
+
   const globalContext = {
     isFullScreen,
     showChat: [EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomBigClass].includes(
@@ -49,6 +50,11 @@ const App: React.FC<AppProps> = observer((props) => {
     isShowMiniIcon: ![EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomBigClass].includes(
       EduClassroomConfig.shared.sessionInfo.roomType,
     ),
+    configUIVisible: {
+      memebers: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
+      announcement: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
+      allMute: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
+    },
   };
 
   const chatroomId = uiStore.classroomStore.roomStore.imConfig?.chatRoomId;

@@ -38,6 +38,7 @@ export const InputMsg = ({ isTeacher }) => {
   const userNickName = state?.loginUserInfo.nickname;
   const isAllMute = state?.room.allMute;
   const isShowEmoji = state?.showEmoji;
+  const configUIVisible = state?.configUIVisible;
 
   // 管理输入框内容
   const [content, setContent] = useState('');
@@ -147,19 +148,20 @@ export const InputMsg = ({ isTeacher }) => {
             onVisibleChange={handleEomijVisibleChange}>
             <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
           </Popover>
-
-          {isTeacher && (
-            <div>
-              <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
-              <Switch
-                className="chat-switch"
-                checked={isAllMute}
-                onClick={() => {
-                  onChangeMute(isAllMute);
-                }}
-              />
-            </div>
-          )}
+          {!configUIVisible.allMute
+            ? null
+            : isTeacher && (
+                <div>
+                  <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
+                  <Switch
+                    className="chat-switch"
+                    checked={isAllMute}
+                    onClick={() => {
+                      onChangeMute(isAllMute);
+                    }}
+                  />
+                </div>
+              )}
         </div>
         <Input.TextArea
           placeholder={transI18n('chat.enter_contents')}
@@ -174,25 +176,6 @@ export const InputMsg = ({ isTeacher }) => {
           {transI18n('chat.send')}
         </Button>
       </div>
-      {/* <Modal
-        visible={isShowEmoji}
-        onCancel={() => {
-          handleCancel();
-        }}
-        width={280}
-        footer={''}
-        closable={false}
-        style={{
-          width: '280px',
-          position: 'absolute',
-          bottom: '110px',
-          right: '10px',
-        }}
-        className="emoji-modal"
-        destroyOnClose
-        maskStyle={{ backgroundColor: 'rgba(0,0,0,0)' }}>
-       
-      </Modal> */}
     </>
   );
 };

@@ -40,3 +40,5 @@ export const announcementStatus = (data) => {
 export const announcementNotice = (data) => {
   return { type: 'ANNOUNCEMENT_NOTICE', data };
 };
+// 设置 UI 配置
+export const setVisibleUI = (data) => ({ type: 'SET_VISIBLE_UI', data });
