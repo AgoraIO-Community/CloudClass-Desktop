@@ -182,6 +182,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
           }
         }
         break;
+      case 'laser':
+        this.setTool(id);
+        break;
       default:
         launchApp(id);
         break;
@@ -255,6 +258,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
         id: 'screenShare',
         iconType: 'share-screen',
         name: transI18n('scaffold.screen_share'),
+      },
+      {
+        id: 'laser',
+        iconType: 'laser-pointer',
+        name: transI18n('scaffold.laser_pointer'),
       },
     ].concat(apps);
   }
@@ -400,6 +408,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
         return WhiteboardTool.blankPage;
       case 'hand':
         return WhiteboardTool.hand;
+      case 'laser':
+        return WhiteboardTool.laserPointer;
     }
     return WhiteboardTool.unknown;
   }

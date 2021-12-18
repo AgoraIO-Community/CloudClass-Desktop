@@ -1,5 +1,5 @@
 import { useHomeStore } from '@/infra/hooks';
-import { AgoraExtAppCountDown, AgoraExtAppAnswer } from 'agora-plugin-gallery';
+import { AgoraExtAppCountDown, AgoraExtAppAnswer, AgoraExtAppVote } from 'agora-plugin-gallery';
 
 import MD5 from 'js-md5';
 import { isEmpty } from 'lodash';
@@ -43,6 +43,7 @@ export const LaunchPage = observer(() => {
       launchOption.extApps = [
         new AgoraExtAppCountDown(launchOption.language as any),
         new AgoraExtAppAnswer(launchOption.language as any),
+        new AgoraExtAppVote(launchOption.language as any),
       ];
       const recordUrl = `https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
 

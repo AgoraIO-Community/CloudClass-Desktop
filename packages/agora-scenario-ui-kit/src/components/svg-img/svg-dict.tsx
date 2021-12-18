@@ -1904,6 +1904,10 @@ export const getViewBox = (name: string) => {
       return '0 0 22 22';
     case 'hands-up-before':
       return '0 0 22 22';
+    case 'teacher-hands-up-active':
+      return '0 0 1024 1024';
+    case 'teacher-hands-up-before':
+      return '0 0 1024 1024';
     default:
       return '0 0 1024 1024';
   }

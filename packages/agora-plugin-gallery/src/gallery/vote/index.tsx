@@ -244,7 +244,18 @@ export class AgoraExtAppVote implements IAgoraExtApp {
   appIdentifier = 'io.agora.vote';
   appName = transI18n('cabinet.vote.appName');
   className = 'vote-dialog';
-  icon = (<Icon type="vote" useSvg size={24} />);
+  icon = (
+    <Icon
+      type="vote"
+      className="vote"
+      style={{
+        height: '24px',
+        width: '24px',
+        marginBottom: '12px',
+      }}
+      size={24}
+    />
+  );
   width = 360;
   height = 283;
 
