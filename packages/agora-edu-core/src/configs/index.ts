@@ -1,5 +1,5 @@
-import { AgoraRteEngine, AgoraRteEngineConfig, AgoraRteLogLevel, Logger } from 'agora-rte-sdk';
-import { RteLanguage } from 'agora-rte-sdk';
+import { AgoraRteEngine, AgoraRteEngineConfig, Logger } from 'agora-rte-sdk';
+import { merge } from 'lodash';
 import { EduSessionInfo, EduRoleTypeEnum, EduRoomTypeEnum, CourseWareList } from '../type';
 import { CloudDriveResource } from '../stores/domain/common/cloud-drive/struct';
 import { CloudDriveResourceConvertProgress } from '../stores/domain/common/cloud-drive/type';
@@ -66,16 +66,18 @@ export class EduClassroomConfig {
     this.appId = appId;
     this._sessionInfo = sessionInfo;
     this.recordUrl = recordUrl;
-    this._rteEngineConfig = new AgoraRteEngineConfig(appId, {
-      ...{
-        rtcConfigs: {
-          defaultCameraEncoderConfigurations: EduClassroomConfig.defaultMediaOptions(
-            sessionInfo.roomType,
-            sessionInfo.role,
-          ),
-        },
+    const rtcConfigs = merge(
+      {
+        defaultCameraEncoderConfigurations: EduClassroomConfig.defaultMediaOptions(
+          sessionInfo.roomType,
+          sessionInfo.role,
+        ),
       },
+      rteOpts?.rtcConfigs,
+    );
+    this._rteEngineConfig = new AgoraRteEngineConfig(appId, {
       ...rteOpts,
+      rtcConfigs,
     });
     this._widgets = widgets;
     this._extApps = extApps;
