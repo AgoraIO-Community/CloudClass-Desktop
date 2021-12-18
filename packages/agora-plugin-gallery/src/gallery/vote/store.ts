@@ -1,5 +1,12 @@
 import { action, observable, computed } from 'mobx';
-import { AgoraExtAppContext, AgoraExtAppHandle, EduRoleTypeEnum } from 'agora-edu-core';
+import {
+  AgoraExtAppContext,
+  AgoraExtAppHandle,
+  AgoraExtAppUserInfo,
+  EduRoleTypeEnum,
+  EduRole2RteRole,
+} from 'agora-edu-core';
+import _ from 'lodash';
 
 const formatTime = (long: number) => {
   let h: any = Math.floor(long / (60 * 60));
@@ -74,7 +81,10 @@ export class PluginStore {
 
   @computed
   get studentList() {
-    return this.userList?.filter((u: any) => ['broadcaster', 'audience'].includes(u.role));
+    return this.userList?.filter((u: any) => {
+      const role2rteRole = EduRole2RteRole(this.context.roomInfo.roomType, u.role);
+      return ['broadcaster', 'audience'].includes(role2rteRole);
+    });
   }
 
   @action
@@ -144,7 +154,7 @@ export class PluginStore {
           }
         });
       } else if (state === 'updateStudent') {
-        if (this.rosterUserList) {
+        if (this.studentList) {
           let students: any = this.context.properties['students'] || [];
           roomProperties['students'] = [];
           roomProperties['studentNames'] = [];
@@ -425,5 +435,28 @@ export class PluginStore {
         this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });
       }
     }
+  }
+
+  @action
+  updateStudents(userList: AgoraExtAppUserInfo[]) {
+    if (_.isEqual(userList, this.userList)) {
+      return;
+    }
+
+    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+      this.userList = userList;
+      if (this.status !== 'config' && this.status !== 'end') {
+        this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });
+      }
+    }
+  }
+  @action.bound
+  setTitle(value: string) {
+    this.title = value;
+  }
+
+  @action.bound
+  setMulChoice(value: boolean) {
+    this.mulChoice = value;
   }
 }

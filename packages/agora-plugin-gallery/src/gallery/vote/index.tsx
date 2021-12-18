@@ -9,6 +9,7 @@ import {
   AgoraExtAppContext,
   AgoraExtAppHandle,
   EduRoleTypeEnum,
+  AgoraExtAppUserInfo,
 } from 'agora-edu-core';
 import { Button, Table, Row, Input, transI18n, I18nProvider, changeLanguage, Icon } from '~ui-kit';
 import classnames from 'classnames';
@@ -46,7 +47,6 @@ const App = observer(
     return (
       <div
         style={{
-          width: '340px',
           height: pluginStore.height,
           transition: 'all 0.5s ease 0s',
           overflow: 'hidden',
@@ -74,7 +74,7 @@ const App = observer(
             }
             maxLength={100}
             onChange={(e: any) => {
-              pluginStore.status === 'config' && (pluginStore.title = e.target.value);
+              pluginStore.status === 'config' && pluginStore.setTitle(e.target.value);
             }}
           />
           {pluginStore.status === 'config' ? (
@@ -88,7 +88,7 @@ const App = observer(
                     checked={!pluginStore.mulChoice}
                     onChange={() => {}}
                     onClick={() => {
-                      pluginStore.status === 'config' && (pluginStore.mulChoice = false);
+                      pluginStore.status === 'config' && pluginStore.setMulChoice(false);
                     }}
                   />
                   <span></span>
@@ -101,7 +101,7 @@ const App = observer(
                     checked={pluginStore.mulChoice}
                     onChange={() => {}}
                     onClick={() => {
-                      pluginStore.status === 'config' && (pluginStore.mulChoice = true);
+                      pluginStore.status === 'config' && pluginStore.setMulChoice(true);
                     }}
                   />
                   <span></span>
@@ -261,8 +261,14 @@ export class AgoraExtAppVote implements IAgoraExtApp {
 
   store?: PluginStore;
 
+  eventHandler = this;
+
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language);
+  }
+
+  onUserListChanged(userList: AgoraExtAppUserInfo[]): void {
+    this.store?.updateStudents(userList);
   }
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
