@@ -147,6 +147,7 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
   }
   async extAppWillUnload(): Promise<boolean> {
     // TODO: 后续应该讲UI的逻辑抽离出来，ext app不应该和UI逻辑强耦合
+
     if (this.store!.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
       this.height = 168;
     }

@@ -40,8 +40,8 @@ const App = function (props) {
   const showRed = state?.showRed;
   const showAnnouncementNotice = state?.showAnnouncementNotice;
   const isFullSize =
-    state?.propsData?.roomType === ROOM_TYPE.smallClass ||
-    state?.propsData?.roomType === ROOM_TYPE.bigClass;
+    state?.propsData?.roomType === ROOM_TYPE.bigClass ||
+    state?.propsData?.roomType === ROOM_TYPE.oneClass;
   i18n.addResourceBundle('zh', 'translation', im_CN);
   i18n.addResourceBundle('en', 'translation', im_US);
 
@@ -211,20 +211,14 @@ const App = function (props) {
   return (
     <>
       {showChat ? (
-        isFullSize ? (
-          <div
-            className="app w-full"
-            style={{
-              width: isFullSize ? '300px' : '100%',
-              height: '530px',
-            }}>
-            <Chat />
-          </div>
-        ) : (
-          <div className="app" style={{ width: '300px', display: isFullSize ? 'none' : 'block' }}>
-            <Chat />
-          </div>
-        )
+        <div
+          className="app w-full"
+          style={{
+            width: isFullSize ? '100%' : '300px',
+            height: isFullSize ? '100%' : '530px',
+          }}>
+          <Chat />
+        </div>
       ) : (
         <div className="chat">
           <div
