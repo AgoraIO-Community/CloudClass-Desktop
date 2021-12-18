@@ -2,16 +2,13 @@ import {
   StreamUIStore,
   EduStreamTool,
   EduClassroomConfig,
-  EduStreamToolCategory,
   EduRoleTypeEnum,
   EduStreamUI,
   iterateSet,
-  StreamIconColor,
 } from 'agora-edu-core';
-import { AGError, AgoraRteMediaPublishState, AgoraRteMediaSourceState, Log } from 'agora-rte-sdk';
+import { Log } from 'agora-rte-sdk';
 import { computed, observable, action } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { transI18n } from '~ui-kit';
 
 @Log.attach({ proxyMethods: false })
 export class LectureRoomStreamUIStore extends StreamUIStore {
@@ -22,7 +19,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   private _gapInPx = 8;
 
   @observable
-  carouselPosition: number = 0;
+  carouselPosition = 0;
 
   @action.bound
   carouselNext() {
@@ -88,15 +85,6 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
     return { width, height };
   }
 
-  // get videoStreamSize() {
-  //   const width =
-  //     this.shareUIStore.classroomViewportSize.width / this._carouselShowCount - this._gapInPx;
-
-  //   const height = (10 / 16) * width;
-
-  //   return { width, height };
-  // }
-
   get carouselStreams() {
     const { list } = iterateSet(super.studentStreams, {
       onMap: (stream) => stream,
@@ -111,5 +99,9 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
 
   get canNav() {
     return super.studentStreams.size > this._carouselShowCount;
+  }
+
+  get layerItems() {
+    return [];
   }
 }

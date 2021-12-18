@@ -247,7 +247,11 @@ const StreamPlayerOverlay = observer(
     children: ReactNode;
   }) => {
     const { streamUIStore } = useStore();
-    const { toolbarPlacement } = streamUIStore;
+    const { toolbarPlacement, layerItems } = streamUIStore;
+
+    const rewardVisible = layerItems && layerItems.includes('reward');
+
+    const grantVisible = layerItems && layerItems.includes('grant');
 
     const cls = classnames({
       [`video-player-overlay`]: 1,
@@ -274,7 +278,7 @@ const StreamPlayerOverlay = observer(
           {children ? children : null}
           <AwardAnimations stream={stream} />
           <div className="top-right-info">
-            <StreamPlayerOverlayAwardNo stream={stream} />
+            {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}
           </div>
           <div className="bottom-left-info">
             <div
@@ -292,7 +296,7 @@ const StreamPlayerOverlay = observer(
             <StreamPlayerOverlayName stream={stream} />
           </div>
           <div className="bottom-right-info">
-            <StreamPlayerWhiteboardGranted stream={stream} />
+            {grantVisible && <StreamPlayerWhiteboardGranted stream={stream} />}
           </div>
           <StreamPlaceholderWaveArmPlaceholder stream={stream} />
         </div>
