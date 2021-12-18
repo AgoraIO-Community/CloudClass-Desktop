@@ -42,7 +42,7 @@ export const PensContainer = observer((props: PensContainerProps) => {
       isActive={isPenToolActive}
       colorSliderMin={1}
       colorSliderMax={31}
-      colorSliderDefault={strokeWidth}
+      strokeWidthValue={strokeWidth}
       colorSliderStep={0.3}
       onSliderChange={changeStroke}
       activeColor={currentColor}

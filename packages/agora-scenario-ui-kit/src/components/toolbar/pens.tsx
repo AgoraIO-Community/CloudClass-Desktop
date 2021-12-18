@@ -14,6 +14,7 @@ export interface PensProps extends ToolItem {
   colorSliderMin?: number;
   colorSliderMax?: number;
   colorSliderDefault?: number;
+  strokeWidthValue?: number;
   colorSliderStep?: number;
   paletteMap?: Record<string, string>;
   onColorClick?: (value: string) => void;
@@ -30,7 +31,7 @@ export const Pens: FC<PensProps> = ({
   activeColor = '#7b88a0',
   colorSliderMin = 0,
   colorSliderMax = 100,
-  colorSliderDefault = 50,
+  strokeWidthValue = 5,
   colorSliderStep = 1,
   paletteMap = {},
   onColorClick,
@@ -68,7 +69,8 @@ export const Pens: FC<PensProps> = ({
 
         <Slider
           style={{ width: '100%' }}
-          defaultValue={colorSliderDefault}
+          defaultValue={strokeWidthValue}
+          value={strokeWidthValue}
           min={colorSliderMin}
           max={colorSliderMax}
           step={colorSliderStep}

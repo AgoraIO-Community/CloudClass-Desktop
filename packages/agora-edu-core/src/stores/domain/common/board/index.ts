@@ -340,6 +340,7 @@ export class BoardStore extends EduStoreBase {
     this.writableRoom.setMemberState({
       strokeWidth: value,
     });
+    this.strokeWidth = value;
   }
 
   @action.bound
