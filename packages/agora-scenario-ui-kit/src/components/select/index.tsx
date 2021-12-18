@@ -16,6 +16,7 @@ export interface SelectProps extends BaseProps {
   options: SelectOption[];
   isSearchable?: boolean;
   defaultMenuIsOpen?: boolean;
+  isMenuTextCenter?: boolean;
   prefix?: React.ReactNode;
   maxMenuHeight?: number;
   onChange?: (value: string) => unknown;
@@ -28,6 +29,7 @@ export const Select: FC<SelectProps> = ({
   options,
   isSearchable = false,
   defaultMenuIsOpen = false,
+  isMenuTextCenter = false,
   prefix,
   maxMenuHeight = 300,
   onChange,
@@ -76,6 +78,7 @@ export const Select: FC<SelectProps> = ({
                 key={item.value}
                 className={classnames({
                   'option-item': 1,
+                  'text-center': isMenuTextCenter,
                   'is-select': item.value === value,
                 })}
                 onClick={() => {

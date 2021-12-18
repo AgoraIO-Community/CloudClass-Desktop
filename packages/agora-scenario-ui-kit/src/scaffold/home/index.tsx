@@ -302,6 +302,7 @@ export const Home: React.FC<HomeProps> = ({
                 id="scenario"
                 value={scenario}
                 options={scenarioOptions}
+                isMenuTextCenter={true}
                 onChange={(value) => {
                   onChangeScenario(value);
                 }}
@@ -322,6 +323,7 @@ export const Home: React.FC<HomeProps> = ({
                   onChangeRole(value);
                 }}
                 placeholder={transI18n('home.role_placeholder')}
+                isMenuTextCenter={true}
                 options={roleOptions}></Select>
             </Col>
           </Row>

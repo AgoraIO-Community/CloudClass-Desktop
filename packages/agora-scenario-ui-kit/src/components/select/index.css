@@ -62,6 +62,10 @@
 .options-container .option-item:hover {
   background: #f9f9fc;
 }
+.options-container .option-item.text-center {
+  text-align: center;
+  text-indent: 0;
+}
 .react-select-container .select-prefix {
   display: flex;
   justify-content: center;
