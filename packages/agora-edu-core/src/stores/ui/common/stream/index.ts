@@ -7,7 +7,6 @@ import {
   AGRtcConnectionType,
   bound,
   RtcState,
-  AGRteTrackErrorReason,
 } from 'agora-rte-sdk';
 import {
   action,
@@ -71,7 +70,11 @@ export class StreamUIStore extends EduUIStoreBase {
           previousReward = oldValue.get(userUuid) || 0;
         }
         let reward = newValue.get(userUuid) || 0;
-        if (reward > previousReward) {
+        const onPodium = this.classroomStore.roomStore.acceptedList.some(
+          ({ userUuid: thisUuid }) => thisUuid === userUuid,
+        );
+        // Add an animation to the award animation queue only if the student is on podium
+        if (reward > previousReward && onPodium) {
           anims.push({ id: uuidv4(), userUuid: userUuid });
         }
       }

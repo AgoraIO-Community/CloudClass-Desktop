@@ -15,7 +15,6 @@ import {
   AudioVolume,
 } from '~ui-kit';
 import RewardSVGA from './assets/svga/reward.svga';
-import WaveArmSVGA from './assets/svga/hands-up.svga';
 import RewardSound from './assets/audio/reward.mp3';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
