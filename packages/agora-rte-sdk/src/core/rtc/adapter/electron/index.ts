@@ -449,6 +449,7 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
           resolve();
         });
         rtcEngine.setChannelProfile(this._channelProfile);
+        rtcEngine.enableAudioVolumeIndication(500, 3);
         rtcEngine.joinChannel(token, this.channelName, '', +streamUuid);
       } else if (connectionType === AGRtcConnectionType.sub) {
         rtcEngine.once('videoSourceJoinedSuccess', () => {

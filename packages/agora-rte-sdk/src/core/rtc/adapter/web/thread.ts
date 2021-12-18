@@ -177,10 +177,9 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
       if (!this._volumePollingTask) {
         this._volumePollingTask = Scheduler.shared.addPollingTask(() => {
           if (this.track) {
-            this.emit(
-              AgoraMediaControlEventType.localAudioVolume,
-              (this.track as ILocalAudioTrack).getVolumeLevel(),
-            );
+            let volume = (this.track as ILocalAudioTrack).getVolumeLevel();
+            volume = Math.min(volume * 3, 1);
+            this.emit(AgoraMediaControlEventType.localAudioVolume, volume);
           }
         }, Scheduler.Duration.second(0.5));
       }
@@ -498,6 +497,7 @@ export class AgoraRteSubscribeThread extends AgoraRteThread {
   readonly _muteMap: Map<string, boolean>;
   readonly _canvasMap?: Map<string, AgoraRtcVideoCanvas>;
   private _mediaType: 'video' | 'audio';
+  private _volumePollingTask?: Scheduler.Task;
 
   get mute(): boolean {
     if (this._muteMap.has(this.streamUuid)) {
@@ -584,6 +584,13 @@ export class AgoraRteSubscribeThread extends AgoraRteThread {
           }
         } else {
           if (this.track) {
+            if (!this._volumePollingTask) {
+              this._volumePollingTask = Scheduler.shared.addPollingTask(() => {
+                let volume = (this.track as IRemoteAudioTrack).getVolumeLevel();
+                volume = Math.min(volume * 3, 1);
+                this.emit('audio-volume-indication', volume);
+              }, Scheduler.Duration.second(0.5));
+            }
             (this.track as IRemoteAudioTrack).play();
           }
         }
@@ -613,6 +620,9 @@ export class AgoraRteSubscribeThread extends AgoraRteThread {
         if (this.track) {
           this.logger.debug(`[${this._user.uid}] stopping track...`);
           this.track.stop();
+          if (this._volumePollingTask) {
+            this._volumePollingTask.stop();
+          }
           this.logger.debug(`[${this._user.uid}] track stopped`);
         }
 

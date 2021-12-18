@@ -64,7 +64,7 @@ export const AudioVolume: FC<AudioVolumeProps> = ({
     <div className={cls} {...restProps}>
       {isMicMuted ? <div className="off-line"></div> : null}
       <div className={'audio-volume-container'}>
-        {!isMicMuted && currentVolume > 0 ? (
+        {!isMicMuted && currentVolume >= 0 ? (
           <div className="audio-volume-main" style={{ height: currentVolume + '%' }}></div>
         ) : null}
       </div>

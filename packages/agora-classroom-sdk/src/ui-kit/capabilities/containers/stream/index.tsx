@@ -110,7 +110,7 @@ const LocalStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) =
   return (
     <AudioVolume
       isMicMuted={stream.isMicMuted}
-      currentVolume={Math.floor(localVolume * 10)}
+      currentVolume={Math.floor(localVolume)}
       className={stream.micIconType}
     />
   );
@@ -118,14 +118,14 @@ const LocalStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) =
 
 const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
-  const { streamVolumes } = streamUIStore;
+  const { remoteStreamVolume } = streamUIStore;
 
-  const volumePercentage = streamVolumes.get(stream.stream.streamUuid) || 0;
+  const volumePercentage = remoteStreamVolume(stream);
 
   return (
     <AudioVolume
       isMicMuted={stream.isMicMuted}
-      currentVolume={Math.floor(volumePercentage * 10)}
+      currentVolume={Math.floor(volumePercentage)}
       className={stream.micIconType}
     />
   );

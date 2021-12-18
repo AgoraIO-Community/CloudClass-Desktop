@@ -16,6 +16,8 @@ import { AGRtcConnectionType } from '../../channel';
 import { Injectable } from '../../../decorator/type';
 import { AgoraRteEngineConfig } from '../../../../configs';
 import { Log } from '../../../decorator/log';
+import { throttle } from 'lodash';
+import { bound } from '../../../decorator';
 
 @Log.attach({ proxyMethods: false })
 export class AgoraRteWebClientBase extends AGEventEmitter {
@@ -192,6 +194,7 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
   // this ensures we keep a user muted if necessary
   private _muteRemoteVideo: Map<string, boolean> = new Map<string, boolean>();
   private _muteRemoteAudio: Map<string, boolean> = new Map<string, boolean>();
+  private _audioVolumes: Map<string, number> = new Map<string, number>();
   private _subscribeVideoThreads: Map<string, AgoraRteSubscribeThread> = new Map<
     string,
     AgoraRteSubscribeThread
@@ -212,7 +215,7 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
   ) {
     super(channelName, configs, base, connectionType);
 
-    this._client.enableAudioVolumeIndicator();
+    const throttledVolumeIndicator = throttle(this._notifyStreamVolumes, 500);
 
     this._client.on('user-published', (user, mediaType) => {
       const streamUuid = `${user.uid}`;
@@ -233,6 +236,10 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
           muteMap: this._muteRemoteAudio,
           mediaType: 'audio',
         });
+        thread.on('audio-volume-indication', (volume: number) => {
+          this._audioVolumes.set(streamUuid, volume);
+          throttledVolumeIndicator();
+        });
         this._subscribeAudioThreads.set(streamUuid, thread);
         thread.runnable = this.ready;
       }
@@ -252,6 +259,7 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
         }
         if (audioThread) {
           audioThread.stop();
+          this._audioVolumes.delete(userId);
           this._subscribeAudioThreads.delete(userId);
         }
       }
@@ -285,12 +293,11 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
       }
       this.emit('network-stats-changed', this._networkStats.networkStats());
     });
+  }
 
-    this._client.on('volume-indicator', (result) => {
-      let map = new Map<string, number>();
-      result.forEach((r) => map.set(`${r.uid}`, r.level));
-      this.emit('audio-volume-indication', map);
-    });
+  @bound
+  private _notifyStreamVolumes() {
+    this.emit('audio-volume-indication', this._audioVolumes);
   }
 
   private _notifySubscribeThreads(streamUuid: string, mediaType: 'video' | 'audio') {

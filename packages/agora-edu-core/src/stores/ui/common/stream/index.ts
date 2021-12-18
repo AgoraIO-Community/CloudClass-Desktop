@@ -7,6 +7,7 @@ import {
   AGRtcConnectionType,
   bound,
   RtcState,
+  Logger,
 } from 'agora-rte-sdk';
 import {
   action,
@@ -210,9 +211,11 @@ export class StreamUIStore extends EduUIStoreBase {
     return streamSet;
   }
 
-  @computed get streamVolumes(): Map<string, number> {
-    return this.classroomStore.streamStore.streamVolumes;
-  }
+  remoteStreamVolume = computedFn((stream: EduStreamUI) => {
+    let volume = this.classroomStore.streamStore.streamVolumes.get(stream.stream.streamUuid) || 0;
+    // Logger.info(`[vo] ${volume}`);
+    return volume * 100;
+  });
 
   @computed get localVolume(): number {
     return this.classroomStore.mediaStore.localMicAudioVolume * 100;

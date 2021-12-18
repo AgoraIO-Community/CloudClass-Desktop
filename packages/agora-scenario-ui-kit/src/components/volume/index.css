@@ -21,9 +21,9 @@
   left: 0;
   right: 0;
   margin: auto;
-  width: calc(var(--size) / 3);
-  height: calc(var(--size) / 2);
-  bottom: calc(var(--size) / 3.5);
+  width: calc(var(--size) / 3.3);
+  height: calc(var(--size) / 2.3);
+  bottom: calc(var(--size) / 2.7);
   background-color: var(--main-color);
   border-radius: calc(var(--size) / 6);
   overflow: hidden;
@@ -37,7 +37,7 @@
   height: 0;
   background-color: #60de17;
   border-radius: 0 0 calc(var(--size) / 6) calc(var(--size) / 6);
-  transition: 0.75s height;
+  transition: height 0.25s ease-in-out;
 }
 
 .audio-volume .half-circle-board {
@@ -51,9 +51,9 @@
   background-color: transparent;
   border-bottom-right-radius: calc(var(--size) / 4);
   border-bottom-left-radius: calc(var(--size) / 4);
-  border-left: calc(var(--size) / 11.5) solid var(--main-color);
-  border-right: calc(var(--size) / 11.5) solid var(--main-color);
-  border-bottom: calc(var(--size) / 11.5) solid var(--main-color);
+  border-left: calc(var(--size) / 10.5) solid var(--main-color);
+  border-right: calc(var(--size) / 10.5) solid var(--main-color);
+  border-bottom: calc(var(--size) / 10.5) solid var(--main-color);
 }
 
 .audio-volume .off-line {
