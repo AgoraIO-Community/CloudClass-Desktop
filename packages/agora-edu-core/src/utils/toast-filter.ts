@@ -4,6 +4,7 @@ import { AGServiceErrorCode } from '../services/error';
 const errorsShouldBlockToast = new Set([
   AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
   AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+  AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT,
 ]);
 
 export abstract class ToastFilter {

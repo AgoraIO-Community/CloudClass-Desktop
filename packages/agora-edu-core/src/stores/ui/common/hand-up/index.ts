@@ -1,8 +1,10 @@
 import { computed } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { iterateMap } from '../../../../utils/collection';
-import { bound } from 'agora-rte-sdk';
+import { bound, AGError } from 'agora-rte-sdk';
 import { EduClassroomConfig } from '../../../../configs';
+import { AGServiceErrorCode } from '../../../../services/error';
+import { transI18n } from '../i18n';
 export type UserWaveArmInfo = {
   userUuid: string;
   userName: string;
@@ -59,9 +61,19 @@ export class HandUpUIStore extends EduUIStoreBase {
   //others
   @bound
   onPodium(userUuid: string) {
-    this.classroomStore.handUpStore
-      .onPodium(userUuid)
-      .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
+    this.classroomStore.handUpStore.onPodium(userUuid).catch((e) => {
+      if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
+        this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
+      } else if (
+        !AGError.isOf(
+          e,
+          AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+          AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+        )
+      ) {
+        this.shareUIStore.addGenericErrorDialog(e);
+      }
+    });
   }
 
   @bound

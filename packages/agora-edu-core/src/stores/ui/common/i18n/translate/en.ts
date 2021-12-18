@@ -78,6 +78,8 @@ export const en = {
     seconds: 'seconds',
   },
   hands_up: 'Hands Up',
+  on_podium_max_count:
+    'The number of people on stage has reached the upper limit, and students cannot be invited to stage',
   co_video: {
     remote_open_camera: 'Your camera has been turned on',
     remote_open_microphone: 'Your mic has been turned on',

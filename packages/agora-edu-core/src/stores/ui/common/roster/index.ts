@@ -14,6 +14,7 @@ import { iterateMap } from '../../../../utils/collection';
 import { DeviceState, Operation } from './type';
 import { EduClassroomConfig, EduRoleTypeEnum } from '../../../..';
 import { AGServiceErrorCode } from '../../../../services/error';
+import { transI18n } from '../i18n';
 
 export class RosterUIStore extends EduUIStoreBase {
   private _disposers: IReactionDisposer[] = [];
@@ -147,7 +148,9 @@ export class RosterUIStore extends EduUIStoreBase {
           });
         } else {
           onPodium(`${profile.uid}`).catch((e) => {
-            if (
+            if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
+              this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
+            } else if (
               !AGError.isOf(
                 e,
                 AGServiceErrorCode.SERV_PROCESS_CONFLICT,

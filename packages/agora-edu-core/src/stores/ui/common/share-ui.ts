@@ -20,8 +20,10 @@ export enum DialogCategory {
 export interface ToastType {
   id: string;
   desc: string;
-  type?: 'success' | 'error' | 'warning';
+  type?: ToastTypeEnum;
 }
+
+export type ToastTypeEnum = 'success' | 'error' | 'warning';
 
 export interface DialogType {
   id: string;
@@ -58,7 +60,7 @@ export class EduShareUIStore {
   }
 
   @action.bound
-  addToast(desc: string, type?: 'success' | 'error' | 'warning') {
+  addToast(desc: string, type?: ToastTypeEnum) {
     const id = uuidv4();
     this.toastQueue.push({ id, desc, type });
     if (this.toastQueue.length > 3) {

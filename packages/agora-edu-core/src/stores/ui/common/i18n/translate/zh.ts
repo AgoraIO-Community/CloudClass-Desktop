@@ -78,6 +78,7 @@ export const zh = {
     seconds: '秒',
   },
   hands_up: '举手',
+  on_podium_max_count: '上台人数已达上限，无法继续邀请学生上台',
   co_video: {
     remote_open_camera: '摄像头已打开',
     remote_open_microphone: '你可以发言了',
