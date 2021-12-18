@@ -170,7 +170,7 @@ const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) =
               hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
-              onClick={tool.onClick}
+              onClick={tool.interactable ? tool.onClick : () => {}}
             />
           </span>
         </Tooltip>
