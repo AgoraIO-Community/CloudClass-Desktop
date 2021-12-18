@@ -1,4 +1,4 @@
-import { Input, message, Modal, Switch } from 'antd';
+import { Input, message, Modal, Switch, Popover } from 'antd';
 import { Button } from '../button';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import './index.css';
 // 展示表情
 export const ShowEomji = ({ getEmoji }) => {
   return (
-    <>
+    <div style={{ width: '240px' }}>
       {Emoji.map((emoji, key) => {
         return (
           <span className="emoji-content" key={key} onClick={getEmoji}>
@@ -24,7 +24,7 @@ export const ShowEomji = ({ getEmoji }) => {
           </span>
         );
       })}
-    </>
+    </div>
   );
 };
 
@@ -49,7 +49,6 @@ export const InputMsg = ({ isTeacher }) => {
   // 显示表情框
   const showEmoji = () => {
     store.dispatch(showEmojiAction(true));
-    inputRef.current.onFocus();
   };
   // 隐藏表情框
   const handleCancel = () => {
@@ -133,11 +132,22 @@ export const InputMsg = ({ isTeacher }) => {
     setInputStatus(true);
   };
 
+  const handleEomijVisibleChange = (visible) => {
+    store.dispatch(showEmojiAction(visible));
+  };
+
   return (
     <>
       <div>
         <div className="chat-icon">
-          <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
+          <Popover
+            content={<ShowEomji getEmoji={getEmoji} />}
+            visible={isShowEmoji}
+            trigger="click"
+            onVisibleChange={handleEomijVisibleChange}>
+            <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
+          </Popover>
+
           {isTeacher && (
             <div>
               <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
@@ -164,7 +174,7 @@ export const InputMsg = ({ isTeacher }) => {
           {transI18n('chat.send')}
         </Button>
       </div>
-      <Modal
+      {/* <Modal
         visible={isShowEmoji}
         onCancel={() => {
           handleCancel();
@@ -181,8 +191,8 @@ export const InputMsg = ({ isTeacher }) => {
         className="emoji-modal"
         destroyOnClose
         maskStyle={{ backgroundColor: 'rgba(0,0,0,0)' }}>
-        <ShowEomji getEmoji={getEmoji} />
-      </Modal>
+       
+      </Modal> */}
     </>
   );
 };

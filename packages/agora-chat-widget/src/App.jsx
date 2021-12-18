@@ -201,20 +201,19 @@ const App = function (props) {
   };
 
   return (
-    <div>
+    <>
       {showChat ? (
         isFullSize ? (
           <div
             className="app w-full"
             style={{
-              width: isFullScreen ? '300px' : '340px',
+              width: isFullSize ? '300px' : '100%',
               height: '530px',
-              display: isFullScreen ? 'none' : 'block',
             }}>
             <Chat />
           </div>
         ) : (
-          <div className="app" style={{ width: '300px', display: isFullScreen ? 'none' : 'block' }}>
+          <div className="app" style={{ width: '300px', display: isFullSize ? 'none' : 'block' }}>
             <Chat />
           </div>
         )
@@ -231,7 +230,7 @@ const App = function (props) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 export default App;

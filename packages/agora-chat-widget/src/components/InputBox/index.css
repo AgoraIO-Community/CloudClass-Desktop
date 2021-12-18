@@ -60,6 +60,9 @@
   vertical-align: sub;
   cursor: pointer;
 }
+.emoji-content:nth-child(7n + 1) {
+  margin-left: 0;
+}
 
 .emoji-all {
   position: absolute;
