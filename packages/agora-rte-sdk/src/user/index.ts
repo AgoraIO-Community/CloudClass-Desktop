@@ -1,4 +1,5 @@
 import debounce from 'lodash/debounce';
+import { AgoraMediaControlEventType } from '..';
 import { bound } from '../core/decorator/bound';
 import { AgoraRteEngine } from '../core/engine';
 import { Logger } from '../core/logger';
@@ -22,6 +23,8 @@ export class AgoraRteLocalUser {
   readonly rtcToken: string;
   private readonly _rtc: AGRtcManager;
   private readonly _scene: AgoraRteScene;
+  private _debouncedSyncVideo = debounce(this._syncVideoSourceState, 500);
+  private _debouncedSyncAudio = debounce(this._syncAudioSourceState, 500);
 
   subStream?: {
     streamUuid: string;
@@ -59,29 +62,48 @@ export class AgoraRteLocalUser {
     this._addEventHandler();
   }
 
+  destroy() {
+    AgoraRteEngine.engine
+      .getAgoraMediaControl()
+      .off(AgoraMediaControlEventType.localVideoTrackChanged, this._handleVideoTrackStateChange);
+    AgoraRteEngine.engine
+      .getAgoraMediaControl()
+      .off(AgoraMediaControlEventType.localAudioTrackChanged, this._handleAudioTrackStateChange);
+  }
+
   private _addEventHandler() {
-    const debouncedSyncVideo = debounce(this._syncVideoSourceState, 500);
-    const debouncedSyncAudio = debounce(this._syncAudioSourceState, 500);
-    this._rtc.onLocalVideoTrackStateChanged(
-      (state: AgoraRteMediaSourceState, type: AgoraRteVideoSourceType) => {
-        if (type === AgoraRteVideoSourceType.Camera) {
-          // camera change
-          if (state !== AgoraRteMediaSourceState.starting) {
-            debouncedSyncVideo(state);
-          }
-        }
-      },
-    );
-    this._rtc.onLocalAudioTrackStateChanged(
-      (state: AgoraRteMediaSourceState, type: AgoraRteAudioSourceType) => {
-        if (type === AgoraRteAudioSourceType.Mic) {
-          // mic change
-          if (state !== AgoraRteMediaSourceState.starting) {
-            debouncedSyncAudio(state);
-          }
-        }
-      },
-    );
+    AgoraRteEngine.engine
+      .getAgoraMediaControl()
+      .on(AgoraMediaControlEventType.localVideoTrackChanged, this._handleVideoTrackStateChange);
+    AgoraRteEngine.engine
+      .getAgoraMediaControl()
+      .on(AgoraMediaControlEventType.localAudioTrackChanged, this._handleAudioTrackStateChange);
+  }
+
+  @bound
+  private _handleVideoTrackStateChange(
+    state: AgoraRteMediaSourceState,
+    type: AgoraRteVideoSourceType,
+  ) {
+    if (type === AgoraRteVideoSourceType.Camera) {
+      // camera change
+      if (state !== AgoraRteMediaSourceState.starting) {
+        this._debouncedSyncVideo(state);
+      }
+    }
+  }
+
+  @bound
+  private _handleAudioTrackStateChange(
+    state: AgoraRteMediaSourceState,
+    type: AgoraRteAudioSourceType,
+  ) {
+    if (type === AgoraRteAudioSourceType.Mic) {
+      // mic change
+      if (state !== AgoraRteMediaSourceState.starting) {
+        this._debouncedSyncAudio(state);
+      }
+    }
   }
 
   @bound

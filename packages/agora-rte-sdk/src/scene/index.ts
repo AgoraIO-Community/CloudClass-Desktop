@@ -197,6 +197,7 @@ export class AgoraRteScene extends EventEmitter {
   }
 
   private _cleanup() {
+    this._localUser?.destroy();
     this._localUser = undefined;
     this._synchronizer = undefined;
     this._initialSync = false;
