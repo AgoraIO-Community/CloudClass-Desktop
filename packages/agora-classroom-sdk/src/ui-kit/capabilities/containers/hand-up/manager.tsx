@@ -63,8 +63,10 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
           borderRadius={borderRadius}
           className={twinkleFlag ? 'card-hands-up-active' : ''}>
           <div className="hands-box-line">
-            <SvgImg type={twinkleFlag ? 'hands-up-active' : 'hands-up-before'} size={24} />
-            {/* <Icon type={twinkleFlag ? 'hands-up-active' : 'hands-up-before'} useSvg size={24} /> */}
+            <SvgImg
+              type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
+              size={24}
+            />
           </div>
           {waveArmCount ? (
             <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
