@@ -40,6 +40,8 @@ import { AgoraMediaControlEventType } from '../../../media/control';
 import { AgoraRteEventType } from '../../../processor/channel-msg/handler';
 import { Duration } from '../../../schedule/scheduler';
 import { ChannelProfile, ClientRole } from '../../../../type';
+import { Log } from '../../../decorator/log';
+import { Injectable } from '../../../decorator/type';
 
 declare global {
   interface Window {
@@ -59,7 +61,9 @@ try {
 
 export interface RtcAdapterElectronConfig {}
 
+@Log.attach({ proxyMethods: false })
 export class RtcAdapterElectron extends RtcAdapterBase {
+  protected logger!: Injectable.Logger;
   private _vdm: RtcVideoDeviceManagerElectron;
   private _adm: RtcAudioDeviceManagerElectron;
   //@ts-ignore
@@ -284,6 +288,19 @@ export class RtcAdapterElectron extends RtcAdapterBase {
     return this.rtcEngine.setBeautyEffectOptions(enable, options);
   }
 
+  hasScreenSharePermission(): boolean {
+    const remote = window.require('electron').remote;
+    if (!remote) {
+      this.logger.warn(
+        `enableRemoteModule is not set, we will not be able to tell you screenshare access status in this case. You can still use screenshare feature though`,
+      );
+      return true;
+    }
+
+    let status = remote.systemPreferences.getMediaAccessStatus('screen');
+    return status !== 'denied';
+  }
+
   destroy(): number {
     let res = this.rtcEngine.release();
     //@ts-ignore
@@ -316,7 +333,7 @@ export class RtcAdapterElectron extends RtcAdapterBase {
     this.rtcEngine.on(
       'localVideoStateChanged',
       (state: LOCAL_VIDEO_STREAM_STATE, reason: LOCAL_VIDEO_STREAM_ERROR) => {
-        Logger.info(`[rtc] video state changed ${state} ${reason}`);
+        this.logger.info(`[rtc] video state changed ${state} ${reason}`);
         this.cameraThread.videoStreamState = state;
       },
     );
@@ -356,16 +373,18 @@ export class RtcAdapterElectron extends RtcAdapterBase {
 
   private updateRole() {
     if (this._localVideoEnabled || this._localAudioEnabled) {
-      Logger.info(`update rtc role to host`);
+      this.logger.info(`update rtc role to host`);
       this.rtcEngine.setClientRole(1);
     } else {
-      Logger.info(`update rtc role to audience`);
+      this.logger.info(`update rtc role to audience`);
       this.rtcEngine.setClientRole(2);
     }
   }
 }
 
+@Log.attach({ proxyMethods: false })
 export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
+  protected logger!: Injectable.Logger;
   channelName: string;
   base: RtcAdapterElectron;
   private _networkStats: RtcNetworkQualityElectron = new RtcNetworkQualityElectron();
@@ -436,7 +455,7 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
           resolve();
         });
         let res = rtcEngine.videoSourceJoin(token, this.channelName, '', +streamUuid);
-        Logger.info(`[rtc] videosource join ${res}`);
+        this.logger.info(`[rtc] videosource join ${res}`);
       }
     });
   }

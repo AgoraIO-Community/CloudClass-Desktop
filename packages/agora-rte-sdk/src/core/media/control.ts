@@ -104,6 +104,10 @@ export class AgoraMediaControl extends AGEventEmitter {
     return this._rtc.isScreenDeviceEnumerateSupported();
   }
 
+  hasScreenSharePermission(): boolean {
+    return this._rtc.hasScreenSharePermission();
+  }
+
   getWindowDevices(): AGScreenShareDevice[] {
     return this._rtc.getWindowDevices();
   }

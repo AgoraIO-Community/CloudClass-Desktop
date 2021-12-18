@@ -121,6 +121,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
     const { launchApp } = this.classroomStore.extAppStore;
     switch (id) {
       case 'screenShare':
+        if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
+          this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'warning');
+        }
         this._activeCabinetItem = 'screenShare';
         if (this.isScreenSharing) {
           this.classroomStore.mediaStore.stopScreenShareCapture();

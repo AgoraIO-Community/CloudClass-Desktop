@@ -211,6 +211,10 @@ export class MediaStore extends EduStoreBase {
     return this.mediaControl.isScreenDeviceEnumerateSupported();
   }
 
+  hasScreenSharePermission(): boolean {
+    return this.mediaControl.hasScreenSharePermission();
+  }
+
   getWindowDevices(): AGScreenShareDevice[] {
     return this.mediaControl.getWindowDevices();
   }

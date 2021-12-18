@@ -158,6 +158,10 @@ export class AGRtcManager {
     return this._adapter.setBeautyEffectOptions(enable, options);
   }
 
+  hasScreenSharePermission(): boolean {
+    return this._adapter.hasScreenSharePermission();
+  }
+
   destroy(): number {
     return this._adapter.destroy();
   }

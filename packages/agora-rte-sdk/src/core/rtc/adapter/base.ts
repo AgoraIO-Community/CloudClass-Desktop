@@ -116,4 +116,5 @@ export abstract class RtcAdapterBase extends AGEventEmitter {
   static getRtcVersion(): string {
     return '';
   }
+  abstract hasScreenSharePermission(): boolean;
 }

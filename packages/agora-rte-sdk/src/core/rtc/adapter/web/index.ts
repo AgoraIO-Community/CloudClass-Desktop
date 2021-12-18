@@ -221,6 +221,11 @@ export class RtcAdapterWeb extends RtcAdapterBase {
     return 0;
   }
 
+  hasScreenSharePermission(): boolean {
+    // there's no way to detect on web if screen share permission has been granted
+    return true;
+  }
+
   destroy(): number {
     //leave channels if not yet
     this._channels.forEach((channel) => channel.leave());

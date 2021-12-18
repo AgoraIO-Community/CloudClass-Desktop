@@ -77,6 +77,7 @@ async function createWindow() {
       // preload: runtime.preloadPath,
       webSecurity: false,
       webviewTag: true,
+      enableRemoteModule: true,
       nativeWindowOpen: true,
       backgroundThrottling: false,
       // nodeIntegrationInSubFrames: true,
