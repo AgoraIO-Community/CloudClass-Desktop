@@ -14,13 +14,17 @@ export class PluginStore {
 
   resetContextAndHandle(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
     if (ctx.properties) {
-      const { startTime: sStartTime, duration: sDuration } = ctx.properties;
+      const { startTime: sStartTime, duration: sDuration, state } = ctx.properties;
       const startTime = parseInt(sStartTime) * 1000;
       const duration = parseInt(sDuration) * 1000;
       if (startTime && duration) {
         this.setPlay(true);
         this.setResult(startTime + duration);
         this.setShowSetting(false);
+      } else {
+        this.setPlay(false);
+        this.setResult(0);
+        this.setShowSetting(true);
       }
     }
     this.context = ctx;

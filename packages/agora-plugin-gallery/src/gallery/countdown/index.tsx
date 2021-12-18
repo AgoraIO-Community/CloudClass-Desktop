@@ -19,7 +19,7 @@ const App = observer(() => {
     <div
       style={{
         width: '100%',
-        height: pluginStore.showSetting ? '100%' : '55px',
+        height: pluginStore.showSetting ? '168px' : '55px',
       }}
       className={classnames({
         [`countdown-modal`]: 1,
@@ -151,7 +151,13 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     if (this.store!.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
       this.height = 168;
     }
-    // this.store?.reset();
+    await this.store!.changeRoomProperties({
+      state: '0',
+      startTime: '0',
+      pauseTime: '0',
+      duration: '0',
+      commonState: 0,
+    });
     return Promise.resolve(true);
   }
 }
