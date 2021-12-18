@@ -17,6 +17,7 @@ import { AgoraRtcVideoCanvas } from '../../canvas';
 import { AGRtcConnectionType } from '../../channel';
 import {
   AgoraRteMediaSourceState,
+  AGRenderMode,
   AGScreenShareDevice,
   AGScreenShareType,
   BeautyEffect,
@@ -183,7 +184,13 @@ export class RtcAdapterElectron extends RtcAdapterBase {
     return 0;
   }
   setupRemoteVideo(canvas: AgoraRtcVideoCanvas): number {
-    return this.rtcEngine.setupRemoteVideo(+canvas.streamUuid, canvas.view);
+    this.rtcEngine.setupRemoteVideo(+canvas.streamUuid, canvas.view);
+    this.rtcEngine.setupViewContentMode(
+      +canvas.streamUuid,
+      canvas.renderMode === AGRenderMode.fill ? 0 : 1,
+      undefined,
+    );
+    return 0;
   }
   startAudioRecordingDeviceTest(indicateInterval: number): number {
     return this.rtcEngine.startAudioRecordingDeviceTest(indicateInterval);

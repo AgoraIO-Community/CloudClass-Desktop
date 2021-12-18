@@ -151,28 +151,20 @@ export class StreamUIStore extends EduUIStoreBase {
 
   @computed get teacherScreenShareStream() {
     let streamUuid = this.classroomStore.roomStore.screenShareStreamUuid;
-
-    if (!streamUuid) {
-      return undefined;
-    }
-
     let streamSet = new Set<EduStreamUI>();
-    let streams = this.teacherStreams;
-    for (let stream of streams) {
-      if (
-        stream.stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare &&
-        stream.stream.streamUuid === streamUuid
-      ) {
-        streamSet.add(stream);
+
+    if (streamUuid) {
+      let streams = this.teacherStreams;
+      for (let stream of streams) {
+        if (
+          stream.stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare &&
+          stream.stream.streamUuid === streamUuid
+        ) {
+          streamSet.add(stream);
+        }
       }
     }
 
-    // if (streamSet.size > 1) {
-    //   return EduErrorCenter.shared.handleThrowableError(
-    //     AGEduErrorCode.EDU_ERR_UNEXPECTED_TEACHER_STREAM_LENGTH,
-    //     new Error(`unexpected stream size ${streams.size}`),
-    //   );
-    // }
     return Array.from(streamSet)[0];
   }
 
