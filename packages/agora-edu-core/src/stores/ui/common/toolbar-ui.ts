@@ -4,7 +4,8 @@ import {
   AGScreenShareType,
   bound,
 } from 'agora-rte-sdk';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { isEqual } from 'lodash';
+import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
 import { EduClassroomConfig, EduRoleTypeEnum, WhiteboardTool } from '../../..';
 import { CustomBtoa } from '../../../utils';
 import { EduUIStoreBase } from './base';
@@ -158,16 +159,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
             let collections = [...displays, ...windows];
             this.shareUIStore.addDialog(DialogCategory.ScreenPicker, {
               onOK: (itemId: string) => {
+                let id = toJS(itemId);
                 setTimeout(() => {
                   let item = collections.find((c) => {
-                    if (c.type === AGScreenShareType.Window) {
-                      return c.id === itemId;
-                    } else {
-                      return (
-                        (c.id as unknown as { id: string }).id ===
-                        (itemId as unknown as { id: string }).id
-                      );
-                    }
+                    return isEqual(c.id, id);
                   });
                   if (item) {
                     this.classroomStore.mediaStore.startScreenShareCapture(itemId, item.type);
