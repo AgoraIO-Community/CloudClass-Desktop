@@ -34,7 +34,6 @@
   background: #f9f9fc;
   border: 0;
   outline: 0;
-  /* cursor: pointer; */
   color: #191919;
   width: 100%;
   padding-left: 19px;
@@ -60,7 +59,6 @@
   background: #f9f9fc;
   border: 0;
   outline: 0;
-  /* cursor: pointer; */
   color: #586376;
   width: 100%;
   padding-left: 19px;
@@ -120,10 +118,6 @@
 
 .student-username {
   display: flex;
-}
-.roster-table .star-wrap {
-  display: flex;
-  align-items: center;
 }
 .roster-table .star-nums {
   color: #7b88a0;
@@ -200,7 +194,8 @@
 .roster-row-hover {
   background: #f9f9fc;
 }
-.roster-col-hover {
+
+.roster-col-hover .clickable {
   background: #e8f0ff;
   cursor: pointer;
 }

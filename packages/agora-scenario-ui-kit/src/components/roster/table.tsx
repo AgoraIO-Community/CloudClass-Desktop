@@ -29,14 +29,6 @@ export const InteractiveCol = ({
 
   const isFirstColumn = idx === 0;
 
-  const props = isFirstColumn
-    ? {
-        title: data[col.key],
-        className: 'roster-username',
-        style: { paddingLeft: 25 },
-      }
-    : null;
-
   const handleClick = () => {
     if (col.operation && data.operations.includes(col.operation)) {
       onClick(col.operation, data);
@@ -73,7 +65,7 @@ export const InteractiveCol = ({
           : {}
       }
       {...interactiveEvents}>
-      <span {...props}>{col.render(data, hovered)}</span>
+      {col.render(data, hovered)}
     </Col>
   );
 };

@@ -1,9 +1,23 @@
-import React from 'react';
-import { SvgImg } from '..';
+import classNames from 'classnames';
+import { DeviceState, SvgImg } from '..';
 import { Column, Profile, cameraIconType, microphoneIconType } from './index';
 
-const Icon = ({ type }: { type: string }) => {
-  return <SvgImg type={type} />;
+const Icon = ({
+  type,
+  canClick = true,
+  children,
+}: {
+  type: string;
+  canClick?: boolean;
+  children?: React.ReactNode;
+}) => {
+  const cls = classNames('w-full h-full flex justify-center items-center', canClick && 'clickable');
+  return (
+    <div className={cls}>
+      <SvgImg type={type} />
+      {children}
+    </div>
+  );
 };
 
 export const defaultColumns: Column[] = [
@@ -12,7 +26,11 @@ export const defaultColumns: Column[] = [
     order: 1,
     name: 'roster.student_name',
     render: (profile: Profile) => {
-      return <React.Fragment>{profile.name}</React.Fragment>;
+      return (
+        <span title={profile.name} className="roster-username" style={{ paddingLeft: 25 }}>
+          {profile.name}
+        </span>
+      );
     },
   },
   {
@@ -22,7 +40,7 @@ export const defaultColumns: Column[] = [
     operation: 'camera',
     render: (profile: Profile) => {
       const iconType = cameraIconType[profile.cameraState];
-      return <Icon type={iconType} />;
+      return <Icon type={iconType} canClick={profile.cameraState !== DeviceState.unavailable} />;
     },
     width: '12%',
   },
@@ -33,7 +51,7 @@ export const defaultColumns: Column[] = [
     operation: 'microphone',
     render: (profile: Profile) => {
       const iconType = microphoneIconType[profile.microphoneState];
-      return <Icon type={iconType} />;
+      return <Icon type={iconType} canClick={profile.cameraState !== DeviceState.unavailable} />;
     },
     width: '12%',
   },
@@ -73,10 +91,9 @@ export const starsColumn: Column = {
   operation: 'star',
   render: (profile: Profile, hovered) => {
     return (
-      <div className="star-wrap">
-        <Icon type={hovered ? 'reward-hover' : 'reward'} />
+      <Icon type={hovered ? 'reward-hover' : 'reward'}>
         <span className="star-nums">&nbsp;x{profile.stars}</span>
-      </div>
+      </Icon>
     );
   },
   width: '12%',
