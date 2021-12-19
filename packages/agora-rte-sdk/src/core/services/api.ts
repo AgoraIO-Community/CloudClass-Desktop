@@ -15,7 +15,10 @@ export interface EntryRequestParams {
   userName: string;
   role: string;
   streamUuid: string;
-  // autoPublish: boolean
+  stream?: {
+    videoSourceState?: AgoraRteMediaSourceState;
+    audioSourceState?: AgoraRteMediaSourceState;
+  };
 }
 
 export class AgoraRteService extends ApiBase {

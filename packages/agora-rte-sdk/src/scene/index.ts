@@ -111,12 +111,17 @@ export class AgoraRteScene extends EventEmitter {
     try {
       // 1. entry
       this._setRteConnectionState(AgoraRteConnectionState.Connecting);
+      const mediaControl = AgoraRteEngine.engine.getAgoraMediaControl();
       const { user, room } = await AgoraRteEngine.engine.getApiService().entryRoom({
         userUuid: AgoraRteEngineConfig.shared.userId,
         roomUuid: this.sceneId,
         userName: options.userName,
         streamUuid: options.streamId,
         role: options.userRole,
+        stream: {
+          videoSourceState: mediaControl.createCameraVideoTrack().state,
+          audioSourceState: mediaControl.createMicrophoneAudioTrack().state,
+        },
       });
 
       Object.assign(AgoraRteEngineConfig.shared.service.headers, { token: user.userToken });

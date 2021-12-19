@@ -50,8 +50,16 @@ export abstract class AgoraRteMediaTrack {
 }
 
 export class AgoraRteCameraVideoTrack extends AgoraRteMediaTrack {
+  state: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
   constructor(rtc: AGRtcManager) {
     super(rtc, { videoSourceType: AgoraRteVideoSourceType.Camera });
+    rtc.onLocalVideoTrackStateChanged(
+      (state: AgoraRteMediaSourceState, type: AgoraRteVideoSourceType) => {
+        if (type === AgoraRteVideoSourceType.Camera) {
+          this.state = state;
+        }
+      },
+    );
   }
 
   setView(canvas: AgoraRtcVideoCanvas) {
@@ -74,8 +82,16 @@ export class AgoraRteCameraVideoTrack extends AgoraRteMediaTrack {
 }
 
 export class AgoraRteMicrophoneAudioTrack extends AgoraRteMediaTrack {
+  state: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
   constructor(rtc: AGRtcManager) {
     super(rtc, { audioSourceType: AgoraRteAudioSourceType.Mic });
+    rtc.onLocalAudioTrackStateChanged(
+      (state: AgoraRteMediaSourceState, type: AgoraRteAudioSourceType) => {
+        if (type === AgoraRteAudioSourceType.Mic) {
+          this.state = state;
+        }
+      },
+    );
   }
 
   setRecordingDevice(deviceId: string) {
