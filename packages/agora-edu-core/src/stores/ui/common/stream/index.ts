@@ -4,24 +4,13 @@ import {
   AgoraRteMediaPublishState,
   AgoraRteVideoSourceType,
   AGRenderMode,
-  AGRtcConnectionType,
   bound,
-  RtcState,
-  Logger,
 } from 'agora-rte-sdk';
-import {
-  action,
-  autorun,
-  computed,
-  IReactionDisposer,
-  observable,
-  reaction,
-  runInAction,
-} from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { EduRoomTypeEnum, EduStream } from '../../../..';
+import { EduStream } from '../../../..';
 import { EduClassroomConfig } from '../../../../configs';
-import { ClassroomState, EduRoleTypeEnum } from '../../../../type';
+import { EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduUIStoreBase } from '../base';
 import { transI18n } from '../i18n';
@@ -38,31 +27,9 @@ export enum StreamIconColor {
 }
 
 export class StreamUIStore extends EduUIStoreBase {
-  private _autorunDisposer?: IReactionDisposer;
+  private _disposers: IReactionDisposer[] = [];
 
   onInstall() {
-    reaction(
-      () => this.classroomStore.mediaStore.localScreenShareTrackState,
-      (state: AgoraRteMediaSourceState) => {
-        // auto publish/unpublish when screenshare track started/stopped
-        if (
-          state === AgoraRteMediaSourceState.started &&
-          this.classroomStore.roomStore.screenShareStreamUuid === undefined
-        ) {
-          this.publishScreenShare();
-        } else if (
-          state === AgoraRteMediaSourceState.stopped &&
-          this.classroomStore.roomStore.screenShareStreamUuid !== undefined
-        ) {
-          this.unpublishScreenShare();
-        }
-      },
-      {
-        equals: (oldValue: AgoraRteMediaSourceState, newValue: AgoraRteMediaSourceState) => {
-          return oldValue === newValue;
-        },
-      },
-    );
     computed(() => this.classroomStore.userStore.rewards).observe(({ newValue, oldValue }) => {
       let anims: { id: string; userUuid: string }[] = [];
       for (const [userUuid] of newValue) {
@@ -85,34 +52,13 @@ export class StreamUIStore extends EduUIStoreBase {
         });
       }
     });
-    this._autorunDisposer = autorun(() => {
-      let streamUuid = this.classroomStore.roomStore.screenShareStreamUuid || '';
-      let token = this.classroomStore.streamStore.shareStreamTokens.get(streamUuid);
-      if (
-        token &&
-        streamUuid &&
-        this.classroomStore.mediaStore.localScreenShareTrackState ===
-          AgoraRteMediaSourceState.started
-      ) {
-        if (this.classroomStore.connectionStore.rtcSubState === RtcState.Idle) {
-          this.classroomStore.connectionStore.joinRTC({
-            connectionType: AGRtcConnectionType.sub,
-            streamUuid,
-            token,
-          });
-        }
-      } else if (this.classroomStore.streamStore.shareStreamTokens.size === 0) {
-        if (this.classroomStore.connectionStore.rtcSubState !== RtcState.Idle) {
-          this.classroomStore.connectionStore.leaveRTC(AGRtcConnectionType.sub);
-        }
-      }
-    });
   }
 
   //observe
   @observable awardAnims: { id: string; userUuid: string }[] = [];
   //action
   //computes
+
   @computed get teacherStreams(): Set<EduStreamUI> {
     let streamSet = new Set<EduStreamUI>();
     let teacherList = this.classroomStore.userStore.teacherList;
@@ -552,31 +498,8 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.classroomStore.mediaStore.stopScreenShareCapture();
   }
 
-  @bound
-  publishScreenShare() {
-    this.classroomStore.streamStore
-      .publishScreenShare()
-      .then(({ rtcToken, streamUuid }: { rtcToken: string; streamUuid: string }) => {
-        runInAction(() => {
-          this.classroomStore.streamStore.shareStreamTokens.set(streamUuid, rtcToken);
-        });
-      })
-      .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-  }
-
-  @bound
-  unpublishScreenShare() {
-    this.classroomStore.streamStore
-      .unpublishScreenShare()
-      .then(() => {
-        runInAction(() => {
-          this.classroomStore.streamStore.shareStreamTokens.clear();
-        });
-      })
-      .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-  }
-
   onDestroy() {
-    this._autorunDisposer && this._autorunDisposer();
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
 }

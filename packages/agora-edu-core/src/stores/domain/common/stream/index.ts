@@ -4,25 +4,32 @@ import {
   AgoraRteEngine,
   AgoraRteEventType,
   AgoraRteMediaPublishState,
+  AgoraRteMediaSourceState,
   AgoraRteOperator,
   AgoraRteScene,
   AgoraRteVideoSourceType,
   AgoraStream,
   AGRenderMode,
+  AGRtcConnectionType,
   bound,
   Logger,
+  RtcState,
 } from 'agora-rte-sdk';
-import { computed, observable, reaction, runInAction } from 'mobx';
-import { AgoraEduInteractionEvent, EduRoleTypeEnum } from '../../../../type';
+import { computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
+import { AgoraEduInteractionEvent, ClassroomState, EduRoleTypeEnum } from '../../../../type';
 import { EduClassroomConfig } from '../../../../configs';
 import { RteRole2EduRole } from '../../../../utils';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
 import { EduStream } from './struct';
 import { EduEventCenter } from '../../../../event-center';
+import { computedFn } from 'mobx-utils';
+import { ShareStreamStateKeeper } from './state-keeper';
 
 //for localstream, remote streams
 export class StreamStore extends EduStoreBase {
+  private _disposers: IReactionDisposer[] = [];
+  private _stateKeeper?: ShareStreamStateKeeper;
   //observers
   @observable streamByStreamUuid: Map<string, EduStream> = new Map<string, EduStream>();
   @observable streamByUserUuid: Map<string, Set<string>> = new Map<string, Set<string>>();
@@ -33,6 +40,16 @@ export class StreamStore extends EduStoreBase {
   //actions
 
   //computes
+  @computed get shareStreamToken() {
+    let streamUuid = this.classroomStore.roomStore.screenShareStreamUuid;
+
+    if (!streamUuid) {
+      return undefined;
+    }
+
+    return this.shareStreamTokens.get(streamUuid);
+  }
+
   @computed get localCameraStreamUuid(): string | undefined {
     let {
       sessionInfo: { userUuid },
@@ -278,6 +295,76 @@ export class StreamStore extends EduStoreBase {
         }
       },
     );
+
+    //state keeper ensures the remote state is always synced with local screenshare track state
+    this._stateKeeper = new ShareStreamStateKeeper(
+      async (targetState: AgoraRteMediaSourceState) => {
+        if (targetState === AgoraRteMediaSourceState.started) {
+          const { rtcToken, streamUuid }: { rtcToken: string; streamUuid: string } =
+            await this.publishScreenShare();
+          runInAction(() => {
+            this.shareStreamTokens.set(streamUuid, rtcToken);
+          });
+        } else if (
+          targetState === AgoraRteMediaSourceState.stopped ||
+          targetState === AgoraRteMediaSourceState.error
+        ) {
+          await this.unpublishScreenShare();
+          runInAction(() => {
+            this.shareStreamTokens.clear();
+          });
+        }
+      },
+    );
+    //this reaction is responsible to update screenshare track state when approporiate
+    this._disposers.push(
+      reaction(
+        () =>
+          computed(() => ({
+            trackState: this.classroomStore.mediaStore.localScreenShareTrackState,
+            classroomState: this.classroomStore.connectionStore.classroomState,
+          })).get(),
+        (value) => {
+          const { trackState, classroomState } = value;
+          if (classroomState === ClassroomState.Connected) {
+            //only set state when classroom is connected, the state will also be refreshed when classroom state become connected
+            this._stateKeeper?.setShareScreenState(trackState);
+          }
+        },
+      ),
+    );
+    //this reaction is responsible to join/leave rtc when screenshare info is ready
+    this._disposers.push(
+      reaction(
+        () =>
+          computed(() => ({
+            streamUuid: this.classroomStore.roomStore.screenShareStreamUuid,
+            shareStreamToken: this.shareStreamToken,
+          })).get(),
+        (value) => {
+          const { streamUuid, shareStreamToken } = value;
+
+          if (streamUuid && shareStreamToken) {
+            if (this.classroomStore.connectionStore.rtcSubState === RtcState.Idle) {
+              this.classroomStore.connectionStore.joinRTC({
+                connectionType: AGRtcConnectionType.sub,
+                streamUuid,
+                token: shareStreamToken,
+              });
+            }
+          } else {
+            // leave rtc if share StreamUuid is no longer in the room
+            if (this.classroomStore.connectionStore.rtcSubState !== RtcState.Idle) {
+              this.classroomStore.connectionStore.leaveRTC(AGRtcConnectionType.sub);
+            }
+          }
+        },
+      ),
+    );
   }
-  onDestroy() {}
+  onDestroy() {
+    this._stateKeeper?.stop();
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
 }

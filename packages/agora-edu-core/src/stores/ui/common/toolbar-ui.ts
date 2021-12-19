@@ -1,9 +1,4 @@
-import {
-  AgoraRteMediaSourceState,
-  AGScreenShareDevice,
-  AGScreenShareType,
-  bound,
-} from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, AGScreenShareDevice, bound } from 'agora-rte-sdk';
 import { isEqual } from 'lodash';
 import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
 import { EduClassroomConfig, EduRoleTypeEnum, WhiteboardTool } from '../../..';
