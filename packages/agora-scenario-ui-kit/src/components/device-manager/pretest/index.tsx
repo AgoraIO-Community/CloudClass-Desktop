@@ -349,7 +349,7 @@ const PretestComponent: React.FC<PretestProps> = ({
                       onClick={() => {
                         setActiveBeauty(item as any);
                       }}>
-                      <Icon type={item as any} useSvg size={18} />
+                      <Icon type={item as any} /*useSvg*/ size={18} />
                       <div className="operation-item-desc">{transI18n(`media.${item}`)}</div>
                     </div>
                   ))}

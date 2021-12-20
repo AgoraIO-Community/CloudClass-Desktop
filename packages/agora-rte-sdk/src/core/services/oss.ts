@@ -1,7 +1,7 @@
 import OSS, { Checkpoint, MultipartUploadResult } from 'ali-oss';
 import axios from 'axios';
 import md5 from 'js-md5';
-import UAParser from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js';
 import { AgoraRteEngineConfig } from '../..';
 import { ApiBase } from './base';
 
