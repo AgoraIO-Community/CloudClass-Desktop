@@ -30,3 +30,6 @@ export type {
   AgoraExtAppRoomInfo,
   AgoraExtAppEventHandler,
 } from './common/ext-app/type';
+
+export { Track } from './common/track/struct';
+export type { Point, Dimensions } from './common/track/type';

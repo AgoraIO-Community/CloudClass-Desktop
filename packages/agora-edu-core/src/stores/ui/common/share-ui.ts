@@ -44,7 +44,7 @@ export class EduShareUIStore {
   toastQueue: ToastType[] = [];
 
   @observable
-  classroomViewportSize: { width: number; height: number } = {
+  classroomViewportSize = {
     width: 0,
     height: 0,
   };

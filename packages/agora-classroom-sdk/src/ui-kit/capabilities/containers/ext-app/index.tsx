@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import { IAgoraExtApp, escapeExtAppIdentifier } from 'agora-edu-core';
 import { Modal } from './modal';
 import { useStore } from '~hooks/use-edu-stores';
-import { Track } from '~containers/root-box';
+import { ExtAppTrack } from '~containers/root-box';
 
 type ExtAppProps = {
   extApp: IAgoraExtApp;
@@ -34,14 +34,16 @@ const ExtApp = ({ extApp, canClose, onClose, onResize, canDrag, mount }: ExtAppP
   );
 
   return (
-    <Track
+    <ExtAppTrack
       trackId={escapeExtAppIdentifier(appIdentifier)}
       minHeight={extApp.minHeight}
       minWidth={extApp.minWidth}
       draggable={true}
       resizable={false}
       controlled={canDrag}
-      cancel=".modal-title-close">
+      cancel=".modal-title-close"
+      boundaryName="extapp-track-bounds"
+      handle="modal-title">
       <Modal
         title={appName}
         onCancel={handleCancel}
@@ -52,14 +54,14 @@ const ExtApp = ({ extApp, canClose, onClose, onResize, canDrag, mount }: ExtAppP
         header={customHeader}>
         {appContainer}
       </Modal>
-    </Track>
+    </ExtAppTrack>
   );
 };
 
 export const ExtAppContainer = observer(() => {
   const { extAppUIStore } = useStore();
 
-  const { canClose, canDrag, shutdownApp, activeApps, updateAppTrack, mount } = extAppUIStore;
+  const { canClose, canDrag, shutdownApp, activeApps, updateTrackState, mount } = extAppUIStore;
 
   return (
     <React.Fragment>
@@ -70,7 +72,7 @@ export const ExtAppContainer = observer(() => {
           canClose={canClose}
           canDrag={canDrag}
           onClose={shutdownApp}
-          onResize={updateAppTrack}
+          onResize={updateTrackState}
           mount={mount}
         />
       ))}

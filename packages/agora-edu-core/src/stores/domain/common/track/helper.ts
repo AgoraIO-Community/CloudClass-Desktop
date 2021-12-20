@@ -22,6 +22,27 @@ export const convertRatioToLocal = (
   };
 };
 
+export const convertRatioToLocalWithFixedDimensions = (
+  diffRatio: { ratioX: number; ratioY: number },
+  dimensions: Dimensions,
+  outerSize: { width: number; height: number },
+  margin: Margin,
+  resizeBounds: ResizeBounds,
+) => {
+  const { position } = convertRatioToLocalPositionWithFixedDimensions(
+    diffRatio,
+    dimensions,
+    outerSize,
+    margin,
+    resizeBounds,
+  );
+
+  return {
+    position,
+    dimensions,
+  };
+};
+
 export const convertRatioToLocalPosition = (
   diffRatio: { ratioX: number; ratioY: number },
   sizeRatio: { ratioWidth: number; ratioHeight: number },
@@ -33,6 +54,28 @@ export const convertRatioToLocalPosition = (
     width: sizeRatio.ratioWidth * outerSize.width,
     height: sizeRatio.ratioHeight * outerSize.height,
   };
+  dimensions.width = clamp(dimensions.width, resizeBounds.minWidth, resizeBounds.maxWidth);
+
+  dimensions.height = clamp(dimensions.height, resizeBounds.minHeight, resizeBounds.maxHeight);
+
+  const medX = outerSize.width - dimensions.width;
+  const medY = outerSize.height - dimensions.height;
+
+  return {
+    position: {
+      x: medX * diffRatio.ratioX,
+      y: medY * diffRatio.ratioY + margin.top,
+    },
+  };
+};
+
+export const convertRatioToLocalPositionWithFixedDimensions = (
+  diffRatio: { ratioX: number; ratioY: number },
+  dimensions: Dimensions,
+  outerSize: { width: number; height: number },
+  margin: Margin,
+  resizeBounds: ResizeBounds,
+) => {
   dimensions.width = clamp(dimensions.width, resizeBounds.minWidth, resizeBounds.maxWidth);
 
   dimensions.height = clamp(dimensions.height, resizeBounds.minHeight, resizeBounds.maxHeight);

@@ -22,8 +22,7 @@ export const RosterContainer: FC<RosterContainerProps> = observer(({ onClose }) 
   return (
     <Roster
       width={width}
-      bounds=".track-bounds"
-      offsetTop={27}
+      bounds=".classroom-track-bounds"
       hostname={teacherName}
       keyword={searchKeyword}
       carouselProps={carouselProps}

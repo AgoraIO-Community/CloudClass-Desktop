@@ -6,6 +6,11 @@
   height: 100%;
 }
 
+.overlay-wrap-content-ltr {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
 .overlay-wrap-enter {
   opacity: 0;
   transform: translateY(20px);

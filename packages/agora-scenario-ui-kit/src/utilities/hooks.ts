@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { IReactionOptions, IReactionPublic, observable, reaction } from 'mobx';
 import type { RendererPlayerProps } from '~utilities/renderer-player';
 
@@ -140,4 +140,25 @@ export const useDebounce = <T>(value: T, delay?: number) => {
     };
   }, [value, delay]);
   return debouncedValue;
+};
+
+export const useDraggableDefaultCenterPosition = ({
+  draggableHeight,
+  draggableWidth,
+}: {
+  draggableWidth: number;
+  draggableHeight: number;
+}) => {
+  const pos = useMemo(() => {
+    const { innerHeight, innerWidth } = window;
+
+    const x = (innerWidth - draggableWidth) / 2;
+
+    const y = (innerHeight - draggableHeight) / 2;
+
+    // dont need returing width and height but need pass type checking
+    return { x, y } as Record<'x' | 'y' | 'width' | 'height', number>;
+  }, [draggableHeight, draggableWidth]);
+
+  return pos;
 };

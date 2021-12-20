@@ -1,6 +1,6 @@
 import { EduClassroomStore } from '../..';
 import { Track } from './struct';
-import { Dimensions, Point, TrackContext } from './type';
+import { Dimensions, Point, TrackAdapter, TrackContext } from './type';
 import { bound, Lodash, Log } from 'agora-rte-sdk';
 import { action, observable, reaction, toJS } from 'mobx';
 import { forEach } from 'lodash';
@@ -10,24 +10,28 @@ import { EduStoreBase } from '../base';
 @Log.attach({ proxyMethods: false })
 export class TrackStore extends EduStoreBase {
   @observable
-  trackByWidgetId: Map<string, Track> = new Map();
+  trackById: Map<string, Track> = new Map();
 
   private _context?: TrackContext;
 
-  constructor(store: EduClassroomStore) {
+  constructor(
+    store: EduClassroomStore,
+    private _trackAdapter: TrackAdapter,
+    private _posOnly?: boolean,
+  ) {
     super(store);
 
-    reaction(() => this.classroomStore.roomStore.widgetsTrackState, this.updateTrackMap);
+    reaction(() => _trackAdapter.trackState, this.updateTrackMap);
   }
 
   @bound
-  initialize(context: TrackContext) {
+  setTrackContext(context: TrackContext) {
     this._context = context;
   }
 
   @bound
   reposition() {
-    this.trackByWidgetId.forEach((track) => {
+    this.trackById.forEach((track) => {
       track.reposition();
     });
   }
@@ -43,24 +47,13 @@ export class TrackStore extends EduStoreBase {
       initial?: boolean;
     },
   ) {
-    const hasTrack = this.trackByWidgetId.has(trackId);
+    const hasTrack = this.trackById.has(trackId);
 
     if (!hasTrack) {
-      this.trackByWidgetId.set(trackId, new Track(this._context!));
+      this.trackById.set(trackId, new Track(this._context!, this._posOnly));
     }
 
-    const track = this.trackByWidgetId.get(trackId)!;
-
-    // if (!track) {
-    //   this.logger.warn('Cannot find set track state with a invalid track id:', trackId);
-    //   return;
-    // }
-
-    if (pos.real) {
-      track.setRealPos(pos, options?.needTransition);
-    } else {
-      track.setRatioPos(pos, options?.needTransition);
-    }
+    const track = this.trackById.get(trackId)!;
 
     if (dimensions) {
       if (dimensions.real) {
@@ -70,30 +63,39 @@ export class TrackStore extends EduStoreBase {
       }
     }
 
-    // track.setReal(pos, dimensions || track.realVal.dimensions);
-
-    // track.setRatio(pos, dimensions || track.realVal.dimensions);
+    if (pos.real) {
+      track.setRealPos(pos, options?.needTransition);
+    } else {
+      track.setRatioPos(pos, options?.needTransition);
+    }
 
     if (end) {
       const rollback = () => {
         if (!hasTrack) {
-          this.trackByWidgetId.delete(trackId);
+          this.trackById.delete(trackId);
         }
       };
 
-      this.updateWidgetTrack(
-        trackId,
-        track.ratioVal.ratioPosition,
-        track.ratioVal.ratioDimensions,
-      ).catch(rollback);
+      this.updateTrack(trackId, track.ratioVal.ratioPosition, track.ratioVal.ratioDimensions).catch(
+        rollback,
+      );
     }
   }
 
-  setTrackDimensionsById(trackId: string, dimensions: Dimensions & { real: boolean }) {
-    const track = this.trackByWidgetId.get(trackId)!;
+  @Lodash.throttled(200, { trailing: true })
+  async updateTrack(trackId: string, position: Point, size: Dimensions, initial?: boolean) {
+    this._trackAdapter.updateTrackState(trackId, {
+      position: { xaxis: position.x, yaxis: position.y },
+      size: { width: size.width, height: size.height },
+      extra: { initial, userUuid: this.classroomStore.roomStore.userUuid },
+    });
+  }
+
+  setTrackLocalDimensionsById(trackId: string, dimensions: Dimensions & { real: boolean }) {
+    const track = this.trackById.get(trackId)!;
 
     if (!track) {
-      this.logger.warn('Cannot find set track state with a invalid track id:', trackId);
+      this.logger.warn('Cannot find track state with a invalid track id:', trackId);
       return;
     }
 
@@ -102,50 +104,75 @@ export class TrackStore extends EduStoreBase {
     } else {
       track.setRatioDimensions(dimensions);
     }
+
+    track.reposition();
+
+    track.fixLocalPos();
+
+    // this function just modifies track's local state. Use to keep RND size with Extapp's inner size
   }
 
   @action.bound
   deleteTrackById(trackId: string) {
-    this.trackByWidgetId.delete(trackId);
-    this.classroomStore.roomStore.deleteWidgetTrackState(trackId);
+    this.trackById.delete(trackId);
+    this._trackAdapter.deleteTrackState(trackId);
   }
 
   @action.bound
   private updateTrackMap(trackState: TrackState) {
     // delete items which not existed in track state
-    for (let id of this.trackByWidgetId.keys()) {
+    for (let id of this.trackById.keys()) {
       if (!trackState[id as unknown as string]) {
-        this.logger.info('Delete track', toJS(this.trackByWidgetId.get(id)));
-        this.trackByWidgetId.delete(id as unknown as string);
+        this.logger.info('Delete track', toJS(this.trackById.get(id)));
+        this.trackById.delete(id as unknown as string);
       }
     }
 
     // update track with new position & dimensions
     forEach(Object.keys(trackState), (id) => {
-      if (!this.trackByWidgetId.has(id)) {
-        this.trackByWidgetId.set(id, new Track(this._context!));
+      const hasTrack = this.trackById.has(id);
+
+      const { position, size, extra } = trackState[id];
+
+      if (!hasTrack && position) {
+        this.trackById.set(id, new Track(this._context!, this._posOnly));
       }
 
-      let track = this.trackByWidgetId.get(id);
+      let track = this.trackById.get(id);
 
-      const { position, size } = trackState[id];
-
-      if (!track || !position || !size) {
+      if (!track || !position) {
         this.logger.warn('Cannot find track state with a invalid track id:', id);
         return;
       }
 
-      track.setRatio(
-        {
-          x: position.xaxis,
-          y: position.yaxis,
-        },
-        {
-          width: size.width,
-          height: size.height,
-        },
-        true,
-      );
+      if (extra?.userUuid === this.classroomStore.roomStore.userUuid && hasTrack) {
+        this.logger.info('Skip self track update');
+        return;
+      }
+
+      if (size) {
+        track.setRatio(
+          {
+            x: position.xaxis,
+            y: position.yaxis,
+          },
+          {
+            width: size.width,
+            height: size.height,
+          },
+          true,
+        );
+      } else {
+        track.setRatioPos(
+          {
+            x: position.xaxis,
+            y: position.yaxis,
+          },
+          true,
+        );
+      }
+
+      track.fixLocalPos();
 
       this.logger.info('Update track ratio', toJS(position), toJS(size));
       this.logger.info(
@@ -153,15 +180,6 @@ export class TrackStore extends EduStoreBase {
         toJS(track.realVal.position),
         toJS(track.realVal.dimensions),
       );
-    });
-  }
-
-  @Lodash.throttled(200, { leading: true })
-  async updateWidgetTrack(widgetId: string, position: Point, size: Dimensions, initial?: boolean) {
-    this.classroomStore.roomStore.updateWidgetTrackState(widgetId, {
-      position: { xaxis: position.x, yaxis: position.y },
-      size: { width: size.width, height: size.height },
-      extra: { initial },
     });
   }
 

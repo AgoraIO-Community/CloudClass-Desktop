@@ -1,12 +1,12 @@
-import { FC, memo } from 'react';
+import { FC, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { RootBox } from '~ui-kit';
 import { useClassroomStyle, useInitialize } from './hooks';
+import { useStore } from '@/infra/hooks/use-edu-stores';
 
 type FixedAspectRatioProps = {
   minimumWidth?: number;
   minimumHeight?: number;
-  delayBeforeScale?: number;
   trackMargin?: Partial<{ top: number }>;
   trackResize?: Partial<{
     minHeight: number;
@@ -17,8 +17,8 @@ type FixedAspectRatioProps = {
 };
 
 const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
-  ({ children, minimumWidth = 0, minimumHeight = 0, delayBeforeScale = 500 }) => {
-    const style = useClassroomStyle({ minimumHeight, minimumWidth, delayBeforeScale });
+  ({ children, minimumWidth = 0, minimumHeight = 0 }) => {
+    const style = useClassroomStyle({ minimumHeight, minimumWidth });
 
     return (
       <div className="flex bg-black justify-center items-center h-screen w-screen">
@@ -30,12 +30,19 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
   },
 );
 
-const TrackArea = memo(({ top }: Partial<{ top: number }>) => (
-  <div
-    className="track-bounds w-full absolute"
-    style={{ height: `calc( 100% - ${top}px )`, top, zIndex: -1 }}
-  />
-));
+export const TrackArea = ({ top = 0, boundaryName }: { top?: number; boundaryName: string }) => {
+  const { trackUIStore } = useStore();
+
+  useEffect(() => {
+    trackUIStore.updateTrackContext(boundaryName);
+  }, []);
+  return (
+    <div
+      className={`${boundaryName} w-full absolute`}
+      style={{ height: `calc( 100% - ${top}px )`, top, zIndex: -1 }}
+    />
+  );
+};
 
 export const FixedAspectRatioRootBox: FC<FixedAspectRatioProps> = ({
   children,
@@ -51,8 +58,20 @@ export const FixedAspectRatioRootBox: FC<FixedAspectRatioProps> = ({
       minimumWidth={minimumWidth || 1024}
       minimumHeight={minimumHeight || 576}
       {...props}>
-      <TrackArea top={trackMargin?.top || 0} />
+      <ClassroomTrackBounds trackMargin={trackMargin} />
       <RootBox>{children}</RootBox>
     </FixedAspectRatioContainer>
   );
 };
+
+export const ClassroomTrackBounds = observer(
+  ({ trackMargin }: { trackMargin: FixedAspectRatioProps['trackMargin'] }) => {
+    const { shareUIStore } = useStore();
+
+    const readyToMount = shareUIStore.classroomViewportSize.width > 0;
+
+    return readyToMount ? (
+      <TrackArea top={trackMargin?.top || 0} boundaryName="classroom-track-bounds" />
+    ) : null;
+  },
+);

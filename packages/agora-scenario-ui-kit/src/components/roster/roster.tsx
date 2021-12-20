@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useState, useEffect } from 'react';
-import Draggable from 'react-draggable';
+import { FC, useState, useEffect } from 'react';
+import { Rnd } from 'react-rnd';
 import { Search } from '../input';
 import { SvgImg } from '../svg-img';
 import { Col, Table, TableHeader } from '../table';
@@ -9,9 +9,11 @@ import { transI18n } from '../i18n';
 import SearchSvg from '../icon/assets/svg/search.svg';
 import { useColumns } from './hooks';
 import { OverlayWrap } from '../overlay-wrap';
+import { useDraggableDefaultCenterPosition } from '../../utilities/hooks';
+
+const modalSize = { width: 606, height: 402 };
 
 export const Roster: FC<RosterProps> = ({
-  isDraggable = true,
   hostname,
   onClose,
   title,
@@ -20,41 +22,18 @@ export const Roster: FC<RosterProps> = ({
   functions = [],
   keyword,
   children,
-  offsetTop,
   bounds,
   width,
 }) => {
-  const DraggableContainer = useCallback(
-    ({
-      children,
-      handle,
-      bounds,
-      offsetTop,
-    }: {
-      children: React.ReactChild;
-      handle: string;
-      bounds?: string;
-      offsetTop?: number;
-    }) => {
-      return isDraggable ? (
-        <Draggable
-          handle={handle}
-          bounds={bounds}
-          positionOffset={{ y: offsetTop || 0, x: 0 }}
-          defaultPosition={{ x: 0, y: 0 }}>
-          {children}
-        </Draggable>
-      ) : (
-        <>{children}</>
-      );
-    },
-    [isDraggable],
-  );
-
   const [opened, setOpened] = useState(false);
   useEffect(() => {
     setOpened(true);
   }, []);
+
+  const defaultPos = useDraggableDefaultCenterPosition({
+    draggableWidth: width || modalSize.width,
+    draggableHeight: modalSize.height,
+  });
 
   const showSearch = functions.includes('search');
   const showCarousel = functions.includes('carousel');
@@ -63,8 +42,14 @@ export const Roster: FC<RosterProps> = ({
 
   return (
     <OverlayWrap opened={opened} onExited={onClose}>
-      <DraggableContainer handle=".main-title" bounds={bounds} offsetTop={offsetTop}>
-        <div className="agora-board-resources roster-wrap" style={{ width }}>
+      <Rnd
+        dragHandleClassName="main-title"
+        bounds={bounds}
+        enableResizing={false}
+        default={defaultPos}>
+        <div
+          className="roster-wrap"
+          style={{ width: width || modalSize.width, height: modalSize.height }}>
           {/* close icon */}
           <div className="btn-pin">
             <SvgImg
@@ -130,7 +115,7 @@ export const Roster: FC<RosterProps> = ({
             </Table>
           </div>
         </div>
-      </DraggableContainer>
+      </Rnd>
     </OverlayWrap>
   );
 };

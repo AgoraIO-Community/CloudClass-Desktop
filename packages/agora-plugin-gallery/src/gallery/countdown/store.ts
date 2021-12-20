@@ -44,7 +44,7 @@ export class PluginStore {
     duration?: string;
     commonState?: number;
   }) => {
-    const roomProperties: any = this.context.properties || {};
+    const { position, size, extra, ...roomProperties }: any = this.context.properties || {};
     const commonProperties: any = {};
     commonState !== undefined && (commonProperties['state'] = commonState); // commonState开启关闭定时器
     state && (roomProperties['state'] = `${state}`);

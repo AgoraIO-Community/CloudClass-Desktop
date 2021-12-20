@@ -5,3 +5,72 @@
   align-self: center;
   max-height: 40px;
 }
+
+.agora-board-resources {
+  background: #ffffff;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 6px;
+  /* border: 1px solid #E3E3EC; */
+  position: relative;
+  overflow-y: hidden;
+}
+
+/* need rewrite ui. hover svg */
+.agora-board-resources .icon-hover {
+  height: 22px;
+  width: 22px;
+}
+
+.agora-board-resources .tabs-nav-list {
+  padding-left: 24px;
+}
+
+.agora-board-resources .tabs-nav {
+  background-color: #f9f9fc;
+}
+
+.agora-board-resources .rc-tabs-nav {
+  @apply bg-table-header;
+  height: 40px;
+}
+
+.agora-board-resources .rc-tabs-nav-list {
+  left: 19px;
+}
+
+.agora-board-resources .rc-tabs-tab-btn {
+  line-height: 20px;
+  font-size: 14px;
+  padding: 10px 5px;
+}
+
+.agora-board-resources .rc-tabs-tab {
+  background: transparent;
+}
+
+.agora-board-resources .form-checkbox {
+  margin-right: 15px;
+}
+
+.agora-board-resources .custom-fix-width {
+  flex: 0;
+}
+
+.cloud-wrap {
+  border: 1px solid #e3e3ec;
+}
+.cloud-wrap .table-header .table-col-item {
+  color: #191919 !important;
+}
+
+.cloud-wrap .table-container {
+  height: 453px;
+}
+.cloud-wrap .table-container.upload-table-container {
+  height: 403px;
+}
+
+.cloud-wrap .table-container-upload .placeholder {
+  position: relative;
+  top: -47px;
+}

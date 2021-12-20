@@ -467,8 +467,8 @@ export class EduApiService extends ApiBase {
     roomId: string,
     extAppUuid: string,
     properties: any,
-    common: any,
-    cause: any,
+    common?: any,
+    cause?: any,
   ) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,
@@ -486,7 +486,7 @@ export class EduApiService extends ApiBase {
     roomId: string,
     extAppUuid: string,
     properties: string[],
-    cause: any,
+    cause?: any,
   ) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomId}/extApps/${escapeExtAppIdentifier(extAppUuid)}/properties`,

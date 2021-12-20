@@ -1,3 +1,5 @@
+import { TrackData, TrackState } from '../room/type';
+
 export type Bounds = {
   left: number;
   top: number;
@@ -35,5 +37,15 @@ export type ResizeBounds = {
 export type TrackContext = {
   margin: Margin;
   outerSize: Dimensions;
+  dragBounds: Bounds;
   resizeBounds: ResizeBounds;
+  ready: boolean;
 };
+
+export interface TrackAdapter {
+  updateTrackState: (widgetId: string, data: TrackData) => void;
+
+  deleteTrackState: (trackId: string) => void;
+
+  get trackState(): TrackState;
+}

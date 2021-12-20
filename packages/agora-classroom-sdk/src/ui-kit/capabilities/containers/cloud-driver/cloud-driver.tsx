@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import Draggable from 'react-draggable';
+import { Rnd } from 'react-rnd';
 import { TabPane, Tabs, transI18n, SvgImg, OverlayWrap } from '~ui-kit';
 import { PublicResourcesContainer } from './public-resource';
 import { PersonalResourcesContainer } from './person-resource';
 import './index.css';
 import { CloudDriverContainerProps } from '.';
+import { useDraggableDefaultCenterPosition } from '~ui-kit/utilities/hooks';
 
 export enum ActiveKeyEnum {
   public = '1',
@@ -17,15 +18,27 @@ export type CloudDriverProps = {
   handleChange: (key: string) => void;
 } & CloudDriverContainerProps;
 
+const modalSize = { width: 606, height: 540 };
+
 export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverProps) => {
   const [opened, setOpened] = useState(false);
   useEffect(() => {
     setOpened(true);
   }, []);
+
+  const defaultPos = useDraggableDefaultCenterPosition({
+    draggableWidth: modalSize.width,
+    draggableHeight: modalSize.height,
+  });
+
   return (
     <OverlayWrap opened={opened} onExited={onClose}>
-      <Draggable bounds=".track-bounds" handle=".tabs-nav" positionOffset={{ y: 27, x: 0 }}>
-        <div className="agora-board-resources cloud-wrap">
+      <Rnd
+        bounds=".classroom-track-bounds"
+        dragHandleClassName="tabs-nav"
+        enableResizing={false}
+        default={defaultPos}>
+        <div className="agora-board-resources cloud-wrap" style={modalSize}>
           <div className="btn-pin">
             <SvgImg type="close" style={{ cursor: 'pointer' }} onClick={() => setOpened(false)} />
           </div>
@@ -38,7 +51,7 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
             </TabPane>
           </Tabs>
         </div>
-      </Draggable>
+      </Rnd>
     </OverlayWrap>
   );
 };

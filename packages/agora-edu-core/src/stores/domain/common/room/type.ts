@@ -44,7 +44,7 @@ export type TrackData = {
     xaxis: number;
     yaxis: number;
   };
-  size: {
+  size?: {
     height: number;
     width: number;
   };

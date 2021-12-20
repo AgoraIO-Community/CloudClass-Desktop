@@ -1,7 +1,7 @@
 import { computed, reaction, toJS } from 'mobx';
 import { AgoraRteEngineConfig, bound, Lodash, Log, RteLanguage } from 'agora-rte-sdk';
 import { EduUIStoreBase } from '../base';
-import { ClassroomState, EduRoleTypeEnum, IAgoraExtApp } from '../../../..';
+import { ClassroomState, EduClassroomConfig, EduRoleTypeEnum, IAgoraExtApp } from '../../../..';
 import { escapeExtAppIdentifier } from '../../../domain/common/room/command-handler';
 import { dependencies } from './dependencies';
 
@@ -65,19 +65,21 @@ export class ExtAppUIStore extends EduUIStoreBase {
   mount(dom: HTMLElement | null, extApp: IAgoraExtApp) {
     if (dom) {
       const { roomUuid, roomType, roomName, extAppProperties } = this.classroomStore.roomStore;
-      const { localUser } = this.classroomStore.userStore;
+
       const language = languageMap[AgoraRteEngineConfig.shared.language];
 
       const properties = toJS(extAppProperties[escapeExtAppIdentifier(extApp.appIdentifier)]) || {};
+
+      const { userUuid, role, userName } = EduClassroomConfig.shared.sessionInfo;
 
       const context = {
         language,
         properties,
         dependencies,
         localUserInfo: {
-          userUuid: localUser.userUuid,
-          userName: localUser.userName,
-          roleType: localUser.userRole,
+          userUuid,
+          userName,
+          roleType: role,
         },
         roomInfo: {
           roomName,
@@ -102,13 +104,15 @@ export class ExtAppUIStore extends EduUIStoreBase {
   }
 
   @Lodash.debounced(200, { trailing: true })
-  updateAppTrack(appId: string, width: number, height: number) {
-    this.logger.info('Updating size', appId, width, height);
-    this.classroomStore.trackStore.setTrackDimensionsById(escapeExtAppIdentifier(appId), {
-      width,
-      height,
-      real: true,
-    });
+  updateTrackState(appId: string, width: number, height: number) {
+    this.classroomStore.extAppsTrackStore.setTrackLocalDimensionsById(
+      escapeExtAppIdentifier(appId),
+      {
+        width,
+        height,
+        real: true,
+      },
+    );
   }
 
   @bound

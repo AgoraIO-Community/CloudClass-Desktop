@@ -53,7 +53,7 @@ export class ExtAppStore extends EduStoreBase {
     }
 
     this.activeAppIds = this.activeAppIds.filter((k) => k !== appId);
-    this.classroomStore.trackStore.deleteTrackById(escapeExtAppIdentifier(appId));
+    this.classroomStore.extAppsTrackStore.deleteTrackById(escapeExtAppIdentifier(appId));
   }
 
   @action.bound
@@ -69,7 +69,7 @@ export class ExtAppStore extends EduStoreBase {
       const app = this.classroomStore.extAppStore.extApps[appId];
 
       const { width, height } = app;
-      this.classroomStore.trackStore.setTrackById(
+      this.classroomStore.extAppsTrackStore.setTrackById(
         escapeExtAppIdentifier(appId),
         true,
         { x: 0.5, y: 0.5, real: false },

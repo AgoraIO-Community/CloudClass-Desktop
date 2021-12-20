@@ -24,7 +24,6 @@ export * from './progress';
 export * from './placeholder';
 export * from './tooltip';
 export * from './svga-player';
-export * from 'react-draggable';
 export * from './input';
 export * from './countdown';
 export * from './svg-img';

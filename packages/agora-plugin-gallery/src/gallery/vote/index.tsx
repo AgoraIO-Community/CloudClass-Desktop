@@ -258,6 +258,8 @@ export class AgoraExtAppVote implements IAgoraExtApp {
   );
   width = 360;
   height = 283;
+  minWidth = 360;
+  minHeight = 283;
 
   store?: PluginStore;
 

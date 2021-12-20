@@ -1,11 +1,13 @@
 import { observer } from 'mobx-react';
 import { FC, useMemo, useEffect, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
-import { BoardPlaceHolder } from '~ui-kit';
-import './index.css';
 import 'video.js/dist/video-js.css';
 import '@netless/window-manager/dist/style.css';
+import { BoardPlaceHolder } from '~ui-kit';
+import './index.css';
+
 import { WhiteboardToolbar } from '~containers/toolbar';
+import { TrackArea } from '~containers/root-box/';
 
 export const WhiteboardContainer: FC = observer(({ children }) => {
   const { boardUIStore } = useStore();
@@ -43,7 +45,8 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
   );
 
   return (
-    <div style={{ height: boardHeight }} className="w-full">
+    <div style={{ height: boardHeight }} className="w-full relative">
+      <WhiteboardTrackArea />
       {readyToMount ? (
         <div className="whiteboard-wrapper">
           {children}
@@ -73,3 +76,9 @@ export const CollectorContainer = observer(() => {
 
   return <div id="window-manager-collector" ref={domRef}></div>;
 });
+
+export const WhiteboardTrackArea = () => {
+  const { boardUIStore } = useStore();
+  const { readyToMount } = boardUIStore;
+  return readyToMount ? <TrackArea boundaryName="extapp-track-bounds" /> : null;
+};

@@ -1,7 +1,7 @@
 import { action, computed, observable } from 'mobx';
 import { Point } from 'white-web-sdk';
+import { Dimensions, ResizeBounds } from '../../../domain/common/track/type';
 import { convertLocalPositionToRatio, convertRatioToLocalPosition } from './helper';
-import { Dimensions, ResizeBounds } from './type';
 export class Track {
   @observable
   private _localVal = {

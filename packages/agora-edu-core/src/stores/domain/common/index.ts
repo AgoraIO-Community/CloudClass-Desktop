@@ -14,6 +14,8 @@ import { HandUpStore } from './hand-up';
 import { RecordingStore } from './recording';
 import { EduStoreBase } from './base';
 import { TrackStore } from './track';
+import { ExtAppTrackAdapter } from './ext-app/track-adapter';
+import { WidgetTrackAdapter } from './widget/track-adapter';
 
 export class EduClassroomStore {
   private _api: EduApiService = new EduApiService();
@@ -35,7 +37,8 @@ export class EduClassroomStore {
   readonly streamStore: StreamStore = new StreamStore(this);
   readonly handUpStore: HandUpStore = new HandUpStore(this);
   readonly recordingStore: RecordingStore = new RecordingStore(this);
-  readonly trackStore: TrackStore = new TrackStore(this);
+  readonly extAppsTrackStore: TrackStore = new TrackStore(this, new ExtAppTrackAdapter(this), true);
+  readonly widgetsTrackStore: TrackStore = new TrackStore(this, new WidgetTrackAdapter(this));
 
   initialize() {
     const instance = this;

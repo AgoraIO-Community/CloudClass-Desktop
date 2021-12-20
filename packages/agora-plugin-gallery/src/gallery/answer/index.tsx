@@ -229,6 +229,8 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
   icon = 'answer';
   width = 380;
   height = 150; // 超过4个选项高度为220
+  minWidth = 380;
+  minHeight = 150; // 超过4个选项高度为220
   store?: PluginStore;
   customHeader = (<Clock app={this} />);
   clockWatchProps = observable({

@@ -90,10 +90,6 @@ export type RosterProps = {
    */
   width?: number;
   /**
-   * 是否可拖拽
-   */
-  isDraggable?: boolean;
-  /**
    * 房主姓名
    */
   hostname: string;
@@ -126,9 +122,4 @@ export type RosterProps = {
    * 拖动区域所在范围dom的class
    */
   bounds?: string;
-
-  /**
-   * 组件拖动顶部的初始偏移量
-   */
-  offsetTop?: number;
 };

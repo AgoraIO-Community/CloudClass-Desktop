@@ -1,5 +1,4 @@
-import { action, computed, observable } from 'mobx';
-import { Point } from 'white-web-sdk';
+import { action, computed, observable, reaction } from 'mobx';
 import {
   convertLocalToRatio,
   convertLocalPositionToRatio,
@@ -7,11 +6,13 @@ import {
   convertRatioToLocal,
   convertRatioToLocalPosition,
   convertRatioToLocalDimensions,
+  convertRatioToLocalPositionWithFixedDimensions,
+  convertRatioToLocalWithFixedDimensions,
 } from './helper';
-import { Dimensions, ResizeBounds } from './type';
+import { Dimensions, Point, TrackContext } from './type';
 export class Track {
   @observable
-  private _localVal = {
+  protected _localVal = {
     position: {
       x: 0,
       y: 0,
@@ -23,7 +24,7 @@ export class Track {
   };
 
   @observable
-  private _ratioVal = {
+  protected _ratioVal = {
     ratioPosition: {
       x: 0,
       y: 0,
@@ -34,15 +35,9 @@ export class Track {
     },
   };
 
-  private _needTransition = false;
+  protected _needTransition = false;
 
-  constructor(
-    private _context: {
-      outerSize: Dimensions;
-      margin: { top: number };
-      resizeBounds: ResizeBounds;
-    },
-  ) {}
+  constructor(protected _context: TrackContext, protected _posOnly?: boolean) {}
 
   @computed
   get realVal() {
@@ -65,7 +60,7 @@ export class Track {
     const medY = height - dimensions.height;
 
     this._ratioVal = convertLocalToRatio(
-      position,
+      this.fixPos(position),
       dimensions,
       medX,
       medY,
@@ -94,7 +89,7 @@ export class Track {
     const medY = height - this._localVal.dimensions.height;
 
     const { ratioPosition } = convertLocalPositionToRatio(
-      position,
+      this.fixPos(position),
       medX,
       medY,
       this._context.margin,
@@ -135,13 +130,23 @@ export class Track {
 
   @action.bound
   setRatio(position: Point, dimensions: Dimensions, needTransition?: boolean) {
-    this._localVal = convertRatioToLocal(
-      { ratioX: position.x, ratioY: position.y },
-      { ratioWidth: dimensions.width, ratioHeight: dimensions.height },
-      this._context.outerSize,
-      this._context.margin,
-      this._context.resizeBounds,
-    );
+    if (this._posOnly) {
+      this._localVal = convertRatioToLocalWithFixedDimensions(
+        { ratioX: position.x, ratioY: position.y },
+        dimensions,
+        this._context.outerSize,
+        this._context.margin,
+        this._context.resizeBounds,
+      );
+    } else {
+      this._localVal = convertRatioToLocal(
+        { ratioX: position.x, ratioY: position.y },
+        { ratioWidth: dimensions.width, ratioHeight: dimensions.height },
+        this._context.outerSize,
+        this._context.margin,
+        this._context.resizeBounds,
+      );
+    }
 
     this._ratioVal = {
       ratioPosition: {
@@ -159,21 +164,36 @@ export class Track {
 
   @action.bound
   setRatioPos(ratioPos: Point, needTransition?: boolean) {
-    const { position } = convertRatioToLocalPosition(
-      { ratioX: ratioPos.x, ratioY: ratioPos.y },
-      {
-        ratioWidth: this._ratioVal.ratioDimensions.width,
-        ratioHeight: this._ratioVal.ratioDimensions.height,
-      },
-      this._context.outerSize,
-      this._context.margin,
-      this._context.resizeBounds,
-    );
+    if (this._posOnly) {
+      const { position } = convertRatioToLocalPositionWithFixedDimensions(
+        { ratioX: ratioPos.x, ratioY: ratioPos.y },
+        this._localVal.dimensions,
+        this._context.outerSize,
+        this._context.margin,
+        this._context.resizeBounds,
+      );
 
-    this._localVal = {
-      position,
-      dimensions: this._localVal.dimensions,
-    };
+      this._localVal = {
+        position,
+        dimensions: this._localVal.dimensions,
+      };
+    } else {
+      const { position } = convertRatioToLocalPosition(
+        { ratioX: ratioPos.x, ratioY: ratioPos.y },
+        {
+          ratioWidth: this._ratioVal.ratioDimensions.width,
+          ratioHeight: this._ratioVal.ratioDimensions.height,
+        },
+        this._context.outerSize,
+        this._context.margin,
+        this._context.resizeBounds,
+      );
+
+      this._localVal = {
+        position,
+        dimensions: this._localVal.dimensions,
+      };
+    }
 
     this._ratioVal = {
       ratioPosition: {
@@ -210,7 +230,28 @@ export class Track {
     this._needTransition = !!needTransition;
   }
 
+  protected fixPos(pos: Point, local: boolean = true) {
+    const { top } = this._context.dragBounds;
+    return {
+      x: pos.x,
+      y: local ? pos.y - top : pos.y + top,
+    };
+  }
+
+  @action.bound
+  fixLocalPos() {
+    this._localVal = {
+      dimensions: this._localVal.dimensions,
+      position: this.fixPos(this._localVal.position, false),
+    };
+  }
+
   reposition() {
-    this.setRatio(this._ratioVal.ratioPosition, this._ratioVal.ratioDimensions);
+    if (this._posOnly) {
+      this.setRatioPos(this._ratioVal.ratioPosition);
+    } else {
+      this.setRatio(this._ratioVal.ratioPosition, this._ratioVal.ratioDimensions);
+    }
+    this._needTransition = true;
   }
 }

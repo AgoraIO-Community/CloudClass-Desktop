@@ -1,3 +1,3 @@
-export { FixedAspectRatioRootBox } from './fixed-aspect-ratio';
+export { FixedAspectRatioRootBox, TrackArea } from './fixed-aspect-ratio';
 
-export { Track } from './track';
+export { ExtAppTrack, WidgetTrack } from './track';

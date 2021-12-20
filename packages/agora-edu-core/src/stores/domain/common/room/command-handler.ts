@@ -122,8 +122,16 @@ class CMDHandler {
     const extApps = changedProperties.extApps;
 
     Object.keys(extApps).forEach((key) => {
-      const oldProps = this.extApps[key];
-      const newProps = extApps[key];
+      const filterTrackProps = (props: any) => {
+        if (!props) {
+          return props;
+        }
+        const { position, size, extra, ...otherProps } = props;
+
+        return otherProps;
+      };
+      const oldProps = filterTrackProps(this.extApps[key]);
+      const newProps = filterTrackProps(extApps[key]);
 
       if (!isEqual(oldProps, newProps)) {
         apps[key] = newProps;
@@ -135,7 +143,6 @@ class CMDHandler {
 
   private handleUpdateTrackState(changedProperties: any) {
     if (changedProperties.widgets) {
-      // const next = cloneDeep(changedProperties.widgets);
       const next = changedProperties.widgets;
       const prev = this.cache.prev('widgets');
 
@@ -147,6 +154,21 @@ class CMDHandler {
         this.cache.next('widgets', next);
 
         this._delegate.fireWidgetsTrackStateChange(next);
+      }
+    }
+
+    if (changedProperties.extApps) {
+      const next = changedProperties.extApps;
+      const prev = this.cache.prev('extapps');
+
+      const rawPrev = JSON.stringify(prev);
+      const rawNext = JSON.stringify(next);
+
+      // prevent unnecessary re-rendering
+      if (rawPrev !== rawNext) {
+        this.cache.next('extapps', next);
+
+        this._delegate.fireExtappsTrackStateChange(next);
       }
     }
   }

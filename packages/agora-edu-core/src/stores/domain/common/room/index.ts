@@ -248,8 +248,15 @@ export class RoomStore extends EduStoreBase {
     await this.api.deleteTrack(this.roomUuid, widgetId, { cause: {} });
   }
 
+  @action.bound
+  async deleteExtappTrackState(extappId: string) {
+    await this.api.deleteExtAppProperties(this.roomUuid, extappId, ['position', 'extra', 'size']);
+  }
+
   @bound
-  async updateExtappTrackState() {}
+  async updateExtappTrackState(extappId: string, data: TrackData) {
+    await this.api.updateExtAppProperties(this.roomUuid, extappId, data);
+  }
 
   @action.bound
   private tickClock() {

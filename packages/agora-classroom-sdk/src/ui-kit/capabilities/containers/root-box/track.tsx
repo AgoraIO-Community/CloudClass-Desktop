@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import React, { useRef, useLayoutEffect, useMemo } from 'react';
 import { DraggableData, ResizableDelta, Rnd, Position } from 'react-rnd';
 import { useStore } from '~hooks/use-edu-stores';
+import { Track, Point, Dimensions } from 'agora-edu-core';
 
 type TrackSyncingProps = {
   trackId: string;
@@ -16,6 +17,7 @@ type TrackSyncingProps = {
   minHeight?: number;
   maxWidth?: number;
   maxHeight?: number;
+  boundaryName?: string;
 };
 
 const forceUpdateRndBounds = (rnd: Rnd, boundary: HTMLDivElement) => {
@@ -42,7 +44,12 @@ const forceUpdateRndBounds = (rnd: Rnd, boundary: HTMLDivElement) => {
   });
 };
 
-export const Track: React.FC<TrackSyncingProps> = observer(
+export const TrackCore: React.FC<
+  TrackSyncingProps & {
+    setTrackById: (trackId: string, end: boolean, pos: Point, dimensions?: Dimensions) => void;
+    trackById: Map<string, Track>;
+  }
+> = observer(
   ({
     children,
     trackId,
@@ -57,24 +64,30 @@ export const Track: React.FC<TrackSyncingProps> = observer(
     maxWidth,
     maxHeight,
     cancel,
+    boundaryName,
+    setTrackById,
+    trackById,
   }) => {
-    const { trackUIStore } = useStore();
-    const { trackByWidgetId, setTrackById, bounds } = trackUIStore;
-
-    const track = trackByWidgetId.get(trackId);
+    const track = trackById.get(trackId);
 
     const rootRef = useRef<Rnd | null>(null);
 
-    const boundsClz = '.track-bounds';
+    const boundsClz = `.${boundaryName}`;
 
     const handleEvents = useMemo(
       () =>
         ({
           drag: {
-            onDrag: (_: any, pos: DraggableData) => {
+            onDrag: (_: unknown, pos: DraggableData) => {
               setTrackById(trackId, true, pos);
             },
-            onResize: (_: any, __: any, ref: HTMLElement, delta: ResizableDelta, pos: Position) => {
+            onResize: (
+              _: unknown,
+              __: unknown,
+              ref: HTMLElement,
+              delta: ResizableDelta,
+              pos: Position,
+            ) => {
               setTrackById(trackId, true, pos, {
                 width: ref.clientWidth,
                 height: ref.clientHeight,
@@ -82,21 +95,27 @@ export const Track: React.FC<TrackSyncingProps> = observer(
             },
           },
           drop: {
-            onDrag: (_: any, pos: DraggableData) => {
+            onDrag: (_: unknown, pos: DraggableData) => {
               setTrackById(trackId, false, pos);
             },
-            onDragStop: (_: any, pos: DraggableData) => {
+            onDragStop: (_: unknown, pos: DraggableData) => {
               setTrackById(trackId, true, pos);
             },
-            onResize: (_: any, __: any, ref: HTMLElement, delta: ResizableDelta, pos: Position) => {
+            onResize: (
+              _: unknown,
+              __: unknown,
+              ref: HTMLElement,
+              delta: ResizableDelta,
+              pos: Position,
+            ) => {
               setTrackById(trackId, false, pos, {
                 width: ref.clientWidth,
                 height: ref.clientHeight,
               });
             },
             onResizeStop: (
-              _: any,
-              __: any,
+              _: unknown,
+              __: unknown,
               ref: HTMLElement,
               delta: ResizableDelta,
               pos: Position,
@@ -113,12 +132,12 @@ export const Track: React.FC<TrackSyncingProps> = observer(
 
     useLayoutEffect(() => {
       const rnd = rootRef.current;
-      const boundary = document.querySelector(boundsClz!) as HTMLDivElement;
-      if (rnd) {
+      const boundary = boundsClz && (document.querySelector(boundsClz) as HTMLDivElement);
+      if (rnd && boundary) {
         // fix rnd bug
         forceUpdateRndBounds(rnd, boundary);
       }
-    }, [bounds, boundsClz]);
+    }, [boundsClz]);
 
     const postStyle = useMemo(
       () => Object.assign({}, style, track?.needTransition ? { transition: 'all .3s' } : null),
@@ -146,3 +165,19 @@ export const Track: React.FC<TrackSyncingProps> = observer(
     ) : null;
   },
 );
+
+export const WidgetTrack: React.FC<TrackSyncingProps> = observer((props) => {
+  const { trackUIStore } = useStore();
+
+  const { widgetTrackById, setWidgetTrackById } = trackUIStore;
+
+  return <TrackCore {...props} setTrackById={setWidgetTrackById} trackById={widgetTrackById} />;
+});
+
+export const ExtAppTrack: React.FC<TrackSyncingProps> = observer((props) => {
+  const { trackUIStore } = useStore();
+
+  const { extAppTrackById, setExtAppTrackById } = trackUIStore;
+
+  return <TrackCore {...props} setTrackById={setExtAppTrackById} trackById={extAppTrackById} />;
+});

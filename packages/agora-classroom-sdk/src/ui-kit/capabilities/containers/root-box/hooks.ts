@@ -14,11 +14,9 @@ export const useInitialize = (trackMargin: { top: number }) => {
 export const useClassroomStyle = ({
   minimumHeight,
   minimumWidth,
-  delayBeforeScale,
 }: {
   minimumHeight: number;
   minimumWidth: number;
-  delayBeforeScale: number;
 }) => {
   const minimumSize = useMemo(
     () => ({ height: minimumHeight, width: minimumWidth }),

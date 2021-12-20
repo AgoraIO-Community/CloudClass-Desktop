@@ -1,14 +1,14 @@
 import { EduUIStoreBase } from '../base';
 import { EduClassroomStore } from '../../../domain';
 import { EduShareUIStore } from '../share-ui';
-import { Dimensions, Point, Margin } from './type';
-import { bound, Lodash, Log } from 'agora-rte-sdk';
-import { action, computed, observable, runInAction } from 'mobx';
+import { bound, Log } from 'agora-rte-sdk';
+import { action, computed } from 'mobx';
+import { Dimensions, Margin, Point, TrackContext } from '../../../domain/common/track/type';
+import { TrackStore } from '../../../domain/common/track';
+
 @Log.attach({ proxyMethods: false })
 export class TrackUIStore extends EduUIStoreBase {
-  private _resizeObserver?: ResizeObserver;
-
-  private _context = {
+  private _extAppTrackContext: TrackContext = {
     margin: {
       top: 0,
     },
@@ -16,20 +16,42 @@ export class TrackUIStore extends EduUIStoreBase {
       width: 0,
       height: 0,
     },
+    dragBounds: {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    },
     resizeBounds: {
       minHeight: 0,
       minWidth: 0,
       maxHeight: Number.MAX_VALUE,
       maxWidth: Number.MAX_VALUE,
     },
+    ready: false,
   };
 
-  @observable
-  bounds = {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+  private _widgetTrackContext: TrackContext = {
+    margin: {
+      top: 0,
+    },
+    outerSize: {
+      width: 0,
+      height: 0,
+    },
+    dragBounds: {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    },
+    resizeBounds: {
+      minHeight: 0,
+      minWidth: 0,
+      maxHeight: Number.MAX_VALUE,
+      maxWidth: Number.MAX_VALUE,
+    },
+    ready: false,
   };
 
   constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
@@ -38,62 +60,23 @@ export class TrackUIStore extends EduUIStoreBase {
 
   @bound
   initialize({ margin }: { margin: Margin }) {
-    this._context.margin = { top: margin.top };
+    this._widgetTrackContext.margin = { top: margin.top };
 
     this.shareUIStore.addWindowResizeEventListenerAndSetNavBarHeight(margin.top);
 
-    this._resizeObserver = new ResizeObserver(this.updateBounds);
+    this.classroomStore.extAppsTrackStore.setTrackContext(this._extAppTrackContext);
 
-    this._resizeObserver.observe(document.body);
-
-    this.updateBounds();
-
-    this.classroomStore.trackStore.initialize(this._context);
+    this.classroomStore.widgetsTrackStore.setTrackContext(this._widgetTrackContext);
   }
 
   @bound
   destroy() {
     this.shareUIStore.removeWindowResizeEventListener();
-    this._resizeObserver?.disconnect();
-    this._resizeObserver = undefined;
-  }
-
-  @Lodash.debounced(500)
-  private updateBounds() {
-    const { margin } = this._context;
-    const { width, height } = this.shareUIStore.classroomViewportSize;
-    // black padding supposed to be each side of classroom
-    const left = (window.innerWidth - width) / 2;
-    const top = (window.innerHeight - height) / 2;
-    // calculate bounds, plus margin of each side
-    const newBounds = {
-      left: left,
-      right: left + width,
-      top: top + margin.top,
-      bottom: top + height,
-    };
-    const changed = ['left', 'right', 'top', 'bottom', 'initialized'].some(
-      //@ts-ignore
-      (attr) => newBounds[attr] !== this.bounds[attr],
-    );
-    // set if it is actually changed
-    if (changed) {
-      this._context.outerSize = {
-        width: newBounds.right - newBounds.left,
-        height: newBounds.bottom - newBounds.top,
-      };
-
-      runInAction(() => {
-        this.bounds = newBounds;
-      });
-
-      this.classroomStore.trackStore.reposition();
-    }
   }
 
   @action.bound
-  setTrackById(trackId: string, end: boolean, pos: Point, dimensions?: Dimensions) {
-    this.classroomStore.trackStore.setTrackById(
+  setWidgetTrackById(trackId: string, end: boolean, pos: Point, dimensions?: Dimensions) {
+    this.classroomStore.widgetsTrackStore.setTrackById(
       trackId,
       end,
       { ...pos, real: true },
@@ -102,17 +85,73 @@ export class TrackUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  deleteTrackById(trackId: string) {
-    this.classroomStore.trackStore.deleteTrackById(trackId);
+  setExtAppTrackById(trackId: string, end: boolean, pos: Point, dimensions?: Dimensions) {
+    this.classroomStore.extAppsTrackStore.setTrackById(
+      trackId,
+      end,
+      { ...pos, real: true },
+      dimensions ? { ...dimensions, real: true } : undefined,
+    );
+  }
+
+  @action.bound
+  deleteWidgetTrackById(trackId: string) {
+    this.classroomStore.widgetsTrackStore.deleteTrackById(trackId);
+  }
+
+  @action.bound
+  deleteExtAppTrackById(trackId: string) {
+    this.classroomStore.extAppsTrackStore.deleteTrackById(trackId);
   }
 
   @computed
-  get trackByWidgetId() {
-    return this.classroomStore.trackStore.trackByWidgetId;
+  get widgetTrackById() {
+    return this.classroomStore.widgetsTrackStore.trackById;
   }
 
-  onDestroy(): void {
-    this.destroy();
+  @computed
+  get extAppTrackById() {
+    return this.classroomStore.extAppsTrackStore.trackById;
   }
+
+  @bound
+  getBounds(boundaryName: string) {
+    const boundsElement = document.querySelector(`.${boundaryName}`);
+    if (boundsElement) {
+      const { left, top, right, bottom, width, height } = boundsElement.getBoundingClientRect();
+      return { left, top, right, bottom, width, height };
+    }
+    return { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
+  }
+
+  @bound
+  updateTrackContext(boundaryName: string) {
+    const context = {
+      'extapp-track-bounds': this._extAppTrackContext,
+      'classroom-track-bounds': this._widgetTrackContext,
+    }[boundaryName] as TrackContext;
+
+    const store = {
+      'extapp-track-bounds': this.classroomStore.extAppsTrackStore,
+      'classroom-track-bounds': this.classroomStore.widgetsTrackStore,
+    }[boundaryName] as TrackStore;
+
+    const { width, height, left, top, right, bottom } = this.getBounds(boundaryName);
+    context.outerSize = {
+      width,
+      height,
+    };
+    context.dragBounds = {
+      left,
+      top,
+      right,
+      bottom,
+    };
+    context.ready = true;
+
+    store.reposition();
+  }
+
+  onDestroy(): void {}
   onInstall(): void {}
 }
