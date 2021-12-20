@@ -18,6 +18,7 @@ import { ListenerCallback } from './declare';
 import { EduContext } from '../contexts';
 import { MediaOptions } from 'agora-rte-sdk';
 import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
+import { I18nProvider } from '~ui-kit';
 
 export type LanguageEnum = 'en' | 'zh';
 export type TranslateEnum =
@@ -204,7 +205,12 @@ export class AgoraEduSDK {
       option.listener(event, ...args);
     });
 
-    render(<Scenarios pretest={pretest} roomType={sessionInfo.roomType} />, dom);
+    render(
+      <I18nProvider language={AgoraEduSDK.convertLanguage(option.language)}>
+        <Scenarios pretest={pretest} roomType={sessionInfo.roomType} />
+      </I18nProvider>,
+      dom,
+    );
   }
 }
 
