@@ -4,7 +4,6 @@ import {
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduStreamUI,
-  iterateSet,
 } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
 import { computed, observable, action } from 'mobx';
@@ -63,7 +62,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
     let tools: EduStreamTool[] = [];
 
     if (iAmHost) {
-      tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
+      tools = tools.concat([this.remoteCameraTool(stream), this.remoteMicTool(stream)]);
 
       if (stream.role === EduRoleTypeEnum.student) {
         tools = tools.concat([this.remotePodiumTool(stream)]);
