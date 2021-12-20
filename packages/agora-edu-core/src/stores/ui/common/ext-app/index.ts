@@ -11,15 +11,17 @@ const languageMap = { [RteLanguage.zh]: 'zh', [RteLanguage.en]: 'en' };
 export class ExtAppUIStore extends EduUIStoreBase {
   /** Getters  */
   get canClose() {
-    const { userRole } = this.classroomStore.roomStore;
+    const { userRole, userUuid } = this.classroomStore.roomStore;
+    const { grantUsers } = this.classroomStore.boardStore;
 
-    return userRole === EduRoleTypeEnum.teacher;
+    return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
   }
 
   get canDrag() {
-    const { userRole } = this.classroomStore.roomStore;
+    const { userRole, userUuid } = this.classroomStore.roomStore;
+    const { grantUsers } = this.classroomStore.boardStore;
 
-    return userRole === EduRoleTypeEnum.teacher;
+    return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
   }
 
   @computed
@@ -94,7 +96,7 @@ export class ExtAppUIStore extends EduUIStoreBase {
       const rollback = () => {
         this.launchApp(extApp.appIdentifier);
       };
-
+      this.shutdownApp(extApp.appIdentifier);
       extApp.extAppWillUnload().catch(rollback);
     }
   }
