@@ -55,12 +55,6 @@ export class BoardUIStore extends EduUIStoreBase {
     this._joinDisposer = when(
       () => this.classroomStore.boardStore.configReady,
       this.joinWhiteboard,
-      {
-        timeout: this._timeoutForConfig,
-        onError: (e) => {
-          this.shareUIStore.addGenericErrorDialog(e as AGError);
-        },
-      },
     );
   }
 
