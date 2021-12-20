@@ -15,7 +15,7 @@ type ExtAppProps = {
 };
 
 const ExtApp = ({ extApp, canClose, onClose, onResize, canDrag, mount }: ExtAppProps) => {
-  const { appName, appIdentifier, minHeight, minWidth } = extApp;
+  const { customHeader, appName, appIdentifier, minHeight, minWidth } = extApp;
 
   const handleCancel = useCallback(() => {
     onClose(extApp.appIdentifier);
@@ -48,7 +48,8 @@ const ExtApp = ({ extApp, canClose, onClose, onResize, canDrag, mount }: ExtAppP
         closable={canClose}
         onResize={handleResize}
         minHeight={minHeight}
-        minWidth={minWidth}>
+        minWidth={minWidth}
+        header={customHeader}>
         {appContainer}
       </Modal>
     </Track>

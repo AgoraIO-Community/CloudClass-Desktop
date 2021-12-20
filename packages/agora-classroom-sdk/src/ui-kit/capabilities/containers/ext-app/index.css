@@ -67,6 +67,10 @@
   font-size: 14px;
 }
 
+.modal-header-slot {
+  flex-grow: 1;
+}
+
 .modal-title-close {
   cursor: pointer;
 }

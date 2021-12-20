@@ -139,3 +139,8 @@
   opacity: 0.5;
   pointer-events: none;
 }
+.btn.btn-sm.answer-submit-btn[disabled] {
+  background-color: rgba(53, 123, 246, 0.3);
+  color: #fff;
+  border-color: transparent;
+}

@@ -11,6 +11,7 @@ type ModalProps = {
   minWidth?: number;
   onCancel: () => void;
   onResize: ({ width, height }: { width: number; height: number }) => void;
+  header?: React.ReactNode;
 };
 
 export const Modal: FC<ModalProps> = ({
@@ -21,6 +22,7 @@ export const Modal: FC<ModalProps> = ({
   minHeight,
   minWidth,
   children,
+  header,
 }) => {
   const cls = classnames('modal', 'relative');
 
@@ -33,6 +35,7 @@ export const Modal: FC<ModalProps> = ({
       </AutoSizer>
       <div className="modal-title">
         <div className="modal-title-text">{title}</div>
+        {header && <div className="modal-header-slot">{header}</div>}
         {closable ? (
           <div className="modal-title-close" onClick={onCancel}>
             <SvgImg type="close" size={20} style={{ color: '#586376' }} />

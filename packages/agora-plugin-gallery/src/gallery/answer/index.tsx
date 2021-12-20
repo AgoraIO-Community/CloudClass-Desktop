@@ -172,6 +172,7 @@ const App = observer(
                     : 'visible',
               }}></span>
             <Button
+              className="answer-submit-btn"
               disabled={
                 pluginStore.ui.includes('sels') && (pluginStore.selAnswer?.length || 0) === 0
               }
