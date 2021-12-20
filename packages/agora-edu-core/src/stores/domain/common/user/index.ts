@@ -50,8 +50,12 @@ export class UserStore extends EduStoreBase {
 
   @action.bound
   private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
-    if (changedRoomProperties.includes('students') && roomProperties['students']) {
-      this.rewards = new Map(Object.entries(roomProperties['students']));
+    if (changedRoomProperties.includes('students')) {
+      this.rewards = new Map(
+        Object.entries(roomProperties['students']).map(([userUuid, { reward }]: any) => {
+          return [userUuid, reward];
+        }),
+      );
     }
   }
 
