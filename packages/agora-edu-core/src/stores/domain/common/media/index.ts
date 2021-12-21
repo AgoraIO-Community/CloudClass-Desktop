@@ -528,7 +528,7 @@ export class MediaStore extends EduStoreBase {
           this.classroomStore.api.reportMicCameraStateLeagcy({
             userUuid,
             roomUuid,
-            data: { video: this.localCameraTrackState },
+            data: { camera: this.localCameraTrackState },
           });
       },
     );
@@ -542,7 +542,7 @@ export class MediaStore extends EduStoreBase {
           this.classroomStore.api.reportMicCameraStateLeagcy({
             userUuid,
             roomUuid,
-            data: { audio: this.localMicTrackState },
+            data: { mic: this.localMicTrackState },
           });
       },
     );
