@@ -1183,6 +1183,13 @@ export class AcadsocRoomStore extends SimpleInterval {
         BizLogger.info(`[CAMERA] report camera device not working`)
       })
 
+      const userRoleMap: Record<number, string> = {
+        0: 'invisible',
+        1: 'teacher',
+        2: 'student',
+        3: 'assistant',
+      };
+
       let reportUserParams = {
         vid: this.appStore.params.config.vid!,
         ver: packageJson.version,
@@ -1200,7 +1207,7 @@ export class AcadsocRoomStore extends SimpleInterval {
         /**
          * apaas角色
          */
-        role: ""+this.appStore.userRole,
+        role: userRoleMap[this.appStore.userRole],
         /**
          * rtc sid
          */
