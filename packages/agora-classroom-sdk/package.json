@@ -245,6 +245,6 @@
   },
   "dependencies": {
     "adm-zip": "0.4.14",
-    "agora-electron-sdk": "3.6.0-build.1216"
+    "agora-electron-sdk": "3.5.1-build.1116"
   }
 }

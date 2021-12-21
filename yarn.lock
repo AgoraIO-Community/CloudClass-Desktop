@@ -6059,10 +6059,10 @@ agora-classroom-sdk@1.1.2-rc.3:
     workbox-range-requests "6.1.2"
     workbox-strategies "6.1.1"
 
-agora-electron-sdk@3.6.0-build.1216:
-  version "3.6.0-build.1216"
-  resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-3.6.0-build.1216.tgz#0150b9cdeed03544d8b74c578e844c90472a6bdc"
-  integrity sha512-O2+7C3AZgNkk+09JiEM8/BGfAPmJxUofw6BerHQALJ+Nrzx6V1HdLNSic5x3mXwWjZsEpbT+CcvUzxM5L1JCkg==
+agora-electron-sdk@3.5.1-build.1116:
+  version "3.5.1-build.1116"
+  resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-3.5.1-build.1116.tgz#711c5cd7162f275167c7112f2d29c97cc8379b30"
+  integrity sha512-H5V2EjfyohpA9i3raUNZVVF6/jtn9uUpusC8a3TR87bvSCN9P3Jr36ex0IyeNBDH4epVHYN/GszMrat4wSlUGA==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     download "^7.1.0"
