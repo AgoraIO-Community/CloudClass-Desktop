@@ -111,7 +111,7 @@ export class AgoraRteElectronCameraThread extends AgoraRteThread {
             this.currentCanvas = this.canvas;
           }
           if (this.currentCanvas && this.currentCanvas.view) {
-            this.currentCanvas.view.style.visibility = 'visible';
+            // this.currentCanvas.view.style.visibility = 'visible';
           }
 
           // ok to sleep
@@ -122,7 +122,7 @@ export class AgoraRteElectronCameraThread extends AgoraRteThread {
           this.logger.debug(`stopping camera...`);
           this._adapter.rtcEngine.enableLocalVideo(false);
           if (this.currentCanvas && this.currentCanvas.view) {
-            this.currentCanvas.view.style.visibility = 'hidden';
+            // this.currentCanvas.view.style.visibility = 'hidden';
           }
           this.setCameraTrackState(AgoraRteMediaSourceState.stopped);
           this.logger.debug(`camera stopped`);
