@@ -227,9 +227,9 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
   appName = transI18n('cabinet.answer.appName');
   className = 'answer-dialog';
   icon = 'answer';
-  width = 380;
+  width = 390;
   height = 150; // 超过4个选项高度为220
-  minWidth = 380;
+  minWidth = 390;
   minHeight = 150; // 超过4个选项高度为220
   store?: PluginStore;
   customHeader = (<Clock app={this} />);
