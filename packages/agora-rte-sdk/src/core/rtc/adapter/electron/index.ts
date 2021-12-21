@@ -77,6 +77,9 @@ export class RtcAdapterElectron extends RtcAdapterBase {
   private _localVideoEnabled = false;
   private _localAudioEnabled = false;
 
+  screenShareId?: string;
+  screenShareType?: AGScreenShareType;
+
   get configs() {
     return {
       ...this._configs,
@@ -205,63 +208,23 @@ export class RtcAdapterElectron extends RtcAdapterBase {
     return this.rtcEngine.stopAudioPlaybackDeviceTest();
   }
   startScreenCapture(id?: string, type?: AGScreenShareType): number {
+    // electron must call start screenshare after join channel, so we store the parameter for later use here
     this.rtcEngine.videoSourceInitialize(AgoraRteEngineConfig.shared.appId);
     if (id !== undefined) {
-      if (type === AGScreenShareType.Screen) {
-        this.rtcEngine.videoSourceStartScreenCaptureByScreen(
-          id as unknown as ScreenSymbol,
-          {
-            width: 0,
-            height: 0,
-            x: 0,
-            y: 0,
-          },
-          {
-            width: 0,
-            height: 0,
-            frameRate: 0,
-            captureMouseCursor: true,
-            windowFocus: true,
-            bitrate: 0,
-            excludeWindowCount: 0,
-            excludeWindowList: [],
-          },
-        );
-        this._screenEventBus.emit(
-          AgoraMediaControlEventType.trackStateChanged,
-          AgoraRteMediaSourceState.started,
-          AgoraRteVideoSourceType.ScreenShare,
-        );
-      } else if (type === AGScreenShareType.Window) {
-        this.rtcEngine.videoSourceStartScreenCaptureByWindow(
-          id as unknown as number,
-          {
-            width: 0,
-            height: 0,
-            x: 0,
-            y: 0,
-          },
-          {
-            width: 0,
-            height: 0,
-            frameRate: 0,
-            captureMouseCursor: true,
-            windowFocus: true,
-            bitrate: 0,
-            excludeWindowCount: 0,
-            excludeWindowList: [],
-          },
-        );
-        this._screenEventBus.emit(
-          AgoraMediaControlEventType.trackStateChanged,
-          AgoraRteMediaSourceState.started,
-          AgoraRteVideoSourceType.ScreenShare,
-        );
-      }
+      this.screenShareId = id;
+      this.screenShareType = type;
+
+      this._screenEventBus.emit(
+        AgoraMediaControlEventType.trackStateChanged,
+        AgoraRteMediaSourceState.started,
+        AgoraRteVideoSourceType.ScreenShare,
+      );
     }
     return 0;
   }
   stopScreenCapture(): number {
+    this.screenShareId = undefined;
+    this.screenShareType = undefined;
     this.rtcEngine.stopScreenCapture2();
     this._screenEventBus.emit(
       AgoraMediaControlEventType.trackStateChanged,
@@ -448,6 +411,56 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
     let rtcEngine = this.base.rtcEngine;
     return rtcEngine.muteRemoteAudioStream(+streamUuid, mute);
   }
+
+  private _startScreenCapture() {
+    let type = this.base.screenShareType,
+      id = this.base.screenShareId;
+    if (!id || !type) {
+      return;
+    }
+    if (type === AGScreenShareType.Screen) {
+      this.base.rtcEngine.videoSourceStartScreenCaptureByScreen(
+        id as unknown as ScreenSymbol,
+        {
+          width: 0,
+          height: 0,
+          x: 0,
+          y: 0,
+        },
+        {
+          width: 0,
+          height: 0,
+          frameRate: 0,
+          captureMouseCursor: true,
+          windowFocus: true,
+          bitrate: 0,
+          excludeWindowCount: 0,
+          excludeWindowList: [],
+        },
+      );
+    } else if (type === AGScreenShareType.Window) {
+      this.base.rtcEngine.videoSourceStartScreenCaptureByWindow(
+        id as unknown as number,
+        {
+          width: 0,
+          height: 0,
+          x: 0,
+          y: 0,
+        },
+        {
+          width: 0,
+          height: 0,
+          frameRate: 0,
+          captureMouseCursor: true,
+          windowFocus: true,
+          bitrate: 0,
+          excludeWindowCount: 0,
+          excludeWindowList: [],
+        },
+      );
+    }
+  }
+
   join(token: string, streamUuid: string, connectionType: AGRtcConnectionType): Promise<void> {
     return new Promise((resolve, reject) => {
       let rtcEngine = this.base.rtcEngine;
@@ -460,8 +473,10 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
         rtcEngine.joinChannel(token, this.channelName, '', +streamUuid);
       } else if (connectionType === AGRtcConnectionType.sub) {
         rtcEngine.once('videoSourceJoinedSuccess', () => {
+          this._startScreenCapture();
           resolve();
         });
+        rtcEngine.videoSourceSetChannelProfile(this._channelProfile);
         let res = rtcEngine.videoSourceJoin(token, this.channelName, '', +streamUuid);
         this.logger.info(`[rtc] videosource join ${res}`);
       }
