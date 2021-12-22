@@ -1,49 +1,23 @@
-const { ROOT_PATH } = require('./utils/index');
 const path = require('path');
 const webpack = require('webpack');
-const dayjs = require('dayjs');
 const webpackbar = require('webpackbar');
-const packageJson = require('../package.json');
-const { env } = process;
+const eduCoreVersion = require('agora-edu-core/package.json').version;
+const rteVersion = require('agora-rte-sdk/package.json').version;
+const { ROOT_PATH } = require('./utils/index');
 
-const eduCoreVersion = require('../../agora-edu-core/package.json').version;
-const rteVersion = require('../../agora-rte-sdk/package.json').version;
 const classroomSdkVersion = require('../package.json').version;
-
-// const {
-//   REACT_APP_AGORA_APP_RECORD_URL = '',
-//   REACT_APP_AGORA_RESTFULL_TOKEN = '',
-//   REACT_APP_AGORA_RECORDING_OSS_URL = '',
-//   REACT_APP_AGORA_GTM_ID = '',
-//   REACT_APP_NETLESS_APP_ID = '',
-//   REACT_APP_AGORA_APP_ID = '',
-//   REACT_APP_AGORA_APP_CERTIFICATE = '',
-//   REACT_APP_AGORA_APP_TOKEN = '',
-//   REACT_APP_AGORA_CUSTOMER_ID = '',
-//   REACT_APP_AGORA_CUSTOMER_CERTIFICATE = '',
-//   REACT_APP_AGORA_LOG = '',
-//   REACT_APP_AGORA_APP_SDK_DOMAIN = '',
-//   REACT_APP_YOUR_OWN_OSS_BUCKET_KEY = '',
-//   REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET = '',
-//   REACT_APP_YOUR_OWN_OSS_BUCKET_NAME = '',
-//   REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE = '',
-//   REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER = '',
-//   AGORA_APAAS_BRANCH_PATH = env.AGORA_APAAS_BRANCH_PATH || '',
-//   REACT_APP_REPORT_URL = '',
-//   REACT_APP_REPORT_QOS = '',
-//   REACT_APP_V1_REPORT_URL = '',
-//   RTE_SDK_VERSION = '',
-// } = data;
-
-const { version = '', swSrcPath = '' } = packageJson;
 
 module.exports = {
   externals: { 'agora-electron-sdk': 'commonjs2 agora-electron-sdk' },
   resolve: {
+    fallback: {
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+      buffer: require.resolve('buffer/'),
+    },
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       '@': path.resolve(ROOT_PATH, 'src'),
-      '~core': path.resolve(ROOT_PATH, 'src/core'),
       '~ui-kit': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src'),
       '~components': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/components'),
       '~styles': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/styles'),
@@ -52,11 +26,11 @@ module.exports = {
       '~containers': path.resolve(ROOT_PATH, 'src/ui-kit/capabilities/containers'),
       '~hooks': path.resolve(ROOT_PATH, 'src/infra/hooks'),
       '~contexts': path.resolve(ROOT_PATH, 'src/infra/contexts'),
-      'agora-rte-sdk': path.resolve(ROOT_PATH, '../agora-rte-sdk/src'),
-      'agora-edu-core': path.resolve(ROOT_PATH, '../agora-edu-core/src'),
       'agora-plugin-gallery': path.resolve(ROOT_PATH, '../agora-plugin-gallery/src'),
       'agora-widget-gallery': path.resolve(ROOT_PATH, '../agora-widget-gallery/src'),
       'agora-chat-widget': path.resolve(ROOT_PATH, '../agora-chat-widget/src'),
+      'agora-rte-sdk': path.resolve(ROOT_PATH, '../agora-rte-sdk/src'),
+      'agora-edu-core': path.resolve(ROOT_PATH, '../agora-edu-core/src'),
     },
   },
   module: {
@@ -180,12 +154,15 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new webpackbar(),
     new webpack.DefinePlugin({
       RTE_SDK_VERSION: JSON.stringify(rteVersion),
       EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
       CLASSROOM_SDK_VERSION: JSON.stringify(classroomSdkVersion),
-      RTE_RUNTIME_PLATFORM: JSON.stringify(env.RTE_RUNTIME_PLATFORM),
+      RTE_RUNTIME_PLATFORM: JSON.stringify(process.env.RTE_RUNTIME_PLATFORM),
     }),
   ],
 };

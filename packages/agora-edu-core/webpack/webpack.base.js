@@ -1,7 +1,5 @@
 const { ROOT_PATH } = require('./utils/index');
 const path = require('path');
-const webpack = require('webpack');
-const dayjs = require('dayjs');
 const webpackbar = require('webpackbar');
 
 module.exports = {
@@ -11,6 +9,7 @@ module.exports = {
     'react-dom': 'react-dom',
     dayjs: 'dayjs',
     'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
+    mobx: 'mobx',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

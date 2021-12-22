@@ -1,28 +1,29 @@
 import { AgoraChatWidget, AgoraHXChatWidget } from 'agora-widget-gallery';
-import { Radio } from 'antd';
+import { Radio, RadioChangeEvent } from 'antd';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
+import { IAgoraWidget, EduClassroomConfig } from 'agora-edu-core';
 import { Button } from '~ui-kit';
 import { useStore } from '~hooks/use-edu-stores';
 import './index.css';
-import { AgoraRteEngineConfig } from 'agora-rte-sdk';
+
 interface BaseProps {
   style?: CSSProperties;
-  className?: any;
+  className?: string;
   id?: string;
 }
 
 export interface WidgetProps extends BaseProps {
-  widgetComponent: any;
-  widgetProps?: any;
+  widgetComponent: IAgoraWidget;
+  widgetProps?: Record<string, unknown>;
 }
 
 export const Widget: FC<WidgetProps> = observer(
   ({ className, widgetComponent, widgetProps = {}, ...restProps }) => {
     const ref = useRef<HTMLDivElement | null>(null);
     const uiStore = useStore();
-    const language = AgoraRteEngineConfig.shared.language;
+    const language = EduClassroomConfig.shared.rteEngineConfig.language;
     widgetProps = { ...widgetProps, language, uiStore };
     useEffect(() => {
       if (ref.current && widgetComponent) {
@@ -32,7 +33,6 @@ export const Widget: FC<WidgetProps> = observer(
       return () => {
         widgetComponent.widgetWillUnload();
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref, widgetComponent]);
 
     const cls = classnames({
@@ -42,11 +42,11 @@ export const Widget: FC<WidgetProps> = observer(
   },
 );
 
-export const WidgetOuter: FC<any> = observer(() => {
+export const WidgetOuter: FC = observer(() => {
   const [visible, setVisible] = useState(false);
   const [chatValue, setChatValue] = useState('hxchat');
 
-  const onChange = (e: any) => {
+  const onChange = (e: RadioChangeEvent) => {
     setChatValue(e.target.value);
   };
 
@@ -56,7 +56,7 @@ export const WidgetOuter: FC<any> = observer(() => {
         <Radio value="agora">agora chat</Radio>
         <Radio value="hxchat">hxchat</Radio>
       </Radio.Group>
-      <Button onClick={(_) => setVisible((pre) => !pre)}>join chat</Button>
+      <Button onClick={() => setVisible((pre) => !pre)}>join chat</Button>
     </>
   ) : (
     <>

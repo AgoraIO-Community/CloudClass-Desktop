@@ -3,20 +3,6 @@ import { createElement, useContext, createContext } from 'react';
 import { config } from './translate/config';
 import { Z_INDEX_RULES } from './style-config';
 
-export type BaseElementProps = {
-  id: string;
-};
-
-export const formatFileSize = (fileByteSize: number, decimalPoint?: number) => {
-  const bytes = +fileByteSize;
-  if (bytes === 0) return '- -';
-  const k = 1000;
-  const dm = decimalPoint || 2;
-  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
-};
-
 export type I18nLanguage = 'zh' | 'en';
 
 export const translate = (lang: I18nLanguage, str: string, options?: any) => {
@@ -53,5 +39,4 @@ export const makeContainer = (name: string) => {
   };
 };
 
-export const list = (num: number) => Array.from({ length: num }, (_, i) => i);
 export const Z_INDEX_CONST = Z_INDEX_RULES;

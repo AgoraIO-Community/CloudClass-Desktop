@@ -40,40 +40,6 @@
   ```bash
   # 声网的 App ID
   REACT_APP_AGORA_APP_ID=agora appId
-  # 开启声网前端日志
-  REACT_APP_AGORA_LOG=true
-  ELECTRON_START_URL=http://localhost:3000
-  ```
-
-  - **（必填）你获取到的声网 Customer ID 和 Customer 密钥**
-
-  ```bash
-  # 声网 HTTP basic customer_id, customer_certificate
-  REACT_APP_AGORA_CUSTOMER_ID=customer_id
-  REACT_APP_AGORA_CUSTOMER_CERTIFICATE=customer_certificate
-  ```
-
-  - **（必填）你获取到的 Netless AppIdentifier**
-
-  ```bash
-  REACT_APP_NETLESS_APP_ID=netless appId
-  ```
-
-  - **（选填）适用于白板课件服务，如不需要可以直接按照下列配置**
-
-  ```bash
-  # 你自己的 OSS bucket name
-  REACT_APP_YOUR_OWN_OSS_BUCKET_NAME=your_oss_bucket_name
-  # 你自己的 OSS bucket folder
-  REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER=your_oss_bucket_folder
-  # 你自己的 OSS bucket region
-  REACT_APP_YOUR_OWN_OSS_BUCKET_REGION=your_bucket_region
-  # 你自己的 OSS bucket access key
-  REACT_APP_YOUR_OWN_OSS_BUCKET_KEY=your_bucket_ak
-  # 你自己的 OSS bucket access secret key
-  REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET=your_bucket_sk
-  # 你自己的 OSS bucket access endpoint
-  REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE=your_cdn_accelerate_endpoint
   ```
 
 - 中国区客户推荐使用以下方式安装 npm 依赖包和 electron & node-sass 加速
@@ -118,7 +84,7 @@
 3. 发布 Web demo。发布前需要修改 `package.json` 中的 "homepage": "你的域名/地址"。例如，`https://solutions.agora.io/education/web` 需修改为 `"homepage": "https://solutions.agora.io/education/web"`
 
    ```
-   npm run build
+   npm run build:apaas
    ```
 
 ## 运行和发布 Electron demo
@@ -134,13 +100,13 @@
 2. 本地运行 Electron demo
 
    ```
-   npm run electron
+   npm run dev:electron
    ```
 
 3. 发布 Electron demo
 
    ```
-   npm run pack:mac
+   npm run pack:electron:mac
    ```
 
 成功运行结束后会生成一个 release 目录，里面包含一个 dmg 安装文件，正常打开移动到 Application 目录即可完成安装，然后可以执行程序。
@@ -169,13 +135,13 @@
 3. 本地运行 Electron demo
 
    ```
-   npm run electron
+   npm run dev:electron
    ```
 
 4. 发布 Electron demo
 
    ```
-   npm run pack:win
+   npm run pack:electron:win
    ```
 
 成功运行结束后会生成一个 release 目录，里面包含一个 exe 安装程序，请使用 Windows 管理员身份打开，即可完成安装，然后可以执行程序。

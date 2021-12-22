@@ -1,7 +1,5 @@
 import { AgoraRteThread } from '../../../utils/thread';
-import { Logger } from '../../../logger';
 import { AgoraRtcVideoCanvas } from '../../canvas';
-import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
 import { AgoraRteMediaSourceState } from '../../type';
 import { AgoraMediaControlEventType } from '../../../media/control';
 import { RtcAdapterElectron } from '.';
@@ -16,6 +14,7 @@ import { AgoraRteEngineConfig } from '../../../../configs';
 
 @Log.attach({ proxyMethods: false })
 export class AgoraRteElectronCameraThread extends AgoraRteThread {
+  // @ts-ignore
   protected logger!: Injectable.Logger;
   canvas?: AgoraRtcVideoCanvas;
   trackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;

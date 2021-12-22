@@ -17,10 +17,6 @@ module.exports = {
         'primary-active': '#2663D0',
         'table-header': '#F9F9FC',
         'table-body': '#FFFFFF',
-
-        // 'download-fg': '#456DFD',
-        // 'download-bg': '#E3E3F0',
-
         success: '#FAFFFF',
         error: '#FFF2F2',
         warning: '#FFFBF4',
@@ -63,7 +59,4 @@ module.exports = {
       opacity: ['disabled'],
     },
   },
-  // plugins: [
-  //   require('@tailwindcss/forms')
-  // ],
 };

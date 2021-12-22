@@ -2,7 +2,6 @@
 import {
   ChatEvent,
   ChatListType,
-  ClassroomState,
   Conversation,
   EduClassroomConfig,
   EduClassroomUIStore,
@@ -10,12 +9,9 @@ import {
   IAgoraWidget,
   MessageItem,
 } from 'agora-edu-core';
-import { AgoraRteEngineConfig } from 'agora-rte-sdk';
 import classnames from 'classnames';
-import { get } from 'lodash';
 import { observer } from 'mobx-react';
-import * as React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ChatNew, I18nProvider, SimpleChatNew } from '~ui-kit';
 import { Context } from './chatContext';

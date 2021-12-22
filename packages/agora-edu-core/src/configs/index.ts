@@ -45,8 +45,8 @@ export class EduClassroomConfig {
   private _extApps: ReadonlyArray<IAgoraExtApp> = [];
   private _compatibleVersions: string[] = [];
   boardDefaults: WhiteboardDefaults = { scale: 1.2 };
-  //by default use https://api.agora.io
-  host: string = 'https://api.agora.io';
+  //by default use https://api.sd-rtn.com
+  host: string = 'https://api.sd-rtn.com';
   ignoreUrlRegionPrefix: boolean = false;
   get headers(): Record<string, string | number> {
     return {

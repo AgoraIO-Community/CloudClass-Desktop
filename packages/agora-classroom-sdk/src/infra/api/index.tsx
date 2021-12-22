@@ -101,9 +101,10 @@ export class AgoraEduSDK {
     return region as EduRegion;
   }
   private static convertMediaOptions(opts?: MediaOptions): EduRtcConfig {
-    let config: EduRtcConfig = {};
+    const config: EduRtcConfig = {};
     if (opts) {
-      let { cameraEncoderConfiguration, screenShareEncoderConfiguration, encryptionConfig } = opts;
+      const { cameraEncoderConfiguration, screenShareEncoderConfiguration, encryptionConfig } =
+        opts;
       if (cameraEncoderConfiguration) {
         config.defaultCameraEncoderConfigurations = {
           ...cameraEncoderConfiguration,

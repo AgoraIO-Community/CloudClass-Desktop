@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { IReactionOptions, IReactionPublic, observable, reaction } from 'mobx';
-import type { RendererPlayerProps } from '~utilities/renderer-player';
+import { IReactionOptions, IReactionPublic, reaction } from 'mobx';
 
 export const useReaction = <T>(
   expression: (reaction: IReactionPublic) => T,
@@ -109,26 +108,6 @@ export const usePrevious = <Type>(value: Type) => {
   }, [value]);
 
   return previousValue.current;
-};
-
-export const useRendererPlayer = <T extends HTMLElement>(props: RendererPlayerProps) => {
-  const ref = useRef<T | null>(null);
-
-  const onRendererPlayer = <T extends HTMLElement>(dom: T, player: RendererPlayerProps) => {
-    if (dom && player.track) {
-      player.track.play && player.track.play(dom, player.fitMode);
-    }
-    return () => {
-      player.track && player.track.stop && player.track.stop && player.track.stop(props.preview);
-    };
-  };
-
-  useEffect(
-    () => onRendererPlayer<T>(ref.current!, props),
-    [ref, props.track, props.fitMode, props.preview],
-  );
-
-  return ref;
 };
 
 export const useDebounce = <T>(value: T, delay?: number) => {

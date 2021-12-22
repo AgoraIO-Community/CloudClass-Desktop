@@ -11,24 +11,34 @@
 yarn bootstrap
 ```
 
-## config
+## Config
 
 ```bash
 # copy config template to agora-classroom-sdk project
-cp .env.example packages/agora-classroom-sdk/.env
+cp .env.example packages/agora-classroom-sdk/.env.dev
 
 # fill the config with your agora.io development environment
 ```
 
-## run
+## How to generate RtmToken using your own AppId and Secret
+
+```bash
+# If .env.dev contains `REACT_APP_AGORA_APP_ID` and `REACT_APP_AGORA_APP_CERTIFICATE` configurations, the client will automatically generate an RTM Token for you
+REACT_APP_AGORA_APP_ID=
+REACT_APP_AGORA_APP_CERTIFICATE=
+```
+
+## Run
 
 ```bash
 yarn dev
 ```
 
-## build classroom sdk
+## Pack the Electron client
 
 ```bash
-yarn build:ui-kit
-yarn build:classroom:sdk
+# Build a Windows client
+yarn pack:electron:mac
+# Build a Mac client
+yarn pack:electron:win
 ```

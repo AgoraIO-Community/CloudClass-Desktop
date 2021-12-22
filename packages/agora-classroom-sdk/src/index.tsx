@@ -19,7 +19,7 @@ const RouteContainer = () => (
   <HashRouter>
     <Switch>
       {routes.map((item, index) => {
-        let route = routesMap[item];
+        const route = routesMap[item];
         if (!route) return null;
         return <Route key={index} exact path={route.path} component={route.component} />;
       })}

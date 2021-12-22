@@ -32,7 +32,7 @@ edu-demo-tsconfig.json
 .env
 env.example
 config-overrides.js
-webpack.config.js
+webpack/*
 entitlements.mac.plist
 .env.example
 *.map

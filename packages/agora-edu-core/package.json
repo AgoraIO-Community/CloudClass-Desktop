@@ -51,7 +51,7 @@
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
     "@netless/window-manager": "0.3.5",
-    "agora-rte-sdk": "1.1.9",
+    "agora-rte-sdk": "2.0.0",
     "await-to-js": "3.0.0",
     "ali-oss": "6.15.2",
     "lodash": "4.17.21",

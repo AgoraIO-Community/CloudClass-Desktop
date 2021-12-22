@@ -36,39 +36,6 @@
   ```bash
   # Agora App ID
   REACT_APP_AGORA_APP_ID=agora appId
-  REACT_APP_AGORA_LOG=true
-  ELECTRON_START_URL=http://localhost:3000
-  ```
-
-  - **(Required) The Agora Customer ID and Customer Secret that you get**
-
-  ```bash
-  # agora http basic authorization customer_id, customer_certificate
-  REACT_APP_AGORA_CUSTOMER_ID=customer_id
-  REACT_APP_AGORA_CUSTOMER_CERTIFICATE=customer_certificate
-  ```
-
-  - **(Required) The Netless AppIdentifier that you get**
-
-  ```bash
-  REACT_APP_NETLESS_APP_ID=netless appId
-  ```
-
-  - **(Optional) OSS configurations for whiteboard courseWare. Ignore these if you do not need this**
-
-  ```bash
-  # your oss bucket name
-  REACT_APP_YOUR_OWN_OSS_BUCKET_NAME=your_oss_bucket_name
-  # your oss bucket folder
-  REACT_APP_YOUR_OWN_OSS_BUCKET_FOLDER=your_oss_bucket_folder
-  # your oss bucket region
-  REACT_APP_YOUR_OWN_OSS_BUCKET_REGION=your_bucket_region
-  # your oss bucket access key
-  REACT_APP_YOUR_OWN_OSS_BUCKET_KEY=your_bucket_ak
-  # your oss bucket access secret key
-  REACT_APP_YOUR_OWN_OSS_BUCKET_SECRET=your_bucket_sk
-  # your oss bucket endpoint
-  REACT_APP_YOUR_OWN_OSS_CDN_ACCELERATE=your_cdn_accelerate_endpoint
   ```
 
 - Install Node.js LTS
@@ -87,7 +54,7 @@
    ```
 3. Release the Web demo. Before the release, you need to change the `"homepage": "Your domain/address"` in `package.json`. For example, you need to change `https://solutions.agora.io/education/web` to `"homepage": "https://solutions.agora.io/education/web"`
    ```
-   npm run build
+   npm run build:apaas
    ```
 
 ## Run the Electron demo
@@ -100,11 +67,11 @@
    ```
 2. Locally run the Electron demo
    ```
-   npm run electron
+   npm run dev:electron
    ```
 3. Release the Electron demo
    ```
-   npm run pack:mac
+   npm run pack:electron:mac
    ```
    After running, a `release` folder that contains a dmg file will be generated. Open the dmg file and remove it to `Application` to install it.
 
@@ -125,7 +92,7 @@
    ```
 2. Release the Electron demo
    ```
-   npm run pack:win
+   npm run pack:electron:win
    ```
    After running, a `release` folder that contains an exe file will be generated. Open the exe file as administrator to install it.
 

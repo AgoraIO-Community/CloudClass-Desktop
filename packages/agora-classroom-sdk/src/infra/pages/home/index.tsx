@@ -31,13 +31,13 @@ export const HomePage = observer(() => {
   const [encryptionKey, setEncryptionKey] = useState<string>('');
 
   useEffect(() => {
-    let lang = homeStore.launchOption.language || getBrowserLanguage();
+    const lang = homeStore.launchOption.language || getBrowserLanguage();
     changeLanguage(lang);
     setLanguage(lang);
   }, []);
 
   const onChangeRegion = (r: string) => {
-    let region = r as EduRegion;
+    const region = r as EduRegion;
     setRegion(region);
     homeStore.region = region;
   };
@@ -129,7 +129,7 @@ export const HomePage = observer(() => {
 
   const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
 
-  let tokenDomain: string = '';
+  let tokenDomain = '';
   let tokenDomainCollection: any = {};
 
   try {
@@ -191,10 +191,10 @@ export const HomePage = observer(() => {
           }
 
           HomeApi.shared.domain = tokenDomain;
-          let { rtmToken, appId } = await HomeApi.shared.login(userUuid);
+          const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
           console.log('## rtm Token', rtmToken);
 
-          let config: HomeLaunchOption = {
+          const config: HomeLaunchOption = {
             appId,
             sdkDomain: domain,
             pretest: true,

@@ -94,21 +94,15 @@
     "react-dom": "17.0.0"
   },
   "scripts": {
-    "install_electron": "node ./scripts/postinstall.js",
     "electron": "cross-env NODE_ENV=development RTE_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npm run electron:client\"",
     "electron:client": "cross-env electron ./app/",
-    "electron:web": "cross-env BROWSER=none react-app-rewired start",
-    "electron:copy:web": "cross-env NODE_ENV=production REACT_APP_RUNTIME_PLATFORM=electron npm run build",
     "electron:copy:electron": "cpx ./app/**/*.js ./build",
-    "electron:build": "npm run electron:copy:web && npm run electron:copy:electron",
     "dev": "webpack serve --config ./webpack/webpack.dev.js",
-    "s": "yarn dev",
     "build:types": "tsc -p tsconfig.json",
     "build": "webpack --config ./webpack/webpack.prod.js",
-    "test": "",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "pack:mac": "electron-builder --mac",
-    "pack:win": "electron-builder --win",
+    "pack:mac": "yarn electron:copy:electron && electron-builder --mac",
+    "pack:win": "yarn electron:copy:electron && electron-builder --win",
     "bundle:npm": "webpack --config ./webpack/webpack.pack.js",
     "pack:npm": "run-s bundle:npm build:types",
     "doc": "typedoc --o"
@@ -165,11 +159,18 @@
     "@types/workbox-core": "4.3.0",
     "@types/workbox-routing": "4.3.0",
     "@types/workbox-sw": "4.3.1",
+    "electron": "12.0.0",
+    "electron-builder": "22.11.7",
+    "electron-util": "0.16.0"
+  },
+  "dependencies": {
+    "adm-zip": "0.4.14",
+    "agora-electron-sdk": "3.5.1-build.1116",
     "@vitejs/plugin-react-refresh": "1.3.1",
     "@zip.js/zip.js": "2.2.22",
     "agora-access-token": "2.0.4",
     "agora-edu-core": "2.0.0",
-    "agora-rte-sdk": "1.1.9",
+    "agora-rte-sdk": "2.0.0",
     "agora-widget-gallery": "1.0.0",
     "ali-oss": "6.15.2",
     "animate.css": "4.1.1",
@@ -185,9 +186,6 @@
     "deep-diff": "1.0.2",
     "devtron": "1.4.0",
     "dexie": "3.0.2",
-    "electron": "12.0.0",
-    "electron-builder": "22.11.7",
-    "electron-util": "0.16.0",
     "eruda": "2.2.1",
     "extract-zip": "2.0.1",
     "fetch-progress": "1.3.0",
@@ -241,10 +239,9 @@
     "workbox-strategies": "6.1.1",
     "workbox-webpack-plugin": "6.3.0",
     "zlib": "1.0.5",
-    "react-rnd": "^10.3.4"
-  },
-  "dependencies": {
-    "adm-zip": "0.4.14",
-    "agora-electron-sdk": "3.5.1-build.1116"
+    "react-rnd": "^10.3.4",
+    "crypto-browserify": "3.12.0",
+    "stream-browserify": "3.0.0",
+    "buffer": "6.0.3"
   }
 }

@@ -12,6 +12,10 @@ const isProd = true;
 // const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
+  externals: {
+    dayjs: 'dayjs',
+    'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
+  },
   entry: {
     ['agora-rte-sdk']: './src/index.ts',
   },

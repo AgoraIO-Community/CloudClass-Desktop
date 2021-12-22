@@ -3,8 +3,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "~core": ["./src/core"],
-      "~core/*": ["./src/core/*"],
       "~ui-kit": ["../agora-scenario-ui-kit/src"],
       "~ui-kit/*": ["../agora-scenario-ui-kit/src/*"],
       "~scaffold": ["../agora-scenario-ui-kit/src/scaffold"],
@@ -22,11 +20,11 @@
       "~hooks/*": ["./src/infra/hooks/*"],
       "~contexts": ["./src/infra/contexts"],
       "~contexts/*": ["./src/infra/contexts/*"],
-      "agora-rte-sdk": ["../agora-rte-sdk/src"],
-      "agora-edu-core": ["../agora-edu-core/src"],
       "agora-widget-gallery": ["../agora-widget-gallery/src"],
       "agora-chat-widget": ["../agora-chat-widget/src"],
-      "agora-plugin-gallery": ["../agora-plugin-gallery/src"]
+      "agora-plugin-gallery": ["../agora-plugin-gallery/src"],
+      "agora-rte-sdk": ["../agora-rte-sdk/src"],
+      "agora-edu-core": ["../agora-edu-core/src"]
     }
   }
 }
