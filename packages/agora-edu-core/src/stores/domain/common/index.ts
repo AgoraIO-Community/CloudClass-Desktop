@@ -16,6 +16,7 @@ import { EduStoreBase } from './base';
 import { TrackStore } from './track';
 import { ExtAppTrackAdapter } from './ext-app/track-adapter';
 import { WidgetTrackAdapter } from './widget/track-adapter';
+import { ReportStore } from './report';
 
 export class EduClassroomStore {
   private _api: EduApiService = new EduApiService();
@@ -39,6 +40,7 @@ export class EduClassroomStore {
   readonly recordingStore: RecordingStore = new RecordingStore(this);
   readonly extAppsTrackStore: TrackStore = new TrackStore(this, new ExtAppTrackAdapter(this), true);
   readonly widgetsTrackStore: TrackStore = new TrackStore(this, new WidgetTrackAdapter(this));
+  private readonly reportStore: ReportStore = new ReportStore(this);
 
   initialize() {
     const instance = this;

@@ -104,6 +104,10 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
     this.emit('rtc-connection-state-changed', state, this.connectionType);
   }
 
+  getClientSessionId() {
+    return (this._client as any)._sessionId;
+  }
+
   async join(appId: string, token: string, streamUuid: string): Promise<void> {
     await this._client.join(appId, this.channelName, token, +streamUuid);
   }

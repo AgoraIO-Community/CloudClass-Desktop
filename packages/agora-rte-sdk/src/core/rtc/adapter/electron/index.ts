@@ -374,6 +374,10 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
     this._addEventListeners();
   }
 
+  getSessionId() {
+    return this.base.rtcEngine.getCallId();
+  }
+
   onConnectionStateChanged(
     cb: (state: RtcState, connectionType: AGRtcConnectionType) => void,
   ): number {

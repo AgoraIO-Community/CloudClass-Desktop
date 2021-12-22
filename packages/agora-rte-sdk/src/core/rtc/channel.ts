@@ -23,6 +23,10 @@ export class AGRtcChannel {
     return type === undefined ? AGRtcConnectionType.main : type;
   }
 
+  getRtcSid() {
+    return this._adapter.getSessionId();
+  }
+
   join(token: string, streamUuid: string, connectionType?: AGRtcConnectionType): Promise<void> {
     return this._adapter.join(token, streamUuid, this.connectionType(connectionType));
   }

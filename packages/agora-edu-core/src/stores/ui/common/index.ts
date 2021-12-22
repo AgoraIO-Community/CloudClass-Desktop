@@ -142,7 +142,9 @@ export class EduClassroomUIStore {
 
     joinClassroom()
       .then(() => {
-        joinRTC().catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+        joinRTC().catch((e) => {
+          this.shareUIStore.addGenericErrorDialog(e as AGError);
+        });
       })
       .catch((e) => {
         if (AGError.isOf(e, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {

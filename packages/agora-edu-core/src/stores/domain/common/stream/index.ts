@@ -23,7 +23,7 @@ import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
 import { EduStream } from './struct';
 import { EduEventCenter } from '../../../../event-center';
-import { computedFn } from 'mobx-utils';
+import { ReportServiceV2 } from '../../../../services/report-v2';
 import { ShareStreamStateKeeper } from './state-keeper';
 
 //for localstream, remote streams
@@ -72,6 +72,20 @@ export class StreamStore extends EduStoreBase {
     for (const streamUuid of streamUuids) {
       let stream = this.streamByStreamUuid.get(streamUuid);
       if (stream && stream.audioSourceType === AgoraRteAudioSourceType.Mic) {
+        return stream.streamUuid;
+      }
+    }
+    return undefined;
+  }
+
+  @computed get localShareStreamUuid(): string | undefined {
+    let {
+      sessionInfo: { userUuid },
+    } = EduClassroomConfig.shared;
+    let streamUuids = this.streamByUserUuid.get(userUuid) || new Set();
+    for (const streamUuid of streamUuids) {
+      let stream = this.streamByStreamUuid.get(streamUuid);
+      if (stream && stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
         return stream.streamUuid;
       }
     }
@@ -141,7 +155,8 @@ export class StreamStore extends EduStoreBase {
   async publishScreenShare() {
     const sessionInfo = EduClassroomConfig.shared.sessionInfo;
     try {
-      return await this.api.startShareScreen(sessionInfo.roomUuid, sessionInfo.userUuid);
+      let res = await this.api.startShareScreen(sessionInfo.roomUuid, sessionInfo.userUuid);
+      return res;
     } catch (e) {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_MEDIA_START_SCREENSHARE_FAIL,
@@ -153,7 +168,8 @@ export class StreamStore extends EduStoreBase {
   async unpublishScreenShare() {
     const sessionInfo = EduClassroomConfig.shared.sessionInfo;
     try {
-      return await this.api.stopShareScreen(sessionInfo.roomUuid, sessionInfo.userUuid);
+      let res = await this.api.stopShareScreen(sessionInfo.roomUuid, sessionInfo.userUuid);
+      return res;
     } catch (e) {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_MEDIA_STOP_SCREENSHARE_FAIL,

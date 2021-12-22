@@ -72,6 +72,8 @@ export class AgoraRteScene extends EventEmitter {
   private _rtmChannelObserver: EventEmitter;
   private _synchronizer?: AgoraRteSynchronizer;
 
+  public createTs?: number;
+
   constructor(sceneId: string, options: SceneObjects) {
     super();
     this.sceneId = sceneId;
@@ -102,6 +104,14 @@ export class AgoraRteScene extends EventEmitter {
     });
   }
 
+  get rtcSid() {
+    return this._rtcChannel.getRtcSid();
+  }
+
+  get rtmSid() {
+    return this._rtmManager.sessionId;
+  }
+
   async joinScene(options: AgoraRteSceneJoinOptions) {
     if (this._sceneState !== AgoraRteConnectionState.Idle) {
       Logger.warn(`scene not idle`);
@@ -123,6 +133,8 @@ export class AgoraRteScene extends EventEmitter {
           audioSourceState: mediaControl.createMicrophoneAudioTrack().state,
         },
       });
+
+      this.createTs = room.roomState.createTime;
 
       Object.assign(AgoraRteEngineConfig.shared.service.headers, { token: user.userToken });
 

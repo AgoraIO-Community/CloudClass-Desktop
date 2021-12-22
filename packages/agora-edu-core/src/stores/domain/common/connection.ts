@@ -23,6 +23,7 @@ import { EduEventCenter } from '../../../event-center';
 import { AgoraRteConnectionState } from 'agora-rte-sdk';
 
 export type CheckInData = {
+  vid: number;
   clientServerTime: number;
   classRoomSchedule: ClassroomSchedule;
   rtcRegion: AgoraComponentRegion;
@@ -138,8 +139,9 @@ export class ConnectionStore extends EduStoreBase {
         this.setClassroomState(ClassroomState.Connecting);
         const { sessionInfo } = EduClassroomConfig.shared;
         const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
-        const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion } = data;
+        const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
         this.setCheckInData({
+          vid,
           clientServerTime: ts,
           classRoomSchedule: {
             state,

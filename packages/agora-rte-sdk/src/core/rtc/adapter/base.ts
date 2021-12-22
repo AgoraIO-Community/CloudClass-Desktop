@@ -67,6 +67,7 @@ export abstract class RtcChannelAdapterBase extends AGEventEmitter {
     streamUuid: string,
     connectionType: AGRtcConnectionType,
   ): Promise<void>;
+  abstract getSessionId(): string;
   abstract leave(connectionType?: AGRtcConnectionType): Promise<void>;
   abstract muteLocalVideo(mute: boolean, connectionType: AGRtcConnectionType): number;
   abstract muteLocalAudio(mute: boolean, connectionType: AGRtcConnectionType): number;

@@ -259,6 +259,10 @@ export class RtcChannelAdapterWeb extends RtcChannelAdapterBase {
     this.sub = new AgoraRteWebClientSub(channelName, configs, base, AGRtcConnectionType.sub);
   }
 
+  getSessionId() {
+    return this.main.getClientSessionId();
+  }
+
   private client(connectionType: AGRtcConnectionType) {
     return connectionType === AGRtcConnectionType.main ? this.main : this.sub;
   }
