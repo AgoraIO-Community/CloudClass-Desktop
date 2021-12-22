@@ -105,11 +105,11 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
 
 const LocalStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
-  const { localVolume } = streamUIStore;
+  const { localVolume, localMicOff } = streamUIStore;
 
   return (
     <AudioVolume
-      isMicMuted={stream.isMicMuted}
+      isMicMuted={localMicOff}
       currentVolume={Math.floor(localVolume)}
       className={stream.micIconType}
     />

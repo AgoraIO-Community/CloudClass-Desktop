@@ -433,9 +433,16 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   cameraPlaceholder = computedFn((stream: EduStreamUI): CameraPlaceholderType => {
+    const isLocal =
+      stream.stream.streamUuid === this.classroomStore.streamStore.localCameraStreamUuid;
+
+    const videoSourceState = isLocal
+      ? this.classroomStore.mediaStore.localCameraTrackState
+      : stream.stream.videoSourceState;
+
     let placeholder = CameraPlaceholderType.none;
 
-    const deviceDisabled = stream.stream.videoSourceState === AgoraRteMediaSourceState.stopped;
+    const deviceDisabled = videoSourceState === AgoraRteMediaSourceState.stopped;
 
     if (deviceDisabled) {
       return CameraPlaceholderType.disabled;
@@ -443,7 +450,7 @@ export class StreamUIStore extends EduUIStoreBase {
 
     if (
       stream.stream.videoState === AgoraRteMediaPublishState.Published &&
-      stream.stream.videoSourceState === AgoraRteMediaSourceState.started
+      videoSourceState === AgoraRteMediaSourceState.started
     ) {
       placeholder = CameraPlaceholderType.none;
     } else {
