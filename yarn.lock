@@ -5967,6 +5967,25 @@ agora-electron-sdk@2.9.107-rc.148-build.79:
     yuv-buffer "^1.0.0"
     yuv-canvas "^1.2.1"
 
+agora-electron-sdk@2.9.107-rc.158-build.1222:
+  version "2.9.107-rc.158-build.1222"
+  resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-2.9.107-rc.158-build.1222.tgz#e81d7a1131ce35dbe7273f0f88493c8d1e6c0f83"
+  integrity sha512-ZHVaupIqo+K6b8mSsxjq8odBPmOBz7MFet2/vMTH0E6QLeX9OcJUGrMVb3mFZZ5iYG1Qpz4X2M8pm0L3wgWT8w==
+  dependencies:
+    bluebird "^3.7.1"
+    download "^7.1.0"
+    extract-zip "^1.6.7"
+    fs-extra "^8.1.0"
+    glob "^7.1.6"
+    just-task "^0.14.0"
+    lodash.isequal "^4.5.0"
+    nan "^2.14.0"
+    node-gyp "^5.1.0"
+    rimraf "^3.0.0"
+    shelljs "^0.8.3"
+    yuv-buffer "^1.0.0"
+    yuv-canvas "^1.2.1"
+
 agora-electron-sdk@apaas:
   version "2.9.107-rc.148-build.68"
   resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-2.9.107-rc.148-build.68.tgz#1e201faf19e57d37d0de3901b1122c995e1c4fb5"
