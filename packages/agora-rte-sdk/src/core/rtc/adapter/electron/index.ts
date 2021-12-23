@@ -419,7 +419,7 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
   private _startScreenCapture() {
     let type = this.base.screenShareType,
       id = this.base.screenShareId;
-    if (!id || !type) {
+    if (id === undefined || type === undefined) {
       return;
     }
     if (type === AGScreenShareType.Screen) {
