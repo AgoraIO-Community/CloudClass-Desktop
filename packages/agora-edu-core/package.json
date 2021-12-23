@@ -18,7 +18,6 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build:docs": "npx typedoc",
     "build": "run-s build:js build:types",
     "build:types": "tsc -p tsconfig.json",
     "build:release:bundle:js": "webpack --config ./webpack/webpack.pack.js",
@@ -35,7 +34,6 @@
     "rimraf": "3.0.2",
     "tsc-alias": "1.2.8",
     "tslib": "2.2.0",
-    "typedoc": "0.22.10",
     "@types/deep-diff": "1.0.0",
     "typescript": "4.4.4"
   },

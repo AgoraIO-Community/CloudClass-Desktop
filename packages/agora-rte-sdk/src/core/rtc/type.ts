@@ -20,9 +20,21 @@ export interface NetworkStats {
 }
 
 export enum AgoraRteMediaSourceState {
+  /**
+   * 设备停止采集
+   */
   stopped = 0,
+  /**
+   * 设备开启中
+   */
   starting = 2,
+  /**
+   * 设备已开启
+   */
   started = 1,
+  /**
+   * 设备错误
+   */
   error = -1,
 }
 

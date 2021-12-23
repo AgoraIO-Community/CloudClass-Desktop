@@ -1,9 +1,30 @@
+/**
+ * 视频流占位符类型
+ */
 export enum CameraPlaceholderType {
+  /**
+   * 摄像头打开
+   */
   none = 'none',
+  /**
+   * 设备正在打开
+   */
   loading = 'loading',
+  /**
+   * 摄像头关闭
+   */
   muted = 'muted',
+  /**
+   * 摄像头损坏
+   */
   broken = 'broken',
+  /**
+   * 摄像头禁用
+   */
   disabled = 'disabled',
+  /**
+   * 老师不在教室
+   */
   notpresent = 'notpresent',
 }
 

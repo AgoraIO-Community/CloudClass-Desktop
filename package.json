@@ -69,7 +69,8 @@
     "webpackbar": "5.0.0-3",
     "worker-loader": "3.0.8",
     "webpack-bundle-analyzer": "4.5.0",
-    "hard-source-webpack-plugin": "0.13.1"
+    "hard-source-webpack-plugin": "0.13.1",
+    "typedoc": "0.22.10"
   },
   "agora_electron": {
     "electron_version": "12.0.0",
@@ -97,10 +98,10 @@
     "build:plugin": "lerna exec --scope=agora-plugin-gallery npm run build",
     "build:widget": "lerna exec --scope=agora-widget-gallery npm run build",
     "build:demo": "lerna exec --scope=agora-classroom-sdk npm run build",
+    "build:docs": "lerna exec --scope=agora-edu-core npx typedoc",
     "ci:build:web": "yarn build:apaas",
     "ci:build:electron:win": "yarn release:electron:win",
-    "ci:build:electron:mac": "yarn release:electron:mac",
-    "ci:build:classroom:sdk": "yarn build:apaas"
+    "ci:build:electron:mac": "yarn release:electron:mac"
   },
   "repository": {
     "type": "git",

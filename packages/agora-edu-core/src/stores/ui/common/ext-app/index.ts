@@ -10,6 +10,10 @@ const languageMap = { [RteLanguage.zh]: 'zh', [RteLanguage.en]: 'en' };
 @Log.attach({ proxyMethods: false })
 export class ExtAppUIStore extends EduUIStoreBase {
   /** Getters  */
+  /**
+   * 当前用户是否拥有 ExtApp 的关闭权限
+   * @returns
+   */
   get canClose() {
     const { userRole, userUuid } = this.classroomStore.roomStore;
     const { grantUsers } = this.classroomStore.boardStore;
@@ -17,6 +21,10 @@ export class ExtAppUIStore extends EduUIStoreBase {
     return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
   }
 
+  /**
+   * 当前用户是否拥有 ExtApp 的移动权限
+   * @returns
+   */
   get canDrag() {
     const { userRole, userUuid } = this.classroomStore.roomStore;
     const { grantUsers } = this.classroomStore.boardStore;
@@ -24,6 +32,10 @@ export class ExtAppUIStore extends EduUIStoreBase {
     return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
   }
 
+  /**
+   * 当前打开的 ExtApp
+   * @returns
+   */
   @computed
   get activeApps() {
     const ready = this.classroomStore.connectionStore.classroomState === ClassroomState.Connected;
@@ -36,31 +48,54 @@ export class ExtAppUIStore extends EduUIStoreBase {
     return Object.values(extApps).filter(this.isActive);
   }
 
+  /**
+   * 更新 ExtApp 属性
+   * @param appId
+   * @returns
+   */
   @bound
-  handleUpdate(appId: string) {
+  private handleUpdate(appId: string) {
     const { updateExtAppProperties } = this.classroomStore.extAppStore;
     return async (properties: any, common: any, cause: {}) =>
       await updateExtAppProperties(appId, properties, common, cause);
   }
 
+  /**
+   * 移除 ExtApp 属性
+   * @param appId
+   * @returns
+   */
   @bound
-  handleDelete(appId: string) {
+  private handleDelete(appId: string) {
     const { deleteExtAppProperties } = this.classroomStore.extAppStore;
     return async (properties: string[], cause: {}) => {
       return await deleteExtAppProperties(appId, properties, cause);
     };
   }
 
+  /**
+   * 关闭 ExtApp
+   * @param appId
+   */
   @bound
   shutdownApp(appId: string) {
     this.classroomStore.extAppStore.shutdownApp(appId);
   }
 
+  /**
+   * 启动 ExtApp
+   * @param appId
+   */
   @bound
   launchApp(appId: string) {
     this.classroomStore.extAppStore.launchApp(appId);
   }
 
+  /**
+   * 挂载 ExtApp 到 DOM
+   * @param dom
+   * @param extApp
+   */
   @bound
   mount(dom: HTMLElement | null, extApp: IAgoraExtApp) {
     if (dom) {
@@ -103,6 +138,12 @@ export class ExtAppUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 更新 ExtApp 的轨迹信息
+   * @param appId
+   * @param width
+   * @param height
+   */
   @Lodash.debounced(200, { trailing: true })
   updateTrackState(appId: string, width: number, height: number) {
     this.classroomStore.extAppsTrackStore.setTrackLocalDimensionsById(
@@ -115,8 +156,13 @@ export class ExtAppUIStore extends EduUIStoreBase {
     );
   }
 
+  /**
+   * ExtApp 是否已启动
+   * @param extApp
+   * @returns
+   */
   @bound
-  isActive(extApp: IAgoraExtApp) {
+  private isActive(extApp: IAgoraExtApp) {
     const { extAppsCommon, extAppProperties, userRole } = this.classroomStore.roomStore;
     const { activeAppIds } = this.classroomStore.extAppStore;
 
@@ -139,8 +185,11 @@ export class ExtAppUIStore extends EduUIStoreBase {
     return localActive || remoteActive;
   }
 
+  /**
+   * ExtApp 事件通知
+   */
   @bound
-  fireEvent() {
+  private fireEvent() {
     this.activeApps.forEach((extApp) => {
       const studentKeys = this.classroomStore.userStore.studentList.keys();
 

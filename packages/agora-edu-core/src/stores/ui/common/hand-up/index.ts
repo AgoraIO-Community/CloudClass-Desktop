@@ -1,8 +1,6 @@
 import { computed } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { iterateMap } from '../../../../utils/collection';
 import { bound, AGError } from 'agora-rte-sdk';
-import { EduClassroomConfig } from '../../../../configs';
 import { AGServiceErrorCode } from '../../../../services/error';
 import { transI18n } from '../i18n';
 export type UserWaveArmInfo = {
@@ -13,6 +11,10 @@ export type UserWaveArmInfo = {
 
 export class HandUpUIStore extends EduUIStoreBase {
   onInstall() {}
+  /**
+   * 挥手用户列表
+   * @returns
+   */
   @computed
   get userWaveArmList() {
     const waveArmList = this.classroomStore.roomStore.waveArmList;
@@ -38,16 +40,28 @@ export class HandUpUIStore extends EduUIStoreBase {
     return userWaveArmList;
   }
 
+  /**
+   * 是否有用户在挥手
+   * @returns
+   */
   @computed
   get hasWaveArmUser() {
     return this.userWaveArmList.length > 0;
   }
 
+  /**
+   * 挥手用户数
+   * @returns
+   */
   @computed
   get waveArmCount() {
     return this.userWaveArmList.length;
   }
 
+  /**
+   * 老师的唯一标识
+   * @returns
+   */
   @computed
   get teacherUuid() {
     const teacherList = this.classroomStore.userStore.teacherList;
@@ -58,7 +72,10 @@ export class HandUpUIStore extends EduUIStoreBase {
     return '';
   }
 
-  //others
+  /**
+   * 学生上台
+   * @param userUuid
+   */
   @bound
   onPodium(userUuid: string) {
     this.classroomStore.handUpStore.onPodium(userUuid).catch((e) => {
@@ -76,6 +93,10 @@ export class HandUpUIStore extends EduUIStoreBase {
     });
   }
 
+  /**
+   * 学生下台
+   * @param userUuid
+   */
   @bound
   offPodium(userUuid: string) {
     this.classroomStore.handUpStore
@@ -83,6 +104,10 @@ export class HandUpUIStore extends EduUIStoreBase {
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
   }
 
+  /**
+   * 老师拒绝学生上台
+   * @param userUuid
+   */
   @bound
   rejectHandUp(userUuid: string) {
     this.classroomStore.handUpStore
@@ -90,6 +115,9 @@ export class HandUpUIStore extends EduUIStoreBase {
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
   }
 
+  /**
+   * 学生取消举手
+   */
   @bound
   async cancelHandUp() {
     this.classroomStore.handUpStore
@@ -97,6 +125,10 @@ export class HandUpUIStore extends EduUIStoreBase {
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
   }
 
+  /**
+   * 学生举手
+   * @param teacherUuid
+   */
   @bound
   handUp(teacherUuid: string) {
     this.classroomStore.handUpStore
@@ -104,6 +136,12 @@ export class HandUpUIStore extends EduUIStoreBase {
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
   }
 
+  /**
+   * 学生挥手
+   *
+   * @param teacherUuid
+   * @param duration 挥手的时间，单位：秒，-1 为持续举手
+   */
   @bound
   waveArm(teacherUuid: string, duration: -1 | 3) {
     this.classroomStore.handUpStore

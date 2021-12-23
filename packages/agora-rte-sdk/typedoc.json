@@ -1,5 +1,5 @@
 {
-  "entryPoints": ["./src/stores/ui", "../agora-rte-sdk/src"],
+  "entryPoints": ["./src"],
   "out": "./docs",
   "exclude": ["**/node_modules/**"],
   "excludeExternals": true,

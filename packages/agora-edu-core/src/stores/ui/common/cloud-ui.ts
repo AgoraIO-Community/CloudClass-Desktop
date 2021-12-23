@@ -1,7 +1,6 @@
-import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
-import { transI18n } from './i18n';
 import {
   CloudDriveCourseResource,
   CloudDriveResource,
@@ -55,6 +54,11 @@ export class CloudUIStore extends EduUIStoreBase {
     );
   }
 
+  /**
+   * 根据类型返回扩展名
+   * @param name
+   * @returns
+   */
   fileNameToType(name: string): string {
     if (name.match(/ppt|pptx|pptx/i)) {
       return 'ppt';
@@ -83,6 +87,12 @@ export class CloudUIStore extends EduUIStoreBase {
     return 'excel';
   }
 
+  /**
+   * 文件大小信息格式化
+   * @param fileByteSize
+   * @param decimalPoint
+   * @returns
+   */
   formatFileSize(fileByteSize: number, decimalPoint?: number) {
     const bytes = +fileByteSize;
     if (bytes === 0) return '- -';
@@ -93,6 +103,11 @@ export class CloudUIStore extends EduUIStoreBase {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + units[i];
   }
 
+  /**
+   * 查询个人资源列表
+   * @param options
+   * @returns
+   */
   @bound
   async fetchPersonalResources(options: CloudDrivePagingOption) {
     try {
@@ -104,6 +119,11 @@ export class CloudUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 上传文件至个人资源
+   * @param file
+   * @returns
+   */
   @bound
   async uploadPersonalResource(file: File) {
     try {
@@ -114,6 +134,10 @@ export class CloudUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 打开课件
+   * @param resource
+   */
   @bound
   async openResource(resource: CloudDriveResource) {
     try {
@@ -133,31 +157,54 @@ export class CloudUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 公共资源
+   * @returns
+   */
   get publicResources() {
     return this.classroomStore.cloudDriveStore.publicResources;
   }
 
   //  ---------  observable ---------------
+  /**
+   * 个人资源左侧选项框状态
+   */
   @observable
   personalResourcesCheckSet: Set<string> = new Set();
 
+  /**
+   * 个人资源页码
+   */
   @observable
   currentPersonalResPage: number = 1;
 
+  /**
+   * 个人资源全选
+   */
   @observable
   isPersonalResSelectedAll: boolean = false;
 
   // ------------- computed ---------------
+  /**
+   * 云盘资源列表
+   */
   @computed
   get personalResources() {
     return this.classroomStore.cloudDriveStore.personalResources;
   }
 
+  /**
+   * 个人云盘资源数
+   */
   @computed
   get personalResourcesTotalNum() {
     return this.classroomStore.cloudDriveStore.personalResourcesTotalNum;
   }
 
+  /**
+   * 云盘资源列表（左侧选择框使用）
+   * @returns
+   */
   @computed
   get personalResourcesList() {
     const { personalResourceUuidByPage } = this.classroomStore.cloudDriveStore;
@@ -175,6 +222,10 @@ export class CloudUIStore extends EduUIStoreBase {
     return arr;
   }
 
+  /**
+   * 是否有选中资源文件
+   * @returns
+   */
   @computed
   get hasSelectedPersonalRes() {
     if (this.isPersonalResSelectedAll) {
@@ -185,6 +236,10 @@ export class CloudUIStore extends EduUIStoreBase {
     });
   }
 
+  /**
+   * 资源上传进度
+   * @returns
+   */
   @computed
   get uploadingProgresses(): UploadItem[] {
     const { uploadProgress } = this.classroomStore.cloudDriveStore;
@@ -206,6 +261,11 @@ export class CloudUIStore extends EduUIStoreBase {
   }
 
   // ------------- action -----------------
+  /**
+   * 勾选资源文件
+   * @param resourceUuid
+   * @param val
+   */
   @action
   setPersonalResourceSelected = (resourceUuid: string, val: boolean) => {
     if (val) {
@@ -217,6 +277,10 @@ export class CloudUIStore extends EduUIStoreBase {
       this.personalResourcesCheckSet.size === this.personalResources.size;
   };
 
+  /**
+   * 资源列表全选
+   * @param val
+   */
   @action
   setAllPersonalResourceSelected = (val: boolean) => {
     let set = new Set<string>();
@@ -229,11 +293,19 @@ export class CloudUIStore extends EduUIStoreBase {
     this.personalResourcesCheckSet = set;
   };
 
+  /**
+   * 设置资源列表页码
+   * @param num
+   */
   @action
   setPersonalResCurrentPage = (num: number) => {
     this.currentPersonalResPage = num;
   };
 
+  /**
+   * 删除个人资源
+   * @returns
+   */
   @action
   removePersonalResources = async () => {
     const uuids: string[] = [];

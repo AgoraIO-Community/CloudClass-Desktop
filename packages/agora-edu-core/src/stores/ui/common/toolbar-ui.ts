@@ -79,11 +79,19 @@ export class ToolbarUIStore extends EduUIStoreBase {
   @observable private _screenSharing: boolean = false;
 
   //computed
+  /**
+   * 当前激活的工具
+   * @returns
+   */
   @computed
   get activeTool(): string {
     return this.convertEduTools2UITools(this.classroomStore.boardStore.selectedTool);
   }
 
+  /**
+   * 当前激活的画笔类工具
+   * @returns
+   */
   @computed
   get selectedPenTool(): string {
     if (this.isPenToolActive) {
@@ -91,27 +99,48 @@ export class ToolbarUIStore extends EduUIStoreBase {
     }
     return 'pen';
   }
+
+  /**
+   * 画笔工具是否激活
+   * @returns
+   */
   @computed
   get isPenToolActive(): boolean {
     return this.penTools.includes(this.activeTool);
   }
 
+  /**
+   * 选中的画笔颜色
+   * @returns
+   */
   @computed
   get currentColor() {
     return this.classroomStore.boardStore.currentColor;
   }
 
+  /**
+   * 选中的画笔粗细
+   * @returns
+   */
   @computed
   get strokeWidth() {
     return this.classroomStore.boardStore.strokeWidth;
   }
 
+  /**
+   * 是否正在进行屏幕共享
+   * @returns
+   */
   @computed
   get isScreenSharing() {
     return this._screenSharing;
   }
 
   //actions
+  /**
+   * 打开 ExtApp 扩展工具
+   * @param id
+   */
   @action.bound
   handleCabinetItem(id: string) {
     const { launchApp } = this.classroomStore.extAppStore;
@@ -181,7 +210,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
     }
   }
 
-  //others
+  /**
+   * 选中工具
+   * @param tool
+   * @returns
+   */
   @action.bound
   setTool(tool: string) {
     const eduTool = this.convertUITools2EduTools(tool);
@@ -219,20 +252,38 @@ export class ToolbarUIStore extends EduUIStoreBase {
   // others
   readonly penTools = ['pen', 'square', 'circle', 'line'];
 
+  /**
+   * 设置画笔粗细
+   * @param value
+   * @returns
+   */
   @bound
   changeStroke(value: any) {
     return this.classroomStore.boardStore.changeStroke(value);
   }
 
+  /**
+   * 设置画笔颜色，支持 Hex 色值
+   * @param value
+   * @returns
+   */
   @bound
   changeHexColor(value: any) {
     return this.classroomStore.boardStore.changeHexColor(value);
   }
 
+  /**
+   * 当前激活的 ExtApp
+   * @returns
+   */
   get activeCabinetItem(): string | undefined {
     return this.isScreenSharing ? 'screenShare' : undefined;
   }
 
+  /**
+   * ExtApp 列表
+   * @returns
+   */
   get cabinetItems(): CabinetItem[] {
     const { extApps } = this.classroomStore.extAppStore;
 
@@ -257,11 +308,19 @@ export class ToolbarUIStore extends EduUIStoreBase {
     ].concat(apps);
   }
 
+  /**
+   * 工具栏工具列表
+   * @returns
+   */
   @computed get tools(): ToolbarItem[] {
     const { sessionInfo } = EduClassroomConfig.shared;
     return sessionInfo.role === EduRoleTypeEnum.teacher ? this.teacherTools : this.studentTools;
   }
 
+  /**
+   * 老师工具栏工具列表
+   * @returns
+   */
   get teacherTools(): ToolbarItem[] {
     return [
       ToolbarItem.fromData({
@@ -324,6 +383,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
     ];
   }
 
+  /**
+   * 学生工具栏工具列表
+   * @returns
+   */
   @computed
   get studentTools(): ToolbarItem[] {
     const { sessionInfo } = EduClassroomConfig.shared;
@@ -376,6 +439,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
     ];
   }
 
+  /**
+   * 转 Edu 工具 对象
+   * @param tool
+   * @returns
+   */
   convertUITools2EduTools(tool: string): WhiteboardTool {
     switch (tool) {
       case 'clicker':
@@ -404,6 +472,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
     return WhiteboardTool.unknown;
   }
 
+  /**
+   * 转 UI 工具对象
+   * @param tool
+   * @returns
+   */
   convertEduTools2UITools(tool: WhiteboardTool): string {
     switch (tool) {
       case WhiteboardTool.clicker:

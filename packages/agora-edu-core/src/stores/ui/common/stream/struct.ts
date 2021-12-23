@@ -1,6 +1,9 @@
 import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from '../../../..';
 import { RteRole2EduRole } from '../../../../utils';
+/**
+ * 业务流 UI 对象
+ */
 export class EduStreamUI {
   readonly stream: EduStream;
   constructor(stream: EduStream) {

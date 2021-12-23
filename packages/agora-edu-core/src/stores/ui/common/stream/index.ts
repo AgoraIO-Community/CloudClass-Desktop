@@ -54,11 +54,15 @@ export class StreamUIStore extends EduUIStoreBase {
     });
   }
 
-  //observe
+  /**
+   * 奖励信息
+   */
   @observable awardAnims: { id: string; userUuid: string }[] = [];
-  //action
-  //computes
 
+  /**
+   * 老师流信息列表
+   * @returns
+   */
   @computed get teacherStreams(): Set<EduStreamUI> {
     let streamSet = new Set<EduStreamUI>();
     let teacherList = this.classroomStore.userStore.teacherList;
@@ -76,7 +80,10 @@ export class StreamUIStore extends EduUIStoreBase {
     return streamSet;
   }
 
-  //only call this api if you are confident there will always be 1 teacher stream only
+  /**
+   * 老师流信息（教室内只有一个老师时使用，如果有一个以上老师请使用 teacherStreams）
+   * @returns
+   */
   @computed get teacherCameraStream(): EduStreamUI | undefined {
     let streamSet = new Set<EduStreamUI>();
     let streams = this.teacherStreams;
@@ -95,6 +102,10 @@ export class StreamUIStore extends EduUIStoreBase {
     return Array.from(streamSet)[0];
   }
 
+  /**
+   * 老师屏幕共享流信息
+   * @returns
+   */
   @computed get teacherScreenShareStream() {
     let streamUuid = this.classroomStore.roomStore.screenShareStreamUuid;
     let streamSet = new Set<EduStreamUI>();
@@ -114,6 +125,10 @@ export class StreamUIStore extends EduUIStoreBase {
     return Array.from(streamSet)[0];
   }
 
+  /**
+   * 学生流信息（教室内只有一个学生时使用，如果有一个以上老师请使用 studentStreams）
+   * @returns
+   */
   @computed get studentCameraStream(): EduStreamUI | undefined {
     let streamSet = new Set<EduStreamUI>();
     let streams = this.studentStreams;
@@ -132,6 +147,10 @@ export class StreamUIStore extends EduUIStoreBase {
     return Array.from(streamSet)[0];
   }
 
+  /**
+   * 学生流信息列表
+   * @returns
+   */
   @computed get studentStreams(): Set<EduStreamUI> {
     let streamSet = new Set<EduStreamUI>();
     let studentList = this.classroomStore.userStore.studentList;
@@ -149,64 +168,122 @@ export class StreamUIStore extends EduUIStoreBase {
     return streamSet;
   }
 
+  /**
+   * 获取远端流音量
+   * @returns
+   */
   remoteStreamVolume = computedFn((stream: EduStreamUI) => {
     let volume = this.classroomStore.streamStore.streamVolumes.get(stream.stream.streamUuid) || 0;
-    // Logger.info(`[vo] ${volume}`);
     return volume * 100;
   });
 
+  /**
+   * 本地音量
+   * @returns
+   */
   @computed get localVolume(): number {
     return this.classroomStore.mediaStore.localMicAudioVolume * 100;
   }
 
+  /**
+   * 本地摄像头设备状态
+   * @returns
+   */
   @computed get localCameraTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localCameraTrackState;
   }
 
+  /**
+   * 本地麦克风设备状态
+   * @returns
+   */
   @computed get localMicTrackState(): AgoraRteMediaSourceState {
     return this.classroomStore.mediaStore.localMicTrackState;
   }
 
+  /**
+   * 本地屏幕共享状态
+   * @returns
+   */
   @computed get localScreenShareOff() {
     return (
       this.classroomStore.mediaStore.localScreenShareTrackState !== AgoraRteMediaSourceState.started
     );
   }
 
+  /**
+   * 本地摄像头设备是否关闭
+   * @returns
+   */
   @computed get localCameraOff() {
     return this.localCameraTrackState !== AgoraRteMediaSourceState.started;
   }
 
+  /**
+   * 本地麦克风设备是否关闭
+   * @returns
+   */
   @computed get localMicOff() {
     return this.localMicTrackState !== AgoraRteMediaSourceState.started;
   }
 
+  /**
+   * 镜像是否开启
+   * @returns
+   */
   @computed get isMirror() {
     return this.classroomStore.mediaStore.isMirror;
   }
 
+  /**
+   * 白板授权用户列表
+   * @returns
+   */
   @computed get whiteboardGrantUsers() {
     return this.classroomStore.boardStore.grantUsers;
   }
 
+  /**
+   * 视频窗口显示的挂件信息
+   * reward: 奖励信息
+   * grant: 授权状态
+   * @returns
+   */
   get layerItems() {
     return ['reward', 'grant'];
   }
+
+  /**
+   * 远端流是否正在举手
+   * @returns
+   */
   isWaveArm = computedFn((stream: EduStreamUI): boolean => {
     return this.classroomStore.roomStore.waveArmList.some(
       (it) => it.userUuid === stream.fromUser.userUuid,
     );
   });
 
+  /**
+   * 远端流奖励信息
+   * @returns
+   */
   awards = computedFn((stream: EduStreamUI): number => {
     let reward = this.classroomStore.userStore.rewards.get(stream.fromUser.userUuid);
     return reward || 0;
   });
 
+  /**
+   * 远端流奖励动画列表
+   * @returns
+   */
   streamAwardAnims = computedFn((stream: EduStreamUI): { id: string; userUuid: string }[] => {
     return this.awardAnims.filter((anim) => anim.userUuid === stream.fromUser.userUuid);
   });
 
+  /**
+   * 本地视频窗摄像头
+   * @returns
+   */
   localCameraTool = computedFn((): EduStreamTool => {
     return new EduStreamTool(
       EduStreamToolCategory.camera,
@@ -227,6 +304,10 @@ export class StreamUIStore extends EduUIStoreBase {
     );
   });
 
+  /**
+   * 本地视频窗麦克风
+   * @returns
+   */
   localMicTool = computedFn((): EduStreamTool => {
     return new EduStreamTool(
       EduStreamToolCategory.microphone,
@@ -247,6 +328,10 @@ export class StreamUIStore extends EduUIStoreBase {
     );
   });
 
+  /**
+   * 本地视频窗上下台
+   * @returns
+   */
   localPodiumTool = computedFn((): EduStreamTool => {
     const { acceptedList } = this.classroomStore.roomStore;
     return new EduStreamTool(
@@ -275,6 +360,10 @@ export class StreamUIStore extends EduUIStoreBase {
     );
   });
 
+  /**
+   * 远端视频窗摄像头
+   * @returns
+   */
   remoteCameraTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     let videoMuted = stream.stream.videoState === AgoraRteMediaPublishState.Unpublished;
     let videoSourceStopped = stream.stream.videoSourceState === AgoraRteMediaSourceState.stopped;
@@ -308,6 +397,10 @@ export class StreamUIStore extends EduUIStoreBase {
     );
   });
 
+  /**
+   * 远端视频窗麦克风
+   * @returns
+   */
   remoteMicTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     let audioMuted = stream.stream.audioState === AgoraRteMediaPublishState.Unpublished;
     let audioSourceStopped = stream.stream.audioSourceState === AgoraRteMediaSourceState.stopped;
@@ -341,6 +434,10 @@ export class StreamUIStore extends EduUIStoreBase {
     );
   });
 
+  /**
+   * 远端视频窗上下台
+   * @returns
+   */
   remotePodiumTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     return new EduStreamTool(
       EduStreamToolCategory.podium,
@@ -369,6 +466,10 @@ export class StreamUIStore extends EduUIStoreBase {
     );
   });
 
+  /**
+   * 远端视频窗白板授权
+   * @returns
+   */
   remoteWhiteboardTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     const whiteboardAuthorized = this.whiteboardGrantUsers.has(stream.fromUser.userUuid);
     return new EduStreamTool(
@@ -392,6 +493,10 @@ export class StreamUIStore extends EduUIStoreBase {
     );
   });
 
+  /**
+   * 远端视频窗奖励
+   * @returns
+   */
   remoteRewardTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     return new EduStreamTool(EduStreamToolCategory.star, 'reward', transI18n('Star'), {
       interactable: true,
@@ -407,6 +512,10 @@ export class StreamUIStore extends EduUIStoreBase {
     });
   });
 
+  /**
+   * 本地视频窗工具列表
+   * @returns
+   */
   @computed get localStreamTools(): EduStreamTool[] {
     let tools: EduStreamTool[] = [];
     tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
@@ -414,6 +523,10 @@ export class StreamUIStore extends EduUIStoreBase {
     return tools;
   }
 
+  /**
+   * 远端视频窗工具列表
+   * @returns
+   */
   remoteStreamTools = computedFn((stream: EduStreamUI): EduStreamTool[] => {
     const iAmHost =
       EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
@@ -428,10 +541,18 @@ export class StreamUIStore extends EduUIStoreBase {
     return tools;
   });
 
+  /**
+   * 本地音频图标
+   * @returns
+   */
   @computed get localMicIconType() {
     return this.localMicOff ? 'microphone-off' : 'microphone-on';
   }
 
+  /**
+   * 本地视频占位符
+   * @returns
+   */
   cameraPlaceholder = computedFn((stream: EduStreamUI): CameraPlaceholderType => {
     const isLocal =
       stream.stream.streamUuid === this.classroomStore.streamStore.localCameraStreamUuid;
@@ -459,14 +580,25 @@ export class StreamUIStore extends EduUIStoreBase {
     return placeholder;
   });
 
+  /**
+   * 视频窗工具栏定位
+   * @returns
+   */
   @computed get toolbarPlacement(): 'left' | 'bottom' {
     return 'bottom';
   }
 
+  /**
+   * 移除奖励动画
+   * @param id
+   */
   @action.bound removeAward(id: string) {
     this.awardAnims = this.awardAnims.filter((anim) => anim.id !== id);
   }
 
+  /**
+   * 切换本地摄像头设备开关状态
+   */
   @bound
   toggleLocalVideo() {
     if (this.localCameraOff) {
@@ -476,6 +608,9 @@ export class StreamUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 切换本地麦克风设备开关状态
+   */
   @bound
   toggleLocalAudio() {
     if (this.localMicOff) {
@@ -485,21 +620,43 @@ export class StreamUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 渲染本地 Stream 视频到 DOM
+   * @param stream
+   * @param dom
+   * @param mirror
+   * @returns
+   */
   @bound
   setupLocalVideo(stream: EduStream, dom: HTMLElement, mirror?: boolean) {
     return this.classroomStore.streamStore.setupLocalVideo(stream, dom, mirror);
   }
 
+  /**
+   * 渲染远端 Stream 视频到 DOM
+   * @param stream
+   * @param dom
+   * @param renderMode
+   * @returns
+   */
   @bound
   setupRemoteVideo(stream: EduStream, dom: HTMLElement, renderMode?: AGRenderMode) {
     return this.classroomStore.streamStore.setupRemoteVideo(stream, dom, renderMode);
   }
-  //others
+
+  /**
+   * 渲染本地屏幕共享到 DOM
+   * @param dom
+   */
   @bound
   setupLocalScreenShare(dom: HTMLElement) {
     this.classroomStore.mediaStore.setupLocalScreenShare(dom);
   }
 
+  /**
+   * 停止屏幕视频采集
+   * @returns
+   */
   @bound
   stopScreenShareCapture() {
     return this.classroomStore.mediaStore.stopScreenShareCapture();

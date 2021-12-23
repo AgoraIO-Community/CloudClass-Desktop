@@ -1,11 +1,11 @@
 export enum DeviceState {
-  // published
+  // 设备开启
   enabled,
-  // unpublished
+  // 设备关闭
   disabled,
-  // not on podium
+  // 设备不可用
   unavailable,
-  // on podium but device is unauthorized
+  // 设备禁用
   unauthorized,
 }
 

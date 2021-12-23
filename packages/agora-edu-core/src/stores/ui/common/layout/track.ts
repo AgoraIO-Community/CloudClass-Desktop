@@ -58,6 +58,10 @@ export class TrackUIStore extends EduUIStoreBase {
     super(store, shareUIStore);
   }
 
+  /**
+   * 初始化轨迹同步
+   * @param
+   */
   @bound
   initialize({ margin }: { margin: Margin }) {
     this._widgetTrackContext.margin = { top: margin.top };
@@ -74,6 +78,13 @@ export class TrackUIStore extends EduUIStoreBase {
     this.shareUIStore.removeWindowResizeEventListener();
   }
 
+  /**
+   * 设置 Widget 组件轨迹同步信息
+   * @param trackId
+   * @param end
+   * @param pos
+   * @param dimensions
+   */
   @action.bound
   setWidgetTrackById(trackId: string, end: boolean, pos: Point, dimensions?: Dimensions) {
     this.classroomStore.widgetsTrackStore.setTrackById(
@@ -84,6 +95,13 @@ export class TrackUIStore extends EduUIStoreBase {
     );
   }
 
+  /**
+   * 设置 ExtApp 组件轨迹同步信息
+   * @param trackId
+   * @param end
+   * @param pos
+   * @param dimensions
+   */
   @action.bound
   setExtAppTrackById(trackId: string, end: boolean, pos: Point, dimensions?: Dimensions) {
     this.classroomStore.extAppsTrackStore.setTrackById(
@@ -94,28 +112,47 @@ export class TrackUIStore extends EduUIStoreBase {
     );
   }
 
+  /**
+   * 移除 Widget 组件轨迹同步信息
+   * @param trackId
+   */
   @action.bound
   deleteWidgetTrackById(trackId: string) {
     this.classroomStore.widgetsTrackStore.deleteTrackById(trackId);
   }
 
+  /**
+   * 移除 ExtApp 组件轨迹同步信息
+   * @param trackId
+   */
   @action.bound
   deleteExtAppTrackById(trackId: string) {
     this.classroomStore.extAppsTrackStore.deleteTrackById(trackId);
   }
 
+  /**
+   * Widget 组件轨迹同步信息
+   */
   @computed
   get widgetTrackById() {
     return this.classroomStore.widgetsTrackStore.trackById;
   }
 
+  /**
+   * ExtApp 组件轨迹同步信息
+   */
   @computed
   get extAppTrackById() {
     return this.classroomStore.extAppsTrackStore.trackById;
   }
 
+  /**
+   * 获取可移动范围参数
+   * @param boundaryName
+   * @returns
+   */
   @bound
-  getBounds(boundaryName: string) {
+  private getBounds(boundaryName: string) {
     const boundsElement = document.querySelector(`.${boundaryName}`);
     if (boundsElement) {
       const { left, top, right, bottom, width, height } = boundsElement.getBoundingClientRect();
@@ -124,6 +161,10 @@ export class TrackUIStore extends EduUIStoreBase {
     return { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
   }
 
+  /**
+   * 重新计算轨迹同步上下文参数
+   * @param boundaryName
+   */
   @bound
   updateTrackContext(boundaryName: string) {
     const context = {

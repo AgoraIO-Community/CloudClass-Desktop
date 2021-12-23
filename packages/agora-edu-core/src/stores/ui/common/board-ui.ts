@@ -17,11 +17,19 @@ export class BoardUIStore extends EduUIStoreBase {
   onInstall() {}
 
   // computed
+  /**
+   * 白板准备好挂载到 DOM
+   * @returns
+   */
   @computed
   get readyToMount() {
     return this.classroomStore.boardStore.ready;
   }
 
+  /**
+   * 白板连接中断
+   * @returns
+   */
   @computed
   get connectionLost() {
     return (
@@ -30,6 +38,10 @@ export class BoardUIStore extends EduUIStoreBase {
     );
   }
 
+  /**
+   * 白板高度
+   * @returns
+   */
   get boardHeight() {
     const { roomType } = this.classroomStore.roomStore;
     const viewportHeight = this.shareUIStore.classroomViewportSize.height;
@@ -42,6 +54,9 @@ export class BoardUIStore extends EduUIStoreBase {
     return height;
   }
 
+  /**
+   * 设置白板课件最小化 DOM
+   */
   set setCollectorContainer(collectorContainer: HTMLElement) {
     this._collectorContainer = collectorContainer;
   }
@@ -50,6 +65,9 @@ export class BoardUIStore extends EduUIStoreBase {
     super(store, shareUIStore);
   }
 
+  /**
+   * 等待白板配置就绪后连接白板
+   */
   @action.bound
   joinWhiteboardWhenConfigReady() {
     this._joinDisposer = when(
@@ -58,6 +76,9 @@ export class BoardUIStore extends EduUIStoreBase {
     );
   }
 
+  /**
+   * 重连白板
+   */
   @bound
   async rejoinWhiteboard() {
     try {
@@ -68,6 +89,9 @@ export class BoardUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 连接白板
+   */
   @bound
   async joinWhiteboard() {
     try {
@@ -77,6 +101,9 @@ export class BoardUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 断开白板
+   */
   @bound
   async leaveWhiteboard() {
     try {
@@ -89,6 +116,10 @@ export class BoardUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 白板挂载到 DOM
+   * @param dom
+   */
   @bound
   async mount(dom: HTMLDivElement) {
     try {
@@ -101,6 +132,9 @@ export class BoardUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 白板卸载，销毁白板实例
+   */
   @bound
   async unmount() {
     try {

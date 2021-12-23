@@ -1,3 +1,6 @@
+/**
+ * 视频窗工具类型
+ */
 export enum EduStreamToolCategory {
   camera,
   microphone,
@@ -7,6 +10,9 @@ export enum EduStreamToolCategory {
   star,
 }
 
+/**
+ * 视频窗工具对象
+ */
 export class EduStreamTool {
   iconType: string;
   hoverIconType?: string;

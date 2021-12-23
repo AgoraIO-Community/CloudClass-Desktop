@@ -106,6 +106,10 @@ export class EduClassroomUIStore {
     return this._pretestUIStore;
   }
 
+  /**
+   * 初始化所有 UIStore
+   * @returns
+   */
   initialize() {
     if (this._installed) {
       return;
@@ -137,6 +141,9 @@ export class EduClassroomUIStore {
     window.globalStore = this;
   }
 
+  /**
+   * 加入 RTC 频道
+   */
   join() {
     const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
 
@@ -160,6 +167,9 @@ export class EduClassroomUIStore {
       });
   }
 
+  /**
+   * 销毁所有 UIStore
+   */
   destroy() {
     const instance = this;
     Object.getOwnPropertyNames(instance).forEach((propertyName) => {

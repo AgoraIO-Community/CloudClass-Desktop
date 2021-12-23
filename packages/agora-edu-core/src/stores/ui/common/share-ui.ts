@@ -37,12 +37,21 @@ export class EduShareUIStore {
   private _containerNode = window;
   private _navBarHeight = 0;
 
+  /**
+   * 模态框列表
+   */
   @observable
   dialogQueue: DialogType[] = [];
 
+  /**
+   * Toast 列表
+   */
   @observable
   toastQueue: ToastType[] = [];
 
+  /**
+   * 视口尺寸信息
+   */
   @observable
   classroomViewportSize = {
     width: 0,
@@ -59,6 +68,12 @@ export class EduShareUIStore {
     });
   }
 
+  /**
+   * 显示一条 Toast 信息
+   * @param desc
+   * @param type
+   * @returns
+   */
   @action.bound
   addToast(desc: string, type?: ToastTypeEnum) {
     const id = uuidv4();
@@ -69,12 +84,22 @@ export class EduShareUIStore {
     return id;
   }
 
+  /**
+   * 移除 Toast 信息
+   * @param id
+   * @returns
+   */
   @action.bound
   removeToast(id: string) {
     this.toastQueue = this.toastQueue.filter((item) => item.id != id);
     return id;
   }
 
+  /**
+   * 显示错误提示模态框
+   * @param error
+   * @param opts
+   */
   @action.bound
   addGenericErrorDialog(
     error: AGError,
@@ -107,6 +132,14 @@ export class EduShareUIStore {
     });
   }
 
+  /**
+   * 显示确认模态框
+   * @param title
+   * @param content
+   * @param onOK
+   * @param actions
+   * @param onCancel
+   */
   @action.bound
   addConfirmDialog(
     title: string,
@@ -134,6 +167,12 @@ export class EduShareUIStore {
     });
   }
 
+  /**
+   * 显示模态框
+   * @param category
+   * @param props
+   * @returns
+   */
   @action.bound
   addDialog(category: DialogCategory, props?: any) {
     const id = props && props.id ? props.id : uuidv4();
@@ -151,12 +190,19 @@ export class EduShareUIStore {
     return id;
   }
 
+  /**
+   * 移除模态框
+   * @param id
+   */
   @action.bound
   removeDialog(id: string) {
     this.dialogQueue = this.dialogQueue.filter((item: DialogType) => item.id !== id);
   }
 
   /** Actions */
+  /**
+   * 更新教室视口尺寸信息
+   */
   @Lodash.debounced(500)
   updateClassroomViewportSize() {
     const { width, height } = getRootDimensions(this._containerNode);
@@ -190,6 +236,10 @@ export class EduShareUIStore {
     });
   }
 
+  /**
+   * 设置导航栏高度，设置 Resize 事件处理器
+   * @param navBarHeight
+   */
   @bound
   addWindowResizeEventListenerAndSetNavBarHeight(navBarHeight: number) {
     this._navBarHeight = navBarHeight;
@@ -199,11 +249,18 @@ export class EduShareUIStore {
     this.updateClassroomViewportSize();
   }
 
+  /**
+   * 移除 Resize 事件处理器
+   */
   @bound
   removeWindowResizeEventListener() {
     this._containerNode.removeEventListener('resize', this.updateClassroomViewportSize);
   }
 
+  /**
+   * 顶部导航栏高度
+   * @returns
+   */
   get navBarHeight() {
     return this._navBarHeight;
   }

@@ -98,14 +98,14 @@
     "electron:client": "cross-env electron ./app/",
     "electron:copy:electron": "cpx ./app/**/*.js ./build",
     "dev": "webpack serve --config ./webpack/webpack.dev.js",
-    "build:types": "tsc -p tsconfig.json",
     "build": "webpack --config ./webpack/webpack.prod.js",
+    "build:types": "tsc -p tsconfig.json",
+    "build:docs": "npx typedoc",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "pack:mac": "yarn electron:copy:electron && electron-builder --mac",
     "pack:win": "yarn electron:copy:electron && electron-builder --win",
-    "bundle:npm": "webpack --config ./webpack/webpack.pack.js",
     "pack:npm": "run-s bundle:npm build:types",
-    "doc": "typedoc --o"
+    "bundle:npm": "webpack --config ./webpack/webpack.pack.js"
   },
   "eslintConfig": {
     "extends": [

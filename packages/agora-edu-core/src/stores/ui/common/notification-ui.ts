@@ -122,7 +122,12 @@ export class NotificationUIStore extends EduUIStoreBase {
     this._notificationTask?.stop();
   }
 
-  addClassStateNotification(state: ClassState, minutes: number) {
+  /**
+   * add class state notification
+   * @param state
+   * @param minutes
+   */
+  protected addClassStateNotification(state: ClassState, minutes: number) {
     const transMap = {
       [ClassState.ongoing]: 'toast.time_interval_between_end',
       [ClassState.afterClass]: 'toast.time_interval_between_close',
@@ -136,8 +141,11 @@ export class NotificationUIStore extends EduUIStoreBase {
   }
 
   /** Actions */
+  /**
+   * check classroom notification
+   */
   @action.bound
-  private checkClassroomNotification() {
+  protected checkClassroomNotification() {
     const { classroomSchedule } = this.classroomStore.roomStore;
 
     const { state } = classroomSchedule;
@@ -163,6 +171,13 @@ export class NotificationUIStore extends EduUIStoreBase {
     }
   }
   /** Computed */
+  /**
+   * 根据课堂状态获取时长，
+   * 未开始：距开始时间
+   * 进行中：距离结束时间
+   * 课程结束：距离教室关闭时间
+   * @returns
+   */
   @computed
   get classDuration() {
     const { classroomSchedule, clientServerTimeShift } = this.classroomStore.roomStore;
@@ -189,6 +204,10 @@ export class NotificationUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 距离教室关闭的时间
+   * @returns
+   */
   @computed
   get durationToRoomClose() {
     const { classroomSchedule } = this.classroomStore.roomStore;
@@ -202,6 +221,10 @@ export class NotificationUIStore extends EduUIStoreBase {
     return durationToClose;
   }
 
+  /**
+   * 距离课程结束的时间
+   * @returns
+   */
   get durationToClassEnd() {
     const { classroomSchedule } = this.classroomStore.roomStore;
 
@@ -217,7 +240,12 @@ export class NotificationUIStore extends EduUIStoreBase {
   }
 
   /** others */
-  _getStateErrorReason(reason?: string): string {
+  /** 错误提示信息
+   * get state error reason
+   * @param reason
+   * @returns
+   */
+  private _getStateErrorReason(reason?: string): string {
     switch (reason) {
       case 'REMOTE_LOGIN':
         return transI18n('toast.kick_by_other_side');

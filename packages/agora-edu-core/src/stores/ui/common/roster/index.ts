@@ -17,6 +17,9 @@ import { AGServiceErrorCode } from '../../../../services/error';
 import { transI18n } from '../i18n';
 
 export class RosterUIStore extends EduUIStoreBase {
+  /**
+   * width: 花名册窗口宽度
+   */
   uiOverrides = {
     width: 640,
   };
@@ -41,9 +44,16 @@ export class RosterUIStore extends EduUIStoreBase {
   }
 
   /** Observables */
+
+  /**
+   * 检索字符串
+   */
   @observable
   searchKeyword: string = '';
 
+  /**
+   * 轮播参数
+   */
   @observable
   carousel = {
     isOpenCarousel: false,
@@ -54,6 +64,10 @@ export class RosterUIStore extends EduUIStoreBase {
 
   /** Methods */
 
+  /**
+   * 开始轮播
+   * @param start
+   */
   @Lodash.debounced(500, { trailing: true })
   private startCarousel(start: boolean) {
     const { startCarousel, stopCarousel } = this.classroomStore.roomStore;
@@ -70,6 +84,11 @@ export class RosterUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 轮播参数事件
+   * @param propKey
+   * @returns
+   */
   private updatePartial<T>(propKey: string) {
     return (val: T, eventType?: 'change' | 'blur') => {
       if (propKey === 'times' && eventType === 'blur') {
@@ -94,6 +113,11 @@ export class RosterUIStore extends EduUIStoreBase {
     };
   }
 
+  /**
+   * 获取主流
+   * @param userUuid
+   * @returns
+   */
   private getMainStream(userUuid: string) {
     const { streamByUserUuid, streamByStreamUuid } = this.classroomStore.streamStore;
 
@@ -114,21 +138,39 @@ export class RosterUIStore extends EduUIStoreBase {
     return null;
   }
 
+  /**
+   * 是否不可点击操作
+   * @param deviceState
+   * @returns
+   */
   private shouldBlockMediaAction(deviceState: DeviceState) {
     return [DeviceState.unauthorized, DeviceState.unavailable].includes(deviceState);
   }
 
+  /**
+   * 更新轮播参数
+   * @param carousel
+   */
   /** Actions */
   @action.bound
   updateCarousel(carousel: RosterUIStore['carousel']) {
     this.carousel = carousel;
   }
 
+  /**
+   * 设置检索字符串
+   * @param keyword
+   */
   @action.bound
   setKeyword(keyword: string) {
     this.searchKeyword = keyword;
   }
 
+  /**
+   * 花名册功能按钮点击
+   * @param operation
+   * @param profile
+   */
   @action.bound
   clickRowAction(
     operation: Operation,
@@ -261,6 +303,10 @@ export class RosterUIStore extends EduUIStoreBase {
   }
 
   /** Computed */
+  /**
+   * 老师名称
+   * @returns
+   */
   @computed
   get teacherName() {
     const { teacherList } = this.classroomStore.userStore;
@@ -272,6 +318,10 @@ export class RosterUIStore extends EduUIStoreBase {
     return list.join(',');
   }
 
+  /**
+   * 学生列表
+   * @returns
+   */
   @computed
   get userList() {
     const { list } = iterateMap(this.classroomStore.userStore.studentList, {
@@ -357,6 +407,10 @@ export class RosterUIStore extends EduUIStoreBase {
       });
   }
 
+  /**
+   * 花名册功能列表
+   * @returns
+   */
   @computed
   get rosterFunctions() {
     const { canKickOut, canOperateCarousel, canSearchInRoster } = this;
@@ -375,6 +429,10 @@ export class RosterUIStore extends EduUIStoreBase {
     return functions;
   }
 
+  /**
+   * 轮播组件属性
+   * @returns
+   */
   @computed
   get carouselProps() {
     return {
@@ -387,38 +445,73 @@ export class RosterUIStore extends EduUIStoreBase {
   }
 
   /** Getters */
+  /**
+   * 是否有踢人权限
+   * @returns
+   */
   get canKickOut() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
+
+  /**
+   * 是否有白板授权权限
+   * @returns
+   */
   get canGrantWhiteboardPermissions() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
 
+  /**
+   * 是否可以操作上下台
+   * @returns
+   */
   get canOperatePodium() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
 
+  /**
+   * 是否可以禁言IM
+   * @returns
+   */
   get canMuteChat() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
 
+  /**
+   * 是否可以开启和关闭学生音视频
+   * @returns
+   */
   get canOperateMedia() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
+
+  /**
+   * 是否可以操作轮播
+   * @returns
+   */
   get canOperateCarousel() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
+
+  /**
+   * 是否可以检索
+   * @returns
+   */
   get canSearchInRoster() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }
 
+  /**
+   * 是否可以发奖励
+   * @returns
+   */
   get canSendRewards() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);

@@ -34,11 +34,19 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   @observable isRecording: boolean = false;
 
   //computed
+  /**
+   * 准备好挂载到 DOM
+   * @returns
+   */
   @computed
   get readyToMount() {
     return this.classroomStore.connectionStore.engine !== undefined;
   }
 
+  /**
+   * 顶部导航栏按钮列表
+   * @returns
+   */
   @computed
   get actions(): EduNavAction[] {
     const { isRecording } = this;
@@ -104,22 +112,38 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return actions;
   }
 
+  /**
+   * 教室时间信息
+   * @returns
+   */
   @computed
   get classroomSchedule() {
     return this.classroomStore.roomStore.classroomSchedule;
   }
 
+  /**
+   * 教室状态
+   * @returns
+   */
   @computed
   get classState() {
     return this.classroomSchedule.state;
   }
 
+  /**
+   * 服务器时间
+   * @returns
+   */
   @computed
   get calibratedTime() {
     const { clockTime, clientServerTimeShift } = this.classroomStore.roomStore;
     return clockTime + clientServerTimeShift;
   }
 
+  /**
+   * 教室持续时间
+   * @returns
+   */
   @computed
   get classTimeDuration(): number {
     let duration = -1;
@@ -149,6 +173,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   // computed
+  /**
+   * 教室状态文字
+   * @returns
+   */
   @computed
   get classStatusText() {
     const duration = this.classTimeDuration || 0;
@@ -177,6 +205,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 教室状态文字颜色
+   * @returns
+   */
   @computed
   get classStatusTextColor() {
     switch (this.classState) {
@@ -191,6 +223,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 是否为开始上课
+   * @returns
+   */
   @computed
   get isBeforeClass() {
     const sessionInfo = EduClassroomConfig.shared.sessionInfo;
@@ -200,6 +236,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return false;
   }
 
+  /**
+   * 网络质量状态
+   * @returns
+   */
   @computed
   get networkQualityClass(): string {
     switch (this.networkQuality) {
@@ -214,6 +254,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return `unknown`;
   }
 
+  /**
+   * 网络质量状态图标
+   * @returns
+   */
   @computed
   get networkQualityIcon(): 'normal-signal' | 'bad-signal' | 'unknown-signal' {
     switch (this.networkQuality) {
@@ -228,6 +272,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return `unknown-signal`;
   }
 
+  /**
+   * 网络质量状态
+   * @returns
+   */
   @computed
   get networkQualityLabel(): string {
     switch (this.networkQuality) {
@@ -242,11 +290,19 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return transI18n('nav.signal_unknown');
   }
 
+  /**
+   * CPU 用量
+   * @returns
+   */
   @computed
   get cpuValue() {
     return this.classroomStore.statisticsStore.cpu;
   }
 
+  /**
+   * CPU 负载百分比
+   * @returns
+   */
   @computed
   get cpuLabel() {
     if (
@@ -263,6 +319,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     )}`;
   }
 
+  /**
+   * 丢包率
+   * @returns
+   */
   @computed
   get packetLoss() {
     if (this.classroomStore.statisticsStore.packetLoss === undefined) {
@@ -271,11 +331,19 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return number2Percent(this.classroomStore.statisticsStore.packetLoss, 2);
   }
 
+  /**
+   * 网络质量状态
+   * @returns
+   */
   @computed
   get networkQuality() {
     return this.classroomStore.statisticsStore.networkQuality || AGNetworkQuality.unknown;
   }
 
+  /**
+   * 网络延时
+   * @returns
+   */
   @computed
   get delay() {
     if (this.classroomStore.statisticsStore.delay === undefined) {
@@ -284,16 +352,28 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return `${this.classroomStore.statisticsStore.delay} ${transI18n('nav.ms')}`;
   }
 
-  //@action
+  /**
+   * 设置录制状态
+   */
   @action revertRecordingState() {
     this.isRecording = this.classroomStore.roomStore.recordStatus === RecordStatus.started;
   }
 
   //others
+  /**
+   * 导航栏标题
+   * @returns
+   */
   get navigationTitle() {
     return EduClassroomConfig.shared.sessionInfo.roomName;
   }
 
+  /**
+   * 倒计时格式化
+   * @param time
+   * @param mode
+   * @returns
+   */
   formatCountDown(time: number, mode: TimeFormatType): string {
     let seconds = Math.floor(time / 1000);
     let duration = dayjs.duration(time);
@@ -332,6 +412,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return duration.format(formatItems.join(' '));
   }
 
+  /**
+   * 开始上课
+   */
   @bound
   async startClass() {
     try {
