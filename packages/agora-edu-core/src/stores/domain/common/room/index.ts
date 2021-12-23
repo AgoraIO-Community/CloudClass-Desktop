@@ -255,7 +255,9 @@ export class RoomStore extends EduStoreBase {
 
   @bound
   async updateExtappTrackState(extappId: string, data: TrackData) {
-    await this.api.updateExtAppProperties(this.roomUuid, extappId, data);
+    await this.api.updateExtAppProperties(this.roomUuid, extappId, data, null, {
+      cmd: 0,
+    });
   }
 
   @action.bound

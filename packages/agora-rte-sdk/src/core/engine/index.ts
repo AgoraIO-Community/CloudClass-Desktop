@@ -12,6 +12,7 @@ import { to } from 'await-to-js';
 import { AGRteErrorCode, RteErrorCenter } from '../utils/error';
 import { RtcAdapterWeb } from '../rtc/adapter/web';
 import { RtcAdapterElectron } from '../rtc/adapter/electron';
+import { TagInfo } from '../services/oss';
 
 export class AgoraRteEngine extends AGEventEmitter {
   private _mediaControl: AgoraMediaControl;
@@ -112,11 +113,11 @@ export class AgoraRteEngine extends AGEventEmitter {
     return this._apiService;
   }
 
-  async uploadSDKLogToAgoraService(roomId: string) {
+  async uploadSDKLogToAgoraService(tagInfo: TagInfo) {
     let err;
     let files: LogFileCollection = await Logger.logger.collectLogs();
     if (files.electron) {
-      [err] = await to(this._logService.uploadZipLogFile(roomId, files.electron));
+      [err] = await to(this._logService.uploadZipLogFile(tagInfo, files.electron));
       if (err) {
         RteErrorCenter.shared.handleNonThrowableError(
           AGRteErrorCode.RTE_ERR_ELECTRON_LOG_UPLOAD_ERR,
@@ -125,7 +126,7 @@ export class AgoraRteEngine extends AGEventEmitter {
       }
     }
     if (files.web) {
-      [err] = await to(this._logService.uploadLogFile(roomId, files.web));
+      [err] = await to(this._logService.uploadLogFile(tagInfo, files.web));
       if (err) {
         RteErrorCenter.shared.handleNonThrowableError(
           AGRteErrorCode.RTE_ERR_WEB_LOG_UPLOAD_ERR,

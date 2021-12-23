@@ -29,10 +29,18 @@ export class LogReporter {
     }
     try {
       this._isProcessing = true;
+      const { roomUuid, roomName, roomType, userUuid, userName, role } =
+        EduClassroomConfig.shared.sessionInfo;
+
       // upload
-      await AgoraRteEngine.engine.uploadSDKLogToAgoraService(
-        EduClassroomConfig.shared.sessionInfo.roomUuid,
-      );
+      await AgoraRteEngine.engine.uploadSDKLogToAgoraService({
+        roomUuid,
+        roomName,
+        roomType,
+        userUuid,
+        userName,
+        role,
+      });
       this._lastUploadTs = Date.now();
       this._isProcessing = false;
     } catch (e) {

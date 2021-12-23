@@ -11,10 +11,19 @@ const parser = UA.getResult();
 //TODO
 const platform = 'web';
 
+export type TagInfo = {
+  roomUuid: string;
+  roomName: string;
+  roomType: number;
+  userUuid: string;
+  userName: string;
+  role: number;
+};
+
 export class OSSFileUploader {
   private _adapter: UploaderAdapter;
-  constructor(private _appId: string, private _roomId: string) {
-    this._adapter = new OSSUploader(this._appId, this._roomId);
+  constructor(private _appId: string, private _tagInfo: TagInfo) {
+    this._adapter = new OSSUploader(this._appId, this._tagInfo);
   }
 
   async upload(file: File, ext: string) {
@@ -29,7 +38,7 @@ interface UploaderAdapter {
 class OSSUploader implements UploaderAdapter {
   private _apiService = new ApiBase();
   private _checkpoints: Map<string, Checkpoint> = new Map<string, Checkpoint>();
-  constructor(private _appId: string, private _roomId: string) {}
+  constructor(private _appId: string, private _tagInfo: TagInfo) {}
 
   private async _uploadByAli(
     file: File,
@@ -61,7 +70,7 @@ class OSSUploader implements UploaderAdapter {
     });
     const checkpoint = this._checkpoints.get(resourceUuid);
 
-    const callbackUrl = `${callbackHost}/edu/apps/${this._appId}/v1/rooms/${this._roomId}/resources/callback`;
+    const callbackUrl = `${callbackHost}/edu/apps/${this._appId}/v1/rooms/${this._tagInfo.roomUuid}/resources/callback`;
     const { res }: MultipartUploadResult = await ossClient.multipartUpload(ossKey, file, {
       progress: (p, cpt) => {
         this._checkpoints.set(resourceUuid, cpt);
@@ -99,7 +108,7 @@ class OSSUploader implements UploaderAdapter {
   ): Promise<void> {
     const { preSignedUrl } = ossConfig;
     const { callbackHost, callbackBody, callbackContentType } = callbackConfig;
-    const callbackUrl = `${callbackHost}/edu/apps/${this._appId}/v1/rooms/${this._roomId}/resources/callback`;
+    const callbackUrl = `${callbackHost}/edu/apps/${this._appId}/v1/rooms/${this._tagInfo.roomUuid}/resources/callback`;
 
     await axios.put(preSignedUrl, file, {
       headers: {
@@ -120,9 +129,7 @@ class OSSUploader implements UploaderAdapter {
     this._checkpoints.delete(resourceUuid);
   }
 
-  private async _fetchStsToken(roomId: string, fileExt: string) {
-    const _roomId = roomId ? roomId : 0;
-
+  private async _fetchStsToken(tag: unknown, fileExt: string) {
     let timestamp = new Date().getTime();
     let body = {
       appId: AgoraRteEngineConfig.shared.appId,
@@ -131,9 +138,7 @@ class OSSUploader implements UploaderAdapter {
       deviceVersion: parser.os.version,
       fileExt: fileExt,
       platform: platform,
-      tag: {
-        roomId: _roomId,
-      },
+      tag: tag,
     };
 
     let params = JSON.stringify(body);
@@ -166,7 +171,7 @@ class OSSUploader implements UploaderAdapter {
   }
 
   async upload(file: File, ext: string) {
-    const data = await this._fetchStsToken(this._roomId, ext);
+    const data = await this._fetchStsToken(this._tagInfo, ext);
     const { vendor = -1 } = data;
     // step 2. begin upload by vendor
     if (vendor === 1) {
