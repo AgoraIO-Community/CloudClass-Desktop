@@ -67,12 +67,14 @@ export const RoomBigStudentStreamsContainer = observer(() => {
       {scrollable && (
         <NavGroup visible={navigationVisible} onPrev={carouselPrev} onNext={carouselNext} />
       )}
-      <CarouselGroup
-        gap={gap}
-        videoWidth={studentVideoStreamSize.width}
-        videoHeight={studentVideoStreamSize.height}
-        carouselStreams={carouselStreams}
-      />
+      <div className="flex-grow flex justify-center relative">
+        <CarouselGroup
+          gap={gap}
+          videoWidth={studentVideoStreamSize.width}
+          videoHeight={studentVideoStreamSize.height}
+          carouselStreams={carouselStreams}
+        />
+      </div>
     </div>
   );
 });
