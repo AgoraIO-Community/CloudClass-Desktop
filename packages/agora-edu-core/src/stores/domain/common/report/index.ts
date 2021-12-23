@@ -77,6 +77,13 @@ export class ReportStore extends EduStoreBase {
             if (vid && scene) {
               //initialize rtc connection
               const { sessionInfo } = EduClassroomConfig.shared;
+              const userRoleMap: Record<number, string> = {
+                '-1': 'none',
+                '0': 'invisible',
+                '1': 'teacher',
+                '2': 'student',
+                '3': 'assistant',
+              };
               let reportUserParams = {
                 vid,
                 ver: EduClassroomConfig.getVersion(),
@@ -87,11 +94,11 @@ export class ReportStore extends EduStoreBase {
                  * rtc流id
                  */
                 streamUid: +streamUuid,
-                streamSuid: '',
+                streamSuid: streamUuid,
                 /**
                  * apaas角色
                  */
-                role: '' + sessionInfo.role,
+                role: userRoleMap[sessionInfo.role],
                 /**
                  * rtc sid
                  */
