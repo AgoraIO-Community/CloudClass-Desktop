@@ -8,6 +8,7 @@ import { placements as Placements } from 'rc-tooltip/lib/placements';
 import { getTransitionName } from '~components/_util/motion';
 import { LiteralUnion } from '~components/_util/type';
 import { PresetColorType, PresetColorTypes } from '~components/_util/colors';
+import { getOS } from '~utilities';
 import './index.css';
 
 export type { AdjustOverflow, PlacementsConfig };
@@ -220,6 +221,7 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
   return (
     <RcTooltip
       {...props}
+      trigger={getOS().isTablet || getOS().isPhone ? 'click' : 'hover'}
       prefixCls={prefixCls}
       overlayClassName={customOverlayClassName}
       getTooltipContainer={getPopupContainer || getTooltipContainer}
