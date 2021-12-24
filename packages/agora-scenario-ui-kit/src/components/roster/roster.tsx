@@ -87,13 +87,20 @@ export const Roster: FC<RosterProps> = ({
           <div className="roster-container">
             {/* carousel & search */}
             <div className="search-header roster-header">
-              <div className="search-teacher-name">
-                <label>{transI18n('roster.teacher_name')}</label>
-                <span title={hostname} className="roster-username">
-                  {hostname}
-                </span>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <div className="search-teacher-name">
+                  <label>{transI18n('roster.teacher_name')}</label>
+                  <span title={hostname} className="roster-username">
+                    {hostname}
+                  </span>
+                </div>
+                {showCarousel && <CarouselSetting {...carouselProps} />}
               </div>
-              {showCarousel && <CarouselSetting {...carouselProps} />}
               {showSearch ? (
                 <div style={{ marginTop: showCarousel ? 5 : 0 }}>
                   <Search
@@ -114,14 +121,12 @@ export const Roster: FC<RosterProps> = ({
                   return (
                     <Col
                       key={key}
-                      className={isFirstColumn ? 'justfy-start' : 'justify-center'}
+                      className={isFirstColumn ? 'justify-start' : 'justify-center'}
                       style={
                         width
                           ? {
                               paddingLeft: isFirstColumn ? 25 : 0,
-                              flexBasis: width,
-                              flexGrow: 0,
-                              flexShrink: 0,
+                              flex: isFirstColumn ? '0 1 auto' : 1,
                             }
                           : {
                               paddingLeft: isFirstColumn ? 25 : 0,

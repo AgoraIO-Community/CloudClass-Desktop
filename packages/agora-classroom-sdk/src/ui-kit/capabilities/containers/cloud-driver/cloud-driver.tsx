@@ -59,7 +59,11 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
         default={defaultPos}>
         <div className="agora-board-resources cloud-wrap" style={modalSize}>
           <div className="btn-pin">
-            <SvgImg type="close" style={{ cursor: 'pointer' }} onClick={() => setOpened(false)} />
+            <SvgImg
+              type="close"
+              style={{ cursor: 'pointer', color: '#7B88A0' }}
+              onClick={() => setOpened(false)}
+            />
           </div>
           <Tabs activeKey={activeKey} onChange={handleChange}>
             <TabPane tab={transI18n('cloud.publicResources')} key={ActiveKeyEnum.public}>

@@ -110,8 +110,8 @@
 
 .tool .triangle-icon {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 2px;
+  right: 2px;
 }
 
 .tool .expandable {
@@ -235,8 +235,10 @@
 
 .toolbar-position {
   position: absolute;
-  left: 15px;
-  top: 5rem;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
   height: calc(100% - 92px - 5rem);
   z-index: 2;
 }

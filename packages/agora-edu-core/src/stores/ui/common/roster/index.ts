@@ -21,7 +21,7 @@ export class RosterUIStore extends EduUIStoreBase {
    * width: 花名册窗口宽度
    */
   uiOverrides = {
-    width: 640,
+    width: 710,
   };
 
   private _disposers: IReactionDisposer[] = [];

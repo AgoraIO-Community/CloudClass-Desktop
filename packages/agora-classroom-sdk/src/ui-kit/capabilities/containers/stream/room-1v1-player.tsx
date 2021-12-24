@@ -32,7 +32,7 @@ export const Room1v1StreamsContainer = observer(({ children }: any) => {
   const { teacherCameraStream, studentCameraStream } = streamUIStore;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: -2 }}>
       <Room1v1TeacherStream stream={teacherCameraStream} />
       <Room1v1StudentStream stream={studentCameraStream} />
     </div>

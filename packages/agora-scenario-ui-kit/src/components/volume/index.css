@@ -44,10 +44,10 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(var(--size) / 6);
+  bottom: calc(var(--size) / 6 + var(--size) / 100);
   margin: auto;
-  width: calc(var(--size) / 1.9);
-  height: calc(var(--size) / 4);
+  width: calc(var(--size) / 1.9 + var(--size) / 16);
+  height: calc(var(--size) / 4 + var(--size) / 12.5);
   background-color: transparent;
   border-bottom-right-radius: calc(var(--size) / 4);
   border-bottom-left-radius: calc(var(--size) / 4);
@@ -70,5 +70,6 @@
   background: var(--main-color);
   border-left: calc(var(--size) / 50) solid var(--main-color);
   z-index: 1;
-  outline: 1px solid var(--bg-color);
+  outline: calc(var(--size) / 50) solid var(--bg-color);
+  border-radius: 4px;
 }

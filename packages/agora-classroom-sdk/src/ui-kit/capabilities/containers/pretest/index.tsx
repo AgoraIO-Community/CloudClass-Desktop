@@ -439,7 +439,7 @@ export const RoomPretest: React.FC<PretestProps> = ({ className, onOK, ...restPr
         btnId="device_assert">
         <div className={cls} {...restProps}>
           <PretestNotificationCenter />
-          <div className="pretest-left" style={{ width: 318 }}>
+          <div className="pretest-left">
             <CameraDeviceManager />
           </div>
           <div className="pretest-right">

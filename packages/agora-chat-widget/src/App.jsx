@@ -23,6 +23,7 @@ import { Chat } from './components/Chat';
 import { message } from 'antd';
 import { ROOM_TYPE, CHAT_TABS_KEYS } from './contants';
 import showChat_icon from './themes/img/chat2x.png';
+import { SvgImg } from './components/svg-img';
 import im_CN from './locales/zh_CN';
 import im_US from './locales/en_US';
 import './App.css';
@@ -227,7 +228,8 @@ const App = function (props) {
               // 展开聊天
               onChangeModal();
             }}>
-            <img src={showChat_icon} width="24" height="24" />
+            {/* <img src={showChat_icon} width="24" height="24" /> */}
+            <SvgImg type="mini-chat" />
             {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
           </div>
         </div>

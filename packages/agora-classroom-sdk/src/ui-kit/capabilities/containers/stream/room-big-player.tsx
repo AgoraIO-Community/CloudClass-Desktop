@@ -13,7 +13,12 @@ export const RoomBigTeacherStreamContainer = observer(() => {
   const teacherStreamContainer = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="teacher-stream-container flex flex-col" ref={teacherStreamContainer}>
+    <div
+      className="teacher-stream-container flex flex-col"
+      style={{
+        marginBottom: -2,
+      }}
+      ref={teacherStreamContainer}>
       {teacherCameraStream ? (
         <StreamPlayer stream={teacherCameraStream} style={teacherVideoStreamSize}></StreamPlayer>
       ) : (

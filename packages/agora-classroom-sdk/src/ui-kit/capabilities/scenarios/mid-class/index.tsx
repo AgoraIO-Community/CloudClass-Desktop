@@ -31,8 +31,8 @@ export const MidClassScenario = observer(() => {
           </WhiteboardContainer>
           <Aside className="aisde-fixed">
             <CollectorContainer />
-            <MidRosterBtn />
             <HandsUpContainer />
+            <MidRosterBtn />
             <ChatWidget />
           </Aside>
           <DialogContainer />

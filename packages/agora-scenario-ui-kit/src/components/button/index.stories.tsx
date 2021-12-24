@@ -17,7 +17,7 @@ type DocsProps = {
 export const Docs = ({ primary, secondary, ghost, danger }: DocsProps) => (
   <>
     <div>
-      <Button>{primary}</Button>
+      <Button style={{ width: 90 }}>{primary}</Button>
       <Button type="secondary">{secondary}</Button>
       <Button type="ghost">{ghost}</Button>
       <Button type="danger">{danger}</Button>

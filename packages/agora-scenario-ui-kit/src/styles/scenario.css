@@ -22,7 +22,7 @@ body,
 .btn-pin {
   position: absolute;
   right: 16px;
-  top: 5px;
+  top: 11px;
   display: block;
   color: #a7a7ca;
   z-index: 1;
@@ -45,6 +45,7 @@ body,
 .horizontal {
   height: 100%;
   box-sizing: border-box;
+  padding-top: 2px;
 }
 
 .card-loading-position {
@@ -248,4 +249,33 @@ body,
 
 .big-class-room #hx-chatroom .app {
   height: 100% !important;
+}
+
+.roster-btn-active {
+  background-color: #0073ff !important;
+}
+.roster-btn-active path {
+  fill: #fff;
+}
+
+.hands-up-manager > .card:hover,
+.hands-up-sender:hover,
+.roster-btn:hover,
+.chat-panel:hover .show-chat-icon {
+  background-color: #0073ff;
+}
+
+.hands-up-manager > .card:hover path,
+.hands-up-sender:hover path,
+.roster-btn:hover path,
+.chat-panel:hover path {
+  fill: #fff;
+}
+
+.mid-class-room .search-teacher-name .roster-username {
+  width: 66px;
+}
+
+.table-col-item .roster-username {
+  padding-left: 0px !important;
 }

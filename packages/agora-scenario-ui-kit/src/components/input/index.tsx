@@ -113,7 +113,7 @@ export const Input: FC<InputProps> = ({
         <div
           className="input-error-msg"
           style={{
-            left: errorMsgPositionLeft,
+            transform: `translateX(${errorMsgPositionLeft}px)`,
           }}>
           {errorMsg}
         </div>

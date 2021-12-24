@@ -4,6 +4,7 @@
   display: inline-block;
   font-size: 16px;
   line-height: 1.5;
+  transform: scale(0.7);
 }
 
 /* Input */
@@ -41,7 +42,7 @@
   content: '';
   display: inline-block;
   box-sizing: border-box;
-  margin: 3px 11px 3px 1px;
+  margin: 3px 0px 3px 1px;
   border: solid 2px; /* Safari */
   border-color: #ececf1;
   border-radius: 3px;

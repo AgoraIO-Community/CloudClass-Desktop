@@ -106,7 +106,7 @@ export const Modal: ModalType = ({
                   setEventSource({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
-                <SvgImg type="close" size={20} style={{ color: '#586376' }} />
+                <SvgImg type="close" size={20} style={{ color: '#7B88A0' }} />
               </div>
             ) : (
               ''
@@ -122,7 +122,7 @@ export const Modal: ModalType = ({
                 setEventSource({ action: 'cancel', event: e });
                 setOpened(false);
               }}>
-              <SvgImg type="backward" style={{ color: '#586376' }} />
+              <SvgImg type="backward" style={{ color: '#7B88A0' }} />
             </div>
             <div className="back-title">{title}</div>
             <div></div>
@@ -135,6 +135,7 @@ export const Modal: ModalType = ({
           footer.map((item: any, index: number) => (
             <div className="btn-div" key={index} id={btnId}>
               {React.cloneElement(item, {
+                style: { width: 90 },
                 onClick: (e: React.MouseEvent<HTMLElement>) => {
                   const { action } = item.props;
                   setEventSource({ action, event: e });

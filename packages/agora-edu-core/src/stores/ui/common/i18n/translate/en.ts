@@ -430,7 +430,7 @@ export const en = {
     region: 'Region:',
     'header-left-title': 'Agora Flexible Classroom',
     about: 'About',
-    'input-error-msg': 'Letter or number only',
+    'input-error-msg': 'Between 6 and 50 characters,letter or number only',
   },
   'home-about': {
     'privacy-policy': 'Privacy Policy',

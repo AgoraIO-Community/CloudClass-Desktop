@@ -263,7 +263,7 @@ const StreamPlayerOverlay = observer(
       <Popover
         // trigger={'click'} // 调试使用
         align={{
-          offset: [-8, 0],
+          offset: [0, -8],
         }}
         overlayClassName="video-player-tools-popover"
         content={

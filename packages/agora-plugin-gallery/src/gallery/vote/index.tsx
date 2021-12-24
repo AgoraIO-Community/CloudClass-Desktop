@@ -206,6 +206,7 @@ const App = observer(
                     : 'visible',
               }}></span>
             <Button
+              className="vote-submit-btn"
               disabled={
                 pluginStore.status === 'config'
                   ? !pluginStore.answer ||

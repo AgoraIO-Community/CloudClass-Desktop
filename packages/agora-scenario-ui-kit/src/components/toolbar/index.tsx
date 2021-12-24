@@ -110,7 +110,7 @@ export const Toolbar: FC<ToolbarProps> = ({
       className="toolbar-position"
       style={{
         maxHeight,
-        left: opened ? 15 : 0,
+        left: opened ? 10 : 0,
       }}
       ref={animContainer}
       onAnimationEnd={() => {

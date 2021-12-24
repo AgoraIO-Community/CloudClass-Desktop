@@ -2,7 +2,7 @@ import { FC, useCallback, useState } from 'react';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
-import { SvgImg } from '~components/svg-img';
+import { SvgImg, SvgIcon } from '~components/svg-img';
 import { Slider } from '~components/slider';
 export interface PensProps extends ToolItem {
   pens?: string[];
@@ -54,14 +54,11 @@ export const Pens: FC<PensProps> = ({
       <div className={`expand-tools pens colors`}>
         {pens.map((pen) => (
           <div key={pen} onClick={() => handleClick(pen)} className="expand-tool pen">
-            <SvgImg
-              color={activePaletteColor}
+            <SvgIcon
+              color={activePen === pen ? activePaletteColor : '#7B88A0'}
               type={activePen === pen ? pen + '-active' : pen}
               canHover
             />
-            <div
-              className={activePen === pen ? 'current-pen' : ''}
-              style={{ width: 3, height: 3 }}></div>
           </div>
         ))}
 
@@ -118,12 +115,14 @@ export const Pens: FC<PensProps> = ({
           onClick={() => {
             handleClickTool(activePen);
           }}>
-          <SvgImg
-            color={activePaletteColor}
-            type={(activePen + '-active') as any}
+          <SvgIcon
+            color={isActive ? activePaletteColor : ''}
+            type={(activePen + (isActive ? '-active' : '')) as any}
             className={isActive ? 'active' : ''}
+            // hoverType={activePen + '-active'}
+            // canHover
           />
-          <SvgImg type="triangle-down" className="triangle-icon" style={{ position: 'absolute' }} />
+          <SvgImg type="triangle-down" className="triangle-icon" size={6} />
         </div>
       </Popover>
     </Tooltip>

@@ -28,9 +28,11 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
     <div className="carousel-menu">
       <div className="carousel-flag">
         <CheckBox checked={isOpenCarousel} onChange={openEventTransform} />
-        <span className="carousel-desc">{transI18n('roster.shift')}</span>
+        <span className="carousel-desc" style={{ position: 'relative', top: -2 }}>
+          {transI18n('roster.shift')}
+        </span>
       </div>
-      <div className="disable-flag" style={{ width: 105 }}>
+      <div className="disable-flag">
         <Select
           value={mode}
           options={[
@@ -47,7 +49,7 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
         />
       </div>
       <div className="student-order">
-        <span>{transI18n('roster.students_in')}</span>
+        <span className="carousel-desc">{transI18n('roster.students_in')}</span>
         <Select
           className="order-select"
           value={randomValue}
@@ -65,7 +67,7 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
         />
       </div>
       <div className="carousel-frequency">
-        <span className="">{transI18n('roster.order_every')}</span>
+        <span className="carousel-desc">{transI18n('roster.order_every')}</span>
         <div className="carousel-frequency-input">
           <Input
             value={times}
@@ -73,7 +75,7 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
             onBlur={timesEventTransform('blur')}
           />
         </div>
-        <span className="">{transI18n('roster.seconds')}</span>
+        <span className="carousel-desc">{transI18n('roster.seconds')}</span>
       </div>
     </div>
   );

@@ -264,7 +264,6 @@ export const Home: React.FC<HomeProps> = ({
                 placeholder={transI18n('home.roomName_placeholder')}
                 rule={/^[a-zA-Z0-9]{1,20}$/}
                 errorMsg={transI18n('home.input-error-msg')}
-                errorMsgPositionLeft={75}
                 maxLength={20}
               />
             </Col>
@@ -286,7 +285,6 @@ export const Home: React.FC<HomeProps> = ({
                 placeholder={transI18n('home.nickName_placeholder')}
                 rule={/^[a-zA-Z0-9]{1,20}$/}
                 errorMsg={transI18n('home.input-error-msg')}
-                errorMsgPositionLeft={75}
                 maxLength={20}
               />
             </Col>

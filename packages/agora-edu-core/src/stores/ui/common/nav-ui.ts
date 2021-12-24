@@ -182,7 +182,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const duration = this.classTimeDuration || 0;
 
     if (duration < 0) {
-      return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
+      // return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
+      return `-- : --`;
     }
     switch (this.classState) {
       case ClassState.beforeClass:
@@ -201,7 +202,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
           TimeFormatType.Timeboard,
         )}`;
       default:
-        return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
+        // return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
+        return `-- : --`;
     }
   }
 
@@ -379,17 +381,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     let duration = dayjs.duration(time);
     let formatItems: string[] = [];
 
-    let hours_text = duration.hours() === 0 ? '' : `H [${transI18n('nav.hours')}]`;
-    let mins_text =
-      duration.minutes() === 0
-        ? ''
-        : duration.seconds() === 0
-        ? `m [${transI18n('nav.short.minutes')}]`
-        : `m [${transI18n('nav.minutes')}]`;
-    let seconds_text = duration.seconds() === 0 ? '' : `s [${transI18n('nav.seconds')}]`;
-    let short_hours_text = `HH [${transI18n('nav.short.hours')}]`;
-    let short_mins_text = `mm [${transI18n('nav.short.minutes')}]`;
-    let short_seconds_text = `ss [${transI18n('nav.short.seconds')}]`;
+    let hours_text = duration.hours() === 0 ? '' : `H :`;
+    let mins_text = duration.minutes() === 0 ? '' : duration.seconds() === 0 ? `m :` : `m :`;
+    let seconds_text = duration.seconds() === 0 ? '' : `s`;
+    let short_hours_text = `HH :`;
+    let short_mins_text = `mm :`;
+    let short_seconds_text = `ss`;
     if (mode === TimeFormatType.Timeboard) {
       // always display all time segment
       if (seconds < 60 * 60) {

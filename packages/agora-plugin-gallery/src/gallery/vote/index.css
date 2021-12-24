@@ -32,19 +32,19 @@
 
 .vote-limit {
   position: absolute;
-  right: 25px;
-  top: 125px;
+  right: 27px;
+  top: 139px;
   font-size: 13px;
   color: #677386;
 }
 .vote-title {
   display: block;
-  width: 330px;
+  width: 318px;
   height: 90px;
   border-radius: 4px;
   font-size: 14px;
-  resize: none;
-  border: 1px solid #eeeef7;
+  resize: none !important;
+  border: 1px solid #eeeef7 !important;
   box-sizing: border-box;
   color: #191919;
   padding: 5px;
@@ -112,6 +112,11 @@
   right: 5px;
   top: 2px;
   background-image: url('./radio.svg');
+}
+
+.vote-item::-webkit-input-placeholder,
+.vote-title::-webkit-input-placeholder {
+  color: #bdbdca !important;
 }
 
 .vote-item-prefix {
@@ -263,4 +268,9 @@
   width: auto;
   padding: 0 5px;
   top: 2px;
+}
+.btn.vote-submit-btn[disabled] {
+  background-color: rgba(53, 123, 246, 0.3) !important;
+  color: #fff !important;
+  border-color: transparent !important;
 }

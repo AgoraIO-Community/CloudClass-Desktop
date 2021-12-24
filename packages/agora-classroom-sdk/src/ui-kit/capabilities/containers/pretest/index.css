@@ -19,6 +19,19 @@
   font-size: 13px;
 }
 
+.pretest .pretest-left {
+  width: 318px;
+  transform: translateY(-5px);
+}
+
+.pretest .pretest-left .media-choice {
+  transform: translateY(2px);
+}
+
+.pretest .pretest-left .device-title-text {
+  transform: translateY(5px);
+}
+
 .pretest .pretest-right {
   margin-left: 40px;
 }
@@ -87,6 +100,7 @@
   width: 320px;
   height: 180px;
   overflow: hidden;
+  border-radius: 4px;
 }
 
 .pretest-toast {

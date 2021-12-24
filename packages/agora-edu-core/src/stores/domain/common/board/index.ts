@@ -48,7 +48,7 @@ type AGGlobalState = GlobalState & { grantUsers?: string[] };
 
 export class BoardStore extends EduStoreBase {
   // ------ observables  -----------
-  @observable selectedTool: WhiteboardTool = WhiteboardTool.selector;
+  @observable selectedTool: WhiteboardTool = WhiteboardTool.clicker;
   @observable strokeColor: Color = DEFAULT_COLOR;
   @observable strokeWidth: number = 5;
   @observable ready: boolean = false;

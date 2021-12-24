@@ -86,7 +86,7 @@
 .roster-header {
   font-size: 13px;
   color: #191919;
-  padding: 11px 19px;
+  padding: 11px 20px;
 }
 
 .roster-header > label {
@@ -97,11 +97,13 @@
   display: flex;
   flex-direction: column;
   height: calc(100% - 45px);
+  border-top: 1px solid #eeeef7;
 }
 
 .roster-container .roster-table {
   flex: 1;
   min-height: 0;
+  border-top: 1px solid #eeeef7;
 }
 
 .roster-table .table-container .table-row-item .table-col-item {
@@ -163,7 +165,13 @@
 
 .carousel-flag {
   margin-left: 35px;
+  margin-right: -2px;
 }
+
+.carousel-flag label.pure-material-checkbox {
+  margin-right: 3px;
+}
+
 .carousel-flag .form-checkbox {
   margin-right: 3px !important;
 }
@@ -181,11 +189,11 @@
 }
 .order-select {
   margin-left: 6px;
-  width: 100px;
+  width: 70px;
 }
 
 .carousel-frequency-input {
-  width: 70px;
+  width: 65px;
   margin: 0 6px;
 }
 
@@ -196,4 +204,18 @@
 .roster-col-hover .clickable {
   background: #e8f0ff;
   cursor: pointer;
+}
+
+.carousel-menu .react-select__single-value,
+.carousel-menu .react-select__option {
+  font-size: 13px !important;
+}
+
+.search-header .input-search-wrapper {
+  background-color: #fff !important;
+  border: 1px solid #d7d7e6;
+}
+
+.carousel-desc {
+  color: #7b88a0;
 }

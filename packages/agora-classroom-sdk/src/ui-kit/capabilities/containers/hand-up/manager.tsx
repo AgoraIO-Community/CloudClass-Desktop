@@ -147,21 +147,14 @@ export const StudentsWaveArmList: FC<StudentsWaveArmListProps> = ({
             <span className="student-name">{item?.userName}</span>
             <span className="operation-icon-wrap">
               {item.onPodium ? (
-                <SvgImg type="on-podium" color="#357bf6" />
+                <SvgImg type="invite-on-podium" color="#357bf6" />
               ) : (
-                // <Icon type="on-podium" color="#357bf6" />
                 <SvgImg
                   type="invite-to-podium"
                   color="#7b89a0"
                   onClick={() => onClick(item.userUuid)}
                   canHover
                 />
-                // <Icon
-                //   type="invite-to-podium"
-                //   color="#7b89a0"
-                //   hover={true}
-                //   onClick={() => onClick(item.userUuid)}
-                // />
               )}
             </span>
           </div>

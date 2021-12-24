@@ -58,11 +58,12 @@ export const InteractiveCol = ({
       style={
         col.width
           ? {
-              flexBasis: col.width,
-              flexGrow: 0,
-              flexShrink: 0,
+              paddingLeft: isFirstColumn ? 25 : 0,
+              flex: isFirstColumn ? '0 1 auto' : 1,
             }
-          : {}
+          : {
+              paddingLeft: isFirstColumn ? 25 : 0,
+            }
       }
       {...interactiveEvents}>
       {col.render(data, hovered)}

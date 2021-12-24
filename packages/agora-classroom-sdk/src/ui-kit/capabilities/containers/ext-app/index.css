@@ -77,7 +77,12 @@
 
 .modal-content {
   @apply box-border flex flex-col justify-center items-center;
-  padding: 17px 20px;
+  padding: 30px 20px;
+}
+
+.modal-content p {
+  margin-bottom: 0;
+  color: #586376;
 }
 
 .modal-footer {

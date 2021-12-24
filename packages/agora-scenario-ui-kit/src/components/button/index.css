@@ -21,15 +21,15 @@
 }
 
 .btn-secondary {
-  @apply text-secondary bg-white border-secondary border;
+  @apply bg-white border-secondary border text-secondary;
 }
 
 .btn-secondary:hover {
-  @apply text-secondary-hover bg-white border-secondary-hover border;
+  @apply bg-white border-secondary-hover border text-secondary-hover;
 }
 
 .btn-secondary:active {
-  @apply text-secondary-active bg-white border-secondary-active border;
+  @apply text-secondary-active bg-white border-secondary-active border text-secondary-active;
 }
 
 .btn-ghost {
@@ -83,6 +83,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  border-radius: 9999px;
   overflow: hidden;
 }
 

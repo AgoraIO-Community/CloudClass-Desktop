@@ -1,0 +1,39 @@
+.svg-story-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 25px;
+  margin-bottom: 25px;
+}
+.my-svg-eraser {
+  background: pink;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.my-svg-eraser > .eraser {
+  fill: yellow;
+}
+.my-svg-eraser:hover {
+  background: #000;
+}
+.my-svg-eraser:hover > .eraser {
+  fill: white;
+}
+
+.svg-img > path {
+  fill: currentColor;
+}
+
+[class*='can-hover'] {
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+[class*='can-hover']:hover {
+  background-color: #f0f0f7;
+}
+
+/* [class*='can-hover']:hover > path{
+    
+} */

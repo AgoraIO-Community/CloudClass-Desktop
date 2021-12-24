@@ -43,8 +43,8 @@ export const AudioVolumeDocs = () => {
         <AudioVolume currentVolume={currentVolume} />
       </div>
       <div>
-        <span>off</span>
-        <AudioVolume off />
+        <span>isMicMuted</span>
+        <AudioVolume isMicMuted />
       </div>
     </>
   );
