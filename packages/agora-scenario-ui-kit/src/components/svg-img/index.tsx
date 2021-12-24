@@ -60,7 +60,7 @@ export const SvgIcon: FC<SvgIconProps> = ({
   color,
 }) => {
   const [hovering, setHovering] = useState<boolean>(false);
-  const t = hovering && hoverType ? hoverType : type;
+  const t = canHover && hovering && hoverType ? hoverType : type;
   const cls = classnames('svg-img', `icon-${t}`, {
     'can-hover': canHover,
     [`${className}`]: !!className,
