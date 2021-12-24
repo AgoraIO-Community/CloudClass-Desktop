@@ -49,7 +49,11 @@ export const getOS = () => {
     isTablet =
       /(?:iPad|PlayBook)/.test(ua) ||
       (isAndroid && !/(?:Mobile)/.test(ua)) ||
-      (isFireFox && /(?:Tablet)/.test(ua)),
+      (isFireFox && /(?:Tablet)/.test(ua)) ||
+      (navigator.maxTouchPoints &&
+        navigator.maxTouchPoints > 2 &&
+        /MacIntel/.test(navigator.platform)) ||
+      'ontouchend' in document,
     isPhone = /(?:iPhone)/.test(ua) && !isTablet,
     isPc = !isPhone && !isAndroid && !isSymbian;
   return {
