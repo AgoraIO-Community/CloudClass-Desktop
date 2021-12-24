@@ -77,6 +77,7 @@ export class AGRtcManager {
   }
 
   setupRemoteVideo(canvas: AgoraRtcVideoCanvas): number {
+    canvas.view.style.setProperty('transform', canvas.mirror ? 'rotateY(180deg)' : '');
     return this._adapter.setupRemoteVideo(canvas);
   }
 

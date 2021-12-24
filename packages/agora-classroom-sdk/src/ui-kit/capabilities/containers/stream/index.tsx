@@ -95,7 +95,7 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
 
     useEffect(() => {
       if (ref.current) {
-        setupRemoteVideo(stream, ref.current);
+        setupRemoteVideo(stream, ref.current, true);
       }
     }, [stream, setupRemoteVideo]);
 

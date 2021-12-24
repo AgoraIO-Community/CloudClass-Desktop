@@ -70,6 +70,9 @@ export class BoardUIStore extends EduUIStoreBase {
    */
   @action.bound
   joinWhiteboardWhenConfigReady() {
+    if (this._joinDisposer) {
+      this._joinDisposer();
+    }
     this._joinDisposer = when(
       () => this.classroomStore.boardStore.configReady,
       this.joinWhiteboard,

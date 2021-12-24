@@ -37,7 +37,7 @@ const ScreenShareRemoteTrackPlayer = observer(
 
     useEffect(() => {
       if (ref.current) {
-        setupRemoteVideo(stream, ref.current, AGRenderMode.fit);
+        setupRemoteVideo(stream, ref.current, false, AGRenderMode.fit);
       }
     }, [ref.current, stream]);
 

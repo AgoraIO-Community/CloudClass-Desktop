@@ -98,10 +98,15 @@ export class StreamStore extends EduStoreBase {
     let canvas = new AgoraRtcVideoCanvas(stream.streamUuid, '', dom, mirror);
     track.setView(canvas);
   };
-  setupRemoteVideo = (stream: EduStream, dom: HTMLElement, renderMode?: AGRenderMode) => {
+  setupRemoteVideo = (
+    stream: EduStream,
+    dom: HTMLElement,
+    mirror: boolean,
+    renderMode?: AGRenderMode,
+  ) => {
     let scene = this.classroomStore.connectionStore.scene;
     if (scene) {
-      let canvas = new AgoraRtcVideoCanvas(stream.streamUuid, scene.sceneId, dom, false, {
+      let canvas = new AgoraRtcVideoCanvas(stream.streamUuid, scene.sceneId, dom, mirror, {
         renderMode,
       });
       scene.localUser?.setupRemoteVideo(canvas);

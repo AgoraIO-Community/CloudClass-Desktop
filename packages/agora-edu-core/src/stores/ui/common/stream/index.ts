@@ -636,12 +636,18 @@ export class StreamUIStore extends EduUIStoreBase {
    * 渲染远端 Stream 视频到 DOM
    * @param stream
    * @param dom
+   * @param mirror
    * @param renderMode
    * @returns
    */
   @bound
-  setupRemoteVideo(stream: EduStream, dom: HTMLElement, renderMode?: AGRenderMode) {
-    return this.classroomStore.streamStore.setupRemoteVideo(stream, dom, renderMode);
+  setupRemoteVideo(
+    stream: EduStream,
+    dom: HTMLElement,
+    mirror: boolean,
+    renderMode?: AGRenderMode,
+  ) {
+    return this.classroomStore.streamStore.setupRemoteVideo(stream, dom, mirror, renderMode);
   }
 
   /**
