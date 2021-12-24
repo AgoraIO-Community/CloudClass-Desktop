@@ -1631,27 +1631,28 @@ export class RoomStore extends SimpleInterval {
 
       const localStreamData = roomManager.data.localStreamData
 
-      const canPublishRTC = (localStreamData: any, sceneType: any): boolean => {
-        const canPublishRTCRoles = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.student]
-        if (sceneType === 0) {
-          if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
-            return true
-          }
-        }
-        if (sceneType === 4) {
-          const canPublishRTCRoles = [EduRoleTypeEnum.teacher]
-          if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
-            return true
-          }
-        }
-        if (sceneType === 2) {
-          const canPublishRTCRoles = [EduRoleTypeEnum.teacher]
-          if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
-            return true
-          }
-        }
-        return false
-      }
+      // const canPublishRTC = (localStreamData: any, sceneType: any): boolean => {
+      //   const canPublishRTCRoles = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.student]
+      //   if (sceneType === 0) {
+      //     if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+      //       return true
+      //     }
+      //   }
+      //   if (sceneType === 4) {
+      //     const canPublishRTCRoles = [EduRoleTypeEnum.teacher]
+      //     if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+      //       return true
+      //     }
+      //   }
+      //   if (sceneType === 2) {
+      //     const canPublishRTCRoles = [EduRoleTypeEnum.teacher]
+      //     if (canPublishRTCRoles.includes(this.roomInfo.userRole)) {
+      //       return true
+      //     }
+      //   }
+      //   return false
+      // }
+      const canPublishRTC = (streamData:any, type: any) => true;
 
       if (canPublishRTC(localStreamData, sceneType)) {
 
