@@ -148,6 +148,7 @@ const App = observer(
                 ) : null}
                 <Input
                   className="vote-item"
+                  maxLength={30}
                   prefix={
                     pluginStore.status === 'config' ? (
                       <span
