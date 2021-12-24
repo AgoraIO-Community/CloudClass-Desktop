@@ -74,3 +74,10 @@
   position: relative;
   top: -47px;
 }
+.drager-bar {
+  position: absolute;
+  width: calc(100% - 180px);
+  height: 46px;
+  top: 0;
+  right: 0;
+}

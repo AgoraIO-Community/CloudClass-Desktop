@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useMemo } from 'react';
 import { Rnd } from 'react-rnd';
 import { Search } from '../input';
 import { SvgImg } from '../svg-img';
@@ -10,6 +10,7 @@ import SearchSvg from '../icon/assets/svg/search.svg';
 import { useColumns } from './hooks';
 import { OverlayWrap } from '../overlay-wrap';
 import { useDraggableDefaultCenterPosition } from '../../utilities/hooks';
+import { throttle } from 'lodash';
 
 const modalSize = { width: 606, height: 402 };
 
@@ -29,11 +30,31 @@ export const Roster: FC<RosterProps> = ({
   useEffect(() => {
     setOpened(true);
   }, []);
-
-  const defaultPos = useDraggableDefaultCenterPosition({
-    draggableWidth: width || modalSize.width,
-    draggableHeight: modalSize.height,
-  });
+  const innerSize = useMemo(
+    throttle(() => {
+      if (bounds) {
+        const innerEle = document.getElementsByClassName(bounds)[0];
+        if (innerEle) {
+          return {
+            innerHeight: innerEle.clientHeight,
+            innerWidth: innerEle.clientWidth,
+          };
+        }
+      }
+      return {
+        innerHeight: window.innerHeight,
+        innerWidth: window.innerWidth,
+      };
+    }, 200),
+    [window.innerHeight, window.innerWidth],
+  );
+  const defaultPos = useDraggableDefaultCenterPosition(
+    {
+      draggableWidth: width || modalSize.width,
+      draggableHeight: modalSize.height,
+    },
+    innerSize,
+  );
 
   const showSearch = functions.includes('search');
   const showCarousel = functions.includes('carousel');
@@ -44,7 +65,7 @@ export const Roster: FC<RosterProps> = ({
     <OverlayWrap opened={opened} onExited={onClose}>
       <Rnd
         dragHandleClassName="main-title"
-        bounds={bounds}
+        bounds={'.' + bounds}
         enableResizing={false}
         default={defaultPos}>
         <div

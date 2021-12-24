@@ -121,15 +121,21 @@ export const useDebounce = <T>(value: T, delay?: number) => {
   return debouncedValue;
 };
 
-export const useDraggableDefaultCenterPosition = ({
-  draggableHeight,
-  draggableWidth,
-}: {
-  draggableWidth: number;
-  draggableHeight: number;
-}) => {
+export const useDraggableDefaultCenterPosition = (
+  {
+    draggableHeight,
+    draggableWidth,
+  }: {
+    draggableWidth: number;
+    draggableHeight: number;
+  },
+  innerSize?: {
+    innerHeight: number;
+    innerWidth: number;
+  },
+) => {
   const pos = useMemo(() => {
-    const { innerHeight, innerWidth } = window;
+    const { innerHeight, innerWidth } = innerSize || window;
 
     const x = (innerWidth - draggableWidth) / 2;
 
