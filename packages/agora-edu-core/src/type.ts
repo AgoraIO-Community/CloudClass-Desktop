@@ -147,28 +147,24 @@ export enum AgoraEduEventType {
 }
 
 export enum AgoraEduClassroomEvent {
-  ready = 1,
-  destroyed = 2,
-  clicked = 3,
-}
-
-export enum AgoraEduInteractionEvent {
-  KickOut = 1,
-  TeacherTurnOnMyMic = 2,
-  TeacherTurnOffMyMic = 3,
-  TeacherGrantPermission = 4,
-  TeacherRevokePermission = 5,
-  UserAcceptToStage = 6,
-  UserLeaveStage = 7,
-  RewardReceived = 8,
-  TeacherTurnOnMyCam = 9,
-  TeacherTurnOffMyCam = 10,
-  CurrentCamUnplugged = 11,
-  CurrentMicUnplugged = 12,
-  CurrentSpeakerUnplugged = 13,
-  CaptureScreenPermissionDenied = 14,
-  ScreenShareStarted = 15,
-  ScreenShareEnded = 16,
+  Ready = 1, // 进入教室
+  Destroyed = 2, // 教室销毁
+  KickOut = 101, // 被踢出教室
+  TeacherTurnOnMyMic = 102, // 老师允许学生打开麦克风
+  TeacherTurnOffMyMic = 103, // 老师不允许学生打开麦克风
+  TeacherGrantPermission = 104, // 老师授权白板权限
+  TeacherRevokePermission = 105, // 老师收回白板权限
+  UserAcceptToStage = 106, // 学生上台
+  UserLeaveStage = 107, // 学生下台
+  RewardReceived = 108, // 收到奖励
+  TeacherTurnOnMyCam = 109, // 老师允许学生打开摄像头
+  TeacherTurnOffMyCam = 110, // 老师不允许学生打开摄像头
+  CurrentCamUnplugged = 111, // 摄像头被拔出
+  CurrentMicUnplugged = 112, // 麦克风被拔出
+  CurrentSpeakerUnplugged = 113, // 扬声器被拔出
+  CaptureScreenPermissionDenied = 114, // 用户未授权屏幕共享
+  ScreenShareStarted = 115, // 屏幕共享开始
+  ScreenShareEnded = 116, // 屏幕共享结束
 }
 
 export type ConfirmDialogAction = 'ok' | 'cancel';

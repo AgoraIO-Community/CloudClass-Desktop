@@ -1,12 +1,9 @@
-import { AgoraRteMediaSourceState, AGRtcDeviceInfo, bound, Log, Logger } from 'agora-rte-sdk';
-import { action, computed, Lambda, observable, reaction, runInAction } from 'mobx';
-import { EduClassroomStore } from '../../../domain';
+import { AgoraRteMediaSourceState, bound, Logger } from 'agora-rte-sdk';
+import { action, computed, Lambda, observable } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { EduShareUIStore } from '../share-ui';
 import { CameraPlaceholderType, DeviceStateChangedReason } from '../type';
 import { v4 as uuidv4 } from 'uuid';
-import { differenceWith } from 'lodash';
-import { AgoraEduInteractionEvent, ClassroomState, EduEventCenter } from '../../../..';
+import { AgoraEduClassroomEvent, EduEventCenter } from '../../../..';
 import { transI18n } from '../i18n';
 import { BeautyType } from '../../../domain';
 import { computedFn } from 'mobx-utils';
@@ -76,7 +73,7 @@ export class PretestUIStore extends EduUIStoreBase {
 
     this._disposers.add(playbackDisposer);
 
-    EduEventCenter.shared.onInteractionEvents(this._handleInteractionEvents);
+    EduEventCenter.shared.onClassroomEvents(this._handleInteractionEvents);
   }
 
   /**
@@ -84,21 +81,21 @@ export class PretestUIStore extends EduUIStoreBase {
    * @param type
    */
   @bound
-  private _handleInteractionEvents(type: AgoraEduInteractionEvent) {
+  private _handleInteractionEvents(type: AgoraEduClassroomEvent) {
     switch (type) {
-      case AgoraEduInteractionEvent.CurrentCamUnplugged:
+      case AgoraEduClassroomEvent.CurrentCamUnplugged:
         this.addToast({
           type: 'error',
           info: DeviceStateChangedReason.cameraUnplugged,
         });
         break;
-      case AgoraEduInteractionEvent.CurrentMicUnplugged:
+      case AgoraEduClassroomEvent.CurrentMicUnplugged:
         this.addToast({
           type: 'error',
           info: DeviceStateChangedReason.micUnplugged,
         });
         break;
-      case AgoraEduInteractionEvent.CurrentSpeakerUnplugged:
+      case AgoraEduClassroomEvent.CurrentSpeakerUnplugged:
         this.addToast({
           type: 'error',
           info: DeviceStateChangedReason.playbackUnplugged,
@@ -551,7 +548,7 @@ export class PretestUIStore extends EduUIStoreBase {
 
   @bound
   onDestroy() {
-    EduEventCenter.shared.offInteractionEvents(this._handleInteractionEvents);
+    EduEventCenter.shared.offClassroomEvents(this._handleInteractionEvents);
     for (const disposer of this._disposers) {
       disposer();
     }

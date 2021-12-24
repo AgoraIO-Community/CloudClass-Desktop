@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { EduClassroomConfig } from '../../../../configs';
 import { EduEventCenter } from '../../../../event-center';
-import { AgoraEduInteractionEvent, EduRoleTypeEnum } from '../../../../type';
+import { AgoraEduClassroomEvent, EduRoleTypeEnum } from '../../../../type';
 import { RteRole2EduRole } from '../../../../utils';
 import { EduUser } from '../user/struct';
 import { TrackState } from './type';
@@ -96,7 +96,7 @@ class CMDHandler {
             ) !== -1 &&
             RteRole2EduRole(roomType, operator.role) === EduRoleTypeEnum.teacher
           ) {
-            EduEventCenter.shared.emitInteractionEvents(AgoraEduInteractionEvent.UserAcceptToStage);
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.UserAcceptToStage);
           }
           break;
         }
@@ -107,7 +107,7 @@ class CMDHandler {
             ) !== -1 &&
             RteRole2EduRole(roomType, operator.role) === EduRoleTypeEnum.teacher
           ) {
-            EduEventCenter.shared.emitInteractionEvents(AgoraEduInteractionEvent.UserLeaveStage);
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.UserLeaveStage);
           }
           break;
         }

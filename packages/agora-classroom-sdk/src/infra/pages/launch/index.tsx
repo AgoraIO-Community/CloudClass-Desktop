@@ -121,7 +121,7 @@ export const LaunchPage = observer(() => {
         ],
         listener: (evt: AgoraEduClassroomEvent, type) => {
           console.log('launch#listener ', evt);
-          if (evt === AgoraEduClassroomEvent.destroyed) {
+          if (evt === AgoraEduClassroomEvent.Destroyed) {
             history.push(`/?reason=${type}`);
           }
         },

@@ -11,7 +11,7 @@ import {
 } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { ChatNew, I18nProvider, SimpleChatNew } from '~ui-kit';
 import { Context } from './chatContext';
@@ -21,7 +21,7 @@ const App = observer(() => {
   const defaultMinimize =
     EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass ||
     EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass;
-  const chatContext = React.useContext(Context);
+  const chatContext = useContext(Context);
   const uiStore = chatContext.uiStore as EduClassroomUIStore;
   const widgetStore = chatContext.widgetStore as WidgetChatUIStore;
   const loading = uiStore.layoutUIStore.loading;

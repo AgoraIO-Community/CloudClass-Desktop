@@ -26,7 +26,6 @@ export {
   EduRoomTypeEnum,
   WhiteboardState,
   AgoraEduClassroomEvent,
-  AgoraEduInteractionEvent,
 } from './type';
 export type { CourseWareList, ConfirmDialogAction } from './type';
 export { ChatStorage, RteRole2EduRole, EduRole2RteRole } from './utils';

@@ -1,8 +1,8 @@
 {
-  "out": "./docs/dist/",
-  "readme": "none",
+  "entryPoints": ["./src/infra/api"],
+  "out": "./docs",
   "exclude": ["**/node_modules/**"],
-  "mode": "file",
-  "includeDeclarations": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
   "hideGenerator": true
 }

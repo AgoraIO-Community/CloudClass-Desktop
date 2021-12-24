@@ -30,12 +30,13 @@ import {
   CloudDriveMediaResource,
   CloudDriveResource,
 } from '../cloud-drive/struct';
-import { AgoraEduInteractionEvent, Color } from '../../../../type';
+import { Color } from '../../../../type';
 import { EduRoleTypeEnum } from '../../../../type';
 import { EduEventCenter } from '../../../../event-center';
 import SlideApp from '@netless/app-slide';
 import { AgoraRteEventType, bound } from 'agora-rte-sdk';
 import get from 'lodash/get';
+import { AgoraEduClassroomEvent } from '../../../..';
 
 const DEFAULT_COLOR: Color = {
   r: 252,
@@ -540,16 +541,16 @@ export class BoardStore extends EduStoreBase {
               await this.room.setWritable(true);
               this.room.disableDeviceInputs = false;
               this.setTool(WhiteboardTool.selector);
-              EduEventCenter.shared.emitInteractionEvents(
-                AgoraEduInteractionEvent.TeacherGrantPermission,
+              EduEventCenter.shared.emitClasroomEvents(
+                AgoraEduClassroomEvent.TeacherGrantPermission,
               );
             }
             if (!newValue.has(sessionInfo.userUuid) && oldValue?.has(sessionInfo.userUuid)) {
               //revoked
               await this.room.setWritable(false);
               this.room.disableDeviceInputs = true;
-              EduEventCenter.shared.emitInteractionEvents(
-                AgoraEduInteractionEvent.TeacherRevokePermission,
+              EduEventCenter.shared.emitClasroomEvents(
+                AgoraEduClassroomEvent.TeacherRevokePermission,
               );
             }
           } catch (e) {

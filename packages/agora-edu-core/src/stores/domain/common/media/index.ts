@@ -18,7 +18,7 @@ import {
 } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
 import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
-import { AgoraEduInteractionEvent, ClassroomState } from '../../../../type';
+import { AgoraEduClassroomEvent, ClassroomState } from '../../../../type';
 import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
@@ -313,8 +313,8 @@ export class MediaStore extends EduStoreBase {
                 } else if (type === AgoraRteVideoSourceType.ScreenShare) {
                   this.localScreenShareTrackState = state;
                   if (reason === AGRteTrackErrorReason.PermissionDenied) {
-                    EduEventCenter.shared.emitInteractionEvents(
-                      AgoraEduInteractionEvent.CaptureScreenPermissionDenied,
+                    EduEventCenter.shared.emitClasroomEvents(
+                      AgoraEduClassroomEvent.CaptureScreenPermissionDenied,
                     );
                   }
                 }
@@ -455,9 +455,7 @@ export class MediaStore extends EduStoreBase {
             //change to first device if there's any
             newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
             if (inOldList && !inNewList) {
-              EduEventCenter.shared.emitInteractionEvents(
-                AgoraEduInteractionEvent.CurrentCamUnplugged,
-              );
+              EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.CurrentCamUnplugged);
             }
           }
         } else {
@@ -480,9 +478,7 @@ export class MediaStore extends EduStoreBase {
             //change to first device if there's any
             newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
             if (inOldList && !inNewList) {
-              EduEventCenter.shared.emitInteractionEvents(
-                AgoraEduInteractionEvent.CurrentMicUnplugged,
-              );
+              EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.CurrentMicUnplugged);
             }
           }
         } else {
@@ -503,8 +499,8 @@ export class MediaStore extends EduStoreBase {
             //change to first device if there's any
             newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
             if (inOldList && !inNewList) {
-              EduEventCenter.shared.emitInteractionEvents(
-                AgoraEduInteractionEvent.CurrentSpeakerUnplugged,
+              EduEventCenter.shared.emitClasroomEvents(
+                AgoraEduClassroomEvent.CurrentSpeakerUnplugged,
               );
             }
           }

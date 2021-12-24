@@ -199,7 +199,7 @@ export class ConnectionStore extends EduStoreBase {
     }
 
     this.setClassroomState(ClassroomState.Connected);
-    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.ready);
+    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Ready);
   }
 
   @bound
@@ -224,7 +224,7 @@ export class ConnectionStore extends EduStoreBase {
       );
     AgoraRteEngine.destroy();
     this.setClassroomState(ClassroomState.Idle);
-    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.destroyed, reason);
+    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Destroyed, reason);
   }
 
   @bound

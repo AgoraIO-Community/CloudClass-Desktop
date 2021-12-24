@@ -50,9 +50,9 @@ export class LogReporter {
 
   static enableLogReport() {
     EduEventCenter.shared.onClassroomEvents((event) => {
-      if (event === AgoraEduClassroomEvent.ready) {
+      if (event === AgoraEduClassroomEvent.Ready) {
         LogReporter._reporter.start();
-      } else if (event === AgoraEduClassroomEvent.destroyed) {
+      } else if (event === AgoraEduClassroomEvent.Destroyed) {
         LogReporter._reporter.stop();
       }
     });

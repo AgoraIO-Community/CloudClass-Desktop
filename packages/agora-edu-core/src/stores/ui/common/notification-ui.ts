@@ -1,11 +1,11 @@
 import { action, computed, reaction } from 'mobx';
 import dayjs from 'dayjs';
-import { AgoraRteMediaSourceState, AGRteTrackErrorReason, Scheduler } from 'agora-rte-sdk';
+import { Scheduler } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import { ClassState } from '../../domain/common/room/type';
 import { ClassroomState, EduEventCenter } from '../../..';
-import { AgoraEduInteractionEvent } from '../../../type';
+import { AgoraEduClassroomEvent } from '../../../type';
 import { LeaveReason } from '../../domain/common/connection';
 import { checkMinutesThrough } from '../../../utils/time';
 
@@ -70,49 +70,49 @@ export class NotificationUIStore extends EduUIStoreBase {
       },
     );
     // interaction events
-    EduEventCenter.shared.onInteractionEvents((event, ...args) => {
+    EduEventCenter.shared.onClassroomEvents((event, ...args) => {
       // kick out
-      if (event === AgoraEduInteractionEvent.KickOut) {
+      if (event === AgoraEduClassroomEvent.KickOut) {
         this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
       }
       // teacher turn on my mic
-      if (event === AgoraEduInteractionEvent.TeacherTurnOnMyMic) {
+      if (event === AgoraEduClassroomEvent.TeacherTurnOnMyMic) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.turn.on.my.mic'));
       }
       // teacher turn off my mic
-      if (event === AgoraEduInteractionEvent.TeacherTurnOffMyMic) {
+      if (event === AgoraEduClassroomEvent.TeacherTurnOffMyMic) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.mic'), 'error');
       }
       // teacher turn on my mic
-      if (event === AgoraEduInteractionEvent.TeacherTurnOnMyCam) {
+      if (event === AgoraEduClassroomEvent.TeacherTurnOnMyCam) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.turn.on.my.cam'));
       }
       // teacher turn off my mic
-      if (event === AgoraEduInteractionEvent.TeacherTurnOffMyCam) {
+      if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');
       }
       // teacher grant permission
-      if (event === AgoraEduInteractionEvent.TeacherGrantPermission) {
+      if (event === AgoraEduClassroomEvent.TeacherGrantPermission) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
       }
       // teacher revoke permission
-      if (event === AgoraEduInteractionEvent.TeacherRevokePermission) {
+      if (event === AgoraEduClassroomEvent.TeacherRevokePermission) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'), 'error');
       }
       // user accpeted to stage
-      if (event === AgoraEduInteractionEvent.UserAcceptToStage) {
+      if (event === AgoraEduClassroomEvent.UserAcceptToStage) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.accept.onpodium'));
       }
       // teacher leave stage
-      if (event === AgoraEduInteractionEvent.UserLeaveStage) {
+      if (event === AgoraEduClassroomEvent.UserLeaveStage) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.onpodium'));
       }
       // reward received
-      if (event === AgoraEduInteractionEvent.RewardReceived) {
+      if (event === AgoraEduClassroomEvent.RewardReceived) {
         this.shareUIStore.addToast(transI18n('toast2.teacher.reward', { reason: args }));
       }
       // capture screen permission denied received
-      if (event === AgoraEduInteractionEvent.CaptureScreenPermissionDenied) {
+      if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {
         this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'error');
       }
     });

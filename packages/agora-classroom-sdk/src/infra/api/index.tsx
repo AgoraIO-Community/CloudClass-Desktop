@@ -194,13 +194,10 @@ export class AgoraEduSDK {
       config.setCourseWareList(courseWareList);
     }
 
-    // config.rteEngineConfig.debugI18n = true;
-    // setDebugI18n(config.rteEngineConfig.debugI18n);
-
     EduClassroomConfig.setConfig(config);
 
     EduEventCenter.shared.onClassroomEvents((event: AgoraEduClassroomEvent, ...args) => {
-      if (event === AgoraEduClassroomEvent.destroyed) {
+      if (event === AgoraEduClassroomEvent.Destroyed) {
         unmountComponentAtNode(dom);
       }
       option.listener(event, ...args);

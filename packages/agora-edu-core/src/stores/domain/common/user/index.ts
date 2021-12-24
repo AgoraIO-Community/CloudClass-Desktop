@@ -3,7 +3,7 @@ import { observable, reaction, runInAction, action, computed } from 'mobx';
 import { EduStoreBase } from '../base';
 import { EduUser } from './struct';
 import { EduClassroomConfig, EduEventCenter } from '../../../..';
-import { AgoraEduInteractionEvent, EduRoleTypeEnum } from '../../../../type';
+import { AgoraEduClassroomEvent, EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { RteRole2EduRole } from '../../../../utils';
 
@@ -96,7 +96,7 @@ export class UserStore extends EduStoreBase {
             this._localUser = undefined;
             // 2 means user has been kicked out
             if (type === 2) {
-              EduEventCenter.shared.emitInteractionEvents(AgoraEduInteractionEvent.KickOut);
+              EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.KickOut);
               return;
             }
           }
@@ -181,8 +181,8 @@ export class UserStore extends EduStoreBase {
         const userNames = changedUserUuids.map(
           (userUuid) => this.studentList.get(userUuid)?.userName,
         );
-        EduEventCenter.shared.emitInteractionEvents(
-          AgoraEduInteractionEvent.RewardReceived,
+        EduEventCenter.shared.emitClasroomEvents(
+          AgoraEduClassroomEvent.RewardReceived,
           userNames.join(','),
         );
       }

@@ -16,7 +16,7 @@ import {
   RtcState,
 } from 'agora-rte-sdk';
 import { computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import { AgoraEduInteractionEvent, ClassroomState, EduRoleTypeEnum } from '../../../../type';
+import { AgoraEduClassroomEvent, ClassroomState, EduRoleTypeEnum } from '../../../../type';
 import { EduClassroomConfig } from '../../../../configs';
 import { RteRole2EduRole } from '../../../../utils';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
@@ -243,17 +243,17 @@ export class StreamStore extends EduStoreBase {
                   Logger.warn(`stream ${stream.streamUuid} not found when updating local stream`);
                 } else {
                   if (oldStream.audioState !== stream.audioState) {
-                    EduEventCenter.shared.emitInteractionEvents(
+                    EduEventCenter.shared.emitClasroomEvents(
                       stream.audioState === AgoraRteMediaPublishState.Published
-                        ? AgoraEduInteractionEvent.TeacherTurnOnMyMic
-                        : AgoraEduInteractionEvent.TeacherTurnOffMyMic,
+                        ? AgoraEduClassroomEvent.TeacherTurnOnMyMic
+                        : AgoraEduClassroomEvent.TeacherTurnOffMyMic,
                     );
                   }
                   if (oldStream.videoState !== stream.videoState) {
-                    EduEventCenter.shared.emitInteractionEvents(
+                    EduEventCenter.shared.emitClasroomEvents(
                       stream.videoState === AgoraRteMediaPublishState.Published
-                        ? AgoraEduInteractionEvent.TeacherTurnOnMyCam
-                        : AgoraEduInteractionEvent.TeacherTurnOffMyCam,
+                        ? AgoraEduClassroomEvent.TeacherTurnOnMyCam
+                        : AgoraEduClassroomEvent.TeacherTurnOffMyCam,
                     );
                   }
                 }
