@@ -12,6 +12,7 @@ import store from '../../redux/store';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import { Emoji } from '../../utils/emoji';
 import './index.css';
+import { getOS } from '../../utils';
 
 // 展示表情
 export const ShowEomji = ({ getEmoji }) => {
@@ -146,7 +147,9 @@ export const InputMsg = ({ isTeacher }) => {
             visible={isShowEmoji}
             trigger="click"
             onVisibleChange={handleEomijVisibleChange}>
-            <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
+            {getOS().isTablet ? null : (
+              <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
+            )}
           </Popover>
           {!configUIVisible.allMute
             ? null
