@@ -17,7 +17,7 @@ import { getOS } from '../../utils';
 // 展示表情
 export const ShowEomji = ({ getEmoji }) => {
   return (
-    <div style={{ width: '240px' }}>
+    <div className="emoji-container">
       {Emoji.map((emoji, key) => {
         return (
           <span className="emoji-content" key={key} onClick={getEmoji}>

@@ -55,13 +55,9 @@
 .emoji-content {
   width: 20px;
   height: 20px;
-  margin: 16px 0 0px 16px;
   font-size: 20px;
   vertical-align: sub;
   cursor: pointer;
-}
-.emoji-content:nth-child(7n + 1) {
-  margin-left: 0;
 }
 
 .emoji-all {
@@ -143,7 +139,12 @@ textarea {
   position: relative;
   top: unset;
 }
-
+.emoji-container {
+  width: 212px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
 /* .input-area-enter {
   height: 0px !important;
 }
