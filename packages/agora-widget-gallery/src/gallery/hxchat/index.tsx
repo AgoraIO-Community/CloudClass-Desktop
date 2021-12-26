@@ -84,10 +84,14 @@ const App: React.FC<AppProps> = observer((props) => {
   const domRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let unmount = () => {};
     if (domRef.current && isJoined && chatroomId) {
       //@ts-ignore
-      hx.renderHXChatRoom(domRef.current, hxStore);
+      unmount = hx.renderHXChatRoom(domRef.current, hxStore);
     }
+    return () => {
+      unmount && unmount();
+    };
   }, [domRef.current, isJoined, isFullScreen, chatroomId]);
 
   return (

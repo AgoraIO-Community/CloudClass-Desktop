@@ -1,6 +1,6 @@
 import { Input, message, Modal, Switch, Popover } from 'antd';
 import { Button } from '../button';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import { transI18n } from '~ui-kit';
@@ -138,19 +138,21 @@ export const InputMsg = ({ isTeacher }) => {
     store.dispatch(showEmojiAction(visible));
   };
 
+  const { isTablet } = useMemo(() => getOS(), []);
+
   return (
     <>
       <div>
         <div className="chat-icon">
-          <Popover
-            content={<ShowEomji getEmoji={getEmoji} />}
-            visible={isShowEmoji}
-            trigger="click"
-            onVisibleChange={handleEomijVisibleChange}>
-            {getOS().isTablet ? null : (
-              <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
-            )}
-          </Popover>
+          {!isTablet ? (
+            <Popover
+              content={<ShowEomji getEmoji={getEmoji} />}
+              visible={isShowEmoji}
+              trigger="click"
+              onVisibleChange={handleEomijVisibleChange}>
+              <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} alt="" />
+            </Popover>
+          ) : null}
           {!configUIVisible.allMute
             ? null
             : isTeacher && (

@@ -23,6 +23,9 @@ export const HXChatRoom = ({ pluginStore }) => {
 
 export const renderHXChatRoom = (dom, pluginStore) => {
   ReactDOM.render(<HXChatRoom pluginStore={pluginStore} />, dom);
+  return () => {
+    ReactDOM.unmountComponentAtNode(dom);
+  };
 };
 
 // 单人禁言
