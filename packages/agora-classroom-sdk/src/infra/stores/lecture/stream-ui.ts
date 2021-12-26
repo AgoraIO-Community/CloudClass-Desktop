@@ -51,8 +51,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   @computed
   get carouselStreams() {
     const list = Array.from(this.studentStreams);
-    if (this.carouselPosition + this._carouselShowCount)
-      return list.slice(this.carouselPosition, this.carouselPosition + this._carouselShowCount);
+    return list.slice(this.carouselPosition, this.carouselPosition + this._carouselShowCount);
   }
 
   remoteStreamTools = computedFn((stream: EduStreamUI): EduStreamTool[] => {
