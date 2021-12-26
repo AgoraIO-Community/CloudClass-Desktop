@@ -300,11 +300,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
         iconType: 'share-screen',
         name: transI18n('scaffold.screen_share'),
       },
-      {
-        id: 'laser',
-        iconType: 'laser-pointer',
-        name: transI18n('scaffold.laser_pointer'),
-      },
     ].concat(apps);
   }
 
