@@ -6,7 +6,7 @@ import {
   AGRenderMode,
   bound,
 } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { EduStream } from '../../../..';
 import { EduClassroomConfig } from '../../../../configs';
@@ -19,6 +19,7 @@ import { EduStreamUI } from './struct';
 import { EduStreamTool, EduStreamToolCategory } from './tool';
 import { v4 as uuidv4 } from 'uuid';
 import { AGServiceErrorCode } from '../../../../services/error';
+import { interactionThrottleHandler } from '../../../../utils/interaction';
 
 export enum StreamIconColor {
   active = '#357bf6',
@@ -502,13 +503,16 @@ export class StreamUIStore extends EduUIStoreBase {
       interactable: true,
       style: {},
       hoverIconType: 'reward-hover',
-      onClick: () => {
-        this.classroomStore.roomStore
-          .sendRewards(EduClassroomConfig.shared.sessionInfo.roomUuid, [
-            { userUuid: stream.fromUser.userUuid, changeReward: 1 },
-          ])
-          .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-      },
+      onClick: interactionThrottleHandler(
+        () => {
+          this.classroomStore.roomStore
+            .sendRewards(EduClassroomConfig.shared.sessionInfo.roomUuid, [
+              { userUuid: stream.fromUser.userUuid, changeReward: 1 },
+            ])
+            .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+        },
+        (message) => this.shareUIStore.addToast(message, 'warning'),
+      ),
     });
   });
 

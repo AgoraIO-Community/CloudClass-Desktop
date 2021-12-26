@@ -32,6 +32,7 @@ export { ChatStorage, RteRole2EduRole, EduRole2RteRole } from './utils';
 export { AGEduErrorCode, EduErrorCenter } from './utils/error';
 export { checkMinutesThrough } from './utils/time';
 export * from './utils/collection';
+export * from './utils/interaction';
 
 export { EduEventCenter } from './event-center';
 export { AGServiceErrorCode } from './services/error';

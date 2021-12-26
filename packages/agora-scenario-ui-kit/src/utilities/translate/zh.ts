@@ -112,6 +112,7 @@ export const zh = {
     class_end: '课程已结束，请点击确定离开教室',
     unknown: '发生未知错误，错误代码: {errCode}, 信息: {message}',
     room_is_full: '当前房间已满，请点击确认离开教室',
+    network_timeout: '网络请求超时',
   },
   toast: {
     mute_chat: '你已被老师禁言了',
@@ -233,6 +234,8 @@ export const zh = {
     upload_failure: '上传失败',
     download_success: '下载成功',
     download_failure: '下载失败',
+    resource_already_opened: '课件已经打开',
+    interaction_too_frequent: '操作过于频繁，请稍后再试',
   },
   end_class_confirm: '确定要结束教室吗？',
   notice: {

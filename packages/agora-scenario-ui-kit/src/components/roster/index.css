@@ -121,6 +121,7 @@
 }
 .roster-table .star-nums {
   color: #7b88a0;
+  user-select: none;
 }
 
 .roster-table .inline-flex {

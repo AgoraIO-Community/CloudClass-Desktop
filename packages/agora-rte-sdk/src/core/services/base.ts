@@ -44,14 +44,29 @@ export class ApiBase {
     }
 
     let resp: Response | undefined;
-    if (full_url) {
-      resp = await HttpClient(`${full_url}`, opts);
-    } else {
-      resp = await HttpClient(
-        `${params.host || this.host || host}${
-          params.pathPrefix || this.pathPrefix || pathPrefix || ''
-        }${path}${querystring}`,
-        opts,
+
+    try {
+      if (full_url) {
+        resp = await HttpClient(`${full_url}`, opts);
+      } else {
+        resp = await HttpClient(
+          `${params.host || this.host || host}${
+            params.pathPrefix || this.pathPrefix || pathPrefix || ''
+          }${path}${querystring}`,
+          opts,
+        );
+      }
+    } catch (e) {
+      const error = e as any;
+      if (error.code === 20) {
+        return RteErrorCenter.shared.handleThrowableError(
+          AGRteErrorCode.RTE_ERR_RESTFUL_NETWORK_TIMEOUT_ERR,
+          error,
+        );
+      }
+      return RteErrorCenter.shared.handleThrowableError(
+        AGRteErrorCode.RTE_ERR_RESTFUL_NETWORK_ERR,
+        error,
       );
     }
 

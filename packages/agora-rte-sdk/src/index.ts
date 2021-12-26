@@ -17,7 +17,7 @@ export type { AgoraRteOperator } from './core/processor/channel-msg/struct';
 export { AGRtcConnectionType } from './core/rtc/channel';
 export { ApiBase } from './core/services/base';
 export { Logger } from './core/logger';
-export { AbstractErrorCenter, AGError, AGErrorWrapper } from './core/utils/error';
+export { AbstractErrorCenter, AGError, AGErrorWrapper, AGRteErrorCode } from './core/utils/error';
 export { retryAttempt } from './core/utils/utils';
 export { Log, Lodash, bound } from './core/decorator';
 export type { Injectable } from './core/decorator';

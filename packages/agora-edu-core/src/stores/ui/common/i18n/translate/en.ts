@@ -127,6 +127,7 @@ export const en = {
     class_end: 'The classroom is end.',
     unknown: 'unknown error',
     room_is_full: 'The room is full',
+    network_timeout: 'Network request timeout',
   },
   toast: {
     mute_chat: 'You were silenced by {hostName}',
@@ -255,6 +256,7 @@ export const en = {
     download_success: 'Download Success',
     download_failure: 'Download Failure',
     resource_already_opened: 'This resource is already opened',
+    interaction_too_frequent: 'The operation is too frequent, please try again later',
   },
   end_class_confirm: 'Are sure end classroom',
   notice: {

@@ -134,6 +134,7 @@ const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) 
 const LocalStreamPlayerTools = observer(() => {
   const { streamUIStore } = useStore();
   const { localStreamTools, toolbarPlacement } = streamUIStore;
+
   return localStreamTools.length > 0 ? (
     <div className={`video-player-tools`}>
       {localStreamTools.map((tool, key) => (
@@ -160,6 +161,7 @@ const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) =
   const { streamUIStore } = useStore();
   const { remoteStreamTools, toolbarPlacement } = streamUIStore;
   const toolList = remoteStreamTools(stream);
+
   return toolList.length > 0 ? (
     <div className={`video-player-tools`}>
       {toolList.map((tool, idx) => (

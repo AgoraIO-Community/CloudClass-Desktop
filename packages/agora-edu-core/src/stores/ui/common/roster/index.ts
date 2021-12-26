@@ -12,7 +12,7 @@ import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share-ui';
 import { iterateMap } from '../../../../utils/collection';
 import { Operations, DeviceState, Operation } from './type';
-import { EduClassroomConfig, EduRoleTypeEnum } from '../../../..';
+import { EduClassroomConfig, EduRoleTypeEnum, interactionThrottleHandler } from '../../../..';
 import { AGServiceErrorCode } from '../../../../services/error';
 import { transI18n } from '../i18n';
 
@@ -171,136 +171,139 @@ export class RosterUIStore extends EduUIStoreBase {
    * @param operation
    * @param profile
    */
-  @action.bound
-  clickRowAction(
-    operation: Operation,
-    profile: {
-      uid: string | number;
-      isOnPodium: boolean;
-      cameraState: DeviceState;
-      microphoneState: DeviceState;
-    },
-  ) {
-    const { addDialog, addGenericErrorDialog } = this.shareUIStore;
-    const { roomUuid, userUuid, sendRewards } = this.classroomStore.roomStore;
-    const { grantUsers, grantPermission, revokePermission } = this.classroomStore.boardStore;
-    const { localUser, kickOutOnceOrBan } = this.classroomStore.userStore;
-    const { enableLocalVideo, enableLocalAudio, localCameraTrackState, localMicTrackState } =
-      this.classroomStore.mediaStore;
-    const { updateRemotePublishState } = this.classroomStore.streamStore;
-    const { onPodium, offPodium } = this.classroomStore.handUpStore;
+  clickRowAction = interactionThrottleHandler(
+    (
+      operation: Operation,
+      profile: {
+        uid: string | number;
+        isOnPodium: boolean;
+        cameraState: DeviceState;
+        microphoneState: DeviceState;
+      },
+    ) => {
+      const { addDialog, addGenericErrorDialog } = this.shareUIStore;
 
-    switch (operation) {
-      case 'podium': {
-        if (profile.isOnPodium) {
-          offPodium(`${profile.uid}`).catch((e) => {
-            if (
-              !AGError.isOf(
-                e,
-                AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-                AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
-              )
-            ) {
-              addGenericErrorDialog(e);
-            }
-          });
-        } else {
-          onPodium(`${profile.uid}`).catch((e) => {
-            if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
-              this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
-            } else if (
-              !AGError.isOf(
-                e,
-                AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-                AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
-              )
-            ) {
-              addGenericErrorDialog(e);
-            }
-          });
-        }
-        break;
-      }
-      case 'grant-board': {
-        const userUuid = profile.uid as string;
+      const { roomUuid, sendRewards } = this.classroomStore.roomStore;
+      const { grantUsers, grantPermission, revokePermission } = this.classroomStore.boardStore;
+      const { localUser, kickOutOnceOrBan } = this.classroomStore.userStore;
+      const { enableLocalVideo, enableLocalAudio, localCameraTrackState, localMicTrackState } =
+        this.classroomStore.mediaStore;
+      const { updateRemotePublishState } = this.classroomStore.streamStore;
+      const { onPodium, offPodium } = this.classroomStore.handUpStore;
 
-        try {
-          if (grantUsers.has(userUuid)) {
-            revokePermission(userUuid);
+      switch (operation) {
+        case 'podium': {
+          if (profile.isOnPodium) {
+            offPodium(`${profile.uid}`).catch((e) => {
+              if (
+                !AGError.isOf(
+                  e,
+                  AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+                  AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+                )
+              ) {
+                addGenericErrorDialog(e);
+              }
+            });
           } else {
-            grantPermission(userUuid);
+            onPodium(`${profile.uid}`).catch((e) => {
+              if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
+                this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
+              } else if (
+                !AGError.isOf(
+                  e,
+                  AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+                  AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+                )
+              ) {
+                addGenericErrorDialog(e);
+              }
+            });
           }
-        } catch (e) {
-          addGenericErrorDialog(e as AGError);
+          break;
         }
-        break;
-      }
-      case 'camera': {
-        // mute or unmute video
-        const userUuid = profile.uid as string;
-        if (localUser.userUuid === userUuid) {
-          const isEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
-          enableLocalVideo(!isEnabled);
-        } else {
-          const mainStream = this.getMainStream(userUuid);
-          const isPublished = mainStream?.videoState === AgoraRteMediaPublishState.Published;
-          if (mainStream) {
-            updateRemotePublishState(userUuid, mainStream.streamUuid, {
-              videoState: isPublished
-                ? AgoraRteMediaPublishState.Unpublished
-                : AgoraRteMediaPublishState.Published,
-            }).catch((e) => addGenericErrorDialog(e));
+        case 'grant-board': {
+          const userUuid = profile.uid as string;
+
+          try {
+            if (grantUsers.has(userUuid)) {
+              revokePermission(userUuid);
+            } else {
+              grantPermission(userUuid);
+            }
+          } catch (e) {
+            addGenericErrorDialog(e as AGError);
           }
+          break;
         }
-
-        break;
-      }
-      case 'microphone': {
-        // mute or unmute audio
-        const userUuid = profile.uid as string;
-        if (localUser.userUuid === userUuid) {
-          const isEnabled = localMicTrackState === AgoraRteMediaSourceState.started;
-          enableLocalAudio(!isEnabled);
-        } else {
-          const mainStream = this.getMainStream(userUuid);
-          const isPublished = mainStream?.audioState === AgoraRteMediaPublishState.Published;
-          if (mainStream) {
-            updateRemotePublishState(userUuid, mainStream.streamUuid, {
-              audioState: isPublished
-                ? AgoraRteMediaPublishState.Unpublished
-                : AgoraRteMediaPublishState.Published,
-            }).catch((e) => addGenericErrorDialog(e));
+        case 'camera': {
+          // mute or unmute video
+          const userUuid = profile.uid as string;
+          if (localUser.userUuid === userUuid) {
+            const isEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
+            enableLocalVideo(!isEnabled);
+          } else {
+            const mainStream = this.getMainStream(userUuid);
+            const isPublished = mainStream?.videoState === AgoraRteMediaPublishState.Published;
+            if (mainStream) {
+              updateRemotePublishState(userUuid, mainStream.streamUuid, {
+                videoState: isPublished
+                  ? AgoraRteMediaPublishState.Unpublished
+                  : AgoraRteMediaPublishState.Published,
+              }).catch((e) => addGenericErrorDialog(e));
+            }
           }
+
+          break;
         }
-        break;
-      }
-      case 'star': {
-        // send stars
-        sendRewards(roomUuid, [
-          {
-            userUuid: profile.uid as string,
-            changeReward: 1,
-          },
-        ]).catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-        break;
-      }
-      case 'kick': {
-        const onOk = (ban: boolean) => {
-          kickOutOnceOrBan(profile.uid as string, ban).catch((e) => addGenericErrorDialog(e));
-        };
+        case 'microphone': {
+          // mute or unmute audio
+          const userUuid = profile.uid as string;
+          if (localUser.userUuid === userUuid) {
+            const isEnabled = localMicTrackState === AgoraRteMediaSourceState.started;
+            enableLocalAudio(!isEnabled);
+          } else {
+            const mainStream = this.getMainStream(userUuid);
+            const isPublished = mainStream?.audioState === AgoraRteMediaPublishState.Published;
+            if (mainStream) {
+              updateRemotePublishState(userUuid, mainStream.streamUuid, {
+                audioState: isPublished
+                  ? AgoraRteMediaPublishState.Unpublished
+                  : AgoraRteMediaPublishState.Published,
+              }).catch((e) => addGenericErrorDialog(e));
+            }
+          }
+          break;
+        }
+        case 'star': {
+          // send stars
+          sendRewards(roomUuid, [
+            {
+              userUuid: profile.uid as string,
+              changeReward: 1,
+            },
+          ]).catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+          break;
+        }
+        case 'kick': {
+          const onOk = (ban: boolean) => {
+            kickOutOnceOrBan(profile.uid as string, ban).catch((e) => addGenericErrorDialog(e));
+          };
 
-        addDialog(DialogCategory.KickOut, {
-          id: 'kick-out',
-          roomUuid,
-          onOk,
-        });
+          addDialog(DialogCategory.KickOut, {
+            id: 'kick-out',
+            roomUuid,
+            onOk,
+          });
 
-        break;
+          break;
+        }
+        case 'chat': {
+        }
       }
-      case 'chat': {
-      }
-    }
-  }
+    },
+    (message) => this.shareUIStore.addToast(message, 'warning'),
+  );
 
   /** Computed */
   /**

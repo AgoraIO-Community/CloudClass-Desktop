@@ -6,6 +6,7 @@ import { EduErrorCenter } from '../../../utils/error';
 import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
 import { ToastFilter } from '../../../utils/toast-filter';
+import { AGRteErrorCode } from 'agora-rte-sdk';
 
 export enum DialogCategory {
   CloudDriver,
@@ -120,10 +121,19 @@ export class EduShareUIStore {
 
     const { onOK, okBtnText } = opts || {};
 
+    let message = error.message;
+
+    if (
+      error.codeList &&
+      error.codeList.includes(AGRteErrorCode.RTE_ERR_RESTFUL_NETWORK_TIMEOUT_ERR)
+    ) {
+      message = transI18n('error.network_timeout');
+    }
+
     this.addDialog(DialogCategory.ErrorGeneric, {
       id,
       title,
-      content: error.message,
+      content: message,
       okBtnText: okBtnText ?? transI18n('toast.confirm'),
       onOK: () => {
         onOK && onOK();

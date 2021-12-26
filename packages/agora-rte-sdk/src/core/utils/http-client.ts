@@ -10,11 +10,7 @@ export const HttpClient = async (url: string, opts: any): Promise<Response | und
         return resolve(fetchResponse);
       })
       .catch((e) => {
-        if (e.code === 20) {
-          reject(new Error(`request timed out`));
-        } else {
-          reject(e);
-        }
+        reject(e);
       })
       .finally(() => {
         clearTimeout(timeoutId);
