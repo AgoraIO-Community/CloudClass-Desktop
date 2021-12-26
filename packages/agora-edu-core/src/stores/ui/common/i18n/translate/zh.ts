@@ -249,6 +249,8 @@ export const zh = {
     download_success: '下载成功',
     download_failure: '下载失败',
     resource_already_opened: '课件已经打开',
+    resource_is_converting: '课件正在转换中',
+    fail_to_convert_resource: '文件转换失败',
     interaction_too_frequent: '操作过于频繁，请稍后再试',
   },
   end_class_confirm: '确定要结束教室吗？',

@@ -256,6 +256,8 @@ export const en = {
     download_success: 'Download Success',
     download_failure: 'Download Failure',
     resource_already_opened: 'This resource is already opened',
+    resource_is_converting: 'The resource is converting',
+    fail_to_convert_resource: 'The resource conversion failed',
     interaction_too_frequent: 'The operation is too frequent, please try again later',
   },
   end_class_confirm: 'Are sure end classroom',

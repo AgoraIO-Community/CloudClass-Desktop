@@ -144,7 +144,7 @@ export class CloudUIStore extends EduUIStoreBase {
       await this.classroomStore.boardStore.openResource(resource);
     } catch (e) {
       let error = e as AGError;
-      this.shareUIStore.addGenericErrorDialog(e as AGError);
+      // this.shareUIStore.addGenericErrorDialog(e as AGError);
       if (error.codeList && error.codeList.length) {
         const code = error.codeList[error.codeList.length - 1];
         if (
