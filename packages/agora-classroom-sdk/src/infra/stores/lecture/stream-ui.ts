@@ -6,7 +6,7 @@ import {
   EduStreamUI,
 } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
-import { computed, observable, action } from 'mobx';
+import { observable, action, computed, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
 @Log.attach({ proxyMethods: false })
@@ -51,7 +51,8 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   @computed
   get carouselStreams() {
     const list = Array.from(this.studentStreams);
-    return list.slice(this.carouselPosition, this.carouselPosition + this._carouselShowCount);
+    if (this.carouselPosition + this._carouselShowCount)
+      return list.slice(this.carouselPosition, this.carouselPosition + this._carouselShowCount);
   }
 
   remoteStreamTools = computedFn((stream: EduStreamUI): EduStreamTool[] => {
@@ -100,5 +101,21 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
 
   get layerItems() {
     return [];
+  }
+
+  onInstall(): void {
+    super.onInstall();
+
+    reaction(
+      () => this.studentStreams,
+      () => {
+        if (
+          this.studentStreams.size - this.carouselPosition < this._carouselShowCount &&
+          this.carouselPosition > 0
+        ) {
+          this.carouselPrev();
+        }
+      },
+    );
   }
 }
