@@ -19,7 +19,7 @@ export type CloudDriverProps = {
   handleChange: (key: string) => void;
 } & CloudDriverContainerProps;
 
-const modalSize = { width: 520, height: 460 };
+const modalSize = { width: 606, height: 540 };
 
 export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverProps) => {
   const [opened, setOpened] = useState(false);
