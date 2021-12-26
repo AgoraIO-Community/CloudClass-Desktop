@@ -1,13 +1,11 @@
 import { useHomeStore } from '@/infra/hooks';
 import { AgoraExtAppCountDown, AgoraExtAppAnswer, AgoraExtAppVote } from 'agora-plugin-gallery';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import MD5 from 'js-md5';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AgoraEduSDK, AgoraEduClassroomEvent } from '../../api';
-import { transI18n } from '~ui-kit';
 
 declare const CLASSROOM_SDK_VERSION: string;
 
@@ -66,59 +64,7 @@ export const LaunchPage = observer(() => {
         ...launchOption,
         // TODO:  Here you need to pass in the address of the recording page posted by the developer himself
         recordUrl,
-        courseWareList: [
-          {
-            isActive: true,
-            resourceName: transI18n('whiteboard.test-courseWare'),
-            resourceUuid: `h5${MD5(
-              'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
-            )}1`,
-            ext: 'pptx',
-            url: 'https://agora-apaas.oss-accelerate.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/mjwrihugyrew4/06546e948fe67f6bf7b161cf5afa4103',
-            conversion: {
-              type: 'static',
-            },
-            size: 0,
-            updateTime: 1623743516439,
-            scenes: [
-              {
-                name: '1',
-                ppt: {
-                  src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/1.slide',
-                  width: 1280,
-                  height: 720,
-                },
-              },
-              {
-                name: '2',
-                ppt: {
-                  src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/2.slide',
-                  width: 1280,
-                  height: 720,
-                },
-              },
-              {
-                name: '3',
-                ppt: {
-                  src: 'pptx://convertcdn.netless.link/dynamicConvert/3361daf0d28011ebae6f1dc0589306eb/3.slide',
-                  width: 1280,
-                  height: 720,
-                },
-              },
-            ],
-            convert: false,
-            taskUuid: '3361daf0d28011ebae6f1dc0589306eb',
-            taskToken: '',
-            taskProgress: {
-              totalPageSize: 3,
-              convertedPageSize: 3,
-              convertedPercentage: 100,
-              convertedFileList: [],
-              status: 'Finished',
-              currentStep: '',
-            },
-          },
-        ],
+        courseWareList: [],
         listener: (evt: AgoraEduClassroomEvent, type) => {
           console.log('launch#listener ', evt);
           if (evt === AgoraEduClassroomEvent.Destroyed) {
