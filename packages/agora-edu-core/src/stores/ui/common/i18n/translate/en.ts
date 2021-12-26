@@ -247,7 +247,7 @@ export const en = {
     time_interval_between_start: `The class will start in {reason} minutes`,
     time_interval_between_end: `The class will be over in {reason} minutes`,
     class_is_end: `Class is over. The classroom will be closed in {reason} minutes`,
-    time_interval_between_close: `The classroom will be closed in {reason}`,
+    time_interval_between_close: `The classroom will be closed in {reason} minutes`,
     reward_limit: 'The maximum number of trophies in the room has been reached',
     chat_enable: 'Enable Mute Chat',
     chat_disable: 'Disable Mute Chat',
