@@ -58,6 +58,7 @@ export const LaunchPage = observer(() => {
         new AgoraExtAppAnswer(launchOption.language),
         new AgoraExtAppVote(launchOption.language),
       ];
+
       const recordUrl = `https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
 
       await AgoraEduSDK.launch(dom, {
