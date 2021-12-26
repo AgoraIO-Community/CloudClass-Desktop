@@ -204,7 +204,7 @@ export const testPpt = {
 export const getJoinRoomParams = (
   role: EduRoleTypeEnum,
 ): Partial<JoinRoomParams> & { identity: Identity; viewMode: ViewMode } => {
-  if (role === EduRoleTypeEnum.teacher) {
+  if (role === EduRoleTypeEnum.teacher || role === EduRoleTypeEnum.assistant) {
     return {
       identity: Identity.host,
       isWritable: true,

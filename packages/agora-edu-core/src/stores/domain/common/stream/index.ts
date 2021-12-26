@@ -1,4 +1,5 @@
 import {
+  AGError,
   AgoraRtcVideoCanvas,
   AgoraRteAudioSourceType,
   AgoraRteEngine,
@@ -23,8 +24,8 @@ import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
 import { EduStream } from './struct';
 import { EduEventCenter } from '../../../../event-center';
-import { ReportServiceV2 } from '../../../../services/report-v2';
 import { ShareStreamStateKeeper } from './state-keeper';
+import { AGServiceErrorCode } from '../../../..';
 
 //for localstream, remote streams
 export class StreamStore extends EduStoreBase {
@@ -176,10 +177,12 @@ export class StreamStore extends EduStoreBase {
       let res = await this.api.stopShareScreen(sessionInfo.roomUuid, sessionInfo.userUuid);
       return res;
     } catch (e) {
-      EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_MEDIA_STOP_SCREENSHARE_FAIL,
-        e as Error,
-      );
+      if (!AGError.isOf(e as AGError, AGServiceErrorCode.SERV_SCREEN_NOT_SHARED)) {
+        EduErrorCenter.shared.handleThrowableError(
+          AGEduErrorCode.EDU_ERR_MEDIA_STOP_SCREENSHARE_FAIL,
+          e as Error,
+        );
+      }
     }
   }
 
