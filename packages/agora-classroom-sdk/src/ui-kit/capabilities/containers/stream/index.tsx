@@ -107,9 +107,11 @@ const LocalStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) =
   const { streamUIStore } = useStore();
   const { localVolume, localMicOff } = streamUIStore;
 
+  const isMicMuted = localMicOff ? true : stream.isMicMuted;
+
   return (
     <AudioVolume
-      isMicMuted={localMicOff}
+      isMicMuted={isMicMuted}
       currentVolume={Math.floor(localVolume)}
       className={stream.micIconType}
     />
