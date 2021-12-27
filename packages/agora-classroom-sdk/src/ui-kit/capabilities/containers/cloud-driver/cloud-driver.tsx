@@ -54,7 +54,8 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
     <OverlayWrap opened={opened} onExited={onClose}>
       <Rnd
         bounds={'.' + boundsClassName}
-        dragHandleClassName="drager-bar"
+        dragHandleClassName="tabs-nav"
+        cancel=".tabs-tab"
         enableResizing={false}
         default={defaultPos}>
         <div className="agora-board-resources cloud-wrap" style={modalSize}>
@@ -72,7 +73,6 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
             <TabPane tab={transI18n('cloud.personalResources')} key={ActiveKeyEnum.person}>
               <PersonalResourcesContainer />
             </TabPane>
-            <div className="drager-bar"></div>
           </Tabs>
         </div>
       </Rnd>
