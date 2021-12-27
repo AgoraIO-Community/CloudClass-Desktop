@@ -171,3 +171,11 @@
   background-position: center bottom;
   background-image: url('./assets/svga/wave-arm.gif');
 }
+.stream-zoom-status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}

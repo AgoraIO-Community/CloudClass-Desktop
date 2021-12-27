@@ -168,3 +168,8 @@ export enum AgoraEduClassroomEvent {
 }
 
 export type ConfirmDialogAction = 'ok' | 'cancel';
+
+export enum orientationEnum {
+  portrait = 'portrait',
+  landscape = 'landscape',
+}

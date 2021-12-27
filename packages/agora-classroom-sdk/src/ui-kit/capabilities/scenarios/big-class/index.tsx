@@ -13,7 +13,7 @@ import {
 } from '~containers/stream/room-big-player';
 import Room from '../room';
 import { ExtAppContainer } from '~containers/ext-app';
-import { ChatWidget } from '~containers/widget/chat-widget';
+import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
 import { CollectorContainer } from '~containers/board';
@@ -42,7 +42,7 @@ export const BigClassScenario = observer(() => {
             </Content>
             <Aside>
               <RoomBigTeacherStreamContainer />
-              <ChatWidget />
+              <ChatWidgetPC />
             </Aside>
           </Layout>
           <DialogContainer />

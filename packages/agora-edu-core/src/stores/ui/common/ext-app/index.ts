@@ -38,11 +38,6 @@ export class ExtAppUIStore extends EduUIStoreBase {
    */
   @computed
   get activeApps() {
-    const ready = this.classroomStore.connectionStore.classroomState === ClassroomState.Connected;
-    if (!ready) {
-      return [];
-    }
-
     const { extApps } = this.classroomStore.extAppStore;
 
     return Object.values(extApps).filter(this.isActive);

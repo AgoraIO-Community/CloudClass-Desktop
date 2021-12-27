@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import { setVisibleUI } from './redux/actions/roomAction';
+import { isShowChat, isShowMiniIcon } from './redux/actions/propsAction';
 import App from './App';
 import { MemoryRouter } from 'react-router-dom';
 import { logoutChatroom } from './api/chatroom';
@@ -46,6 +48,15 @@ export const isMuted = () => {
 // 获取禁言列表 --- 老师调用  返回 userUuid 的数组
 export const getMuteList = () => {
   return store.getState()?.room.muteList;
+};
+export const dispatchVisibleUI = (data) => {
+  return store.dispatch(setVisibleUI(data));
+};
+export const dispatchShowChat = (data) => {
+  return store.dispatch(isShowChat(data));
+};
+export const dispatchShowMiniIcon = (data) => {
+  return store.dispatch(isShowMiniIcon(data));
 };
 
 export const logout = () => {

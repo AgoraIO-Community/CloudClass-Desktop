@@ -74,4 +74,6 @@ export type IconTypes =
   | 'buffing'
   | 'ruddy'
   | 'answer'
-  | 'vote';
+  | 'vote'
+  | 'search-zoom-in'
+  | 'search-zoom-out';

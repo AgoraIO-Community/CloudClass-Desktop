@@ -27,8 +27,8 @@ export {
   WhiteboardState,
   AgoraEduClassroomEvent,
 } from './type';
-export type { CourseWareList, ConfirmDialogAction } from './type';
-export { ChatStorage, RteRole2EduRole, EduRole2RteRole } from './utils';
+export type { CourseWareList, ConfirmDialogAction, orientationEnum } from './type';
+export { ChatStorage, RteRole2EduRole, EduRole2RteRole, UUAparser } from './utils';
 export { AGEduErrorCode, EduErrorCenter } from './utils/error';
 export { checkMinutesThrough } from './utils/time';
 export * from './utils/collection';
@@ -41,3 +41,5 @@ export { EduStoreFactory } from './stores';
 export * from './stores/domain';
 export * from './stores/ui';
 export { MessageItem } from './stores/domain/common/message/struct';
+export { getRootDimensions } from './stores/ui/common/layout/helper';
+export type { Platform } from './configs';

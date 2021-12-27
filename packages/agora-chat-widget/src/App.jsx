@@ -34,15 +34,13 @@ const App = function (props) {
     isFullScreen,
     showChat: globalShowChat,
     isShowMiniIcon: miniIconStatus,
-    configUIVisible,
+    configUIVisible: config,
   } = props.pluginStore.globalContext;
   const state = useSelector((state) => state);
   const showChat = state?.showChat;
   const showRed = state?.showRed;
   const showAnnouncementNotice = state?.showAnnouncementNotice;
-  const isFullSize =
-    state?.propsData?.roomType === ROOM_TYPE.bigClass ||
-    state?.propsData?.roomType === ROOM_TYPE.oneClass;
+  const configUIVisible = state?.configUIVisible;
   i18n.addResourceBundle('zh', 'translation', im_CN);
   i18n.addResourceBundle('en', 'translation', im_US);
 
@@ -56,7 +54,7 @@ const App = function (props) {
     store.dispatch(propsAction(new_IM_Data));
     store.dispatch(isShowChat(globalShowChat));
     store.dispatch(isShowMiniIcon(miniIconStatus));
-    store.dispatch(setVisibleUI(configUIVisible));
+    store.dispatch(setVisibleUI(config));
     if (appkey) {
       initIMSDK(appkey);
     }
@@ -215,8 +213,8 @@ const App = function (props) {
         <div
           className="app w-full"
           style={{
-            width: isFullSize ? '100%' : '300px',
-            height: isFullSize ? '100%' : '530px',
+            width: configUIVisible.isFullSize ? '100%' : '300px',
+            height: configUIVisible.isFullSize ? '100%' : '530px',
           }}>
           <Chat />
         </div>

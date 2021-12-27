@@ -9,18 +9,26 @@ import {
   IAgoraWidget,
 } from 'agora-edu-core';
 import { set } from 'lodash';
+import { autorun, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Context } from './chatContext';
+import { WidgetChatUIStore } from './store';
 
 type AppProps = {
   orgName: string;
   appName: string;
+  visibleEmoji?: boolean;
+  visibleBtnSend?: boolean;
+  inputBoxStatus?: string | undefined;
   uiStore: EduClassroomUIStore;
 };
 
 const App: React.FC<AppProps> = observer((props) => {
-  const { uiStore, ...resetProps } = props;
+  const chatContext = React.useContext(Context);
+  const uiStore = chatContext.uiStore as EduClassroomUIStore;
+  const widgetStore = chatContext.widgetStore as WidgetChatUIStore;
   const [minimize, toggleChatMinimize] = useState<boolean>(false);
   const isFullScreen = false; // todo from uistore
   const isJoined =
@@ -44,16 +52,16 @@ const App: React.FC<AppProps> = observer((props) => {
 
   const globalContext = {
     isFullScreen,
-    showChat: [EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomBigClass].includes(
-      EduClassroomConfig.shared.sessionInfo.roomType,
-    ),
-    isShowMiniIcon: ![EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomBigClass].includes(
-      EduClassroomConfig.shared.sessionInfo.roomType,
-    ),
+    showChat: widgetStore.showChat,
+    isShowMiniIcon: !widgetStore.showChat,
     configUIVisible: {
       memebers: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
       announcement: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
+      isFullSize: widgetStore.isFullSize,
+      emoji: typeof props.visibleEmoji !== 'undefined' ? props.visibleEmoji : true,
+      btnSend: typeof props.visibleBtnSend !== 'undefined' ? props.visibleBtnSend : true,
+      inputBox: props.inputBoxStatus,
     },
   };
 
@@ -69,6 +77,24 @@ const App: React.FC<AppProps> = observer((props) => {
     }
   }, [isFullScreen]);
 
+  useEffect(() => {
+    widgetStore.addOrientationchange();
+    widgetStore.handleOrientationchange();
+    return () => widgetStore.removeOrientationchange();
+  }, []);
+
+  autorun(() => {
+    hx.dispatchVisibleUI({ isFullSize: widgetStore.isFullSize });
+  });
+
+  reaction(
+    () => widgetStore.showChat,
+    (value) => {
+      hx.dispatchShowChat(value);
+      hx.dispatchShowMiniIcon(!value);
+    },
+  );
+
   set(
     uiStore,
     'props.imAvatarUrl',
@@ -79,7 +105,7 @@ const App: React.FC<AppProps> = observer((props) => {
   const hxStore = {
     context,
     globalContext,
-    props: { ...resetProps, chatroomId, appName, orgName },
+    props: { ...props, chatroomId, appName, orgName },
   };
   const domRef = useRef<HTMLDivElement>(null);
 
@@ -107,8 +133,14 @@ export class AgoraHXChatWidget implements IAgoraWidget {
   constructor() {}
 
   widgetDidLoad(dom: Element, props: any): void {
-    // hx.renderHXChatRoom(dom)
-    ReactDOM.render(<App {...props} />, dom);
+    const { uiStore, ...resetProps } = props;
+    const widgetStore = new WidgetChatUIStore(uiStore);
+    ReactDOM.render(
+      <Context.Provider value={{ uiStore: uiStore, widgetStore }}>
+        <App {...resetProps} />
+      </Context.Provider>,
+      dom,
+    );
   }
   // TODO: uncertain
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {}

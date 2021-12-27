@@ -26,6 +26,10 @@ let defaultState = {
     memebers: true, // 成员 tab
     announcement: true, //公告 tab
     allMute: true, // 全体禁言按钮
+    isFullSize: false, // 是否为自适应展示
+    emoji: true, // 默认emoji 为 true
+    inputBox: 'multiple', // 输入UI
+    btnSend: true, // 是否暂时send按钮
   },
 };
 const reducer = (state = defaultState, action) => {

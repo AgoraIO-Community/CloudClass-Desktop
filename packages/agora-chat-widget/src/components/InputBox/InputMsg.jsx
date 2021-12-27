@@ -1,6 +1,6 @@
 import { Input, message, Modal, Switch, Popover } from 'antd';
 import { Button } from '../button';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import { transI18n } from '~ui-kit';
@@ -12,7 +12,6 @@ import store from '../../redux/store';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import { Emoji } from '../../utils/emoji';
 import './index.css';
-import { getOS } from '../../utils';
 
 // 展示表情
 export const ShowEomji = ({ getEmoji }) => {
@@ -138,21 +137,48 @@ export const InputMsg = ({ isTeacher }) => {
     store.dispatch(showEmojiAction(visible));
   };
 
-  const { isTablet } = useMemo(() => getOS(), []);
+  const renderInputBox = React.useMemo(() => {
+    if (configUIVisible.inputBox === 'inline') {
+      return (
+        <Input
+          className="inline-input-chat"
+          bordered={false}
+          ref={inputRef}
+          placeholder={transI18n('chat.enter_contents')}
+          onChange={(e) => changeMsg(e)}
+          value={content}
+          onPressEnter={sendTextMessage()}
+          enterKeyHint="send"
+        />
+      );
+    } else {
+      return (
+        <Input.TextArea
+          placeholder={transI18n('chat.enter_contents')}
+          className={classnames('input-chat', { 'input-chating-status': inputStatus })}
+          onChange={(e) => changeMsg(e)}
+          onFocus={handleTextareFoucs}
+          value={content}
+          onPressEnter={sendTextMessage()}
+          ref={inputRef}
+        />
+      );
+    }
+  }, [configUIVisible.inputBox, content, inputStatus]);
 
   return (
     <>
       <div>
         <div className="chat-icon">
-          {!isTablet ? (
+          {configUIVisible.emoji && (
             <Popover
               content={<ShowEomji getEmoji={getEmoji} />}
               visible={isShowEmoji}
               trigger="click"
               onVisibleChange={handleEomijVisibleChange}>
-              <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} alt="" />
+              <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
             </Popover>
-          ) : null}
+          )}
           {!configUIVisible.allMute
             ? null
             : isTeacher && (
@@ -168,18 +194,12 @@ export const InputMsg = ({ isTeacher }) => {
                 </div>
               )}
         </div>
-        <Input.TextArea
-          placeholder={transI18n('chat.enter_contents')}
-          className={classnames('input-chat', { 'input-chating-status': inputStatus })}
-          onChange={(e) => changeMsg(e)}
-          onFocus={handleTextareFoucs}
-          value={content}
-          onPressEnter={sendTextMessage()}
-          ref={inputRef}
-        />
-        <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
-          {transI18n('chat.send')}
-        </Button>
+        {renderInputBox}
+        {configUIVisible.btnSend && (
+          <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
+            {transI18n('chat.send')}
+          </Button>
+        )}
       </div>
     </>
   );

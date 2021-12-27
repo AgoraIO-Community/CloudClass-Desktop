@@ -4,7 +4,7 @@ import { BaseProps } from '~ui-kit/components/interface/base-props';
 import './index.css';
 
 export interface LayoutProps extends BaseProps {
-  direction?: 'row' | 'col';
+  direction?: 'row' | 'col' | 'col-reverse';
   children?: React.ReactNode;
 }
 

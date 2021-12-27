@@ -12,6 +12,7 @@ type ModalProps = {
   onCancel: () => void;
   onResize: ({ width, height }: { width: number; height: number }) => void;
   header?: React.ReactNode;
+  className?: string;
 };
 
 export const Modal: FC<ModalProps> = ({
@@ -23,8 +24,9 @@ export const Modal: FC<ModalProps> = ({
   minWidth,
   children,
   header,
+  className,
 }) => {
-  const cls = classnames('modal', 'relative');
+  const cls = classnames('modal', 'relative', className);
 
   const contentCls = classnames('modal-content');
 

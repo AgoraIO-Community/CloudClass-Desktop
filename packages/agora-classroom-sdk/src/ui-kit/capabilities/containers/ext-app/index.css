@@ -111,3 +111,11 @@
   background-color: rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
+
+.untrack-extapp-container {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate3d(-50%, -50%, 0);
+  overflow: auto;
+}

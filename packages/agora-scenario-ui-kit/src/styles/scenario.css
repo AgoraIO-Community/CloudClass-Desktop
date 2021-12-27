@@ -250,6 +250,22 @@ body,
 .big-class-room #hx-chatroom .app {
   height: 100% !important;
 }
+.big-class-h5 .chat-panel {
+  min-width: unset;
+}
+
+.fullsize-video-container {
+  width: 100vw;
+  height: 100vh;
+}
+.fullsize-video-container .video-player-overlay {
+  width: 100%;
+  height: 100%;
+}
+.fullsize-video-container .video-player {
+  width: 100% !important;
+  height: 100% !important;
+}
 
 .roster-btn-active {
   background-color: #0073ff !important;

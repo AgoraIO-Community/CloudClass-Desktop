@@ -19,7 +19,7 @@ export interface WhiteboardConfigs {
 export interface WhiteboardDefaults {
   scale: number;
 }
-
+export type Platform = 'PC' | 'H5';
 export class EduClassroomConfig {
   private static _classroomConfig?: EduClassroomConfig;
   static get shared(): EduClassroomConfig {
@@ -37,6 +37,7 @@ export class EduClassroomConfig {
 
   readonly appId: string;
   readonly recordUrl: string;
+  readonly platform: Platform;
   private readonly _rteEngineConfig: AgoraRteEngineConfig;
   private _sessionInfo?: EduSessionInfo;
   private _boardConfig?: WhiteboardConfigs;
@@ -63,8 +64,10 @@ export class EduClassroomConfig {
     rteOpts?: AgoraRteOptions,
     widgets: { [key: string]: IAgoraWidget } = {},
     extApps: IAgoraExtApp[] = [],
+    platform: Platform = 'PC',
   ) {
     this.appId = appId;
+    this.platform = platform;
     this._sessionInfo = sessionInfo;
     this.recordUrl = recordUrl;
     const rtcConfigs = merge(

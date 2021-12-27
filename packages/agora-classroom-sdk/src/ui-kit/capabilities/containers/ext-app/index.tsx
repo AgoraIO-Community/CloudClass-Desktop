@@ -79,3 +79,50 @@ export const ExtAppContainer = observer(() => {
     </React.Fragment>
   );
 });
+
+const UntrackExtApp = ({ extApp, canClose, onClose, mount }: any) => {
+  const { customHeader, appName, minHeight, minWidth } = extApp;
+
+  const handleCancel = useCallback(() => {
+    onClose(extApp.appIdentifier);
+  }, [onClose, extApp.appIdentifier]);
+
+  // use memo to prevent unnecessary ref callback which may cause bugs
+  const appContainer = useMemo(
+    () => <div className="h-full w-full overflow-hidden" ref={(dom) => mount(dom, extApp)}></div>,
+    [extApp],
+  );
+
+  return (
+    <div className="untrack-extapp-container" style={{ width: minWidth, height: minHeight }}>
+      <Modal
+        title={appName}
+        onCancel={handleCancel}
+        closable={canClose}
+        header={customHeader}
+        minHeight={minHeight}
+        minWidth={minWidth}
+        onResize={() => {}}>
+        {appContainer}
+      </Modal>
+    </div>
+  );
+};
+
+export const ExtAPPUntrackContainer = observer(() => {
+  const { extAppUIStore } = useStore();
+  const { canClose, shutdownApp, activeApps, mount } = extAppUIStore;
+  return (
+    <>
+      {activeApps.map((extApp) => (
+        <UntrackExtApp
+          key={extApp.appIdentifier}
+          extApp={extApp}
+          canClose={canClose}
+          onClose={shutdownApp}
+          mount={mount}
+        />
+      ))}
+    </>
+  );
+});

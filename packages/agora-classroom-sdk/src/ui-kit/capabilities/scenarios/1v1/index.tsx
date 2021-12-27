@@ -7,7 +7,7 @@ import { NavigationBarContainer } from '~containers/nav';
 import { Aside, Content, Layout } from '~components/layout';
 import { ScreenShareContainer } from '~containers/screen-share';
 import { Room1v1StreamsContainer } from '~containers/stream/room-1v1-player';
-import { ChatWidget } from '~containers/widget/chat-widget';
+import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import Room from '../room';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { ExtAppContainer } from '~containers/ext-app';
@@ -33,7 +33,7 @@ export const OneToOneScenario = observer(() => {
             </Content>
             <Aside>
               <Room1v1StreamsContainer />
-              <ChatWidget />
+              <ChatWidgetPC />
             </Aside>
           </Layout>
           <DialogContainer />

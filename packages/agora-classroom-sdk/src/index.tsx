@@ -26,7 +26,7 @@ const RouteContainer = () => (
       <Route
         key={'default'}
         path={'/'}
-        component={routesMap[BizPageRouter.TestHomePage].component}
+        component={routesMap[BizPageRouter.TestAdapteHomePage].component}
       />
     </Switch>
   </HashRouter>

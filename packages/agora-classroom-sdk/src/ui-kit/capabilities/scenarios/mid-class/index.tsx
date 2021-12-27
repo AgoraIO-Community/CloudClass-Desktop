@@ -10,7 +10,7 @@ import { RoomMidStreamsContainer } from '~containers/stream/room-mid-player';
 import { CollectorContainer } from '~containers/board';
 import { WhiteboardContainer } from '~containers/board';
 import { FixedAspectRatioRootBox } from '~containers/root-box';
-import { ChatWidget } from '~containers/widget/chat-widget';
+import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import { ExtAppContainer } from '~containers/ext-app';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
@@ -33,7 +33,7 @@ export const MidClassScenario = observer(() => {
             <CollectorContainer />
             <HandsUpContainer />
             <MidRosterBtn />
-            <ChatWidget />
+            <ChatWidgetPC />
           </Aside>
           <DialogContainer />
           <LoadingContainer />

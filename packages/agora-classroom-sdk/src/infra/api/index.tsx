@@ -12,6 +12,7 @@ import {
   EduEventCenter,
   AgoraEduClassroomEvent,
   IAgoraWidget,
+  Platform,
 } from 'agora-edu-core';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
@@ -67,6 +68,7 @@ export type LaunchOption = {
   userFlexProperties?: { [key: string]: any }; //用户自订属性
   mediaOptions?: MediaOptions;
   latencyLevel?: 1 | 2;
+  platform?: Platform;
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
@@ -150,6 +152,7 @@ export class AgoraEduSDK {
       roomType,
       courseWareList,
       duration,
+      platform = 'PC',
     } = option;
 
     const sessionInfo = {
@@ -183,6 +186,7 @@ export class AgoraEduSDK {
         ...option.widgets,
       },
       option.extApps,
+      platform,
     );
 
     if (AgoraEduSDK._config.host) {

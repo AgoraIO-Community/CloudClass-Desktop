@@ -28,13 +28,15 @@ export const MessageBox = () => {
   };
 
   return (
-    <div>
+    <>
       {isHaveMsg ? (
         <div
           className="message-box"
           id="chat-messages"
           style={{
-            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 158px)',
+            height: isHaveNotice
+              ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
+              : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
           }}>
           <div>
             {msgs &&
@@ -54,7 +56,9 @@ export const MessageBox = () => {
         <div
           className="message-box no-box"
           style={{
-            height: isHaveNotice ? 'calc(100% - 200px)' : 'calc(100% - 158px)',
+            height: isHaveNotice
+              ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
+              : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
           }}>
           <div className="no-msgs">
             <img src={noMessage_icon} />
@@ -62,6 +66,6 @@ export const MessageBox = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };

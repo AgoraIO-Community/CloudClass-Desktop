@@ -122,5 +122,9 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "dependencies": {
+    "@types/ua-parser-js": "^0.7.36",
+    "vconsole": "^3.10.1"
   }
 }

@@ -1,4 +1,5 @@
 import { EduRoleTypeEnum, EduRoomTypeEnum } from '..';
+import { UAParser } from 'ua-parser-js';
 
 export const EduRole2RteRole = (roomType: EduRoomTypeEnum, roleType: EduRoleTypeEnum) => {
   if (roleType === EduRoleTypeEnum.teacher) {
@@ -97,3 +98,34 @@ export const CustomBtoa = (input: any) => {
 };
 
 export const ChatStorage = new PersistLocalStorage();
+
+enum UAType {
+  console = 'console',
+  mobile = 'mobile',
+  tablet = 'tablet',
+  smarttv = 'starttv',
+  wearable = 'wearable',
+  embedded = 'embedded',
+}
+
+enum orientationType {
+  potrait = 'portrait',
+  landscape = 'landscape',
+}
+export class UUAparser {
+  private static _userAgent: string = window.navigator.userAgent;
+  private static _UAParserInstance = new UAParser(UUAparser._userAgent);
+
+  static get getType() {
+    return UUAparser._UAParserInstance.getDevice().type;
+  }
+
+  static get mobileBrowser() {
+    const isTablet =
+      (navigator.maxTouchPoints &&
+        navigator.maxTouchPoints > 2 &&
+        /MacIntel/.test(navigator.platform)) ||
+      'ontouchend' in document;
+    return UUAparser.getType === UAType.mobile || UUAparser.getType === UAType.tablet || isTablet;
+  }
+}

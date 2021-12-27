@@ -1,7 +1,7 @@
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import { ConfirmDialogAction } from '../../../type';
+import { ConfirmDialogAction, orientationEnum } from '../../../type';
 import { EduErrorCenter } from '../../../utils/error';
 import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
@@ -37,6 +37,7 @@ export class EduShareUIStore {
   private _classroomMinimumSize = { width: 1024, height: 576 };
   private _containerNode = window;
   private _navBarHeight = 0;
+  private _matchMedia = window.matchMedia('(orientation: portrait)');
 
   /**
    * 模态框列表
@@ -58,6 +59,9 @@ export class EduShareUIStore {
     width: 0,
     height: 0,
   };
+
+  @observable
+  orientation: orientationEnum = orientationEnum.portrait;
 
   constructor() {
     EduErrorCenter.shared.on('error', (code: string, error: Error) => {
@@ -246,6 +250,18 @@ export class EduShareUIStore {
     });
   }
 
+  @action.bound
+  handleOrientationchange() {
+    // If there are matches, we're in portrait
+    if (this._matchMedia.matches) {
+      // Portrait orientation
+      this.orientation = orientationEnum.portrait;
+    } else {
+      // Landscape orientation
+      this.orientation = orientationEnum.landscape;
+    }
+  }
+
   /**
    * 设置导航栏高度，设置 Resize 事件处理器
    * @param navBarHeight
@@ -265,6 +281,17 @@ export class EduShareUIStore {
   @bound
   removeWindowResizeEventListener() {
     this._containerNode.removeEventListener('resize', this.updateClassroomViewportSize);
+  }
+
+  @bound
+  addOrientationchange() {
+    this._matchMedia.addListener(this.handleOrientationchange);
+    this.handleOrientationchange();
+  }
+
+  @bound
+  removeOrientationchange() {
+    this._matchMedia.removeListener(this.handleOrientationchange);
   }
 
   /**

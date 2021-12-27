@@ -10,6 +10,9 @@
 .layout-col {
   @apply flex-col;
 }
+.layout-col-reverse {
+  @apply flex-col-reverse;
+}
 
 .layout-content {
   @apply flex flex-row flex-1 h-full;

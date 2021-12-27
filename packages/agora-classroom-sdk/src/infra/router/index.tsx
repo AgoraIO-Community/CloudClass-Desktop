@@ -1,5 +1,7 @@
 import { BizPageRouter } from '@/infra/types';
 import { HomePage } from '@/infra/pages/home';
+import { HomeH5Page } from '@/infra/pages/home/h5';
+import { Home } from '@/infra/pages/home/home';
 import { LaunchPage } from '@/infra/pages/launch';
 import { OneToOneScenario } from '~capabilities/scenarios/1v1';
 import * as React from 'react';
@@ -52,8 +54,8 @@ export const routesMap: Record<string, AppRouteComponent> = {
   //   path: '/incognito',
   //   component: () => PageSFC(IncognitoPage)
   // },
-  [BizPageRouter.TestHomePage]: {
+  [BizPageRouter.TestAdapteHomePage]: {
     path: '/',
-    component: () => PageSFC(HomePage),
+    component: () => PageSFC(Home()),
   },
 };

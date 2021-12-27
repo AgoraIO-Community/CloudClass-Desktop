@@ -12,7 +12,28 @@ export class TrackStore extends EduStoreBase {
   @observable
   trackById: Map<string, Track> = new Map();
 
-  private _context?: TrackContext;
+  private _context?: TrackContext = {
+    margin: {
+      top: 0,
+    },
+    outerSize: {
+      width: 0,
+      height: 0,
+    },
+    dragBounds: {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+    },
+    resizeBounds: {
+      minHeight: 0,
+      minWidth: 0,
+      maxHeight: Number.MAX_VALUE,
+      maxWidth: Number.MAX_VALUE,
+    },
+    ready: false,
+  };
 
   constructor(
     store: EduClassroomStore,
