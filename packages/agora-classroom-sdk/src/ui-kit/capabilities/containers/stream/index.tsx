@@ -145,7 +145,7 @@ const LocalStreamPlayerTools = observer(() => {
             <SvgIcon
               canHover={tool.interactable}
               style={tool.style}
-              hoverType={tool.hoverIconType}
+              // hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
               onClick={tool.interactable ? tool.onClick : () => {}}
@@ -172,7 +172,7 @@ const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) =
             <SvgIcon
               canHover={tool.interactable}
               style={tool.style}
-              hoverType={tool.hoverIconType}
+              // hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
               onClick={tool.interactable ? tool.onClick : () => {}}
