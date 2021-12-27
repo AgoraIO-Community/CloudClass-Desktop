@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useRef, useMemo } from 'react';
 import { BaseWaveArmProps } from './types';
 import { Card, SvgImg } from '~components';
 import { transI18n } from '~ui-kit';
 import { useInterval } from '@/infra/hooks/utilites';
-
+import { Scheduler } from 'agora-rte-sdk';
 export interface WaveArmSenderProps extends BaseWaveArmProps {
   waveArmDuration: (duration: 3 | -1) => Promise<void> | void;
 }
@@ -87,12 +87,14 @@ class FSM {
 }
 
 export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
-  const [fsm, setFSM] = useState<FSM>(new FSM(WaveArmStateEnum.waveArmBefore));
+  const fsm = useMemo(() => new FSM(WaveArmStateEnum.waveArmBefore), []);
   const [firstTip, setFirstTip] = useState<boolean>(false);
   const [showTip, setShowTip] = useState<boolean>(false);
 
   const [countDownNum, setCountDownNum] = useState<number>(0);
   const [startCountDown, setStartCountDown] = useState<boolean>(false);
+
+  const taskRef = useRef<Scheduler.Task>();
 
   useEffect(() => {
     let promise: Promise<any> | null = null;
@@ -100,7 +102,9 @@ export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
       setCountDownNum(3);
       setStartCountDown(false);
       promise = new Promise(async (resolve: any) => {
-        await waveArmDuration(-1);
+        taskRef.current = Scheduler.shared.addPollingTask(async () => {
+          await waveArmDuration(3);
+        }, Scheduler.Duration.second(3));
         resolve();
       });
     });
@@ -108,10 +112,15 @@ export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
       setCountDownNum(3);
       setStartCountDown(true);
       promise?.then(async () => {
+        taskRef.current?.stop();
         await waveArmDuration(3);
         promise = null;
       });
     });
+
+    return () => {
+      taskRef.current?.stop();
+    };
   }, []);
   const handleMouseDown = () => {
     setFirstTip(true);

@@ -132,8 +132,12 @@ export class RoomStore extends EduStoreBase {
         this.recordStatus = get(roomProperties, 'record.state', RecordStatus.stopped);
       }
       if (key === 'processes') {
-        this.waveArmList = get(roomProperties, 'processes.waveArm.progress', []);
-        this.acceptedList = get(roomProperties, 'processes.handsUp.accepted', []);
+        const handsUpList = get(roomProperties, 'processes.handsUp.progress', []);
+        const waveArmList = get(roomProperties, 'processes.waveArm.progress', []);
+        this.waveArmList = handsUpList.concat(waveArmList);
+        const handsUpAcceptList = get(roomProperties, 'processes.handsUp.accepted', []);
+        const waveArmAcceptList = get(roomProperties, 'processes.waveArm.accepted', []);
+        this.acceptedList = [].concat(handsUpAcceptList).concat(waveArmAcceptList);
       }
       if (key === 'schedule') {
         const startTime = get(roomProperties, 'schedule.startTime');

@@ -515,16 +515,23 @@ export class MediaStore extends EduStoreBase {
     this._disposers.add(playbackDisposer);
     this._disposers.add(playbackDisposer);
 
+    const deviceStateConvertionMap = {
+      [AgoraRteMediaSourceState.started]: 1,
+      [AgoraRteMediaSourceState.starting]: 1,
+      [AgoraRteMediaSourceState.stopped]: 2,
+      [AgoraRteMediaSourceState.error]: 0,
+    };
+
     reaction(
       () => this.localCameraTrackState,
       () => {
         const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
-        !isEmpty(EduClassroomConfig.shared.compatibleVersions) &&
+        !EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
           this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
           this.classroomStore.api.reportMicCameraStateLeagcy({
             userUuid,
             roomUuid,
-            data: { camera: this.localCameraTrackState },
+            data: { camera: deviceStateConvertionMap[this.localCameraTrackState] },
           });
       },
     );
@@ -533,12 +540,12 @@ export class MediaStore extends EduStoreBase {
       () => this.localMicTrackState,
       () => {
         const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
-        !isEmpty(EduClassroomConfig.shared.compatibleVersions) &&
+        !EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
           this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
           this.classroomStore.api.reportMicCameraStateLeagcy({
             userUuid,
             roomUuid,
-            data: { mic: this.localMicTrackState },
+            data: { mic: deviceStateConvertionMap[this.localMicTrackState] },
           });
       },
     );

@@ -32,6 +32,9 @@ export class PollingTask {
   constructor(private __arguments: PollingArguments) {}
 
   start() {
+    if (this.__running) {
+      throw new Error('Task is already running');
+    }
     this.__running = true;
     if (this.__arguments.immediate) {
       promisify(this.__arguments.runnable).then(() => {
@@ -73,6 +76,9 @@ export class IntervalTask {
   constructor(private __arguments: IntervalArguments) {}
 
   start() {
+    if (this.__running) {
+      throw new Error('Task is already running');
+    }
     this.__running = true;
     const { immediate, interval } = this.__arguments;
     if (immediate) {

@@ -25,8 +25,8 @@ export const WaveArmListContainer = observer(() => {
 export const WaveArmSenderContainer = observer(() => {
   const { handUpUIStore } = useStore();
   const { waveArm, teacherUuid } = handUpUIStore;
-  const waveArmDuration = async (duration: 3 | -1) => {
-    await waveArm(teacherUuid, duration);
+  const waveArmDuration = (duration: 3 | -1) => {
+    return waveArm(teacherUuid, duration);
   };
   return <WaveArmSender waveArmDuration={waveArmDuration} />;
 });

@@ -3,6 +3,7 @@ import { EduUIStoreBase } from '../base';
 import { bound, AGError } from 'agora-rte-sdk';
 import { AGServiceErrorCode } from '../../../../services/error';
 import { transI18n } from '../i18n';
+import { EduClassroomConfig } from '../../../..';
 export type UserWaveArmInfo = {
   userUuid: string;
   userName: string;
@@ -126,17 +127,6 @@ export class HandUpUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 学生举手
-   * @param teacherUuid
-   */
-  @bound
-  handUp(teacherUuid: string) {
-    this.classroomStore.handUpStore
-      .handUp(teacherUuid)
-      .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
-  }
-
-  /**
    * 学生挥手
    *
    * @param teacherUuid
@@ -144,9 +134,23 @@ export class HandUpUIStore extends EduUIStoreBase {
    */
   @bound
   waveArm(teacherUuid: string, duration: -1 | 3) {
-    this.classroomStore.handUpStore
-      .waveArm(teacherUuid, duration)
-      .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
+    if (EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired) {
+      this.classroomStore.handUpStore.handUp(teacherUuid).catch((e) => {
+        if (
+          !AGError.isOf(
+            e,
+            AGServiceErrorCode.SERV_HAND_UP_CONFLICT,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+          )
+        ) {
+          this.shareUIStore.addGenericErrorDialog(e);
+        }
+      });
+    } else {
+      this.classroomStore.handUpStore
+        .waveArm(teacherUuid, duration)
+        .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
+    }
   }
 
   onDestroy() {}

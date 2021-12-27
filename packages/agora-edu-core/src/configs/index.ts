@@ -43,6 +43,7 @@ export class EduClassroomConfig {
   private _courseWareList?: CloudDriveResource[];
   private _widgets: { [key: string]: IAgoraWidget } = {};
   private _extApps: ReadonlyArray<IAgoraExtApp> = [];
+  private _currentAPIVersion = 'v3';
   private _compatibleVersions: string[] = [];
   boardDefaults: WhiteboardDefaults = { scale: 1.2 };
   //by default use https://api.sd-rtn.com
@@ -109,8 +110,10 @@ export class EduClassroomConfig {
     this._compatibleVersions = compatibleVersions;
   }
 
-  get compatibleVersions() {
-    return this._compatibleVersions;
+  get isLowAPIVersionCompatibleRequired() {
+    return this._compatibleVersions.some((v) => {
+      return v < this._currentAPIVersion;
+    });
   }
 
   get whiteboardConfig(): WhiteboardConfigs {
