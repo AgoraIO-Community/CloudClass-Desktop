@@ -38,7 +38,7 @@
     "typescript": "4.4.4"
   },
   "dependencies": {
-    "@netless/app-slide": "0.0.27",
+    "@netless/app-slide": "0.0.52",
     "@netless/combine-player": "1.1.4",
     "@netless/cursor-tool": "0.0.7",
     "@netless/iframe-bridge": "2.1.4",
@@ -48,7 +48,7 @@
     "@netless/white-audio-plugin2": "2.0.5",
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
-    "@netless/window-manager": "0.3.5",
+    "@netless/window-manager": "0.3.16",
     "agora-rte-sdk": "2.0.0",
     "await-to-js": "3.0.0",
     "ali-oss": "6.15.2",
@@ -59,7 +59,7 @@
     "react": "17.0.0",
     "rxjs": "6.6.6",
     "uuid": "3.3.3",
-    "white-web-sdk": "2.15.6",
+    "white-web-sdk": "2.15.13",
     "video.js": "7.10.0",
     "deep-diff": "1.0.2"
   },
