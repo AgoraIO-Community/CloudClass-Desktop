@@ -3,6 +3,7 @@ import { CloudDriveResourceInfo } from '../stores/domain/common/cloud-drive/type
 import { EduSessionInfo } from '../type';
 import { ClassState } from '../stores/domain/common/room/type';
 import { escapeExtAppIdentifier } from '../stores/domain/common/room/command-handler';
+import { EduClassroomConfig } from '..';
 
 export class EduApiService extends ApiBase {
   async getConfig(): Promise<any> {
@@ -261,8 +262,9 @@ export class EduApiService extends ApiBase {
       changeReward: number;
     }>;
   }) {
+    const apiVersion = EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired ? 'v2' : 'v3';
     const res = await this.fetch({
-      path: `/v3/rooms/${params.roomUuid}/rewards`,
+      path: `/${apiVersion}/rooms/${params.roomUuid}/rewards`,
       method: 'POST',
       data: {
         rewardDetails: params.rewards,
