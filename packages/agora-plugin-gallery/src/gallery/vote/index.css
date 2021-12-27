@@ -267,7 +267,6 @@
   left: 70px;
   width: auto;
   padding: 0 5px;
-  top: 2px;
 }
 .btn.vote-submit-btn[disabled] {
   background-color: rgba(53, 123, 246, 0.3) !important;
