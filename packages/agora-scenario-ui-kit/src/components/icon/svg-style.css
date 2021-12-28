@@ -193,3 +193,13 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+.icon-zoom-in-gray {
+  background-image: url('./assets/svg/zoom-in-gary.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon-zoom-out-gray {
+  background-image: url('./assets/svg/zoom-out-gary.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}

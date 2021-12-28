@@ -33,9 +33,9 @@ export class LectureH5BoardUIStore extends BoardUIStore {
   @computed
   get iconBorderZoomType() {
     if (this.borderZoomStatus === 'zoom-out') {
-      return 'search-zoom-out';
+      return 'zoom-out-gray';
     }
-    return 'search-zoom-in';
+    return 'zoom-in-gray';
   }
 
   @computed

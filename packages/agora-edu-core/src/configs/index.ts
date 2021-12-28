@@ -19,7 +19,11 @@ export interface WhiteboardConfigs {
 export interface WhiteboardDefaults {
   scale: number;
 }
-export type Platform = 'PC' | 'H5';
+export enum Platform {
+  PC = 'PC',
+  H5 = 'H5',
+}
+
 export class EduClassroomConfig {
   private static _classroomConfig?: EduClassroomConfig;
   static get shared(): EduClassroomConfig {
@@ -64,7 +68,7 @@ export class EduClassroomConfig {
     rteOpts?: AgoraRteOptions,
     widgets: { [key: string]: IAgoraWidget } = {},
     extApps: IAgoraExtApp[] = [],
-    platform: Platform = 'PC',
+    platform: Platform = Platform.PC,
   ) {
     this.appId = appId;
     this.platform = platform;

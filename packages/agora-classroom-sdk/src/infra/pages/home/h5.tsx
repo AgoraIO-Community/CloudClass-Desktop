@@ -1,24 +1,18 @@
 import { useHomeStore } from '@/infra/hooks';
-import {
-  changeLanguage,
-  Home,
-  Layout,
-  Col,
-  Row,
-  Table,
-  Input,
-  Select,
-  Button,
-  transI18n,
-  Card,
-} from '~ui-kit';
+import { changeLanguage, H5Login } from '~ui-kit';
 import { getBrowserLanguage, storage } from '@/infra/utils';
 import { observer } from 'mobx-react';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { LanguageEnum } from '@/infra/api';
 import { HomeLaunchOption } from '@/infra/stores/home';
-import { EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import {
+  EduClassroomConfig,
+  EduRegion,
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+  Platform,
+} from 'agora-edu-core';
 import { MessageDialog } from './message-dialog';
 import { HomeApi } from './home-api';
 import { Helmet } from 'react-helmet';
@@ -192,7 +186,7 @@ export const HomeH5Page = observer(() => {
             region,
             duration: duration * 60,
             latencyLevel: 2,
-            platform: 'H5',
+            platform: Platform.H5,
           };
           if (encryptionKey && encryptionMode) {
             config!.mediaOptions!.encryptionConfig = {
@@ -207,108 +201,3 @@ export const HomeH5Page = observer(() => {
     </React.Fragment>
   ) : null;
 });
-
-const H5Login: React.FC<any> = ({
-  roomName,
-  onChangeRoomName,
-  userName,
-  onChangeUserName,
-  userId,
-  onClick,
-  role,
-  scenario,
-  onChangeScenario,
-  version,
-}) => {
-  const scenarioOptions = [
-    { label: transI18n('home.roomType_interactiveBigClass'), value: 'big-class' },
-  ];
-
-  return (
-    <Layout style={{ height: '100vh', background: '#fff' }}>
-      <Table className="home-form">
-        <Row className="home-row-item can-error-item">
-          <Col>
-            <Input
-              inputPrefixWidth={55}
-              prefix={
-                <span id="et_room_name" className="home-label" title={transI18n('home.roomName')}>
-                  {transI18n('home.roomName')}
-                </span>
-              }
-              id="roomName"
-              type="text"
-              className="block w-full"
-              value={roomName}
-              onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}
-              placeholder={transI18n('home.roomName_placeholder')}
-              rule={/^[a-zA-Z0-9]{1,20}$/}
-              errorMsg={transI18n('home.input-error-msg')}
-              maxLength={20}
-            />
-          </Col>
-        </Row>
-        <Row className="home-row-item can-error-item">
-          <Col>
-            <Input
-              inputPrefixWidth={55}
-              prefix={
-                <span id="et_user_name" className="home-label" title={transI18n('home.nickName')}>
-                  {transI18n('home.nickName')}
-                </span>
-              }
-              id="userName"
-              type="text"
-              className="block w-full"
-              value={userName}
-              onChange={(evt) => onChangeUserName(evt.currentTarget.value)}
-              placeholder={transI18n('home.nickName_placeholder')}
-              rule={/^[a-zA-Z0-9]{1,20}$/}
-              errorMsg={transI18n('home.input-error-msg')}
-              maxLength={20}
-            />
-          </Col>
-        </Row>
-        <Row className="home-row-item">
-          <Col>
-            <Select
-              prefix={
-                <span id="et_room_type" className="home-label" title={transI18n('home.roomType')}>
-                  {transI18n('home.roomType')}
-                </span>
-              }
-              id="scenario"
-              value={scenario}
-              options={scenarioOptions}
-              isMenuTextCenter={true}
-              onChange={(value) => {
-                onChangeScenario(value);
-              }}
-              placeholder={transI18n('home.roomType_placeholder')}></Select>
-          </Col>
-        </Row>
-
-        <Button
-          id="btn_join"
-          className="mt-4"
-          type="primary"
-          size="lg"
-          onClick={onClick}
-          disabled={
-            !(
-              !!userId &&
-              !!userName &&
-              !!roomName &&
-              !!role &&
-              !!scenario &&
-              /^[a-zA-Z0-9]{1,20}$/.test(roomName) &&
-              /^[a-zA-Z0-9]{1,20}$/.test(userName)
-            )
-          }>
-          {transI18n('home.enter_classroom')}
-        </Button>
-        <Row className="text-center home-align-center">Version: Flexible Classroom_{version}</Row>
-      </Table>
-    </Layout>
-  );
-};

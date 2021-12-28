@@ -173,8 +173,8 @@
 }
 .stream-zoom-status {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 6px;
+  bottom: 6px;
   width: 34px;
   height: 34px;
   cursor: pointer;

@@ -42,4 +42,4 @@ export * from './stores/domain';
 export * from './stores/ui';
 export { MessageItem } from './stores/domain/common/message/struct';
 export { getRootDimensions } from './stores/ui/common/layout/helper';
-export type { Platform } from './configs';
+export { Platform } from './configs';

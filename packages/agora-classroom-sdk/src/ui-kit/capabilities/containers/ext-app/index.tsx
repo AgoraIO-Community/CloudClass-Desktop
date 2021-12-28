@@ -94,7 +94,9 @@ const UntrackExtApp = ({ extApp, canClose, onClose, mount }: any) => {
   );
 
   return (
-    <div className="untrack-extapp-container" style={{ width: minWidth, height: minHeight }}>
+    <div
+      className="untrack-extapp-container"
+      style={{ width: minWidth, maxWidth: '100vw', maxHeight: '90vh' }}>
       <Modal
         title={appName}
         onCancel={handleCancel}

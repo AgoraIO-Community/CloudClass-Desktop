@@ -5,6 +5,7 @@ import { routesMap } from '@/infra/router';
 import { HomeStore } from '@/infra/stores/home';
 import { BizPageRouter } from './infra/types';
 import { GlobalStorage } from './infra/utils';
+import React from 'react';
 
 const routes: BizPageRouter[] = [
   BizPageRouter.PretestPage,
@@ -26,7 +27,13 @@ const RouteContainer = () => (
       <Route
         key={'default'}
         path={'/'}
-        component={routesMap[BizPageRouter.TestAdapteHomePage].component}
+        exact
+        component={routesMap[BizPageRouter.TestHomePage].component}
+      />
+      <Route
+        key={'h5login'}
+        path={'/h5login'}
+        component={routesMap[BizPageRouter.TestH5HomePage].component}
       />
     </Switch>
   </HashRouter>

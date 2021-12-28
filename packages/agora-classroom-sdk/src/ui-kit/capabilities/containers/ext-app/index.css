@@ -117,5 +117,4 @@
   left: 50%;
   top: 45%;
   transform: translate3d(-50%, -50%, 0);
-  overflow: auto;
 }

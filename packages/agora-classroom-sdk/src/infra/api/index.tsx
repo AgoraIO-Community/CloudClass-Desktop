@@ -152,7 +152,7 @@ export class AgoraEduSDK {
       roomType,
       courseWareList,
       duration,
-      platform = 'PC',
+      platform = Platform.PC,
     } = option;
 
     const sessionInfo = {

@@ -71,8 +71,7 @@ export const WhiteboardH5Container: FC = observer(({ children }) => {
       ) : null}
       <Icon
         type={iconBorderZoomType as IconTypes}
-        size={18}
-        className={classnames('stream-zoom-status', iconZoomVisibleCls)}
+        className={classnames('whiteboard-zoom-status', iconZoomVisibleCls)}
         onClick={handleBoradZoomStatus}
       />
     </div>
