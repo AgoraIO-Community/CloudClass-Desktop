@@ -25,13 +25,7 @@ export class UserStore extends EduStoreBase {
   private _localUser?: EduUser;
 
   @computed
-  get localUser(): EduUser {
-    if (!this._localUser) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_LOCAL_USER_INFO_NOT_READY,
-        new Error(`localUser is undefined, not logged in?`),
-      );
-    }
+  get localUser() {
     return this._localUser;
   }
 

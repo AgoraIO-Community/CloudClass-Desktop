@@ -63,6 +63,7 @@ export class AgoraRteEngine extends AGEventEmitter {
   }
 
   async login(rtmToken: string, userId: string): Promise<void> {
+    ReportService.shared.host = 'https://api.agora.io';
     ReportService.shared.pathPrefix = `/cn/v1.0/projects/${AgoraRteEngineConfig.shared.appId}/app-dev-report`;
     const ignoreUrlRegionPrefix = AgoraRteEngineConfig.shared.ignoreUrlRegionPrefix;
     this._apiService.pathPrefix = `${

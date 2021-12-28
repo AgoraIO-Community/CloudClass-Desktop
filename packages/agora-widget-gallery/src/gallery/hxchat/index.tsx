@@ -34,11 +34,24 @@ const App: React.FC<AppProps> = observer((props) => {
   const isJoined =
     uiStore.classroomStore.connectionStore.classroomState === ClassroomState.Connected;
 
-  const localUserInfo = {
-    userUuid: EduClassroomConfig.shared.sessionInfo.userUuid,
-    userName: EduClassroomConfig.shared.sessionInfo.userName,
-    roleType: EduClassroomConfig.shared.sessionInfo.role,
+  const { localUser } = uiStore.classroomStore.userStore;
+
+  const getIMUserID = () => {
+    try {
+      return localUser?.userProperties.get('widgets').easemobIM.userId;
+    } catch (e) {
+      return localUser?.userUuid;
+    }
   };
+
+  const localUserInfo = localUser
+    ? {
+        userUuid: getIMUserID(),
+        userName: EduClassroomConfig.shared.sessionInfo.userName,
+        roleType: EduClassroomConfig.shared.sessionInfo.role,
+      }
+    : null;
+
   const roomInfo = {
     roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
     roomName: EduClassroomConfig.shared.sessionInfo.roomName,
@@ -111,14 +124,14 @@ const App: React.FC<AppProps> = observer((props) => {
 
   useEffect(() => {
     let unmount = () => {};
-    if (domRef.current && isJoined && chatroomId) {
+    if (domRef.current && isJoined && chatroomId && localUserInfo) {
       //@ts-ignore
       unmount = hx.renderHXChatRoom(domRef.current, hxStore);
     }
     return () => {
       unmount && unmount();
     };
-  }, [domRef.current, isJoined, isFullScreen, chatroomId]);
+  }, [domRef.current, isJoined, isFullScreen, chatroomId, localUserInfo]);
 
   return (
     <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>

@@ -7,7 +7,11 @@ import { Layout } from '~components/layout';
 import './index.css';
 import classnames from 'classnames';
 
-export const ChatWidget: FC<any> = observer((props) => {
+export const ChatWidget: FC<{
+  visibleEmoji: boolean;
+  visibleBtnSend?: boolean;
+  inputBoxStatus?: string;
+}> = (props) => {
   return (
     <Widget
       widgetComponent={EduClassroomConfig.shared.widgets['chat']}
@@ -15,9 +19,9 @@ export const ChatWidget: FC<any> = observer((props) => {
       className="chat-panel"
     />
   );
-});
+};
 
-export const ChatWidgetH5: FC<any> = observer(() => {
+export const ChatWidgetH5: FC = observer(() => {
   const { layoutUIStore, streamUIStore } = useLectureH5UIStores();
   return (
     <Layout
@@ -31,6 +35,6 @@ export const ChatWidgetH5: FC<any> = observer(() => {
   );
 });
 
-export const ChatWidgetPC: FC<any> = observer(() => {
+export const ChatWidgetPC: FC = observer(() => {
   return <ChatWidget visibleEmoji={!UUAparser.mobileBrowser} />;
 });
