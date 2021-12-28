@@ -10,7 +10,7 @@ import { action, computed, IReactionDisposer, observable, runInAction } from 'mo
 import { computedFn } from 'mobx-utils';
 import { EduStream } from '../../../..';
 import { EduClassroomConfig } from '../../../../configs';
-import { EduRoleTypeEnum } from '../../../../type';
+import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduUIStoreBase } from '../base';
 import { transI18n } from '../i18n';
@@ -42,8 +42,11 @@ export class StreamUIStore extends EduUIStoreBase {
         const onPodium = this.classroomStore.roomStore.acceptedList.some(
           ({ userUuid: thisUuid }) => thisUuid === userUuid,
         );
+        const haveAnimation =
+          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
+          onPodium;
         // Add an animation to the award animation queue only if the student is on podium
-        if (reward > previousReward && onPodium) {
+        if (reward > previousReward && haveAnimation) {
           anims.push({ id: uuidv4(), userUuid: userUuid });
         }
       }
