@@ -7,7 +7,7 @@ import AgoraRTM, {
   RtmTextMessage,
 } from 'agora-rtm-sdk';
 import { Logger } from '../logger';
-import { AgoraRteEngineConfig, AgoraRteLogLevel } from '../../configs';
+import { AgoraRegion, AgoraRteEngineConfig, AgoraRteLogLevel } from '../../configs';
 import { ReportService } from '../services/report';
 import { AGRteErrorCode, RteErrorCenter } from '../utils/error';
 import { AgoraRteEventType } from '../processor/channel-msg/handler';
@@ -79,10 +79,24 @@ export class AGRtmManager extends EventEmitter {
     return logFilter;
   }
 
+  private get _region(): RtmStatusCode.AreaCode {
+    let region: AgoraRegion = AgoraRteEngineConfig.shared.region;
+    switch (region) {
+      case AgoraRegion.CN:
+        return 'GLOBAL' as RtmStatusCode.AreaCode;
+      case AgoraRegion.AP:
+        return 'ASIA' as RtmStatusCode.AreaCode;
+      case AgoraRegion.EU:
+        return 'EUROPE' as RtmStatusCode.AreaCode;
+      case AgoraRegion.NA:
+        return 'NORTH_AMERICA' as RtmStatusCode.AreaCode;
+    }
+  }
+
   async login(token: string, uid: string, configs: AGRtmManagerInitConfig) {
     let client;
     try {
-      AgoraRTM.setArea({ areaCodes: [AgoraRteEngineConfig.shared.rtmRegion] });
+      AgoraRTM.setArea({ areaCodes: [this._region] });
       client = AgoraRTM.createInstance(AgoraRteEngineConfig.shared.appId, {
         enableLogUpload: configs.uploadLog,
         logFilter: this.logFilter,

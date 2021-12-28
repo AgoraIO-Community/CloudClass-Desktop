@@ -93,9 +93,6 @@ export class ConnectionStore extends EduStoreBase {
   @action
   setCheckInData(checkInData: CheckInData) {
     this.checkInData = checkInData;
-    EduClassroomConfig.shared.rteEngineConfig.setRtcRegion(checkInData.rtcRegion);
-    EduClassroomConfig.shared.rteEngineConfig.setRtmRegion(checkInData.rtmRegion);
-    this.logger.info(`rtc region ${checkInData.rtcRegion}, rtm region ${checkInData.rtmRegion}`);
   }
 
   @action.bound

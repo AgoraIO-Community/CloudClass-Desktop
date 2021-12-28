@@ -70,17 +70,20 @@ export class AgoraRteEngineConfig {
   rtcConfigs: AGRtcConfig = {};
   logFilePath?: string;
   static logLevel: AgoraRteLogLevel = AgoraRteLogLevel.DEBUG;
-  static readonly platform: AgoraRteRuntimePlatform = window.isElectron
-    ? AgoraRteRuntimePlatform.Electron
-    : AgoraRteRuntimePlatform.Web;
+  static get platform(): AgoraRteRuntimePlatform {
+    var userAgent = navigator.userAgent.toLowerCase();
+    if (userAgent.indexOf(' electron/') > -1) {
+      // Electron-specific code
+      return AgoraRteRuntimePlatform.Electron;
+    }
+    return AgoraRteRuntimePlatform.Web;
+  }
   userId: string = '';
   token: string = '';
   ignoreUrlRegionPrefix = false;
   language: RteLanguage = RteLanguage.zh;
   debugI18n: boolean = false;
   region: AgoraRegion = AgoraRegion.CN;
-  private _rtcRegion?: AREAS;
-  private _rtmRegion?: RtmStatusCode.AreaCode;
 
   SCENE_JOIN_RETRY_ATTEMPTS = 3;
 
@@ -99,60 +102,6 @@ export class AgoraRteEngineConfig {
           ...opts.rtcConfigs,
         };
       }
-    }
-  }
-
-  get rtcRegion(): AREAS {
-    if (!this._rtcRegion) {
-      return RteErrorCenter.shared.handleThrowableError(
-        AGRteErrorCode.RTC_ERR_REGION_NOT_SPECIFIED,
-        new Error(`no rtc region specified`),
-      );
-    }
-    return this._rtcRegion;
-  }
-
-  get rtmRegion(): RtmStatusCode.AreaCode {
-    if (!this._rtmRegion) {
-      return RteErrorCenter.shared.handleThrowableError(
-        AGRteErrorCode.RTM_ERR_REGION_NOT_SPECIFIED,
-        new Error(`no rtm region specified`),
-      );
-    }
-    return this._rtmRegion;
-  }
-
-  setRtcRegion(area: AgoraComponentRegion) {
-    switch (area) {
-      case 'AREA_GLOBAL':
-        this._rtcRegion = 'GLOBAL' as AREAS;
-        break;
-      case 'AREA_AS':
-        this._rtcRegion = 'ASIA' as AREAS;
-        break;
-      case 'AREA_EUR':
-        this._rtcRegion = 'EUROPE' as AREAS;
-        break;
-      case 'AREA_NA':
-        this._rtcRegion = 'NORTH_AMERICA' as AREAS;
-        break;
-    }
-  }
-
-  setRtmRegion(area: AgoraComponentRegion) {
-    switch (area) {
-      case 'AREA_GLOBAL':
-        this._rtmRegion = 'GLOBAL' as RtmStatusCode.AreaCode;
-        break;
-      case 'AREA_AS':
-        this._rtmRegion = 'ASIA' as RtmStatusCode.AreaCode;
-        break;
-      case 'AREA_EUR':
-        this._rtmRegion = 'EUROPE' as RtmStatusCode.AreaCode;
-        break;
-      case 'AREA_NA':
-        this._rtmRegion = 'NORTH_AMERICA' as RtmStatusCode.AreaCode;
-        break;
     }
   }
 

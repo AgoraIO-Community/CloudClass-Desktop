@@ -80,13 +80,6 @@ async function createWindow() {
       enableRemoteModule: true,
       nativeWindowOpen: true,
       backgroundThrottling: false,
-      // nodeIntegrationInSubFrames: true,
-      // autoplayPolicy: 'no-user-gesture-required',
-      // nodeIntegration: true,
-      // nodeIntegrationInWorker: true,
-      // nodeIntegrationInSubFrames: true,
-      // contextIsolation: false,
-      preload: path.join(__dirname, './preload'),
     },
   });
 
@@ -357,10 +350,6 @@ app.on('activate', function () {
   if (mainWindow) {
     mainWindow.show();
   }
-});
-
-ipcMain.on('send-main-pid', (event, arg) => {
-  event.reply('main-pid-reply', `${process.pid}`);
 });
 
 // In this file you can include the rest of your app's specific main process

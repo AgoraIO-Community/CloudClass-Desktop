@@ -39,7 +39,7 @@ export const HomePage = observer(() => {
   const onChangeRegion = (r: string) => {
     const region = r as EduRegion;
     setRegion(region);
-    homeStore.region = region;
+    homeStore.setRegion(region);
   };
 
   const onChangeLanguage = (language: string) => {

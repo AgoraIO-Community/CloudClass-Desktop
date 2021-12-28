@@ -1,7 +1,7 @@
 import { AGEventEmitter } from '../utils/events';
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from '../../configs';
 import { AgoraRteScene } from '../../scene';
-import { Logger, LogFileCollection } from '../logger';
+import { Logger } from '../logger';
 import { AgoraMediaControl } from '../media/control';
 import { AGRtcManager } from '../rtc';
 import { AGRtmManager } from '../rtm';
@@ -116,25 +116,49 @@ export class AgoraRteEngine extends AGEventEmitter {
 
   async uploadSDKLogToAgoraService(tagInfo: TagInfo) {
     let err;
-    let files: LogFileCollection = await Logger.logger.collectLogs();
-    if (files.electron) {
-      [err] = await to(this._logService.uploadZipLogFile(tagInfo, files.electron));
+    let consoleLog;
+    let electronLog;
+    [err, consoleLog] = await to(Logger.logger.collectConsoleLogs());
+
+    if (!err) {
+      [err] = await to(this._logService.uploadLogFile(tagInfo, consoleLog));
       if (err) {
+        RteErrorCenter.shared.handleNonThrowableError(
+          AGRteErrorCode.RTE_ERR_WEB_LOG_UPLOAD_ERR,
+          err as Error,
+        );
+      } else {
+        //clean up when success, ignore errors
+        await to(Logger.logger.cleanupConsoleLogs());
+      }
+    } else {
+      RteErrorCenter.shared.handleNonThrowableError(
+        AGRteErrorCode.RTE_ERR_WEB_LOG_UPLOAD_ERR,
+        err as Error,
+      );
+    }
+
+    if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+      [err, electronLog] = await to(
+        Logger.logger.collectElectronLogs(
+          RtcAdapterElectron.logBasePath,
+          RtcAdapterElectron.logFolderPath,
+        ),
+      );
+      if (!err) {
+        [err] = await to(this._logService.uploadZipLogFile(tagInfo, electronLog));
+        if (err) {
+          RteErrorCenter.shared.handleNonThrowableError(
+            AGRteErrorCode.RTE_ERR_ELECTRON_LOG_UPLOAD_ERR,
+            err as Error,
+          );
+        }
+      } else {
         RteErrorCenter.shared.handleNonThrowableError(
           AGRteErrorCode.RTE_ERR_ELECTRON_LOG_UPLOAD_ERR,
           err as Error,
         );
       }
     }
-    if (files.web) {
-      [err] = await to(this._logService.uploadLogFile(tagInfo, files.web));
-      if (err) {
-        RteErrorCenter.shared.handleNonThrowableError(
-          AGRteErrorCode.RTE_ERR_WEB_LOG_UPLOAD_ERR,
-          err as Error,
-        );
-      }
-    }
-    files.clean();
   }
 }

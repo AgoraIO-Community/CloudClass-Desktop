@@ -1,4 +1,5 @@
 import AgoraRTC, {
+  AREAS,
   ConnectionState,
   EncryptionMode,
   IAgoraRTCClient,
@@ -14,7 +15,7 @@ import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
 import { AGMediaEncryptionMode, RtcState } from '../../type';
 import { AGRtcConnectionType } from '../../channel';
 import { Injectable } from '../../../decorator/type';
-import { AgoraRteEngineConfig } from '../../../../configs';
+import { AgoraComponentRegion, AgoraRegion, AgoraRteEngineConfig } from '../../../../configs';
 import { Log } from '../../../decorator/log';
 import { throttle } from 'lodash';
 import { bound } from '../../../decorator';
@@ -47,7 +48,7 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
     this._base = base;
     this.connectionType = connectionType;
 
-    AgoraRTC.setArea({ areaCode: [AgoraRteEngineConfig.shared.rtcRegion] });
+    AgoraRTC.setArea({ areaCode: [this._rtcRegion()] });
 
     // create new for subchannel
     this._client = AgoraRTC.createClient({
@@ -152,6 +153,20 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
       return 0;
     }
     return -1;
+  }
+
+  private _rtcRegion(): AREAS {
+    let area: AgoraRegion = AgoraRteEngineConfig.shared.region;
+    switch (area) {
+      case AgoraRegion.CN:
+        return 'GLOBAL' as AREAS;
+      case AgoraRegion.AP:
+        return 'ASIA' as AREAS;
+      case AgoraRegion.EU:
+        return 'EUROPE' as AREAS;
+      case AgoraRegion.NA:
+        return 'NORTH_AMERICA' as AREAS;
+    }
   }
 
   private _getRtcState(state: ConnectionState): RtcState {

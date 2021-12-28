@@ -4,13 +4,10 @@ import { upperCase, escape } from 'lodash';
 import LogWorker from 'worker-loader?inline=fallback!./log.worker';
 import { AgoraRteEngineConfig, AgoraRteLogLevel } from '../../configs';
 import { db } from './db';
-export interface LogFileCollection {
-  electron?: File;
-  web?: File;
-  clean: () => void;
-}
 
 export class Logger {
+  private _lastObjectIndex = -1;
+
   thread = new LogWorker();
   constructor() {}
 
@@ -119,37 +116,59 @@ export class Logger {
     window.console = console;
   }
 
-  async collectLogs(): Promise<LogFileCollection> {
-    // TODO performance enhancement needed
-    let lastObjectIndex = -1;
+  async collectConsoleLogs(): Promise<File> {
+    let logsStr: string = '';
 
-    let collection: LogFileCollection = {
-      clean: async () => {
-        const count = await db.logs.where('id').belowOrEqual(lastObjectIndex).delete();
-        console.log(`[logger] delete ${count} logs`);
-      },
-    };
-    //@ts-ignore
-    if (window.doGzip) {
-      //@ts-ignore
-      let file = await window.doGzip();
-      collection.electron = file;
-    }
-
-    let logs: any[] = [];
-
-    await db.logs.each((e: any) => logs.push(e));
-
-    if (logs.length) {
-      lastObjectIndex = logs[logs.length - 1].id;
-    }
-
-    const logsStr = logs.map((e: any) => e.content).join('\n');
+    await db.logs.each((e: any) => {
+      logsStr += e.content + '\n';
+      this._lastObjectIndex = e.id;
+    });
 
     const now = +Date.now();
     const file = new File([logsStr], `${now}`);
-    collection.web = file;
 
-    return collection;
+    return file;
+  }
+
+  async cleanupConsoleLogs() {
+    const count = await db.logs.where('id').belowOrEqual(this._lastObjectIndex).delete();
+    console.log(`[logger] delete ${count} logs`);
+  }
+
+  private _addLocalFolderAsync(zip: any, logFolderPath: string) {
+    return new Promise<void>((resolve, reject) => {
+      zip.addLocalFolderAsync(logFolderPath, (success: boolean, err: Error) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  }
+
+  private _readFile(zipPath: string) {
+    return new Promise<Buffer>((resolve, reject) => {
+      const fs = window.require('fs');
+      fs.readFile(zipPath, (err: Error, data: Buffer) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(data);
+      });
+    });
+  }
+
+  async collectElectronLogs(logBasePath: string, logFolderPath: string): Promise<File> {
+    const now = +Date.now();
+
+    const AdmZip = window.require('adm-zip');
+    const path = window.require('path');
+    const zip = new AdmZip();
+    await this._addLocalFolderAsync(zip, logFolderPath);
+    const zipPath = path.resolve(logBasePath, 'logs.zip');
+    zip.writeZip(zipPath);
+    let res = await this._readFile(zipPath);
+
+    return new File([res], `${now}`);
   }
 }

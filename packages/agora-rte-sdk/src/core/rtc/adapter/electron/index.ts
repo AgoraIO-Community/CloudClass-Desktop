@@ -1,5 +1,6 @@
 import type {
   AgoraNetworkQuality,
+  AREA_CODE,
   ConnectionState,
   LOCAL_AUDIO_STREAM_STATE,
   LOCAL_VIDEO_STREAM_ERROR,
@@ -36,7 +37,12 @@ import {
 import { RtcAudioDeviceManagerElectron, RtcVideoDeviceManagerElectron } from './device';
 import { RtcNetworkQualityElectron } from './stats';
 import { AgoraRteElectronCameraThread } from './thread';
-import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from '../../../../configs';
+import {
+  AgoraComponentRegion,
+  AgoraRegion,
+  AgoraRteEngineConfig,
+  AgoraRteRuntimePlatform,
+} from '../../../../configs';
 import { AgoraMediaControlEventType } from '../../../media/control';
 import { AgoraRteEventType } from '../../../processor/channel-msg/handler';
 import { Duration } from '../../../schedule/scheduler';
@@ -76,6 +82,16 @@ export class RtcAdapterElectron extends RtcAdapterBase {
   cameraThread: AgoraRteElectronCameraThread;
   private _localVideoEnabled = false;
   private _localAudioEnabled = false;
+  static get remote() {
+    const remote = window.require('electron').remote;
+    if (!remote) {
+      Logger.warn(
+        `enableRemoteModule is not set, we will not be able to tell you screenshare access status in this case. You can still use screenshare feature though`,
+      );
+      return undefined;
+    }
+    return remote;
+  }
 
   screenShareId?: string;
   screenShareType?: AGScreenShareType;
@@ -96,12 +112,28 @@ export class RtcAdapterElectron extends RtcAdapterBase {
       //@ts-ignore
       RtcAdapterElectron.rtcEngine = new IAgoraRtcEngine();
     }
-    let res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId);
+
+    const logPath = RtcAdapterElectron.logPath;
+    let res = 0;
+    if (logPath) {
+      Logger.info(`[RtcAdapterElectron] sdk log path: ${logPath}`);
+      let path = window.require('path');
+      res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region, {
+        filePath: logPath,
+        fileSize: 1024,
+        level: 0x0001,
+      });
+    } else {
+      Logger.warn(`[RtcAdapterElectron] no log path found, sdk logs will be put in default folder`);
+      res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region);
+    }
+
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
         AGRteErrorCode.RTC_ERR_RTC_ENGINE_INITIALZIE_FAILED,
         new Error(`rtc engine initialize failed ${res}`),
       );
+
     this._adm = new RtcAudioDeviceManagerElectron(this);
     this._vdm = new RtcVideoDeviceManagerElectron(this);
     this.cameraThread = new AgoraRteElectronCameraThread(this);
@@ -259,16 +291,11 @@ export class RtcAdapterElectron extends RtcAdapterBase {
   }
 
   hasScreenSharePermission(): boolean {
-    const remote = window.require('electron').remote;
-    if (!remote) {
-      this.logger.warn(
-        `enableRemoteModule is not set, we will not be able to tell you screenshare access status in this case. You can still use screenshare feature though`,
-      );
-      return true;
+    if (RtcAdapterElectron.remote) {
+      let status = RtcAdapterElectron.remote.systemPreferences.getMediaAccessStatus('screen');
+      return status !== 'denied';
     }
-
-    let status = remote.systemPreferences.getMediaAccessStatus('screen');
-    return status !== 'denied';
+    return true;
   }
 
   destroy(): number {
@@ -297,6 +324,43 @@ export class RtcAdapterElectron extends RtcAdapterBase {
 
     let { version, build } = this.version;
     return `${version}.${build}`;
+  }
+
+  static get logBasePath() {
+    if (RtcAdapterElectron.remote) {
+      return RtcAdapterElectron.remote.app.getPath('logs');
+    }
+  }
+
+  static get logFolderPath() {
+    if (this.logBasePath) {
+      const path = window.require('path');
+      return path.resolve(this.logBasePath, 'logs');
+    }
+    return undefined;
+  }
+
+  static get logPath() {
+    const folder = this.logFolderPath;
+    if (folder) {
+      const path = window.require('path');
+      return path.resolve(folder, 'sdk.log');
+    }
+    return undefined;
+  }
+
+  private get _region(): AREA_CODE {
+    let area: AgoraRegion = AgoraRteEngineConfig.shared.region;
+    switch (area) {
+      case AgoraRegion.CN:
+        return 0xffffffff;
+      case AgoraRegion.AP:
+        return 8;
+      case AgoraRegion.EU:
+        return 4;
+      case AgoraRegion.NA:
+        return 2;
+    }
   }
 
   private _addEventListeners() {
