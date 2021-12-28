@@ -203,3 +203,9 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.icon-test-speaker {
+  background-image: url('./assets/svg/test-speaker.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}

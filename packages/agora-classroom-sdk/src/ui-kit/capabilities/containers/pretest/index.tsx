@@ -17,7 +17,6 @@ import './index.css';
 import { useStore } from '~hooks/use-edu-stores';
 import { Slider } from '~ui-kit/components/slider';
 import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
-
 declare global {
   interface Window {
     process: {
@@ -219,6 +218,7 @@ const PlaybackTestPlayer = observer(() => {
       stopPlaybackDeviceTest,
       localPlaybackTestVolume,
       disable,
+      playbackTesting,
     },
   } = useStore();
   let url = PretestAudio;
@@ -236,17 +236,18 @@ const PlaybackTestPlayer = observer(() => {
 
   return (
     <div className="device-volume-test">
-      <SvgImg type="speaker" style={{ color: '#0073FF' }} />
-      <Volume currentVolume={localPlaybackTestVolume} maxLength={33} style={{ marginLeft: 6 }} />
-      <Button
-        disabled={disable}
-        type="secondary"
-        style={{ marginLeft: 10 }}
+      <div
+        className="test-speaker"
         onClick={() => {
           startPlaybackDeviceTest(url);
         }}>
-        {transI18n('media.test_speaker')}
-      </Button>
+        {playbackTesting ? (
+          <div className="test-speakering-icon"></div>
+        ) : (
+          <Icon type="test-speaker" size={22} className="test-speaker-icon"></Icon>
+        )}
+        <div className="test-btn">{transI18n('media.test_speaker')}</div>
+      </div>
     </div>
   );
 });

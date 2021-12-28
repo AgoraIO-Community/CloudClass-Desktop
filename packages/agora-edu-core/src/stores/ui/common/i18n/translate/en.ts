@@ -318,7 +318,7 @@ export const en = {
     switch_speaker: 'Switch Speaker',
     volume: 'Volume',
     adjust_volume: 'Adjust Volume',
-    test_speaker: 'Test',
+    test_speaker: 'Test Speaker',
     camera_error: 'Device exception, camera is unplugged or occupied and cannot be used!',
     microphone_error: 'Device exception, microphone is unplugged or occupied and cannot be used!',
     mirror: 'mirror',

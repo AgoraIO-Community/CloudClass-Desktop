@@ -104,6 +104,8 @@ export class PretestUIStore extends EduUIStoreBase {
     }
   }
 
+  private _timer: ReturnType<typeof setTimeout> | null = null;
+
   /**
    * Toast 消息列表
    */
@@ -114,6 +116,11 @@ export class PretestUIStore extends EduUIStoreBase {
    * 美颜类型
    */
   @observable activeBeautyType: BeautyType = BeautyType.buffing;
+
+  /**
+   * 是否正在测试扬声器
+   */
+  @observable playbackTesting: boolean = false;
 
   /**
    * 视频消息 Toast 列表
@@ -419,16 +426,22 @@ export class PretestUIStore extends EduUIStoreBase {
    * 开始扬声器测试
    * @param url
    */
-  @bound
+  @action.bound
   startPlaybackDeviceTest(url: string) {
+    this.playbackTesting = true;
     this.classroomStore.mediaStore.startPlaybackDeviceTest(url);
+    this._timer && clearTimeout(this._timer);
+    this._timer = setTimeout(() => {
+      this.stopPlaybackDeviceTest();
+    }, 3000);
   }
 
   /**
    * 停止扬声器测试
    */
-  @bound
+  @action.bound
   stopPlaybackDeviceTest() {
+    this.playbackTesting = false;
     this.classroomStore.mediaStore.stopPlaybackDeviceTest();
   }
 
