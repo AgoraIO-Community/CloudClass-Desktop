@@ -37,7 +37,6 @@ import SlideApp from '@netless/app-slide';
 import { AgoraRteEventType, bound } from 'agora-rte-sdk';
 import get from 'lodash/get';
 import { AgoraEduClassroomEvent } from '../../../..';
-import { transI18n } from '../../../ui';
 
 const DEFAULT_COLOR: Color = {
   r: 252,
@@ -235,7 +234,7 @@ export class BoardStore extends EduStoreBase {
       if (opened) {
         EduErrorCenter.shared.handleThrowableError(
           AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
-          Error(transI18n('toast.resource_already_opened')),
+          Error('resource already opened'),
         );
       }
       await this.putCourseResource(resource);
@@ -245,7 +244,7 @@ export class BoardStore extends EduStoreBase {
       if (opened) {
         EduErrorCenter.shared.handleThrowableError(
           AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
-          Error(transI18n('toast.resource_already_opened')),
+          Error('resource already opened'),
         );
       }
       await this.putMediaResource(resource);
@@ -260,12 +259,12 @@ export class BoardStore extends EduStoreBase {
     if (resource.taskProgress.status == 'Converting') {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_CONVERSION_CONVERTING,
-        Error(transI18n('toast.resource_is_converting')),
+        Error('resource is converting'),
       );
     } else if (resource.taskProgress.status == 'Fail') {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_CONVERSION_FAIL,
-        Error(transI18n('toast.fail_to_convert_resource')),
+        Error('fail to convert resource'),
       );
     }
     const scenePath = `/${resource.resourceUuid}`;
@@ -510,7 +509,7 @@ export class BoardStore extends EduStoreBase {
       room = await client.joinRoom(data, this._whiteboardEventListeners);
     } catch (e) {
       return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_BOARD_JOIN_JOIN_API_FAILED,
+        AGEduErrorCode.EDU_ERR_BOARD_JOIN_API_FAILED,
         e as Error,
       );
     }

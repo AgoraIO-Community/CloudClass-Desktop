@@ -146,7 +146,7 @@ export class MessagesStore extends EduStoreBase {
       }
     } catch (e) {
       EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_GET_COVERSATION_HISTORY_CAHT_MESSAGE_FAIL,
+        AGEduErrorCode.EDU_ERR_GET_COVERSATION_HISTORY_CHAT_MESSAGE_FAIL,
         e as Error,
       );
     }
@@ -207,7 +207,7 @@ export class MessagesStore extends EduStoreBase {
     } catch (e) {
       // throw an error
       EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_UN_MUTE_CAHT_FAIL,
+        AGEduErrorCode.EDU_ERR_UN_MUTE_CHAT_FAIL,
         e as Error,
       );
     }

@@ -1,5 +1,5 @@
-import { AbstractErrorCenter, AGErrorWrapper, Logger } from 'agora-rte-sdk';
-import { v4 as uuidv4 } from 'uuid';
+import { AbstractErrorCenter, AGError, AGErrorWrapper, Logger } from 'agora-rte-sdk';
+import { transI18n } from '../stores/ui/common/i18n';
 
 export class EduErrorCenter extends AbstractErrorCenter {
   static shared = new EduErrorCenter();
@@ -32,7 +32,7 @@ export enum AGEduErrorCode {
   EDU_ERR_BOARD_ROOM_NOT_AVAILABLE = '600007',
   EDU_ERR_BOARD_JOIN_FAILED = '600008',
   EDU_ERR_BOARD_LEAVE_FAILED = '600009',
-  EDU_ERR_BOARD_JOIN_JOIN_API_FAILED = '600010',
+  EDU_ERR_BOARD_JOIN_API_FAILED = '600010',
   EDU_ERR_BOARD_WINDOW_MANAGER_NOT_AVAILABLE = '600011',
   EDU_ERR_INVALID_CLOUD_RESOURCE = '600012',
   EDU_ERR_SCENE_NOT_READY = '600013',
@@ -71,12 +71,12 @@ export enum AGEduErrorCode {
   EDU_ERR_HAND_UP_WAVE_FAIL = '600046',
   EDU_ERR_BOARD_ROOM_NOT_WRITABLE = '600047',
   EDU_ERR_GET_HISTORY_CHAT_MESSAGE_FAIL = '600048',
-  EDU_ERR_GET_COVERSATION_HISTORY_CAHT_MESSAGE_FAIL = '600049',
+  EDU_ERR_GET_COVERSATION_HISTORY_CHAT_MESSAGE_FAIL = '600049',
   EDU_ERR_GET_CONVERSATION_LIST_FAIL = '600050',
   EDU_ERR_SEND_MESSAGE_CONVERSATION_FAIL = '600051',
   EDU_ERR_SEND_MESSAGE_FAIL = '600052',
   EDU_ERR_MUTE_CHAT_FAIL = '600053',
-  EDU_ERR_UN_MUTE_CAHT_FAIL = '600054',
+  EDU_ERR_UN_MUTE_CHAT_FAIL = '600054',
   EDU_ERR_MEDIA_CONTROL_NOT_READY = '600055',
   EDU_ERR_UNEXPECTED_STUDENT_STREAM_LENGTH = '600056',
   EDU_ERR_CLOUD_REMOVE_PERSONAL_RESOURCE_FAIL = '600057',
@@ -98,3 +98,12 @@ export enum AGEduErrorCode {
   EDU_ERR_REPORT_INVALID_PARAMS = '600073',
   EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED = '600074',
 }
+
+export const getEduErrorMessage = (error: Error) => {
+  if (error instanceof AGError && error.codeList && error.codeList.length) {
+    const code = error.codeList[error.codeList.length - 1];
+    return transI18n(`edu_error.${code}`);
+  }
+
+  return null;
+};

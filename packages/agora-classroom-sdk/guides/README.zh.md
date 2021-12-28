@@ -23,9 +23,9 @@
 
 ### 使用的技术
 
-- typescript 4.2.3
+- typescript 4.4.4
 - react & react hooks & mobx
-- electron 7.1.14 & electron-builder
+- electron 12.0.0 & electron-builder
 - ui-kit & storybook
 - Agora Edu 云服务
 
@@ -33,13 +33,14 @@
 
 - 请确保你已经完成 Agora e-Education 项目指南中的[前提条件](../README.zh.md#prerequisites)。
 - 配置阿里云 OSS，详见[阿里云 OSS 配置指南](https://github.com/AgoraIO-Usecase/eEducation/wiki/%E9%98%BF%E9%87%8C%E4%BA%91OSS%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97)。
-- 重命名 `.env.example` 为 `.env.local`，并配置以下参数：
+- 重命名 `.env.example` 为 `.env.dev`，并配置以下参数：
 
   - **（必填）你获取到的声网 App ID**
 
   ```bash
   # 声网的 App ID
   REACT_APP_AGORA_APP_ID=agora appId
+  REACT_APP_AGORA_APP_CERTIFICATE=agora app certificate
   ```
 
 - 中国区客户推荐使用以下方式安装 npm 依赖包和 electron & node-sass 加速

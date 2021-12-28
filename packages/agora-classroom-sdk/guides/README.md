@@ -19,9 +19,9 @@
 
 ### Frontend tech utilities
 
-- typescript 4.2.3
+- typescript 4.4.4
 - react & react hooks & mobx
-- electron 7.1.14 & electron-builder
+- electron 12.0.0 & electron-builder
 - ui-kit & storybook
 - Agora Edu Cloud Service
 
@@ -29,13 +29,14 @@
 
 - Make sure you have made the preparations mentioned in the [Agora e-Education Guide](../README.md#prerequisites).
 - Set up your Alibaba Cloud OSS Guide. For details, see [Alibaba Cloud OSS Guide](https://github.com/AgoraIO-Usecase/eEducation/wiki/Alibaba-Cloud-OSS-Guide).
-- Rename `.env.example` to `.env.local` and configure the following parameters:
+- Rename `.env.example` to `.env.dev` and configure the following parameters:
 
   - **(Required) The Agora App ID that you get**
 
   ```bash
   # Agora App ID
   REACT_APP_AGORA_APP_ID=agora appId
+  REACT_APP_AGORA_APP_CERTIFICATE=agora app certificate
   ```
 
 - Install Node.js LTS

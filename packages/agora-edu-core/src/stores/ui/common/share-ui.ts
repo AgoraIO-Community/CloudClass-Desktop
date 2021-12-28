@@ -2,7 +2,7 @@ import { AGError, bound, Lodash } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogAction, orientationEnum } from '../../../type';
-import { EduErrorCenter } from '../../../utils/error';
+import { EduErrorCenter, getEduErrorMessage } from '../../../utils/error';
 import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
 import { ToastFilter } from '../../../utils/toast-filter';
@@ -68,7 +68,10 @@ export class EduShareUIStore {
       if (ToastFilter.shouldBlockToast(error)) {
         return;
       }
-      let emsg = error.message.length > 64 ? `${error.message.substr(0, 64)}...` : error.message;
+      let emsg =
+        getEduErrorMessage(error) ||
+        (error.message.length > 64 ? `${error.message.substr(0, 64)}...` : error.message);
+
       this.addToast(`Error [${code}]: ${emsg}`, 'error');
     });
   }
@@ -132,6 +135,8 @@ export class EduShareUIStore {
       error.codeList.includes(AGRteErrorCode.RTE_ERR_RESTFUL_NETWORK_TIMEOUT_ERR)
     ) {
       message = transI18n('error.network_timeout');
+    } else {
+      message = getEduErrorMessage(error) || message;
     }
 
     this.addDialog(DialogCategory.ErrorGeneric, {
