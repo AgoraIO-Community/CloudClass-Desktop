@@ -239,7 +239,7 @@ export class RosterUIStore extends EduUIStoreBase {
         case 'camera': {
           // mute or unmute video
           const userUuid = profile.uid as string;
-          if (localUser.userUuid === userUuid) {
+          if (localUser?.userUuid === userUuid) {
             const isEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
             enableLocalVideo(!isEnabled);
           } else {
@@ -259,7 +259,7 @@ export class RosterUIStore extends EduUIStoreBase {
         case 'microphone': {
           // mute or unmute audio
           const userUuid = profile.uid as string;
-          if (localUser.userUuid === userUuid) {
+          if (localUser?.userUuid === userUuid) {
             const isEnabled = localMicTrackState === AgoraRteMediaSourceState.started;
             enableLocalAudio(!isEnabled);
           } else {

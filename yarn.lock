@@ -2939,10 +2939,10 @@
   resolved "https://registry.yarnpkg.com/@netless/app-media-player/-/app-media-player-0.1.0-beta.5.tgz#13ad8680be81503f5dc48c4c4e9848ba15b76e5a"
   integrity sha512-q24tZnDGwTM8fvSs97qavuF8w8cXa4Tx3Nl7Xvig5Um4XKrfNijjLK9pI1cdctfuefl9s8wrG8JNCN2C6yqeDw==
 
-"@netless/app-slide@0.0.27":
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.0.27.tgz#5585056f0f924e51f94739f68b09ed0fcf89739e"
-  integrity sha512-lUGB8N+nhiipTyctCettXb1xmKDB83vTDKD/bS7Rnw2mYQydBk/4xbt0zJ01cYKwpFD5RW2SrHoHSasGB9KKUg==
+"@netless/app-slide@0.0.52":
+  version "0.0.52"
+  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.0.52.tgz#b52e743db45af5e606dc3bec323d90caf65069b2"
+  integrity sha512-dtgXfCgXlolCHWHgdXQWWEsnES/MmIoCILB0e+He/kZHUO/zDjrptXaFbp/b6xT5KrBKt+XvgEoqT8ky4aEKVw==
 
 "@netless/canvas-polyfill@^0.0.4":
   version "0.0.4"
@@ -3016,10 +3016,10 @@
   resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha512-8Qvz1NcBhGb+2S9FYy9Xuln0/82q+Bn0EluXxM+BDw/aimhkN1QWxGl++ZysztZ60vzn18vl7p4cJuF2cfslIQ==
 
-"@netless/window-manager@0.3.15":
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.3.15.tgz#211dc567e5bfacdabaa2cdb98682349c0bf4f58f"
-  integrity sha512-AtR3NRIVXHqXywGnqekRZQI/GBNg5uvIXyP8sYHpHUf31gj4lbio3QRMOH3gSmpX5aa+hn6mhreY62HZv7Dj7A==
+"@netless/window-manager@0.3.16":
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.3.16.tgz#a0f384f0cc0f7cd1d294d09d623dec38ab3796e2"
+  integrity sha512-pqXXqAkouCdLtqAE8XzLpiB6N4yMRY0gYzDaju+bhrf/vgsMP0iUSwHCKdV9rqP5GQB7FJCbRXL679SGq4qMCw==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/app-docs-viewer" "0.1.24"
@@ -4931,6 +4931,13 @@
   version "17.0.0"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.0.tgz#b3b691eb956c4b3401777ee67b900cb28415d95a"
   integrity sha512-lUqY7OlkF/RbNtD5nIq7ot8NquXrdFrjSOR6+w9a9RFQevGi1oZO1dcJbXMeONAPKtZ2UrZOEJ5UOCVsxbLk/g==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-helmet@^6.1.5":
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@types/react-helmet/-/react-helmet-6.1.5.tgz#35f89a6b1646ee2bc342a33a9a6c8777933f9083"
+  integrity sha512-/ICuy7OHZxR0YCAZLNg9r7I9aijWUWvxaPR6uTuyxe8tAj5RL4Sw1+R6NhXUtOsarkGYPmaHdBDvuXh2DIN/uA==
   dependencies:
     "@types/react" "*"
 
@@ -25776,10 +25783,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.15.6:
-  version "2.15.6"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.15.6.tgz#30fa5f07efa9c2c4315207aa21fe9abebf68558c"
-  integrity sha512-bLNI4a0tAPxCB8Q6yuuz0kP48yGXPmYtLtVM+yW+bcN5LNMbangrxDiwvtAlxNeRSleMDsGXFxy8j/yKgAd63A==
+white-web-sdk@2.15.13:
+  version "2.15.13"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.15.13.tgz#1730ffb7aa656ee6f9b16184dbe497d23902e18f"
+  integrity sha512-IOPD/t/teIRRmjfD95vGZawTsMYtMcv99Hn4Oue1ObcodSEZAkRlEGUcjUzg3P/885sYgZfupPSOQxtKewCjxQ==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"

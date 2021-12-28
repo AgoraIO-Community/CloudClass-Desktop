@@ -94,7 +94,6 @@ export type CourseWareItem = {
   };
   size: number;
   updateTime: number;
-  scenes: SceneDefinition[];
   convert?: boolean;
   taskUuid?: string;
   taskToken?: string;

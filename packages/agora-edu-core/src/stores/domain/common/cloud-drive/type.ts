@@ -16,7 +16,7 @@ export interface CloudDriveResourceConvertProgress {
     ppt: {
       width: number;
       height: number;
-      preview: string;
+      preview?: string;
       src: string;
     };
   }[];
