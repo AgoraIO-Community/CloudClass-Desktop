@@ -28,12 +28,14 @@ edu-demo-tsconfig.json
 *.sh
 *.sh~
 .eslintcache
+.eslintrc.js
 .npmrc
 .env
+.env.*
 env.example
 config-overrides.js
-webpack.config.js
+webpack
 entitlements.mac.plist
-.env.example
 *.map
 *.*~agoraAddonlog.txt
+docs
