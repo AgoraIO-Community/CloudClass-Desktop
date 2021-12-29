@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export class HomeApi {
   static shared = new HomeApi();
-  domain: string = '';
+  domain = '';
 
   async login(userUuid: string): Promise<{
     rtmToken: string;

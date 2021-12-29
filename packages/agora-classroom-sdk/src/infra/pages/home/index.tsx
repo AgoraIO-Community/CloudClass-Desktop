@@ -14,6 +14,11 @@ const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_D
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
+const regionByLang = {
+  zh: EduRegion.CN,
+  en: EduRegion.NA,
+};
+
 export const HomePage = observer(() => {
   const homeStore = useHomeStore();
 
@@ -25,7 +30,7 @@ export const HomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>('');
   const [duration, setDuration] = useState<number>(30);
   const [language, setLanguage] = useState<string>('');
-  const [region, setRegion] = useState<EduRegion>(homeStore.region);
+  const [region, setRegion] = useState<EduRegion>(EduRegion.CN);
   const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
@@ -34,6 +39,8 @@ export const HomePage = observer(() => {
     const lang = homeStore.launchOption.language || getBrowserLanguage();
     changeLanguage(lang);
     setLanguage(lang);
+    const region = homeStore.region || regionByLang[getBrowserLanguage()];
+    setRegion(region);
   }, []);
 
   const onChangeRegion = (r: string) => {

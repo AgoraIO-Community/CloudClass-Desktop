@@ -19,13 +19,17 @@ export class HomeStore {
   launchOption!: HomeLaunchOption;
 
   @observable
-  region: EduRegion = EduRegion.CN;
+  region?: EduRegion;
 
   constructor() {
     this.setRegion(GlobalStorage.read(regionKey) || this.region);
     this.launchOption = GlobalStorage.read(launchKey) || {};
     autorun(() => {
-      GlobalStorage.save(regionKey, toJS(this.region));
+      if (this.region) {
+        GlobalStorage.save(regionKey, toJS(this.region));
+      } else {
+        GlobalStorage.clear(regionKey);
+      }
     });
   }
 

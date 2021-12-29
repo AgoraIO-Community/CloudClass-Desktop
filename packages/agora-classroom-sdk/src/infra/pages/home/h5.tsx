@@ -30,10 +30,10 @@ export const HomeH5Page = observer(() => {
   const [userName, setUserName] = useState<string>('');
   const [userRole, setRole] = useState<string>('student');
   const [curScenario, setScenario] = useState<string>('big-class');
-  const [duration, setDuration] = useState<number>(30);
+  const [duration] = useState<number>(30);
   const [language, setLanguage] = useState<string>('');
-  const [region, setRegion] = useState<EduRegion>(homeStore.region);
-  const [debug, setDebug] = useState<boolean>(false);
+  const [region] = useState<EduRegion>(EduRegion.CN);
+  const [debug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
 
