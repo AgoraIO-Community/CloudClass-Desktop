@@ -20,9 +20,9 @@ export class RosterUIStore extends EduUIStoreBase {
   /**
    * width: 花名册窗口宽度
    */
-  uiOverrides = {
-    width: 710,
-  };
+  get uiOverrides() {
+    return { ...super.uiOverrides, width: 710 };
+  }
 
   private _disposers: IReactionDisposer[] = [];
   onInstall() {

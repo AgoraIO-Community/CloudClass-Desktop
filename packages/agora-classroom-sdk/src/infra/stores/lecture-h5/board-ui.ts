@@ -7,11 +7,13 @@ import {
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 
 export class LectureH5BoardUIStore extends BoardUIStore {
-  // override
-  // ratio of board height in classroom viewport
-  heightRatio = 0.79;
-  // aspect ratio of board, height / width
-  aspectRatio = 0.5634;
+  protected get uiOverrides() {
+    return {
+      ...super.uiOverrides,
+      heightRatio: 0.79,
+      aspectRatio: 0.5634,
+    };
+  }
 
   constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
     super(store, shareUIStore);
@@ -71,7 +73,7 @@ export class LectureH5BoardUIStore extends BoardUIStore {
   @computed
   get boardContainerHeight() {
     if (this.shareUIStore.orientation === 'portrait') {
-      return this.rootDimensions.width * this.aspectRatio;
+      return this.rootDimensions.width * this.uiOverrides.aspectRatio;
     }
     return 'unset';
   }

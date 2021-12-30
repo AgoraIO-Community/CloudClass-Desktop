@@ -9,8 +9,13 @@ export class BoardUIStore extends EduUIStoreBase {
   private _timeoutForConfig = 10000;
   private _joinDisposer?: IReactionDisposer;
 
-  protected heightRatio = 1;
-  protected aspectRatio = 9 / 16;
+  protected get uiOverrides() {
+    return {
+      ...super.uiOverrides,
+      heightRatio: 1,
+      aspectRatio: 9 / 16,
+    };
+  }
 
   private _collectorContainer: HTMLElement | undefined = undefined;
 
@@ -45,7 +50,7 @@ export class BoardUIStore extends EduUIStoreBase {
   get boardHeight() {
     const { roomType } = this.classroomStore.roomStore;
     const viewportHeight = this.shareUIStore.classroomViewportSize.height;
-    const height = this.heightRatio * viewportHeight;
+    const height = this.uiOverrides.heightRatio * viewportHeight;
 
     if (roomType === EduRoomTypeEnum.Room1v1Class) {
       return height - this.shareUIStore.navBarHeight;
@@ -127,8 +132,11 @@ export class BoardUIStore extends EduUIStoreBase {
   async mount(dom: HTMLDivElement) {
     try {
       const options = this._collectorContainer
-        ? { containerSizeRatio: this.aspectRatio, collectorContainer: this._collectorContainer }
-        : { containerSizeRatio: this.aspectRatio };
+        ? {
+            containerSizeRatio: this.uiOverrides.aspectRatio,
+            collectorContainer: this._collectorContainer,
+          }
+        : { containerSizeRatio: this.uiOverrides.aspectRatio };
       await this.classroomStore.boardStore.mount(dom, options);
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);

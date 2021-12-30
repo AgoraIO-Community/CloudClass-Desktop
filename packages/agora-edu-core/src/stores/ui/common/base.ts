@@ -7,7 +7,9 @@ export abstract class EduUIStoreBase {
   /**
    * 参数覆盖
    */
-  protected uiOverrides: Object = {};
+  protected get uiOverrides() {
+    return {};
+  }
   /**
    * 当前 EduClassroomStore 实例
    */

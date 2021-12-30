@@ -2,7 +2,10 @@ import { computed } from 'mobx';
 import { RosterUIStore } from 'agora-edu-core';
 
 export class LectureRosterUIStore extends RosterUIStore {
-  uiOverrides = { width: 400 };
+  get uiOverrides() {
+    return { ...super.uiOverrides, width: 400 };
+  }
+
   @computed
   get rosterFunctions() {
     const { canKickOut, canSearchInRoster } = this;
