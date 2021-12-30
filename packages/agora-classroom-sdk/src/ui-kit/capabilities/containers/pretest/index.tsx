@@ -221,13 +221,13 @@ const PlaybackTestPlayer = observer(() => {
       playbackTesting,
     },
   } = useStore();
-  let url = PretestAudio;
+  const urlRef = useRef<string>(PretestAudio);
 
   useEffect(() => {
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
       let isProduction = NODE_ENV === 'production';
       const path = window.require('path');
-      url = isProduction
+      urlRef.current = isProduction
         ? `${window.process.resourcesPath}/pretest-audio.mp3`
         : path.resolve('./assets/pretest-audio.mp3');
     }
@@ -239,7 +239,7 @@ const PlaybackTestPlayer = observer(() => {
       <div
         className="test-speaker"
         onClick={() => {
-          startPlaybackDeviceTest(url);
+          startPlaybackDeviceTest(urlRef.current);
         }}>
         {playbackTesting ? (
           <div className="test-speakering-icon"></div>
