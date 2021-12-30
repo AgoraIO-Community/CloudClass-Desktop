@@ -58,7 +58,7 @@ export type LaunchOption = {
   // rtmUid: string
   rtmToken: string; // rtmToken
   language: LanguageEnum; // 国际化
-  startTime: number; // 房间开始时间
+  startTime?: number; // 房间开始时间
   duration: number; // 课程时长
   courseWareList: CourseWareList; // 课件列表
   recordUrl?: string; // 回放页地址
@@ -153,6 +153,7 @@ export class AgoraEduSDK {
       courseWareList,
       duration,
       platform = Platform.PC,
+      startTime,
     } = option;
 
     const sessionInfo = {
@@ -165,6 +166,7 @@ export class AgoraEduSDK {
       duration,
       flexProperties: {},
       token: rtmToken,
+      startTime,
     };
 
     const config = new EduClassroomConfig(

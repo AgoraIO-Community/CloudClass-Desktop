@@ -53,6 +53,7 @@ export interface EduSessionInfo {
   token: string;
   flexProperties: any;
   duration: number;
+  startTime?: number;
 }
 
 export type StorageCourseWareItem = {

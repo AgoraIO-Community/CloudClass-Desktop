@@ -15,8 +15,17 @@ export class EduApiService extends ApiBase {
   }
 
   async checkIn(session: EduSessionInfo): Promise<any> {
-    const { roomUuid, userUuid, role, roomName, roomType, userName, flexProperties, duration } =
-      session;
+    const {
+      roomUuid,
+      userUuid,
+      role,
+      roomName,
+      roomType,
+      userName,
+      flexProperties,
+      duration,
+      startTime,
+    } = session;
     let { data, ts } = await this.fetch({
       path: `/v3/rooms/${roomUuid}/users/${userUuid}`,
       method: 'PUT',
@@ -27,6 +36,7 @@ export class EduApiService extends ApiBase {
         roomType: roomType,
         userName: userName,
         userProperties: flexProperties,
+        startTime,
       },
     });
     return { data, ts };
