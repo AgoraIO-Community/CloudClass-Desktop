@@ -309,7 +309,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed get tools(): ToolbarItem[] {
     const { sessionInfo } = EduClassroomConfig.shared;
-    return sessionInfo.role === EduRoleTypeEnum.teacher ? this.teacherTools : this.studentTools;
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(sessionInfo.role)
+      ? this.teacherTools
+      : this.studentTools;
   }
 
   /**
