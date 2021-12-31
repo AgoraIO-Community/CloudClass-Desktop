@@ -2,6 +2,7 @@ import { GlobalStorage } from '../utils';
 import { autorun, observable, action, toJS } from 'mobx';
 import { LaunchOption } from '@/infra/api';
 import { EduRegion } from 'agora-edu-core';
+import { ToastType } from './ui';
 
 export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   appId: string;
@@ -21,6 +22,9 @@ export class HomeStore {
   @observable
   region?: EduRegion;
 
+  @observable
+  toastList: ToastType[] = [];
+
   constructor() {
     this.setRegion(GlobalStorage.read(regionKey) || this.region);
     this.launchOption = GlobalStorage.read(launchKey) || {};
@@ -31,6 +35,16 @@ export class HomeStore {
         GlobalStorage.clear(regionKey);
       }
     });
+  }
+
+  @action.bound
+  addToast(toast: ToastType) {
+    this.toastList.push(toast);
+  }
+
+  @action.bound
+  removeToast(id: string) {
+    this.toastList = this.toastList.filter((it) => it.id != id);
   }
 
   @action

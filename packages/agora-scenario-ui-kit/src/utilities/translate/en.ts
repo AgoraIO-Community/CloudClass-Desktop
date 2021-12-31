@@ -416,6 +416,7 @@ export const en = {
     'header-left-title': 'Agora Flexible Classroom',
     about: 'About',
     'input-error-msg': 'Between 6 and 50 characters,letter or number only',
+    network_error: 'Network error, please try again later',
   },
   'home-about': {
     'privacy-policy': 'Privacy Policy',

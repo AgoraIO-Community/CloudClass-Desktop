@@ -409,6 +409,7 @@ export const zh = {
     'header-left-title': '声网灵动课堂',
     about: '关于',
     'input-error-msg': '只能输入6-50位字符(字母、数字)',
+    network_error: '当前网络异常，请稍后再试',
   },
   'home-about': {
     'privacy-policy': '隐私条例',

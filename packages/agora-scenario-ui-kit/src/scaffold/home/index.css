@@ -215,3 +215,25 @@ input:-webkit-autofill:active {
   -webkit-transition-delay: 99999s;
   -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
 }
+
+.entry-room-loading-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  visibility: hidden;
+}
+.entry-room-loading-wrapper.show-loading {
+  visibility: visible;
+}
+.entry-room-loading {
+  background: url(./assets/loading.gif) no-repeat center;
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+}

@@ -1,5 +1,5 @@
 import { useHomeStore } from '@/infra/hooks';
-import { changeLanguage, Home } from '~ui-kit';
+import { changeLanguage, Home, transI18n, Toast } from '~ui-kit';
 import { getBrowserLanguage, storage } from '@/infra/utils';
 import { observer } from 'mobx-react';
 import React, { useState, useMemo, useEffect } from 'react';
@@ -9,6 +9,9 @@ import { HomeLaunchOption } from '@/infra/stores/home';
 import { EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { MessageDialog } from './message-dialog';
 import { HomeApi } from './home-api';
+import { v4 as uuidv4 } from 'uuid';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { ToastType } from '@/infra/stores/ui';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -34,6 +37,7 @@ export const HomePage = observer(() => {
   const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const lang = homeStore.launchOption.language || getBrowserLanguage();
@@ -178,57 +182,96 @@ export const HomePage = observer(() => {
         }}
         language={language}
         onChangeLanguage={onChangeLanguage}
+        loading={loading}
         onClick={async () => {
-          const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-          if (!tokenDomain && tokenDomainCollection) {
-            switch (region) {
-              case 'CN':
-                tokenDomain = tokenDomainCollection['prod_cn'];
-                break;
-              case 'AP':
-                tokenDomain = tokenDomainCollection['prod_ap'];
-                break;
-              case 'NA':
-                tokenDomain = tokenDomainCollection['prod_na'];
-                break;
-              case 'EU':
-                tokenDomain = tokenDomainCollection['prod_eu'];
-                break;
+          try {
+            setLoading(true);
+            const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
+            if (!tokenDomain && tokenDomainCollection) {
+              switch (region) {
+                case 'CN':
+                  tokenDomain = tokenDomainCollection['prod_cn'];
+                  break;
+                case 'AP':
+                  tokenDomain = tokenDomainCollection['prod_ap'];
+                  break;
+                case 'NA':
+                  tokenDomain = tokenDomainCollection['prod_na'];
+                  break;
+                case 'EU':
+                  tokenDomain = tokenDomainCollection['prod_eu'];
+                  break;
+              }
             }
-          }
 
-          HomeApi.shared.domain = tokenDomain;
-          const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
-          console.log('## rtm Token', rtmToken);
+            HomeApi.shared.domain = tokenDomain;
 
-          const config: HomeLaunchOption = {
-            appId,
-            sdkDomain: domain,
-            pretest: true,
-            courseWareList: courseWareList.slice(0, 1),
-            language: language as LanguageEnum,
-            userUuid: `${userUuid}`,
-            rtmToken,
-            roomUuid: `${roomUuid}`,
-            roomType: scenario,
-            roomName: `${roomName}`,
-            userName: userName,
-            roleType: role,
-            startTime: Date.now(),
-            region,
-            duration: duration * 60,
-            latencyLevel: 2,
-          };
-          if (encryptionKey && encryptionMode) {
-            config!.mediaOptions!.encryptionConfig = {
-              key: encryptionKey,
-              mode: parseInt(encryptionMode),
+            const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
+            console.log('## rtm Token', rtmToken);
+
+            const config: HomeLaunchOption = {
+              appId,
+              sdkDomain: domain,
+              pretest: true,
+              courseWareList: courseWareList.slice(0, 1),
+              language: language as LanguageEnum,
+              userUuid: `${userUuid}`,
+              rtmToken,
+              roomUuid: `${roomUuid}`,
+              roomType: scenario,
+              roomName: `${roomName}`,
+              userName: userName,
+              roleType: role,
+              startTime: Date.now(),
+              region,
+              duration: duration * 60,
+              latencyLevel: 2,
             };
+            if (encryptionKey && encryptionMode) {
+              config.mediaOptions = {
+                encryptionConfig: {
+                  key: encryptionKey,
+                  mode: parseInt(encryptionMode),
+                },
+              };
+            }
+            homeStore.setLaunchConfig(config);
+            history.push('/launch');
+          } catch (e) {
+            homeStore.addToast({
+              id: uuidv4(),
+              desc:
+                (e as Error).message === 'Network Error'
+                  ? transI18n('home.network_error')
+                  : (e as Error).message,
+              type: 'error',
+            });
+          } finally {
+            setLoading(false);
           }
-          homeStore.setLaunchConfig(config);
-          history.push('/launch');
-        }}
-      />
+        }}>
+        <HomeToastContainer />
+      </Home>
     </React.Fragment>
   ) : null;
+});
+
+const HomeToastContainer: React.FC = observer(() => {
+  const { toastList, removeToast } = useHomeStore();
+  return (
+    <TransitionGroup style={{ justifyContent: 'center', display: 'flex' }}>
+      {toastList.map((value: ToastType, idx: number) => (
+        <CSSTransition classNames="toast-animation" timeout={1000} key={`${value.id}`}>
+          <Toast
+            style={{ position: 'absolute', top: 50 * (idx + 1), zIndex: 9999 }}
+            type={value.type}
+            closeToast={() => {
+              removeToast(value.id);
+            }}>
+            {value.desc}
+          </Toast>
+        </CSSTransition>
+      ))}
+    </TransitionGroup>
+  );
 });

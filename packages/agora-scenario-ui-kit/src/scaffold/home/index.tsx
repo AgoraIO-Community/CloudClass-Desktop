@@ -4,11 +4,13 @@ import { Layout, Header } from '~components/layout';
 import { Input } from '~components/input';
 import { Select } from '~components/select';
 import { Col, Row, Table } from '~components/table';
-import { t, transI18n } from '~components/i18n';
+import { transI18n } from '~components/i18n';
 import './index.css';
 import { HomeModule } from '~utilities/types';
 import { Modal } from '~components/modal';
 import { HomeAbout, Disclaimer } from '~components/home-about';
+import { Card } from '~ui-kit';
+import classnames from 'classnames';
 
 export interface HomeAttributes {
   roomId: string;
@@ -30,6 +32,7 @@ export interface HomeProps extends HomeModule<HomeAttributes> {
   version: string;
   SDKVersion: string;
   publishDate: string;
+  loading: boolean;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -48,6 +51,7 @@ export const Home: React.FC<HomeProps> = ({
   debug = false,
   encryptionMode,
   encryptionKey,
+  loading,
   onChangeEncryptionMode,
   onChangeEncryptionKey,
   onChangeRole,
@@ -61,6 +65,7 @@ export const Home: React.FC<HomeProps> = ({
   onChangeRoomName,
   onChangeDebug,
   onClick,
+  ...restProps
 }) => {
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
@@ -200,6 +205,15 @@ export const Home: React.FC<HomeProps> = ({
           <Disclaimer />
         </Modal>
       ) : null}
+      <div
+        className={classnames({
+          'entry-room-loading-wrapper': 1,
+          'show-loading': loading,
+        })}>
+        <Card height={90} width={90}>
+          <div className="entry-room-loading"></div>
+        </Card>
+      </div>
       <Layout
         style={{
           boxShadow: '0px 6px 18px 0px rgba(47, 65, 146, 0.12)',
@@ -456,6 +470,7 @@ export const Home: React.FC<HomeProps> = ({
           </Row>
         </Table>
       </Layout>
+      {restProps.children}
     </Layout>
   );
 };
