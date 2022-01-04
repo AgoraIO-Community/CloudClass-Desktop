@@ -1442,6 +1442,10 @@ export type MediaContext = {
       */
      pretestNoticeChannel: Subject<any>;
      /**
+      * 设备插拔通知
+      */
+     mediaNoticeChannel: Subject<any>;
+     /**
       * 麦克风音量
       * @version v1.1.2
       */

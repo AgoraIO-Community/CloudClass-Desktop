@@ -417,6 +417,17 @@ export class PretestStore {
             })
           }
           this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'video'})
+          //插入视频设备
+          this.appStore.mediaPlugPullNotice$.next({
+            type: 'plug_video'
+          });
+        }
+
+        if (videoDeviceInit && cams.length < this._cameraList.length) {
+          //拔出视频设备
+          this.appStore.mediaPlugPullNotice$.next({
+            type: 'pull_video'
+          });
         }
 
         if (this.isElectron && !cams.length) {
@@ -454,6 +465,16 @@ export class PretestStore {
             })
           }
           this.appStore.fireToast('pretest.detect_new_device_in_room', {type: 'audio'})
+          //插入音频设备
+          this.appStore.mediaPlugPullNotice$.next({
+            type: 'plug_audio'
+          });
+        }
+        if (audioDeviceInit && mics.length < this._microphoneList.length){
+          //拔出音频设备
+          this.appStore.mediaPlugPullNotice$.next({
+            type: 'pull_audio'
+          });
         }
         if (this.isElectron && !mics.length) {
           this.muteMicrophone()
