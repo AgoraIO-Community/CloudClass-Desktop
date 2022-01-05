@@ -4,7 +4,7 @@ import { videoPlugin2 } from '@netless/white-video-plugin2';
 import { audioPlugin2 } from '@netless/white-audio-plugin2';
 import { get } from 'lodash';
 import { BizLogger } from './biz-logger';
-import {IframeBridge, IframeWrapper} from "@netless/iframe-bridge"
+import { IframeBridge, IframeWrapper } from "@netless/iframe-bridge"
 export interface SceneFile {
   name: string
   type: string
@@ -27,24 +27,24 @@ export class BoardClient extends EventEmitter {
 
   private appIdentifier!: string
 
-  constructor(config: {identity: string, appIdentifier: string} = {identity: 'guest', appIdentifier: ''}) {
+  constructor(config: { identity: string, appIdentifier: string } = { identity: 'guest', appIdentifier: '' }) {
     super()
     this.appIdentifier = config.appIdentifier
     this.initPlugins(config.identity)
     this.init()
   }
 
-  initPlugins (identity: string) {
-    const plugins = createPlugins({"video2": videoPlugin2, "audio2": audioPlugin2});
+  initPlugins(identity: string) {
+    const plugins = createPlugins({ "video2": videoPlugin2, "audio2": audioPlugin2 });
 
-    plugins.setPluginContext("video2", {identity});
-    plugins.setPluginContext("audio2", {identity});
+    plugins.setPluginContext("video2", { identity });
+    plugins.setPluginContext("audio2", { identity });
     this.plugins = plugins;
   }
-  
-  init () {
+
+  init() {
     this.client = new WhiteWebSdk({
-        // 其他参数
+      // 其他参数
       invisiblePlugins: [IframeBridge],
       wrappedComponents: [IframeWrapper],
       pptParams: {
@@ -95,6 +95,12 @@ export class BoardClient extends EventEmitter {
         this.emit('onPPTLoadProgress', {uuid, progress})
       },
     })
+    let f = this.room.setViewMode.bind(this.room);
+    this.room.setViewMode = mode => {
+      console.log("viewMode:", mode);
+      f(mode);
+      console.log(this.room.state.broadcastState);
+    }
     if (isAssistant) {
       this.room.setMemberState({
         strokeColor: [252, 58, 63],
@@ -114,7 +120,7 @@ export class BoardClient extends EventEmitter {
       setTimeout(() => {
         console.log("ViewMode.Freedom")
         this.room.setViewMode(ViewMode.Freedom);
-        this.room.setViewMode(ViewMode.Follower);      
+        this.room.setViewMode(ViewMode.Follower);
       }, 1);
     }
 
