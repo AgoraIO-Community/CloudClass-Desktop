@@ -101,8 +101,12 @@ export enum AGEduErrorCode {
 
 export const getEduErrorMessage = (error: Error) => {
   if (error instanceof AGError && error.codeList && error.codeList.length) {
-    const code = error.codeList[error.codeList.length - 1];
-    return transI18n(`edu_error.${code}`);
+    if (error.servCode) {
+      return transI18n(`edu_serv_error.${error.servCode}`);
+    } else {
+      const code = error.codeList[error.codeList.length - 1];
+      return transI18n(`edu_error.${code}`);
+    }
   }
 
   return null;
