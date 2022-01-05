@@ -1,5 +1,5 @@
 .chat-list {
-  height: calc(100% - 120px);
+  height: calc(100% - 33px);
   padding-bottom: 18px;
   overflow-y: auto;
   width: 100%;

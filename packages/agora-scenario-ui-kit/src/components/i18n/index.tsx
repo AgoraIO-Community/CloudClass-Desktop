@@ -157,9 +157,5 @@ export const I18nProvider: React.FC<I18nProvider> = ({ children, language }) => 
     i18n.changeLanguage(language);
   }, [language, debugI18n]);
 
-  return (
-    <I18nextProvider i18n={i18n}>
-      <div className={`${language}`}>{children}</div>
-    </I18nextProvider>
-  );
+  return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
 };

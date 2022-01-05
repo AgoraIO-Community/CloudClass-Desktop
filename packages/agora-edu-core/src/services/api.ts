@@ -196,7 +196,6 @@ export class EduApiService extends ApiBase {
   }) {
     const res = await this.fetch({
       path: `/v2/rooms/${params.roomUuid}/from/${params.userUuid}/chat`,
-      pathPrefix: `/edu/apps/${AgoraRteEngineConfig.shared.appId}`,
       method: 'POST',
       data: params.data,
     });

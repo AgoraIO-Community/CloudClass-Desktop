@@ -19,8 +19,7 @@ import { WidgetChatUIStore } from './chatStore';
 
 const App = observer(() => {
   const defaultMinimize =
-    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass ||
-    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass;
+    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass;
   const chatContext = useContext(Context);
   const uiStore = chatContext.uiStore as EduClassroomUIStore;
   const widgetStore = chatContext.widgetStore as WidgetChatUIStore;
@@ -55,7 +54,10 @@ const App = observer(() => {
   }, [loading]);
 
   return (
-    <div id="netless-white" style={{ display: 'flex', width: '100%', height: '100%' }}>
+    <div
+      id="netless-white"
+      style={{ display: 'flex', width: '100%', height: '100%' }}
+      className={`rtm-chat rtm-chat-${EduClassroomConfig.shared.sessionInfo.roomType}`}>
       {EduClassroomConfig.shared.sessionInfo.roomType === 0 ? (
         // display simple chat for 1v1
         <SimpleChatNew

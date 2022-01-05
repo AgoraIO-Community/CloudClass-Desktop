@@ -5,7 +5,6 @@ import { routesMap } from '@/infra/router';
 import { HomeStore } from '@/infra/stores/home';
 import { BizPageRouter } from './infra/types';
 import { GlobalStorage } from './infra/utils';
-import React from 'react';
 
 const routes: BizPageRouter[] = [
   BizPageRouter.PretestPage,

@@ -79,10 +79,6 @@ export const HomeAbout: FC<HomeAboutProps> = ({
           </div>
         </div>
         <div className="about-main-item">
-          <div className="main-text">{t('home-about.version-time')}</div>
-          <div className="main-desc">{publishDate}</div>
-        </div>
-        <div className="about-main-item">
           <div className="main-text">{t('home-about.sdk-version')}</div>
           <div className="main-desc">{`Ver ${SDKVersion}`}</div>
         </div>

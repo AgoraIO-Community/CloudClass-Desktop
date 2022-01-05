@@ -17,6 +17,8 @@ const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_D
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
+declare const CLASSROOM_SDK_VERSION: string;
+
 const regionByLang = {
   zh: EduRegion.CN,
   en: EduRegion.NA,
@@ -153,7 +155,7 @@ export const HomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
-        version={EduClassroomConfig.getVersion()}
+        version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
         publishDate={REACT_APP_PUBLISH_DATE}
         roomId={roomUuid}

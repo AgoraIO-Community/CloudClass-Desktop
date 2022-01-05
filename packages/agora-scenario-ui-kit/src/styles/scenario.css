@@ -198,9 +198,11 @@ body,
   align-items: flex-end;
   bottom: 15px;
   right: 10px;
+  pointer-events: none;
 }
 .aisde-fixed > div {
   margin-right: 8px;
+  pointer-events: auto;
 }
 .aisde-fixed:last-child {
   margin-right: 0;
@@ -277,7 +279,8 @@ body,
 .hands-up-manager > .card:hover,
 .hands-up-sender:hover,
 .roster-btn:hover,
-.chat-panel:hover .show-chat-icon {
+.chat-panel:hover .show-chat-icon,
+.chat-panel:hover .chat-min {
   background-color: #0073ff;
 }
 
@@ -294,4 +297,10 @@ body,
 
 .table-col-item .roster-username {
   padding-left: 0px !important;
+}
+.rtm-chat {
+  background: #fff;
+}
+.rtm-chat-2 .small-class-chat-fixed {
+  height: 100% !important;
 }
