@@ -150,3 +150,5 @@
 ## 常见问题
 
 - 如果你在运行 Electron 时发现 localhost:3000 端口被占用，可以在 `package.json` 里找到 `ELECTRON_START_URL=http://localhost:3000` 修改成你本地可以使用的端口号。
+- 如果打包时遇到 `Error: Can't resolve '../../build/Release/agora_node_ext'` 异常，需要在 Webpack 打包配置中加入：`externals: { 'agora-electron-sdk': 'commonjs2 agora-electron-sdk' }`
+- 在 Linux 环境下构建报错：`Error:unsupported platform!`，需要修改 agora-classroom-sdk/package.json 文件配置：`"agora_electron": {"electron_version": "12.0.0","prebuilt": true}` 修改为 `"agora_electron": {"electron_version": "12.0.0","prebuilt": true,"platform":"win32" | "darwin",}`

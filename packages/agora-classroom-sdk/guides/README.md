@@ -100,3 +100,5 @@
 ## FAQ
 
 - If you find your localhost:3000 port already exists or has been used, you can change `ELECTRON_START_URL=http://localhost:3000` in `package.json` to an available port, and then run it again.
+- If you encounter an exception of `Error: Can't resolve'../../build/Release/agora_node_ext'` when packaging, you need to add configuration to the Webpack packaging configuration: `externals: {'agora-electron-sdk': 'commonjs2 agora-electron-sdk' }`
+- Build error in Linux environment: `Error:unsupported platform!`, need to modify agora-classroom-sdk/package.json file configuration: `"agora_electron": {"electron_version": "12.0.0","prebuilt": true}` amended to `"agora_electron": {"electron_version": "12.0.0","prebuilt": true,"platform":"win32" | "darwin"}`
