@@ -15,10 +15,9 @@ import { announcementNotice } from '../../redux/actions/roomAction';
 import minimize from '../../themes/svg/minimize.svg';
 import notice from '../../themes/img/notice.png';
 import _ from 'lodash';
+import './index.css';
 
 const { TabPane } = Tabs;
-
-import './index.css';
 
 // 主页面，定义 tabs
 export const Chat = () => {

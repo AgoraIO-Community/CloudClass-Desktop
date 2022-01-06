@@ -1,5 +1,5 @@
 import { Input, message, Modal, Switch, Popover } from 'antd';
-import { Button } from '../button';
+import { Button } from '../Button';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
