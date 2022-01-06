@@ -11,11 +11,15 @@ import { MessageDialog } from './message-dialog';
 import { HomeApi } from './home-api';
 import { v4 as uuidv4 } from 'uuid';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { ToastType } from '@/infra/stores/ui';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
+
+const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
+const REACT_APP_AGORA_APP_CERTIFICATE = process.env.REACT_APP_AGORA_APP_CERTIFICATE;
 
 declare const CLASSROOM_SDK_VERSION: string;
 
@@ -209,7 +213,7 @@ export const HomePage = observer(() => {
             HomeApi.shared.domain = tokenDomain;
 
             const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
-            console.log('## rtm Token', rtmToken);
+            console.log('## get rtm Token from demo server', rtmToken);
 
             const config: HomeLaunchOption = {
               appId,
@@ -229,6 +233,22 @@ export const HomePage = observer(() => {
               duration: duration * 60,
               latencyLevel: 2,
             };
+
+            config.appId = REACT_APP_AGORA_APP_ID || config.appId;
+            // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
+            // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
+            if (REACT_APP_AGORA_APP_CERTIFICATE) {
+              config.rtmToken = RtmTokenBuilder.buildToken(
+                config.appId,
+                REACT_APP_AGORA_APP_CERTIFICATE,
+                config.userUuid,
+                RtmRole.Rtm_User,
+                0,
+              );
+
+              console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
+            }
+
             if (encryptionKey && encryptionMode) {
               config.mediaOptions = {
                 encryptionConfig: {

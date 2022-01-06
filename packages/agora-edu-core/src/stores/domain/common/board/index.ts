@@ -303,7 +303,7 @@ export class BoardStore extends EduStoreBase {
     await this.windowManager.addApp({
       kind: BuiltinApps.MediaPlayer,
       options: {
-        title: resource.url, // 可选
+        title: resource.resourceName, // 可选
       },
       attributes: {
         src: resource.url, // 音视频 url
