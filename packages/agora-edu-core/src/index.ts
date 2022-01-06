@@ -1,3 +1,4 @@
+/// <reference path="declare.d.ts" />
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { configure } from 'mobx';
