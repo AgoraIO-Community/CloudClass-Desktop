@@ -40,13 +40,16 @@ export class NotificationUIStore extends EduUIStoreBase {
             Scheduler.Duration.second(1),
           );
         } else if (ClassState.close === state) {
-          this.shareUIStore.addConfirmDialog(
-            transI18n('toast.leave_room'),
-            transI18n('error.class_end'),
-            () => {
-              this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
-            },
-            ['ok'],
+          this.classroomStore.connectionStore.leaveClassroomUntil(
+            LeaveReason.leave,
+            new Promise((resolve) => {
+              this.shareUIStore.addConfirmDialog(
+                transI18n('toast.leave_room'),
+                transI18n('error.class_end'),
+                resolve,
+                ['ok'],
+              );
+            }),
           );
         }
       },
@@ -56,15 +59,18 @@ export class NotificationUIStore extends EduUIStoreBase {
       () => this.classroomStore.connectionStore.classroomState,
       (state) => {
         if (ClassroomState.Error === state) {
-          this.shareUIStore.addConfirmDialog(
-            transI18n('toast.leave_room'),
-            this._getStateErrorReason(
-              this.classroomStore.connectionStore.classroomStateErrorReason,
-            ),
-            () => {
-              this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
-            },
-            ['ok'],
+          this.classroomStore.connectionStore.leaveClassroomUntil(
+            LeaveReason.leave,
+            new Promise((resolve) => {
+              this.shareUIStore.addConfirmDialog(
+                transI18n('toast.leave_room'),
+                this._getStateErrorReason(
+                  this.classroomStore.connectionStore.classroomStateErrorReason,
+                ),
+                resolve,
+                ['ok'],
+              );
+            }),
           );
         }
       },

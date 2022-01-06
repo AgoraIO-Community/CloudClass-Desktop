@@ -201,6 +201,11 @@ export class ConnectionStore extends EduStoreBase {
 
   @bound
   async leaveClassroom(reason: LeaveReason) {
+    await this.leaveClassroomUntil(reason, Promise.resolve());
+  }
+
+  @bound
+  async leaveClassroomUntil(reason: LeaveReason, promise: Promise<void>) {
     let [err] = await to(this.leaveWhiteboard());
     err &&
       EduErrorCenter.shared.handleNonThrowableError(
@@ -221,7 +226,10 @@ export class ConnectionStore extends EduStoreBase {
       );
     AgoraRteEngine.destroy();
     this.setClassroomState(ClassroomState.Idle);
-    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Destroyed, reason);
+
+    promise.then(() =>
+      EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Destroyed, reason),
+    );
   }
 
   @bound

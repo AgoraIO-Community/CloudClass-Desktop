@@ -157,12 +157,15 @@ export class EduClassroomUIStore {
         if (AGError.isOf(e, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
           this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
         } else {
-          this.shareUIStore.addGenericErrorDialog(e as AGError, {
-            onOK: () => {
-              this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
-            },
-            okBtnText: transI18n('toast.leave_room2'),
-          });
+          this.classroomStore.connectionStore.leaveClassroomUntil(
+            LeaveReason.leave,
+            new Promise((resolve) => {
+              this.shareUIStore.addGenericErrorDialog(e as AGError, {
+                onOK: resolve,
+                okBtnText: transI18n('toast.leave_room2'),
+              });
+            }),
+          );
         }
       });
   }
