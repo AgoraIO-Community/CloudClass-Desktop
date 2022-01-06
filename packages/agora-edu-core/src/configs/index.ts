@@ -1,8 +1,13 @@
 import { AgoraRteEngine, AgoraRteEngineConfig, Logger } from 'agora-rte-sdk';
 import { merge } from 'lodash';
-import { EduSessionInfo, EduRoleTypeEnum, EduRoomTypeEnum, CourseWareList } from '../type';
+import {
+  EduSessionInfo,
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+  CourseWareList,
+  CourseWareItem,
+} from '../type';
 import { CloudDriveResource } from '../stores/domain/common/cloud-drive/struct';
-import { CloudDriveResourceConvertProgress } from '../stores/domain/common/cloud-drive/type';
 import { AGEduErrorCode, EduErrorCenter } from '../utils/error';
 import { AgoraRteOptions } from 'agora-rte-sdk/src/configs';
 import { IAgoraExtApp, IAgoraWidget } from '..';
@@ -134,18 +139,7 @@ export class EduClassroomConfig {
   }
 
   setCourseWareList(list?: CourseWareList) {
-    const resourceList = list?.map(
-      (data: {
-        ext: string;
-        resourceName: string;
-        resourceUuid: string;
-        size: number;
-        updateTime: number;
-        taskProgress?: CloudDriveResourceConvertProgress;
-        taskUuid?: string;
-        url?: string;
-      }) => CloudDriveResource.fromData(data),
-    );
+    const resourceList = list?.map((data: CourseWareItem) => CloudDriveResource.fromData(data));
     this._courseWareList = resourceList;
   }
 

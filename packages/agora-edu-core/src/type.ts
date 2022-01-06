@@ -89,17 +89,11 @@ export type CourseWareItem = {
   resourceName: string;
   resourceUuid: string;
   ext: string;
-  url: string;
-  conversion: {
-    type: string;
-  };
+  url?: string;
   size: number;
   updateTime: number;
-  convert?: boolean;
   taskUuid?: string;
-  taskToken?: string;
   taskProgress?: CloudDriveResourceConvertProgress;
-  isActive?: boolean;
 };
 
 export type CourseWareList = CourseWareItem[];

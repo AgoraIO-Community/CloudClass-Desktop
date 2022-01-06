@@ -7,7 +7,6 @@ export interface CloudDriveResourceInfo {
 }
 
 export interface CloudDriveResourceConvertProgress {
-  status: 'Waiting' | 'Converting' | 'Finished' | 'Fail';
   totalPageSize: number;
   convertedPageSize: number;
   convertedPercentage: number;
@@ -20,7 +19,6 @@ export interface CloudDriveResourceConvertProgress {
       src: string;
     };
   }[];
-  currentStep: string;
 }
 
 export interface CloudDrivePagingOption {
