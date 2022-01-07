@@ -42,7 +42,7 @@ npm run dev
 
 ```bash
 # 构建 Windows 客户端
-npm run pack:electron:mac
-# 构建 Mac 客户端
 npm run pack:electron:win
+# 构建 Mac 客户端
+npm run pack:electron:mac
 ```
