@@ -70,7 +70,7 @@ class OSSUploader implements UploaderAdapter {
     });
     const checkpoint = this._checkpoints.get(resourceUuid);
 
-    const callbackUrl = `${callbackHost}/edu/apps/${this._appId}/v1/rooms/${this._tagInfo.roomUuid}/resources/callback`;
+    const callbackUrl = `${callbackHost}/monitor/apps/${this._appId}/v1/log/oss/callback`;
     const { res }: MultipartUploadResult = await ossClient.multipartUpload(ossKey, file, {
       progress: (p, cpt) => {
         this._checkpoints.set(resourceUuid, cpt);
@@ -108,7 +108,7 @@ class OSSUploader implements UploaderAdapter {
   ): Promise<void> {
     const { preSignedUrl } = ossConfig;
     const { callbackHost, callbackBody, callbackContentType } = callbackConfig;
-    const callbackUrl = `${callbackHost}/edu/apps/${this._appId}/v1/rooms/${this._tagInfo.roomUuid}/resources/callback`;
+    const callbackUrl = `${callbackHost}/monitor/apps/${this._appId}/v1/log/oss/callback`;
 
     await axios.put(preSignedUrl, file, {
       headers: {

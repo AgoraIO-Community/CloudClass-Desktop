@@ -228,7 +228,6 @@ export const HomePage = observer(() => {
               roomName: `${roomName}`,
               userName: userName,
               roleType: role,
-              startTime: Date.now(),
               region,
               duration: duration * 60,
               latencyLevel: 2,

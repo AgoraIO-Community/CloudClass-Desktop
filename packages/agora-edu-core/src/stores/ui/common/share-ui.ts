@@ -2,7 +2,7 @@ import { AGError, bound, Lodash } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogAction, orientationEnum } from '../../../type';
-import { EduErrorCenter, getEduErrorMessage } from '../../../utils/error';
+import { EduErrorCenter, getEduErrorMessage, getErrorServCode } from '../../../utils/error';
 import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
 import { ToastFilter } from '../../../utils/toast-filter';
@@ -68,11 +68,13 @@ export class EduShareUIStore {
       if (ToastFilter.shouldBlockToast(error)) {
         return;
       }
-      let emsg =
+      const emsg =
         getEduErrorMessage(error) ||
         (error.message.length > 64 ? `${error.message.substr(0, 64)}...` : error.message);
 
-      this.addToast(`Error [${code}]: ${emsg}`, 'error');
+      const servCode = getErrorServCode(error);
+
+      this.addToast(`Error [${code}${servCode ? `-${servCode}` : ''}]: ${emsg}`, 'error');
     });
   }
 
@@ -121,7 +123,8 @@ export class EduShareUIStore {
     let title = '';
 
     if (error.codeList && error.codeList.length > 0) {
-      title = `Error ${error.codeList[error.codeList.length - 1]}`;
+      const servCode = getErrorServCode(error);
+      title = `Error ${error.codeList[error.codeList.length - 1]}${servCode ? `-${servCode}` : ''}`;
     } else {
       title = `Unknown Error`;
     }

@@ -132,14 +132,39 @@ export class AgoraEduSDK {
   }
 
   static config(config: ConfigParams) {
-    this.appId = config.appId;
+    AgoraEduSDK.appId = config.appId;
     if (config.region) {
-      this.region = this.convertRegion(config.region);
+      AgoraEduSDK.region = AgoraEduSDK.convertRegion(config.region);
     }
   }
 
-  static async launch(dom: HTMLElement, option: LaunchOption): Promise<any> {
+  static validateOptions(option: LaunchOption) {
+    if (!option) {
+      throw new Error('AgoraEduSDK: LaunchOption is required!');
+    } else if (
+      ![
+        EduRoleTypeEnum.assistant,
+        EduRoleTypeEnum.invisible,
+        EduRoleTypeEnum.none,
+        EduRoleTypeEnum.student,
+        EduRoleTypeEnum.teacher,
+      ].includes(option.roleType)
+    ) {
+      throw new Error('AgoraEduSDK: Invalid roleType!');
+    } else if (
+      ![
+        EduRoomTypeEnum.Room1v1Class,
+        EduRoomTypeEnum.RoomBigClass,
+        EduRoomTypeEnum.RoomSmallClass,
+      ].includes(option.roomType)
+    ) {
+      throw new Error('AgoraEduSDK: Invalid roomType!');
+    }
+  }
+
+  static async launch(dom: HTMLElement, option: LaunchOption): Promise<void> {
     EduContext.reset();
+    AgoraEduSDK.validateOptions(option);
     const {
       pretest,
       userUuid,
@@ -169,7 +194,7 @@ export class AgoraEduSDK {
     };
 
     const config = new EduClassroomConfig(
-      this.appId,
+      AgoraEduSDK.appId,
       sessionInfo,
       option.recordUrl || '',
       {
@@ -183,7 +208,7 @@ export class AgoraEduSDK {
         },
       },
       {
-        chat: ChatFactory(this.region),
+        chat: ChatFactory(AgoraEduSDK.region),
         ...option.widgets,
       },
       option.extApps,

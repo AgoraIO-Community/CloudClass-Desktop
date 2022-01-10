@@ -80,8 +80,7 @@ export const CmdMsg = ({ item }) => {
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
-              {transI18n('chat.mute_msg').format(`${item.ext.nickName}`) +
-                transI18n('chat.teacher')}
+              {transI18n('chat.mute_msg').format(`${item.ext.nickName}`)}
             </span>
           </div>
         );
@@ -106,8 +105,7 @@ export const CmdMsg = ({ item }) => {
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
-              {transI18n('chat.mute_msg').format(`${item.ext.nickName}`) +
-                transI18n('chat.teacher')}
+              {transI18n('chat.unmute_msg').format(`${item.ext.nickName}`)}
             </span>
           </div>
         );
@@ -133,8 +131,7 @@ export const CmdMsg = ({ item }) => {
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
-              {transI18n('chat.mute_msg').format(`${item.ext.nickName}`) +
-                transI18n('chat.teacher')}
+              {transI18n('chat.mute_msg').format(`${item.ext.nickName}`)}
             </span>
           </div>
         );
@@ -158,8 +155,7 @@ export const CmdMsg = ({ item }) => {
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
-              {transI18n('chat.unmute_msg').format(`${item.ext.nickName}`) +
-                transI18n('chat.teacher')}
+              {transI18n('chat.unmute_msg').format(`${item.ext.nickName}`)}
             </span>
           </div>
         );

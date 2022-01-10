@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import i18n from 'i18next';
 import { useSelector } from 'react-redux';
 import WebIM, { initIMSDK } from './utils/WebIM';
@@ -21,9 +21,8 @@ import { getRoomWhileList } from './api/mute';
 import _ from 'lodash';
 import { Chat } from './components/Chat';
 import { message } from 'antd';
-import { ROOM_TYPE, CHAT_TABS_KEYS } from './contants';
-import showChat_icon from './themes/img/chat2x.png';
-import { SvgImg } from './components/svg-img';
+import { CHAT_TABS_KEYS } from './contants';
+import { SvgImg } from './components/SvgImg';
 import im_CN from './locales/zh_CN';
 import im_US from './locales/en_US';
 import './App.css';
