@@ -161,6 +161,10 @@ export class ExtAppUIStore extends EduUIStoreBase {
     const { extAppsCommon, extAppProperties, userRole } = this.classroomStore.roomStore;
     const { activeAppIds } = this.classroomStore.extAppStore;
 
+    if (userRole === EduRoleTypeEnum.assistant) {
+      return false;
+    }
+
     const localActive = activeAppIds.includes(extApp.appIdentifier);
 
     const state = extAppProperties[escapeExtAppIdentifier(extApp.appIdentifier)] || {};
