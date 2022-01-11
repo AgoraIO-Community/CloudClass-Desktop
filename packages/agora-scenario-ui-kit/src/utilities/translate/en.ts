@@ -445,7 +445,7 @@ export const en = {
   },
   cabinet: {
     answer: {
-      appName: 'Answer',
+      appName: 'Pop-up quiz',
     },
     countdown: {
       appName: 'Countdown',
