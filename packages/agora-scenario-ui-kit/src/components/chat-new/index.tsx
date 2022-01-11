@@ -112,7 +112,7 @@ export const SimpleChatNew: FC<ChatProps> = ({
       {...resetProps}
       onCollapse={onCollapse}
       collapse={collapse}
-      content={<ChatMin unreadCount={unreadCount} />}>
+      content={<ChatMin unreadCount={0} />}>
       <div className={['chat-panel', cls].join(' ')}>
         <div className="chat-header">
           <span className="chat-header-title">{transI18n('message')}</span>
@@ -209,7 +209,7 @@ export const ChatNew: FC<ChatProps> = ({
       {...resetProps}
       onCollapse={onCollapse}
       collapse={collapse}
-      content={<ChatMin unreadCount={unreadCount} />}>
+      content={<ChatMin unreadCount={unreadConversationCountFn(0) + unReadMessageCount} />}>
       <div className={classnames('chat-panel', className)}>
         <div className="chat-header with-tab">
           <span

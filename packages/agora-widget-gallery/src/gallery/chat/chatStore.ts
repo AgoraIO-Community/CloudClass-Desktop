@@ -5,10 +5,11 @@ import {
   EduClassroomConfig,
   EduClassroomUIStore,
   EduRoleTypeEnum,
+  EduRoomTypeEnum,
   MessageItem,
 } from 'agora-edu-core';
 import { AGError } from 'agora-rte-sdk';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { computedFn } from 'mobx-utils';
@@ -22,6 +23,10 @@ export class WidgetChatUIStore {
 
   @observable
   activeTab: ChatListType = 'room';
+
+  @observable
+  minimize: boolean =
+    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass;
 
   @observable
   activeConversation?: Conversation;
@@ -66,7 +71,8 @@ export class WidgetChatUIStore {
     reaction(
       () => this.convertedMessageList,
       (_) => {
-        if (this.activeTab !== 'room') {
+        if (!this.coreStore.classroomStore.messageStore.newMessageFlag) return;
+        if (this.activeTab !== 'room' || this.minimize) {
           let id = uuidv4();
           this.unreadMessageSet.add(id);
         }
@@ -75,16 +81,23 @@ export class WidgetChatUIStore {
 
     reaction(
       () => this.activeTab,
-      (activeTab) => {
-        if (activeTab === 'room') {
-          this.unreadMessageSet.clear();
-        }
+      () => {
+        this.unreadMessageSet.clear();
+      },
+      {
+        equals: (a, b) => {
+          if (a === 'room' || b === 'room') {
+            return false;
+          }
+          return true;
+        },
       },
     );
 
     reaction(
       () => this.chatConversationList,
       (list) => {
+        if (!this.coreStore.classroomStore.messageStore.newMessageFlag) return;
         const { role } = EduClassroomConfig.shared.sessionInfo;
         let shoudleUpdate = false;
         if (role === EduRoleTypeEnum.student && this.activeTab === 'room') shoudleUpdate = true; // 当学生在 room tab 的更新
@@ -107,9 +120,24 @@ export class WidgetChatUIStore {
           });
         }
       },
+      {
+        equals: (a, b) => {
+          if ((isEmpty(a) || isEmpty(a[0]?.messages)) && !isEmpty(b[0]?.messages)) {
+            return true;
+          }
+          return false;
+        },
+      },
     );
     // https://github.com/mobxjs/mobx/issues/385
     // Yes that is correct. The change in messages is only triggered when the changed elements are accessed. That's why it works with map( a => a ). Instead you can do a messages.slice().
+    // 如果打开了聊天窗口那么需要清空聊天红点，打开聊天窗口的话 activetab 一定是 ’room‘ 因为这是逻辑上写的 😃
+    reaction(
+      () => this.minimize,
+      (minimize) => {
+        !minimize && this.unreadMessageSet.clear();
+      },
+    );
   }
 
   getHistoryChatMessage = async (data: { nextId: string; sort: number }) => {
@@ -220,6 +248,13 @@ export class WidgetChatUIStore {
   };
 
   @action
+  toggleChatMinimize = () => {
+    if (this.minimize) {
+      this.minimize = false;
+    } else {
+      this.minimize = true;
+    }
+  };
   setUI = (ui: IChatConfigUI) => {
     this.configUI = { ...this.configUI, ...ui };
   };

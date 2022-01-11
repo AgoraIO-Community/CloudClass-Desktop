@@ -10,6 +10,7 @@ import {
   MessageItem,
 } from 'agora-edu-core';
 import classnames from 'classnames';
+import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffect, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
@@ -24,7 +25,7 @@ const App = observer(() => {
   const uiStore = chatContext.uiStore as EduClassroomUIStore;
   const widgetStore = chatContext.widgetStore as WidgetChatUIStore;
   const loading = uiStore.layoutUIStore.loading;
-  const [minimize, toggleChatMinimize] = useState(defaultMinimize);
+
   const {
     roomChatMessages: messageList,
     unmuted: canChatting,
@@ -33,6 +34,7 @@ const App = observer(() => {
     unreadMessageCount,
     unReadCount,
     configUI,
+    minimize,
   } = widgetStore;
 
   const {
@@ -43,6 +45,7 @@ const App = observer(() => {
     refreshConversationMessageList,
     updateActiveTab,
     unreadConversationCountFn,
+    toggleChatMinimize,
   } = widgetStore;
 
   useEffect(() => {
@@ -70,7 +73,7 @@ const App = observer(() => {
           uid={EduClassroomConfig.shared.sessionInfo.userUuid}
           messages={messageList.map((message: MessageItem) => message.toMessage())}
           onCollapse={() => {
-            toggleChatMinimize((pre) => !pre);
+            toggleChatMinimize();
           }}
           onSend={handleSendText}
           showCloseIcon={false}
@@ -79,6 +82,7 @@ const App = observer(() => {
           }}
           unreadCount={unreadMessageCount}
           configUI={configUI}
+          unreadCountMsg={0}
         />
       ) : (
         <ChatNew
@@ -93,7 +97,7 @@ const App = observer(() => {
           unreadConversationCountFn={unreadConversationCountFn}
           activeTab={widgetStore.activeTab}
           onCollapse={() => {
-            toggleChatMinimize((pre) => !pre);
+            toggleChatMinimize();
           }}
           onSend={handleSendText}
           showCloseIcon={defaultMinimize}

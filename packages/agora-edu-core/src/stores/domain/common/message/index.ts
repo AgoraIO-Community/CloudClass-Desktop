@@ -17,6 +17,7 @@ export class MessagesStore extends EduStoreBase {
   @observable chatConvasationUserUuid: Map<string, Conversation> = new Map<string, Conversation>();
   @observable chatConvasationMessageId: Map<string, MessageItem> = new Map<string, MessageItem>();
   @observable roomChatMessagesMessageId: Map<string, MessageItem> = new Map<string, MessageItem>();
+  @observable newMessageFlag: boolean = false; // ⚠️ 用于判断是否为新消息进来
 
   @action.bound
   addChatMessage(args: MessageItem) {
@@ -310,6 +311,7 @@ export class MessagesStore extends EduStoreBase {
         let conversationList = new Conversation(conversationItem);
 
         this.addConversationChatMessage(conversationMessageItem, conversationList);
+        this.newMessageFlag = true;
       });
     });
     scene.on(AgoraRteEventType.ChatReceived, (evt: AgoraChatMessage) => {
@@ -331,6 +333,7 @@ export class MessagesStore extends EduStoreBase {
           isOwn: userUuid === currentUserUuid,
         });
         this.addChatMessage(messageItem);
+        this.newMessageFlag = true;
       });
     });
   }

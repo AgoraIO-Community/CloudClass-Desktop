@@ -9,9 +9,10 @@
 }
 .chat-min .unread-count {
   position: absolute;
-  height: 14px;
+  width: 8px;
+  height: 8px;
   padding: 1px 4px;
-  border-radius: 12px;
+  border-radius: 8px;
   background: #f04c36;
   top: -3px;
   left: 25px;

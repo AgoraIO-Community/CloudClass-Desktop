@@ -29,7 +29,7 @@ export const ChatMin: FC<ChatMinProps> = ({
       />
       {unreadCount ? (
         <div className="unread-count">
-          <span>{unreadCount < 100 ? unreadCount : '99+'}</span>
+          {/* <span>{unreadCount < 100 ? unreadCount : '99+'}</span> */}
         </div>
       ) : (
         ''

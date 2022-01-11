@@ -30,7 +30,7 @@ export interface MessageListProps extends BaseProps {
 const cache = new CellMeasurerCache({
   // defaultWidth: 200,
   minWidth: 75,
-  minHeight: 81,
+  minHeight: 83,
   fixedWidth: false,
 });
 
