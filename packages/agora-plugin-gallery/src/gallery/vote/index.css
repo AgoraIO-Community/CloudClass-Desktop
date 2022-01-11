@@ -220,6 +220,7 @@
   bottom: 0;
   left: 30px;
   border-radius: 2px;
+  background-color: #eeeef7;
 }
 .vote-process span {
   background: #0073ff;
@@ -272,4 +273,25 @@
   background-color: rgba(53, 123, 246, 0.3) !important;
   color: #fff !important;
   border-color: transparent !important;
+}
+
+.vote-item-label {
+  cursor: pointer;
+  flex: 1;
+  align-self: center;
+  padding-left: 8px;
+}
+.vote-item-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.vote-label-for {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  content: 'content';
+  cursor: pointer;
 }

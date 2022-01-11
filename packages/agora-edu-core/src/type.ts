@@ -94,6 +94,7 @@ export type CourseWareItem = {
   updateTime: number;
   taskUuid?: string;
   taskProgress?: CloudDriveResourceConvertProgress;
+  conversion?: any;
 };
 
 export type CourseWareList = CourseWareItem[];

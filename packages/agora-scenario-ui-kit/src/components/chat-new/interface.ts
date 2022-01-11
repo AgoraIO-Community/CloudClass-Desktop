@@ -25,3 +25,7 @@ export type ChatEvent = {
   conversation?: Conversation;
   text?: string;
 };
+
+export interface IChatConfigUI {
+  visibleQuestion?: false;
+}

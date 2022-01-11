@@ -10,7 +10,7 @@ import { TabPane, Tabs } from '../tabs';
 import { ChatList } from './chat-list';
 import { ChatMin } from './chat-min';
 import './index.css';
-import { ChatEvent, ChatListType, Conversation, Message } from './interface';
+import { ChatEvent, ChatListType, Conversation, Message, IChatConfigUI } from './interface';
 import { MessageList } from './message-list';
 
 export interface ChatProps extends AffixProps {
@@ -82,6 +82,8 @@ export interface ChatProps extends AffixProps {
     activeTab: ChatListType,
     activeConversation?: Conversation,
   ) => void | Promise<void>;
+
+  configUI?: IChatConfigUI;
 }
 
 export const SimpleChatNew: FC<ChatProps> = ({
@@ -177,6 +179,7 @@ export const ChatNew: FC<ChatProps> = ({
   className,
   unReadMessageCount,
   unreadConversationCountFn,
+  configUI,
   ...resetProps
 }) => {
   const [activeConversation, setActiveConversation] = useState<Conversation | undefined>(undefined);
@@ -271,79 +274,83 @@ export const ChatNew: FC<ChatProps> = ({
               }}
             />
           </TabPane>
-          <TabPane
-            tab={
-              <span className="question tab-title">
-                {transI18n('quiz')}
-                {unreadConversationCountFn(0) ? <span className="new-message-notice"></span> : null}
-              </span>
-            }
-            key="1">
-            {singleConversation ? (
-              <>
-                <MessageList
-                  className={'conversation no-header chat-history'}
-                  messages={singleConversation.messages}
-                  disableChat={false}
-                  onPullFresh={() => {
-                    onPullRefresh({
-                      type: 'conversation',
-                      conversation: singleConversation,
-                    });
-                  }}
-                  onSend={(text) => {
-                    onSend({
-                      type: 'conversation',
-                      conversation: singleConversation,
-                      text,
-                    });
-                  }}
-                />
-              </>
-            ) : activeConversation ? (
-              <>
-                <div className="conversation-header">
-                  <div
-                    className="back-btn"
-                    onClick={() => {
-                      setActiveConversation(undefined);
-                      onChangeActiveTab && onChangeActiveTab('conversation-list', undefined);
-                    }}>
-                    <img src={backBtn} />
+          {configUI?.visibleQuestion && (
+            <TabPane
+              tab={
+                <span className="question tab-title">
+                  {transI18n('quiz')}
+                  {unreadConversationCountFn(0) ? (
+                    <span className="new-message-notice"></span>
+                  ) : null}
+                </span>
+              }
+              key="1">
+              {singleConversation ? (
+                <>
+                  <MessageList
+                    className={'conversation no-header chat-history'}
+                    messages={singleConversation.messages}
+                    disableChat={false}
+                    onPullFresh={() => {
+                      onPullRefresh({
+                        type: 'conversation',
+                        conversation: singleConversation,
+                      });
+                    }}
+                    onSend={(text) => {
+                      onSend({
+                        type: 'conversation',
+                        conversation: singleConversation,
+                        text,
+                      });
+                    }}
+                  />
+                </>
+              ) : activeConversation ? (
+                <>
+                  <div className="conversation-header">
+                    <div
+                      className="back-btn"
+                      onClick={() => {
+                        setActiveConversation(undefined);
+                        onChangeActiveTab && onChangeActiveTab('conversation-list', undefined);
+                      }}>
+                      <img src={backBtn} />
+                    </div>
+                    <div className="avatar"></div>
+                    <div className="name">{activeConversation.userName}</div>
                   </div>
-                  <div className="avatar"></div>
-                  <div className="name">{activeConversation.userName}</div>
-                </div>
-                <MessageList
-                  className={'conversation chat-history'}
-                  messages={getActiveConversationMessages()}
-                  disableChat={false}
-                  onPullFresh={() => {
-                    onPullRefresh({
-                      type: 'conversation',
-                      conversation: activeConversation,
-                    });
-                  }}
-                  onSend={(text) => {
-                    onSend({
-                      type: 'conversation',
-                      conversation: activeConversation,
-                      text,
-                    });
-                  }}
-                />
-              </>
-            ) : (
-              <ChatList
-                conversations={conversations}
-                unreadConversationCountFn={unreadConversationCountFn}
-                onPullRefresh={onPullRefresh}
-                onClickConversation={(conversation) => {
-                  setActiveConversation(conversation);
-                  onChangeActiveTab && onChangeActiveTab('conversation', conversation);
-                }}></ChatList>
-            )}
-          </TabPane>
+                  <MessageList
+                    className={'conversation chat-history'}
+                    messages={getActiveConversationMessages()}
+                    disableChat={false}
+                    onPullFresh={() => {
+                      onPullRefresh({
+                        type: 'conversation',
+                        conversation: activeConversation,
+                      });
+                    }}
+                    onSend={(text) => {
+                      onSend({
+                        type: 'conversation',
+                        conversation: activeConversation,
+                        text,
+                      });
+                    }}
+                  />
+                </>
+              ) : (
+                <ChatList
+                  conversations={conversations}
+                  unreadConversationCountFn={unreadConversationCountFn}
+                  onPullRefresh={onPullRefresh}
+                  onClickConversation={(conversation) => {
+                    setActiveConversation(conversation);
+                    onChangeActiveTab && onChangeActiveTab('conversation', conversation);
+                  }}></ChatList>
+              )}
+            </TabPane>
+          )}
         </Tabs>
       </div>
     </Affix>

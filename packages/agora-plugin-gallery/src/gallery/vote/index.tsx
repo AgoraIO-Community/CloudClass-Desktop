@@ -142,41 +142,49 @@ const App = observer(
                       onClick={() => {
                         pluginStore.changeSelAnswer(col, pluginStore.mulChoice);
                       }}
+                      id={`${pluginStore.answer && pluginStore.answer[idx]}-${idx}`}
                     />
                     <span className={pluginStore.mulChoice ? 'vote-item-mul' : ''}></span>
                   </label>
                 ) : null}
-                <Input
-                  className="vote-item"
-                  maxLength={30}
-                  prefix={
-                    pluginStore.status === 'config' ? (
-                      <span
-                        style={{
-                          color: '#677386',
-                          fontSize: '14px',
-                        }}>
-                        {idx + 1}.
-                      </span>
-                    ) : null
-                  }
-                  suffix={
-                    pluginStore.status === 'end' || pluginStore.status === 'info' ? (
-                      <span
-                        style={{
-                          color: '#677386',
-                          fontSize: '14px',
-                        }}>
-                        {pluginStore.answerInfo ? pluginStore.answerInfo[idx] : ''}
-                      </span>
-                    ) : null
-                  }
-                  value={pluginStore.answer && pluginStore.answer[idx]}
-                  disabled={pluginStore.status !== 'config'}
-                  placeholder={transI18n('vote.item-tip')}
-                  onChange={(e: any) => {
-                    pluginStore.changeAnswer(idx, e.target.value);
-                  }}></Input>
+                <div className="vote-item-container">
+                  <Input
+                    className="vote-item"
+                    maxLength={30}
+                    prefix={
+                      pluginStore.status === 'config' ? (
+                        <span
+                          style={{
+                            color: '#677386',
+                            fontSize: '14px',
+                          }}>
+                          {idx + 1}.
+                        </span>
+                      ) : null
+                    }
+                    suffix={
+                      pluginStore.status === 'end' || pluginStore.status === 'info' ? (
+                        <span
+                          style={{
+                            color: '#677386',
+                            fontSize: '14px',
+                          }}>
+                          {pluginStore.answerInfo ? pluginStore.answerInfo[idx] : ''}
+                        </span>
+                      ) : null
+                    }
+                    value={pluginStore.answer && pluginStore.answer[idx]}
+                    disabled={pluginStore.status !== 'config'}
+                    placeholder={transI18n('vote.item-tip')}
+                    onChange={(e: any) => {
+                      pluginStore.changeAnswer(idx, e.target.value);
+                    }}></Input>
+                  {pluginStore.status !== 'config' && (
+                    <label
+                      className="vote-label-for"
+                      htmlFor={`${pluginStore.answer && pluginStore.answer[idx]}-${idx}`}></label>
+                  )}
+                </div>
                 {pluginStore.status === 'info' || pluginStore.status === 'end' ? (
                   <span className="vote-process" style={{ width: 'calc(100% - 50px)' }}>
                     <span

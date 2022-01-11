@@ -455,7 +455,7 @@ export const en = {
     },
   },
   answer: {
-    appName: 'Selector',
+    appName: 'Pop-up quiz',
     start: 'Begin Answering',
     submit: 'Post',
     change: 'Change My Answer',

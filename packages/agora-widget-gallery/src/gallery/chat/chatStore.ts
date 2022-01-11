@@ -13,6 +13,9 @@ import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { computedFn } from 'mobx-utils';
 
+interface IChatConfigUI {
+  visibleQuestion?: false;
+}
 export class WidgetChatUIStore {
   @observable
   coreStore!: EduClassroomUIStore;
@@ -44,6 +47,9 @@ export class WidgetChatUIStore {
 
   @observable
   unreadCoversationMap: Map<string, Array<number>> = new Map(); // uuid, [read, total] 存储已读和总共的 message 条数
+
+  @observable
+  configUI: IChatConfigUI = {};
 
   constructor(coreStore: EduClassroomUIStore) {
     runInAction(() => {
@@ -211,6 +217,11 @@ export class WidgetChatUIStore {
   @action
   setUnreadConversationMap = (id: string, value: number[]) => {
     this.unreadCoversationMap.set(id, value);
+  };
+
+  @action
+  setUI = (ui: IChatConfigUI) => {
+    this.configUI = { ...this.configUI, ...ui };
   };
 
   refreshMessageList = async () => {

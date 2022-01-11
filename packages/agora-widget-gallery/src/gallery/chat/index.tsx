@@ -32,6 +32,7 @@ const App = observer(() => {
     convertedConversationList: conversationList,
     unreadMessageCount,
     unReadCount,
+    configUI,
   } = widgetStore;
 
   const {
@@ -77,6 +78,7 @@ const App = observer(() => {
             refreshMessageList();
           }}
           unreadCount={unreadMessageCount}
+          configUI={configUI}
         />
       ) : (
         <ChatNew
@@ -112,6 +114,7 @@ const App = observer(() => {
             EduClassroomConfig.shared.sessionInfo.role === 2 ? conversationList[0] : undefined
           }
           conversations={conversationList}
+          configUI={configUI}
         />
       )}
     </div>
