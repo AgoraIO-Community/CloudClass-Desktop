@@ -8,7 +8,7 @@ export const MidRosterBtn = () => <RosterBtn />;
 export const BigRosterBtn = () => {
   const role = EduClassroomConfig.shared.sessionInfo.role;
 
-  return role === EduRoleTypeEnum.teacher ? <RosterBtn /> : null;
+  return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) ? <RosterBtn /> : null;
 };
 
 const RosterBtn = () => {
