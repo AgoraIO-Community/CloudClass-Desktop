@@ -116,7 +116,8 @@
   margin-left: 10px;
 }
 
-.header-right-about {
+.header-right-about,
+.header-right-item {
   font-size: 14px;
   font-weight: 400;
   color: #586376;
@@ -124,6 +125,7 @@
 }
 
 .header-right-about:hover,
+.header-right-item:hover,
 .header-right .react-select__single-value:hover {
   color: #0073ff;
 }

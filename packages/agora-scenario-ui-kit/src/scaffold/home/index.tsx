@@ -11,6 +11,7 @@ import { Modal } from '~components/modal';
 import { HomeAbout, Disclaimer } from '~components/home-about';
 import { Card } from '~ui-kit';
 import classnames from 'classnames';
+import { Link } from 'react-router-dom';
 
 export interface HomeAttributes {
   roomId: string;
@@ -116,6 +117,13 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
+          <Link
+            className="header-right-item"
+            to={`/recordation-search/${Buffer.from(
+              `{"language":"${language}", "region":"${region}"}`,
+            ).toString('base64')}`}>
+            {transI18n('home.recordation-search')}
+          </Link>
           <div
             style={{
               marginRight: language === 'en' ? -12 : -58,

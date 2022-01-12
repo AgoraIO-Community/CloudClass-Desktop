@@ -34,6 +34,11 @@ const RouteContainer = () => (
         path={'/h5login'}
         component={routesMap[BizPageRouter.TestH5HomePage].component}
       />
+      <Route
+        key={'recordation'}
+        path={'/recordation-search/:p'}
+        component={routesMap[BizPageRouter.RecordationSearchPage].component}
+      />
     </Switch>
   </HashRouter>
 );

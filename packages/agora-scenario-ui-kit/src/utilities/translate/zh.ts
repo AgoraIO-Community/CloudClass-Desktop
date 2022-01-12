@@ -410,6 +410,10 @@ export const zh = {
     about: '关于',
     'input-error-msg': '只能输入6-50位字符(字母、数字)',
     network_error: '当前网络异常，请稍后再试',
+    'recordation-search': '课程回放',
+    'recordation-tip': '只能查询1小时内的回放',
+    replay: '回放',
+    search: '查询',
   },
   'home-about': {
     'privacy-policy': '隐私条例',

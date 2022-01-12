@@ -12,4 +12,5 @@ export enum BizPageRouter {
   TestRecordPage = 'test_record',
   TestH5HomePage = 'test_h5_home',
   TestAdapteHomePage = 'test_adapte_home',
+  RecordationSearchPage = 'recordation-search',
 }

@@ -417,6 +417,10 @@ export const en = {
     about: 'About',
     'input-error-msg': 'Between 6 and 50 characters,letter or number only',
     network_error: 'Network error, please try again later',
+    'recordation-search': 'Recordation',
+    'recordation-tip': 'Recordations only within 1 hour',
+    replay: 'replay',
+    search: 'search',
   },
   'home-about': {
     'privacy-policy': 'Privacy Policy',
