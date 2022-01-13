@@ -1,9 +1,4 @@
-import {
-  EduClassroomStore,
-  EduShareUIStore,
-  getRootDimensions,
-  StreamUIStore,
-} from 'agora-edu-core';
+import { EduClassroomStore, EduShareUIStore, StreamUIStore } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 
@@ -13,16 +8,9 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   private _teacherWidthRatio = 0.299;
 
   private _gapInPx = 2;
-  private _rootWidth = 0;
-  private _rootHeight = 0;
 
   constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
     super(store, shareUIStore);
-    let { width, height } = getRootDimensions(this._containerNode); // 初始化
-    console.log(`root width`, width);
-    console.log(`root height`, height);
-    this._rootWidth = width;
-    this._rootHeight = height;
 
     reaction(
       () => this.shareUIStore.orientation,
@@ -68,12 +56,12 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   get getRoomDimensions() {
     return this.shareUIStore.orientation === 'portrait'
       ? {
-          width: Math.min(this._rootWidth, this._rootHeight),
-          height: Math.max(this._rootWidth, this._rootHeight),
+          width: Math.min(this._containerNode.screen.width, this._containerNode.screen.height),
+          height: Math.max(this._containerNode.screen.width, this._containerNode.screen.height),
         }
       : {
-          width: Math.max(this._rootWidth, this._rootHeight),
-          height: Math.min(this._rootWidth, this._rootHeight),
+          width: Math.max(this._containerNode.screen.width, this._containerNode.screen.height),
+          height: Math.min(this._containerNode.screen.width, this._containerNode.screen.height),
         };
   }
 
