@@ -60,6 +60,8 @@
   background: transparent;
   border: none;
   padding: 0 5px 15px 5px;
+  -webkit-opacity: 1; /* Disabled status in safari */
+  -webkit-text-fill-color: #191919;
 }
 
 .vote-title::-webkit-scrollbar {
@@ -170,6 +172,11 @@
 
 .vote-modal .table-row-item input[type='text'] {
   color: #191919;
+}
+
+.vote-modal .table-row-item input[type='text']:disabled {
+  -webkit-opacity: 1; /* Disabled status in safari */
+  -webkit-text-fill-color: #191919; /* Disabled status in safari */
 }
 
 .vote-modal .input-wrapper {
