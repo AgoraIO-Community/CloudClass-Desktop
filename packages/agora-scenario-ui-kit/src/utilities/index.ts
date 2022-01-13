@@ -1,24 +1,7 @@
-import { get, isEmpty } from 'lodash';
 import { createElement, useContext, createContext } from 'react';
-import { config } from './translate/config';
 import { Z_INDEX_RULES } from './style-config';
 
 export type I18nLanguage = 'zh' | 'en';
-
-export const translate = (lang: I18nLanguage, str: string, options?: any) => {
-  const textMap: Record<I18nLanguage, any> = config;
-  let result = get(textMap[lang], str, null);
-  if (result === null) {
-    console.warn(`[UI-KIT-WARN] translate: '${str}', isEmpty`);
-  }
-
-  if (!isEmpty(options)) {
-    if (options.reason && result.match(/\{.+\}/)) {
-      result = result.replace(/\{.+\}/, options.reason);
-    }
-  }
-  return result as string;
-};
 
 export const makeContainer = (name: string) => {
   const Context = createContext(null as any);

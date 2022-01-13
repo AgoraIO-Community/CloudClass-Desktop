@@ -1,4 +1,17 @@
 export const en = {
+  'Close Microphone': 'close microphone',
+  'Open Microphone': 'open microphone',
+  'Camera Not Available': 'Camera Not Available',
+  'Microphone Not Available': 'Microphone Not Available',
+  'Close Camera': 'close camera',
+  'Open Camera': 'open camera',
+  'Clear Podium': 'Close Podium',
+  'Clear Podiums': 'Clear Podiums',
+  'Close Whiteboard': 'close whiteboard',
+  'Open Whiteboard': 'open whiteboard',
+  Star: 'star',
+  'Open Private Call': 'open private call',
+  'Close Private Call': 'close private call',
   role: {
     teacher: 'Teacher',
     student: 'Student',
@@ -65,6 +78,8 @@ export const en = {
     seconds: 'seconds',
   },
   hands_up: 'Hands Up',
+  on_podium_max_count:
+    'The number of people on stage has reached the upper limit, and students cannot be invited to stage',
   hands_up_tip: 'Press and hold down',
   co_video: {
     remote_open_camera: 'Your camera has been turned on',
@@ -125,7 +140,7 @@ export const en = {
     granted_board_success: 'Grant Permission success',
     revoke_board_success: 'Revoke Permission success',
     create_screen_share_failed: 'Create screen share failed',
-    kick_by_other_side: 'Kick by other client',
+    kick_by_other_side: 'Kick out by other client',
     screen_share: 'Screen Share',
     close_ppt: 'Close CourseWare',
     sure_close_ppt: 'Are you sure to close?',
@@ -139,7 +154,7 @@ export const en = {
     cancel: 'Cancel',
     leave_room: 'Leave Classroom',
     quit_room: 'Are you sure to exit the classroom?',
-    kick: 'kicked',
+    kick: 'Account remote login',
     login_failure: 'login failure',
     whiteboard_lock: 'Whiteboard follow',
     whiteboard_unlock: 'Whiteboard nofollow',
@@ -232,7 +247,7 @@ export const en = {
     classroom_remote_join: 'Account was logged in from remote device, you have left the classroom',
     time_interval_between_start: `The class will start in {reason} minutes`,
     time_interval_between_end: `The class will be over in {reason} minutes`,
-    class_is_end: `Class is over. The classroom will be closed in {reason}`,
+    class_is_end: `Class is over. The classroom will be closed in {reason} minutes`,
     time_interval_between_close: `The classroom will be closed in {reason} minutes`,
     reward_limit: 'The maximum number of trophies in the room has been reached',
     chat_enable: 'Enable Mute Chat',
@@ -241,6 +256,8 @@ export const en = {
     download_success: 'Download Success',
     download_failure: 'Download Failure',
     resource_already_opened: 'This resource is already opened',
+    resource_is_converting: 'The resource is converting',
+    fail_to_convert_resource: 'The resource conversion failed',
     interaction_too_frequent: 'The operation is too frequent, please try again later',
   },
   end_class_confirm: 'Are sure end classroom',
@@ -354,6 +371,7 @@ export const en = {
     exit: 'Exit',
     recording: 'Recording',
     start_record: 'Start Recording',
+    stop_record: 'Stop Recording',
   },
   nav: {
     delay: 'Delay: ',
@@ -365,6 +383,7 @@ export const en = {
     to_start_in: 'To start in: ',
     started_elapse: 'Started: ',
     ended_elapse: 'Ended: ',
+    class_not_started: 'Class session is not started',
     hours: 'hours',
     minutes: 'minutes',
     seconds: 'seconds',
@@ -446,6 +465,30 @@ export const en = {
   },
   confirm: {
     delete: 'Delete prompt',
+  },
+  stream: {
+    'placeholder.loading': 'Camera is loading',
+    'placeholder.muted': 'Camera is closed',
+    'placeholder.broken': 'Camera is broken',
+    'placeholder.notpresent.teacher': 'Teacher is not in the classroom',
+    'placeholder.notpresent.student': 'Student is not in the classroom',
+  },
+  screenshare: {
+    display: 'Display {reason}',
+  },
+  toast2: {
+    'teacher.turn.off.my.mic': 'Your mic is turned off by teacher',
+    'teacher.turn.on.my.mic': 'Your mic is turned on by teacher',
+    'teacher.turn.off.my.cam': 'Your camera is turned off by teacher',
+    'teacher.turn.on.my.cam': 'Your camera is turned on by teacher',
+    'teacher.grant.permission': 'You can now draw on your whiteboard',
+    'teacher.revoke.permission': 'You can no longer draw on your whiteboard',
+    'teacher.accept.onpodium':
+      'The teacher has invited you to stage，you can interact with others now',
+    'teacher.revoke.onpodium': 'You are not on stage now and you can not interact with others',
+    'teacher.reward': 'Congratulations to {reason} for getting a star',
+    screen_permission_denied:
+      'Before using screen sharing, please turn on the screenshot permission',
   },
   cabinet: {
     answer: {
@@ -571,7 +614,7 @@ export const en = {
     '20403001': 'This role is full in the room!',
     '20403002': 'Room is full!',
     '20404000': 'Process not exist!',
-    '20404100': 'Room not exists!',
+    '20404100': 'Room not exist!',
     '20410101': 'Sequence is obsolete!',
     '20404200': 'User not exist!',
     '20404300': 'Stream not exist!',

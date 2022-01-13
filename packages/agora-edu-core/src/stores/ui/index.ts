@@ -2,7 +2,7 @@ export type { EduNavAction } from './common/nav-ui';
 export { DialogCategory } from './common/share-ui';
 export type { ToastType } from './common/share-ui';
 export { PretestUIStore } from './common/pretest';
-export { transI18n } from './common/i18n';
+export { transI18n, destoryI18n } from './common/i18n';
 export { EduClassroomUIStore } from './common';
 export { StreamUIStore } from './common/stream';
 export { EduStreamUI } from './common/stream/struct';

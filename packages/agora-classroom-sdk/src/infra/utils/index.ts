@@ -30,7 +30,7 @@ export class MemoryStorage {
 export class CustomStorage {
   private storage: AppStorage;
 
-  languageKey: string = 'demo_language';
+  languageKey = 'demo_language';
 
   constructor() {
     this.storage = new MemoryStorage();
@@ -44,16 +44,16 @@ export class CustomStorage {
     this.storage = window.localStorage;
   }
 
-  read(key: string): any {
+  read(key: string) {
     try {
-      let json = JSON.parse(this.storage.getItem(key) as string);
+      const json = JSON.parse(this.storage.getItem(key) as string);
       return json;
     } catch (_) {
       return this.storage.getItem(key);
     }
   }
 
-  save(key: string, val: any) {
+  save(key: string, val: unknown) {
     this.storage.setItem(key, JSON.stringify(val));
   }
 
@@ -70,7 +70,7 @@ export class CustomStorage {
     return language;
   }
 
-  getRtmMessage(): { count: any; messages: any[] } {
+  getRtmMessage(): { count: number; messages: any[] } {
     const channelMessages = GlobalStorage.read('channelMessages');
     if (isEmpty(channelMessages))
       return {
@@ -101,7 +101,7 @@ export class CustomStorage {
 export class PersistLocalStorage {
   private storage: AppStorage;
 
-  languageKey: string = 'app_storage';
+  languageKey = 'app_storage';
 
   constructor() {
     this.storage = window.localStorage;

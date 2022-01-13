@@ -19,7 +19,7 @@ import { ListenerCallback } from './declare';
 import { EduContext } from '../contexts';
 import { MediaOptions } from 'agora-rte-sdk';
 import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
-import { I18nProvider } from '~ui-kit';
+import { I18nProvider, i18nResources } from '~ui-kit';
 
 export type LanguageEnum = 'en' | 'zh';
 export type TranslateEnum =
@@ -213,6 +213,7 @@ export class AgoraEduSDK {
       },
       option.extApps,
       platform,
+      i18nResources,
     );
 
     if (AgoraEduSDK._config.host) {

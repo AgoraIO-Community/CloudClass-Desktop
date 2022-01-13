@@ -1,5 +1,6 @@
-import { AgoraRteEngine, AgoraRteEngineConfig, Logger } from 'agora-rte-sdk';
+import { AgoraRteEngine, AgoraRteEngineConfig, Logger, AgoraRteOptions } from 'agora-rte-sdk';
 import { merge } from 'lodash';
+import { Resource } from 'i18next';
 import {
   EduSessionInfo,
   EduRoleTypeEnum,
@@ -9,7 +10,6 @@ import {
 } from '../type';
 import { CloudDriveResource } from '../stores/domain/common/cloud-drive/struct';
 import { AGEduErrorCode, EduErrorCenter } from '../utils/error';
-import { AgoraRteOptions } from 'agora-rte-sdk/src/configs';
 import { IAgoraExtApp, IAgoraWidget } from '..';
 
 export interface WhiteboardConfigs {
@@ -53,6 +53,7 @@ export class EduClassroomConfig {
   private _extApps: ReadonlyArray<IAgoraExtApp> = [];
   private _currentAPIVersion = 'v3';
   private _compatibleVersions: string[] = [];
+  private _i18nResources = {};
   boardDefaults: WhiteboardDefaults = { scale: 1.2 };
   //by default use https://api.sd-rtn.com
   host: string = 'https://api.sd-rtn.com';
@@ -72,6 +73,7 @@ export class EduClassroomConfig {
     widgets: { [key: string]: IAgoraWidget } = {},
     extApps: IAgoraExtApp[] = [],
     platform: Platform = Platform.PC,
+    i18nResources: Resource = {},
   ) {
     this.appId = appId;
     this.platform = platform;
@@ -98,6 +100,12 @@ export class EduClassroomConfig {
     Logger.info(
       `[Core] core configurations initialized, rte: v${AgoraRteEngine.getVersion()}, core: ${EduClassroomConfig.getVersion()}`,
     );
+
+    this._i18nResources = i18nResources;
+  }
+
+  get i18nResources() {
+    return this._i18nResources;
   }
 
   get sessionInfo(): EduSessionInfo {

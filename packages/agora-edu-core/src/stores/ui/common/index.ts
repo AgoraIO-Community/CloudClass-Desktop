@@ -162,7 +162,7 @@ export class EduClassroomUIStore {
             new Promise((resolve) => {
               this.shareUIStore.addGenericErrorDialog(e as AGError, {
                 onOK: resolve,
-                okBtnText: transI18n('toast.leave_room2'),
+                okBtnText: transI18n('toast.leave_room'),
               });
             }),
           );

@@ -8,6 +8,7 @@ export {
   RteLanguage,
   AgoraRegion,
 } from './configs';
+export type { AgoraRteOptions } from './configs';
 export type { AgoraComponentRegion } from './configs';
 export type { AgoraRteServiceConfig } from './configs';
 export { AgoraRtcVideoCanvas, AgoraRtcLocalVideoCanvas } from './core/rtc/canvas';
