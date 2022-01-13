@@ -6,6 +6,7 @@
 
 @tailwind screens;
 
-* {
+html,
+html body {
   @apply font-scenario;
 }

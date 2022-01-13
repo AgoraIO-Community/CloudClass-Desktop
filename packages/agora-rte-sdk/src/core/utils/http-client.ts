@@ -3,7 +3,7 @@ export const HttpClient = async (url: string, opts: any): Promise<Response | und
     const controller = new AbortController();
 
     // 5 second timeout:
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     fetch(url, { ...opts, signal: controller.signal })
       .then((fetchResponse: Response) => {

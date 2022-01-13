@@ -97,28 +97,8 @@ export enum AGEduErrorCode {
   EDU_ERR_BOARD_CONFIG_TIMEOUT = '600072',
   EDU_ERR_REPORT_INVALID_PARAMS = '600073',
   EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED = '600074',
+  EDU_ERR_HAND_UP_ON_PODIUM_FAIL = '600075',
 }
-
-// RTE Server Error Code
-// '20400200': 'userUuid is required!',
-// '20400300': 'stream is required!',
-// '20401000': 'User token invalid!',
-// '20401001': 'Role cannot join room!',
-// '20403001': 'Role %s is full in the room!',
-// '20403002': 'Room is full!',
-// '20404000': 'Process not exists!',
-// '20404100': 'Room not exists!',
-// '20410101': 'Sequence is obsolete!',
-// '20404200': 'User not exists!',
-// '20404300': 'Stream not exists!',
-// '20404400': 'Room template not exists!',
-// '20409000': 'Process conflict!',
-// '20409100': 'Room conflict!',
-// '20409300': 'Stream uuid conflict!',
-// '20410100': 'Room is end!',
-// '20410200': 'User not online!',
-// '20500300': 'Create stream failed!',
-// '20500001': 'Generate token failed!',
 
 export const getEduErrorMessage = (error: Error) => {
   if (error instanceof AGError && error.codeList && error.codeList.length) {

@@ -2,10 +2,11 @@ import { EduStoreBase } from '../base';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduClassroomConfig } from '../../../..';
 import { bound } from 'agora-rte-sdk';
+import { PodiumSrouce } from './type';
 
 export class HandUpStore extends EduStoreBase {
   @bound
-  async onPodium(userUuid: string) {
+  async onPodium(userUuid: string, source: PodiumSrouce = PodiumSrouce.InvitedByTeacher) {
     const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.acceptHandsUp({
@@ -14,7 +15,9 @@ export class HandUpStore extends EduStoreBase {
       });
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_HAND_UP_ACCEPT_FAIL,
+        source === PodiumSrouce.AcceptedByTeacher
+          ? AGEduErrorCode.EDU_ERR_HAND_UP_ACCEPT_FAIL
+          : AGEduErrorCode.EDU_ERR_HAND_UP_ON_PODIUM_FAIL,
         err as Error,
       );
     }

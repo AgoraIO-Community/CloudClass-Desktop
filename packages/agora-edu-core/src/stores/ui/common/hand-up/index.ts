@@ -4,6 +4,7 @@ import { bound, AGError } from 'agora-rte-sdk';
 import { AGServiceErrorCode } from '../../../../services/error';
 import { transI18n } from '../i18n';
 import { EduClassroomConfig } from '../../../..';
+import { PodiumSrouce } from '../../../domain/common/hand-up/type';
 export type UserWaveArmInfo = {
   userUuid: string;
   userName: string;
@@ -74,24 +75,26 @@ export class HandUpUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 学生上台
+   * 学生上台(接受学生举手)
    * @param userUuid
    */
   @bound
   onPodium(userUuid: string) {
-    this.classroomStore.handUpStore.onPodium(userUuid).catch((e) => {
-      if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
-        this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
-      } else if (
-        !AGError.isOf(
-          e,
-          AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-          AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
-        )
-      ) {
-        this.shareUIStore.addGenericErrorDialog(e);
-      }
-    });
+    this.classroomStore.handUpStore
+      .onPodium(userUuid, PodiumSrouce.AcceptedByTeacher)
+      .catch((e) => {
+        if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
+          this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
+        } else if (
+          !AGError.isOf(
+            e,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+          )
+        ) {
+          this.shareUIStore.addGenericErrorDialog(e);
+        }
+      });
   }
 
   /**

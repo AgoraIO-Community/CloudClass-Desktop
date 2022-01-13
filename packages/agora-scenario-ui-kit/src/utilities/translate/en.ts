@@ -605,6 +605,7 @@ export const en = {
     '600072': 'Whiteboard connection Timeout',
     '600073': 'Failed to report information',
     '600074': 'The resource is already opened',
+    '600075': 'Failed to get on the podium',
   },
   edu_serv_error: {
     '20400200': 'UserUuid is required!',
