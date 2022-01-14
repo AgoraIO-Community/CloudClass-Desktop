@@ -284,9 +284,9 @@ export const Home: React.FC<HomeProps> = ({
                 value={roomName}
                 onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}
                 placeholder={transI18n('home.roomName_placeholder')}
-                rule={/^[a-zA-Z0-9]{6,20}$/}
+                rule={/^[a-zA-Z0-9]{6,50}$/}
                 errorMsg={transI18n('home.input-error-msg')}
-                maxLength={20}
+                maxLength={50}
               />
             </Col>
           </Row>
@@ -305,9 +305,9 @@ export const Home: React.FC<HomeProps> = ({
                 value={userName}
                 onChange={(evt) => onChangeUserName(evt.currentTarget.value)}
                 placeholder={transI18n('home.nickName_placeholder')}
-                rule={/^[a-zA-Z0-9]{6,20}$/}
+                rule={/^[a-zA-Z0-9]{6,50}$/}
                 errorMsg={transI18n('home.input-error-msg')}
-                maxLength={20}
+                maxLength={50}
               />
             </Col>
           </Row>
@@ -461,8 +461,8 @@ export const Home: React.FC<HomeProps> = ({
                 !!roomName &&
                 !!role &&
                 !!scenario &&
-                /^[a-zA-Z0-9]{6,20}$/.test(roomName) &&
-                /^[a-zA-Z0-9]{6,20}$/.test(userName)
+                /^[a-zA-Z0-9]{6,50}$/.test(roomName) &&
+                /^[a-zA-Z0-9]{6,50}$/.test(userName)
               )
             }>
             {transI18n('home.enter_classroom')}
