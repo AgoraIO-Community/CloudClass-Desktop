@@ -1,6 +1,6 @@
 import { CameraPlaceholderType, EduRoleTypeEnum, EduStream, EduStreamUI } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef } from 'react';
+import React, { CSSProperties, FC, Fragment, ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -387,3 +387,25 @@ export const CarouselGroup = observer(
     );
   },
 );
+
+export const NavGroup: FC<{ onNext: () => void; onPrev: () => void; visible: boolean }> = ({
+  onNext,
+  onPrev,
+  visible,
+}) => {
+  const ANIMATION_DELAY = 200;
+  return (
+    <Fragment>
+      <CSSTransition timeout={ANIMATION_DELAY} classNames="carousel-nav" in={visible}>
+        <div className="carousel-prev" onClick={onPrev}>
+          <SvgImg type="backward" size={35} />
+        </div>
+      </CSSTransition>
+      <CSSTransition timeout={ANIMATION_DELAY} classNames="carousel-nav" in={visible}>
+        <div className="carousel-next" onClick={onNext}>
+          <SvgImg type="forward" size={35} />
+        </div>
+      </CSSTransition>
+    </Fragment>
+  );
+};

@@ -5,14 +5,19 @@ import {
   EduStreamUI,
   StreamUIStore,
 } from 'agora-edu-core';
-import { computed } from 'mobx';
+import { Log } from 'agora-rte-sdk';
+import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
+@Log.attach({ proxyMethods: false })
 export class InteractiveRoomStreamUIStore extends StreamUIStore {
   // 1 teacher + 6 students
   private _carouselShowCount = 7;
 
   private _gapInPx = 8;
+
+  @observable
+  carouselPosition = 0;
 
   get videoStreamSize() {
     const width =
@@ -29,7 +34,12 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
 
     const streams = [];
 
-    for (const student of acceptedList) {
+    const carouselStudentList = acceptedList.slice(
+      this.carouselPosition,
+      this.carouselPosition + this.carouselStudentShowCount,
+    );
+
+    for (const student of carouselStudentList) {
       const streamUuids =
         this.classroomStore.streamStore.streamByUserUuid.get(student.userUuid) || new Set();
 
@@ -86,5 +96,47 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
 
   get gap() {
     return this._gapInPx;
+  }
+
+  get carouselStudentShowCount() {
+    return this._carouselShowCount - 1;
+  }
+
+  @action.bound
+  carouselNext() {
+    if (super.studentStreams.size > this.carouselStudentShowCount + this.carouselPosition) {
+      this.carouselPosition += 1;
+      this.logger.info('next', this.carouselPosition);
+    }
+  }
+
+  @action.bound
+  carouselPrev() {
+    if (0 < this.carouselPosition) {
+      this.carouselPosition -= 1;
+      this.logger.info('prev', this.carouselPosition);
+    }
+  }
+
+  get scrollable() {
+    return super.studentStreams.size > this.carouselStudentShowCount;
+  }
+
+  onInstall(): void {
+    super.onInstall();
+
+    reaction(
+      () => this.classroomStore.roomStore.acceptedList,
+      () => {
+        const { acceptedList } = this.classroomStore.roomStore;
+
+        if (
+          acceptedList.length - this.carouselPosition < this.carouselStudentShowCount &&
+          this.carouselPosition > 0
+        ) {
+          this.carouselPrev();
+        }
+      },
+    );
   }
 }

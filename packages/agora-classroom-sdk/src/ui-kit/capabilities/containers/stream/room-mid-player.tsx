@@ -1,15 +1,31 @@
 import { observer } from 'mobx-react';
 import { useInteractiveUIStores } from '~hooks/use-edu-stores';
-import { CarouselGroup, StreamPlayer } from '.';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { EduInteractiveUIClassStore } from '@/infra/stores/interactive';
+import { CarouselGroup, NavGroup, StreamPlayer } from '.';
 
 export const RoomMidStreamsContainer = observer(() => {
   const { streamUIStore } = useInteractiveUIStores() as EduInteractiveUIClassStore;
-  const { carouselStreams, videoStreamSize, gap } = streamUIStore;
+  const { videoStreamSize, carouselNext, carouselPrev, scrollable, gap, carouselStreams } =
+    streamUIStore;
+
+  const [navigationVisible, setNavigationVisible] = useState(false);
+
+  const mouseHandler = useCallback(
+    (visible) => () => {
+      setNavigationVisible(visible);
+    },
+    [],
+  );
 
   return (
-    <div className="flex-grow flex-shrink-0">
+    <div
+      className="flex-grow flex-shrink-0 relative"
+      onMouseEnter={mouseHandler(true)}
+      onMouseLeave={mouseHandler(false)}>
+      {scrollable && (
+        <NavGroup visible={navigationVisible} onPrev={carouselPrev} onNext={carouselNext} />
+      )}
       <div className="h-full flex justify-center items-center">
         <TeacherStream />
         <CarouselGroup
