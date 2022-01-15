@@ -366,6 +366,9 @@ export const zh = {
     signal_weak: '良',
     signal_bad: '差',
     signal_unknown: '未知',
+    signal_down: '断网',
+    singal_poor_tip: '当前网络质量不佳，请检查设备网络连接',
+    singal_down_tip: '当前网络已断开, 请检查设备网络连接',
   },
   tool: {
     board_name: '白板',

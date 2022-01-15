@@ -10,7 +10,10 @@ export class StatisticsStore extends EduStoreBase {
   packetLoss?: number = 0;
 
   @observable
-  networkQuality?: AGNetworkQuality = AGNetworkQuality.unknown;
+  downlinkNetworkQuality?: AGNetworkQuality = AGNetworkQuality.good; // 默认网络状态为正常
+
+  @observable
+  uplinkNetworkQuality?: AGNetworkQuality = AGNetworkQuality.good; // 默认网络状态为正常
 
   @observable
   cpu?: number = 0;
@@ -27,19 +30,22 @@ export class StatisticsStore extends EduStoreBase {
   @action.bound
   private updateNetworkStats({
     packetLoss,
-    networkQuality,
+    uplinkNetworkQuality,
+    downlinkNetworkQuality,
     cpu,
     cpuTotal,
     delay,
   }: {
     packetLoss: number;
-    networkQuality: AGNetworkQuality;
+    uplinkNetworkQuality: AGNetworkQuality;
+    downlinkNetworkQuality: AGNetworkQuality;
     cpu: number;
     cpuTotal: number;
     delay: number;
   }) {
     this.packetLoss = packetLoss;
-    this.networkQuality = networkQuality;
+    this.uplinkNetworkQuality = uplinkNetworkQuality;
+    this.downlinkNetworkQuality = downlinkNetworkQuality;
     this.cpu = cpu;
     this.cpuTotal = cpuTotal;
     this.delay = delay;
@@ -51,14 +57,16 @@ export class StatisticsStore extends EduStoreBase {
       AgoraRteEventType.NetworkStats,
       ({
         packetLoss = 0,
-        networkQuality = AGNetworkQuality.unknown,
+        downlinkNetworkQuality = AGNetworkQuality.good,
+        uplinkNetworkQuality = AGNetworkQuality.good,
         cpu = -1,
         cpuTotal = -1,
         delay = 0,
       }: NetworkStats) => {
         this.updateNetworkStats({
           packetLoss,
-          networkQuality,
+          downlinkNetworkQuality,
+          uplinkNetworkQuality,
           cpu,
           cpuTotal,
           delay,

@@ -72,15 +72,15 @@ td.biz-col.label.right {
   text-align: center;
   width: 40px;
 }
-.biz-signal-quality.excellent path {
+.biz-signal-quality.excellent path,
+.biz-signal-quality.good path {
   fill: #0bad69;
 }
 
-.biz-signal-quality.good path {
+.biz-signal-quality.bad path {
   fill: #f5b723;
 }
-
-.biz-signal-quality.bad path {
+.biz-signal-quality.down path {
   fill: #f04c36;
 }
 

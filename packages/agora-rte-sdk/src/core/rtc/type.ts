@@ -4,6 +4,7 @@ export enum AGNetworkQuality {
   poor = 2,
   good = 3,
   great = 4,
+  down = 5,
 }
 
 export enum AGRteTrackErrorReason {
@@ -13,7 +14,8 @@ export enum AGRteTrackErrorReason {
 
 export interface NetworkStats {
   packetLoss?: number;
-  networkQuality?: AGNetworkQuality;
+  downlinkNetworkQuality?: AGNetworkQuality;
+  uplinkNetworkQuality?: AGNetworkQuality;
   cpu?: number;
   cpuTotal?: number;
   delay?: number;

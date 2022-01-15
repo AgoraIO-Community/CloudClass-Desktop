@@ -29,6 +29,19 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         this.isRecording = recordStatus === RecordStatus.started;
       },
     );
+
+    reaction(
+      () => this.downlinkNetworkQuality,
+      (downlinkNetworkQuality) => {
+        if (downlinkNetworkQuality === AGNetworkQuality.bad) {
+          this.shareUIStore.addToast(transI18n('nav.singal_poor_tip'), 'warning');
+        }
+
+        if (downlinkNetworkQuality === AGNetworkQuality.down) {
+          this.shareUIStore.addToast(transI18n('nav.singal_down_tip'), 'error');
+        }
+      },
+    );
   }
   //observables
   @observable isRecording: boolean = false;
@@ -244,16 +257,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get networkQualityClass(): string {
-    switch (this.networkQuality) {
+    switch (this.downlinkNetworkQuality) {
       case AGNetworkQuality.good:
-        return 'good';
       case AGNetworkQuality.great:
         return 'excellent';
       case AGNetworkQuality.poor:
       case AGNetworkQuality.bad:
         return 'bad';
+      case AGNetworkQuality.down:
+        return 'down';
     }
-    return `unknown`;
+    return `excellent`;
   }
 
   /**
@@ -261,15 +275,16 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed
-  get networkQualityIcon(): 'normal-signal' | 'bad-signal' | 'unknown-signal' {
-    switch (this.networkQuality) {
+  get networkQualityIcon(): 'normal-signal' | 'bad-signal' | 'unknown-signal' | 'down-signal' {
+    switch (this.downlinkNetworkQuality) {
       case AGNetworkQuality.good:
-        return 'normal-signal';
       case AGNetworkQuality.great:
         return 'normal-signal';
       case AGNetworkQuality.poor:
       case AGNetworkQuality.bad:
         return 'bad-signal';
+      case AGNetworkQuality.down:
+        return 'down-signal';
     }
     return `unknown-signal`;
   }
@@ -280,16 +295,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get networkQualityLabel(): string {
-    switch (this.networkQuality) {
+    switch (this.downlinkNetworkQuality) {
       case AGNetworkQuality.good:
-        return transI18n('nav.signal_good');
       case AGNetworkQuality.great:
         return transI18n('nav.signal_excellent');
       case AGNetworkQuality.poor:
       case AGNetworkQuality.bad:
         return transI18n('nav.signal_bad');
+      case AGNetworkQuality.down:
+        return transI18n('nav.signal_down');
     }
-    return transI18n('nav.signal_unknown');
+    return transI18n('nav.signal_excellent');
   }
 
   /**
@@ -334,12 +350,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 网络质量状态
+   * 下行网络质量状态
    * @returns
    */
   @computed
-  get networkQuality() {
-    return this.classroomStore.statisticsStore.networkQuality || AGNetworkQuality.unknown;
+  get downlinkNetworkQuality() {
+    return this.classroomStore.statisticsStore.downlinkNetworkQuality || AGNetworkQuality.good;
   }
 
   /**
@@ -351,7 +367,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     if (this.classroomStore.statisticsStore.delay === undefined) {
       return `-- ${transI18n('nav.ms')}`;
     }
-    return `${this.classroomStore.statisticsStore.delay} ${transI18n('nav.ms')}`;
+    return `${Math.floor(this.classroomStore.statisticsStore.delay)} ${transI18n('nav.ms')}`;
   }
 
   /**

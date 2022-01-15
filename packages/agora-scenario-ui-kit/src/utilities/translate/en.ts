@@ -398,6 +398,9 @@ export const en = {
     signal_weak: 'Weak',
     signal_bad: 'Bad',
     signal_unknown: 'Unknown',
+    signal_down: 'down',
+    singal_poor_tip: 'Poor local network connection, please check the network connection.',
+    singal_down_tip: 'The local network is disconnected, please check the network connection.',
   },
   send: 'Send',
   home: {

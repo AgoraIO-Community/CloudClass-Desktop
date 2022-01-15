@@ -1,5 +1,6 @@
 import { EduRoleTypeEnum, EduRoomTypeEnum } from '..';
 import { UAParser } from 'ua-parser-js';
+import { isNaN } from 'lodash';
 
 export const EduRole2RteRole = (roomType: EduRoomTypeEnum, roleType: EduRoleTypeEnum) => {
   if (roleType === EduRoleTypeEnum.teacher) {
@@ -44,7 +45,7 @@ export const RteRole2EduRole = (roomType: EduRoomTypeEnum, role: string) => {
 };
 
 export const number2Percent = (v: number, fixed: number = 0): string => {
-  return Number(v * 100).toFixed(fixed) + '%';
+  return !isNaN(Number(v * 100)) ? Number(v * 100).toFixed(fixed) + '%' : '0%';
 };
 
 export class PersistLocalStorage {
