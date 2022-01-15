@@ -4,8 +4,7 @@ import { action, computed, observable, reaction, runInAction } from 'mobx';
 
 @Log.attach({ proxyMethods: false })
 export class LectureH5RoomStreamUIStore extends StreamUIStore {
-  private _containerNode = window;
-  private _teacherWidthRatio = 0.299;
+  private _teacherWidthRatio = 0.31;
 
   private _gapInPx = 2;
 
@@ -53,19 +52,6 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   }
 
   @computed
-  get getRoomDimensions() {
-    return this.shareUIStore.orientation === 'portrait'
-      ? {
-          width: Math.min(this._containerNode.screen.width, this._containerNode.screen.height),
-          height: Math.max(this._containerNode.screen.width, this._containerNode.screen.height),
-        }
-      : {
-          width: Math.max(this._containerNode.screen.width, this._containerNode.screen.height),
-          height: Math.min(this._containerNode.screen.width, this._containerNode.screen.height),
-        };
-  }
-
-  @computed
   get carouselShowCount() {
     return this.shareUIStore.orientation === 'portrait' ? 3 : 4;
   }
@@ -77,8 +63,8 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
     width =
       this.shareUIStore.orientation === 'portrait'
-        ? this.getRoomDimensions.width
-        : this.getRoomDimensions.width * this._teacherWidthRatio;
+        ? (this.shareUIStore.classroomViewportSize.h5Width as number)
+        : (this.shareUIStore.classroomViewportSize.h5Width as number) * this._teacherWidthRatio;
     height = (9 / 16) * width;
 
     return { width, height };
@@ -88,8 +74,10 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   get studentVideoStreamSize() {
     const restWidth =
       this.shareUIStore.orientation === 'landscape'
-        ? this.getRoomDimensions.width - this.teacherVideoStreamSize.width - 2
-        : this.getRoomDimensions.width;
+        ? (this.shareUIStore.classroomViewportSize.h5Width as number) -
+          this.teacherVideoStreamSize.width -
+          2
+        : (this.shareUIStore.classroomViewportSize.h5Width as number);
 
     const width = restWidth / this.carouselShowCount - this._gapInPx;
 
@@ -103,6 +91,10 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
     return this.shareUIStore.orientation === 'landscape'
       ? this.studentVideoStreamSize.height
       : 'unset';
+  }
+  @computed
+  get containerH5Extend() {
+    return this.shareUIStore.orientation === 'landscape' ? 'flex-1' : '';
   }
 
   @computed
@@ -118,10 +110,19 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
     }
     return 'search-zoom-in';
   }
-
   @computed
   get streamLayoutContainerCls() {
     return this.streamZoomStatus !== 'zoom-out' ? 'fullsize-video-container' : '';
+  }
+
+  @computed
+  get streamLayoutContainerDimensions() {
+    return this.streamZoomStatus !== 'zoom-out'
+      ? {
+          width: this.shareUIStore.classroomViewportSize.h5Width,
+          height: this.shareUIStore.classroomViewportSize.h5Height,
+        }
+      : {};
   }
 
   @computed

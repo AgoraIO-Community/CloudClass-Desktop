@@ -22,21 +22,23 @@ require('matchmedia-polyfill/matchMedia.addListener');
 export const BigClassScenarioH5 = observer(() => {
   return (
     <Room>
-      <Helmet>
-        <title>大班课</title>
-        <meta
-          name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-        />
-        <meta content="yes" name="apple-mobile-web-app-capable" />
-        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
-        <meta content="telephone=no" name="format-detection" />
-      </Helmet>
-      <LayoutOrientation className="flex-1 big-class-h5" style={{ height: '100vh' }}>
-        <H5LayoutStudentStreamBoardContainer />
-        <H5TeacherStreamChatContainer />
-      </LayoutOrientation>
-      <ExtAPPUntrackContainer />
+      <H5LayoutContainer>
+        <Helmet>
+          <title>大班课</title>
+          <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          />
+          <meta content="yes" name="apple-mobile-web-app-capable" />
+          <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+          <meta content="telephone=no" name="format-detection" />
+        </Helmet>
+        <LayoutOrientation className="big-class-h5">
+          <H5LayoutStudentStreamBoardContainer />
+          <H5TeacherStreamChatContainer />
+        </LayoutOrientation>
+        <ExtAPPUntrackContainer />
+      </H5LayoutContainer>
     </Room>
   );
 });
@@ -45,14 +47,18 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
   const { layoutUIStore, shareUIStore } = useLectureH5UIStores();
   useEffect(() => {
     shareUIStore.addOrientationchange();
+
+    shareUIStore.addWindowResizeEventListenerAndSetNavBarHeight(0);
     return () => {
       shareUIStore.removeOrientationchange();
+      shareUIStore.removeWindowResizeEventListener();
     };
   }, []);
   return (
     <Layout
       className={classnames(className)}
       direction={layoutUIStore.flexOrientationCls}
+      style={layoutUIStore.h5LayoutUIDimensions}
       {...restProps}>
       {children}
     </Layout>
@@ -79,5 +85,18 @@ const H5TeacherStreamChatContainer = observer(() => {
       <RoomBigTeacherStreamH5Container />
       <ChatWidgetH5 />
     </Layout>
+  );
+});
+
+const H5LayoutContainer: FC<React.Attributes> = observer(({ children }) => {
+  const {
+    layoutUIStore: { h5ContainerCls },
+  } = useLectureH5UIStores() as EduLectureH5UIStore;
+  return (
+    <section
+      className={`h5-layout-container flex h-full ${h5ContainerCls}`}
+      style={{ backgroundColor: '#f9f9fc' }}>
+      {children}
+    </section>
   );
 });

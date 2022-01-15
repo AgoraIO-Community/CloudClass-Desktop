@@ -11,7 +11,10 @@ import './index.css';
 import { WhiteboardToolbar } from '~containers/toolbar';
 
 export const WhiteboardH5Container: FC = observer(({ children }) => {
-  const { boardUIStore } = useLectureH5UIStores() as EduLectureH5UIStore;
+  const {
+    boardUIStore,
+    streamUIStore: { containerH5VisibleCls },
+  } = useLectureH5UIStores() as EduLectureH5UIStore;
   const {
     readyToMount,
     mount,
@@ -22,9 +25,9 @@ export const WhiteboardH5Container: FC = observer(({ children }) => {
     leaveWhiteboard,
     iconBorderZoomType,
     iconZoomVisibleCls,
-    whiteboardContainerCls,
     handleBoradZoomStatus,
     boardContainerHeight,
+    boardContainerWidth,
   } = boardUIStore;
 
   useEffect(() => {
@@ -51,9 +54,8 @@ export const WhiteboardH5Container: FC = observer(({ children }) => {
 
   return (
     <div
-      className={classnames('w-full relative', whiteboardContainerCls)}
-      style={{ height: boardContainerHeight }}>
-      {/* <WhiteboardTrackArea/> */}
+      className={classnames('whiteboard-h5-container w-full relative', containerH5VisibleCls)}
+      style={{ height: boardContainerHeight, width: boardContainerWidth }}>
       {readyToMount ? (
         <div className="whiteboard-wrapper">
           {children}

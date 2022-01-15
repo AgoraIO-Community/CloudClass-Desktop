@@ -16,11 +16,14 @@ export const RoomBigTeacherStreamH5Container: FC<any> = observer(() => {
     teacherVideoStreamSize,
     iconZoomType,
     handleZoomStatus,
+    streamLayoutContainerDimensions,
     streamLayoutContainerCls,
     iconZoomVisibleCls,
   } = streamUIStore;
   return (
-    <Layout className={classnames('relative', streamLayoutContainerCls)}>
+    <Layout
+      className={classnames('relative', streamLayoutContainerCls)}
+      style={streamLayoutContainerDimensions}>
       {teacherCameraStream ? (
         <StreamPlayer stream={teacherCameraStream} style={teacherVideoStreamSize}></StreamPlayer>
       ) : (
@@ -50,6 +53,7 @@ export const RoomBigStudentStreamsH5Container: FC<any> = observer(() => {
     carouselStreams,
     containerH5VisibleCls,
     studentVideoStreamContainerHeight,
+    containerH5Extend,
   } = streamUIStore;
 
   const [navigationVisible, setNavigationVisible] = useState(false);
@@ -64,8 +68,13 @@ export const RoomBigStudentStreamsH5Container: FC<any> = observer(() => {
     <div
       onMouseEnter={mouseHandler(true)}
       onMouseLeave={mouseHandler(false)}
-      style={{ marginTop: 2, marginBottom: 2, height: studentVideoStreamContainerHeight }}
-      className={classnames(containerH5VisibleCls, addtionalContainerH5VisibleCls)}>
+      className={classnames(
+        'items-center',
+        containerH5Extend,
+        containerH5VisibleCls,
+        addtionalContainerH5VisibleCls,
+      )}
+      style={{ height: studentVideoStreamContainerHeight }}>
       {scrollable && (
         <NavGroup visible={navigationVisible} onPrev={carouselPrev} onNext={carouselNext} />
       )}

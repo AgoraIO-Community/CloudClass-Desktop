@@ -56,26 +56,23 @@ export class LectureH5BoardUIStore extends BoardUIStore {
   }
 
   @computed
-  get rootDimensions() {
-    let { width: rootWidth, height: rootHeight } = getRootDimensions(window);
-    const orientation = this.shareUIStore.orientation;
-    if (orientation === 'portrait') {
-      const width = Math.min(rootWidth, rootHeight);
-      const height = Math.max(rootWidth, rootHeight);
-      return { width, height };
-    } else {
-      const height = Math.min(rootWidth, rootHeight);
-      const width = Math.max(rootWidth, rootHeight);
-      return { width, height };
+  get boardContainerHeight() {
+    if (this.borderZoomStatus !== 'zoom-out') {
+      return this.shareUIStore.classroomViewportSize.h5Height;
     }
+    return (this.boardContainerWidth as number) * this.uiOverrides.aspectRatio;
   }
 
   @computed
-  get boardContainerHeight() {
-    if (this.shareUIStore.orientation === 'portrait') {
-      return this.rootDimensions.width * this.uiOverrides.aspectRatio;
+  get boardContainerWidth() {
+    if (this.borderZoomStatus !== 'zoom-out') {
+      return this.shareUIStore.classroomViewportSize.h5Width;
     }
-    return 'unset';
+    const { h5Width } = this.shareUIStore.classroomViewportSize;
+    if (this.shareUIStore.orientation !== 'portrait') {
+      return (h5Width as number) * 0.697;
+    }
+    return h5Width as number;
   }
 
   @action.bound

@@ -23,4 +23,8 @@
   width: 34px;
   height: 34px;
   cursor: pointer;
+  background-color: #fff;
+}
+.whiteboard-h5-container {
+  transition: all 0.3s ease;
 }

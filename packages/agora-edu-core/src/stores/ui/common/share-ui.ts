@@ -1,5 +1,5 @@
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
-import { observable, action, runInAction } from 'mobx';
+import { observable, action, runInAction, computed } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogAction, orientationEnum } from '../../../type';
 import { EduErrorCenter, getEduErrorMessage, getErrorServCode } from '../../../utils/error';
@@ -55,9 +55,11 @@ export class EduShareUIStore {
    * 视口尺寸信息
    */
   @observable
-  classroomViewportSize = {
+  classroomViewportSize: { width: number; height: number; h5Width?: number; h5Height?: number } = {
     width: 0,
     height: 0,
+    h5Width: 1024,
+    h5Height: 576,
   };
 
   @observable
@@ -255,6 +257,8 @@ export class EduShareUIStore {
           height: this._classroomMinimumSize.height,
         };
       }
+      this.classroomViewportSize.h5Width = scopeSize.width;
+      this.classroomViewportSize.h5Height = scopeSize.height;
     });
   }
 
@@ -267,6 +271,7 @@ export class EduShareUIStore {
     } else {
       // Landscape orientation
       this.orientation = orientationEnum.landscape;
+      this.updateClassroomViewportSize();
     }
   }
 

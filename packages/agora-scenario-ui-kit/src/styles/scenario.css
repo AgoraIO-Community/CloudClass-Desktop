@@ -252,14 +252,13 @@ body,
 .big-class-room #hx-chatroom .app {
   height: 100% !important;
 }
+.big-class-h5 {
+  transition: all 0.3s ease;
+}
 .big-class-h5 .chat-panel {
   min-width: unset;
 }
 
-.fullsize-video-container {
-  width: 100vw;
-  height: 100vh;
-}
 .fullsize-video-container .video-player-overlay {
   width: 100%;
   height: 100%;
