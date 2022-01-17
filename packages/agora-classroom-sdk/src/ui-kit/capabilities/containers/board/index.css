@@ -22,6 +22,7 @@
   bottom: 20px;
   width: 34px;
   height: 34px;
+  z-index: 2;
   cursor: pointer;
   background-color: #fff;
 }
