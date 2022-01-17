@@ -19,21 +19,20 @@ export const RoomMidStreamsContainer = observer(() => {
   );
 
   return (
-    <div
-      className="flex-grow flex-shrink-0 relative"
-      onMouseEnter={mouseHandler(true)}
-      onMouseLeave={mouseHandler(false)}>
-      {scrollable && (
-        <NavGroup visible={navigationVisible} onPrev={carouselPrev} onNext={carouselNext} />
-      )}
-      <div className="h-full flex justify-center items-center">
+    <div className="flex-grow flex-shrink-0">
+      <div className="h-full flex justify-center items-center relative">
         <TeacherStream />
-        <CarouselGroup
-          gap={gap}
-          videoWidth={videoStreamSize.width}
-          videoHeight={videoStreamSize.height}
-          carouselStreams={carouselStreams}
-        />
+        <div onMouseEnter={mouseHandler(true)} onMouseLeave={mouseHandler(false)}>
+          {scrollable && (
+            <NavGroup visible={navigationVisible} onPrev={carouselPrev} onNext={carouselNext} />
+          )}
+          <CarouselGroup
+            gap={gap}
+            videoWidth={videoStreamSize.width}
+            videoHeight={videoStreamSize.height}
+            carouselStreams={carouselStreams}
+          />
+        </div>
       </div>
     </div>
   );
