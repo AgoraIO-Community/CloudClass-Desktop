@@ -178,12 +178,12 @@ const App = function (props) {
             if (message.from === "系统管理员") return
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
             arr.push(message.from)
-            intervalId && clearInterval(intervalId);
+            intervalId && clearTimeout(intervalId);
             intervalId = setTimeout(() => {
               let users = _.cloneDeep(arr);
               arr = [];
               getUserInfo(users)
-            }, 500);
+            }, 3000);
             let ary = []
             roomUserList.map((v, k) => {
               ary.push(v)
