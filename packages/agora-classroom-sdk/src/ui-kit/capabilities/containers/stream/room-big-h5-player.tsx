@@ -5,7 +5,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { Layout } from '~components/layout';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
-import { NavGroup } from './room-big-player';
+import { NavGroup } from '.';
 import { Icon, IconTypes } from '~ui-kit';
 import classnames from 'classnames';
 
