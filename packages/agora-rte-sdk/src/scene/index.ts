@@ -5,6 +5,7 @@ import {
   AgoraRteSyncSnapshotData,
   AgoraStream,
   AgoraUser,
+  IAgoraStreamData,
 } from '../core/processor/channel-msg/struct';
 import { AgoraRtmConnectionState, AGRtmManager } from '../core/rtm';
 import { AgoraRteLocalUser } from '../user';
@@ -142,7 +143,25 @@ export class AgoraRteScene extends EventEmitter {
       await this._rtmManager.join(this._rtmChannel, this._rtmChannelObserver, this.sceneId);
 
       // 3. initialize object models
-      const { streamUuid, userName, userRole, rtcToken, streams = [] } = user;
+      const { streamUuid, userName, userUuid, userRole, rtcToken, streams = [] } = user;
+      let agStreams = streams.map((s: IAgoraStreamData) => {
+        return AgoraStream.fromData({
+          streamUuid: s.streamUuid,
+          streamName: s.streamName,
+          fromUser: {
+            userName,
+            userUuid,
+            role: userRole,
+          },
+          videoSourceState: s.videoSourceState,
+          audioSourceState: s.audioSourceState,
+          videoSourceType: s.videoSourceType,
+          audioSourceType: s.audioSourceType,
+          videoState: s.videoState,
+          audioState: s.audioState,
+        });
+      });
+      this.dataStore.setStreams(agStreams);
       this._localUser = new AgoraRteLocalUser(this, {
         userUuid: AgoraRteEngineConfig.shared.userId,
         userName,
@@ -267,7 +286,18 @@ export class AgoraRteScene extends EventEmitter {
       this.logger.info(`snapshot updated`);
       this._setInitialSnapshotSync(true);
 
-      const users = Array.from(this.dataStore.users.values());
+      if (!this.localUser) {
+        return RteErrorCenter.shared.handleThrowableError(
+          AGRteErrorCode.RTE_ERR_LOCAL_USER_NOT_EXIST,
+          new Error('local user not exist'),
+        );
+      }
+
+      //do not fire local user event from snapshot, as this has been done in entry api phase
+      const users = Array.from(this.dataStore.users.values()).filter(
+        (u) => u.userUuid !== this.localUser!.userUuid,
+      );
+      users.push(this.localUser.toData());
       if (users.length > 0) {
         this._handleUserAdded(users);
       }

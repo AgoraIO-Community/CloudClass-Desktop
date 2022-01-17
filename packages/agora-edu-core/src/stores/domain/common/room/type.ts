@@ -7,7 +7,9 @@ export type CarouselSetting = {
 
 export type HandUpProgress = {
   userUuid: string;
+  userName: string;
   ts: number;
+  payload?: object;
 };
 
 export enum ClassState {

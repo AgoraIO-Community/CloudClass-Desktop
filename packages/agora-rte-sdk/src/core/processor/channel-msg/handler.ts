@@ -21,6 +21,7 @@ export enum AgoraRteChannelMessageCmd {
   UserInfo = 21,
   UserProperty = 22,
   UserProperties = 23,
+  UserSubscribeInOut = 24,
   StreamInOut = 40,
   StreamsInOut = 41,
   MessageExtension = 99,
@@ -125,6 +126,9 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
       case AgoraRteChannelMessageCmd.UserProperties:
         this._handleUserProperties(task);
         break;
+      case AgoraRteChannelMessageCmd.UserSubscribeInOut:
+        this._handleUserSubscribe(task);
+        break;
       case AgoraRteChannelMessageCmd.StreamInOut:
         this._handleStreamInOut(task);
         break;
@@ -217,6 +221,42 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
       operator,
       cause,
     );
+  }
+
+  private _handleUserSubscribe(task: AgoraRteMessageHandleTask) {
+    const data = task.sequence.data;
+    const { users } = data;
+    let subscribeUsersData: AgoraUser[] = [];
+    let unsubscribeUsersData: AgoraUser[] = [];
+    users.forEach((u: any) => {
+      const user = AgoraUser.fromData(u);
+      if (u.subscribe === 1) {
+        this._dataStore.setUser(user.userUuid, user);
+        const { streams = [] } = u;
+        streams.forEach((streamData: any) => {
+          const stream = AgoraStream.fromData({
+            ...streamData,
+            fromUser: {
+              userUuid: user.userUuid,
+              role: user.userRole,
+              userName: user.userName,
+            },
+          });
+          this._dataStore.setStream(stream.streamUuid, stream);
+        });
+        subscribeUsersData.push(user);
+      } else if (u.subscribe === 0) {
+        this._dataStore.deleteStream(u.streamUuid);
+        this._dataStore.deleteUser(u.userUuid);
+        unsubscribeUsersData.push(user);
+      }
+    });
+    if (subscribeUsersData.length > 0) {
+      this.emit(AgoraRteEventType.UserAdded, subscribeUsersData);
+    }
+    if (unsubscribeUsersData.length > 0) {
+      this.emit(AgoraRteEventType.UserRemoved, unsubscribeUsersData);
+    }
   }
 
   private _handleUserInOut(task: AgoraRteMessageHandleTask) {

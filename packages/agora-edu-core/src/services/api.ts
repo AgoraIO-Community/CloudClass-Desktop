@@ -1,6 +1,6 @@
 import { ApiBase, AgoraRteEngineConfig } from 'agora-rte-sdk';
 import { CloudDriveResourceInfo } from '../stores/domain/common/cloud-drive/type';
-import { EduSessionInfo } from '../type';
+import { EduSessionInfo, EduRoleTypeEnum } from '../type';
 import { ClassState } from '../stores/domain/common/room/type';
 import { escapeExtAppIdentifier } from '../stores/domain/common/room/command-handler';
 import { EduClassroomConfig } from '..';
@@ -327,6 +327,7 @@ export class EduApiService extends ApiBase {
     toUserUuid: string;
     timout?: number;
     retry?: boolean;
+    payload?: object;
   }) {
     const res = await this.fetch({
       path: `/v2/rooms/${params.roomUuid}/processes/waveArm/progress`,
@@ -335,6 +336,7 @@ export class EduApiService extends ApiBase {
         toUserUuid: params.toUserUuid,
         timeout: params.timout,
         retry: params.retry,
+        payload: params.payload,
       },
     });
     return res.data;
@@ -531,6 +533,49 @@ export class EduApiService extends ApiBase {
       path: `/v2/rooms/${payload.roomUuid}/users/${payload.userUuid}/device`,
       method: 'PUT',
       data: payload.data,
+    });
+    return res.data;
+  }
+
+  async fetchUserList(
+    roomId: string,
+    params: {
+      role: EduRoleTypeEnum;
+      type?: '0' | '1';
+      nextId: string | number | null | undefined;
+      count?: number;
+      userName?: string;
+    },
+  ) {
+    const qs = [];
+
+    const { role, type, nextId, count, userName } = params;
+
+    if (role) {
+      qs.push(`role=${role}`);
+    }
+
+    if (type) {
+      qs.push(`type=${type}`);
+    }
+
+    if (userName) {
+      qs.push(`userName=${userName}`);
+    }
+
+    if (nextId) {
+      qs.push(`nextId=${nextId}`);
+    }
+
+    if (count) {
+      qs.push(`count=${count}`);
+    }
+
+    const path = `/v2/rooms/${roomId}/users` + (qs ? `?${qs.join('&')}` : '');
+
+    const res = await this.fetch({
+      path,
+      method: 'GET',
     });
     return res.data;
   }

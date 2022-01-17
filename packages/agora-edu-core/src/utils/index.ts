@@ -29,11 +29,13 @@ export const RteRole2EduRole = (roomType: EduRoomTypeEnum, role: string) => {
     return EduRoleTypeEnum.assistant;
   }
 
-  if (roomType === EduRoomTypeEnum.Room1v1Class && role === 'broadcaster') {
+  //下台学生 与班型无关
+  if (role === 'audience') {
     return EduRoleTypeEnum.student;
   }
 
-  if (role === 'audience') {
+  //上台学生 与班型无关
+  if (role === 'broadcaster') {
     return EduRoleTypeEnum.student;
   }
 

@@ -2,7 +2,7 @@ import './index.css';
 
 export { Roster } from './roster';
 
-export { RosterTable } from './table';
+export { RosterTable, InfiniteScrollRosterTable } from './table';
 
 export type Operation =
   | 'podium'

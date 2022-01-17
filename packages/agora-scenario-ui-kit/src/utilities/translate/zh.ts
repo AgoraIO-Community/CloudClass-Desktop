@@ -76,6 +76,7 @@ export const zh = {
     random: '随机',
     order_every: '轮播',
     seconds: '秒',
+    no_more_data: '没有更多数据了',
   },
   hands_up: '举手',
   on_podium_max_count: '上台人数已达上限，无法继续邀请学生上台',

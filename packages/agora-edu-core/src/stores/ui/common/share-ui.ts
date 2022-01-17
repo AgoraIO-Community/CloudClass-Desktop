@@ -11,6 +11,7 @@ import { AGRteErrorCode } from 'agora-rte-sdk';
 export enum DialogCategory {
   CloudDriver,
   Roster,
+  LectureRoster,
   KickOut,
   ErrorGeneric,
   Confirm,

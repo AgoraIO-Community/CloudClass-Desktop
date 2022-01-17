@@ -19,3 +19,10 @@ export type Operation =
   | 'star';
 
 export type Operations = Partial<Record<Operation, { interactable: boolean }>>;
+
+export type Profile = {
+  uid: string | number;
+  isOnPodium: boolean;
+  cameraState: DeviceState;
+  microphoneState: DeviceState;
+};

@@ -6,6 +6,7 @@ import { CloudDriverContainer } from '~containers/cloud-driver';
 import { RoomDeviceSettingContainer } from '~containers/device-setting';
 import { useStore } from '~hooks/use-edu-stores';
 import { RosterContainer } from '../roster/user-list';
+import { LectureRosterContainer } from '../roster/lecture-user-list';
 import { Confirm } from './confirm';
 import { GenericErrorDialog } from './error-generic';
 import { KickOut } from './kick-out';
@@ -17,6 +18,8 @@ const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode
       return <CloudDriverContainer {...props} id={id} />;
     case DialogCategory.Roster:
       return <RosterContainer {...props} id={id} />;
+    case DialogCategory.LectureRoster:
+      return <LectureRosterContainer {...props} id={id} />;
     case DialogCategory.KickOut:
       return <KickOut {...props} id={id} />;
     case DialogCategory.ErrorGeneric:

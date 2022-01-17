@@ -98,6 +98,7 @@ export enum AGEduErrorCode {
   EDU_ERR_REPORT_INVALID_PARAMS = '600073',
   EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED = '600074',
   EDU_ERR_HAND_UP_ON_PODIUM_FAIL = '600075',
+  EDU_ERR_FETCH_USER_LIST = '600076',
 }
 
 export const getEduErrorMessage = (error: Error) => {

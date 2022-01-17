@@ -11,6 +11,7 @@ export interface TableBaseProps extends BaseProps {
   hoverClass?: string;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onScroll?: React.UIEventHandler<HTMLDivElement>;
 }
 
 export interface TableProps extends TableBaseProps {}

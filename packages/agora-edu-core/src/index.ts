@@ -44,3 +44,7 @@ export * from './stores/ui';
 export { MessageItem } from './stores/domain/common/message/struct';
 export { getRootDimensions } from './stores/ui/common/layout/helper';
 export { Platform } from './configs';
+export type { FetchUserParam } from './stores/domain/common/user/type';
+export { FetchUserType } from './stores/domain/common/user/type';
+export { DeviceState } from './stores/ui/common/roster/type';
+export type { Operations, Operation, Profile } from './stores/ui/common/roster/type';

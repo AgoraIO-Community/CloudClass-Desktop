@@ -76,6 +76,7 @@ export const en = {
     random: 'random',
     order_every: 'order every',
     seconds: 'seconds',
+    no_more_data: 'No more data',
   },
   hands_up: 'Hands Up',
   on_podium_max_count:

@@ -102,7 +102,7 @@ export class HandUpStore extends EduStoreBase {
   }
 
   @bound
-  async waveArm(teacherUuid: string, duration: -1 | 3) {
+  async waveArm(teacherUuid: string, duration: -1 | 3, payload?: object) {
     const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.waveArm({
@@ -110,6 +110,7 @@ export class HandUpStore extends EduStoreBase {
         toUserUuid: teacherUuid,
         timout: duration,
         retry: true,
+        payload: payload,
       });
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(

@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce';
-import { AgoraMediaControlEventType } from '..';
+import { AgoraMediaControlEventType, AgoraUser } from '..';
 import { bound } from '../core/decorator/bound';
 import { AgoraRteEngine } from '../core/engine';
 import { Logger } from '../core/logger';
@@ -30,6 +30,15 @@ export class AgoraRteLocalUser {
     streamUuid: string;
     rtcToken: string;
   };
+
+  toData(): AgoraUser {
+    const { userName, userUuid, userRole } = this;
+    return AgoraUser.fromData({
+      userName,
+      userUuid,
+      userRole,
+    });
+  }
 
   constructor(
     scene: AgoraRteScene,

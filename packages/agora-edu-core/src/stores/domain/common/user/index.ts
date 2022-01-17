@@ -6,6 +6,7 @@ import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AgoraEduClassroomEvent, EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { RteRole2EduRole } from '../../../../utils';
+import { FetchUserParam, FetchUserType } from './type';
 
 //for users
 export class UserStore extends EduStoreBase {
@@ -18,6 +19,8 @@ export class UserStore extends EduStoreBase {
 
   @observable assistantList: Map<string, EduUser> = new Map<string, EduUser>();
 
+  // @observable infiniteScrollUsersList: Map<string, EduUser> = new Map<string, EduUser>();
+
   @observable
   rewards: Map<string, number> = new Map<string, number>();
 
@@ -27,6 +30,26 @@ export class UserStore extends EduStoreBase {
   @computed
   get localUser() {
     return this._localUser;
+  }
+
+  async fetchUserList(params: FetchUserParam) {
+    try {
+      const { sessionInfo } = EduClassroomConfig.shared;
+      const data = await this.classroomStore.api.fetchUserList(sessionInfo.roomUuid, {
+        ...params,
+      });
+      return {
+        total: data.total,
+        count: data.count,
+        nextId: data.nextId,
+        list: data.list,
+      };
+    } catch (error) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_FETCH_USER_LIST,
+        error as Error,
+      );
+    }
   }
 
   @action.bound

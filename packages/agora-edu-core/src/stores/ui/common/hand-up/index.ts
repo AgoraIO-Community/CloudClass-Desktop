@@ -21,21 +21,16 @@ export class HandUpUIStore extends EduUIStoreBase {
   get userWaveArmList() {
     const waveArmList = this.classroomStore.roomStore.waveArmList;
     const acceptedList = this.classroomStore.roomStore.acceptedList;
-    const userList = this.classroomStore.userStore.users;
 
     const userWaveArmList = waveArmList.reduce<UserWaveArmInfo[]>((list, waveArmItem) => {
-      const userItem = userList.get(waveArmItem.userUuid);
-      if (userItem) {
-        const isOnPodiuming = acceptedList.some((item) => {
-          return item.userUuid === waveArmItem.userUuid;
-        });
-        list.push({
-          userUuid: waveArmItem.userUuid,
-          userName: userItem.userName,
-          onPodium: isOnPodiuming,
-        });
-        return list;
-      }
+      const isOnPodiuming = acceptedList.some((item) => {
+        return item.userUuid === waveArmItem.userUuid;
+      });
+      list.push({
+        userUuid: waveArmItem.userUuid,
+        userName: waveArmItem.userName,
+        onPodium: isOnPodiuming,
+      });
       return list;
     }, []);
 
@@ -136,7 +131,7 @@ export class HandUpUIStore extends EduUIStoreBase {
    * @param duration 挥手的时间，单位：秒，-1 为持续举手
    */
   @bound
-  waveArm(teacherUuid: string, duration: -1 | 3) {
+  waveArm(teacherUuid: string, duration: -1 | 3, payload?: object) {
     if (EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired) {
       this.classroomStore.handUpStore.handUp(teacherUuid).catch((e) => {
         if (
@@ -151,7 +146,7 @@ export class HandUpUIStore extends EduUIStoreBase {
       });
     } else {
       this.classroomStore.handUpStore
-        .waveArm(teacherUuid, duration)
+        .waveArm(teacherUuid, duration, payload)
         .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
     }
   }
