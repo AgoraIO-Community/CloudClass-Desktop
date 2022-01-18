@@ -355,12 +355,6 @@ export class BoardStore extends EduStoreBase {
     this.writableRoom.setMemberState({
       strokeColor: [r, g, b],
     });
-    const [r1, g1, b1] = this.room.state.memberState.strokeColor;
-    this.strokeColor = {
-      r: r1,
-      g: g1,
-      b: b1,
-    };
   }
 
   // ----------  other -------------
@@ -419,6 +413,11 @@ export class BoardStore extends EduStoreBase {
         let globalState = state.globalState as AGGlobalState | undefined;
         if (globalState && globalState.grantUsers) {
           this.grantUsers = new Set(globalState.grantUsers);
+        }
+        // 监听颜色的变化，赋值给strokeColor
+        if (state?.memberState?.strokeColor) {
+          const [r, g, b] = state.memberState.strokeColor;
+          this.strokeColor = { r, g, b };
         }
       });
     },
