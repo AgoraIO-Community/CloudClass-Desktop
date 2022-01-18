@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   Button,
   changeLanguage,
@@ -7,7 +7,7 @@ import {
   Input,
   Layout,
   Placeholder,
-  Toast,
+  SvgImg,
   transI18n,
 } from '~ui-kit';
 import dayjs from 'dayjs';
@@ -88,6 +88,12 @@ export const RecordationSearchPage = () => {
         <div className="header-left">
           <div className="header-left-logo"></div>
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
+        </div>
+        <div className="header-right">
+          <Link className="header-right-item" to={'/'}>
+            <SvgImg style={{ color: '#3f5c8f', display: 'inline-block' }} type="exit" size={24} />
+            {transI18n('nav.back')}
+          </Link>
         </div>
       </Header>
       <section className="flex flex-1 justify-center items-center">
