@@ -330,12 +330,17 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
               this.setScreenShareTrackState(AgoraRteMediaSourceState.stopped);
             });
             this.setScreenShareTrackState(AgoraRteMediaSourceState.started);
-          } catch (e) {
+          } catch (e: any) {
+            // 非系统授权问题，用户点击按钮”取消“不提示
+            if (e.code === 'PERMISSION_DENIED' && !/system/.test(e.message)) break;
+
+            this.setScreenShareTrackState(AgoraRteMediaSourceState.error, resolveErrorCode(e));
+
             RteErrorCenter.shared.handleNonThrowableError(
               AGRteErrorCode.RTC_ERR_SCREEN_SHARE_ERR,
               e as Error,
             );
-            this.setScreenShareTrackState(AgoraRteMediaSourceState.error, resolveErrorCode(e));
+
             break;
           }
 
