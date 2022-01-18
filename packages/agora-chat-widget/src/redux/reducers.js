@@ -204,6 +204,11 @@ const reducer = (state = defaultState, action) => {
         ...state,
         configUIVisible: { ...state.configUIVisible, ...data },
       };
+    case 'RESET_ACTION':
+      return {
+        ...state,
+        ...defaultState,
+      };
     default:
       break;
   }

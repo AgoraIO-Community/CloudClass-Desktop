@@ -61,4 +61,5 @@ export const dispatchShowMiniIcon = (data) => {
 
 export const logout = () => {
   logoutChatroom();
+  store.dispatch({ type: 'RESET_ACTION' });
 };
