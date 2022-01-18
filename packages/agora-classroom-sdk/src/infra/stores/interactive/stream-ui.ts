@@ -85,10 +85,6 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
           this.remotePodiumTool(stream),
         ]);
       }
-
-      if (stream.role === EduRoleTypeEnum.teacher) {
-        tools.push(this.localPodiumTool());
-      }
     }
 
     return tools;
