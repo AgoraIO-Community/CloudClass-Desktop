@@ -69,7 +69,7 @@ export const en = {
     reward: 'Reward',
     kick: 'Kick',
     granted: 'Auth',
-    shift: 'Shift',
+    shift: 'Video Rotation',
     everyone: 'Everyone',
     available: 'Available',
     students_in: 'students in',
