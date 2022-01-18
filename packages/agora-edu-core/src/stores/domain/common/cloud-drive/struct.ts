@@ -165,6 +165,12 @@ export class CloudDriveCourseResource extends CloudDriveResource {
     this.taskUuid = data.taskUuid;
     this.conversion = data.conversion;
     this.scenes = data.taskProgress.convertedFileList;
+    this.scenes.forEach((scene) => {
+      if (scene.ppt) {
+        //@ts-ignore
+        scene.ppt.previewURL = scene.ppt.preview;
+      }
+    });
   }
 }
 

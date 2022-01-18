@@ -1,4 +1,5 @@
 import MD5 from 'js-md5';
+import { toLower } from 'lodash';
 import { EduClassroomConfig } from '../../../../configs';
 import { CloudDriveResource } from './struct';
 
@@ -7,6 +8,7 @@ export type ConversionOption = {
   preview: boolean;
   scale: number;
   outputFormat: string;
+  canvasVersion: boolean;
 };
 
 export class CloudDriveUtils {
@@ -35,8 +37,8 @@ export class CloudDriveUtils {
   }
 
   static conversionOption(ext: string, scale?: number): ConversionOption | undefined {
-    const needConvert = CloudDriveResource.convertableTypes.includes(ext);
-    const needDynamicConvert = CloudDriveResource.convertableDynamicTypes.includes(ext);
+    const needConvert = CloudDriveResource.convertableTypes.includes(toLower(ext));
+    const needDynamicConvert = CloudDriveResource.convertableDynamicTypes.includes(toLower(ext));
 
     return needConvert
       ? {
@@ -44,6 +46,7 @@ export class CloudDriveUtils {
           preview: true,
           scale: scale || EduClassroomConfig.shared.boardDefaults.scale,
           outputFormat: 'png',
+          canvasVersion: needDynamicConvert,
         }
       : undefined;
   }

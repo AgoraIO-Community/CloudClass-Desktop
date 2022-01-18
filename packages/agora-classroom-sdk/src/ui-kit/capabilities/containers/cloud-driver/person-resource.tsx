@@ -106,7 +106,7 @@ export const PersonalResourcesContainer = observer(() => {
       if (files?.length) {
         setShowUploadModal(true);
         const taskArr = [];
-        for (let file of files) {
+        for (const file of files) {
           taskArr.push(uploadPersonalResource(file));
         }
         await Promise.all(taskArr);

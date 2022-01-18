@@ -50,7 +50,7 @@ export class BoardStore extends EduStoreBase {
   // ------ observables  -----------
   @observable selectedTool: WhiteboardTool = WhiteboardTool.clicker;
   @observable strokeColor: Color = DEFAULT_COLOR;
-  @observable strokeWidth: number = 5;
+  @observable strokeWidth: number = 8;
   @observable ready: boolean = false;
   @observable grantUsers: Set<string> = new Set<string>();
   @observable configReady = false;
