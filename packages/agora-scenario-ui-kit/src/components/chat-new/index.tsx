@@ -101,6 +101,7 @@ export const SimpleChatNew: FC<ChatProps> = ({
   onCollapse,
   onPullRefresh,
   className,
+  configUI,
   ...resetProps
 }) => {
   const cls = classnames({
@@ -144,6 +145,7 @@ export const SimpleChatNew: FC<ChatProps> = ({
           </div>
         ) : null}
         <MessageList
+          showInputBox={configUI?.showInputBox}
           className={'room chat-history'}
           messages={messages}
           disableChat={!isHost && !canChatting}
@@ -263,6 +265,7 @@ export const ChatNew: FC<ChatProps> = ({
               </div>
             ) : null}
             <MessageList
+              showInputBox={configUI?.showInputBox}
               className={'room chat-history'}
               messages={messages}
               disableChat={!isHost && !canChatting}
@@ -288,6 +291,7 @@ export const ChatNew: FC<ChatProps> = ({
               {singleConversation ? (
                 <>
                   <MessageList
+                    showInputBox={configUI?.showInputBox}
                     className={'conversation no-header chat-history'}
                     messages={singleConversation.messages}
                     disableChat={false}
@@ -321,6 +325,7 @@ export const ChatNew: FC<ChatProps> = ({
                     <div className="name">{activeConversation.userName}</div>
                   </div>
                   <MessageList
+                    showInputBox={configUI?.showInputBox}
                     className={'conversation chat-history'}
                     messages={getActiveConversationMessages()}
                     disableChat={false}

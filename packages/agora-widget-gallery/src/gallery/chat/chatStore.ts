@@ -16,6 +16,7 @@ import { computedFn } from 'mobx-utils';
 
 interface IChatConfigUI {
   visibleQuestion?: false;
+  showInputBox?: boolean;
 }
 export class WidgetChatUIStore {
   @observable
@@ -138,6 +139,10 @@ export class WidgetChatUIStore {
         !minimize && this.unreadMessageSet.clear();
       },
     );
+
+    this.setUI({
+      showInputBox: EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible,
+    });
   }
 
   getHistoryChatMessage = async (data: { nextId: string; sort: number }) => {
@@ -256,7 +261,9 @@ export class WidgetChatUIStore {
     }
   };
   setUI = (ui: IChatConfigUI) => {
-    this.configUI = { ...this.configUI, ...ui };
+    runInAction(() => {
+      this.configUI = { ...this.configUI, ...ui };
+    });
   };
 
   refreshMessageList = async () => {

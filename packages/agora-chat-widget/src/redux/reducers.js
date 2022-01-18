@@ -23,6 +23,7 @@ let defaultState = {
   showEmoji: false, // 表情面板显示/隐藏
   showAnnouncementNotice: false, //公告更新提示
   configUIVisible: {
+    showInputBox: true, //是否显示输入UI
     memebers: true, // 成员 tab
     announcement: true, //公告 tab
     allMute: true, // 全体禁言按钮

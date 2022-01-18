@@ -28,4 +28,5 @@ export type ChatEvent = {
 
 export interface IChatConfigUI {
   visibleQuestion?: false;
+  showInputBox?: boolean;
 }

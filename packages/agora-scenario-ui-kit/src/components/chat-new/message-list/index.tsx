@@ -25,6 +25,10 @@ export interface MessageListProps extends BaseProps {
    * 点击发送按钮的回调
    */
   onSend: (text: string) => void | Promise<void>;
+  /**
+   * 是否显示输入框
+   */
+  showInputBox?: boolean;
 }
 
 const cache = new CellMeasurerCache({
@@ -35,7 +39,7 @@ const cache = new CellMeasurerCache({
 });
 
 export const MessageList: FC<MessageListProps> = observer(
-  ({ className, messages = [], disableChat, onPullFresh, onSend }) => {
+  ({ className, messages = [], disableChat, onPullFresh, onSend, showInputBox = true }) => {
     const cls = classnames({
       [`${className}`]: !!className,
     });
@@ -116,7 +120,7 @@ export const MessageList: FC<MessageListProps> = observer(
             </div>
           )}
         </div>
-        <ChatTextBox disableChat={disableChat} handleSend={handleSend} />
+        {showInputBox && <ChatTextBox disableChat={disableChat} handleSend={handleSend} />}
       </>
     );
   },

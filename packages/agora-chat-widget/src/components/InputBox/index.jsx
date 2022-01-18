@@ -23,6 +23,7 @@ const UserMute = () => {
 
 export const InputBox = () => {
   const state = useSelector((state) => state);
+  const showInputBox = state.configUIVisible.showInputBox;
   const roleType = state?.loginUserInfo.ext;
   const isAllMute = state?.room.allMute;
   const isUserMute = state?.room.isUserMute;
@@ -30,11 +31,13 @@ export const InputBox = () => {
 
   return (
     <div className="input-box">
-      <>
-        {!isTeacher && isAllMute && <AllMute />}
-        {!isTeacher && !isAllMute && isUserMute && <UserMute />}
-        {(isTeacher || (!isAllMute && !isUserMute)) && <InputMsg isTeacher={isTeacher} />}
-      </>
+      {showInputBox && (
+        <>
+          {!isTeacher && isAllMute && <AllMute />}
+          {!isTeacher && !isAllMute && isUserMute && <UserMute />}
+          {(isTeacher || (!isAllMute && !isUserMute)) && <InputMsg isTeacher={isTeacher} />}
+        </>
+      )}
     </div>
   );
 };

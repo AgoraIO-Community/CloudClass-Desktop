@@ -5,6 +5,7 @@ import {
   ClassroomState,
   EduClassroomConfig,
   EduClassroomUIStore,
+  EduRoleTypeEnum,
   EduRoomTypeEnum,
   IAgoraWidget,
 } from 'agora-edu-core';
@@ -68,6 +69,7 @@ const App: React.FC<AppProps> = observer((props) => {
     showChat: widgetStore.showChat,
     isShowMiniIcon: !widgetStore.showChat,
     configUIVisible: {
+      showInputBox: EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible, // 输入UI
       memebers: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
       announcement: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
