@@ -18,7 +18,10 @@ lerna bootstrap
 
 ```bash
 # 拷贝配置文件到demo目录
+# 开发环境
 cp .env.example packages/agora-classroom-sdk/.env.dev
+# 正式环境
+cp .env.example packages/agora-classroom-sdk/.env
 
 # 按照模板配置你的项目
 ```
@@ -41,8 +44,10 @@ npm run dev
 ## 打包 Electron 客户端
 
 ```bash
-# 构建 Windows 客户端
-npm run build:demo && npm run pack:electron:win
-# 构建 Mac 客户端
-npm run build:demo && npm run pack:electron:mac
+# 构建 Web 资源
+npm run build:demo
+# 构建 Windows 客户端（需要先执行 npm run build:demo 构建 Web 资源）
+npm run pack:electron:win
+# 构建 Mac 客户端（需要先执行 npm run build:demo 构建 Web 资源）
+npm run pack:electron:mac
 ```

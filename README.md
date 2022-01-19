@@ -15,7 +15,10 @@ yarn bootstrap
 
 ```bash
 # copy config template to agora-classroom-sdk project
+# development
 cp .env.example packages/agora-classroom-sdk/.env.dev
+# production
+cp .env.example packages/agora-classroom-sdk/.env
 
 # fill the config with your agora.io development environment
 ```
@@ -37,8 +40,10 @@ yarn dev
 ## Pack the Electron client
 
 ```bash
-# Build a Windows client
-yarn build:demo && yarn pack:electron:win
-# Build a Mac client
-yarn build:demo && yarn pack:electron:mac
+# Build Web Resources
+yarn build:demo
+# Build a Windows client(Run `yarn build:demo` to build Web resources before pack electron)
+yarn pack:electron:win
+# Build a Mac client(Run `yarn build:demo` to build Web resources before pack electron)
+yarn pack:electron:mac
 ```
