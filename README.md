@@ -38,7 +38,7 @@ yarn dev
 
 ```bash
 # Build a Windows client
-yarn pack:electron:win
+yarn build:demo && yarn pack:electron:win
 # Build a Mac client
-yarn pack:electron:mac
+yarn build:demo && yarn pack:electron:mac
 ```
