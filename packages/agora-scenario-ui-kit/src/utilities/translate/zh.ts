@@ -436,6 +436,7 @@ export const zh = {
     'recordation-tip': '只能查询1小时内的回放',
     replay: '回放',
     search: '查询',
+    system_name: '声网灵动课堂',
   },
   'home-about': {
     'privacy-policy': '隐私条例',

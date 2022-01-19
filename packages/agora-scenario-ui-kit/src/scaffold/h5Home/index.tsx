@@ -24,7 +24,7 @@ export const H5Login: React.FC<any> = ({
 
   return (
     <div style={{ height: '100vh', background: '#fff', overflow: 'auto' }}>
-      <div className="h5-header">声网灵动课堂</div>
+      <div className="h5-header">{transI18n('home.system_name')}</div>
       <Table className="home-h5-form">
         <Row className="home-row-item can-error-item">
           <Col>

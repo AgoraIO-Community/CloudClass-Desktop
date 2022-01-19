@@ -446,6 +446,7 @@ export const en = {
     'recordation-tip': 'Recordations only within 1 hour',
     replay: 'replay',
     search: 'search',
+    system_name: 'Agora Flexible Classroom',
   },
   'home-about': {
     'privacy-policy': 'Privacy Policy',
