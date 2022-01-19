@@ -10,6 +10,7 @@ export { EduStreamTool, EduStreamToolCategory } from './common/stream/tool';
 export { ToolbarItem, ToolbarItemCategory } from './common/toolbar-ui';
 export { CameraPlaceholderType } from './common/type';
 export { ToolbarUIStore } from './common/toolbar-ui';
+export type { CabinetItem } from './common/toolbar-ui';
 export { RosterUIStore } from './common/roster';
 export { StreamIconColor } from './common/stream';
 export { BoardUIStore } from './common/board-ui';
