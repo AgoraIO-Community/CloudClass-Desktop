@@ -41,11 +41,11 @@ const App: React.FC<AppProps> = observer((props) => {
     try {
       return localUser?.userProperties.get('widgets').easemobIM.userId;
     } catch (e) {
-      return localUser?.userUuid;
+      return null;
     }
   };
 
-  const localUserInfo = localUser
+  const localUserInfo = getIMUserID()
     ? {
         userUuid: getIMUserID(),
         userName: EduClassroomConfig.shared.sessionInfo.userName,
