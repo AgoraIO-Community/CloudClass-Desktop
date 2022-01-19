@@ -3151,10 +3151,10 @@
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha512-smL1iufVg8XxsvO1GzLD4NZf3wFTev7FRIiHlIYDCjIgTS7/Yq6N2n8JMh2ZDjYi1nMBxDstkQPxZOEOpc/N8g==
 
-"@netless/telebox-insider@^0.2.19":
-  version "0.2.21"
-  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.2.21.tgz#671864588caa5a252c07bb90389b7a4341adbdad"
-  integrity sha512-rHkplhSCPuOSRKPbyjqT+dw7ENSBu3GNeS4iYgFdwIjiyet5Jp3WbG+kZuOMQcK9WRJDFjS89gikB8/JDx5Kig==
+"@netless/telebox-insider@0.2.19", "@netless/telebox-insider@^0.2.19":
+  version "0.2.19"
+  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.2.19.tgz#f5b06129a2aa789c9008f4c4e14a4167509da386"
+  integrity sha512-nb39pYGU+ltk5IMXPx7zGjA2rzkeu4r2EaBfrD/8h1QMov8or+T7tE5lJ3CNd6Bg/chVPjdfvOc8MleLztpjyg==
   dependencies:
     "@types/shallowequal" "^1.1.1"
     eventemitter3 "^4.0.7"
