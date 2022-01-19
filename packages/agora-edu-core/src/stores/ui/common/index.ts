@@ -19,6 +19,7 @@ import { PretestUIStore } from './pretest';
 import { LeaveReason } from '../../domain/common/connection';
 import { AGServiceErrorCode } from '../../../services/error';
 import { LogReporter } from '../../../log-reporter';
+import { WidgetUIStore } from '..';
 
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class EduClassroomUIStore {
@@ -37,6 +38,7 @@ export class EduClassroomUIStore {
   protected _extAppUIStore: ExtAppUIStore;
   protected _notificationUIStore: NotificationUIStore;
   protected _pretestUIStore: PretestUIStore;
+  protected _widgetUIStore: WidgetUIStore;
   private _installed: boolean = false;
 
   constructor(store: EduClassroomStore) {
@@ -55,6 +57,7 @@ export class EduClassroomUIStore {
     this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore);
     this._trackUIStore = new TrackUIStore(store, this.shareUIStore);
     this._extAppUIStore = new ExtAppUIStore(store, this.shareUIStore);
+    this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
   }
 
   /**
@@ -104,6 +107,9 @@ export class EduClassroomUIStore {
   }
   get pretestUIStore() {
     return this._pretestUIStore;
+  }
+  get widgetUIStore() {
+    return this._widgetUIStore;
   }
 
   /**

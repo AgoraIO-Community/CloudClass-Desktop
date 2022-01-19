@@ -23,3 +23,4 @@ export { TrackUIStore } from './common/layout/track';
 export { NavigationBarUIStore } from './common/nav-ui';
 export { NotificationUIStore } from './common/notification-ui';
 export { EduShareUIStore } from './common/share-ui';
+export { WidgetUIStore } from './common/widget-ui';

@@ -454,7 +454,7 @@ export class EduApiService extends ApiBase {
     return res.data;
   }
 
-  async updateTrack(roomUuid: string, widgetUuid: string, body: any) {
+  async updateWidgetProperties(roomUuid: string, widgetUuid: string, body: any) {
     let { data } = await this.fetch({
       path: `/v2/rooms/${roomUuid}/widgets/${widgetUuid}`,
       method: 'PUT',
@@ -465,7 +465,7 @@ export class EduApiService extends ApiBase {
     };
   }
 
-  async deleteTrack(roomUuid: string, widgetUuid: string, body: any) {
+  async deleteWidgetProperties(roomUuid: string, widgetUuid: string, body: any) {
     let { data } = await this.fetch({
       path: `/v2/rooms/${roomUuid}/widgets/${widgetUuid}`,
       method: 'DELETE',

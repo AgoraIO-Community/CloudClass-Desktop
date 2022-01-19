@@ -7,14 +7,14 @@ export class WidgetTrackAdapter implements TrackAdapter {
   constructor(private _classroomStore: EduClassroomStore) {}
   @bound
   updateTrackState(trackId: string, trackData: TrackData) {
-    this._classroomStore.roomStore.updateWidgetTrackState(trackId, trackData);
+    this._classroomStore.widgetStore.setActive(trackId, trackData, trackData.extra.userUuid);
   }
   @bound
   deleteTrackState(trackId: string) {
-    this._classroomStore.roomStore.deleteWidgetTrackState(trackId);
+    this._classroomStore.widgetStore.setInactive(trackId);
   }
 
   get trackState(): TrackState {
-    return this._classroomStore.roomStore.widgetsTrackState;
+    return this._classroomStore.widgetStore.widgetsTrackState;
   }
 }

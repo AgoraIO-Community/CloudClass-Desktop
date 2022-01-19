@@ -4,8 +4,9 @@ import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { IAgoraExtApp } from './type';
 import { EduClassroomConfig } from '../../../..';
 import { bound } from 'agora-rte-sdk';
-import { escapeExtAppIdentifier } from '../room/command-handler';
 import { forEach } from 'lodash';
+import { escapeExtAppIdentifier } from '../room/command-handler';
+import { TrackData, TrackState } from '../room/type';
 
 /**
  * 负责功能：
@@ -23,6 +24,9 @@ export class ExtAppStore extends EduStoreBase {
 
   @observable
   focusedAppId?: string;
+
+  @observable
+  extappsTrackState: TrackState = {};
 
   @bound
   fireExtAppsDidUpdate(apps: Record<string, any>, extAppCause: any) {
@@ -111,6 +115,25 @@ export class ExtAppStore extends EduStoreBase {
         err as Error,
       );
     }
+  }
+
+  @bound
+  async deleteExtappTrackState(extappId: string) {
+    const { roomUuid } = this.classroomStore.roomStore;
+    await this.api.deleteExtAppProperties(roomUuid, extappId, ['position', 'extra', 'size']);
+  }
+
+  @bound
+  async updateExtappTrackState(extappId: string, data: TrackData) {
+    const { roomUuid } = this.classroomStore.roomStore;
+    await this.api.updateExtAppProperties(roomUuid, extappId, data, null, {
+      cmd: 0,
+    });
+  }
+
+  @action.bound
+  updateTrackState(trackState: TrackState) {
+    this.extappsTrackState = trackState;
   }
 
   onInstall() {

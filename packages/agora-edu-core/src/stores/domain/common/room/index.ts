@@ -12,8 +12,6 @@ import {
   HandUpProgress,
   IMConfig,
   RecordStatus,
-  TrackData,
-  TrackState,
 } from './type';
 
 /**
@@ -34,16 +32,8 @@ import {
 export class RoomStore extends EduStoreBase {
   private _cmdHandler = new CMDHandler({
     fireExtAppDidUpdate: this.classroomStore.extAppStore.fireExtAppsDidUpdate,
-    fireWidgetsTrackStateChange: (trackState) => {
-      runInAction(() => {
-        this.widgetsTrackState = trackState;
-      });
-    },
-    fireExtappsTrackStateChange: (trackState) => {
-      runInAction(() => {
-        this.extappsTrackState = trackState;
-      });
-    },
+    fireWidgetsTrackStateChange: this.classroomStore.widgetStore.updateTrackState,
+    fireExtappsTrackStateChange: this.classroomStore.extAppStore.updateTrackState,
     getUserById: (userUuid: string) => {
       return this.classroomStore.userStore.users.get(userUuid);
     },
@@ -76,12 +66,6 @@ export class RoomStore extends EduStoreBase {
 
   @observable
   extAppsCommon: Record<string, { state: number }> = {};
-
-  @observable
-  widgetsTrackState: TrackState = {};
-
-  @observable
-  extappsTrackState: TrackState = {};
 
   @observable
   classroomSchedule: ClassroomSchedule = {
@@ -240,28 +224,6 @@ export class RoomStore extends EduStoreBase {
         err as Error,
       );
     }
-  }
-
-  @bound
-  async updateWidgetTrackState(widgetId: string, data: TrackData) {
-    await this.api.updateTrack(this.roomUuid, widgetId, data);
-  }
-
-  @action.bound
-  async deleteWidgetTrackState(widgetId: string) {
-    await this.api.deleteTrack(this.roomUuid, widgetId, { cause: {} });
-  }
-
-  @action.bound
-  async deleteExtappTrackState(extappId: string) {
-    await this.api.deleteExtAppProperties(this.roomUuid, extappId, ['position', 'extra', 'size']);
-  }
-
-  @bound
-  async updateExtappTrackState(extappId: string, data: TrackData) {
-    await this.api.updateExtAppProperties(this.roomUuid, extappId, data, null, {
-      cmd: 0,
-    });
   }
 
   @action.bound

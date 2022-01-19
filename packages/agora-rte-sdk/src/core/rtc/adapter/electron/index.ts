@@ -498,7 +498,7 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
         {
           width: 0,
           height: 0,
-          frameRate: 0,
+          frameRate: 10,
           captureMouseCursor: true,
           windowFocus: true,
           bitrate: 0,
@@ -518,7 +518,7 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
         {
           width: 0,
           height: 0,
-          frameRate: 0,
+          frameRate: 10,
           captureMouseCursor: true,
           windowFocus: true,
           bitrate: 0,

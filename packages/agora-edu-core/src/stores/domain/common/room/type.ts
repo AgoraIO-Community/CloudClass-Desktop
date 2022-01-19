@@ -53,4 +53,4 @@ export type TrackData = {
   extra?: any;
 };
 
-export type TrackState = Record<string, TrackData>;
+export type TrackState = Record<string, TrackData & { state: 0 | 1; ownerUserUuid: string }>;

@@ -246,6 +246,7 @@ export class ConnectionStore extends EduStoreBase {
     err && EduErrorCenter.shared.handleThrowableError(AGEduErrorCode.EDU_ERR_JOIN_RTC_FAIL, err);
   }
 
+  @bound
   async leaveRTC(connectionType?: AGRtcConnectionType) {
     //leave rtc
     let [err] = await to(this.scene?.leaveRTC(connectionType) || Promise.resolve());
