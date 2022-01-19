@@ -68,6 +68,8 @@ export class PluginStore {
   @observable
   userList?: any[];
 
+  private _lag = 0;
+
   resetContextAndHandle(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
     this.context = ctx;
     this.handle = handle;
@@ -88,8 +90,9 @@ export class PluginStore {
       this.currentTime = '';
     } else {
       let properties = this.context.properties;
+      if (!this._lag) this._lag = Number(properties.startTime) * 1000 - Date.now();
       this.currentTime = formatTime(
-        properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+        properties.endTime ? Number(properties.endTime) * 1000 : Date.now() + this._lag,
         Number(properties.startTime) * 1000,
       );
     }
