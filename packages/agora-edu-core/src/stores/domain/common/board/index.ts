@@ -153,6 +153,11 @@ export class BoardStore extends EduStoreBase {
     })
       .then((manager) => {
         this._windowManager = manager;
+
+        if (manager.appManager?.mainViewProxy.context) {
+          //@ts-ignore
+          manager.appManager.mainViewProxy.context.manager = manager.appManager;
+        }
         //TODO: store this value somewhere
         manager.mainView.disableCameraTransform = true;
         // if (this.userRole === EduRoleTypeEnum.teacher) {
