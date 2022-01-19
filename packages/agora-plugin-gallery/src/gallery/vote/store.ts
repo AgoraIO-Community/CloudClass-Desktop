@@ -7,17 +7,12 @@ import {
   EduRole2RteRole,
 } from 'agora-edu-core';
 import _ from 'lodash';
+import dayjs from 'dayjs';
 
-const formatTime = (long: number) => {
-  let h: any = Math.floor(long / (60 * 60));
-  h = (h < 10 ? '0' : '') + h;
-  let m: any = Math.floor(long / 60) % 60;
-  m = (m < 10 ? '0' : '') + m;
-  let s: any = Math.floor(long % 60);
-  s = (s < 10 ? '0' : '') + s;
-  return h + ':' + m + ':' + s;
+const formatTime = (endTime: number, startTime: number) => {
+  const diff = dayjs(endTime).diff(dayjs(startTime));
+  return dayjs.duration(diff).format('HH:mm:ss');
 };
-
 const getStudentInfo = (info: any) => {
   if (
     info === null ||
@@ -94,9 +89,8 @@ export class PluginStore {
     } else {
       let properties = this.context.properties;
       this.currentTime = formatTime(
-        properties.endTime
-          ? Number(properties.endTime) - Number(properties.startTime)
-          : Math.floor(Date.now() / 1000) - Number(properties.startTime),
+        properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+        Number(properties.startTime) * 1000,
       );
     }
 

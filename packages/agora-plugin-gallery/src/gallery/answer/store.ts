@@ -5,16 +5,12 @@ import {
   AgoraExtAppUserInfo,
   EduRoleTypeEnum,
 } from 'agora-edu-core';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 
-const formatTime = (long: number) => {
-  let h: any = Math.floor(long / (60 * 60));
-  h = (h < 10 ? '0' : '') + h;
-  let m: any = Math.floor(long / 60) % 60;
-  m = (m < 10 ? '0' : '') + m;
-  let s: any = Math.floor(long % 60);
-  s = (s < 10 ? '0' : '') + s;
-  return h + ':' + m + ':' + s;
+const formatTime = (endTime: number, startTime: number) => {
+  const diff = dayjs(endTime).diff(dayjs(startTime));
+  return dayjs.duration(diff).format('HH:mm:ss');
 };
 
 const getStudentInfo = (info: any) => {
@@ -83,9 +79,8 @@ export class PluginStore {
     } else {
       let properties = this.context.properties;
       this.currentTime = formatTime(
-        properties.endTime
-          ? Number(properties.endTime) - Number(properties.startTime)
-          : Math.floor(Date.now() / 1000) - Number(properties.startTime),
+        properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+        Number(properties.startTime) * 1000,
       );
     }
 
@@ -293,9 +288,8 @@ export class PluginStore {
         this.answer = properties.items;
         this.selAnswer = [];
         this.currentTime = formatTime(
-          properties.endTime
-            ? Number(properties.endTime) - Number(properties.startTime)
-            : Math.floor(Date.now() / 1000) - Number(properties.startTime),
+          properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+          Number(properties.startTime) * 1000,
         );
         this.students = [];
         let answeredNumber = 0;
@@ -310,7 +304,10 @@ export class PluginStore {
           if (answer) {
             ++answeredNumber;
             info.answer = answer.answer ? answer.answer.slice().sort().join('') : '';
-            info.replyTime = formatTime(Number(answer.replyTime) - Number(properties.startTime));
+            info.replyTime = formatTime(
+              Number(answer.replyTime) * 1000,
+              Number(properties.startTime) * 1000,
+            );
             if (info.answer === (properties.answer?.join('') || '')) {
               ++rightNumber;
             }
@@ -345,9 +342,8 @@ export class PluginStore {
         this.title = '';
         this.answer = properties.items;
         this.currentTime = formatTime(
-          properties.endTime
-            ? Number(properties.endTime) - Number(properties.startTime)
-            : Math.floor(Date.now() / 1000) - Number(properties.startTime),
+          properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+          Number(properties.startTime) * 1000,
         );
         this.height = (this.answer?.length || 0) > 4 ? 190 : 120;
         if (this.status !== 'answer' || this.showModifyBtn) {
@@ -373,9 +369,8 @@ export class PluginStore {
           getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer ||
           this.selAnswer;
         this.currentTime = formatTime(
-          properties.endTime
-            ? Number(properties.endTime) - Number(properties.startTime)
-            : Math.floor(Date.now() / 1000) - Number(properties.startTime),
+          properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+          Number(properties.startTime) * 1000,
         );
         this.status = 'info';
         this.height = 120;
@@ -394,7 +389,10 @@ export class PluginStore {
           if (answer) {
             ++answeredNumber;
             info.answer = answer.answer ? answer.answer.slice().sort().join('') : '';
-            info.replyTime = formatTime(Number(answer.replyTime) - Number(properties.startTime));
+            info.replyTime = formatTime(
+              Number(answer.replyTime) * 1000,
+              Number(properties.startTime) * 1000,
+            );
             if (info.answer === (properties.answer?.join('') || '')) {
               ++rightNumber;
             }
