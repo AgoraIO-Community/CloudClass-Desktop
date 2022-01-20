@@ -94,6 +94,9 @@ export const updateAnnouncement = (roomId, noticeCentent, callback) => {
 // 退出聊天室
 export const logoutChatroom = () => {
   const roomId = store.getState().propsData.chatroomId;
+  if (!WebIM.conn) {
+    return;
+  }
   WebIM.conn.quitChatRoom({
     roomId: roomId, // 聊天室id
     success: function (res) {
