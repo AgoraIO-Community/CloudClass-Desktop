@@ -61,6 +61,8 @@ export class PluginStore {
   @observable
   showModifyBtn: boolean = false; //当前是否显示修改按钮
 
+  private _lag = 0;
+
   resetContextAndHandle(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
     this.context = ctx;
     this.handle = handle;
@@ -78,8 +80,9 @@ export class PluginStore {
       this.currentTime = '';
     } else {
       let properties = this.context.properties;
+      if (!this._lag) this._lag = Number(properties.startTime) * 1000 - Date.now();
       this.currentTime = formatTime(
-        properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+        properties.endTime ? Number(properties.endTime) * 1000 : Date.now() + this._lag,
         Number(properties.startTime) * 1000,
       );
     }
@@ -342,7 +345,9 @@ export class PluginStore {
         this.title = '';
         this.answer = properties.items;
         this.currentTime = formatTime(
-          properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
+          properties.endTime
+            ? Number(properties.endTime) * 1000
+            : Number(properties.startTime) * 1000,
           Number(properties.startTime) * 1000,
         );
         this.height = (this.answer?.length || 0) > 4 ? 190 : 120;

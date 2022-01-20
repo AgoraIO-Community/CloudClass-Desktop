@@ -44,6 +44,12 @@ export class ToolbarItem {
 }
 
 export class ToolbarUIStore extends EduUIStoreBase {
+  readonly allowedCabinetItems: string[] = [
+    'screenShare',
+    'io.agora.countdown',
+    'io.agora.answer',
+    'io.agora.vote',
+  ];
   readonly defaultColors: string[] = [
     '#ffffff',
     '#9b9b9b',
@@ -287,20 +293,26 @@ export class ToolbarUIStore extends EduUIStoreBase {
   get cabinetItems(): CabinetItem[] {
     const { extApps } = this.classroomStore.extAppStore;
 
-    const apps = Object.values(extApps).map(({ appIdentifier, icon, appName }) => ({
-      id: appIdentifier,
-      iconType: typeof icon === 'string' ? icon : '',
-      icon: typeof icon === 'string' ? null : icon,
-      name: appName,
-    }));
+    const apps = Object.values(extApps)
+      .map(
+        ({ appIdentifier, icon, appName }) =>
+          ({
+            id: appIdentifier,
+            iconType: typeof icon === 'string' ? icon : '',
+            icon: typeof icon === 'string' ? null : icon,
+            name: appName,
+          } as CabinetItem),
+      )
+      .concat([
+        {
+          id: 'screenShare',
+          iconType: 'share-screen',
+          name: transI18n('scaffold.screen_share'),
+        },
+      ])
+      .filter((it) => this.allowedCabinetItems.includes(it.id));
 
-    return [
-      {
-        id: 'screenShare',
-        iconType: 'share-screen',
-        name: transI18n('scaffold.screen_share'),
-      },
-    ].concat(apps);
+    return apps;
   }
 
   /**

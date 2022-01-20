@@ -9,7 +9,12 @@ import {
   Profile,
   DialogCategory,
 } from 'agora-edu-core';
-import { AgoraRteMediaSourceState, AgoraRteMediaPublishState, Lodash } from 'agora-rte-sdk';
+import {
+  AgoraRteMediaSourceState,
+  AgoraRteMediaPublishState,
+  Lodash,
+  AGError,
+} from 'agora-rte-sdk';
 
 export class LectureRosterUIStore extends RosterUIStore {
   get uiOverrides() {
@@ -86,7 +91,7 @@ export class LectureRosterUIStore extends RosterUIStore {
           this._usersList = this._usersList.filter((it: any) => it.userUuid !== profile.uid);
         });
       } catch (e) {
-        addGenericErrorDialog(e);
+        addGenericErrorDialog(e as AGError);
       }
     };
 

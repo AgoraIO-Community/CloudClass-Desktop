@@ -2,6 +2,7 @@ import { EduClassroomStore, EduClassroomUIStore } from 'agora-edu-core';
 import { LectureBoardUIStore } from './board-ui';
 import { LectureRosterUIStore } from './roster';
 import { LectureRoomStreamUIStore } from './stream-ui';
+import { LectrueToolbarUIStore } from './toolbar-ui';
 
 export class EduLectureUIStore extends EduClassroomUIStore {
   constructor(store: EduClassroomStore) {
@@ -9,6 +10,7 @@ export class EduLectureUIStore extends EduClassroomUIStore {
     this._streamUIStore = new LectureRoomStreamUIStore(store, this.shareUIStore);
     this._rosterUIStore = new LectureRosterUIStore(store, this.shareUIStore);
     this._boardUIStore = new LectureBoardUIStore(store, this.shareUIStore);
+    this._toolbarUIStore = new LectrueToolbarUIStore(store, this.shareUIStore);
   }
 
   get streamUIStore() {
