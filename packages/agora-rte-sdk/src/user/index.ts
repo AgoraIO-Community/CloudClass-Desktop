@@ -18,6 +18,7 @@ export class AgoraRteLocalUser {
   readonly userUuid: string;
   readonly userName: string;
   readonly userRole: string;
+  readonly userProperties: any;
   readonly streamUuid: string;
   readonly sceneId: string;
   readonly rtcToken: string;
@@ -32,11 +33,12 @@ export class AgoraRteLocalUser {
   };
 
   toData(): AgoraUser {
-    const { userName, userUuid, userRole } = this;
+    const { userName, userUuid, userRole, userProperties } = this;
     return AgoraUser.fromData({
       userName,
       userUuid,
       userRole,
+      userProperties,
     });
   }
 
@@ -50,6 +52,7 @@ export class AgoraRteLocalUser {
       sceneId,
       rtcToken,
       rtc,
+      userProperties,
     }: {
       userUuid: string;
       userName: string;
@@ -58,11 +61,13 @@ export class AgoraRteLocalUser {
       sceneId: string;
       rtcToken: string;
       rtc: AGRtcManager;
+      userProperties: any;
     },
   ) {
     this.userUuid = userUuid;
     this.userName = userName;
     this.userRole = userRole;
+    this.userProperties = userProperties;
     this.streamUuid = streamUuid;
     this.sceneId = sceneId;
     this.rtcToken = rtcToken;
