@@ -10,6 +10,8 @@ const parser = UA.getResult();
 
 //TODO
 const platform = 'web';
+// always use prd domain for policy api
+const policyHost = 'https://api.sd-rtn.com';
 
 export type TagInfo = {
   roomUuid: string;
@@ -147,6 +149,7 @@ class OSSUploader implements UploaderAdapter {
     let sign = md5(signStr);
 
     let { data } = await this._apiService.fetch({
+      host: policyHost,
       path: `/monitor/v1/log/oss/policy`,
       data: body,
       method: 'POST',
