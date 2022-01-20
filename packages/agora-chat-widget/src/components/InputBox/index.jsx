@@ -28,14 +28,17 @@ export const InputBox = () => {
   const isAllMute = state?.room.allMute;
   const isUserMute = state?.room.isUserMute;
   let isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+  const isAssistant = roleType && JSON.parse(roleType).role === ROLE.assistant.id;
 
   return (
     <div className="input-box">
       {showInputBox && (
         <>
-          {!isTeacher && isAllMute && <AllMute />}
-          {!isTeacher && !isAllMute && isUserMute && <UserMute />}
-          {(isTeacher || (!isAllMute && !isUserMute)) && <InputMsg isTeacher={isTeacher} />}
+          {!isAssistant && !isTeacher && isAllMute && <AllMute />}
+          {!isAssistant && !isTeacher && !isAllMute && isUserMute && <UserMute />}
+          {(isAssistant || isTeacher || (!isAllMute && !isUserMute)) && (
+            <InputMsg allMutePermission={isTeacher || isAssistant} />
+          )}
         </>
       )}
     </div>

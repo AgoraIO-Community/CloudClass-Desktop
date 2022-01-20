@@ -33,6 +33,7 @@ export const ShowAnnouncement = () => {
   const roleType = state?.loginUserInfo.ext;
   // 在propsData 取值
   const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
+  const isAssistant = roleType && JSON.parse(roleType).role === ROLE.assistant.id;
 
   const callback = () => {
     hideModal();
@@ -52,7 +53,7 @@ export const ShowAnnouncement = () => {
       {Announcement.length > 0 ? (
         <div className="announcement">
           <div className="announcement-box" id="deleteModal">
-            {isTeacher && (
+            {(isTeacher || isAssistant) && (
               <div className="menu">
                 {/* updateAnnouncement(roomId, "" */}
                 <span
@@ -80,7 +81,7 @@ export const ShowAnnouncement = () => {
             <img src={announcement} className="announcement-icon" />
             <div className="no-notice">
               <span className="no-notice-text"> {transI18n('chat.default_announcement')}</span>
-              {isTeacher && <Edit />}
+              {(isTeacher || isAssistant) && <Edit />}
             </div>
           </div>
         </div>

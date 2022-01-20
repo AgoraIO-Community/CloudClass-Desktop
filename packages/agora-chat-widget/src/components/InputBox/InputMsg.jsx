@@ -28,7 +28,7 @@ export const ShowEomji = ({ getEmoji }) => {
   );
 };
 
-export const InputMsg = ({ isTeacher }) => {
+export const InputMsg = ({ allMutePermission }) => {
   const state = useSelector((state) => state);
   const loginUser = state?.loginUser;
   const roomId = state?.room.info.id;
@@ -181,7 +181,7 @@ export const InputMsg = ({ isTeacher }) => {
           )}
           {!configUIVisible.allMute
             ? null
-            : isTeacher && (
+            : allMutePermission && (
                 <div>
                   <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
                   <Switch

@@ -33,7 +33,7 @@ export const WaveArmSenderContainer = observer(() => {
 
 export const HandsUpContainer = observer(() => {
   const userRole = EduClassroomConfig.shared.sessionInfo.role;
-  if (userRole === EduRoleTypeEnum.teacher) {
+  if (userRole === EduRoleTypeEnum.teacher || userRole === EduRoleTypeEnum.assistant) {
     return <WaveArmManagerContainer />;
   }
   if (userRole === EduRoleTypeEnum.student) {
