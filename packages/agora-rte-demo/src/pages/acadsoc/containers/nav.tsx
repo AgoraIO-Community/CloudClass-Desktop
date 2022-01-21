@@ -217,16 +217,16 @@ const ActionBarContainer = observer(() => {
         controller.appController.callback(AgoraEduEvent.menuclicked, {name: "prepare"})
       }
     },
-    {
-      name: 'sos',
-      tooltip: t('tooltip.sos'),
-      clickEvent: () => {
-        controller.appController.callback(AgoraEduEvent.menuclicked, {name: "sos"})
-        controller.appController.uploadLog()
-          .then(console.log)
-          .catch(console.warn)
-        },
-    },
+    // {
+    //   name: 'sos',
+    //   tooltip: t('tooltip.sos'),
+    //   clickEvent: () => {
+    //     controller.appController.callback(AgoraEduEvent.menuclicked, {name: "sos"})
+    //     controller.appController.uploadLog()
+    //       .then(console.log)
+    //       .catch(console.warn)
+    //     },
+    // },
     { 
       name: 'refresh',
       tooltip: t('tooltip.refresh'),
