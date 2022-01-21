@@ -32,13 +32,11 @@ const UserList = ({ roomUserList }) => {
     const roomAdmins = useSelector((state) => state.room.admins);
     const [currentPage, setCurrentPage] = useState(1)
 
-    const [firstRoomUserList,setFirstRoomUserList] = useState(_.slice(roomUserList,0,20))
+    const [firstRoomUserList,setFirstRoomUserList] = useState(()=>_.slice(roomUserList, 0, 20))
 
     useEffect(()=>{
         if (roomUserList.length === 20) {
             setFirstRoomUserList(_.slice(roomUserList,0,20))
-        }else{
-            return
         }
     },[roomUserList])
     useEffect(() => {
