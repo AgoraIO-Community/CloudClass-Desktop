@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Input, Switch, Tag } from 'antd';
+import { Input, Switch, Tag,List } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Flex, Text, Image } from 'rebass'
 import { useSelector } from 'react-redux'
@@ -14,8 +14,10 @@ import voiceOff from '../../../themes/img/icon-mute.svg'
 import voiceNo from '../../../themes/img/icon-chat.svg'
 import forbid from '../../../themes/img/icon_forbid.svg'
 import RcTooltip from 'rc-tooltip'
+import _ from 'lodash'
 import 'rc-tooltip/assets/bootstrap_white.css'
 
+import VirtualList from 'rc-virtual-list'
 const UserList = ({ roomUserList }) => {
     // 禁言列表
     const [isMute, setIsMute] = useState(false);
@@ -30,6 +32,15 @@ const UserList = ({ roomUserList }) => {
     const roomAdmins = useSelector((state) => state.room.admins);
     const [currentPage, setCurrentPage] = useState(1)
 
+    const [firstRoomUserList,setFirstRoomUserList] = useState(_.slice(roomUserList,0,20))
+
+    useEffect(()=>{
+        if (roomUserList.length === 20) {
+            setFirstRoomUserList(_.slice(roomUserList,0,20))
+        }else{
+            return
+        }
+    },[roomUserList])
     useEffect(() => {
         let ary = []
         roomMuteList.forEach((item) => {
@@ -37,6 +48,7 @@ const UserList = ({ roomUserList }) => {
         })
         setMuteMembers(ary);
     }, [roomMuteList])
+    const ContainerHeight = roomUserList.length<20 ? 'calc(100% + 100px)' : firstRoomUserList.length * 44
     // 设置个人禁言
     const setUserMute = (roomId, val) => {
         let options = {
@@ -101,6 +113,13 @@ const UserList = ({ roomUserList }) => {
         }
     }
 
+    const onScroll = e =>{
+        if (e.target.scrollHeight - e.target.scrollTop === ContainerHeight) {
+            let newAry = _.slice(roomUserList,0,100)
+            setFirstRoomUserList(newAry)
+          }
+    }
+
     return (
         <div style={{ height: '100%' }}>
             <div className='search-back'>
@@ -119,14 +138,23 @@ const UserList = ({ roomUserList }) => {
                 </Flex>
             }
             {
-                <div style={{ height: 'calc(100% + 100px)', overflowY: 'scroll' }} ref={userRef}>
+                <div style={{ height: 'calc(100% + 100px)', overflowY: 'scroll' ,listStyle:'none'}} ref={userRef}>
                     {/* 是否展示搜索列表 */}
                     {searchUser && <SearchList roomListInfo={roomListInfo} searchUser={searchUser} onSetMute={onSetMute} muteMembers={muteMembers} />}
                     {!searchUser && isMute && <MuteList roomListInfo={roomListInfo} muteMembers={muteMembers} onSetMute={onSetMute} />}
                     {/* 展示列表及搜索结果列表 */}
-                    {!searchUser && !isMute && roomUserList.map((item, key) => {
-                        return (
-                            <Flex className="user-item" key={key} justifyContent='space-between' mt='16px' alignItems='center'>
+                    {!searchUser && !isMute && 
+                        <VirtualList
+                            data={roomUserList.length<20?roomUserList:firstRoomUserList}
+                            itemKey="id"
+                            height={ContainerHeight}
+                            itemHeight={44}
+                            onScroll={onScroll}
+                            >
+                            {item =>{
+                                return  (
+                                <List.Item key={item.id}>
+                                  <Flex className="user-item" key={item.id} justifyContent='space-between' mt='16px' alignItems='center'>
                                 <Flex alignItems='center'>
                                     <div className='list-user-box'>
                                         <img className='list-user-img' src={item.avatarurl || avatarUrl} alt=""/>
@@ -154,10 +182,12 @@ const UserList = ({ roomUserList }) => {
                                             />
                                         </div>
                                     </RcTooltip>}
-                            </Flex>
-                        )
-                        // }
-                    })}
+                                </Flex>
+                                </List.Item>
+                                )
+                            }}
+                        </VirtualList>
+                    }
                 </div>
             }
         </div >

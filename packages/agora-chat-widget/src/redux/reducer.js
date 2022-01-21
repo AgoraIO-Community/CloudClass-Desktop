@@ -135,7 +135,7 @@ const reducer = (state = defaultState, action) => {
             let ary = [];
             let userInfo = state.userListInfo;
             if (action.option === 'addMember') {
-                ary = ary.concat(data, ...state.room.users)
+                ary = ary.concat(...state.room.users,data)
             } else if (action.option === 'removeMember') {
                 _.remove(state.room.users, (v) => {
                     return v == data
