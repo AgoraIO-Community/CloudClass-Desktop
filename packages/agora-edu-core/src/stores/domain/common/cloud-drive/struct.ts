@@ -46,7 +46,7 @@ export abstract class CloudDriveResource {
       );
     }
 
-    if (this.convertableTypes.includes(data.ext)) {
+    if (this.convertableTypes.includes(ext)) {
       if (!data.taskProgress || !data.taskUuid || !data.conversion) {
         return EduErrorCenter.shared.handleThrowableError(
           AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
