@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
@@ -91,7 +91,7 @@ const App = function (props) {
       store.dispatch(roomAllMute(false))
     }
   }, [isRoomAllMute])
-  let arr = []
+  let arr = useRef([]);
   let intervalId;
   const createListen = (new_IM_Data, appkey) => {
     WebIM.conn.listen({
@@ -177,11 +177,11 @@ const App = function (props) {
             if (roomOwner === message.from) return
             if (message.from === "系统管理员") return
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
-            arr.push(message.from)
+            arr.current.push(message.from)
             if(!intervalId) {
               intervalId = setTimeout(() => {
-                let users = _.cloneDeep(arr);
-                arr = [];
+                let users = _.cloneDeep(arr.current);
+                arr.current = [];
                 getUserInfo(users);
                 intervalId = null
               }, 1000);
