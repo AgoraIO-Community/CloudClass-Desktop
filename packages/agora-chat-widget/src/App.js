@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import store from './redux/store'
-import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore, setStateListner, roomAdmins } from './redux/aciton'
+import { isLogin, roomMessages, roomUserCount, qaMessages, userMute, roomAllMute, extData, roomUsers, clearStore, setStateListner, roomAdmins,resetPage } from './redux/aciton'
 import WebIM, { initIMSDK } from './utils/WebIM';
 import LoginIM from './api/login'
 import { joinRoom, getRoomInfo, getRoomNotice, getRoomWhileList, getRoomUsers } from './api/chatroom'
@@ -178,12 +178,15 @@ const App = function (props) {
             if (message.from === "系统管理员") return
             // getRoomUsers(1, ROOM_PAGESIZE, message.gid);
             arr.push(message.from)
-            intervalId && clearInterval(intervalId);
-            intervalId = setTimeout(() => {
-              let users = _.cloneDeep(arr);
-              arr = [];
-              getUserInfo(users)
-            }, 500);
+            if(!intervalId) {
+              intervalId = setTimeout(() => {
+                let users = _.cloneDeep(arr);
+                arr = [];
+                getUserInfo(users);
+                intervalId = null
+              }, 1000);
+            }
+            
             let ary = []
             roomUserList.map((v, k) => {
               ary.push(v)
@@ -200,6 +203,7 @@ const App = function (props) {
 
             // 移除成员
             store.dispatch(roomUsers(message.from, 'removeMember'))
+            store.dispatch(resetPage(true))
             break;
           case "updateAnnouncement":
             getRoomNotice(message.gid)

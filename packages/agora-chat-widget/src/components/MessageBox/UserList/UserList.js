@@ -7,7 +7,6 @@ import { getRoomWhileList, getRoomUsers } from '../../../api/chatroom'
 import WebIM from '../../../utils/WebIM'
 import SearchList from './SearchList'
 import MuteList from './MuteList'
-import { ROOM_PAGESIZE } from '../constants'
 import './userList.css'
 import avatarUrl from '../../../themes/img/avatar-big@2x.png'
 import voiceOff from '../../../themes/img/icon-mute.svg'
@@ -16,8 +15,11 @@ import forbid from '../../../themes/img/icon_forbid.svg'
 import RcTooltip from 'rc-tooltip'
 import _ from 'lodash'
 import 'rc-tooltip/assets/bootstrap_white.css'
-
+import store from '../../../redux/store';
+import { resetPage } from '../../../redux/aciton';
 import VirtualList from 'rc-virtual-list'
+const heightStyle = 'calc(100% + 100px)'
+const defaultUserListCount = 20;
 const UserList = ({ roomUserList }) => {
     // 禁言列表
     const [isMute, setIsMute] = useState(false);
@@ -30,13 +32,21 @@ const UserList = ({ roomUserList }) => {
     const roomMuteList = useSelector((state) => state.room.muteList);
     const roomListInfo = useSelector((state) => state.userListInfo);
     const roomAdmins = useSelector((state) => state.room.admins);
-    const [currentPage, setCurrentPage] = useState(1)
-
-    const [firstRoomUserList,setFirstRoomUserList] = useState(()=>_.slice(roomUserList, 0, 20))
-
+    const isResetPage = useSelector((state) => state.isResetPage);
+    const [currentPage, setCurrentPage] = useState(0)
+    const [firstRoomUserList,setFirstRoomUserList] = useState(()=>_.slice(roomUserList,0,defaultUserListCount))
+    let ContainerHeight = roomUserList.length < defaultUserListCount ? heightStyle : firstRoomUserList.length * 44
+ 
+    useEffect(() => {
+        if (isResetPage) {
+             let newAry = _.slice(roomUserList, 0, (currentPage + 1) * 100);
+             setFirstRoomUserList(newAry);
+             store.dispatch(resetPage(false));
+        }
+    }, [isResetPage]);
     useEffect(()=>{
-        if (roomUserList.length === 20) {
-            setFirstRoomUserList(_.slice(roomUserList,0,20))
+        if (roomUserList.length === defaultUserListCount) {
+            setFirstRoomUserList(_.slice(roomUserList,0,defaultUserListCount))
         }
     },[roomUserList])
     useEffect(() => {
@@ -46,7 +56,7 @@ const UserList = ({ roomUserList }) => {
         })
         setMuteMembers(ary);
     }, [roomMuteList])
-    const ContainerHeight = roomUserList.length<20 ? 'calc(100% + 100px)' : firstRoomUserList.length * 44
+
     // 设置个人禁言
     const setUserMute = (roomId, val) => {
         let options = {
@@ -56,7 +66,6 @@ const UserList = ({ roomUserList }) => {
         WebIM.conn.addUsersToChatRoomWhitelist(options).then((res) => {
             setLoading(false)
             getRoomWhileList(roomId)
-            // store.dispatch(roomMuteUsers(true))
         }).catch(() => { setLoading(false) });
     }
     // 移除个人禁言
@@ -68,7 +77,6 @@ const UserList = ({ roomUserList }) => {
         WebIM.conn.rmUsersFromChatRoomWhitelist(options).then((res) => {
             setLoading(false)
             getRoomWhileList(roomId)
-            // store.dispatch(roomMuteUsers(false))
         }).catch(() => { setLoading(false) });
     }
     // 禁言开关
@@ -90,30 +98,12 @@ const UserList = ({ roomUserList }) => {
         }
     }
 
-    // useEffect(() => {
-    //     getRoomUsers(currentPage, ROOM_PAGESIZE, roomId)
-    // }, [])
-
-    // 监听滚动条事件，滚动加载成员
-    const userRef = useRef()
-    const handleUser = (e) => {
-        e.preventDefault()
-        const scrollTop = userRef.current.scrollTop;
-        const clientHeight = userRef.current.clientHeight;
-        const scrollHeight = userRef.current.scrollHeight;
-        const isBottom = scrollTop + clientHeight === scrollHeight;
-        if (isBottom) {
-            let count = parseInt(memberCount / ROOM_PAGESIZE) + 1
-            if (currentPage < count) {
-                getRoomUsers(currentPage + 1, ROOM_PAGESIZE, roomId);
-                setCurrentPage(currentPage + 1)
-            }
-        }
-    }
-
     const onScroll = e =>{
         if (e.target.scrollHeight - e.target.scrollTop === ContainerHeight) {
-            let newAry = _.slice(roomUserList,0,100)
+            let newAry = _.slice(roomUserList,0,(currentPage+1) * 100)
+            if (roomUserList.length / 100 > currentPage) {
+              setCurrentPage(() => currentPage + 1);
+            }
             setFirstRoomUserList(newAry)
           }
     }
@@ -136,14 +126,14 @@ const UserList = ({ roomUserList }) => {
                 </Flex>
             }
             {
-                <div style={{ height: 'calc(100% + 100px)', overflowY: 'scroll' ,listStyle:'none'}} ref={userRef}>
+                <div style={{ height: 'calc(100% + 100px)', overflowY: 'scroll' ,listStyle:'none'}}>
                     {/* 是否展示搜索列表 */}
                     {searchUser && <SearchList roomListInfo={roomListInfo} searchUser={searchUser} onSetMute={onSetMute} muteMembers={muteMembers} />}
                     {!searchUser && isMute && <MuteList roomListInfo={roomListInfo} muteMembers={muteMembers} onSetMute={onSetMute} />}
                     {/* 展示列表及搜索结果列表 */}
                     {!searchUser && !isMute && 
                         <VirtualList
-                            data={roomUserList.length<20?roomUserList:firstRoomUserList}
+                            data={roomUserList.length < defaultUserListCount ?roomUserList:firstRoomUserList}
                             itemKey="id"
                             height={ContainerHeight}
                             itemHeight={44}

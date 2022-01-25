@@ -39,6 +39,7 @@ let defaultState = {
     messageListIsBottom: true, // 消息列表滚动条是否在底部
     historyCurrentHeight: 0,
     isHistoryCurrent: false,
+    isResetPage:false,
 }
 const reducer = (state = defaultState, action) => {
     const { type, data, qaSender } = action;
@@ -371,6 +372,11 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 isHistoryCurrent: data
             }
+        case 'RESET_PAGE':
+            return {
+                ...state,
+                isResetPage:data
+              };
         default:
             return state;
     }

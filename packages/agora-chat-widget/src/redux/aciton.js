@@ -141,3 +141,7 @@ export const setStateListner = (data) => {
 export const messageListIsBottom = (data) => {
     return { type: 'MESSAGE_LIST_IS_BOTTOM', data }
 }
+
+export const resetPage = (data) =>{
+    return { type: 'RESET_PAGE',data };
+}
