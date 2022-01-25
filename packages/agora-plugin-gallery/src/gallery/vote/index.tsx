@@ -11,7 +11,16 @@ import {
   EduRoleTypeEnum,
   AgoraExtAppUserInfo,
 } from 'agora-edu-core';
-import { Button, Table, Row, Input, transI18n, I18nProvider, changeLanguage, Icon } from '~ui-kit';
+import {
+  Button,
+  Table,
+  Row,
+  Input,
+  transI18n,
+  I18nProvider,
+  changeLanguage,
+  SvgImg,
+} from '~ui-kit';
 import classnames from 'classnames';
 import './index.css';
 import reduceSvg from './reduce.svg';
@@ -254,18 +263,7 @@ export class AgoraExtAppVote implements IAgoraExtApp {
   appIdentifier = 'io.agora.vote';
   appName = transI18n('cabinet.vote.appName');
   className = 'vote-dialog';
-  icon = (
-    <Icon
-      type="vote"
-      className="vote"
-      style={{
-        height: '24px',
-        width: '24px',
-        marginBottom: '12px',
-      }}
-      size={24}
-    />
-  );
+  icon = 'vote';
   width = 360;
   height = 283;
   minWidth = 360;
