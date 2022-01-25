@@ -1,5 +1,11 @@
-import { AGError, AGNetworkQuality } from 'agora-rte-sdk';
-import { computed, action, observable, reaction, runInAction, observe } from 'mobx';
+import {
+  AGError,
+  AGNetworkQuality,
+  AgoraRteAudioSourceType,
+  AgoraRteMediaSourceState,
+  AgoraRteVideoSourceType,
+} from 'agora-rte-sdk';
+import { computed, action, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { DialogCategory, EduClassroomConfig, EduRoleTypeEnum } from '../../..';
 import { number2Percent } from '../../../utils';
@@ -31,13 +37,13 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     );
 
     reaction(
-      () => this.downlinkNetworkQuality,
-      (downlinkNetworkQuality) => {
-        if (downlinkNetworkQuality === AGNetworkQuality.bad) {
+      () => this.networkQuality,
+      (networkQuality) => {
+        if (networkQuality === AGNetworkQuality.bad) {
           this.shareUIStore.addToast(transI18n('nav.singal_poor_tip'), 'warning');
         }
 
-        if (downlinkNetworkQuality === AGNetworkQuality.down) {
+        if (networkQuality === AGNetworkQuality.down) {
           this.shareUIStore.addToast(transI18n('nav.singal_down_tip'), 'error');
         }
       },
@@ -257,7 +263,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get networkQualityClass(): string {
-    switch (this.downlinkNetworkQuality) {
+    switch (this.networkQuality) {
       case AGNetworkQuality.good:
       case AGNetworkQuality.great:
         return 'excellent';
@@ -276,7 +282,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get networkQualityIcon(): 'normal-signal' | 'bad-signal' | 'unknown-signal' | 'down-signal' {
-    switch (this.downlinkNetworkQuality) {
+    switch (this.networkQuality) {
       case AGNetworkQuality.good:
       case AGNetworkQuality.great:
         return 'normal-signal';
@@ -295,7 +301,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get networkQualityLabel(): string {
-    switch (this.downlinkNetworkQuality) {
+    switch (this.networkQuality) {
       case AGNetworkQuality.good:
       case AGNetworkQuality.great:
         return transI18n('nav.signal_excellent');
@@ -350,12 +356,57 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 下行网络质量状态
+   * 网络质量状态
    * @returns
    */
   @computed
-  get downlinkNetworkQuality() {
-    return this.classroomStore.statisticsStore.downlinkNetworkQuality || AGNetworkQuality.good;
+  get networkQuality() {
+    let hasPublishedScreenStream = false;
+    let hasPublishedCameraStream = false;
+    let hasPublishedMicStream = false;
+
+    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
+
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    const streamUuids = streamByUserUuid.get(userUuid) || new Set();
+
+    for (const streamUuid of streamUuids) {
+      let stream = streamByStreamUuid.get(streamUuid);
+      if (stream && stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
+        hasPublishedScreenStream = true;
+      }
+
+      if (
+        stream &&
+        stream.videoSourceType === AgoraRteVideoSourceType.Camera &&
+        stream.audioSourceState === AgoraRteMediaSourceState.started
+      ) {
+        hasPublishedCameraStream = true;
+      }
+
+      if (
+        stream &&
+        stream.audioSourceType === AgoraRteAudioSourceType.Mic &&
+        stream.audioSourceState === AgoraRteMediaSourceState.started
+      ) {
+        hasPublishedMicStream = true;
+      }
+    }
+
+    const { downlinkNetworkQuality, uplinkNetworkQuality } = this.classroomStore.statisticsStore;
+
+    if ([downlinkNetworkQuality, uplinkNetworkQuality].includes(AGNetworkQuality.down)) {
+      return AGNetworkQuality.down;
+    }
+
+    if (hasPublishedScreenStream || hasPublishedCameraStream || hasPublishedMicStream) {
+      return Math.min(
+        downlinkNetworkQuality || AGNetworkQuality.unknown,
+        uplinkNetworkQuality || AGNetworkQuality.unknown,
+      ) as AGNetworkQuality;
+    }
+
+    return downlinkNetworkQuality || AGNetworkQuality.unknown;
   }
 
   /**

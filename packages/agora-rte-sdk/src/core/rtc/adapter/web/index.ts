@@ -331,6 +331,7 @@ export class RtcChannelAdapterWeb extends RtcChannelAdapterBase {
 
   onNetworkStats(cb: (stats: NetworkStats) => void): number {
     this.main.on('network-stats-changed', cb);
+
     return 0;
   }
   onAudioVolumeIndication(cb: (volumes: Map<string, number>) => void): number {
