@@ -30,10 +30,10 @@ export const ShowAnnouncement = () => {
   const state = useSelector((state) => state);
   const roomId = state.room.info.id;
   const Announcement = state.room.announcement;
-  const roleType = state?.loginUserInfo.ext;
+  const roleType = state?.propsData.roleType;
   // 在propsData 取值
-  const isTeacher = roleType && JSON.parse(roleType).role === ROLE.teacher.id;
-  const isAssistant = roleType && JSON.parse(roleType).role === ROLE.assistant.id;
+  const isTeacher = roleType === ROLE.teacher.id;
+  const isAssistant = roleType === ROLE.assistant.id;
 
   const callback = () => {
     hideModal();

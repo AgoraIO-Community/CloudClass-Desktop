@@ -44,7 +44,7 @@ const App = function (props) {
   i18n.addResourceBundle('en', 'translation', im_US);
 
   useEffect(() => {
-    const isPropsValue = store.getState()?.PropsData || {};
+    const isPropsValue = store.getState()?.propsData || {};
     if (Object.keys(isPropsValue).length === 0) {
       let im_Data = props.pluginStore;
       let im_Data_Props = _.get(im_Data, 'props', '');
@@ -130,6 +130,19 @@ const App = function (props) {
           }
         }
       },
+      onPictureMessage: (message) => {
+        console.log('onPictureMessage>>>', message);
+        if (new_IM_Data.chatroomId === message.to) {
+          const showChat = store.getState().showChat;
+          const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
+          store.dispatch(showRedNotification(isShowRed));
+          store.dispatch(messageAction(message, { isHistory: false }));
+          if (!showChat) {
+            store.dispatch(showRedNotification(true));
+          }
+        }
+      },
+
       onCmdMessage: (message) => {
         console.log('onCmdMessaeg>>>', message);
         if (new_IM_Data.chatroomId === message.to) {

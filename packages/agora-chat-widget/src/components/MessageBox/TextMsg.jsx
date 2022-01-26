@@ -21,7 +21,7 @@ export const TextMsg = ({ item }) => {
   const msgData = item?.msg || item?.data;
   const useAvatarUrl = item?.ext.avatarUrl;
   const userNickName = item?.ext.nickName;
-  const loginNickName = state?.loginUserInfo.nickname;
+  const loginNickName = state?.propsData.userName;
   const isTeacher =
     state.propsData.roleType === ROLE.teacher.id || state.propsData.roleType === ROLE.assistant.id;
 

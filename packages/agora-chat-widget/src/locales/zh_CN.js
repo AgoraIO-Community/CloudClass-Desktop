@@ -44,6 +44,10 @@ const im_CN = {
     delete_content: '确认删除此公告？',
     you: '您',
     mute_by_system: '您不能发言',
+    get_room_info: '获取聊天室详情失败',
+    get_room_announcement: '获取聊天室公告失败',
+    update_room_announcement: '修改聊天室公告失败',
+    uploading_picture: '上传图片失败',
   },
 };
 export default im_CN;
