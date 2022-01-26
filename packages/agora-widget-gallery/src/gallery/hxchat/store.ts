@@ -24,7 +24,7 @@ export class WidgetChatUIStore {
   isFullSize: boolean = false;
 
   @observable
-  showChat: boolean = true;
+  showChat: boolean = false;
 
   constructor(coreStore: EduClassroomUIStore) {
     runInAction(() => {
