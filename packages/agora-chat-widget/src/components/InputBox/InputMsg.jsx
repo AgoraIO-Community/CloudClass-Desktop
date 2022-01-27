@@ -14,6 +14,7 @@ import imgIcon from '../../themes/img/img.png';
 import screenshotIcon from '../../themes/img/screenshot.png';
 import ScreenshotMenu from './Screenshot';
 import { sendImgMsg } from '../../api/message';
+import isElctronPlatform from '../../utils/platform';
 
 import { Emoji } from '../../utils/emoji';
 import './index.css';
@@ -49,7 +50,7 @@ export const InputMsg = ({ allMutePermission }) => {
   const isAllMute = state?.room.allMute;
   const isShowEmoji = state?.showEmoji;
   const configUIVisible = state?.configUIVisible;
-  let isElectron = window.navigator.userAgent.indexOf('Electron') !== -1;
+  let isElectron = isElctronPlatform();
 
   // 管理输入框内容
   const [content, setContent] = useState('');
@@ -197,21 +198,23 @@ export const InputMsg = ({ allMutePermission }) => {
                 <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
               </Popover>
             )}
-            <div onClick={updateImage} className="chat-tool-item">
-              <img src={imgIcon} alt="" className="emoji-icon" />
-              <input
-                id="uploadImage"
-                onChange={() => {
-                  sendImgMsg(couterRef);
-                }}
-                type="file"
-                ref={couterRef}
-                style={{
-                  display: 'none',
-                }}
-              />
-            </div>
-            {isElectron && (
+            {configUIVisible.imgIcon && (
+              <div onClick={updateImage} className="chat-tool-item">
+                <img src={imgIcon} alt="" className="emoji-icon" />
+                <input
+                  id="uploadImage"
+                  onChange={() => {
+                    sendImgMsg(couterRef);
+                  }}
+                  type="file"
+                  ref={couterRef}
+                  style={{
+                    display: 'none',
+                  }}
+                />
+              </div>
+            )}
+            {configUIVisible.screenshotIcon && isElectron && (
               <Popover content={<ScreenshotMenu couterRef={couterRef} />} className="emoji-modal">
                 <img src={screenshotIcon} className="emoji-icon" alt="" />
               </Popover>

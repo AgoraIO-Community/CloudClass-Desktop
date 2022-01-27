@@ -48,6 +48,8 @@ const enUS = {
     get_room_announcement: 'Failed to get the chat room announcement',
     update_room_announcement: 'Failed to modify the chat room announcement',
     uploading_picture: 'Uploading picture failed',
+    screenshots: 'Screenshots',
+    hide_classroom_page_screenshots: 'Hide classroom page screenshot',
   },
 };
 

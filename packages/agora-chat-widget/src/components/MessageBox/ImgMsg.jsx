@@ -31,50 +31,42 @@ export const ImgMsg = ({ item }) => {
 
   return (
     <div>
-      {sender && (
-        <div>
+      <div>
+        {sender ? (
           <div className="msg-user-me">
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
             <span className="msg-from-name">{userNickName}</span>
             {<img src={useAvatarUrl} className="msg-avatar" alt="" />}
           </div>
-          <div className="msg-border">
-            <div style={{ margin: '8px' }} onClick={() => showMaximumPicture(imgUrl)}>
-              <div
-                style={{
-                  height: isImgStyle ? '160px' : '100px',
-                  width: isImgStyle ? '100px' : '160px',
-                  backgroundImage: `url(${imgUrl})`,
-                }}
-                alt=""></div>
-            </div>
-          </div>
-        </div>
-      )}
-      {!sender && (
-        <div>
+        ) : (
           <div className="msg-user-other">
             {<img src={useAvatarUrl} className="msg-avatar" alt="" />}
             <span className="msg-from-name">{userNickName}</span>
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
           </div>
+        )}
+        <div className={sender ? 'msg-border' : ''}>
           <div style={{ margin: '8px' }} onClick={() => showMaximumPicture(imgUrl)}>
             <div
               style={{
                 height: isImgStyle ? '160px' : '100px',
                 width: isImgStyle ? '100px' : '160px',
                 backgroundImage: `url(${imgUrl})`,
-              }}></div>
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+              }}
+              alt=""></div>
           </div>
         </div>
-      )}
+      </div>
       <Modal
         onCancel={() => setMaxImg(false)}
         visible={maxImg}
         footer={null}
-        width={imgWidth > 960 ? imgWidth / 2 : imgWidth}
+        width={imgWidth}
         bodyStyle={{ padding: '0' }}
         className="max-img">
         <img src={maImgUrl} style={{ width: '100%', height: '100%' }} alt="" />

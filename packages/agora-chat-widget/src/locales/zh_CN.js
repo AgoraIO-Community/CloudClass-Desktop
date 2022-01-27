@@ -48,6 +48,8 @@ const im_CN = {
     get_room_announcement: '获取聊天室公告失败',
     update_room_announcement: '修改聊天室公告失败',
     uploading_picture: '上传图片失败',
+    screenshots: '截图',
+    hide_classroom_page_screenshots: '隐藏教室页面截图',
   },
 };
 export default im_CN;
