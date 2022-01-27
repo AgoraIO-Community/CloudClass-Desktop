@@ -121,7 +121,11 @@ export class PluginStore {
     commonState?: number;
   }) => {
     let roomProperties: any = {};
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.localUserInfo.roleType,
+      )
+    ) {
       ['start', 'end'].includes(state || '') && (roomProperties['state'] = state);
       canChange && (roomProperties['canChange'] = canChange);
       mulChoice && (roomProperties['mulChoice'] = mulChoice);
@@ -227,7 +231,11 @@ export class PluginStore {
 
   @action
   onSubClick = async (clear: boolean = false) => {
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.localUserInfo.roleType,
+      )
+    ) {
       if (clear) {
         this.timehandle && clearInterval(this.timehandle);
         this.timehandle = null;
@@ -285,7 +293,11 @@ export class PluginStore {
   @action
   onReceivedProps(properties: any, cause: any) {
     this.context.properties = properties;
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.localUserInfo.roleType,
+      )
+    ) {
       if (properties.state === 'start' || properties.state === 'end') {
         this.title = '';
         this.answer = properties.items;
@@ -457,7 +469,11 @@ export class PluginStore {
 
   @action
   updateGlobalContext(state: any) {
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.localUserInfo.roleType,
+      )
+    ) {
       // this.globalContext = state
       if (this.status !== 'config') {
         this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });
@@ -471,7 +487,11 @@ export class PluginStore {
       return;
     }
 
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.localUserInfo.roleType,
+      )
+    ) {
       this.userList = userList;
       if (this.status !== 'config' && this.status !== 'end') {
         this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });

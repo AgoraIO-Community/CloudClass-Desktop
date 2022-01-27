@@ -292,25 +292,30 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   get cabinetItems(): CabinetItem[] {
     const { extApps } = this.classroomStore.extAppStore;
+    const { userRole } = this.classroomStore.roomStore;
 
-    const apps = Object.values(extApps)
-      .map(
-        ({ appIdentifier, icon, appName }) =>
-          ({
-            id: appIdentifier,
-            iconType: typeof icon === 'string' ? icon : '',
-            icon: typeof icon === 'string' ? null : icon,
-            name: appName,
-          } as CabinetItem),
-      )
-      .concat([
-        {
-          id: 'screenShare',
-          iconType: 'share-screen',
-          name: transI18n('scaffold.screen_share'),
-        },
-      ])
-      .filter((it) => this.allowedCabinetItems.includes(it.id));
+    const isTeacher = userRole === EduRoleTypeEnum.teacher;
+
+    let apps = Object.values(extApps).map(
+      ({ appIdentifier, icon, appName }) =>
+        ({
+          id: appIdentifier,
+          iconType: typeof icon === 'string' ? icon : '',
+          icon: typeof icon === 'string' ? null : icon,
+          name: appName,
+        } as CabinetItem),
+    );
+
+    // assitant dont need screen share
+    if (isTeacher) {
+      apps.push({
+        id: 'screenShare',
+        iconType: 'share-screen',
+        name: transI18n('scaffold.screen_share'),
+      });
+    }
+
+    apps = apps.filter((it) => this.allowedCabinetItems.includes(it.id));
 
     return apps;
   }
@@ -321,14 +326,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed get tools(): ToolbarItem[] {
     const { sessionInfo } = EduClassroomConfig.shared;
-    const assistantTools = this.teacherTools.filter((tools) => {
-      return tools.category !== ToolbarItemCategory.Cabinet;
-    });
 
-    return sessionInfo.role === EduRoleTypeEnum.teacher
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(sessionInfo.role)
       ? this.teacherTools
-      : sessionInfo.role === EduRoleTypeEnum.assistant
-      ? assistantTools
       : this.studentTools;
   }
 

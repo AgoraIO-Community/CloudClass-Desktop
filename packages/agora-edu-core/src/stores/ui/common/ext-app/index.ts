@@ -18,7 +18,10 @@ export class ExtAppUIStore extends EduUIStoreBase {
     const { userRole, userUuid } = this.classroomStore.roomStore;
     const { grantUsers } = this.classroomStore.boardStore;
 
-    return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
+    return (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole) ||
+      grantUsers.has(userUuid)
+    );
   }
 
   /**
@@ -29,7 +32,10 @@ export class ExtAppUIStore extends EduUIStoreBase {
     const { userRole, userUuid } = this.classroomStore.roomStore;
     const { grantUsers } = this.classroomStore.boardStore;
 
-    return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
+    return (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole) ||
+      grantUsers.has(userUuid)
+    );
   }
 
   /**
@@ -161,10 +167,6 @@ export class ExtAppUIStore extends EduUIStoreBase {
     const { extAppsCommon, extAppProperties, userRole } = this.classroomStore.roomStore;
     const { activeAppIds } = this.classroomStore.extAppStore;
 
-    if (userRole === EduRoleTypeEnum.assistant) {
-      return false;
-    }
-
     const localActive = activeAppIds.includes(extApp.appIdentifier);
 
     const state = extAppProperties[escapeExtAppIdentifier(extApp.appIdentifier)] || {};
@@ -174,7 +176,7 @@ export class ExtAppUIStore extends EduUIStoreBase {
     const remoteActive = extAppCommon && extAppCommon.state === 1;
 
     if (extApp.appIdentifier === 'io.agora.countdown') {
-      if (userRole === EduRoleTypeEnum.teacher) {
+      if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(userRole)) {
         return localActive || remoteActive;
       }
       // student

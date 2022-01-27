@@ -281,7 +281,11 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
 
   async extAppWillUnload(): Promise<boolean> {
     try {
-      if (this.store?.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+      if (
+        [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+          this.store?.context.localUserInfo.roleType!,
+        )
+      ) {
         await this.store?.onSubClick(true);
       }
       return true;

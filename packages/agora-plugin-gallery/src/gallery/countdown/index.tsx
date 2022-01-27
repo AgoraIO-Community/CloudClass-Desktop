@@ -25,7 +25,9 @@ const App = observer(() => {
         [`countdown-modal`]: 1,
         [`countdown-modal-hover`]:
           !pluginStore.showSetting &&
-          pluginStore.context.localUserInfo.roleType === EduRoleTypeEnum.teacher,
+          [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+            pluginStore.context.localUserInfo.roleType,
+          ),
       })}>
       <div className="restart-wrap">
         <Button
@@ -131,7 +133,6 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     this.store = AgoraExtAppCountDown.store;
     this.store.resetContextAndHandle(ctx, handle);
 
-    this.height = this.store.showSetting ? 168 : 55;
     ReactDOM.render(
       <I18nProvider language={this.language}>
         <Provider store={this.store}>
@@ -142,15 +143,9 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
     );
   }
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
-    this.height = this.store?.showSetting ? 168 : 55;
     this.store?.onReceivedProps(properties, cause);
   }
   async extAppWillUnload(): Promise<boolean> {
-    // TODO: 后续应该讲UI的逻辑抽离出来，ext app不应该和UI逻辑强耦合
-
-    if (this.store!.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-      this.height = 168;
-    }
     await this.store!.changeRoomProperties({
       state: '0',
       startTime: '0',
