@@ -31,6 +31,8 @@ let defaultState = {
     emoji: true, // 默认emoji 为 true
     inputBox: 'multiple', // 输入UI
     btnSend: true, // 是否暂时send按钮
+    imgIcon: true, // 是否展示图片图标
+    screenshotIcon: true, // 是否展示截图图标
   },
 };
 const reducer = (state = defaultState, action) => {

@@ -10,6 +10,12 @@ import { messageAction, showEmojiAction } from '../../redux/actions/messageActio
 import store from '../../redux/store';
 // import emojiIcon from '../../themes/img/emoji.png';
 import emojiIcon from '../../themes/svg/emoji.svg';
+import imgIcon from '../../themes/img/img.png';
+import screenshotIcon from '../../themes/img/screenshot.png';
+import ScreenshotMenu from './Screenshot';
+import { sendImgMsg } from '../../api/message';
+import isElctronPlatform from '../../utils/platform';
+
 import { Emoji } from '../../utils/emoji';
 import './index.css';
 
@@ -19,7 +25,12 @@ export const ShowEomji = ({ getEmoji }) => {
     <div className="emoji-container">
       {Emoji.map((emoji, key) => {
         return (
-          <span className="emoji-content" key={key} onClick={getEmoji}>
+          <span
+            className="emoji-content"
+            key={key}
+            onClick={(e) => {
+              getEmoji(e);
+            }}>
             {emoji}
           </span>
         );
@@ -32,13 +43,14 @@ export const InputMsg = ({ allMutePermission }) => {
   const state = useSelector((state) => state);
   const loginUser = state?.loginUser;
   const roomId = state?.room.info.id;
-  const roleType = state?.loginUserInfo.ext;
+  const roleType = state?.propsData.roleType;
   const roomUuid = state?.propsData.roomUuid;
+  const userNickName = state?.propsData.userName;
   const userAvatarUrl = state?.loginUserInfo.avatarurl;
-  const userNickName = state?.loginUserInfo.nickname;
   const isAllMute = state?.room.allMute;
   const isShowEmoji = state?.showEmoji;
   const configUIVisible = state?.configUIVisible;
+  let isElectron = isElctronPlatform();
 
   // 管理输入框内容
   const [content, setContent] = useState('');
@@ -86,6 +98,12 @@ export const InputMsg = ({ allMutePermission }) => {
     setContent(msgContent);
   };
 
+  const couterRef = useRef();
+  const updateImage = () => {
+    couterRef.current.focus();
+    couterRef.current.click();
+  };
+
   // 发送消息
   const sendTextMessage = () => (e) => {
     e.preventDefault();
@@ -104,7 +122,7 @@ export const InputMsg = ({ allMutePermission }) => {
       ext: {
         msgtype: MSG_TYPE.common, // 消息类型
         roomUuid: roomUuid,
-        role: JSON.parse(roleType).role,
+        role: roleType,
         avatarUrl: userAvatarUrl || '',
         nickName: userNickName,
       }, // 扩展消息
@@ -170,15 +188,38 @@ export const InputMsg = ({ allMutePermission }) => {
     <>
       <div>
         <div className="chat-icon">
-          {configUIVisible.emoji && (
-            <Popover
-              content={<ShowEomji getEmoji={getEmoji} />}
-              visible={isShowEmoji}
-              trigger="click"
-              onVisibleChange={handleEomijVisibleChange}>
-              <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
-            </Popover>
-          )}
+          <div style={{ display: 'flex' }}>
+            {configUIVisible.emoji && (
+              <Popover
+                content={<ShowEomji getEmoji={getEmoji} />}
+                visible={isShowEmoji}
+                trigger="click"
+                onVisibleChange={handleEomijVisibleChange}>
+                <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
+              </Popover>
+            )}
+            {configUIVisible.imgIcon && (
+              <div onClick={updateImage} className="chat-tool-item">
+                <img src={imgIcon} alt="" className="emoji-icon" />
+                <input
+                  id="uploadImage"
+                  onChange={() => {
+                    sendImgMsg(couterRef);
+                  }}
+                  type="file"
+                  ref={couterRef}
+                  style={{
+                    display: 'none',
+                  }}
+                />
+              </div>
+            )}
+            {configUIVisible.screenshotIcon && isElectron && (
+              <Popover content={<ScreenshotMenu couterRef={couterRef} />} className="emoji-modal">
+                <img src={screenshotIcon} className="emoji-icon" alt="" />
+              </Popover>
+            )}
+          </div>
           {!configUIVisible.allMute
             ? null
             : allMutePermission && (
