@@ -268,6 +268,9 @@ export const en = {
     student_interactive_apply: `"{reason}" want to co-video`,
   },
   scaffold: {
+    clear: 'Clear',
+    undo: 'Undo',
+    redo: 'Redo',
     search: 'Search',
     student_list: 'Student List',
     pencil: 'Pencil',

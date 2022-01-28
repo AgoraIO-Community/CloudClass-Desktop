@@ -259,6 +259,9 @@ export const zh = {
     student_interactive_apply: `"{reason}"想和你连麦`,
   },
   scaffold: {
+    clear: '清屏',
+    undo: '撤销上一步操作',
+    redo: '重做',
     search: '搜索',
     student_list: '学生列表',
     pencil: '画笔',

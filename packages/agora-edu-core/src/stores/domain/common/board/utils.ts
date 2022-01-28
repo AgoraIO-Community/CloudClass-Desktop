@@ -26,6 +26,10 @@ export const convertAGToolToWhiteTool = (tool: WhiteboardTool): ApplianceNames |
       return ApplianceNames.clicker;
     case WhiteboardTool.laserPointer:
       return ApplianceNames.laserPointer;
+    case WhiteboardTool.arrow:
+      return ApplianceNames.arrow;
+    case WhiteboardTool.shape:
+      return ApplianceNames.shape;
     default:
       return undefined;
   }

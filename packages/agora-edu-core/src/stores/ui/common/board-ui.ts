@@ -22,6 +22,16 @@ export class BoardUIStore extends EduUIStoreBase {
   onInstall() {}
 
   // computed
+  @computed
+  get undoSteps() {
+    return this.classroomStore.boardStore.undoSteps;
+  }
+
+  @computed
+  get redoSteps() {
+    return this.classroomStore.boardStore.redoSteps;
+  }
+
   /**
    * 白板准备好挂载到 DOM
    * @returns

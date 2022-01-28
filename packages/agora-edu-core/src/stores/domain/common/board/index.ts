@@ -54,6 +54,8 @@ export class BoardStore extends EduStoreBase {
   @observable ready: boolean = false;
   @observable grantUsers: Set<string> = new Set<string>();
   @observable configReady = false;
+  @observable undoSteps = 0;
+  @observable redoSteps = 0;
 
   // ---------- computeds --------
   @computed
@@ -115,6 +117,12 @@ export class BoardStore extends EduStoreBase {
           this.grantUsers = new Set(globalState.grantUsers);
         });
       }
+
+      /**
+       *  https://docs.agora.io/cn/whiteboard/API%20Reference/whiteboard_web/interfaces/room.html#disableserialization
+       *  undo,redo需要设置false才能生效
+       */
+      room.disableSerialization = false;
     } catch (e) {
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_BOARD_JOIN_FAILED,
@@ -204,9 +212,24 @@ export class BoardStore extends EduStoreBase {
         room.putScenes('/', [{ name: `${newIndex}` }], newIndex);
         // room.setSceneIndex(newIndex);
         this.windowManager.setMainViewSceneIndex(newIndex);
-
-        return;
+        break;
       }
+
+      case WhiteboardTool.clear: {
+        this.writableRoom.cleanCurrentScene();
+        break;
+      }
+
+      case WhiteboardTool.undo: {
+        this.writableRoom.undo();
+        break;
+      }
+
+      case WhiteboardTool.redo: {
+        this.writableRoom.redo();
+        break;
+      }
+
       case WhiteboardTool.pen:
       case WhiteboardTool.rectangle:
       case WhiteboardTool.ellipse:
@@ -428,6 +451,16 @@ export class BoardStore extends EduStoreBase {
     },
     onCatchErrorWhenAppendFrame: (userId: number, error: Error) => {},
     onCatchErrorWhenRender: (error: Error) => {},
+    onCanUndoStepsUpdate: (steps: number) => {
+      runInAction(() => {
+        this.undoSteps = steps;
+      });
+    },
+    onCanRedoStepsUpdate: (steps: number) => {
+      runInAction(() => {
+        this.redoSteps = steps;
+      });
+    },
   };
 
   protected get room(): Room {

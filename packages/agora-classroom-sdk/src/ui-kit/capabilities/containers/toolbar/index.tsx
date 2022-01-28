@@ -9,7 +9,7 @@ export const WhiteboardToolbar = observer(({ children }: any) => {
   const { toolbarUIStore } = useStore();
   const { activeTool, activeMap, tools, setTool } = toolbarUIStore;
 
-  let mappedTools = tools.map((tool) => {
+  const mappedTools = tools.map((tool) => {
     if (tool.category === ToolbarItemCategory.PenPicker) {
       return {
         ...tool,

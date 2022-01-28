@@ -287,3 +287,19 @@
   background: #ececf1;
   margin: 12px 0 22px;
 }
+
+.tool.undo-disabled,
+.tool.redo-disabled,
+.tool.undo-disabled path,
+.tool.redo-disabled path,
+.tool.undo-disabled:hover path,
+.tool.redo-disabled:hover path {
+  fill: rgb(226, 226, 238);
+}
+
+.tool.undo path,
+.tool.redo path,
+.tool.undo:hover path,
+.tool.redo:hover path {
+  fill: rgb(123, 136, 160);
+}
