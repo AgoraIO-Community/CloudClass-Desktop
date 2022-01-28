@@ -104,7 +104,7 @@ export const en = {
   },
   signal: {
     delay: 'Delay',
-    lose: 'Lose',
+    lose: 'Packet Loss',
     status: 'Status',
     CPU: 'CPU',
     receive: 'Receive',
@@ -329,6 +329,7 @@ export const en = {
     whitening: 'Whitening',
     buffing: 'Buffing',
     ruddy: 'Ruddy',
+    default: 'Default',
   },
   tool: {
     board_name: 'Whiteboard',
@@ -441,6 +442,7 @@ export const en = {
     'header-left-title': 'Agora Flexible Classroom',
     about: 'About',
     'input-error-msg': 'Between 6 and 50 characters,letter or number only',
+    'input-username-error-msg': 'Between 3 and 25 characters,letter or number only',
     network_error: 'Network error, please try again later',
     'recordation-search': 'Recordation',
     'recordation-tip': 'Recordations only within 1 hour',

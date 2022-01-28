@@ -8,6 +8,8 @@ export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   appId: string;
   sdkDomain: string;
   region: EduRegion;
+  userRole: string;
+  curScenario: string;
 };
 const regionKey = `home_store_demo_launch_region`;
 const launchKey = `home_store_demo_launch_options`;
@@ -61,6 +63,10 @@ export class HomeStore {
     }
     GlobalStorage.save(regionKey, toJS(this.region));
     GlobalStorage.save(launchKey, this.launchOption);
+  }
+
+  get launchConfig() {
+    return GlobalStorage.read(launchKey) || {};
   }
 
   clear() {

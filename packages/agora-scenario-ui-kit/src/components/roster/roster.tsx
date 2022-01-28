@@ -70,7 +70,7 @@ export const Roster: FC<RosterProps> = ({
         default={defaultPos}>
         <div
           className="roster-wrap"
-          style={{ width: width || modalSize.width, height: modalSize.height }}>
+          style={{ minWidth: width || modalSize.width, height: modalSize.height }}>
           {/* close icon */}
           <div className="btn-pin">
             <SvgImg

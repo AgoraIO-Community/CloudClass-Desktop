@@ -317,6 +317,7 @@ export const zh = {
     whitening: '美白',
     buffing: '磨皮',
     ruddy: '红润',
+    default: '默认',
   },
   pretest: {
     title: '设备检测',
@@ -431,6 +432,7 @@ export const zh = {
     'header-left-title': '声网灵动课堂',
     about: '关于',
     'input-error-msg': '只能输入6-50位字符(字母、数字)',
+    'input-username-error-msg': '只能输入3-25位字符(文字、字母、数字、空格)',
     network_error: '当前网络异常，请稍后再试',
     'recordation-search': '课程回放',
     'recordation-tip': '只能查询1小时内的回放',
