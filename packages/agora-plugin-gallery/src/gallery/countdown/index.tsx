@@ -8,6 +8,7 @@ import {
   AgoraExtAppContext,
   AgoraExtAppHandle,
   EduRoleTypeEnum,
+  AgoraExtAppEventHandler,
 } from 'agora-edu-core';
 import { Button, Countdown, Input, transI18n, I18nProvider, changeLanguage, Icon } from '~ui-kit';
 import classnames from 'classnames';
@@ -112,7 +113,7 @@ const App = observer(() => {
   );
 });
 
-export class AgoraExtAppCountDown implements IAgoraExtApp {
+export class AgoraExtAppCountDown implements IAgoraExtApp, AgoraExtAppEventHandler {
   // should be final
   static store = new PluginStore();
   appIdentifier = 'io.agora.countdown';
@@ -122,15 +123,19 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
   height = 168; // 开始倒计时后高度为 55
   minWidth = 258;
   minHeight = 168;
-  store?: PluginStore;
+  store: PluginStore;
+
+  eventHandler = this;
+  _el?: Element;
 
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language);
+    this.store = AgoraExtAppCountDown.store;
     this.appName = transI18n('cabinet.countdown.appName');
   }
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
-    this.store = AgoraExtAppCountDown.store;
+    this._el = dom;
     this.store.resetContextAndHandle(ctx, handle);
 
     ReactDOM.render(
@@ -142,17 +147,19 @@ export class AgoraExtAppCountDown implements IAgoraExtApp {
       dom,
     );
   }
+
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
-    this.store?.onReceivedProps(properties, cause);
+    this.store.onReceivedProps(properties, cause);
   }
+
+  onClose() {
+    this.store.clearProps();
+  }
+
   async extAppWillUnload(): Promise<boolean> {
-    await this.store!.changeRoomProperties({
-      state: '0',
-      startTime: '0',
-      pauseTime: '0',
-      duration: '0',
-      commonState: 0,
-    });
+    if (this._el) {
+      ReactDOM.unmountComponentAtNode(this._el);
+    }
     return Promise.resolve(true);
   }
 }

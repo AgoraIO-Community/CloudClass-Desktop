@@ -1,6 +1,5 @@
 import { bound } from 'agora-rte-sdk';
 import { EduClassroomStore } from '..';
-import { Track } from '../..';
 import { TrackData, TrackState } from '../room/type';
 import { TrackAdapter } from '../track/type';
 
@@ -13,7 +12,7 @@ export class ExtAppTrackAdapter implements TrackAdapter {
   }
   @bound
   deleteTrackState(trackId: string) {
-    // this._classroomStore.roomStore.deleteExtappTrackState(trackId);
+    this._classroomStore.extAppStore.deleteExtappTrackState(trackId);
   }
 
   get trackState(): TrackState {

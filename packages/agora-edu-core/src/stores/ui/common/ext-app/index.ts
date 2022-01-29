@@ -1,7 +1,7 @@
 import { computed, reaction, toJS } from 'mobx';
 import { AgoraRteEngineConfig, bound, Lodash, Log, RteLanguage } from 'agora-rte-sdk';
 import { EduUIStoreBase } from '../base';
-import { ClassroomState, EduClassroomConfig, EduRoleTypeEnum, IAgoraExtApp } from '../../../..';
+import { EduClassroomConfig, EduRoleTypeEnum, IAgoraExtApp } from '../../../..';
 import { escapeExtAppIdentifier } from '../../../domain/common/room/command-handler';
 import { dependencies } from './dependencies';
 
@@ -130,13 +130,13 @@ export class ExtAppUIStore extends EduUIStoreBase {
       };
 
       extApp.extAppDidLoad(dom, context, handlers);
-    } else {
-      const rollback = () => {
-        this.launchApp(extApp.appIdentifier);
-      };
-      this.shutdownApp(extApp.appIdentifier);
-      extApp.extAppWillUnload().catch(rollback);
     }
+
+    // const rollback = () => {
+    //   this.launchApp(extApp.appIdentifier);
+    // };
+    // this.shutdownApp(extApp.appIdentifier);
+    // extApp.extAppWillUnload().catch(rollback);
   }
 
   /**

@@ -69,6 +69,7 @@ export class PluginStore {
     const duration = parseInt(sDuration) * 1000;
     if (state === '1') {
       this.setResult(startTime + duration);
+      this.setShowSetting(false);
       this.setPlay(true);
     } else if (state === '2') {
       this.setPlay(false);
@@ -94,5 +95,12 @@ export class PluginStore {
   @action
   setPlay(play: boolean) {
     this.play = play;
+  }
+
+  @action
+  clearProps() {
+    this.changeRoomProperties({
+      commonState: 0,
+    });
   }
 }

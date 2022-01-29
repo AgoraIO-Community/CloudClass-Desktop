@@ -5,6 +5,8 @@ import {
   AgoraExtAppUserInfo,
   EduRoleTypeEnum,
   EduRole2RteRole,
+  AgoraExtAppController,
+  EduClassroomConfig,
 } from 'agora-edu-core';
 import _ from 'lodash';
 import dayjs from 'dayjs';
@@ -37,6 +39,7 @@ export const c2h = (count: number) => {
 export class PluginStore {
   context!: AgoraExtAppContext;
   handle!: AgoraExtAppHandle;
+  controller!: AgoraExtAppController;
 
   @observable
   height?: number = 283;
@@ -132,7 +135,11 @@ export class PluginStore {
     commonState?: number;
   }) => {
     let roomProperties: any = {};
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.localUserInfo.roleType,
+      )
+    ) {
       ['start', 'end'].includes(state || '') && (roomProperties['state'] = state);
       canChange && (roomProperties['canChange'] = canChange);
       typeof mulChoice !== 'undefined' && (roomProperties['mulChoice'] = mulChoice);
@@ -172,14 +179,6 @@ export class PluginStore {
               roomProperties['studentNames'].push(user.userName);
             }
           });
-
-          // if (JSON.stringify(students.slice().sort()) !== JSON.stringify(roomProperties['students'].slice().sort())) {
-          //     // this.context.userList = this.globalContext.rosterUserList
-          //     console.log(roomProperties);
-
-          // }else{
-          //     return;
-          // }
         } else {
           return;
         }
@@ -238,37 +237,41 @@ export class PluginStore {
     }
   };
 
-  onSubClick = async (clear: boolean = false) => {
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-      if (clear) {
-        await this.changeRoomProperties({ state: 'clear' });
+  @action
+  clearProps() {
+    this.changeRoomProperties({ state: 'clear' });
+  }
+
+  onSubClick = async () => {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.localUserInfo.roleType,
+      )
+    ) {
+      if (this.status === 'config') {
+        let sels: string[] = [];
+        this.selAnswer?.map((sel: string) => {
+          if (this.answer?.includes(sel)) {
+            sels.push(sel);
+          }
+        });
+        await this.changeRoomProperties({
+          state: 'start',
+          startTime: Math.floor(Date.now() / 1000).toString(),
+          title: this.title,
+          items: this.answer,
+          mulChoice: this.mulChoice,
+          answer: [],
+          commonState: 1,
+        });
+      } else if (this.status === 'info') {
+        await this.changeRoomProperties({
+          state: 'end',
+          endTime: Math.floor(Date.now() / 1000).toString(),
+          commonState: 1,
+        });
       } else {
-        if (this.status === 'config') {
-          let sels: string[] = [];
-          this.selAnswer?.map((sel: string) => {
-            if (this.answer?.includes(sel)) {
-              sels.push(sel);
-            }
-          });
-          //this.changeRoomProperties({ state: 'clearStudent' })//删除属性会引起插件被关闭
-          await this.changeRoomProperties({
-            state: 'start',
-            startTime: Math.floor(Date.now() / 1000).toString(),
-            title: this.title,
-            items: this.answer,
-            mulChoice: this.mulChoice,
-            answer: [],
-            commonState: 1,
-          });
-        } else if (this.status === 'info') {
-          await this.changeRoomProperties({
-            state: 'end',
-            endTime: Math.floor(Date.now() / 1000).toString(),
-            commonState: 1,
-          });
-        } else {
-          await this.changeRoomProperties({ state: 'clear' });
-        }
+        await this.changeRoomProperties({ state: 'clear' });
       }
     } else {
       if (this.status === 'answer') {
@@ -283,8 +286,11 @@ export class PluginStore {
 
   @action
   onReceivedProps(properties: any, cause: any) {
-    this.context.properties = properties;
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (this.context) {
+      this.context.properties = properties;
+    }
+    const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
+    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
       if (properties.state === 'start' || properties.state === 'end') {
         this.title = properties.title;
         this.answer = properties.items;
@@ -328,19 +334,14 @@ export class PluginStore {
         this.ui = ['sels', 'subs'];
       }
     } else {
-      if (
-        properties.state === 'start' &&
-        !getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])
-      ) {
+      if (properties.state === 'start' && !getStudentInfo(properties['student' + userUuid])) {
         this.title = properties.title;
         this.answer = properties.items;
         this.mulChoice = properties.mulChoice;
         this.status = 'answer';
         this.height =
           c2h(properties.title?.length || 0) + (this.answer?.length || 0) * 50 - 10 + 116;
-        this.buttonName = !getStudentInfo(
-          properties['student' + this.context.localUserInfo.userUuid],
-        )
+        this.buttonName = !getStudentInfo(properties['student' + userUuid])
           ? 'vote.submit'
           : 'vote.change';
         this.ui = ['sels', 'subs'];
@@ -348,8 +349,7 @@ export class PluginStore {
         this.title = properties.title;
         this.answer = properties.items;
         this.mulChoice = properties.mulChoice;
-        this.selAnswer =
-          getStudentInfo(properties['student' + this.context.localUserInfo.userUuid])?.answer || [];
+        this.selAnswer = getStudentInfo(properties['student' + userUuid])?.answer || [];
         this.status = 'info';
         this.height =
           c2h(properties.title?.length || 0) + (this.answer?.length || 0) * 50 - 10 + 20;
@@ -425,22 +425,16 @@ export class PluginStore {
   }
 
   @action
-  updateGlobalContext(state: any) {
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-      // this.globalContext = state
-      if (this.status !== 'config') {
-        this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });
-      }
-    }
-  }
-
-  @action
   updateStudents(userList: AgoraExtAppUserInfo[]) {
     if (_.isEqual(userList, this.userList)) {
       return;
     }
 
-    if (this.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        EduClassroomConfig.shared.sessionInfo.role,
+      )
+    ) {
       this.userList = userList;
       if (this.status !== 'config' && this.status !== 'end') {
         this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });

@@ -1,5 +1,5 @@
 import 'promise-polyfill/src/polyfill';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { observable, observe, runInAction } from 'mobx';
 import { PluginStore } from './store';
@@ -12,6 +12,7 @@ import {
   AgoraExtAppEventHandler,
   AgoraExtAppUserInfo,
   EduRoleTypeEnum,
+  AgoraExtAppController,
 } from 'agora-edu-core';
 
 import {
@@ -231,13 +232,14 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
   height = 150; // 超过4个选项高度为220
   minWidth = 390;
   minHeight = 150; // 超过4个选项高度为220
-  store?: PluginStore;
+  store: PluginStore;
   customHeader = (<Clock app={this} />);
   clockWatchProps = observable({
     currentTime: '',
   });
 
   eventHandler = this;
+  _el?: Element;
 
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language);
@@ -245,12 +247,21 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
     this.appName = transI18n('cabinet.answer.appName');
   }
 
+  setController(controller: AgoraExtAppController) {
+    this.store.controller = controller;
+  }
+
+  onClose() {
+    this.store.clearProps();
+  }
+
   onUserListChanged(userList: AgoraExtAppUserInfo[]): void {
-    this.store?.updateStudents(userList);
+    this.store.updateStudents(userList);
   }
 
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
-    this.store?.resetContextAndHandle(ctx, handle);
+    this._el = dom;
+    this.store.resetContextAndHandle(ctx, handle);
 
     ReactDOM.render(
       <I18nProvider language={this.language}>
@@ -276,21 +287,15 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
   }
 
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
-    this.store?.onReceivedProps(properties, cause);
+    this.store.onReceivedProps(properties, cause);
   }
 
   async extAppWillUnload(): Promise<boolean> {
-    try {
-      if (
-        [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-          this.store?.context.localUserInfo.roleType!,
-        )
-      ) {
-        await this.store?.onSubClick(true);
-      }
-      return true;
-    } catch (e) {
-      return false;
+    if (this._el) {
+      ReactDOM.unmountComponentAtNode(this._el);
     }
+    this.store.clearTimer();
+
+    return Promise.resolve(true);
   }
 }

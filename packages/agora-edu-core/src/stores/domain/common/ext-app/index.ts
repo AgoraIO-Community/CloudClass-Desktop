@@ -1,9 +1,9 @@
-import { action, observable, toJS } from 'mobx';
+import { action, observable, runInAction, toJS, reaction } from 'mobx';
 import { EduStoreBase } from '../base';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { IAgoraExtApp } from './type';
-import { EduClassroomConfig } from '../../../..';
-import { bound } from 'agora-rte-sdk';
+import { EduClassroomConfig, EduRoleTypeEnum } from '../../../..';
+import { bound, Log } from 'agora-rte-sdk';
 import { forEach } from 'lodash';
 import { escapeExtAppIdentifier } from '../room/command-handler';
 import { TrackData, TrackState } from '../room/type';
@@ -16,6 +16,7 @@ import { TrackData, TrackState } from '../room/type';
  *  4.当前focus的ExtApp
  *  5.ExApps实例
  */
+@Log.attach({ proxyMethods: false })
 export class ExtAppStore extends EduStoreBase {
   private _extAppInstances: Record<string, IAgoraExtApp> = {};
 
@@ -41,6 +42,14 @@ export class ExtAppStore extends EduStoreBase {
 
   @bound
   registerExtApp(app: IAgoraExtApp) {
+    if (app.setController) {
+      app.setController({
+        shutdown: () => {
+          this.shutdownApp(app.appIdentifier);
+        },
+      });
+    }
+
     this._extAppInstances[app.appIdentifier] = app;
   }
 
@@ -54,6 +63,12 @@ export class ExtAppStore extends EduStoreBase {
 
     if (appId === this.focusedAppId) {
       this.focusedAppId = undefined;
+    }
+
+    const onClose = this._extAppInstances[appId].eventHandler?.onClose;
+
+    if (onClose) {
+      onClose.call(this._extAppInstances[appId].eventHandler);
     }
 
     this.activeAppIds = this.activeAppIds.filter((k) => k !== appId);
@@ -79,7 +94,12 @@ export class ExtAppStore extends EduStoreBase {
         { x: 0.5, y: 0.5, real: false },
         { width, height, real: true },
       );
+
       this.activeAppIds.push(appId);
+
+      const { updateExtAppProperties } = this.classroomStore.extAppStore;
+
+      updateExtAppProperties(appId, {}, { state: 1 }, {});
     }
 
     this.focusedAppId = appId;
@@ -138,6 +158,35 @@ export class ExtAppStore extends EduStoreBase {
 
   onInstall() {
     forEach(EduClassroomConfig.shared.extApps, this.registerExtApp);
+
+    const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      this.classroomStore.roomStore.userRole,
+    );
+
+    if (isTeacherOrAssistant) {
+      reaction(
+        () => this.classroomStore.roomStore.extAppsCommon,
+        (extAppsCommon) => {
+          runInAction(() => {
+            Object.keys(extAppsCommon).forEach((key) => {
+              const appId = escapeExtAppIdentifier(key, true);
+              const commonState = extAppsCommon[key];
+
+              if (commonState.state && !this.activeAppIds.includes(appId)) {
+                this.activeAppIds.push(appId);
+
+                this.logger.info(`Ext app [${appId}] is set to active by remote`);
+              }
+              if (!commonState.state && this.activeAppIds.includes(appId)) {
+                this.activeAppIds = this.activeAppIds.filter((key) => key !== appId);
+
+                this.logger.info(`Ext app [${appId}] is set to inactive by remote`);
+              }
+            });
+          });
+        },
+      );
+    }
   }
   onDestroy() {}
 }

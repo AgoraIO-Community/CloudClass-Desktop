@@ -1,5 +1,4 @@
 import { ClassroomState } from '../../../..';
-import { EduUser } from '../user/struct';
 
 export type AgoraExtAppContext = {
   properties: any;
@@ -16,7 +15,13 @@ export type AgoraExtAppEventType =
 export interface AgoraExtAppEventHandler {
   onUserListChanged?(userList: AgoraExtAppUserInfo[]): void;
   onRoomStateChanged?(state: ClassroomState): void;
+  onClose?(): void;
 }
+
+export interface AgoraExtAppController {
+  shutdown(): void;
+}
+
 export interface IAgoraExtApp {
   language: string;
   appIdentifier: string;
@@ -31,6 +36,7 @@ export interface IAgoraExtApp {
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void;
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void;
   extAppWillUnload(): Promise<boolean>;
+  setController?(controller: AgoraExtAppController): void;
 }
 
 export type AgoraExtAppHandle = {

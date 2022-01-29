@@ -29,6 +29,7 @@ export type {
   AgoraExtAppUserInfo,
   AgoraExtAppRoomInfo,
   AgoraExtAppEventHandler,
+  AgoraExtAppController,
 } from './common/ext-app/type';
 
 export { Track } from './common/track/struct';

@@ -10,6 +10,8 @@ import {
   AgoraExtAppHandle,
   EduRoleTypeEnum,
   AgoraExtAppUserInfo,
+  AgoraExtAppEventHandler,
+  AgoraExtAppController,
 } from 'agora-edu-core';
 import {
   Button,
@@ -65,7 +67,9 @@ const App = observer(
           [`vote-language-en`]: lang === 'en',
         })}>
         {pluginStore.status !== 'config' &&
-        pluginStore.context.localUserInfo.roleType !== EduRoleTypeEnum.teacher ? (
+        ![EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+          pluginStore.context.localUserInfo.roleType,
+        ) ? (
           <span className="vote-title-tip">
             {transI18n(pluginStore.mulChoice ? 'vote.mul-sel' : 'vote.single-sel')}
           </span>
@@ -257,7 +261,7 @@ const App = observer(
   },
 );
 
-export class AgoraExtAppVote implements IAgoraExtApp {
+export class AgoraExtAppVote implements IAgoraExtApp, AgoraExtAppEventHandler {
   // should be final
   static store = new PluginStore();
   appIdentifier = 'io.agora.vote';
@@ -269,20 +273,27 @@ export class AgoraExtAppVote implements IAgoraExtApp {
   minWidth = 360;
   minHeight = 283;
 
-  store?: PluginStore;
+  store: PluginStore;
 
   eventHandler = this;
 
+  _el?: Element;
+
   constructor(public readonly language: any = 'en') {
     changeLanguage(this.language);
+    this.store = AgoraExtAppVote.store;
   }
 
   onUserListChanged(userList: AgoraExtAppUserInfo[]): void {
     this.store?.updateStudents(userList);
   }
 
+  setController(controller: AgoraExtAppController) {
+    this.store.controller = controller;
+  }
+
   extAppDidLoad(dom: Element, ctx: AgoraExtAppContext, handle: AgoraExtAppHandle): void {
-    this.store = AgoraExtAppVote.store;
+    this._el = dom;
     this.store.resetContextAndHandle(ctx, handle);
 
     ReactDOM.render(
@@ -300,18 +311,20 @@ export class AgoraExtAppVote implements IAgoraExtApp {
       dom,
     );
   }
+
+  onClose() {
+    this.store.clearProps();
+  }
+
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
     this.store?.onReceivedProps(properties, cause);
   }
 
   async extAppWillUnload(): Promise<boolean> {
-    try {
-      if (this.store?.context.localUserInfo.roleType === EduRoleTypeEnum.teacher) {
-        await this.store?.onSubClick(true);
-      }
-      return true;
-    } catch (e) {
-      return false;
+    if (this._el) {
+      ReactDOM.unmountComponentAtNode(this._el);
     }
+
+    return Promise.resolve(true);
   }
 }
