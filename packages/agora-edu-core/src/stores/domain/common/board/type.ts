@@ -12,15 +12,15 @@ export enum WhiteboardTool {
   laserPointer,
   blankPage,
   arrow,
-  shape,
+  pentagram,
+  rhombus,
+  triangle,
   clear,
   undo,
   redo,
 }
 
-export enum ShapeType {
-  pentagram,
-  rhombus,
-  speechBalloon,
-  triangle,
-}
+export type WhiteboardShapeTool =
+  | WhiteboardTool.triangle
+  | WhiteboardTool.rhombus
+  | WhiteboardTool.pentagram;

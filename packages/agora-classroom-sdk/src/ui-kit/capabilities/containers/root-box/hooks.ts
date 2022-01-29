@@ -24,7 +24,7 @@ export const useClassroomStyle = ({
   );
   const { shareUIStore } = useStore();
 
-  const { classroomViewportSize } = shareUIStore;
+  const { classroomViewportSize, classroomViewportTransitionDuration } = shareUIStore;
 
   const postStyle = useMemo(
     () =>
@@ -36,7 +36,7 @@ export const useClassroomStyle = ({
               minWidth: minimumSize.width,
               minHeight: minimumSize.height,
             },
-            { transition: 'all .3s' },
+            { transition: `all ${classroomViewportTransitionDuration}ms` },
           )
         : {},
     [

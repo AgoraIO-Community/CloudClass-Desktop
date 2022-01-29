@@ -73,7 +73,16 @@ export class ToolbarUIStore extends EduUIStoreBase {
     '#0073ff',
     '#ffc8e2',
   ];
-  readonly defaultPens: string[] = ['pen', 'square', 'circle', 'line'];
+  readonly defaultPens: string[] = [
+    'pen',
+    'square',
+    'circle',
+    'line',
+    'pentagram',
+    'rhombus',
+    'arrow',
+    'triangle',
+  ];
   readonly paletteMap: Record<string, string> = {
     '#ffffff': '#E1E1EA',
   };
@@ -265,7 +274,16 @@ export class ToolbarUIStore extends EduUIStoreBase {
   }
 
   // others
-  readonly penTools = ['pen', 'square', 'circle', 'line'];
+  readonly penTools = [
+    'pen',
+    'square',
+    'circle',
+    'line',
+    'arrow',
+    'pentagram',
+    'rhombus',
+    'triangle',
+  ];
 
   /**
    * 设置画笔粗细
@@ -512,8 +530,12 @@ export class ToolbarUIStore extends EduUIStoreBase {
         return WhiteboardTool.laserPointer;
       case 'arrow':
         return WhiteboardTool.arrow;
-      case 'shape':
-        return WhiteboardTool.shape;
+      case 'pentagram':
+        return WhiteboardTool.pentagram;
+      case 'rhombus':
+        return WhiteboardTool.rhombus;
+      case 'triangle':
+        return WhiteboardTool.triangle;
       case 'clear':
         return WhiteboardTool.clear;
       case 'undo':
@@ -543,6 +565,14 @@ export class ToolbarUIStore extends EduUIStoreBase {
         return 'circle';
       case WhiteboardTool.straight:
         return 'line';
+      case WhiteboardTool.arrow:
+        return 'arrow';
+      case WhiteboardTool.pentagram:
+        return 'pentagram';
+      case WhiteboardTool.triangle:
+        return 'triangle';
+      case WhiteboardTool.rhombus:
+        return 'rhombus';
       case WhiteboardTool.text:
         return 'text';
       case WhiteboardTool.eraser:

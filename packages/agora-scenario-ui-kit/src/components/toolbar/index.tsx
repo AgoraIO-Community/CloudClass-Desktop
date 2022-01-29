@@ -7,8 +7,7 @@ import foldAbsent from './assets/open-default.svg';
 import unfoldHover from './assets/close-hover.svg';
 import foldHover from './assets/open-hover.svg';
 import './index.css';
-import { useMounted } from '~ui-kit/utilities/hooks';
-import { debounce } from 'lodash';
+import { useDebounce, useMounted } from '~ui-kit/utilities/hooks';
 
 export { Pens } from './pens';
 
@@ -21,6 +20,8 @@ export interface ToolbarProps extends BaseProps {
   active?: string;
   activeMap?: Record<string, boolean>;
   defaultOpened?: boolean;
+  classroomViewportHeight?: number;
+  classroomViewportTransitionDuration?: number;
   onClick?: (value: string) => unknown;
   onOpenedChange?: (opened: boolean) => void;
 }
@@ -39,6 +40,8 @@ export const Toolbar: FC<ToolbarProps> = ({
   active,
   activeMap = {},
   defaultOpened = true,
+  classroomViewportHeight,
+  classroomViewportTransitionDuration = 300,
   onOpenedChange,
   onClick,
 }) => {
@@ -49,6 +52,8 @@ export const Toolbar: FC<ToolbarProps> = ({
   const toolbarScrollEl = useRef<HTMLDivElement | null>(null);
   const animContainer = useRef<HTMLDivElement | null>(null);
   const [reachEnd, setReachEnd] = useState<boolean>(false);
+  const [reachTop, setReachTop] = useState<boolean>(false);
+
   const cls = classnames({
     [`toolbar`]: 1,
     [`opened`]: opened,
@@ -57,43 +62,35 @@ export const Toolbar: FC<ToolbarProps> = ({
 
   const isMounted = useMounted();
 
-  useEffect(() => {
-    if (animTimer.current) {
-      clearTimeout(animTimer.current);
-    }
-    const onWindowSizeChange = debounce(() => {
-      if (animContainer.current) {
-        let maxHeight = +animContainer.current.style.maxHeight.replace('px', '');
-        setReachEnd(maxHeight !== animContainer.current.clientHeight);
-      }
-    }, 200);
-    window.addEventListener('resize', onWindowSizeChange);
+  const debounceClassroomViewportHeight = useDebounce(
+    classroomViewportHeight,
+    classroomViewportTransitionDuration,
+  );
 
+  const updateShadowState = () => {
+    const current = toolbarScrollEl.current;
+    if (current) {
+      setReachEnd(current.clientHeight + current.scrollTop < current.scrollHeight);
+      setReachTop(current.scrollTop > 0);
+    }
+  };
+
+  useEffect(updateShadowState, [debounceClassroomViewportHeight]);
+
+  useEffect(() => {
+    const current = toolbarScrollEl.current;
+
+    current?.addEventListener('scroll', updateShadowState);
     return () => {
-      window.removeEventListener('resize', onWindowSizeChange);
+      current?.removeEventListener('scroll', updateShadowState);
+
+      if (animTimer.current) {
+        clearTimeout(animTimer.current);
+      }
     };
   }, []);
 
-  useEffect(() => {
-    let current = toolbarScrollEl.current;
-    const onScrollToolbar = debounce(() => {
-      if (current) {
-        const bottom = current.scrollHeight - current.scrollTop === current.clientHeight;
-        setReachEnd(!bottom);
-      }
-    }, 50);
-    current?.addEventListener('scroll', onScrollToolbar);
-    return () => {
-      current?.removeEventListener('scroll', onScrollToolbar);
-    };
-  }, [toolbarScrollEl]);
-
-  useEffect(() => {
-    if (animContainer.current) {
-      let maxHeight = +animContainer.current.style.maxHeight.replace('px', '');
-      setReachEnd(maxHeight !== animContainer.current.clientHeight);
-    }
-  }, [tools]);
+  useEffect(updateShadowState, [tools]);
 
   const maxHeight =
     // toolbar items height accumulation
@@ -112,16 +109,7 @@ export const Toolbar: FC<ToolbarProps> = ({
         maxHeight,
         left: opened ? 10 : 0,
       }}
-      ref={animContainer}
-      onAnimationEnd={() => {
-        // const animEl = animContainer.current;
-        // if (animEl && animEl.classList.contains('toolbar-anim-hide')) {
-        //   animEl.style.left = '0px';
-        // }
-        // if (animEl && animEl.classList.contains('toolbar-anim-show')) {
-        //   animEl.style.left = '15px';
-        // }
-      }}>
+      ref={animContainer}>
       <div className={cls} style={style} ref={toolbarEl}>
         <div
           className={`menu ${opened ? 'unfold' : 'fold'}`}
@@ -175,6 +163,14 @@ export const Toolbar: FC<ToolbarProps> = ({
           ))}
         </div>
       </div>
+      <div
+        className={
+          reachTop
+            ? opened
+              ? 'toolbar-shadow-up'
+              : 'toolbar-shadow-up hidden'
+            : 'toolbar-shadow-up hidden'
+        }></div>
       <div
         className={
           reachEnd ? (opened ? 'toolbar-shadow' : 'toolbar-shadow hidden') : 'toolbar-shadow hidden'

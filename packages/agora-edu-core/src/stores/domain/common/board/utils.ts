@@ -28,7 +28,9 @@ export const convertAGToolToWhiteTool = (tool: WhiteboardTool): ApplianceNames |
       return ApplianceNames.laserPointer;
     case WhiteboardTool.arrow:
       return ApplianceNames.arrow;
-    case WhiteboardTool.shape:
+    case WhiteboardTool.pentagram:
+    case WhiteboardTool.rhombus:
+    case WhiteboardTool.triangle:
       return ApplianceNames.shape;
     default:
       return undefined;

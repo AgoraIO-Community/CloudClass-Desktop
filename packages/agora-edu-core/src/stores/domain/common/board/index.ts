@@ -21,9 +21,10 @@ import {
   JoinRoomParams,
   RoomCallbacks,
   GlobalState,
+  ShapeType,
 } from 'white-web-sdk';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
-import { WhiteboardTool } from './type';
+import { WhiteboardShapeTool, WhiteboardTool } from './type';
 import {
   CloudDriveCourseResource,
   CloudDriveImageResource,
@@ -202,6 +203,35 @@ export class BoardStore extends EduStoreBase {
     this.room.setGlobalState({ grantUsers: Array.from(newSet) });
   }
 
+  getShapeType(tool: WhiteboardShapeTool): string {
+    switch (tool) {
+      case WhiteboardTool.triangle:
+        return 'triangle';
+      case WhiteboardTool.rhombus:
+        return 'rhombus';
+      case WhiteboardTool.pentagram:
+        return 'pentagram';
+      default:
+        return 'triangle';
+    }
+  }
+
+  setShapeTool(tool: WhiteboardShapeTool) {
+    const appliance = convertAGToolToWhiteTool(tool);
+    if (appliance) {
+      const shapeType = this.getShapeType(tool) as ShapeType;
+      /**
+       * https://docs.agora.io/cn/whiteboard/whiteboard_tool?platform=Web#%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86
+       * 当 currentApplianceName 设为 shape 时，还可以设置 shapeType 选择图形类型；如果不设置，则默认使用三角形。
+       */
+      this.writableRoom.setMemberState({
+        currentApplianceName: appliance,
+        shapeType,
+      });
+      this.selectedTool = tool;
+    }
+  }
+
   @action.bound
   setTool(tool: WhiteboardTool) {
     switch (tool) {
@@ -230,10 +260,18 @@ export class BoardStore extends EduStoreBase {
         break;
       }
 
+      case WhiteboardTool.pentagram:
+      case WhiteboardTool.rhombus:
+      case WhiteboardTool.triangle: {
+        this.setShapeTool(tool);
+        break;
+      }
+
       case WhiteboardTool.pen:
       case WhiteboardTool.rectangle:
       case WhiteboardTool.ellipse:
       case WhiteboardTool.straight:
+      case WhiteboardTool.arrow:
       case WhiteboardTool.selector:
       case WhiteboardTool.text:
       case WhiteboardTool.hand:
