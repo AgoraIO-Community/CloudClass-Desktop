@@ -20,8 +20,6 @@ export interface ToolbarProps extends BaseProps {
   active?: string;
   activeMap?: Record<string, boolean>;
   defaultOpened?: boolean;
-  classroomViewportHeight?: number;
-  classroomViewportTransitionDuration?: number;
   onClick?: (value: string) => unknown;
   onOpenedChange?: (opened: boolean) => void;
 }
@@ -40,8 +38,6 @@ export const Toolbar: FC<ToolbarProps> = ({
   active,
   activeMap = {},
   defaultOpened = true,
-  classroomViewportHeight,
-  classroomViewportTransitionDuration = 300,
   onOpenedChange,
   onClick,
 }) => {
@@ -62,11 +58,6 @@ export const Toolbar: FC<ToolbarProps> = ({
 
   const isMounted = useMounted();
 
-  const debounceClassroomViewportHeight = useDebounce(
-    classroomViewportHeight,
-    classroomViewportTransitionDuration,
-  );
-
   const updateShadowState = () => {
     const current = toolbarScrollEl.current;
     if (current) {
@@ -75,14 +66,21 @@ export const Toolbar: FC<ToolbarProps> = ({
     }
   };
 
-  useEffect(updateShadowState, [debounceClassroomViewportHeight]);
-
   useEffect(() => {
     const current = toolbarScrollEl.current;
 
     current?.addEventListener('scroll', updateShadowState);
+
+    const observer = new ResizeObserver(() => {
+      updateShadowState();
+    });
+
+    observer.observe(current as HTMLElement);
+
     return () => {
       current?.removeEventListener('scroll', updateShadowState);
+
+      observer.unobserve(current as HTMLElement);
 
       if (animTimer.current) {
         clearTimeout(animTimer.current);

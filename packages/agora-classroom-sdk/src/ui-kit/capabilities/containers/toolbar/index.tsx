@@ -6,9 +6,8 @@ import { PensContainer } from './pens';
 import { ToolCabinetContainer } from './tool-cabinet';
 
 export const WhiteboardToolbar = observer(({ children }: any) => {
-  const { toolbarUIStore, shareUIStore } = useStore();
+  const { toolbarUIStore } = useStore();
   const { activeTool, activeMap, tools, setTool } = toolbarUIStore;
-  const { classroomViewportSize, classroomViewportTransitionDuration } = shareUIStore;
 
   const mappedTools = tools.map((tool) => {
     if (tool.category === ToolbarItemCategory.PenPicker) {
@@ -36,8 +35,6 @@ export const WhiteboardToolbar = observer(({ children }: any) => {
       tools={mappedTools}
       onClick={setTool}
       defaultOpened={true}
-      classroomViewportHeight={classroomViewportSize.height}
-      classroomViewportTransitionDuration={classroomViewportTransitionDuration}
     />
   ) : null;
 });
