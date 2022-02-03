@@ -115,7 +115,19 @@ export class NotificationUIStore extends EduUIStoreBase {
       }
       // reward received
       if (event === AgoraEduClassroomEvent.RewardReceived) {
-        this.shareUIStore.addToast(transI18n('toast2.teacher.reward', { reason: args }));
+        const [userNames] = args;
+        if (userNames.length > 3) {
+          this.shareUIStore.addToast(
+            transI18n('toast2.teacher.reward2', {
+              reason1: userNames.slice(0, 3),
+              reason2: userNames.length,
+            }),
+          );
+        } else {
+          this.shareUIStore.addToast(
+            transI18n('toast2.teacher.reward', { reason: userNames.join(',') }),
+          );
+        }
       }
       // capture screen permission denied received
       if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {

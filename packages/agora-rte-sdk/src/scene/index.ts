@@ -367,6 +367,19 @@ export class AgoraRteScene extends EventEmitter {
     );
 
     handler.on(
+      AgoraRteEventType.BatchUserPropertyUpdated,
+      (users: any[], operator: any, cause: any) => {
+        this.logger.debug(
+          `batch-user-property-updated ${jsonstring(users)} ${jsonstring(operator)} ${jsonstring(
+            cause,
+          )}`,
+        );
+
+        this.emit(AgoraRteEventType.BatchUserPropertyUpdated, users, operator, cause);
+      },
+    );
+
+    handler.on(
       AgoraRteEventType.LocalStreamAdded,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`local-stream-added [${streams.join(',')}]`);

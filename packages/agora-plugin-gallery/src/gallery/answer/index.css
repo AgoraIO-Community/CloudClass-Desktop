@@ -144,3 +144,34 @@
   color: #fff;
   border-color: transparent;
 }
+
+.award-wrap {
+  position: relative;
+}
+
+.award-list {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 20px;
+  background: #fff;
+  border: #e2e2f0 1px solid;
+  padding: 6px 0;
+  box-shadow: 0px 2px 8px 0px rgb(0 0 0 / 15%);
+  border-radius: 4px;
+}
+
+.award-list .hidden {
+  display: none;
+}
+
+.award-list ul {
+  margin-bottom: 0;
+}
+
+.award-list ul li {
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.award-list ul li:hover {
+  background: #f9f9fc;
+}

@@ -20,6 +20,7 @@ export interface AgoraExtAppEventHandler {
 
 export interface AgoraExtAppController {
   shutdown(): void;
+  invokeAPI(apiName: string, ...args: any[]): Promise<any>;
 }
 
 export interface IAgoraExtApp {

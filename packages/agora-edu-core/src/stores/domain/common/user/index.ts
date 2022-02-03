@@ -7,6 +7,7 @@ import { AgoraEduClassroomEvent, EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { RteRole2EduRole } from '../../../../utils';
 import { FetchUserParam, FetchUserType } from './type';
+import { BatchRecord } from '../../../../utils/batch';
 
 //for users
 export class UserStore extends EduStoreBase {
@@ -166,6 +167,33 @@ export class UserStore extends EduStoreBase {
       },
     );
 
+    scene.on(
+      AgoraRteEventType.BatchUserPropertyUpdated,
+      (users: { userUuid: string; userProperties: any }[], operator: any, cause: any) => {
+        const batchRecord = BatchRecord.getBatchRecord<typeof users>(cause, (batchArray) => {
+          const allUsers = batchArray.flat();
+          const newRewards = new Map(this.rewards);
+          for (const user of allUsers) {
+            const { userUuid, userProperties } = user;
+
+            const { reward } = userProperties;
+
+            if (reward) {
+              newRewards.set(userUuid, reward.count || 0);
+            }
+          }
+
+          runInAction(() => {
+            this.rewards = newRewards;
+          });
+
+          EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.BatchRewardReceived);
+        });
+
+        batchRecord.addBatch(users);
+      },
+    );
+
     scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
   }
 
@@ -194,14 +222,12 @@ export class UserStore extends EduStoreBase {
           changedUserUuids.push(userUuid);
         }
       }
+
       if (changedUserUuids.length > 0) {
         const userNames = changedUserUuids.map(
           (userUuid) => this.studentList.get(userUuid)?.userName,
         );
-        EduEventCenter.shared.emitClasroomEvents(
-          AgoraEduClassroomEvent.RewardReceived,
-          userNames.join(','),
-        );
+        EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.RewardReceived, userNames);
       }
     });
   }

@@ -325,6 +325,7 @@ export class PluginStore {
         let rightNumber = 0;
         properties.students.map((student: string, index: number) => {
           let info = {
+            id: student,
             name: properties.studentNames[index],
             replyTime: '',
             answer: '',
@@ -353,7 +354,9 @@ export class PluginStore {
         this.height = properties.state === 'end' ? 366 : 366;
         this.buttonName = properties.state === 'end' ? 'answer.restart' : 'answer.over';
         this.ui =
-          properties.state === 'end' ? ['users', 'infos', 'subs'] : ['users', 'infos', 'subs'];
+          properties.state === 'end'
+            ? ['users', 'infos', 'subs', 'award']
+            : ['users', 'infos', 'subs'];
         this.updateTime();
       } else {
         this.title = '';
@@ -404,6 +407,7 @@ export class PluginStore {
         let rightNumber = 0;
         properties.students.map((student: string, index: number) => {
           let info = {
+            id: student,
             name: properties.studentNames[index],
             replyTime: '',
             answer: '',
@@ -488,6 +492,39 @@ export class PluginStore {
       if (this.status !== 'config' && this.status !== 'end') {
         this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });
       }
+    }
+  }
+
+  @action
+  sendReward(type: 'winner' | 'all') {
+    if (!this.students?.length) {
+      return;
+    }
+
+    let args: { userUuid: string; changeReward: number }[] = [];
+
+    if (type === 'winner') {
+      args = this.students
+        .filter(({ answer }) => answer === this.context.properties.answer.join(''))
+        .map(({ id }) => {
+          return { userUuid: id, changeReward: 1 };
+        });
+    } else {
+      args = this.students
+        .filter(({ answer }) => !!answer)
+        .map(({ id }) => {
+          return { userUuid: id, changeReward: 1 };
+        });
+    }
+
+    if (args.length > 0) {
+      this.controller.invokeAPI(
+        'sendRewards',
+        EduClassroomConfig.shared.sessionInfo.roomUuid,
+        args,
+      );
+    } else {
+      this.controller.invokeAPI('addToast', '没有学生需要发奖励', 'warning');
     }
   }
 }

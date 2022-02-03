@@ -42,14 +42,6 @@ export class ExtAppStore extends EduStoreBase {
 
   @bound
   registerExtApp(app: IAgoraExtApp) {
-    if (app.setController) {
-      app.setController({
-        shutdown: () => {
-          this.shutdownApp(app.appIdentifier);
-        },
-      });
-    }
-
     this._extAppInstances[app.appIdentifier] = app;
   }
 

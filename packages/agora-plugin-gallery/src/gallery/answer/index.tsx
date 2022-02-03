@@ -1,5 +1,5 @@
 import 'promise-polyfill/src/polyfill';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import ReactDOM from 'react-dom';
 import { observable, observe, runInAction } from 'mobx';
 import { PluginStore } from './store';
@@ -30,6 +30,7 @@ import classnames from 'classnames';
 import './index.css';
 import reduceSvg from './reduce.svg';
 import addSvg from './add.svg';
+import awardSvg from './award.svg';
 
 const App = observer(
   ({
@@ -172,6 +173,15 @@ const App = observer(
                     ? 'hidden'
                     : 'visible',
               }}></span>
+
+            {pluginStore.ui?.includes('award') && (
+              <AwardButton
+                onAward={(type) => {
+                  pluginStore.sendReward(type);
+                }}>
+                奖励
+              </AwardButton>
+            )}
             <Button
               className="answer-submit-btn"
               disabled={
@@ -299,3 +309,46 @@ export class AgoraExtAppAnswer implements IAgoraExtApp, AgoraExtAppEventHandler 
     return Promise.resolve(true);
   }
 }
+
+const AwardButton: FC<{ onAward: (type: 'winner' | 'all') => void }> = ({ children, onAward }) => {
+  const [listVisible, setListVisible] = useState(false);
+
+  return (
+    <div className="award-wrap">
+      <div className={'award-list' + (listVisible ? '' : ' hidden')}>
+        <ul>
+          <li
+            onClick={() => {
+              setListVisible(false);
+              onAward('winner');
+            }}>
+            奖励答对学生
+          </li>
+          <li
+            onClick={() => {
+              setListVisible(false);
+              onAward('all');
+            }}>
+            奖励参与学生
+          </li>
+        </ul>
+      </div>
+      <Button
+        onClick={() => {
+          setListVisible(!listVisible);
+        }}>
+        <div className="flex">
+          <span
+            style={{
+              display: 'inline-block',
+              height: 24,
+              width: 24,
+              backgroundImage: `url(${awardSvg})`,
+            }}
+          />
+          {children}
+        </div>
+      </Button>
+    </div>
+  );
+};

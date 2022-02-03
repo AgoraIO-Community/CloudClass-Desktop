@@ -1,11 +1,26 @@
-import { computed } from 'mobx';
+import { computed, observable } from 'mobx';
+import uuidv4 from 'uuid';
 import { EduUIStoreBase } from '../base';
-import { ClassroomState } from '../../../../type';
+import { AgoraEduClassroomEvent, ClassroomState } from '../../../../type';
+import { EduEventCenter } from '../../../..';
 
 export class LayoutUIStore extends EduUIStoreBase {
-  onInstall(): void {}
-  onDestroy(): void {}
+  @observable
+  awardAnims: { id: string }[] = [];
 
+  onInstall(): void {
+    EduEventCenter.shared.onClassroomEvents((event) => {
+      if (event === AgoraEduClassroomEvent.BatchRewardReceived) {
+        this.awardAnims.push({
+          id: uuidv4(),
+        });
+      }
+    });
+  }
+
+  removeAward(id: string) {
+    this.awardAnims = this.awardAnims.filter((anim) => anim.id !== id);
+  }
   /**
    * 教室加载状态
    */
@@ -15,4 +30,6 @@ export class LayoutUIStore extends EduUIStoreBase {
       classroomState === ClassroomState.Connecting || classroomState === ClassroomState.Reconnecting
     );
   }
+
+  onDestroy(): void {}
 }

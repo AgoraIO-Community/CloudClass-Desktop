@@ -15,6 +15,7 @@ import { ExtAppContainer } from '~containers/ext-app';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
 import { MidRosterBtn } from '../../containers/roster';
+import { Award } from '../../containers/award';
 
 export const MidClassScenario = observer(() => {
   // layout
@@ -40,6 +41,7 @@ export const MidClassScenario = observer(() => {
         </Layout>
         <ExtAppContainer />
         <ToastContainer />
+        <Award />
       </FixedAspectRatioRootBox>
     </Room>
   );

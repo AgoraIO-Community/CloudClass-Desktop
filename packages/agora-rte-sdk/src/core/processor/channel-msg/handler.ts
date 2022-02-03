@@ -25,6 +25,7 @@ export enum AgoraRteChannelMessageCmd {
   StreamInOut = 40,
   StreamsInOut = 41,
   MessageExtension = 99,
+  BatchUserProperties = 25,
 }
 
 export enum AgoraRtePeerMessageCmd {
@@ -39,6 +40,7 @@ export enum AgoraRteEventType {
   UserRemoved = 'user-removed',
   RoomPropertyUpdated = 'room-property-updated',
   UserPropertyUpdated = 'user-property-updated',
+  BatchUserPropertyUpdated = 'batch-user-property-updated',
   LocalStreamAdded = 'local-stream-added',
   LocalStreamUpdate = 'local-stream-update',
   LocalStreamRemove = 'local-stream-removed',
@@ -125,6 +127,9 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
         break;
       case AgoraRteChannelMessageCmd.UserProperties:
         this._handleUserProperties(task);
+        break;
+      case AgoraRteChannelMessageCmd.BatchUserProperties:
+        this._handleBatchUserProperties(task);
         break;
       case AgoraRteChannelMessageCmd.UserSubscribeInOut:
         this._handleUserSubscribe(task);
@@ -333,6 +338,32 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
       operator,
       cause,
     );
+  }
+
+  private _handleBatchUserProperties(task: AgoraRteMessageHandleTask) {
+    const { users, operator, cause } = task.sequence.data;
+
+    const _users = users
+      .map(({ fromUser, operator, cause, changeProperties }: any) => {
+        const { userUuid } = fromUser;
+
+        const user = this._dataStore.findUser(userUuid);
+        if (!user) {
+          return this.logger.warn(`user ${userUuid} not exists, update property failed`);
+        }
+
+        user.setUserProperties(this._mergeProperties(user.userProperties.toJS(), changeProperties));
+
+        return {
+          userUuid,
+          userProperties: user.userProperties.toObject(),
+          operator,
+          cause,
+        };
+      })
+      .filter((change: any) => !!change);
+
+    this.emit(AgoraRteEventType.BatchUserPropertyUpdated, _users, operator, cause);
   }
 
   private _processStreamEvent(action: number, stream: AgoraStream): AgoraRteEventType {
