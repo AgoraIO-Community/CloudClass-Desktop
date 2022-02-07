@@ -84,6 +84,11 @@ export class Logger {
   static originConsole = window.console;
 
   static setupConsoleHijack() {
+    //@ts-ignore
+    if (console.__hijackSetup) {
+      console.log('[logger] hijack alread setup!');
+      return;
+    }
     console.log(`[logger] setup hijack..`);
     const thread = this.logger.thread as any;
 
@@ -112,6 +117,8 @@ export class Logger {
         //@ts-ignore
         console[method] = proxy(console, console[method]);
       });
+    //@ts-ignore
+    console.__hijackSetup = true;
     //@ts-ignore
     window.console = console;
   }
