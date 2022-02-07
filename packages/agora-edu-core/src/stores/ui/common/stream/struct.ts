@@ -32,6 +32,10 @@ export class EduStreamUI {
     return this.stream.fromUser;
   }
 
+  get isMirrorMode() {
+    return this.role !== EduRoleTypeEnum.teacher;
+  }
+
   get role(): EduRoleTypeEnum {
     return RteRole2EduRole(EduClassroomConfig.shared.sessionInfo.roomType, this.fromUser.role);
   }

@@ -116,5 +116,9 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
         }
       },
     );
+
+    this.classroomStore.mediaStore.setMirror(
+      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher,
+    );
   }
 }
