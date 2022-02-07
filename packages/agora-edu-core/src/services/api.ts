@@ -271,7 +271,7 @@ export class EduApiService extends ApiBase {
       changeReward: number;
     }>;
   }) {
-    const apiVersion = EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired ? 'v2' : 'v3';
+    const apiVersion = EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired ? 'v2' : 'v4';
     const res = await this.fetch({
       path: `/${apiVersion}/rooms/${params.roomUuid}/rewards`,
       method: 'POST',
