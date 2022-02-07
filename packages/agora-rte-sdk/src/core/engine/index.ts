@@ -60,6 +60,7 @@ export class AgoraRteEngine extends AGEventEmitter {
     this._engine?.getAgoraMediaControl().createScreenShareTrack().stop();
     this._engine?.logout();
     this._engine = undefined;
+    Logger.restoreConsoleHijack();
   }
 
   async login(rtmToken: string, userId: string): Promise<void> {

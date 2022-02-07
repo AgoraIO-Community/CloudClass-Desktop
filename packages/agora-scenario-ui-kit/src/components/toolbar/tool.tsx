@@ -4,8 +4,9 @@ import { IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
 import { SvgIcon } from '~components/svg-img';
 import classnames from 'classnames';
+import { BaseProps } from '../interface/base-props';
 
-export interface ToolItem {
+export interface ToolItem extends BaseProps {
   value: string;
   label: any;
   icon: IconTypes;
