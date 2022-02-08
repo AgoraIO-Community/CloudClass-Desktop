@@ -136,7 +136,7 @@ export class PluginStore {
   }) => {
     let roomProperties: any = {};
     if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
         this.context.localUserInfo.roleType,
       )
     ) {
@@ -244,7 +244,7 @@ export class PluginStore {
 
   onSubClick = async () => {
     if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
         this.context.localUserInfo.roleType,
       )
     ) {
@@ -290,7 +290,9 @@ export class PluginStore {
       this.context.properties = properties;
     }
     const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(role)
+    ) {
       if (properties.state === 'start' || properties.state === 'end') {
         this.title = properties.title;
         this.answer = properties.items;
@@ -332,6 +334,10 @@ export class PluginStore {
         this.height = 283;
         this.buttonName = 'vote.start';
         this.ui = ['sels', 'subs'];
+      }
+      const cannotOperate = role === EduRoleTypeEnum.observer;
+      if (cannotOperate) {
+        this.ui = this.ui.filter((k) => k !== 'subs');
       }
     } else {
       if (properties.state === 'start' && !getStudentInfo(properties['student' + userUuid])) {
@@ -431,7 +437,7 @@ export class PluginStore {
     }
 
     if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
         EduClassroomConfig.shared.sessionInfo.role,
       )
     ) {

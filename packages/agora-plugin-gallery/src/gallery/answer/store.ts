@@ -125,7 +125,7 @@ export class PluginStore {
   }) => {
     let roomProperties: any = {};
     if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
         this.context.localUserInfo.roleType,
       )
     ) {
@@ -215,7 +215,7 @@ export class PluginStore {
         await this.handle.deleteRoomProperties(propers, {});
         return;
       } else if (state === 'end') {
-        await this.handle.updateRoomProperties(roomProperties, { state: 2 }, {});
+        await this.handle.updateRoomProperties(roomProperties, { state: 1 }, {});
         return;
       }
       // state === 'clear' means user close plugin
@@ -250,7 +250,7 @@ export class PluginStore {
   @action
   onSubClick = async () => {
     if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
         this.context.localUserInfo.roleType,
       )
     ) {
@@ -278,7 +278,7 @@ export class PluginStore {
         await this.changeRoomProperties({
           state: 'clear',
           endTime: Math.floor(Date.now() / 1000).toString(),
-          commonState: 2,
+          commonState: 1,
         });
       }
     } else {
@@ -311,7 +311,9 @@ export class PluginStore {
       this.context.properties = properties;
     }
     const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
-    if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+    if (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(role)
+    ) {
       if (properties.state === 'start' || properties.state === 'end') {
         this.title = '';
         this.answer = properties.items;
@@ -368,6 +370,10 @@ export class PluginStore {
         this.height = 150;
         this.buttonName = 'answer.start';
         this.ui = ['sels', 'subs'];
+      }
+      const cannotOperate = role === EduRoleTypeEnum.observer;
+      if (cannotOperate) {
+        this.ui = this.ui.filter((k) => k !== 'subs');
       }
     } else {
       if (properties.state === 'start') {
@@ -484,7 +490,7 @@ export class PluginStore {
     }
 
     if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
         EduClassroomConfig.shared.sessionInfo.role,
       )
     ) {

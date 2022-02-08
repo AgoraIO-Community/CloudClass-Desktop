@@ -148,6 +148,7 @@ export class AgoraEduSDK {
         EduRoleTypeEnum.none,
         EduRoleTypeEnum.student,
         EduRoleTypeEnum.teacher,
+        EduRoleTypeEnum.observer,
       ].includes(option.roleType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roleType!');

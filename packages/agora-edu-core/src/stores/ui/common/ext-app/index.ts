@@ -205,6 +205,12 @@ export class ExtAppUIStore extends EduUIStoreBase {
       return remoteActive && state.state === '1';
     }
 
+    if (extApp.appIdentifier === 'io.agora.answer' || extApp.appIdentifier === 'io.agora.vote') {
+      if ([EduRoleTypeEnum.student].includes(userRole)) {
+        return remoteActive && state.state === 'start';
+      }
+    }
+
     return localActive || remoteActive;
   }
 

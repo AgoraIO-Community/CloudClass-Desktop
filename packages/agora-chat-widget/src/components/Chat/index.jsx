@@ -39,7 +39,8 @@ export const Chat = () => {
   const isTeacher =
     roleType &&
     (JSON.parse(roleType).role === ROLE.teacher.id ||
-      JSON.parse(roleType).role === ROLE.assistant.id);
+      JSON.parse(roleType).role === ROLE.assistant.id ||
+      JSON.parse(roleType).role === ROLE.observer.id);
   useEffect(() => {
     // 加载成员信息
     let _speakerTeacher = [];

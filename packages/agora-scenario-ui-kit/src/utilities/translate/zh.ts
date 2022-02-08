@@ -421,6 +421,7 @@ export const zh = {
     role_student: '学生',
     role_assistant: '助教',
     role_audience: '观众',
+    role_observer: '监课',
     language: '语言：',
     language_placeholder: '请选择语言',
     duration: '时长',

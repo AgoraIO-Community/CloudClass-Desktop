@@ -151,9 +151,11 @@ export class ExtAppStore extends EduStoreBase {
   onInstall() {
     forEach(EduClassroomConfig.shared.extApps, this.registerExtApp);
 
-    const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-      this.classroomStore.roomStore.userRole,
-    );
+    const isTeacherOrAssistant = [
+      EduRoleTypeEnum.teacher,
+      EduRoleTypeEnum.assistant,
+      EduRoleTypeEnum.observer,
+    ].includes(this.classroomStore.roomStore.userRole);
 
     if (isTeacherOrAssistant) {
       reaction(

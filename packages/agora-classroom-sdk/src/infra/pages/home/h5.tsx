@@ -54,6 +54,7 @@ export const HomeH5Page = observer(() => {
       assistant: EduRoleTypeEnum.assistant,
       student: EduRoleTypeEnum.student,
       incognito: EduRoleTypeEnum.invisible,
+      observer: EduRoleTypeEnum.observer,
     };
     return roles[userRole];
   }, [userRole]);

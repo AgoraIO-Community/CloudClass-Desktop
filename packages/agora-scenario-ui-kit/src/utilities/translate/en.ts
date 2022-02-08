@@ -431,6 +431,7 @@ export const en = {
     role_student: 'Student',
     role_assistant: 'Assistant',
     role_audience: 'Audience',
+    role_observer: 'Observer',
     language: 'Language:',
     language_placeholder: 'Please choose language',
     duration: 'Duration',

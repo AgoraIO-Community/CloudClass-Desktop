@@ -17,6 +17,10 @@ export const EduRole2RteRole = (roomType: EduRoomTypeEnum, roleType: EduRoleType
     return 'invisible';
   }
 
+  if (roleType === EduRoleTypeEnum.observer) {
+    return 'observer';
+  }
+
   return 'audience';
 };
 
@@ -41,6 +45,10 @@ export const RteRole2EduRole = (roomType: EduRoomTypeEnum, role: string) => {
 
   if (role === 'invisible') {
     return EduRoleTypeEnum.invisible;
+  }
+
+  if (role === 'observer') {
+    return EduRoleTypeEnum.observer;
   }
 
   return EduRoleTypeEnum.none;

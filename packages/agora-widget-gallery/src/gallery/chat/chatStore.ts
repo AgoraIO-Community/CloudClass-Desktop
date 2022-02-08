@@ -141,7 +141,9 @@ export class WidgetChatUIStore {
     );
 
     this.setUI({
-      showInputBox: EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible,
+      showInputBox:
+        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible &&
+        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.observer,
     });
   }
 
