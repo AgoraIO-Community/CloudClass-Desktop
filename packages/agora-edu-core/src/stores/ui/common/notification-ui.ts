@@ -4,7 +4,7 @@ import { Scheduler } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import { ClassState } from '../../domain/common/room/type';
-import { ClassroomState, EduEventCenter } from '../../..';
+import { ClassroomState, EduClassroomConfig, EduEventCenter } from '../../..';
 import { AgoraEduClassroomEvent } from '../../../type';
 import { LeaveReason } from '../../domain/common/connection';
 import { checkMinutesThrough } from '../../../utils/time';
@@ -79,7 +79,13 @@ export class NotificationUIStore extends EduUIStoreBase {
     EduEventCenter.shared.onClassroomEvents((event, ...args) => {
       // kick out
       if (event === AgoraEduClassroomEvent.KickOut) {
-        this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+        const user = args[0];
+
+        const { sessionInfo } = EduClassroomConfig.shared;
+
+        if (user.userUuid === sessionInfo.userUuid) {
+          this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+        }
       }
       // teacher turn on my mic
       if (event === AgoraEduClassroomEvent.TeacherTurnOnMyMic) {

@@ -2,14 +2,17 @@ export class BatchRecord<E> {
   private static _batchRecords: Map<number, BatchRecord<any>> = new Map();
 
   static getBatchRecord<T>(
-    batch: { id: number; total: number; current: number },
+    batch: { batchId: number; total: number; current: number },
     cb: (dataChunk: T[]) => void,
   ) {
-    if (!this._batchRecords.has(batch.id)) {
-      this._batchRecords.set(batch.id, new BatchRecord(batch.id, batch.total, batch.current, cb));
+    if (!this._batchRecords.has(batch.batchId)) {
+      this._batchRecords.set(
+        batch.batchId,
+        new BatchRecord(batch.batchId, batch.total, batch.current, cb),
+      );
     }
 
-    const batchRecord = this._batchRecords.get(batch.id) as BatchRecord<T>;
+    const batchRecord = this._batchRecords.get(batch.batchId) as BatchRecord<T>;
 
     batchRecord._setCallback(cb);
 

@@ -1,4 +1,4 @@
-import { computed, observable } from 'mobx';
+import { computed, observable, runInAction, action } from 'mobx';
 import uuidv4 from 'uuid';
 import { EduUIStoreBase } from '../base';
 import { AgoraEduClassroomEvent, ClassroomState } from '../../../../type';
@@ -11,13 +11,16 @@ export class LayoutUIStore extends EduUIStoreBase {
   onInstall(): void {
     EduEventCenter.shared.onClassroomEvents((event) => {
       if (event === AgoraEduClassroomEvent.BatchRewardReceived) {
-        this.awardAnims.push({
-          id: uuidv4(),
+        runInAction(() => {
+          this.awardAnims.push({
+            id: uuidv4(),
+          });
         });
       }
     });
   }
 
+  @action.bound
   removeAward(id: string) {
     this.awardAnims = this.awardAnims.filter((anim) => anim.id !== id);
   }

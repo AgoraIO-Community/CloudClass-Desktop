@@ -1,4 +1,6 @@
-import { action, computed, observable, reaction } from 'mobx';
+import { Injectable, Log } from 'agora-rte-sdk';
+import { action, computed, observable } from 'mobx';
+import { toJS } from 'white-web-sdk';
 import {
   convertLocalToRatio,
   convertLocalPositionToRatio,
@@ -10,7 +12,10 @@ import {
   convertRatioToLocalWithFixedDimensions,
 } from './helper';
 import { Dimensions, Point, TrackContext } from './type';
+
+@Log.attach({ proxyMethods: false })
 export class Track {
+  logger!: Injectable.Logger;
   @observable
   protected _localVal = {
     position: {
@@ -60,13 +65,20 @@ export class Track {
     const medY = height - dimensions.height;
 
     this._ratioVal = convertLocalToRatio(
-      this.fixPos(position),
+      this.fixPos(position, true),
       dimensions,
       medX,
       medY,
       this._context.outerSize,
       this._context.margin,
     );
+
+    this.logger.info('convertLocalToRatio medX:', medX, 'medY:', medY);
+    this.logger.info('position:', { x: position.x, y: position.y });
+    this.logger.info('fix pos:', this.fixPos(position, true));
+    this.logger.info('dimensions:', dimensions);
+    this.logger.info('outerSize:', this._context.outerSize);
+    this.logger.info('margin:', this._context.margin);
 
     this._localVal = {
       position: {
@@ -89,11 +101,16 @@ export class Track {
     const medY = height - this._localVal.dimensions.height;
 
     const { ratioPosition } = convertLocalPositionToRatio(
-      this.fixPos(position),
+      this.fixPos(position, true),
       medX,
       medY,
       this._context.margin,
     );
+
+    this.logger.info('convertLocalPositionToRatio medX:', medX, 'medY:', medY);
+    this.logger.info('position:', { x: position.x, y: position.y });
+    this.logger.info('fix pos:', this.fixPos(position, true));
+    this.logger.info('margin:', this._context.margin);
 
     this._ratioVal = {
       ratioPosition,
@@ -111,6 +128,10 @@ export class Track {
   @action.bound
   setRealDimensions(dimensions: Dimensions, needTransition?: boolean) {
     const { ratioDimensions } = convertLocalDimensionsToRatio(dimensions, this._context.outerSize);
+
+    this.logger.info('convertLocalDimensionsToRatio');
+    this.logger.info('dimensions:', dimensions);
+    this.logger.info('outerSize:', this._context.outerSize);
 
     this._ratioVal = {
       ratioDimensions,
@@ -138,6 +159,8 @@ export class Track {
         this._context.margin,
         this._context.resizeBounds,
       );
+
+      this.logger.info('convertRatioToLocalWithFixedDimensions');
     } else {
       this._localVal = convertRatioToLocal(
         { ratioX: position.x, ratioY: position.y },
@@ -146,7 +169,17 @@ export class Track {
         this._context.margin,
         this._context.resizeBounds,
       );
+      this.logger.info('convertRatioToLocal');
     }
+
+    this.logger.info('position', {
+      ratioX: position.x,
+      ratioY: position.y,
+    });
+    this.logger.info('dimensions:', dimensions);
+    this.logger.info('margin:', this._context.margin);
+
+    this._localVal.position = this.fixPos(this._localVal.position, false);
 
     this._ratioVal = {
       ratioPosition: {
@@ -177,6 +210,9 @@ export class Track {
         position,
         dimensions: this._localVal.dimensions,
       };
+      this.logger.info('convertRatioToLocalPositionWithFixedDimensions');
+
+      this.logger.info('dimensions', toJS(this._localVal.dimensions));
     } else {
       const { position } = convertRatioToLocalPosition(
         { ratioX: ratioPos.x, ratioY: ratioPos.y },
@@ -193,7 +229,28 @@ export class Track {
         position,
         dimensions: this._localVal.dimensions,
       };
+      this.logger.info('convertRatioToLocalPosition', {
+        ratioWidth: this._ratioVal.ratioDimensions.width,
+        ratioHeight: this._ratioVal.ratioDimensions.height,
+      });
+
+      this.logger.info(
+        'dimensions',
+        toJS({
+          ratioWidth: this._ratioVal.ratioDimensions.width,
+          ratioHeight: this._ratioVal.ratioDimensions.height,
+        }),
+      );
     }
+
+    this.logger.info('position', {
+      ratioX: ratioPos.x,
+      ratioY: ratioPos.y,
+    });
+    this.logger.info('fix pos', this.fixPos(this._localVal.position, false));
+    this.logger.info('margin:', this._context.margin);
+
+    this._localVal.position = this.fixPos(this._localVal.position, false);
 
     this._ratioVal = {
       ratioPosition: {
@@ -214,6 +271,9 @@ export class Track {
       this._context.resizeBounds,
     );
 
+    this.logger.info('convertRatioToLocalDimensions dimensions:', ratioDimensions);
+    this.logger.info('outerSize:', this._context.outerSize);
+
     this._localVal = {
       dimensions,
       position: this._localVal.position,
@@ -230,27 +290,20 @@ export class Track {
     this._needTransition = !!needTransition;
   }
 
-  protected fixPos(pos: Point, local: boolean = true) {
-    const { top } = this._context.dragBounds;
+  protected fixPos(pos: Point, local: boolean) {
+    const { left, top } = this._context.offset;
+    this.logger.info('offset', this._context.offset);
     return {
-      x: pos.x,
+      x: local ? pos.x - left : pos.x + left,
       y: local ? pos.y - top : pos.y + top,
-    };
-  }
-
-  @action.bound
-  fixLocalPos() {
-    this._localVal = {
-      dimensions: this._localVal.dimensions,
-      position: this.fixPos(this._localVal.position, false),
     };
   }
 
   reposition() {
     if (this._posOnly) {
-      this.setRatioPos(this._ratioVal.ratioPosition);
+      this.setRatioPos(this._ratioVal.ratioPosition, true);
     } else {
-      this.setRatio(this._ratioVal.ratioPosition, this._ratioVal.ratioDimensions);
+      this.setRatio(this._ratioVal.ratioPosition, this._ratioVal.ratioDimensions, true);
     }
     this._needTransition = true;
   }

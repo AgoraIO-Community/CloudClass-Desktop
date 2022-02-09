@@ -109,14 +109,15 @@ export class UserStore extends EduStoreBase {
       const { sessionInfo } = EduClassroomConfig.shared;
       runInAction(() => {
         users.forEach((user) => {
+          // 2 means user has been kicked out
+          if (type === 2) {
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.KickOut, user);
+          }
+
           const userRole = RteRole2EduRole(sessionInfo.roomType, user.userRole);
+
           if (user.userUuid === sessionInfo.userUuid) {
             this._localUser = undefined;
-            // 2 means user has been kicked out
-            if (type === 2) {
-              EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.KickOut);
-              return;
-            }
           }
           if (userRole === EduRoleTypeEnum.teacher) {
             this.teacherList.delete(user.userUuid);
@@ -170,7 +171,7 @@ export class UserStore extends EduStoreBase {
     scene.on(
       AgoraRteEventType.BatchUserPropertyUpdated,
       (users: { userUuid: string; userProperties: any }[], operator: any, cause: any) => {
-        const batchRecord = BatchRecord.getBatchRecord<typeof users>(cause, (batchArray) => {
+        const batchRecord = BatchRecord.getBatchRecord<typeof users>(cause.data, (batchArray) => {
           const allUsers = batchArray.flat();
           const newRewards = new Map(this.rewards);
           for (const user of allUsers) {

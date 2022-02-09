@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { RootBox } from '~ui-kit';
 import { useClassroomStyle, useInitialize } from './hooks';
@@ -31,13 +31,17 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
 );
 
 export const TrackArea = ({ top = 0, boundaryName }: { top?: number; boundaryName: string }) => {
-  const { trackUIStore } = useStore();
+  const { trackUIStore, shareUIStore } = useStore();
+  const dom = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    trackUIStore.updateTrackContext(boundaryName);
-  }, []);
+    const { offsetTop, offsetLeft } = dom.current!.parentElement!;
+    trackUIStore.updateTrackContext(boundaryName, { top: offsetTop, left: offsetLeft });
+  }, [shareUIStore.classroomViewportSize]);
+
   return (
     <div
+      ref={dom}
       className={`${boundaryName} w-full absolute`}
       style={{ height: `calc( 100% - ${top}px )`, top, zIndex: -1 }}
     />

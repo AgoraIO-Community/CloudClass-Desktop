@@ -1,10 +1,8 @@
 import { TrackData, TrackState } from '../room/type';
 
-export type Bounds = {
+export type Offset = {
   left: number;
   top: number;
-  right: number;
-  bottom: number;
 };
 
 export type Margin = {
@@ -37,9 +35,8 @@ export type ResizeBounds = {
 export type TrackContext = {
   margin: Margin;
   outerSize: Dimensions;
-  dragBounds: Bounds;
+  offset: Offset;
   resizeBounds: ResizeBounds;
-  ready: boolean;
 };
 
 export interface TrackAdapter {

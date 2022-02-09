@@ -11,23 +11,22 @@ export const Award = observer(() => {
   } = useStore();
 
   return (
-    // <div className="center-reward">
-    //   {awardAnims.map((anim) => {
-    //     return (
-    //       <SvgaPlayer
-    //         key={anim.id}
-    //         style={{ position: 'absolute' }}
-    //         url={RewardSVGA}
-    //         onFinish={() => {
-    //           removeAward(anim.id);
-    //         }}></SvgaPlayer>
-    //     );
-    //   })}
-    //   {awardAnims.map((anim) => {
-    //     return <SoundPlayer url={RewardSound} key={anim.id} />;
-    //   })}
-    // </div>
-    <div />
+    <div className="center-reward">
+      {awardAnims.map((anim) => {
+        return (
+          <SvgaPlayer
+            key={anim.id}
+            style={{ position: 'absolute', transform: 'scale(1.5)' }}
+            url={RewardSVGA}
+            onFinish={() => {
+              removeAward(anim.id);
+            }}></SvgaPlayer>
+        );
+      })}
+      {awardAnims.map((anim) => {
+        return <SoundPlayer url={RewardSound} key={anim.id} />;
+      })}
+    </div>
   );
 });
 export default Award;
