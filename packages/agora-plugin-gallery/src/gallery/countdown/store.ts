@@ -1,8 +1,9 @@
 import { action, observable } from 'mobx';
-import type { AgoraExtAppContext, AgoraExtAppHandle } from 'agora-edu-core';
+import type { AgoraExtAppContext, AgoraExtAppController, AgoraExtAppHandle } from 'agora-edu-core';
 export class PluginStore {
   context!: AgoraExtAppContext;
   handle!: AgoraExtAppHandle;
+  controller!: AgoraExtAppController;
   @observable
   result?: number = 0;
   @observable
@@ -19,7 +20,7 @@ export class PluginStore {
       const duration = parseInt(sDuration) * 1000;
       if (startTime && duration) {
         this.setPlay(true);
-        this.setResult(startTime + duration);
+        this.setResult(startTime + duration + this.controller.getServerTimeShift());
         this.setShowSetting(false);
       } else {
         this.setPlay(false);
@@ -68,13 +69,19 @@ export class PluginStore {
     const pauseTime = parseInt(sPauseTime) * 1000;
     const duration = parseInt(sDuration) * 1000;
     if (state === '1') {
-      this.setResult(startTime + duration);
+      this.setResult(startTime + duration + this.controller.getServerTimeShift());
       this.setShowSetting(false);
       this.setPlay(true);
     } else if (state === '2') {
       this.setPlay(false);
-      this.setResult(Date.now() + duration - (pauseTime - startTime));
+      this.setResult(
+        Date.now() + duration - (pauseTime - startTime) + +this.controller.getServerTimeShift(),
+      );
     }
+  }
+
+  getNowTsStr() {
+    return Math.floor((Date.now() + this.controller.getServerTimeShift()) / 1000).toString();
   }
 
   @action

@@ -129,28 +129,6 @@ export class ExtAppUIStore extends EduUIStoreBase {
         deleteRoomProperties: this.handleDelete(extApp.appIdentifier),
       };
 
-      if (extApp.setController) {
-        extApp.setController({
-          shutdown: () => {
-            this.shutdownApp(extApp.appIdentifier);
-          },
-          invokeAPI: (apiName: string, ...args: any[]) => {
-            switch (apiName) {
-              case 'addToast': {
-                this.shareUIStore.addToast(args[0], args[1]);
-                return Promise.resolve();
-              }
-              case 'sendRewards': {
-                return this.classroomStore.roomStore.sendRewards(args[0], args[1]);
-              }
-              default: {
-                return Promise.resolve();
-              }
-            }
-          },
-        });
-      }
-
       extApp.extAppDidLoad(dom, context, handlers);
     }
 
@@ -243,6 +221,36 @@ export class ExtAppUIStore extends EduUIStoreBase {
     reaction(() => this.classroomStore.userStore.studentList.keys(), this.fireEvent);
 
     reaction(() => this.activeApps.keys(), this.fireEvent);
+
+    const apps = this.classroomStore.extAppStore.extApps;
+    Object.keys(apps).forEach((appId) => {
+      const extApp = apps[appId];
+
+      if (extApp.setController) {
+        extApp.setController({
+          shutdown: () => {
+            this.shutdownApp(extApp.appIdentifier);
+          },
+          invokeAPI: (apiName: string, ...args: any[]) => {
+            switch (apiName) {
+              case 'addToast': {
+                this.shareUIStore.addToast(args[0], args[1]);
+                return Promise.resolve();
+              }
+              case 'sendRewards': {
+                return this.classroomStore.roomStore.sendRewards(args[0], args[1]);
+              }
+              default: {
+                return Promise.resolve();
+              }
+            }
+          },
+          getServerTimeShift: () => {
+            return this.classroomStore.roomStore.clientServerTimeShift;
+          },
+        });
+      }
+    });
   }
 
   onDestroy() {}

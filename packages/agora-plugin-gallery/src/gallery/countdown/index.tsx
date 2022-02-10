@@ -9,6 +9,7 @@ import {
   AgoraExtAppHandle,
   EduRoleTypeEnum,
   AgoraExtAppEventHandler,
+  AgoraExtAppController,
 } from 'agora-edu-core';
 import { Button, Countdown, Input, transI18n, I18nProvider, changeLanguage, Icon } from '~ui-kit';
 import classnames from 'classnames';
@@ -38,7 +39,7 @@ const App = observer(() => {
             pluginStore.setShowSetting(true);
             pluginStore.changeRoomProperties({
               state: '2',
-              pauseTime: Math.floor(Date.now() / 1000).toString(),
+              pauseTime: pluginStore.getNowTsStr(),
             });
           }}>
           {transI18n('countdown.restart')}
@@ -98,7 +99,7 @@ const App = observer(() => {
                 pluginStore.setPlay(true);
                 pluginStore.changeRoomProperties({
                   state: '1',
-                  startTime: Math.floor(Date.now() / 1000).toString(),
+                  startTime: pluginStore.getNowTsStr(),
                   duration: pluginStore.number != undefined ? pluginStore.number.toString() : '0',
                   commonState: 1,
                 });
@@ -150,6 +151,10 @@ export class AgoraExtAppCountDown implements IAgoraExtApp, AgoraExtAppEventHandl
 
   extAppRoomPropertiesDidUpdate(properties: any, cause: any): void {
     this.store.onReceivedProps(properties, cause);
+  }
+
+  setController(controller: AgoraExtAppController) {
+    this.store.controller = controller;
   }
 
   onClose() {

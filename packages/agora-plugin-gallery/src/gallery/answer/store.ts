@@ -64,8 +64,6 @@ export class PluginStore {
   @observable
   showModifyBtn: boolean = false; //当前是否显示修改按钮
 
-  private _lag = 0;
-
   resetContextAndHandle(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
     this.context = ctx;
     this.handle = handle;
@@ -83,9 +81,10 @@ export class PluginStore {
       this.currentTime = '';
     } else {
       let properties = this.context.properties;
-      if (!this._lag) this._lag = Number(properties.startTime) * 1000 - Date.now();
       this.currentTime = formatTime(
-        properties.endTime ? Number(properties.endTime) * 1000 : Date.now() + this._lag,
+        properties.endTime
+          ? Number(properties.endTime) * 1000
+          : Date.now() + this.controller.getServerTimeShift(),
         Number(properties.startTime) * 1000,
       );
     }
@@ -263,7 +262,7 @@ export class PluginStore {
         });
         await this.changeRoomProperties({
           state: 'start',
-          startTime: Math.floor(Date.now() / 1000).toString(),
+          startTime: this.getNowTsStr(),
           items: this.answer,
           answer: sels,
           commonState: 1,
@@ -271,33 +270,35 @@ export class PluginStore {
       } else if (this.status === 'info') {
         await this.changeRoomProperties({
           state: 'end',
-          endTime: Math.floor(Date.now() / 1000).toString(),
+          endTime: this.getNowTsStr(),
           commonState: 1,
         });
       } else {
         await this.changeRoomProperties({
           state: 'clear',
-          endTime: Math.floor(Date.now() / 1000).toString(),
+          endTime: this.getNowTsStr(),
           commonState: 1,
         });
       }
     } else {
       if (this.status === 'answer') {
-        if (this.status === 'answer') {
-          if (this.showModifyBtn) {
-            this.toChangeMode();
-          } else {
-            this.showModifyBtn = true;
-            await this.changeRoomProperties({
-              replyTime: Math.floor(Date.now() / 1000).toString(),
-              answer: this.selAnswer,
-              commonState: 1,
-            });
-          }
+        if (this.showModifyBtn) {
+          this.toChangeMode();
+        } else {
+          this.showModifyBtn = true;
+          await this.changeRoomProperties({
+            replyTime: this.getNowTsStr(),
+            answer: this.selAnswer,
+            commonState: 1,
+          });
         }
       }
     }
   };
+
+  getNowTsStr() {
+    return Math.floor((Date.now() + this.controller.getServerTimeShift()) / 1000).toString();
+  }
 
   @action
   toChangeMode() {
@@ -318,10 +319,6 @@ export class PluginStore {
         this.title = '';
         this.answer = properties.items;
         this.selAnswer = [];
-        this.currentTime = formatTime(
-          properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
-          Number(properties.startTime) * 1000,
-        );
         this.students = [];
         let answeredNumber = 0;
         let rightNumber = 0;
@@ -379,12 +376,6 @@ export class PluginStore {
       if (properties.state === 'start') {
         this.title = '';
         this.answer = properties.items;
-        this.currentTime = formatTime(
-          properties.endTime
-            ? Number(properties.endTime) * 1000
-            : Number(properties.startTime) * 1000,
-          Number(properties.startTime) * 1000,
-        );
         this.height = (this.answer?.length || 0) > 4 ? 190 : 120;
         if (this.status !== 'answer' || this.showModifyBtn) {
           this.status = 'answer';
@@ -400,10 +391,6 @@ export class PluginStore {
         this.title = '';
         this.answer = properties.answer;
         this.selAnswer = getStudentInfo(properties['student' + userUuid])?.answer || this.selAnswer;
-        this.currentTime = formatTime(
-          properties.endTime ? Number(properties.endTime) * 1000 : Date.now(),
-          Number(properties.startTime) * 1000,
-        );
         this.status = 'info';
         this.height = 120;
         this.ui = ['infos'];
@@ -529,8 +516,6 @@ export class PluginStore {
         EduClassroomConfig.shared.sessionInfo.roomUuid,
         args,
       );
-    } else {
-      this.controller.invokeAPI('addToast', '没有学生需要发奖励', 'warning');
     }
   }
 }
