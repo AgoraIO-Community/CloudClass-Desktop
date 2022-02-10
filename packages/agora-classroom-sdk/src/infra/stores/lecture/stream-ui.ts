@@ -4,6 +4,7 @@ import {
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduStreamUI,
+  EduStreamToolCategory,
 } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
 import { observable, action, computed, reaction } from 'mobx';
@@ -67,6 +68,18 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
       if (stream.role === EduRoleTypeEnum.student) {
         tools = tools.concat([this.remotePodiumTool(stream)]);
       }
+    }
+
+    const shouldNotHaveStreamTools =
+      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant &&
+      stream.role === EduRoleTypeEnum.teacher;
+
+    if (shouldNotHaveStreamTools) {
+      tools = tools.filter(({ category }) => {
+        return ![EduStreamToolCategory.camera, EduStreamToolCategory.microphone].includes(category);
+      });
+
+      tools.push(this.localPodiumTool());
     }
 
     return tools;
