@@ -102,7 +102,7 @@ const App = observer(
                 </Col>
               </TableHeader>
               <Table className="table-container">
-                {pluginStore.students?.map((student: any) => (
+                {pluginStore.getAnsweredStudents().map((student: any) => (
                   <Row className={'border-bottom-width-1'} key={student.name}>
                     {['name', 'replyTime', 'answer'].map((col: string, idx: number) => (
                       <Col

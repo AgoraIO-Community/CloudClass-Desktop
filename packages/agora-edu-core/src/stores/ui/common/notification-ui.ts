@@ -120,12 +120,15 @@ export class NotificationUIStore extends EduUIStoreBase {
         this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.onpodium'));
       }
       // reward received
-      if (event === AgoraEduClassroomEvent.RewardReceived) {
+      if (
+        event === AgoraEduClassroomEvent.RewardReceived ||
+        event === AgoraEduClassroomEvent.BatchRewardReceived
+      ) {
         const [userNames] = args;
         if (userNames.length > 3) {
           this.shareUIStore.addToast(
             transI18n('toast2.teacher.reward2', {
-              reason1: userNames.slice(0, 3),
+              reason1: userNames.slice(0, 3).join(','),
               reason2: userNames.length,
             }),
           );

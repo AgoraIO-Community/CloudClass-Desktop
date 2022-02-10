@@ -300,6 +300,10 @@ export class PluginStore {
     return Math.floor((Date.now() + this.controller.getServerTimeShift()) / 1000).toString();
   }
 
+  getAnsweredStudents() {
+    return this.students ? this.students?.filter(({ answer }) => !!answer) : [];
+  }
+
   @action
   toChangeMode() {
     this.buttonName = 'answer.submit';
