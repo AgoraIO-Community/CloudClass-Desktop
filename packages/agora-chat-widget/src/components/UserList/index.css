@@ -35,6 +35,9 @@
   color: #191919;
   line-height: 18px;
   margin: 0 20px;
+  width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-tag {

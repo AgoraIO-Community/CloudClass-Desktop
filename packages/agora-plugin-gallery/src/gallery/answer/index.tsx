@@ -122,6 +122,10 @@ const App = observer(
                             title={student[col]}
                             style={{
                               paddingLeft: 0,
+                              width: 113,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center',
                             }}>
                             {student[col]}
                           </span>
