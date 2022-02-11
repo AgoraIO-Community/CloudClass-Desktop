@@ -6,7 +6,7 @@ import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AgoraEduClassroomEvent, EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { RteRole2EduRole } from '../../../../utils';
-import { FetchUserParam, FetchUserType } from './type';
+import { FetchUserParam } from './type';
 import { BatchRecord } from '../../../../utils/batch';
 
 //for users
@@ -70,12 +70,14 @@ export class UserStore extends EduStoreBase {
     this.rewards = newRewards;
     if (isBatch) {
       const userNames = this.getRewardedUsers(oldRewards, newRewards);
+
       EduEventCenter.shared.emitClasroomEvents(
         AgoraEduClassroomEvent.BatchRewardReceived,
         userNames,
       );
     } else {
       const userNames = this.getRewardedUsers(oldRewards, newRewards);
+
       EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.RewardReceived, userNames);
     }
   }
@@ -103,22 +105,12 @@ export class UserStore extends EduStoreBase {
     return [];
   }
 
-  @action.bound
-  private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
-    if (changedRoomProperties.includes('students')) {
-      this.rewards = new Map(
-        Object.entries(roomProperties['students']).map(([userUuid, { reward }]: any) => {
-          return [userUuid, reward];
-        }),
-      );
-    }
-  }
-
   //others
   private _addEventHandlers(scene: AgoraRteScene) {
     scene.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
       const { sessionInfo } = EduClassroomConfig.shared;
       runInAction(() => {
+        const newRewards = new Map(this.rewards);
         users.forEach((user) => {
           let userItem = new EduUser(user);
           if (userItem.userUuid === sessionInfo.userUuid) {
@@ -135,11 +127,13 @@ export class UserStore extends EduStoreBase {
           }
           this.users.set(user.userUuid, userItem);
 
+          // initialize reward count when one comes in
           const reward = user.userProperties.get('reward');
           if (reward) {
-            this.rewards.set(user.userUuid, reward.count || 0);
+            newRewards.set(user.userUuid, reward.count || 0);
           }
         });
+        this.rewards = newRewards;
       });
     });
     scene.on(AgoraRteEventType.UserRemoved, (users: AgoraUser[], type: number) => {
@@ -229,8 +223,6 @@ export class UserStore extends EduStoreBase {
         batchRecord.addBatch(users);
       },
     );
-
-    scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
   }
 
   onInstall() {
