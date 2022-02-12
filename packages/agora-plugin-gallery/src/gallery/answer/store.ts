@@ -519,6 +519,7 @@ export class PluginStore {
         'sendRewards',
         EduClassroomConfig.shared.sessionInfo.roomUuid,
         args,
+        true,
       );
     }
   }

@@ -238,7 +238,7 @@ export class ExtAppUIStore extends EduUIStoreBase {
                 return Promise.resolve();
               }
               case 'sendRewards': {
-                return this.classroomStore.roomStore.sendRewards(args[0], args[1]);
+                return this.classroomStore.roomStore.sendRewards(args[0], args[1], args[2]);
               }
               default: {
                 return Promise.resolve();
