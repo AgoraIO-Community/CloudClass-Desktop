@@ -264,14 +264,21 @@ export class EduApiService extends ApiBase {
     return res.data;
   }
 
-  async sendRewards(params: {
-    roomUuid: string;
-    rewards: Array<{
-      userUuid: string;
-      changeReward: number;
-    }>;
-  }) {
-    const apiVersion = EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired ? 'v2' : 'v4';
+  async sendRewards(
+    params: {
+      roomUuid: string;
+      rewards: Array<{
+        userUuid: string;
+        changeReward: number;
+      }>;
+    },
+    isBatch?: boolean,
+  ) {
+    const apiVersion = EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired
+      ? 'v2'
+      : isBatch
+      ? 'v4'
+      : 'v3';
     const res = await this.fetch({
       path: `/${apiVersion}/rooms/${params.roomUuid}/rewards`,
       method: 'POST',
