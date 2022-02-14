@@ -69,10 +69,18 @@
     "win": {
       "icon": "icons/favicon.png",
       "target": [
-        {
-          "target": "zip"
-        }
+        "nsis"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icons/favicon.ico",
+      "shortcutName": "AgoraFlexibleClassroom",
+      "artifactName": "AgoraFlexibleClassroom-${version}.${ext}"
     },
     "linux": {
       "icon": "icons/favicon.png",
