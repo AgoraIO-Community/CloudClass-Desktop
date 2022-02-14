@@ -11,6 +11,7 @@ export const ChatWidget: FC<{
   visibleEmoji: boolean;
   visibleBtnSend?: boolean;
   inputBoxStatus?: string;
+  showRoomChatOnly?: boolean;
 }> = (props) => {
   return (
     <Widget
@@ -31,6 +32,19 @@ export const ChatWidgetH5: FC = observer(() => {
         'h5-chat-pannel',
       )}>
       <ChatWidget visibleEmoji={false} visibleBtnSend={false} inputBoxStatus="inline" />
+    </Layout>
+  );
+});
+
+export const ChatWidgetOneOnOneH5: FC = observer(() => {
+  return (
+    <Layout className="h-full">
+      <ChatWidget
+        visibleEmoji={false}
+        visibleBtnSend={false}
+        inputBoxStatus="inline"
+        showRoomChatOnly={true}
+      />
     </Layout>
   );
 });

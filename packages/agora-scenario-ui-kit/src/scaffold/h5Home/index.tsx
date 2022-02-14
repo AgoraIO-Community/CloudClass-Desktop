@@ -16,10 +16,17 @@ export const H5Login: React.FC<any> = ({
   role,
   scenario,
   onChangeScenario,
+  onChangeRole,
   version,
 }) => {
   const scenarioOptions = [
+    { label: transI18n('home.roomType_1v1'), value: '1v1' },
     { label: transI18n('home.roomType_interactiveBigClass'), value: 'big-class' },
+  ];
+
+  const roleOptions = [
+    { label: transI18n('home.role_student'), value: 'student' },
+    { label: transI18n('home.role_audience'), value: 'incognito' },
   ];
 
   return (
@@ -66,6 +73,25 @@ export const H5Login: React.FC<any> = ({
               errorMsg={transI18n('home.input-error-msg')}
               maxLength={50}
             />
+          </Col>
+        </Row>
+        <Row className="home-row-item">
+          <Col>
+            <Select
+              className="home-h5-select"
+              prefix={
+                <span className="home-label" title={transI18n('home.role')}>
+                  {transI18n('home.role')}
+                </span>
+              }
+              id="role"
+              value={role}
+              onChange={(value) => {
+                onChangeRole(value);
+              }}
+              placeholder={transI18n('home.role_placeholder')}
+              isMenuTextCenter={true}
+              options={roleOptions}></Select>
           </Col>
         </Row>
         <Row className="home-row-item">

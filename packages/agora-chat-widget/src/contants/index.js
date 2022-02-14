@@ -12,6 +12,10 @@ export const ROLE = {
     id: 3,
     tag: '助教',
   },
+  audience: {
+    id: [0, 4], // 后台定义
+    tag: '观众',
+  },
 };
 
 export const ROOM_TYPE = {

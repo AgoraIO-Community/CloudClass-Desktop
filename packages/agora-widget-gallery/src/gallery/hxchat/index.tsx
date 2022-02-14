@@ -24,6 +24,7 @@ type AppProps = {
   visibleBtnSend?: boolean;
   inputBoxStatus?: string | undefined;
   uiStore: EduClassroomUIStore;
+  showRoomChatOnly?: boolean;
 };
 
 const App: React.FC<AppProps> = observer((props) => {
@@ -73,6 +74,7 @@ const App: React.FC<AppProps> = observer((props) => {
       memebers: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
       announcement: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
+      showRoomChatOnly: props.showRoomChatOnly,
       isFullSize: widgetStore.isFullSize,
       emoji: typeof props.visibleEmoji !== 'undefined' ? props.visibleEmoji : true,
       btnSend: typeof props.visibleBtnSend !== 'undefined' ? props.visibleBtnSend : true,

@@ -12,6 +12,8 @@ export const en = {
   Star: 'star',
   'Open Private Call': 'open private call',
   'Close Private Call': 'close private call',
+  video: 'video',
+  chat: 'chat',
   role: {
     teacher: 'Teacher',
     student: 'Student',

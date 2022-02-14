@@ -108,15 +108,8 @@ export const Chat = () => {
   };
   return (
     <div>
-      <Tabs onChange={onTabChange} activeKey={tabKey}>
-        <TabPane
-          tab={
-            <div>
-              {showRed && <div className="red-notice"></div>}
-              {transI18n('chat.chat')}
-            </div>
-          }
-          key={CHAT_TABS_KEYS.chat}>
+      {configUIVisible.showRoomChatOnly ? (
+        <>
           {announcement && (
             <div
               className="notice"
@@ -127,33 +120,56 @@ export const Chat = () => {
               <span className="notice-text">{announcement}</span>
             </div>
           )}
-          <MessageBox />
-          <InputBox />
-        </TabPane>
-        {configUIVisible.memebers && isTeacher && (
-          <TabPane
-            tab={
-              roomUserList.length > 0
-                ? `${transI18n('chat.members')}(${roomUserList.length})`
-                : `${transI18n('chat.members')}`
-            }
-            key={CHAT_TABS_KEYS.user}>
-            <UserList roomUserList={roomUserList} />
-          </TabPane>
-        )}
-        {configUIVisible.announcement && (
+          <MessageBox height="100%" />
+        </>
+      ) : (
+        <Tabs onChange={onTabChange} activeKey={tabKey}>
           <TabPane
             tab={
               <div>
-                {showAnnouncementNotice && <div className="red-notice"></div>}
-                {transI18n('chat.announcement')}
+                {showRed && <div className="red-notice"></div>}
+                {transI18n('chat.chat')}
               </div>
             }
-            key={CHAT_TABS_KEYS.notice}>
-            <Announcement />
+            key={CHAT_TABS_KEYS.chat}>
+            {announcement && (
+              <div
+                className="notice"
+                onClick={() => {
+                  toTabKey();
+                }}>
+                <img src={notice} className="notice-icon" />
+                <span className="notice-text">{announcement}</span>
+              </div>
+            )}
+            <MessageBox />
+            <InputBox />
           </TabPane>
-        )}
-      </Tabs>
+          {configUIVisible.memebers && isTeacher && (
+            <TabPane
+              tab={
+                roomUserList.length > 0
+                  ? `${transI18n('chat.members')}(${roomUserList.length})`
+                  : `${transI18n('chat.members')}`
+              }
+              key={CHAT_TABS_KEYS.user}>
+              <UserList roomUserList={roomUserList} />
+            </TabPane>
+          )}
+          {configUIVisible.announcement && (
+            <TabPane
+              tab={
+                <div>
+                  {showAnnouncementNotice && <div className="red-notice"></div>}
+                  {transI18n('chat.announcement')}
+                </div>
+              }
+              key={CHAT_TABS_KEYS.notice}>
+              <Announcement />
+            </TabPane>
+          )}
+        </Tabs>
+      )}
       {showMIniIcon && (
         <div className="mini-icon">
           <img

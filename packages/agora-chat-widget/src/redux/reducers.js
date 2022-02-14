@@ -31,6 +31,7 @@ let defaultState = {
     emoji: true, // 默认emoji 为 true
     inputBox: 'multiple', // 输入UI
     btnSend: true, // 是否暂时send按钮
+    showRoomChatOnly: false, // 隐藏tab，只显示聊天 谨慎使用改配置 ⚠️👁️
   },
 };
 const reducer = (state = defaultState, action) => {

@@ -12,6 +12,8 @@ export const zh = {
   Star: '奖励',
   'Open Private Call': '开启私密语音',
   'Close Private Call': '关闭私密语音',
+  video: '视频',
+  chat: '聊天',
   role: {
     teacher: '老师',
     student: '学生',

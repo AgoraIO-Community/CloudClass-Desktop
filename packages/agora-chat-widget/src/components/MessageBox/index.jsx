@@ -4,16 +4,19 @@ import { transI18n } from '~ui-kit';
 import { TextMsg } from './TextMsg';
 import { CmdMsg } from './CmdMsg';
 import scrollElementToBottom from '../../utils/scrollElementToBottom';
-import { CHAT_TABS_KEYS } from '../../contants';
+import { CHAT_TABS_KEYS, ROLE } from '../../contants';
 import noMessage_icon from '../../themes/img/noMessage.png';
 import './index.css';
 
 // 聊天页面
-export const MessageBox = () => {
+export const MessageBox = ({ height }) => {
   const state = useSelector((state) => state);
   const msgs = state?.messages;
   const isTabKey = state?.isTabKey;
   const isHaveNotice = state?.room?.announcement;
+  const roleType = state?.loginUserInfo.ext;
+  // 在propsData 取值
+  const isAudience = roleType && ROLE.audience.id.includes(JSON.parse(roleType).role);
   let isHaveMsg = msgs && msgs.length > 0;
 
   const activeTab = isTabKey === CHAT_TABS_KEYS.chat;
@@ -34,7 +37,9 @@ export const MessageBox = () => {
           className="message-box"
           id="chat-messages"
           style={{
-            height: isHaveNotice
+            height: height
+              ? height
+              : isHaveNotice
               ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
               : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
           }}>
@@ -56,7 +61,9 @@ export const MessageBox = () => {
         <div
           className="message-box no-box"
           style={{
-            height: isHaveNotice
+            height: height
+              ? height
+              : isHaveNotice
               ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
               : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
           }}>

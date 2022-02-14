@@ -255,10 +255,10 @@ body,
 .big-class-h5 {
   transition: all 0.3s ease;
 }
-.big-class-h5 .chat-panel {
+.big-class-h5 .chat-panel,
+.oneOnOne-layout-container .chat-panel {
   min-width: unset;
 }
-
 .fullsize-video-container .video-player-overlay {
   width: 100%;
   height: 100%;
@@ -302,4 +302,20 @@ body,
 }
 .rtm-chat-2 .small-class-chat-fixed {
   height: 100% !important;
+}
+.full-size-tabs .tabs-content {
+  height: 100%;
+}
+.oneOnone-tabs-container .tabs-tab {
+  font-size: 12px;
+  padding: 8px 0 8px 4px;
+}
+.oneOnone-tabs-container .tabs-tab.tabs-tab-active .tabs-tab-btn {
+  font-weight: 600;
+}
+.oneOnone-tabs-container .tabs-tab + .tabs-tab {
+  margin: 0 0 0 10px;
+}
+.oneOnone-tabs-container .tabs-ink-bar {
+  display: none;
 }

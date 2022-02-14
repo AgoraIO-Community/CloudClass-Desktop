@@ -27,6 +27,7 @@ export class EduContext {
     );
     const lectureUI = EduUIStoreFactory.createWithType(EduRoomTypeEnum.RoomBigClass, lecture);
     const lectureH5UI = EduUIStoreFactory.createWithTypeH5(EduRoomTypeEnum.RoomBigClass, lecture);
+    const oneToOneH5UI = EduUIStoreFactory.createWithTypeH5(EduRoomTypeEnum.Room1v1Class, oneToOne);
 
     return React.createContext({
       oneToOne: oneToOne,
@@ -36,6 +37,7 @@ export class EduContext {
       interactiveUI,
       lectureUI,
       lectureH5UI,
+      oneToOneH5UI,
     });
   }
 }

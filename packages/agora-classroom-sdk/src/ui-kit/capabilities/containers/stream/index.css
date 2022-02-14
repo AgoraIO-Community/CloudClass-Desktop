@@ -179,3 +179,7 @@
   height: 34px;
   cursor: pointer;
 }
+
+.oneOnOneStreamsh5Container > div {
+  flex: 1;
+}

@@ -6,6 +6,7 @@ export const use1v1UIStores = () => React.useContext(EduContext.shared).oneToOne
 export const useInteractiveUIStores = () => React.useContext(EduContext.shared).interactiveUI;
 export const useLectureUIStores = () => React.useContext(EduContext.shared).lectureUI;
 export const useLectureH5UIStores = () => React.useContext(EduContext.shared).lectureH5UI;
+export const use1v1H5UIStores = () => React.useContext(EduContext.shared).oneToOneH5UI;
 
 export function useStore(): EduClassroomUIStore {
   const oneToOneUIStores = React.useContext(EduContext.shared).oneToOneUI;

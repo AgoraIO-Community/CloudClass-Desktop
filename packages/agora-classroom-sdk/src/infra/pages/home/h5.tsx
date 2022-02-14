@@ -145,6 +145,7 @@ export const HomeH5Page = observer(() => {
         onChangeScenario={onChangeScenario}
         onChangeRoomName={onChangeRoomName}
         onChangeUserName={onChangeUserName}
+        onChangeRole={onChangeRole}
         language={language}
         onChangeLanguage={onChangeLanguage}
         onClick={async () => {

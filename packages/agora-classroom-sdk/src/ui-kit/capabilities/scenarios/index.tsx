@@ -7,6 +7,7 @@ import { OneToOneScenario } from './1v1';
 import { MidClassScenario } from './mid-class';
 import { BigClassScenario } from './big-class';
 import { BigClassScenarioH5 } from './big-class-h5';
+import { OneToOneScenarioH5 } from './1v1-h5';
 
 export type ScenariosProps = {
   pretest: boolean;
@@ -16,7 +17,11 @@ export type ScenariosProps = {
 export const renderRoomSceneWith = (roomType: EduRoomTypeEnum) => {
   switch (roomType) {
     case EduRoomTypeEnum.Room1v1Class: {
-      return <OneToOneScenario />;
+      return EduClassroomConfig.shared.platform === 'H5' ? (
+        <OneToOneScenarioH5 />
+      ) : (
+        <OneToOneScenario />
+      );
     }
     case EduRoomTypeEnum.RoomBigClass: {
       return EduClassroomConfig.shared.platform === 'H5' ? (
