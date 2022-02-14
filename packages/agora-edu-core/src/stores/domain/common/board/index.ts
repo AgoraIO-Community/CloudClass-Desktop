@@ -335,6 +335,7 @@ export class BoardStore extends EduStoreBase {
     }
     const scenePath = `/${resource.resourceUuid}`;
     if (resource.conversion.canvasVersion) {
+      const url = resource.taskProgress?.prefix;
       // 判断是否为带 canvasVersion 参数的转换文件
       await this.windowManager.addApp({
         kind: 'Slide',
@@ -344,6 +345,7 @@ export class BoardStore extends EduStoreBase {
         },
         attributes: {
           taskId: resource.taskUuid,
+          url,
         },
       });
     } else {
