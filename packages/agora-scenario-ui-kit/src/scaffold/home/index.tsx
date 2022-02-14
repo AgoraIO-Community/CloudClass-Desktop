@@ -117,13 +117,13 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
-          <Link
+          {/* <Link
             className="header-right-item"
             to={`/recordation-search/${Buffer.from(
               `{"language":"${language}", "region":"${region}"}`,
             ).toString('base64')}`}>
             {transI18n('home.recordation-search')}
-          </Link>
+          </Link> */}
           <div
             style={{
               marginRight: language === 'en' ? -12 : -58,
