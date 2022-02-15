@@ -304,6 +304,8 @@ body,
   height: 100% !important;
 }
 .full-size-tabs .tabs-content {
+  position: absolute;
+  top: 0;
   height: 100%;
 }
 .oneOnone-tabs-container .tabs-tab {
@@ -318,4 +320,9 @@ body,
 }
 .oneOnone-tabs-container .tabs-ink-bar {
   display: none;
+}
+
+/* nor fewly brower*/
+.oneOnone-tabs-container .tabs-content-holder {
+  position: relative;
 }

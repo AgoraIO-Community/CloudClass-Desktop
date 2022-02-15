@@ -81,7 +81,7 @@ const H5LayoutStreamAsideContainer = observer(() => {
       <TabPane tab={transI18n('video')} key="video">
         <RoomOneOnOneStreamsH5Container />
       </TabPane>
-      <TabPane tab={transI18n('chat')} key="chat">
+      <TabPane tab={transI18n('trans_chat')} key="chat" forceRender={true}>
         <ChatWidgetOneOnOneH5 />
       </TabPane>
     </Tabs>
