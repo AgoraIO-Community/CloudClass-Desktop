@@ -13,6 +13,7 @@ import { RoomOneOnOneStreamsH5Container } from '~containers/stream/room-1v1-h5-p
 import { ChatWidgetOneOnOneH5 } from '~containers/widget/chat-widget';
 import { ScreenShareContainer } from '~containers/screen-share';
 import { LayoutOneOnOneWhiteboardContainer } from '~containers/board/RoomOneOnOneWhiteboardContainer';
+import { DialogContainer } from '~containers/dialog';
 
 export const OneToOneScenarioH5 = observer(() => {
   return (
@@ -32,6 +33,7 @@ export const OneToOneScenarioH5 = observer(() => {
         <OneOnOneH5MainContainer />
         <ExtAPPUntrackContainer />
         <ToastContainer />
+        <DialogContainer />
       </LayoutOrientation>
     </Room>
   );
