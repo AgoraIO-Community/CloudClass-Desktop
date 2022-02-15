@@ -8,6 +8,7 @@ import { OneOnOneH5NavgationBarContainer } from '~containers/nav/OneOnOne-h5';
 import classnames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { Tabs, TabPane, transI18n } from '~ui-kit';
+import { ToastContainer } from '~containers/toast';
 import { RoomOneOnOneStreamsH5Container } from '~containers/stream/room-1v1-h5-player';
 import { ChatWidgetOneOnOneH5 } from '~containers/widget/chat-widget';
 import { ScreenShareContainer } from '~containers/screen-share';
@@ -30,6 +31,7 @@ export const OneToOneScenarioH5 = observer(() => {
         <OneOnOneH5NavgationBarContainer />
         <OneOnOneH5MainContainer />
         <ExtAPPUntrackContainer />
+        <ToastContainer />
       </LayoutOrientation>
     </Room>
   );
