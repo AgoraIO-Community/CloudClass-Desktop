@@ -183,7 +183,6 @@ export const HomeH5Page = observer(() => {
             roomName: `${roomName}`,
             userName: userName,
             roleType: role,
-            startTime: Date.now(),
             region,
             duration: duration * 60,
             latencyLevel: 2,
