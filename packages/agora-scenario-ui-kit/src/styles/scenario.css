@@ -303,11 +303,7 @@ body,
 .rtm-chat-2 .small-class-chat-fixed {
   height: 100% !important;
 }
-.full-size-tabs .tabs-content {
-  position: absolute;
-  top: 0;
-  height: 100%;
-}
+
 .oneOnone-tabs-container .tabs-tab {
   font-size: 12px;
   padding: 8px 0 8px 4px;
@@ -325,4 +321,10 @@ body,
 /* nor fewly brower*/
 .oneOnone-tabs-container .tabs-content-holder {
   position: relative;
+}
+
+.oneOnone-tabs-container .tabs-content {
+  position: absolute;
+  top: 0;
+  height: 100%;
 }

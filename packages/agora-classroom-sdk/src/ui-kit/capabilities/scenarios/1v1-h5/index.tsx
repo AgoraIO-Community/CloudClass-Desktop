@@ -76,7 +76,7 @@ const H5LayoutStreamAsideContainer = observer(() => {
   return (
     <Tabs
       defaultActiveKey="video"
-      className="full-size-tabs oneOnone-tabs-container"
+      className="oneOnone-tabs-container"
       style={{ width: videoStreamSize.width }}>
       <TabPane tab={transI18n('video')} key="video">
         <RoomOneOnOneStreamsH5Container />
