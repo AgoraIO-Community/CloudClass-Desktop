@@ -22,9 +22,7 @@
       "~contexts/*": ["./src/infra/contexts/*"],
       "agora-widget-gallery": ["../agora-widget-gallery/src"],
       "agora-chat-widget": ["../agora-chat-widget/src"],
-      "agora-plugin-gallery": ["../agora-plugin-gallery/src"],
-      "agora-rte-sdk": ["../agora-rte-sdk/src"],
-      "agora-edu-core": ["../agora-edu-core/src"]
+      "agora-plugin-gallery": ["../agora-plugin-gallery/src"]
     }
   }
 }
