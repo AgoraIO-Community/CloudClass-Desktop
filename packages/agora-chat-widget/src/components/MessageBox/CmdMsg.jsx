@@ -14,7 +14,7 @@ export const CmdMsg = ({ item }) => {
   const isDeleteMsg = item?.action === 'DEL';
   const isTeahcer = state?.propsData.roleType === ROLE.teacher.id;
   const assistantTeacher = state?.propsData.roleType === ROLE.assistant.id;
-  const currentUserId = state?.loginUser;
+  const currentUserId = state?.propsData.userUuid;
   const isMuter = state?.propsData.userUuid === item?.ext.muteMember;
 
   String.prototype.format = function () {
