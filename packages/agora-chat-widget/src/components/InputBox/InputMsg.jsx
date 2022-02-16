@@ -30,12 +30,12 @@ export const ShowEomji = ({ getEmoji }) => {
 
 export const InputMsg = ({ allMutePermission }) => {
   const state = useSelector((state) => state);
-  const loginUser = state?.loginUser;
+  const loginUser = state?.propsData.userUuid;
   const roomId = state?.room.info.id;
-  const roleType = state?.loginUserInfo.ext;
+  const roleType = state?.propsData.roleType;
   const roomUuid = state?.propsData.roomUuid;
   const userAvatarUrl = state?.loginUserInfo.avatarurl;
-  const userNickName = state?.loginUserInfo.nickname;
+  const userNickName = state?.propsData.userName;
   const isAllMute = state?.room.allMute;
   const isShowEmoji = state?.showEmoji;
   const configUIVisible = state?.configUIVisible;
@@ -104,7 +104,7 @@ export const InputMsg = ({ allMutePermission }) => {
       ext: {
         msgtype: MSG_TYPE.common, // 消息类型
         roomUuid: roomUuid,
-        role: JSON.parse(roleType).role,
+        role: roleType,
         avatarUrl: userAvatarUrl || '',
         nickName: userNickName,
       }, // 扩展消息
