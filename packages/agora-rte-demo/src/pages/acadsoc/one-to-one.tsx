@@ -15,6 +15,7 @@ import { GenericError, EduLogger } from 'agora-rte-sdk'
 import { dialogManager } from 'agora-aclass-ui-kit'
 import { t } from '@/i18n'
 import { BusinessExceptions } from '@/utils/biz-error'
+import { eduSDKApi } from '@/services/edu-sdk-api'
 
 export const AcadsocOneToOne = observer(() => {
 
@@ -81,6 +82,12 @@ export const AcadsocOneToOne = observer(() => {
     reportService.startTick('joinRoom', 'end')
     acadsocStore.join().then(() => {
       reportService.reportElapse('joinRoom', 'end', {result: true})
+      eduSDKApi.setRoomProperties({
+        roomUuid: appStore.acadsocStore.roomInfo.roomUuid,
+        data: {
+          language: appStore.uiStore.recordLanguage
+        }
+      })
     }).catch(e => {
       console.log(" acadsocStore#join ", e)
       reportService.reportElapse('joinRoom', 'end', {result: false, errCode: `${e.message}`})

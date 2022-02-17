@@ -80,6 +80,7 @@ export type AppStoreInitParams = {
   roomInfoParams?: RoomInfoParams
   config: AppStoreConfigParams
   language: LanguageEnum
+  recordLanguage?: LanguageEnum
   translateLanguage: TranslateEnum
   startTime?: number
   duration?: number
@@ -265,7 +266,7 @@ export class AppStore implements ClassRoomAbstractStore {
     console.log("[ID] appStore ### ", this.id)
     console.log(" roomInfoParams ", params.roomInfoParams)
     console.log(" config >>> params: ", {...this.params})
-    const {config, roomInfoParams, language} = this.params
+    const {config, roomInfoParams, language, recordLanguage} = this.params
 
     //@ts-ignore
     // window.rtcEngine.on('error', (evt) => {
@@ -375,6 +376,10 @@ export class AppStore implements ClassRoomAbstractStore {
       this.uiStore.setLanguage(language)
     }
 
+    if (recordLanguage) {
+      this.uiStore.setRecordLanguage(recordLanguage)
+    }
+
     this.pretestStore = new PretestStore(this)
     this.acadsocStore = new AcadsocRoomStore(this)
     this.statisticsStore = new StatisticsStore(this)
@@ -408,6 +413,7 @@ export class AppStore implements ClassRoomAbstractStore {
         ...this.params.roomInfoParams
       },
       language: this.params.language,
+      recordLanguage: this.params.recordLanguage || 'zh-hk',
       translateLanguage: this.params.translateLanguage,
       startTime: this.params.startTime,
       duration: this.params.duration,

@@ -121,6 +121,9 @@ export class UIStore {
   _language: LanguageEnum = GlobalStorage.getLanguage();
 
   @observable
+  _recordLanguage: LanguageEnum = 'zh-hk'
+
+  @observable
   dialogs: any[] = []
 
   @observable
@@ -162,6 +165,7 @@ export class UIStore {
     this.lastSeqId = 0
     this.curSeqId = 0
     this._language = ''
+    this._recordLanguage = 'zh-hk'
     this.dialogs = []
     this.activeTab = 'chatroom'
     this.cancel = undefined
@@ -338,10 +342,19 @@ export class UIStore {
     return this._language;
   }
 
+  get recordLanguage(): LanguageEnum {
+    return this._recordLanguage
+  }
+
   @action
   setLanguage(language: LanguageEnum) {
     this._language = language
     GlobalStorage.setLanguage(this._language)
+  }
+
+  @action
+  setRecordLanguage(language: LanguageEnum) {
+    this._recordLanguage = language
   }
 
   hasDialog(type: string) {

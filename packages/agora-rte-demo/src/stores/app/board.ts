@@ -946,7 +946,8 @@ export class BoardStore {
         isWritable: true,
         disableDeviceInputs: true,
         disableCameraTransform: true,
-        disableAutoResize: false
+        disableAutoResize: false,
+        uid: this.appStore.roomInfo.userUuid
       })
       EduLogger.info("[aClass Board] Netless Join Success..")
 
@@ -1069,7 +1070,7 @@ export class BoardStore {
           animationMode: AnimationMode.Immediately,
         });
       }
-      this.scale = this.room.state.zoomScale
+      this.scale = this.room.state.cameraState.scale
     }
   }
 
@@ -1180,9 +1181,9 @@ export class BoardStore {
         this.currentArrow = this.getCurrentArrow(state.memberState)
         this.currentFontSize = this.getCurrentFontSize(state.memberState)
       }
-      if (state.zoomScale) {
+      if (state.cameraState.scale) {
         runInAction(() => {
-          this.scale = state.zoomScale
+          this.scale = state.cameraState.scale
         })
       }
       if (state.sceneState) {

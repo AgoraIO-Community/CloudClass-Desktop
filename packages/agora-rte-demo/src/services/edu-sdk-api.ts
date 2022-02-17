@@ -211,6 +211,22 @@ export class EduSDKApi extends ApiBase {
     })
     return res.data
   }
+
+  async setRoomProperties (params: {
+    roomUuid: string,
+    data: {[key in string]: unknown}
+  }) {
+    const res = await this.fetch({
+      url: `/v2/rooms/${params.roomUuid}/properties`,
+      method: 'PUT',
+      data: {
+        properties: {
+          ...params.data
+        }
+      }
+    })
+    return res.data
+  }
 }
 
 export const eduSDKApi = new EduSDKApi({

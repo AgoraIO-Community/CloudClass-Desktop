@@ -64,9 +64,9 @@ const sdkConfig: SDKConfig = {
   sdkDomain: 'https://api.agora.io',
   // sdkDomain: 'https://api-solutions-dev.bj2.agoralab.co',
   reportDomain: 'https://api.agora.io',
+  // reportDomain: 'https://api-solutions-dev.bj2.agoralab.co',
   reportV2Qos: 1,
   reportV2Url: 'https://rest-argus-ad.agoralab.co',
-  // reportDomain: 'https://api-solutions-dev.bj2.agoralab.co',
   logDomain: 'https://api-solutions.agoralab.co'
 }
 
@@ -125,6 +125,7 @@ export type LaunchOption = {
   duration: number, // 课程时长
   courseWareList: CourseWareList, // 课件列表
   personalCourseWareList?: CourseWareList // 个人课件列表
+  recordLanguage?: LanguageEnum
 }
 
 export type ReplayOption = {
@@ -305,6 +306,7 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
         },
         language: option.language,
+        recordLanguage: option.recordLanguage || 'zh-hk',
         translateLanguage: option.translateLanguage,
         startTime: option.startTime,
         duration: option.duration,

@@ -244,7 +244,7 @@
     "react-beautiful-dnd": "13.0.0",
     "react-dom": "16.13.1",
     "video.js": "7.10.0",
-    "white-web-sdk": "2.13.10",
+    "white-web-sdk": "2.15.3",
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1",
     "workbox-webpack-plugin": "6.1.2"

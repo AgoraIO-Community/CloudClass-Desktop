@@ -19,14 +19,14 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // replace fetch to resolve whiteboard convert issue
-const mockFetch = fetch;
-window.fetch = async function(input: RequestInfo, init?: RequestInit): Promise<Response> {
-    if (typeof input === "string") {
-        return mockFetch(input.replace("api.netless.link/services/conversion/tasks?roomToken", "shunt-api.netless.link/services/conversion/tasks?roomToken"), init);
-    } else {
-        return mockFetch({...input, url: input.url.replace("api.netless.link/services/conversion/tasks?roomToken", "shunt-api.netless.link/services/conversion/tasks?roomToken")}, init);
-    }
-};
+// const mockFetch = fetch;
+// window.fetch = async function(input: RequestInfo, init?: RequestInit): Promise<Response> {
+//     if (typeof input === "string") {
+//         return mockFetch(input.replace("api.netless.link/services/conversion/tasks?roomToken", "shunt-api.netless.link/services/conversion/tasks?roomToken"), init);
+//     } else {
+//         return mockFetch({...input, url: input.url.replace("api.netless.link/services/conversion/tasks?roomToken", "shunt-api.netless.link/services/conversion/tasks?roomToken")}, init);
+//     }
+// };
 
 GlobalStorage.useSessionStorage()
 //@ts-ignore
