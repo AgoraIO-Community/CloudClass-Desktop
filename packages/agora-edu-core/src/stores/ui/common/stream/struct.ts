@@ -33,7 +33,7 @@ export class EduStreamUI {
   }
 
   get isMirrorMode() {
-    return this.role !== EduRoleTypeEnum.teacher;
+    return false;
   }
 
   get role(): EduRoleTypeEnum {

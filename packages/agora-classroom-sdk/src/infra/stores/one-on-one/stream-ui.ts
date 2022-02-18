@@ -1,4 +1,4 @@
-import { EduClassroomConfig, EduRoleTypeEnum, StreamUIStore } from 'agora-edu-core';
+import { StreamUIStore } from 'agora-edu-core';
 import { computed } from 'mobx';
 
 export class OneToOneStreamUIStore extends StreamUIStore {
@@ -10,8 +10,6 @@ export class OneToOneStreamUIStore extends StreamUIStore {
   onInstall(): void {
     super.onInstall();
 
-    this.classroomStore.mediaStore.setMirror(
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher,
-    );
+    this.classroomStore.mediaStore.setMirror(true);
   }
 }

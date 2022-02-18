@@ -148,8 +148,6 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       },
     );
 
-    this.classroomStore.mediaStore.setMirror(
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher,
-    );
+    this.classroomStore.mediaStore.setMirror(true);
   }
 }
