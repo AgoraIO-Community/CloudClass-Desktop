@@ -119,11 +119,17 @@ export class BoardStore extends EduStoreBase {
         });
       }
 
-      /**
-       *  https://docs.agora.io/cn/whiteboard/API%20Reference/whiteboard_web/interfaces/room.html#disableserialization
-       *  undo,redo需要设置false才能生效
-       */
-      room.disableSerialization = false;
+      if (
+        [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+          EduClassroomConfig.shared.sessionInfo.role,
+        )
+      ) {
+        /**
+         *  https://docs.agora.io/cn/whiteboard/API%20Reference/whiteboard_web/interfaces/room.html#disableserialization
+         *  undo,redo需要设置false才能生效
+         */
+        room.disableSerialization = false;
+      }
     } catch (e) {
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_BOARD_JOIN_FAILED,
