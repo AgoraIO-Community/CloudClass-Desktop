@@ -236,7 +236,7 @@ export const HomePage = observer(() => {
         roleType: userRole,
         startTime: +dayjs(session.startTime),
         duration: session.duration * 60,
-        recordLanguage: 'zh-hk',
+        recordLanguage: 'zh',
       })
       setLoading(false)
       history.push('/acadsoc/launch')
