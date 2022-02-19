@@ -176,7 +176,10 @@ export class TrackUIStore extends EduUIStoreBase {
       context.offset,
     );
 
-    [this.classroomStore.extAppsTrackStore, this.classroomStore.widgetsTrackStore].forEach(
+    this.classroomStore.extAppsTrackStore.setTrackContext(this._extAppTrackContext);
+    this.classroomStore.widgetsTrackStore.setTrackContext(this._widgetTrackContext);
+
+    [(this.classroomStore.extAppsTrackStore, this.classroomStore.widgetsTrackStore)].forEach(
       (store) => {
         store.reposition();
       },
