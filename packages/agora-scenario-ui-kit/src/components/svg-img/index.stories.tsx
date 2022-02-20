@@ -21,6 +21,54 @@ export const Docs = ({ size, fill }: DocsProps) => (
     </div>
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       <div className="svg-story-div">
+        <SvgImg type={'arrow'} size={size} />
+        <p>arrow</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'arrow-active'} color="red" size={size} />
+        <p>arrow-active</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'pentagram'} size={size} />
+        <p>pentagram</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'pentagram-active'} color="red" size={size} />
+        <p>pentagram-active</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'rhombus'} size={size} />
+        <p>rhombus</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'rhombus-active'} color="red" size={size} />
+        <p>rhombus-active</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'triangle'} size={size} />
+        <p>triangle</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'triangle-active'} color="red" size={size} />
+        <p>triangle-active</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'clear'} size={size} />
+        <p>clear</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'clear-active'} size={size} />
+        <p>clear-active</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'undo'} size={size} />
+        <p>undo</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'redo'} size={size} />
+        <p>redo</p>
+      </div>
+      <div className="svg-story-div">
         <SvgImg type={'answer'} size={size} />
         <p>answer</p>
       </div>

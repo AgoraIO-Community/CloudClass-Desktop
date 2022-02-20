@@ -11,4 +11,16 @@ export enum WhiteboardTool {
   clicker,
   laserPointer,
   blankPage,
+  arrow,
+  pentagram,
+  rhombus,
+  triangle,
+  clear,
+  undo,
+  redo,
 }
+
+export type WhiteboardShapeTool =
+  | WhiteboardTool.triangle
+  | WhiteboardTool.rhombus
+  | WhiteboardTool.pentagram;

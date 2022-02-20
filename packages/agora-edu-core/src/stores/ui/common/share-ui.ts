@@ -39,6 +39,7 @@ export class EduShareUIStore {
   private _containerNode = window;
   private _navBarHeight = 0;
   private _matchMedia = window.matchMedia('(orientation: portrait)');
+  private _classroomViewportTransitionDuration = 300;
 
   /**
    * 模态框列表
@@ -314,5 +315,9 @@ export class EduShareUIStore {
    */
   get navBarHeight() {
     return this._navBarHeight;
+  }
+
+  get classroomViewportTransitionDuration() {
+    return this._classroomViewportTransitionDuration;
   }
 }

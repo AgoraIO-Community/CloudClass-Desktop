@@ -60,10 +60,18 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    * @returns 设备列表
    */
   @computed get playbackDevicesList() {
-    return this.classroomStore.mediaStore.audioPlaybackDevices.map((item) => ({
+    const playbackDevicesList = this.classroomStore.mediaStore.audioPlaybackDevices.map((item) => ({
       label: item.devicename,
       value: item.deviceid,
     }));
+    return playbackDevicesList.length
+      ? playbackDevicesList
+      : [
+          {
+            label: transI18n(`media.default`),
+            value: 'default',
+          },
+        ];
   }
 
   /**
@@ -87,7 +95,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get currentPlaybackDeviceId(): string {
-    return this.classroomStore.mediaStore.playbackDeviceId ?? '';
+    return this.classroomStore.mediaStore.playbackDeviceId ?? 'default';
   }
 
   /**

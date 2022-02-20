@@ -26,20 +26,29 @@ export class ToolbarItem {
     label: string;
     icon: string;
     category?: ToolbarItemCategory;
+    className?: string;
   }) {
-    return new ToolbarItem(data.icon, data.value, data.label, data.category);
+    return new ToolbarItem(data.icon, data.value, data.label, data.category, data.className);
   }
 
   value: string;
   label: string;
   icon: string;
   category?: ToolbarItemCategory;
+  className?: string;
 
-  constructor(icon: string, value: string, label: string, category?: ToolbarItemCategory) {
+  constructor(
+    icon: string,
+    value: string,
+    label: string,
+    category?: ToolbarItemCategory,
+    className?: string,
+  ) {
     this.value = value;
     this.label = label;
     this.icon = icon;
     this.category = category;
+    this.className = className;
   }
 }
 
@@ -64,7 +73,16 @@ export class ToolbarUIStore extends EduUIStoreBase {
     '#0073ff',
     '#ffc8e2',
   ];
-  readonly defaultPens: string[] = ['pen', 'square', 'circle', 'line'];
+  readonly defaultPens: string[] = [
+    'pen',
+    'square',
+    'circle',
+    'line',
+    'pentagram',
+    'rhombus',
+    'arrow',
+    'triangle',
+  ];
   readonly paletteMap: Record<string, string> = {
     '#ffffff': '#E1E1EA',
   };
@@ -256,7 +274,16 @@ export class ToolbarUIStore extends EduUIStoreBase {
   }
 
   // others
-  readonly penTools = ['pen', 'square', 'circle', 'line'];
+  readonly penTools = [
+    'pen',
+    'square',
+    'circle',
+    'line',
+    'arrow',
+    'pentagram',
+    'rhombus',
+    'triangle',
+  ];
 
   /**
    * 设置画笔粗细
@@ -336,6 +363,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * 老师工具栏工具列表
    * @returns
    */
+  @computed
   get teacherTools(): ToolbarItem[] {
     return [
       ToolbarItem.fromData({
@@ -394,6 +422,23 @@ export class ToolbarUIStore extends EduUIStoreBase {
         label: 'scaffold.tools',
         icon: 'tools',
         category: ToolbarItemCategory.Cabinet,
+      },
+      {
+        value: 'clear',
+        label: 'scaffold.clear',
+        icon: 'clear',
+      },
+      {
+        value: 'undo',
+        label: 'scaffold.undo',
+        icon: 'undo',
+        className: this.classroomStore.boardStore.undoSteps === 0 ? 'undo-disabled' : 'undo',
+      },
+      {
+        value: 'redo',
+        label: 'scaffold.redo',
+        icon: 'redo',
+        className: this.classroomStore.boardStore.redoSteps === 0 ? 'redo-disabled' : 'redo',
       },
     ];
   }
@@ -483,6 +528,20 @@ export class ToolbarUIStore extends EduUIStoreBase {
         return WhiteboardTool.hand;
       case 'laser':
         return WhiteboardTool.laserPointer;
+      case 'arrow':
+        return WhiteboardTool.arrow;
+      case 'pentagram':
+        return WhiteboardTool.pentagram;
+      case 'rhombus':
+        return WhiteboardTool.rhombus;
+      case 'triangle':
+        return WhiteboardTool.triangle;
+      case 'clear':
+        return WhiteboardTool.clear;
+      case 'undo':
+        return WhiteboardTool.undo;
+      case 'redo':
+        return WhiteboardTool.redo;
     }
     return WhiteboardTool.unknown;
   }
@@ -506,6 +565,14 @@ export class ToolbarUIStore extends EduUIStoreBase {
         return 'circle';
       case WhiteboardTool.straight:
         return 'line';
+      case WhiteboardTool.arrow:
+        return 'arrow';
+      case WhiteboardTool.pentagram:
+        return 'pentagram';
+      case WhiteboardTool.triangle:
+        return 'triangle';
+      case WhiteboardTool.rhombus:
+        return 'rhombus';
       case WhiteboardTool.text:
         return 'text';
       case WhiteboardTool.eraser:

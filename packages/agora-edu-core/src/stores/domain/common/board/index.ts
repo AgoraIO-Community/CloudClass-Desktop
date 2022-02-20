@@ -21,9 +21,10 @@ import {
   JoinRoomParams,
   RoomCallbacks,
   GlobalState,
+  ShapeType,
 } from 'white-web-sdk';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
-import { WhiteboardTool } from './type';
+import { WhiteboardShapeTool, WhiteboardTool } from './type';
 import {
   CloudDriveCourseResource,
   CloudDriveImageResource,
@@ -54,6 +55,8 @@ export class BoardStore extends EduStoreBase {
   @observable ready: boolean = false;
   @observable grantUsers: Set<string> = new Set<string>();
   @observable configReady = false;
+  @observable undoSteps = 0;
+  @observable redoSteps = 0;
 
   // ---------- computeds --------
   @computed
@@ -114,6 +117,18 @@ export class BoardStore extends EduStoreBase {
         runInAction(() => {
           this.grantUsers = new Set(globalState.grantUsers);
         });
+      }
+
+      if (
+        [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+          EduClassroomConfig.shared.sessionInfo.role,
+        )
+      ) {
+        /**
+         *  https://docs.agora.io/cn/whiteboard/API%20Reference/whiteboard_web/interfaces/room.html#disableserialization
+         *  undo,redo需要设置false才能生效
+         */
+        room.disableSerialization = false;
       }
     } catch (e) {
       return EduErrorCenter.shared.handleThrowableError(
@@ -194,6 +209,35 @@ export class BoardStore extends EduStoreBase {
     this.room.setGlobalState({ grantUsers: Array.from(newSet) });
   }
 
+  getShapeType(tool: WhiteboardShapeTool): string {
+    switch (tool) {
+      case WhiteboardTool.triangle:
+        return 'triangle';
+      case WhiteboardTool.rhombus:
+        return 'rhombus';
+      case WhiteboardTool.pentagram:
+        return 'pentagram';
+      default:
+        return 'triangle';
+    }
+  }
+
+  setShapeTool(tool: WhiteboardShapeTool) {
+    const appliance = convertAGToolToWhiteTool(tool);
+    if (appliance) {
+      const shapeType = this.getShapeType(tool) as ShapeType;
+      /**
+       * https://docs.agora.io/cn/whiteboard/whiteboard_tool?platform=Web#%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86
+       * 当 currentApplianceName 设为 shape 时，还可以设置 shapeType 选择图形类型；如果不设置，则默认使用三角形。
+       */
+      this.writableRoom.setMemberState({
+        currentApplianceName: appliance,
+        shapeType,
+      });
+      this.selectedTool = tool;
+    }
+  }
+
   @action.bound
   setTool(tool: WhiteboardTool) {
     switch (tool) {
@@ -204,13 +248,36 @@ export class BoardStore extends EduStoreBase {
         room.putScenes('/', [{ name: `${newIndex}` }], newIndex);
         // room.setSceneIndex(newIndex);
         this.windowManager.setMainViewSceneIndex(newIndex);
-
-        return;
+        break;
       }
+
+      case WhiteboardTool.clear: {
+        this.writableRoom.cleanCurrentScene();
+        break;
+      }
+
+      case WhiteboardTool.undo: {
+        this.writableRoom.undo();
+        break;
+      }
+
+      case WhiteboardTool.redo: {
+        this.writableRoom.redo();
+        break;
+      }
+
+      case WhiteboardTool.pentagram:
+      case WhiteboardTool.rhombus:
+      case WhiteboardTool.triangle: {
+        this.setShapeTool(tool);
+        break;
+      }
+
       case WhiteboardTool.pen:
       case WhiteboardTool.rectangle:
       case WhiteboardTool.ellipse:
       case WhiteboardTool.straight:
+      case WhiteboardTool.arrow:
       case WhiteboardTool.selector:
       case WhiteboardTool.text:
       case WhiteboardTool.hand:
@@ -274,6 +341,7 @@ export class BoardStore extends EduStoreBase {
     }
     const scenePath = `/${resource.resourceUuid}`;
     if (resource.conversion.canvasVersion) {
+      const url = resource.taskProgress?.prefix;
       // 判断是否为带 canvasVersion 参数的转换文件
       await this.windowManager.addApp({
         kind: 'Slide',
@@ -283,6 +351,7 @@ export class BoardStore extends EduStoreBase {
         },
         attributes: {
           taskId: resource.taskUuid,
+          url,
         },
       });
     } else {
@@ -428,6 +497,16 @@ export class BoardStore extends EduStoreBase {
     },
     onCatchErrorWhenAppendFrame: (userId: number, error: Error) => {},
     onCatchErrorWhenRender: (error: Error) => {},
+    onCanUndoStepsUpdate: (steps: number) => {
+      runInAction(() => {
+        this.undoSteps = steps;
+      });
+    },
+    onCanRedoStepsUpdate: (steps: number) => {
+      runInAction(() => {
+        this.redoSteps = steps;
+      });
+    },
   };
 
   protected get room(): Room {
