@@ -1,5 +1,5 @@
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
-import { observable, action, runInAction, computed } from 'mobx';
+import { observable, action, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmDialogAction, orientationEnum } from '../../../type';
 import { EduErrorCenter, getEduErrorMessage, getErrorServCode } from '../../../utils/error';
@@ -7,7 +7,6 @@ import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
 import { ToastFilter } from '../../../utils/toast-filter';
 import { AGRteErrorCode } from 'agora-rte-sdk';
-
 export enum DialogCategory {
   CloudDriver,
   Roster,
@@ -34,6 +33,7 @@ export interface DialogType {
 }
 
 export class EduShareUIStore {
+  readonly classroomViewportClassName = 'classroom-viewport';
   private _aspectRatio = 9 / 16;
   private _classroomMinimumSize = { width: 1024, height: 576 };
   private _containerNode = window;
@@ -307,6 +307,16 @@ export class EduShareUIStore {
   @bound
   removeOrientationchange() {
     this._matchMedia.removeListener(this.handleOrientationchange);
+  }
+
+  addViewportResizeObserver(callback: () => void) {
+    const observer = new ResizeObserver(callback);
+
+    const viewport = document.querySelector(`.${this.classroomViewportClassName}`);
+    if (viewport) {
+      observer.observe(viewport);
+    }
+    return observer;
   }
 
   /**

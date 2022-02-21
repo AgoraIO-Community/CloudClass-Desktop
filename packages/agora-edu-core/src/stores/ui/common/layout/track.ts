@@ -167,23 +167,18 @@ export class TrackUIStore extends EduUIStoreBase {
 
     context.offset = offset;
 
-    this.logger.info(
-      'updateTrackContext [',
-      boundaryName,
-      '] context.outerSize:',
-      context.outerSize,
-      'context.offset:',
-      context.offset,
-    );
-
+    // this.logger.info(
+    //   'updateTrackContext [',
+    //   boundaryName,
+    //   '] context.outerSize:',
+    //   context.outerSize,
+    //   'context.offset:',
+    //   context.offset,
+    // );
     this.classroomStore.extAppsTrackStore.setTrackContext(this._extAppTrackContext);
+    this.classroomStore.extAppsTrackStore.reposition();
     this.classroomStore.widgetsTrackStore.setTrackContext(this._widgetTrackContext);
-
-    [(this.classroomStore.extAppsTrackStore, this.classroomStore.widgetsTrackStore)].forEach(
-      (store) => {
-        store.reposition();
-      },
-    );
+    this.classroomStore.widgetsTrackStore.reposition();
   }
 
   onDestroy(): void {}

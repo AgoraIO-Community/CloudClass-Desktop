@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import { Aside, Content, Layout } from '~components/layout';
+import { FC } from 'react';
+import { Aside, Layout } from '~components/layout';
 import { LoadingContainer } from '~containers/loading';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { NavigationBarContainer } from '~containers/nav';
@@ -19,6 +20,10 @@ import { HandsUpContainer } from '~containers/hand-up';
 import { CollectorContainer } from '~containers/board';
 import { BigRosterBtn } from '../../containers/roster';
 
+const Content: FC = ({ children }) => {
+  return <div className="flex-col flex-grow">{children}</div>;
+};
+
 export const BigClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'big-class-room');
@@ -29,16 +34,16 @@ export const BigClassScenario = observer(() => {
         <Layout className={layoutCls} direction="col">
           <NavigationBarContainer />
           <Layout className="horizontal">
-            <Content className="big-class-main">
+            <Content>
               <RoomBigStudentStreamsContainer />
               <WhiteboardContainer>
                 <ScreenShareContainer />
+                <Aside className="aisde-fixed">
+                  <CollectorContainer />
+                  <BigRosterBtn />
+                  <HandsUpContainer />
+                </Aside>
               </WhiteboardContainer>
-              <Aside className="aisde-fixed">
-                <CollectorContainer />
-                <BigRosterBtn />
-                <HandsUpContainer />
-              </Aside>
             </Content>
             <Aside>
               <RoomBigTeacherStreamContainer />
