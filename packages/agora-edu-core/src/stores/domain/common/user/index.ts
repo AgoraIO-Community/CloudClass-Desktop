@@ -71,14 +71,18 @@ export class UserStore extends EduStoreBase {
     if (isBatch) {
       const userNames = this.getRewardedUsers(oldRewards, newRewards);
 
-      EduEventCenter.shared.emitClasroomEvents(
-        AgoraEduClassroomEvent.BatchRewardReceived,
-        userNames,
-      );
+      if (userNames.length) {
+        EduEventCenter.shared.emitClasroomEvents(
+          AgoraEduClassroomEvent.BatchRewardReceived,
+          userNames,
+        );
+      }
     } else {
       const userNames = this.getRewardedUsers(oldRewards, newRewards);
 
-      EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.RewardReceived, userNames);
+      if (userNames.length) {
+        EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.RewardReceived, userNames);
+      }
     }
   }
 
