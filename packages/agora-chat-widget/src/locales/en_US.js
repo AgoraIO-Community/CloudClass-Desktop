@@ -50,6 +50,7 @@ const enUS = {
     uploading_picture: 'Uploading picture failed',
     screenshots: 'Screenshots',
     hide_classroom_page_screenshots: 'Hide classroom page screenshot',
+    screenshots_file: 'Screenshots_file',
   },
 };
 

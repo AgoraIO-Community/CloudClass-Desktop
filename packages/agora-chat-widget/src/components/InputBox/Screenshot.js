@@ -22,7 +22,7 @@ const ScreenshotMenu = ({ couterRef }) => {
         let file = {
           url: dataURL,
           data: blob,
-          filename: `截图文件${new Date().getTime()}.png`,
+          filename: `${transI18n('chat.screenshots_file')}${new Date().getTime()}.png`,
           filetype: 'png',
           // 该参数用来标识图片发送对象的来源，主要告诉拦截器如果是截图，就不要在输入框生成缩略图了
           from: 'screenShot',

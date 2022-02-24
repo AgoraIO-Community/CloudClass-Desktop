@@ -13,7 +13,7 @@ export const TextMsg = ({ item }) => {
   const state = useSelector((state) => state);
   const roomId = state?.room.info.id;
   const roomUuid = state?.propsData.roomUuid;
-  const loginUser = state?.loginUser;
+  const loginUser = state?.propsData.userUuid;
   const roleType = state?.propsData.roleType;
   const sender = item?.from === loginUser;
   const teacherTag = item?.ext.role === ROLE.teacher.id;

@@ -41,7 +41,7 @@ export const ShowEomji = ({ getEmoji }) => {
 
 export const InputMsg = ({ allMutePermission }) => {
   const state = useSelector((state) => state);
-  const loginUser = state?.loginUser;
+  const loginUser = state?.propsData.userUuid;
   const roomId = state?.room.info.id;
   const roleType = state?.propsData.roleType;
   const roomUuid = state?.propsData.roomUuid;

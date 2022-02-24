@@ -1,6 +1,7 @@
 // 判断是否为 electron 平台
 export default function isElctronPlatform() {
-  let isElectron = window.navigator.userAgent.indexOf('Electron') !== -1;
+  let isElectron =
+    window && window.process && window.process.versions && window.process.versions['electron'];
   if (isElectron) {
     return true;
   }
