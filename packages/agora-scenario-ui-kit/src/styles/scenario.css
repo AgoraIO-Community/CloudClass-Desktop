@@ -110,10 +110,6 @@ body,
 .edu-room {
   height: 100%;
 }
-.edu-room .layout {
-  position: relative;
-}
-
 .chat-panel .tabs {
   top: 0;
   left: 0;

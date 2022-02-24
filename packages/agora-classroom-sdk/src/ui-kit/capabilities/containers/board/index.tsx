@@ -51,7 +51,7 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
   );
 
   return (
-    <div style={{ height: boardHeight }} className="w-full relative">
+    <div style={{ height: boardHeight }} className="w-full relative flex-shrink-0">
       <WhiteboardTrackArea />
       {readyToMount ? (
         <div className="whiteboard-wrapper">

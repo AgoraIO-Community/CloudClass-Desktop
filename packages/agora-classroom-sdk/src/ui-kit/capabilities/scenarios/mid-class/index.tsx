@@ -15,7 +15,6 @@ import { ExtAppContainer } from '~containers/ext-app';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
 import { MidRosterBtn } from '../../containers/roster';
-
 export const MidClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'mid-class-room');

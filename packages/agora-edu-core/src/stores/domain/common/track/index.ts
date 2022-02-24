@@ -12,28 +12,7 @@ export class TrackStore extends EduStoreBase {
   @observable
   trackById: Map<string, Track> = new Map();
 
-  private _context?: TrackContext = {
-    margin: {
-      top: 0,
-    },
-    outerSize: {
-      width: 0,
-      height: 0,
-    },
-    dragBounds: {
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-    },
-    resizeBounds: {
-      minHeight: 0,
-      minWidth: 0,
-      maxHeight: Number.MAX_VALUE,
-      maxWidth: Number.MAX_VALUE,
-    },
-    ready: false,
-  };
+  private _context?: TrackContext;
 
   constructor(
     store: EduClassroomStore,
@@ -48,6 +27,9 @@ export class TrackStore extends EduStoreBase {
   @bound
   setTrackContext(context: TrackContext) {
     this._context = context;
+    this.trackById.forEach((track) => {
+      track.updateContext(context);
+    });
   }
 
   @bound
@@ -105,6 +87,15 @@ export class TrackStore extends EduStoreBase {
 
   @Lodash.throttled(200, { trailing: true })
   async updateTrack(trackId: string, position: Point, size: Dimensions, initial?: boolean) {
+    this.logger.info(
+      'Send track trackId: ',
+      trackId,
+      ', point:',
+      toJS(position),
+      'size:',
+      toJS(size),
+    );
+
     this._trackAdapter.updateTrackState(trackId, {
       position: { xaxis: position.x, yaxis: position.y },
       size: { width: size.width, height: size.height },
@@ -127,10 +118,6 @@ export class TrackStore extends EduStoreBase {
     }
 
     track.reposition();
-
-    track.fixLocalPos();
-
-    // this function just modifies track's local state. Use to keep RND size with Extapp's inner size
   }
 
   @action.bound
@@ -192,8 +179,6 @@ export class TrackStore extends EduStoreBase {
           true,
         );
       }
-
-      track.fixLocalPos();
 
       this.logger.info('Update track ratio', toJS(position), toJS(size));
       this.logger.info(

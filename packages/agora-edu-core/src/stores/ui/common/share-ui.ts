@@ -34,10 +34,12 @@ export interface DialogType {
 }
 
 export class EduShareUIStore {
+  readonly classroomViewportClassName = 'classroom-viewport';
+  readonly classroomViewportTransitionDuration = 300;
+  readonly navBarHeight = 27;
   private _aspectRatio = 9 / 16;
   private _classroomMinimumSize = { width: 1024, height: 576 };
   private _containerNode = window;
-  private _navBarHeight = 0;
   private _matchMedia = window.matchMedia('(orientation: portrait)');
   private _classroomViewportTransitionDuration = 300;
 
@@ -278,13 +280,10 @@ export class EduShareUIStore {
   }
 
   /**
-   * 设置导航栏高度，设置 Resize 事件处理器
-   * @param navBarHeight
+   设置 Resize 事件处理器
    */
   @bound
-  addWindowResizeEventListenerAndSetNavBarHeight(navBarHeight: number) {
-    this._navBarHeight = navBarHeight;
-
+  addWindowResizeEventListener() {
     this._containerNode.addEventListener('resize', this.updateClassroomViewportSize);
 
     this.updateClassroomViewportSize();
@@ -309,15 +308,13 @@ export class EduShareUIStore {
     this._matchMedia.removeListener(this.handleOrientationchange);
   }
 
-  /**
-   * 顶部导航栏高度
-   * @returns
-   */
-  get navBarHeight() {
-    return this._navBarHeight;
-  }
+  addViewportResizeObserver(callback: () => void) {
+    const observer = new ResizeObserver(callback);
 
-  get classroomViewportTransitionDuration() {
-    return this._classroomViewportTransitionDuration;
+    const viewport = document.querySelector(`.${this.classroomViewportClassName}`);
+    if (viewport) {
+      observer.observe(viewport);
+    }
+    return observer;
   }
 }

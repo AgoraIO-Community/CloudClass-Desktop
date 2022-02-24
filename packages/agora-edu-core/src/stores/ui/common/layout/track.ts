@@ -3,9 +3,7 @@ import { EduClassroomStore } from '../../../domain';
 import { EduShareUIStore } from '../share-ui';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed } from 'mobx';
-import { Dimensions, Margin, Point, TrackContext } from '../../../domain/common/track/type';
-import { TrackStore } from '../../../domain/common/track';
-
+import { Dimensions, Margin, Offset, Point, TrackContext } from '../../../domain/common/track/type';
 @Log.attach({ proxyMethods: false })
 export class TrackUIStore extends EduUIStoreBase {
   private _extAppTrackContext: TrackContext = {
@@ -16,19 +14,13 @@ export class TrackUIStore extends EduUIStoreBase {
       width: 0,
       height: 0,
     },
-    dragBounds: {
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-    },
+    offset: { left: 0, top: 0 },
     resizeBounds: {
       minHeight: 0,
       minWidth: 0,
       maxHeight: Number.MAX_VALUE,
       maxWidth: Number.MAX_VALUE,
     },
-    ready: false,
   };
 
   private _widgetTrackContext: TrackContext = {
@@ -39,23 +31,21 @@ export class TrackUIStore extends EduUIStoreBase {
       width: 0,
       height: 0,
     },
-    dragBounds: {
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-    },
+    offset: { left: 0, top: 0 },
     resizeBounds: {
       minHeight: 0,
       minWidth: 0,
       maxHeight: Number.MAX_VALUE,
       maxWidth: Number.MAX_VALUE,
     },
-    ready: false,
   };
 
   constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
     super(store, shareUIStore);
+
+    this.classroomStore.extAppsTrackStore.setTrackContext(this._extAppTrackContext);
+
+    this.classroomStore.widgetsTrackStore.setTrackContext(this._widgetTrackContext);
   }
 
   /**
@@ -64,13 +54,7 @@ export class TrackUIStore extends EduUIStoreBase {
    */
   @bound
   initialize({ margin }: { margin: Margin }) {
-    this._widgetTrackContext.margin = { top: margin.top };
-
-    this.shareUIStore.addWindowResizeEventListenerAndSetNavBarHeight(margin.top);
-
-    this.classroomStore.extAppsTrackStore.setTrackContext(this._extAppTrackContext);
-
-    this.classroomStore.widgetsTrackStore.setTrackContext(this._widgetTrackContext);
+    this.shareUIStore.addWindowResizeEventListener();
   }
 
   @bound
@@ -166,31 +150,32 @@ export class TrackUIStore extends EduUIStoreBase {
    * @param boundaryName
    */
   @bound
-  updateTrackContext(boundaryName: string) {
-    const context = {
-      'extapp-track-bounds': this._extAppTrackContext,
-      'classroom-track-bounds': this._widgetTrackContext,
-    }[boundaryName] as TrackContext;
+  updateTrackContext(boundaryName: string, offset: Offset) {
+    const { width, height } = this.getBounds(boundaryName);
 
-    const store = {
-      'extapp-track-bounds': this.classroomStore.extAppsTrackStore,
-      'classroom-track-bounds': this.classroomStore.widgetsTrackStore,
-    }[boundaryName] as TrackStore;
+    if (boundaryName === 'extapp-track-bounds') {
+      [this._extAppTrackContext, this._widgetTrackContext].forEach((context) => {
+        context.outerSize = {
+          width,
+          height,
+        };
 
-    const { width, height, left, top, right, bottom } = this.getBounds(boundaryName);
-    context.outerSize = {
-      width,
-      height,
-    };
-    context.dragBounds = {
-      left,
-      top,
-      right,
-      bottom,
-    };
-    context.ready = true;
+        context.offset = offset;
+      });
+    }
 
-    store.reposition();
+    // this.logger.info(
+    //   'updateTrackContext [',
+    //   boundaryName,
+    //   '] context.outerSize:',
+    //   context.outerSize,
+    //   'context.offset:',
+    //   context.offset,
+    // );
+    this.classroomStore.extAppsTrackStore.setTrackContext(this._extAppTrackContext);
+    this.classroomStore.extAppsTrackStore.reposition();
+    this.classroomStore.widgetsTrackStore.setTrackContext(this._widgetTrackContext);
+    this.classroomStore.widgetsTrackStore.reposition();
   }
 
   onDestroy(): void {}
