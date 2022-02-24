@@ -53,6 +53,16 @@ export class BoardUIStore extends EduUIStoreBase {
     );
   }
 
+  @computed
+  get currentSceneIndex() {
+    return this.classroomStore.boardStore.currentSceneIndex;
+  }
+
+  @computed
+  get scenesCount() {
+    return this.classroomStore.boardStore.scenesCount;
+  }
+
   /**
    * 白板高度
    * @returns
@@ -160,6 +170,33 @@ export class BoardUIStore extends EduUIStoreBase {
   async unmount() {
     try {
       await this.classroomStore.boardStore.unmount();
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
+
+  @action.bound
+  addMainViewScene() {
+    try {
+      this.classroomStore.boardStore.addMainViewScene();
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
+
+  @action.bound
+  toPreMainViewScene() {
+    try {
+      this.classroomStore.boardStore.toPreMainViewScene();
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
+
+  @action.bound
+  toNextMainViewScene() {
+    try {
+      this.classroomStore.boardStore.toNextMainViewScene();
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }

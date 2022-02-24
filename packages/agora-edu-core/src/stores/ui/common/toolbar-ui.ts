@@ -522,8 +522,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
         return WhiteboardTool.text;
       case 'eraser':
         return WhiteboardTool.eraser;
-      case 'blank-page':
-        return WhiteboardTool.blankPage;
       case 'hand':
         return WhiteboardTool.hand;
       case 'laser':
@@ -577,8 +575,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
         return 'text';
       case WhiteboardTool.eraser:
         return 'eraser';
-      case WhiteboardTool.blankPage:
-        return 'blank-page';
       case WhiteboardTool.hand:
         return 'hand';
     }

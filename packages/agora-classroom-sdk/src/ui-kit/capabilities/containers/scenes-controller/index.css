@@ -1,0 +1,41 @@
+.scenes-controller-container {
+  position: absolute;
+  min-width: 170px;
+  height: 34px !important;
+  left: 10px;
+  bottom: 18px;
+}
+
+.scenes-controller-line {
+  width: 1px;
+  height: 16px;
+  border: 1px solid #e5e5f0;
+  margin-left: 6px;
+  margin-right: 9px;
+}
+
+.scenes-controller-btn-list {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 0 10px 0 16px;
+}
+
+.scenes-controller-info {
+  color: #586376;
+  font-size: 14px;
+  user-select: none;
+  margin: 0 6px;
+}
+
+.scenes-controller-btn .backward-disabled path,
+.scenes-controller-btn .forward-disabled path {
+  fill: rgb(226, 226, 238);
+}
+
+.scenes-controller-btn .backward-enabled path,
+.scenes-controller-btn .forward-enabled path {
+  fill: rgb(123, 136, 160);
+}
