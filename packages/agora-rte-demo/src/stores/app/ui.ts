@@ -121,7 +121,7 @@ export class UIStore {
   _language: LanguageEnum = GlobalStorage.getLanguage();
 
   @observable
-  _recordLanguage: LanguageEnum = 'zh-hk'
+  _recordLanguage: LanguageEnum = ''
 
   @observable
   dialogs: any[] = []
@@ -165,7 +165,7 @@ export class UIStore {
     this.lastSeqId = 0
     this.curSeqId = 0
     this._language = ''
-    this._recordLanguage = 'zh-hk'
+    this._recordLanguage = ''
     this.dialogs = []
     this.activeTab = 'chatroom'
     this.cancel = undefined

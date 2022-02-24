@@ -82,10 +82,12 @@ export const AcadsocOneToOne = observer(() => {
     reportService.startTick('joinRoom', 'end')
     acadsocStore.join().then(() => {
       reportService.reportElapse('joinRoom', 'end', {result: true})
+      const recordLanguage = appStore.uiStore.recordLanguage
+      if (recordLanguage)
       eduSDKApi.setRoomProperties({
         roomUuid: appStore.acadsocStore.roomInfo.roomUuid,
         data: {
-          language: appStore.uiStore.recordLanguage
+          language: recordLanguage
         }
       })
     }).catch(e => {

@@ -413,7 +413,7 @@ export class AppStore implements ClassRoomAbstractStore {
         ...this.params.roomInfoParams
       },
       language: this.params.language,
-      recordLanguage: this.params.recordLanguage || 'zh',
+      recordLanguage: this.params.recordLanguage,
       translateLanguage: this.params.translateLanguage,
       startTime: this.params.startTime,
       duration: this.params.duration,

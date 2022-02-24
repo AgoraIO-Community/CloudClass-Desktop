@@ -306,7 +306,7 @@ export class AgoraEduSDK {
           rtmToken: option.rtmToken,
         },
         language: option.language,
-        recordLanguage: option.recordLanguage || 'zh',
+        recordLanguage: option.recordLanguage,
         translateLanguage: option.translateLanguage,
         startTime: option.startTime,
         duration: option.duration,
