@@ -1,5 +1,3 @@
-import { AREAS } from 'agora-rtc-sdk-ng';
-import { RtmStatusCode } from 'agora-rtm-sdk';
 import { AGRtcConfig } from '../core/rtc/adapter';
 import { AGRteErrorCode, RteErrorCenter } from '../core/utils/error';
 
@@ -49,6 +47,7 @@ export interface AgoraRteOptions {
   language?: RteLanguage;
   region?: AgoraRegion;
   rtcConfigs?: Partial<AGRtcConfig>;
+  rtcSDKParameters?: any[];
 }
 
 export class AgoraRteEngineConfig {
@@ -65,10 +64,13 @@ export class AgoraRteEngineConfig {
   static setConfig(config: AgoraRteEngineConfig) {
     this._config = config;
   }
+
   appId: string;
   service: AgoraRteServiceConfig = {};
   rtcConfigs: AGRtcConfig = {};
   logFilePath?: string;
+  rtcSDKParameters: any[] = [];
+
   static logLevel: AgoraRteLogLevel = AgoraRteLogLevel.DEBUG;
   static get platform(): AgoraRteRuntimePlatform {
     var userAgent = navigator.userAgent.toLowerCase();
@@ -101,6 +103,9 @@ export class AgoraRteEngineConfig {
           ...this.rtcConfigs,
           ...opts.rtcConfigs,
         };
+      }
+      if (opts.rtcSDKParameters) {
+        this.rtcSDKParameters = opts.rtcSDKParameters;
       }
     }
   }

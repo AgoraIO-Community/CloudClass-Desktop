@@ -89,6 +89,15 @@ export class EduClassroomConfig {
       rteOpts?.rtcConfigs,
     );
     this._rteEngineConfig = new AgoraRteEngineConfig(appId, {
+      rtcSDKParameters: [
+        {
+          'rtc.report_app_scenario': {
+            appScenario: sessionInfo.roomType,
+            serviceType: 0,
+            appVersion: EDU_SDK_VERSION,
+          },
+        },
+      ],
       ...rteOpts,
       rtcConfigs,
     });
