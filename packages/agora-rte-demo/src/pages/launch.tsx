@@ -9,6 +9,7 @@ import { AppStore } from '@/stores/app'
 import { useHistory } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { RtmTokenBuilder, RtmRole } from 'agora-access-token'
+import { eduSDKApi } from '@/services/edu-sdk-api'
 
 //@ts-ignore
 window.controller = controller
@@ -52,6 +53,17 @@ export const LaunchPage = observer(() => {
         ...launchOption,
         listener: (evt: AgoraEduEvent) => {
           console.log("launch#listener ", evt)
+          if (evt === AgoraEduEvent.ready) {
+            const {recordLanguage, roomUuid} = launchOption
+            if (recordLanguage) {
+              eduSDKApi.setRoomProperties({
+                roomUuid,
+                data: {
+                  language: recordLanguage
+                }
+              })
+            }
+          }
           if (evt === AgoraEduEvent.destroyed) {
             history.push('/')
           }
