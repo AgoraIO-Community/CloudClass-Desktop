@@ -29,7 +29,7 @@ export class EduClassroomStore {
   readonly connectionStore: ConnectionStore = new ConnectionStore(this);
   readonly widgetStore: WidgetStore = new WidgetStore(this);
   readonly extAppStore: ExtAppStore = new ExtAppStore(this);
-  readonly boardStore: BoardStore = new BoardStore(this);
+  // readonly boardStore: BoardStore = new BoardStore(this);
   readonly cloudDriveStore: CloudDriveStore = new CloudDriveStore(this);
   readonly userStore: UserStore = new UserStore(this);
   readonly messageStore: MessagesStore = new MessagesStore(this);
