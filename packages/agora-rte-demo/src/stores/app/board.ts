@@ -1038,7 +1038,9 @@ export class BoardStore {
     }
 
     if ([EduRoleTypeEnum.teacher].includes(this.appStore.roomInfo.userRole)) {
-      this.removeScreenShareScene();
+      if (this.room.state.sceneState.contextPath === "/screenShare") {
+        this.removeScreenShareScene();
+      }
     }
 
     EduLogger.info("[aClass Board] prepare scenes..")
@@ -1181,7 +1183,7 @@ export class BoardStore {
         this.currentArrow = this.getCurrentArrow(state.memberState)
         this.currentFontSize = this.getCurrentFontSize(state.memberState)
       }
-      if (state.cameraState.scale) {
+      if (state.cameraState) {
         runInAction(() => {
           this.scale = state.cameraState.scale
         })
