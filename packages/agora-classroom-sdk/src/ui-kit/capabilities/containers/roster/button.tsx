@@ -1,5 +1,6 @@
 import { useStore } from '@/infra/hooks/use-edu-stores';
-import { DialogCategory, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
+import { DialogCategory } from '@/infra/stores/common/share-ui';
+import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { useState, FC } from 'react';
 import { Card, SvgImg } from '~ui-kit';
 

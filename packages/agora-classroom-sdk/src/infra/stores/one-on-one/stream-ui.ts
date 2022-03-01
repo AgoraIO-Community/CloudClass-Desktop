@@ -1,5 +1,5 @@
-import { StreamUIStore } from 'agora-edu-core';
 import { computed } from 'mobx';
+import { StreamUIStore } from '../common/stream';
 
 export class OneToOneStreamUIStore extends StreamUIStore {
   //override

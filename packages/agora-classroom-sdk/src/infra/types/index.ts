@@ -14,3 +14,10 @@ export enum BizPageRouter {
   TestAdapteHomePage = 'test_adapte_home',
   RecordationSearchPage = 'recordation-search',
 }
+
+export enum OrientationEnum {
+  portrait = 'portrait',
+  landscape = 'landscape',
+}
+
+export type ConfirmDialogAction = 'ok' | 'cancel';

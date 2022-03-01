@@ -1,5 +1,4 @@
-import { AbstractErrorCenter, AGError, AGErrorWrapper, Logger } from 'agora-rte-sdk';
-import { transI18n } from '../stores/ui/common/i18n';
+import { AbstractErrorCenter, AGErrorWrapper, Logger } from 'agora-rte-sdk';
 
 export class EduErrorCenter extends AbstractErrorCenter {
   static shared = new EduErrorCenter();
@@ -100,23 +99,3 @@ export enum AGEduErrorCode {
   EDU_ERR_HAND_UP_ON_PODIUM_FAIL = '600075',
   EDU_ERR_FETCH_USER_LIST = '600076',
 }
-
-export const getEduErrorMessage = (error: Error) => {
-  if (error instanceof AGError && error.codeList && error.codeList.length) {
-    const code = error.codeList[error.codeList.length - 1];
-
-    if (error.servCode) {
-      return transI18n(`edu_serv_error.${error.servCode}`);
-    } else {
-      return transI18n(`edu_error.${code}`);
-    }
-  }
-
-  return null;
-};
-
-export const getErrorServCode = (error: Error) => {
-  if (error instanceof AGError) {
-    return error.servCode;
-  }
-};

@@ -17,6 +17,7 @@ import { TrackStore } from './track';
 import { ExtAppTrackAdapter } from './ext-app/track-adapter';
 import { WidgetTrackAdapter } from './widget/track-adapter';
 import { ReportStore } from './report';
+import { LogReporter } from '../../../log-reporter';
 
 export class EduClassroomStore {
   private _api: EduApiService = new EduApiService();
@@ -43,6 +44,8 @@ export class EduClassroomStore {
   private readonly reportStore: ReportStore = new ReportStore(this);
 
   initialize() {
+    LogReporter.enableLogReport();
+
     const instance = this;
     Object.getOwnPropertyNames(instance).forEach((propertyName) => {
       if (propertyName.endsWith('Store')) {

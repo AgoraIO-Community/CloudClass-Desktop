@@ -21,6 +21,7 @@ export { ClassState, RecordStatus } from './common/room/type';
 export type { ChatEvent, ChatListType, IConversation, Conversation } from './common/message/type';
 export type { IAgoraWidget, AgoraWidgetContext } from './common/widget/type';
 export { BeautyType } from './common/media/type';
+export { DEVICE_DISABLE } from './common/media';
 
 export type {
   AgoraExtAppContext,
@@ -32,4 +33,9 @@ export type {
 } from './common/ext-app/type';
 
 export { Track } from './common/track/struct';
-export type { Point, Dimensions } from './common/track/type';
+export type { Point, Dimensions, TrackContext, Margin, Offset } from './common/track/type';
+
+export { MessageItem } from './common/message/struct';
+export type { FetchUserParam } from './common/user/type';
+export { FetchUserType } from './common/user/type';
+export { PodiumSrouce } from './common/hand-up/type';

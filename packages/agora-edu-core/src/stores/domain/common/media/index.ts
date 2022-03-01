@@ -16,7 +16,6 @@ import {
   Log,
   AGRteTrackErrorReason,
 } from 'agora-rte-sdk';
-import { isEmpty } from 'lodash';
 import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
 import { AgoraEduClassroomEvent, ClassroomState } from '../../../../type';
 import { EduClassroomConfig, EduEventCenter } from '../../../..';
