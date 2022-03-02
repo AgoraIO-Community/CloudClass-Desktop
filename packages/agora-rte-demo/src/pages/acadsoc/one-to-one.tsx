@@ -105,7 +105,9 @@ export const AcadsocOneToOne = observer(() => {
       </>
       <Nav />
       <div className={!boardStore.isFullScreen ? styles.flexBox : styles.fullScreen}>
-        <div className={styles.mainContainer}>
+        <div className={styles.mainContainer} style={{
+          flexDirection: appStore.uiStore.recordLanguage === 'zh-hk' ? 'row' : 'row-reverse'
+        }}>
           <div className={styles.rightContainer}>
             <RightContainer/>
           </div>
