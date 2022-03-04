@@ -1,19 +1,3 @@
-import { parse, stringify } from 'qs';
-
-export function getPageQuery() {
-  console.log('window. getuery323');
-  return parse(window.location.href.split('?')[1]);
-}
-
-export function getQueryPath(path = '', query = {}) {
-  console.log('window. ');
-  const search = stringify(query);
-  if (search.length) {
-    return `${path}?${search}`;
-  }
-  return path;
-}
-
 /*
  ** 时间戳转换成指定格式日期
  ** eg.
@@ -79,4 +63,16 @@ export const getOS = () => {
     isPhone: isPhone,
     isPc: isPc,
   };
+};
+
+export const dataURLtoBlob = (dataurl) => {
+  var arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
 };

@@ -43,26 +43,32 @@ export const getRoomInfo = (roomId) => {
   let options = {
     chatRoomId: roomId, // 聊天室id
   };
-  WebIM.conn.getChatRoomDetails(options).then((res) => {
-    store.dispatch(roomInfo(res.data[0]));
-    // 将成员存到 store
-    let newArr = [];
-    res.data[0].affiliations.map((item) => {
-      if (item.owner) {
-        return;
-      } else {
-        newArr.push(item.member);
+  WebIM.conn
+    .getChatRoomDetails(options)
+    .then((res) => {
+      store.dispatch(roomInfo(res.data[0]));
+      // 将成员存到 store
+      let newArr = [];
+      res.data[0].affiliations.map((item) => {
+        if (item.owner) {
+          return;
+        } else {
+          newArr.push(item.member);
+        }
+      });
+      store.dispatch(roomUsers(newArr));
+      // 判断是否全局禁言
+      if (res.data[0].mute) {
+        store.dispatch(roomAllMute(true));
       }
+      getUserInfo(newArr);
+      getAnnouncement(roomId);
+      getRoomWhileList(roomId);
+    })
+    .catch((err) => {
+      message.error(transI18n('get_room_info'));
+      console.log('getRoomInfo>>>', err);
     });
-    store.dispatch(roomUsers(newArr));
-    // 判断是否全局禁言
-    if (res.data[0].mute) {
-      store.dispatch(roomAllMute(true));
-    }
-    getUserInfo(newArr);
-    getAnnouncement(roomId);
-    getRoomWhileList(roomId);
-  });
 };
 
 // 获取群组公告
@@ -70,9 +76,15 @@ export const getAnnouncement = (roomId) => {
   let options = {
     roomId, // 聊天室id
   };
-  WebIM.conn.fetchChatRoomAnnouncement(options).then((res) => {
-    store.dispatch(roomAnnouncement(res.data.announcement));
-  });
+  WebIM.conn
+    .fetchChatRoomAnnouncement(options)
+    .then((res) => {
+      store.dispatch(roomAnnouncement(res.data.announcement));
+    })
+    .catch((err) => {
+      message.error(transI18n('chat.get_room_announcement'));
+      console.log('getAnnouncement>>>', err);
+    });
 };
 
 // 上传/修改 群组公告
@@ -84,11 +96,17 @@ export const updateAnnouncement = (roomId, noticeCentent, callback) => {
     roomId: roomId, // 聊天室id
     announcement: noticeCentent, // 公告内容
   };
-  WebIM.conn.updateChatRoomAnnouncement(options).then((res) => {
-    getAnnouncement(res.data.id);
-    store.dispatch(announcementStatus(true));
-    callback && callback();
-  });
+  WebIM.conn
+    .updateChatRoomAnnouncement(options)
+    .then((res) => {
+      getAnnouncement(res.data.id);
+      store.dispatch(announcementStatus(true));
+      callback && callback();
+    })
+    .catch((err) => {
+      message.error(transI18n('chat.update_room_announcement'));
+      console.log('updateAnnouncement>>>', err);
+    });
 };
 
 // 退出聊天室

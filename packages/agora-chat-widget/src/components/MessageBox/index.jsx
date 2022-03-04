@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { transI18n } from '~ui-kit';
 import { TextMsg } from './TextMsg';
 import { CmdMsg } from './CmdMsg';
+import { ImgMsg } from './ImgMsg';
 import scrollElementToBottom from '../../utils/scrollElementToBottom';
 import { CHAT_TABS_KEYS } from '../../contants';
 import noMessage_icon from '../../themes/img/noMessage.png';
@@ -43,10 +44,12 @@ export const MessageBox = () => {
               msgs.map((item, key) => {
                 const isText = item?.contentsType === 'TEXT' || item?.type === 'txt';
                 const isCmd = item?.contentsType === 'COMMAND' || item?.type === 'cmd';
+                const isImg = item?.contentsType === 'IMAGE' || item?.type === 'img';
                 return (
                   <div key={key}>
                     {isText && <TextMsg item={item} />}
                     {isCmd && <CmdMsg item={item} />}
+                    {isImg && <ImgMsg item={item} />}
                   </div>
                 );
               })}

@@ -112,3 +112,24 @@
   align-items: center;
   cursor: pointer;
 }
+
+.reset-msg-text {
+  margin-left: 5px;
+  color: #357bf6;
+  cursor: pointer;
+}
+
+.max-img .ant-modal-close-x {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 30px;
+  height: 30px;
+  background: #7f7878;
+  border-radius: 50px;
+  text-align: center;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
