@@ -57,6 +57,8 @@ export class BoardStore extends EduStoreBase {
   @observable configReady = false;
   @observable undoSteps = 0;
   @observable redoSteps = 0;
+  @observable currentSceneIndex = 0;
+  @observable scenesCount = 0;
 
   // ---------- computeds --------
   @computed
@@ -107,8 +109,6 @@ export class BoardStore extends EduStoreBase {
       //@ts-ignore
       window.room = room;
 
-      this.restoreWhiteboardMemberStateTo(room);
-
       this.setRoom(room);
 
       // readin globalstate data, this must comes after setRoom
@@ -118,7 +118,6 @@ export class BoardStore extends EduStoreBase {
           this.grantUsers = new Set(globalState.grantUsers);
         });
       }
-
       if (
         [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
           EduClassroomConfig.shared.sessionInfo.role,
@@ -168,6 +167,11 @@ export class BoardStore extends EduStoreBase {
     })
       .then((manager) => {
         this._windowManager = manager;
+
+        this.restoreWhiteboardMemberStateTo(this.room);
+
+        this.addManagerEmitterListeners();
+        this.updateScenesCount(this.room.state.sceneState.scenes.length);
 
         if (manager.appManager?.mainViewProxy.context) {
           //@ts-ignore
@@ -241,16 +245,6 @@ export class BoardStore extends EduStoreBase {
   @action.bound
   setTool(tool: WhiteboardTool) {
     switch (tool) {
-      case WhiteboardTool.blankPage: {
-        const room = this.writableRoom;
-        room.setScenePath('/init');
-        const newIndex = room.state.sceneState.scenes.length;
-        room.putScenes('/', [{ name: `${newIndex}` }], newIndex);
-        // room.setSceneIndex(newIndex);
-        this.windowManager.setMainViewSceneIndex(newIndex);
-        break;
-      }
-
       case WhiteboardTool.clear: {
         this.writableRoom.cleanCurrentScene();
         break;
@@ -431,6 +425,57 @@ export class BoardStore extends EduStoreBase {
     });
   }
 
+  @action.bound
+  updateCurrentSceneIndex(currentSceneIndex: number): void {
+    this.currentSceneIndex = currentSceneIndex;
+  }
+
+  @action.bound
+  updateScenesCount(scenesCount: number): void {
+    this.scenesCount = scenesCount;
+  }
+
+  @action.bound
+  async addMainViewScene() {
+    if (this.writableRoom && this.windowManager) {
+      await this.windowManager.addPage({ after: true });
+      await this.windowManager.nextPage();
+    }
+  }
+
+  @action.bound
+  async toPreMainViewScene() {
+    if (this.windowManager && this.currentSceneIndex > 0) {
+      await this.windowManager.prevPage();
+    }
+  }
+
+  @action.bound
+  async toNextMainViewScene() {
+    if (this.windowManager && this.currentSceneIndex < this.scenesCount - 1) {
+      await this.windowManager.nextPage();
+    }
+  }
+
+  addManagerEmitterListeners() {
+    this.windowManager?.emitter.on('mainViewSceneIndexChange', (scene) => {
+      this.updateCurrentSceneIndex(scene);
+    });
+    this.windowManager?.emitter.on('mainViewScenesLengthChange', (length) => {
+      this.updateScenesCount(length);
+    });
+    this.windowManager?.emitter.on('canUndoStepsChange', (steps) => {
+      runInAction(() => {
+        this.undoSteps = steps;
+      });
+    });
+    this.windowManager?.emitter.on('canRedoStepsChange', (steps) => {
+      runInAction(() => {
+        this.redoSteps = steps;
+      });
+    });
+  }
+
   // ----------  other -------------
   private _whiteBoardContainer?: HTMLElement;
   private _room?: Room;
@@ -497,16 +542,6 @@ export class BoardStore extends EduStoreBase {
     },
     onCatchErrorWhenAppendFrame: (userId: number, error: Error) => {},
     onCatchErrorWhenRender: (error: Error) => {},
-    onCanUndoStepsUpdate: (steps: number) => {
-      runInAction(() => {
-        this.undoSteps = steps;
-      });
-    },
-    onCanRedoStepsUpdate: (steps: number) => {
-      runInAction(() => {
-        this.redoSteps = steps;
-      });
-    },
   };
 
   protected get room(): Room {
