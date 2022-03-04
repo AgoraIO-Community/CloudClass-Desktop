@@ -37,3 +37,4 @@ export { AGServiceErrorCode } from './services/error';
 export { EduStoreFactory } from './stores';
 export * from './stores/domain';
 export { Platform } from './configs';
+export type { groupUser } from './stores/domain/common/group/struct';

@@ -25,6 +25,7 @@ export enum AgoraRteChannelMessageCmd {
   StreamInOut = 40,
   StreamsInOut = 41,
   MessageExtension = 99,
+  Group = 11,
 }
 
 export enum AgoraRtePeerMessageCmd {
@@ -58,6 +59,7 @@ export enum AgoraRteEventType {
   RtcConnectionStateChanged = 'rtc-connection-state-changed',
   RtmConnectionStateChanged = 'rtm-connection-state-changed',
   RteConnectionStateChanged = 'rte-connection-state-changed',
+  GroupUpdate = 'group-update',
 }
 
 export interface AgoraRteChannelMessageHandle {
@@ -137,6 +139,8 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
         break;
       case AgoraRteChannelMessageCmd.MessageExtension:
         this._handleMessageExtension(task);
+      case AgoraRteChannelMessageCmd.Group:
+        this._handleGroup(task);
         break;
     }
   }
@@ -411,5 +415,19 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
 
   private _handleMessageExtension(task: AgoraRteMessageHandleTask) {
     //TODO
+  }
+
+  private _handleGroup(task: AgoraRteMessageHandleTask) {
+    console.log('handle groups info');
+
+    console.log(task);
+
+    // this.emit(
+    //   AgoraRteEventType.UserPropertyUpdated,
+    //   userUuid,
+    //   user.userProperties.toObject(),
+    //   operator,
+    //   cause,
+    // );
   }
 }
