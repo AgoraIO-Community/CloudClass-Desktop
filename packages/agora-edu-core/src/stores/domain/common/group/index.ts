@@ -28,7 +28,7 @@ export class GroupStore extends EduStoreBase {
   // @observable
   // subRoomList: WeakMap<any, SubRoomStore> = new WeakMap<any, SubRoomStore>()
 
-  MAX_GROUP_COUNT = 20; // 最大分组数量
+  private MAX_GROUP_COUNT = 20; // 最大分组数量
 
   @observable
   state: GroupState = GroupState.CLOSE;

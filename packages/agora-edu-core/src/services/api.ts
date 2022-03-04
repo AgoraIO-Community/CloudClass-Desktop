@@ -661,4 +661,26 @@ export class EduApiService extends ApiBase {
     });
     return res.data;
   }
+
+  /**
+   * 发送全体消息
+   * @param roomUuid
+   * @param data
+   * rang: 1.大房间 2.指定组 3.全体（大房间+所有组）
+   * toGroupUuids: 当type=2时，传入指定小组id
+   * type: 消息类型；txt:文本消息，img：图片消息，loc：位置消息，audio：语音消息，video：视频消息，file：文件消息
+   * msg: 消息
+   * @returns
+   */
+  async sendNotificationMessage(
+    roomUuid: string,
+    data: { rang: number; toGroupUuids: string[]; type: string; msg: string },
+  ) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/easemobIM/messages`,
+      method: 'PATCH',
+      data,
+    });
+    return res.data;
+  }
 }
