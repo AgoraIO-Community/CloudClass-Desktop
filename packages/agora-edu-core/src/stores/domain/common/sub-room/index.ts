@@ -1,32 +1,12 @@
-import {
-  AGError,
-  AgoraRteConnectionState,
-  AgoraRteEngine,
-  AgoraRteEventType,
-  AgoraRteScene,
-  AgoraRteSceneJoinRTCOptions,
-  AGRtcConnectionType,
-  bound,
-  Log,
-  retryAttempt,
-  RtcState,
-} from 'agora-rte-sdk';
-import to from 'await-to-js';
-import { action, computed, observable, reaction } from 'mobx';
+import { AGError, AgoraRteScene, Log } from 'agora-rte-sdk';
+import { observable } from 'mobx';
 import { AGServiceErrorCode } from '../../../..';
-import { EduClassroomConfig } from '../../../../configs';
-import { EduApiService } from '../../../../services/api';
 import { EduSessionInfo } from '../../../../type';
-import { EduRole2RteRole } from '../../../../utils';
-import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
-import { EduStoreBase } from '../base';
-import { ConnectionStore, LeaveReason } from '../connection';
+import { LeaveReason } from '../connection';
 import { GroupStore } from '../group';
-import { UserStore } from '../user';
 import { BoardStoreEach } from './border';
 import { ConnectionStoreEach } from './connection';
 import { StreamStoreEach } from './stream';
-import { EduSubRoomSessionInfo } from './struct';
 import { UserStoreEach } from './user';
 
 /**
@@ -106,6 +86,8 @@ export class SubRoomStore {
   leaveSubRoom = async () => {
     try {
       await this.connectionStore.leaveClassroom(LeaveReason.leave);
+      this.streamStore.onDestroy();
+      this.boardStore.onDestroy();
     } catch (e) {
       return e;
     }

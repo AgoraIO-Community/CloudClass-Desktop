@@ -21,7 +21,6 @@ import { AgoraEduClassroomEvent, ClassroomState, EduRoleTypeEnum } from '../../.
 //   import { EduClassroomConfig } from '../../../../configs';
 import { RteRole2EduRole } from '../../../../utils';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
-import { EduStoreBase } from '../base';
 import { EduEventCenter } from '../../../../event-center';
 import { AGServiceErrorCode, EduStream } from '../../../..';
 import { ShareStreamStateKeeper } from '../stream/state-keeper';

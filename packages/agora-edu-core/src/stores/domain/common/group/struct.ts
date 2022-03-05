@@ -1,5 +1,6 @@
 export interface groupUser {
   userUuid: string;
+  userName: string;
 }
 export class EduGroupDetail {
   groupName: string;
@@ -19,7 +20,7 @@ export class EduSubRoomConfig {
   constructor(
     subRoomName: string,
     invitationUserList: groupUser[],
-    subRoomProperties: Record<string, any>,
+    subRoomProperties?: Record<string, any>,
   ) {
     this.subRoomName = subRoomName;
     this.invitationUserList = invitationUserList;

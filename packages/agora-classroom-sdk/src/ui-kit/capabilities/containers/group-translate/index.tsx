@@ -5,7 +5,7 @@ import { useStore } from '~hooks/use-edu-stores';
 
 const GroupTranslate = observer(() => {
   const { groupUIStore } = useStore();
-  const { currentRoomUuid, groupState, generateSubRooms } = groupUIStore;
+  const { currentRoomUuid, groupState, handleGenerateSubRooms } = groupUIStore;
   const [number, setNumber] = React.useState<number>(4);
 
   return (
@@ -20,7 +20,7 @@ const GroupTranslate = observer(() => {
           value={number}></input>
       </Card>
       <Card>
-        <Button type="primary" onClick={(_) => generateSubRooms(number)}>
+        <Button type="primary" onClick={(_) => handleGenerateSubRooms(number)}>
           generate subroom
         </Button>
       </Card>

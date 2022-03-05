@@ -28,7 +28,9 @@ export class GroupStore extends EduStoreBase {
   // @observable
   // subRoomList: WeakMap<any, SubRoomStore> = new WeakMap<any, SubRoomStore>()
 
-  private MAX_GROUP_COUNT = 20; // 最大分组数量
+  MAX_GROUP_COUNT = 20; // 最大分组数量
+  MIN_GROUP_COUNT = 2;
+  MAX_PER_GROUP_PERSON = 15; // 单组最大人数
 
   @observable
   state: GroupState = GroupState.CLOSE;
@@ -96,6 +98,14 @@ export class GroupStore extends EduStoreBase {
     }
   }
 
+  /**
+   * 关闭分组
+   */
+  stopGroup() {
+    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+    this.classroomStore.api.addSubRoomList(roomUuid, GroupState.CLOSE, {});
+  }
+
   // 移除子房间
   /**
    *
@@ -148,14 +158,19 @@ export class GroupStore extends EduStoreBase {
    */
   inviteUserListToSubRoom(toGroupUuid: string, userList: groupUser[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    return this._moveUserListToSubRoom(roomUuid, toGroupUuid, userList, true);
+    return this._moveUserListToSubRoom(roomUuid, toGroupUuid, userList, userList, true);
   }
 
   /**
    * 将用户移入子房间，跳过邀请步骤
    */
-  addUserListToSubRoom(fromGroupUuid: string, toGroupUuid: string, userList: groupUser[]) {
-    return this._moveUserListToSubRoom(fromGroupUuid, toGroupUuid, userList, false);
+  addUserListToSubRoom(
+    fromGroupUuid: string,
+    toGroupUuid: string,
+    fromUserList: groupUser[],
+    toUserList: groupUser[],
+  ) {
+    return this._moveUserListToSubRoom(fromGroupUuid, toGroupUuid, fromUserList, toUserList, false);
   }
   /**
    * 用户接受邀请进入子房间
@@ -173,18 +188,21 @@ export class GroupStore extends EduStoreBase {
    * 将用户从原来的子房间里移动到目标的子房间
    * @param fromGroupUuid 原小组
    * @param toGroupUuid 目标小组
+   * @param fromUserList 原小组用户列表
+   * @param toUserList 目标小组用户列表
    * @param userList 用户列表
    * @param inProgress 是否需要邀请
    */
   private _moveUserListToSubRoom(
     fromGroupUuid: string,
     toGroupUuid: string,
-    userList: groupUser[],
+    fromUserList: groupUser[],
+    toUserList: groupUser[],
     inProgress: boolean,
   ) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    let toGroup = { groupUuid: toGroupUuid, addUsers: userList };
-    let fromGroup = { groupUuid: fromGroupUuid, removeUser: userList };
+    let fromGroup = { groupUuid: fromGroupUuid, removeUser: fromUserList };
+    let toGroup = { groupUuid: toGroupUuid, addUsers: toUserList };
     let groups = [fromGroup, toGroup];
     return this.classroomStore.api.updateSubRoomUsers(roomUuid, { groups, inProgress });
   }
