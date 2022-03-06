@@ -25,7 +25,7 @@ export const ScreenPickerDialog = ({
   return (
     <Modal
       id={id}
-      width={662}
+      style={{ width: 662 }}
       onOk={() => {
         removeDialog(id);
         onOK && onOK(activeId);
@@ -35,10 +35,10 @@ export const ScreenPickerDialog = ({
         onCancel && onCancel();
       }}
       footer={[
-        <Button type={'secondary'} action="cancel">
+        <Button key="cancel" type={'secondary'} action="cancel">
           {t('toast.cancel')}
         </Button>,
-        <Button type={'primary'} action="ok" disabled={!activeId}>
+        <Button key="ok" type={'primary'} action="ok" disabled={!activeId}>
           {t('toast.confirm')}
         </Button>,
       ]}
@@ -73,7 +73,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
     <>
       <div className={cls}>{screenShareTitle}</div>
       <div className={'programs'} style={{ maxHeight: scrollHeight }}>
-        {items.map((item, index) => {
+        {items.map((item) => {
           return (
             <div
               className={'program-item'}

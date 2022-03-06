@@ -178,7 +178,7 @@ export const Home: React.FC<HomeProps> = ({
       {showAbout ? (
         <Modal
           title={transI18n('home.about')}
-          width={366}
+          style={{ width: 366 }}
           onCancel={() => {
             setShowAbout(false);
           }}
@@ -205,8 +205,7 @@ export const Home: React.FC<HomeProps> = ({
       ) : null}
       {showDisclaimer ? (
         <Modal
-          width={560}
-          style={{ height: language === 'en' ? 475 : 370 }}
+          style={{ height: language === 'en' ? 475 : 370, width: 560 }}
           title={transI18n('disclaimer.title')}
           modalType="back"
           onCancel={() => {

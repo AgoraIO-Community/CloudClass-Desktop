@@ -97,7 +97,6 @@ export const ShowAnnouncement = () => {
         }}
         okText={transI18n('chat.ok')}
         cancelText={transI18n('chat.cancel')}
-        width={280}
         className="delete-modal"
         style={{ top: '40%' }}
         destroyOnClose

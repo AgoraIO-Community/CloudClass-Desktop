@@ -32,11 +32,12 @@ export const Docs = ({ endDate, type, theme }: DocsProps) => {
         }}>
         <Modal
           title={'countdown'}
-          width={258}
-          className={classnames({
-            [`countdown-modal`]: 1,
-            [`countdown-modal-hover`]: !showSetting,
-          })}>
+          style={{ width: 258 }}
+          // className={classnames({
+          //   [`countdown-modal`]: 1,
+          //   [`countdown-modal-hover`]: !showSetting,
+          // })}
+        >
           <div className="restart-wrap">
             <Button
               onClick={() => {

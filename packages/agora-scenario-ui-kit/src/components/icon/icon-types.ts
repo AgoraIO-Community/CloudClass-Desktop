@@ -77,4 +77,5 @@ export type IconTypes =
   | 'vote'
   | 'search-zoom-in'
   | 'search-zoom-out'
-  | 'test-speaker';
+  | 'test-speaker'
+  | 'group-discuss';

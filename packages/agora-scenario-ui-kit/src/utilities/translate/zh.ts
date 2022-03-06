@@ -288,6 +288,7 @@ export const zh = {
     text: '文本',
     tools: '工具栏',
     user_list: '用户列表',
+    breakout_room: '分组讨论',
   },
   cloud: {
     fileName: '文件名',
@@ -531,6 +532,20 @@ export const zh = {
     'item-tip': '请输入选项内容',
     'single-sel': '单选',
     'mul-sel': '多选',
+  },
+  breakout_room: {
+    create_prefix: '创建',
+    create_suffix: '个讨论组',
+    auto: '自动分配',
+    manual: '手动分配',
+    wait_for_arrange: '待分配{reason}人',
+    create_submit: '创建',
+    arrange: '分配',
+    re_create: '重新创建',
+    add_group: '增加小组',
+    start: '开始',
+    move_to: '移动组',
+    change_to: '交换组',
   },
   begin_class: '开始上课',
   edu_error: {

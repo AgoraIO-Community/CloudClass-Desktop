@@ -1,0 +1,75 @@
+.breakout-room {
+  width: 360px;
+  height: 373px;
+  padding-bottom: 0;
+  --text-color: #586376;
+  --link-color: #357bf6;
+  --link-active-color: #191919;
+  --link-active-bg-color: #c7d3ed;
+  color: var(--text-color);
+}
+
+.breakout-room .outline-box {
+  width: 280px;
+  height: 174px;
+  border-radius: 4px;
+  border: 1px solid #eeeef7;
+}
+
+.breakout-room .group-select {
+  width: 60px;
+}
+
+/** 40px for header, 20px for bottom padding */
+.breakout-room .content-area {
+  height: calc(100% - 40px + 20px);
+}
+
+.breakout-room .rounded-btn,
+.breakout-room .ripple-circle {
+  @apply rounded !important;
+}
+
+.breakout-room .btn-secondary {
+  color: var(--text-color);
+}
+
+.breakout-room .suffix-link {
+  font-size: 12px;
+  color: var(--link-color);
+}
+
+.breakout-room .suffix-link.active {
+  background: var(--link-active-bg-color);
+  color: var(--link-active-color);
+}
+
+/** overwrite popover's default style */
+.breakout-room-group-panel .popover-inner-content {
+  padding: 0;
+}
+.breakout-room-group-panel .popover-inner {
+  background-color: unset;
+  box-shadow: none;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 6px;
+  border: 1px solid #e3e3ec;
+  background: #fff;
+}
+.breakout-room-group-panel .popover-arrow {
+  display: none;
+}
+
+.breakout-room .fcr-tree-node:hover,
+.breakout-room-group-panel .fcr-tree-node:hover {
+  background: #f9f9fc;
+}
+
+.breakout-room .suffix-btn {
+  border-radius: 2px;
+}
+
+.breakout-room .suffix-btn:hover {
+  background: var(--link-active-bg-color);
+  color: var(--link-active-color);
+}

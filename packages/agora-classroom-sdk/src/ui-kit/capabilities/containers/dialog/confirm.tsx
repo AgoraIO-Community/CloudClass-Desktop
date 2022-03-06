@@ -36,7 +36,7 @@ export const Confirm: React.FC<
   return (
     <Modal
       id={id}
-      width={300}
+      style={{ width: 300 }}
       title={title}
       onOk={opts && opts.onOk ? opts.onOk : () => {}}
       onCancel={opts && opts.onCancel ? opts.onCancel : () => {}}

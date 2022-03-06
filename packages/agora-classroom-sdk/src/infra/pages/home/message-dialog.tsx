@@ -25,7 +25,7 @@ export const MessageDialog: FC = () => {
       title={transI18n('message')}
       onOk={onOk}
       footer={[
-        <Button type="primary" action="ok">
+        <Button key="ok" type="primary" action="ok">
           {transI18n('toast.confirm')}
         </Button>,
       ]}>

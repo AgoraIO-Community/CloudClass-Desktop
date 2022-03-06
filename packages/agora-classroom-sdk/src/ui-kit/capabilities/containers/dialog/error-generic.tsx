@@ -1,7 +1,8 @@
+import { FC } from 'react';
 import { Button, Modal } from '~ui-kit';
 import { BaseDialogProps } from '.';
 
-export const GenericErrorDialog: React.FC<
+export const GenericErrorDialog: FC<
   BaseDialogProps & {
     onOK: () => void;
     okBtnText: string;
@@ -14,7 +15,7 @@ export const GenericErrorDialog: React.FC<
     <Modal
       onOk={onOK}
       footer={[
-        <Button type={'primary'} action="ok">
+        <Button key="ok" type={'primary'} action="ok">
           {okBtnText}
         </Button>,
       ]}

@@ -120,8 +120,12 @@ export const RoomDeviceSettingContainer = observer(({ id }: any) => {
   return (
     <Modal
       title={transI18n('pretest.settingTitle')}
-      width={360}
-      footer={[<Button action="ok">{transI18n('toast.confirm')}</Button>]}
+      style={{ width: 360 }}
+      footer={[
+        <Button key="ok" action="ok">
+          {transI18n('toast.confirm')}
+        </Button>,
+      ]}
       onCancel={() => {
         removeDialog(id);
       }}

@@ -329,12 +329,12 @@ export const CourseWareManager = ({
           </Row>
           <Modal
             title="上传"
-            width={450}
             style={{
               position: 'absolute',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
+              width: 450,
             }}>
             <Loading
               hasLoadingGif={false}
@@ -364,31 +364,6 @@ export const CourseWareManager = ({
       </Tabs>
     </div>
   );
-};
-
-export const CheckBoxShowCase = ({ size, progress }: UploadListProps) => {
-  return (
-    <Button
-      onClick={() => {
-        Modal.show({
-          closable: true,
-          onOk: () => {
-            console.log('ok');
-          },
-          onCancel: () => {
-            console.log('cancel');
-          },
-          component: <CourseWareManager />,
-        });
-      }}>
-      show checklist
-    </Button>
-  );
-};
-
-CheckBoxShowCase.args = {
-  progress: 0,
-  size: 0,
 };
 
 export const UploadProgress = () => {

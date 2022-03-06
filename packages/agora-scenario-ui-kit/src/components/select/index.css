@@ -139,7 +139,7 @@
   transform: rotate(0deg);
   transition: 150ms;
   -webkit-transition: 150ms;
-  background: url('../../icons/svg/arrow-icon.svg') center;
+  background: url('../icon/assets/svg/arrow-icon.svg') center;
 }
 .react-select__indicators svg path {
   display: none;
@@ -159,4 +159,19 @@
 
 .react-select__indicator {
   margin-left: -5px;
+}
+
+.react-select-sm .react-select__control {
+  min-height: 21px;
+}
+.react-select-sm .react-select__indicator {
+  padding: 0 8px;
+}
+
+.react-select-sm .react-select__value-container {
+  padding: 0 8px;
+}
+
+.react-select-sm .options-container {
+  top: 26px;
 }

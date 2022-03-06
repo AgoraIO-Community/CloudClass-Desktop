@@ -17,6 +17,7 @@ export enum DialogCategory {
   Confirm,
   DeviceSetting,
   ScreenPicker,
+  BreakoutRoom,
 }
 
 export interface ToastType {

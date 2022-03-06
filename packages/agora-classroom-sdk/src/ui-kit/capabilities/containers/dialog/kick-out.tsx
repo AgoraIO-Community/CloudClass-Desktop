@@ -14,7 +14,7 @@ export const KickOut: React.FC<BaseDialogProps & { onOk: (ban: boolean) => void 
 
     return (
       <Modal
-        width={300}
+        style={{ width: 300 }}
         title={transI18n('kick.kick_out_student')}
         onOk={() => {
           onOk(type === 'kicked_ban');
@@ -24,10 +24,10 @@ export const KickOut: React.FC<BaseDialogProps & { onOk: (ban: boolean) => void 
           removeDialog(id);
         }}
         footer={[
-          <Button type={'secondary'} action="cancel">
+          <Button key="cancel" type={'secondary'} action="cancel">
             {transI18n('toast.cancel')}
           </Button>,
-          <Button type={'primary'} action="ok">
+          <Button key="ok" type={'primary'} action="ok">
             {transI18n('toast.confirm')}
           </Button>,
         ]}>

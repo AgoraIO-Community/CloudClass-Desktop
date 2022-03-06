@@ -11,7 +11,7 @@ export type SelectOption = {
   value: any;
 };
 export interface SelectProps extends BaseProps {
-  value?: string | undefined;
+  value?: any;
   placeholder?: string;
   options: SelectOption[];
   isSearchable?: boolean;
@@ -19,7 +19,8 @@ export interface SelectProps extends BaseProps {
   isMenuTextCenter?: boolean;
   prefix?: React.ReactNode;
   maxMenuHeight?: number;
-  onChange?: (value: string) => unknown;
+  onChange?: (value: any) => unknown;
+  size?: 'sm';
 }
 
 // 基于react-select封装 https://github.com/JedWatson/react-select/blob/master/README.md
@@ -34,6 +35,7 @@ export const Select: FC<SelectProps> = ({
   maxMenuHeight = 300,
   onChange,
   className,
+  size,
   ...restProps
 }) => {
   const wrappedOptions = options.map((item: any) => ({
@@ -45,16 +47,21 @@ export const Select: FC<SelectProps> = ({
 
   const [showOption, setShowOpton] = useState<boolean>(defaultMenuIsOpen);
 
-  const cls = classnames({
-    [`select`]: 1,
-    [`${className}`]: !!className,
+  const containerCls = classnames('react-select-container', {
+    ['react-select-sm']: size === 'sm',
   });
+
+  const cls = classnames({
+    [`${className}`]: !!className,
+    ['react-select-prefix']: prefix,
+  });
+
   return (
-    <div className={'react-select-container'}>
+    <div className={containerCls}>
       {prefix && <div className={'select-prefix'}>{prefix}</div>}
       <ReactSelect
-        className={[cls, prefix ? 'react-select-prefix' : ''].join(' ')}
-        classNamePrefix={['react-select'].join(' ')}
+        className={cls}
+        classNamePrefix="react-select"
         value={wrappedOptions.find((item) => item.value === value)}
         placeholder={placeholder}
         options={wrappedOptions}
@@ -71,16 +78,17 @@ export const Select: FC<SelectProps> = ({
         {...restProps}
       />
       <CSSTransition in={showOption} timeout={180} className="options-container" unmountOnExit>
-        <div>
+        <div style={{ maxHeight: 200, overflow: 'scroll' }}>
           {wrappedOptions.map((item) => {
+            const optionCls = classnames('option-item', {
+              'text-center': isMenuTextCenter,
+              'is-select': item.value === value,
+            });
+
             return (
               <div
                 key={item.value}
-                className={classnames({
-                  'option-item': 1,
-                  'text-center': isMenuTextCenter,
-                  'is-select': item.value === value,
-                })}
+                className={optionCls}
                 onClick={() => {
                   onChange && onChange(item.value);
                 }}>

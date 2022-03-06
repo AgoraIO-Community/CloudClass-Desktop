@@ -12,6 +12,12 @@ export enum ToolbarItemCategory {
   Cabinet,
 }
 
+export enum CabinetItemEnum {
+  ScreenShare = 'screenShare',
+  BreakoutRoom = 'breakoutRoom',
+  Laser = 'laser',
+}
+
 export interface CabinetItem {
   id: string;
   name: string;
@@ -53,7 +59,8 @@ export class ToolbarItem {
 
 export class ToolbarUIStore extends EduUIStoreBase {
   readonly allowedCabinetItems: string[] = [
-    'screenShare',
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.BreakoutRoom,
     'io.agora.countdown',
     'io.agora.answer',
     'io.agora.vote',
@@ -85,6 +92,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   readonly paletteMap: Record<string, string> = {
     '#ffffff': '#E1E1EA',
   };
+
   onInstall() {
     reaction(
       () => this.classroomStore.mediaStore.localScreenShareTrackState,
@@ -168,11 +176,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
   handleCabinetItem(id: string) {
     const { launchApp } = this.classroomStore.extAppStore;
     switch (id) {
-      case 'screenShare':
+      case CabinetItemEnum.ScreenShare:
         if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
           this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'warning');
         }
-        this._activeCabinetItem = 'screenShare';
+        this._activeCabinetItem = CabinetItemEnum.ScreenShare;
         if (this.isScreenSharing) {
           this.classroomStore.mediaStore.stopScreenShareCapture();
         } else {
@@ -224,8 +232,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
           }
         }
         break;
-      case 'laser':
+      case CabinetItemEnum.Laser:
         this.setTool(id);
+        break;
+      case CabinetItemEnum.BreakoutRoom:
+        this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
         break;
       default:
         launchApp(id);
@@ -309,7 +320,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   get activeCabinetItem(): string | undefined {
-    return this.isScreenSharing ? 'screenShare' : undefined;
+    return this.isScreenSharing ? CabinetItemEnum.ScreenShare : undefined;
   }
 
   /**
@@ -331,9 +342,14 @@ export class ToolbarUIStore extends EduUIStoreBase {
       )
       .concat([
         {
-          id: 'screenShare',
+          id: CabinetItemEnum.ScreenShare,
           iconType: 'share-screen',
           name: transI18n('scaffold.screen_share'),
+        },
+        {
+          id: CabinetItemEnum.BreakoutRoom,
+          iconType: 'group-discuss',
+          name: transI18n('scaffold.breakout_room'),
         },
       ])
       .filter((it) => this.allowedCabinetItems.includes(it.id));
