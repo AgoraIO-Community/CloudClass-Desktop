@@ -1,21 +1,13 @@
-import {
-  AgoraRteConnectionState,
-  AgoraRteEngine,
-  AgoraRteEventType,
-  AgoraRteScene,
-  AgoraRteSceneJoinRTCOptions,
-  AGRtcConnectionType,
-  bound,
-  Log,
-  retryAttempt,
-  RtcState,
-} from 'agora-rte-sdk';
-import to from 'await-to-js';
-import { action, observable } from 'mobx';
-import { EduClassroomConfig } from '../../../../configs';
-import { EduRole2RteRole } from '../../../../utils';
-import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
-import { EduStoreBase } from '../base';
+import { AGError, AgoraRteScene, Log } from 'agora-rte-sdk';
+import { observable } from 'mobx';
+import { AGServiceErrorCode } from '../../../..';
+import { EduSessionInfo } from '../../../../type';
+import { LeaveReason } from '../connection';
+import { GroupStore } from '../group';
+import { BoardStoreEach } from './border';
+import { ConnectionStoreEach } from './connection';
+import { StreamStoreEach } from './stream';
+import { UserStoreEach } from './user';
 
 /**
  * 负责功能：
@@ -30,126 +22,107 @@ import { EduStoreBase } from '../base';
  *
  */
 @Log.attach({ proxyMethods: false })
-export class SubRoomStore extends EduStoreBase {
-  /** Observables */
-  @observable roomState: AgoraRteConnectionState = AgoraRteConnectionState.Idle;
+export class SubRoomStore {
+  @observable userStore!: UserStoreEach;
+  @observable connectionStore!: ConnectionStoreEach; // 为 subroom 提供 rte 链接
+  @observable boardStore!: BoardStoreEach; // 创建白板
+  @observable streamStore!: StreamStoreEach; // media control
 
-  @observable rtcState: RtcState = RtcState.Idle;
+  @observable scene?: AgoraRteScene; //
 
-  @observable rtcSubState: RtcState = RtcState.Idle;
+  classRoomGroupstore: GroupStore;
+  subRoomSeesionInfo: EduSessionInfo;
 
-  @observable scene?: AgoraRteScene;
-
-  /** Computeds */
-
-  /** Methods */
-
-  async join() {
-    const engine = this.classroomStore.connectionStore.getEngine();
-
-    let [error] = await to(
-      retryAttempt(async () => {
-        const { sessionInfo } = EduClassroomConfig.shared;
-
-        await engine.login(sessionInfo.token, sessionInfo.userUuid);
-        const scene = engine.createAgoraRteScene(sessionInfo.roomUuid);
-
-        //listen to rte state change
-        scene.on(
-          AgoraRteEventType.RteConnectionStateChanged,
-          (state: AgoraRteConnectionState, reason?: string) => {
-            this.setRoomState(state);
-          },
-        );
-
-        //listen to rtc state change
-        scene.on(AgoraRteEventType.RtcConnectionStateChanged, (state, connectionType) => {
-          this.setRtcState(state, connectionType);
-        });
-
-        this.setScene(scene);
-        // streamId defaults to 0 means server allocate streamId for you
-        await scene.joinScene({
-          userName: sessionInfo.userName,
-          userRole: EduRole2RteRole(sessionInfo.roomType, sessionInfo.role),
-          streamId: '0',
-        });
-      }, [])
-        .fail(({ error }: { error: Error }) => {
-          EduClassroomConfig.shared.setWhiteboardConfig(undefined);
-          this.setScene(undefined);
-          this.logger.error(error.message);
-          return true;
-        })
-        .abort(() => {
-          EduClassroomConfig.shared.setWhiteboardConfig(undefined);
-          this.setScene(undefined);
-        })
-        .exec(),
-    );
+  constructor(store: GroupStore, subRoomSeesionInfo: EduSessionInfo) {
+    this.classRoomGroupstore = store;
+    this.subRoomSeesionInfo = subRoomSeesionInfo;
+    this.initialize();
   }
 
-  async leave() {
-    let [err] = await to(this.leaveRTC());
-    err &&
-      EduErrorCenter.shared.handleNonThrowableError(
-        AGEduErrorCode.EDU_ERR_LEAVE_CLASSROOM_FAIL,
-        err,
-      );
-    [err] = await to(this.scene?.leaveScene() || Promise.resolve());
-    err &&
-      EduErrorCenter.shared.handleNonThrowableError(
-        AGEduErrorCode.EDU_ERR_LEAVE_CLASSROOM_FAIL,
-        err,
-      );
-    AgoraRteEngine.destroy();
-    this.setRoomState(AgoraRteConnectionState.Idle);
-  }
+  initialize = () => {
+    this.connectionStore = new ConnectionStoreEach(this);
+    this.userStore = new UserStoreEach(this);
+    this.boardStore = new BoardStoreEach(this);
+    this.streamStore = new StreamStoreEach(this);
+  };
 
-  @bound
-  async joinRTC(options?: AgoraRteSceneJoinRTCOptions) {
-    if (this.getRtcState(options?.connectionType ?? AGRtcConnectionType.main) !== RtcState.Idle) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_JOIN_RTC_FAIL,
-        new Error(`invalid join rtc state: ${this.rtcState}`),
-      );
+  /**
+   * 加入子房间
+   * ⭐ TODO 退订大房间的流信息，并且断开流的发布 🍅
+   */
+  joinSubRoom = () => {
+    const { joinClassroom, joinRTC } = this.connectionStore;
+    // _addEventHandlers
+    return new Promise((joinSubRoomResolve, joinSubRoomReject) => {
+      joinClassroom()
+        .then(() => {
+          joinRTC().catch((e) => {
+            return joinSubRoomReject(e);
+          });
+        })
+        .catch((e) => {
+          if (AGError.isOf(e, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
+            this.connectionStore.leaveClassroom(LeaveReason.kickOut);
+          } else {
+            this.connectionStore.leaveClassroomUntil(
+              LeaveReason.leave,
+              new Promise((resolve) => {
+                joinSubRoomResolve({ error: e, resovle: resolve });
+                // this.shareUIStore.addGenericErrorDialog(e as AGError, {
+                //   onOK: resolve,
+                //   okBtnText: transI18n('toast.leave_room'),
+                // });
+              }),
+            );
+          }
+        });
+    });
+  };
+
+  /**
+   * 离开子房间
+   * 彻底 distory 小房间的rtc rtm channel
+   */
+  leaveSubRoom = async () => {
+    try {
+      await this.connectionStore.leaveClassroom(LeaveReason.leave);
+      this.streamStore.onDestroy();
+      this.boardStore.onDestroy();
+    } catch (e) {
+      return e;
     }
+  };
 
-    //join rtc
-    let [err] = await to(this.scene?.joinRTC(options) || Promise.resolve());
-    err && EduErrorCenter.shared.handleThrowableError(AGEduErrorCode.EDU_ERR_JOIN_RTC_FAIL, err);
+  /**
+   * 获取子房间消息
+   */
+
+  getSubRoomInfo() {
+    const { roomUuid, roomName } = this.subRoomSeesionInfo;
+    return {
+      subRoomUuid: roomUuid,
+      subRoomName: roomName,
+    };
   }
 
-  getRtcState(connectionType: AGRtcConnectionType) {
-    return connectionType === AGRtcConnectionType.main ? this.rtcState : this.rtcSubState;
+  /**
+   * 获取子房间自定义属性
+   */
+  getSubRoomProperties() {
+    return this.subRoomSeesionInfo.flexProperties;
   }
 
-  @bound
-  async leaveRTC(connectionType?: AGRtcConnectionType) {
-    //leave rtc
-    let [err] = await to(this.scene?.leaveRTC(connectionType) || Promise.resolve());
-    err &&
-      EduErrorCenter.shared.handleNonThrowableError(AGEduErrorCode.EDU_ERR_LEAVE_RTC_FAIL, err);
+  /**
+   * 更新子房间自定义属性(Flex) TODO
+   */
+  updateSubRoomProperties() {
+    return 'todo';
   }
 
-  @action
-  setScene(scene?: AgoraRteScene) {
-    this.scene = scene;
+  /**
+   * 删除房间自定义属性(Flex)
+   */
+  deleteSubRoomProperties() {
+    return 'todo';
   }
-
-  @action
-  setRoomState(state: AgoraRteConnectionState) {
-    this.roomState = state;
-  }
-
-  @action.bound
-  setRtcState(state: RtcState, connectionType?: AGRtcConnectionType) {
-    let connType = connectionType ? connectionType : AGRtcConnectionType.main;
-    this.logger.debug(`${connectionType}] rtc state changed to ${state}`);
-    connType === AGRtcConnectionType.main ? (this.rtcState = state) : (this.rtcSubState = state);
-  }
-
-  /** Hooks */
-  onInstall() {}
-  onDestroy() {}
 }

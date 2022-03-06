@@ -12,6 +12,7 @@ import { MediaStore } from './media';
 import { WidgetStore } from './widget';
 import { HandUpStore } from './hand-up';
 import { RecordingStore } from './recording';
+import { GroupStore } from './group';
 import { EduStoreBase } from './base';
 import { TrackStore } from './track';
 import { ExtAppTrackAdapter } from './ext-app/track-adapter';
@@ -39,8 +40,10 @@ export class EduClassroomStore {
   readonly streamStore: StreamStore = new StreamStore(this);
   readonly handUpStore: HandUpStore = new HandUpStore(this);
   readonly recordingStore: RecordingStore = new RecordingStore(this);
+  readonly groupStore: GroupStore = new GroupStore(this);
   readonly extAppsTrackStore: TrackStore = new TrackStore(this, new ExtAppTrackAdapter(this), true);
   readonly widgetsTrackStore: TrackStore = new TrackStore(this, new WidgetTrackAdapter(this));
+
   private readonly reportStore: ReportStore = new ReportStore(this);
 
   initialize() {

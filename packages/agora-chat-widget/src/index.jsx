@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { setVisibleUI } from './redux/actions/roomAction';
 import { isShowChat, isShowMiniIcon } from './redux/actions/propsAction';
+import { messageAction } from './redux/actions/messageAction';
 import App from './App';
 import { MemoryRouter } from 'react-router-dom';
 import { logoutChatroom } from './api/chatroom';
@@ -57,6 +58,15 @@ export const dispatchShowChat = (data) => {
 };
 export const dispatchShowMiniIcon = (data) => {
   return store.dispatch(isShowMiniIcon(data));
+};
+
+/**
+ * 让外部可以插入到消息插入到消息列表中
+ * @param {*} data
+ * @returns
+ */
+export const receiveMessage = (data) => {
+  return store.dispatch(messageAction(data, options));
 };
 
 export const logout = () => {
