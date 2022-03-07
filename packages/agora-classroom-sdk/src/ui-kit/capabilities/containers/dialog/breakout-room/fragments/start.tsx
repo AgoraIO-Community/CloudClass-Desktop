@@ -52,7 +52,7 @@ export const Start: FC<Props> = ({ onNext }) => {
           />
         </div>
       </div>
-      <div className="my-3">{transI18n('breakout_room.wait_for_arrange', { reason: 10 })}</div>
+      <div className="my-3">{transI18n('breakout_room.wait_for_assign', { reason: 10 })}</div>
       <Button onClick={onNext}>{transI18n('breakout_room.create_submit')}</Button>
     </div>
   );

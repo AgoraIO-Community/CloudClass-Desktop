@@ -167,7 +167,7 @@ const usePanelState = () => {
 };
 
 export const GroupSelect: FC<Props> = ({ onNext }) => {
-  const handleArrange = (e: MouseEvent) => {
+  const handleAssign = (e: MouseEvent) => {
     e.stopPropagation();
   };
 
@@ -188,8 +188,8 @@ export const GroupSelect: FC<Props> = ({ onNext }) => {
                 return (
                   <SuffixLink
                     className="pr-4"
-                    onClick={handleArrange}
-                    text={transI18n('breakout_room.arrange')}
+                    onClick={handleAssign}
+                    text={transI18n('breakout_room.assign')}
                   />
                 );
               } else if (level === 1) {
