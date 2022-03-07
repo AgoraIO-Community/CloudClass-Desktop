@@ -49,7 +49,7 @@
     "@netless/white-audio-plugin2": "2.0.5",
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
-    "@netless/window-manager": "0.4.7",
+    "@netless/window-manager": "0.4.10",
     "agora-rte-sdk": "2.1.0",
     "await-to-js": "3.0.0",
     "ali-oss": "6.15.2",

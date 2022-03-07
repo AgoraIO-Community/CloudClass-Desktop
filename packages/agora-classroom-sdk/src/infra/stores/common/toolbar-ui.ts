@@ -53,6 +53,7 @@ export class ToolbarItem {
 
 export class ToolbarUIStore extends EduUIStoreBase {
   readonly allowedCabinetItems: string[] = [
+    'laser',
     'screenShare',
     'io.agora.countdown',
     'io.agora.answer',
@@ -334,6 +335,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
           id: 'screenShare',
           iconType: 'share-screen',
           name: transI18n('scaffold.screen_share'),
+        },
+        {
+          id: 'laser',
+          iconType: 'laser-pointer',
+          name: transI18n('scaffold.laser_pointer'),
         },
       ])
       .filter((it) => this.allowedCabinetItems.includes(it.id));

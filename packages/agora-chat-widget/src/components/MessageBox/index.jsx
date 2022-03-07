@@ -36,8 +36,12 @@ export const MessageBox = () => {
           id="chat-messages"
           style={{
             height: isHaveNotice
-              ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
-              : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
+              ? `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'
+                })`
+              : `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'
+                })`,
           }}>
           <div>
             {msgs &&
@@ -60,8 +64,12 @@ export const MessageBox = () => {
           className="message-box no-box"
           style={{
             height: isHaveNotice
-              ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
-              : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
+              ? `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'
+                })`
+              : `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'
+                })`,
           }}>
           <div className="no-msgs">
             <img src={noMessage_icon} />
