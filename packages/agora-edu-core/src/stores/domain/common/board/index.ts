@@ -620,6 +620,7 @@ export class BoardStore extends EduStoreBase {
       wrappedComponents: [],
       invisiblePlugins: [WindowManager],
       useMultiViews: true,
+      disableMagixEventDispatchLimit: true,
       ...params,
     };
     let room;
