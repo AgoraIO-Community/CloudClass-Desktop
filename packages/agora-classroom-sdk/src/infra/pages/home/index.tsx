@@ -12,8 +12,8 @@ import { HomeApi } from './home-api';
 import { v4 as uuidv4 } from 'uuid';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import { ToastType } from '@/infra/stores/ui';
 import MD5 from 'js-md5';
+import { ToastType } from '@/infra/stores/common/share-ui';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';

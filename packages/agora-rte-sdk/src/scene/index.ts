@@ -19,11 +19,6 @@ import { RtmChannel } from 'agora-rtm-sdk';
 import { EventEmitter } from 'events';
 import { AGRtcManager } from '../core/rtc';
 import { AGRtcChannel, AGRtcConnectionType } from '../core/rtc/channel';
-import {
-  AgoraRteAudioSourceType,
-  AgoraRteMediaPublishState,
-  AgoraRteVideoSourceType,
-} from '../core/media/track';
 import { AgoraRteSyncDataStore } from '../core/processor/channel-msg/data';
 import { AGRteErrorCode, RteErrorCenter } from '../core/utils/error';
 import { NetworkStats, RtcState } from '../core/rtc/type';
@@ -111,6 +106,10 @@ export class AgoraRteScene extends EventEmitter {
 
   get rtmSid() {
     return this._rtmManager.sessionId;
+  }
+
+  get rtcChannel() {
+    return this._rtcChannel;
   }
 
   async joinScene(options: AgoraRteSceneJoinOptions) {
@@ -308,7 +307,7 @@ export class AgoraRteScene extends EventEmitter {
       );
       users.push(this.localUser.toData());
       if (users.length > 0) {
-        this._handleUserAdded(users);
+        this.emit(AgoraRteEventType.UserAdded, users);
       }
 
       this._handleRoomPropertyChange(
@@ -325,7 +324,7 @@ export class AgoraRteScene extends EventEmitter {
 
     handler.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
       this.logger.info(`user-added [${users.join(',')}]`);
-      this._handleUserAdded(users);
+      this.emit(AgoraRteEventType.UserAdded, users);
     });
 
     handler.on(AgoraRteEventType.UserUpdated, (user: AgoraUser) => {
@@ -334,7 +333,7 @@ export class AgoraRteScene extends EventEmitter {
 
     handler.on(AgoraRteEventType.UserRemoved, (users: AgoraUser[], type?: number) => {
       this.logger.info(`user-removed [${users.join(',')}]`);
-      this._handleUserRemoved(users, type);
+      this.emit(AgoraRteEventType.UserRemoved, users, type);
     });
 
     handler.on(
@@ -370,7 +369,10 @@ export class AgoraRteScene extends EventEmitter {
       AgoraRteEventType.LocalStreamAdded,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`local-stream-added [${streams.join(',')}]`);
-        this._handleLocalStreamAdded(streams, operator);
+        if (streams.length === 0) {
+          return;
+        }
+        this.emit(AgoraRteEventType.LocalStreamAdded, streams, operator);
       },
     );
 
@@ -378,7 +380,10 @@ export class AgoraRteScene extends EventEmitter {
       AgoraRteEventType.LocalStreamUpdate,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`local-stream-upsert [${streams.join(',')}]`);
-        this._handleLocalStreamChanged(streams, operator);
+        if (streams.length === 0) {
+          return;
+        }
+        this.emit(AgoraRteEventType.LocalStreamUpdate, streams, operator);
       },
     );
 
@@ -386,7 +391,10 @@ export class AgoraRteScene extends EventEmitter {
       AgoraRteEventType.LocalStreamRemove,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`local-stream-removed [${streams.join(',')}]`);
-        this._handleLocalStreamRemoved(streams, operator);
+        if (streams.length === 0) {
+          return;
+        }
+        this.emit(AgoraRteEventType.LocalStreamRemove, streams, operator);
       },
     );
 
@@ -394,7 +402,10 @@ export class AgoraRteScene extends EventEmitter {
       AgoraRteEventType.RemoteStreamAdded,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`remote-stream-added [${streams.join(',')}]`);
-        this._handleRemoteStreamsAdded(streams, operator);
+        if (streams.length === 0) {
+          return;
+        }
+        this.emit(AgoraRteEventType.RemoteStreamAdded, streams, operator);
       },
     );
 
@@ -402,7 +413,10 @@ export class AgoraRteScene extends EventEmitter {
       AgoraRteEventType.RemoteStreamUpdate,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`remote-stream-upsert [${streams.join(',')}]`);
-        this._handleRemoteStreamsChanged(streams, operator);
+        if (streams.length === 0) {
+          return;
+        }
+        this.emit(AgoraRteEventType.RemoteStreamUpdate, streams, operator);
       },
     );
 
@@ -410,303 +424,16 @@ export class AgoraRteScene extends EventEmitter {
       AgoraRteEventType.RemoteStreamRemove,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`remote-stream-removed [${streams.join(',')}]`);
-        this._handleRemoteStreamsRemoved(streams, operator);
+        if (streams.length === 0) {
+          return;
+        }
+        this.emit(AgoraRteEventType.RemoteStreamRemove, streams, operator);
       },
     );
 
     handler.on(AgoraRteEventType.ChatUserMessage, (message: AgoraChatMessage) => {
       this.emit(AgoraRteEventType.ChatUserMessage, message);
     });
-  }
-
-  private _handleLocalStreamAdded(streams: AgoraStream[], operator?: AgoraRteOperator) {
-    if (streams.length === 0) {
-      return;
-    }
-    this.logger.info(`_handleLocalStreamAdded [${streams.join(',')}]`);
-
-    streams.forEach((s) => {
-      //TODO
-      const type =
-        s.streamName === 'secondary' || s.videoSourceType === AgoraRteVideoSourceType.ScreenShare
-          ? AGRtcConnectionType.sub
-          : AGRtcConnectionType.main;
-
-      // local device is not affected by videoSourceStateChange
-      // switch (s.videoSourceState) {
-      //   case AgoraRteMediaSourceState.started:
-      //     s.videoSourceType === AgoraRteVideoSourceType.Camera
-      //       ? AgoraRteEngine.engine.getAgoraMediaControl().createCameraVideoTrack().start()
-      //       : AgoraRteEngine.engine.getAgoraMediaControl().createScreenShareTrack().start();
-      //     break;
-      //   case AgoraRteMediaSourceState.stopped:
-      //     s.videoSourceType === AgoraRteVideoSourceType.Camera
-      //       ? AgoraRteEngine.engine.getAgoraMediaControl().createCameraVideoTrack().stop()
-      //       : AgoraRteEngine.engine.getAgoraMediaControl().createScreenShareTrack().stop();
-      //     break;
-      // }
-
-      switch (s.videoState) {
-        case AgoraRteMediaPublishState.Published: {
-          if (s.videoSourceType === AgoraRteVideoSourceType.Camera) {
-            this._rtcChannel.muteLocalVideoStream(false, type);
-          } else if (s.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
-            this._rtcChannel.muteLocalScreenStream(false, type);
-          }
-          break;
-        }
-        case AgoraRteMediaPublishState.Unpublished: {
-          if (s.videoSourceType === AgoraRteVideoSourceType.Camera) {
-            this._rtcChannel.muteLocalVideoStream(true, type);
-          } else if (s.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
-            this._rtcChannel.muteLocalScreenStream(true, type);
-          }
-          break;
-        }
-      }
-
-      // switch (s.audioSourceState) {
-      //   case AgoraRteMediaSourceState.started:
-      //     type === AGRtcConnectionType.main &&
-      //       AgoraRteEngine.engine.getAgoraMediaControl().createMicrophoneAudioTrack().start();
-      //     break;
-      //   case AgoraRteMediaSourceState.stopped:
-      //     type === AGRtcConnectionType.main &&
-      //       AgoraRteEngine.engine.getAgoraMediaControl().createMicrophoneAudioTrack().stop();
-      //     break;
-      // }
-
-      switch (s.audioState) {
-        case AgoraRteMediaPublishState.Published:
-          this._rtcChannel.muteLocalAudioStream(false);
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          this._rtcChannel.muteLocalAudioStream(true);
-          break;
-      }
-    });
-
-    this.emit(AgoraRteEventType.LocalStreamAdded, streams, operator);
-  }
-
-  private _handleLocalStreamChanged(streams: AgoraStream[], operator?: AgoraRteOperator) {
-    if (streams.length === 0) {
-      return;
-    }
-    this.logger.info(`_handleLocalStreamChanged [${streams.join(',')}]`);
-    streams.forEach((s) => {
-      const type =
-        s.streamName === 'secondary' || s.videoSourceType === AgoraRteVideoSourceType.ScreenShare
-          ? AGRtcConnectionType.sub
-          : AGRtcConnectionType.main;
-
-      // switch (s.videoSourceState) {
-      //   case AgoraRteMediaSourceState.started:
-      //     s.videoSourceType === AgoraRteVideoSourceType.Camera
-      //       ? AgoraRteEngine.engine.getAgoraMediaControl().createCameraVideoTrack().start()
-      //       : AgoraRteEngine.engine.getAgoraMediaControl().createScreenShareTrack().start();
-      //     break;
-      //   case AgoraRteMediaSourceState.stopped:
-      //     s.videoSourceType === AgoraRteVideoSourceType.Camera
-      //       ? AgoraRteEngine.engine.getAgoraMediaControl().createCameraVideoTrack().stop()
-      //       : AgoraRteEngine.engine.getAgoraMediaControl().createScreenShareTrack().stop();
-      //     break;
-      // }
-
-      switch (s.videoState) {
-        case AgoraRteMediaPublishState.Published: {
-          if (s.videoSourceType === AgoraRteVideoSourceType.Camera) {
-            this._rtcChannel.muteLocalVideoStream(false, type);
-          } else if (s.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
-            this._rtcChannel.muteLocalScreenStream(false, type);
-          }
-          break;
-        }
-        case AgoraRteMediaPublishState.Unpublished: {
-          if (s.videoSourceType === AgoraRteVideoSourceType.Camera) {
-            this._rtcChannel.muteLocalVideoStream(true, type);
-          } else if (s.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
-            this._rtcChannel.muteLocalScreenStream(true, type);
-          }
-          break;
-        }
-      }
-
-      // switch (s.audioSourceState) {
-      //   case AgoraRteMediaSourceState.started:
-      //     type === AGRtcConnectionType.main &&
-      //       AgoraRteEngine.engine.getAgoraMediaControl().createMicrophoneAudioTrack().start();
-      //     break;
-      //   case AgoraRteMediaSourceState.stopped:
-      //     type === AGRtcConnectionType.main &&
-      //       AgoraRteEngine.engine.getAgoraMediaControl().createMicrophoneAudioTrack().stop();
-      //     break;
-      // }
-
-      switch (s.audioState) {
-        case AgoraRteMediaPublishState.Published:
-          this._rtcChannel.muteLocalAudioStream(false);
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          this._rtcChannel.muteLocalAudioStream(true);
-          break;
-      }
-    });
-
-    this.emit(AgoraRteEventType.LocalStreamUpdate, streams, operator);
-  }
-
-  private _handleLocalStreamRemoved(streams: AgoraStream[], operator?: AgoraRteOperator) {
-    if (streams.length === 0) {
-      return;
-    }
-
-    this.logger.info(`_handleLocalStreamRemoved [${streams.join(',')}]`);
-    streams.forEach((s) => {
-      const type =
-        s.streamName === 'secondary' || s.videoSourceType === AgoraRteVideoSourceType.ScreenShare
-          ? AGRtcConnectionType.sub
-          : AGRtcConnectionType.main;
-
-      if (s.videoSourceType === AgoraRteVideoSourceType.Camera) {
-        this._rtcChannel.muteLocalVideoStream(true, type);
-        AgoraRteEngine.engine.getAgoraMediaControl().createCameraVideoTrack().stop();
-      } else if (s.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
-        this._rtcChannel.muteLocalScreenStream(true, type);
-        AgoraRteEngine.engine.getAgoraMediaControl().createScreenShareTrack().stop();
-      } else if (s.videoSourceType === AgoraRteVideoSourceType.None) {
-        // no action needed
-      }
-
-      if (s.audioSourceType === AgoraRteAudioSourceType.Mic) {
-        this._rtcChannel.muteLocalAudioStream(true, type);
-        type === AGRtcConnectionType.main &&
-          AgoraRteEngine.engine.getAgoraMediaControl().createMicrophoneAudioTrack().stop();
-      } else if (s.audioSourceType === AgoraRteAudioSourceType.None) {
-        // no action needed
-      }
-    });
-
-    this.emit(AgoraRteEventType.LocalStreamRemove, streams, operator);
-  }
-
-  private _handleRemoteStreamsAdded(streams: AgoraStream[], operator?: AgoraRteOperator) {
-    if (streams.length === 0) {
-      return;
-    }
-
-    this.logger.info(`_handleRemoteStreamsAdded [${streams.join(',')}]`);
-    // remote stream added, try subscribing
-    streams.forEach((s) => {
-      switch (s.videoState) {
-        case AgoraRteMediaPublishState.Published:
-          this._rtcChannel.muteRemoteVideoStream(s.streamUuid, false);
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          this._rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
-          break;
-      }
-
-      switch (s.audioState) {
-        case AgoraRteMediaPublishState.Published:
-          this._rtcChannel.muteRemoteAudioStream(s.streamUuid, false);
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          this._rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
-          break;
-      }
-    });
-
-    this.emit(AgoraRteEventType.RemoteStreamAdded, streams, operator);
-  }
-
-  private _handleRemoteStreamsChanged(streams: AgoraStream[], operator?: AgoraRteOperator) {
-    this.logger.info(`_handleRemoteStreamsChanged [${streams.join(',')}]`);
-    // remote stream added, try subscribing
-    streams.forEach((s) => {
-      switch (s.videoState) {
-        case AgoraRteMediaPublishState.Published:
-          this._rtcChannel.muteRemoteVideoStream(s.streamUuid, false);
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          this._rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
-          break;
-      }
-
-      switch (s.audioState) {
-        case AgoraRteMediaPublishState.Published:
-          this._rtcChannel.muteRemoteAudioStream(s.streamUuid, false);
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          this._rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
-          break;
-      }
-    });
-
-    this.emit(AgoraRteEventType.RemoteStreamUpdate, streams, operator);
-  }
-
-  private _handleRemoteStreamsRemoved(streams: AgoraStream[], operator?: AgoraRteOperator) {
-    if (streams.length === 0) {
-      return;
-    }
-    this.logger.info(`_handleRemoteStreamsRemoved [${streams.join(',')}]`);
-    // remote stream added, try subscribing
-    streams.forEach((s) => {
-      this._rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
-      this._rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
-    });
-    this.emit(AgoraRteEventType.RemoteStreamRemove, streams, operator);
-  }
-
-  private _handleUserAdded(users: AgoraUser[]) {
-    let addedLocalStreams: AgoraStream[] = [];
-    let addedRemoteStreams: AgoraStream[] = [];
-    users.forEach((u) => {
-      if (this.localUser?.userUuid === u.userUuid) {
-        // local user added
-        const streams = this.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          addedLocalStreams = addedLocalStreams.concat(streams);
-        }
-      } else {
-        // remote user added
-        const streams = this.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          addedRemoteStreams = addedRemoteStreams.concat(streams);
-        }
-      }
-    });
-
-    this._handleLocalStreamAdded(addedLocalStreams);
-    this._handleRemoteStreamsAdded(addedRemoteStreams);
-
-    this.emit(AgoraRteEventType.UserAdded, users);
-  }
-
-  private _handleUserRemoved(users: AgoraUser[], type?: number) {
-    let removedLocalStreams: AgoraStream[] = [];
-    let removedRemoteStreams: AgoraStream[] = [];
-    users.forEach((u) => {
-      if (this.localUser?.userUuid === u.userUuid) {
-        // local user added
-        const streams = this.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          removedLocalStreams = removedLocalStreams.concat(streams);
-        }
-      } else {
-        // remote user added
-        const streams = this.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          removedRemoteStreams = removedRemoteStreams.concat(streams);
-        }
-      }
-    });
-
-    this._handleLocalStreamRemoved(removedLocalStreams);
-    this._handleRemoteStreamsRemoved(removedRemoteStreams);
-
-    this.emit(AgoraRteEventType.UserRemoved, users, type);
   }
 
   private _handleRoomPropertyChange(

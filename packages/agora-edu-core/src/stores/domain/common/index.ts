@@ -19,6 +19,7 @@ import { ExtAppTrackAdapter } from './ext-app/track-adapter';
 import { WidgetTrackAdapter } from './widget/track-adapter';
 import { ReportStore } from './report';
 import { LogReporter } from '../../../log-reporter';
+import { SubscriptionStore } from './subscription';
 
 export class EduClassroomStore {
   private _api: EduApiService = new EduApiService();
@@ -27,6 +28,7 @@ export class EduClassroomStore {
     return this._api;
   }
 
+  readonly subscriptionStore: SubscriptionStore = new SubscriptionStore(this);
   readonly connectionStore: ConnectionStore = new ConnectionStore(this);
   readonly widgetStore: WidgetStore = new WidgetStore(this);
   readonly extAppStore: ExtAppStore = new ExtAppStore(this);
