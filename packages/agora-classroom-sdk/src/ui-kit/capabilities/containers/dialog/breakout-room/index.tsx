@@ -9,7 +9,7 @@ import { GroupSelect } from './fragments/group-select';
 export const BreakoutRoomDialog = ({ id }: { id: string }) => {
   const { shareUIStore } = useStore();
   const { removeDialog } = shareUIStore;
-  const [stage, setStage] = useState<'start' | 'select'>('select');
+  const [stage, setStage] = useState<'start' | 'select'>('start');
 
   const fragment = useMemo(() => {
     switch (stage) {

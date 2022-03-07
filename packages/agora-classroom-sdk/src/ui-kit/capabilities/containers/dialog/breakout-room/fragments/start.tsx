@@ -21,7 +21,7 @@ export const Start: FC<Props> = ({ onNext }) => {
   const [type, setType] = useState(1);
 
   return (
-    <div>
+    <div className="w-full flex flex-col items-center justify-center">
       <div className="outline-box pt-3 flex justify-center">
         <div className="inline-flex flex-col">
           <div className="inline-flex items-center mb-2">
