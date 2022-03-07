@@ -21,7 +21,9 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
     const style = useClassroomStyle({ minimumHeight, minimumWidth });
 
     return (
-      <div className="flex bg-black justify-center items-center h-screen w-screen">
+      <div
+        className="flex justify-center items-center h-screen w-screen"
+        style={{ background: 'darkblue' }}>
         <div style={style} className="w-full h-full relative">
           {children}
         </div>
