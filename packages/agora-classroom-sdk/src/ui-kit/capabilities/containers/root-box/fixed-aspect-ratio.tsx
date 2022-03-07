@@ -23,7 +23,7 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
     return (
       <div
         className="flex justify-center items-center h-screen w-screen"
-        style={{ background: 'darkblue' }}>
+        style={{ background: '#263487' }}>
         <div style={style} className="w-full h-full relative">
           {children}
         </div>

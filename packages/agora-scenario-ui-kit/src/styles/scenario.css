@@ -269,7 +269,7 @@ body,
 }
 
 .roster-btn-active {
-  background-color: gold !important;
+  background-color: #ddb332 !important;
 }
 .roster-btn-active path {
   fill: #fff;
@@ -280,7 +280,7 @@ body,
 .roster-btn:hover,
 .chat-panel:hover .show-chat-icon,
 .chat-panel:hover .chat-min {
-  background-color: gold;
+  background-color: #ddb332;
 }
 
 .hands-up-manager > .card:hover path,
