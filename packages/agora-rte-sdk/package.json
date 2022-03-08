@@ -62,7 +62,8 @@
   "dependencies": {
     "agora-rtc-sdk-ng": "4.7.3",
     "agora-rtm-sdk": "1.4.3",
-    "async-await-retry": "1.2.3"
+    "async-await-retry": "1.2.3",
+    "agora-cef-sdk": "file:./vendor/agora-cef-sdk"
   },
   "peerDependencies": {
     "agora-electron-sdk": "*"

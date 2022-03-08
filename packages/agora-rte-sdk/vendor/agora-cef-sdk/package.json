@@ -1,0 +1,15 @@
+{
+  "name": "agora-cef-sdk",
+  "version": "3.1.1",
+  "description": "cef SDK for Agora rtc",
+  "main": "AgoraRtcEngine.bundle.js",
+  "types": "AgoraRtcEngine.d.ts",
+  "author": {
+    "name": "Agora Lab."
+  },
+  "files": [
+    "AgoraRtcEngine.bundle.js",
+    "AgoraRtcEngine.d.ts"
+  ],
+  "license": "UNLICENSED"
+}
