@@ -1,7 +1,7 @@
 .modal {
   box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
   border-radius: 8px;
-  border: 1px solid #e1e1ea;
+  border: 6px solid #75c0ff;
   padding-bottom: 20px;
   @apply box-border bg-white;
 }
@@ -55,15 +55,15 @@
 .modal-title {
   @apply box-border flex justify-between items-center relative;
   height: 40px;
-  background-color: #f9f9fc;
+  background-color: #75c0ff;
   padding: 0 20px;
-  border-radius: 8px 8px 0 0;
+  /* border-radius: 8px 8px 0 0; */
   border-bottom: 1px solid #eeeef7;
   z-index: 1;
 }
 
 .modal-title-text {
-  color: #333333;
+  color: #fff;
   font-size: 14px;
 }
 

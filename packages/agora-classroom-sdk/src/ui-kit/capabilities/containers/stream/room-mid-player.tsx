@@ -20,7 +20,13 @@ export const RoomMidStreamsContainer = observer(() => {
 
   return (
     <div className="flex-grow flex-shrink-0">
-      <div className="h-full flex justify-center items-center relative">
+      <div
+        className="h-full flex justify-center items-center relative"
+        style={{
+          backgroundColor: '#364D9C',
+          boxSizing: 'border-box',
+          borderBottom: '4px solid #75C0FE',
+        }}>
         <TeacherStream />
         <div onMouseEnter={mouseHandler(true)} onMouseLeave={mouseHandler(false)}>
           {scrollable && (

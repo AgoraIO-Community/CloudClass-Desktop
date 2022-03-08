@@ -228,9 +228,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   get classStatusTextColor() {
     switch (this.classState) {
       case ClassState.beforeClass:
-        return '#677386';
       case ClassState.ongoing:
-        return '#677386';
+        return '#C2D5E5';
       case ClassState.afterClass:
         return '#F04C36';
       default:
