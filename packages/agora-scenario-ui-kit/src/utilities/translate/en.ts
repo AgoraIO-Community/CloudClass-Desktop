@@ -558,6 +558,7 @@ export const en = {
     start: 'Start',
     move_to: 'Move to',
     change_to: 'Change to',
+    group_label: 'Group',
   },
   begin_class: 'Begin class',
   edu_error: {

@@ -546,6 +546,7 @@ export const zh = {
     start: '开始',
     move_to: '移动组',
     change_to: '交换组',
+    group_label: '小组',
   },
   begin_class: '开始上课',
   edu_error: {

@@ -4,7 +4,7 @@ import { EduSessionInfo, EduRoleTypeEnum } from '../type';
 import { ClassState } from '../stores/domain/common/room/type';
 import { escapeExtAppIdentifier } from '../stores/domain/common/room/command-handler';
 import { EduClassroomConfig } from '..';
-import { EduGroupDetail, EduPatchGroup } from '../stores/domain/common/group/struct';
+import { GroupDetail, PatchGroup } from '../stores/domain/common/group/struct';
 import { GroupState } from '../stores/domain/common/group/type';
 export class EduApiService extends ApiBase {
   async getConfig(): Promise<any> {
@@ -588,28 +588,13 @@ export class EduApiService extends ApiBase {
    * @param data
    * @returns
    */
-  async addSubRoomList(
+  async updateGroupState(
     roomUuid: string,
-    state: GroupState,
-    data: { groups?: EduGroupDetail[]; inProgress?: boolean },
+    data: { groups?: GroupDetail[]; inProgress?: boolean },
+    state: GroupState = GroupState.OPEN,
   ) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomUuid}/groups/states/${state}`,
-      method: 'PUT',
-      data,
-    });
-    return res.data;
-  }
-
-  /**
-   * 新增组
-   * @param roomUuid
-   * @param data
-   * @returns
-   */
-  async addRoomList(roomUuid: string, data: { groups: EduGroupDetail[]; inProgress: boolean }) {
-    const res = await this.fetch({
-      path: `/v2/rooms/${roomUuid}/groups/states/1`,
       method: 'PUT',
       data,
     });
@@ -622,7 +607,7 @@ export class EduApiService extends ApiBase {
    * @param data
    * @returns
    */
-  async removeSubRoom(roomUuid: string, data: { removeGroupUuids: string[] }) {
+  async removeGroup(roomUuid: string, data: { removeGroupUuids: string[] }) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomUuid}/groups/states/1`,
       method: 'DELETE',
@@ -636,7 +621,7 @@ export class EduApiService extends ApiBase {
    * @param roomUuid
    * @param groupUuid
    */
-  async acceptSubRoomInvited(roomUuid: string, groupUuid: string) {
+  async acceptGroupInvited(roomUuid: string, groupUuid: string) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomUuid}/groups/${groupUuid}/acceptance`,
       method: 'POST',
@@ -650,10 +635,7 @@ export class EduApiService extends ApiBase {
    * @param data  🔢 inProgress 是否邀请，true 发送邀请 false 直接加入
    * @returns
    */
-  async updateSubRoomUsers(
-    roomUuid: string,
-    data: { groups: EduPatchGroup[]; inProgress: boolean },
-  ) {
+  async updateGroupUsers(roomUuid: string, data: { groups: PatchGroup[]; inProgress: boolean }) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomUuid}/groups/users`,
       method: 'PATCH',
@@ -678,6 +660,21 @@ export class EduApiService extends ApiBase {
   ) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomUuid}/widgets/easemobIM/messages`,
+      method: 'PATCH',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 修改分组信息
+   * @param roomUuid
+   * @param data
+   * @returns
+   */
+  async updateGroupInfo(roomUuid: string, data: { groups: PatchGroup[] }) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/info`,
       method: 'PATCH',
       data,
     });

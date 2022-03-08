@@ -159,4 +159,6 @@ export enum AgoraEduClassroomEvent {
   CaptureScreenPermissionDenied = 114, // 用户未授权屏幕共享
   ScreenShareStarted = 115, // 屏幕共享开始
   ScreenShareEnded = 116, // 屏幕共享结束
+  InvitedToGroup = 117, //被邀请至小组
+  MoveToOtherGroup = 118, // 被移动至小组
 }

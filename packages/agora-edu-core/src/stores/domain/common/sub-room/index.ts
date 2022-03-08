@@ -1,10 +1,11 @@
 import { AGError, AgoraRteScene, Log } from 'agora-rte-sdk';
-import { observable } from 'mobx';
+import { observable, _allowStateChangesInsideComputed } from 'mobx';
 import { AGServiceErrorCode } from '../../../..';
+import { EduApiService } from '../../../../services/api';
 import { EduSessionInfo } from '../../../../type';
 import { LeaveReason } from '../connection';
 import { GroupStore } from '../group';
-import { BoardStoreEach } from './border';
+import { BoardStoreEach } from './board';
 import { ConnectionStoreEach } from './connection';
 import { StreamStoreEach } from './stream';
 import { UserStoreEach } from './user';
@@ -23,20 +24,34 @@ import { UserStoreEach } from './user';
  */
 @Log.attach({ proxyMethods: false })
 export class SubRoomStore {
+  private _classRoomGroupStore: GroupStore;
+
+  private _sessionInfo: EduSessionInfo;
+
+  private _api: EduApiService = new EduApiService();
+
   @observable userStore!: UserStoreEach;
+
   @observable connectionStore!: ConnectionStoreEach; // 为 subroom 提供 rte 链接
+
   @observable boardStore!: BoardStoreEach; // 创建白板
+
   @observable streamStore!: StreamStoreEach; // media control
 
   @observable scene?: AgoraRteScene; //
 
-  classRoomGroupstore: GroupStore;
-  subRoomSeesionInfo: EduSessionInfo;
-
-  constructor(store: GroupStore, subRoomSeesionInfo: EduSessionInfo) {
-    this.classRoomGroupstore = store;
-    this.subRoomSeesionInfo = subRoomSeesionInfo;
+  constructor(store: GroupStore, sessionInfo: EduSessionInfo) {
+    this._classRoomGroupStore = store;
+    this._sessionInfo = sessionInfo;
     this.initialize();
+  }
+
+  get sessionInfo() {
+    return this._sessionInfo;
+  }
+
+  get api() {
+    return this._api;
   }
 
   initialize = () => {
@@ -75,6 +90,7 @@ export class SubRoomStore {
               }),
             );
           }
+          joinSubRoomReject(e);
         });
     });
   };
@@ -97,20 +113,12 @@ export class SubRoomStore {
    * 获取子房间消息
    */
 
-  getSubRoomInfo() {
-    const { roomUuid, roomName } = this.subRoomSeesionInfo;
-    return {
-      subRoomUuid: roomUuid,
-      subRoomName: roomName,
-    };
-  }
+  getSubRoomInfo() {}
 
   /**
    * 获取子房间自定义属性
    */
-  getSubRoomProperties() {
-    return this.subRoomSeesionInfo.flexProperties;
-  }
+  getSubRoomProperties() {}
 
   /**
    * 更新子房间自定义属性(Flex) TODO

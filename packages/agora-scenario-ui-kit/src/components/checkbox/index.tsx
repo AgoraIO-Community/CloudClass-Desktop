@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { FC, SyntheticEvent, useEffect, useRef } from 'react';
 import { BaseProps } from '../interface/base-props';
 import './index.css';
@@ -9,6 +10,7 @@ type CheckboxProps = BaseProps & {
   disabled?: boolean;
   indeterminate?: boolean;
   onChange?: (e: SyntheticEvent<HTMLElement>) => void;
+  gap?: number;
 };
 
 export const CheckBox: FC<CheckboxProps> = ({
@@ -17,6 +19,7 @@ export const CheckBox: FC<CheckboxProps> = ({
   checked = false,
   disabled = false,
   indeterminate = false,
+  gap,
   ...restProps
 }) => {
   const checkboxRef = useRef<null | HTMLInputElement>(null);
@@ -26,8 +29,13 @@ export const CheckBox: FC<CheckboxProps> = ({
       checkboxEl.indeterminate = indeterminate;
     }
   }, [indeterminate]);
+
+  const cls = classNames('pure-material-checkbox', {
+    [`gap-${gap}`]: !!gap,
+  });
+
   return (
-    <label className="pure-material-checkbox">
+    <label className={cls}>
       <input
         ref={checkboxRef}
         type="checkbox"

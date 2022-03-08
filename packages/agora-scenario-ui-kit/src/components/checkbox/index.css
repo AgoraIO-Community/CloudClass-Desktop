@@ -141,3 +141,7 @@
 .pure-material-checkbox > span {
   user-select: none;
 }
+
+.pure-material-checkbox.gap-1 > span::before {
+  margin-right: 4px;
+}

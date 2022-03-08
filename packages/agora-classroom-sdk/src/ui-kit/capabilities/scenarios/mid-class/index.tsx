@@ -15,7 +15,6 @@ import { ExtAppContainer } from '~containers/ext-app';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
 import { MidRosterBtn } from '~containers/roster';
-import GroupTranslate from '~containers/group-translate';
 export const MidClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'mid-class-room');
@@ -24,7 +23,6 @@ export const MidClassScenario = observer(() => {
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
         <Layout className={layoutCls} direction="col">
-          <GroupTranslate />
           <NavigationBarContainer />
           <RoomMidStreamsContainer />
           <WhiteboardContainer>

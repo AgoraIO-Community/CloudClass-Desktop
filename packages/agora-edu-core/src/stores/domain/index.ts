@@ -39,3 +39,7 @@ export { MessageItem } from './common/message/struct';
 export type { FetchUserParam } from './common/user/type';
 export { FetchUserType } from './common/user/type';
 export { PodiumSrouce } from './common/hand-up/type';
+
+export type { GroupUser, SubRoomConfig } from './common/group/struct';
+export { GroupDetail } from './common/group/struct';
+export type { EduUser } from './common/user/struct';

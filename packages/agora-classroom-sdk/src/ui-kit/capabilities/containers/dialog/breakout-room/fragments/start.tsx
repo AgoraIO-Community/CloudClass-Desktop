@@ -1,4 +1,7 @@
+import { useStore } from '@/infra/hooks/use-edu-stores';
+import { GroupMethod } from '@/infra/stores/common/group-ui';
 import { range } from 'lodash';
+import { observer } from 'mobx-react';
 import { useMemo, useState, FC } from 'react';
 import { Button, RadioGroup, Select, transI18n } from '~ui-kit';
 
@@ -6,7 +9,11 @@ type Props = {
   onNext: () => void;
 };
 
-export const Start: FC<Props> = ({ onNext }) => {
+export const Start: FC<Props> = observer(({ onNext }) => {
+  const { groupUIStore } = useStore();
+
+  const { createGroups } = groupUIStore;
+
   const groupNumOptions = useMemo(
     () =>
       range(1, 32).map((i) => ({
@@ -53,7 +60,13 @@ export const Start: FC<Props> = ({ onNext }) => {
         </div>
       </div>
       <div className="my-3">{transI18n('breakout_room.wait_for_assign', { reason: 10 })}</div>
-      <Button onClick={onNext}>{transI18n('breakout_room.create_submit')}</Button>
+      <Button
+        onClick={() => {
+          createGroups(GroupMethod.MANUAL, groupNum);
+          onNext();
+        }}>
+        {transI18n('breakout_room.create_submit')}
+      </Button>
     </div>
   );
-};
+});

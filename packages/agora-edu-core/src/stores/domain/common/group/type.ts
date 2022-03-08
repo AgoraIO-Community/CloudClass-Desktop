@@ -1,4 +1,4 @@
-import { EduGroupDetail } from './struct';
+import { GroupDetail } from './struct';
 
 // 是否开启分组 1开启 0不开启
 export enum GroupState {
@@ -6,4 +6,4 @@ export enum GroupState {
   CLOSE = 0,
 }
 
-export type GroupDetails = Record<string, EduGroupDetail>;
+export type GroupDetails = Record<string, GroupDetail>;

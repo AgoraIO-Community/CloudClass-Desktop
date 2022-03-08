@@ -1,21 +1,37 @@
-import { action, computed, observable } from 'mobx';
+import { EduClassroomConfig, GroupDetail, GroupUser } from 'agora-edu-core';
+import { range } from 'lodash';
+import { action, computed } from 'mobx';
 import { EduUIStoreBase } from './base';
-import { EduClassroomStore, groupUser } from 'agora-edu-core';
-import { EduShareUIStore } from './share-ui';
+import { transI18n } from './i18n';
+
+export enum GroupMethod {
+  AUTO,
+  MANUAL,
+}
+
+type User = {
+  userUuid: string;
+};
+
+type Group = {
+  groupName: string;
+  users: User[];
+};
 
 export class GroupUIStore extends EduUIStoreBase {
-  private ERROR_MAX_PER_GROUP_PERSON_CODE = 'MAX_PER_GROUP_PERSON';
-  @observable
-  groupNumbers = 6;
+  // static readonly ERROR_MAX_PER_GROUP_PERSON_CODE = 'MAX_PER_GROUP_PERSON';
+  static readonly GROUP_NAME_TEMPLATE = transI18n('breakout_room.group_label');
 
-  @observable
-  subRoomList: Map<Symbol, groupUser[]> = new Map();
-
-  @observable
-  groupTailNumber = 0;
-
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
-    super(store, shareUIStore);
+  /**
+   * 获取子房间列表
+   */
+  @computed
+  get groups() {
+    const { groupDetails } = this.classroomStore.groupStore;
+    return Object.entries(groupDetails).map(([groupUuid, groupDetail]) => ({
+      groupUuid,
+      groupName: groupDetail.groupName,
+    }));
   }
 
   /**
@@ -23,7 +39,7 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @computed
   get currentRoomUuid() {
-    return this.classroomStore.groupStore.parentRoomUuid;
+    return EduClassroomConfig.shared.sessionInfo.roomUuid;
   }
 
   /**
@@ -40,54 +56,79 @@ export class GroupUIStore extends EduUIStoreBase {
    * @param to 新名字
    */
   @action.bound
-  renameGroupName(from: string, to: string) {
-    let exist = this.subRoomList.has(Symbol.for(to));
-    if (exist) {
-      throw new Error('INCORPERATED');
-    } else {
-      // 修改subroomList group name
-      let oldSubRoomList = this.subRoomList.get(Symbol.for(from)) as groupUser[];
-      this.subRoomList.set(Symbol.for(to), oldSubRoomList);
-      this.subRoomList.delete(Symbol.for(from));
-    }
+  renameGroupName(groupUuid: string, groupName: string) {
+    // const exist = this.subRoomList.has(Symbol.for(to));
+    // if (exist) {
+    //   throw new Error('INCORPERATED');
+    // } else {
+    //   // 修改subroomList group name
+    //   const oldSubRoomList = this.subRoomList.get(Symbol.for(from)) as GroupUser[];
+    //   this.subRoomList.set(Symbol.for(to), oldSubRoomList);
+    //   this.subRoomList.delete(Symbol.for(from));
+    // }
+
+    this.classroomStore.groupStore.updateGroupInfo([
+      {
+        groupUuid,
+        groupName,
+      },
+    ]);
   }
 
   /**
    * 新增组
    */
   @action.bound
-  addGroup() {
-    this.groupTailNumber++;
-    this.subRoomList.set(Symbol(`untitled-group${this.groupTailNumber}`), []);
+  addGroup(group: Group) {
+    // this.groupTailNumber++;
+    // this.subRoomList.set(Symbol(`untitled-group${this.groupTailNumber}`), []);
+    // this.classroomStore.groupStore.createSubRoomObject();
+    // this.classroomStore.groupStore.addSubRoomList();
+    this.classroomStore.groupStore.addGroups([new GroupDetail(group.groupName, [])], false);
   }
 
   /**
    * 删除组
-   * @param groupName 组名
+   * @param groupUuid 组id
    */
   @action.bound
-  deleteGroup(groupName: string) {
-    this.subRoomList.delete(Symbol.for(groupName));
+  deleteGroup(groupUuid: string) {
+    // this.subRoomList.delete(Symbol.for(groupName));
+    this.classroomStore.groupStore.removeGroups([groupUuid]);
   }
 
   /**
    * 分配用户
-   * @param groupName
+   * @param groupUuid
    * @param user
    */
   @action.bound
-  assignUserToGroup(groupName: string, user: groupUser) {
-    let currentUsers = this.subRoomList.get(Symbol(groupName)) || [];
-    currentUsers.push(user);
-    this.subRoomList.set(Symbol(groupName), currentUsers);
+  assignUserToGroup(groupUuid: string, user: GroupUser) {
+    // const currentUsers = this.subRoomList.get(Symbol(groupName)) || [];
+    // currentUsers.push(user);
+    // this.subRoomList.set(Symbol(groupName), currentUsers);
+
+    this.classroomStore.groupStore.inviteUserListToGroup(groupUuid, [user]);
   }
 
   /**
-   * 清除分组信息
+   * 移出房间
+   * @param groupUuid
+   * @param user
    */
   @action.bound
-  clearGroups() {
-    this.subRoomList.clear();
+  removeUserFromGroup(groupUuid: string, user: GroupUser) {
+    this.classroomStore.groupStore.removeUserListFromGroup(groupUuid, [user]);
+  }
+
+  /**
+   * 移动用户
+   * @param fromGroupUuid
+   * @param toGroupUuid
+   * @param user
+   */
+  moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, user: GroupUser) {
+    this.classroomStore.groupStore.addUserListToGroup(fromGroupUuid, toGroupUuid, [user], [user]);
   }
 
   /**
@@ -95,14 +136,14 @@ export class GroupUIStore extends EduUIStoreBase {
    * @param count
    */
   @action.bound
-  handleGenerateSubRooms = (count: number) => {
-    try {
-      this.subRoomList = this.generateSubRoomList(count);
-    } catch (e) {
-      if (e === this.ERROR_MAX_PER_GROUP_PERSON_CODE) {
-        // handle excesstive group person
-      }
-    }
+  private _handleGenerateSubRooms = (count: number) => {
+    // try {
+    //   this.subRoomList = this.generateSubRoomList(count);
+    // } catch (e) {
+    //   if (e === GroupUIStore.ERROR_MAX_PER_GROUP_PERSON_CODE) {
+    //     // handle excesstive group person
+    //   }
+    // }
   };
 
   /**
@@ -112,43 +153,73 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @action.bound
   private generateSubRoomList = (count: number) => {
-    const studentListSize = this.classroomStore.userStore.studentList.size;
-    if (studentListSize) {
-      let cursor = 0,
-        lastCount = count,
-        subRoomUserList = new Map<Symbol, groupUser[]>(),
-        userList = [...this.classroomStore.userStore.studentList.values()];
-
-      while (lastCount) {
-        ++this.groupTailNumber;
-        if (cursor < userList.length) {
-          const perSubroomUserList = userList.slice(cursor, cursor + count);
-          if (perSubroomUserList.length >= this.classroomStore.groupStore.MAX_PER_GROUP_PERSON) {
-            throw new Error(this.ERROR_MAX_PER_GROUP_PERSON_CODE);
-          }
-          const perGroupName = Symbol.for(`untitled-group${this.groupTailNumber}`);
-          subRoomUserList.set(perGroupName, perSubroomUserList);
-          cursor += cursor + count;
-        } else {
-          const perGroupName = Symbol.for(`untitled-group${this.groupTailNumber}`);
-          subRoomUserList.set(perGroupName, []);
-        }
-        --lastCount;
-      }
-      return subRoomUserList;
-    }
-    return new Map<Symbol, groupUser[]>();
+    // const studentListSize = this.classroomStore.userStore.studentList.size;
+    // if (studentListSize) {
+    //   let cursor = 0;
+    //   let lastCount = count;
+    //   const subRoomUserList = new Map<symbol, GroupUser[]>();
+    //   const userList = [...this.classroomStore.userStore.studentList.values()];
+    //   while (lastCount) {
+    //     ++this.groupTailNumber;
+    //     if (cursor < userList.length) {
+    //       const perSubroomUserList = userList.slice(cursor, cursor + count);
+    //       if (perSubroomUserList.length >= this.classroomStore.groupStore.MAX_PER_GROUP_PERSON) {
+    //         throw new Error(GroupUIStore.ERROR_MAX_PER_GROUP_PERSON_CODE);
+    //       }
+    //       const perGroupName = Symbol.for(`untitled-group${this.groupTailNumber}`);
+    //       subRoomUserList.set(perGroupName, perSubroomUserList);
+    //       cursor += cursor + count;
+    //     } else {
+    //       const perGroupName = Symbol.for(`untitled-group${this.groupTailNumber}`);
+    //       subRoomUserList.set(perGroupName, []);
+    //     }
+    //     --lastCount;
+    //   }
+    //   return subRoomUserList;
+    // }
+    // return new Map<symbol, GroupUser[]>();
   };
 
-  startGroup = (list: groupUser[]) => {
+  /**
+   * 开始分组
+   * @param list
+   */
+  startGroup = (list: GroupUser[]) => {
     // this.classroomStore.groupStore.inviteUserListToSubRoom()
+    this.classroomStore.groupStore;
   };
 
+  /**
+   * 关闭分组
+   */
   stopGroup = () => {
     this.classroomStore.groupStore.stopGroup();
   };
 
-  translateGroups = () => {};
+  /**
+   * 创建分组
+   * @param type
+   * @param group
+   */
+  createGroups(type: GroupMethod, count: number) {
+    if (type === GroupMethod.MANUAL) {
+      const groupDetails = range(0, count).map(
+        (i) => new GroupDetail(this._generateGroupName(i), [], i),
+      );
+
+      this.classroomStore.groupStore.addGroups(groupDetails, false);
+    }
+
+    // Not supported
+  }
+
+  leave() {
+    this.classroomStore.groupStore.leaveSubRoom();
+  }
+
+  private _generateGroupName(no: number) {
+    return `${GroupUIStore.GROUP_NAME_TEMPLATE} ${no}`;
+  }
 
   onInstall() {}
   onDestroy() {}

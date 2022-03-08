@@ -77,7 +77,7 @@ export class UserStoreEach {
   //others
   private _addEventHandlers(scene: AgoraRteScene) {
     scene.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
-      const sessionInfo = this.subRoomStore.subRoomSeesionInfo;
+      const sessionInfo = this.subRoomStore.sessionInfo;
       runInAction(() => {
         users.forEach((user) => {
           let userItem = new EduUser(user);
@@ -103,7 +103,7 @@ export class UserStoreEach {
       });
     });
     scene.on(AgoraRteEventType.UserRemoved, (users: AgoraUser[], type: number) => {
-      const sessionInfo = this.subRoomStore.subRoomSeesionInfo;
+      const sessionInfo = this.subRoomStore.sessionInfo;
       runInAction(() => {
         users.forEach((user) => {
           const userRole = RteRole2EduRole(0, user.userRole); //
@@ -129,7 +129,7 @@ export class UserStoreEach {
       });
     });
     scene.on(AgoraRteEventType.UserUpdated, (users: AgoraUser[]) => {
-      const sessionInfo = this.subRoomStore.subRoomSeesionInfo;
+      const sessionInfo = this.subRoomStore.sessionInfo;
       runInAction(() => {
         users.forEach((user) => {
           let userItem = new EduUser(user);

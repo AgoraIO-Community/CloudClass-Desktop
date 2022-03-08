@@ -1,23 +1,9 @@
 import { transI18n } from '@/infra/stores/common/i18n';
 import classNames from 'classnames';
 import { range } from 'lodash';
-import {
-  FC,
-  MouseEvent,
-  cloneElement,
-  ReactElement,
-  useState,
-  useMemo,
-  useContext,
-  createContext,
-} from 'react';
-import { Button, CheckBox, Popover, Tree } from '~ui-kit';
-
-const PanelStateContext = createContext({
-  visiblePanelId: 0,
-  onTrigger: (panelId: number) => {},
-  getNextPanelId: (): number => 0,
-});
+import { FC, MouseEvent, ReactElement, useContext, useState } from 'react';
+import { Button, CheckBox, Tree } from '~ui-kit';
+import { Panel, usePanelState, PanelStateContext } from '../panel';
 
 const data = range(1, 32).map((i) => ({
   text: '小组' + i,
@@ -33,7 +19,7 @@ const groupData = range(1, 32).map((i) => ({
 }));
 
 const userData = range(1, 20).map((i) => ({
-  userId: i,
+  userId: `${i}`,
   userName: '学生' + i,
 }));
 
@@ -51,6 +37,7 @@ const SuffixLink = ({ onClick, text, className }: ButtonProps) => {
     </span>
   );
 };
+
 const SuffixButton = ({ onClick, text }: ButtonProps) => {
   return (
     <div className="suffix-btn py-1 px-2" onClick={onClick}>
@@ -64,77 +51,66 @@ type GroupPanelProps = {
 };
 
 const GroupPanel: FC<GroupPanelProps> = ({ children, onSelect }) => {
-  const { visiblePanelId, onTrigger, getNextPanelId } = useContext(PanelStateContext);
-
-  const panelId = useMemo(() => getNextPanelId(), []);
-
-  const childBtn = useMemo(
-    () =>
-      cloneElement(children as ReactElement, {
-        onClick: () => {
-          onTrigger(panelId);
-        },
-      }),
-    [children],
-  );
-
   return (
-    <Popover
-      overlayClassName="breakout-room-group-panel"
-      visible={visiblePanelId === panelId}
-      placement="rightTop"
-      content={
-        <div className="panel-content py-2" style={{ width: 200, height: 200, overflow: 'scroll' }}>
-          <Tree
-            childClassName="px-4 py-1"
-            disableExpansion
-            data={groupData}
-            gap={2}
-            onClick={onSelect}
-            renderSuffix={(node, level) => {
-              if (level === 0) {
-                return <span>{node.children?.length || 0}</span>;
-              }
-            }}
-          />
-        </div>
-      }>
-      {childBtn}
-    </Popover>
+    <Panel className="breakout-room-group-panel" trigger={children as ReactElement}>
+      <div
+        className="panel-content py-2"
+        style={{ width: 200, height: 200, overflow: 'scroll' }}
+        onClick={(e: MouseEvent) => {
+          e.stopPropagation();
+        }}>
+        <Tree
+          childClassName="px-4 py-1"
+          disableExpansion
+          data={groupData}
+          gap={2}
+          onClick={onSelect}
+          renderSuffix={(node, level) => {
+            if (level === 0) {
+              return <span>{node.children?.length || 0}</span>;
+            }
+          }}
+        />
+      </div>
+    </Panel>
   );
 };
 
 type UserPanelProps = {
-  onSelect: () => void;
+  onSelect: (users: Set<string>) => void;
 };
 
 const UserPanel: FC<UserPanelProps> = ({ children, onSelect }) => {
-  const [panelVisible, setPanelVisible] = useState(false);
-
-  const childBtn = useMemo(
-    () =>
-      cloneElement(children as ReactElement, {
-        onClick: () => {
-          setPanelVisible((visible) => !visible);
-        },
-      }),
-    [children],
-  );
+  const [users, setUsers] = useState(() => new Set<string>());
 
   return (
-    <Popover
-      overlayClassName="breakout-room-group-panel"
-      visible={panelVisible}
-      placement="rightTop"
-      content={
-        <div className="panel-content py-2" style={{ width: 200, height: 200, overflow: 'scroll' }}>
-          {userData.map(({ userId, userName }) => (
-            <CheckBox key="" text={userName} value={userId} />
-          ))}
-        </div>
-      }>
-      {childBtn}
-    </Popover>
+    <Panel className="breakout-room-group-panel" trigger={children as ReactElement}>
+      <div
+        className="panel-content py-2 overflow-scroll flex flex-wrap"
+        style={{ width: 300, height: 200 }}
+        onClick={(e: MouseEvent) => {
+          e.stopPropagation();
+        }}>
+        {userData.map(({ userId, userName }) => (
+          <div
+            key={userId}
+            style={{ width: '33.33%', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <CheckBox
+              gap={1}
+              text={userName}
+              value={userId}
+              onChange={() => {
+                const newUsers = new Set(users);
+                newUsers.add(userId);
+                setUsers(newUsers);
+                onSelect(users);
+              }}
+              checked={users.has(userId)}
+            />
+          </div>
+        ))}
+      </div>
+    </Panel>
   );
 };
 
@@ -142,37 +118,12 @@ type Props = {
   onNext: () => void;
 };
 
-const usePanelState = () => {
-  const [visiblePanelId, setVisiblePanelId] = useState(0);
-
-  const panelState = useMemo(() => {
-    let nextId = 0;
-    return {
-      visiblePanelId,
-      onTrigger: (panelId: number) => {
-        setVisiblePanelId((prevPanelId: number) => {
-          if (prevPanelId === panelId) {
-            return 0;
-          }
-          return panelId;
-        });
-      },
-      getNextPanelId: () => {
-        return Date.now() + nextId++;
-      },
-    };
-  }, [visiblePanelId]);
-
-  return panelState;
-};
-
 export const GroupSelect: FC<Props> = ({ onNext }) => {
-  const handleAssign = (e: MouseEvent) => {
-    e.stopPropagation();
-  };
+  // const handleAssign = (e: MouseEvent) => {
+  // };
 
-  const handleMoveTo = () => {};
-  const handleChangeTo = () => {};
+  // const handleMoveTo = () => { };
+  // const handleChangeTo = () => { };
 
   const panelState = usePanelState();
 
@@ -186,11 +137,9 @@ export const GroupSelect: FC<Props> = ({ onNext }) => {
             renderSuffix={(_, level) => {
               if (level === 0) {
                 return (
-                  <SuffixLink
-                    className="pr-4"
-                    onClick={handleAssign}
-                    text={transI18n('breakout_room.assign')}
-                  />
+                  <UserPanel onSelect={() => {}}>
+                    <SuffixLink className="pr-4" text={transI18n('breakout_room.assign')} />
+                  </UserPanel>
                 );
               } else if (level === 1) {
                 return (

@@ -111,12 +111,12 @@ export class ConnectionStoreEach {
   @action.bound
   initialize() {
     const ignoreUrlRegionPrefix = EduClassroomConfig.shared.rteEngineConfig.ignoreUrlRegionPrefix;
-    this.subRoomStore.classRoomGroupstore.api.pathPrefix = `${
+    this.subRoomStore.api.pathPrefix = `${
       ignoreUrlRegionPrefix
         ? ''
         : '/' + EduClassroomConfig.shared.rteEngineConfig.region.toLowerCase()
     }/edu/apps/${EduClassroomConfig.shared.appId}`;
-    this.subRoomStore.classRoomGroupstore.api.headers = EduClassroomConfig.shared.headers;
+    this.subRoomStore.api.headers = EduClassroomConfig.shared.headers;
     this.engine = AgoraRteEngine.createWithConfig(EduClassroomConfig.shared.rteEngineConfig);
   }
 
@@ -147,8 +147,8 @@ export class ConnectionStoreEach {
     let [error] = await to(
       retryAttempt(async () => {
         this.setClassroomState(ClassroomState.Connecting);
-        const sessionInfo = this.subRoomStore.subRoomSeesionInfo;
-        const { data, ts } = await this.subRoomStore.classRoomGroupstore.api.checkIn(sessionInfo);
+        const sessionInfo = this.subRoomStore.sessionInfo;
+        const { data, ts } = await this.subRoomStore.api.checkIn(sessionInfo);
         const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
         this.setCheckInData({
           vid,

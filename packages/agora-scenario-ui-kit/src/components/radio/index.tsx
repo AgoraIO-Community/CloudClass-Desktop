@@ -25,13 +25,9 @@ export const Radio: FC<RadioProps> = ({ label, onChange, className, name, checke
   const cls = classNames('inline-flex items-center cursor-pointer', className);
 
   return (
-    <div
-      className={cls}
-      onClick={() => {
-        onChange && onChange();
-      }}>
-      <input type="radio" className="mr-1" name={name} checked={checked} />
-      {label}
+    <div className={cls}>
+      <input type="radio" className="mr-1" name={name} checked={checked} onChange={onChange} />
+      <span onClick={onChange}>{label}</span>
     </div>
   );
 };
