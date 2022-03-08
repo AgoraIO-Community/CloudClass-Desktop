@@ -61,8 +61,10 @@
 }
 
 .cloud-wrap {
-  border: 1px solid #e3e3ec;
+  box-sizing: border-box;
+  border: 6px solid #75c0ff;
 }
+
 .cloud-wrap .table-header .table-col-item {
   color: #191919 !important;
 }
@@ -77,4 +79,12 @@
 .cloud-wrap .table-container-upload .placeholder {
   position: relative;
   top: -47px;
+}
+
+.cloud-wrap .tabs-nav {
+  background-color: #75c0ff;
+}
+.cloud-wrap .tabs-tab-btn,
+.cloud-wrap .tabs-tab.tabs-tab-active .tabs-tab-btn {
+  color: #fff;
 }

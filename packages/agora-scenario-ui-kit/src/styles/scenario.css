@@ -24,7 +24,7 @@ body,
   right: 16px;
   top: 11px;
   display: block;
-  color: #a7a7ca;
+  color: #fff;
   z-index: 1;
 }
 
@@ -32,6 +32,7 @@ body,
   width: 20px !important;
   height: 20px !important;
   cursor: pointer;
+  color: #fff !important;
 }
 
 .rc-mask {

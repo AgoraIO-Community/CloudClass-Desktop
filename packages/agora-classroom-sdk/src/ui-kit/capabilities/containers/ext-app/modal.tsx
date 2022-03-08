@@ -40,7 +40,7 @@ export const Modal: FC<ModalProps> = ({
         {header && <div className="modal-header-slot">{header}</div>}
         {closable ? (
           <div className="modal-title-close" onClick={onCancel}>
-            <SvgImg type="close" size={20} style={{ color: '#586376' }} />
+            <SvgImg type="close" size={20} style={{ color: '#fff' }} />
           </div>
         ) : null}
       </div>

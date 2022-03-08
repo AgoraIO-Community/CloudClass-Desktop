@@ -31,10 +31,10 @@
   align-items: center;
   padding: 12px;
   font-size: 14px;
-  background: #f9f9fc;
+  background: #75c0ff;
   border: 0;
   outline: 0;
-  color: #191919;
+  color: #fff;
   width: 100%;
   padding-left: 19px;
 }
@@ -43,7 +43,7 @@
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47, 65%, 146%, 15%);
   border-radius: 6px;
-  border: 1px solid #e3e3ec;
+  border: 6px solid #75c0ff;
   position: relative;
   overflow-y: hidden;
 }
@@ -54,10 +54,10 @@
   align-items: center;
   padding: 12px;
   font-size: 14px;
-  background: #f9f9fc;
+  background: #75c0ff;
   border: 0;
   outline: 0;
-  color: #586376;
+  color: #fff;
   width: 100%;
   padding-left: 19px;
 }

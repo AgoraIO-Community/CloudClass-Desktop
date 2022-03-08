@@ -106,7 +106,7 @@ export const Modal: ModalType = ({
                   setEventSource({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
-                <SvgImg type="close" size={20} style={{ color: '#7B88A0' }} />
+                <SvgImg type="close" size={20} style={{ color: '#fff' }} />
               </div>
             ) : (
               ''
