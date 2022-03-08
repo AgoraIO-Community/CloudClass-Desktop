@@ -3,9 +3,12 @@
 }
 
 .btn-primary {
-  @apply text-white bg-primary;
-  @apply hover:bg-primary-hover;
-  @apply active:bg-primary-active;
+  @apply text-white;
+  background: #ddb332;
+}
+.btn-primary:hover,
+.btn-primary:active {
+  background: #b98e03;
 }
 
 .btn-danger {
