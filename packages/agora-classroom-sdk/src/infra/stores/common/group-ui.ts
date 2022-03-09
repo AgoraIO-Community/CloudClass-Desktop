@@ -1,4 +1,5 @@
 import { EduClassroomConfig, GroupDetail, GroupUser } from 'agora-edu-core';
+import { AGError, bound } from 'agora-rte-sdk';
 import { range } from 'lodash';
 import { action, computed } from 'mobx';
 import { EduUIStoreBase } from './base';
@@ -9,29 +10,48 @@ export enum GroupMethod {
   MANUAL,
 }
 
-type User = {
-  userUuid: string;
-};
-
-type Group = {
-  groupName: string;
-  users: User[];
-};
-
 export class GroupUIStore extends EduUIStoreBase {
   // static readonly ERROR_MAX_PER_GROUP_PERSON_CODE = 'MAX_PER_GROUP_PERSON';
-  static readonly GROUP_NAME_TEMPLATE = transI18n('breakout_room.group_label');
 
   /**
-   * 获取子房间列表
+   * 分组列表
    */
   @computed
   get groups() {
     const { groupDetails } = this.classroomStore.groupStore;
-    return Object.entries(groupDetails).map(([groupUuid, groupDetail]) => ({
-      groupUuid,
-      groupName: groupDetail.groupName,
-    }));
+
+    const list: { id: string; text: string; children: { id: string; text: string }[] }[] = [];
+
+    groupDetails.forEach((group, groupUuid) => {
+      const tree = {
+        id: groupUuid,
+        text: group.groupName,
+        children: group.users.map(({ userUuid }: { userUuid: string }) => ({
+          id: userUuid,
+          text: userUuid,
+        })) as { id: string; text: string }[],
+      };
+
+      list.push(tree);
+    });
+
+    return list;
+  }
+
+  /**
+   * 学生列表
+   */
+  @computed
+  get students() {
+    const list: { userUuid: string }[] = [];
+
+    this.classroomStore.userStore.studentList.forEach((user) => {
+      list.push({
+        userUuid: user.userUuid,
+      });
+    });
+
+    return list;
   }
 
   /**
@@ -79,12 +99,13 @@ export class GroupUIStore extends EduUIStoreBase {
    * 新增组
    */
   @action.bound
-  addGroup(group: Group) {
+  addGroup(group: GroupDetail) {
     // this.groupTailNumber++;
     // this.subRoomList.set(Symbol(`untitled-group${this.groupTailNumber}`), []);
     // this.classroomStore.groupStore.createSubRoomObject();
     // this.classroomStore.groupStore.addSubRoomList();
-    this.classroomStore.groupStore.addGroups([new GroupDetail(group.groupName, [])], false);
+
+    this.classroomStore.groupStore.addGroups([group], false);
   }
 
   /**
@@ -201,13 +222,17 @@ export class GroupUIStore extends EduUIStoreBase {
    * @param type
    * @param group
    */
+  @bound
   createGroups(type: GroupMethod, count: number) {
     if (type === GroupMethod.MANUAL) {
-      const groupDetails = range(0, count).map(
-        (i) => new GroupDetail(this._generateGroupName(i), [], i),
-      );
+      const groupDetails = range(0, count).map((i) => ({
+        groupName: this._generateGroupName(i),
+        users: [],
+      }));
 
-      this.classroomStore.groupStore.addGroups(groupDetails, false);
+      this.classroomStore.groupStore.addGroups(groupDetails, false).catch((e) => {
+        this.shareUIStore.addGenericErrorDialog(e as AGError);
+      });
     }
 
     // Not supported
@@ -218,7 +243,7 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private _generateGroupName(no: number) {
-    return `${GroupUIStore.GROUP_NAME_TEMPLATE} ${no}`;
+    return `${transI18n('breakout_room.group_label')} ${no}`;
   }
 
   onInstall() {}

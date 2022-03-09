@@ -5,11 +5,16 @@ import './index.css';
 import { transI18n } from '@/infra/stores/common/i18n';
 import { Start } from './fragments/start';
 import { GroupSelect } from './fragments/group-select';
+import { GroupState } from 'agora-edu-core';
 
 export const BreakoutRoomDialog = ({ id }: { id: string }) => {
-  const { shareUIStore } = useStore();
+  const { shareUIStore, groupUIStore } = useStore();
   const { removeDialog } = shareUIStore;
-  const [stage, setStage] = useState<'start' | 'select'>('start');
+  const { groupState } = groupUIStore;
+
+  const [stage, setStage] = useState<'start' | 'select'>(() =>
+    groupState === GroupState.OPEN ? 'select' : 'start',
+  );
 
   const fragment = useMemo(() => {
     switch (stage) {

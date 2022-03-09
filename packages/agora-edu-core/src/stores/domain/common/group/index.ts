@@ -4,11 +4,11 @@ import get from 'lodash/get';
 import { action, observable, reaction } from 'mobx';
 import { EduClassroomConfig } from '../../../..';
 import { EduEventCenter } from '../../../../event-center';
-import { AgoraEduClassroomEvent, EduSessionInfo } from '../../../../type';
+import { AgoraEduClassroomEvent } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
 import { SubRoomStore } from '../sub-room';
-import { GroupDetail, GroupUser, PatchGroup, SubRoomConfig } from './struct';
+import { GroupDetail, GroupUser, PatchGroup } from './type';
 import { GroupDetails, GroupState } from './type';
 
 /**
@@ -104,17 +104,11 @@ export class GroupStore extends EduStoreBase {
    */
   async addGroups(groupDetails: GroupDetail[], inProgress: boolean) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    if (this.state === GroupState.OPEN) {
-      await this.classroomStore.api.updateGroupState(roomUuid, {
-        groups: groupDetails,
-        inProgress,
-      });
-    } else {
-      EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_GROUP_ALREADY_OPENED,
-        new Error('Group is already opened'),
-      );
-    }
+
+    await this.classroomStore.api.updateGroupState(roomUuid, {
+      groups: groupDetails,
+      inProgress,
+    });
   }
 
   /**

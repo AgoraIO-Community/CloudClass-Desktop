@@ -1,27 +1,10 @@
+import { useStore } from '@/infra/hooks/use-edu-stores';
 import { transI18n } from '@/infra/stores/common/i18n';
 import classNames from 'classnames';
-import { range } from 'lodash';
-import { FC, MouseEvent, ReactElement, useContext, useState } from 'react';
+import { observer } from 'mobx-react';
+import { FC, MouseEvent, ReactElement, useMemo, useState } from 'react';
 import { Button, CheckBox, Tree } from '~ui-kit';
 import { Panel, usePanelState, PanelStateContext } from '../panel';
-
-const data = range(1, 32).map((i) => ({
-  text: '小组' + i,
-  children: [
-    {
-      text: '小明',
-    },
-  ],
-}));
-
-const groupData = range(1, 32).map((i) => ({
-  text: '小组' + i,
-}));
-
-const userData = range(1, 20).map((i) => ({
-  userId: `${i}`,
-  userName: '学生' + i,
-}));
 
 type ButtonProps = {
   text: string;
@@ -47,10 +30,17 @@ const SuffixButton = ({ onClick, text }: ButtonProps) => {
 };
 
 type GroupPanelProps = {
+  groups: { text: string; id: string }[];
   onSelect: () => void;
 };
 
-const GroupPanel: FC<GroupPanelProps> = ({ children, onSelect }) => {
+const GroupPanel: FC<GroupPanelProps> = ({ children, onSelect, groups }) => {
+  const groupsWithoutUsers = useMemo(() => {
+    return groups.map(({ text, id }) => {
+      return { text, id };
+    });
+  }, []);
+
   return (
     <Panel className="breakout-room-group-panel" trigger={children as ReactElement}>
       <div
@@ -62,7 +52,7 @@ const GroupPanel: FC<GroupPanelProps> = ({ children, onSelect }) => {
         <Tree
           childClassName="px-4 py-1"
           disableExpansion
-          data={groupData}
+          data={groupsWithoutUsers}
           gap={2}
           onClick={onSelect}
           renderSuffix={(node, level) => {
@@ -77,11 +67,12 @@ const GroupPanel: FC<GroupPanelProps> = ({ children, onSelect }) => {
 };
 
 type UserPanelProps = {
+  users: { userUuid: string }[];
   onSelect: (users: Set<string>) => void;
 };
 
-const UserPanel: FC<UserPanelProps> = ({ children, onSelect }) => {
-  const [users, setUsers] = useState(() => new Set<string>());
+const UserPanel: FC<UserPanelProps> = ({ children, onSelect, users }) => {
+  const [checkedUsers, setCheckedUsers] = useState(() => new Set<string>());
 
   return (
     <Panel className="breakout-room-group-panel" trigger={children as ReactElement}>
@@ -91,21 +82,21 @@ const UserPanel: FC<UserPanelProps> = ({ children, onSelect }) => {
         onClick={(e: MouseEvent) => {
           e.stopPropagation();
         }}>
-        {userData.map(({ userId, userName }) => (
+        {users.map(({ userUuid }) => (
           <div
-            key={userId}
+            key={userUuid}
             style={{ width: '33.33%', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             <CheckBox
               gap={1}
-              text={userName}
-              value={userId}
+              text={userUuid}
+              value={userUuid}
               onChange={() => {
-                const newUsers = new Set(users);
-                newUsers.add(userId);
-                setUsers(newUsers);
-                onSelect(users);
+                const newCheckedUsers = new Set(checkedUsers);
+                newCheckedUsers.add(userUuid);
+                setCheckedUsers(checkedUsers);
+                onSelect(checkedUsers);
               }}
-              checked={users.has(userId)}
+              checked={checkedUsers.has(userUuid)}
             />
           </div>
         ))}
@@ -118,12 +109,10 @@ type Props = {
   onNext: () => void;
 };
 
-export const GroupSelect: FC<Props> = ({ onNext }) => {
-  // const handleAssign = (e: MouseEvent) => {
-  // };
+export const GroupSelect: FC<Props> = observer(({ onNext }) => {
+  const { groupUIStore } = useStore();
 
-  // const handleMoveTo = () => { };
-  // const handleChangeTo = () => { };
+  const { groups, students } = groupUIStore;
 
   const panelState = usePanelState();
 
@@ -133,21 +122,21 @@ export const GroupSelect: FC<Props> = ({ onNext }) => {
         <PanelStateContext.Provider value={panelState}>
           <Tree
             childClassName="pl-4"
-            data={data}
+            data={groups}
             renderSuffix={(_, level) => {
               if (level === 0) {
                 return (
-                  <UserPanel onSelect={() => {}}>
+                  <UserPanel onSelect={() => {}} users={students}>
                     <SuffixLink className="pr-4" text={transI18n('breakout_room.assign')} />
                   </UserPanel>
                 );
               } else if (level === 1) {
                 return (
                   <div className="flex">
-                    <GroupPanel onSelect={() => {}}>
+                    <GroupPanel onSelect={() => {}} groups={groups}>
                       <SuffixButton text={transI18n('breakout_room.move_to')} />
                     </GroupPanel>
-                    <GroupPanel onSelect={() => {}}>
+                    <GroupPanel onSelect={() => {}} groups={groups}>
                       <SuffixButton text={transI18n('breakout_room.change_to')} />
                     </GroupPanel>
                   </div>
@@ -172,4 +161,4 @@ export const GroupSelect: FC<Props> = ({ onNext }) => {
       </div>
     </div>
   );
-};
+});

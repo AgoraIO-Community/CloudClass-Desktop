@@ -1,18 +1,4 @@
-export interface GroupUser {
-  userUuid: string;
-  userName: string;
-}
-
-export class GroupDetail {
-  groupName: string;
-  users: GroupUser[];
-  sort?: number;
-  constructor(groupName: string, users: GroupUser[], sort?: number) {
-    this.groupName = groupName;
-    this.users = users;
-    this.sort = sort;
-  }
-}
+import { GroupUser } from './type';
 
 export class SubRoomConfig {
   subRoomUuid: string;
@@ -30,12 +16,4 @@ export class SubRoomConfig {
     this.invitationUserList = invitationUserList;
     this.subRoomProperties = subRoomProperties;
   }
-}
-
-export interface PatchGroup {
-  groupUuid: string;
-  groupName?: string;
-  sort?: number;
-  addUsers?: GroupUser[];
-  removeUsers?: GroupUser[];
 }
