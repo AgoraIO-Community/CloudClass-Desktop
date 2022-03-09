@@ -67,7 +67,7 @@ const GroupPanel: FC<GroupPanelProps> = ({ children, onSelect, groups }) => {
 };
 
 type UserPanelProps = {
-  users: { userUuid: string }[];
+  users: { userUuid: string; userName: string }[];
   onSelect: (users: Set<string>) => void;
 };
 
@@ -77,23 +77,27 @@ const UserPanel: FC<UserPanelProps> = ({ children, onSelect, users }) => {
   return (
     <Panel className="breakout-room-group-panel" trigger={children as ReactElement}>
       <div
-        className="panel-content py-2 overflow-scroll flex flex-wrap"
+        className="panel-content py-2 overflow-scroll flex flex-wrap justify-start"
         style={{ width: 300, height: 200 }}
         onClick={(e: MouseEvent) => {
           e.stopPropagation();
         }}>
-        {users.map(({ userUuid }) => (
+        {users.map(({ userUuid, userName }) => (
           <div
             key={userUuid}
             style={{ width: '33.33%', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             <CheckBox
               gap={1}
-              text={userUuid}
+              text={userName}
               value={userUuid}
               onChange={() => {
                 const newCheckedUsers = new Set(checkedUsers);
-                newCheckedUsers.add(userUuid);
-                setCheckedUsers(checkedUsers);
+                if (newCheckedUsers.has(userUuid)) {
+                  newCheckedUsers.delete(userUuid);
+                } else {
+                  newCheckedUsers.add(userUuid);
+                }
+                setCheckedUsers(newCheckedUsers);
                 onSelect(checkedUsers);
               }}
               checked={checkedUsers.has(userUuid)}

@@ -43,11 +43,16 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @computed
   get students() {
-    const list: { userUuid: string }[] = [];
+    const { groupDetails } = this.classroomStore.groupStore;
+
+    const list: { userUuid: string; userName: string }[] = [];
+
+    groupDetails;
 
     this.classroomStore.userStore.studentList.forEach((user) => {
       list.push({
         userUuid: user.userUuid,
+        userName: user.userName,
       });
     });
 
