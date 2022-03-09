@@ -45,7 +45,7 @@ declare global {
 //@ts-ignore
 let IAgoraRtcEngine;
 try {
-  IAgoraRtcEngine = AgoraCEF.AgoraRtcEngine;
+  IAgoraRtcEngine = AgoraCEF.AgoraRtcEngine.RtcEngineContext;
 } catch (e) {
   Logger.warn(`load AgoraCEF sdk failed: ${e}`);
 }
@@ -66,16 +66,16 @@ export class RtcAdapterCef extends RtcAdapterBase {
   cameraThread: AgoraRteCefCameraThread;
   private _localVideoEnabled = false;
   private _localAudioEnabled = false;
-  static get remote() {
-    const remote = window.require('electron').remote;
-    if (!remote) {
-      Logger.warn(
-        `enableRemoteModule is not set, we will not be able to tell you screenshare access status in this case. You can still use screenshare feature though`,
-      );
-      return undefined;
-    }
-    return remote;
-  }
+  // static get remote() {
+  //   const remote = window.require('electron').remote;
+  //   if (!remote) {
+  //     Logger.warn(
+  //       `enableRemoteModule is not set, we will not be able to tell you screenshare access status in this case. You can still use screenshare feature though`,
+  //     );
+  //     return undefined;
+  //   }
+  //   return remote;
+  // }
 
   screenShareId?: string;
   screenShareType?: AGScreenShareType;
@@ -94,22 +94,24 @@ export class RtcAdapterCef extends RtcAdapterBase {
     super();
     if (!RtcAdapterCef.rtcEngine) {
       //@ts-ignore
-      RtcAdapterElectron.rtcEngine = new IAgoraRtcEngine();
+      RtcAdapterCef.rtcEngine = new IAgoraRtcEngine(AgoraRteEngineConfig.shared.appId);
     }
 
-    const logPath = RtcAdapterCef.logPath;
-    let res = 0;
-    if (logPath) {
-      Logger.info(`[RtcAdapterCef] sdk log path: ${logPath}`);
-      res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region, {
-        filePath: logPath,
-        fileSize: 1024,
-        level: 0x0001,
-      });
-    } else {
-      Logger.warn(`[RtcAdapterCef] no log path found, sdk logs will be put in default folder`);
-      res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region);
-    }
+    // const logPath = RtcAdapterCef.logPath;
+    // let res = 0;
+    // if (logPath) {
+    //   Logger.info(`[RtcAdapterCef] sdk log path: ${logPath}`);
+    //   res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region, {
+    //     filePath: logPath,
+    //     fileSize: 1024,
+    //     level: 0x0001,
+    //   });
+    // } else {
+    //   Logger.warn(`[RtcAdapterCef] no log path found, sdk logs will be put in default folder`);
+    //   res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region);
+    // }
+
+    const res = AgoraCEF.AgoraRtcEngine.initialize(this.rtcEngine);
 
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
@@ -125,7 +127,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
   createRtcChannel(channelName: string, base: RtcAdapterBase): RtcChannelAdapterBase {
     let channel = this._channels.get(channelName);
     if (!channel) {
-      channel = new RtcChannelAdapterElectron(channelName, this.configs, base);
+      channel = new RtcChannelAdapterCef(channelName, this.configs, base);
       this._channels.set(channelName, channel);
     }
     return channel;
@@ -211,7 +213,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
     return 0;
   }
   startAudioRecordingDeviceTest(indicateInterval: number): number {
-    return this.rtcEngine.startAudioRecordingDeviceTest(indicateInterval);
+    return AgoraCEF.AgoraRtcEngine.audioDeviceManager.startRecordingDeviceTest(indicateInterval);
   }
   stopAudioRecordingDeviceTest(): number {
     return this.rtcEngine.stopAudioRecordingDeviceTest();
@@ -223,7 +225,6 @@ export class RtcAdapterCef extends RtcAdapterBase {
     return this.rtcEngine.stopAudioPlaybackDeviceTest();
   }
   startScreenCapture(id?: string, type?: AGScreenShareType): number {
-    // electron must call start screenshare after join channel, so we store the parameter for later use here
     this.rtcEngine.videoSourceInitialize(AgoraRteEngineConfig.shared.appId);
     if (id !== undefined) {
       this.screenShareId = id;
@@ -270,21 +271,23 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
 
   setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
-    return this.rtcEngine.setBeautyEffectOptions(enable, options);
+    // return this.rtcEngine.setBeautyEffectOptions(enable, options);
+    return 0;
   }
 
   hasScreenSharePermission(): boolean {
-    if (RtcAdapterCef.remote) {
-      let status = RtcAdapterCef.remote.systemPreferences.getMediaAccessStatus('screen');
-      return status !== 'denied';
-    }
-    return true;
+    // if (RtcAdapterCef.remote) {
+    //   let status = RtcAdapterCef.remote.systemPreferences.getMediaAccessStatus('screen');
+    //   return status !== 'denied';
+    // }
+    // return true;
+    return false;
   }
 
   destroy(): number {
     let res = this.rtcEngine.release();
     //@ts-ignore
-    RtcAdapterElectron.rtcEngine = undefined;
+    RtcAdapterCef.rtcEngine = undefined;
     return res;
   }
 
@@ -310,16 +313,17 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
 
   static get logBasePath() {
-    if (RtcAdapterCef.remote) {
-      return RtcAdapterCef.remote.app.getPath('logs');
-    }
+    // if (RtcAdapterCef.remote) {
+    //   return RtcAdapterCef.remote.app.getPath('logs');
+    // }
+    return '';
   }
 
   static get logFolderPath() {
-    if (this.logBasePath) {
-      const path = window.require('path');
-      return path.resolve(this.logBasePath, 'logs');
-    }
+    // if (this.logBasePath) {
+    //   const path = window.require('path');
+    //   return path.resolve(this.logBasePath, 'logs');
+    // }
     return undefined;
   }
 
@@ -347,57 +351,57 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
 
   private _addEventListeners() {
-    this.rtcEngine.on('localVideoStateChanged', (state: any, reason: any) => {
-      this.logger.info(`[rtc] video state changed ${state} ${reason}`);
-      this.cameraThread.videoStreamState = state;
-    });
-    this.rtcEngine.on('localAudioStateChanged', (state: any) => {
-      if (state === 0) {
-        this.emit(
-          AgoraMediaControlEventType.localAudioTrackChanged,
-          AgoraRteMediaSourceState.stopped,
-          AgoraRteAudioSourceType.Mic,
-        );
-      }
-      if (state === 2 || state === 1) {
-        this.emit(
-          AgoraMediaControlEventType.localAudioTrackChanged,
-          AgoraRteMediaSourceState.started,
-          AgoraRteAudioSourceType.Mic,
-        );
-      }
-    });
-    this.rtcEngine.on(
-      'groupAudioVolumeIndication',
-      (speakers: { uid: number; volume: number; vad: number }[]) => {
-        let localRecordingVolume = speakers.find((s) => s.uid === 0);
-        let localPlaybackVolume = speakers.find((s) => s.uid === 1);
-        if (localRecordingVolume) {
-          this.emit(AgoraMediaControlEventType.localAudioVolume, localRecordingVolume.volume / 255);
-        }
-        if (localPlaybackVolume) {
-          this.emit(
-            AgoraMediaControlEventType.localAudioPlaybackVolumeIndicator,
-            localPlaybackVolume.volume / 255,
-          );
-        }
-      },
-    );
+    // this.rtcEngine.on('localVideoStateChanged', (state: any, reason: any) => {
+    //   this.logger.info(`[rtc] video state changed ${state} ${reason}`);
+    //   this.cameraThread.videoStreamState = state;
+    // });
+    // this.rtcEngine.on('localAudioStateChanged', (state: any) => {
+    //   if (state === 0) {
+    //     this.emit(
+    //       AgoraMediaControlEventType.localAudioTrackChanged,
+    //       AgoraRteMediaSourceState.stopped,
+    //       AgoraRteAudioSourceType.Mic,
+    //     );
+    //   }
+    //   if (state === 2 || state === 1) {
+    //     this.emit(
+    //       AgoraMediaControlEventType.localAudioTrackChanged,
+    //       AgoraRteMediaSourceState.started,
+    //       AgoraRteAudioSourceType.Mic,
+    //     );
+    //   }
+    // });
+    // this.rtcEngine.on(
+    //   'groupAudioVolumeIndication',
+    //   (speakers: { uid: number; volume: number; vad: number }[]) => {
+    //     let localRecordingVolume = speakers.find((s) => s.uid === 0);
+    //     let localPlaybackVolume = speakers.find((s) => s.uid === 1);
+    //     if (localRecordingVolume) {
+    //       this.emit(AgoraMediaControlEventType.localAudioVolume, localRecordingVolume.volume / 255);
+    //     }
+    //     if (localPlaybackVolume) {
+    //       this.emit(
+    //         AgoraMediaControlEventType.localAudioPlaybackVolumeIndicator,
+    //         localPlaybackVolume.volume / 255,
+    //       );
+    //     }
+    //   },
+    // );
   }
 
   private updateRole() {
     if (this._localVideoEnabled || this._localAudioEnabled) {
       this.logger.info(`update rtc role to host`);
-      this.rtcEngine.setClientRole(1);
+      AgoraCEF.AgoraRtcEngine.setClientRole(1);
     } else {
       this.logger.info(`update rtc role to audience`);
-      this.rtcEngine.setClientRole(2);
+      AgoraCEF.AgoraRtcEngine.setClientRole(2);
     }
   }
 }
 
 @Log.attach({ proxyMethods: false })
-export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
+export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
   protected logger!: Injectable.Logger;
   channelName: string;
   base: RtcAdapterCef;

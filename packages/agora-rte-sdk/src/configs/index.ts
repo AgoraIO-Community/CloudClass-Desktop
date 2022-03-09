@@ -77,6 +77,10 @@ export class AgoraRteEngineConfig {
       // Electron-specific code
       return AgoraRteRuntimePlatform.Electron;
     }
+    // @ts-ignore
+    if (window.agoraBridge) {
+      return AgoraRteRuntimePlatform.Cef;
+    }
     return AgoraRteRuntimePlatform.Web;
   }
   userId: string = '';

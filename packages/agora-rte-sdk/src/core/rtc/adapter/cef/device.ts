@@ -8,6 +8,7 @@ import {
   RtcAudioDeviceManagerBase,
   RtcVideoDeviceManagerBase,
 } from '../base';
+import * as AgoraCEF from 'agora-cef-sdk';
 
 export class RtcVideoDeviceManagerCef extends RtcVideoDeviceManagerBase {
   private _deviceInfo: Map<string, AGRtcDeviceInfo> = new Map<string, AGRtcDeviceInfo>();
@@ -61,13 +62,14 @@ export class RtcVideoDeviceManagerCef extends RtcVideoDeviceManagerBase {
 
   private _initializeDeviceList() {
     this.fetchDeviceList();
-    this.adapter.rtcEngine.on('videoDeviceStateChanged', () => {
-      this.fetchDeviceList();
-    });
+    // this.adapter.rtcEngine.on('videoDeviceStateChanged', () => {
+    //   this.fetchDeviceList();
+    // });
   }
 
   private fetchDeviceList() {
-    let devices = this.adapter.rtcEngine.getVideoDevices() as AGRtcDeviceInfo[];
+    let devices =
+      AgoraCEF.AgoraRtcEngine.videoDeviceManager.enumerateVideoDevices() as AGRtcDeviceInfo[];
     let newDevices: AGRtcDeviceInfo[] = [];
     this._deviceIds.clear();
     this._deviceInfo.clear();
@@ -93,11 +95,11 @@ export class RtcAudioDeviceManagerCef extends RtcAudioDeviceManagerBase {
 
   _initializeDeviceList() {
     this._fetchRecordingDeviceList();
-    this._fetchPlaybackDeviceList();
-    this.adapter.rtcEngine.on('audioDeviceStateChanged', () => {
-      this._fetchRecordingDeviceList();
-      this._fetchPlaybackDeviceList();
-    });
+    // this._fetchPlaybackDeviceList();
+    // this.adapter.rtcEngine.on('audioDeviceStateChanged', () => {
+    //   this._fetchRecordingDeviceList();
+    //   // this._fetchPlaybackDeviceList();
+    // });
   }
 
   onLocalAudioPlaybackTestVolumeChanged(cb: LocalAudioPlaybackVolumeIndicatorEvent): number {
@@ -200,7 +202,8 @@ export class RtcAudioDeviceManagerCef extends RtcAudioDeviceManagerBase {
   }
 
   private _fetchRecordingDeviceList() {
-    let devices = this.adapter.rtcEngine.getAudioRecordingDevices() as AGRtcDeviceInfo[];
+    let devices =
+      AgoraCEF.AgoraRtcEngine.audioDeviceManager.enumerateRecordingDevices() as AGRtcDeviceInfo[];
     let newDevices: AGRtcDeviceInfo[] = [];
     this._recordingDeviceInfo.clear();
     this._recordingDeviceIds.clear();
