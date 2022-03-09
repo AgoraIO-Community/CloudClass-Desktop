@@ -23,6 +23,7 @@ export enum AgoraRteLogLevel {
 export enum AgoraRteRuntimePlatform {
   Electron,
   Web,
+  Cef,
 }
 
 export interface AgoraRteServiceConfig {

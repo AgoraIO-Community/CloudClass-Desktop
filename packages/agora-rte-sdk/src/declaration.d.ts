@@ -1,5 +1,3 @@
-import AgoraRtcEngine from 'agora-electron-sdk';
-
 interface Window {
   platform: string;
   isElectron: boolean;
@@ -8,3 +6,5 @@ interface Window {
 }
 
 declare module 'web-audio-peak-meter';
+
+declare module 'agora-cef-sdk';

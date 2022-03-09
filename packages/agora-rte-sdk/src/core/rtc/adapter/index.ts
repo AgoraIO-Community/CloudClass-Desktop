@@ -4,6 +4,7 @@ import { AGMediaEncryptionConfig, AGVideoEncoderConfigurations } from '../type';
 import { RtcAdapterBase } from './base';
 import { RtcAdapterElectron, RtcAdapterElectronConfig } from './electron';
 import { RtcAdapterWeb, RtcAdapterWebConfig } from './web';
+import { RtcAdapterCef, RtcAdapterCefConfig } from './cef';
 
 export interface AGRtcConfig {
   defaultCameraEncoderConfigurations?: AGVideoEncoderConfigurations;
@@ -16,6 +17,8 @@ export interface AGRtcConfig {
   web?: RtcAdapterWebConfig;
   // electron specific configs
   electron?: RtcAdapterElectronConfig;
+  // cef specific configs
+  cef?: RtcAdapterCefConfig;
 }
 
 export class RtcAdapterFactory {
@@ -25,6 +28,8 @@ export class RtcAdapterFactory {
         return new RtcAdapterElectron();
       case AgoraRteRuntimePlatform.Web:
         return new RtcAdapterWeb(configs?.web);
+      case AgoraRteRuntimePlatform.Cef:
+        return new RtcAdapterCef();
     }
   }
 }
