@@ -28,7 +28,6 @@ export abstract class SceneSubscriptionBase implements SceneSubscription {
 
     scene.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
       this.logger.info(`user-added [${users.join(',')}]`);
-      this._handleUserAdded(users, scene);
     });
 
     scene.on(AgoraRteEventType.UserUpdated, (user: AgoraUser) => {
@@ -96,29 +95,6 @@ export abstract class SceneSubscriptionBase implements SceneSubscription {
   abstract handleRemoteStreamUpdated(streams: AgoraStream[]): void;
   abstract handleRemoteStreamRemoved(streams: AgoraStream[]): void;
 
-  private _handleUserAdded(users: AgoraUser[], scene: AgoraRteScene) {
-    let addedLocalStreams: AgoraStream[] = [];
-    let addedRemoteStreams: AgoraStream[] = [];
-    users.forEach((u) => {
-      if (scene.localUser?.userUuid === u.userUuid) {
-        // local user added
-        const streams = scene.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          addedLocalStreams = addedLocalStreams.concat(streams);
-        }
-      } else {
-        // remote user added
-        const streams = scene.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          addedRemoteStreams = addedRemoteStreams.concat(streams);
-        }
-      }
-    });
-
-    this.handleLocalStreamAdded(addedLocalStreams);
-    this.handleRemoteStreamAdded(addedRemoteStreams);
-  }
-
   private _handleUserRemoved(users: AgoraUser[], scene: AgoraRteScene, type?: number) {
     let removedLocalStreams: AgoraStream[] = [];
     let removedRemoteStreams: AgoraStream[] = [];
@@ -161,8 +137,6 @@ export class MainRoomSubscription extends SceneSubscriptionBase {
       return;
     }
     this.logger.info(`_handleLocalStreamAdded [${streams.join(',')}]`);
-
-    scene.localUser?.deleteLocalMediaStream;
 
     streams.forEach((s) => {
       const type =

@@ -289,6 +289,30 @@ export class AgoraRteScene extends EventEmitter {
     Logger.warn(`unhandled rte connection state: rtm: ${rtmState}, snapshot: ${initialSync}`);
   }
 
+  private _handleUserAdded(users: AgoraUser[]) {
+    let addedLocalStreams: AgoraStream[] = [];
+    let addedRemoteStreams: AgoraStream[] = [];
+    users.forEach((u) => {
+      if (this.localUser?.userUuid === u.userUuid) {
+        // local user added
+        const streams = this.dataStore.findUserStreams(u.userUuid);
+        if (streams) {
+          addedLocalStreams = addedLocalStreams.concat(streams);
+        }
+      } else {
+        // remote user added
+        const streams = this.dataStore.findUserStreams(u.userUuid);
+        if (streams) {
+          addedRemoteStreams = addedRemoteStreams.concat(streams);
+        }
+      }
+    });
+
+    this.emit(AgoraRteEventType.LocalStreamAdded, addedLocalStreams);
+    this.emit(AgoraRteEventType.RemoteStreamAdded, addedRemoteStreams);
+    this.emit(AgoraRteEventType.UserAdded, users);
+  }
+
   private _addEventListeners(handler: AgoraRteChannelMessageHandle) {
     handler.on(AgoraRteEventType.SnapshotUpdated, () => {
       this.logger.info(`snapshot updated`);
@@ -307,7 +331,7 @@ export class AgoraRteScene extends EventEmitter {
       );
       users.push(this.localUser.toData());
       if (users.length > 0) {
-        this.emit(AgoraRteEventType.UserAdded, users);
+        this._handleUserAdded(users);
       }
 
       this._handleRoomPropertyChange(
