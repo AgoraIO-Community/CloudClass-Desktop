@@ -283,7 +283,7 @@ export const en = {
     pentagram: 'pentagram',
     rhombus: 'rhombus',
     triangle: 'triangle',
-    selector: 'selector',
+    selector: 'popupQuiz',
     clicker: 'mouse',
     eraser: 'eraser',
     color: 'color',
@@ -533,7 +533,7 @@ export const en = {
     restart: 'Start Again',
   },
   vote: {
-    appName: 'Polling',
+    appName: 'Poll',
     start: 'Create poll',
     restart: 'Restart',
     over: 'End poll',

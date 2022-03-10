@@ -55,9 +55,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
   readonly allowedCabinetItems: string[] = [
     'laser',
     'screenShare',
-    'io.agora.countdown',
-    'io.agora.answer',
-    'io.agora.vote',
+    'countdownTimer',
+    'poll',
+    'popupQuiz',
   ];
   readonly defaultColors: string[] = [
     '#ffffff',
@@ -167,7 +167,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @action.bound
   handleCabinetItem(id: string) {
-    const { launchApp } = this.classroomStore.extAppStore;
+    // const { launchApp } = this.classroomStore.extAppStore;
+    const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
       case 'screenShare':
         if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
@@ -318,9 +319,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   get cabinetItems(): CabinetItem[] {
-    const { extApps } = this.classroomStore.extAppStore;
+    const { extensionAppInstances } = this.classroomStore.extensionAppStore;
 
-    const apps = Object.values(extApps)
+    const apps = Object.values(extensionAppInstances)
       .map(
         ({ appIdentifier, icon, appName }) =>
           ({

@@ -64,6 +64,7 @@ export interface AgoraRteMessageHandleTask {
     operator: AgoraRteOperator;
     sequence: number;
     data: any;
+    timestamp: number;
   };
 }
 

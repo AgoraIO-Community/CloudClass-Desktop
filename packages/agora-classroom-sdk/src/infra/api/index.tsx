@@ -13,6 +13,7 @@ import {
   AgoraEduClassroomEvent,
   IAgoraWidget,
   Platform,
+  IAgoraExtensionApp,
 } from 'agora-edu-core';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
@@ -68,6 +69,7 @@ export type LaunchOption = {
   mediaOptions?: MediaOptions;
   latencyLevel?: 1 | 2;
   platform?: Platform;
+  extensions?: IAgoraExtensionApp[]; // 新app插件
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
@@ -214,6 +216,7 @@ export class AgoraEduSDK {
       option.extApps,
       platform,
       i18nResources,
+      option.extensions,
     );
 
     if (AgoraEduSDK._config.host) {
