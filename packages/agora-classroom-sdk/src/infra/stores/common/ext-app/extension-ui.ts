@@ -29,7 +29,11 @@ export class ExtensionAppUIStore extends EduUIStoreBase {
     const { userRole, userUuid } = this.classroomStore.roomStore;
     const { grantUsers } = this.classroomStore.boardStore;
 
-    return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
+    return (
+      userRole === EduRoleTypeEnum.teacher ||
+      userRole === EduRoleTypeEnum.assistant ||
+      grantUsers.has(userUuid)
+    );
   }
 
   /**

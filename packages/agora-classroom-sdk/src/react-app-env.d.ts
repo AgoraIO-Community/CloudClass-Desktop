@@ -1,5 +1,3 @@
-/// <reference types="./sdk/education/interface/index.d.ts" />
-
 declare module '*.css';
 declare module '*.svga';
 declare module '*.svg';
@@ -117,3 +115,14 @@ declare module '@netless/zip' {
 }
 
 declare const zip: any;
+
+declare module 'agora-plugin-gallery' {
+  declare class AgoraCountdown {}
+  declare class AgoraPolling {}
+  declare class AgoraSelector {}
+}
+
+declare module 'agora-widget-gallery' {
+  declare class AgoraHXChatWidget {}
+  declare class AgoraChatWidget {}
+}

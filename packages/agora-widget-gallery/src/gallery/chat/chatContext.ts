@@ -1,4 +1,4 @@
-import { EduClassroomUIStore } from 'agora-edu-core';
+import { EduClassroomUIStore } from 'agora-classroom-sdk';
 import React from 'react';
 import { WidgetChatUIStore } from './chatStore';
 

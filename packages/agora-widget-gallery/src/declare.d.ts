@@ -1,3 +1,1 @@
-declare module 'agora-classroom-sdk' {
-  class EduClassroomUIStore {}
-}
+declare type EduClassroomUIStore = any;

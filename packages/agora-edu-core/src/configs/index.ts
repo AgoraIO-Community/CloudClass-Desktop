@@ -10,7 +10,7 @@ import {
 } from '../type';
 import { CloudDriveResource } from '../stores/domain/common/cloud-drive/struct';
 import { AGEduErrorCode, EduErrorCenter } from '../utils/error';
-import { IAgoraExtApp, IAgoraWidget, IAgoraExtensionApp } from '..';
+import { IAgoraWidget, IAgoraExtensionApp } from '..';
 
 export interface WhiteboardConfigs {
   boardAppId: string;
@@ -50,7 +50,6 @@ export class EduClassroomConfig {
   private _boardConfig?: WhiteboardConfigs;
   private _courseWareList?: CloudDriveResource[];
   private _widgets: { [key: string]: IAgoraWidget } = {};
-  private _extApps: ReadonlyArray<IAgoraExtApp> = [];
   private _extensions?: IAgoraExtensionApp[];
   private _currentAPIVersion = 'v3';
   private _compatibleVersions: string[] = [];
@@ -72,7 +71,6 @@ export class EduClassroomConfig {
     recordUrl: string,
     rteOpts?: AgoraRteOptions,
     widgets: { [key: string]: IAgoraWidget } = {},
-    extApps: IAgoraExtApp[] = [],
     platform: Platform = Platform.PC,
     i18nResources: Resource = {},
     extensions?: IAgoraExtensionApp[],
@@ -104,7 +102,6 @@ export class EduClassroomConfig {
       rtcConfigs,
     });
     this._widgets = widgets;
-    this._extApps = extApps;
     this._extensions = extensions;
 
     AgoraRteEngineConfig.setConfig(this._rteEngineConfig);
@@ -178,10 +175,6 @@ export class EduClassroomConfig {
 
   get widgets() {
     return this._widgets;
-  }
-
-  get extApps() {
-    return this._extApps;
   }
 
   get extensions() {

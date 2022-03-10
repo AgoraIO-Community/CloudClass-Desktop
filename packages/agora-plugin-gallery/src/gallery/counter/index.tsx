@@ -1,4 +1,5 @@
 import 'promise-polyfill/src/polyfill';
+import React from 'react';
 import {
   IAgoraExtensionApp,
   AgoraExtensionAppTypeEnum,

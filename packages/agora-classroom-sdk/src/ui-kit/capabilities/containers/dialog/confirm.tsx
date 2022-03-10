@@ -1,4 +1,4 @@
-import { ConfirmDialogAction } from 'agora-edu-core';
+import { ConfirmDialogAction } from '@/infra/types';
 import { observer } from 'mobx-react';
 import { Button, Modal, t } from '~ui-kit';
 import { BaseDialogProps } from '.';

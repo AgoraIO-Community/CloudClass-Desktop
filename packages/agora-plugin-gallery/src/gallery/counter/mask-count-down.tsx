@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import './maskCountDown.css';
+import './mask-count-down.css';
 
 export const MaskCountDown = ({
   content,
