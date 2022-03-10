@@ -13,7 +13,7 @@ import { WhiteboardH5Container } from '~containers/board/RoomBigH5WhiteboardCont
 import { ScreenShareContainer } from '~containers/screen-share';
 import Room from '../room';
 import { useEffect } from 'react';
-import { ExtAPPUntrackContainer } from '~containers/ext-app';
+import { ExtensionAppContainer } from '~containers/extension-app-container';
 import { Helmet } from 'react-helmet';
 
 require('matchmedia-polyfill');
@@ -37,7 +37,7 @@ export const BigClassScenarioH5 = observer(() => {
           <H5LayoutStudentStreamBoardContainer />
           <H5TeacherStreamChatContainer />
         </LayoutOrientation>
-        <ExtAPPUntrackContainer />
+        <ExtensionAppContainer />
       </H5LayoutContainer>
     </Room>
   );

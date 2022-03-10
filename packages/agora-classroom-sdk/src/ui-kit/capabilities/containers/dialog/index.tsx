@@ -1,4 +1,3 @@
-import { DialogCategory } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { ReactNode } from 'react';
@@ -11,6 +10,7 @@ import { Confirm } from './confirm';
 import { GenericErrorDialog } from './error-generic';
 import { KickOut } from './kick-out';
 import { ScreenPickerDialog } from './screen-picker';
+import { DialogCategory } from '@/infra/stores/common/share-ui';
 
 const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode => {
   switch (category) {

@@ -3,8 +3,10 @@ import { t } from '~components/i18n';
 import { IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
 import { SvgIcon } from '~components/svg-img';
+import classnames from 'classnames';
+import { BaseProps } from '../interface/base-props';
 
-export interface ToolItem {
+export interface ToolItem extends BaseProps {
   value: string;
   label: any;
   icon: IconTypes;
@@ -29,11 +31,16 @@ export const Tool: FC<ToolProps> = (props) => {
     isActive = false,
     onClick = console.log.bind(`click ${props.value}`),
     component: Component,
+    className,
   } = props;
 
   const handleToolClick = (value: any) => {
     onClick(value);
   };
+
+  const cls = classnames('tool', {
+    [`${className}`]: !!className,
+  });
 
   return (
     <>
@@ -47,7 +54,7 @@ export const Tool: FC<ToolProps> = (props) => {
           align={{
             offset: [30, 0],
           }}>
-          <div className={`tool`}>
+          <div className={cls}>
             {icon ? (
               <SvgIcon
                 type={isActive ? icon + '-active' : icon}

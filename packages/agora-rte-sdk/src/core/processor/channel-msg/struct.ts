@@ -71,6 +71,7 @@ export interface AgoraRteMessageHandleTask {
     sequence: number;
     data: any;
     batch: AgoraRteMessageBatch;
+    timestamp: number;
   };
 }
 

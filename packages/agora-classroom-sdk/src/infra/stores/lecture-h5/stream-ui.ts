@@ -1,6 +1,8 @@
-import { EduClassroomStore, EduShareUIStore, StreamUIStore } from 'agora-edu-core';
+import { EduClassroomStore } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { EduShareUIStore } from '../common/share-ui';
+import { StreamUIStore } from '../common/stream';
 
 @Log.attach({ proxyMethods: false })
 export class LectureH5RoomStreamUIStore extends StreamUIStore {

@@ -51,6 +51,12 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
 
     AgoraRTC.setArea({ areaCode: [this._rtcRegion()] });
 
+    if (AgoraRteEngineConfig.shared.rtcSDKParameters) {
+      AgoraRteEngineConfig.shared.rtcSDKParameters.forEach((parameter) => {
+        //@ts-ignore
+        AgoraRTC.setParameter(parameter);
+      });
+    }
     // create new for subchannel
     this._client = AgoraRTC.createClient({
       codec: this.configs.codec,

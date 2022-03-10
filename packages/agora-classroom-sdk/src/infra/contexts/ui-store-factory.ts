@@ -1,8 +1,9 @@
-import { EduClassroomStore, EduClassroomUIStore, EduRoomTypeEnum } from 'agora-edu-core';
+import { EduClassroomStore, EduRoomTypeEnum } from 'agora-edu-core';
 import { EduInteractiveUIClassStore } from '../stores/interactive';
 import { EduLectureUIStore } from '../stores/lecture';
 import { Edu1v1ClassUIStore } from '../stores/one-on-one';
 import { EduLectureH5UIStore } from '../stores/lecture-h5';
+import { EduClassroomUIStore } from '../stores/common';
 
 export class EduUIStoreFactory {
   static createWithType(type: EduRoomTypeEnum, store: EduClassroomStore): EduClassroomUIStore {

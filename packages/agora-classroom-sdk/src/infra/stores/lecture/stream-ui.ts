@@ -1,14 +1,10 @@
-import {
-  StreamUIStore,
-  EduStreamTool,
-  EduClassroomConfig,
-  EduRoleTypeEnum,
-  EduStreamUI,
-  EduStreamToolCategory,
-} from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
 import { observable, action, computed, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
+import { StreamUIStore } from '../common/stream';
+import { EduStreamUI } from '../common/stream/struct';
+import { EduStreamTool, EduStreamToolCategory } from '../common/stream/tool';
 
 @Log.attach({ proxyMethods: false })
 export class LectureRoomStreamUIStore extends StreamUIStore {
@@ -130,8 +126,6 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
       },
     );
 
-    this.classroomStore.mediaStore.setMirror(
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher,
-    );
+    this.classroomStore.mediaStore.setMirror(true);
   }
 }

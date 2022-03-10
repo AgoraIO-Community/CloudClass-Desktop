@@ -1,20 +1,14 @@
 import { observable, action, computed, runInAction, reaction } from 'mobx';
-import {
-  RosterUIStore,
-  FetchUserParam,
-  FetchUserType,
-  EduRoleTypeEnum,
-  DeviceState,
-  Operations,
-  Profile,
-  DialogCategory,
-} from 'agora-edu-core';
+import { FetchUserParam, FetchUserType, EduRoleTypeEnum } from 'agora-edu-core';
 import {
   AgoraRteMediaSourceState,
   AgoraRteMediaPublishState,
   Lodash,
   AGError,
 } from 'agora-rte-sdk';
+import { RosterUIStore } from '../common/roster';
+import { DeviceState, Operations, Profile } from '../common/roster/type';
+import { DialogCategory } from '../common/share-ui';
 
 export class LectureRosterUIStore extends RosterUIStore {
   get uiOverrides() {

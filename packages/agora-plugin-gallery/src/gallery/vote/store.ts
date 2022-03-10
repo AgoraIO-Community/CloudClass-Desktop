@@ -1,459 +1,220 @@
-import { action, observable, computed } from 'mobx';
 import {
-  AgoraExtAppContext,
-  AgoraExtAppHandle,
-  AgoraExtAppUserInfo,
+  ExtensionController,
   EduRoleTypeEnum,
-  EduRole2RteRole,
-  AgoraExtAppController,
-  EduClassroomConfig,
+  ExtensionStoreEach as ExtensionStore,
 } from 'agora-edu-core';
-import _ from 'lodash';
-import dayjs from 'dayjs';
+import { action, autorun, computed, observable, runInAction } from 'mobx';
 
-const formatTime = (endTime: number, startTime: number) => {
-  const diff = dayjs(endTime).diff(dayjs(startTime));
-  return dayjs.duration(diff).format('HH:mm:ss');
-};
-const getStudentInfo = (info: any) => {
-  if (
-    info === null ||
-    typeof info === 'undefined' ||
-    info === 'deleted' ||
-    JSON.stringify(info) === '{}'
-  ) {
-    return null;
-  }
-  return info;
-};
+// 2 为老师或者助教出题阶段 只可老师或者助教可见
+// 1 为中间答题阶段，不同为老师或者助教和学生的权限问题
+// 0 为最后结果展示阶段
 
-export const c2h = (count: number) => {
-  if (count > 60) {
-    return 120;
-  } else if (count > 40) {
-    return 90;
-  }
-  return 75;
-};
+type stagePanel = 0 | 1 | 2;
+
+type optionType = 'radio' | 'checkbox';
+
+const maxOptionCount = 5;
 
 export class PluginStore {
-  context!: AgoraExtAppContext;
-  handle!: AgoraExtAppHandle;
-  controller!: AgoraExtAppController;
+  controller!: ExtensionController;
+  context!: ExtensionStore;
 
-  @observable
-  height?: number = 283;
-  @observable
-  title?: string = '';
-  @observable
-  answer?: string[] = ['', ''];
-  @observable
-  selAnswer?: string[] = [];
-  @observable
-  currentTime?: string = '';
-  @observable
-  students?: any[];
-  @observable
-  status: string = 'config'; //config,answer,info,end
-  @observable
-  answerInfo?: string[] = [];
-  @observable
-  buttonName?: string = 'vote.start';
-  @observable
-  ui?: string[] = ['sels']; //'sels','users','infos','subs'
-  @observable
-  timehandle?: any = null;
-  @observable
-  mulChoice?: boolean = false;
+  constructor(controller: ExtensionController, context: ExtensionStore) {
+    this.context = context;
+    this.controller = controller;
 
-  @observable
-  rosterUserList?: any[];
-  @observable
-  userList?: any[];
-
-  private _lag = 0;
-
-  resetContextAndHandle(ctx: AgoraExtAppContext, handle: AgoraExtAppHandle) {
-    this.context = ctx;
-    this.handle = handle;
-    this.onReceivedProps(ctx.properties || {}, null);
-  }
-
-  @computed
-  get studentList() {
-    return this.userList?.filter((u: any) => {
-      const role2rteRole = EduRole2RteRole(this.context.roomInfo.roomType, u.role);
-      return ['broadcaster', 'audience'].includes(role2rteRole);
+    autorun(() => {
+      typeof this.context.roomProperties.extra?.pollState !== 'undefined' &&
+        this.setStagePanel(this.context.roomProperties.extra.pollState);
+      typeof this.context.roomProperties.extra?.pollTitle !== 'undefined' &&
+        this.setTitle(this.context.roomProperties.extra.pollTitle);
+      this.context.roomProperties.extra?.mode && this.setType(this.getTypeByMode);
+      runInAction(() => {
+        typeof this.context.roomProperties.extra?.pollItems !== 'undefined' &&
+          (this.options = this.context.roomProperties.extra.pollItems);
+      });
     });
   }
 
-  @action
-  updateTime = () => {
-    if (this.status === 'config') {
-      this.currentTime = '';
-    } else {
-      let properties = this.context.properties;
-      if (!this._lag) this._lag = Number(properties.startTime) * 1000 - Date.now();
-      this.currentTime = formatTime(
-        properties.endTime ? Number(properties.endTime) * 1000 : Date.now() + this._lag,
-        Number(properties.startTime) * 1000,
-      );
-    }
+  @observable
+  stagePanel: stagePanel = 2;
 
-    if (this.status === 'config' || this.status === 'end' || this.context.properties.endTime) {
-      this.timehandle && clearInterval(this.timehandle);
-      this.timehandle = null;
-    } else {
-      this.timehandle ||
-        (this.timehandle = setInterval(() => {
-          this.updateTime();
-        }, 1000));
-    }
-  };
+  @observable
+  title: string = ''; // 题干
 
-  changeRoomProperties = async ({
-    state,
-    canChange = false,
-    mulChoice,
-    startTime,
-    endTime,
-    title,
-    items,
-    answer,
-    replyTime,
-    commonState,
-  }: {
-    state?: string; //config(老师本地配置),start(开始答题/投票),end(答题/投票结束)
-    canChange?: boolean; //是否允许修改(投票为false，答题为true)
-    mulChoice?: boolean; //是否多选(答题为true，投票可设置)
-    startTime?: string;
-    endTime?: string;
-    title?: string;
-    items?: Array<string>; //可选内容
-    answer?: Array<string>; //正确答案(答题用，投票忽略)
-    replyTime?: string;
-    commonState?: number;
-  }) => {
-    let roomProperties: any = {};
-    if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
-        this.context.localUserInfo.roleType,
-      )
-    ) {
-      ['start', 'end'].includes(state || '') && (roomProperties['state'] = state);
-      canChange && (roomProperties['canChange'] = canChange);
-      typeof mulChoice !== 'undefined' && (roomProperties['mulChoice'] = mulChoice);
-      startTime && (roomProperties['startTime'] = startTime);
-      endTime && (roomProperties['endTime'] = endTime);
-      items && (roomProperties['items'] = items);
-      title && (roomProperties['title'] = title);
-      answer && (roomProperties['answer'] = answer);
-      if (state === 'start') {
-        roomProperties['students'] = [];
-        roomProperties['studentNames'] = [];
-        this.studentList?.map((user: any) => {
-          if (!/^guest[0-9]{10}2$/.test(user.userUuid || '')) {
-            roomProperties['students'].push(user.userUuid);
-            roomProperties['studentNames'].push(user.userName);
-          }
-        });
-      } else if (state === 'updateStudent') {
-        if (this.studentList) {
-          let students: any = this.context.properties['students'] || [];
-          roomProperties['students'] = [];
-          roomProperties['studentNames'] = [];
+  @observable
+  options: string[] = ['', ''];
 
-          students.map((student: any, index: number) => {
-            if (getStudentInfo(this.context.properties['student' + student])) {
-              roomProperties['students'].push(student);
-              roomProperties['studentNames'].push(this.context.properties['studentNames'][index]);
-            }
-          });
+  @observable
+  selectedOptions: string[] = [];
 
-          this.studentList?.map((user: any) => {
-            if (
-              !/^guest[0-9]{10}2$/.test(user.userUuid || '') &&
-              !roomProperties['students'].includes(user.userUuid)
-            ) {
-              roomProperties['students'].push(user.userUuid);
-              roomProperties['studentNames'].push(user.userName);
-            }
-          });
-        } else {
-          return;
-        }
-      } else if (state === 'clear') {
-        roomProperties['students'] = [];
-        roomProperties['studentNames'] = [];
-        roomProperties['state'] = '';
-        roomProperties['canChange'] = false;
-        roomProperties['mulChoice'] = false;
-        roomProperties['startTime'] = '';
-        roomProperties['endTime'] = '';
-        roomProperties['title'] = '';
-        roomProperties['items'] = [];
-        roomProperties['answer'] = [];
-        this.changeRoomProperties({ state: 'clearStudent' });
-      } else if (state === 'clearStudent') {
-        let propers: string[] = [];
-        let keys = Object.keys(this.context.properties);
-        keys.map((ele: string) => {
-          [
-            'answer',
-            'canChange',
-            'title',
-            'endTime',
-            'items',
-            'mulChoice',
-            'startTime',
-            'state',
-            'studentNames',
-            'students',
-          ].includes(ele) || propers.push(ele);
-        });
-        console.log(
-          'clearStudent:',
-          this.context.properties.students,
-          propers,
-          this.context.properties,
-        );
-        await this.handle.deleteRoomProperties(propers, {});
-        return;
-      }
-      await this.handle.updateRoomProperties(roomProperties, { state: commonState || 0 }, {});
-    } else {
-      if (this.context.properties.state === 'start') {
-        roomProperties['student' + this.context.localUserInfo.userUuid] = {
-          startTime: this.context.properties.startTime,
-          replyTime,
-          answer,
-        };
-        await this.handle.updateRoomProperties(
-          roomProperties,
-          { state: commonState || 0 },
-          { startTime: this.context.properties.startTime },
-        );
-      }
-    }
-  };
+  @observable
+  type: optionType = 'radio';
 
-  @action
-  clearProps() {
-    this.changeRoomProperties({ state: 'clear' });
-  }
-
-  onSubClick = async () => {
-    if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
-        this.context.localUserInfo.roleType,
-      )
-    ) {
-      if (this.status === 'config') {
-        let sels: string[] = [];
-        this.selAnswer?.map((sel: string) => {
-          if (this.answer?.includes(sel)) {
-            sels.push(sel);
-          }
-        });
-        await this.changeRoomProperties({
-          state: 'start',
-          startTime: Math.floor(Date.now() / 1000).toString(),
-          title: this.title,
-          items: this.answer,
-          mulChoice: this.mulChoice,
-          answer: [],
-          commonState: 1,
-        });
-      } else if (this.status === 'info') {
-        await this.changeRoomProperties({
-          state: 'end',
-          endTime: Math.floor(Date.now() / 1000).toString(),
-          commonState: 1,
-        });
-      } else {
-        await this.changeRoomProperties({ state: 'clear' });
-      }
-    } else {
-      if (this.status === 'answer') {
-        await this.changeRoomProperties({
-          replyTime: Math.floor(Date.now() / 1000).toString(),
-          answer: this.selAnswer,
-          commonState: 1,
-        });
-      }
-    }
-  };
-
-  @action
-  onReceivedProps(properties: any, cause: any) {
-    if (this.context) {
-      this.context.properties = properties;
-    }
-    const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
-    if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(role)
-    ) {
-      if (properties.state === 'start' || properties.state === 'end') {
-        this.title = properties.title;
-        this.answer = properties.items;
-        this.mulChoice = properties.mulChoice;
-        this.selAnswer = [];
-        this.students = [];
-        let selNumber = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        properties.students.map((student: string, index: number) => {
-          let answer = getStudentInfo(properties['student' + student]);
-          if (answer && answer.answer) {
-            answer.answer.map((sel: string) => {
-              let idx = properties.items.indexOf(sel);
-              idx >= 0 && selNumber[idx]++;
-            });
-          }
-        });
-
-        properties.items.map((item: string, index: number) => {
-          this.answerInfo &&
-            (this.answerInfo[index] = `(${selNumber[index]}) ${Math.floor(
-              (selNumber[index] * 100) / (properties.students.length || 1),
-            )}%`);
-        });
-        this.status = properties.state === 'end' ? 'end' : 'info';
-        this.height =
-          c2h(properties.title?.length || 0) +
-          (this.answer?.length || 0) * 50 -
-          10 +
-          (properties.state === 'end' ? 0 : 116);
-        this.buttonName = properties.state === 'end' ? 'vote.restart' : 'vote.over';
-        this.ui = properties.state === 'end' ? ['users', 'infos'] : ['users', 'infos', 'subs'];
-      } else {
-        this.title = '';
-        this.answer = ['', ''];
-        this.selAnswer = [];
-        this.currentTime = '';
-        this.students = [];
-        this.status = 'config';
-        this.height = 283;
-        this.buttonName = 'vote.start';
-        this.ui = ['sels', 'subs'];
-      }
-      const cannotOperate = role === EduRoleTypeEnum.observer;
-      if (cannotOperate) {
-        this.ui = this.ui.filter((k) => k !== 'subs');
-      }
-    } else {
-      if (properties.state === 'start' && !getStudentInfo(properties['student' + userUuid])) {
-        this.title = properties.title;
-        this.answer = properties.items;
-        this.mulChoice = properties.mulChoice;
-        this.status = 'answer';
-        this.height =
-          c2h(properties.title?.length || 0) + (this.answer?.length || 0) * 50 - 10 + 116;
-        this.buttonName = !getStudentInfo(properties['student' + userUuid])
-          ? 'vote.submit'
-          : 'vote.change';
-        this.ui = ['sels', 'subs'];
-      } else if (properties.state === 'end' || properties.state === 'start') {
-        this.title = properties.title;
-        this.answer = properties.items;
-        this.mulChoice = properties.mulChoice;
-        this.selAnswer = getStudentInfo(properties['student' + userUuid])?.answer || [];
-        this.status = 'info';
-        this.height =
-          c2h(properties.title?.length || 0) + (this.answer?.length || 0) * 50 - 10 + 20;
-        this.ui = ['infos'];
-
-        let selNumber = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        properties.students.map((student: string, index: number) => {
-          let answer = getStudentInfo(properties['student' + student]);
-          if (answer && answer.answer) {
-            answer.answer.map((sel: string) => {
-              let idx = properties.items.indexOf(sel);
-              idx >= 0 && selNumber[idx]++;
-            });
-          }
-        });
-
-        properties.items.map((item: string, index: number) => {
-          this.answerInfo &&
-            (this.answerInfo[index] = `(${selNumber[index]}) ${Math.floor(
-              (selNumber[index] * 100) / (properties.students.length || 1),
-            )}%`);
-        });
-      } else {
-        this.status = 'config';
-        this.title = '';
-        this.answer = ['', ''];
-        this.selAnswer = [];
-        this.currentTime = '';
-        this.students = [];
-        this.height = 270;
-        this.buttonName = 'vote.submit';
-        this.ui = ['infos'];
-      }
-    }
-  }
-
-  @action
-  addAnswer() {
-    if (this.answer && this.answer.length < 8) {
-      this.answer.push('');
-      this.height = 433 - (5 - this.answer.length) * 50;
-    }
-  }
-
-  @action
-  subAnswer() {
-    if (this.answer && this.answer.length > 2) {
-      this.answer.splice(this.answer.length - 1, 1);
-      this.height = 433 - (5 - this.answer.length) * 50;
-    }
-  }
-
-  @action
-  changeAnswer(idx: number, answer: string) {
-    if (this.status === 'config') {
-      if (this.answer && this.answer.length > idx && idx >= 0) {
-        this.answer[idx] = answer;
-      }
-    }
-  }
-
-  @action
-  changeSelAnswer(sel: string, mul: boolean = true) {
-    if (mul) {
-      if (this.selAnswer?.includes(sel)) {
-        this.selAnswer.splice(this.selAnswer.indexOf(sel), 1);
-      } else {
-        this.selAnswer?.push(sel);
-      }
-    } else {
-      this.selAnswer = [sel];
-    }
-  }
-
-  @action
-  updateStudents(userList: AgoraExtAppUserInfo[]) {
-    if (_.isEqual(userList, this.userList)) {
-      return;
-    }
-
-    if (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
-        EduClassroomConfig.shared.sessionInfo.role,
-      )
-    ) {
-      this.userList = userList;
-      if (this.status !== 'config' && this.status !== 'end') {
-        this.changeRoomProperties({ state: 'updateStudent', commonState: 1 });
-      }
-    }
-  }
   @action.bound
-  setTitle(value: string) {
-    this.title = value;
+  setTitle(title: string) {
+    this.title = title;
   }
 
   @action.bound
-  setMulChoice(value: boolean) {
-    this.mulChoice = value;
+  setType(type: optionType) {
+    this.type = type;
+  }
+
+  @action.bound
+  addOption(text: string = '') {
+    this.options = [...this.options, text];
+  }
+  @action.bound
+  reduceOption() {
+    this.options.splice(this.options.length - 1, 1);
+  }
+
+  @action.bound
+  changeOptions(index: number, value: string) {
+    this.options[index] = value;
+  }
+
+  @action.bound
+  handleStartVote() {
+    let body = {
+      mode: this.type === 'radio' ? 1 : 2,
+      pollItems: this.options,
+      pollTitle: this.title,
+    };
+    this.controller.startPolling(body);
+  }
+  /**
+   * 投票
+   */
+  @action.bound
+  handleSubmitVote() {
+    const userUuid = this.context.context.localUserInfo.userUuid;
+    const selectedIndexs = this.selectedIndexs;
+    this.controller.submitResult(this.context.roomProperties.extra.pollId, userUuid, {
+      selectIndex: selectedIndexs,
+    });
+  }
+
+  /**
+   * 结束投票
+   */
+
+  @action.bound
+  handleStopVote() {
+    this.controller.stopPolling(this.context.roomProperties.extra.pollId);
+  }
+
+  @action.bound
+  setStagePanel(state: stagePanel) {
+    this.stagePanel = state;
+  }
+
+  @action.bound
+  hanldeSelectedOptions(e: any) {
+    const checked = e.target.checked,
+      value = e.target.value;
+    if (this.type === 'radio') {
+      checked ? (this.selectedOptions[0] = value) : (this.selectedOptions = []);
+    } else if (this.type === 'checkbox') {
+      this.selectedOptions = checked
+        ? [...this.selectedOptions, value]
+        : this.selectedOptions.filter((option: string) => option !== value);
+    }
+  }
+
+  @action.bound
+  resetStore() {
+    this.stagePanel = 2;
+    this.title = '';
+    this.options = ['', ''];
+    this.selectedOptions = [];
+    this.type = 'radio';
+  }
+  /**
+   * 获取时间差
+   */
+  @computed
+  get getTimestampGap() {
+    return this.context.context.methods.getTimestampGap();
+  }
+
+  @computed
+  get getTypeByMode() {
+    let mode = 'radio';
+    if (this.context.roomProperties.extra?.mode) {
+      mode = this.context.roomProperties.extra.mode === 1 ? 'radio' : 'checkbox';
+    }
+    return mode as optionType;
+  }
+
+  @computed
+  get isController() {
+    return (
+      this.context.context.localUserInfo.roleType === EduRoleTypeEnum.teacher ||
+      this.context.context.localUserInfo.roleType === EduRoleTypeEnum.assistant
+    );
+  }
+
+  @computed
+  get isTeacherType() {
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
+      this.context.context.localUserInfo.roleType,
+    );
+  }
+
+  @computed
+  get addBtnCls() {
+    return this.options.length >= maxOptionCount ? 'visibility-hidden' : 'visibility-visible';
+  }
+
+  @computed
+  get reduceBtnCls() {
+    return this.options.length > 2 ? 'visibility-visible' : 'visibility-hidden';
+  }
+
+  @computed
+  get submitDisabled() {
+    return this.options.some((value: string) => !value) || !this.title;
+  }
+
+  @computed
+  get pollingResult() {
+    return this.context.roomProperties.extra?.pollDetails;
+  }
+
+  @computed
+  get selectedIndexs() {
+    return this.selectedOptions.map((selectedOption: string) =>
+      this.options.findIndex((option) => option === selectedOption),
+    );
+  }
+
+  @computed
+  get isShowResultSection() {
+    // 1.当前有控制权限并处于答题阶段
+    // 2.没有控制权限，并且有pollId代表已经答过题
+    // 3.已经结束答题
+    if (this.stagePanel === 1 && this.isTeacherType) {
+      return true;
+    } else if (!this.isTeacherType && this.context.userProperties.pollId) {
+      return true;
+    } else if (this.stagePanel === 0) {
+      return true;
+    }
+    return false;
+  }
+
+  @computed
+  get isInitinalStage() {
+    return this.stagePanel === 2 && this.isTeacherType;
+  }
+
+  /**
+   * for students
+   */
+  @computed
+  get isShowVote() {
+    return !this.isShowResultSection && this.stagePanel === 1 && !this.isTeacherType;
   }
 }

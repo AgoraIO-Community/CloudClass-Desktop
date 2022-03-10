@@ -3,12 +3,12 @@ import {
   ChatListType,
   Conversation,
   EduClassroomConfig,
-  EduClassroomUIStore,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   MessageItem,
 } from 'agora-edu-core';
 import { AGError } from 'agora-rte-sdk';
+import { EduClassroomUIStore } from 'agora-classroom-sdk';
 import { get, isEmpty } from 'lodash';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';

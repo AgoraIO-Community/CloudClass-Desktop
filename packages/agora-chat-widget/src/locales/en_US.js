@@ -44,6 +44,13 @@ const enUS = {
     delete_content: 'Are you sure to delete this bulletin?',
     you: 'you',
     mute_by_system: 'You are muted',
+    get_room_info: 'Failed to get chat room details',
+    get_room_announcement: 'Failed to get the chat room announcement',
+    update_room_announcement: 'Failed to modify the chat room announcement',
+    uploading_picture: 'Uploading picture failed',
+    screenshots: 'Screenshots',
+    hide_classroom_page_screenshots: 'Hide classroom page screenshot',
+    screenshots_file: 'Screenshots_file',
   },
 };
 

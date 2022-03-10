@@ -8,6 +8,7 @@ import './index.css';
 
 import { WhiteboardToolbar } from '~containers/toolbar';
 import { TrackArea } from '~containers/root-box/';
+import { ScenesController } from '../scenes-controller';
 
 export const WhiteboardContainer: FC = observer(({ children }) => {
   const { boardUIStore } = useStore();
@@ -20,6 +21,11 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
     boardHeight,
     joinWhiteboardWhenConfigReady,
     leaveWhiteboard,
+    currentSceneIndex,
+    scenesCount,
+    addMainViewScene,
+    toPreMainViewScene,
+    toNextMainViewScene,
   } = boardUIStore;
 
   useEffect(() => {
@@ -45,7 +51,7 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
   );
 
   return (
-    <div style={{ height: boardHeight }} className="w-full relative">
+    <div style={{ height: boardHeight }} className="w-full relative flex-shrink-0">
       <WhiteboardTrackArea />
       {readyToMount ? (
         <div className="whiteboard-wrapper">
@@ -59,6 +65,13 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
               />
             ) : null}
             <WhiteboardToolbar />
+            <ScenesController
+              addScene={addMainViewScene}
+              preScene={toPreMainViewScene}
+              nextScene={toNextMainViewScene}
+              currentSceneIndex={currentSceneIndex}
+              scenesCount={scenesCount}
+            />
           </div>
         </div>
       ) : null}

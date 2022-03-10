@@ -1,5 +1,4 @@
 .input-box {
-  /* position: relative; */
   margin: 5px 0 0 0;
   width: 100%;
   background: #f9f9fc;
@@ -101,12 +100,13 @@ textarea {
   outline: none !important;
   resize: none !important;
   border: none !important;
-  min-height: unset !important;
   transition: all 0.3s ease !important;
+  height: 70px !important;
+  margin-bottom: 70px !important;
 }
 .input-chat::-webkit-input-placeholder {
   position: relative;
-  top: 10px;
+  top: unset;
 }
 
 .input-btn {
@@ -131,34 +131,9 @@ textarea {
   background: #357bf6;
   border-radius: 15px !important;
 }
-.input-chating-status {
-  height: 70px !important;
-  margin-bottom: 70px !important;
-}
-.input-chating-status::-webkit-input-placeholder {
-  position: relative;
-  top: unset;
-}
 .emoji-container {
   width: 212px;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
-/* .input-area-enter {
-  height: 0px !important;
-}
-.input-area-enter-active {
-  height: 70px !important;
-  transition: all 300ms !important;
-}
-.input-area-enter-done {
-  height: 70px !important;
-}
-.input-area-exit {
-  height: 70px !important
-}
-.input-area-exit-active {
-  height: 0px !important;
-  margin-top: -10px !important;
-} */

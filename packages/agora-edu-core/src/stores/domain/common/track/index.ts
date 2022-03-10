@@ -27,6 +27,9 @@ export class TrackStore extends EduStoreBase {
   @bound
   setTrackContext(context: TrackContext) {
     this._context = context;
+    this.trackById.forEach((track) => {
+      track.updateContext(context);
+    });
   }
 
   @bound

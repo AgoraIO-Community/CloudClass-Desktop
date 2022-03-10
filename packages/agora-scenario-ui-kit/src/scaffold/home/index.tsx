@@ -110,6 +110,9 @@ export const Home: React.FC<HomeProps> = ({
 
   const signupEnUrl = 'https://sso.agora.io/en/signup';
 
+  const roomNameReg = /^[a-zA-Z0-9]{6,50}$/;
+  const userNameReg = /^[\u4e00-\u9fa5a-zA-Z0-9\s]{3,50}$/;
+
   return (
     <Layout className={debug ? 'home-page debug' : 'home-page'} direction="col">
       <Header className="home-page-header">
@@ -118,13 +121,13 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
-          <Link
+          {/* <Link
             className="header-right-item"
             to={`/recordation-search/${Buffer.from(
               `{"language":"${language}", "region":"${region}"}`,
             ).toString('base64')}`}>
             {transI18n('home.recordation-search')}
-          </Link>
+          </Link> */}
           <div
             style={{
               marginRight: language === 'en' ? -12 : -58,
@@ -285,7 +288,7 @@ export const Home: React.FC<HomeProps> = ({
                 value={roomName}
                 onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}
                 placeholder={transI18n('home.roomName_placeholder')}
-                rule={/^[a-zA-Z0-9]{6,50}$/}
+                rule={roomNameReg}
                 errorMsg={transI18n('home.input-error-msg')}
                 maxLength={50}
               />
@@ -306,8 +309,8 @@ export const Home: React.FC<HomeProps> = ({
                 value={userName}
                 onChange={(evt) => onChangeUserName(evt.currentTarget.value)}
                 placeholder={transI18n('home.nickName_placeholder')}
-                rule={/^[a-zA-Z0-9]{6,50}$/}
-                errorMsg={transI18n('home.input-error-msg')}
+                rule={userNameReg}
+                errorMsg={transI18n('home.input-username-error-msg')}
                 maxLength={50}
               />
             </Col>
@@ -458,12 +461,12 @@ export const Home: React.FC<HomeProps> = ({
               !(
                 !!userId &&
                 !!roomId &&
-                !!userName &&
+                !!userName.trim() &&
                 !!roomName &&
                 !!role &&
                 !!scenario &&
-                /^[a-zA-Z0-9]{6,50}$/.test(roomName) &&
-                /^[a-zA-Z0-9]{6,50}$/.test(userName)
+                roomNameReg.test(roomName) &&
+                userNameReg.test(userName)
               )
             }>
             {transI18n('home.enter_classroom')}

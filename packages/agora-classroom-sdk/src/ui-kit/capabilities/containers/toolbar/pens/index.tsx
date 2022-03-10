@@ -27,6 +27,10 @@ export const PensContainer = observer((props: PensContainerProps) => {
     square: 'scaffold.rectangle',
     circle: 'scaffold.circle',
     line: 'scaffold.straight',
+    arrow: 'scaffold.arrow',
+    pentagram: 'scaffold.pentagram',
+    rhombus: 'scaffold.rhombus',
+    triangle: 'scaffold.triangle',
   };
 
   return (

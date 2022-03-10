@@ -28,7 +28,7 @@ export const Chat = () => {
   const announcement = _.get(state, 'room.announcement', '');
   const showRed = _.get(state, 'showRed');
   const showAnnouncementNotice = _.get(state, 'showAnnouncementNotice');
-  const roleType = _.get(state, 'loginUserInfo.ext', '');
+  const roleType = _.get(state, 'propsData.roleType', '');
   const roomUsers = _.get(state, 'room.roomUsers', []);
   const roomUsersInfo = _.get(state, 'room.roomUsersInfo', {});
   const showChat = _.get(state, 'showChat');
@@ -37,10 +37,7 @@ export const Chat = () => {
   const isTabKey = state?.isTabKey;
   // 直接在 propsData 中取值
   const isTeacher =
-    roleType &&
-    (JSON.parse(roleType).role === ROLE.teacher.id ||
-      JSON.parse(roleType).role === ROLE.assistant.id ||
-      JSON.parse(roleType).role === ROLE.observer.id);
+    roleType === ROLE.teacher.id || roleType === ROLE.assistant.id || roleType === ROLE.observer.id;
   useEffect(() => {
     // 加载成员信息
     let _speakerTeacher = [];

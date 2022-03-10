@@ -28,23 +28,12 @@ export {
   WhiteboardState,
   AgoraEduClassroomEvent,
 } from './type';
-export type { CourseWareList, ConfirmDialogAction, orientationEnum } from './type';
-export { ChatStorage, RteRole2EduRole, EduRole2RteRole, UUAparser } from './utils';
+export type { CourseWareList } from './type';
+export { ChatStorage, RteRole2EduRole, EduRole2RteRole, UUAparser, CustomBtoa } from './utils';
 export { AGEduErrorCode, EduErrorCenter } from './utils/error';
-export { checkMinutesThrough } from './utils/time';
 export * from './utils/collection';
-export * from './utils/interaction';
-
 export { EduEventCenter } from './event-center';
 export { AGServiceErrorCode } from './services/error';
-
 export { EduStoreFactory } from './stores';
 export * from './stores/domain';
-export * from './stores/ui';
-export { MessageItem } from './stores/domain/common/message/struct';
-export { getRootDimensions } from './stores/ui/common/layout/helper';
 export { Platform } from './configs';
-export type { FetchUserParam } from './stores/domain/common/user/type';
-export { FetchUserType } from './stores/domain/common/user/type';
-export { DeviceState } from './stores/ui/common/roster/type';
-export type { Operations, Operation, Profile } from './stores/ui/common/roster/type';

@@ -20,9 +20,13 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
   ({ children, minimumWidth = 0, minimumHeight = 0 }) => {
     const style = useClassroomStyle({ minimumHeight, minimumWidth });
 
+    const { shareUIStore } = useStore();
+
     return (
       <div className="flex bg-black justify-center items-center h-screen w-screen">
-        <div style={style} className="w-full h-full relative">
+        <div
+          style={style}
+          className={`w-full h-full relative ${shareUIStore.classroomViewportClassName}`}>
           {children}
         </div>
       </div>
@@ -35,9 +39,14 @@ export const TrackArea = ({ top = 0, boundaryName }: { top?: number; boundaryNam
   const dom = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const { offsetTop, offsetLeft } = dom.current!.parentElement!;
-    trackUIStore.updateTrackContext(boundaryName, { top: offsetTop, left: offsetLeft });
-  }, [shareUIStore.classroomViewportSize]);
+    const observer = shareUIStore.addViewportResizeObserver(() => {
+      const { offsetTop, offsetLeft } = dom.current!.parentElement!;
+      trackUIStore.updateTrackContext(boundaryName, { top: offsetTop, left: offsetLeft });
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div

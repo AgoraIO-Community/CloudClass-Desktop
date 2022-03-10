@@ -1,9 +1,9 @@
 import { EduClassroomConfig } from 'agora-edu-core';
 import { computed } from 'mobx';
-import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from 'agora-edu-core';
+import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from '../common/toolbar-ui';
 
 export class OneToOneToolbarUIStore extends ToolbarUIStore {
-  readonly allowedCabinetItems: string[] = ['screenShare', 'io.agora.countdown', 'io.agora.answer'];
+  readonly allowedCabinetItems: string[] = ['laser', 'screenShare', 'countdownTimer', 'popupQuiz'];
 
   get teacherTools(): ToolbarItem[] {
     return [

@@ -69,10 +69,18 @@
     "win": {
       "icon": "icons/favicon.png",
       "target": [
-        {
-          "target": "zip"
-        }
+        "nsis"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icons/favicon.ico",
+      "shortcutName": "AgoraFlexibleClassroom",
+      "artifactName": "AgoraFlexibleClassroom-${version}.${ext}"
     },
     "linux": {
       "icon": "icons/favicon.png",
@@ -239,6 +247,7 @@
     "workbox-strategies": "6.1.1",
     "workbox-webpack-plugin": "6.3.0",
     "zlib": "1.0.5",
+    "electron-screenshots": "0.0.13",
     "react-rnd": "10.3.4",
     "react-helmet": "6.1.0",
     "crypto-browserify": "3.12.0",
