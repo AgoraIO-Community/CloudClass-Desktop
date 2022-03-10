@@ -51,6 +51,16 @@ export class ExtensionController {
     this.api.getAnswerList(this.roomUuid, selectorId, body);
   submitAnswer = (selectorId: string, userUuid: string, body: any) =>
     this.api.submitAnswer(this.roomUuid, selectorId, userUuid, body);
+  sendRewards = (
+    rewards: {
+      userUuid: string;
+      changeReward: number;
+    }[],
+  ) =>
+    this.api.sendRewards(
+      { roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid, rewards },
+      true,
+    );
 }
 
 // 为每个 extension 定义一个 observable 对象
@@ -204,6 +214,7 @@ export class ExtensionAppStore extends EduStoreBase {
         setActive: this.setActive,
         setInactive: this.setInactive,
       },
+      dependencies: new Map(),
     };
     let extensionStoreObserver = new ExtensionStoreEach(context);
     this.extensionAppStore[extension.appIdentifier] = extensionStoreObserver;

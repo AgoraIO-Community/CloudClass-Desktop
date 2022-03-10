@@ -157,6 +157,13 @@ export class PluginStore {
   }
 
   @computed
+  get isTeacherType() {
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
+      this.context.context.localUserInfo.roleType,
+    );
+  }
+
+  @computed
   get addBtnCls() {
     return this.options.length >= maxOptionCount ? 'visibility-hidden' : 'visibility-visible';
   }
@@ -188,9 +195,9 @@ export class PluginStore {
     // 1.当前有控制权限并处于答题阶段
     // 2.没有控制权限，并且有pollId代表已经答过题
     // 3.已经结束答题
-    if (this.stagePanel === 1 && this.isController) {
+    if (this.stagePanel === 1 && this.isTeacherType) {
       return true;
-    } else if (!this.isController && this.context.userProperties.pollId) {
+    } else if (!this.isTeacherType && this.context.userProperties.pollId) {
       return true;
     } else if (this.stagePanel === 0) {
       return true;
@@ -200,7 +207,7 @@ export class PluginStore {
 
   @computed
   get isInitinalStage() {
-    return this.stagePanel === 2 && this.isController;
+    return this.stagePanel === 2 && this.isTeacherType;
   }
 
   /**
@@ -208,6 +215,6 @@ export class PluginStore {
    */
   @computed
   get isShowVote() {
-    return !this.isShowResultSection && this.stagePanel === 1 && !this.isController;
+    return !this.isShowResultSection && this.stagePanel === 1 && !this.isTeacherType;
   }
 }

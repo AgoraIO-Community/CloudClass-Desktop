@@ -4,11 +4,11 @@ import * as hx from 'agora-chat-widget';
 import {
   ClassroomState,
   EduClassroomConfig,
-  EduClassroomUIStore,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   IAgoraWidget,
 } from 'agora-edu-core';
+import { EduClassroomUIStore } from 'agora-classroom-sdk';
 import { set } from 'lodash';
 import { autorun, reaction } from 'mobx';
 import { observer } from 'mobx-react';

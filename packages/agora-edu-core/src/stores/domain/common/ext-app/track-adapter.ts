@@ -12,7 +12,7 @@ export class ExtAppTrackAdapter implements TrackAdapter {
   }
   @bound
   deleteTrackState(trackId: string) {
-    this._classroomStore.extAppStore.deleteExtappTrackState(trackId);
+    this._classroomStore.extensionAppStore.deleteExtappTrackState(trackId);
   }
 
   get trackState(): TrackState {

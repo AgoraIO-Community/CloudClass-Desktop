@@ -308,6 +308,7 @@ export class AgoraRteScene extends EventEmitter {
         );
       }
 
+      this.dataStore.setUser(this.localUser.userUuid, AgoraUser.fromData(this.localUser.toData()));
       //do not fire local user event from snapshot, as this has been done in entry api phase
       const users = Array.from(this.dataStore.users.values()).filter(
         (u) => u.userUuid !== this.localUser!.userUuid,

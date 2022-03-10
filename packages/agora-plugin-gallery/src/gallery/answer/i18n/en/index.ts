@@ -13,6 +13,9 @@ const selector_en = {
     'answer-time': 'Time',
     'selected-answer': 'Answer',
     restart: 'Start Again',
+    award: 'Send Award',
+    award_winner: 'Award Winner',
+    award_all: 'Award all participants',
   },
 };
 

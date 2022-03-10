@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, FC } from 'react';
 import { observer } from 'mobx-react';
 import { reaction } from 'mobx';
 import dayjs from 'dayjs';
@@ -7,6 +7,7 @@ import addSvg from './add.svg';
 import reduceSvg from './reduce.svg';
 import { Button, Col, Row, Table, TableHeader, transI18n } from '~ui-kit';
 import './index.css';
+import awardSvg from './award.svg';
 
 const App = observer(() => (
   <>
@@ -28,8 +29,10 @@ const Content = observer(() => {
     currentAnswer,
     optionPermissions,
     isShowResultDetail,
-    isController,
+    isTeacherType,
     myAnswer,
+    isShowAwardButton,
+    sendAward,
   } = pluginStore;
 
   return (
@@ -63,12 +66,17 @@ const Content = observer(() => {
             <span>{transI18n('widget_selector.right-key')}：</span>
             {currentAnswer}
           </div>
-          {!isController && (
+          {!isTeacherType && (
             <div>
               <span>{transI18n('widget_selector.my-answer')}：</span>
               {myAnswer}
             </div>
           )}
+        </div>
+      )}
+      {isShowAwardButton && (
+        <div className="answer-award-btns">
+          <AwardButton onAward={sendAward}>{transI18n('widget_selector.award')}</AwardButton>
         </div>
       )}
     </>
@@ -107,7 +115,7 @@ const ResultDetail = observer(() => {
   }, []);
 
   const fetchList = useCallback(async () => {
-    if (pluginStore.isController) {
+    if (pluginStore.isTeacherType) {
       const res = await pluginStore.getAnswerList(nextId, 50);
       const resultData = res.data;
 
@@ -220,5 +228,48 @@ const AnswerBtns = observer(() => {
     </div>
   );
 });
+
+const AwardButton: FC<{ onAward: (type: 'winner' | 'all') => void }> = ({ children, onAward }) => {
+  const [listVisible, setListVisible] = useState(false);
+
+  return (
+    <div className="award-wrap">
+      <div className={'award-list' + (listVisible ? '' : ' hidden')}>
+        <ul>
+          <li
+            onClick={() => {
+              setListVisible(false);
+              onAward('winner');
+            }}>
+            {transI18n('widget_selector.award_winner')}
+          </li>
+          <li
+            onClick={() => {
+              setListVisible(false);
+              onAward('all');
+            }}>
+            {transI18n('widget_selector.award_all')}
+          </li>
+        </ul>
+      </div>
+      <Button
+        onClick={() => {
+          setListVisible(!listVisible);
+        }}>
+        <div className="flex justify-center">
+          <span
+            style={{
+              display: 'inline-block',
+              height: 24,
+              width: 24,
+              backgroundImage: `url(${awardSvg})`,
+            }}
+          />
+          {children}
+        </div>
+      </Button>
+    </div>
+  );
+};
 
 export default App;

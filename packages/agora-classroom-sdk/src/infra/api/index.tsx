@@ -248,3 +248,4 @@ export class AgoraEduSDK {
 }
 
 export * from './declare';
+export { EduClassroomUIStore } from '../stores/common';

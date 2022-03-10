@@ -167,7 +167,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @action.bound
   handleCabinetItem(id: string) {
-    // const { launchApp } = this.classroomStore.extAppStore;
     const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
       case 'screenShare':
