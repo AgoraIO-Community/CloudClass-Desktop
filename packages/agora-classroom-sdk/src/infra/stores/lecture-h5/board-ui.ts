@@ -1,10 +1,7 @@
-import {
-  BoardUIStore,
-  EduClassroomStore,
-  EduShareUIStore,
-  getRootDimensions,
-} from 'agora-edu-core';
+import { EduClassroomStore } from 'agora-edu-core';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { BoardUIStore } from '../common/board-ui';
+import { EduShareUIStore } from '../common/share-ui';
 
 export class LectureH5BoardUIStore extends BoardUIStore {
   protected get uiOverrides() {

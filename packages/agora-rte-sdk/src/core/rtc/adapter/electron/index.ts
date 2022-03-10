@@ -128,11 +128,18 @@ export class RtcAdapterElectron extends RtcAdapterBase {
       res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region);
     }
 
-    if (res !== 0)
+    if (res !== 0) {
       RteErrorCenter.shared.handleThrowableError(
         AGRteErrorCode.RTC_ERR_RTC_ENGINE_INITIALZIE_FAILED,
         new Error(`rtc engine initialize failed ${res}`),
       );
+    }
+
+    if (AgoraRteEngineConfig.shared.rtcSDKParameters) {
+      AgoraRteEngineConfig.shared.rtcSDKParameters.forEach((parameter) => {
+        this.rtcEngine.setParameters(JSON.stringify(parameter));
+      });
+    }
 
     this._adm = new RtcAudioDeviceManagerElectron(this);
     this._vdm = new RtcVideoDeviceManagerElectron(this);

@@ -21,6 +21,14 @@ export const Docs = ({ size, fill }: DocsProps) => (
     </div>
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       <div className="svg-story-div">
+        <SvgImg type={'add-scene'} size={size} />
+        <p>add-scene</p>
+      </div>
+      <div className="svg-story-div">
+        <SvgImg type={'add-scene-active'} color="red" size={size} />
+        <p>add-scene-active</p>
+      </div>
+      <div className="svg-story-div">
         <SvgImg type={'arrow'} size={size} />
         <p>arrow</p>
       </div>

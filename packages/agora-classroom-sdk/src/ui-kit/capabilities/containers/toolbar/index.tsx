@@ -1,4 +1,4 @@
-import { ToolbarItemCategory } from 'agora-edu-core';
+import { ToolbarItemCategory } from '@/infra/stores/common/toolbar-ui';
 import { observer } from 'mobx-react';
 import { useStore } from '~hooks/use-edu-stores';
 import { Toolbar, ToolItem } from '~ui-kit';

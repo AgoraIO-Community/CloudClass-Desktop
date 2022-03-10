@@ -173,10 +173,6 @@ export class BoardStore extends EduStoreBase {
         this.addManagerEmitterListeners();
         this.updateScenesCount(this.room.state.sceneState.scenes.length);
 
-        if (manager.appManager?.mainViewProxy.context) {
-          //@ts-ignore
-          manager.appManager.mainViewProxy.context.manager = manager.appManager;
-        }
         //TODO: store this value somewhere
         manager.mainView.disableCameraTransform = true;
         // if (this.userRole === EduRoleTypeEnum.teacher) {
@@ -196,6 +192,7 @@ export class BoardStore extends EduStoreBase {
 
   unmount = () => {
     this._windowManager?.destroy();
+    this._windowManager = undefined;
     this._whiteBoardContainer = undefined;
   };
 

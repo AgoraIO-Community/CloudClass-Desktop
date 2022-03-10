@@ -8,7 +8,7 @@ export class ExtAppTrackAdapter implements TrackAdapter {
   @bound
   updateTrackState(trackId: string, trackData: TrackData) {
     const { size, ...data } = trackData;
-    this._classroomStore.extAppStore.updateExtappTrackState(trackId, data);
+    this._classroomStore.extensionAppStore.updateExtappTrackState(trackId, data);
   }
   @bound
   deleteTrackState(trackId: string) {
@@ -16,6 +16,6 @@ export class ExtAppTrackAdapter implements TrackAdapter {
   }
 
   get trackState(): TrackState {
-    return this._classroomStore.extAppStore.extappsTrackState;
+    return this._classroomStore.extensionAppStore.extappsTrackState;
   }
 }

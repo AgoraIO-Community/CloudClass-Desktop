@@ -31,9 +31,9 @@ import {
  */
 export class RoomStore extends EduStoreBase {
   private _cmdHandler = new CMDHandler({
-    fireExtAppDidUpdate: this.classroomStore.extAppStore.fireExtAppsDidUpdate,
-    fireWidgetsTrackStateChange: this.classroomStore.widgetStore.updateTrackState,
-    fireExtappsTrackStateChange: this.classroomStore.extAppStore.updateTrackState,
+    fireExtAppDidUpdate: () => {},
+    fireWidgetsTrackStateChange: this.classroomStore.extensionAppStore.updateTrackState,
+    fireExtappsTrackStateChange: () => {},
     getUserById: (userUuid: string) => {
       return this.classroomStore.userStore.users.get(userUuid);
     },
@@ -167,6 +167,10 @@ export class RoomStore extends EduStoreBase {
     this._cmdHandler.exec(operator, cause, roomProperties);
   }
 
+  private hanldeTimestampGapChange(timestamp: number) {
+    this._clientServerTimeShift = timestamp;
+  }
+
   @bound
   async startCarousel(params: { range: number; type: number; interval: number }) {
     try {
@@ -283,6 +287,7 @@ export class RoomStore extends EduStoreBase {
         (scene) => {
           if (scene) {
             scene.on(AgoraRteEventType.RoomPropertyUpdated, this.handleRoomPropertiesChange);
+            scene.on(AgoraRteEventType.TimeStampGapUpdate, this.hanldeTimestampGapChange);
           }
         },
       ),

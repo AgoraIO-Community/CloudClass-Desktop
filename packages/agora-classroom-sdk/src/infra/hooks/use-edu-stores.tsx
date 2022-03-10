@@ -1,6 +1,7 @@
-import { EduClassroomConfig, EduRoomTypeEnum, EduClassroomUIStore } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
 import React from 'react';
 import { EduContext } from '../contexts';
+import { EduClassroomUIStore } from '../stores/common';
 
 export const use1v1UIStores = () => React.useContext(EduContext.shared).oneToOneUI;
 export const useInteractiveUIStores = () => React.useContext(EduContext.shared).interactiveUI;

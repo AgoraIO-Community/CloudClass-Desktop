@@ -1,4 +1,4 @@
-import { CameraPlaceholderType, EduRoleTypeEnum, EduStream, EduStreamUI } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, { CSSProperties, FC, Fragment, ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
@@ -18,6 +18,8 @@ import {
 } from '~ui-kit';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
+import { EduStreamUI } from '@/infra/stores/common/stream/struct';
+import { CameraPlaceholderType } from '@/infra/stores/common/type';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {

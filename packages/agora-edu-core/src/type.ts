@@ -1,4 +1,3 @@
-import { SceneDefinition } from 'white-web-sdk';
 import { CloudDriveResourceConvertProgress } from './stores/domain/common/cloud-drive/type';
 
 export enum ClassroomState {
@@ -163,11 +162,4 @@ export enum AgoraEduClassroomEvent {
   ScreenShareStarted = 115, // 屏幕共享开始
   ScreenShareEnded = 116, // 屏幕共享结束
   BatchRewardReceived = 117, // 批量奖励
-}
-
-export type ConfirmDialogAction = 'ok' | 'cancel';
-
-export enum orientationEnum {
-  portrait = 'portrait',
-  landscape = 'landscape',
 }

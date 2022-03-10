@@ -40,9 +40,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
             key={item.id}
             onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
             {item.icon}
-            <span>
-              {['countdown'].includes(item.name) ? transI18n(`${item.name}.appName`) : item.name}
-            </span>
+            <span>{item.name}</span>
           </div>
         ))}
       </div>

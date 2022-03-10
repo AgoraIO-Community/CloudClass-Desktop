@@ -10,7 +10,6 @@ export enum WhiteboardTool {
   eraser,
   clicker,
   laserPointer,
-  blankPage,
   arrow,
   pentagram,
   rhombus,

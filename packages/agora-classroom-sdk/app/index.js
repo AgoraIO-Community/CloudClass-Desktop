@@ -5,6 +5,7 @@ const { ipcMain } = electron;
 
 const { crashReporter } = require('electron');
 
+const ShortcutCapture = require('electron-screenshots');
 // const bt = require('backtrace-node');
 
 // workaround for resizable issue in mac os
@@ -301,6 +302,51 @@ async function createWindow() {
   //     currentWindow.setFullScreen(!fullscreen);
   //   }
   // });
+
+  ipcMain.on('close', () => {
+    const currentWindow = BrowserWindow.getFocusedWindow() || mainWindow;
+    if (currentWindow === mainWindow) {
+      app.quit();
+      return;
+    }
+    currentWindow.close();
+  });
+
+  var shortcutCapture = new ShortcutCapture.default();
+  let isCapturing = false;
+  let stopScreen = () => {
+    mainWindow.show();
+    isCapturing = false;
+  };
+  shortcutCapture.on('ok', (e, { dataURL, viewer }) => {
+    mainWindow.webContents.send('shortcutCaptureDone', dataURL, viewer);
+    stopScreen();
+  });
+  shortcutCapture.on('finish', (e, { dataURL, viewer }) => {
+    mainWindow.webContents.send('shortcutCaptureDone', dataURL, viewer);
+    stopScreen();
+  });
+  shortcutCapture.on('cancel', (e) => {
+    stopScreen();
+  });
+  shortcutCapture.on('save', (e) => {
+    stopScreen();
+  });
+  const showScreenShot = (event) => {
+    if (shortcutCapture) {
+      shortcutCapture.startCapture();
+    }
+  };
+  ipcMain.on('shortcutcapture', (event, { hideWindow }) => {
+    if (!isCapturing) {
+      isCapturing = true;
+      hideWindow && mainWindow.hide();
+      if (!shortcutCapture) {
+        shortcutCapture = new ShortcutCapture.default();
+      }
+      showScreenShot(event);
+    }
+  });
 
   ipcMain.on('close', () => {
     const currentWindow = BrowserWindow.getFocusedWindow() || mainWindow;
