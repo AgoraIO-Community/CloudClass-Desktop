@@ -3,7 +3,7 @@ import {
   EduRoleTypeEnum,
   ExtensionStoreEach as ExtensionStore,
 } from 'agora-edu-core';
-import { action, autorun, computed, observable, reaction, runInAction } from 'mobx';
+import { action, autorun, computed, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
 const answerConfine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -260,7 +260,11 @@ export class PluginStore {
    */
   @computed
   get isShowAnswerBtn() {
-    return this.answerState === 1 && !this.isTeacherType;
+    return (
+      this.answerState === 1 &&
+      !this.isTeacherType &&
+      this.context.context.localUserInfo.roleType !== EduRoleTypeEnum.invisible
+    );
   }
 
   @computed

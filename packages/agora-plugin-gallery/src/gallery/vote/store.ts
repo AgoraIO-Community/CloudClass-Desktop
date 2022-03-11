@@ -217,4 +217,11 @@ export class PluginStore {
   get isShowVote() {
     return !this.isShowResultSection && this.stagePanel === 1 && !this.isTeacherType;
   }
+
+  @computed
+  get isShowVoteBtn() {
+    return (
+      this.isShowVote && this.context.context.localUserInfo.roleType !== EduRoleTypeEnum.invisible
+    );
+  }
 }
