@@ -307,7 +307,7 @@ export class AgoraRteScene extends EventEmitter {
           new Error('local user not exist'),
         );
       }
-
+      // put local user into data store as user in-out events may not receive in some types of scenes
       this.dataStore.setUser(this.localUser.userUuid, AgoraUser.fromData(this.localUser.toData()));
       //do not fire local user event from snapshot, as this has been done in entry api phase
       const users = Array.from(this.dataStore.users.values()).filter(

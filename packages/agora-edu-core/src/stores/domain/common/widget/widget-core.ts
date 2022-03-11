@@ -19,6 +19,7 @@ import {
   IAgoraExtensionApp,
   IAgoraExtensionRoomProperties,
 } from './type';
+import { dependencies } from './dependencies';
 
 export class ExtensionController {
   private roomUuid: string;
@@ -214,7 +215,7 @@ export class ExtensionAppStore extends EduStoreBase {
         setActive: this.setActive,
         setInactive: this.setInactive,
       },
-      dependencies: new Map(),
+      dependencies,
     };
     let extensionStoreObserver = new ExtensionStoreEach(context);
     this.extensionAppStore[extension.appIdentifier] = extensionStoreObserver;
