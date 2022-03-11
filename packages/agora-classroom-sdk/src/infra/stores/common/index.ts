@@ -53,7 +53,6 @@ export class EduClassroomUIStore {
     this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore);
     this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore);
     this._trackUIStore = new TrackUIStore(store, this.shareUIStore);
-    // this._extAppUIStore = new ExtAppUIStore(store, this.shareUIStore);
     this._extensionAppUIStore = new ExtensionAppUIStore(store, this.shareUIStore);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
   }

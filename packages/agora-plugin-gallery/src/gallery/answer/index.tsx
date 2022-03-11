@@ -1,4 +1,5 @@
 import 'promise-polyfill/src/polyfill';
+import React from 'react';
 import { autorun } from 'mobx';
 import { Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';

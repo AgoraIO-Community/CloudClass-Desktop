@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface IAgoraWidget {
   widgetId: string;
   widgetDidLoad(dom: Element, widgetProps: any, sendMsg?: any, onReceivedMsg?: any): void;

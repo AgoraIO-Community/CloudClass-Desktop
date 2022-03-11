@@ -92,30 +92,10 @@ export class AgoraRteSynchronizer {
         this.addTask({
           sequence,
         });
-
-        // const dataMessage = JSON.parse(message.text);
-
-        // const tasks = this.flatTasks(dataMessage);
-
-        // tasks.forEach((task) => this.addTask(task));
       } catch (e) {
         this.logger.error(`${(e as Error).message} original: ${message.text}`);
       }
     }
-  }
-
-  flatTasks(dataMessage: any) {
-    const isMessageBatching = Array.isArray(dataMessage);
-
-    const sequences: any[] = [];
-
-    if (isMessageBatching) {
-      sequences.concat(dataMessage);
-    } else {
-      sequences.concat([dataMessage]);
-    }
-
-    return sequences.map((sequence) => ({ sequence } as AgoraRteMessageHandleTask));
   }
 
   syncSnapshot(snapshot: AgoraRteSyncSnapshotData) {
@@ -258,10 +238,6 @@ export class AgoraRteSynchronizer {
         const tasks = list.slice(0, messageLength).map((m: any) => {
           return { sequence: m } as AgoraRteMessageHandleTask;
         });
-        // const tasks = list
-        //   .slice(0, messageLength)
-        //   .map((m: any) => this.flatTasks(m))
-        //   .flat() as AgoraRteMessageHandleTask[];
         this.prependTasks(tasks);
         success = true;
         this.logger.info(`gap resolved, new ${tasks.length} tasks prepended `);
