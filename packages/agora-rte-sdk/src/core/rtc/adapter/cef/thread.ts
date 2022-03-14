@@ -7,6 +7,7 @@ import { Log } from '../../../decorator/log';
 import { AgoraRteVideoSourceType } from '../../../media/track';
 import { Injectable } from '../../../decorator/type';
 import { AgoraRteEngineConfig } from '../../../../configs';
+import * as AgoraCEF from 'agora-cef-sdk';
 
 @Log.attach({ proxyMethods: false })
 export class AgoraRteCefCameraThread extends AgoraRteThread {
@@ -56,8 +57,8 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
                     resolve();
                   }
                 };
-                this._adapter.rtcEngine.on('localVideoStateChanged', callback);
-                this._adapter.rtcEngine.enableLocalVideo(true);
+                AgoraCEF.AgoraRtcEngine.on('localVideoStateChanged', callback);
+                AgoraCEF.AgoraRtcEngine.enableLocalVideo(true);
 
                 let { rtcConfigs } = AgoraRteEngineConfig.shared;
                 let { defaultCameraEncoderConfigurations } = rtcConfigs;
@@ -75,17 +76,17 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
                     }
                   : undefined;
                 if (encoderConfig) {
-                  this._adapter.rtcEngine.setVideoEncoderConfiguration(encoderConfig);
-                  this._adapter.rtcEngine.setVideoRenderFPS(encoderConfig.frameRate);
+                  AgoraCEF.AgoraRtcEngine.setVideoEncoderConfiguration(encoderConfig);
+                  AgoraCEF.AgoraRtcEngine.setVideoRenderFPS(encoderConfig.frameRate);
                 }
               });
             }
             this.setCameraTrackState(AgoraRteMediaSourceState.started);
-            callback && this._adapter.rtcEngine.off('localVideoStateChanged', callback);
+            callback && AgoraCEF.AgoraRtcEngine.off('localVideoStateChanged', callback);
             this.logger.debug(`camera started.`);
           } catch (e) {
             this.setCameraTrackState(AgoraRteMediaSourceState.error);
-            callback && this._adapter.rtcEngine.off('localVideoStateChanged', callback);
+            callback && AgoraCEF.AgoraRtcEngine.off('localVideoStateChanged', callback);
             break;
           }
         } else if (this.trackState !== AgoraRteMediaSourceState.started) {
@@ -94,14 +95,14 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
 
         if (this.trackState === AgoraRteMediaSourceState.started) {
           if (!this.currentCanvas && this.canvas) {
-            this._adapter.rtcEngine.setupLocalVideo(this.canvas.view);
+            AgoraCEF.AgoraRtcEngine.setupLocalVideo(this.canvas.view);
             this.currentCanvas = this.canvas;
           } else if (
             this.currentCanvas &&
             this.canvas &&
             this.canvas.view !== this.currentCanvas.view
           ) {
-            this._adapter.rtcEngine.setupLocalVideo(this.canvas.view);
+            AgoraCEF.AgoraRtcEngine.setupLocalVideo(this.canvas.view);
             this.currentCanvas = this.canvas;
           }
           if (this.currentCanvas && this.currentCanvas.view) {
@@ -114,7 +115,7 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
       } else {
         if (this.trackState !== AgoraRteMediaSourceState.stopped) {
           this.logger.debug(`stopping camera...`);
-          this._adapter.rtcEngine.enableLocalVideo(false);
+          AgoraCEF.AgoraRtcEngine.enableLocalVideo(false);
           if (this.currentCanvas && this.currentCanvas.view) {
             // this.currentCanvas.view.style.visibility = 'hidden';
           }

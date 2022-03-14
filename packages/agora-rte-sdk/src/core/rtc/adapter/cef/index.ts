@@ -361,42 +361,42 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
 
   private _addEventListeners() {
-    // this.rtcEngine.on('localVideoStateChanged', (state: any, reason: any) => {
-    //   this.logger.info(`[rtc] video state changed ${state} ${reason}`);
-    //   this.cameraThread.videoStreamState = state;
-    // });
-    // this.rtcEngine.on('localAudioStateChanged', (state: any) => {
-    //   if (state === 0) {
-    //     this.emit(
-    //       AgoraMediaControlEventType.localAudioTrackChanged,
-    //       AgoraRteMediaSourceState.stopped,
-    //       AgoraRteAudioSourceType.Mic,
-    //     );
-    //   }
-    //   if (state === 2 || state === 1) {
-    //     this.emit(
-    //       AgoraMediaControlEventType.localAudioTrackChanged,
-    //       AgoraRteMediaSourceState.started,
-    //       AgoraRteAudioSourceType.Mic,
-    //     );
-    //   }
-    // });
-    // this.rtcEngine.on(
-    //   'groupAudioVolumeIndication',
-    //   (speakers: { uid: number; volume: number; vad: number }[]) => {
-    //     let localRecordingVolume = speakers.find((s) => s.uid === 0);
-    //     let localPlaybackVolume = speakers.find((s) => s.uid === 1);
-    //     if (localRecordingVolume) {
-    //       this.emit(AgoraMediaControlEventType.localAudioVolume, localRecordingVolume.volume / 255);
-    //     }
-    //     if (localPlaybackVolume) {
-    //       this.emit(
-    //         AgoraMediaControlEventType.localAudioPlaybackVolumeIndicator,
-    //         localPlaybackVolume.volume / 255,
-    //       );
-    //     }
-    //   },
-    // );
+    AgoraCEF.AgoraRtcEngine.on('localVideoStateChanged', (state: any, reason: any) => {
+      this.logger.info(`[rtc] video state changed ${state} ${reason}`);
+      this.cameraThread.videoStreamState = state;
+    });
+    AgoraCEF.AgoraRtcEngine.on('localAudioStateChanged', (state: any) => {
+      if (state === 0) {
+        this.emit(
+          AgoraMediaControlEventType.localAudioTrackChanged,
+          AgoraRteMediaSourceState.stopped,
+          AgoraRteAudioSourceType.Mic,
+        );
+      }
+      if (state === 2 || state === 1) {
+        this.emit(
+          AgoraMediaControlEventType.localAudioTrackChanged,
+          AgoraRteMediaSourceState.started,
+          AgoraRteAudioSourceType.Mic,
+        );
+      }
+    });
+    AgoraCEF.AgoraRtcEngine.on(
+      'groupAudioVolumeIndication',
+      (speakers: { uid: number; volume: number; vad: number }[]) => {
+        let localRecordingVolume = speakers.find((s) => s.uid === 0);
+        let localPlaybackVolume = speakers.find((s) => s.uid === 1);
+        if (localRecordingVolume) {
+          this.emit(AgoraMediaControlEventType.localAudioVolume, localRecordingVolume.volume / 255);
+        }
+        if (localPlaybackVolume) {
+          this.emit(
+            AgoraMediaControlEventType.localAudioPlaybackVolumeIndicator,
+            localPlaybackVolume.volume / 255,
+          );
+        }
+      },
+    );
   }
 
   private updateRole() {
@@ -572,7 +572,7 @@ export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
   }
 
   private _addEventListeners() {
-    let rtcEngine = this.base.rtcEngine;
+    let rtcEngine = AgoraCEF.AgoraRtcEngine;
     rtcEngine.on('networkQuality', (uid: number, txquality: any, rxquality: any) => {
       if (uid === 0) {
         this._networkStats.downlinkNetworkQuality = rxquality;

@@ -75,9 +75,9 @@ export class RtcVideoDeviceManagerCef extends RtcVideoDeviceManagerBase {
 
   private _initializeDeviceList() {
     this.fetchDeviceList();
-    // this.adapter.rtcEngine.on('videoDeviceStateChanged', () => {
-    //   this.fetchDeviceList();
-    // });
+    AgoraCEF.AgoraRtcEngine.on('videoDeviceStateChanged', () => {
+      this.fetchDeviceList();
+    });
   }
 
   private fetchDeviceList() {
@@ -110,10 +110,10 @@ export class RtcAudioDeviceManagerCef extends RtcAudioDeviceManagerBase {
   _initializeDeviceList() {
     this._fetchRecordingDeviceList();
     // this._fetchPlaybackDeviceList();
-    // this.adapter.rtcEngine.on('audioDeviceStateChanged', () => {
-    //   this._fetchRecordingDeviceList();
-    //   // this._fetchPlaybackDeviceList();
-    // });
+    AgoraCEF.AgoraRtcEngine.on('audioDeviceStateChanged', () => {
+      this._fetchRecordingDeviceList();
+      // this._fetchPlaybackDeviceList();
+    });
   }
 
   onLocalAudioPlaybackTestVolumeChanged(cb: LocalAudioPlaybackVolumeIndicatorEvent): number {
@@ -203,7 +203,7 @@ export class RtcAudioDeviceManagerCef extends RtcAudioDeviceManagerBase {
   }
 
   private _fetchPlaybackDeviceList() {
-    let devices = this.adapter.rtcEngine.getAudioPlaybackDevices() as AGRtcDeviceInfo[];
+    let devices = AgoraCEF.AgoraRtcEngine.getAudioPlaybackDevices() as AGRtcDeviceInfo[];
     let newDevices: AGRtcDeviceInfo[] = [];
     this._playbackDeviceInfo.clear();
     this._playbackDeviceIds.clear();

@@ -52,6 +52,11 @@ export interface AGRtcDeviceInfo {
   devicename: string;
 }
 
+export interface AGRtcCefDeviceInfo {
+  deviceId: string;
+  deviceName: string;
+}
+
 export interface AGVideoEncoderConfigurations {
   width: number;
   height: number;
