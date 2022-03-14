@@ -1,21 +1,20 @@
 import 'promise-polyfill/src/polyfill';
 import React from 'react';
+import { autorun } from 'mobx';
+import { Provider } from 'mobx-react';
+import ReactDOM from 'react-dom';
 import {
   IAgoraExtensionApp,
   AgoraExtensionAppTypeEnum,
   ExtensionStoreEach as ExtensionStore,
   ExtensionController,
 } from 'agora-edu-core';
-import { Provider } from 'mobx-react';
-import ReactDOM from 'react-dom';
 import App from './app';
-import Clock from './Clock';
+import Clock from './clock';
 import { PluginStore } from './store';
 import './i18n/config';
 import { transI18n } from '~ui-kit';
 import { SELECTOR } from '../../constants';
-import { autorun } from 'mobx';
-
 export class AgoraSelector implements IAgoraExtensionApp {
   static store: PluginStore | null = null;
   appIdentifier = SELECTOR;

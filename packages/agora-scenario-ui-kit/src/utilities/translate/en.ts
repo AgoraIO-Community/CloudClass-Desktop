@@ -439,6 +439,7 @@ export const en = {
     role_student: 'Student',
     role_assistant: 'Assistant',
     role_audience: 'Audience',
+    role_observer: 'Observer',
     language: 'Language:',
     language_placeholder: 'Please choose language',
     duration: 'Duration',
@@ -503,6 +504,8 @@ export const en = {
       'The teacher has invited you on-stage，you can interact with others now',
     'teacher.revoke.onpodium': 'You are not on stage and cannot interact with others',
     'teacher.reward': 'Congratulations to {reason} for getting a star',
+    'teacher.reward2':
+      'Congratulations to {reason1} and {reason2} other students for getting a star',
     screen_permission_denied:
       'Before using screen sharing, please turn on the screenshot permission',
   },

@@ -33,6 +33,7 @@ export enum EduRoomTypeEnum {
  * teacher = 1，为老师
  * student = 2，为学生
  * assistant = 3，为助教
+ * observer = 4，为监课
  */
 export enum EduRoleTypeEnum {
   none = -1,
@@ -40,6 +41,7 @@ export enum EduRoleTypeEnum {
   teacher = 1,
   student = 2,
   assistant = 3,
+  observer = 4,
 }
 
 export interface EduSessionInfo {
@@ -159,4 +161,5 @@ export enum AgoraEduClassroomEvent {
   CaptureScreenPermissionDenied = 114, // 用户未授权屏幕共享
   ScreenShareStarted = 115, // 屏幕共享开始
   ScreenShareEnded = 116, // 屏幕共享结束
+  BatchRewardReceived = 117, // 批量奖励
 }

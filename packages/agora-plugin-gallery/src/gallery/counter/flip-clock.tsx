@@ -1,6 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import FlipCard from './FlipCard';
+import FlipCard from './flip-card';
 
 export const formatDiff = (duration: number) => {
   const formatedStr = dayjs.duration(duration, 'seconds').format('mm:ss');

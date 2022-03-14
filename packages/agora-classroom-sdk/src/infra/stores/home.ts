@@ -2,7 +2,7 @@ import { EduRegion } from 'agora-edu-core';
 import { autorun, observable, action, toJS } from 'mobx';
 import { LaunchOption } from '@/infra/api';
 import { GlobalStorage } from '../utils';
-import { ToastType } from './ui';
+import { ToastType } from './common/share-ui';
 
 export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   appId: string;

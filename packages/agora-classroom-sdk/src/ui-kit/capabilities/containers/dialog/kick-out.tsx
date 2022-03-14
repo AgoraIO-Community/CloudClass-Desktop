@@ -24,10 +24,10 @@ export const KickOut: React.FC<BaseDialogProps & { onOk: (ban: boolean) => void 
           removeDialog(id);
         }}
         footer={[
-          <Button type={'secondary'} action="cancel">
+          <Button key="cancel" type={'secondary'} action="cancel">
             {transI18n('toast.cancel')}
           </Button>,
-          <Button type={'primary'} action="ok">
+          <Button key="ok" type={'primary'} action="ok">
             {transI18n('toast.confirm')}
           </Button>,
         ]}>

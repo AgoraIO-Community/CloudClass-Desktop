@@ -3,7 +3,7 @@ import {
   EduRoleTypeEnum,
   ExtensionStoreEach as ExtensionStore,
 } from 'agora-edu-core';
-import { action, autorun, computed, observable, reaction } from 'mobx';
+import { action, autorun, computed, observable } from 'mobx';
 import { COUNTDOWN } from '../../constants';
 
 export class PluginStore {
@@ -15,7 +15,7 @@ export class PluginStore {
     this.controller = controller;
 
     autorun(() => {
-      if (this.context.context.localUserInfo.roleType !== EduRoleTypeEnum.teacher) {
+      if (!this.isController) {
         this.setShowSetting(false);
       }
     });
@@ -68,6 +68,8 @@ export class PluginStore {
 
   @computed
   get isController() {
-    return this.context.context.localUserInfo.roleType === EduRoleTypeEnum.teacher;
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      this.context.context.localUserInfo.roleType,
+    );
   }
 }

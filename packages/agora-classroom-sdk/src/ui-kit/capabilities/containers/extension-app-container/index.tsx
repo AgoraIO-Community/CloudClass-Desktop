@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 // import root from 'react-shadow';
 import { useStore } from '~hooks/use-edu-stores';
 import { ExtAppTrack } from '~containers/root-box';
-import { Modal } from '../ext-app/modal';
+import { Modal } from './modal';
 import { escapeExtAppIdentifier } from 'agora-edu-core';
 
 const UntrackExtApp = ({ minWidth, children }: any) => {

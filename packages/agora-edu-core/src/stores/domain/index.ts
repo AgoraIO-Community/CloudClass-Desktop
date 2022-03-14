@@ -25,15 +25,6 @@ export { BeautyType } from './common/media/type';
 export { ExtensionController, ExtensionStoreEach } from './common/widget/widget-core';
 export { DEVICE_DISABLE } from './common/media';
 
-export type {
-  AgoraExtAppContext,
-  IAgoraExtApp,
-  AgoraExtAppHandle,
-  AgoraExtAppUserInfo,
-  AgoraExtAppRoomInfo,
-  AgoraExtAppEventHandler,
-} from './common/ext-app/type';
-
 export { Track } from './common/track/struct';
 export type { Point, Dimensions, TrackContext, Margin, Offset } from './common/track/type';
 

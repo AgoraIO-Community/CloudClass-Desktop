@@ -1,8 +1,8 @@
+import { EduNavAction } from '@/infra/stores/common/nav-ui';
 import { observer } from 'mobx-react';
 import { useStore } from '~hooks/use-edu-stores';
 import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n } from '~ui-kit';
 import './index.css';
-import { EduNavAction } from 'agora-edu-core';
 
 export const ClassStatusComponent = observer(() => {
   const { navigationBarUIStore } = useStore();

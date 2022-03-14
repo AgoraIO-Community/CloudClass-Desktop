@@ -2,7 +2,6 @@ import { EduApiService } from '../../../services/api';
 import { BoardStore } from './board';
 import { CloudDriveStore } from './cloud-drive';
 import { ConnectionStore } from './connection';
-import { ExtAppStore } from './ext-app';
 import { ExtensionAppStore } from './widget/widget-core';
 import { RoomStore } from './room';
 import { StatisticsStore } from './statistics';
@@ -29,7 +28,6 @@ export class EduClassroomStore {
 
   readonly connectionStore: ConnectionStore = new ConnectionStore(this);
   readonly widgetStore: WidgetStore = new WidgetStore(this);
-  readonly extAppStore: ExtAppStore = new ExtAppStore(this);
   readonly extensionAppStore: ExtensionAppStore = new ExtensionAppStore(this);
   readonly boardStore: BoardStore = new BoardStore(this);
   readonly cloudDriveStore: CloudDriveStore = new CloudDriveStore(this);

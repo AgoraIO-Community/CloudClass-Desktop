@@ -8,7 +8,6 @@ import {
   EduLanguage,
   EduRtcConfig,
   EduMediaEncryptionMode,
-  IAgoraExtApp,
   EduEventCenter,
   AgoraEduClassroomEvent,
   IAgoraWidget,
@@ -63,7 +62,6 @@ export type LaunchOption = {
   duration: number; // 课程时长
   courseWareList: CourseWareList; // 课件列表
   recordUrl?: string; // 回放页地址
-  extApps?: IAgoraExtApp[]; // app插件
   widgets?: { [key: string]: IAgoraWidget };
   userFlexProperties?: { [key: string]: any }; //用户自订属性
   mediaOptions?: MediaOptions;
@@ -150,6 +148,7 @@ export class AgoraEduSDK {
         EduRoleTypeEnum.none,
         EduRoleTypeEnum.student,
         EduRoleTypeEnum.teacher,
+        EduRoleTypeEnum.observer,
       ].includes(option.roleType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roleType!');
@@ -210,10 +209,9 @@ export class AgoraEduSDK {
         },
       },
       {
-        chat: ChatFactory(AgoraEduSDK.region),
+        chat: ChatFactory(AgoraEduSDK.region) as IAgoraWidget,
         ...option.widgets,
       },
-      option.extApps,
       platform,
       i18nResources,
       option.extensions,
@@ -247,3 +245,4 @@ export class AgoraEduSDK {
 }
 
 export * from './declare';
+export { EduClassroomUIStore } from '../stores/common';

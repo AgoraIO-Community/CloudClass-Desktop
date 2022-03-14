@@ -3,7 +3,7 @@ import {
   EduRoleTypeEnum,
   ExtensionStoreEach as ExtensionStore,
 } from 'agora-edu-core';
-import { action, autorun, computed, observable, reaction, runInAction } from 'mobx';
+import { action, autorun, computed, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
 const answerConfine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -64,7 +64,9 @@ export class PluginStore {
 
   @action.bound
   setSelectedAnswers(value: string[]) {
-    if (this.context.roomProperties.extra.popupQuizId === this.context.userProperties.popupQuizId) {
+    if (
+      this.context.roomProperties?.extra?.popupQuizId === this.context.userProperties.popupQuizId
+    ) {
       this.selectedAnswers = value;
     } else {
       this.selectedAnswers = [];
@@ -132,6 +134,36 @@ export class PluginStore {
     this.selectedAnswers = [];
     this.localOptionPermission = false;
   }
+
+  @action.bound
+  async sendAward(type: 'winner' | 'all') {
+    const res = await this.getAnswerList(0, 10000);
+
+    const students = res.data.list as { isCorrect: boolean; ownerUserUuid: string }[];
+
+    if (!students.length) {
+      return;
+    }
+
+    let args: { userUuid: string; changeReward: number }[] = [];
+
+    if (type === 'winner') {
+      args = students
+        .filter(({ isCorrect }) => isCorrect)
+        .map(({ ownerUserUuid }) => {
+          return { userUuid: ownerUserUuid, changeReward: 1 };
+        });
+    } else {
+      args = students.map(({ ownerUserUuid }) => {
+        return { userUuid: ownerUserUuid, changeReward: 1 };
+      });
+    }
+
+    if (args.length > 0) {
+      this.controller.sendRewards(args);
+    }
+  }
+
   /**
    * 获取时间差
    */
@@ -159,6 +191,13 @@ export class PluginStore {
   }
 
   @computed
+  get isTeacherType() {
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
+      this.context.context.localUserInfo.roleType,
+    );
+  }
+
+  @computed
   get addBtnCls() {
     return this.answerList.length >= maxOptionsLength
       ? 'answer-btn visibility-hidden'
@@ -174,14 +213,14 @@ export class PluginStore {
 
   @computed
   get isInitinalSection() {
-    return this.answerState === 2 && this.isController;
+    return this.answerState === 2 && this.isTeacherType;
   }
 
   @computed
   get isShowSelectionSection() {
     return (
-      (this.answerState === 2 && this.isController) ||
-      (this.context.roomProperties.extra?.answerState === 1 && !this.isController)
+      (this.answerState === 2 && this.isTeacherType) ||
+      (this.context.roomProperties.extra?.answerState === 1 && !this.isTeacherType)
     );
   }
 
@@ -190,14 +229,25 @@ export class PluginStore {
     // 1.当前有控制权限并处于答题阶段
     // 2.没有控制权限，并且有popupQuizId代表已经答过题
     // 3.已经结束答题
-    if (this.answerState === 1 && this.isController) {
+    if (this.answerState === 1 && this.isTeacherType) {
       return true;
-    } else if (!this.isController && this.answerState === 0) {
+    } else if (!this.isTeacherType && this.answerState === 0) {
       return true;
     } else if (this.answerState === 0) {
       return true;
     }
     return false;
+  }
+
+  @computed
+  get isShowAwardButton() {
+    return (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        this.context.context.localUserInfo.roleType,
+      ) &&
+      this.isShowResultSection &&
+      this.answerState === 0
+    );
   }
 
   @computed
@@ -210,7 +260,11 @@ export class PluginStore {
    */
   @computed
   get isShowAnswerBtn() {
-    return this.answerState === 1 && !this.isController;
+    return (
+      this.answerState === 1 &&
+      !this.isTeacherType &&
+      this.context.context.localUserInfo.roleType !== EduRoleTypeEnum.invisible
+    );
   }
 
   @computed
@@ -241,7 +295,7 @@ export class PluginStore {
   @computed
   get optionPermissions() {
     let cls = '';
-    if (!this.isController && this.isAnswered && !this.localOptionPermission) {
+    if (!this.isTeacherType && this.isAnswered && !this.localOptionPermission) {
       cls = 'not-allowed';
     }
     return cls;
@@ -249,7 +303,7 @@ export class PluginStore {
 
   @computed
   get isShowResultDetail() {
-    return this.isController && this.answerState !== 2;
+    return this.isTeacherType && this.answerState !== 2;
   }
 
   @computed

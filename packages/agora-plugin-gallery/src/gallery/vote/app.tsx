@@ -57,7 +57,7 @@ const Title = observer(() => {
           </div>
         </>
       ) : (
-        <div className="vote-question">{pluginStore.title} </div>
+        <div className="vote-question break-all">{pluginStore.title} </div>
       )}
     </>
   );
@@ -130,7 +130,7 @@ const VoteBtns = observer(() => {
           {transI18n('widget_polling.over')}
         </Button>
       )}
-      {pluginStore.isShowVote && (
+      {pluginStore.isShowVoteBtn && (
         <Button
           type="primary"
           className="btn-rewrite-disabled"

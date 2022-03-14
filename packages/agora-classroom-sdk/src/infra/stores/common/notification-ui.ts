@@ -7,6 +7,7 @@ import {
   AgoraEduClassroomEvent,
   ClassroomState,
   ClassState,
+  EduClassroomConfig,
   EduEventCenter,
   LeaveReason,
 } from 'agora-edu-core';
@@ -82,7 +83,13 @@ export class NotificationUIStore extends EduUIStoreBase {
     EduEventCenter.shared.onClassroomEvents((event, ...args) => {
       // kick out
       if (event === AgoraEduClassroomEvent.KickOut) {
-        this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+        const user = args[0];
+
+        const { sessionInfo } = EduClassroomConfig.shared;
+
+        if (user.userUuid === sessionInfo.userUuid) {
+          this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+        }
       }
       // teacher turn on my mic
       if (event === AgoraEduClassroomEvent.TeacherTurnOnMyMic) {
@@ -117,8 +124,23 @@ export class NotificationUIStore extends EduUIStoreBase {
         this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.onpodium'));
       }
       // reward received
-      if (event === AgoraEduClassroomEvent.RewardReceived) {
-        this.shareUIStore.addToast(transI18n('toast2.teacher.reward', { reason: args }));
+      if (
+        event === AgoraEduClassroomEvent.RewardReceived ||
+        event === AgoraEduClassroomEvent.BatchRewardReceived
+      ) {
+        const [userNames] = args;
+        if (userNames.length > 3) {
+          this.shareUIStore.addToast(
+            transI18n('toast2.teacher.reward2', {
+              reason1: userNames.slice(0, 3).join(','),
+              reason2: userNames.length,
+            }),
+          );
+        } else {
+          this.shareUIStore.addToast(
+            transI18n('toast2.teacher.reward', { reason: userNames.join(',') }),
+          );
+        }
       }
       // capture screen permission denied received
       if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {

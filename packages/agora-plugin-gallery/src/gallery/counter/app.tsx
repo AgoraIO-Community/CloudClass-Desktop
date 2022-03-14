@@ -2,8 +2,8 @@ import React from 'react';
 import { usePluginStore, useTimeCounter } from './hooks';
 import { observer } from 'mobx-react';
 import { Button, Input, transI18n } from '~ui-kit';
-import FlipClock, { formatDiff } from './FlipClock';
-import { MaskCountDown } from './MaskCountDown';
+import FlipClock, { formatDiff } from './flip-clock';
+import { MaskCountDown } from './mask-count-down';
 import { autorun } from 'mobx';
 
 const App = observer(() => {
@@ -51,6 +51,7 @@ const App = observer(() => {
             );
           setDuration(duration);
           play();
+          pluginStore.setShowSetting(false);
         }
       }
       if (
@@ -58,6 +59,7 @@ const App = observer(() => {
         !pluginStore.context.roomProperties.extra.state
       ) {
         reset();
+        pluginStore.setShowSetting(true && pluginStore.isController);
       }
     });
   }, []);

@@ -36,7 +36,8 @@ export const Chat = () => {
   const configUIVisible = _.get(state, 'configUIVisible');
   const isTabKey = state?.isTabKey;
   // 直接在 propsData 中取值
-  const isTeacher = roleType === ROLE.teacher.id || roleType === ROLE.assistant.id;
+  const isTeacher =
+    roleType === ROLE.teacher.id || roleType === ROLE.assistant.id || roleType === ROLE.observer.id;
   useEffect(() => {
     // 加载成员信息
     let _speakerTeacher = [];

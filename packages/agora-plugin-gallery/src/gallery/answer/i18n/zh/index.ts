@@ -13,6 +13,9 @@ const selector_zh = {
     'answer-time': '答题用时',
     'selected-answer': '所选答案',
     restart: '重新开始',
+    award: '奖励',
+    award_winner: '奖励答对学生',
+    award_all: '奖励参与学生',
   },
 };
 

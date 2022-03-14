@@ -167,7 +167,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @action.bound
   handleCabinetItem(id: string) {
-    // const { launchApp } = this.classroomStore.extAppStore;
     const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
       case 'screenShare':
@@ -354,14 +353,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed get tools(): ToolbarItem[] {
     const { sessionInfo } = EduClassroomConfig.shared;
-    const assistantTools = this.teacherTools.filter((tools) => {
-      return tools.category !== ToolbarItemCategory.Cabinet;
-    });
 
-    return sessionInfo.role === EduRoleTypeEnum.teacher
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(sessionInfo.role)
       ? this.teacherTools
-      : sessionInfo.role === EduRoleTypeEnum.assistant
-      ? assistantTools
       : this.studentTools;
   }
 

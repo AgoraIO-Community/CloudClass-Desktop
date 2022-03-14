@@ -80,6 +80,7 @@ export const Home: React.FC<HomeProps> = ({
     { label: transI18n('home.role_student'), value: 'student' },
     { label: transI18n('home.role_assistant'), value: 'assistant' },
     { label: transI18n('home.role_audience'), value: 'incognito' },
+    { label: transI18n('home.role_observer'), value: 'observer' },
   ];
   const languageOptions = [
     { label: '中文', value: 'zh' },

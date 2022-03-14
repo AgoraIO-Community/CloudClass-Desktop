@@ -216,12 +216,19 @@ export class RoomStore extends EduStoreBase {
   }
 
   @bound
-  async sendRewards(roomUuid: string, rewards: { userUuid: string; changeReward: number }[]) {
+  async sendRewards(
+    roomUuid: string,
+    rewards: { userUuid: string; changeReward: number }[],
+    isBatch?: boolean,
+  ) {
     try {
-      await this.api.sendRewards({
-        roomUuid,
-        rewards: rewards,
-      });
+      await this.api.sendRewards(
+        {
+          roomUuid,
+          rewards: rewards,
+        },
+        isBatch,
+      );
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_SEND_STAR_FAIL,

@@ -1,5 +1,4 @@
-import { EduRoleTypeEnum } from 'agora-edu-core';
-import { AgoraEduClassroomEvent } from 'agora-edu-core';
+import { EduRoleTypeEnum, AgoraEduClassroomEvent } from 'agora-edu-core';
 
 export type AgoraRegion = Uppercase<AgoraRegionString>;
 
