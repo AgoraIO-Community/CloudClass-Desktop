@@ -113,6 +113,13 @@ export class RtcAdapterCef extends RtcAdapterBase {
 
     const res = AgoraCEF.AgoraRtcEngine.initialize(this.rtcEngine);
 
+    this.init();
+    AgoraCEF.AgoraRtcEngine.setChannelProfile(1);
+    AgoraCEF.AgoraRtcEngine.enableVideo();
+    AgoraCEF.AgoraRtcEngine.enableAudio();
+    AgoraCEF.AgoraRtcEngine.enableWebSdkInteroperability(true);
+    AgoraCEF.AgoraRtcEngine.enableAudioVolumeIndication(1000, 3, true);
+
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
         AGRteErrorCode.RTC_ERR_RTC_ENGINE_INITIALZIE_FAILED,
@@ -124,6 +131,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
     this.cameraThread = new AgoraRteCefCameraThread(this);
     this._addEventListeners();
   }
+  init() {}
   createRtcChannel(channelName: string, base: RtcAdapterBase): RtcChannelAdapterBase {
     let channel = this._channels.get(channelName);
     if (!channel) {
@@ -174,10 +182,10 @@ export class RtcAdapterCef extends RtcAdapterBase {
     return true;
   }
   setVideoCameraDevice(deviceId: string): number {
-    return this.rtcEngine.setVideoDevice(deviceId);
+    return AgoraCEF.AgoraRtcEngine.videoDeviceManager.setDevice(deviceId);
   }
   setAudioRecordingDevice(deviceId: string): number {
-    return this.rtcEngine.setAudioRecordingDevice(deviceId);
+    return AgoraCEF.AgoraRtcEngine.audioDeviceManager.setRecordingDevice(deviceId);
   }
   setAudioPlaybackDevice(deviceId: string): number {
     return this.rtcEngine.setAudioPlaybackDevice(deviceId);
@@ -192,7 +200,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
   enableLocalAudio(enable: boolean): number {
     this._localAudioEnabled = enable;
     this.updateRole();
-    return this.rtcEngine.enableLocalAudio(enable);
+    return AgoraCEF.AgoraRtcEngine.enableLocalAudio(enable);
   }
   setupLocalVideo(canvas: AgoraRtcVideoCanvas, videoSourceType: AgoraRteVideoSourceType): number {
     if (videoSourceType === AgoraRteVideoSourceType.Camera) {
@@ -216,37 +224,39 @@ export class RtcAdapterCef extends RtcAdapterBase {
     return AgoraCEF.AgoraRtcEngine.audioDeviceManager.startRecordingDeviceTest(indicateInterval);
   }
   stopAudioRecordingDeviceTest(): number {
-    return this.rtcEngine.stopAudioRecordingDeviceTest();
+    return AgoraCEF.AgoraRtcEngine.audioDeviceManager.stopRecordingDeviceTest();
   }
   startAudioPlaybackDeviceTest(url: string): number {
-    return this.rtcEngine.startAudioPlaybackDeviceTest(url);
+    // return this.rtcEngine.startAudioPlaybackDeviceTest(url);
+    return 0;
   }
   stopAudioPlaybackDeviceTest(): number {
-    return this.rtcEngine.stopAudioPlaybackDeviceTest();
+    // return this.rtcEngine.stopAudioPlaybackDeviceTest();
+    return 0;
   }
   startScreenCapture(id?: string, type?: AGScreenShareType): number {
-    this.rtcEngine.videoSourceInitialize(AgoraRteEngineConfig.shared.appId);
-    if (id !== undefined) {
-      this.screenShareId = id;
-      this.screenShareType = type;
+    // this.rtcEngine.videoSourceInitialize(AgoraRteEngineConfig.shared.appId);
+    // if (id !== undefined) {
+    //   this.screenShareId = id;
+    //   this.screenShareType = type;
 
-      this._screenEventBus.emit(
-        AgoraMediaControlEventType.trackStateChanged,
-        AgoraRteMediaSourceState.started,
-        AgoraRteVideoSourceType.ScreenShare,
-      );
-    }
+    //   this._screenEventBus.emit(
+    //     AgoraMediaControlEventType.trackStateChanged,
+    //     AgoraRteMediaSourceState.started,
+    //     AgoraRteVideoSourceType.ScreenShare,
+    //   );
+    // }
     return 0;
   }
   stopScreenCapture(): number {
-    this.screenShareId = undefined;
-    this.screenShareType = undefined;
-    this.rtcEngine.stopScreenCapture2();
-    this._screenEventBus.emit(
-      AgoraMediaControlEventType.trackStateChanged,
-      AgoraRteMediaSourceState.stopped,
-      AgoraRteVideoSourceType.ScreenShare,
-    );
+    // this.screenShareId = undefined;
+    // this.screenShareType = undefined;
+    // this.rtcEngine.stopScreenCapture2();
+    // this._screenEventBus.emit(
+    //   AgoraMediaControlEventType.trackStateChanged,
+    //   AgoraRteMediaSourceState.stopped,
+    //   AgoraRteVideoSourceType.ScreenShare,
+    // );
     return 0;
   }
   onLocalAudioPlaybackTestVolumeChanged(cb: LocalAudioPlaybackVolumeIndicatorEvent): number {

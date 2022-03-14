@@ -1,6 +1,6 @@
 import { RtcAdapterCef } from '.';
 import { AgoraMediaControlEventType } from '../../../media/control';
-import { AGRtcDeviceInfo } from '../../type';
+import { AGRtcCefDeviceInfo, AGRtcDeviceInfo } from '../../type';
 import {
   LocalAudioPlaybackVolumeIndicatorEvent,
   LocalAudioTrackStateEvent,
@@ -9,6 +9,19 @@ import {
   RtcVideoDeviceManagerBase,
 } from '../base';
 import * as AgoraCEF from 'agora-cef-sdk';
+
+const formatCefDeviceInfoArr2AGRtcDeviceInfoArr = (
+  originCef: AGRtcCefDeviceInfo[],
+): AGRtcDeviceInfo[] => {
+  const result: AGRtcDeviceInfo[] = [];
+  originCef.forEach((info) => {
+    result.push({
+      deviceid: info.deviceId,
+      devicename: info.deviceName,
+    });
+  });
+  return result;
+};
 
 export class RtcVideoDeviceManagerCef extends RtcVideoDeviceManagerBase {
   private _deviceInfo: Map<string, AGRtcDeviceInfo> = new Map<string, AGRtcDeviceInfo>();
@@ -68,8 +81,9 @@ export class RtcVideoDeviceManagerCef extends RtcVideoDeviceManagerBase {
   }
 
   private fetchDeviceList() {
-    let devices =
-      AgoraCEF.AgoraRtcEngine.videoDeviceManager.enumerateVideoDevices() as AGRtcDeviceInfo[];
+    let devices = formatCefDeviceInfoArr2AGRtcDeviceInfoArr(
+      AgoraCEF.AgoraRtcEngine.videoDeviceManager.enumerateVideoDevices(),
+    ) as AGRtcDeviceInfo[];
     let newDevices: AGRtcDeviceInfo[] = [];
     this._deviceIds.clear();
     this._deviceInfo.clear();
@@ -202,8 +216,9 @@ export class RtcAudioDeviceManagerCef extends RtcAudioDeviceManagerBase {
   }
 
   private _fetchRecordingDeviceList() {
-    let devices =
-      AgoraCEF.AgoraRtcEngine.audioDeviceManager.enumerateRecordingDevices() as AGRtcDeviceInfo[];
+    let devices = formatCefDeviceInfoArr2AGRtcDeviceInfoArr(
+      AgoraCEF.AgoraRtcEngine.audioDeviceManager.enumerateRecordingDevices(),
+    ) as AGRtcDeviceInfo[];
     let newDevices: AGRtcDeviceInfo[] = [];
     this._recordingDeviceInfo.clear();
     this._recordingDeviceIds.clear();
