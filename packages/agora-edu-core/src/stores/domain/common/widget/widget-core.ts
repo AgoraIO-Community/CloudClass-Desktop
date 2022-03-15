@@ -306,8 +306,12 @@ export class ExtensionAppStore extends EduStoreBase {
     let activedAppIds: string[] = [];
     forEach(this.extensionAppStore, (app: ExtensionStoreEach, appId: string) => {
       if (typeof app.localState !== 'undefined') {
-        // 如果有本地状态那么以本地状态为准
-        app.localState && activedAppIds.push(appId);
+        // 如果有本地状态那么需要判断远程状态和本地状态
+        if (app.roomProperties.state) {
+          activedAppIds.push(appId);
+        } else {
+          app.localState && activedAppIds.push(appId);
+        }
       } else {
         app.roomProperties.state && activedAppIds.push(appId);
       }
