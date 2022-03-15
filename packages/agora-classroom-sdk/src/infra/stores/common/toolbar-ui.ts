@@ -64,7 +64,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
     '#9b9b9b',
     '#4a4a4a',
     '#000000',
-    '#fc3a3f',
+    '#d0021b',
     '#f5a623',
     '#f8e71c',
     '#7ed321',

@@ -40,9 +40,9 @@ import get from 'lodash/get';
 import { AgoraEduClassroomEvent } from '../../../..';
 
 const DEFAULT_COLOR: Color = {
-  r: 252,
-  g: 58,
-  b: 63,
+  r: 208,
+  g: 2,
+  b: 27,
 };
 
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
