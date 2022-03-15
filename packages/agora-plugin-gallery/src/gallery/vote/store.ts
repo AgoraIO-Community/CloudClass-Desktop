@@ -3,6 +3,7 @@ import {
   EduRoleTypeEnum,
   ExtensionStoreEach as ExtensionStore,
 } from 'agora-edu-core';
+import { Toast } from '~ui-kit';
 import { action, autorun, computed, observable, runInAction } from 'mobx';
 
 // 2 为老师或者助教出题阶段 只可老师或者助教可见
@@ -91,9 +92,21 @@ export class PluginStore {
   handleSubmitVote() {
     const userUuid = this.context.context.localUserInfo.userUuid;
     const selectedIndexs = this.selectedIndexs;
-    this.controller.submitResult(this.context.roomProperties.extra.pollId, userUuid, {
-      selectIndex: selectedIndexs,
-    });
+    this.controller
+      .submitResult(this.context.roomProperties.extra.pollId, userUuid, {
+        selectIndex: selectedIndexs,
+      })
+      .then((res) => {
+        const data = res.data;
+        this.context.setUserProperties({ pollId: data?.pollId });
+      })
+      .catch((e) => {
+        Toast.show({
+          type: 'error',
+          text: JSON.stringify(e),
+          closeToast: () => {},
+        });
+      });
   }
 
   /**
@@ -193,11 +206,8 @@ export class PluginStore {
   @computed
   get isShowResultSection() {
     // 1.当前有控制权限并处于答题阶段
-    // 2.没有控制权限，并且有pollId代表已经答过题
-    // 3.已经结束答题
-    if (this.stagePanel === 1 && this.isTeacherType) {
-      return true;
-    } else if (!this.isTeacherType && this.context.userProperties.pollId) {
+    // 2.已经结束答题
+    if (this.stagePanel === 1 && this.isController) {
       return true;
     } else if (this.stagePanel === 0) {
       return true;
@@ -223,5 +233,10 @@ export class PluginStore {
     return (
       this.isShowVote && this.context.context.localUserInfo.roleType !== EduRoleTypeEnum.invisible
     );
+  }
+
+  @computed
+  get visibleVote() {
+    return this.isShowVote && this.context.userProperties?.pollId;
   }
 }

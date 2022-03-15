@@ -134,7 +134,7 @@ const VoteBtns = observer(() => {
         <Button
           type="primary"
           className="btn-rewrite-disabled"
-          disabled={!pluginStore.selectedOptions.length}
+          disabled={!pluginStore.selectedOptions.length || pluginStore.visibleVote}
           onClick={pluginStore.handleSubmitVote}>
           {transI18n('widget_polling.submit')}
         </Button>
@@ -174,7 +174,7 @@ const ResultSection = observer(() => {
 
 const SelectionSection = observer(() => {
   const pluginStore = usePluginStore();
-  const { type, options, selectedOptions, hanldeSelectedOptions } = pluginStore;
+  const { type, options, selectedOptions, visibleVote, hanldeSelectedOptions } = pluginStore;
 
   return (
     <>
@@ -188,6 +188,7 @@ const SelectionSection = observer(() => {
                 name="vote-selection"
                 onChange={hanldeSelectedOptions}
                 value={option}
+                disabled={visibleVote}
                 checked={selectedOptions.includes(option)}
               />
             ) : (
@@ -195,6 +196,7 @@ const SelectionSection = observer(() => {
                 id={option}
                 onChange={hanldeSelectedOptions}
                 value={option}
+                disabled={visibleVote}
                 checked={selectedOptions.includes(option)}
               />
             )}

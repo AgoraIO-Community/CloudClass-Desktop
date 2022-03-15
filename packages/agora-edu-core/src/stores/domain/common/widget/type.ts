@@ -73,7 +73,7 @@ enum AgoraWidgetContextMethodsEnum {
 }
 
 export type AgoraExtensionAppContext = {
-  dependencies: Map<string, any>;
+  // dependencies: Map<string, any>;
   localUserInfo: AgoraExtensionAppUserInfo;
   roomInfo: AgoraExtensionAppRoomInfo;
   language: string;
