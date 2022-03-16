@@ -264,14 +264,21 @@ export class EduApiService extends ApiBase {
     return res.data;
   }
 
-  async sendRewards(params: {
-    roomUuid: string;
-    rewards: Array<{
-      userUuid: string;
-      changeReward: number;
-    }>;
-  }) {
-    const apiVersion = EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired ? 'v2' : 'v3';
+  async sendRewards(
+    params: {
+      roomUuid: string;
+      rewards: Array<{
+        userUuid: string;
+        changeReward: number;
+      }>;
+    },
+    isBatch?: boolean,
+  ) {
+    const apiVersion = EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired
+      ? 'v2'
+      : isBatch
+      ? 'v4'
+      : 'v3';
     const res = await this.fetch({
       path: `/${apiVersion}/rooms/${params.roomUuid}/rewards`,
       method: 'POST',
@@ -474,6 +481,175 @@ export class EduApiService extends ApiBase {
     return {
       data,
     };
+  }
+  /**
+   * 移除 extra 中的属性
+   * @param roomUuid
+   * @param widgetUuid
+   * @param body
+   * @returns
+   */
+  async removeWidgetExtraProperties(roomUuid: string, widgetUuid: string, body: any) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/${widgetUuid}/extra`,
+      method: 'DELETE',
+      data: body,
+    });
+    return {
+      data,
+    };
+  }
+
+  /**
+   * 设置用户 widget 属性
+   * @param roomUuid
+   * @param widgetUuid
+   * @param userUuid
+   * @param body
+   * @returns
+   */
+  async setWidgetUserProperties(roomUuid: string, widgetUuid: string, userUuid: string, body: any) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/${widgetUuid}/users/${userUuid}`,
+      method: 'PUT',
+      data: body,
+    });
+    return {
+      data,
+    };
+  }
+
+  /**
+   * 移除用户 widget 属性
+   * @param roomUuid
+   * @param widgetUuid
+   * @param userUuid
+   * @param body
+   * @returns
+   */
+  async removeWidgetUserProperties(
+    roomUuid: string,
+    widgetUuid: string,
+    userUuid: string,
+    body: any,
+  ) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/${widgetUuid}/users/${userUuid}`,
+      method: 'DELETE',
+      data: body,
+    });
+    return {
+      data,
+    };
+  }
+
+  /**
+   * 开启选择题
+   * @param roomUuid
+   * @param body
+   * @returns
+   */
+  async startAnswer(roomUuid: string, body: any) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/popupQuizs/start`,
+      method: 'POST',
+      data: body,
+    });
+    return { data };
+  }
+
+  /**
+   * 停止选择
+   * @param roomUuid
+   * @param body
+   * @returns
+   */
+  async stopAnswer(roomUuid: string, popupQuizId: string) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/popupQuizs/${popupQuizId}/stop`,
+      method: 'POST',
+    });
+    return { data };
+  }
+
+  /**
+   * 获取答题列表
+   * @param roomUuid
+   * @param body
+   * @returns
+   */
+  async getAnswerList(
+    roomUuid: string,
+    popupQuizId: string,
+    query: { nextId: number; count: number },
+  ) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/popupQuizs/${popupQuizId}/users`,
+      method: 'GET',
+      query,
+    });
+    return { data };
+  }
+
+  /**
+   * 提交答案
+   * @param roomUuid
+   * @param body
+   * @returns
+   */
+  async submitAnswer(roomUuid: string, popupQuizId: string, userUuid: string, body: any) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/popupQuizs/${popupQuizId}/users/${userUuid}`,
+      method: 'PUT',
+      data: body,
+    });
+    return { data };
+  }
+
+  /**
+   * 开启投票
+   * @param roomUuid
+   * @param body
+   * @returns
+   */
+  async startPolling(roomUuid: string, body: any) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/polls/start`,
+      method: 'POST',
+      data: body,
+    });
+    return { data };
+  }
+
+  /**
+   * 投票
+   * @param roomUuid
+   * @param pollId 投票id
+   * @param userUuid 用户ID
+   * @param body
+   * @returns
+   */
+  async submitResult(roomUuid: string, pollId: string, userUuid: string, body: any) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/polls/${pollId}/users/${userUuid}`,
+      method: 'POST',
+      data: body,
+    });
+    return { data };
+  }
+
+  /**
+   * 结束投票
+   * @param roomUuid
+   * @param pollId
+   * @returns
+   */
+  async stopPolling(roomUuid: string, pollId: string) {
+    let { data } = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/polls/${pollId}/stop`,
+      method: 'POST',
+    });
+    return { data };
   }
 
   async updateExtAppProperties(

@@ -12,7 +12,8 @@ import { HomeApi } from './home-api';
 import { v4 as uuidv4 } from 'uuid';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import { ToastType } from '@/infra/stores/ui';
+import MD5 from 'js-md5';
+import { ToastType } from '@/infra/stores/common/share-ui';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -31,13 +32,15 @@ const regionByLang = {
 export const HomePage = observer(() => {
   const homeStore = useHomeStore();
 
+  const launchConfig = homeStore.launchConfig;
+
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
-  const [roomName, setRoomName] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
-  const [userRole, setRole] = useState<string>('');
-  const [curScenario, setScenario] = useState<string>('');
-  const [duration, setDuration] = useState<number>(30);
+  const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
+  const [userName, setUserName] = useState<string>(launchConfig.userName || '');
+  const [userRole, setRole] = useState<string>(launchConfig.userRole || '');
+  const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
+  const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
   const [language, setLanguage] = useState<string>('');
   const [region, setRegion] = useState<EduRegion>(EduRegion.CN);
   const [debug, setDebug] = useState<boolean>(false);
@@ -70,6 +73,7 @@ export const HomePage = observer(() => {
       assistant: EduRoleTypeEnum.assistant,
       student: EduRoleTypeEnum.student,
       incognito: EduRoleTypeEnum.invisible,
+      observer: EduRoleTypeEnum.observer,
     };
     return roles[userRole];
   }, [userRole]);
@@ -85,7 +89,7 @@ export const HomePage = observer(() => {
 
   const userUuid = useMemo(() => {
     if (!debug) {
-      return `${userName}${role}`;
+      return `${MD5(userName)}${role}`;
     }
     return `${userId}`;
   }, [role, userName, debug, userId]);
@@ -231,6 +235,8 @@ export const HomePage = observer(() => {
               region,
               duration: duration * 60,
               latencyLevel: 2,
+              userRole,
+              curScenario,
             };
 
             config.appId = REACT_APP_AGORA_APP_ID || config.appId;

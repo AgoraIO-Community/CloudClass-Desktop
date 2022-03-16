@@ -1,19 +1,25 @@
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
+import { FC } from 'react';
 import { WhiteboardContainer } from '~containers/board';
 import { DialogContainer } from '~containers/dialog';
 import { LoadingContainer } from '~containers/loading';
 import { NavigationBarContainer } from '~containers/nav';
-import { Aside, Content, Layout } from '~components/layout';
+import { Aside, Layout } from '~components/layout';
 import { ScreenShareContainer } from '~containers/screen-share';
 import { Room1v1StreamsContainer } from '~containers/stream/room-1v1-player';
 import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import Room from '../room';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
-import { ExtAppContainer } from '~containers/ext-app';
+import { ExtensionAppContainer } from '~containers/extension-app-container';
+
 import { ToastContainer } from '~containers/toast';
 import { CollectorContainer } from '~containers/board';
 import AkasuoLogo from './akasuo-logo';
+
+const Content: FC = ({ children }) => {
+  return <div className="flex-grow">{children}</div>;
+};
 
 export const OneToOneScenario = observer(() => {
   const layoutCls = classnames('edu-room');
@@ -41,7 +47,8 @@ export const OneToOneScenario = observer(() => {
           <DialogContainer />
           <LoadingContainer />
         </Layout>
-        <ExtAppContainer />
+        {/* <ExtAppContainer /> */}
+        <ExtensionAppContainer />
         <ToastContainer />
       </FixedAspectRatioRootBox>
     </Room>

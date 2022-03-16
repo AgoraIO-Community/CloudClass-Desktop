@@ -33,6 +33,8 @@ export class Logger {
     Logger.log(AgoraRteLogLevel.ERROR, ...args);
   }
 
+  static originConsole = window.console;
+
   private static log(logLevel: AgoraRteLogLevel, ...args: any[]) {
     const globalLogLevel = AgoraRteEngineConfig.logLevel;
 
@@ -47,26 +49,26 @@ export class Logger {
     const pattern: { [key: string]: any } = {
       [`${AgoraRteLogLevel.WARN}`]: {
         call: () => {
-          loggerArgs = [prefix, ...args] as any;
-          (console as any).warn.apply(console, loggerArgs);
+          loggerArgs = [prefix, ...args];
+          console.warn.apply(console, loggerArgs);
         },
       },
       [`${AgoraRteLogLevel.DEBUG}`]: {
         call: () => {
-          loggerArgs = [prefix, ...args] as any;
-          (console as any).debug.apply(console, loggerArgs);
+          loggerArgs = [prefix, ...args];
+          console.debug.apply(console, loggerArgs);
         },
       },
       [`${AgoraRteLogLevel.INFO}`]: {
         call: () => {
-          loggerArgs = [prefix, ...args] as any;
-          (console as any).info.apply(console, loggerArgs);
+          loggerArgs = [prefix, ...args];
+          console.info.apply(console, loggerArgs);
         },
       },
       [`${AgoraRteLogLevel.ERROR}`]: {
         call: () => {
-          loggerArgs = [prefix, ...args] as any;
-          (console as any).error.apply(console, loggerArgs);
+          loggerArgs = [prefix, ...args];
+          console.error.apply(console, loggerArgs);
         },
       },
     };
@@ -81,9 +83,13 @@ export class Logger {
     }
   }
 
-  static originConsole = window.console;
-
   static setupConsoleHijack() {
+    const console = { ...Logger.originConsole };
+    //@ts-ignore
+    if (console.__hijackSetup) {
+      console.log('[logger] hijack already setup!');
+      return;
+    }
     console.log(`[logger] setup hijack..`);
     const thread = this.logger.thread as any;
 
@@ -113,7 +119,16 @@ export class Logger {
         console[method] = proxy(console, console[method]);
       });
     //@ts-ignore
+    console.__hijackSetup = true;
     window.console = console;
+  }
+
+  static restoreConsoleHijack() {
+    console.log(`[logger] restore hijack..`);
+
+    window.console = Logger.originConsole;
+    //@ts-ignore
+    console.__hijackSetup = false;
   }
 
   async collectConsoleLogs(): Promise<File> {

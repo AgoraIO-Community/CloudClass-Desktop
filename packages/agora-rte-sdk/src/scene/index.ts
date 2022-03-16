@@ -73,6 +73,8 @@ export class AgoraRteScene extends EventEmitter {
   private _rtmChannelObserver: EventEmitter;
   private _synchronizer?: AgoraRteSynchronizer;
 
+  private _timestampGap: number = 0;
+
   public createTs?: number;
 
   constructor(sceneId: string, options: SceneObjects) {
@@ -111,6 +113,10 @@ export class AgoraRteScene extends EventEmitter {
 
   get rtmSid() {
     return this._rtmManager.sessionId;
+  }
+
+  get timestampServerLocalGap() {
+    return this._timestampGap;
   }
 
   async joinScene(options: AgoraRteSceneJoinOptions) {
@@ -301,7 +307,8 @@ export class AgoraRteScene extends EventEmitter {
           new Error('local user not exist'),
         );
       }
-
+      // put local user into data store as user in-out events may not receive in some types of scenes
+      this.dataStore.setUser(this.localUser.userUuid, AgoraUser.fromData(this.localUser.toData()));
       //do not fire local user event from snapshot, as this has been done in entry api phase
       const users = Array.from(this.dataStore.users.values()).filter(
         (u) => u.userUuid !== this.localUser!.userUuid,
@@ -367,6 +374,19 @@ export class AgoraRteScene extends EventEmitter {
     );
 
     handler.on(
+      AgoraRteEventType.BatchUserPropertyUpdated,
+      (users: any[], operator: any, cause: any) => {
+        this.logger.debug(
+          `batch-user-property-updated ${jsonstring(users)} ${jsonstring(operator)} ${jsonstring(
+            cause,
+          )}`,
+        );
+
+        this.emit(AgoraRteEventType.BatchUserPropertyUpdated, users, operator, cause);
+      },
+    );
+
+    handler.on(
       AgoraRteEventType.LocalStreamAdded,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
         this.logger.info(`local-stream-added [${streams.join(',')}]`);
@@ -416,6 +436,11 @@ export class AgoraRteScene extends EventEmitter {
 
     handler.on(AgoraRteEventType.ChatUserMessage, (message: AgoraChatMessage) => {
       this.emit(AgoraRteEventType.ChatUserMessage, message);
+    });
+
+    handler.on(AgoraRteEventType.TimeStampGapUpdate, (timestamp: number) => {
+      this._timestampGap = timestamp;
+      this.emit(AgoraRteEventType.TimeStampGapUpdate, timestamp);
     });
   }
 

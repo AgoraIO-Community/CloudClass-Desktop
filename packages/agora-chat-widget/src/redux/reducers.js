@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { CHAT_TABS_KEYS } from '../contants';
 let defaultState = {
   propsData: {}, // props 值
-  showChat: true, // 控制Chat
+  showChat: false, // 控制Chat
   isShowMiniIcon: true, // 控制最小化icon
   isLogin: false, // 登陆状态
   loginUser: '', // 当前登陆ID
@@ -31,6 +31,8 @@ let defaultState = {
     emoji: true, // 默认emoji 为 true
     inputBox: 'multiple', // 输入UI
     btnSend: true, // 是否暂时send按钮
+    imgIcon: true, // 是否展示图片图标
+    screenshotIcon: true, // 是否展示截图图标
   },
 };
 const reducer = (state = defaultState, action) => {

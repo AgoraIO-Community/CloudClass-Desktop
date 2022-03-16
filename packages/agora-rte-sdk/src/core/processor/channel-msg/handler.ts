@@ -25,6 +25,7 @@ export enum AgoraRteChannelMessageCmd {
   StreamInOut = 40,
   StreamsInOut = 41,
   MessageExtension = 99,
+  BatchUserProperties = 25,
 }
 
 export enum AgoraRtePeerMessageCmd {
@@ -39,6 +40,7 @@ export enum AgoraRteEventType {
   UserRemoved = 'user-removed',
   RoomPropertyUpdated = 'room-property-updated',
   UserPropertyUpdated = 'user-property-updated',
+  BatchUserPropertyUpdated = 'batch-user-property-updated',
   LocalStreamAdded = 'local-stream-added',
   LocalStreamUpdate = 'local-stream-update',
   LocalStreamRemove = 'local-stream-removed',
@@ -58,6 +60,7 @@ export enum AgoraRteEventType {
   RtcConnectionStateChanged = 'rtc-connection-state-changed',
   RtmConnectionStateChanged = 'rtm-connection-state-changed',
   RteConnectionStateChanged = 'rte-connection-state-changed',
+  TimeStampGapUpdate = 'timestamp-gap-update',
 }
 
 export interface AgoraRteChannelMessageHandle {
@@ -69,6 +72,7 @@ export interface AgoraRteChannelMessageHandle {
 export class AgoraRteChannelMessageHandle extends AGEventEmitter {
   protected logger!: Injectable.Logger;
   private _dataStore: AgoraRteSyncDataStore;
+  private _timestampGap: number = 0;
 
   sceneId: string;
   userUuid: string;
@@ -126,6 +130,9 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
       case AgoraRteChannelMessageCmd.UserProperties:
         this._handleUserProperties(task);
         break;
+      case AgoraRteChannelMessageCmd.BatchUserProperties:
+        this._handleBatchUserProperties(task);
+        break;
       case AgoraRteChannelMessageCmd.UserSubscribeInOut:
         this._handleUserSubscribe(task);
         break;
@@ -139,6 +146,8 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
         this._handleMessageExtension(task);
         break;
     }
+
+    this._syncTsGapWithServerAndLocal(task);
   }
 
   handlePeerMessage(task: AgoraRtePeerMessageHandleTask) {
@@ -335,6 +344,43 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
     );
   }
 
+  private _handleBatchUserProperties(task: AgoraRteMessageHandleTask) {
+    const { users, operator, cause } = task.sequence.data;
+
+    const _users = users.reduce(
+      (prev: unknown[], { fromUser, operator, cause, changeProperties }: any) => {
+        const { userUuid } = fromUser;
+
+        const user = this._dataStore.findUser(userUuid);
+        if (!user) {
+          this.logger.warn(`user ${userUuid} not exists, update property failed`);
+        } else {
+          user.setUserProperties(
+            this._mergeProperties(user.userProperties.toJS(), changeProperties),
+          );
+
+          const changed = {
+            userUuid,
+            userProperties: user.userProperties.toObject(),
+            operator,
+            cause,
+          };
+
+          prev.push(changed);
+        }
+
+        return prev;
+      },
+      [],
+    );
+
+    if (!_users.length) {
+      return this.logger.warn(`no user properties have changed`);
+    }
+
+    this.emit(AgoraRteEventType.BatchUserPropertyUpdated, _users, operator, cause);
+  }
+
   private _processStreamEvent(action: number, stream: AgoraStream): AgoraRteEventType {
     const isLocal = stream.fromUser.userUuid === this.userUuid;
     if (action === 3) {
@@ -411,5 +457,16 @@ export class AgoraRteChannelMessageHandle extends AGEventEmitter {
 
   private _handleMessageExtension(task: AgoraRteMessageHandleTask) {
     //TODO
+  }
+
+  // 本地时间戳 - 服务器时间戳
+  private _syncTsGapWithServerAndLocal(task: AgoraRteMessageHandleTask) {
+    const gap = task.sequence.timestamp - Date.now();
+    if (this._timestampGap !== gap && Math.abs(this._timestampGap - gap) > 800) {
+      // 🕛 时间间隔大于800ms就更新
+      this._timestampGap = gap;
+      // emit upper
+      this.emit(AgoraRteEventType.TimeStampGapUpdate, this._timestampGap);
+    }
   }
 }

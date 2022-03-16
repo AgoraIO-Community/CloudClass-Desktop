@@ -12,6 +12,10 @@ export const ROLE = {
     id: 3,
     tag: '助教',
   },
+  observer: {
+    id: 4,
+    tag: '监课',
+  },
 };
 
 export const ROOM_TYPE = {

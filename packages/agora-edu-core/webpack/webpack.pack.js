@@ -6,7 +6,6 @@ const webpack = require('webpack');
 
 const baseConfig = require('./webpack.base');
 const { ROOT_PATH } = require('./utils/index');
-const packageJson = require('../package.json');
 
 const config = {
   mode: 'production',

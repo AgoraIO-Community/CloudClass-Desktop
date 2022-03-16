@@ -1,4 +1,4 @@
-import { CameraPlaceholderType, EduRoleTypeEnum, EduStream, EduStreamUI } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, { CSSProperties, FC, Fragment, ReactNode, useEffect, useMemo, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
@@ -18,6 +18,8 @@ import {
 } from '~ui-kit';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
+import { EduStreamUI } from '@/infra/stores/common/stream/struct';
+import { CameraPlaceholderType } from '@/infra/stores/common/type';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -66,6 +68,7 @@ type TrackPlayerProps = {
   stream: EduStream;
   style?: CSSProperties;
   className?: string;
+  mirrorMode?: boolean;
 };
 
 export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
@@ -86,7 +89,7 @@ export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
 );
 
 export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
-  ({ style, stream, className }) => {
+  ({ style, stream, className, mirrorMode = true }) => {
     const { classroomStore } = useStore();
     const { streamStore } = classroomStore;
     const { setupRemoteVideo } = streamStore;
@@ -95,7 +98,7 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
 
     useEffect(() => {
       if (ref.current) {
-        setupRemoteVideo(stream, ref.current, true);
+        setupRemoteVideo(stream, ref.current, mirrorMode);
       }
     }, [stream, setupRemoteVideo]);
 
@@ -338,7 +341,12 @@ export const StreamPlayer = observer(
         {stream.stream.isLocal ? (
           <LocalTrackPlayer className={cls} style={style} stream={stream.stream} />
         ) : (
-          <RemoteTrackPlayer className={cls} style={style} stream={stream.stream} />
+          <RemoteTrackPlayer
+            className={cls}
+            style={style}
+            stream={stream.stream}
+            mirrorMode={stream.isMirrorMode}
+          />
         )}
       </StreamPlayerOverlay>
     );

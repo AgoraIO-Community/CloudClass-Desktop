@@ -144,7 +144,7 @@ export const TrackCore: React.FC<
       [style, track?.needTransition],
     );
 
-    return track ? (
+    return track && track.isContextInitialized ? (
       <Rnd
         {...handleEvents}
         style={postStyle}

@@ -23,6 +23,8 @@ export interface ButtonProps extends BaseProps {
   action?: string;
   animate?: boolean;
   onClick?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
+  onMouseOver?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
+  onMouseLeave?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
 }
 
 export const Button: FC<ButtonProps> = ({

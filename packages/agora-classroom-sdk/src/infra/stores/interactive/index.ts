@@ -1,4 +1,5 @@
-import { EduClassroomStore, EduClassroomUIStore } from 'agora-edu-core';
+import { EduClassroomStore } from 'agora-edu-core';
+import { EduClassroomUIStore } from '../common';
 import { InteractiveBoardUIStore } from './board-ui';
 import { InteractiveRoomStreamUIStore } from './stream-ui';
 

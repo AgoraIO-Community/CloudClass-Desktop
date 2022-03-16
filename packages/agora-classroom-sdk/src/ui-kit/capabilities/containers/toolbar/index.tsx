@@ -1,4 +1,4 @@
-import { ToolbarItemCategory } from 'agora-edu-core';
+import { ToolbarItemCategory } from '@/infra/stores/common/toolbar-ui';
 import { observer } from 'mobx-react';
 import { useStore } from '~hooks/use-edu-stores';
 import { Toolbar, ToolItem } from '~ui-kit';
@@ -9,7 +9,7 @@ export const WhiteboardToolbar = observer(({ children }: any) => {
   const { toolbarUIStore } = useStore();
   const { activeTool, activeMap, tools, setTool } = toolbarUIStore;
 
-  let mappedTools = tools.map((tool) => {
+  const mappedTools = tools.map((tool) => {
     if (tool.category === ToolbarItemCategory.PenPicker) {
       return {
         ...tool,

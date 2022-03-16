@@ -1,5 +1,5 @@
-import { LayoutUIStore } from 'agora-edu-core';
 import { computed } from 'mobx';
+import { LayoutUIStore } from '../common/layout';
 export class LectureH5LayoutUIStore extends LayoutUIStore {
   @computed
   get flexOrientationCls() {

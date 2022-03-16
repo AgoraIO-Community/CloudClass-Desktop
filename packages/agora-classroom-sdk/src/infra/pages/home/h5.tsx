@@ -24,10 +24,12 @@ const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAI
 export const HomeH5Page = observer(() => {
   const homeStore = useHomeStore();
 
+  const launchConfig = homeStore.launchConfig;
+
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
-  const [roomName, setRoomName] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
+  const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
+  const [userName, setUserName] = useState<string>(launchConfig.userName || '');
   const [userRole, setRole] = useState<string>('student');
   const [curScenario, setScenario] = useState<string>('big-class');
   const [duration] = useState<number>(30);
@@ -54,6 +56,7 @@ export const HomeH5Page = observer(() => {
       assistant: EduRoleTypeEnum.assistant,
       student: EduRoleTypeEnum.student,
       incognito: EduRoleTypeEnum.invisible,
+      observer: EduRoleTypeEnum.observer,
     };
     return roles[userRole];
   }, [userRole]);
@@ -187,6 +190,8 @@ export const HomeH5Page = observer(() => {
             duration: duration * 60,
             latencyLevel: 2,
             platform: Platform.H5,
+            userRole,
+            curScenario,
           };
           if (encryptionKey && encryptionMode) {
             config!.mediaOptions!.encryptionConfig = {

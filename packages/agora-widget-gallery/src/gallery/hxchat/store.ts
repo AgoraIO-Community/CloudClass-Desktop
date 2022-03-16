@@ -1,10 +1,6 @@
 import { action, autorun, computed, observable, reaction, runInAction } from 'mobx';
-import {
-  EduClassroomConfig,
-  EduClassroomUIStore,
-  EduRoomTypeEnum,
-  UUAparser,
-} from 'agora-edu-core';
+import { EduClassroomConfig, EduRoomTypeEnum, UUAparser } from 'agora-edu-core';
+import { EduClassroomUIStore } from 'agora-classroom-sdk';
 
 enum orientationEnum {
   portrait = 'portrait',
@@ -24,7 +20,7 @@ export class WidgetChatUIStore {
   isFullSize: boolean = false;
 
   @observable
-  showChat: boolean = true;
+  showChat: boolean = false;
 
   constructor(coreStore: EduClassroomUIStore) {
     runInAction(() => {

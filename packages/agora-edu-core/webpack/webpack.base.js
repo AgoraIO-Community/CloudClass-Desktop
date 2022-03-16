@@ -1,6 +1,8 @@
 const { ROOT_PATH } = require('./utils/index');
 const path = require('path');
 const webpackbar = require('webpackbar');
+const eduCoreVersion = require('../package.json').version;
+const webpack = require('webpack');
 
 module.exports = {
   externals: {
@@ -138,5 +140,10 @@ module.exports = {
       },
     ],
   },
-  plugins: [new webpackbar()],
+  plugins: [
+    new webpackbar(),
+    new webpack.DefinePlugin({
+      EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
+    }),
+  ],
 };

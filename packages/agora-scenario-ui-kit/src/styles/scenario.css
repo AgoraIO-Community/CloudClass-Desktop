@@ -111,10 +111,6 @@ body,
 .edu-room {
   height: 100%;
 }
-.edu-room .layout {
-  position: relative;
-}
-
 .chat-panel .tabs {
   top: 0;
   left: 0;
@@ -232,11 +228,6 @@ body,
   position: unset !important;
   right: unset !important;
   bottom: unset !important;
-}
-
-.big-class-room .big-class-main {
-  position: relative;
-  flex-direction: column;
 }
 
 /* .big-class-room .hands-up-manager,

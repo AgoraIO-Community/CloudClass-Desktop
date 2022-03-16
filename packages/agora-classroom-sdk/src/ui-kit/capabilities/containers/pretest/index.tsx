@@ -110,8 +110,9 @@ const BeautyControllerBar = observer(() => {
     <CSSTransition in={isBeauty} timeout={300} unmountOnExit classNames="beauty-bar-animate">
       <div className="beauty-bar">
         <div className="beauty-bar-left">
-          {['whitening', 'buffing', 'ruddy'].map((item: any) => (
+          {['whitening', 'buffing', 'ruddy'].map((item) => (
             <Tooltip
+              key={item}
               title={transI18n(`media.${item}`)}
               placement="top"
               color="rgba(0,0,0,0.6)"
@@ -119,7 +120,6 @@ const BeautyControllerBar = observer(() => {
               <Icon
                 className={classnames('beauty-type-icon')}
                 type={activeBeautyTypeIcon(item)}
-                key={item}
                 size={22}
                 onClick={() => setActiveBeautyType(item as BeautyType)}
               />
@@ -225,7 +225,7 @@ const PlaybackTestPlayer = observer(() => {
 
   useEffect(() => {
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
-      let isProduction = NODE_ENV === 'production';
+      const isProduction = NODE_ENV === 'production';
       const path = window.require('path');
       urlRef.current = isProduction
         ? `${window.process.resourcesPath}/pretest-audio.mp3`
@@ -434,7 +434,11 @@ export const RoomPretest: React.FC<PretestProps> = ({ className, onOK, ...restPr
       <Modal
         title={transI18n('pretest.settingTitle')}
         width={720}
-        footer={[<Button action="ok">{transI18n('pretest.finishTest')}</Button>]}
+        footer={[
+          <Button action="ok" key="ok">
+            {transI18n('pretest.finishTest')}
+          </Button>,
+        ]}
         onOk={onOK}
         onCancel={() => {}}
         btnId="device_assert">

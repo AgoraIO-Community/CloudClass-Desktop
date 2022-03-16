@@ -15,7 +15,7 @@ import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
 import { AGMediaEncryptionMode, RtcState } from '../../type';
 import { AGRtcConnectionType } from '../../channel';
 import { Injectable } from '../../../decorator/type';
-import { AgoraComponentRegion, AgoraRegion, AgoraRteEngineConfig } from '../../../../configs';
+import { AgoraRegion, AgoraRteEngineConfig } from '../../../../configs';
 import { Log } from '../../../decorator/log';
 import { throttle } from 'lodash';
 import { bound } from '../../../decorator';
@@ -35,6 +35,7 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
   private _connectionState: RtcState = RtcState.Idle;
   protected readonly channelName: string;
   readonly connectionType: AGRtcConnectionType;
+  private _networkStats: RtcNetworkQualityWeb = new RtcNetworkQualityWeb();
 
   constructor(
     channelName: string,
@@ -50,6 +51,12 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
 
     AgoraRTC.setArea({ areaCode: [this._rtcRegion()] });
 
+    if (AgoraRteEngineConfig.shared.rtcSDKParameters) {
+      AgoraRteEngineConfig.shared.rtcSDKParameters.forEach((parameter) => {
+        //@ts-ignore
+        AgoraRTC.setParameter(parameter);
+      });
+    }
     // create new for subchannel
     this._client = AgoraRTC.createClient({
       codec: this.configs.codec,
@@ -74,6 +81,35 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
 
     this._client.on('connection-state-change', (clientState) => {
       this.setConnectionState(this._getRtcState(clientState));
+    });
+
+    this._client.on('network-quality', (stats) => {
+      this._networkStats.uplinkNetworkQuality = stats.uplinkNetworkQuality;
+      this._networkStats.downlinkNetworkQuality = stats.downlinkNetworkQuality;
+
+      const localVideoTrackStats = this._client.getLocalVideoStats();
+      const remoteVideoTrackStats = this._client.getRemoteVideoStats();
+      const rtcStats = this._client.getRTCStats();
+
+      this._networkStats.rtt = rtcStats.RTT;
+      this._networkStats.txVideoPacketLoss =
+        localVideoTrackStats.sendPacketsLost / localVideoTrackStats.sendPackets;
+
+      let totalLoss = 0,
+        totalPacket = 0,
+        totalDelay = 0;
+      let remoteStatsValues = Object.values(remoteVideoTrackStats);
+      for (let s of remoteStatsValues) {
+        totalLoss += s.receivePacketsLost;
+        totalPacket += s.receivePackets;
+        totalDelay += s.end2EndDelay;
+      }
+
+      if (remoteStatsValues.length > 0) {
+        this._networkStats.rxVideoPacketLoss = totalLoss / totalPacket;
+        this._networkStats.end2EndDelay = totalDelay / remoteStatsValues.length;
+      }
+      this.emit('network-stats-changed', this._networkStats.networkStats(), this.connectionType);
     });
   }
 
@@ -203,7 +239,6 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
 }
 
 export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
-  private _networkStats: RtcNetworkQualityWeb = new RtcNetworkQualityWeb();
   private _remoteRtcUsers: Map<string, IAgoraRTCRemoteUser> = new Map<
     string,
     IAgoraRTCRemoteUser
@@ -282,35 +317,6 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
           this._subscribeAudioThreads.delete(userId);
         }
       }
-    });
-
-    this._client.on('network-quality', (stats) => {
-      this._networkStats.uplinkNetworkQuality = stats.uplinkNetworkQuality;
-      this._networkStats.downlinkNetworkQuality = stats.downlinkNetworkQuality;
-
-      const localVideoTrackStats = this._client.getLocalVideoStats();
-      const remoteVideoTrackStats = this._client.getRemoteVideoStats();
-      const rtcStats = this._client.getRTCStats();
-
-      this._networkStats.rtt = rtcStats.RTT;
-      this._networkStats.txVideoPacketLoss =
-        localVideoTrackStats.sendPacketsLost / localVideoTrackStats.sendPackets;
-
-      let totalLoss = 0,
-        totalPacket = 0,
-        totalDelay = 0;
-      let remoteStatsValues = Object.values(remoteVideoTrackStats);
-      for (let s of remoteStatsValues) {
-        totalLoss += s.receivePacketsLost;
-        totalPacket += s.receivePackets;
-        totalDelay += s.end2EndDelay;
-      }
-
-      if (remoteStatsValues.length > 0) {
-        this._networkStats.rxVideoPacketLoss = totalLoss / totalPacket;
-        this._networkStats.end2EndDelay = totalDelay / remoteStatsValues.length;
-      }
-      this.emit('network-stats-changed', this._networkStats.networkStats());
     });
   }
 

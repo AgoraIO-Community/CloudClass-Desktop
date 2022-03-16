@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react';
 import { Toast } from '~ui-kit';
 import { useStore } from '~hooks/use-edu-stores';
-import { ToastType } from 'agora-edu-core';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './index.css';
+import { ToastType } from '@/infra/stores/common/share-ui';
 
 export const ToastContainer = observer(() => {
   const { shareUIStore } = useStore();

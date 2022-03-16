@@ -2,7 +2,7 @@ import { EduApiService } from '../../../services/api';
 import { BoardStore } from './board';
 import { CloudDriveStore } from './cloud-drive';
 import { ConnectionStore } from './connection';
-import { ExtAppStore } from './ext-app';
+import { ExtensionAppStore } from './widget/widget-core';
 import { RoomStore } from './room';
 import { StatisticsStore } from './statistics';
 import { StreamStore } from './stream';
@@ -17,6 +17,7 @@ import { TrackStore } from './track';
 import { ExtAppTrackAdapter } from './ext-app/track-adapter';
 import { WidgetTrackAdapter } from './widget/track-adapter';
 import { ReportStore } from './report';
+import { LogReporter } from '../../../log-reporter';
 
 export class EduClassroomStore {
   private _api: EduApiService = new EduApiService();
@@ -27,7 +28,7 @@ export class EduClassroomStore {
 
   readonly connectionStore: ConnectionStore = new ConnectionStore(this);
   readonly widgetStore: WidgetStore = new WidgetStore(this);
-  readonly extAppStore: ExtAppStore = new ExtAppStore(this);
+  readonly extensionAppStore: ExtensionAppStore = new ExtensionAppStore(this);
   readonly boardStore: BoardStore = new BoardStore(this);
   readonly cloudDriveStore: CloudDriveStore = new CloudDriveStore(this);
   readonly userStore: UserStore = new UserStore(this);
@@ -43,6 +44,8 @@ export class EduClassroomStore {
   private readonly reportStore: ReportStore = new ReportStore(this);
 
   initialize() {
+    LogReporter.enableLogReport();
+
     const instance = this;
     Object.getOwnPropertyNames(instance).forEach((propertyName) => {
       if (propertyName.endsWith('Store')) {

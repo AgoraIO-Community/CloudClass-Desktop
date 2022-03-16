@@ -10,15 +10,7 @@ export const ToolCabinetContainer = observer(() => {
     const { id, icon, iconType, name } = item;
     return {
       id,
-      icon: icon ? (
-        icon
-      ) : (
-        <SvgImg
-          style={{ marginBottom: 12, transform: 'translateY(5px)' }}
-          type={iconType}
-          size={24}
-        />
-      ),
+      icon: icon ? icon : <SvgImg style={{ marginBottom: 7 }} type={iconType} size={24} />,
       name,
     };
   });

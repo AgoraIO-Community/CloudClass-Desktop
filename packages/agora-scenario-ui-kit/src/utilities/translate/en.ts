@@ -104,7 +104,7 @@ export const en = {
   },
   signal: {
     delay: 'Delay',
-    lose: 'Lose',
+    lose: 'Packet Loss',
     status: 'Status',
     CPU: 'CPU',
     receive: 'Receive',
@@ -268,6 +268,9 @@ export const en = {
     student_interactive_apply: `"{reason}" want to co-video`,
   },
   scaffold: {
+    clear: 'Clear',
+    undo: 'Undo',
+    redo: 'Redo',
     search: 'Search',
     student_list: 'Student List',
     pencil: 'Pencil',
@@ -276,7 +279,11 @@ export const en = {
     straight: 'straight',
     circle: 'circle',
     rectangle: 'rectangle',
-    selector: 'selector',
+    arrow: 'arrow',
+    pentagram: 'pentagram',
+    rhombus: 'rhombus',
+    triangle: 'triangle',
+    selector: 'popupQuiz',
     clicker: 'mouse',
     eraser: 'eraser',
     color: 'color',
@@ -329,6 +336,7 @@ export const en = {
     whitening: 'Whitening',
     buffing: 'Buffing',
     ruddy: 'Ruddy',
+    default: 'Default',
   },
   tool: {
     board_name: 'Whiteboard',
@@ -431,6 +439,7 @@ export const en = {
     role_student: 'Student',
     role_assistant: 'Assistant',
     role_audience: 'Audience',
+    role_observer: 'Observer',
     language: 'Language:',
     language_placeholder: 'Please choose language',
     duration: 'Duration',
@@ -441,6 +450,7 @@ export const en = {
     'header-left-title': 'Agora Flexible Classroom',
     about: 'About',
     'input-error-msg': 'Between 6 and 50 characters,letter or number only',
+    'input-username-error-msg': 'Between 3 and 25 characters,letter or number only',
     network_error: 'Network error, please try again later',
     'recordation-search': 'Recordation',
     'recordation-tip': 'Recordations only within 1 hour',
@@ -494,6 +504,8 @@ export const en = {
       'The teacher has invited you on-stage，you can interact with others now',
     'teacher.revoke.onpodium': 'You are not on stage and cannot interact with others',
     'teacher.reward': 'Congratulations to {reason} for getting a star',
+    'teacher.reward2':
+      'Congratulations to {reason1} and {reason2} other students for getting a star',
     screen_permission_denied:
       'Before using screen sharing, please turn on the screenshot permission',
   },
@@ -524,7 +536,7 @@ export const en = {
     restart: 'Start Again',
   },
   vote: {
-    appName: 'Polling',
+    appName: 'Poll',
     start: 'Create poll',
     restart: 'Restart',
     over: 'End poll',
