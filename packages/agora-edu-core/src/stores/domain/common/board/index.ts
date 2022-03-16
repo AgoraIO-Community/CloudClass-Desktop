@@ -181,6 +181,8 @@ export class BoardStore extends EduStoreBase {
         // if(this.userRole === EduRoleTypeEnum.student) {
         //   manager.setReadonly(!this._grantPermission)
         // }
+
+        this.loadAppPublicCourseWareList();
       })
       .catch((e) => {
         EduErrorCenter.shared.handleNonThrowableError(
@@ -286,6 +288,16 @@ export class BoardStore extends EduStoreBase {
         }
         break;
       }
+    }
+  }
+
+  async loadAppPublicCourseWareList() {
+    const publicResources = EduClassroomConfig.shared.courseWareList;
+    const initOpenList = publicResources.filter((item) => item.initOpen);
+    if (initOpenList.length > 0) {
+      initOpenList.forEach((item) => {
+        this.openResource(item);
+      });
     }
   }
 

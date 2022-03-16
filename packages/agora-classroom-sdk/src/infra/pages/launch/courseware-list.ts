@@ -166,5 +166,6 @@ export default [
       currentStep: 'Packaging',
       prefix: 'https://convertcdn.netless.link/dynamicConvert',
     },
+    initOpen: false,
   },
 ] as CourseWareList;

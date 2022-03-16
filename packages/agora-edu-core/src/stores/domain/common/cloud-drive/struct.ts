@@ -37,6 +37,7 @@ export abstract class CloudDriveResource {
       type: 'dynamic' | 'static';
     };
     url?: string;
+    initOpen?: boolean;
   }): CloudDriveResource | never {
     let ext = data.ext.toLowerCase();
     if (!this.supportedTypes.includes(ext)) {
@@ -62,6 +63,7 @@ export abstract class CloudDriveResource {
         taskProgress: data.taskProgress,
         taskUuid: data.taskUuid,
         conversion: data.conversion,
+        initOpen: data.initOpen,
       });
     } else if (this.mediaVideoTypes.includes(ext)) {
       if (!data.url) {
@@ -78,6 +80,7 @@ export abstract class CloudDriveResource {
         updateTime: data.updateTime,
         url: data.url,
         type: 'video',
+        initOpen: data.initOpen,
       });
     } else if (this.mediaAudioTypes.includes(ext)) {
       if (!data.url) {
@@ -94,6 +97,7 @@ export abstract class CloudDriveResource {
         updateTime: data.updateTime,
         url: data.url,
         type: 'audio',
+        initOpen: data.initOpen,
       });
     } else {
       if (!data.url) {
@@ -109,6 +113,7 @@ export abstract class CloudDriveResource {
         size: data.size,
         updateTime: data.updateTime,
         url: data.url,
+        initOpen: data.initOpen,
       });
     }
   }
@@ -118,18 +123,21 @@ export abstract class CloudDriveResource {
   resourceUuid: string;
   size: number;
   updateTime: number;
+  initOpen?: boolean;
   constructor(data: {
     ext: string;
     resourceName: string;
     resourceUuid: string;
     size: number;
     updateTime: number;
+    initOpen?: boolean;
   }) {
     this.ext = data.ext;
     this.resourceName = data.resourceName;
     this.resourceUuid = data.resourceUuid;
     this.size = data.size;
     this.updateTime = data.updateTime;
+    this.initOpen = data.initOpen;
   }
 }
 
@@ -159,11 +167,13 @@ export class CloudDriveCourseResource extends CloudDriveResource {
       scale: number;
       type: 'dynamic' | 'static';
     };
+    initOpen?: boolean;
   }) {
     super(data);
     this.taskProgress = data.taskProgress;
     this.taskUuid = data.taskUuid;
     this.conversion = data.conversion;
+    this.initOpen = data.initOpen;
     this.scenes = data.taskProgress.convertedFileList;
     this.scenes.forEach((scene) => {
       if (scene.ppt) {
@@ -185,10 +195,12 @@ export class CloudDriveMediaResource extends CloudDriveResource {
     updateTime: number;
     url: string;
     type: 'video' | 'audio';
+    initOpen?: boolean;
   }) {
     super(data);
     this.url = data.url;
     this.type = data.type;
+    this.initOpen = data.initOpen;
   }
 }
 
@@ -202,9 +214,11 @@ export class CloudDriveImageResource extends CloudDriveResource {
     size: number;
     updateTime: number;
     url: string;
+    initOpen?: boolean;
   }) {
     super(data);
     this.url = data.url;
+    this.initOpen = data.initOpen;
   }
 }
 
