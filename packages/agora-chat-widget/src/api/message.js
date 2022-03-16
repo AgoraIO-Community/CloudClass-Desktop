@@ -10,7 +10,7 @@ export const sendCmdMsg = (action, userId) => {
   const roomUuid = state?.propsData.roomUuid;
   const roleType = state?.propsData.roleType;
   const loginName = state?.propsData.userName;
-  const loginUser = state?.loginUser;
+  const loginUser = state?.propsData.userUuid;
   var id = WebIM.conn.getUniqueId(); //生成本地消息id
   var msg = new WebIM.message('cmd', id); //创建命令消息
   msg.set({
