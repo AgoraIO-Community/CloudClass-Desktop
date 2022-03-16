@@ -27,8 +27,7 @@ td.biz-col.label.right {
   background: #263487;
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
-  border-top: 0px;
-  border: 1px solid #ececf1;
+  border: 0px;
 }
 
 .biz-header-title-wrap {
@@ -69,7 +68,7 @@ td.biz-col.label.right {
 }
 
 .header-actions > svg:hover {
-  color: #ddb332;
+  color: #dfb635;
 }
 
 /* 因为 iconfont icon设计不合规无法对齐 特此 hack */

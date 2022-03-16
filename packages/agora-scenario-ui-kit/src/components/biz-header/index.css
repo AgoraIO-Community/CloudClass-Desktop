@@ -4,8 +4,7 @@
   @apply bg-white;
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
-  border-top: 0px;
-  border: 1px solid #ececf1;
+  border: 0px;
 }
 
 .biz-header-title-wrap {
