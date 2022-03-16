@@ -8,7 +8,7 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
 
   @computed
   get chatWidgetH5Cls() {
-    return this.shareUIStore.orientation === 'portrait' ? 'aisde-fixed' : 'flex-1';
+    return this.shareUIStore.orientation === 'portrait' ? 'aside-fixed' : 'flex-1';
   }
 
   @computed

@@ -185,7 +185,7 @@ body,
   transform: translateY(74px);
 }
 
-.aisde-fixed {
+.aside-fixed {
   transition: 0.5s;
   margin-right: 0;
   min-width: unset;
@@ -201,23 +201,27 @@ body,
   right: 10px;
   pointer-events: none;
 }
-.aisde-fixed > div {
+.aside-fixed > div {
   margin-right: 8px;
   pointer-events: auto;
 }
-.aisde-fixed:last-child {
+.aside-fixed:last-child {
   margin-right: 0;
 }
-.aisde-fixed .chat-panel {
+.aside-fixed .chat-panel {
   min-width: unset;
 }
 
-.aisde-fixed-full-collapse {
+.aside-fixed-full-collapse {
   transition: 0.5s;
   margin-right: -300px;
 }
-.aisde-fixed .show-chat-icon {
+.aside-fixed .show-chat-icon {
   position: initial;
+}
+
+.aside-1v1 {
+  background: #364d9c;
 }
 
 .telebox-collector img {
