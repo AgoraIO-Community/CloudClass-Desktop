@@ -94,7 +94,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
     super();
     if (!RtcAdapterCef.rtcEngine) {
       //@ts-ignore
-      RtcAdapterCef.rtcEngine = new IAgoraRtcEngine(AgoraRteEngineConfig.shared.appId);
+      RtcAdapterCef.rtcEngine = AgoraCEF.AgoraRtcEngine;
     }
 
     // const logPath = RtcAdapterCef.logPath;
@@ -111,14 +111,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
     //   res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region);
     // }
 
-    const res = AgoraCEF.AgoraRtcEngine.initialize(this.rtcEngine);
-
-    this.init();
-    AgoraCEF.AgoraRtcEngine.setChannelProfile(1);
-    AgoraCEF.AgoraRtcEngine.enableVideo();
-    AgoraCEF.AgoraRtcEngine.enableAudio();
-    AgoraCEF.AgoraRtcEngine.enableWebSdkInteroperability(true);
-    AgoraCEF.AgoraRtcEngine.enableAudioVolumeIndication(1000, 3, true);
+    const res = this.rtcEngine.initialize(new AgoraCEF.AgoraRtcEngine.RtcEngineContext(AgoraRteEngineConfig.shared.appId));
 
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
@@ -131,7 +124,6 @@ export class RtcAdapterCef extends RtcAdapterBase {
     this.cameraThread = new AgoraRteCefCameraThread(this);
     this._addEventListeners();
   }
-  init() {}
   createRtcChannel(channelName: string, base: RtcAdapterBase): RtcChannelAdapterBase {
     let channel = this._channels.get(channelName);
     if (!channel) {
@@ -361,11 +353,11 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
 
   private _addEventListeners() {
-    AgoraCEF.AgoraRtcEngine.on('localVideoStateChanged', (state: any, reason: any) => {
+    AgoraCEF.AgoraRtcEngine.on('LocalVideoStateChanged', (state: any, reason: any) => {
       this.logger.info(`[rtc] video state changed ${state} ${reason}`);
       this.cameraThread.videoStreamState = state;
     });
-    AgoraCEF.AgoraRtcEngine.on('localAudioStateChanged', (state: any) => {
+    AgoraCEF.AgoraRtcEngine.on('LocalAudioStateChanged', (state: any) => {
       if (state === 0) {
         this.emit(
           AgoraMediaControlEventType.localAudioTrackChanged,
@@ -527,7 +519,8 @@ export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
     return new Promise((resolve, reject) => {
       let rtcEngine = this.base.rtcEngine;
       if (connectionType === AGRtcConnectionType.main) {
-        rtcEngine.once('joinedChannel', () => {
+        rtcEngine.on('JoinChannelSuccess', () => {
+          rtcEngine.off('JoinChannelSuccess')
           resolve();
         });
         rtcEngine.setChannelProfile(this._channelProfile);
