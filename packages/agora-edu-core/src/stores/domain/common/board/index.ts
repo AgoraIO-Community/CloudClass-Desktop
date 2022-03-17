@@ -165,7 +165,7 @@ export class BoardStore extends EduStoreBase {
       // containerSizeRatio: options.containerSizeRatio,
       ...options,
     })
-      .then((manager) => {
+      .then(async (manager) => {
         this._windowManager = manager;
 
         this.restoreWhiteboardMemberStateTo(this.room);
@@ -182,7 +182,9 @@ export class BoardStore extends EduStoreBase {
         //   manager.setReadonly(!this._grantPermission)
         // }
 
-        this.loadAppPublicCourseWareList();
+        await this.teacherFirstLoginHandle();
+        await this.studentBoardPermissionHandle();
+        await this.openCourseWareHandle();
       })
       .catch((e) => {
         EduErrorCenter.shared.handleNonThrowableError(
@@ -298,6 +300,50 @@ export class BoardStore extends EduStoreBase {
       initOpenList.forEach((item) => {
         this.openResource(item);
       });
+    }
+  }
+
+  async teacherFirstLoginHandle() {
+    if ([EduRoleTypeEnum.teacher].includes(EduClassroomConfig.shared.sessionInfo.role)) {
+      // @ts-ignore
+      const teacherFirstLogin = this.room.state.globalState?.teacherFirstLogin;
+      if (!teacherFirstLogin) {
+        /**
+         * 老师第一次登陆，清空白板，收回白板，记录标识位
+         */
+        this.room.removeScenes('/');
+        this.room.setGlobalState({
+          grantUsers: [],
+          teacherFirstLogin: true,
+        });
+      }
+    }
+  }
+
+  async openCourseWareHandle() {
+    // @ts-ignore
+    const teacherFirstLogin = this.room.state.globalState?.teacherFirstLogin;
+    if (teacherFirstLogin) {
+      if (
+        [EduRoleTypeEnum.teacher].includes(EduClassroomConfig.shared.sessionInfo.role) &&
+        this.windowManager.queryAll().length === 0
+      ) {
+        await this.loadAppPublicCourseWareList();
+      }
+    } else {
+      await this.loadAppPublicCourseWareList();
+    }
+  }
+
+  async studentBoardPermissionHandle() {
+    const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
+    if ([EduRoleTypeEnum.student].includes(role)) {
+      // @ts-ignore
+      const teacherFirstLogin = this.room.state.globalState?.teacherFirstLogin;
+      if (!teacherFirstLogin) {
+        await this.room.setWritable(true);
+        this.grantPermission(userUuid);
+      }
     }
   }
 
