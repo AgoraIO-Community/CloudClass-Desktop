@@ -1,10 +1,10 @@
-import { ApiBase, AgoraRteEngineConfig } from 'agora-rte-sdk';
+import { ApiBase } from 'agora-rte-sdk';
 import { CloudDriveResourceInfo } from '../stores/domain/common/cloud-drive/type';
 import { EduSessionInfo, EduRoleTypeEnum } from '../type';
 import { ClassState } from '../stores/domain/common/room/type';
 import { escapeExtAppIdentifier } from '../stores/domain/common/room/command-handler';
 import { EduClassroomConfig } from '..';
-import { GroupDetail, PatchGroup } from '../stores/domain/common/group/struct';
+import { GroupDetail, PatchGroup } from '../stores/domain/common/group/type';
 import { GroupState } from '../stores/domain/common/group/type';
 export class EduApiService extends ApiBase {
   async getConfig(): Promise<any> {
@@ -582,6 +582,21 @@ export class EduApiService extends ApiBase {
   }
 
   /**
+   *
+   * @param roomUuid
+   * @param data
+   * @returns
+   */
+  async addGroup(roomUuid: string, data: { groups: GroupDetail[]; inProgress: boolean }) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/states/1`,
+      method: 'POST',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
    * 开启/关闭分组
    * @param roomUuid
    * @param state
@@ -590,7 +605,7 @@ export class EduApiService extends ApiBase {
    */
   async updateGroupState(
     roomUuid: string,
-    data: { groups?: GroupDetail[]; inProgress?: boolean },
+    data: { groups: GroupDetail[]; inProgress?: boolean },
     state: GroupState = GroupState.OPEN,
   ) {
     const res = await this.fetch({

@@ -8,7 +8,6 @@ export enum GroupState {
 
 export interface GroupUser {
   userUuid: string;
-  userName: string;
 }
 
 export type GroupDetail = {
@@ -23,6 +22,6 @@ export interface PatchGroup {
   groupUuid: string;
   groupName?: string;
   sort?: number;
-  addUsers?: GroupUser[];
-  removeUsers?: GroupUser[];
+  addUsers?: string[];
+  removeUsers?: string[];
 }

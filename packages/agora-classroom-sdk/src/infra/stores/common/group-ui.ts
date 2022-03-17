@@ -1,41 +1,95 @@
-import { EduClassroomConfig, GroupDetail, GroupUser } from 'agora-edu-core';
-import { AGError, bound } from 'agora-rte-sdk';
-import { range } from 'lodash';
-import { action, computed } from 'mobx';
+import {
+  AgoraEduClassroomEvent,
+  EduEventCenter,
+  GroupDetail,
+  GroupState,
+  PatchGroup,
+} from 'agora-edu-core';
+import { AGError, bound, Log } from 'agora-rte-sdk';
+import { difference, range } from 'lodash';
+import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
+import uuidv4 from 'uuid';
 
 export enum GroupMethod {
   AUTO,
   MANUAL,
 }
 
+@Log.attach({ proxyMethods: false })
 export class GroupUIStore extends EduUIStoreBase {
-  // static readonly ERROR_MAX_PER_GROUP_PERSON_CODE = 'MAX_PER_GROUP_PERSON';
+  private _groupSeq = 0;
+  @observable
+  joiningSubRoom = false;
+
+  @observable
+  localGroups: Map<string, GroupDetail> = new Map();
+
+  private _groupNum = 0;
 
   /**
    * 分组列表
    */
   @computed
   get groups() {
-    const { groupDetails } = this.classroomStore.groupStore;
-
     const list: { id: string; text: string; children: { id: string; text: string }[] }[] = [];
 
-    groupDetails.forEach((group, groupUuid) => {
+    const { users } = this.classroomStore.userStore;
+
+    this.groupDetails.forEach((group, groupUuid) => {
       const tree = {
         id: groupUuid,
         text: group.groupName,
         children: group.users.map(({ userUuid }: { userUuid: string }) => ({
           id: userUuid,
-          text: userUuid,
+          text: users.get(userUuid)?.userName || 'unknown',
         })) as { id: string; text: string }[],
       };
 
       list.push(tree);
     });
 
+    if (this.groupState === GroupState.OPEN) {
+      const notGrouped: { id: string; text: string }[] = [];
+
+      this.classroomStore.userStore.studentList.forEach((student, studentUuid) => {
+        const groupUuid = this.groupUuidByUserUuid.get(studentUuid);
+        if (!groupUuid) {
+          notGrouped.push({ id: studentUuid, text: student.userName });
+        }
+      });
+
+      if (notGrouped.length > 0) {
+        list.unshift({
+          id: '',
+          text: transI18n('breakout_room.not_grouped'),
+          children: notGrouped,
+        });
+      }
+    }
+
     return list;
+  }
+
+  @computed
+  get groupDetails() {
+    const { groupDetails } = this.classroomStore.groupStore;
+
+    return this.groupState === GroupState.OPEN ? groupDetails : this.localGroups;
+  }
+
+  @computed
+  get groupUuidByUserUuid() {
+    const map: Map<string, string> = new Map();
+
+    this.groupDetails.forEach((group, groupUuid) => {
+      group.users.forEach(({ userUuid }) => {
+        map.set(userUuid, groupUuid);
+      });
+    });
+
+    return map;
   }
 
   /**
@@ -43,16 +97,15 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @computed
   get students() {
-    const { groupDetails } = this.classroomStore.groupStore;
-
-    const list: { userUuid: string; userName: string }[] = [];
-
-    groupDetails;
+    const list: { userUuid: string; userName: string; groupUuid: string | undefined }[] = [];
 
     this.classroomStore.userStore.studentList.forEach((user) => {
+      const groupUuid = this.groupUuidByUserUuid.get(user.userUuid);
+
       list.push({
         userUuid: user.userUuid,
         userName: user.userName,
+        groupUuid,
       });
     });
 
@@ -60,11 +113,23 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 当前房间 主房间id，如果不为空，则表示是小组，小房间才有
+   *
    */
   @computed
-  get currentRoomUuid() {
-    return EduClassroomConfig.shared.sessionInfo.roomUuid;
+  get notGroupedCount() {
+    const count = this.students.reduce((prev, { groupUuid }) => {
+      if (groupUuid) {
+        prev += 1;
+      }
+
+      return prev;
+    }, 0);
+    return count;
+  }
+
+  @computed
+  get numberToBeAssigned() {
+    return 0;
   }
 
   /**
@@ -76,41 +141,105 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 当前房间
+   */
+  get currentSubRoom() {
+    return this.classroomStore.groupStore.currentSubRoom;
+  }
+
+  /**
+   * 设置分组用户列表
+   * @param groupUuid
+   * @param users
+   */
+  @action.bound
+  setGroupUsers(groupUuid: string, users: string[]) {
+    this.logger.info('Set group users', groupUuid, users);
+
+    let patches: PatchGroup[] = [];
+
+    this.groupDetails.forEach((group, uuid) => {
+      if (groupUuid === uuid) {
+        const groupUsers = group.users.map(({ userUuid }) => userUuid);
+
+        const removeUsers = difference(groupUsers, users);
+
+        const addUsers = difference(users, groupUsers);
+
+        patches.push({
+          groupUuid,
+          addUsers,
+          removeUsers,
+        });
+      }
+    });
+
+    if (this.groupState === GroupState.OPEN) {
+      patches = patches.filter(
+        ({ removeUsers, addUsers }) => removeUsers?.length || addUsers?.length,
+      );
+      this.classroomStore.groupStore.updateGroupUsers(patches);
+    } else {
+      patches.forEach(({ removeUsers = [], addUsers = [], groupUuid }) => {
+        const groupDetail = this.localGroups.get(groupUuid);
+
+        if (groupDetail) {
+          const users = addUsers.map((userUuid) => ({ userUuid }));
+
+          const newUsers = groupDetail.users
+            .filter(({ userUuid }) => !removeUsers.includes(userUuid))
+            .concat(users);
+
+          groupDetail.users = newUsers;
+
+          this.localGroups.set(groupUuid, groupDetail);
+        }
+      });
+    }
+  }
+
+  /**
    * 重命名组
    * @param from 原名字
    * @param to 新名字
    */
   @action.bound
   renameGroupName(groupUuid: string, groupName: string) {
-    // const exist = this.subRoomList.has(Symbol.for(to));
-    // if (exist) {
-    //   throw new Error('INCORPERATED');
-    // } else {
-    //   // 修改subroomList group name
-    //   const oldSubRoomList = this.subRoomList.get(Symbol.for(from)) as GroupUser[];
-    //   this.subRoomList.set(Symbol.for(to), oldSubRoomList);
-    //   this.subRoomList.delete(Symbol.for(from));
-    // }
+    if (this.groupState === GroupState.OPEN) {
+      this.classroomStore.groupStore.updateGroupInfo([
+        {
+          groupUuid,
+          groupName,
+        },
+      ]);
+    } else {
+      const groupDetail = this.localGroups.get(groupUuid);
 
-    this.classroomStore.groupStore.updateGroupInfo([
-      {
-        groupUuid,
-        groupName,
-      },
-    ]);
+      if (groupDetail) {
+        groupDetail.groupName = groupName;
+        this.localGroups.set(groupUuid, groupDetail);
+      }
+    }
   }
 
   /**
    * 新增组
    */
   @action.bound
-  addGroup(group: GroupDetail) {
-    // this.groupTailNumber++;
-    // this.subRoomList.set(Symbol(`untitled-group${this.groupTailNumber}`), []);
-    // this.classroomStore.groupStore.createSubRoomObject();
-    // this.classroomStore.groupStore.addSubRoomList();
-
-    this.classroomStore.groupStore.addGroups([group], false);
+  addGroup() {
+    if (this.groupState === GroupState.OPEN) {
+      this.classroomStore.groupStore.addGroups([
+        {
+          groupName: this._generateGroupName(),
+          users: [],
+        },
+      ]);
+    } else {
+      this.localGroups.set(`${uuidv4()}`, {
+        groupName: this._generateGroupName(),
+        users: [],
+      });
+    }
   }
 
   /**
@@ -118,33 +247,12 @@ export class GroupUIStore extends EduUIStoreBase {
    * @param groupUuid 组id
    */
   @action.bound
-  deleteGroup(groupUuid: string) {
-    // this.subRoomList.delete(Symbol.for(groupName));
-    this.classroomStore.groupStore.removeGroups([groupUuid]);
-  }
-
-  /**
-   * 分配用户
-   * @param groupUuid
-   * @param user
-   */
-  @action.bound
-  assignUserToGroup(groupUuid: string, user: GroupUser) {
-    // const currentUsers = this.subRoomList.get(Symbol(groupName)) || [];
-    // currentUsers.push(user);
-    // this.subRoomList.set(Symbol(groupName), currentUsers);
-
-    this.classroomStore.groupStore.inviteUserListToGroup(groupUuid, [user]);
-  }
-
-  /**
-   * 移出房间
-   * @param groupUuid
-   * @param user
-   */
-  @action.bound
-  removeUserFromGroup(groupUuid: string, user: GroupUser) {
-    this.classroomStore.groupStore.removeUserListFromGroup(groupUuid, [user]);
+  removeGroup(groupUuid: string) {
+    if (this.groupState === GroupState.OPEN) {
+      this.classroomStore.groupStore.removeGroups([groupUuid]);
+    } else {
+      this.localGroups.delete(groupUuid);
+    }
   }
 
   /**
@@ -153,104 +261,184 @@ export class GroupUIStore extends EduUIStoreBase {
    * @param toGroupUuid
    * @param user
    */
-  moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, user: GroupUser) {
-    this.classroomStore.groupStore.addUserListToGroup(fromGroupUuid, toGroupUuid, [user], [user]);
+  @action.bound
+  moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string) {
+    if (this.groupState === GroupState.OPEN) {
+      if (!fromGroupUuid) {
+        this.classroomStore.groupStore.updateGroupUsers([
+          {
+            groupUuid: toGroupUuid,
+            addUsers: [userUuid],
+          },
+        ]);
+      }
+
+      this.classroomStore.groupStore.addUserListToGroup(
+        fromGroupUuid,
+        toGroupUuid,
+        [userUuid],
+        [userUuid],
+      );
+    } else {
+      const fromGroup = this.localGroups.get(fromGroupUuid);
+      const toGroup = this.localGroups.get(toGroupUuid);
+      if (fromGroup && toGroup) {
+        fromGroup.users = fromGroup.users.filter(({ userUuid: uuid }) => uuid !== userUuid);
+        toGroup.users = toGroup.users.concat([{ userUuid }]);
+        this.localGroups.set(fromGroupUuid, fromGroup);
+        this.localGroups.set(toGroupUuid, toGroup);
+      }
+    }
   }
 
   /**
-   * 处理自动分组问题
-   * @param count
+   * 用户组互换
+   * @param userUuid1
+   * @param userUuid2
    */
-  @action.bound
-  private _handleGenerateSubRooms = (count: number) => {
-    // try {
-    //   this.subRoomList = this.generateSubRoomList(count);
-    // } catch (e) {
-    //   if (e === GroupUIStore.ERROR_MAX_PER_GROUP_PERSON_CODE) {
-    //     // handle excesstive group person
-    //   }
-    // }
-  };
+  @bound
+  interchangeGroup(userUuid1: string, userUuid2: string) {
+    const patches: PatchGroup[] = [];
+
+    let groupUuid1 = '';
+    let groupUuid2 = '';
+
+    if (this.groupState === GroupState.CLOSE) {
+      throw new Error('not supported');
+    }
+
+    this.classroomStore.groupStore.groupDetails.forEach(({ users }, gropuUuid) => {
+      const hasUser1 = users.some(({ userUuid }) => userUuid === userUuid1);
+      if (hasUser1) {
+        groupUuid1 = gropuUuid;
+      }
+
+      const hasUser2 = users.find(({ userUuid }) => userUuid === userUuid2);
+      if (hasUser2) {
+        groupUuid2 = gropuUuid;
+      }
+    });
+
+    if (groupUuid1 && groupUuid2) {
+      patches.push({
+        groupUuid: groupUuid1,
+        addUsers: [userUuid2],
+        removeUsers: [userUuid1],
+      });
+
+      patches.push({
+        groupUuid: groupUuid2,
+        addUsers: [userUuid1],
+        removeUsers: [userUuid2],
+      });
+
+      this.classroomStore.groupStore.updateGroupUsers(patches);
+    } else {
+      this.logger.info('cannot know which group the user is in');
+    }
+  }
+
+  @bound
+  startGroup() {
+    const groupDetails: GroupDetail[] = [];
+
+    this.localGroups.forEach((group) => {
+      groupDetails.push({
+        groupName: group.groupName,
+        users: group.users,
+      });
+    });
+
+    this.classroomStore.groupStore
+      .startGroup(groupDetails)
+      .then(() => {
+        runInAction(() => {
+          this.localGroups = new Map();
+        });
+      })
+      .catch((e) => {
+        this.shareUIStore.addGenericErrorDialog(e as AGError);
+      });
+  }
 
   /**
-   * 自动分组
-   * @param count 分组数量
-   * @returns
+   * 结束分组
    */
-  @action.bound
-  private generateSubRoomList = (count: number) => {
-    // const studentListSize = this.classroomStore.userStore.studentList.size;
-    // if (studentListSize) {
-    //   let cursor = 0;
-    //   let lastCount = count;
-    //   const subRoomUserList = new Map<symbol, GroupUser[]>();
-    //   const userList = [...this.classroomStore.userStore.studentList.values()];
-    //   while (lastCount) {
-    //     ++this.groupTailNumber;
-    //     if (cursor < userList.length) {
-    //       const perSubroomUserList = userList.slice(cursor, cursor + count);
-    //       if (perSubroomUserList.length >= this.classroomStore.groupStore.MAX_PER_GROUP_PERSON) {
-    //         throw new Error(GroupUIStore.ERROR_MAX_PER_GROUP_PERSON_CODE);
-    //       }
-    //       const perGroupName = Symbol.for(`untitled-group${this.groupTailNumber}`);
-    //       subRoomUserList.set(perGroupName, perSubroomUserList);
-    //       cursor += cursor + count;
-    //     } else {
-    //       const perGroupName = Symbol.for(`untitled-group${this.groupTailNumber}`);
-    //       subRoomUserList.set(perGroupName, []);
-    //     }
-    //     --lastCount;
-    //   }
-    //   return subRoomUserList;
-    // }
-    // return new Map<symbol, GroupUser[]>();
-  };
-
-  /**
-   * 开始分组
-   * @param list
-   */
-  startGroup = (list: GroupUser[]) => {
-    // this.classroomStore.groupStore.inviteUserListToSubRoom()
-    this.classroomStore.groupStore;
-  };
-
-  /**
-   * 关闭分组
-   */
-  stopGroup = () => {
+  @bound
+  stopGroup() {
     this.classroomStore.groupStore.stopGroup();
-  };
+  }
 
   /**
    * 创建分组
    * @param type
    * @param group
    */
-  @bound
-  createGroups(type: GroupMethod, count: number) {
-    if (type === GroupMethod.MANUAL) {
-      const groupDetails = range(0, count).map((i) => ({
-        groupName: this._generateGroupName(i),
-        users: [],
-      }));
+  @action.bound
+  createGroups(type: GroupMethod, count?: number) {
+    if (count) {
+      this._groupNum = count;
+    }
 
-      this.classroomStore.groupStore.addGroups(groupDetails, false).catch((e) => {
-        this.shareUIStore.addGenericErrorDialog(e as AGError);
+    this.localGroups = new Map();
+    this._groupSeq = 0;
+
+    if (type === GroupMethod.MANUAL) {
+      range(0, this._groupNum).forEach(() => {
+        const groupDetail = {
+          groupName: this._generateGroupName(),
+          users: [],
+        };
+
+        this.localGroups.set(`${uuidv4()}`, groupDetail);
       });
     }
 
     // Not supported
   }
 
+  /**
+   * 离开子房间
+   */
   leave() {
     this.classroomStore.groupStore.leaveSubRoom();
   }
 
-  private _generateGroupName(no: number) {
-    return `${transI18n('breakout_room.group_label')} ${no}`;
+  private _generateGroupName() {
+    const nextSeq = (this._groupSeq += 1);
+
+    return `${transI18n('breakout_room.group_label')} ${nextSeq}`;
   }
 
-  onInstall() {}
+  onInstall() {
+    EduEventCenter.shared.onClassroomEvents((type, args) => {
+      if (type === AgoraEduClassroomEvent.JoinSubRoom) {
+        if (this.currentSubRoom) {
+        } else {
+          this.shareUIStore.addToast('Cannot find subroom');
+        }
+      }
+      if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
+        this.shareUIStore.addToast('Leave sub room');
+      }
+      if (type === AgoraEduClassroomEvent.AcceptedToGroup) {
+        this.logger.info('Accepted to group', args);
+        this.shareUIStore.addToast('Accepted to group');
+      }
+
+      if (type === AgoraEduClassroomEvent.InvitedToGroup) {
+        this.shareUIStore.addConfirmDialog(
+          transI18n('breakout_room.confirm_title'),
+          transI18n('breakout_room.confirm_content'),
+          () => {
+            const { groupUuid } = args;
+            this.classroomStore.groupStore.joinSubRoom(groupUuid);
+          },
+        );
+      }
+      if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
+      }
+    });
+  }
   onDestroy() {}
 }

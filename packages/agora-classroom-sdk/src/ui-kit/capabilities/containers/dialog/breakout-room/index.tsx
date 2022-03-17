@@ -6,8 +6,9 @@ import { transI18n } from '@/infra/stores/common/i18n';
 import { Start } from './fragments/start';
 import { GroupSelect } from './fragments/group-select';
 import { GroupState } from 'agora-edu-core';
+import { observer } from 'mobx-react';
 
-export const BreakoutRoomDialog = ({ id }: { id: string }) => {
+export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
   const { shareUIStore, groupUIStore } = useStore();
   const { removeDialog } = shareUIStore;
   const { groupState } = groupUIStore;
@@ -30,7 +31,7 @@ export const BreakoutRoomDialog = ({ id }: { id: string }) => {
         return (
           <GroupSelect
             onNext={() => {
-              removeDialog(id);
+              setStage('start');
             }}
           />
         );
@@ -51,4 +52,4 @@ export const BreakoutRoomDialog = ({ id }: { id: string }) => {
       {fragment}
     </Modal>
   );
-};
+});

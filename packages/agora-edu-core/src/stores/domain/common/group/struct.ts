@@ -1,19 +1,11 @@
-import { GroupUser } from './type';
+import { AGEventEmitter } from 'agora-rte-sdk';
+import { EduClassroomConfig } from '../../../../configs';
 
-export class SubRoomConfig {
-  subRoomUuid: string;
-  subRoomName: string;
-  invitationUserList: GroupUser[];
-  subRoomProperties?: Record<string, any>;
-  constructor(
-    subRoomUuid: string,
-    subRoomName: string,
-    invitationUserList: GroupUser[],
-    subRoomProperties?: Record<string, any>,
-  ) {
-    this.subRoomUuid = subRoomUuid;
-    this.subRoomName = subRoomName;
-    this.invitationUserList = invitationUserList;
-    this.subRoomProperties = subRoomProperties;
+export class SubRoom extends AGEventEmitter {
+  constructor(private _roomConfig: EduClassroomConfig) {
+    super();
+  }
+  get roomConfig() {
+    return this._roomConfig;
   }
 }

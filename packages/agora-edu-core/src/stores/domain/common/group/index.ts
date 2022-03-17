@@ -2,13 +2,12 @@ import { AgoraRteEventType } from 'agora-rte-sdk';
 import { startsWith } from 'lodash';
 import get from 'lodash/get';
 import { action, observable, reaction } from 'mobx';
-import { EduClassroomConfig } from '../../../..';
+import { EduClassroomConfig } from '../../../../configs';
 import { EduEventCenter } from '../../../../event-center';
 import { AgoraEduClassroomEvent } from '../../../../type';
-import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
-import { SubRoomStore } from '../sub-room';
-import { GroupDetail, GroupUser, PatchGroup } from './type';
+import { SubRoom } from './struct';
+import { GroupDetail, PatchGroup } from './type';
 import { GroupDetails, GroupState } from './type';
 
 /**
@@ -34,7 +33,7 @@ export class GroupStore extends EduStoreBase {
 
   private _currentGroupUuid?: string;
 
-  private _subRooms: Map<string, SubRoomStore> = new Map();
+  private _subRooms: Map<string, SubRoom> = new Map();
 
   @observable
   state: GroupState = GroupState.CLOSE;
@@ -59,29 +58,41 @@ export class GroupStore extends EduStoreBase {
       }
     });
 
-    const { cmd, data } = cause;
+    if (cause) {
+      const { cmd, data } = cause;
+      // Emit event when local user is invited by teacher
+      if (cmd === 501 && startsWith(data.processUuid, GroupStore.CMD_PROCESS_PREFIX)) {
+        const groupUuid = data.processUuid.substring(GroupStore.CMD_PROCESS_PREFIX);
+        const progress = (data.addProgress as { userUuid: string; ts: number }[]) || [];
+        const accepted = (data.addAccepted as { userUuid: string }[]) || [];
+        const actionType = data.actionType as number;
+        const { userUuid: localUuid } = EduClassroomConfig.shared.sessionInfo;
 
-    // Emit event when local user is invited by teacher
-    if (cmd === 501 && startsWith(data.processUuid, GroupStore.CMD_PROCESS_PREFIX)) {
-      const groupUuid = data.processUuid.substring(GroupStore.CMD_PROCESS_PREFIX);
-      const progress = data.addProgress as { userUuid: string; ts: number }[];
-      const { userUuid: localUuid } = EduClassroomConfig.shared.sessionInfo;
+        const invitedLocal = progress.some(({ userUuid }) => userUuid === localUuid);
 
-      const invitedLocal = progress.some(({ userUuid }) => userUuid === localUuid);
+        if (invitedLocal) {
+          EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.InvitedToGroup, {
+            groupUuid,
+          });
+        }
 
-      if (invitedLocal) {
-        EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.InvitedToGroup, {
-          groupUuid,
-        });
+        if (actionType === 2 && accepted?.length) {
+          EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.AcceptedToGroup, {
+            groupUuid,
+            accepted,
+          });
+        }
       }
     }
   }
 
   @action.bound
   private _setDetails(details: GroupDetails) {
+    const newGroupDetails = new Map<string, GroupDetail>();
     Object.entries(details).forEach(([groupUuid, groupDetail]) => {
-      this.groupDetails.set(groupUuid, groupDetail);
+      newGroupDetails.set(groupUuid, groupDetail);
     });
+    this.groupDetails = newGroupDetails;
   }
 
   private _checkSubRoom() {
@@ -92,7 +103,7 @@ export class GroupStore extends EduStoreBase {
       const notInSubRoom = local && !this._subRooms.has(groupUuid);
 
       if (notInSubRoom) {
-        this._entrySubRoom(groupUuid);
+        this.joinSubRoom(groupUuid);
       }
     }
   }
@@ -102,13 +113,35 @@ export class GroupStore extends EduStoreBase {
    * @param groupDetail 创建分组信息
    * @param inProgress 是否邀请
    */
-  async addGroups(groupDetails: GroupDetail[], inProgress: boolean) {
+  async addGroups(groupDetails: GroupDetail[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
 
-    await this.classroomStore.api.updateGroupState(roomUuid, {
-      groups: groupDetails,
-      inProgress,
-    });
+    await this.api.addGroup(roomUuid, { groups: groupDetails, inProgress: false });
+  }
+
+  /**
+   * 移除分组
+   * @param groups 子房间 Id 列表
+   */
+  async removeGroups(groups: string[]) {
+    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+    await this.api.removeGroup(roomUuid, { removeGroupUuids: groups });
+  }
+
+  /**
+   * 开启分组
+   * @param groupDetails
+   */
+  async startGroup(groupDetails: GroupDetail[]) {
+    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+    await this.api.updateGroupState(
+      roomUuid,
+      {
+        groups: groupDetails,
+        inProgress: true,
+      },
+      GroupState.OPEN,
+    );
   }
 
   /**
@@ -116,58 +149,48 @@ export class GroupStore extends EduStoreBase {
    */
   async stopGroup() {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this.classroomStore.api.updateGroupState(roomUuid, {}, GroupState.CLOSE);
-  }
-
-  /**
-   * 移除子房间
-   * @param groups 子房间 Id 列表
-   */
-  async removeGroups(groups: string[]) {
-    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this.classroomStore.api.removeGroup(roomUuid, { removeGroupUuids: groups });
-  }
-
-  /**
-   * 移除所有子房间
-   * 关闭分组状态
-   */
-  async removeAllGroups() {
-    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this.classroomStore.api.updateGroupState(roomUuid, {}, GroupState.CLOSE);
+    await this.api.updateGroupState(roomUuid, { groups: [] }, GroupState.CLOSE);
   }
 
   /**
    * 进入房间
    */
-  private _entrySubRoom(groupUuid: string) {
-    let sessionInfo = EduClassroomConfig.shared.sessionInfo;
-
-    this._subRooms.set(
-      groupUuid,
-      new SubRoomStore(this, {
-        ...sessionInfo,
-        roomUuid: groupUuid,
-      }),
-    );
-
+  joinSubRoom(groupUuid: string) {
     this._currentGroupUuid = groupUuid;
+
+    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.JoinSubRoom);
   }
 
+  /**
+   * 离开子房间
+   */
   async leaveSubRoom() {
     if (this._currentGroupUuid) {
-      const subRoom = this._subRooms.get(this._currentGroupUuid);
+      this._subRooms.delete(this._currentGroupUuid);
 
-      await subRoom?.leaveSubRoom();
+      this._currentGroupUuid = undefined;
+
+      EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.LeaveSubRoom);
     }
   }
 
   /**
    * 邀请用户从主房间加入子房间
    */
-  async inviteUserListToGroup(toGroupUuid: string, userList: GroupUser[], invite: boolean = true) {
+  async inviteUserListToGroup(toGroupUuid: string, userList: string[], invite: boolean = true) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this._moveUserListToGroup(roomUuid, toGroupUuid, userList, userList, invite);
+  }
+
+  /**
+   * 更新分组成员列表
+   * @param groupUuid
+   * @param addUsers
+   * @param removeUsers
+   */
+  async updateGroupUsers(patches: PatchGroup[]) {
+    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+    await this.api.updateGroupUsers(roomUuid, { groups: patches, inProgress: false });
   }
 
   /**
@@ -176,25 +199,10 @@ export class GroupStore extends EduStoreBase {
   async addUserListToGroup(
     fromGroupUuid: string,
     toGroupUuid: string,
-    fromUserList: GroupUser[],
-    toUserList: GroupUser[],
+    fromUserList: string[],
+    toUserList: string[],
   ) {
     await this._moveUserListToGroup(fromGroupUuid, toGroupUuid, fromUserList, toUserList, false);
-  }
-
-  /**
-   * 移除子房间
-   * @param groupUuid
-   * @param userList
-   * @returns
-   */
-  async removeUserListFromGroup(groupUuid: string, userList: GroupUser[]) {
-    const fromGroup = { groupUuid, removeUser: userList };
-
-    await this.classroomStore.api.updateGroupUsers(groupUuid, {
-      groups: [fromGroup],
-      inProgress: false,
-    });
   }
 
   /**
@@ -209,15 +217,15 @@ export class GroupStore extends EduStoreBase {
   private async _moveUserListToGroup(
     fromGroupUuid: string,
     toGroupUuid: string,
-    fromUserList: GroupUser[],
-    toUserList: GroupUser[],
+    fromUserList: string[],
+    toUserList: string[],
     inProgress: boolean,
   ) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    let fromGroup = { groupUuid: fromGroupUuid, removeUser: fromUserList };
+    let fromGroup = { groupUuid: fromGroupUuid, removeUsers: fromUserList };
     let toGroup = { groupUuid: toGroupUuid, addUsers: toUserList };
     let groups = [fromGroup, toGroup];
-    await this.classroomStore.api.updateGroupUsers(roomUuid, { groups, inProgress });
+    await this.api.updateGroupUsers(roomUuid, { groups, inProgress });
   }
 
   /**
@@ -225,7 +233,7 @@ export class GroupStore extends EduStoreBase {
    */
   async acceptGroupInvited(groupUuid: string) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this.classroomStore.api.acceptGroupInvited(roomUuid, groupUuid);
+    await this.api.acceptGroupInvited(roomUuid, groupUuid);
   }
 
   /**
@@ -234,9 +242,26 @@ export class GroupStore extends EduStoreBase {
    */
   async updateGroupInfo(groups: PatchGroup[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this.classroomStore.api.updateGroupInfo(roomUuid, {
+    await this.api.updateGroupInfo(roomUuid, {
       groups,
     });
+  }
+
+  /**
+   * 当前所在子房间
+   */
+  get currentSubRoom() {
+    if (!this._currentGroupUuid) {
+      return null;
+    }
+
+    const subRoom = this._subRooms.get(this._currentGroupUuid);
+
+    if (!subRoom) {
+      return null;
+    }
+
+    return subRoom;
   }
 
   /** Hooks */

@@ -1,72 +1,67 @@
 import classNames from 'classnames';
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { SvgIcon } from '..';
 import './style.css';
 
-type TreeModel = {
+export type TreeModel = {
+  id: string;
   text: string;
   children?: TreeModel[];
 };
 
-type TreeProps = {
+type MultiRootTreeProps = {
   data: TreeModel[];
-  renderSuffix?: (node: TreeModel, level: number) => JSX.Element | undefined;
+  renderNode?: (node: TreeModel, level: number) => JSX.Element | undefined;
   gap?: number;
-  onClick?: () => void;
   disableExpansion?: boolean;
   childClassName?: string;
 } & BaseProps;
 
-type TreeNodeProps = {
+type TreeProps = {
   level: number;
   data: TreeModel;
   gap?: number;
-  renderSuffix?: (node: TreeModel, level: number) => JSX.Element | undefined;
-  onClick?: () => void;
+  renderNode?: (node: TreeModel, level: number) => JSX.Element | undefined;
   disableExpansion?: boolean;
   childClassName?: string;
 };
 
-export const Tree: FC<TreeProps> = ({
+export const MultiRootTree: FC<MultiRootTreeProps> = ({
   data,
-  renderSuffix,
   gap,
-  onClick,
   disableExpansion,
   childClassName,
+  renderNode,
 }) => {
   return (
-    <div>
+    <div className="fcr-multi-tree-root">
       {data.map((node, key) => (
-        <TreeNode
+        <Tree
           data={node}
           key={key.toString()}
-          renderSuffix={renderSuffix}
           level={0}
           gap={gap}
-          onClick={onClick}
           disableExpansion={disableExpansion}
           childClassName={childClassName}
+          renderNode={renderNode}
         />
       ))}
     </div>
   );
 };
-export const TreeNode: FC<TreeNodeProps> = ({
+
+export const Tree: FC<TreeProps> = ({
   data,
-  renderSuffix,
   level,
   gap,
-  onClick,
   disableExpansion,
   childClassName,
+  renderNode,
 }) => {
   const hasChildren = data.children?.length;
 
   const [expanded, setExtpanded] = useState(false);
-
-  const indent = level * 2;
 
   const cls = classNames('fcr-tree-node flex items-center cursor-pointer', {
     [`mb-${gap}`]: !!gap,
@@ -74,12 +69,16 @@ export const TreeNode: FC<TreeNodeProps> = ({
   });
 
   return (
-    <div>
+    <div className="fcr-tree-root">
       <div
         className={cls}
-        onClick={() => {
-          setExtpanded(!expanded);
-        }}>
+        onClick={
+          !disableExpansion
+            ? () => {
+                setExtpanded(!expanded);
+              }
+            : undefined
+        }>
         {!disableExpansion &&
           (hasChildren ? (
             <SvgIcon
@@ -94,25 +93,43 @@ export const TreeNode: FC<TreeNodeProps> = ({
           ) : (
             <i style={{ width: 22 }} />
           ))}
-        <div className="flex-grow flex justify-between items-center" onClick={onClick}>
-          <span>{data.text}</span>
-          {renderSuffix && renderSuffix(data, level)}
-        </div>
+        {renderNode ? (
+          renderNode(data, level)
+        ) : (
+          <div className="flex-grow flex justify-between items-center">
+            <span>{data.text}</span>
+          </div>
+        )}
       </div>
       {expanded &&
         data.children &&
         data.children.map((node, key) => (
-          <TreeNode
+          <Tree
             data={node}
             key={key.toString()}
             level={level + 1}
             gap={gap}
-            onClick={onClick}
-            renderSuffix={renderSuffix}
             disableExpansion={disableExpansion}
             childClassName={childClassName}
+            renderNode={renderNode}
           />
         ))}
+    </div>
+  );
+};
+
+type TreeNodeProps = {
+  content: React.ReactNode;
+  className?: string;
+  tail?: JSX.Element;
+} & React.HTMLAttributes<HTMLDivElement>;
+
+export const TreeNode: FC<TreeNodeProps> = ({ content, tail, className, ...htmlProps }) => {
+  const cls = classNames('flex-grow flex justify-between items-center', className);
+  return (
+    <div className={cls} {...htmlProps}>
+      <span>{content}</span>
+      {tail}
     </div>
   );
 };

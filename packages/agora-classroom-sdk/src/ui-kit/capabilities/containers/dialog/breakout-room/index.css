@@ -1,5 +1,5 @@
 .breakout-room {
-  width: 360px;
+  width: 420px;
   height: 373px;
   padding-bottom: 0;
   --text-color: #586376;
@@ -65,11 +65,11 @@
   background: #f9f9fc;
 }
 
-.breakout-room .suffix-btn {
+.breakout-room .link-btn {
   border-radius: 2px;
 }
 
-.breakout-room .suffix-btn:hover {
+.breakout-room .link-btn:hover {
   background: var(--link-active-bg-color);
   color: var(--link-active-color);
 }

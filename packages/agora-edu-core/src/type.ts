@@ -161,4 +161,7 @@ export enum AgoraEduClassroomEvent {
   ScreenShareEnded = 116, // 屏幕共享结束
   InvitedToGroup = 117, //被邀请至小组
   MoveToOtherGroup = 118, // 被移动至小组
+  JoinSubRoom = 119, //加入分组房间
+  LeaveSubRoom = 120, //离开分组房间
+  AcceptedToGroup = 121, //用户接收并加入小组
 }

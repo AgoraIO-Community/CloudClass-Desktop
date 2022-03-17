@@ -6,13 +6,13 @@ import { useMemo, useState, FC } from 'react';
 import { Button, RadioGroup, Select, transI18n } from '~ui-kit';
 
 type Props = {
-  onNext: () => void;
+  onNext: (params: { groupNum: number }) => void;
 };
 
 export const Start: FC<Props> = observer(({ onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { createGroups } = groupUIStore;
+  const { createGroups, numberToBeAssigned } = groupUIStore;
 
   const groupNumOptions = useMemo(
     () =>
@@ -59,11 +59,13 @@ export const Start: FC<Props> = observer(({ onNext }) => {
           />
         </div>
       </div>
-      <div className="my-3">{transI18n('breakout_room.wait_for_assign', { reason: 10 })}</div>
+      <div className="my-3">
+        {transI18n('breakout_room.wait_for_assign', { reason: `${numberToBeAssigned}` })}
+      </div>
       <Button
         onClick={() => {
           createGroups(GroupMethod.MANUAL, groupNum);
-          onNext();
+          onNext({ groupNum });
         }}>
         {transI18n('breakout_room.create_submit')}
       </Button>
