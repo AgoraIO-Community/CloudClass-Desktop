@@ -38,19 +38,6 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
     );
   }
 
-  prepareDom(dom?: HTMLElement): Element | undefined {
-    if (!dom) return undefined;
-
-    const el = document.createElement('canvas');
-    el.style.position = 'absolute';
-    el.style.height = '100%';
-    el.style.width = '100%';
-    el.style.objectFit = 'cover';
-    el.style.transform = 'rotateY(180deg) scale(1.0)';
-    dom.append(el);
-    return el;
-  }
-
   async onExecution() {
     do {
       this.logger.debug(`thread notify start...`);
@@ -107,16 +94,24 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
 
         if (this.trackState === AgoraRteMediaSourceState.started) {
           if (!this.currentCanvas && this.canvas) {
-            let el = this.prepareDom(this.canvas.view);
-            this._adapter.rtcEngine.setupLocalVideo(el);
+            let canvas = this.canvas.view.getElementsByTagName('canvas');
+            if (canvas.length > 0) {
+              this._adapter.rtcEngine.setupLocalVideo(canvas.item(0));
+            } else {
+              this.logger.warn('canvas not exist for this video container');
+            }
             this.currentCanvas = this.canvas;
           } else if (
             this.currentCanvas &&
             this.canvas &&
             this.canvas.view !== this.currentCanvas.view
           ) {
-            let el = this.prepareDom(this.canvas.view);
-            this._adapter.rtcEngine.setupLocalVideo(el);
+            let canvas = this.canvas.view.getElementsByTagName('canvas');
+            if (canvas.length > 0) {
+              this._adapter.rtcEngine.setupLocalVideo(canvas.item(0));
+            } else {
+              this.logger.warn('canvas not exist for this video container');
+            }
             this.currentCanvas = this.canvas;
           }
           if (this.currentCanvas && this.currentCanvas.view) {

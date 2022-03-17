@@ -227,6 +227,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
   setupLocalVideo(canvas: AgoraRtcVideoCanvas, videoSourceType: AgoraRteVideoSourceType): number {
     if (videoSourceType === AgoraRteVideoSourceType.Camera) {
+      this._wrapVideoDom(canvas.view);
       this.cameraThread.canvas = canvas;
       this.cameraThread.run();
     } else if (videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
@@ -235,12 +236,13 @@ export class RtcAdapterCef extends RtcAdapterBase {
     return 0;
   }
   setupRemoteVideo(canvas: AgoraRtcVideoCanvas): number {
-    this.rtcEngine.setupRemoteVideo(+canvas.streamUuid, canvas.view);
-    this.rtcEngine.setupViewContentMode(
-      +canvas.streamUuid,
-      canvas.renderMode === AGRenderMode.fill ? 0 : 1,
-      undefined,
-    );
+    let el = this._wrapVideoDom(canvas.view);
+    this.rtcEngine.setupRemoteVideo(el, +canvas.streamUuid);
+    // this.rtcEngine.setupViewContentMode(
+    //   +canvas.streamUuid,
+    //   canvas.renderMode === AGRenderMode.fill ? 0 : 1,
+    //   undefined,
+    // );
     return 0;
   }
   startAudioRecordingDeviceTest(indicateInterval: number): number {
@@ -381,6 +383,22 @@ export class RtcAdapterCef extends RtcAdapterBase {
       case AgoraRegion.NA:
         return 2;
     }
+  }
+
+  private _wrapVideoDom(dom: HTMLElement): HTMLCanvasElement | null {
+    if (!dom) return null;
+
+    const canvas = dom.getElementsByTagName('canvas');
+    if (canvas.length > 0) return canvas.item(0);
+
+    const el = document.createElement('canvas');
+    el.style.position = 'absolute';
+    el.style.height = '100%';
+    el.style.width = '100%';
+    el.style.objectFit = 'cover';
+    el.style.transform = 'rotateY(180deg) scale(1.0)';
+    dom.append(el);
+    return el;
   }
 
   private _addEventListeners() {
