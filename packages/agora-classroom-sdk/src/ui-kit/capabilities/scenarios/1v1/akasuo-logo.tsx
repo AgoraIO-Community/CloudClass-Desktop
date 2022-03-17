@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from './akasuo-logo.svg';
 
 export default function AkasuoLogo() {
   return (
@@ -9,7 +10,7 @@ export default function AkasuoLogo() {
         alignItems: 'center',
         height: 46,
       }}>
-      <span style={{ color: '#fff' }}>阿卡索</span>
+      <img src={logo} />
     </div>
   );
 }
