@@ -184,7 +184,9 @@ export class BoardStore extends EduStoreBase {
 
         await this.teacherFirstLoginHandle();
         await this.studentBoardPermissionHandle();
-        await this.openCourseWareHandle();
+        setTimeout(async () => {
+          await this.openCourseWareHandle();
+        }, 500);
       })
       .catch((e) => {
         EduErrorCenter.shared.handleNonThrowableError(
