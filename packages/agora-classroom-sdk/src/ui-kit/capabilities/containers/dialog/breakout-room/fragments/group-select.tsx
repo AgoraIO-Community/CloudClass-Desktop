@@ -14,12 +14,23 @@ type LinkButtonProps = {
   text: string;
   onClick?: (e: MouseEvent) => void;
   className?: string;
+  hoverText?: string;
 };
 
-const LinkButton = ({ onClick, text }: LinkButtonProps) => {
+const LinkButton = ({ onClick, text, hoverText = text }: LinkButtonProps) => {
+  const [hover, setHover] = useState(false);
+
   return (
-    <div className="link-btn py-1 px-3" onClick={onClick}>
-      {text}
+    <div
+      className="link-btn py-1 px-3"
+      onClick={onClick}
+      onMouseOver={() => {
+        setHover(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+      }}>
+      {hover ? hoverText : text}
     </div>
   );
 };
@@ -32,7 +43,8 @@ type GroupButtonsProps = {
 const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
   const { groupUIStore } = useStore();
 
-  const { students, setGroupUsers, groupDetails, groupState, notGroupedCount } = groupUIStore;
+  const { students, setGroupUsers, groupDetails, groupState, notGroupedCount, joinSubRoom } =
+    groupUIStore;
 
   const [toggle, setToggle] = useState(false);
 
@@ -46,7 +58,12 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
     <div className="flex" onMouseEnter={mouseHandler(true)} onMouseLeave={mouseHandler(false)}>
       {toggle ? btns : null}
       {groupState === GroupState.OPEN ? (
-        <LinkButton className="pr-4" text={`${userCount}`} />
+        <LinkButton
+          className="pr-4"
+          text={`${userCount}`}
+          onClick={() => joinSubRoom(groupUuid)}
+          hoverText={'加入小组'}
+        />
       ) : (
         <UserPanel
           groupUuid={groupUuid}

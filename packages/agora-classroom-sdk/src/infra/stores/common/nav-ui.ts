@@ -117,13 +117,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         title: 'Exit',
         iconType: 'exit',
         onClick: async () => {
-          this.shareUIStore.addConfirmDialog(
-            transI18n('toast.leave_room'),
-            transI18n('toast.quit_room'),
-            () => {
-              this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+          const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+          this.shareUIStore.addDialog(DialogCategory.Quit, {
+            onOk: (back: boolean) => {
+              if (back) {
+                this.classroomStore.groupStore.leaveSubRoom();
+              } else {
+                this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+              }
             },
-          );
+            showOption: isInSubRoom,
+          });
         },
       },
     ];

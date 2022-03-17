@@ -1,10 +1,12 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import {
   AgoraComponentRegion,
   AgoraRteEngine,
   AgoraRteEventType,
   AgoraRteScene,
   AgoraRteSceneJoinRTCOptions,
+  AgoraStream,
+  AgoraUser,
   AGRtcConnectionType,
   bound,
   Log,
@@ -43,9 +45,25 @@ export class ConnectionStore extends EduStoreBase {
   @observable whiteboardState: WhiteboardState = WhiteboardState.Idle;
   @observable rtcState: RtcState = RtcState.Idle;
   @observable rtcSubState: RtcState = RtcState.Idle;
-  @observable scene?: AgoraRteScene;
+  @observable _scenes: AgoraRteScene[] = [];
   @observable engine?: AgoraRteEngine;
   @observable checkInData?: CheckInData;
+
+  @computed
+  get scene() {
+    if (this._scenes.length) {
+      return this._scenes[this._scenes.length - 1];
+    }
+    return undefined;
+  }
+
+  get sceneId() {
+    return this.scene?.sceneId!;
+  }
+
+  getScene(sceneId: string) {
+    return this._scenes.find((scene) => sceneId === scene.sceneId);
+  }
 
   // actions
   @action.bound
@@ -87,7 +105,11 @@ export class ConnectionStore extends EduStoreBase {
 
   @action
   setScene(scene?: AgoraRteScene) {
-    this.scene = scene;
+    if (scene) {
+      this._scenes.push(scene);
+    } else {
+      this._scenes.pop();
+    }
   }
 
   @action
@@ -199,6 +221,73 @@ export class ConnectionStore extends EduStoreBase {
     EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Ready);
   }
 
+  @action.bound
+  async joinSubRoom(roomUuid: string) {
+    if (this.classroomState !== ClassroomState.Connected) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_GROUP_CANNOT_JOIN,
+        new Error(`cannot join group while classroom not connected`),
+      );
+    }
+
+    let [error] = await to(
+      retryAttempt(async () => {
+        const { sessionInfo: baseSessionInfo } = EduClassroomConfig.shared;
+        const sessionInfo = { ...baseSessionInfo, baseSessionInfo, roomUuid };
+        const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
+        const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
+        this.setCheckInData({
+          vid,
+          clientServerTime: ts,
+          classRoomSchedule: {
+            state,
+            startTime,
+            duration,
+            closeDelay,
+          },
+          rtcRegion,
+          rtmRegion,
+        });
+
+        const engine = this.getEngine();
+        const scene = engine.createAgoraRteScene(sessionInfo.roomUuid);
+
+        this.setScene(scene);
+        // streamId defaults to 0 means server allocate streamId for you
+        await scene.joinScene({
+          userName: sessionInfo.userName,
+          userRole: EduRole2RteRole(sessionInfo.roomType, sessionInfo.role),
+          streamId: '0',
+        });
+      }, [])
+        .fail(({ error }: { error: Error }) => {
+          this.setScene(undefined);
+          this.logger.error(error.message);
+          return true;
+        })
+        .abort(() => {
+          this.setScene(undefined);
+        })
+        .exec(),
+    );
+
+    if (error) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_JOIN_CLASSROOM_FAIL,
+        error,
+      );
+    }
+  }
+
+  @action.bound
+  async leaveSubRoom() {
+    if (this.scene) {
+      this.scene.leaveRTC();
+      this.scene.leaveScene();
+      this.setScene(undefined);
+    }
+  }
+
   @bound
   async leaveClassroom(reason: LeaveReason) {
     await this.leaveClassroomUntil(reason, Promise.resolve());
@@ -206,6 +295,10 @@ export class ConnectionStore extends EduStoreBase {
 
   @bound
   async leaveClassroomUntil(reason: LeaveReason, promise: Promise<void>) {
+    if (this._scenes.length > 1) {
+      await this.leaveSubRoom();
+    }
+
     let [err] = await to(this.leaveWhiteboard());
     err &&
       EduErrorCenter.shared.handleNonThrowableError(

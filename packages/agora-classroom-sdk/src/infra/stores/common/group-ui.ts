@@ -398,10 +398,12 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 离开子房间
+   * 加入子房间
+   * @param groupUuid
    */
-  leave() {
-    this.classroomStore.groupStore.leaveSubRoom();
+  @bound
+  joinSubRoom(groupUuid: string) {
+    this.classroomStore.groupStore.joinSubRoom(groupUuid);
   }
 
   private _generateGroupName() {
@@ -413,13 +415,28 @@ export class GroupUIStore extends EduUIStoreBase {
   onInstall() {
     EduEventCenter.shared.onClassroomEvents((type, args) => {
       if (type === AgoraEduClassroomEvent.JoinSubRoom) {
-        if (this.currentSubRoom) {
+        runInAction(() => {
+          this.joiningSubRoom = true;
+        });
+        const roomUuid = this.classroomStore.groupStore.currentSubRoom;
+        if (roomUuid) {
+          this.classroomStore.connectionStore
+            .joinSubRoom(roomUuid)
+            .then(() => {
+              runInAction(() => {
+                this.joiningSubRoom = true;
+              });
+            })
+            .catch(() => {
+              this.shareUIStore.addToast('Cannot join sub room');
+            });
         } else {
-          this.shareUIStore.addToast('Cannot find subroom');
+          this.shareUIStore.addToast('Cannot find room');
         }
       }
       if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
         this.shareUIStore.addToast('Leave sub room');
+        this.classroomStore.connectionStore.leaveClassroom;
       }
       if (type === AgoraEduClassroomEvent.AcceptedToGroup) {
         this.logger.info('Accepted to group', args);

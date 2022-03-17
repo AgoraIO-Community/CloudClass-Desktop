@@ -6,7 +6,6 @@ import { EduClassroomConfig } from '../../../../configs';
 import { EduEventCenter } from '../../../../event-center';
 import { AgoraEduClassroomEvent } from '../../../../type';
 import { EduStoreBase } from '../base';
-import { SubRoom } from './struct';
 import { GroupDetail, PatchGroup } from './type';
 import { GroupDetails, GroupState } from './type';
 
@@ -32,8 +31,6 @@ export class GroupStore extends EduStoreBase {
   static readonly CMD_PROCESS_PREFIX = 'groups-';
 
   private _currentGroupUuid?: string;
-
-  private _subRooms: Map<string, SubRoom> = new Map();
 
   @observable
   state: GroupState = GroupState.CLOSE;
@@ -100,7 +97,7 @@ export class GroupStore extends EduStoreBase {
 
     for (const [groupUuid, group] of this.groupDetails.entries()) {
       const local = group.users.find(({ userUuid }) => userUuid === localUuid);
-      const notInSubRoom = local && !this._subRooms.has(groupUuid);
+      const notInSubRoom = local && groupUuid !== this._currentGroupUuid;
 
       if (notInSubRoom) {
         this.joinSubRoom(groupUuid);
@@ -166,7 +163,12 @@ export class GroupStore extends EduStoreBase {
    */
   async leaveSubRoom() {
     if (this._currentGroupUuid) {
-      this._subRooms.delete(this._currentGroupUuid);
+      await this.updateGroupUsers([
+        {
+          groupUuid: this._currentGroupUuid,
+          removeUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
+        },
+      ]);
 
       this._currentGroupUuid = undefined;
 
@@ -251,17 +253,7 @@ export class GroupStore extends EduStoreBase {
    * 当前所在子房间
    */
   get currentSubRoom() {
-    if (!this._currentGroupUuid) {
-      return null;
-    }
-
-    const subRoom = this._subRooms.get(this._currentGroupUuid);
-
-    if (!subRoom) {
-      return null;
-    }
-
-    return subRoom;
+    return this._currentGroupUuid;
   }
 
   /** Hooks */
