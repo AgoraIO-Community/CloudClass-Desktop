@@ -133,3 +133,7 @@
   justify-content: center;
   align-items: center;
 }
+
+.max-img .ant-modal-content {
+  margin: 30px;
+}

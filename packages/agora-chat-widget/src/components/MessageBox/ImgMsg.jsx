@@ -21,7 +21,7 @@ export const ImgMsg = ({ item }) => {
 
   // 控制大图
   const [maxImg, setMaxImg] = useState(false);
-  const [maImgUrl, setMaxImgUrl] = useState('');
+  const [maxImgUrl, setMaxImgUrl] = useState('');
 
   // 点击展示大图
   const showMaximumPicture = (imgUrl) => {
@@ -69,7 +69,7 @@ export const ImgMsg = ({ item }) => {
         width={imgWidth}
         bodyStyle={{ padding: '0' }}
         className="max-img">
-        <img src={maImgUrl} style={{ width: '100%', height: '100%' }} alt="" />
+        <img src={maxImgUrl} style={{ width: '100%', height: '100%' }} alt="" />
       </Modal>
     </div>
   );
