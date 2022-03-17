@@ -38,6 +38,19 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
     );
   }
 
+  prepareDom(dom?: HTMLElement): Element | undefined {
+    if (!dom) return undefined;
+
+    const el = document.createElement('canvas');
+    el.style.position = 'absolute';
+    el.style.height = '100%';
+    el.style.width = '100%';
+    el.style.objectFit = 'cover';
+    el.style.transform = 'rotateY(180deg) scale(1.0)';
+    dom.append(el);
+    return el;
+  }
+
   async onExecution() {
     do {
       this.logger.debug(`thread notify start...`);
@@ -77,7 +90,6 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
                   : undefined;
                 if (encoderConfig) {
                   this._adapter.rtcEngine.setVideoEncoderConfiguration(encoderConfig);
-                  this._adapter.rtcEngine.setVideoRenderFPS(encoderConfig.frameRate);
                 }
               });
             }
@@ -95,14 +107,16 @@ export class AgoraRteCefCameraThread extends AgoraRteThread {
 
         if (this.trackState === AgoraRteMediaSourceState.started) {
           if (!this.currentCanvas && this.canvas) {
-            this._adapter.rtcEngine.setupLocalVideo(this.canvas.view);
+            let el = this.prepareDom(this.canvas.view);
+            this._adapter.rtcEngine.setupLocalVideo(el);
             this.currentCanvas = this.canvas;
           } else if (
             this.currentCanvas &&
             this.canvas &&
             this.canvas.view !== this.currentCanvas.view
           ) {
-            this._adapter.rtcEngine.setupLocalVideo(this.canvas.view);
+            let el = this.prepareDom(this.canvas.view);
+            this._adapter.rtcEngine.setupLocalVideo(el);
             this.currentCanvas = this.canvas;
           }
           if (this.currentCanvas && this.currentCanvas.view) {
