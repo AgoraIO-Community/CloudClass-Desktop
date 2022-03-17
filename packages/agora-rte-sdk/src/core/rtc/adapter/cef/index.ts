@@ -111,13 +111,44 @@ export class RtcAdapterCef extends RtcAdapterBase {
     //   res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region);
     // }
 
-    const res = this.rtcEngine.initialize(new AgoraCEF.AgoraRtcEngine.RtcEngineContext(AgoraRteEngineConfig.shared.appId));
+    const res = this.rtcEngine.initialize(
+      new AgoraCEF.AgoraRtcEngine.RtcEngineContext(AgoraRteEngineConfig.shared.appId),
+    );
 
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
         AGRteErrorCode.RTC_ERR_RTC_ENGINE_INITIALZIE_FAILED,
         new Error(`rtc engine initialize failed ${res}`),
       );
+    const logPath = RtcAdapterCef.logPath;
+    if (logPath) {
+      Logger.info(`[RtcAdapterCef] sdk log path: ${logPath}`);
+      this.rtcEngine.setLogFile(logPath);
+    }
+
+    // this is needed as enumerate device depends on this
+    this.rtcEngine.enableVideo();
+    this.rtcEngine.enableAudio();
+
+    const engineEventBus = new AGEventEmitter();
+
+    function proxy(context: any, method: any) {
+      return function (...args: any[]) {
+        engineEventBus.on(args[0], args[1]);
+        method.apply(context, [
+          args[0],
+          (...callbackArgs: any[]) => {
+            engineEventBus.emit(args[0], ...callbackArgs);
+          },
+        ]);
+      };
+    }
+
+    this.rtcEngine.on = proxy(this.rtcEngine, this.rtcEngine.on);
+
+    this.rtcEngine.off = (evt: string, callback: Function) => {
+      engineEventBus.off(evt, callback);
+    };
 
     this._adm = new RtcAudioDeviceManagerCef(this);
     this._vdm = new RtcVideoDeviceManagerCef(this);
@@ -520,7 +551,7 @@ export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
       let rtcEngine = this.base.rtcEngine;
       if (connectionType === AGRtcConnectionType.main) {
         rtcEngine.on('JoinChannelSuccess', () => {
-          rtcEngine.off('JoinChannelSuccess')
+          rtcEngine.off('JoinChannelSuccess');
           resolve();
         });
         rtcEngine.setChannelProfile(this._channelProfile);

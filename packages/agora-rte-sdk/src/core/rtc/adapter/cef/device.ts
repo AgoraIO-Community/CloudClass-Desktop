@@ -75,7 +75,7 @@ export class RtcVideoDeviceManagerCef extends RtcVideoDeviceManagerBase {
 
   private _initializeDeviceList() {
     this.fetchDeviceList();
-    AgoraCEF.AgoraRtcEngine.on('videoDeviceStateChanged', () => {
+    AgoraCEF.AgoraRtcEngine.on('VideoDeviceStateChanged', () => {
       this.fetchDeviceList();
     });
   }
