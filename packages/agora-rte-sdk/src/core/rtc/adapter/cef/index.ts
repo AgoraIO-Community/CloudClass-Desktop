@@ -205,10 +205,10 @@ export class RtcAdapterCef extends RtcAdapterBase {
     return true;
   }
   setVideoCameraDevice(deviceId: string): number {
-    return AgoraCEF.AgoraRtcEngine.videoDeviceManager.setDevice(deviceId);
+    return this.rtcEngine.videoDeviceManager.setDevice(deviceId);
   }
   setAudioRecordingDevice(deviceId: string): number {
-    return AgoraCEF.AgoraRtcEngine.audioDeviceManager.setRecordingDevice(deviceId);
+    return this.rtcEngine.audioDeviceManager.setRecordingDevice(deviceId);
   }
   setAudioPlaybackDevice(deviceId: string): number {
     return this.rtcEngine.setAudioPlaybackDevice(deviceId);
@@ -223,7 +223,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
   enableLocalAudio(enable: boolean): number {
     this._localAudioEnabled = enable;
     this.updateRole();
-    return AgoraCEF.AgoraRtcEngine.enableLocalAudio(enable);
+    return this.rtcEngine.enableLocalAudio(enable);
   }
   setupLocalVideo(canvas: AgoraRtcVideoCanvas, videoSourceType: AgoraRteVideoSourceType): number {
     if (videoSourceType === AgoraRteVideoSourceType.Camera) {
@@ -246,10 +246,10 @@ export class RtcAdapterCef extends RtcAdapterBase {
     return 0;
   }
   startAudioRecordingDeviceTest(indicateInterval: number): number {
-    return AgoraCEF.AgoraRtcEngine.audioDeviceManager.startRecordingDeviceTest(indicateInterval);
+    return this.rtcEngine.audioDeviceManager.startRecordingDeviceTest(indicateInterval);
   }
   stopAudioRecordingDeviceTest(): number {
-    return AgoraCEF.AgoraRtcEngine.audioDeviceManager.stopRecordingDeviceTest();
+    return this.rtcEngine.audioDeviceManager.stopRecordingDeviceTest();
   }
   startAudioPlaybackDeviceTest(url: string): number {
     // return this.rtcEngine.startAudioPlaybackDeviceTest(url);
@@ -402,11 +402,11 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
 
   private _addEventListeners() {
-    AgoraCEF.AgoraRtcEngine.on('LocalVideoStateChanged', (state: any, reason: any) => {
+    this.rtcEngine.on('LocalVideoStateChanged', (state: any, reason: any) => {
       this.logger.info(`[rtc] video state changed ${state} ${reason}`);
       this.cameraThread.videoStreamState = state;
     });
-    AgoraCEF.AgoraRtcEngine.on('LocalAudioStateChanged', (state: any) => {
+    this.rtcEngine.on('LocalAudioStateChanged', (state: any) => {
       if (state === 0) {
         this.emit(
           AgoraMediaControlEventType.localAudioTrackChanged,
@@ -422,8 +422,8 @@ export class RtcAdapterCef extends RtcAdapterBase {
         );
       }
     });
-    AgoraCEF.AgoraRtcEngine.on(
-      'groupAudioVolumeIndication',
+    this.rtcEngine.on(
+      'AudioVolumeIndication',
       (speakers: { uid: number; volume: number; vad: number }[]) => {
         let localRecordingVolume = speakers.find((s) => s.uid === 0);
         let localPlaybackVolume = speakers.find((s) => s.uid === 1);
@@ -443,10 +443,10 @@ export class RtcAdapterCef extends RtcAdapterBase {
   private updateRole() {
     if (this._localVideoEnabled || this._localAudioEnabled) {
       this.logger.info(`update rtc role to host`);
-      AgoraCEF.AgoraRtcEngine.setClientRole(1);
+      this.rtcEngine.setClientRole(1);
     } else {
       this.logger.info(`update rtc role to audience`);
-      AgoraCEF.AgoraRtcEngine.setClientRole(2);
+      this.rtcEngine.setClientRole(2);
     }
   }
 }
@@ -573,7 +573,7 @@ export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
           resolve();
         });
         rtcEngine.setChannelProfile(this._channelProfile);
-        rtcEngine.enableAudioVolumeIndication(500, 3);
+        rtcEngine.enableAudioVolumeIndication(500, 3, false);
         rtcEngine.joinChannel(token, this.channelName, '', +streamUuid);
       } else if (connectionType === AGRtcConnectionType.sub) {
         rtcEngine.once('videoSourceJoinedSuccess', () => {
@@ -615,13 +615,13 @@ export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
 
   private _addEventListeners() {
     let rtcEngine = AgoraCEF.AgoraRtcEngine;
-    rtcEngine.on('networkQuality', (uid: number, txquality: any, rxquality: any) => {
+    rtcEngine.on('NetworkQuality', (uid: number, txquality: any, rxquality: any) => {
       if (uid === 0) {
         this._networkStats.downlinkNetworkQuality = rxquality;
         this._networkStats.uplinkNetworkQuality = txquality;
       }
     });
-    rtcEngine.on('rtcStats', (stats: any) => {
+    rtcEngine.on('RtcStats', (stats: any) => {
       const {
         txPacketLossRate,
         rxPacketLossRate,
@@ -639,7 +639,7 @@ export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
     });
 
     rtcEngine.on(
-      'groupAudioVolumeIndication',
+      'AudioVolumeIndication',
       (speakers: { uid: number; volume: number; vad: number }[]) => {
         let volumes = new Map<string, number>();
         speakers.forEach((s) => volumes.set('' + s.uid, s.volume));
@@ -647,7 +647,7 @@ export class RtcChannelAdapterCef extends RtcChannelAdapterBase {
       },
     );
 
-    rtcEngine.on('connectionStateChanged', (state: any) => {
+    rtcEngine.on('ConnectionStateChanged', (state: any) => {
       this.emit(AgoraRteEventType.RtcConnectionStateChanged, this._getRtcState(state));
     });
 
