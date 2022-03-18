@@ -67,9 +67,19 @@ export const ImgMsg = ({ item }) => {
         visible={maxImg}
         footer={null}
         width={imgWidth}
-        bodyStyle={{ padding: '0' }}
+        closable={false}
+        bodyStyle={{
+          padding: '0',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
         className="max-img">
-        <img src={maxImgUrl} style={{ width: '100%', height: '100%' }} alt="" />
+        <div className="img-box">
+          <img src={maxImgUrl} style={{ maxHeight: '720px' }} alt="" />
+          <div className="closeStyle" onClick={() => setMaxImg(false)}>
+            X
+          </div>
+        </div>
       </Modal>
     </div>
   );
