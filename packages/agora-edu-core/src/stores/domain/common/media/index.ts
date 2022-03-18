@@ -12,7 +12,6 @@ import {
   bound,
   BeautyEffect,
   lighteningLevel,
-  Logger,
   Log,
   AGRteTrackErrorReason,
 } from 'agora-rte-sdk';
@@ -21,6 +20,7 @@ import { AgoraEduClassroomEvent, ClassroomState } from '../../../../type';
 import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
+import { trace } from 'mobx';
 
 export const DEVICE_DISABLE = 'DEVICE_DISABLE';
 
@@ -242,6 +242,7 @@ export class MediaStore extends EduStoreBase {
   };
 
   @computed get cameraAccessors() {
+    trace();
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
       cameraDeviceId: this.cameraDeviceId,
@@ -250,6 +251,7 @@ export class MediaStore extends EduStoreBase {
   }
 
   @computed get micAccessors() {
+    trace();
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
       recordingDeviceId: this.recordingDeviceId,
@@ -524,7 +526,10 @@ export class MediaStore extends EduStoreBase {
     reaction(
       () => this.localCameraTrackState,
       () => {
-        const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
+        const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+        const roomUuid = this.classroomStore.connectionStore.scene
+          ? this.classroomStore.connectionStore.sceneId
+          : EduClassroomConfig.shared.sessionInfo.roomUuid;
         !EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
           this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
           this.classroomStore.api.reportMicCameraStateLeagcy({
@@ -538,7 +543,10 @@ export class MediaStore extends EduStoreBase {
     reaction(
       () => this.localMicTrackState,
       () => {
-        const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
+        const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+        const roomUuid = this.classroomStore.connectionStore.scene
+          ? this.classroomStore.connectionStore.sceneId
+          : EduClassroomConfig.shared.sessionInfo.roomUuid;
         !EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
           this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
           this.classroomStore.api.reportMicCameraStateLeagcy({

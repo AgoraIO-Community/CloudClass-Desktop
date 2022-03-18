@@ -19,7 +19,7 @@ export class ApiBase {
   //instance level defaults
   host?: string;
   pathPrefix?: string;
-  headers?: AgoraRteServiceConfig;
+  headers?: AgoraRteServiceConfig['headers'];
 
   async fetch(params: AgoraFetchParams) {
     const { method, data, full_url, path, query = {} } = params;

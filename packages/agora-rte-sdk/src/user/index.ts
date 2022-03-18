@@ -137,7 +137,7 @@ export class AgoraRteLocalUser {
   }
 
   async setSceneProperties(properties: any, cause: any) {
-    return await AgoraRteEngine.engine.getApiService().updateRoomProperties({
+    return await this._scene.getApiService().updateRoomProperties({
       roomUuid: this.sceneId,
       properties,
       cause,
@@ -145,7 +145,7 @@ export class AgoraRteLocalUser {
   }
 
   async deleteSceneProperties(properties: string[], cause: any) {
-    return await AgoraRteEngine.engine.getApiService().deleteRoomProperties({
+    return await this._scene.getApiService().deleteRoomProperties({
       roomUuid: this.sceneId,
       properties,
       cause,
@@ -153,7 +153,7 @@ export class AgoraRteLocalUser {
   }
 
   async setUserProperties(properties: any, cause: any) {
-    return await AgoraRteEngine.engine.getApiService().updateUserProperties({
+    return await this._scene.getApiService().updateUserProperties({
       userUuid: this.userUuid,
       roomUuid: this.sceneId,
       properties,
@@ -162,7 +162,7 @@ export class AgoraRteLocalUser {
   }
 
   async deleteUserProperties(properties: string[], cause: any) {
-    return await AgoraRteEngine.engine.getApiService().deleteUserProperties({
+    return await this._scene.getApiService().deleteUserProperties({
       userUuid: this.userUuid,
       roomUuid: this.sceneId,
       properties,
@@ -180,7 +180,7 @@ export class AgoraRteLocalUser {
     },
     connectionType?: AGRtcConnectionType,
   ) {
-    return await AgoraRteEngine.engine
+    return await this._scene
       .getApiService()
       .updateDeviceState(
         this.sceneId,
@@ -205,7 +205,7 @@ export class AgoraRteLocalUser {
     },
     connectionType?: AGRtcConnectionType,
   ) {
-    return await AgoraRteEngine.engine
+    return await this._scene
       .getApiService()
       .upsertStream(
         this.sceneId,
@@ -232,29 +232,27 @@ export class AgoraRteLocalUser {
     },
     connectionType?: AGRtcConnectionType,
   ) {
-    return await AgoraRteEngine.engine
-      .getApiService()
-      .upsertStream(this.sceneId, userUuid, streamUuid, {
-        publishVideo,
-        publishAudio,
-      });
+    return await this._scene.getApiService().upsertStream(this.sceneId, userUuid, streamUuid, {
+      publishVideo,
+      publishAudio,
+    });
   }
   async deleteLocalMediaStream() {
-    return await AgoraRteEngine.engine
+    return await this._scene
       .getApiService()
       .deleteStream(this.sceneId, this.userUuid, this.streamUuid);
   }
 
   async deleteLocalScreenStream() {
     if (this.subStream) {
-      return await AgoraRteEngine.engine
+      return await this._scene
         .getApiService()
         .deleteStream(this.sceneId, this.userUuid, this.subStream.streamUuid);
     }
   }
 
   async sendRoomMessage(message: string) {
-    return await AgoraRteEngine.engine.getApiService().sendRoomChatMessage(message, this.sceneId);
+    return await this._scene.getApiService().sendRoomChatMessage(message, this.sceneId);
   }
 
   setupRemoteVideo(canvas: AgoraRtcVideoCanvas) {

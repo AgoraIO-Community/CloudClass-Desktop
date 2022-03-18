@@ -28,6 +28,7 @@ import { AgoraRteEngine } from '../core/engine';
 import { AgoraRteEngineConfig } from '../configs';
 import { Log } from '../core/decorator/log';
 import { AgoraRteConnectionState } from '../type';
+import { AgoraRteService } from '../core/services/api';
 export interface AgoraRteSceneJoinOptions {
   userName: string;
   userRole: string;
@@ -55,6 +56,12 @@ export class AgoraRteScene extends EventEmitter {
   private _localUser?: AgoraRteLocalUser;
   private _sceneState: AgoraRteConnectionState = AgoraRteConnectionState.Idle;
   private _initialSync: boolean = false;
+  private _apiService: AgoraRteService;
+
+  getApiService(): AgoraRteService {
+    return this._apiService;
+  }
+
   get localUser() {
     return this._localUser;
   }
@@ -78,6 +85,8 @@ export class AgoraRteScene extends EventEmitter {
     this._rtmChannel = options.rtmChannel;
     this._rtmChannelObserver = options.rtmChannelObserver;
     this._rtcChannel = options.rtcChannel;
+    this._apiService = new AgoraRteService();
+    this._apiService.pathPrefix = AgoraRteEngine.engine.apiServicePathPrefix;
     this.dataStore = new AgoraRteSyncDataStore();
 
     //add one-time event listeners to avoid repeat event registeration
@@ -122,7 +131,7 @@ export class AgoraRteScene extends EventEmitter {
       // 1. entry
       this._setRteConnectionState(AgoraRteConnectionState.Connecting);
       const mediaControl = AgoraRteEngine.engine.getAgoraMediaControl();
-      const { user, room } = await AgoraRteEngine.engine.getApiService().entryRoom({
+      const { user, room } = await this.getApiService().entryRoom({
         userUuid: AgoraRteEngineConfig.shared.userId,
         roomUuid: this.sceneId,
         userName: options.userName,
@@ -136,7 +145,12 @@ export class AgoraRteScene extends EventEmitter {
 
       this.createTs = room.roomState.createTime;
 
-      Object.assign(AgoraRteEngineConfig.shared.service.headers, { token: user.userToken });
+      // Object.assign(AgoraRteEngineConfig.shared.service.headers, { token: user.userToken });
+
+      this._apiService.headers = {
+        ...AgoraRteEngineConfig.shared.service.headers,
+        token: user.userToken,
+      };
 
       // 2. rtm join
       await this._rtmManager.join(this._rtmChannel, this._rtmChannelObserver, this.sceneId);
@@ -189,7 +203,7 @@ export class AgoraRteScene extends EventEmitter {
       }
 
       this._synchronizer = new AgoraRteSynchronizer(this.dataStore, {
-        sceneId: this.sceneId,
+        scene: this,
         userUuid: AgoraRteEngineConfig.shared.userId,
         streamUuid,
         channelObserver: this._rtmChannelObserver,
@@ -198,7 +212,7 @@ export class AgoraRteScene extends EventEmitter {
       this._addEventListeners(this._synchronizer.handle);
 
       // 4. sync/get snapshot
-      const snapshotData = await AgoraRteEngine.engine.getApiService().syncSnapShot(this.sceneId);
+      const snapshotData = await this.getApiService().syncSnapShot(this.sceneId);
       this._synchronizer.syncSnapshot(AgoraRteSyncSnapshotData.fromData(snapshotData));
     } catch (e) {
       // cleanup
