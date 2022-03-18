@@ -1,8 +1,6 @@
 import { AgoraRteEventType, AgoraRteScene } from 'agora-rte-sdk';
 import { AgoraChatMessage } from 'agora-rte-sdk/src/core/processor/channel-msg/struct';
-import { get } from 'lodash';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
-import { EduClassroomStore } from '..';
+import { action, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { EduRoleTypeEnum } from '../../../../type';
 import { RteRole2EduRole } from '../../../../utils';
@@ -53,9 +51,9 @@ export class MessagesStore extends EduStoreBase {
   @action.bound
   async getHistoryChatMessage(data: { nextId: string; sort: number }) {
     try {
-      const { roomUuid, userUuid } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
       const historyMessage = await this.classroomStore.api.getHistoryChatMessage({
-        roomUuid: roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         userUuid: userUuid,
         data,
       });
@@ -98,7 +96,7 @@ export class MessagesStore extends EduStoreBase {
   }) {
     try {
       const historyMessage = await this.classroomStore.api.getConversationHistoryChatMessage({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         data,
       });
 
@@ -161,7 +159,7 @@ export class MessagesStore extends EduStoreBase {
   async getConversationList(data: { nextId: string; sort: number }) {
     try {
       const conversation = await this.classroomStore.api.getConversationList({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         data,
       });
       runInAction(() => {
@@ -189,7 +187,7 @@ export class MessagesStore extends EduStoreBase {
   async muteChat() {
     try {
       await this.classroomStore.api.muteChat({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         muteChat: 1,
       });
     } catch (e) {
@@ -202,7 +200,7 @@ export class MessagesStore extends EduStoreBase {
   async unmuteChat() {
     try {
       await this.classroomStore.api.muteChat({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         muteChat: 0,
       });
     } catch (e) {
@@ -226,10 +224,10 @@ export class MessagesStore extends EduStoreBase {
 
   sendMessage = async (message: string) => {
     try {
-      const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
       const ts = +Date.now();
       await this.classroomStore.api.sendChat({
-        roomUuid: roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         userUuid: userUuid,
         data: {
           message,
@@ -246,14 +244,11 @@ export class MessagesStore extends EduStoreBase {
 
   sendMessageToConversation = async (message: string, conversation: Conversation) => {
     try {
-      const {
-        userUuid: currentUserUuid,
-        userName,
-        roomUuid,
-      } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid: currentUserUuid, userName } = EduClassroomConfig.shared.sessionInfo;
+
       const ts = +Date.now();
       const result = await this.classroomStore.api.sendConversationChat({
-        roomUuid: roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         userUuid: conversation.userUuid,
         data: {
           message,

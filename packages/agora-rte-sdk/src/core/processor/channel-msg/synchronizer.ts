@@ -86,7 +86,7 @@ export class AgoraRteSynchronizer {
   }) {
     // only process channel message from server
     if (memberId === 'server') {
-      this.logger.debug('channel message', message.text);
+      this.logger.debug(`channel message sceneId:${this.sceneId}`, message.text);
       try {
         const sequence = JSON.parse(message.text);
         this.addTask({

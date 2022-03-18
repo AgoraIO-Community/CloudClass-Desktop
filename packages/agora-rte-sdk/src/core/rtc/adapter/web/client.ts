@@ -150,6 +150,10 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
   }
 
   async leave(): Promise<void> {
+    this._videoPublishThread.stop();
+    this._audioPublishThread.stop();
+    this._screenPublishThread.stop();
+
     let [err] = await to(this._client.leave());
     err &&
       RteErrorCenter.shared.handleNonThrowableError(

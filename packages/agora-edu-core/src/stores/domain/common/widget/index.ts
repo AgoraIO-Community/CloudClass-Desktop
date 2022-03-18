@@ -1,10 +1,9 @@
 import { EduStoreBase } from '../base';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { IAgoraWidget } from './type';
-import { EduClassroomConfig } from '../../../..';
 import { TrackState } from '../room/type';
-import { action, observable, reaction } from 'mobx';
-import { AgoraRteEventType, bound } from 'agora-rte-sdk';
+import { action, computed, observable } from 'mobx';
+import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
 import { get } from 'lodash';
 
 /**
@@ -37,8 +36,7 @@ export class WidgetStore extends EduStoreBase {
 
   @bound
   setActive(widgetId: string, widgetProps: any, ownerUserUuid?: string) {
-    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-    this.api.updateWidgetProperties(roomUuid, widgetId, {
+    this.api.updateWidgetProperties(this.classroomStore.connectionStore.sceneId, widgetId, {
       state: 1,
       ownerUserUuid,
       ...widgetProps,
@@ -47,8 +45,7 @@ export class WidgetStore extends EduStoreBase {
 
   @bound
   setInactive(widgetId: string) {
-    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-    this.api.updateWidgetProperties(roomUuid, widgetId, {
+    this.api.updateWidgetProperties(this.classroomStore.connectionStore.sceneId, widgetId, {
       state: 0,
     });
   }
@@ -88,15 +85,32 @@ export class WidgetStore extends EduStoreBase {
     });
   }
 
+  //others
+  private _addEventHandlers(scene: AgoraRteScene) {
+    scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  private _removeEventHandlers(scene: AgoraRteScene) {
+    scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  @action
+  private _resetData() {}
+
+  _selectUsers() {}
+
   onInstall() {
-    reaction(
-      () => this.classroomStore.connectionStore.scene,
-      (scene) => {
-        if (scene) {
-          scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
-        }
-      },
-    );
+    computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue, oldValue }) => {
+      if (oldValue) {
+        this._removeEventHandlers(oldValue);
+      }
+      if (newValue) {
+        this._resetData();
+        this._selectUsers();
+        //bind events
+        this._addEventHandlers(newValue);
+      }
+    });
   }
 
   onDestroy() {}

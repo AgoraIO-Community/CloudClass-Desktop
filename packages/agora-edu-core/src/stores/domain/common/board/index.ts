@@ -1,6 +1,6 @@
 import { EduStoreBase } from '../base';
 import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { BuiltinApps, MountParams, WindowManager } from '@netless/window-manager';
 import {
@@ -35,7 +35,7 @@ import { Color } from '../../../../type';
 import { EduRoleTypeEnum } from '../../../../type';
 import { EduEventCenter } from '../../../../event-center';
 import SlideApp from '@netless/app-slide';
-import { AgoraRteEventType, bound } from 'agora-rte-sdk';
+import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
 import get from 'lodash/get';
 import { AgoraEduClassroomEvent } from '../../../..';
 
@@ -482,12 +482,7 @@ export class BoardStore extends EduStoreBase {
   private _windowManager?: WindowManager;
 
   @action.bound
-  private handleRoomPropertiesChange(
-    changedRoomProperties: string[],
-    roomProperties: any,
-    operator: any,
-    cause: any,
-  ) {
+  private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
     changedRoomProperties.forEach((key) => {
       if (key === 'widgets') {
         const configs = get(roomProperties, 'widgets.netlessBoard.extra');
@@ -636,15 +631,42 @@ export class BoardStore extends EduStoreBase {
 
   private _disposers: (() => void)[] = [];
 
+  //others
+  private _addEventHandlers(scene: AgoraRteScene) {
+    scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  private _removeEventHandlers(scene: AgoraRteScene) {
+    scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  @action
+  private _resetData() {
+    this.configReady = false;
+  }
+
+  private _selectProperties() {
+    const roomProperties = this.classroomStore.connectionStore.scene?.dataStore.roomProperties;
+
+    const keys = Array.from(roomProperties?.keys() || []);
+
+    this._handleRoomPropertiesChange(keys, roomProperties);
+  }
+
   onInstall() {
     let { sessionInfo } = EduClassroomConfig.shared;
-    let store = this.classroomStore;
+
     this._disposers.push(
-      reaction(
-        () => store.connectionStore.scene,
-        (scene) => {
-          if (scene) {
-            scene.on(AgoraRteEventType.RoomPropertyUpdated, this.handleRoomPropertiesChange);
+      computed(() => this.classroomStore.connectionStore.scene).observe(
+        ({ newValue, oldValue }) => {
+          if (oldValue) {
+            this._removeEventHandlers(oldValue);
+          }
+          if (newValue) {
+            this._resetData();
+            this._selectProperties();
+            //bind events
+            this._addEventHandlers(newValue);
           }
         },
       ),

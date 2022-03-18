@@ -1,13 +1,15 @@
 import {
   AgoraEduClassroomEvent,
+  EduClassroomConfig,
   EduEventCenter,
   GroupDetail,
   GroupState,
   PatchGroup,
+  WhiteboardState,
 } from 'agora-edu-core';
-import { AGError, bound, Log } from 'agora-rte-sdk';
+import { AGError, bound, Log, RtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import uuidv4 from 'uuid';
@@ -271,14 +273,9 @@ export class GroupUIStore extends EduUIStoreBase {
             addUsers: [userUuid],
           },
         ]);
+      } else {
+        this.classroomStore.groupStore.addUserListToGroup(fromGroupUuid, toGroupUuid, [userUuid]);
       }
-
-      this.classroomStore.groupStore.addUserListToGroup(
-        fromGroupUuid,
-        toGroupUuid,
-        [userUuid],
-        [userUuid],
-      );
     } else {
       const fromGroup = this.localGroups.get(fromGroupUuid);
       const toGroup = this.localGroups.get(toGroupUuid);
@@ -403,7 +400,20 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @bound
   joinSubRoom(groupUuid: string) {
-    this.classroomStore.groupStore.joinSubRoom(groupUuid);
+    if (!this.classroomStore.groupStore.currentSubRoom) {
+      this.classroomStore.groupStore.updateGroupUsers([
+        {
+          groupUuid: groupUuid,
+          addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
+        },
+      ]);
+    } else {
+      this.classroomStore.groupStore.addUserListToGroup(
+        this.classroomStore.groupStore.currentSubRoom,
+        groupUuid,
+        [EduClassroomConfig.shared.sessionInfo.userUuid],
+      );
+    }
   }
 
   private _generateGroupName() {
@@ -412,31 +422,69 @@ export class GroupUIStore extends EduUIStoreBase {
     return `${transI18n('breakout_room.group_label')} ${nextSeq}`;
   }
 
+  @action
+  private setConnectionState(state: boolean) {
+    this.joiningSubRoom = state;
+  }
+
+  @bound
+  private async _joinSubRoom() {
+    this.setConnectionState(true);
+    const roomUuid = this.classroomStore.groupStore.currentSubRoom;
+    if (roomUuid) {
+      try {
+        await when(
+          () =>
+            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
+            this.classroomStore.connectionStore.rtcState === RtcState.Connected,
+        );
+        await this.classroomStore.connectionStore.leaveRTC();
+        await this.classroomStore.connectionStore.leaveWhiteboard();
+        await when(
+          () =>
+            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
+            this.classroomStore.connectionStore.rtcState === RtcState.Idle,
+        );
+        await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+        await this.classroomStore.connectionStore.joinRTC();
+        await this.classroomStore.connectionStore.joinWhiteboard();
+      } catch (e) {
+        this.shareUIStore.addToast('Cannot join sub room');
+      } finally {
+        this.setConnectionState(false);
+      }
+    } else {
+      this.shareUIStore.addToast('Cannot find room');
+    }
+  }
+
+  @bound
+  private async _leaveSubRoom() {
+    this.setConnectionState(true);
+    try {
+      await this.classroomStore.connectionStore.leaveSubRoom();
+      await when(
+        () =>
+          this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
+          this.classroomStore.connectionStore.rtcState === RtcState.Idle,
+      );
+      await this.classroomStore.connectionStore.joinRTC();
+      await this.classroomStore.connectionStore.joinWhiteboard();
+    } catch (e) {
+      this.shareUIStore.addToast('Cannot leave sub room');
+    } finally {
+      this.setConnectionState(false);
+    }
+  }
+
   onInstall() {
     EduEventCenter.shared.onClassroomEvents((type, args) => {
       if (type === AgoraEduClassroomEvent.JoinSubRoom) {
-        runInAction(() => {
-          this.joiningSubRoom = true;
-        });
-        const roomUuid = this.classroomStore.groupStore.currentSubRoom;
-        if (roomUuid) {
-          this.classroomStore.connectionStore
-            .joinSubRoom(roomUuid)
-            .then(() => {
-              runInAction(() => {
-                this.joiningSubRoom = true;
-              });
-            })
-            .catch(() => {
-              this.shareUIStore.addToast('Cannot join sub room');
-            });
-        } else {
-          this.shareUIStore.addToast('Cannot find room');
-        }
+        this._joinSubRoom();
       }
       if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
         this.shareUIStore.addToast('Leave sub room');
-        this.classroomStore.connectionStore.leaveClassroom;
+        this._leaveSubRoom();
       }
       if (type === AgoraEduClassroomEvent.AcceptedToGroup) {
         this.logger.info('Accepted to group', args);

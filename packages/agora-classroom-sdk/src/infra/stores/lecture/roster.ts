@@ -76,7 +76,7 @@ export class LectureRosterUIStore extends RosterUIStore {
 
   clickKick = (profile: Profile) => {
     const { addDialog, addGenericErrorDialog } = this.shareUIStore;
-    const { roomUuid } = this.classroomStore.roomStore;
+
     const { kickOutOnceOrBan } = this.classroomStore.userStore;
     const onOk = async (ban: boolean) => {
       try {
@@ -91,7 +91,6 @@ export class LectureRosterUIStore extends RosterUIStore {
 
     addDialog(DialogCategory.KickOut, {
       id: 'kick-out',
-      roomUuid,
       onOk,
     });
   };

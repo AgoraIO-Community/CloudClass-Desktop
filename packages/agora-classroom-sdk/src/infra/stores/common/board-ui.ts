@@ -1,7 +1,12 @@
 import { action, computed, when, IReactionDisposer } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
-import { EduClassroomStore, EduRoomTypeEnum, WhiteboardState } from 'agora-edu-core';
+import {
+  EduClassroomConfig,
+  EduClassroomStore,
+  EduRoomTypeEnum,
+  WhiteboardState,
+} from 'agora-edu-core';
 import { EduShareUIStore } from './share-ui';
 
 export class BoardUIStore extends EduUIStoreBase {
@@ -67,7 +72,7 @@ export class BoardUIStore extends EduUIStoreBase {
    * @returns
    */
   get boardHeight() {
-    const { roomType } = this.classroomStore.roomStore;
+    const { roomType } = EduClassroomConfig.shared.sessionInfo;
     const viewportHeight = this.shareUIStore.classroomViewportSize.height;
     const height = this.uiOverrides.heightRatio * viewportHeight;
 

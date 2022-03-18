@@ -514,9 +514,7 @@ export class StreamUIStore extends EduUIStoreBase {
       onClick: interactionThrottleHandler(
         () => {
           this.classroomStore.roomStore
-            .sendRewards(EduClassroomConfig.shared.sessionInfo.roomUuid, [
-              { userUuid: stream.fromUser.userUuid, changeReward: 1 },
-            ])
+            .sendRewards([{ userUuid: stream.fromUser.userUuid, changeReward: 1 }])
             .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
         },
         (message) => this.shareUIStore.addToast(message, 'warning'),

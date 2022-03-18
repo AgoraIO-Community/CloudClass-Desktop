@@ -1,7 +1,7 @@
-import { AgoraRteEventType } from 'agora-rte-sdk';
+import { AgoraRteEventType, AgoraRteScene } from 'agora-rte-sdk';
 import { startsWith } from 'lodash';
 import get from 'lodash/get';
-import { action, observable, reaction } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { EduEventCenter } from '../../../../event-center';
 import { AgoraEduClassroomEvent } from '../../../../type';
@@ -179,9 +179,9 @@ export class GroupStore extends EduStoreBase {
   /**
    * 邀请用户从主房间加入子房间
    */
-  async inviteUserListToGroup(toGroupUuid: string, userList: string[], invite: boolean = true) {
+  async inviteUserListToGroup(toGroupUuid: string, userList: string[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this._moveUserListToGroup(roomUuid, toGroupUuid, userList, userList, invite);
+    await this._moveUserListToGroup(roomUuid, toGroupUuid, userList, true);
   }
 
   /**
@@ -198,34 +198,27 @@ export class GroupStore extends EduStoreBase {
   /**
    * 将用户移入子房间，跳过邀请步骤
    */
-  async addUserListToGroup(
-    fromGroupUuid: string,
-    toGroupUuid: string,
-    fromUserList: string[],
-    toUserList: string[],
-  ) {
-    await this._moveUserListToGroup(fromGroupUuid, toGroupUuid, fromUserList, toUserList, false);
+  async addUserListToGroup(fromGroupUuid: string, toGroupUuid: string, userList: string[]) {
+    await this._moveUserListToGroup(fromGroupUuid, toGroupUuid, userList, false);
   }
 
   /**
    * 将用户从原来的子房间里移动到目标的子房间
    * @param fromGroupUuid 原小组
    * @param toGroupUuid 目标小组
-   * @param fromUserList 原小组用户列表
-   * @param toUserList 目标小组用户列表
+   * @param userList 原小组用户列表
    * @param userList 用户列表
    * @param inProgress 是否需要邀请
    */
   private async _moveUserListToGroup(
     fromGroupUuid: string,
     toGroupUuid: string,
-    fromUserList: string[],
-    toUserList: string[],
+    userList: string[],
     inProgress: boolean,
   ) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    let fromGroup = { groupUuid: fromGroupUuid, removeUsers: fromUserList };
-    let toGroup = { groupUuid: toGroupUuid, addUsers: toUserList };
+    let fromGroup = { groupUuid: fromGroupUuid, removeUsers: userList };
+    let toGroup = { groupUuid: toGroupUuid, addUsers: userList };
     let groups = [fromGroup, toGroup];
     await this.api.updateGroupUsers(roomUuid, { groups, inProgress });
   }
@@ -256,12 +249,30 @@ export class GroupStore extends EduStoreBase {
     return this._currentGroupUuid;
   }
 
+  //others
+  private _addEventHandlers(scene: AgoraRteScene) {
+    scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  private _removeEventHandlers(scene: AgoraRteScene) {
+    scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  @action
+  private _resetData() {}
+
   /** Hooks */
   onInstall() {
-    reaction(
-      () => this.classroomStore.connectionStore.scene,
-      (scene) => {
-        scene && scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+    computed(() => this.classroomStore.connectionStore.mainRoomScene).observe(
+      ({ newValue, oldValue }) => {
+        if (oldValue) {
+          this._removeEventHandlers(oldValue);
+        }
+        if (newValue) {
+          this._resetData();
+          //bind events
+          this._addEventHandlers(newValue);
+        }
       },
     );
   }

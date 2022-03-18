@@ -1,12 +1,10 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, when } from 'mobx';
 import {
   AgoraComponentRegion,
   AgoraRteEngine,
   AgoraRteEventType,
   AgoraRteScene,
   AgoraRteSceneJoinRTCOptions,
-  AgoraStream,
-  AgoraUser,
   AGRtcConnectionType,
   bound,
   Log,
@@ -37,6 +35,11 @@ export enum LeaveReason {
   kickOut,
 }
 
+export enum SceneType {
+  Main,
+  Sub,
+}
+
 @Log.attach({ proxyMethods: false })
 export class ConnectionStore extends EduStoreBase {
   // observerbles
@@ -45,24 +48,31 @@ export class ConnectionStore extends EduStoreBase {
   @observable whiteboardState: WhiteboardState = WhiteboardState.Idle;
   @observable rtcState: RtcState = RtcState.Idle;
   @observable rtcSubState: RtcState = RtcState.Idle;
-  @observable _scenes: AgoraRteScene[] = [];
+  @observable _mainRoomScene?: AgoraRteScene;
+  @observable _subRoomScene?: AgoraRteScene;
   @observable engine?: AgoraRteEngine;
   @observable checkInData?: CheckInData;
 
   @computed
   get scene() {
-    if (this._scenes.length) {
-      return this._scenes[this._scenes.length - 1];
+    if (this._subRoomScene) {
+      return this._subRoomScene;
     }
-    return undefined;
+    return this._mainRoomScene;
   }
 
   get sceneId() {
-    return this.scene?.sceneId!;
+    return this.scene!.sceneId;
   }
 
-  getScene(sceneId: string) {
-    return this._scenes.find((scene) => sceneId === scene.sceneId);
+  @computed
+  get mainRoomScene() {
+    return this._mainRoomScene;
+  }
+
+  @computed
+  get subRoomScene() {
+    return this._subRoomScene;
   }
 
   // actions
@@ -104,11 +114,11 @@ export class ConnectionStore extends EduStoreBase {
   }
 
   @action
-  setScene(scene?: AgoraRteScene) {
-    if (scene) {
-      this._scenes.push(scene);
+  setScene(sceneType: SceneType, scene?: AgoraRteScene) {
+    if (sceneType === SceneType.Main) {
+      this._mainRoomScene = scene;
     } else {
-      this._scenes.pop();
+      this._subRoomScene = scene;
     }
   }
 
@@ -188,7 +198,7 @@ export class ConnectionStore extends EduStoreBase {
           this.setRtcState(state, connectionType);
         });
 
-        this.setScene(scene);
+        this.setScene(SceneType.Main, scene);
         // streamId defaults to 0 means server allocate streamId for you
         await scene.joinScene({
           userName: sessionInfo.userName,
@@ -198,13 +208,13 @@ export class ConnectionStore extends EduStoreBase {
       }, [])
         .fail(({ error }: { error: Error }) => {
           EduClassroomConfig.shared.setWhiteboardConfig(undefined);
-          this.setScene(undefined);
+          this.setScene(SceneType.Main, undefined);
           this.logger.error(error.message);
           return true;
         })
         .abort(() => {
           EduClassroomConfig.shared.setWhiteboardConfig(undefined);
-          this.setScene(undefined);
+          this.setScene(SceneType.Main, undefined);
         })
         .exec(),
     );
@@ -252,7 +262,7 @@ export class ConnectionStore extends EduStoreBase {
         const engine = this.getEngine();
         const scene = engine.createAgoraRteScene(sessionInfo.roomUuid);
 
-        this.setScene(scene);
+        this.setScene(SceneType.Sub, scene);
         // streamId defaults to 0 means server allocate streamId for you
         await scene.joinScene({
           userName: sessionInfo.userName,
@@ -261,12 +271,12 @@ export class ConnectionStore extends EduStoreBase {
         });
       }, [])
         .fail(({ error }: { error: Error }) => {
-          this.setScene(undefined);
+          this.setScene(SceneType.Sub, undefined);
           this.logger.error(error.message);
           return true;
         })
         .abort(() => {
-          this.setScene(undefined);
+          this.setScene(SceneType.Sub, undefined);
         })
         .exec(),
     );
@@ -282,9 +292,10 @@ export class ConnectionStore extends EduStoreBase {
   @action.bound
   async leaveSubRoom() {
     if (this.scene) {
-      this.scene.leaveRTC();
-      this.scene.leaveScene();
-      this.setScene(undefined);
+      await this.leaveWhiteboard();
+      await this.scene.leaveRTC();
+      await this.scene.leaveScene();
+      this.setScene(SceneType.Sub, undefined);
     }
   }
 
@@ -295,10 +306,6 @@ export class ConnectionStore extends EduStoreBase {
 
   @bound
   async leaveClassroomUntil(reason: LeaveReason, promise: Promise<void>) {
-    if (this._scenes.length > 1) {
-      await this.leaveSubRoom();
-    }
-
     let [err] = await to(this.leaveWhiteboard());
     err &&
       EduErrorCenter.shared.handleNonThrowableError(
@@ -327,13 +334,6 @@ export class ConnectionStore extends EduStoreBase {
 
   @bound
   async joinRTC(options?: AgoraRteSceneJoinRTCOptions) {
-    if (this.getRtcState(options?.connectionType ?? AGRtcConnectionType.main) !== RtcState.Idle) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_JOIN_RTC_FAIL,
-        new Error(`invalid join rtc state: ${this.rtcState}`),
-      );
-    }
-
     //join rtc
     let [err] = await to(this.scene?.joinRTC(options) || Promise.resolve());
     err && EduErrorCenter.shared.handleThrowableError(AGEduErrorCode.EDU_ERR_JOIN_RTC_FAIL, err);

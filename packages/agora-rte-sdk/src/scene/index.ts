@@ -315,7 +315,7 @@ export class AgoraRteScene extends EventEmitter {
 
   private _addEventListeners(handler: AgoraRteChannelMessageHandle) {
     handler.on(AgoraRteEventType.SnapshotUpdated, () => {
-      this.logger.info(`snapshot updated`);
+      this.logger.info(`sceneId:${this.sceneId} snapshot updated`);
       this._setInitialSnapshotSync(true);
 
       if (!this.localUser) {
@@ -347,16 +347,16 @@ export class AgoraRteScene extends EventEmitter {
     });
 
     handler.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
-      this.logger.info(`user-added [${users.join(',')}]`);
+      this.logger.info(`sceneId:${this.sceneId} user-added [${users.join(',')}]`);
       this.emit(AgoraRteEventType.UserAdded, users);
     });
 
     handler.on(AgoraRteEventType.UserUpdated, (user: AgoraUser) => {
-      this.logger.info(`user-updated ${user}`);
+      this.logger.info(`sceneId:${this.sceneId} user-updated ${user}`);
     });
 
     handler.on(AgoraRteEventType.UserRemoved, (users: AgoraUser[], type?: number) => {
-      this.logger.info(`user-removed [${users.join(',')}]`);
+      this.logger.info(`sceneId:${this.sceneId} user-removed [${users.join(',')}]`);
       this.emit(AgoraRteEventType.UserRemoved, users, type);
     });
 
@@ -369,9 +369,9 @@ export class AgoraRteScene extends EventEmitter {
         cause: any,
       ) => {
         this.logger.debug(
-          `room-property-updated ${jsonstring(roomProperties)} ${jsonstring(operator)} ${jsonstring(
-            cause,
-          )}`,
+          `sceneId:${this.sceneId} room-property-updated ${jsonstring(roomProperties)} ${jsonstring(
+            operator,
+          )} ${jsonstring(cause)}`,
         );
         this._handleRoomPropertyChange(changedKeys, roomProperties, operator, cause);
       },
@@ -381,9 +381,9 @@ export class AgoraRteScene extends EventEmitter {
       AgoraRteEventType.UserPropertyUpdated,
       (userUuid: string, userProperties: any, operator: any, cause: any) => {
         this.logger.debug(
-          `user-property-updated ${userUuid} ${jsonstring(userProperties)} ${jsonstring(
-            operator,
-          )} ${jsonstring(cause)}`,
+          `sceneId:${this.sceneId} user-property-updated ${userUuid} ${jsonstring(
+            userProperties,
+          )} ${jsonstring(operator)} ${jsonstring(cause)}`,
         );
         this.emit(AgoraRteEventType.UserPropertyUpdated, userUuid, userProperties, operator, cause);
       },
@@ -392,7 +392,7 @@ export class AgoraRteScene extends EventEmitter {
     handler.on(
       AgoraRteEventType.LocalStreamAdded,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
-        this.logger.info(`local-stream-added [${streams.join(',')}]`);
+        this.logger.info(`sceneId:${this.sceneId} local-stream-added [${streams.join(',')}]`);
         if (streams.length === 0) {
           return;
         }
@@ -403,7 +403,7 @@ export class AgoraRteScene extends EventEmitter {
     handler.on(
       AgoraRteEventType.LocalStreamUpdate,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
-        this.logger.info(`local-stream-upsert [${streams.join(',')}]`);
+        this.logger.info(`sceneId:${this.sceneId} local-stream-upsert [${streams.join(',')}]`);
         if (streams.length === 0) {
           return;
         }
@@ -414,7 +414,7 @@ export class AgoraRteScene extends EventEmitter {
     handler.on(
       AgoraRteEventType.LocalStreamRemove,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
-        this.logger.info(`local-stream-removed [${streams.join(',')}]`);
+        this.logger.info(`sceneId:${this.sceneId} local-stream-removed [${streams.join(',')}]`);
         if (streams.length === 0) {
           return;
         }
@@ -425,7 +425,7 @@ export class AgoraRteScene extends EventEmitter {
     handler.on(
       AgoraRteEventType.RemoteStreamAdded,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
-        this.logger.info(`remote-stream-added [${streams.join(',')}]`);
+        this.logger.info(`sceneId:${this.sceneId} remote-stream-added [${streams.join(',')}]`);
         if (streams.length === 0) {
           return;
         }
@@ -436,7 +436,7 @@ export class AgoraRteScene extends EventEmitter {
     handler.on(
       AgoraRteEventType.RemoteStreamUpdate,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
-        this.logger.info(`remote-stream-upsert [${streams.join(',')}]`);
+        this.logger.info(`sceneId:${this.sceneId} remote-stream-upsert [${streams.join(',')}]`);
         if (streams.length === 0) {
           return;
         }
@@ -447,7 +447,7 @@ export class AgoraRteScene extends EventEmitter {
     handler.on(
       AgoraRteEventType.RemoteStreamRemove,
       (streams: AgoraStream[], operator?: AgoraRteOperator) => {
-        this.logger.info(`remote-stream-removed [${streams.join(',')}]`);
+        this.logger.info(`sceneId:${this.sceneId} remote-stream-removed [${streams.join(',')}]`);
         if (streams.length === 0) {
           return;
         }

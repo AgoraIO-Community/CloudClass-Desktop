@@ -322,6 +322,21 @@ export class StreamStore extends EduStoreBase {
     scene.off(AgoraRteEventType.RemoteStreamUpdate, this._updateRemoteStream);
   }
 
+  private _selectStreams() {
+    const localStreams: AgoraStream[] = [];
+    const remoteStreams: AgoraStream[] = [];
+
+    this.classroomStore.connectionStore.scene?.dataStore.streams.forEach((stream) => {
+      if (stream.fromUser.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid) {
+        localStreams.push(stream);
+      } else {
+        remoteStreams.push(stream);
+      }
+    });
+    this._addLocalStream(localStreams);
+    this._addRemoteStream(remoteStreams);
+  }
+
   @action
   private _resetData() {
     this._stateKeeper = undefined;
@@ -340,6 +355,7 @@ export class StreamStore extends EduStoreBase {
       }
       if (newValue) {
         this._resetData();
+        this._selectStreams();
         //bind events
         this._addEventHandlers(newValue);
       }

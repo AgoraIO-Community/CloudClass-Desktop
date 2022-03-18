@@ -195,6 +195,14 @@ export class UserStore extends EduStoreBase {
     this._localUser = undefined;
   }
 
+  _selectUsers() {
+    const users: AgoraUser[] = [];
+    this.classroomStore.connectionStore.scene?.dataStore.users.forEach((user) => {
+      users.push(user);
+    });
+    this._addUsers(users);
+  }
+
   onInstall() {
     computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue, oldValue }) => {
       if (oldValue) {
@@ -202,6 +210,7 @@ export class UserStore extends EduStoreBase {
       }
       if (newValue) {
         this._resetData();
+        this._selectUsers();
         //bind events
         this._addEventHandlers(newValue);
       }

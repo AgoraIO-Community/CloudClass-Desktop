@@ -93,9 +93,15 @@ export class ExtAppStore extends EduStoreBase {
   /** Methods */
   @bound
   async updateExtAppProperties(appId: string, properties: any, common: any, cause: any) {
-    const { roomUuid } = this.classroomStore.roomStore;
+    const {} = this;
     try {
-      return await this.api.updateExtAppProperties(roomUuid, appId, properties, common, cause);
+      return await this.api.updateExtAppProperties(
+        this.classroomStore.connectionStore.sceneId,
+        appId,
+        properties,
+        common,
+        cause,
+      );
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_EXTAPP_UPDATE_PROPERTIES_FAIL,
@@ -106,9 +112,13 @@ export class ExtAppStore extends EduStoreBase {
 
   @bound
   async deleteExtAppProperties(appId: string, properties: string[], cause: any) {
-    const { roomUuid } = this.classroomStore.roomStore;
     try {
-      return await this.api.deleteExtAppProperties(roomUuid, appId, properties, cause);
+      return await this.api.deleteExtAppProperties(
+        this.classroomStore.connectionStore.sceneId,
+        appId,
+        properties,
+        cause,
+      );
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_EXTAPP_DELETE_PROPERTIES_FAIL,
@@ -119,16 +129,24 @@ export class ExtAppStore extends EduStoreBase {
 
   @bound
   async deleteExtappTrackState(extappId: string) {
-    const { roomUuid } = this.classroomStore.roomStore;
-    await this.api.deleteExtAppProperties(roomUuid, extappId, ['position', 'extra', 'size']);
+    await this.api.deleteExtAppProperties(this.classroomStore.connectionStore.sceneId, extappId, [
+      'position',
+      'extra',
+      'size',
+    ]);
   }
 
   @bound
   async updateExtappTrackState(extappId: string, data: TrackData) {
-    const { roomUuid } = this.classroomStore.roomStore;
-    await this.api.updateExtAppProperties(roomUuid, extappId, data, null, {
-      cmd: 0,
-    });
+    await this.api.updateExtAppProperties(
+      this.classroomStore.connectionStore.sceneId,
+      extappId,
+      data,
+      null,
+      {
+        cmd: 0,
+      },
+    );
   }
 
   @action.bound

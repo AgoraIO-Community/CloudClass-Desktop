@@ -311,10 +311,10 @@ export class RosterUIStore extends EduUIStoreBase {
   };
 
   clickStar = (profile: Profile) => {
-    const { roomUuid, sendRewards } = this.classroomStore.roomStore;
+    const { sendRewards } = this.classroomStore.roomStore;
 
     // send stars
-    sendRewards(roomUuid, [
+    sendRewards([
       {
         userUuid: profile.uid as string,
         changeReward: 1,
@@ -324,7 +324,6 @@ export class RosterUIStore extends EduUIStoreBase {
 
   clickKick = (profile: Profile) => {
     const { addDialog, addGenericErrorDialog } = this.shareUIStore;
-    const { roomUuid } = this.classroomStore.roomStore;
     const { kickOutOnceOrBan } = this.classroomStore.userStore;
     const onOk = (ban: boolean) => {
       kickOutOnceOrBan(profile.uid as string, ban).catch((e) => addGenericErrorDialog(e));
@@ -332,7 +331,6 @@ export class RosterUIStore extends EduUIStoreBase {
 
     addDialog(DialogCategory.KickOut, {
       id: 'kick-out',
-      roomUuid,
       onOk,
     });
   };

@@ -19,10 +19,10 @@ export class ExtAppUIStore extends EduUIStoreBase {
    * @returns
    */
   get canClose() {
-    const { userRole, userUuid } = this.classroomStore.roomStore;
+    const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
     const { grantUsers } = this.classroomStore.boardStore;
 
-    return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
+    return role === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
   }
 
   /**
@@ -30,10 +30,11 @@ export class ExtAppUIStore extends EduUIStoreBase {
    * @returns
    */
   get canDrag() {
-    const { userRole, userUuid } = this.classroomStore.roomStore;
+    const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
+
     const { grantUsers } = this.classroomStore.boardStore;
 
-    return userRole === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
+    return role === EduRoleTypeEnum.teacher || grantUsers.has(userUuid);
   }
 
   /**
@@ -98,7 +99,11 @@ export class ExtAppUIStore extends EduUIStoreBase {
   @bound
   mount(dom: HTMLElement | null, extApp: IAgoraExtApp) {
     if (dom) {
-      const { roomUuid, roomType, roomName, extAppProperties } = this.classroomStore.roomStore;
+      const { extAppProperties } = this.classroomStore.roomStore;
+
+      const { roomType, roomName } = EduClassroomConfig.shared.sessionInfo;
+
+      const roomUuid = this.classroomStore.connectionStore.sceneId;
 
       const language = languageMap[AgoraRteEngineConfig.shared.language];
 
@@ -162,10 +167,11 @@ export class ExtAppUIStore extends EduUIStoreBase {
    */
   @bound
   private isActive(extApp: IAgoraExtApp) {
-    const { extAppsCommon, extAppProperties, userRole } = this.classroomStore.roomStore;
+    const { extAppsCommon, extAppProperties } = this.classroomStore.roomStore;
+    const { role } = EduClassroomConfig.shared.sessionInfo;
     const { activeAppIds } = this.classroomStore.extAppStore;
 
-    if (userRole === EduRoleTypeEnum.assistant) {
+    if (role === EduRoleTypeEnum.assistant) {
       return false;
     }
 
@@ -178,7 +184,7 @@ export class ExtAppUIStore extends EduUIStoreBase {
     const remoteActive = extAppCommon && extAppCommon.state === 1;
 
     if (extApp.appIdentifier === 'io.agora.countdown') {
-      if (userRole === EduRoleTypeEnum.teacher) {
+      if (role === EduRoleTypeEnum.teacher) {
         return localActive || remoteActive;
       }
       // student

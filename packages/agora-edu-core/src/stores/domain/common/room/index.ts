@@ -1,6 +1,6 @@
-import { AgoraRteEventType, bound, Scheduler } from 'agora-rte-sdk';
+import { AgoraRteEventType, AgoraRteScene, bound, Scheduler } from 'agora-rte-sdk';
 import get from 'lodash/get';
-import { action, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
@@ -101,7 +101,7 @@ export class RoomStore extends EduStoreBase {
 
   /** Actions */
   @action.bound
-  private handleRoomPropertiesChange(
+  private _handleRoomPropertiesChange(
     changedRoomProperties: string[],
     roomProperties: any,
     operator: any,
@@ -171,7 +171,7 @@ export class RoomStore extends EduStoreBase {
   async startCarousel(params: { range: number; type: number; interval: number }) {
     try {
       await this.api.startCarousel({
-        roomUuid: this.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         count: 6,
         ...params,
       });
@@ -187,7 +187,7 @@ export class RoomStore extends EduStoreBase {
   async stopCarousel() {
     try {
       await this.api.stopCarousel({
-        roomUuid: this.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
       });
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
@@ -200,7 +200,7 @@ export class RoomStore extends EduStoreBase {
   async updateClassState(state: ClassState) {
     try {
       await this.api.updateClassState({
-        roomUuid: this.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         state: state,
       });
     } catch (err) {
@@ -212,10 +212,10 @@ export class RoomStore extends EduStoreBase {
   }
 
   @bound
-  async sendRewards(roomUuid: string, rewards: { userUuid: string; changeReward: number }[]) {
+  async sendRewards(rewards: { userUuid: string; changeReward: number }[]) {
     try {
       await this.api.sendRewards({
-        roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         rewards: rewards,
       });
     } catch (err) {
@@ -236,54 +236,50 @@ export class RoomStore extends EduStoreBase {
     return this._clientServerTimeShift;
   }
 
-  get roomUuid() {
-    const { sessionInfo } = EduClassroomConfig.shared;
-    return sessionInfo.roomUuid;
+  //others
+  private _addEventHandlers(scene: AgoraRteScene) {
+    scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
   }
 
-  get roomType() {
-    const { sessionInfo } = EduClassroomConfig.shared;
-    return sessionInfo.roomType;
+  private _removeEventHandlers(scene: AgoraRteScene) {
+    scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
   }
 
-  get userUuid() {
-    const { sessionInfo } = EduClassroomConfig.shared;
-    return sessionInfo.userUuid;
+  @action
+  private _resetData() {
+    this.screenShareStreamUuid = undefined;
   }
 
-  get userRole() {
-    const { sessionInfo } = EduClassroomConfig.shared;
-    return sessionInfo.role;
-  }
+  _selectProperties() {
+    const roomProperties = this.classroomStore.connectionStore.scene?.dataStore.roomProperties;
 
-  get roomName() {
-    const { sessionInfo } = EduClassroomConfig.shared;
-    return sessionInfo.roomName;
-  }
+    const keys = Array.from(roomProperties?.keys() || []);
 
-  get userName() {
-    const { sessionInfo } = EduClassroomConfig.shared;
-    return sessionInfo.userName;
+    this._handleRoomPropertiesChange(keys, roomProperties, {}, {});
   }
 
   /** Computed */
-
   onInstall() {
-    let store = this.classroomStore;
     this._disposers.push(
-      reaction(
-        () => store.connectionStore.scene,
-        (scene) => {
-          if (scene) {
-            scene.on(AgoraRteEventType.RoomPropertyUpdated, this.handleRoomPropertiesChange);
+      computed(() => this.classroomStore.connectionStore.scene).observe(
+        ({ newValue, oldValue }) => {
+          if (oldValue) {
+            this._removeEventHandlers(oldValue);
+          }
+          if (newValue) {
+            this._resetData();
+            this._selectProperties();
+            //bind events
+            this._addEventHandlers(newValue);
           }
         },
       ),
     );
+
     // set schedule when checked in
     this._disposers.push(
       reaction(
-        () => store.connectionStore.checkInData,
+        () => this.classroomStore.connectionStore.checkInData,
         (checkInData) => {
           if (checkInData) {
             runInAction(() => {
