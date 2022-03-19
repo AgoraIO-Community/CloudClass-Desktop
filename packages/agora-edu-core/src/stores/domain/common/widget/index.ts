@@ -17,7 +17,14 @@ export class WidgetStore extends EduStoreBase {
   widgets: { [key: string]: IAgoraWidget } = {};
 
   @observable
-  widgetStateMap: Record<string, boolean> = {};
+  private _dataStore: DataStore = {
+    widgetStateMap: {},
+  };
+
+  @computed
+  get widgetStateMap() {
+    return this._dataStore.widgetStateMap;
+  }
 
   @observable
   widgetsTrackState: TrackState = {};
@@ -66,52 +73,77 @@ export class WidgetStore extends EduStoreBase {
     }, {});
   }
 
+  @action
+  private _setEventHandler(scene: AgoraRteScene) {
+    const handler = SceneEventHandler.createEventHandler(scene);
+    this._dataStore = handler.dataStore;
+  }
+
+  onInstall() {
+    computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue, oldValue }) => {
+      if (newValue) {
+        this._setEventHandler(newValue);
+      }
+    });
+  }
+
+  onDestroy() {
+    SceneEventHandler.cleanup();
+  }
+}
+
+type DataStore = {
+  widgetStateMap: Record<string, boolean>;
+};
+
+class SceneEventHandler {
+  private static _handlers: Record<string, SceneEventHandler> = {};
+
+  static createEventHandler(scene: AgoraRteScene) {
+    if (!SceneEventHandler._handlers[scene.sceneId]) {
+      const handler = new SceneEventHandler(scene);
+
+      handler.addEventHandlers();
+
+      SceneEventHandler._handlers[scene.sceneId] = handler;
+    }
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static cleanup() {
+    Object.keys(SceneEventHandler._handlers).forEach((k) => {
+      SceneEventHandler._handlers[k].removeEventHandlers();
+    });
+
+    SceneEventHandler._handlers = {};
+  }
+
+  constructor(private _scene: AgoraRteScene) {}
+
+  @observable
+  dataStore: DataStore = {
+    widgetStateMap: {},
+  };
+
+  addEventHandlers() {
+    this._scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  removeEventHandlers() {
+    this._scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
   @action.bound
-  private _handleRoomPropertiesChange(
-    changedRoomProperties: string[],
-    roomProperties: any,
-    operator: any,
-    cause: any,
-  ) {
+  private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
     changedRoomProperties.forEach((key) => {
       if (key === 'widgets') {
         const widgets = get(roomProperties, 'widgets', []);
 
-        this.widgetStateMap = Object.keys(widgets).reduce((prev, cur) => {
+        this.dataStore.widgetStateMap = Object.keys(widgets).reduce((prev, cur) => {
           prev[cur] = widgets[cur].state === 1;
           return prev;
         }, {} as Record<string, boolean>);
       }
     });
   }
-
-  //others
-  private _addEventHandlers(scene: AgoraRteScene) {
-    scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
-  }
-
-  private _removeEventHandlers(scene: AgoraRteScene) {
-    scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
-  }
-
-  @action
-  private _resetData() {}
-
-  _selectUsers() {}
-
-  onInstall() {
-    computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue, oldValue }) => {
-      if (oldValue) {
-        this._removeEventHandlers(oldValue);
-      }
-      if (newValue) {
-        this._resetData();
-        this._selectUsers();
-        //bind events
-        this._addEventHandlers(newValue);
-      }
-    });
-  }
-
-  onDestroy() {}
 }

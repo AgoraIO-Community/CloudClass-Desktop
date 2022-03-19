@@ -13,11 +13,7 @@ import {
   Log,
 } from 'agora-rte-sdk';
 
-export interface SceneSubscription {
-  setActive(active: boolean): void;
-}
-
-export abstract class SceneSubscriptionBase implements SceneSubscription {
+export abstract class SceneSubscription {
   protected logger!: Injectable.Logger;
 
   protected _active: boolean = false;
@@ -124,13 +120,8 @@ export abstract class SceneSubscriptionBase implements SceneSubscription {
   }
 }
 
-export enum SubscriptionType {
-  MainRoom,
-  SubRoom,
-}
-
 @Log.attach({ proxyMethods: false })
-export class MainRoomSubscription extends SceneSubscriptionBase {
+export class MainRoomSubscription extends SceneSubscription {
   handleLocalStreamAdded(streams: AgoraStream[]) {
     const scene = this._scene;
     if (streams.length === 0) {
@@ -354,35 +345,8 @@ export class MainRoomSubscription extends SceneSubscriptionBase {
   }
 }
 
-@Log.attach({ proxyMethods: false })
-export class SubRoomSubscription extends SceneSubscriptionBase {
-  handleLocalStreamAdded(streams: AgoraStream[]): void {
-    throw new Error('Method not implemented.');
-  }
-  handleLocalStreamUpdated(streams: AgoraStream[]): void {
-    throw new Error('Method not implemented.');
-  }
-  handleLocalStreamRemoved(streams: AgoraStream[]): void {
-    throw new Error('Method not implemented.');
-  }
-  handleRemoteStreamAdded(streams: AgoraStream[]): void {
-    throw new Error('Method not implemented.');
-  }
-  handleRemoteStreamUpdated(streams: AgoraStream[]): void {
-    throw new Error('Method not implemented.');
-  }
-  handleRemoteStreamRemoved(streams: AgoraStream[]): void {
-    throw new Error('Method not implemented.');
-  }
-}
-
 export class SubscriptionFactory {
-  static createSubscription(type: SubscriptionType, scene: AgoraRteScene) {
-    if (SubscriptionType.MainRoom === type) {
-      return new MainRoomSubscription(scene);
-    } else if (SubscriptionType.SubRoom === type) {
-      return new SubRoomSubscription(scene);
-    }
-    return null;
+  static createSubscription(scene: AgoraRteScene) {
+    return new MainRoomSubscription(scene);
   }
 }

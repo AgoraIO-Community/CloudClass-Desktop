@@ -1,6 +1,5 @@
 import { AgoraRteEventType, AgoraRteScene, NetworkStats, AGNetworkQuality } from 'agora-rte-sdk';
 import { action, observable, reaction } from 'mobx';
-import { EduClassroomStore } from '..';
 import { EduStoreBase } from '../base';
 
 //for users
@@ -77,7 +76,7 @@ export class StatisticsStore extends EduStoreBase {
 
   onInstall() {
     reaction(
-      () => this.classroomStore.connectionStore.scene,
+      () => this.classroomStore.connectionStore.mainRoomScene,
       (scene) => {
         if (scene) {
           //bind events
