@@ -7,7 +7,7 @@ import { transI18n } from '~ui-kit';
 import { removeAllmute, setAllmute } from '../../api/mute';
 import { MSG_TYPE } from '../../contants';
 import { messageAction, showEmojiAction } from '../../redux/actions/messageAction';
-import store from '../../redux/store';
+import { ref } from '../../redux/store';
 // import emojiIcon from '../../themes/img/emoji.png';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import { Emoji } from '../../utils/emoji';
@@ -49,12 +49,12 @@ export const InputMsg = ({ allMutePermission }) => {
 
   // 显示表情框
   const showEmoji = () => {
-    store.dispatch(showEmojiAction(true));
+    ref.store.dispatch(showEmojiAction(true));
   };
   // 隐藏表情框
   const handleCancel = () => {
     Modal.destroyAll();
-    store.dispatch(showEmojiAction(false));
+    ref.store.dispatch(showEmojiAction(false));
   };
 
   // 获取到点击的表情，加入到输入框
@@ -113,7 +113,7 @@ export const InputMsg = ({ allMutePermission }) => {
         msg.id = serverId;
         msg.body.id = serverId;
         msg.body.time = new Date().getTime().toString();
-        store.dispatch(messageAction(msg.body, { isHistory: false }));
+        ref.store.dispatch(messageAction(msg.body, { isHistory: false }));
       }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
       fail: function (err) {
         console.log('fail>>>', err);
@@ -134,7 +134,7 @@ export const InputMsg = ({ allMutePermission }) => {
   };
 
   const handleEomijVisibleChange = (visible) => {
-    store.dispatch(showEmojiAction(visible));
+    ref.store.dispatch(showEmojiAction(visible));
   };
 
   const renderInputBox = React.useMemo(() => {

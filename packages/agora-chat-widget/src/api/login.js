@@ -1,17 +1,17 @@
 import WebIM from '../utils/WebIM';
-import store from '../redux/store';
+import { ref } from '../redux/store';
 import { userAction } from '../redux/actions/userAction';
 
 // 登陆
 export const loginIM = (appkey) => {
-  const userName = store.getState().propsData.userUuid;
-  let potions = {
+  const userName = ref.store.getState().propsData.userUuid;
+  let options = {
     user: userName ? userName.toLocaleLowerCase() : '',
     pwd: userName,
     appKey: appkey,
     success: () => {
-      store.dispatch(userAction(potions.user));
+      ref.store.dispatch(userAction(options.user));
     },
   };
-  WebIM.conn.open(potions);
+  WebIM.conn.open(options);
 };

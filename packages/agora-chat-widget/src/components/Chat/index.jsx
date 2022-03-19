@@ -6,7 +6,7 @@ import { InputBox } from '../InputBox';
 import { UserList } from '../UserList';
 import { Announcement } from '../Announcement';
 import { ROLE, CHAT_TABS_KEYS } from '../../contants';
-import store from '../../redux/store';
+import { ref } from '../../redux/store';
 import { isShowChat } from '../../redux/actions/propsAction';
 import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction';
 import { transI18n } from '~ui-kit';
@@ -77,24 +77,24 @@ export const Chat = () => {
   }, [roomUsers, roomUsersInfo]);
 
   const hideChatModal = () => {
-    store.dispatch(isShowChat(false));
-    store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat));
+    ref.store.dispatch(isShowChat(false));
+    ref.store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat));
   };
 
   // 监听 Tab 切换
   const onTabChange = (key) => {
-    store.dispatch(selectTabAction(key));
+    ref.store.dispatch(selectTabAction(key));
     switch (key) {
       case 'CHAT':
         setTabKey(CHAT_TABS_KEYS.chat);
-        store.dispatch(showRedNotification(false));
+        ref.store.dispatch(showRedNotification(false));
         break;
       case 'USER':
         setTabKey(CHAT_TABS_KEYS.user);
         break;
       case 'ANNOUNCEMENT':
         setTabKey(CHAT_TABS_KEYS.notice);
-        store.dispatch(announcementNotice(false));
+        ref.store.dispatch(announcementNotice(false));
         break;
       default:
         break;
@@ -104,7 +104,7 @@ export const Chat = () => {
   // 点击聊天Tab中的公告，跳转到公告Tab
   const toTabKey = () => {
     setTabKey(CHAT_TABS_KEYS.notice);
-    store.dispatch(announcementNotice(false));
+    ref.store.dispatch(announcementNotice(false));
   };
   return (
     <div>

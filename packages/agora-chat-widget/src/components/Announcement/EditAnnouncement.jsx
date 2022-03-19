@@ -5,7 +5,7 @@ import { transI18n } from '~ui-kit';
 import { updateAnnouncement } from '../../api/chatroom';
 import { ANNOUNCEMENT_SIZE } from '../../contants';
 import { announcementStatus } from '../../redux/actions/roomAction';
-import store from '../../redux/store';
+import { ref } from '../../redux/store';
 import './index.css';
 
 const { TextArea } = Input;
@@ -25,7 +25,7 @@ export const EditAnnouncement = ({ onEdit }) => {
   };
 
   const editStatus = () => {
-    store.dispatch(announcementStatus(true));
+    ref.store.dispatch(announcementStatus(true));
   };
   return (
     <div className="edit-content">

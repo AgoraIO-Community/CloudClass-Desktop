@@ -1,11 +1,11 @@
 import WebIM from '../utils/WebIM';
 import { MSG_TYPE } from '../contants';
-import store from '../redux/store';
+import { ref } from '../redux/store';
 import { messageAction } from '../redux/actions/messageAction';
 
 // 禁言消息
 export const sendCmdMsg = (action, userId) => {
-  const state = store.getState();
+  const state = ref.store.getState();
   const roomId = state?.propsData.chatroomId;
   const roomUuid = state?.propsData.roomUuid;
   const roleType = state?.propsData.roleType;
@@ -30,7 +30,7 @@ export const sendCmdMsg = (action, userId) => {
       msg.id = serverId;
       msg.body.id = serverId;
       msg.body.time = new Date().getTime().toString();
-      store.dispatch(messageAction(msg.body, { isHistory: false }));
+      ref.store.dispatch(messageAction(msg.body, { isHistory: false }));
     }, //消息发送成功回调
     fail: function (e) {
       console.log('Fail'); //如禁言、拉黑后发送消息会失败

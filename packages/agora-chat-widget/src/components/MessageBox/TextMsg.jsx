@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Tag, Menu, Dropdown } from 'antd';
 import { ROLE, MSG_TYPE } from '../../contants';
 import { transI18n } from '~ui-kit';
-import store from '../../redux/store';
+import { ref } from '../../redux/store';
 import { messageAction } from '../../redux/actions/messageAction';
 import delete_icon from '../../themes/img/delete.png';
 import './index.css';

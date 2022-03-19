@@ -3,6 +3,9 @@ import config from './WebIMConfig';
 
 export const initIMSDK = (appkey) => {
   let WebIM = window.WebIM || {};
+  if (WebIM.conn) {
+    WebIM.conn.close();
+  }
   WebIM.config = config;
   WebIM.config.appkey = appkey;
 
@@ -24,4 +27,4 @@ export const initIMSDK = (appkey) => {
   WebIM.conn = new websdk.connection(options);
 };
 
-export default WebIM;
+export default window.WebIM;

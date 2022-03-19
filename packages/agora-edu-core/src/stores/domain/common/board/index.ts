@@ -63,7 +63,11 @@ export class BoardStore extends EduStoreBase {
 
   // ------ observables  -----------
   @observable ready: boolean = false;
-  @observable grantUsers: Set<string> = new Set<string>();
+
+  @computed
+  get grantUsers() {
+    return this._dataStore.grantUsers;
+  }
 
   @computed
   get selectedTool() {
@@ -108,6 +112,7 @@ export class BoardStore extends EduStoreBase {
     redoSteps: 0,
     currentSceneIndex: 0,
     scenesCount: 0,
+    grantUsers: new Set(),
   };
 
   // ---------- computeds --------
@@ -164,7 +169,7 @@ export class BoardStore extends EduStoreBase {
       let globalState = room.state.globalState as AGGlobalState;
       if (globalState.grantUsers) {
         runInAction(() => {
-          this.grantUsers = new Set(globalState.grantUsers);
+          this._dataStore.grantUsers = new Set(globalState.grantUsers);
         });
       }
       if (
@@ -250,14 +255,14 @@ export class BoardStore extends EduStoreBase {
 
   @bound
   grantPermission(userUuid: string) {
-    let newSet = new Set(this.grantUsers);
+    let newSet = new Set(this._dataStore.grantUsers);
     newSet.add(userUuid);
     this.room.setGlobalState({ grantUsers: Array.from(newSet) });
   }
 
   @bound
   revokePermission(userUuid: string) {
-    let newSet = new Set(this.grantUsers);
+    let newSet = new Set(this._dataStore.grantUsers);
     newSet.delete(userUuid);
     this.room.setGlobalState({ grantUsers: Array.from(newSet) });
   }
@@ -550,7 +555,7 @@ export class BoardStore extends EduStoreBase {
       runInAction(() => {
         let globalState = state.globalState as AGGlobalState | undefined;
         if (globalState && globalState.grantUsers) {
-          this.grantUsers = new Set(globalState.grantUsers);
+          this._dataStore.grantUsers = new Set(globalState.grantUsers);
         }
         // 监听颜色的变化，赋值给strokeColor
         if (state?.memberState?.strokeColor) {
@@ -674,7 +679,7 @@ export class BoardStore extends EduStoreBase {
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
-        computed(() => this.grantUsers).observe(async ({ newValue, oldValue }) => {
+        computed(() => this._dataStore.grantUsers).observe(async ({ newValue, oldValue }) => {
           try {
             if (newValue.has(sessionInfo.userUuid) && !oldValue?.has(sessionInfo.userUuid)) {
               //granted
@@ -720,6 +725,7 @@ type DataStore = {
   redoSteps: number;
   currentSceneIndex: number;
   scenesCount: number;
+  grantUsers: Set<string>;
 };
 
 class SceneEventHandler {
@@ -756,6 +762,7 @@ class SceneEventHandler {
     redoSteps: 0,
     currentSceneIndex: 0,
     scenesCount: 0,
+    grantUsers: new Set<string>(),
   };
 
   addEventHandlers() {

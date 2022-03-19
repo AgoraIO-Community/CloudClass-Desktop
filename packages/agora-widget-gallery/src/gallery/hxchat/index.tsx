@@ -32,8 +32,6 @@ const App: React.FC<AppProps> = observer((props) => {
   const widgetStore = chatContext.widgetStore as WidgetChatUIStore;
   const [minimize, toggleChatMinimize] = useState<boolean>(false);
   const isFullScreen = false; // todo from uistore
-  const isJoined =
-    uiStore.classroomStore.connectionStore.classroomState === ClassroomState.Connected;
 
   const { localUser } = uiStore.classroomStore.userStore;
 
@@ -45,9 +43,11 @@ const App: React.FC<AppProps> = observer((props) => {
     }
   };
 
-  const localUserInfo = getIMUserID()
+  const userUuid = getIMUserID();
+
+  const localUserInfo = userUuid
     ? {
-        userUuid: getIMUserID(),
+        userUuid,
         userName: EduClassroomConfig.shared.sessionInfo.userName,
         roleType: EduClassroomConfig.shared.sessionInfo.role,
       }
@@ -57,11 +57,6 @@ const App: React.FC<AppProps> = observer((props) => {
     roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
     roomName: EduClassroomConfig.shared.sessionInfo.roomName,
     roomType: EduClassroomConfig.shared.sessionInfo.roomType,
-  };
-
-  const context = {
-    localUserInfo,
-    roomInfo,
   };
 
   const globalContext = {
@@ -115,29 +110,17 @@ const App: React.FC<AppProps> = observer((props) => {
     'props.imAvatarUrl',
     'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png',
   );
-  // set(pluginStore, 'props.imUserName', userName);
 
   const hxStore = {
-    context,
     globalContext,
-    props: { ...props, chatroomId, appName, orgName },
+    context: { ...props, chatroomId, appName, orgName, ...roomInfo, ...localUserInfo },
   };
-  const domRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    let unmount = () => {};
-    if (domRef.current && isJoined && chatroomId && localUserInfo) {
-      //@ts-ignore
-      unmount = hx.renderHXChatRoom(domRef.current, hxStore);
-    }
-    return () => {
-      unmount && unmount();
-    };
-  }, [domRef.current, isJoined, isFullScreen, chatroomId, localUserInfo]);
+  const domRef = useRef<HTMLDivElement>(null);
 
   return (
     <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>
-      {/* <iframe style={{width:'100%',height:'100%'}} src={`https://cloudclass-agora-test.easemob.com/?chatRoomId=${chatroomId}&roomUuid=${roomInfo.roomUuid}&roleType=${localUserInfo.roleType}&userUuid=${localUserInfo.userUuid}&avatarUrl=${'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png'}&nickName=${localUserInfo.userName}&org=${orgName}&apk=${appName}`}></iframe> */}
+      <hx.HXChatRoom pluginStore={hxStore} />
     </div>
   );
 });
@@ -145,11 +128,14 @@ const App: React.FC<AppProps> = observer((props) => {
 export class AgoraHXChatWidget implements IAgoraWidget {
   widgetId = 'io.agora.widget.hx.chatroom';
 
+  private _dom?: Element;
+
   constructor() {}
 
   widgetDidLoad(dom: Element, props: any): void {
     const { uiStore, ...resetProps } = props;
     const widgetStore = new WidgetChatUIStore(uiStore);
+    this._dom = dom;
     ReactDOM.render(
       <Context.Provider value={{ uiStore: uiStore, widgetStore }}>
         <App {...resetProps} />
@@ -160,8 +146,7 @@ export class AgoraHXChatWidget implements IAgoraWidget {
   // TODO: uncertain
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {}
   widgetWillUnload(): void {
-    console.log('widgetWillUnload>>>>');
-    //@ts-ignore
     hx.logout();
+    ReactDOM.unmountComponentAtNode(this._dom!);
   }
 }

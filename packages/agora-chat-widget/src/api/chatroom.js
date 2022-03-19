@@ -8,7 +8,7 @@ import {
   roomInfo,
   roomUsers,
 } from '../redux/actions/roomAction';
-import store from '../redux/store';
+import { ref } from '../redux/store';
 import WebIM from '../utils/WebIM';
 import { getHistoryMessages } from './historyMsg';
 import { getRoomWhileList, isChatRoomWhiteUser } from './mute';
@@ -16,9 +16,9 @@ import { getUserInfo } from './userInfo';
 
 // 加入聊天室
 export const joinRoom = async () => {
-  const roomId = store.getState().propsData.chatroomId;
-  const userUuid = store.getState().propsData.userUuid;
-  const roleType = store.getState().propsData.roleType;
+  const roomId = ref.store.getState().propsData.chatroomId;
+  const userUuid = ref.store.getState().propsData.userUuid;
+  const roleType = ref.store.getState().propsData.roleType;
   let options = {
     roomId: roomId, // 聊天室id
     message: 'reason', // 原因（可选参数）
@@ -44,7 +44,7 @@ export const getRoomInfo = (roomId) => {
     chatRoomId: roomId, // 聊天室id
   };
   WebIM.conn.getChatRoomDetails(options).then((res) => {
-    store.dispatch(roomInfo(res.data[0]));
+    ref.store.dispatch(roomInfo(res.data[0]));
     // 将成员存到 store
     let newArr = [];
     res.data[0].affiliations.map((item) => {
@@ -54,10 +54,10 @@ export const getRoomInfo = (roomId) => {
         newArr.push(item.member);
       }
     });
-    store.dispatch(roomUsers(newArr));
+    ref.store.dispatch(roomUsers(newArr));
     // 判断是否全局禁言
     if (res.data[0].mute) {
-      store.dispatch(roomAllMute(true));
+      ref.store.dispatch(roomAllMute(true));
     }
     getUserInfo(newArr);
     getAnnouncement(roomId);
@@ -71,7 +71,7 @@ export const getAnnouncement = (roomId) => {
     roomId, // 聊天室id
   };
   WebIM.conn.fetchChatRoomAnnouncement(options).then((res) => {
-    store.dispatch(roomAnnouncement(res.data.announcement));
+    ref.store.dispatch(roomAnnouncement(res.data.announcement));
   });
 };
 
@@ -86,14 +86,14 @@ export const updateAnnouncement = (roomId, noticeCentent, callback) => {
   };
   WebIM.conn.updateChatRoomAnnouncement(options).then((res) => {
     getAnnouncement(res.data.id);
-    store.dispatch(announcementStatus(true));
+    ref.store.dispatch(announcementStatus(true));
     callback && callback();
   });
 };
 
 // 退出聊天室
 export const logoutChatroom = () => {
-  const roomId = store.getState().propsData.chatroomId;
+  const roomId = ref.store.getState().propsData.chatroomId;
   if (!WebIM.conn) {
     return;
   }

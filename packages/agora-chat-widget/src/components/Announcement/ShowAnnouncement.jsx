@@ -5,12 +5,12 @@ import { transI18n } from '~ui-kit';
 import { updateAnnouncement } from '../../api/chatroom';
 import { ROLE } from '../../contants';
 import { announcementStatus } from '../../redux/actions/roomAction';
-import store from '../../redux/store';
+import { ref } from '../../redux/store';
 import announcement from '../../themes/img/announcement.png';
 import './index.css';
 
 const onChangeStatus = () => {
-  store.dispatch(announcementStatus(false));
+  ref.store.dispatch(announcementStatus(false));
 };
 
 const Edit = () => {

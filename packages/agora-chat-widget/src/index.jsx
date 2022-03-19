@@ -1,7 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import createStore from './redux/store';
 import { setVisibleUI } from './redux/actions/roomAction';
 import { isShowChat, isShowMiniIcon } from './redux/actions/propsAction';
 import { messageAction } from './redux/actions/messageAction';
@@ -11,11 +10,14 @@ import { logoutChatroom } from './api/chatroom';
 import { setUserMute, removeUserMute } from './api/mute';
 
 // import './index.css'
+let store = null;
 
 export const HXChatRoom = ({ pluginStore }) => {
+  const chatStore = React.useMemo(() => (store = createStore()), []);
+
   return (
     // <React.StrictMode>
-    <Provider store={store}>
+    <Provider store={chatStore}>
       <MemoryRouter>
         <App pluginStore={pluginStore} />
       </MemoryRouter>
@@ -24,12 +26,12 @@ export const HXChatRoom = ({ pluginStore }) => {
   );
 };
 
-export const renderHXChatRoom = (dom, pluginStore) => {
-  ReactDOM.render(<HXChatRoom pluginStore={pluginStore} />, dom);
-  return () => {
-    ReactDOM.unmountComponentAtNode(dom);
-  };
-};
+// export const renderHXChatRoom = (dom, pluginStore, onUpdate) => {
+//   ReactDOM.render(<HXChatRoom pluginStore={pluginStore} />, dom);
+//   return () => {
+//     ReactDOM.unmountComponentAtNode(dom);
+//   };
+// };
 
 // 单人禁言
 export const muteUser = (userId) => {
@@ -43,21 +45,21 @@ export const unMuteUser = (userId) => {
 
 // 当前登陆ID，是否被禁言 --- 学生调用 返回 Boolean
 export const isMuted = () => {
-  return store.getState()?.room.isUserMute;
+  return store?.getState()?.room.isUserMute;
 };
 
 // 获取禁言列表 --- 老师调用  返回 userUuid 的数组
 export const getMuteList = () => {
-  return store.getState()?.room.muteList;
+  return store?.getState()?.room.muteList;
 };
 export const dispatchVisibleUI = (data) => {
-  return store.dispatch(setVisibleUI(data));
+  return store?.dispatch(setVisibleUI(data));
 };
 export const dispatchShowChat = (data) => {
-  return store.dispatch(isShowChat(data));
+  return store?.dispatch(isShowChat(data));
 };
 export const dispatchShowMiniIcon = (data) => {
-  return store.dispatch(isShowMiniIcon(data));
+  return store?.dispatch(isShowMiniIcon(data));
 };
 
 /**
@@ -66,7 +68,7 @@ export const dispatchShowMiniIcon = (data) => {
  * @returns
  */
 export const receiveMessage = (data) => {
-  return store.dispatch(messageAction(data, options));
+  return store?.dispatch(messageAction(data));
 };
 
 export const logout = () => {

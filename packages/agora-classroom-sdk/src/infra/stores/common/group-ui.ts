@@ -445,6 +445,9 @@ export class GroupUIStore extends EduUIStoreBase {
             this.classroomStore.connectionStore.rtcState === RtcState.Connected,
         );
 
+        // workaround: room may not exist when whiteboard state is connected, it will no op  if leave board at this time
+        await new Promise((r) => setTimeout(r, 500));
+
         await this.classroomStore.connectionStore.leaveRTC();
         if (this.classroomStore.connectionStore.whiteboardState !== WhiteboardState.Disconnecting) {
           await this.classroomStore.connectionStore.leaveWhiteboard();

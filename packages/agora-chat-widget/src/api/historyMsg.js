@@ -1,5 +1,5 @@
 import WebIM from '../utils/WebIM';
-import store from '../redux/store';
+import { ref } from '../redux/store';
 import { messageAction } from '../redux/actions/messageAction';
 import { HISTORY_COUNT } from '../contants';
 import _ from 'lodash';
@@ -19,16 +19,16 @@ export const getHistoryMessages = (roomId) => {
         const { action, id } = val;
         if (action == 'DEL') {
           deleteMsgId.push(msgId);
-          store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
+          ref.store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
         } else if (deleteMsgId.includes(id)) {
           return;
         } else {
-          store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
+          ref.store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
         }
       });
     },
     fail: function (err) {
-      stop = true;
+      // stop = true;
       console.log('漫游失败', err);
     },
   };
