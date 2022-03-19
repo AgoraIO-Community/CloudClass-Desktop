@@ -2,6 +2,7 @@ import {
   AgoraEduClassroomEvent,
   EduClassroomConfig,
   EduEventCenter,
+  EduRoleTypeEnum,
   GroupDetail,
   GroupState,
   PatchGroup,
@@ -438,8 +439,10 @@ export class GroupUIStore extends EduUIStoreBase {
             this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
             this.classroomStore.connectionStore.rtcState === RtcState.Connected,
         );
+
         await this.classroomStore.connectionStore.leaveRTC();
-        await this.classroomStore.connectionStore.leaveWhiteboard();
+        // await this.classroomStore.connectionStore.leaveWhiteboard();
+
         await when(
           () =>
             this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
@@ -447,7 +450,13 @@ export class GroupUIStore extends EduUIStoreBase {
         );
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
         await this.classroomStore.connectionStore.joinRTC();
-        await this.classroomStore.connectionStore.joinWhiteboard();
+        // await this.classroomStore.connectionStore.joinWhiteboard();
+        if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+          await this.classroomStore.streamStore.updateLocalPublishState({
+            videoState: 1,
+            audioState: 1,
+          });
+        }
       } catch (e) {
         this.shareUIStore.addToast('Cannot join sub room');
       } finally {
@@ -472,6 +481,48 @@ export class GroupUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.joinWhiteboard();
     } catch (e) {
       this.shareUIStore.addToast('Cannot leave sub room');
+    } finally {
+      this.setConnectionState(false);
+    }
+  }
+
+  @bound
+  private async _changeSubRoom() {
+    this.setConnectionState(true);
+    try {
+      const roomUuid = this.classroomStore.groupStore.currentSubRoom;
+      if (roomUuid) {
+        await this.classroomStore.connectionStore.leaveSubRoom();
+        await when(
+          () =>
+            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
+            this.classroomStore.connectionStore.rtcState === RtcState.Idle,
+        );
+
+        await when(
+          () =>
+            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
+            this.classroomStore.connectionStore.rtcState === RtcState.Connected,
+        );
+
+        await this.classroomStore.connectionStore.leaveRTC();
+
+        await when(
+          () =>
+            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
+            this.classroomStore.connectionStore.rtcState === RtcState.Idle,
+        );
+        await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+        await this.classroomStore.connectionStore.joinRTC();
+        if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+          await this.classroomStore.streamStore.updateLocalPublishState({
+            videoState: 1,
+            audioState: 1,
+          });
+        }
+      }
+    } catch (e) {
+      this.shareUIStore.addToast('Cannot change sub room');
     } finally {
       this.setConnectionState(false);
     }
@@ -502,6 +553,7 @@ export class GroupUIStore extends EduUIStoreBase {
         );
       }
       if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
+        this._changeSubRoom();
       }
     });
   }

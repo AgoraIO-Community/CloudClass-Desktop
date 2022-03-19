@@ -95,13 +95,18 @@ export class GroupStore extends EduStoreBase {
   private _checkSubRoom() {
     const { userUuid: localUuid } = EduClassroomConfig.shared.sessionInfo;
 
+    let lastGroupUuid = '';
     for (const [groupUuid, group] of this.groupDetails.entries()) {
       const local = group.users.find(({ userUuid }) => userUuid === localUuid);
-      const notInSubRoom = local && groupUuid !== this._currentGroupUuid;
-
-      if (notInSubRoom) {
-        this.joinSubRoom(groupUuid);
+      if (local) {
+        lastGroupUuid = groupUuid;
+        break;
       }
+    }
+    if (lastGroupUuid && this._currentGroupUuid && lastGroupUuid !== this._currentGroupUuid) {
+      this.moveIntoSubRoom(this._currentGroupUuid, lastGroupUuid);
+    } else if (lastGroupUuid && !this._currentGroupUuid) {
+      this.joinSubRoom(lastGroupUuid);
     }
   }
 
@@ -156,6 +161,20 @@ export class GroupStore extends EduStoreBase {
     this._currentGroupUuid = groupUuid;
 
     EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.JoinSubRoom);
+  }
+
+  /**
+   *
+   * @param fromGroupUuid
+   * @param toGroupUuid
+   */
+  moveIntoSubRoom(fromGroupUuid: string, toGroupUuid: string) {
+    this._currentGroupUuid = toGroupUuid;
+
+    EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.MoveToOtherGroup, {
+      fromGroupUuid,
+      toGroupUuid,
+    });
   }
 
   /**

@@ -555,6 +555,7 @@ export const zh = {
     not_grouped: '未分组',
     confirm_title: '加入小组',
     confirm_content: '确定加入小组吗？',
+    join_group: '加入小组',
   },
   begin_class: '开始上课',
   edu_error: {

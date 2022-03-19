@@ -15,6 +15,7 @@ import { ExtAppContainer } from '~containers/ext-app';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
 import { MidRosterBtn } from '~containers/roster';
+import { SceneSwitch } from '~containers/scene-switch';
 export const MidClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'mid-class-room');
@@ -22,23 +23,25 @@ export const MidClassScenario = observer(() => {
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
-        <Layout className={layoutCls} direction="col">
-          <NavigationBarContainer />
-          <RoomMidStreamsContainer />
-          <WhiteboardContainer>
-            <ScreenShareContainer />
-          </WhiteboardContainer>
-          <Aside className="aisde-fixed">
-            <CollectorContainer />
-            <HandsUpContainer />
-            <MidRosterBtn />
-            <ChatWidgetPC />
-          </Aside>
-          <DialogContainer />
-          <LoadingContainer />
-        </Layout>
-        <ExtAppContainer />
-        <ToastContainer />
+        <SceneSwitch>
+          <Layout className={layoutCls} direction="col">
+            <NavigationBarContainer />
+            <RoomMidStreamsContainer />
+            <WhiteboardContainer>
+              <ScreenShareContainer />
+            </WhiteboardContainer>
+            <Aside className="aisde-fixed">
+              <CollectorContainer />
+              <HandsUpContainer />
+              <MidRosterBtn />
+              {/* <ChatWidgetPC /> */}
+            </Aside>
+            <DialogContainer />
+            <LoadingContainer />
+          </Layout>
+          <ExtAppContainer />
+          <ToastContainer />
+        </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
   );

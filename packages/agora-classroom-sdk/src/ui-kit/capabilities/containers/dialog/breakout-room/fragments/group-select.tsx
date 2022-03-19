@@ -30,7 +30,7 @@ const LinkButton = ({ onClick, text, hoverText = text }: LinkButtonProps) => {
       onMouseLeave={() => {
         setHover(false);
       }}>
-      {hover ? hoverText : text}
+      {hover && hoverText ? hoverText : text}
     </div>
   );
 };
@@ -61,8 +61,8 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
         <LinkButton
           className="pr-4"
           text={`${userCount}`}
-          onClick={() => joinSubRoom(groupUuid)}
-          hoverText={'加入小组'}
+          onClick={() => groupUuid && joinSubRoom(groupUuid)}
+          hoverText={groupUuid && transI18n('breakout_room.join_group')}
         />
       ) : (
         <UserPanel
@@ -91,7 +91,7 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
   const { closeAll } = useContext(PanelStateContext);
 
   const filteredGroups = useMemo(() => {
-    const newGroups = cloneDeep(groups);
+    const newGroups = cloneDeep(groups.filter(({ id }) => id && id !== groupUuid));
 
     newGroups.forEach((group) => {
       const { children } = group;
@@ -100,12 +100,12 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
     });
 
     return newGroups;
-  }, [groups]);
+  }, [groups, groupUuid]);
 
   return (
     <div className="flex">
       <GroupPanel
-        groups={groups}
+        groups={filteredGroups}
         onNodeClick={(node) => {
           moveUserToGroup(groupUuid, node.id, userUuid);
           closeAll();
