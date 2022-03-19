@@ -244,6 +244,7 @@ export class StreamStore extends EduStoreBase {
     );
   }
   onDestroy() {
+    SceneEventHandler.cleanup();
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
@@ -270,6 +271,14 @@ class SceneEventHandler {
       SceneEventHandler._handlers[scene.sceneId] = handler;
     }
     return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static cleanup() {
+    Object.keys(SceneEventHandler._handlers).forEach((k) => {
+      SceneEventHandler._handlers[k].removeEventHandlers();
+    });
+
+    SceneEventHandler._handlers = {};
   }
 
   constructor(private _scene: AgoraRteScene, private _api: EduApiService) {}

@@ -123,7 +123,9 @@ export class UserStore extends EduStoreBase {
       }
     });
   }
-  onDestroy() {}
+  onDestroy() {
+    SceneEventHandler.cleanup();
+  }
 }
 
 type DataStore = {
@@ -147,6 +149,14 @@ class SceneEventHandler {
       SceneEventHandler._handlers[scene.sceneId] = handler;
     }
     return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static cleanup() {
+    Object.keys(SceneEventHandler._handlers).forEach((k) => {
+      SceneEventHandler._handlers[k].removeEventHandlers();
+    });
+
+    SceneEventHandler._handlers = {};
   }
 
   constructor(private _scene: AgoraRteScene) {}

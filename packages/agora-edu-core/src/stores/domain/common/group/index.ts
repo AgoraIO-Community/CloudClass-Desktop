@@ -277,9 +277,6 @@ export class GroupStore extends EduStoreBase {
     scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
   }
 
-  @action
-  private _resetData() {}
-
   /** Hooks */
   onInstall() {
     computed(() => this.classroomStore.connectionStore.mainRoomScene).observe(
@@ -288,7 +285,6 @@ export class GroupStore extends EduStoreBase {
           this._removeEventHandlers(oldValue);
         }
         if (newValue) {
-          this._resetData();
           //bind events
           this._addEventHandlers(newValue);
         }
