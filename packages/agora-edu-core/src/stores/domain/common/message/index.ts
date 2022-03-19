@@ -372,9 +372,6 @@ class SceneEventHandler {
   };
 
   addEventHandlers() {
-    this._scene.on(AgoraRteEventType.RoomPropertyUpdated, this._receiveChat);
-
-    // to do
     this._scene.on(AgoraRteEventType.ChatUserMessage, this._receiveUserMessage);
     this._scene.on(AgoraRteEventType.ChatReceived, this._receiveChat);
   }

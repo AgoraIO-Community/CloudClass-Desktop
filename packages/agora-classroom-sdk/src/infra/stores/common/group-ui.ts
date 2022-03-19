@@ -401,6 +401,11 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @bound
   joinSubRoom(groupUuid: string) {
+    if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
+      this.shareUIStore.addToast(transI18n('breakout_room.already_in_room'));
+      return;
+    }
+
     if (!this.classroomStore.groupStore.currentSubRoom) {
       this.classroomStore.groupStore.updateGroupUsers([
         {
@@ -441,16 +446,20 @@ export class GroupUIStore extends EduUIStoreBase {
         );
 
         await this.classroomStore.connectionStore.leaveRTC();
-        // await this.classroomStore.connectionStore.leaveWhiteboard();
+        if (this.classroomStore.connectionStore.whiteboardState !== WhiteboardState.Disconnecting) {
+          await this.classroomStore.connectionStore.leaveWhiteboard();
+        }
 
         await when(
           () =>
             this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
             this.classroomStore.connectionStore.rtcState === RtcState.Idle,
         );
+
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+
         await this.classroomStore.connectionStore.joinRTC();
-        // await this.classroomStore.connectionStore.joinWhiteboard();
+
         if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
           await this.classroomStore.streamStore.updateLocalPublishState({
             videoState: 1,
@@ -472,13 +481,14 @@ export class GroupUIStore extends EduUIStoreBase {
     this.setConnectionState(true);
     try {
       await this.classroomStore.connectionStore.leaveSubRoom();
+
       await when(
         () =>
           this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
           this.classroomStore.connectionStore.rtcState === RtcState.Idle,
       );
+
       await this.classroomStore.connectionStore.joinRTC();
-      await this.classroomStore.connectionStore.joinWhiteboard();
     } catch (e) {
       this.shareUIStore.addToast('Cannot leave sub room');
     } finally {
@@ -492,28 +502,24 @@ export class GroupUIStore extends EduUIStoreBase {
     try {
       const roomUuid = this.classroomStore.groupStore.currentSubRoom;
       if (roomUuid) {
-        await this.classroomStore.connectionStore.leaveSubRoom();
-        await when(
-          () =>
-            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
-            this.classroomStore.connectionStore.rtcState === RtcState.Idle,
-        );
+        if (this.joiningSubRoom) {
+          await when(() => !this.joiningSubRoom);
+        }
 
-        await when(
-          () =>
-            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
-            this.classroomStore.connectionStore.rtcState === RtcState.Connected,
-        );
+        await this.classroomStore.connectionStore.leaveSubRoom();
 
         await this.classroomStore.connectionStore.leaveRTC();
 
         await when(
           () =>
-            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
-            this.classroomStore.connectionStore.rtcState === RtcState.Idle,
+            this.classroomStore.connectionStore.rtcState === RtcState.Idle &&
+            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle,
         );
+
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+
         await this.classroomStore.connectionStore.joinRTC();
+
         if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
           await this.classroomStore.streamStore.updateLocalPublishState({
             videoState: 1,

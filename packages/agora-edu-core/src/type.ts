@@ -13,6 +13,7 @@ export enum WhiteboardState {
   Connecting = 1,
   Connected = 2,
   Reconnecting = 3,
+  Disconnecting = 4,
 }
 
 /**

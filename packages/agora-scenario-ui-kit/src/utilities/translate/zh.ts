@@ -556,6 +556,7 @@ export const zh = {
     confirm_title: '加入小组',
     confirm_content: '确定加入小组吗？',
     join_group: '加入小组',
+    already_in_room: '已经在这个小组了',
   },
   begin_class: '开始上课',
   edu_error: {

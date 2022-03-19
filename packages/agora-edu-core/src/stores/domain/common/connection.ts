@@ -103,6 +103,9 @@ export class ConnectionStore extends EduStoreBase {
       case RoomPhase.Disconnected:
         this.whiteboardState = WhiteboardState.Idle;
         break;
+      case RoomPhase.Disconnecting:
+        this.whiteboardState = WhiteboardState.Disconnecting;
+        break;
     }
   }
 
@@ -207,13 +210,11 @@ export class ConnectionStore extends EduStoreBase {
         });
       }, [])
         .fail(({ error }: { error: Error }) => {
-          EduClassroomConfig.shared.setWhiteboardConfig(undefined);
           this.setScene(SceneType.Main, undefined);
           this.logger.error(error.message);
           return true;
         })
         .abort(() => {
-          EduClassroomConfig.shared.setWhiteboardConfig(undefined);
           this.setScene(SceneType.Main, undefined);
         })
         .exec(),
@@ -292,7 +293,6 @@ export class ConnectionStore extends EduStoreBase {
   @action.bound
   async leaveSubRoom() {
     if (this.scene) {
-      await this.leaveWhiteboard();
       await this.scene.leaveRTC();
       await this.scene.leaveScene();
       this.setScene(SceneType.Sub, undefined);

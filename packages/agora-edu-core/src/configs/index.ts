@@ -12,13 +12,6 @@ import { CloudDriveResource } from '../stores/domain/common/cloud-drive/struct';
 import { AGEduErrorCode, EduErrorCenter } from '../utils/error';
 import { IAgoraExtApp, IAgoraWidget } from '..';
 
-export interface WhiteboardConfigs {
-  boardAppId: string;
-  boardId: string;
-  boardRegion: string;
-  boardToken: string;
-}
-
 export interface WhiteboardDefaults {
   scale: number;
 }
@@ -47,7 +40,6 @@ export class EduClassroomConfig {
   readonly platform: Platform;
   private readonly _rteEngineConfig: AgoraRteEngineConfig;
   private _sessionInfo?: EduSessionInfo;
-  private _boardConfig?: WhiteboardConfigs;
   private _courseWareList?: CloudDriveResource[];
   private _widgets: { [key: string]: IAgoraWidget } = {};
   private _extApps: ReadonlyArray<IAgoraExtApp> = [];
@@ -129,10 +121,6 @@ export class EduClassroomConfig {
     return this._sessionInfo;
   }
 
-  setWhiteboardConfig(config?: WhiteboardConfigs) {
-    this._boardConfig = config;
-  }
-
   setCompatibleVersions(compatibleVersions: string[]) {
     this._compatibleVersions = compatibleVersions;
   }
@@ -141,18 +129,6 @@ export class EduClassroomConfig {
     return this._compatibleVersions.some((v) => {
       return v < this._currentAPIVersion;
     });
-  }
-
-  get whiteboardConfig(): WhiteboardConfigs {
-    if (!this._boardConfig) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_BOARD_INFO_NOT_READY,
-        new Error(`board info is undefined`),
-      );
-    }
-
-    // handleThrowableError will throw an error so it's not possible to return undefined here
-    return this._boardConfig;
   }
 
   setCourseWareList(list?: CourseWareList) {

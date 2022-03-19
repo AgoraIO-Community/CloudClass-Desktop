@@ -55,7 +55,13 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
   const userCount = groupUuid ? groupDetails.get(groupUuid)?.users.length || 0 : notGroupedCount;
 
   return (
-    <div className="flex" onMouseEnter={mouseHandler(true)} onMouseLeave={mouseHandler(false)}>
+    <div
+      className="flex"
+      onMouseEnter={mouseHandler(true)}
+      onMouseLeave={mouseHandler(false)}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}>
       {toggle ? btns : null}
       {groupState === GroupState.OPEN ? (
         <LinkButton

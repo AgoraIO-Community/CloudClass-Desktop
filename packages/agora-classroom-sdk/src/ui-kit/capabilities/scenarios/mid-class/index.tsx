@@ -34,7 +34,7 @@ export const MidClassScenario = observer(() => {
               <CollectorContainer />
               <HandsUpContainer />
               <MidRosterBtn />
-              {/* <ChatWidgetPC /> */}
+              <ChatWidgetPC />
             </Aside>
             <DialogContainer />
             <LoadingContainer />
