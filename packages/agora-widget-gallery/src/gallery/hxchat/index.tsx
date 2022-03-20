@@ -146,7 +146,6 @@ export class AgoraHXChatWidget implements IAgoraWidget {
   // TODO: uncertain
   widgetRoomPropertiesDidUpdate(properties: any, cause: any): void {}
   widgetWillUnload(): void {
-    hx.logout();
     ReactDOM.unmountComponentAtNode(this._dom!);
   }
 }

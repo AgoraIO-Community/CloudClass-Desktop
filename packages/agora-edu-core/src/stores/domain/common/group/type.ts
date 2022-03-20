@@ -6,6 +6,7 @@ export enum GroupState {
 
 export interface GroupUser {
   userUuid: string;
+  notJoined?: boolean;
 }
 
 export type GroupDetail = {

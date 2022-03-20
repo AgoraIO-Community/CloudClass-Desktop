@@ -540,7 +540,7 @@ export const zh = {
     create_suffix: '个讨论组',
     auto: '自动分配',
     manual: '手动分配',
-    wait_for_assign: '待分配{reason}人',
+    wait_for_assign: '待分配{reason1}人，每组{reason2}人',
     create_submit: '创建',
     assign: '分配',
     re_create: '重新创建',
@@ -557,6 +557,7 @@ export const zh = {
     confirm_content: '确定加入小组吗？',
     join_group: '加入小组',
     already_in_room: '已经在这个小组了',
+    not_accepted: '(未接受)',
   },
   begin_class: '开始上课',
   edu_error: {

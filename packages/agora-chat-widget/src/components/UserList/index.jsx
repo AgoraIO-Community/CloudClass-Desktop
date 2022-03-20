@@ -1,30 +1,26 @@
-import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Tag, Tooltip } from 'antd';
 import { ROLE } from '../../contants';
 import { transI18n } from '~ui-kit';
-import { setUserMute, removeUserMute } from '../../api/mute';
-import _ from 'lodash';
 import avatarUrl from '../../themes/img/avatar-big@2x.png';
 import muteNo from '../../themes/img/muteNo.png';
 import muteOff from '../../themes/img/muteOff.png';
 import './index.css';
 
-// 禁言
-const mute = (val, userId) => {
-  if (val) {
-    removeUserMute(userId);
-  } else {
-    setUserMute(userId);
-  }
-};
-
 // 成员页面
 export const UserList = ({ roomUserList }) => {
   const state = useSelector((state) => state);
+  const { apis } = state;
   // 改成枚举
   const muteList = state?.room.muteList;
-
+  // 禁言
+  const mute = (val, userId) => {
+    if (val) {
+      apis.muteAPI.removeUserMute(userId);
+    } else {
+      apis.muteAPI.setUserMute(userId);
+    }
+  };
   return (
     <div className="user">
       {roomUserList.length > 0 &&

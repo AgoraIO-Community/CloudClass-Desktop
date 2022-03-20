@@ -209,6 +209,11 @@ const reducer = (state = defaultState, action) => {
         ...state,
         ...defaultState,
       };
+    case 'SET_APIS':
+      return {
+        ...state,
+        apis: data,
+      };
     default:
       break;
   }

@@ -1,10 +1,6 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-
 import { ShowAnnouncement } from './ShowAnnouncement';
 import { EditAnnouncement } from './EditAnnouncement';
-
-import announcement from '../../themes/img/announcement.png';
 
 import './index.css';
 

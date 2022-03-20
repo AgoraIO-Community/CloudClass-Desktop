@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { transI18n } from '~ui-kit';
 import { TextMsg } from './TextMsg';

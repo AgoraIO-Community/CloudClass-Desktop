@@ -1,36 +1,42 @@
 import WebIM from '../utils/WebIM';
-import { ref } from '../redux/store';
 import { messageAction } from '../redux/actions/messageAction';
 import { HISTORY_COUNT } from '../contants';
 import _ from 'lodash';
 
-export const getHistoryMessages = (roomId) => {
-  var options = {
-    queue: roomId,
-    isGroup: true,
-    count: HISTORY_COUNT,
-    success: function (res) {
-      const historyMsg = _.reverse(res);
-      let deleteMsgId = [];
-      historyMsg.map((val, key) => {
-        const {
-          ext: { msgId },
-        } = val;
-        const { action, id } = val;
-        if (action == 'DEL') {
-          deleteMsgId.push(msgId);
-          ref.store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
-        } else if (deleteMsgId.includes(id)) {
-          return;
-        } else {
-          ref.store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
-        }
-      });
-    },
-    fail: function (err) {
-      // stop = true;
-      console.log('漫游失败', err);
-    },
+export class ChatHistoryAPI {
+  store = null;
+  constructor(store) {
+    this.store = store;
+  }
+
+  getHistoryMessages = (roomId) => {
+    var options = {
+      queue: roomId,
+      isGroup: true,
+      count: HISTORY_COUNT,
+      success: (res) => {
+        const historyMsg = _.reverse(res);
+        let deleteMsgId = [];
+        historyMsg.map((val, key) => {
+          const {
+            ext: { msgId },
+          } = val;
+          const { action, id } = val;
+          if (action == 'DEL') {
+            deleteMsgId.push(msgId);
+            this.store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
+          } else if (deleteMsgId.includes(id)) {
+            return;
+          } else {
+            this.store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
+          }
+        });
+      },
+      fail: (err) => {
+        // stop = true;
+        console.log('漫游失败', err);
+      },
+    };
+    WebIM.conn.fetchHistoryMessages(options);
   };
-  WebIM.conn.fetchHistoryMessages(options);
-};
+}

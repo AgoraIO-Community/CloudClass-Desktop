@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector, useStore } from 'react-redux';
 import { Tabs } from 'antd';
 import { MessageBox } from '../MessageBox';
 import { InputBox } from '../InputBox';
 import { UserList } from '../UserList';
 import { Announcement } from '../Announcement';
 import { ROLE, CHAT_TABS_KEYS } from '../../contants';
-import { ref } from '../../redux/store';
 import { isShowChat } from '../../redux/actions/propsAction';
 import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction';
 import { transI18n } from '~ui-kit';
@@ -24,6 +23,7 @@ export const Chat = () => {
   const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat);
   const [roomUserList, setRoomUserList] = useState([]);
   const state = useSelector((state) => state);
+  const store = useStore();
   const isLogin = _.get(state, 'isLogin');
   const announcement = _.get(state, 'room.announcement', '');
   const showRed = _.get(state, 'showRed');
@@ -77,24 +77,24 @@ export const Chat = () => {
   }, [roomUsers, roomUsersInfo]);
 
   const hideChatModal = () => {
-    ref.store.dispatch(isShowChat(false));
-    ref.store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat));
+    store.dispatch(isShowChat(false));
+    store.dispatch(selectTabAction(CHAT_TABS_KEYS.chat));
   };
 
   // 监听 Tab 切换
   const onTabChange = (key) => {
-    ref.store.dispatch(selectTabAction(key));
+    store.dispatch(selectTabAction(key));
     switch (key) {
       case 'CHAT':
         setTabKey(CHAT_TABS_KEYS.chat);
-        ref.store.dispatch(showRedNotification(false));
+        store.dispatch(showRedNotification(false));
         break;
       case 'USER':
         setTabKey(CHAT_TABS_KEYS.user);
         break;
       case 'ANNOUNCEMENT':
         setTabKey(CHAT_TABS_KEYS.notice);
-        ref.store.dispatch(announcementNotice(false));
+        store.dispatch(announcementNotice(false));
         break;
       default:
         break;
@@ -104,7 +104,7 @@ export const Chat = () => {
   // 点击聊天Tab中的公告，跳转到公告Tab
   const toTabKey = () => {
     setTabKey(CHAT_TABS_KEYS.notice);
-    ref.store.dispatch(announcementNotice(false));
+    store.dispatch(announcementNotice(false));
   };
   return (
     <div>

@@ -1,13 +1,11 @@
 import { Input, message, Modal, Switch, Popover } from 'antd';
 import { Button } from '../Button';
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import classnames from 'classnames';
 import { transI18n } from '~ui-kit';
-import { removeAllmute, setAllmute } from '../../api/mute';
 import { MSG_TYPE } from '../../contants';
 import { messageAction, showEmojiAction } from '../../redux/actions/messageAction';
-import { ref } from '../../redux/store';
 // import emojiIcon from '../../themes/img/emoji.png';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import { Emoji } from '../../utils/emoji';
@@ -30,6 +28,8 @@ export const ShowEomji = ({ getEmoji }) => {
 
 export const InputMsg = ({ allMutePermission }) => {
   const state = useSelector((state) => state);
+  const store = useStore();
+  const { apis } = state;
   const loginUser = state?.loginUser;
   const roomId = state?.room.info.id;
   const roleType = state?.loginUserInfo.ext;
@@ -49,12 +49,12 @@ export const InputMsg = ({ allMutePermission }) => {
 
   // 显示表情框
   const showEmoji = () => {
-    ref.store.dispatch(showEmojiAction(true));
+    store.dispatch(showEmojiAction(true));
   };
   // 隐藏表情框
   const handleCancel = () => {
     Modal.destroyAll();
-    ref.store.dispatch(showEmojiAction(false));
+    store.dispatch(showEmojiAction(false));
   };
 
   // 获取到点击的表情，加入到输入框
@@ -74,9 +74,9 @@ export const InputMsg = ({ allMutePermission }) => {
   // 全局禁言开关
   const onChangeMute = (val) => {
     if (!val) {
-      setAllmute(roomId);
+      apis.muteAPI.setAllmute(roomId);
     } else {
-      removeAllmute(roomId);
+      apis.muteAPI.removeAllmute(roomId);
     }
   };
 
@@ -94,8 +94,8 @@ export const InputMsg = ({ allMutePermission }) => {
       message.error(transI18n('chat.enter_content_is_empty'));
       return;
     }
-    let id = WebIM.conn.getUniqueId(); // 生成本地消息id
-    let msg = new WebIM.message('txt', id); // 创建文本消息
+    let id = window.WebIM.conn.getUniqueId(); // 生成本地消息id
+    let msg = new window.WebIM.message('txt', id); // 创建文本消息
     let option = {
       msg: content, // 消息内容
       to: roomId, // 接收消息对象(聊天室id)
@@ -113,7 +113,7 @@ export const InputMsg = ({ allMutePermission }) => {
         msg.id = serverId;
         msg.body.id = serverId;
         msg.body.time = new Date().getTime().toString();
-        ref.store.dispatch(messageAction(msg.body, { isHistory: false }));
+        store.dispatch(messageAction(msg.body, { isHistory: false }));
       }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
       fail: function (err) {
         console.log('fail>>>', err);
@@ -124,7 +124,7 @@ export const InputMsg = ({ allMutePermission }) => {
     };
     msg.set(option);
     setContent('');
-    WebIM.conn.send(msg.body);
+    window.WebIM.conn.send(msg.body);
     setInputStatus(false);
     inputRef.current.blur();
   };
@@ -134,7 +134,7 @@ export const InputMsg = ({ allMutePermission }) => {
   };
 
   const handleEomijVisibleChange = (visible) => {
-    ref.store.dispatch(showEmojiAction(visible));
+    store.dispatch(showEmojiAction(visible));
   };
 
   const renderInputBox = React.useMemo(() => {

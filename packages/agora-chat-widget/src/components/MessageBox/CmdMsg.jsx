@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { transI18n } from '~ui-kit';
 import { ROLE } from '../../contants';

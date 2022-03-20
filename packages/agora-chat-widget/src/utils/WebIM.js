@@ -3,11 +3,11 @@ import config from './WebIMConfig';
 
 export const initIMSDK = (appkey) => {
   let WebIM = window.WebIM || {};
+  WebIM.config = config;
+  WebIM.config.appkey = appkey;
   if (WebIM.conn) {
     WebIM.conn.close();
   }
-  WebIM.config = config;
-  WebIM.config.appkey = appkey;
 
   let options = {
     isMultiLoginSessions: WebIM.config.isMultiLoginSessions,

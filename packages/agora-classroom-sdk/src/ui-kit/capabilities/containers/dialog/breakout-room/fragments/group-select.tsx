@@ -216,7 +216,8 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
     ) : level === 1 ? (
       <UserButtons groupUuid={groupUuidByUserUuid.get(node.id) as string} userUuid={node.id} />
     ) : undefined;
-  const content =
+
+  let content =
     level === 0 ? (
       <RenameInput
         key={`group-rename-input-${node.id}`}
@@ -230,6 +231,10 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
     ) : (
       node.text
     );
+
+  if (level === 1 && (node as any).notJoined) {
+    content += ` ${transI18n('breakout_room.not_accepted')}`;
+  }
 
   return <TreeNode content={content} tail={tialNode} />;
 };

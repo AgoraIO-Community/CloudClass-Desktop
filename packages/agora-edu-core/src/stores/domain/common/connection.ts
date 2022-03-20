@@ -10,7 +10,12 @@ import {
   Log,
   RtcState,
 } from 'agora-rte-sdk';
-import { AgoraEduClassroomEvent, ClassroomState, WhiteboardState } from '../../../type';
+import {
+  AgoraEduClassroomEvent,
+  ClassroomState,
+  EduRoomTypeEnum,
+  WhiteboardState,
+} from '../../../type';
 import { EduClassroomConfig } from '../../../configs';
 import { EduRole2RteRole } from '../../../utils';
 import { EduStoreBase } from './base';
@@ -244,7 +249,7 @@ export class ConnectionStore extends EduStoreBase {
     let [error] = await to(
       retryAttempt(async () => {
         const { sessionInfo: baseSessionInfo } = EduClassroomConfig.shared;
-        const sessionInfo = { ...baseSessionInfo, baseSessionInfo, roomUuid };
+        const sessionInfo = { ...baseSessionInfo, roomUuid, roomType: EduRoomTypeEnum.RoomGroup };
         const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
         const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
         this.setCheckInData({

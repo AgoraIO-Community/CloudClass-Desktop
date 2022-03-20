@@ -44,9 +44,10 @@ export class GroupUIStore extends EduUIStoreBase {
       const tree = {
         id: groupUuid,
         text: group.groupName,
-        children: group.users.map(({ userUuid }: { userUuid: string }) => ({
+        children: group.users.map(({ userUuid, notJoined }) => ({
           id: userUuid,
           text: users.get(userUuid)?.userName || 'unknown',
+          notJoined,
         })) as { id: string; text: string }[],
       };
 
@@ -67,6 +68,7 @@ export class GroupUIStore extends EduUIStoreBase {
         list.unshift({
           id: '',
           text: transI18n('breakout_room.not_grouped'),
+          // waitForAccept: false,
           children: notGrouped,
         });
       }
@@ -132,7 +134,7 @@ export class GroupUIStore extends EduUIStoreBase {
 
   @computed
   get numberToBeAssigned() {
-    return 0;
+    return this.classroomStore.userStore.studentList.size;
   }
 
   /**
@@ -557,7 +559,7 @@ export class GroupUIStore extends EduUIStoreBase {
           transI18n('breakout_room.confirm_content'),
           () => {
             const { groupUuid } = args;
-            this.classroomStore.groupStore.joinSubRoom(groupUuid);
+            this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
           },
         );
       }

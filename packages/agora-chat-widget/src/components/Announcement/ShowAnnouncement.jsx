@@ -1,19 +1,13 @@
 import { Modal } from 'antd';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useSelector, useStore } from 'react-redux';
 import { transI18n } from '~ui-kit';
-import { updateAnnouncement } from '../../api/chatroom';
 import { ROLE } from '../../contants';
 import { announcementStatus } from '../../redux/actions/roomAction';
-import { ref } from '../../redux/store';
 import announcement from '../../themes/img/announcement.png';
 import './index.css';
 
-const onChangeStatus = () => {
-  ref.store.dispatch(announcementStatus(false));
-};
-
-const Edit = () => {
+const Edit = ({ onChangeStatus }) => {
   return (
     <span
       className="edit"
@@ -27,7 +21,9 @@ const Edit = () => {
 
 export const ShowAnnouncement = () => {
   const [visible, setVisible] = useState(false);
+  const store = useStore();
   const state = useSelector((state) => state);
+  const { apis } = state;
   const roomId = state.room.info.id;
   const Announcement = state.room.announcement;
   const roleType = state?.loginUserInfo.ext;
@@ -46,6 +42,10 @@ export const ShowAnnouncement = () => {
   const hideModal = () => {
     Modal.destroyAll();
     setVisible(false);
+  };
+
+  const onChangeStatus = () => {
+    store.dispatch(announcementStatus(false));
   };
 
   return (
@@ -81,7 +81,7 @@ export const ShowAnnouncement = () => {
             <img src={announcement} className="announcement-icon" />
             <div className="no-notice">
               <span className="no-notice-text"> {transI18n('chat.default_announcement')}</span>
-              {(isTeacher || isAssistant) && <Edit />}
+              {(isTeacher || isAssistant) && <Edit onChangeStatus={onChangeStatus} />}
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ export const ShowAnnouncement = () => {
         title={transI18n('chat.delete_comfirm')}
         visible={visible}
         onOk={() => {
-          updateAnnouncement(roomId, '', callback);
+          apis.chatRoomAPI.updateAnnouncement(roomId, '', callback);
         }}
         onCancel={() => {
           hideModal();

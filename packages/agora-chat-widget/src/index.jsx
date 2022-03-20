@@ -1,23 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import createStore from './redux/store';
 import { setVisibleUI } from './redux/actions/roomAction';
-import { isShowChat, isShowMiniIcon } from './redux/actions/propsAction';
+import { isShowChat, isShowMiniIcon, setAPIs } from './redux/actions/propsAction';
 import { messageAction } from './redux/actions/messageAction';
 import App from './App';
 import { MemoryRouter } from 'react-router-dom';
-import { logoutChatroom } from './api/chatroom';
-import { setUserMute, removeUserMute } from './api/mute';
+import { ChatRoomAPI } from './api/chatroom';
+import { ChatHistoryAPI } from './api/historyMsg';
+import { LoginAPI } from './api/login';
+import { MessageAPI } from './api/message';
+import { MuteAPI } from './api/mute';
+import { UserInfoAPI } from './api/userInfo';
 
-// import './index.css'
 let store = null;
 
 export const HXChatRoom = ({ pluginStore }) => {
   const chatStore = React.useMemo(() => (store = createStore()), []);
 
+  const chatAPIs = React.useMemo(() => {
+    const chatHistoryAPI = new ChatHistoryAPI(chatStore);
+    const loginAPI = new LoginAPI(chatStore);
+    const messageAPI = new MessageAPI(chatStore);
+    const muteAPI = new MuteAPI(chatStore, messageAPI);
+    const userInfoAPI = new UserInfoAPI(chatStore);
+    const chatRoomAPI = new ChatRoomAPI(chatStore, chatHistoryAPI, muteAPI, userInfoAPI);
+
+    return {
+      chatRoomAPI,
+      chatHistoryAPI,
+      loginAPI,
+      messageAPI,
+      muteAPI,
+      userInfoAPI,
+    };
+  }, [chatStore]);
+
+  useEffect(() => {
+    chatStore.dispatch(setAPIs(chatAPIs));
+    return () => {
+      chatAPIs.chatRoomAPI.logoutChatroom();
+      chatStore.dispatch({ type: 'RESET_ACTION' });
+    };
+  }, [chatStore, chatAPIs]);
+
   return (
     // <React.StrictMode>
-    <Provider store={chatStore}>
+    <Provider store={chatStore} apis={chatAPIs}>
       <MemoryRouter>
         <App pluginStore={pluginStore} />
       </MemoryRouter>
@@ -25,22 +54,14 @@ export const HXChatRoom = ({ pluginStore }) => {
     // </React.StrictMode>
   );
 };
-
-// export const renderHXChatRoom = (dom, pluginStore, onUpdate) => {
-//   ReactDOM.render(<HXChatRoom pluginStore={pluginStore} />, dom);
-//   return () => {
-//     ReactDOM.unmountComponentAtNode(dom);
-//   };
-// };
-
 // 单人禁言
 export const muteUser = (userId) => {
-  setUserMute(userId);
+  store?.getState().apis.setUserMute(userId);
 };
 
 // 解除单人禁言
 export const unMuteUser = (userId) => {
-  removeUserMute(userId);
+  store?.getState().apis.removeUserMute(userId);
 };
 
 // 当前登陆ID，是否被禁言 --- 学生调用 返回 Boolean
@@ -69,9 +90,4 @@ export const dispatchShowMiniIcon = (data) => {
  */
 export const receiveMessage = (data) => {
   return store?.dispatch(messageAction(data));
-};
-
-export const logout = () => {
-  logoutChatroom();
-  store.dispatch({ type: 'RESET_ACTION' });
 };

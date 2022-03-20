@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import i18n from 'i18next';
 import { useSelector, useStore } from 'react-redux';
 import { initIMSDK } from './utils/WebIM';
 import { propsAction, isShowChat, isShowMiniIcon } from './redux/actions/propsAction';
 import { showRedNotification } from './redux/actions/messageAction';
 import { setVisibleUI } from './redux/actions/roomAction';
-import { loginIM } from './api/login';
 import { Chat } from './components/Chat';
 import { SvgImg } from './components/SvgImg';
 import im_CN from './locales/zh_CN';
@@ -23,11 +22,12 @@ const App = function (props) {
     configUIVisible: config,
   } = props.pluginStore.globalContext;
   const state = useSelector((state) => state);
+  const apis = state?.apis;
   const showChat = state?.showChat;
   const showRed = state?.showRed;
   const showAnnouncementNotice = state?.showAnnouncementNotice;
   const configUIVisible = state?.configUIVisible;
-  const { createListen } = useMemo(() => createListener(), []);
+  const { createListen } = useMemo(() => createListener(store), [store]);
 
   useEffect(() => {
     store.dispatch(isShowChat(globalShowChat));
@@ -50,7 +50,7 @@ const App = function (props) {
 
     const { orgName, appName, chatroomId, userUuid } = propsData;
 
-    if (orgName && appName && chatroomId && userUuid && !loggedIn.current) {
+    if (orgName && appName && chatroomId && userUuid && !loggedIn.current && apis) {
       loggedIn.current = true;
 
       const appkey = orgName + '#' + appName;
@@ -61,9 +61,9 @@ const App = function (props) {
 
       createListen(propsData, appkey);
 
-      loginIM(appkey);
+      apis.loginAPI.loginIM(appkey);
     }
-  }, [props.pluginStore, createListen]);
+  }, [props.pluginStore, createListen, store, apis]);
 
   return (
     <>

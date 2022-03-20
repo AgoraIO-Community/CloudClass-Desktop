@@ -6,7 +6,7 @@ import { EduClassroomConfig } from '../../../../configs';
 import { EduEventCenter } from '../../../../event-center';
 import { AgoraEduClassroomEvent } from '../../../../type';
 import { EduStoreBase } from '../base';
-import { GroupDetail, PatchGroup } from './type';
+import { GroupDetail, GroupUser, PatchGroup } from './type';
 import { GroupDetails, GroupState } from './type';
 
 /**
@@ -48,9 +48,22 @@ export class GroupStore extends EduStoreBase {
   ) {
     changedRoomProperties.forEach((key) => {
       if (key === 'groups') {
-        const groupsDetail = get(roomProperties, 'groups', {});
-        this.state = groupsDetail.state;
-        this._setDetails(groupsDetail.details);
+        const processes = get(roomProperties, 'processes', {});
+        const groups = get(roomProperties, 'groups', {});
+
+        this.state = groups.state;
+
+        const progress = Object.keys(processes).reduce((prev, k) => {
+          if (k.startsWith(GroupStore.CMD_PROCESS_PREFIX)) {
+            const groupUuid = k.substring(GroupStore.CMD_PROCESS_PREFIX.length);
+            const users = processes[k].progress.map(
+              ({ userUuid }: { userUuid: string }) => userUuid,
+            );
+            prev.set(groupUuid, users);
+          }
+          return prev;
+        }, new Map<string, string[]>());
+        this._setDetails(groups.details, progress);
         this._checkSubRoom();
       }
     });
@@ -59,7 +72,7 @@ export class GroupStore extends EduStoreBase {
       const { cmd, data } = cause;
       // Emit event when local user is invited by teacher
       if (cmd === 501 && startsWith(data.processUuid, GroupStore.CMD_PROCESS_PREFIX)) {
-        const groupUuid = data.processUuid.substring(GroupStore.CMD_PROCESS_PREFIX);
+        const groupUuid = data.processUuid.substring(GroupStore.CMD_PROCESS_PREFIX.length);
         const progress = (data.addProgress as { userUuid: string; ts: number }[]) || [];
         const accepted = (data.addAccepted as { userUuid: string }[]) || [];
         const actionType = data.actionType as number;
@@ -84,9 +97,17 @@ export class GroupStore extends EduStoreBase {
   }
 
   @action.bound
-  private _setDetails(details: GroupDetails) {
+  private _setDetails(details: GroupDetails, progress: Map<string, string[]>) {
     const newGroupDetails = new Map<string, GroupDetail>();
     Object.entries(details).forEach(([groupUuid, groupDetail]) => {
+      if (progress.has(groupUuid)) {
+        const notJoinedUsers =
+          progress
+            .get(groupUuid)
+            ?.map((userUuid) => ({ userUuid, notJoined: true } as GroupUser)) || [];
+
+        groupDetail.users.unshift(...notJoinedUsers);
+      }
       newGroupDetails.set(groupUuid, groupDetail);
     });
     this.groupDetails = newGroupDetails;

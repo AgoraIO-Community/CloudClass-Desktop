@@ -25,10 +25,12 @@ export const Start: FC<Props> = observer(({ onNext }) => {
 
   const [groupNum, setGroupNum] = useState(1);
 
-  const [type, setType] = useState(1);
+  const [type, setType] = useState(GroupMethod.MANUAL);
+
+  const perGroup = numberToBeAssigned / groupNum;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="outline-box pt-3 flex justify-center">
         <div className="inline-flex flex-col">
           <div className="inline-flex items-center mb-2">
@@ -48,8 +50,8 @@ export const Start: FC<Props> = observer(({ onNext }) => {
             gap={3}
             direction="vertical"
             radios={[
-              { label: transI18n('breakout_room.auto'), value: 1 },
-              { label: transI18n('breakout_room.manual'), value: 2 },
+              // { label: transI18n('breakout_room.auto'), value: GroupMethod.AUTO },
+              { label: transI18n('breakout_room.manual'), value: GroupMethod.MANUAL },
             ]}
             name="breakout-room-type"
             value={type}
@@ -60,11 +62,15 @@ export const Start: FC<Props> = observer(({ onNext }) => {
         </div>
       </div>
       <div className="my-3">
-        {transI18n('breakout_room.wait_for_assign', { reason: `${numberToBeAssigned}` })}
+        {numberToBeAssigned > 0 &&
+          transI18n('breakout_room.wait_for_assign', {
+            reason1: `${numberToBeAssigned}`,
+            reason2: `${perGroup}-${perGroup + 1}`,
+          })}
       </div>
       <Button
         onClick={() => {
-          createGroups(GroupMethod.MANUAL, groupNum);
+          createGroups(type, groupNum);
           onNext({ groupNum });
         }}>
         {transI18n('breakout_room.create_submit')}
