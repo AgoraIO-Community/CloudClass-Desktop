@@ -156,6 +156,8 @@ export const en = {
     cancel: 'Cancel',
     leave_room: 'Leave Classroom',
     quit_room: 'You want to exit the classroom?',
+    quit_room_option1: 'Return to main session',
+    quit_room_option2: 'Leave Room',
     kick: 'Account remote login',
     login_failure: 'login failure',
     whiteboard_lock: 'Whiteboard follow',
