@@ -27,7 +27,7 @@ export const Start: FC<Props> = observer(({ onNext }) => {
 
   const [type, setType] = useState(GroupMethod.MANUAL);
 
-  const perGroup = numberToBeAssigned / groupNum;
+  const perGroup = Math.floor(numberToBeAssigned / groupNum);
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
