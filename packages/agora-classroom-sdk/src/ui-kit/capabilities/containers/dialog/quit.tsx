@@ -11,7 +11,7 @@ export const Quit: React.FC<
 
   const { removeDialog } = shareUIStore;
 
-  const [type, setType] = useState<'back' | 'quit'>('back');
+  const [type, setType] = useState<'back' | 'quit'>(showOption ? 'back' : 'quit');
 
   return (
     <Modal
