@@ -38,6 +38,7 @@ import SlideApp from '@netless/app-slide';
 import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
 import get from 'lodash/get';
 import { AgoraEduClassroomEvent } from '../../../..';
+import { EduClassroomStore } from '..';
 
 export interface WhiteboardConfig {
   boardAppId: string;
@@ -63,6 +64,21 @@ export class BoardStore extends EduStoreBase {
 
   // ------ observables  -----------
   @observable ready: boolean = false;
+  @observable managerReady: boolean = false;
+
+  constructor(store: EduClassroomStore) {
+    super(store);
+    WindowManager.register({
+      kind: 'Slide',
+      appOptions: {
+        // 打开这个选项显示 debug 工具栏
+        debug: true,
+      },
+      src: async () => {
+        return SlideApp;
+      },
+    });
+  }
 
   @computed
   get grantUsers() {
@@ -134,16 +150,7 @@ export class BoardStore extends EduStoreBase {
         viewMode,
       } = getJoinRoomParams(role);
       const { boardAppId, boardId, boardToken, boardRegion } = this._dataStore.whiteboardConfig!;
-      WindowManager.register({
-        kind: 'Slide',
-        appOptions: {
-          // 打开这个选项显示 debug 工具栏
-          debug: true,
-        },
-        src: async () => {
-          return SlideApp;
-        },
-      });
+
       const client = this._createBoardClient({
         identity,
         boardAppId,
@@ -221,6 +228,7 @@ export class BoardStore extends EduStoreBase {
     })
       .then((manager) => {
         this._windowManager = manager;
+        this.setWindowManager(manager);
 
         this.restoreWhiteboardMemberStateTo(this.room);
 
@@ -250,14 +258,25 @@ export class BoardStore extends EduStoreBase {
 
   unmount = () => {
     this._windowManager?.destroy();
+    this.setWindowManager(undefined);
     this._whiteBoardContainer = undefined;
   };
+
+  @action.bound
+  protected setWindowManager(windowManager?: WindowManager) {
+    this._windowManager = windowManager;
+    this.managerReady = !!windowManager;
+  }
 
   @bound
   grantPermission(userUuid: string) {
     let newSet = new Set(this._dataStore.grantUsers);
     newSet.add(userUuid);
     this.room.setGlobalState({ grantUsers: Array.from(newSet) });
+  }
+
+  async setWritable(writable: boolean) {
+    await this.room.setWritable(writable);
   }
 
   @bound
@@ -679,9 +698,17 @@ export class BoardStore extends EduStoreBase {
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
-        computed(() => this._dataStore.grantUsers).observe(async ({ newValue, oldValue }) => {
+        computed(() => ({
+          grantUsers: this._dataStore.grantUsers,
+          ready: this.managerReady,
+        })).observe(async ({ newValue, oldValue }) => {
+          const { grantUsers: newGranted, ready } = newValue;
+          const oldGranted = oldValue?.grantUsers;
+          if (!ready) {
+            return;
+          }
           try {
-            if (newValue.has(sessionInfo.userUuid) && !oldValue?.has(sessionInfo.userUuid)) {
+            if (newGranted.has(sessionInfo.userUuid) && !oldGranted?.has(sessionInfo.userUuid)) {
               //granted
               await this.room.setWritable(true);
               this.room.disableDeviceInputs = false;
@@ -690,7 +717,7 @@ export class BoardStore extends EduStoreBase {
                 AgoraEduClassroomEvent.TeacherGrantPermission,
               );
             }
-            if (!newValue.has(sessionInfo.userUuid) && oldValue?.has(sessionInfo.userUuid)) {
+            if (!newGranted.has(sessionInfo.userUuid) && oldGranted?.has(sessionInfo.userUuid)) {
               //revoked
               await this.room.setWritable(false);
               this.room.disableDeviceInputs = true;

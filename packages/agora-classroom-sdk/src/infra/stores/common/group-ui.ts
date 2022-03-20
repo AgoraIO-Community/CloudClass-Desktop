@@ -435,17 +435,29 @@ export class GroupUIStore extends EduUIStoreBase {
     this.joiningSubRoom = state;
   }
 
+  async waitUntilLeft() {
+    await when(
+      () =>
+        this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
+        this.classroomStore.connectionStore.rtcState === RtcState.Idle,
+    );
+  }
+
+  async waitUntilConnected() {
+    await when(
+      () =>
+        this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
+        this.classroomStore.connectionStore.rtcState === RtcState.Connected,
+    );
+  }
+
   @bound
   private async _joinSubRoom() {
     this.setConnectionState(true);
     const roomUuid = this.classroomStore.groupStore.currentSubRoom;
     if (roomUuid) {
       try {
-        await when(
-          () =>
-            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
-            this.classroomStore.connectionStore.rtcState === RtcState.Connected,
-        );
+        await this.waitUntilConnected();
 
         // workaround: room may not exist when whiteboard state is connected, it will no op  if leave board at this time
         await new Promise((r) => setTimeout(r, 500));
@@ -455,11 +467,7 @@ export class GroupUIStore extends EduUIStoreBase {
           await this.classroomStore.connectionStore.leaveWhiteboard();
         }
 
-        await when(
-          () =>
-            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
-            this.classroomStore.connectionStore.rtcState === RtcState.Idle,
-        );
+        await this.waitUntilLeft();
 
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
@@ -475,6 +483,13 @@ export class GroupUIStore extends EduUIStoreBase {
         this.shareUIStore.addToast('Cannot join sub room');
       } finally {
         this.setConnectionState(false);
+      }
+      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+        await when(() => this.classroomStore.boardStore.managerReady);
+        await this.classroomStore.boardStore.setWritable(true);
+        await this.classroomStore.boardStore.grantPermission(
+          EduClassroomConfig.shared.sessionInfo.userUuid,
+        );
       }
     } else {
       this.shareUIStore.addToast('Cannot find room');
