@@ -442,10 +442,27 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * 导航栏标题
    * @returns
    */
+  @computed
   get navigationTitle() {
-    return EduClassroomConfig.shared.sessionInfo.roomName;
+    return this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName;
   }
 
+  /**
+   * 所在房间名称
+   */
+  @computed
+  get currentSubRoomName() {
+    let groupName = null;
+    const { currentSubRoom, groupDetails } = this.classroomStore.groupStore;
+    if (currentSubRoom) {
+      groupDetails.forEach((group, groupUuid) => {
+        if (groupUuid === currentSubRoom) {
+          groupName = group.groupName;
+        }
+      });
+    }
+    return groupName;
+  }
   /**
    * 倒计时格式化
    * @param time
