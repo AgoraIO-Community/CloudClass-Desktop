@@ -110,15 +110,20 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
 
   return (
     <div className="flex">
-      <GroupPanel
-        groups={filteredGroups}
-        onNodeClick={(node) => {
-          moveUserToGroup(groupUuid, node.id, userUuid);
-          closeAll();
-        }}>
-        <LinkButton text={transI18n('breakout_room.move_to')} />
-      </GroupPanel>
-      {groupState === GroupState.OPEN && groupUuid && (
+      {groupUuid ? (
+        <div style={{ height: 30 }} />
+      ) : (
+        <GroupPanel
+          groups={filteredGroups}
+          onNodeClick={(node) => {
+            moveUserToGroup(groupUuid, node.id, userUuid);
+            closeAll();
+          }}>
+          <LinkButton text={transI18n('breakout_room.move_to')} />
+        </GroupPanel>
+      )}
+
+      {/* {groupState === GroupState.OPEN && groupUuid && (
         <GroupPanel
           groups={filteredGroups}
           canExpand
@@ -130,7 +135,7 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
           }}>
           <LinkButton text={transI18n('breakout_room.change_to')} />
         </GroupPanel>
-      )}
+      )} */}
     </div>
   );
 });
