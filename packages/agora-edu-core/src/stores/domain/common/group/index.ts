@@ -118,7 +118,9 @@ export class GroupStore extends EduStoreBase {
 
     let lastGroupUuid = '';
     for (const [groupUuid, group] of this.groupDetails.entries()) {
-      const local = group.users.find(({ userUuid }) => userUuid === localUuid);
+      const local = group.users.find(
+        ({ userUuid, notJoined }) => userUuid === localUuid && !notJoined,
+      );
       if (local) {
         lastGroupUuid = groupUuid;
         break;
