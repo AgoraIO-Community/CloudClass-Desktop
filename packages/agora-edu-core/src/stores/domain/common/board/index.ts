@@ -277,6 +277,7 @@ export class BoardStore extends EduStoreBase {
 
   async setWritable(writable: boolean) {
     await this.room.setWritable(writable);
+    this.room.disableDeviceInputs = !writable;
   }
 
   @bound

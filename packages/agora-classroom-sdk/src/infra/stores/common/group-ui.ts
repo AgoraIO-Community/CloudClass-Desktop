@@ -7,6 +7,7 @@ import {
   GroupState,
   PatchGroup,
   WhiteboardState,
+  WhiteboardTool,
 } from 'agora-edu-core';
 import { AGError, bound, Log, RtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
@@ -487,6 +488,7 @@ export class GroupUIStore extends EduUIStoreBase {
       if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
         await when(() => this.classroomStore.boardStore.managerReady);
         await this.classroomStore.boardStore.setWritable(true);
+        this.classroomStore.boardStore.setTool(WhiteboardTool.selector);
         await this.classroomStore.boardStore.grantPermission(
           EduClassroomConfig.shared.sessionInfo.userUuid,
         );
