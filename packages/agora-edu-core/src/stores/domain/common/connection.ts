@@ -56,7 +56,8 @@ export class ConnectionStore extends EduStoreBase {
   @observable _mainRoomScene?: AgoraRteScene;
   @observable _subRoomScene?: AgoraRteScene;
   @observable engine?: AgoraRteEngine;
-  @observable checkInData?: CheckInData;
+  @observable _mainRoomCheckInData?: CheckInData;
+  @observable _subRoomCheckInData?: CheckInData;
 
   @computed
   get scene() {
@@ -78,6 +79,16 @@ export class ConnectionStore extends EduStoreBase {
   @computed
   get subRoomScene() {
     return this._subRoomScene;
+  }
+
+  @computed
+  get mainRoomCheckInData() {
+    return this._mainRoomCheckInData;
+  }
+
+  @computed
+  get subRoomCheckInData() {
+    return this._subRoomCheckInData;
   }
 
   // actions
@@ -131,8 +142,12 @@ export class ConnectionStore extends EduStoreBase {
   }
 
   @action
-  setCheckInData(checkInData: CheckInData) {
-    this.checkInData = checkInData;
+  setCheckInData(sceneType: SceneType, checkInData: CheckInData) {
+    if (sceneType === SceneType.Main) {
+      this._mainRoomCheckInData = checkInData;
+    } else {
+      this._subRoomCheckInData = checkInData;
+    }
   }
 
   @action.bound
@@ -177,7 +192,7 @@ export class ConnectionStore extends EduStoreBase {
         const { sessionInfo } = EduClassroomConfig.shared;
         const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
         const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
-        this.setCheckInData({
+        this.setCheckInData(SceneType.Main, {
           vid,
           clientServerTime: ts,
           classRoomSchedule: {
@@ -252,7 +267,7 @@ export class ConnectionStore extends EduStoreBase {
         const sessionInfo = { ...baseSessionInfo, roomUuid, roomType: EduRoomTypeEnum.RoomGroup };
         const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
         const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
-        this.setCheckInData({
+        this.setCheckInData(SceneType.Sub, {
           vid,
           clientServerTime: ts,
           classRoomSchedule: {

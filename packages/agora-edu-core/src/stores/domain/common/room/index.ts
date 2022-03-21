@@ -282,7 +282,7 @@ export class RoomStore extends EduStoreBase {
     // set schedule when checked in
     this._disposers.push(
       reaction(
-        () => this.classroomStore.connectionStore.checkInData,
+        () => this.classroomStore.connectionStore.mainRoomCheckInData,
         (checkInData) => {
           if (checkInData) {
             runInAction(() => {
