@@ -42,8 +42,15 @@ type GroupButtonsProps = {
 const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
   const { groupUIStore } = useStore();
 
-  const { students, setGroupUsers, groupDetails, groupState, notGroupedCount, joinSubRoom } =
-    groupUIStore;
+  const {
+    students,
+    setGroupUsers,
+    groupState,
+    notGroupedCount,
+    joinSubRoom,
+    getGroupUserCount,
+    currentSubRoom,
+  } = groupUIStore;
 
   const [toggle, setToggle] = useState(false);
 
@@ -51,8 +58,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
     setToggle(t);
   };
 
-  const userCount = groupUuid ? groupDetails.get(groupUuid)?.users.length || 0 : notGroupedCount;
-
+  const userCount = groupUuid ? getGroupUserCount(groupUuid) : notGroupedCount;
   return (
     <div
       className="flex"
@@ -63,12 +69,16 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
       }}>
       {toggle ? btns : null}
       {groupState === GroupState.OPEN ? (
-        <LinkButton
-          className="pr-4"
-          text={`${userCount}`}
-          onClick={() => groupUuid && joinSubRoom(groupUuid)}
-          hoverText={groupUuid && transI18n('breakout_room.join_group')}
-        />
+        currentSubRoom === groupUuid ? (
+          <div className="py-1 px-3">{transI18n('breakout_room.joined')}</div>
+        ) : (
+          <LinkButton
+            className="pr-4"
+            text={`${userCount}`}
+            onClick={() => groupUuid && joinSubRoom(groupUuid)}
+            hoverText={groupUuid && transI18n('breakout_room.join_group')}
+          />
+        )
       ) : (
         <UserPanel
           groupUuid={groupUuid}
@@ -110,7 +120,7 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
   return (
     <div className="flex">
       {groupUuid ? (
-        <div style={{ height: 30 }} />
+        <div className="py-1" />
       ) : (
         <GroupPanel
           groups={filteredGroups}

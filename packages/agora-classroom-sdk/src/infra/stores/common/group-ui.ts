@@ -42,14 +42,22 @@ export class GroupUIStore extends EduUIStoreBase {
     const { users } = this.classroomStore.userStore;
 
     this.groupDetails.forEach((group, groupUuid) => {
+      const students = [] as { id: string; text: string; notJoined?: boolean }[];
+
+      group.users.forEach(({ userUuid, notJoined }) => {
+        if (this.classroomStore.userStore.studentList.has(userUuid)) {
+          students.push({
+            id: userUuid,
+            text: users.get(userUuid)?.userName || 'unknown',
+            notJoined,
+          });
+        }
+      });
+
       const tree = {
         id: groupUuid,
         text: group.groupName,
-        children: group.users.map(({ userUuid, notJoined }) => ({
-          id: userUuid,
-          text: users.get(userUuid)?.userName || 'unknown',
-          notJoined,
-        })) as { id: string; text: string }[],
+        children: students,
       };
 
       list.push(tree);
@@ -212,7 +220,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @action.bound
   renameGroupName(groupUuid: string, groupName: string) {
     if (this._isGroupExisted({ groupUuid, groupName })) {
-      this.shareUIStore.addToast(transI18n('toast.group_name_existed'));
+      this.shareUIStore.addToast(transI18n('toast.breakout_room_group_name_existed'));
       return;
     }
 
@@ -413,6 +421,13 @@ export class GroupUIStore extends EduUIStoreBase {
     return this.groups.some(({ text, id }) => groupName === text && id !== groupUuid);
   }
 
+  @bound
+  getGroupUserCount(groupUuid: string) {
+    return this.groupDetails.get(groupUuid)?.users.reduce((prev, { userUuid }) => {
+      if (this.classroomStore.userStore.studentList.has(userUuid)) prev += 1;
+      return prev;
+    }, 0);
+  }
   /**
    * 加入子房间
    * @param groupUuid

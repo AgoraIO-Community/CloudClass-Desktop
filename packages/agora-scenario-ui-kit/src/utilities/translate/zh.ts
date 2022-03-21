@@ -255,7 +255,7 @@ export const zh = {
     resource_is_converting: '课件正在转换中',
     fail_to_convert_resource: '文件转换失败',
     interaction_too_frequent: '操作过于频繁，请稍后再试',
-    group_name_existed: '组名称已存在',
+    breakout_room_group_name_existed: '组名称已存在',
   },
   end_class_confirm: '确定要结束教室吗？',
   notice: {
@@ -561,6 +561,7 @@ export const zh = {
     join_group: '加入小组',
     already_in_room: '已经在这个小组了',
     not_accepted: '(未接受)',
+    joined: '已加入',
   },
   begin_class: '开始上课',
   edu_error: {

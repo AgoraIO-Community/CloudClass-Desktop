@@ -264,6 +264,7 @@ export const en = {
     resource_is_converting: 'The resource is converting',
     fail_to_convert_resource: 'The resource conversion failed',
     interaction_too_frequent: 'The operation is too frequent, please try again later.',
+    breakout_room_group_name_existed: 'The group name already exists',
   },
   end_class_confirm: 'Confirm the end of class?',
   notice: {
@@ -573,6 +574,7 @@ export const en = {
     join_group: 'Join',
     already_in_room: 'You are already in this group',
     not_accepted: 'Not accepted',
+    joined: '已加入',
   },
   begin_class: 'Begin class',
   edu_error: {
