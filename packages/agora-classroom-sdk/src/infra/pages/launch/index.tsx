@@ -1,5 +1,6 @@
 import { useHomeStore } from '@/infra/hooks';
-import { AgoraExtAppCountDown, AgoraExtAppAnswer, AgoraExtAppVote } from 'agora-plugin-gallery';
+import { IAgoraExtensionApp } from 'agora-edu-core';
+import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-gallery';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect } from 'react';
@@ -36,11 +37,11 @@ export const LaunchPage = observer(() => {
         region: launchOption.region ?? 'CN',
       });
 
-      launchOption.extApps = [
-        new AgoraExtAppCountDown(launchOption.language),
-        new AgoraExtAppAnswer(launchOption.language),
-        new AgoraExtAppVote(launchOption.language),
-      ];
+      launchOption.extensions = [
+        new AgoraCountdown(),
+        new AgoraSelector(),
+        new AgoraPolling(),
+      ] as IAgoraExtensionApp[];
 
       const recordUrl = `https://solutions-apaas.agora.io/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
 

@@ -58,12 +58,20 @@ export interface AgoraRteOperator {
   role: string;
 }
 
+export interface AgoraRteMessageBatch {
+  id: number;
+  total: number;
+  current: number;
+}
+
 export interface AgoraRteMessageHandleTask {
   sequence: {
     cmd: number;
     operator: AgoraRteOperator;
     sequence: number;
     data: any;
+    batch: AgoraRteMessageBatch;
+    timestamp: number;
   };
 }
 

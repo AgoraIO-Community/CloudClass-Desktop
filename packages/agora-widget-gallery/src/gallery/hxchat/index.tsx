@@ -4,11 +4,11 @@ import * as hx from 'agora-chat-widget';
 import {
   ClassroomState,
   EduClassroomConfig,
-  EduClassroomUIStore,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   IAgoraWidget,
 } from 'agora-edu-core';
+import { EduClassroomUIStore } from 'agora-classroom-sdk';
 import { set } from 'lodash';
 import { autorun, reaction } from 'mobx';
 import { observer } from 'mobx-react';
@@ -64,7 +64,9 @@ const App: React.FC<AppProps> = observer((props) => {
     showChat: widgetStore.showChat,
     isShowMiniIcon: !widgetStore.showChat,
     configUIVisible: {
-      showInputBox: EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible, // 输入UI
+      showInputBox:
+        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible &&
+        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.observer, // 输入UI
       memebers: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
       announcement: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮

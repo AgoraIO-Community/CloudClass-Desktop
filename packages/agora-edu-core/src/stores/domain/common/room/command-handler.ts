@@ -126,7 +126,7 @@ class CMDHandler {
     // fire did update event when app properties actually changed
     const { extAppCause } = data;
     const apps: Record<string, any> = {};
-    const extApps = changedProperties.extApps;
+    const extApps = changedProperties.extApps || {};
 
     Object.keys(extApps).forEach((key) => {
       const filterTrackProps = (props: any) => {

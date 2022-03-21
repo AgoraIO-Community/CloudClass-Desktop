@@ -4,7 +4,7 @@ import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { StreamUIStore } from '../common/stream';
 import { EduStreamUI } from '../common/stream/struct';
-import { EduStreamTool } from '../common/stream/tool';
+import { EduStreamTool, EduStreamToolCategory } from '../common/stream/tool';
 
 @Log.attach({ proxyMethods: false })
 export class InteractiveRoomStreamUIStore extends StreamUIStore {
@@ -84,6 +84,18 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       }
     }
 
+    const shouldNotHaveStreamTools =
+      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant &&
+      stream.role === EduRoleTypeEnum.teacher;
+
+    if (shouldNotHaveStreamTools) {
+      tools = tools.filter(({ category }) => {
+        return ![EduStreamToolCategory.camera, EduStreamToolCategory.microphone].includes(category);
+      });
+
+      tools.push(this.localPodiumTool());
+    }
+
     return tools;
   });
 
@@ -131,5 +143,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
         }
       },
     );
+
+    this.classroomStore.mediaStore.setMirror(true);
   }
 }

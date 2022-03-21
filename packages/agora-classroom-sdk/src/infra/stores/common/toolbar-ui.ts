@@ -16,6 +16,9 @@ export enum CabinetItemEnum {
   ScreenShare = 'screenShare',
   BreakoutRoom = 'breakoutRoom',
   Laser = 'laser',
+  CountdownTimer = 'countdownTimer',
+  Poll = 'poll',
+  PopupQuiz = 'popupQuiz',
 }
 
 export interface CabinetItem {
@@ -61,16 +64,17 @@ export class ToolbarUIStore extends EduUIStoreBase {
   readonly allowedCabinetItems: string[] = [
     CabinetItemEnum.ScreenShare,
     CabinetItemEnum.BreakoutRoom,
-    'io.agora.countdown',
-    'io.agora.answer',
-    'io.agora.vote',
+    CabinetItemEnum.Laser,
+    CabinetItemEnum.CountdownTimer,
+    CabinetItemEnum.Poll,
+    CabinetItemEnum.PopupQuiz,
   ];
   readonly defaultColors: string[] = [
     '#ffffff',
     '#9b9b9b',
     '#4a4a4a',
     '#000000',
-    '#fc3a3f',
+    '#d0021b',
     '#f5a623',
     '#f8e71c',
     '#7ed321',
@@ -174,7 +178,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @action.bound
   handleCabinetItem(id: string) {
-    const { launchApp } = this.classroomStore.extAppStore;
+    const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
       case CabinetItemEnum.ScreenShare:
         if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
@@ -328,9 +332,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   get cabinetItems(): CabinetItem[] {
-    const { extApps } = this.classroomStore.extAppStore;
+    const { extensionAppInstances } = this.classroomStore.extensionAppStore;
 
-    const apps = Object.values(extApps)
+    const apps = Object.values(extensionAppInstances)
       .map(
         ({ appIdentifier, icon, appName }) =>
           ({
@@ -351,6 +355,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
           iconType: 'group-discuss',
           name: transI18n('scaffold.breakout_room'),
         },
+        {
+          id: CabinetItemEnum.Laser,
+          iconType: 'laser-pointer',
+          name: transI18n('scaffold.laser_pointer'),
+        },
       ])
       .filter((it) => this.allowedCabinetItems.includes(it.id));
 
@@ -363,14 +372,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed get tools(): ToolbarItem[] {
     const { sessionInfo } = EduClassroomConfig.shared;
-    const assistantTools = this.teacherTools.filter((tools) => {
-      return tools.category !== ToolbarItemCategory.Cabinet;
-    });
 
-    return sessionInfo.role === EduRoleTypeEnum.teacher
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(sessionInfo.role)
       ? this.teacherTools
-      : sessionInfo.role === EduRoleTypeEnum.assistant
-      ? assistantTools
       : this.studentTools;
   }
 

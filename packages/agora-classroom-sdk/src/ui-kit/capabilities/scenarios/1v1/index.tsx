@@ -11,7 +11,8 @@ import { Room1v1StreamsContainer } from '~containers/stream/room-1v1-player';
 import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import Room from '../room';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
-import { ExtAppContainer } from '~containers/ext-app';
+import { ExtensionAppContainer } from '~containers/extension-app-container';
+
 import { ToastContainer } from '~containers/toast';
 import { CollectorContainer } from '~containers/board';
 
@@ -44,7 +45,8 @@ export const OneToOneScenario = observer(() => {
           <DialogContainer />
           <LoadingContainer />
         </Layout>
-        <ExtAppContainer />
+        {/* <ExtAppContainer /> */}
+        <ExtensionAppContainer />
         <ToastContainer />
       </FixedAspectRatioRootBox>
     </Room>

@@ -110,7 +110,7 @@ const BeautyControllerBar = observer(() => {
     <CSSTransition in={isBeauty} timeout={300} unmountOnExit classNames="beauty-bar-animate">
       <div className="beauty-bar">
         <div className="beauty-bar-left">
-          {['whitening', 'buffing', 'ruddy'].map((item: any) => (
+          {['whitening', 'buffing', 'ruddy'].map((item) => (
             <Tooltip
               key={item}
               title={transI18n(`media.${item}`)}

@@ -1,5 +1,6 @@
 import { useStore } from '@/infra/hooks/use-edu-stores';
-import { EduRoleTypeEnum, EduStreamUI } from 'agora-edu-core';
+import { EduStreamUI } from '@/infra/stores/common/stream/struct';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { StreamPlayer, StreamPlaceholder } from '.';
 

@@ -225,11 +225,6 @@ body,
   bottom: unset !important;
 }
 
-.big-class-room .big-class-main {
-  position: relative;
-  flex-direction: column;
-}
-
 /* .big-class-room .hands-up-manager,
 .big-class-room .hands-up-sender {
   position: absolute;

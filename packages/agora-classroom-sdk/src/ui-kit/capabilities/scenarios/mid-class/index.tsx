@@ -11,11 +11,13 @@ import { CollectorContainer } from '~containers/board';
 import { WhiteboardContainer } from '~containers/board';
 import { FixedAspectRatioRootBox } from '~containers/root-box';
 import { ChatWidgetPC } from '~containers/widget/chat-widget';
-import { ExtAppContainer } from '~containers/ext-app';
+import { ExtensionAppContainer } from '~containers/extension-app-container';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
 import { MidRosterBtn } from '~containers/roster';
 import { SceneSwitch } from '~containers/scene-switch';
+import { Award } from '../../containers/award';
+
 export const MidClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'mid-class-room');
@@ -39,8 +41,9 @@ export const MidClassScenario = observer(() => {
             <DialogContainer />
             <LoadingContainer />
           </Layout>
-          <ExtAppContainer />
+          <ExtensionAppContainer />
           <ToastContainer />
+          <Award />
         </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>

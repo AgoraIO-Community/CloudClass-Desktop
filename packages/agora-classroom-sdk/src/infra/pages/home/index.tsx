@@ -73,6 +73,7 @@ export const HomePage = observer(() => {
       assistant: EduRoleTypeEnum.assistant,
       student: EduRoleTypeEnum.student,
       incognito: EduRoleTypeEnum.invisible,
+      observer: EduRoleTypeEnum.observer,
     };
     return roles[userRole];
   }, [userRole]);

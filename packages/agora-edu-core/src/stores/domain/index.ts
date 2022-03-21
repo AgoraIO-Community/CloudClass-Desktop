@@ -19,18 +19,11 @@ export { LeaveReason } from './common/connection';
 export { ClassState, RecordStatus } from './common/room/type';
 
 export type { ChatEvent, ChatListType, IConversation, Conversation } from './common/message/type';
-export type { IAgoraWidget, AgoraWidgetContext } from './common/widget/type';
+export type { IAgoraWidget, AgoraWidgetContext, IAgoraExtensionApp } from './common/widget/type';
+export { AgoraExtensionAppTypeEnum } from './common/widget/type';
 export { BeautyType } from './common/media/type';
+export { ExtensionController, ExtensionStoreEach } from './common/widget/widget-core';
 export { DEVICE_DISABLE } from './common/media';
-
-export type {
-  AgoraExtAppContext,
-  IAgoraExtApp,
-  AgoraExtAppHandle,
-  AgoraExtAppUserInfo,
-  AgoraExtAppRoomInfo,
-  AgoraExtAppEventHandler,
-} from './common/ext-app/type';
 
 export { Track } from './common/track/struct';
 export type { Point, Dimensions, TrackContext, Margin, Offset } from './common/track/type';

@@ -432,6 +432,7 @@ export const zh = {
     role_student: '学生',
     role_assistant: '助教',
     role_audience: '观众',
+    role_observer: '监课',
     language: '语言：',
     language_placeholder: '请选择语言',
     duration: '时长',
@@ -495,6 +496,7 @@ export const zh = {
     'teacher.accept.onpodium': '老师邀请你上台了，与大家积极互动吧',
     'teacher.revoke.onpodium': '你离开讲台了，暂时无法与大家互动',
     'teacher.reward': '祝贺{reason}获得奖励',
+    'teacher.reward2': '祝贺{reason1}等{reason2}位同学获得奖励',
     screen_permission_denied: '使用屏幕共享前，请先打开屏幕录制权限',
   },
   cabinet: {

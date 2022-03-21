@@ -31,9 +31,9 @@ import {
  */
 export class RoomStore extends EduStoreBase {
   private _cmdHandler = new CMDHandler({
-    fireExtAppDidUpdate: this.classroomStore.extAppStore.fireExtAppsDidUpdate,
-    fireWidgetsTrackStateChange: this.classroomStore.widgetStore.updateTrackState,
-    fireExtappsTrackStateChange: this.classroomStore.extAppStore.updateTrackState,
+    fireExtAppDidUpdate: () => {},
+    fireWidgetsTrackStateChange: this.classroomStore.extensionAppStore.updateTrackState,
+    fireExtappsTrackStateChange: () => {},
     getUserById: (userUuid: string) => {
       return this.classroomStore.userStore.users.get(userUuid);
     },
@@ -131,6 +131,10 @@ export class RoomStore extends EduStoreBase {
     }
   }
 
+  private _hanldeTimestampGapChange(timestamp: number) {
+    this._clientServerTimeShift = timestamp;
+  }
+
   /** Actions */
   @bound
   async startCarousel(params: { range: number; type: number; interval: number }) {
@@ -177,12 +181,15 @@ export class RoomStore extends EduStoreBase {
   }
 
   @bound
-  async sendRewards(rewards: { userUuid: string; changeReward: number }[]) {
+  async sendRewards(rewards: { userUuid: string; changeReward: number }[], isBatch?: boolean) {
     try {
-      await this.api.sendRewards({
-        roomUuid: this.classroomStore.connectionStore.sceneId,
-        rewards: rewards,
-      });
+      await this.api.sendRewards(
+        {
+          roomUuid: this.classroomStore.connectionStore.sceneId,
+          rewards: rewards,
+        },
+        isBatch,
+      );
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_SEND_STAR_FAIL,
@@ -232,10 +239,12 @@ export class RoomStore extends EduStoreBase {
   //others
   private _addEventHandlers(scene: AgoraRteScene) {
     scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+    scene.on(AgoraRteEventType.TimeStampGapUpdate, this._hanldeTimestampGapChange);
   }
 
   private _removeEventHandlers(scene: AgoraRteScene) {
     scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+    scene.off(AgoraRteEventType.TimeStampGapUpdate, this._hanldeTimestampGapChange);
   }
 
   @action

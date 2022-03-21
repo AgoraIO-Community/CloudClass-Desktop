@@ -68,6 +68,7 @@ type TrackPlayerProps = {
   stream: EduStream;
   style?: CSSProperties;
   className?: string;
+  mirrorMode?: boolean;
 };
 
 export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
@@ -88,7 +89,7 @@ export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
 );
 
 export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
-  ({ style, stream, className }) => {
+  ({ style, stream, className, mirrorMode = true }) => {
     const { classroomStore } = useStore();
     const { streamStore } = classroomStore;
     const { setupRemoteVideo } = streamStore;
@@ -97,7 +98,7 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
 
     useEffect(() => {
       if (ref.current) {
-        setupRemoteVideo(stream, ref.current, true);
+        setupRemoteVideo(stream, ref.current, mirrorMode);
       }
     }, [stream, setupRemoteVideo]);
 
@@ -340,7 +341,12 @@ export const StreamPlayer = observer(
         {stream.stream.isLocal ? (
           <LocalTrackPlayer className={cls} style={style} stream={stream.stream} />
         ) : (
-          <RemoteTrackPlayer className={cls} style={style} stream={stream.stream} />
+          <RemoteTrackPlayer
+            className={cls}
+            style={style}
+            stream={stream.stream}
+            mirrorMode={stream.isMirrorMode}
+          />
         )}
       </StreamPlayerOverlay>
     );

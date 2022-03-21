@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { transI18n } from '~ui-kit';
 import { TextMsg } from './TextMsg';
 import { CmdMsg } from './CmdMsg';
+import { ImgMsg } from './ImgMsg';
 import scrollElementToBottom from '../../utils/scrollElementToBottom';
 import { CHAT_TABS_KEYS } from '../../contants';
 import noMessage_icon from '../../themes/img/noMessage.png';
@@ -35,18 +36,24 @@ export const MessageBox = () => {
           id="chat-messages"
           style={{
             height: isHaveNotice
-              ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
-              : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
+              ? `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'
+                })`
+              : `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'
+                })`,
           }}>
           <div>
             {msgs &&
               msgs.map((item, key) => {
                 const isText = item?.contentsType === 'TEXT' || item?.type === 'txt';
                 const isCmd = item?.contentsType === 'COMMAND' || item?.type === 'cmd';
+                const isImg = item?.contentsType === 'IMAGE' || item?.type === 'img';
                 return (
                   <div key={key}>
                     {isText && <TextMsg item={item} />}
                     {isCmd && <CmdMsg item={item} />}
+                    {isImg && <ImgMsg item={item} />}
                   </div>
                 );
               })}
@@ -57,8 +64,12 @@ export const MessageBox = () => {
           className="message-box no-box"
           style={{
             height: isHaveNotice
-              ? `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'})`
-              : `calc(100% - ${state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'})`,
+              ? `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '135px' : '200px'
+                })`
+              : `calc(100% - 70px - ${
+                  state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'
+                })`,
           }}>
           <div className="no-msgs">
             <img src={noMessage_icon} />

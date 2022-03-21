@@ -48,9 +48,9 @@ export interface WhiteboardConfig {
 }
 
 const DEFAULT_COLOR: Color = {
-  r: 252,
-  g: 58,
-  b: 63,
+  r: 208,
+  g: 2,
+  b: 27,
 };
 
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
@@ -65,20 +65,6 @@ export class BoardStore extends EduStoreBase {
   // ------ observables  -----------
   @observable ready: boolean = false;
   @observable managerReady: boolean = false;
-
-  constructor(store: EduClassroomStore) {
-    super(store);
-    WindowManager.register({
-      kind: 'Slide',
-      appOptions: {
-        // 打开这个选项显示 debug 工具栏
-        debug: true,
-      },
-      src: async () => {
-        return SlideApp;
-      },
-    });
-  }
 
   @computed
   get grantUsers() {
@@ -235,10 +221,6 @@ export class BoardStore extends EduStoreBase {
         this.addManagerEmitterListeners();
         this.updateScenesCount(this.room.state.sceneState.scenes.length);
 
-        if (manager.appManager?.mainViewProxy.context) {
-          //@ts-ignore
-          manager.appManager.mainViewProxy.context.manager = manager.appManager;
-        }
         //TODO: store this value somewhere
         manager.mainView.disableCameraTransform = true;
         // if (this.userRole === EduRoleTypeEnum.teacher) {
@@ -664,6 +646,7 @@ export class BoardStore extends EduStoreBase {
       wrappedComponents: [],
       invisiblePlugins: [WindowManager],
       useMultiViews: true,
+      disableMagixEventDispatchLimit: true,
       ...params,
     };
     let room;
@@ -685,6 +668,17 @@ export class BoardStore extends EduStoreBase {
   }
 
   onInstall() {
+    WindowManager.register({
+      kind: 'Slide',
+      appOptions: {
+        // 打开这个选项显示 debug 工具栏
+        debug: true,
+      },
+      src: async () => {
+        return SlideApp;
+      },
+    });
+
     let { sessionInfo } = EduClassroomConfig.shared;
 
     this._disposers.push(

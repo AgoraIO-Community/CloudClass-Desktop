@@ -11,7 +11,7 @@ import { ToolbarUIStore } from './toolbar-ui';
 import { LayoutUIStore } from './layout';
 import { EduUIStoreBase } from './base';
 import { TrackUIStore } from './layout/track';
-import { ExtAppUIStore } from './ext-app';
+import { ExtensionAppUIStore } from './ext-app';
 import { destoryI18n, transI18n } from './i18n';
 import { NotificationUIStore } from './notification-ui';
 import { PretestUIStore } from './pretest';
@@ -33,7 +33,7 @@ export class EduClassroomUIStore {
   protected _toolbarUIStore: ToolbarUIStore;
   protected _layoutUIStore: LayoutUIStore;
   protected _trackUIStore: TrackUIStore;
-  protected _extAppUIStore: ExtAppUIStore;
+  protected _extensionAppUIStore: ExtensionAppUIStore;
   protected _notificationUIStore: NotificationUIStore;
   protected _pretestUIStore: PretestUIStore;
   protected _widgetUIStore: WidgetUIStore;
@@ -55,7 +55,7 @@ export class EduClassroomUIStore {
     this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore);
     this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore);
     this._trackUIStore = new TrackUIStore(store, this.shareUIStore);
-    this._extAppUIStore = new ExtAppUIStore(store, this.shareUIStore);
+    this._extensionAppUIStore = new ExtensionAppUIStore(store, this.shareUIStore);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
     this._groupUIStore = new GroupUIStore(store, this.shareUIStore);
   }
@@ -103,8 +103,8 @@ export class EduClassroomUIStore {
   get trackUIStore() {
     return this._trackUIStore;
   }
-  get extAppUIStore() {
-    return this._extAppUIStore;
+  get extesionAppUIStore() {
+    return this._extensionAppUIStore;
   }
   get pretestUIStore() {
     return this._pretestUIStore;

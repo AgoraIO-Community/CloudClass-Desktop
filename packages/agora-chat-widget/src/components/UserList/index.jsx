@@ -32,7 +32,9 @@ export const UserList = ({ roomUserList }) => {
             <div className="user-list" key={key}>
               <div className="user-info">
                 <img src={item?.avatarurl || avatarUrl} className="user-avatar" />
-                <span className="user-text">{item?.nickname || item?.id}</span>
+                <span className="user-text" title={item?.nickname || item?.id}>
+                  {item?.nickname || item?.id}
+                </span>
                 {isTeacher && (
                   <Tag className="user-tag teacher-tag">
                     <span className="teacher-text">{transI18n('chat.teacher')}</span>

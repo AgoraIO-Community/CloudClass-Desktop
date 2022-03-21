@@ -7,6 +7,7 @@ import { AgoraEduClassroomEvent, EduRoleTypeEnum } from '../../../../type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { RteRole2EduRole } from '../../../../utils';
 import { FetchUserParam } from './type';
+import { BatchRecord } from '../../../../utils/batch';
 
 export class UserStore extends EduStoreBase {
   @observable
@@ -177,6 +178,8 @@ class SceneEventHandler {
     this._scene.on(AgoraRteEventType.UserUpdated, this._updateUsers);
     this._scene.on(AgoraRteEventType.UserPropertyUpdated, this._updateUserProperties);
     this._scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+
+    this._scene.on(AgoraRteEventType.BatchUserPropertyUpdated, this._updateBatchUserProperties);
   }
 
   removeEventHandlers() {
@@ -185,6 +188,7 @@ class SceneEventHandler {
     this._scene.off(AgoraRteEventType.UserUpdated, this._updateUsers);
     this._scene.off(AgoraRteEventType.UserPropertyUpdated, this._updateUserProperties);
     this._scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+    this._scene.off(AgoraRteEventType.BatchUserPropertyUpdated, this._updateBatchUserProperties);
   }
 
   @action.bound
@@ -201,6 +205,7 @@ class SceneEventHandler {
   @action.bound
   private _addUsers(users: AgoraUser[]) {
     const { sessionInfo } = EduClassroomConfig.shared;
+    const newRewards = new Map(this.dataStore.rewards);
     users.forEach((user) => {
       let userItem = new EduUser(user);
       if (userItem.userUuid === sessionInfo.userUuid) {
@@ -216,26 +221,29 @@ class SceneEventHandler {
         this.dataStore.assistantList.set(user.userUuid, userItem);
       }
       this.dataStore.users.set(user.userUuid, userItem);
-
+      // initialize reward count when one comes in
       const reward = user.userProperties.get('reward');
       if (reward) {
-        this.dataStore.rewards.set(user.userUuid, reward.count || 0);
+        newRewards.set(user.userUuid, reward.count || 0);
       }
     });
+    this.dataStore.rewards = newRewards;
   }
 
   @action.bound
   private _removeUsers(users: AgoraUser[], type: number) {
     const { sessionInfo } = EduClassroomConfig.shared;
+
     users.forEach((user) => {
+      // 2 means user has been kicked out
+      if (type === 2) {
+        EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.KickOut, user);
+      }
+
       const userRole = RteRole2EduRole(sessionInfo.roomType, user.userRole);
+
       if (user.userUuid === sessionInfo.userUuid) {
         this.dataStore.localUser = undefined;
-        // 2 means user has been kicked out
-        if (type === 2) {
-          EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.KickOut);
-          return;
-        }
       }
       if (userRole === EduRoleTypeEnum.teacher) {
         this.dataStore.teacherList.delete(user.userUuid);
@@ -253,6 +261,7 @@ class SceneEventHandler {
   @action.bound
   private _updateUsers(users: AgoraUser[]) {
     const { sessionInfo } = EduClassroomConfig.shared;
+
     users.forEach((user) => {
       let userItem = new EduUser(user);
       if (userItem.userUuid === sessionInfo.userUuid) {
@@ -277,7 +286,76 @@ class SceneEventHandler {
     if (reward) {
       const newRewards = new Map(this.dataStore.rewards);
       newRewards.set(userUuid, reward.count || 0);
-      this.dataStore.rewards = newRewards;
+      this._updateRewards(newRewards, false);
     }
+  }
+
+  @action.bound
+  async _updateRewards(newRewards: Map<string, number>, isBatch: boolean) {
+    const oldRewards = this.dataStore.rewards;
+    this.dataStore.rewards = newRewards;
+    if (isBatch) {
+      const userNames = this._getRewardedUsers(oldRewards, newRewards);
+
+      if (userNames.length) {
+        EduEventCenter.shared.emitClasroomEvents(
+          AgoraEduClassroomEvent.BatchRewardReceived,
+          userNames,
+        );
+      }
+    } else {
+      const userNames = this._getRewardedUsers(oldRewards, newRewards);
+
+      if (userNames.length) {
+        EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.RewardReceived, userNames);
+      }
+    }
+  }
+
+  private _updateBatchUserProperties(
+    users: { userUuid: string; userName: string; userProperties: any }[],
+    operator: any,
+    cause: any,
+  ) {
+    const batchRecord = BatchRecord.getBatchRecord<typeof users>(cause.data, (batchArray) => {
+      const allUsers = batchArray.flat();
+      const newRewards = new Map(this.dataStore.rewards);
+      for (const user of allUsers) {
+        const { userUuid, userProperties } = user;
+
+        const { reward } = userProperties;
+
+        if (reward) {
+          newRewards.set(userUuid, reward.count || 0);
+        }
+      }
+
+      this._updateRewards(newRewards, true);
+    });
+
+    batchRecord.addBatch(users);
+  }
+
+  private _getRewardedUsers(oldRewards: Map<string, number>, newRewards: Map<string, number>) {
+    let changedUserUuids: string[] = [];
+    for (const [userUuid] of newRewards) {
+      let previousReward = 0;
+      if (oldRewards) {
+        previousReward = oldRewards.get(userUuid) || 0;
+      }
+      let reward = newRewards.get(userUuid) || 0;
+      if (reward > previousReward) {
+        changedUserUuids.push(userUuid);
+      }
+    }
+
+    if (changedUserUuids.length > 0) {
+      const userNames = changedUserUuids.map(
+        (userUuid) => this.dataStore.studentList.get(userUuid)?.userName,
+      );
+      return userNames;
+    }
+
+    return [];
   }
 }

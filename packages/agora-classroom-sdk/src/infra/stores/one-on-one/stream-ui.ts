@@ -6,4 +6,10 @@ export class OneToOneStreamUIStore extends StreamUIStore {
   @computed get toolbarPlacement(): 'bottom' | 'left' {
     return 'left';
   }
+
+  onInstall(): void {
+    super.onInstall();
+
+    this.classroomStore.mediaStore.setMirror(true);
+  }
 }
