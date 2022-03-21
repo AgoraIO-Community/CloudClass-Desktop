@@ -11,7 +11,6 @@ import emojiIcon from '../../themes/svg/emoji.svg';
 import imgIcon from '../../themes/img/img.png';
 import screenshotIcon from '../../themes/img/screenshot.png';
 import ScreenshotMenu from './Screenshot';
-import { sendImgMsg } from '../../api/message';
 import isElctronPlatform from '../../utils/platform';
 
 import { Emoji } from '../../utils/emoji';
@@ -204,7 +203,7 @@ export const InputMsg = ({ allMutePermission }) => {
                 <input
                   id="uploadImage"
                   onChange={() => {
-                    sendImgMsg(couterRef);
+                    apis.messageAPI.sendImgMsg(couterRef);
                   }}
                   type="file"
                   ref={couterRef}

@@ -178,7 +178,6 @@ class SceneEventHandler {
     this._scene.on(AgoraRteEventType.UserUpdated, this._updateUsers);
     this._scene.on(AgoraRteEventType.UserPropertyUpdated, this._updateUserProperties);
     this._scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
-
     this._scene.on(AgoraRteEventType.BatchUserPropertyUpdated, this._updateBatchUserProperties);
   }
 

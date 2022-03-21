@@ -32,13 +32,13 @@ export class MessageAPI {
         muteNickName: (userId && state.room.roomUsersInfo[userId].nickname) || '',
         nickName: loginName,
       }, //用户自扩展的消息内容（群聊用法相同）
-      success: function (id, serverId) {
+      success: (id, serverId) => {
         msg.id = serverId;
         msg.body.id = serverId;
         msg.body.time = new Date().getTime().toString();
         this.store.dispatch(messageAction(msg.body, { isHistory: false }));
       }, //消息发送成功回调
-      fail: function (e) {
+      fail: (e) => {
         console.log('Fail'); //如禁言、拉黑后发送消息会失败
       },
     });
@@ -68,7 +68,7 @@ export class MessageAPI {
     let img = new Image();
     img.src = file.url;
     //加载后才能拿到宽和高
-    img.onload = function () {
+    img.onload = () => {
       if (file.filetype.toLowerCase() in allowType) {
         var option = {
           file: file,
@@ -84,16 +84,16 @@ export class MessageAPI {
           width: img.width,
           height: img.height,
           chatType: 'chatRoom',
-          onFileUploadError: function (err) {
+          onFileUploadError: (err) => {
             // 消息上传失败
             message.error(transI18n('chat.uploading_picture'));
             console.log('onFileUploadError>>>', err);
           },
-          onFileUploadComplete: function (res) {
+          onFileUploadComplete: (res) => {
             // 消息上传成功
             console.log('onFileUploadComplete>>>', res);
           },
-          success: function (id, serverId) {
+          success: (id, serverId) => {
             // 消息发送成功回调
             msg.id = serverId;
             msg.body.id = serverId;
@@ -101,7 +101,7 @@ export class MessageAPI {
             this.store.dispatch(messageAction(msg.body, { isHistory: false }));
             couterRef.current.value = null;
           },
-          fail: function (e) {
+          fail: (e) => {
             //如禁言、拉黑后发送消息会失败
             couterRef.current.value = null;
           },

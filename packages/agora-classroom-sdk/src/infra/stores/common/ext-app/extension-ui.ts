@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum, escapeExtAppIdentifier } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, escapeExtAppIdentifier } from 'agora-edu-core';
 import { bound, Lodash, Log } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { EduUIStoreBase } from '../base';
@@ -11,7 +11,7 @@ export class ExtensionAppUIStore extends EduUIStoreBase {
    * @returns
    */
   get canClose() {
-    const { userRole, userUuid } = this.classroomStore.roomStore;
+    const { role: userRole, userUuid } = EduClassroomConfig.shared.sessionInfo;
     const { grantUsers } = this.classroomStore.boardStore;
 
     return (
@@ -26,7 +26,7 @@ export class ExtensionAppUIStore extends EduUIStoreBase {
    * @returns
    */
   get canDrag() {
-    const { userRole, userUuid } = this.classroomStore.roomStore;
+    const { role: userRole, userUuid } = EduClassroomConfig.shared.sessionInfo;
     const { grantUsers } = this.classroomStore.boardStore;
 
     return (

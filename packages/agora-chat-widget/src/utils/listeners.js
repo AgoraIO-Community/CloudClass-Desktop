@@ -69,6 +69,18 @@ export const createListener = (store) => {
           }
         }
       },
+      onPictureMessage: (message) => {
+        console.log('onPictureMessage>>>', message);
+        if (new_IM_Data.chatroomId === message.to) {
+          const showChat = store.getState().showChat;
+          const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
+          store.dispatch(showRedNotification(isShowRed));
+          store.dispatch(messageAction(message, { isHistory: false }));
+          if (!showChat) {
+            store.dispatch(showRedNotification(true));
+          }
+        }
+      },
       onCmdMessage: (message) => {
         console.log('onCmdMessaeg>>>', message);
         if (new_IM_Data.chatroomId === message.to) {
