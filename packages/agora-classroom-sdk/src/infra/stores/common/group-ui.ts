@@ -211,6 +211,11 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @action.bound
   renameGroupName(groupUuid: string, groupName: string) {
+    if (this._isGroupExisted({ groupUuid, groupName })) {
+      this.shareUIStore.addToast(transI18n('toast.group_name_existed'));
+      return;
+    }
+
     if (this.groupState === GroupState.OPEN) {
       this.classroomStore.groupStore.updateGroupInfo([
         {
@@ -233,16 +238,22 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @action.bound
   addGroup() {
+    const newGroup = { groupUuid: uuidv4(), groupName: this._generateGroupName() };
+
+    if (this._isGroupExisted(newGroup)) {
+      newGroup.groupName += ' 1';
+    }
+
     if (this.groupState === GroupState.OPEN) {
       this.classroomStore.groupStore.addGroups([
         {
-          groupName: this._generateGroupName(),
+          groupName: newGroup.groupName,
           users: [],
         },
       ]);
     } else {
-      this.localGroups.set(`${uuidv4()}`, {
-        groupName: this._generateGroupName(),
+      this.localGroups.set(newGroup.groupUuid, {
+        groupName: newGroup.groupName,
         users: [],
       });
     }
@@ -396,6 +407,10 @@ export class GroupUIStore extends EduUIStoreBase {
     }
 
     // Not supported
+  }
+
+  private _isGroupExisted({ groupName, groupUuid }: { groupName: string; groupUuid: string }) {
+    return this.groups.some(({ text, id }) => groupName === text && id !== groupUuid);
   }
 
   /**

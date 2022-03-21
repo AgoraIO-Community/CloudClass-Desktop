@@ -7,7 +7,6 @@ import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
 import { GroupState } from 'agora-edu-core';
-import { GroupMethod } from '@/infra/stores/common/group-ui';
 import { cloneDeep } from 'lodash';
 
 type LinkButtonProps = {
@@ -251,7 +250,7 @@ type Props = {
 export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { groups, addGroup, createGroups, groupState, startGroup, stopGroup } = groupUIStore;
+  const { groups, addGroup, groupState, startGroup, stopGroup } = groupUIStore;
 
   const panelState = usePanelState();
 
@@ -273,7 +272,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
             className="rounded-btn mr-2"
             onClick={() => {
               stopGroup();
-              createGroups(GroupMethod.MANUAL);
+              onNext();
             }}>
             {transI18n('breakout_room.re_create')}
           </Button>
