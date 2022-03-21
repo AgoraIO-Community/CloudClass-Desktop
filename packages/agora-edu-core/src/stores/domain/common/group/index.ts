@@ -126,10 +126,17 @@ export class GroupStore extends EduStoreBase {
         break;
       }
     }
-    if (lastGroupUuid && this._currentGroupUuid && lastGroupUuid !== this._currentGroupUuid) {
-      this.moveIntoSubRoom(this._currentGroupUuid, lastGroupUuid);
-    } else if (lastGroupUuid && !this._currentGroupUuid) {
-      this.joinSubRoom(lastGroupUuid);
+
+    if (lastGroupUuid) {
+      if (this._currentGroupUuid && lastGroupUuid !== this._currentGroupUuid) {
+        this.moveIntoSubRoom(this._currentGroupUuid, lastGroupUuid);
+      } else if (!this._currentGroupUuid) {
+        this.joinSubRoom(lastGroupUuid);
+      }
+    } else {
+      if (this._currentGroupUuid) {
+        this.leaveSubRoom();
+      }
     }
   }
 
