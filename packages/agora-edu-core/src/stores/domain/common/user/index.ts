@@ -21,6 +21,15 @@ export class UserStore extends EduStoreBase {
   };
 
   @computed
+  get mainRoomDataStore() {
+    const scene = this.classroomStore.connectionStore.mainRoomScene;
+
+    const handler = SceneEventHandler.createEventHandler(scene!);
+
+    return handler.dataStore;
+  }
+
+  @computed
   get localUser() {
     return this._dataStore.localUser;
   }

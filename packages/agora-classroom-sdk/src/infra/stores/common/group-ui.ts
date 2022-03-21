@@ -39,13 +39,13 @@ export class GroupUIStore extends EduUIStoreBase {
   get groups() {
     const list: { id: string; text: string; children: { id: string; text: string }[] }[] = [];
 
-    const { users } = this.classroomStore.userStore;
+    const { users, studentList } = this.userData;
 
     this.groupDetails.forEach((group, groupUuid) => {
       const students = [] as { id: string; text: string; notJoined?: boolean }[];
 
       group.users.forEach(({ userUuid, notJoined }) => {
-        if (this.classroomStore.userStore.studentList.has(userUuid)) {
+        if (studentList.has(userUuid)) {
           students.push({
             id: userUuid,
             text: users.get(userUuid)?.userName || 'unknown',
@@ -66,7 +66,7 @@ export class GroupUIStore extends EduUIStoreBase {
     if (this.groupState === GroupState.OPEN) {
       const notGrouped: { id: string; text: string }[] = [];
 
-      this.classroomStore.userStore.studentList.forEach((student, studentUuid) => {
+      studentList.forEach((student, studentUuid) => {
         const groupUuid = this.groupUuidByUserUuid.get(studentUuid);
         if (!groupUuid) {
           notGrouped.push({ id: studentUuid, text: student.userName });
@@ -113,7 +113,7 @@ export class GroupUIStore extends EduUIStoreBase {
   get students() {
     const list: { userUuid: string; userName: string; groupUuid: string | undefined }[] = [];
 
-    this.classroomStore.userStore.studentList.forEach((user) => {
+    this.userData.studentList.forEach((user) => {
       const groupUuid = this.groupUuidByUserUuid.get(user.userUuid);
 
       list.push({
@@ -132,7 +132,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @computed
   get notGroupedCount() {
     const count = this.students.reduce((prev, { groupUuid }) => {
-      if (groupUuid) {
+      if (!groupUuid) {
         prev += 1;
       }
 
@@ -143,7 +143,12 @@ export class GroupUIStore extends EduUIStoreBase {
 
   @computed
   get numberToBeAssigned() {
-    return this.classroomStore.userStore.studentList.size;
+    return this.userData.studentList.size;
+  }
+
+  @computed
+  get userData() {
+    return this.classroomStore.userStore.mainRoomDataStore;
   }
 
   /**
@@ -424,7 +429,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @bound
   getGroupUserCount(groupUuid: string) {
     return this.groupDetails.get(groupUuid)?.users.reduce((prev, { userUuid }) => {
-      if (this.classroomStore.userStore.studentList.has(userUuid)) prev += 1;
+      if (this.userData.studentList.has(userUuid)) prev += 1;
       return prev;
     }, 0);
   }
