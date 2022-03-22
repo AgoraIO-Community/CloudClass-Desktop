@@ -25,6 +25,7 @@ export const zh = {
     'courseWare-loading': '课件加载中，请稍候…',
     'h5-courseWare': 'H5课件',
     'test-courseWare': 'test课件',
+    'clear-whiteboard': '你想清空白板内容吗？'
   },
   screen_share: '屏幕共享',
   kick: {
@@ -472,6 +473,7 @@ export const zh = {
   },
   confirm: {
     delete: '删除提示',
+    clear: '清屏提示'
   },
   stream: {
     'placeholder.loading': '正在打开摄像头',

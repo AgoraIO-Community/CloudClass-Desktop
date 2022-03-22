@@ -25,6 +25,7 @@ export const en = {
     'courseWare-loading': 'Courseware Loading...',
     'h5-courseWare': 'HTML5 Courseware',
     'test-courseWare': 'Test Courseware',
+    'clear-whiteboard': 'Do you want to clear whiteboard content ?'
   },
   screen_share: 'Screen Share',
   kick: {
@@ -482,6 +483,7 @@ export const en = {
   },
   confirm: {
     delete: 'Delete prompt',
+    clear: 'Clear prompt'
   },
   stream: {
     'placeholder.loading': 'Camera is loading',

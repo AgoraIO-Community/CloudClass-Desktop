@@ -243,7 +243,13 @@ export class ToolbarUIStore extends EduUIStoreBase {
   setTool(tool: string) {
     const eduTool = this.convertUITools2EduTools(tool);
     if (eduTool !== WhiteboardTool.unknown) {
-      return this.classroomStore.boardStore.setTool(eduTool);
+      if (eduTool === WhiteboardTool.clear) {
+        this.shareUIStore.addConfirmDialog(transI18n('confirm.clear'), transI18n('whiteboard.clear-whiteboard'), () => {
+          return this.classroomStore.boardStore.setTool(eduTool);
+        });
+      } else {
+        return this.classroomStore.boardStore.setTool(eduTool);
+      }
     }
 
     switch (tool) {
