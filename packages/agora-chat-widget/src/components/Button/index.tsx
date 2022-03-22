@@ -5,12 +5,14 @@ import './index.css';
 
 type ButtonType = 'primary' | 'secondary' | 'ghost' | 'danger';
 
+const primaryColor = '#ddb332';
+
 function createRipple(container: HTMLDivElement, y: number, x: number, type: ButtonType) {
   const circleElement = document.createElement('div');
   circleElement.className = 'ripple-circle';
   circleElement.style.top = y + 'px';
   circleElement.style.left = x + 'px';
-  circleElement.style.background = type === 'primary' ? 'rgba(38, 99, 208, 1)' : '#fff';
+  circleElement.style.background = type === 'primary' ? primaryColor : '#fff';
   container.appendChild(circleElement);
   setTimeout(() => circleElement.remove(), 900);
 }

@@ -9,15 +9,12 @@
 
 .btn-primary {
   color: rgba(255, 255, 255, 1);
-  background-color: rgba(53, 123, 246, 1);
+  background-color: #ddb332 !important;
 }
 
-.btn-primary:hover {
-  background-color: rgba(99, 154, 250, 1);
-}
-
+.btn-primary:hover,
 .btn-primary:active {
-  background-color: rgba(38, 99, 208, 1);
+  background-color: #b98e03 !important;
 }
 
 .btn-danger {
