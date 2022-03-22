@@ -18,7 +18,7 @@ import { CollectorContainer } from '~containers/board';
 import AkasuoLogo from './akasuo-logo';
 
 const Content: FC = ({ children }) => {
-  return <div className="flex-grow">{children}</div>;
+  return <div className="flex-grow" style={{position: 'relative'}}>{children}</div>;
 };
 
 export const OneToOneScenario = observer(() => {

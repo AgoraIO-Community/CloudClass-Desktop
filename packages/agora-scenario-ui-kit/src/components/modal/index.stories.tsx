@@ -26,7 +26,7 @@ export const Docs = ({ title }: DocsProps) => (
   <>
     <div className="mt-4">
       <Modal title={title} footer={[<Button type="secondary">test</Button>, <Button>test</Button>]}>
-        <p>你确定要下课吗？</p>
+        <p>你要确认下课吗？</p>
       </Modal>
     </div>
     <div className="mt-4">
