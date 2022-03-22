@@ -2,7 +2,6 @@ import { SceneDefinition } from '@netless/window-manager';
 import { observable } from 'mobx';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { CloudDriveResourceConvertProgress } from './type';
-
 export abstract class CloudDriveResource {
   static supportedTypes = [
     'bmp',
@@ -39,14 +38,7 @@ export abstract class CloudDriveResource {
     url?: string;
     initOpen?: boolean;
   }): CloudDriveResource | never {
-    let ext = data.ext.toLowerCase();
-    if (!this.supportedTypes.includes(ext)) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-        new Error(`unsupported file type ${ext}`),
-      );
-    }
-
+    let ext = data.ext?.toLowerCase?.();
     if (this.convertableTypes.includes(ext)) {
       if (!data.taskProgress || !data.taskUuid || !data.conversion) {
         return EduErrorCenter.shared.handleThrowableError(

@@ -92,21 +92,25 @@ export class PluginStore {
   handleSubmitVote() {
     const userUuid = this.context.context.localUserInfo.userUuid;
     const selectedIndexs = this.selectedIndexs;
-    this.controller
-      .submitResult(this.context.roomProperties.extra.pollId, userUuid, {
-        selectIndex: selectedIndexs,
-      })
-      .then((res) => {
-        const data = res.data;
-        this.context.setUserProperties({ pollId: data?.pollId });
-      })
-      .catch((e) => {
-        Toast.show({
-          type: 'error',
-          text: JSON.stringify(e),
-          closeToast: () => {},
+    return new Promise((resolve, reject) => {
+      this.controller
+        .submitResult(this.context.roomProperties.extra.pollId, userUuid, {
+          selectIndex: selectedIndexs,
+        })
+        .then((res) => {
+          const data = res.data;
+          this.context.setUserProperties({ pollId: data?.pollId });
+          resolve(data);
+        })
+        .catch((e) => {
+          Toast.show({
+            type: 'error',
+            text: JSON.stringify(e),
+            closeToast: () => {},
+          });
+          reject(e);
         });
-      });
+    });
   }
 
   /**
@@ -188,7 +192,11 @@ export class PluginStore {
 
   @computed
   get submitDisabled() {
-    return this.options.some((value: string) => !value) || !this.title;
+    return (
+      !this.title ||
+      this.options.some((value: string) => !value) ||
+      new Set(this.options).size !== this.options.length
+    );
   }
 
   @computed

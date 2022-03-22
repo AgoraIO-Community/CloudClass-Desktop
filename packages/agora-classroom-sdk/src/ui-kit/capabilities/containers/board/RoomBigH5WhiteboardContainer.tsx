@@ -2,6 +2,8 @@ import { observer } from 'mobx-react';
 import { FC, useMemo, useEffect } from 'react';
 import { useLectureH5UIStores } from '~hooks/use-edu-stores';
 import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
+import { useStore } from '~hooks/use-edu-stores';
+import { TrackArea } from '~containers/root-box/';
 import 'video.js/dist/video-js.css';
 import '@netless/window-manager/dist/style.css';
 import { BoardPlaceHolder, Icon, IconTypes } from '~ui-kit';
@@ -56,6 +58,7 @@ export const WhiteboardH5Container: FC = observer(({ children }) => {
     <div
       className={classnames('whiteboard-h5-container w-full relative', containerH5VisibleCls)}
       style={{ height: boardContainerHeight, width: boardContainerWidth }}>
+      <WhiteboardTrackArea />
       {readyToMount ? (
         <div className="whiteboard-wrapper">
           {children}
@@ -79,3 +82,9 @@ export const WhiteboardH5Container: FC = observer(({ children }) => {
     </div>
   );
 });
+
+export const WhiteboardTrackArea = () => {
+  const { boardUIStore } = useStore();
+  const { readyToMount } = boardUIStore;
+  return readyToMount ? <TrackArea boundaryName="extapp-track-bounds" /> : null;
+};

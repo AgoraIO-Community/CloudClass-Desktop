@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import classNames from 'classnames';
-import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { Card, SvgIcon, SvgImg } from '~ui-kit';
 import './index.css';
 
@@ -22,9 +21,7 @@ export const ScenesController: FC<ScenesControllerProps> = ({
   const isFirstScene = currentSceneIndex === 0;
   const isLastScene = currentSceneIndex + 1 === scenesCount;
 
-  const role = EduClassroomConfig.shared.sessionInfo.role;
-
-  return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) ? (
+  return (
     <Card className={classNames('scenes-controller-container')}>
       <div className="scenes-controller-btn-list">
         <div className="scenes-controller-btn" onClick={addScene}>
@@ -50,5 +47,5 @@ export const ScenesController: FC<ScenesControllerProps> = ({
         </div>
       </div>
     </Card>
-  ) : null;
+  );
 };

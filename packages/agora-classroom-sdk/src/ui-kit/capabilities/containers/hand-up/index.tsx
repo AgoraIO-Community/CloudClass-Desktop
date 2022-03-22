@@ -1,7 +1,7 @@
 import { EduRoleTypeEnum, EduClassroomConfig } from 'agora-edu-core';
 import { useStore } from '~hooks/use-edu-stores';
 import { observer } from 'mobx-react';
-import { WaveArmSender } from './sender';
+import { WaveArmSender as WaveArmSenderContainer } from './sender';
 import { WaveArmManager, StudentsWaveArmList } from './manager';
 import './index.css';
 
@@ -20,15 +20,6 @@ export const WaveArmListContainer = observer(() => {
   const { onPodium } = handUpUIStore;
   const { userWaveArmList } = handUpUIStore;
   return <StudentsWaveArmList userWaveArmList={userWaveArmList} onClick={onPodium} />;
-});
-
-export const WaveArmSenderContainer = observer(() => {
-  const { handUpUIStore } = useStore();
-  const { waveArm, teacherUuid } = handUpUIStore;
-  const waveArmDuration = (duration: 3 | -1) => {
-    return waveArm(teacherUuid, duration);
-  };
-  return <WaveArmSender waveArmDuration={waveArmDuration} />;
 });
 
 export const HandsUpContainer = observer(() => {

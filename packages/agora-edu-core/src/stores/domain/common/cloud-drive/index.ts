@@ -236,6 +236,11 @@ export class CloudDriveStore extends EduStoreBase {
         );
       }
       ext = ext.toLowerCase();
+      if (!CloudDriveResource.supportedTypes.includes(ext))
+        return EduErrorCenter.shared.handleThrowableError(
+          AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
+          new Error(`unsupported file type ${ext}`),
+        );
       const conversion = CloudDriveUtils.conversionOption(ext);
       let progress = new CloudDriveUploadingProgress({
         resourceName: name,

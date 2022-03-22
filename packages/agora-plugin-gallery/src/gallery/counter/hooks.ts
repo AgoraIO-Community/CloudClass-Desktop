@@ -10,43 +10,38 @@ export const usePluginStore = (): PluginStore => {
 };
 
 // 获取当前时间
-const getCurrentTimestamp = () => (window.performance ? performance.now() : Date.now());
+// const getCurrentTimestamp = () => (window.performance ? performance.now() : Date.now());
 
 export const useTimeCounter = () => {
   const [duration, setDuration] = useState<number>(0);
-  const currentTime = useRef(getCurrentTimestamp());
-  const timer = useRef<number | null>(null);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const step = useCallback(() => {
-    let currentStepTime = getCurrentTimestamp();
-    if ((currentStepTime - currentTime.current) / 1000 > 1) {
-      setDuration((duration) => duration - 1);
-      currentTime.current = currentStepTime;
-    }
-    timer.current = window.requestAnimationFrame(step);
+    setDuration((duration) => duration - 1);
   }, []);
 
   const play = useCallback(() => {
     stop();
-    currentTime.current = getCurrentTimestamp(); // 初始化时间戳
-    step();
+    timer.current = setInterval(() => {
+      step();
+    }, 1000);
   }, []);
 
   const stop = useCallback(() => {
     if (timer.current) {
-      window.cancelAnimationFrame(timer.current);
+      clearInterval(timer.current);
     }
   }, []);
 
   const reset = useCallback(() => {
     if (timer.current) {
-      window.cancelAnimationFrame(timer.current);
+      clearInterval(timer.current);
       setDuration((_) => 0);
     }
   }, []);
 
   useEffect(() => {
-    !duration && timer.current && window.cancelAnimationFrame(timer.current);
+    (!duration || duration <= 0) && reset();
   }, [duration]);
 
   return { duration, setDuration, play, stop, reset };

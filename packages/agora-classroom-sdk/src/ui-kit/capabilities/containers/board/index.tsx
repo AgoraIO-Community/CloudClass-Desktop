@@ -26,6 +26,8 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
     addMainViewScene,
     toPreMainViewScene,
     toNextMainViewScene,
+    isGrantedBoard,
+    isTeacherOrAssistant,
   } = boardUIStore;
 
   useEffect(() => {
@@ -65,13 +67,15 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
               />
             ) : null}
             <WhiteboardToolbar />
-            <ScenesController
-              addScene={addMainViewScene}
-              preScene={toPreMainViewScene}
-              nextScene={toNextMainViewScene}
-              currentSceneIndex={currentSceneIndex}
-              scenesCount={scenesCount}
-            />
+            {(isTeacherOrAssistant || isGrantedBoard) && (
+              <ScenesController
+                addScene={addMainViewScene}
+                preScene={toPreMainViewScene}
+                nextScene={toNextMainViewScene}
+                currentSceneIndex={currentSceneIndex}
+                scenesCount={scenesCount}
+              />
+            )}
           </div>
         </div>
       ) : null}
@@ -81,13 +85,11 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
 
 export const CollectorContainer = observer(() => {
   const { boardUIStore } = useStore();
-  const domRef = useRef(null);
-
-  useEffect(() => {
-    if (domRef.current) boardUIStore.setCollectorContainer = domRef.current;
-  }, []);
-
-  return <div id="window-manager-collector" ref={domRef}></div>;
+  return (
+    <div
+      id="window-manager-collector"
+      ref={(domRef) => domRef && (boardUIStore.collectorContainer = domRef)}></div>
+  );
 });
 
 export const WhiteboardTrackArea = () => {

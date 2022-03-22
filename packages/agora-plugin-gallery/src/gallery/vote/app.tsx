@@ -5,7 +5,9 @@ import { usePluginStore } from './hooks';
 import reduceSvg from './reduce.svg';
 import addSvg from './add.svg';
 import './index.css';
-import { isEmpty } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
+
+const MAX_LENGTH = 30;
 
 const App = () => (
   <>
@@ -25,12 +27,14 @@ const Title = observer(() => {
             value={pluginStore.title}
             className="vote-title"
             placeholder={transI18n('widget_polling.input-tip')}
-            maxLength={100}
+            maxLength={MAX_LENGTH}
             onChange={(e: any) => {
               pluginStore.setTitle(e.target.value);
             }}
           />
-          <span className="vote-limit">{pluginStore.title?.length || 0}/100</span>
+          <span className="vote-limit">
+            {pluginStore.title?.length || 0}/{MAX_LENGTH}
+          </span>
           <div className="vote-type">
             <label htmlFor="singal">
               <input
@@ -72,7 +76,7 @@ const Content = observer(() => {
           <div key={idx} className="vote-item-container">
             <Input
               className="vote-item"
-              maxLength={30}
+              maxLength={MAX_LENGTH}
               value={option}
               onChange={(e) => pluginStore.changeOptions(idx, e.target.value)}
               placeholder={transI18n('widget_polling.item-tip')}
@@ -96,6 +100,17 @@ const Content = observer(() => {
 
 const VoteBtns = observer(() => {
   const pluginStore = usePluginStore();
+  const cursorRef = React.useRef<boolean>(false);
+
+  const handleSubmitVote = React.useCallback(() => {
+    if (!cursorRef.current) {
+      pluginStore.handleSubmitVote().catch(() => {
+        cursorRef.current = false;
+      });
+      cursorRef.current = true;
+    }
+  }, []);
+
   return (
     <div className="vote-btns-container">
       {pluginStore.isInitinalStage && (
@@ -135,7 +150,7 @@ const VoteBtns = observer(() => {
           type="primary"
           className="btn-rewrite-disabled"
           disabled={!pluginStore.selectedOptions.length || pluginStore.visibleVote}
-          onClick={pluginStore.handleSubmitVote}>
+          onClick={handleSubmitVote}>
           {transI18n('widget_polling.submit')}
         </Button>
       )}
@@ -201,7 +216,9 @@ const SelectionSection = observer(() => {
               />
             )}
           </div>
-          <div className="selection-text">{option}</div>
+          <div className="selection-text">
+            <span>{option}</span>
+          </div>
         </label>
       ))}
     </>
