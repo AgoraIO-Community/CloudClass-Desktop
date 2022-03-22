@@ -351,6 +351,7 @@ export class BoardStore extends EduStoreBase {
 
   @action.bound
   async openResource(resource: CloudDriveResource) {
+    let openedFlag = false
     const ext = resource.ext?.toLowerCase?.();
     if (!CloudDriveResource.supportedTypes.includes(ext))
       return EduErrorCenter.shared.handleThrowableError(
@@ -361,26 +362,29 @@ export class BoardStore extends EduStoreBase {
     if (resource instanceof CloudDriveCourseResource) {
       const opened = curResources.find(({ options }) => options?.title === resource.resourceName);
       if (opened) {
-        EduErrorCenter.shared.handleThrowableError(
-          AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
-          Error('resource already opened'),
-        );
+        openedFlag = true
+        // EduErrorCenter.shared.handleThrowableError(
+        //   AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
+        //   Error('resource already opened'),
+        // );
       }
       await this.putCourseResource(resource);
     }
     if (resource instanceof CloudDriveMediaResource) {
       const opened = curResources.find(({ options }) => options?.title === resource.url);
       if (opened) {
-        EduErrorCenter.shared.handleThrowableError(
-          AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
-          Error('resource already opened'),
-        );
+        openedFlag = true
+        // EduErrorCenter.shared.handleThrowableError(
+        //   AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
+        //   Error('resource already opened'),
+        // );
       }
       await this.putMediaResource(resource);
     }
     if (resource instanceof CloudDriveImageResource) {
       await this.putImageResource(resource);
     }
+    return openedFlag
   }
 
   @action.bound

@@ -7,6 +7,7 @@ import {
   CloudDrivePagingOption,
   CloudDriveResource,
 } from 'agora-edu-core';
+import { transI18n } from './i18n';
 
 interface UploadItem {
   iconType?: string;
@@ -141,7 +142,8 @@ export class CloudUIStore extends EduUIStoreBase {
   @bound
   async openResource(resource: CloudDriveResource) {
     try {
-      await this.classroomStore.boardStore.openResource(resource);
+      const openedFlag = await this.classroomStore.boardStore.openResource(resource);
+      openedFlag && this.shareUIStore.addToast(transI18n('edu_error.600074'), 'success')
     } catch (e) {
       const error = e as AGError;
       // this.shareUIStore.addGenericErrorDialog(e as AGError);
