@@ -310,7 +310,7 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
         const userId = `${user.uid}`;
         this._remoteRtcUsers.delete(userId);
         const videoThread = this._subscribeVideoThreads.get(userId);
-        const audioThread = this._subscribeVideoThreads.get(userId);
+        const audioThread = this._subscribeAudioThreads.get(userId);
         if (videoThread) {
           videoThread.stop();
           this._subscribeVideoThreads.delete(userId);
@@ -320,6 +320,22 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
           this._audioVolumes.delete(userId);
           this._subscribeAudioThreads.delete(userId);
         }
+      }
+    });
+
+    this._client.on('user-left', (user) => {
+      const userId = `${user.uid}`;
+      this._remoteRtcUsers.delete(userId);
+      const videoThread = this._subscribeVideoThreads.get(userId);
+      const audioThread = this._subscribeAudioThreads.get(userId);
+      if (videoThread) {
+        videoThread.stop();
+        this._subscribeVideoThreads.delete(userId);
+      }
+      if (audioThread) {
+        audioThread.stop();
+        this._audioVolumes.delete(userId);
+        this._subscribeAudioThreads.delete(userId);
       }
     });
   }
@@ -380,6 +396,20 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
     this._muteRemoteAudio.set(streamUuid, mute);
     this._notifySubscribeThreads(streamUuid, 'audio');
     return 0;
+  }
+
+  async leave(): Promise<void> {
+    await super.leave();
+    this._remoteRtcUsers.clear();
+    this._subscribeVideoThreads.forEach((thread) => {
+      thread.stop();
+    });
+    this._subscribeVideoThreads.clear();
+    this._subscribeAudioThreads.forEach((thread) => {
+      thread.stop();
+    });
+    this._subscribeAudioThreads.clear();
+    this._remoteRtcUsers.clear();
   }
 }
 

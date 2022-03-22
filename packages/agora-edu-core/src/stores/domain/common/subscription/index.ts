@@ -1,17 +1,17 @@
 import { AgoraRteScene, Log } from 'agora-rte-sdk';
-import { reaction } from 'mobx';
+import { computed, reaction } from 'mobx';
 import { EduStoreBase } from '../base';
 import { SceneSubscription, SubscriptionFactory } from './room';
 
 @Log.attach({ proxyMethods: false })
 export class SubscriptionStore extends EduStoreBase {
-  private _sceneSubscriptions: Map<string, SceneSubscription> = new Map<
+  private static _sceneSubscriptions: Map<string, SceneSubscription> = new Map<
     string,
     SceneSubscription
   >();
 
   setActive(sceneId: string) {
-    this._sceneSubscriptions.forEach((sub, subSceneId) => {
+    SubscriptionStore._sceneSubscriptions.forEach((sub, subSceneId) => {
       if (subSceneId === sceneId) {
         sub.setActive(true);
       } else {
@@ -21,13 +21,13 @@ export class SubscriptionStore extends EduStoreBase {
   }
 
   createSceneSubscription(scene: AgoraRteScene) {
-    if (!this._sceneSubscriptions.has(scene.sceneId)) {
+    if (!SubscriptionStore._sceneSubscriptions.has(scene.sceneId)) {
       const sub = SubscriptionFactory.createSubscription(scene);
 
-      sub && this._sceneSubscriptions.set(scene.sceneId, sub);
+      sub && SubscriptionStore._sceneSubscriptions.set(scene.sceneId, sub);
     }
 
-    return this._sceneSubscriptions.get(scene.sceneId);
+    return SubscriptionStore._sceneSubscriptions.get(scene.sceneId);
   }
 
   onInstall(): void {
@@ -40,6 +40,11 @@ export class SubscriptionStore extends EduStoreBase {
         }
       },
     );
+    computed(() => this.classroomStore.connectionStore.subRoomScene).observe(({ oldValue }) => {
+      if (oldValue) {
+        SubscriptionStore._sceneSubscriptions.delete(oldValue.sceneId);
+      }
+    });
   }
 
   onDestroy(): void {}

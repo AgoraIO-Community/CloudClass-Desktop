@@ -516,12 +516,10 @@ export class GroupUIStore extends EduUIStoreBase {
 
         await this.classroomStore.connectionStore.joinRTC();
 
-        if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-          await this.classroomStore.streamStore.updateLocalPublishState({
-            videoState: 1,
-            audioState: 1,
-          });
-        }
+        await this.classroomStore.streamStore.updateLocalPublishState({
+          videoState: 1,
+          audioState: 1,
+        });
       } catch (e) {
         this.shareUIStore.addToast('Cannot join sub room');
       } finally {
@@ -580,12 +578,10 @@ export class GroupUIStore extends EduUIStoreBase {
 
         await this.classroomStore.connectionStore.joinRTC();
 
-        if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-          await this.classroomStore.streamStore.updateLocalPublishState({
-            videoState: 1,
-            audioState: 1,
-          });
-        }
+        await this.classroomStore.streamStore.updateLocalPublishState({
+          videoState: 1,
+          audioState: 1,
+        });
       }
     } catch (e) {
       this.shareUIStore.addToast('Cannot change sub room');
