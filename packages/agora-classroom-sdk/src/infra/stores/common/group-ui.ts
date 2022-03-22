@@ -302,7 +302,7 @@ export class GroupUIStore extends EduUIStoreBase {
           },
         ]);
       } else {
-        this.classroomStore.groupStore.addUserListToGroup(fromGroupUuid, toGroupUuid, [userUuid]);
+        this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, [userUuid]);
       }
     } else {
       const fromGroup = this.localGroups.get(fromGroupUuid);
@@ -452,7 +452,7 @@ export class GroupUIStore extends EduUIStoreBase {
         },
       ]);
     } else {
-      this.classroomStore.groupStore.addUserListToGroup(
+      this.classroomStore.groupStore.moveUsersToGroup(
         this.classroomStore.groupStore.currentSubRoom,
         groupUuid,
         [EduClassroomConfig.shared.sessionInfo.userUuid],
@@ -471,7 +471,7 @@ export class GroupUIStore extends EduUIStoreBase {
     this.joiningSubRoom = state;
   }
 
-  async waitUntilLeft() {
+  private async _waitUntilLeft() {
     await when(
       () =>
         this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
@@ -479,7 +479,7 @@ export class GroupUIStore extends EduUIStoreBase {
     );
   }
 
-  async waitUntilConnected() {
+  private async _waitUntilConnected() {
     await when(
       () =>
         this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
@@ -487,13 +487,20 @@ export class GroupUIStore extends EduUIStoreBase {
     );
   }
 
+  private async _waitUntilJoined() {
+    if (this.joiningSubRoom) {
+      await when(() => !this.joiningSubRoom);
+    }
+  }
+
   @bound
   private async _joinSubRoom() {
+    await this._waitUntilJoined();
     this.setConnectionState(true);
     const roomUuid = this.classroomStore.groupStore.currentSubRoom;
     if (roomUuid) {
       try {
-        await this.waitUntilConnected();
+        await this._waitUntilConnected();
 
         // workaround: room may not exist when whiteboard state is connected, it will no op  if leave board at this time
         await new Promise((r) => setTimeout(r, 500));
@@ -503,7 +510,7 @@ export class GroupUIStore extends EduUIStoreBase {
           await this.classroomStore.connectionStore.leaveWhiteboard();
         }
 
-        await this.waitUntilLeft();
+        await this._waitUntilLeft();
 
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
@@ -535,6 +542,7 @@ export class GroupUIStore extends EduUIStoreBase {
 
   @bound
   private async _leaveSubRoom() {
+    await this._waitUntilJoined();
     this.setConnectionState(true);
     try {
       await this.classroomStore.connectionStore.leaveSubRoom();
@@ -555,17 +563,12 @@ export class GroupUIStore extends EduUIStoreBase {
 
   @bound
   private async _changeSubRoom() {
+    await this._waitUntilJoined();
     this.setConnectionState(true);
     try {
       const roomUuid = this.classroomStore.groupStore.currentSubRoom;
       if (roomUuid) {
-        if (this.joiningSubRoom) {
-          await when(() => !this.joiningSubRoom);
-        }
-
         await this.classroomStore.connectionStore.leaveSubRoom();
-
-        await this.classroomStore.connectionStore.leaveRTC();
 
         await when(
           () =>

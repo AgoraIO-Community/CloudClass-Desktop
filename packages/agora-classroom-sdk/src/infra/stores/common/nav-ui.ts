@@ -121,7 +121,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
           this.shareUIStore.addDialog(DialogCategory.Quit, {
             onOk: (back: boolean) => {
               if (back) {
-                this.classroomStore.groupStore.leaveSubRoom();
+                this._leaveSubRoom();
               } else {
                 this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
               }
@@ -511,6 +511,14 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       await this.classroomStore.roomStore.updateClassState(ClassState.ongoing);
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
+
+  private _leaveSubRoom() {
+    const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    if (currentRoomUuid) {
+      this.classroomStore.groupStore.removeGroupUsers(currentRoomUuid, [userUuid]);
     }
   }
 
