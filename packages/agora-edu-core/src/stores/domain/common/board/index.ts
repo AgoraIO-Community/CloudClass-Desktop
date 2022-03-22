@@ -40,9 +40,9 @@ import get from 'lodash/get';
 import { AgoraEduClassroomEvent } from '../../../..';
 
 const DEFAULT_COLOR: Color = {
-  r: 208,
-  g: 2,
-  b: 27,
+  r: 0,
+  g: 115,
+  b: 255,
 };
 
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
@@ -51,7 +51,7 @@ export class BoardStore extends EduStoreBase {
   // ------ observables  -----------
   @observable selectedTool: WhiteboardTool = WhiteboardTool.clicker;
   @observable strokeColor: Color = DEFAULT_COLOR;
-  @observable strokeWidth: number = 8;
+  @observable strokeWidth: number = 2;
   @observable ready: boolean = false;
   @observable grantUsers: Set<string> = new Set<string>();
   @observable configReady = false;
@@ -171,8 +171,8 @@ export class BoardStore extends EduStoreBase {
         this.restoreWhiteboardMemberStateTo(this.room);
 
         this.addManagerEmitterListeners();
-        this.updateScenesCount(this.room.state.sceneState.scenes.length);
-
+        this.updateScenesCount(manager.mainViewScenesLength);
+        this.updateCurrentSceneIndex(manager.mainViewSceneIndex);
         //TODO: store this value somewhere
         manager.mainView.disableCameraTransform = true;
         // if (this.userRole === EduRoleTypeEnum.teacher) {
@@ -291,6 +291,12 @@ export class BoardStore extends EduStoreBase {
 
   @action.bound
   async openResource(resource: CloudDriveResource) {
+    const ext = resource.ext?.toLowerCase?.();
+    if (!CloudDriveResource.supportedTypes.includes(ext))
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
+        new Error(`unsupported file type ${ext}`),
+      );
     const curResources = Object.values(this.windowManager?.apps || []);
     if (resource instanceof CloudDriveCourseResource) {
       const opened = curResources.find(({ options }) => options?.title === resource.resourceName);
@@ -657,6 +663,7 @@ export class BoardStore extends EduStoreBase {
               await this.room.setWritable(true);
               this.room.disableDeviceInputs = false;
               this.setTool(WhiteboardTool.selector);
+              this.restoreWhiteboardMemberStateTo(this.room);
               EduEventCenter.shared.emitClasroomEvents(
                 AgoraEduClassroomEvent.TeacherGrantPermission,
               );

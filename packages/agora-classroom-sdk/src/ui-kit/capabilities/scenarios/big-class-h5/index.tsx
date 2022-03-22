@@ -48,7 +48,7 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
   useEffect(() => {
     shareUIStore.addOrientationchange();
 
-    shareUIStore.addWindowResizeEventListenerAndSetNavBarHeight(0);
+    shareUIStore.addWindowResizeEventListener();
     return () => {
       shareUIStore.removeOrientationchange();
       shareUIStore.removeWindowResizeEventListener();
@@ -91,10 +91,11 @@ const H5TeacherStreamChatContainer = observer(() => {
 const H5LayoutContainer: FC<React.Attributes> = observer(({ children }) => {
   const {
     layoutUIStore: { h5ContainerCls },
+    shareUIStore: { classroomViewportClassName },
   } = useLectureH5UIStores() as EduLectureH5UIStore;
   return (
     <section
-      className={`h5-layout-container flex h-full ${h5ContainerCls}`}
+      className={`h5-layout-container flex h-full ${h5ContainerCls}  ${classroomViewportClassName}`}
       style={{ backgroundColor: '#f9f9fc' }}>
       {children}
     </section>

@@ -1,7 +1,13 @@
 import { action, computed, when, IReactionDisposer } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
-import { EduClassroomStore, EduRoomTypeEnum, WhiteboardState } from 'agora-edu-core';
+import {
+  EduClassroomConfig,
+  EduClassroomStore,
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+  WhiteboardState,
+} from 'agora-edu-core';
 import { EduShareUIStore } from './share-ui';
 
 export class BoardUIStore extends EduUIStoreBase {
@@ -19,8 +25,22 @@ export class BoardUIStore extends EduUIStoreBase {
   private _collectorContainer: HTMLElement | undefined = undefined;
 
   onInstall() {}
-
+  get isTeacherOrAssistant() {
+    const role = EduClassroomConfig.shared.sessionInfo.role;
+    const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+      role,
+    );
+    return isTeacherOrAssistant;
+  }
   // computed
+
+  @computed
+  get isGrantedBoard() {
+    const { userUuid } = this.classroomStore.roomStore;
+    const { grantUsers } = this.classroomStore.boardStore;
+    return grantUsers.has(userUuid);
+  }
+
   @computed
   get undoSteps() {
     return this.classroomStore.boardStore.undoSteps;
@@ -81,7 +101,7 @@ export class BoardUIStore extends EduUIStoreBase {
   /**
    * 设置白板课件最小化 DOM
    */
-  set setCollectorContainer(collectorContainer: HTMLElement) {
+  set collectorContainer(collectorContainer: HTMLElement) {
     this._collectorContainer = collectorContainer;
   }
 

@@ -38,9 +38,9 @@ export class PluginStore {
   }
 
   @action.bound
-  handleSetting(enabled: boolean, data: object) {
+  handleSetting(enabled: boolean, data?: object) {
     this.setShowSetting(enabled);
-    this.context.context.methods.setActive(COUNTDOWN, data);
+    data && this.context.context.methods.setActive(COUNTDOWN, data);
   }
 
   /**

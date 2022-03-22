@@ -5,6 +5,12 @@
   padding-bottom: 20px;
   @apply box-border bg-white;
 }
+.extapp-track-modal {
+  padding-bottom: 0;
+}
+.extapp-track-modal .modal-content {
+  padding: 21px 14px;
+}
 
 .top-level-modal {
   position: fixed;

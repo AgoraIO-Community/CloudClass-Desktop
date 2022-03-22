@@ -119,7 +119,7 @@ export class BoardClient extends EventEmitter {
       },
     });
     this.room.setMemberState({
-      strokeColor: [208, 2, 27],
+      strokeColor: [0, 115, 255],
       currentApplianceName: ApplianceNames.clicker,
       textSize: 24,
     });

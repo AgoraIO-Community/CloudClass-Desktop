@@ -20,7 +20,6 @@ let defaultState = {
   isTabKey: CHAT_TABS_KEYS.chat, // 当前选中的Tab
   showRed: false, // 不在聊天Tab消息提示
   announcementStatus: true, // 公告编辑状态
-  showEmoji: false, // 表情面板显示/隐藏
   showAnnouncementNotice: false, //公告更新提示
   configUIVisible: {
     showInputBox: true, //是否显示输入UI
@@ -186,11 +185,7 @@ const reducer = (state = defaultState, action) => {
         ...state,
         announcementStatus: data,
       };
-    case 'SHOW_EMOJI_ACTION':
-      return {
-        ...state,
-        showEmoji: data,
-      };
+    
     case 'ANNOUNCEMENT_NOTICE':
       return {
         ...state,

@@ -26,19 +26,20 @@
   color: rgb(255, 255, 255);
 }
 .answer-result-info {
-  margin-top: 10px;
+  margin-top: 30px;
   font-size: 13px;
   color: #191919;
 }
 .answer-result-info div {
   margin: 10px auto;
   margin-left: 110px;
+  line-height: 1.1;
 }
 .answer-result-info span {
   color: #7b88a0;
 }
 .answer-btns-container {
-  margin-top: 50px;
+  margin-top: 30px;
   text-align: center;
 }
 
@@ -54,7 +55,7 @@
 }
 .border-bottom-width-1 {
   border-bottom-width: 1px;
-  border-color: rgb(227, 227, 236);
+  border-color: rgb(249, 249, 252);
   margin: 0px 0px -1px -1px;
 }
 .answer-btn-container .answer-btn {

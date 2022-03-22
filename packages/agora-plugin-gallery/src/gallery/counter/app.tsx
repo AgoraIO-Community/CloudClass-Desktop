@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { Button, Input, transI18n } from '~ui-kit';
 import FlipClock, { formatDiff } from './flip-clock';
 import { MaskCountDown } from './mask-count-down';
+import { COUNTDOWN } from '../../constants';
 import { autorun } from 'mobx';
 
 const App = observer(() => {
@@ -26,14 +27,17 @@ const App = observer(() => {
 
   const handleRestart = React.useCallback(() => {
     reset();
-    pluginStore.handleSetting(true, { extra: { state: 0 } });
+    pluginStore.handleSetting(true);
+    pluginStore.controller.updateWidgetProperties({
+      state: 0,
+      extra: { state: 0, startTime: 0, duration: 0 },
+    });
   }, []);
 
   React.useEffect(() => {
     autorun(() => {
       if (
         pluginStore.context.roomProperties.extra &&
-        pluginStore.context.roomProperties.extra.state &&
         pluginStore.context.roomProperties.extra.startTime
       ) {
         const serverTimeCalcByLocalTime = Date.now() + pluginStore.getTimestampGap;
@@ -54,13 +58,6 @@ const App = observer(() => {
           pluginStore.setShowSetting(false);
         }
       }
-      if (
-        pluginStore.context.roomProperties.extra &&
-        !pluginStore.context.roomProperties.extra.state
-      ) {
-        reset();
-        pluginStore.setShowSetting(true && pluginStore.isController);
-      }
     });
   }, []);
 
@@ -73,6 +70,12 @@ const App = observer(() => {
     durationRef.current = duration;
   }, [duration]);
 
+  const handleNumberChange = React.useCallback((number: number) => {
+    number >= 3600 && (number = 3600);
+    pluginStore.setNumber(number);
+    formatDiff(number);
+  }, []);
+
   return (
     <>
       <MaskCountDown
@@ -82,41 +85,42 @@ const App = observer(() => {
       </MaskCountDown>
       {pluginStore.showSetting && (
         <div className="text-center mt-3.5">
-          <Input
-            value={pluginStore.number}
-            onChange={(e: any) => {
-              pluginStore.setNumber(e.target.value.replace(/\D+/g, ''));
-              formatDiff(e.target.value.replace(/\D+/g, ''));
-            }}
-            suffix={
-              <span
-                style={{
-                  color:
-                    pluginStore.number != undefined &&
-                    pluginStore.number <= 3600 &&
-                    pluginStore.number >= 3
-                      ? '#333'
-                      : '#F04C36',
-                }}>
-                ({transI18n('widget_answer.seconds')})
-              </span>
-            }
-            maxNumber={3600}
-            style={{
-              color:
-                pluginStore.number != undefined &&
-                pluginStore.number <= 3600 &&
-                pluginStore.number >= 3
-                  ? '#333'
-                  : '#F04C36',
-            }}
-          />
+          <div style={{ width: '180px', height: '40px', marginLeft: 'auto', marginRight: 'auto' }}>
+            <Input
+              value={pluginStore.number}
+              onChange={(e: any) => {
+                handleNumberChange(+e.target.value.replace(/\D+/g, ''));
+              }}
+              suffix={
+                <span
+                  style={{
+                    color:
+                      pluginStore.number != undefined &&
+                      pluginStore.number <= 3600 &&
+                      pluginStore.number >= 1
+                        ? '#333'
+                        : '#F04C36',
+                  }}>
+                  ({transI18n('widget_answer.seconds')})
+                </span>
+              }
+              maxNumber={3600}
+              style={{
+                color:
+                  pluginStore.number != undefined &&
+                  pluginStore.number <= 3600 &&
+                  pluginStore.number >= 1
+                    ? '#333'
+                    : '#F04C36',
+              }}
+            />
+          </div>
           <Button
             className="btn-rewrite-disabled mt-3.5"
             onClick={handleSetting}
             disabled={
               (pluginStore.number !== undefined && pluginStore.number > 3600) ||
-              pluginStore.number < 3
+              pluginStore.number < 1
             }>
             {transI18n('widget_answer.start')}
           </Button>

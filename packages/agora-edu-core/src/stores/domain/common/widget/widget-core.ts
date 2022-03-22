@@ -176,12 +176,7 @@ export class ExtensionAppStore extends EduStoreBase {
   @bound
   setInactive(widgetId: string, isRemove?: boolean) {
     const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-    isRemove
-      ? this.api.deleteWidgetProperties(roomUuid, widgetId, {})
-      : this.api.updateWidgetProperties(roomUuid, widgetId, {
-          state: 0,
-          extra: { state: 0 },
-        });
+    isRemove && this.api.deleteWidgetProperties(roomUuid, widgetId, {});
   }
 
   @bound

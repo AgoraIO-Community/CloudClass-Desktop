@@ -10,7 +10,7 @@ import {
   ExtensionController,
 } from 'agora-edu-core';
 import App from './app';
-import Clock from './clock';
+import Clock from './Clock';
 import { PluginStore } from './store';
 import './i18n/config';
 import { transI18n } from '~ui-kit';
@@ -20,9 +20,9 @@ export class AgoraSelector implements IAgoraExtensionApp {
   appIdentifier = SELECTOR;
   appName = transI18n('widget_selector.appName');
   icon = 'answer';
-  width = 390;
+  width = 360;
   height = 150; // 超过4个选项高度为220
-  minWidth = 390;
+  minWidth = 360;
   minHeight = 150; // 超过4个选项高度为220
   store?: PluginStore;
   customHeader = (<></>);

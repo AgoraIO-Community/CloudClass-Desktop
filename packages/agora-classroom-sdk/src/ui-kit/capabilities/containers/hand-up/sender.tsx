@@ -1,12 +1,11 @@
-import { FC, useEffect, useState, useRef, useMemo } from 'react';
+import { FC, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { BaseWaveArmProps } from './types';
 import { Card, SvgImg } from '~components';
 import { transI18n } from '~ui-kit';
 import { useInterval } from '@/infra/hooks/utilites';
 import { Scheduler } from 'agora-rte-sdk';
-export interface WaveArmSenderProps extends BaseWaveArmProps {
-  waveArmDuration: (duration: 3 | -1) => Promise<void> | void;
-}
+import { useStore } from '@/infra/hooks/use-edu-stores';
+import { observer } from 'mobx-react';
 
 export enum WaveArmStateEnum {
   waveArmBefore = 'wave-arm-before',
@@ -86,7 +85,9 @@ class FSM {
   }
 }
 
-export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
+export const WaveArmSender: FC<BaseWaveArmProps> = observer(() => {
+  const { handUpUIStore, classroomStore } = useStore();
+  const { waveArm, teacherUuid } = handUpUIStore;
   const fsm = useMemo(() => new FSM(WaveArmStateEnum.waveArmBefore), []);
   const [firstTip, setFirstTip] = useState<boolean>(false);
   const [showTip, setShowTip] = useState<boolean>(false);
@@ -96,14 +97,14 @@ export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
 
   const taskRef = useRef<Scheduler.Task>();
 
-  useEffect(() => {
+  const waveArmSubscribtion = useCallback(() => {
     let promise: Promise<any> | null = null;
     fsm.whenAfter(WaveArmStateEnum.waveArmBefore, WaveArmStateEnum.waveArming, () => {
       setCountDownNum(3);
       setStartCountDown(false);
       promise = new Promise(async (resolve: any) => {
         taskRef.current = Scheduler.shared.addPollingTask(async () => {
-          await waveArmDuration(3);
+          await waveArm(teacherUuid, 3, { userName: classroomStore.roomStore.userName });
         }, Scheduler.Duration.second(3));
         resolve();
       });
@@ -113,7 +114,7 @@ export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
       setStartCountDown(true);
       promise?.then(async () => {
         taskRef.current?.stop();
-        await waveArmDuration(3);
+        await waveArm(teacherUuid, 3, { userName: classroomStore.roomStore.userName });
         promise = null;
       });
     });
@@ -121,7 +122,12 @@ export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
     return () => {
       taskRef.current?.stop();
     };
-  }, []);
+  }, [teacherUuid]);
+
+  useEffect(() => {
+    teacherUuid && waveArmSubscribtion();
+  }, [teacherUuid]);
+
   const handleMouseDown = () => {
     setFirstTip(true);
     fsm.changeState(WaveArmStateEnum.waveArming);
@@ -178,4 +184,4 @@ export const WaveArmSender: FC<WaveArmSenderProps> = ({ waveArmDuration }) => {
       ) : null}
     </Card>
   );
-};
+});
