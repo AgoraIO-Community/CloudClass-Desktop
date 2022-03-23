@@ -345,6 +345,34 @@ export class GroupStore extends EduStoreBase {
     return this._currentGroupUuid;
   }
 
+  @computed
+  get groupUuidByUserUuid() {
+    const map: Map<string, string> = new Map();
+
+    this.groupDetails.forEach((group, groupUuid) => {
+      group.users.forEach(({ userUuid, notJoined }) => {
+        if (!notJoined) {
+          map.set(userUuid, groupUuid);
+        }
+      });
+    });
+
+    return map;
+  }
+
+  @computed
+  get userByUuid() {
+    const map: Map<string, GroupUser> = new Map();
+
+    this.groupDetails.forEach((group) => {
+      group.users.forEach((user) => {
+        map.set(user.userUuid, user);
+      });
+    });
+
+    return map;
+  }
+
   //others
   private _addEventHandlers(scene: AgoraRteScene) {
     scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);

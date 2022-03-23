@@ -189,7 +189,7 @@ type GroupTreeNodeProps = {
 
 const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
   const { groupUIStore } = useStore();
-  const { renameGroupName, removeGroup, groupUuidByUserUuid } = groupUIStore;
+  const { renameGroupName, removeGroup, getUserGroupUuid } = groupUIStore;
 
   const [editing, setEditing] = useState(false);
 
@@ -223,7 +223,7 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
     level === 0 && node.id ? (
       <GroupButtons groupUuid={node.id} btns={[renameBtn, removeBtn]} />
     ) : level === 1 ? (
-      <UserButtons groupUuid={groupUuidByUserUuid.get(node.id) as string} userUuid={node.id} />
+      <UserButtons groupUuid={getUserGroupUuid(node.id) as string} userUuid={node.id} />
     ) : (
       <div className="py-1">&nbsp;</div>
     );

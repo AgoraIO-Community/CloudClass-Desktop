@@ -67,8 +67,10 @@ export class GroupUIStore extends EduUIStoreBase {
       const notGrouped: { id: string; text: string }[] = [];
 
       studentList.forEach((student, studentUuid) => {
-        const groupUuid = this.groupUuidByUserUuid.get(studentUuid);
-        if (!groupUuid) {
+        const groupUuid = this.getUserGroupUuid(studentUuid);
+        const user = this.getGroupUserByUuid(studentUuid);
+
+        if (!groupUuid && !user?.notJoined) {
           notGrouped.push({ id: studentUuid, text: student.userName });
         }
       });
@@ -93,17 +95,22 @@ export class GroupUIStore extends EduUIStoreBase {
     return this.groupState === GroupState.OPEN ? groupDetails : this.localGroups;
   }
 
-  @computed
-  get groupUuidByUserUuid() {
-    const map: Map<string, string> = new Map();
+  /**
+   * 获取学生所在组ID
+   * @param userUuid
+   */
+  @bound
+  getUserGroupUuid(userUuid: string) {
+    return this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
+  }
 
-    this.groupDetails.forEach((group, groupUuid) => {
-      group.users.forEach(({ userUuid }) => {
-        map.set(userUuid, groupUuid);
-      });
-    });
-
-    return map;
+  /**
+   * 获取学生信息
+   * @param userUuid
+   */
+  @bound
+  getGroupUserByUuid(userUuid: string) {
+    return this.classroomStore.groupStore.userByUuid.get(userUuid);
   }
 
   /**
@@ -114,7 +121,7 @@ export class GroupUIStore extends EduUIStoreBase {
     const list: { userUuid: string; userName: string; groupUuid: string | undefined }[] = [];
 
     this.userData.studentList.forEach((user) => {
-      const groupUuid = this.groupUuidByUserUuid.get(user.userUuid);
+      const groupUuid = this.getUserGroupUuid(user.userUuid);
 
       list.push({
         userUuid: user.userUuid,

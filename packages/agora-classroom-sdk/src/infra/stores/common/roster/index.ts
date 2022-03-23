@@ -358,7 +358,24 @@ export class RosterUIStore extends EduUIStoreBase {
    */
   @computed
   get userList() {
-    const { list } = iterateMap(this.classroomStore.userStore.studentList, {
+    const isMainRoom =
+      this.classroomStore.connectionStore.sceneId ===
+      this.classroomStore.connectionStore.mainRoomScene?.sceneId;
+    let studentList = this.classroomStore.userStore.studentList;
+
+    if (isMainRoom) {
+      studentList = new Map();
+
+      const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+
+      this.classroomStore.userStore.studentList.forEach((user) => {
+        if (!groupUuidByUserUuid.has(user.userUuid)) {
+          studentList.set(user.userUuid, user);
+        }
+      });
+    }
+
+    const { list } = iterateMap(studentList, {
       onMap: (userUuid: string, { userName }) => {
         const { acceptedList, chatMuted } = this.classroomStore.roomStore;
         const { rewards } = this.classroomStore.userStore;
