@@ -166,21 +166,6 @@ export class RoomStore extends EduStoreBase {
     }
   }
   @bound
-  async updateClassState(state: ClassState) {
-    try {
-      await this.api.updateClassState({
-        roomUuid: this.classroomStore.connectionStore.sceneId,
-        state: state,
-      });
-    } catch (err) {
-      EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_UPDATE_CLASS_STATE_FAIL,
-        err as Error,
-      );
-    }
-  }
-
-  @bound
   async sendRewards(rewards: { userUuid: string; changeReward: number }[], isBatch?: boolean) {
     try {
       await this.api.sendRewards(
@@ -193,6 +178,20 @@ export class RoomStore extends EduStoreBase {
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_SEND_STAR_FAIL,
+        err as Error,
+      );
+    }
+  }
+  @bound
+  async updateClassState(state: ClassState) {
+    try {
+      await this.api.updateClassState({
+        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        state: state,
+      });
+    } catch (err) {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UPDATE_CLASS_STATE_FAIL,
         err as Error,
       );
     }

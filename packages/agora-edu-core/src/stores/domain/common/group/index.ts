@@ -69,7 +69,7 @@ export class GroupStore extends EduStoreBase {
         const groups = get(roomProperties, 'groups', {});
         const processes = get(roomProperties, 'processes', {});
         const progress = this._getProgress(processes);
-        this._setDetails(groups.details, progress);
+        this._setDetails(groups.details || {}, progress);
         this.state = groups.state;
         this._checkSubRoom();
       }
@@ -78,7 +78,7 @@ export class GroupStore extends EduStoreBase {
         const groups = get(roomProperties, 'groups', {});
         const processes = get(roomProperties, 'processes', {});
         const progress = this._getProgress(processes);
-        this._setDetails(groups.details, progress);
+        this._setDetails(groups.details || {}, progress);
         this.state = groups.state;
       }
     });
