@@ -62,7 +62,7 @@ const App = observer(() => {
   }, []);
 
   React.useEffect(() => {
-    if (durationRef.current !== duration && duration <= 3) {
+    if (durationRef.current !== duration && duration < 3) {
       setCaution(true);
     } else {
       setCaution(false);
@@ -70,10 +70,16 @@ const App = observer(() => {
     durationRef.current = duration;
   }, [duration]);
 
-  const handleNumberChange = React.useCallback((number: number) => {
-    number >= 3600 && (number = 3600);
-    pluginStore.setNumber(number);
-    formatDiff(number);
+  const handleNumberChange = React.useCallback((value: string) => {
+    if (value) {
+      let number = +value;
+      number >= 3600 && (number = 3600);
+      number < 1 && (number = 1);
+      pluginStore.setNumber(number);
+      formatDiff(number);
+    } else {
+      pluginStore.setNumber(value);
+    }
   }, []);
 
   return (
@@ -89,7 +95,7 @@ const App = observer(() => {
             <Input
               value={pluginStore.number}
               onChange={(e: any) => {
-                handleNumberChange(+e.target.value.replace(/\D+/g, ''));
+                handleNumberChange(e.target.value.replace(/\D+/g, ''));
               }}
               suffix={
                 <span

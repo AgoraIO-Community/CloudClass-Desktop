@@ -22,13 +22,13 @@ export class PluginStore {
   }
 
   @observable
-  number = 60;
+  number: number | string = 60;
 
   @observable
   showSetting = true;
 
   @action.bound
-  setNumber(number: number) {
+  setNumber(number: number | string) {
     this.number = number;
   }
 
