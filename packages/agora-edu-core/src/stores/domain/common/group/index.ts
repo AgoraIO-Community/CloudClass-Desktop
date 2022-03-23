@@ -66,21 +66,20 @@ export class GroupStore extends EduStoreBase {
   ) {
     changedRoomProperties.forEach((key) => {
       if (key === 'groups') {
-        const processes = get(roomProperties, 'processes', {});
         const groups = get(roomProperties, 'groups', {});
-        this.state = groups.state;
-        const progress = Object.keys(processes).reduce((prev, k) => {
-          if (k.startsWith(GroupStore.CMD_PROCESS_PREFIX)) {
-            const groupUuid = k.substring(GroupStore.CMD_PROCESS_PREFIX.length);
-            const users = processes[k].progress.map(
-              ({ userUuid }: { userUuid: string }) => userUuid,
-            );
-            prev.set(groupUuid, users);
-          }
-          return prev;
-        }, new Map<string, string[]>());
+        const processes = get(roomProperties, 'processes', {});
+        const progress = this._getProgress(processes);
         this._setDetails(groups.details, progress);
+        this.state = groups.state;
         this._checkSubRoom();
+      }
+
+      if (key === 'processes') {
+        const groups = get(roomProperties, 'groups', {});
+        const processes = get(roomProperties, 'processes', {});
+        const progress = this._getProgress(processes);
+        this._setDetails(groups.details, progress);
+        this.state = groups.state;
       }
     });
 
@@ -110,6 +109,19 @@ export class GroupStore extends EduStoreBase {
         }
       }
     }
+  }
+
+  private _getProgress(processes: any) {
+    const progress = Object.keys(processes).reduce((prev, k) => {
+      if (k.startsWith(GroupStore.CMD_PROCESS_PREFIX)) {
+        const groupUuid = k.substring(GroupStore.CMD_PROCESS_PREFIX.length);
+        const users = processes[k].progress.map(({ userUuid }: { userUuid: string }) => userUuid);
+        prev.set(groupUuid, users);
+      }
+      return prev;
+    }, new Map<string, string[]>());
+
+    return progress;
   }
 
   @action.bound
