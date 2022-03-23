@@ -556,7 +556,7 @@ export const en = {
     create_suffix: 'breakout rooms',
     auto: 'Auto',
     manual: 'Manual',
-    wait_for_assign: '待分配{reason1}人，每组{reason2}人',
+    wait_for_assign: 'To be assigned {reason1} persons, per group {reason2} persons',
     create_submit: 'Create',
     assign: 'Assign',
     re_create: 'Re-Create',
@@ -574,7 +574,7 @@ export const en = {
     join_group: 'Join',
     already_in_room: 'You are already in this group',
     not_accepted: 'Not accepted',
-    joined: '已加入',
+    joined: 'Joined',
   },
   begin_class: 'Begin class',
   edu_error: {
