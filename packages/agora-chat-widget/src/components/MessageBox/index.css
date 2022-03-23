@@ -119,17 +119,34 @@
   cursor: pointer;
 }
 
-.max-img .ant-modal-close-x {
-  position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 30px;
-  height: 30px;
-  background: #7f7878;
-  border-radius: 50px;
-  text-align: center;
-  color: #ffffff;
+.img-box {
+  position: relative;
+  max-width: 880px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.closeStyle {
+  position: absolute;
+  top: -25px;
+  right: -35px;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  background: #7f7878;
+  cursor: pointer;
+}
+.max-img {
+  display: flex;
+  justify-content: center;
+}
+
+.max-img .ant-modal-content {
+  background: none;
+  box-shadow: none;
 }

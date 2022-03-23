@@ -32,7 +32,7 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
           {transI18n('roster.shift')}
         </span>
       </div>
-      <div className="disable-flag">
+      {/* <div className="disable-flag">
         <Select
           value={mode}
           options={[
@@ -47,7 +47,7 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
           ]}
           onChange={onModeChange}
         />
-      </div>
+      </div> */}
       <div className="student-order">
         <span className="carousel-desc">{transI18n('roster.students_in')}</span>
         <Select

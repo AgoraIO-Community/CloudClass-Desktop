@@ -22,9 +22,9 @@ export class AgoraCountdown implements IAgoraExtensionApp {
   icon = 'countdown';
   type = AgoraExtensionAppTypeEnum.POPUP;
   width = 258;
-  height = 168; // 开始倒计时后高度为 55
+  height = 144; // 开始倒计时后高度为 55
   minWidth = 258;
-  minHeight = 168;
+  minHeight = 144;
   trackPath = true;
 
   apply(storeobserver: ExtensionStore, controller: ExtensionController) {

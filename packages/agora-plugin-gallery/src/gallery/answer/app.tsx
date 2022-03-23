@@ -31,8 +31,6 @@ const Content = observer(() => {
     isShowResultDetail,
     isTeacherType,
     myAnswer,
-    isShowAwardButton,
-    sendAward,
   } = pluginStore;
 
   return (
@@ -72,11 +70,6 @@ const Content = observer(() => {
               {myAnswer}
             </div>
           )}
-        </div>
-      )}
-      {isShowAwardButton && (
-        <div className="answer-award-btns">
-          <AwardButton onAward={sendAward}>{transI18n('widget_selector.award')}</AwardButton>
         </div>
       )}
     </>

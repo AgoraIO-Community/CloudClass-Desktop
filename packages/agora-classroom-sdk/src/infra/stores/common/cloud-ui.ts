@@ -84,7 +84,7 @@ export class CloudUIStore extends EduUIStoreBase {
     if (name.match(/h5/i)) {
       return 'h5';
     }
-    return 'excel';
+    return 'unknown';
   }
 
   /**

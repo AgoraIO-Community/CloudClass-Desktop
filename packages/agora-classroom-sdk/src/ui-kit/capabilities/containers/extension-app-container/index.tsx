@@ -52,6 +52,7 @@ const ExtensionApp = ({ extApp, canClose, canDrag, onClose, onResize }: any) => 
       boundaryName="extapp-track-bounds"
       handle="modal-title">
       <Modal
+        className="extapp-track-modal"
         title={appName}
         onCancel={handleCancel}
         closable={canClose}

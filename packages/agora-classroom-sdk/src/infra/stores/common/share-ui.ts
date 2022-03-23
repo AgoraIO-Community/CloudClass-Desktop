@@ -80,9 +80,7 @@ export class EduShareUIStore {
         getEduErrorMessage(error) ||
         (error.message.length > 64 ? `${error.message.substr(0, 64)}...` : error.message);
 
-      const servCode = getErrorServCode(error);
-
-      this.addToast(`Error [${code}${servCode ? `-${servCode}` : ''}]: ${emsg}`, 'error');
+      this.addToast(emsg, 'error');
     });
   }
 

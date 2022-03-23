@@ -5,7 +5,7 @@ import { useSelector, useStore } from 'react-redux';
 import classnames from 'classnames';
 import { transI18n } from '~ui-kit';
 import { MSG_TYPE } from '../../contants';
-import { messageAction, showEmojiAction } from '../../redux/actions/messageAction';
+import { messageAction } from '../../redux/actions/messageAction';
 // import emojiIcon from '../../themes/img/emoji.png';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import imgIcon from '../../themes/img/img.png';
@@ -47,7 +47,6 @@ export const InputMsg = ({ allMutePermission }) => {
   const userNickName = state?.propsData.userName;
   const userAvatarUrl = state?.loginUserInfo.avatarurl;
   const isAllMute = state?.room.allMute;
-  const isShowEmoji = state?.showEmoji;
   const configUIVisible = state?.configUIVisible;
   let isElectron = isElctronPlatform();
 
@@ -58,14 +57,9 @@ export const InputMsg = ({ allMutePermission }) => {
 
   const [inputStatus, setInputStatus] = useState(false);
 
-  // 显示表情框
-  const showEmoji = () => {
-    store.dispatch(showEmojiAction(true));
-  };
   // 隐藏表情框
   const handleCancel = () => {
     Modal.destroyAll();
-    store.dispatch(showEmojiAction(false));
   };
 
   // 获取到点击的表情，加入到输入框
@@ -150,10 +144,6 @@ export const InputMsg = ({ allMutePermission }) => {
     setInputStatus(true);
   };
 
-  const handleEomijVisibleChange = (visible) => {
-    store.dispatch(showEmojiAction(visible));
-  };
-
   const renderInputBox = React.useMemo(() => {
     if (configUIVisible.inputBox === 'inline') {
       return (
@@ -189,12 +179,8 @@ export const InputMsg = ({ allMutePermission }) => {
         <div className="chat-icon">
           <div style={{ display: 'flex' }}>
             {configUIVisible.emoji && (
-              <Popover
-                content={<ShowEomji getEmoji={getEmoji} />}
-                visible={isShowEmoji}
-                trigger="click"
-                onVisibleChange={handleEomijVisibleChange}>
-                <img src={emojiIcon} className="emoji-icon" onClick={showEmoji} />
+              <Popover content={<ShowEomji getEmoji={getEmoji} />} trigger="click">
+                <img src={emojiIcon} className="emoji-icon" />
               </Popover>
             )}
             {configUIVisible.imgIcon && (

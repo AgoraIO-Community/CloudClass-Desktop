@@ -111,6 +111,12 @@ export class StreamUIStore extends EduUIStoreBase {
     return Array.from(streamSet)[0];
   }
 
+  @computed get screenShareStream() {
+    const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid as string;
+    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+    return stream;
+  }
+
   /**
    * 老师屏幕共享流信息
    * @returns
