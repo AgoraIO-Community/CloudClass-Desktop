@@ -16,7 +16,7 @@ export class MuteAPI {
 
   // 单人禁言
   setUserMute = (userId) => {
-    const roomId = this.getState().propsData.chatroomId;
+    const roomId = this.store.getState().propsData.chatroomId;
     let options = {
       chatRoomId: roomId, // 聊天室id
       users: [userId], // 成员id列表
