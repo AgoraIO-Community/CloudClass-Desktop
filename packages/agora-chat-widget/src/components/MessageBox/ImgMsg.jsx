@@ -72,10 +72,11 @@ export const ImgMsg = ({ item }) => {
           padding: '0',
           display: 'flex',
           justifyContent: 'center',
+          height: '80%',
         }}
         className="max-img">
         <div className="img-box">
-          <img src={maxImgUrl} style={{ maxHeight: '720px' }} alt="" />
+          <img src={maxImgUrl} style={{ maxHeight: '720px', height: '100%' }} alt="" />
           <div className="closeStyle" onClick={() => setMaxImg(false)}>
             X
           </div>
