@@ -310,8 +310,16 @@ export class MessagesStore extends EduStoreBase {
 
   @action
   private _setEventHandler(scene: AgoraRteScene) {
-    const handler = SceneEventHandler.createEventHandler(scene);
-    this._dataStore = handler.dataStore;
+    if (this.classroomStore.connectionStore.mainRoomScene === scene) {
+      let handler = SceneEventHandler.getEventHandler(scene);
+      if (!handler) {
+        handler = SceneEventHandler.createEventHandler(scene);
+      }
+      this._dataStore = handler.dataStore;
+    } else {
+      const handler = SceneEventHandler.createEventHandler(scene);
+      this._dataStore = handler.dataStore;
+    }
   }
 
   onInstall() {
@@ -340,13 +348,19 @@ class SceneEventHandler {
   private static _handlers: Record<string, SceneEventHandler> = {};
 
   static createEventHandler(scene: AgoraRteScene) {
-    if (!SceneEventHandler._handlers[scene.sceneId]) {
-      const handler = new SceneEventHandler(scene);
-
-      handler.addEventHandlers();
-
-      SceneEventHandler._handlers[scene.sceneId] = handler;
+    if (SceneEventHandler._handlers[scene.sceneId]) {
+      SceneEventHandler._handlers[scene.sceneId].removeEventHandlers();
     }
+    const handler = new SceneEventHandler(scene);
+
+    handler.addEventHandlers();
+
+    SceneEventHandler._handlers[scene.sceneId] = handler;
+
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static getEventHandler(scene: AgoraRteScene) {
     return SceneEventHandler._handlers[scene.sceneId];
   }
 

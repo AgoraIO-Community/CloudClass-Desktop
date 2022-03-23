@@ -579,40 +579,6 @@ export class MediaStore extends EduStoreBase {
           });
       },
     );
-
-    // reaction(
-    //   () => this.classroomStore.connectionStore.subRoomState,
-    //   async (subRoomState) => {
-    //     if (subRoomState !== ClassroomState.Connected) {
-    //       return;
-    //     }
-    //     const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-
-    //     const roomUuid = this.classroomStore.connectionStore.sceneId;
-
-    //     if (!EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired) {
-    //       this.classroomStore.api.reportMicCameraStateLeagcy({
-    //         userUuid,
-    //         roomUuid,
-    //         data: {
-    //           camera: deviceStateConvertionMap[this.localCameraTrackState],
-    //           mic: deviceStateConvertionMap[this.localMicTrackState],
-    //         },
-    //       });
-
-    //       this.classroomStore.connectionStore.scene?.localUser?.updateLocalMediaState({
-    //         videoSourceState:
-    //           this.localCameraTrackState !== AgoraRteMediaSourceState.starting
-    //             ? this.localCameraTrackState
-    //             : undefined,
-    //         audioSourceState:
-    //           this.localMicTrackState !== AgoraRteMediaSourceState.starting
-    //             ? this.localMicTrackState
-    //             : undefined,
-    //       });
-    //     }
-    //   },
-    // );
   }
 
   @bound
