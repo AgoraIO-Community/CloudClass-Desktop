@@ -1304,6 +1304,7 @@ export class BoardStore {
       currentSceneInfo: undefined,
       roomScenes: undefined
     })
+    this.room.setSceneIndex(0)
     EduLogger.info("重置白板全局自定义业务分页状态")
   }
 
