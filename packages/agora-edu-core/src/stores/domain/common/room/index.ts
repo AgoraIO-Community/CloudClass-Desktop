@@ -1,6 +1,6 @@
 import { AgoraRteEventType, AgoraRteScene, bound, Scheduler } from 'agora-rte-sdk';
 import get from 'lodash/get';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';

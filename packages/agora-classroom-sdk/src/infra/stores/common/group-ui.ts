@@ -1,5 +1,6 @@
 import {
   AgoraEduClassroomEvent,
+  ClassroomState,
   EduClassroomConfig,
   EduEventCenter,
   EduRoleTypeEnum,
@@ -9,7 +10,7 @@ import {
   WhiteboardState,
   WhiteboardTool,
 } from 'agora-edu-core';
-import { AGError, bound, Log, RtcState } from 'agora-rte-sdk';
+import { AGError, AgoraRteMediaPublishState, bound, Log, RtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
 import { action, computed, observable, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
@@ -519,9 +520,17 @@ export class GroupUIStore extends EduUIStoreBase {
 
         await this.classroomStore.connectionStore.joinRTC();
 
+        await when(
+          () => this.classroomStore.connectionStore.subRoomState === ClassroomState.Connected,
+        );
+
         await this.classroomStore.streamStore.updateLocalPublishState({
-          videoState: 1,
-          audioState: 1,
+          videoState: AgoraRteMediaPublishState.Published,
+          audioState: AgoraRteMediaPublishState.Published,
+        });
+        await this.classroomStore.mediaStore.updateLocalMediaState({
+          videoSourceState: this.classroomStore.mediaStore.localCameraTrackState,
+          audioSourceState: this.classroomStore.mediaStore.localMicTrackState,
         });
       } catch (e) {
         this.shareUIStore.addToast('Cannot join sub room');
@@ -571,19 +580,23 @@ export class GroupUIStore extends EduUIStoreBase {
       if (roomUuid) {
         await this.classroomStore.connectionStore.leaveSubRoom();
 
-        await when(
-          () =>
-            this.classroomStore.connectionStore.rtcState === RtcState.Idle &&
-            this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle,
-        );
+        await this._waitUntilLeft();
 
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
         await this.classroomStore.connectionStore.joinRTC();
 
+        await when(
+          () => this.classroomStore.connectionStore.subRoomState === ClassroomState.Connected,
+        );
+
         await this.classroomStore.streamStore.updateLocalPublishState({
-          videoState: 1,
-          audioState: 1,
+          videoState: AgoraRteMediaPublishState.Published,
+          audioState: AgoraRteMediaPublishState.Published,
+        });
+        await this.classroomStore.mediaStore.updateLocalMediaState({
+          videoSourceState: this.classroomStore.mediaStore.localCameraTrackState,
+          audioSourceState: this.classroomStore.mediaStore.localMicTrackState,
         });
       }
     } catch (e) {

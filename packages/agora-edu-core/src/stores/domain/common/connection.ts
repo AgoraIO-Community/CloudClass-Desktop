@@ -49,6 +49,7 @@ export enum SceneType {
 export class ConnectionStore extends EduStoreBase {
   // observerbles
   @observable classroomState: ClassroomState = ClassroomState.Idle;
+  @observable subRoomState: ClassroomState = ClassroomState.Idle;
   @observable classroomStateErrorReason?: string;
   @observable whiteboardState: WhiteboardState = WhiteboardState.Idle;
   @observable rtcState: RtcState = RtcState.Idle;
@@ -100,6 +101,15 @@ export class ConnectionStore extends EduStoreBase {
         this.classroomStateErrorReason = reason;
       }
       this.classroomState = state;
+    }
+  }
+
+  @action.bound
+  setSubRoomState(state: ClassroomState, reason?: string) {
+    if (this.subRoomState !== state) {
+      this.logger.info(`classroom state changed to ${state} ${reason}`);
+
+      this.subRoomState = state;
     }
   }
 
@@ -263,6 +273,7 @@ export class ConnectionStore extends EduStoreBase {
 
     let [error] = await to(
       retryAttempt(async () => {
+        this.setSubRoomState(ClassroomState.Connecting);
         const { sessionInfo: baseSessionInfo } = EduClassroomConfig.shared;
         const sessionInfo = { ...baseSessionInfo, roomUuid, roomType: EduRoomTypeEnum.RoomGroup };
         const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
@@ -282,6 +293,14 @@ export class ConnectionStore extends EduStoreBase {
 
         const engine = this.getEngine();
         const scene = engine.createAgoraRteScene(sessionInfo.roomUuid);
+
+        //listen to rte state change
+        scene.on(
+          AgoraRteEventType.RteConnectionStateChanged,
+          (state: AgoraRteConnectionState, reason?: string) => {
+            this.setClassroomState(this._getClassroomState(state), reason);
+          },
+        );
 
         this.setScene(SceneType.Sub, scene);
         // streamId defaults to 0 means server allocate streamId for you
@@ -303,11 +322,14 @@ export class ConnectionStore extends EduStoreBase {
     );
 
     if (error) {
+      this.setSubRoomState(ClassroomState.Idle);
       return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_JOIN_CLASSROOM_FAIL,
+        AGEduErrorCode.EDU_ERR_GROUP_JOIN_SUBROOM_FAIL,
         error,
       );
     }
+
+    this.setSubRoomState(ClassroomState.Connected);
   }
 
   @action.bound
@@ -316,6 +338,7 @@ export class ConnectionStore extends EduStoreBase {
       await this.scene.leaveRTC();
       await this.scene.leaveScene();
       this.setScene(SceneType.Sub, undefined);
+      this.setSubRoomState(ClassroomState.Idle);
     }
   }
 
