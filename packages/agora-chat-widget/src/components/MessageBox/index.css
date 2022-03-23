@@ -122,6 +122,9 @@
 .img-box {
   position: relative;
   max-width: 880px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .closeStyle {
@@ -144,7 +147,6 @@
 }
 
 .max-img .ant-modal-content {
-  margin: 30px;
   background: none;
   box-shadow: none;
 }
