@@ -109,29 +109,6 @@ export class UserStore extends EduStoreBase {
         this._setEventHandler(newValue);
       }
     });
-
-    computed(() => this.rewards).observe(({ newValue, oldValue }) => {
-      let changedUserUuids: string[] = [];
-      for (const [userUuid] of newValue) {
-        let previousReward = 0;
-        if (oldValue) {
-          previousReward = oldValue.get(userUuid) || 0;
-        }
-        let reward = newValue.get(userUuid) || 0;
-        if (reward > previousReward) {
-          changedUserUuids.push(userUuid);
-        }
-      }
-      if (changedUserUuids.length > 0) {
-        const userNames = changedUserUuids.map(
-          (userUuid) => this.studentList.get(userUuid)?.userName,
-        );
-        EduEventCenter.shared.emitClasroomEvents(
-          AgoraEduClassroomEvent.RewardReceived,
-          userNames.join(','),
-        );
-      }
-    });
   }
   onDestroy() {
     SceneEventHandler.cleanup();

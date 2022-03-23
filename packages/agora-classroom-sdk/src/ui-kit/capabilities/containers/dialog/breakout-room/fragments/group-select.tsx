@@ -220,11 +220,13 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
   );
 
   const tialNode =
-    level === 0 ? (
+    level === 0 && node.id ? (
       <GroupButtons groupUuid={node.id} btns={[renameBtn, removeBtn]} />
     ) : level === 1 ? (
       <UserButtons groupUuid={groupUuidByUserUuid.get(node.id) as string} userUuid={node.id} />
-    ) : undefined;
+    ) : (
+      <div className="py-1">&nbsp;</div>
+    );
 
   let content =
     level === 0 ? (

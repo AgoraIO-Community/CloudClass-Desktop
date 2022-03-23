@@ -229,9 +229,9 @@ export class GroupStore extends EduStoreBase {
    * @param addUsers
    * @param removeUsers
    */
-  async updateGroupUsers(patches: PatchGroup[]) {
+  async updateGroupUsers(patches: PatchGroup[], sendInvitation: boolean = false) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this.api.updateGroupUsers(roomUuid, { groups: patches, inProgress: false });
+    await this.api.updateGroupUsers(roomUuid, { groups: patches, inProgress: sendInvitation });
   }
 
   /**

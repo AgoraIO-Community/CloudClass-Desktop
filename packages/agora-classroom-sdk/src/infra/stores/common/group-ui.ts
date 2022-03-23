@@ -175,7 +175,7 @@ export class GroupUIStore extends EduUIStoreBase {
   setGroupUsers(groupUuid: string, users: string[]) {
     this.logger.info('Set group users', groupUuid, users);
 
-    let patches: PatchGroup[] = [];
+    const patches: PatchGroup[] = [];
 
     this.groupDetails.forEach((group, uuid) => {
       if (groupUuid === uuid) {
@@ -193,28 +193,21 @@ export class GroupUIStore extends EduUIStoreBase {
       }
     });
 
-    if (this.groupState === GroupState.OPEN) {
-      patches = patches.filter(
-        ({ removeUsers, addUsers }) => removeUsers?.length || addUsers?.length,
-      );
-      this.classroomStore.groupStore.updateGroupUsers(patches);
-    } else {
-      patches.forEach(({ removeUsers = [], addUsers = [], groupUuid }) => {
-        const groupDetail = this.localGroups.get(groupUuid);
+    patches.forEach(({ removeUsers = [], addUsers = [], groupUuid }) => {
+      const groupDetail = this.localGroups.get(groupUuid);
 
-        if (groupDetail) {
-          const users = addUsers.map((userUuid) => ({ userUuid }));
+      if (groupDetail) {
+        const users = addUsers.map((userUuid) => ({ userUuid }));
 
-          const newUsers = groupDetail.users
-            .filter(({ userUuid }) => !removeUsers.includes(userUuid))
-            .concat(users);
+        const newUsers = groupDetail.users
+          .filter(({ userUuid }) => !removeUsers.includes(userUuid))
+          .concat(users);
 
-          groupDetail.users = newUsers;
+        groupDetail.users = newUsers;
 
-          this.localGroups.set(groupUuid, groupDetail);
-        }
-      });
-    }
+        this.localGroups.set(groupUuid, groupDetail);
+      }
+    });
   }
 
   /**
@@ -295,12 +288,15 @@ export class GroupUIStore extends EduUIStoreBase {
   moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string) {
     if (this.groupState === GroupState.OPEN) {
       if (!fromGroupUuid) {
-        this.classroomStore.groupStore.updateGroupUsers([
-          {
-            groupUuid: toGroupUuid,
-            addUsers: [userUuid],
-          },
-        ]);
+        this.classroomStore.groupStore.updateGroupUsers(
+          [
+            {
+              groupUuid: toGroupUuid,
+              addUsers: [userUuid],
+            },
+          ],
+          true,
+        );
       } else {
         this.classroomStore.groupStore.moveUsersToGroup(fromGroupUuid, toGroupUuid, [userUuid]);
       }
