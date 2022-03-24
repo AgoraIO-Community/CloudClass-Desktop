@@ -111,6 +111,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
     //   res = this.rtcEngine.initialize(AgoraRteEngineConfig.shared.appId, this._region);
     // }
 
+    this.rtcEngine.release();
     const res = this.rtcEngine.initialize(
       new AgoraCEF.AgoraRtcEngine.RtcEngineContext(AgoraRteEngineConfig.shared.appId),
     );
@@ -133,10 +134,6 @@ export class RtcAdapterCef extends RtcAdapterBase {
       this.rtcEngine.setLogFile(logPath);
     }
 
-    // this is needed as enumerate device depends on this
-    this.rtcEngine.enableVideo();
-    this.rtcEngine.enableAudio();
-
     const engineEventBus = new AGEventEmitter();
 
     function proxy(context: any, method: any) {
@@ -157,10 +154,15 @@ export class RtcAdapterCef extends RtcAdapterBase {
       engineEventBus.off(evt, callback);
     };
 
+    this._addEventListeners();
+
+    // this is needed as enumerate device depends on this
+    this.rtcEngine.enableVideo();
+    this.rtcEngine.enableAudio();
+
     this._adm = new RtcAudioDeviceManagerCef(this);
     this._vdm = new RtcVideoDeviceManagerCef(this);
     this.cameraThread = new AgoraRteCefCameraThread(this);
-    this._addEventListeners();
   }
   createRtcChannel(channelName: string, base: RtcAdapterBase): RtcChannelAdapterBase {
     let channel = this._channels.get(channelName);
@@ -230,7 +232,13 @@ export class RtcAdapterCef extends RtcAdapterBase {
   enableLocalAudio(enable: boolean): number {
     this._localAudioEnabled = enable;
     this.updateRole();
-    return this.rtcEngine.enableLocalAudio(enable);
+    this.rtcEngine.enableLocalAudio(enable);
+    this.emit(
+      AgoraMediaControlEventType.localAudioTrackChanged,
+      enable ? AgoraRteMediaSourceState.started : AgoraRteMediaSourceState.stopped,
+      AgoraRteAudioSourceType.Mic,
+    );
+    return 0;
   }
   setupLocalVideo(canvas: AgoraRtcVideoCanvas, videoSourceType: AgoraRteVideoSourceType): number {
     if (videoSourceType === AgoraRteVideoSourceType.Camera) {
@@ -413,22 +421,23 @@ export class RtcAdapterCef extends RtcAdapterBase {
       this.logger.info(`[rtc] video state changed ${state} ${reason}`);
       this.cameraThread.videoStreamState = state;
     });
-    this.rtcEngine.on('LocalAudioStateChanged', (state: any) => {
-      if (state === 0) {
-        this.emit(
-          AgoraMediaControlEventType.localAudioTrackChanged,
-          AgoraRteMediaSourceState.stopped,
-          AgoraRteAudioSourceType.Mic,
-        );
-      }
-      if (state === 2 || state === 1) {
-        this.emit(
-          AgoraMediaControlEventType.localAudioTrackChanged,
-          AgoraRteMediaSourceState.started,
-          AgoraRteAudioSourceType.Mic,
-        );
-      }
-    });
+    // this.rtcEngine.on('LocalAudioStateChanged', (state: any) => {
+    //   this.logger.info(`[rtc] audio state changed ${state}`);
+    //   if (state === 0) {
+    //     this.emit(
+    //       AgoraMediaControlEventType.localAudioTrackChanged,
+    //       AgoraRteMediaSourceState.stopped,
+    //       AgoraRteAudioSourceType.Mic,
+    //     );
+    //   }
+    //   if (state === 2 || state === 1) {
+    //     this.emit(
+    //       AgoraMediaControlEventType.localAudioTrackChanged,
+    //       AgoraRteMediaSourceState.started,
+    //       AgoraRteAudioSourceType.Mic,
+    //     );
+    //   }
+    // });
     this.rtcEngine.on(
       'AudioVolumeIndication',
       (speakers: { uid: number; volume: number; vad: number }[]) => {
