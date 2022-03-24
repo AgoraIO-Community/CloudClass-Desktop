@@ -153,7 +153,7 @@ export const zh = {
     confirm: '确定',
     cancel: '取消',
     leave_room: '离开教室',
-    quit_room: '确定退出课程吗？',
+    quit_room: '你要确认下课吗？',
     kick: '远端重复登录, 当前账号已离开房间',
     login_failure: '登录房间失败',
     whiteboard_lock: '设置白板跟随',
