@@ -557,7 +557,7 @@ export const zh = {
     remove: '删除',
     not_grouped: '未分组',
     confirm_invite_teacher_title: '请求帮助',
-    confirm_invite_teacher_content: '{reason1}小组中的{reason2}请求帮助？',
+    confirm_invite_teacher_content: '{reason1}小组中的{reason2}请求帮助',
     confirm_invite_teacher_btn_ok: '加入',
     confirm_invite_teacher_btn_cancel: '稍后加入',
     confirm_invite_student_title: '加入小组',
