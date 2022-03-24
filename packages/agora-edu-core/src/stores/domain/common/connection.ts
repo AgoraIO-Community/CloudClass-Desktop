@@ -340,7 +340,10 @@ export class ConnectionStore extends EduStoreBase {
   @action.bound
   async leaveSubRoom() {
     if (this.scene) {
-      await this.scene.leaveRTC(AGRtcConnectionType.sub);
+      if (this.rtcSubState !== RtcState.Idle) {
+        this.classroomStore.mediaStore.stopScreenShareCapture();
+        await this.scene.leaveRTC(AGRtcConnectionType.sub);
+      }
       await this.scene.leaveRTC();
       await this.scene.leaveScene();
       this.setScene(SceneType.Sub, undefined);

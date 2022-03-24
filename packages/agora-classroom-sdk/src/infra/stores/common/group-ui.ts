@@ -10,7 +10,14 @@ import {
   WhiteboardState,
   WhiteboardTool,
 } from 'agora-edu-core';
-import { AGError, AgoraRteMediaPublishState, bound, Log, RtcState } from 'agora-rte-sdk';
+import {
+  AGError,
+  AgoraRteMediaPublishState,
+  AGRtcConnectionType,
+  bound,
+  Log,
+  RtcState,
+} from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
 import { action, computed, observable, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
@@ -498,10 +505,10 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private async _publishStreams() {
-    await this.classroomStore.streamStore.updateLocalPublishState({
-      videoState: AgoraRteMediaPublishState.Published,
-      audioState: AgoraRteMediaPublishState.Published,
-    });
+    // await this.classroomStore.streamStore.updateLocalPublishState({
+    //   videoState: AgoraRteMediaPublishState.Published,
+    //   audioState: AgoraRteMediaPublishState.Published,
+    // });
     await this.classroomStore.mediaStore.updateLocalMediaState({
       videoSourceState: this.classroomStore.mediaStore.localCameraTrackState,
       audioSourceState: this.classroomStore.mediaStore.localMicTrackState,
@@ -523,6 +530,11 @@ export class GroupUIStore extends EduUIStoreBase {
     if (roomUuid) {
       try {
         await this._waitUntilConnected();
+
+        if (this.classroomStore.connectionStore.rtcSubState !== RtcState.Idle) {
+          this.classroomStore.mediaStore.stopScreenShareCapture();
+          this.classroomStore.connectionStore.leaveRTC(AGRtcConnectionType.sub);
+        }
 
         // workaround: room may not exist when whiteboard state is connected, it will no op  if leave board at this time
         await new Promise((r) => setTimeout(r, 500));
