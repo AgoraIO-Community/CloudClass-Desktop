@@ -188,7 +188,7 @@ export class GroupStore extends EduStoreBase {
   async addGroups(groupDetails: GroupDetail[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
 
-    await this.api.addGroup(roomUuid, { groups: groupDetails, inProgress: false });
+    await this.api.addGroup(roomUuid, { groups: groupDetails, inProgress: true });
   }
 
   /**
