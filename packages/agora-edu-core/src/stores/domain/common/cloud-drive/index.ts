@@ -1,10 +1,14 @@
-import OSS, { Checkpoint, MultipartUploadResult } from 'ali-oss';
+import OSS from 'ali-oss';
 import { action, computed, flow, observable, reaction, runInAction, toJS } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs/index';
 import {
   CloudDriveResourceConvertProgress,
   CloudDriveResourceInfo,
   CloudDrivePagingOption,
+  CloudDriveResourceUploadStatus,
+  Checkpoints,
+  UploadType,
+  CheckPointsValue,
 } from './type';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
@@ -37,6 +41,39 @@ export class CloudDriveStore extends EduStoreBase {
   personalResourcesTotalNum: number = 0;
 
   // --------- actions ----------------------
+  @action.bound
+  cancelUpload = async (resourceUuid: string) => {
+    const checkpoint = this._checkpoints.get(resourceUuid);
+    if (checkpoint) {
+      switch (checkpoint.type) {
+        case UploadType.COMMON_XHR:
+          const { checkPoint: cancelTokenSource } =
+            checkpoint as CheckPointsValue<UploadType.COMMON_XHR>;
+          if (cancelTokenSource) {
+            cancelTokenSource.cancel('Cancled');
+            this.uploadProgress.delete(resourceUuid);
+          }
+          break;
+      }
+    } else {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UPLOAD_FAILED_NO_CHECKPOINT,
+        new Error(`get upload checkpoint failed when cancel upload`),
+      );
+    }
+  };
+  @action
+  retryUpload = (resourceUuid: string) => {
+    const checkpoint = this._checkpoints.get(resourceUuid);
+    if (checkpoint) {
+      this.uploadPersonalResource(checkpoint.file);
+    } else {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UPLOAD_FAILED_NO_CHECKPOINT,
+        new Error(`get upload checkpoint failed when retry upload`),
+      );
+    }
+  };
   @action
   fetchPersonalResources = async (options: CloudDrivePagingOption) => {
     let data = {
@@ -83,82 +120,30 @@ export class CloudDriveStore extends EduStoreBase {
   };
 
   @action.bound
-  private async _initProgress(progress: CloudDriveUploadingProgress) {
+  private _initProgress(progress: CloudDriveUploadingProgress) {
     this.uploadProgress.set(progress.resourceUuid, progress);
   }
 
   @action.bound
-  private async _updateProgress(resourceUuid: string, progressValue: number) {
+  private async _updateProgress(
+    resourceUuid: string,
+    progressValue?: number,
+    status?: CloudDriveResourceUploadStatus,
+  ) {
     let progress = this.uploadProgress.get(resourceUuid);
     if (progress) {
-      progress.progress = progressValue;
+      if (progressValue) {
+        progress.progress = progressValue;
+        if (progressValue === 1) {
+          progress.status = CloudDriveResourceUploadStatus.Success;
+        }
+      }
+      if (status) progress.status = status;
     }
   }
 
   // others
-  private _checkpoints: Map<string, Checkpoint> = new Map<string, Checkpoint>();
-
-  private async _uploadByAli(
-    file: File,
-    resourceUuid: string,
-    ossConfig: {
-      accessKeyId: string;
-      accessKeySecret: string;
-      bucketName: string;
-      ossEndpoint: string;
-      securityToken: string;
-      ossKey: string;
-    },
-    callbackConfig: {
-      callbackHost: string;
-      callbackBody: string;
-      callbackContentType: string;
-    },
-  ): Promise<string> {
-    const { appId, sessionInfo } = EduClassroomConfig.shared;
-    const { ossKey, accessKeyId, accessKeySecret, bucketName, ossEndpoint, securityToken } =
-      ossConfig;
-    const { callbackHost, callbackBody, callbackContentType } = callbackConfig;
-    const ossClient = new OSS({
-      accessKeyId,
-      accessKeySecret,
-      bucket: bucketName,
-      endpoint: ossEndpoint,
-      secure: true,
-      stsToken: securityToken,
-    });
-    const checkpoint = this._checkpoints.get(resourceUuid);
-
-    const callbackUrl = `${callbackHost}/edu/apps/${appId}/v1/rooms/${sessionInfo.roomUuid}/resources/callback`;
-    const { res }: MultipartUploadResult = await ossClient.multipartUpload(ossKey, file, {
-      progress: (p, cpt) => {
-        runInAction(() => {
-          this._checkpoints.set(resourceUuid, cpt);
-          this._updateProgress(resourceUuid, p);
-        });
-      },
-      callback: {
-        url: callbackUrl,
-        body: callbackBody,
-        contentType: callbackContentType,
-      },
-      //resume upload if checkpoints exists
-      checkpoint,
-    });
-
-    if (res.status !== 200) {
-      EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_UPLOAD_ALI_FAIL,
-        new Error(`upload to ali oss error, status is ${res.status}`),
-      );
-    }
-
-    // clean up
-    this._checkpoints.delete(resourceUuid);
-
-    const url = ossClient.generateObjectUrl(ossKey);
-    return url;
-  }
+  private _checkpoints: Checkpoints = new Map();
 
   private async _uploadByAws(
     file: File,
@@ -171,46 +156,47 @@ export class CloudDriveStore extends EduStoreBase {
       securityToken: string;
       ossKey: string;
       preSignedUrl: string;
-    },
-    callbackConfig: {
-      callbackHost: string;
-      callbackBody: string;
-      callbackContentType: string;
+      fileUrl: string;
     },
   ): Promise<string> {
-    const { appId, sessionInfo } = EduClassroomConfig.shared;
-    const { preSignedUrl } = ossConfig;
-    const { callbackHost, callbackBody, callbackContentType } = callbackConfig;
-    const callbackUrl = `${callbackHost}/edu/apps/${appId}/v1/rooms/${sessionInfo.roomUuid}/resources/callback`;
+    const { preSignedUrl, fileUrl } = ossConfig;
 
-    await axios.put(preSignedUrl, file, {
-      headers: {
-        'Content-Type': file.type,
-      },
-      onUploadProgress: (progressEvent: any) => {
-        let percentCompleted = Math.floor(progressEvent.loaded / progressEvent.total);
-        runInAction(() => {
-          this._updateProgress(resourceUuid, percentCompleted);
-        });
-      },
-    });
-    let res = await axios.post(callbackUrl, JSON.parse(callbackBody), {
-      headers: {
-        ['content-type']: callbackContentType,
-      },
-    });
+    const cancelTokenSource = axios.CancelToken.source();
+    try {
+      await axios.put(preSignedUrl, file, {
+        cancelToken: cancelTokenSource.token,
+        headers: {
+          'Content-Type': file.type,
+        },
+        onUploadProgress: (progressEvent: any) => {
+          const checkpoint = this._checkpoints.get(resourceUuid)!;
+          if (!checkpoint.checkPoint)
+            this._checkpoints.set(resourceUuid, {
+              ...checkpoint,
+              checkPoint: cancelTokenSource,
+            });
 
-    if (res.status !== 200) {
-      EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_UPLOAD_AWS_FAIL,
-        new Error(`upload to aws oss error, status is ${res.status}`),
-      );
+          let percentCompleted = Math.floor(progressEvent.loaded / progressEvent.total);
+          runInAction(() => {
+            this._updateProgress(resourceUuid, percentCompleted);
+          });
+        },
+      });
+      this._checkpoints.delete(resourceUuid);
+    } catch (e) {
+      if ((e as Error).message === 'Cancled') {
+        this._updateProgress(resourceUuid, undefined, CloudDriveResourceUploadStatus.Canceled);
+        return '';
+      } else {
+        this._updateProgress(resourceUuid, undefined, CloudDriveResourceUploadStatus.Failed);
+        EduErrorCenter.shared.handleThrowableError(
+          AGEduErrorCode.EDU_ERR_UPLOAD_AWS_FAIL,
+          new Error(`upload to oss error`),
+        );
+      }
     }
 
-    // clean up
-    this._checkpoints.delete(resourceUuid);
-
-    return res.data.data.url;
+    return fileUrl;
   }
 
   private async _addCloudDriveResource(resourceUuid: string, resourceInfo: CloudDriveResourceInfo) {
@@ -236,101 +222,78 @@ export class CloudDriveStore extends EduStoreBase {
         );
       }
       ext = ext.toLowerCase();
-      if (!CloudDriveResource.supportedTypes.includes(ext))
-        return EduErrorCenter.shared.handleThrowableError(
-          AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-          new Error(`unsupported file type ${ext}`),
-        );
-      const conversion = CloudDriveUtils.conversionOption(ext);
-      let progress = new CloudDriveUploadingProgress({
+
+      // step 1. fetch sts token for futher operations
+
+      const uploadData = {
+        userUuid: sessionInfo.userUuid,
         resourceName: name,
         resourceUuid,
+        contentType: CloudDriveUtils.fileExt2ContentType(ext),
         ext: ext,
         size: file.size,
         updateTime: 0,
-      });
+      };
+      const progress = new CloudDriveUploadingProgress(uploadData);
       this._initProgress(progress);
-      // step 1. fetch sts token for futher operations
-      let data = await this.classroomStore.api.fetchFileUploadSts(sessionInfo.roomUuid, {
-        resourceName: name,
-        resourceUuid,
-        ext: ext,
-        size: file.size,
-      });
-      const { vendor = -1 } = data;
-      let url = '';
-
-      // step 2. begin upload by vendor
-      if (vendor === 1) {
-        // aws
-        const {
-          accessKeyId,
-          accessKeySecret,
-          bucketName,
-          ossEndpoint,
-          securityToken,
-          ossKey,
-          callbackBody,
-          callbackContentType,
-          callbackHost,
-          //only available for aws for now
-          preSignedUrl,
-        } = data;
-        url = await this._uploadByAws(
+      if (!this._checkpoints.get(resourceUuid)) {
+        this._checkpoints.set(resourceUuid, {
+          type: UploadType.COMMON_XHR,
           file,
-          resourceUuid,
-          {
-            accessKeyId,
-            accessKeySecret,
-            bucketName,
-            ossEndpoint,
-            securityToken,
-            ossKey,
-            preSignedUrl,
-          },
-          { callbackBody, callbackContentType, callbackHost },
-        );
-      } else if (vendor === 2) {
-        // ali
-        const {
-          accessKeyId,
-          accessKeySecret,
-          bucketName,
-          ossEndpoint,
-          securityToken,
-          ossKey,
-          callbackBody,
-          callbackContentType,
-          callbackHost,
-        } = data;
-        url = await this._uploadByAli(
-          file,
-          resourceUuid,
-          {
-            accessKeyId,
-            accessKeySecret,
-            bucketName,
-            ossEndpoint,
-            securityToken,
-            ossKey,
-          },
-          { callbackBody, callbackContentType, callbackHost },
-        );
-      } else {
-        return EduErrorCenter.shared.handleThrowableError(
-          AGEduErrorCode.EDU_ERR_UPLOAD_FAILED_UNSUPPORTED_VENDOR,
-          new Error(`vendor ${vendor} is not supported`),
+        });
+      }
+      if (!CloudDriveResource.supportedTypes.includes(ext)) {
+        this._updateProgress(resourceUuid, undefined, CloudDriveResourceUploadStatus.Failed);
+        return EduErrorCenter.shared.handleNonThrowableError(
+          AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
+          new Error(`unsupported file type ${ext}`),
         );
       }
 
-      // step 3. done uploading, binding
-      await this._addCloudDriveResource(resourceUuid, {
-        resourceName: name,
-        ext,
-        size: file.size,
-        url,
-        conversion,
+      // step 1. fetch sts token for futher operations
+      const data = await this.classroomStore.api.fetchFileUploadSts(
+        sessionInfo.roomUuid,
+        uploadData,
+      );
+
+      let url = '';
+
+      // step 2. begin upload by vendor
+      // aws
+      const {
+        accessKeyId,
+        accessKeySecret,
+        bucketName,
+        ossEndpoint,
+        securityToken,
+        ossKey,
+
+        //only available for aws for now
+        preSignedUrl,
+        url: fileUrl,
+      } = data[0];
+
+      url = await this._uploadByAws(file, resourceUuid, {
+        accessKeyId,
+        accessKeySecret,
+        bucketName,
+        ossEndpoint,
+        securityToken,
+        ossKey,
+        preSignedUrl,
+        fileUrl,
       });
+      const conversion = CloudDriveUtils.conversionOption(ext);
+
+      // step 3. done uploading, binding
+      url &&
+        (await this._addCloudDriveResource(resourceUuid, {
+          resourceName: name,
+          ext,
+          size: file.size,
+          url,
+          conversion,
+        }));
     } catch (e) {
       EduErrorCenter.shared.handleThrowableError(AGEduErrorCode.EDU_ERR_UPLOAD_FAIL, e as Error);
     }

@@ -6,7 +6,6 @@ import { Col, Table, TableHeader } from '../table';
 import { CarouselSetting } from './carousel-setting';
 import { RosterProps } from './';
 import { transI18n } from '../i18n';
-import SearchSvg from '../icon/assets/svg/search.svg';
 import { useColumns } from './hooks';
 import { OverlayWrap } from '../overlay-wrap';
 import { useDraggableDefaultCenterPosition } from '../../utilities/hooks';
@@ -106,7 +105,7 @@ export const Roster: FC<RosterProps> = ({
                   <Search
                     value={keyword}
                     onSearch={onKeywordChange}
-                    prefix={<img src={SearchSvg} />}
+                    prefix={<SvgImg type="search" />}
                     inputPrefixWidth={32}
                     placeholder={transI18n('scaffold.search')}
                   />

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>展开icon备份</title>
+    <g id="V2.0.0_PC端交互" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="云盘-上传列表展开-上传成功/失败" transform="translate(-544.000000, -319.000000)">
+            <g id="展开icon备份" transform="translate(556.000000, 331.000000) scale(1, -1) translate(-556.000000, -331.000000) translate(544.000000, 319.000000)">
+                <rect id="Rectangle-10" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                <polyline id="Path-2-Copy" stroke="#A7A7CA" stroke-width="1.5" transform="translate(11.444444, 12.000000) scale(1, -1) translate(-11.444444, -12.000000) " points="4.77777778 8.71896189 11.4181939 15.3333333 18.1111111 8.66666667"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

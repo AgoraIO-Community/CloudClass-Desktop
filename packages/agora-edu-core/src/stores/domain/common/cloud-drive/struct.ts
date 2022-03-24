@@ -1,7 +1,7 @@
 import { SceneDefinition } from '@netless/window-manager';
 import { observable } from 'mobx';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
-import { CloudDriveResourceConvertProgress } from './type';
+import { CloudDriveResourceConvertProgress, CloudDriveResourceUploadStatus } from './type';
 export abstract class CloudDriveResource {
   static supportedTypes = [
     'bmp',
@@ -206,6 +206,7 @@ export class CloudDriveUploadingProgress {
   resourceUuid: string;
   size: number;
   updateTime: number;
+  @observable status: CloudDriveResourceUploadStatus = CloudDriveResourceUploadStatus.Pending;
   @observable progress: number = 0;
 
   constructor(data: {

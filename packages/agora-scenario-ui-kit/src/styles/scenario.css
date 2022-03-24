@@ -23,9 +23,12 @@ body,
   position: absolute;
   right: 16px;
   top: 11px;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: #a7a7ca;
   z-index: 1;
+  overflow: hidden;
 }
 
 .btn-pin > .icon-close {

@@ -1,6 +1,6 @@
 .bottom-col {
   position: absolute;
-  bottom: 8px;
+  bottom: 58px;
   align-items: center;
   align-self: center;
   max-height: 40px;
@@ -77,4 +77,95 @@
 .cloud-wrap .table-container-upload .placeholder {
   position: relative;
   top: -47px;
+}
+
+.cloud-panel {
+  box-sizing: border-box;
+  padding: 7px 15px;
+}
+.cloud-panel,
+.cloud-panel-right {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cloud-panel-right .input-prefix {
+  position: relative;
+  left: -10px;
+  margin-right: -10px;
+  opacity: 0.5;
+}
+
+.cloud-help-tip {
+  display: flex;
+  margin-bottom: 15px;
+}
+.cloud-help-tip > .help-tip-left {
+  margin-right: 10px;
+}
+
+.cloud-btn-group {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-right: 20px;
+  border-top: 1px solid #eeeef7;
+}
+
+.cloud-minimize-container {
+  min-width: 138px;
+}
+
+.cloud-minimize-container .cloud-upload-minimize {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 28px;
+  box-sizing: border-box;
+  padding: 5px 8px;
+  border-radius: 15px;
+  border: 1px solid #e3e3ec;
+  cursor: pointer;
+}
+
+.cloud-minimize-container .cloud-upload-minimize .upload-minimize-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cloud-minimize-container .cloud-upload-minimize .upload-minimize-text {
+  margin-left: 4px;
+}
+
+.cloud-more-menu {
+  width: 100%;
+}
+
+.more-menu-item {
+  width: 100%;
+  font-size: 13px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #586376;
+  cursor: pointer;
+}
+
+.more-menu-item:hover {
+  background: #f8f8fb;
+  color: #191919;
+}
+
+.cloud-help-title {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #586376;
 }

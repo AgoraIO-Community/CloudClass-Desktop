@@ -1,6 +1,15 @@
 .loading {
   @apply flex flex-col justify-center items-center;
 }
+
+.loading-upload-list {
+  max-height: 188px;
+  overflow: auto;
+}
+
+.loading-upload-list::-webkit-scrollbar {
+  display: none;
+}
 .loading .loading-text {
   font-size: 13px;
   font-weight: 400;
@@ -27,14 +36,20 @@
   @apply flex justify-start items-center;
 }
 
+.loading .loading-upload-item:not(:nth-child(1)) {
+  margin-top: 24px;
+}
+
 .loading .loading-file-name {
   margin-left: 4px;
   font-size: 13px;
   color: #191919;
   @apply flex-1;
   width: 120px;
-  white-space: normal;
+  white-space: nowrap;
   word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .loading .loading-file-size {
@@ -47,10 +62,15 @@
 .loading .upload-success-text {
   font-size: 13px;
   font-weight: 400;
-  color: #586376;
+  color: #339c00;
   margin-left: 7px;
 }
-
+.loading .upload-error-text {
+  font-size: 13px;
+  font-weight: 400;
+  color: #f04c36;
+  margin-left: 7px;
+}
 .loading .upload-pending-text {
   font-size: 13px;
   color: #357bf6;
