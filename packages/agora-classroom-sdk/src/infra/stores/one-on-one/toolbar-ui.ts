@@ -3,8 +3,7 @@ import { computed } from 'mobx';
 import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from '../common/toolbar-ui';
 
 export class OneToOneToolbarUIStore extends ToolbarUIStore {
-  // @ts-ignore
-  readonly allowedCabinetItems: string[] =  window.agoraBridge ? ['laser', 'countdownTimer', 'popupQuiz'] : ['laser', 'screenShare', 'countdownTimer', 'popupQuiz'];
+  readonly allowedCabinetItems: string[] = ['laser', 'countdownTimer', 'popupQuiz'];
 
   get teacherTools(): ToolbarItem[] {
     return [

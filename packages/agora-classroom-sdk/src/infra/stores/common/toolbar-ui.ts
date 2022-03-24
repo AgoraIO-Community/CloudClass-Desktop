@@ -52,8 +52,7 @@ export class ToolbarItem {
 }
 
 export class ToolbarUIStore extends EduUIStoreBase {
-  // @ts-ignore
-  readonly allowedCabinetItems: string[] = window.agoraBridge ? ['laser', 'countdownTimer', 'poll', 'popupQuiz'] : ['laser', 'screenShare', 'countdownTimer', 'poll', 'popupQuiz'];
+  readonly allowedCabinetItems: string[] = ['laser', 'countdownTimer', 'poll', 'popupQuiz'];
   readonly defaultColors: string[] = [
     '#ffffff',
     '#9b9b9b',
