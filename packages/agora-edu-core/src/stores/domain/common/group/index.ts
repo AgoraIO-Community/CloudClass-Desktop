@@ -88,17 +88,23 @@ export class GroupStore extends EduStoreBase {
       // Emit event when local user is invited by teacher
       if (cmd === 501 && startsWith(data.processUuid, GroupStore.CMD_PROCESS_PREFIX)) {
         const groupUuid = data.processUuid.substring(GroupStore.CMD_PROCESS_PREFIX.length);
-        const progress = (data.addProgress as { userUuid: string; ts: number }[]) || [];
+        const progress =
+          (data.addProgress as {
+            userUuid: string;
+            ts: number;
+            payload: { groupUuid: string; groupName: string };
+          }[]) || [];
         const accepted = (data.addAccepted as { userUuid: string }[]) || [];
         const actionType = data.actionType as number;
         const { userUuid: localUuid } = EduClassroomConfig.shared.sessionInfo;
 
-        const invitedLocal = progress.some(({ userUuid }) => userUuid === localUuid);
+        const invitedLocal = progress.find(({ userUuid }) => userUuid === localUuid);
 
         if (invitedLocal) {
-          EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.InvitedToGroup, {
-            groupUuid,
-          });
+          EduEventCenter.shared.emitClasroomEvents(
+            AgoraEduClassroomEvent.InvitedToGroup,
+            invitedLocal.payload,
+          );
         }
 
         if (actionType === 2 && accepted?.length) {
@@ -185,6 +191,7 @@ export class GroupStore extends EduStoreBase {
    * @param groupDetail 创建分组信息
    * @param inProgress 是否邀请
    */
+  @bound
   async addGroups(groupDetails: GroupDetail[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
 
@@ -195,6 +202,7 @@ export class GroupStore extends EduStoreBase {
    * 移除分组
    * @param groups 子房间 Id 列表
    */
+  @bound
   async removeGroups(groups: string[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.removeGroup(roomUuid, { removeGroupUuids: groups });
@@ -204,6 +212,7 @@ export class GroupStore extends EduStoreBase {
    * 更新分组信息
    * @param groups
    */
+  @bound
   async updateGroupInfo(groups: PatchGroup[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.updateGroupInfo(roomUuid, {
@@ -215,6 +224,7 @@ export class GroupStore extends EduStoreBase {
    * 开启分组
    * @param groupDetails
    */
+  @bound
   async startGroup(groupDetails: GroupDetail[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.updateGroupState(
@@ -230,6 +240,7 @@ export class GroupStore extends EduStoreBase {
   /**
    * 关闭分组
    */
+  @bound
   async stopGroup() {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.updateGroupState(roomUuid, { groups: [] }, GroupState.CLOSE);
@@ -241,6 +252,7 @@ export class GroupStore extends EduStoreBase {
    * @param addUsers
    * @param removeUsers
    */
+  @bound
   async updateGroupUsers(patches: PatchGroup[], sendInvitation: boolean = false) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.updateGroupUsers(roomUuid, { groups: patches, inProgress: sendInvitation });
@@ -251,6 +263,7 @@ export class GroupStore extends EduStoreBase {
    * @param fromGroupUuid
    * @param users
    */
+  @bound
   async removeGroupUsers(fromGroupUuid: string, users: string[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     let fromGroup = { groupUuid: fromGroupUuid, removeUsers: users };
@@ -263,6 +276,7 @@ export class GroupStore extends EduStoreBase {
    * @param toGroupUuid
    * @param users
    */
+  @bound
   async moveUsersToGroup(fromGroupUuid: string, toGroupUuid: string, users: string[]) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     const fromGroup = { groupUuid: fromGroupUuid, removeUsers: users };
@@ -275,6 +289,7 @@ export class GroupStore extends EduStoreBase {
    * 接受邀请加入到小组
    * @param groupUuid
    */
+  @bound
   async acceptGroupInvited(groupUuid: string) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.acceptGroupInvited(roomUuid, groupUuid);
@@ -284,6 +299,7 @@ export class GroupStore extends EduStoreBase {
    * 进入房间
    * @param groupUuid
    */
+  @bound
   joinSubRoom(groupUuid: string) {
     this._currentGroupUuid = groupUuid;
 
@@ -296,6 +312,7 @@ export class GroupStore extends EduStoreBase {
    * @param fromGroupUuid
    * @param toGroupUuid
    */
+  @bound
   moveIntoSubRoom(fromGroupUuid: string, toGroupUuid: string) {
     this._currentGroupUuid = toGroupUuid;
 
@@ -305,6 +322,7 @@ export class GroupStore extends EduStoreBase {
     });
   }
 
+  @bound
   leaveSubRoom() {
     if (this._currentGroupUuid) {
       this._currentGroupUuid = undefined;

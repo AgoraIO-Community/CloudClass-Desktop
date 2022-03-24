@@ -610,7 +610,7 @@ export class GroupUIStore extends EduUIStoreBase {
         await this._publishStreams();
       }
     } catch (e) {
-      this.shareUIStore.addToast('Cannot change sub room');
+      this.logger.error('cannot change sub room', e);
     } finally {
       this.setConnectionState(false);
     }
@@ -625,21 +625,50 @@ export class GroupUIStore extends EduUIStoreBase {
         this._joinSubRoom();
       }
       if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
-        this.shareUIStore.addToast('Leave sub room');
+        // this.shareUIStore.addToast('Leave sub room');
         this._leaveSubRoom();
       }
       if (type === AgoraEduClassroomEvent.AcceptedToGroup) {
-        this.logger.info('Accepted to group', args);
-        this.shareUIStore.addToast('Accepted to group');
+        // this.logger.info('Accepted to group', args);
+        // this.shareUIStore.addToast('Accepted to group');
       }
 
       if (type === AgoraEduClassroomEvent.InvitedToGroup) {
+        const { groupUuid, groupName, inviter = transI18n('breakout_room.student') } = args;
+
+        const title =
+          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
+            ? transI18n('breakout_room.confirm_invite_teacher_title')
+            : transI18n('breakout_room.confirm_invite_student_title');
+        const content =
+          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
+            ? transI18n('breakout_room.confirm_invite_teacher_content', {
+                reason1: groupName,
+                reason2: inviter,
+              })
+            : transI18n('breakout_room.confirm_invite_student_content');
+
+        const ok =
+          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
+            ? transI18n('breakout_room.confirm_invite_teacher_btn_ok')
+            : transI18n('breakout_room.confirm_invite_student_btn_ok');
+
+        const cancel =
+          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
+            ? transI18n('breakout_room.confirm_invite_teacher_btn_cancel')
+            : transI18n('breakout_room.confirm_invite_student_btn_cancel');
+
         this.shareUIStore.addConfirmDialog(
-          transI18n('breakout_room.confirm_title'),
-          transI18n('breakout_room.confirm_content'),
+          title,
+          content,
           () => {
-            const { groupUuid } = args;
             this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
+          },
+          ['ok', 'cancel'],
+          () => {},
+          {
+            ok,
+            cancel,
           },
         );
       }

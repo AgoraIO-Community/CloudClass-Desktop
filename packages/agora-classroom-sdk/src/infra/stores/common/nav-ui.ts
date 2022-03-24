@@ -105,6 +105,58 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         },
       },
     ];
+    const studentActions: EduNavAction[] = [
+      {
+        title: 'AskForHelp',
+        iconType: 'ask-for-help',
+        onClick: () => {
+          const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
+
+          if (teachers.size) {
+            const teacherUuid = teachers.keys().next().value;
+            const { groupUuidByUserUuid, updateGroupUsers, currentSubRoom } =
+              this.classroomStore.groupStore;
+            const isTeacherInSubRoom = !!groupUuidByUserUuid.get(teacherUuid);
+
+            if (!isTeacherInSubRoom) {
+              if (currentSubRoom) {
+                this.shareUIStore.addConfirmDialog(
+                  transI18n('breakout_room.confirm_invite_teacher_title'),
+                  transI18n('breakout_room.confirm_ask_for_help_content'),
+                  () => {
+                    updateGroupUsers(
+                      [
+                        {
+                          groupUuid: currentSubRoom,
+                          addUsers: [teacherUuid],
+                        },
+                      ],
+                      true,
+                    );
+                  },
+                  ['ok', 'cancel'],
+                  () => {},
+                  {
+                    ok: transI18n('breakout_room.confirm_ask_for_help_btn_ok'),
+                    cancel: transI18n('breakout_room.confirm_ask_for_help_btn_cancel'),
+                  },
+                );
+              }
+            } else {
+              this.shareUIStore.addConfirmDialog(
+                transI18n('breakout_room.confirm_invite_teacher_title'),
+                transI18n('breakout_room.confirm_ask_for_help_busy_content'),
+              );
+            }
+          } else {
+            this.shareUIStore.addConfirmDialog(
+              transI18n('breakout_room.confirm_invite_teacher_title'),
+              transI18n('breakout_room.confirm_ask_for_help_absent_content'),
+            );
+          }
+        },
+      },
+    ];
     const commonActions: EduNavAction[] = [
       {
         title: 'Settings',
@@ -135,6 +187,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     let actions = commonActions;
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
       actions = teacherActions.concat(actions);
+    }
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isInSubRoom) {
+      actions = studentActions.concat(actions);
     }
 
     return actions;

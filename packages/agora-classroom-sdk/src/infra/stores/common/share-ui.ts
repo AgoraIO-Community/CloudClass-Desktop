@@ -175,6 +175,7 @@ export class EduShareUIStore {
     onOK?: () => void,
     actions?: ConfirmDialogAction[],
     onCancel?: () => void,
+    btnText?: Record<ConfirmDialogAction, string>,
   ) {
     const id = uuidv4();
     this.addDialog(DialogCategory.Confirm, {
@@ -183,6 +184,7 @@ export class EduShareUIStore {
       content,
       opts: {
         actions,
+        btnText,
         onOk: () => {
           onOK && onOK();
           this.removeDialog(id);
