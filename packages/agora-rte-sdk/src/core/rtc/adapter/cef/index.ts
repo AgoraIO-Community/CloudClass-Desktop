@@ -115,6 +115,13 @@ export class RtcAdapterCef extends RtcAdapterBase {
       new AgoraCEF.AgoraRtcEngine.RtcEngineContext(AgoraRteEngineConfig.shared.appId),
     );
 
+    this.rtcEngine.setParameters(
+      `${JSON.stringify({
+        'che.video.h264ProfileNegotiated': 66,
+        'che.video.web_h264_interop_enable': true,
+      })}`,
+    );
+
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
         AGRteErrorCode.RTC_ERR_RTC_ENGINE_INITIALZIE_FAILED,
