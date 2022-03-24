@@ -129,9 +129,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     ];
 
     let actions = commonActions;
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-      actions = teacherActions.concat(actions);
-    }
+    // akasuo 自动录制
+    // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+    //   actions = teacherActions.concat(actions);
+    // }
 
     return actions;
   }
