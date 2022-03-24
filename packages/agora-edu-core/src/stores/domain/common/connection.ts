@@ -302,6 +302,11 @@ export class ConnectionStore extends EduStoreBase {
           },
         );
 
+        //listen to rtc state change
+        scene.on(AgoraRteEventType.RtcConnectionStateChanged, (state, connectionType) => {
+          this.setRtcState(state, connectionType);
+        });
+
         this.setScene(SceneType.Sub, scene);
         // streamId defaults to 0 means server allocate streamId for you
         await scene.joinScene({
@@ -335,6 +340,7 @@ export class ConnectionStore extends EduStoreBase {
   @action.bound
   async leaveSubRoom() {
     if (this.scene) {
+      await this.scene.leaveRTC(AGRtcConnectionType.sub);
       await this.scene.leaveRTC();
       await this.scene.leaveScene();
       this.setScene(SceneType.Sub, undefined);

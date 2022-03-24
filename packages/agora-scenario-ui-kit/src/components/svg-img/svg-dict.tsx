@@ -1588,7 +1588,7 @@ export const getPath = (name: string, props?: any) => {
                   id="路径-31"
                   stroke={props.color ? props.color : 'none'}
                   strokeWidth="1.20714286"
-                  stroke-linecap="round"></line>
+                  strokeLinecap="round"></line>
               </g>
             </g>
           </g>
@@ -1798,13 +1798,13 @@ export const getPath = (name: string, props?: any) => {
                     id="路径-23"
                     stroke="#FFFFFF"
                     strokeWidth="1.2"
-                    stroke-linecap="round"></path>
+                    strokeLinecap="round"></path>
                   <path
                     d="M9.325684,3.727637 L11.1444939,5.54644689 C11.339756,5.74170904 11.339756,6.05829153 11.1444939,6.25355367 L9.325684,8.07236356 L9.325684,8.07236356"
                     id="路径-25"
                     stroke="#FFFFFF"
                     strokeWidth="1.2"
-                    stroke-linecap="round"></path>
+                    strokeLinecap="round"></path>
                   <line
                     x1="4"
                     y1="15"
@@ -1813,7 +1813,7 @@ export const getPath = (name: string, props?: any) => {
                     id="路径-21"
                     stroke="#357BF6"
                     strokeWidth="1.2"
-                    stroke-linecap="round"></line>
+                    strokeLinecap="round"></line>
                 </g>
               </g>
             </g>
@@ -1841,13 +1841,13 @@ export const getPath = (name: string, props?: any) => {
                     id="路径-23"
                     stroke="#357BF6"
                     strokeWidth="1.2"
-                    stroke-linecap="round"></path>
+                    strokeLinecap="round"></path>
                   <path
                     d="M9.325684,3.727637 L11.1444939,5.54644689 C11.339756,5.74170904 11.339756,6.05829153 11.1444939,6.25355367 L9.325684,8.07236356 L9.325684,8.07236356"
                     id="路径-25"
                     stroke="#357BF6"
                     strokeWidth="1.2"
-                    stroke-linecap="round"></path>
+                    strokeLinecap="round"></path>
                   <line
                     x1="4"
                     y1="15"
@@ -1856,7 +1856,7 @@ export const getPath = (name: string, props?: any) => {
                     id="路径-21"
                     stroke="#FFFFFF"
                     strokeWidth="1.2"
-                    stroke-linecap="round"></line>
+                    strokeLinecap="round"></line>
                 </g>
               </g>
             </g>
