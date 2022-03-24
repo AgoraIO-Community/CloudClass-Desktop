@@ -1,5 +1,6 @@
 import { ToolbarUIStore } from '../common/toolbar-ui';
 
 export class LectrueToolbarUIStore extends ToolbarUIStore {
-  readonly allowedCabinetItems: string[] = ['laser', 'screenShare', 'countdownTimer', 'poll'];
+  // @ts-ignore
+  readonly allowedCabinetItems: string[] = window.agoraBridge ? ['laser', 'countdownTimer', 'poll'] : ['laser', 'screenShare', 'countdownTimer', 'poll'];
 }
