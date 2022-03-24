@@ -497,6 +497,24 @@ export class GroupUIStore extends EduUIStoreBase {
     }
   }
 
+  private async _publishStreams() {
+    await this.classroomStore.streamStore.updateLocalPublishState({
+      videoState: AgoraRteMediaPublishState.Published,
+      audioState: AgoraRteMediaPublishState.Published,
+    });
+    await this.classroomStore.mediaStore.updateLocalMediaState({
+      videoSourceState: this.classroomStore.mediaStore.localCameraTrackState,
+      audioSourceState: this.classroomStore.mediaStore.localMicTrackState,
+    });
+  }
+
+  private async _grantWhiteboard() {
+    await when(() => this.classroomStore.boardStore.managerReady);
+    await this.classroomStore.boardStore.setWritable(true);
+    this.classroomStore.boardStore.setTool(WhiteboardTool.selector);
+    this.classroomStore.boardStore.grantPermission(EduClassroomConfig.shared.sessionInfo.userUuid);
+  }
+
   @bound
   private async _joinSubRoom() {
     await this._waitUntilJoined();
@@ -524,26 +542,14 @@ export class GroupUIStore extends EduUIStoreBase {
           () => this.classroomStore.connectionStore.subRoomState === ClassroomState.Connected,
         );
 
-        await this.classroomStore.streamStore.updateLocalPublishState({
-          videoState: AgoraRteMediaPublishState.Published,
-          audioState: AgoraRteMediaPublishState.Published,
-        });
-        await this.classroomStore.mediaStore.updateLocalMediaState({
-          videoSourceState: this.classroomStore.mediaStore.localCameraTrackState,
-          audioSourceState: this.classroomStore.mediaStore.localMicTrackState,
-        });
+        await this._publishStreams();
       } catch (e) {
         this.shareUIStore.addToast('Cannot join sub room');
       } finally {
         this.setConnectionState(false);
       }
       if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
-        await when(() => this.classroomStore.boardStore.managerReady);
-        await this.classroomStore.boardStore.setWritable(true);
-        this.classroomStore.boardStore.setTool(WhiteboardTool.selector);
-        await this.classroomStore.boardStore.grantPermission(
-          EduClassroomConfig.shared.sessionInfo.userUuid,
-        );
+        this._grantWhiteboard();
       }
     } else {
       this.shareUIStore.addToast('Cannot find room');
@@ -589,20 +595,15 @@ export class GroupUIStore extends EduUIStoreBase {
         await when(
           () => this.classroomStore.connectionStore.subRoomState === ClassroomState.Connected,
         );
-
-        await this.classroomStore.streamStore.updateLocalPublishState({
-          videoState: AgoraRteMediaPublishState.Published,
-          audioState: AgoraRteMediaPublishState.Published,
-        });
-        await this.classroomStore.mediaStore.updateLocalMediaState({
-          videoSourceState: this.classroomStore.mediaStore.localCameraTrackState,
-          audioSourceState: this.classroomStore.mediaStore.localMicTrackState,
-        });
+        await this._publishStreams();
       }
     } catch (e) {
       this.shareUIStore.addToast('Cannot change sub room');
     } finally {
       this.setConnectionState(false);
+    }
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+      this._grantWhiteboard();
     }
   }
 
