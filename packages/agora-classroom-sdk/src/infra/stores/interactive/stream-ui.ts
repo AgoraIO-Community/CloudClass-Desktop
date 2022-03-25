@@ -101,6 +101,39 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     return teacherCameraStream;
   }
 
+  @computed
+  get assistantCameraStream(): EduStreamUI | undefined {
+    const streamSet = new Set<EduStreamUI>();
+    const streams = this.assistantStreams;
+    for (const stream of streams) {
+      if (stream.stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
+        streamSet.add(stream);
+      }
+    }
+
+    if (streamSet.size > 1) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UNEXPECTED_TEACHER_STREAM_LENGTH,
+        new Error(`unexpected stream size ${streams.size}`),
+      );
+    }
+
+    const assistantCameraStream = Array.from(streamSet)[0];
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (!isInSubRoom) {
+      if (assistantCameraStream) {
+        const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+
+        const assistantUuid = assistantCameraStream.fromUser.userUuid;
+
+        if (groupUuidByUserUuid.has(assistantUuid)) return undefined;
+      }
+    }
+    return assistantCameraStream;
+  }
+
   @computed get localStreamTools(): EduStreamTool[] {
     const { sessionInfo } = EduClassroomConfig.shared;
     let tools: EduStreamTool[] = [];

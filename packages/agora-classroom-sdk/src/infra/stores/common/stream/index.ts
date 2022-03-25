@@ -90,6 +90,27 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 助教流信息列表
+   * @returns
+   */
+  @computed get assistantStreams(): Set<EduStreamUI> {
+    const streamSet = new Set<EduStreamUI>();
+    const assistantList = this.classroomStore.userStore.assistantList;
+    for (const assistant of assistantList.values()) {
+      const streamUuids =
+        this.classroomStore.streamStore.streamByUserUuid.get(assistant.userUuid) || new Set();
+      for (const streamUuid of streamUuids) {
+        const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+        if (stream) {
+          const uiStream = new EduStreamUI(stream);
+          streamSet.add(uiStream);
+        }
+      }
+    }
+    return streamSet;
+  }
+
+  /**
    * 老师流信息（教室内只有一个老师时使用，如果有一个以上老师请使用 teacherStreams）
    * @returns
    */
