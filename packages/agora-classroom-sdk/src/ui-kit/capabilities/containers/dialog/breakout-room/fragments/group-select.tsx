@@ -353,7 +353,8 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
 
   const started = (
     <div className="flex justify-between px-4 py-2">
-      {broadcastButton}
+      {/* {broadcastButton} */}
+      <div />
       {startButton}
     </div>
   );
