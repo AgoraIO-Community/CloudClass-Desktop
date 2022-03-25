@@ -12,6 +12,9 @@
   border: 4px solid #75c0fe;
   border-radius: 4px;
   background: white;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 .whiteboard-zoom-status {
   border-radius: 50%;

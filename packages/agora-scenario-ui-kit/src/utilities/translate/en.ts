@@ -158,7 +158,7 @@ export const en = {
     confirm: 'Confirm',
     cancel: 'Cancel',
     leave_room: 'Leave Classroom',
-    quit_room: 'You want to exit the classroom?',
+    quit_room: 'Are you sure you want to quit the classroom?',
     kick: 'Account remote login',
     login_failure: 'login failure',
     whiteboard_lock: 'Whiteboard follow',

@@ -44,11 +44,6 @@ export const BigClassScenario = observer(() => {
                   <HandsUpContainer />
                 </Aside>
               </WhiteboardContainer>
-              <Aside className="aside-fixed">
-                <CollectorContainer />
-                <BigRosterBtn />
-                <HandsUpContainer />
-              </Aside>
             </Content>
             <Aside>
               <RoomBigTeacherStreamContainer />
