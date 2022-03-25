@@ -31,7 +31,7 @@ export interface ModalProps extends BaseProps {
   // TODO: need support
   maskClosable?: boolean;
   contentClassName?: string;
-  modalType?: 'normal' | 'back';
+  modalType?: 'normal' | 'back' | 'minimize';
   children?: React.ReactNode;
   btnId?: string;
   topLevel?: boolean;
@@ -107,6 +107,24 @@ export const Modal: ModalType = ({
                   setOpened(false);
                 }}>
                 <SvgImg type="close" size={20} style={{ color: '#fff' }} />
+              </div>
+            ) : (
+              ''
+            )}
+          </>
+        ) : null}
+        {modalType === 'minimize' ? (
+          <>
+            <div className="modal-title-text">{title}</div>
+            {closable ? (
+              <div
+                className="modal-title-close"
+                onClick={(e: React.MouseEvent<HTMLElement>) => {
+                  setEventSource({ action: 'cancel', event: e });
+                  setOpened(false);
+                  onCancel && onCancel(e);
+                }}>
+                <SvgImg type="close-arrow" size={20} style={{ color: '#7B88A0' }} />
               </div>
             ) : (
               ''

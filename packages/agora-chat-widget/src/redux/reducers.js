@@ -185,7 +185,7 @@ const reducer = (state = defaultState, action) => {
         ...state,
         announcementStatus: data,
       };
-    
+
     case 'ANNOUNCEMENT_NOTICE':
       return {
         ...state,

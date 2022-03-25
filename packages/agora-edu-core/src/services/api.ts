@@ -54,6 +54,7 @@ export class EduApiService extends ApiBase {
       pageNo?: number;
       converted?: number;
       orderBy?: string;
+      parentResourceUuid?: string;
     },
   ) {
     let queryparams: string[] = [];
@@ -61,8 +62,9 @@ export class EduApiService extends ApiBase {
       options = {};
     }
     options.orderBy = 'updateTime';
+    options.parentResourceUuid = 'root';
     let { data } = await this.fetch({
-      path: `/v2/users/${userUuid}/resources/page${queryparams.join('&')}`,
+      path: `/v3/users/${userUuid}/resources/page${queryparams.join('&')}`,
       method: 'GET',
       query: options,
     });
@@ -73,9 +75,10 @@ export class EduApiService extends ApiBase {
     const finalData = resourceUuids.map((resourceUuid) => ({
       resourceUuid,
       userUuid,
+      type: '1',
     }));
     const { data } = await this.fetch({
-      path: `/v2/resources/users`,
+      path: `/v3/users/${userUuid}/resources`,
       method: 'DELETE',
       data: finalData,
     });
@@ -85,28 +88,36 @@ export class EduApiService extends ApiBase {
   async fetchFileUploadSts(
     roomUuid: string,
     {
+      userUuid,
       resourceUuid,
       resourceName,
+      contentType,
       ext,
       size,
       conversion,
     }: {
+      userUuid: string;
       resourceUuid: string;
       resourceName: string;
+      contentType: string;
       ext: string;
       size: number;
       conversion?: Object;
     },
   ) {
     const { data } = await this.fetch({
-      path: `/v1/rooms/${roomUuid}/resources/${resourceUuid}/sts`,
-      method: 'PUT',
-      data: {
-        resourceName,
-        ext,
-        size,
-        conversion,
-      },
+      path: `/v3/users/${userUuid}/presignedUrls`,
+      method: 'POST',
+      data: [
+        {
+          resourceName,
+          resourceUuid,
+          contentType,
+          ext,
+          size,
+          conversion,
+        },
+      ],
     });
     return data;
   }
@@ -117,8 +128,8 @@ export class EduApiService extends ApiBase {
     resourceInfo: CloudDriveResourceInfo,
   ) {
     let { data } = await this.fetch({
-      path: `/v2/resources/${resourceUuid}`,
-      method: 'PUT',
+      path: `/v3/users/${userUuid}/resources/${resourceUuid}`,
+      method: 'POST',
       data: {
         resourceName: resourceInfo.resourceName, //文件名
         size: resourceInfo.size, //文件大小
@@ -126,6 +137,7 @@ export class EduApiService extends ApiBase {
         url: resourceInfo.url, //网络地址
         conversion: resourceInfo.conversion,
         userUuids: [userUuid],
+        parentResourceUuid: 'root',
       },
     });
     return data;

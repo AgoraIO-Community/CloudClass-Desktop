@@ -6,32 +6,35 @@ import {
   CloudDriveCourseResource,
   CloudDrivePagingOption,
   CloudDriveResource,
+  EduClassroomConfig,
 } from 'agora-edu-core';
 import { transI18n } from './i18n';
+import { CloudDriveResourceUploadStatus } from '../../../../../agora-edu-core/src/stores/domain/common/cloud-drive/type';
 
-interface UploadItem {
+export enum FileTypeSvgColor {
+  ppt = '#F6B081',
+  word = '#96CBE1',
+  excel = '#A6DDBF',
+  pdf = '#A3C3DE',
+  video = '#A8ABE9',
+  audio = '#6C82D1',
+  txt = '#8597FF',
+  image = '#95E2E7',
+}
+
+export interface UploadItem {
+  resourceUuid: string;
   iconType?: string;
   fileName?: string;
   fileSize?: string;
   currentProgress?: number;
-  uploadComplete?: boolean;
+  status: CloudDriveResourceUploadStatus;
 }
 
 let _lastFetchPersonalResourcesOptions: CloudDrivePagingOption;
-
 export class CloudUIStore extends EduUIStoreBase {
-  readonly pageSize: number = 8;
+  readonly pageSize: number = 6;
   onInstall() {
-    reaction(
-      () => this.currentPersonalResPage,
-      (currentPage) => {
-        const { fetchPersonalResources } = this.classroomStore.cloudDriveStore;
-        fetchPersonalResources({
-          pageNo: currentPage,
-          pageSize: this.pageSize,
-        });
-      },
-    );
     reaction(
       () => this.personalResourcesList,
       (personalResourcesList) => {
@@ -45,12 +48,26 @@ export class CloudUIStore extends EduUIStoreBase {
             this.fetchPersonalResources({
               pageNo: this.currentPersonalResPage,
               pageSize: this.pageSize,
+              resourceName: this.searchPersonalResourcesKeyword,
             });
           }
         }
       },
       {
         delay: 1500,
+      },
+    );
+    reaction(
+      () => this.searchPersonalResourcesKeyword,
+      (keyword) => {
+        this.fetchPersonalResources({
+          pageNo: 1,
+          pageSize: this.pageSize,
+          resourceName: keyword,
+        });
+      },
+      {
+        delay: 500,
       },
     );
   }
@@ -114,6 +131,7 @@ export class CloudUIStore extends EduUIStoreBase {
     try {
       const data = await this.classroomStore.cloudDriveStore.fetchPersonalResources(options);
       _lastFetchPersonalResourcesOptions = options;
+      this.setPersonalResCurrentPage(options.pageNo);
       return data;
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
@@ -163,11 +181,53 @@ export class CloudUIStore extends EduUIStoreBase {
    * 公共资源
    * @returns
    */
+  @computed
   get publicResources() {
-    return this.classroomStore.cloudDriveStore.publicResources;
+    const keyword = this.searchPublicResourcesKeyword;
+    const list = EduClassroomConfig.shared.courseWareList;
+    const map = new Map<string, CloudDriveResource>();
+    if (keyword) {
+      list
+        .filter((item) => item.resourceName.includes(keyword))
+        .forEach((item) => {
+          map.set(item.resourceUuid, item);
+        });
+      return map;
+    } else {
+      list.forEach((item) => {
+        map.set(item.resourceUuid, item);
+      });
+      return map;
+    }
   }
 
   //  ---------  observable ---------------
+  @observable
+  showUploadModal = false;
+  @observable
+  showUploadToast = false;
+  /**
+   * 上传状态
+   */
+  @observable
+  uploadState: 'uploading' | 'success' | 'error' | 'idle' = 'idle';
+  /**
+   * 云盘上传modal最小化显示
+   */
+  @observable
+  showUploadMinimize = false;
+  /**
+   * 检索公共资源课件字符串
+   */
+  @observable
+  searchPublicResourcesKeyword = '';
+
+  /**
+   * 检索个人资源课件字符串
+   */
+  @observable
+  searchPersonalResourcesKeyword = '';
+
   /**
    * 个人资源左侧选项框状态
    */
@@ -247,17 +307,16 @@ export class CloudUIStore extends EduUIStoreBase {
     const { uploadProgress } = this.classroomStore.cloudDriveStore;
     const arr = [];
     for (const item of uploadProgress.values()) {
-      const { resourceName, size, progress } = item;
-      if (progress !== 1) {
-        const progressValue = Math.floor(progress * 100);
-        arr.push({
-          iconType: this.fileNameToType(resourceName),
-          fileName: resourceName,
-          uploadComplete: false,
-          fileSize: this.formatFileSize(size),
-          currentProgress: progressValue,
-        });
-      }
+      const { resourceName, size, progress, status, resourceUuid } = item;
+      const progressValue = Math.floor(progress * 100);
+      arr.push({
+        iconType: this.fileNameToType(resourceName),
+        fileName: resourceName,
+        fileSize: this.formatFileSize(size),
+        currentProgress: progressValue,
+        resourceUuid,
+        status,
+      });
     }
     return arr;
   }
@@ -305,21 +364,54 @@ export class CloudUIStore extends EduUIStoreBase {
   };
 
   /**
+   * 设置上传状态
+   * @param uploadState
+   */
+  @action
+  setUploadState = (uploadState: 'uploading' | 'success' | 'error') => {
+    this.uploadState = uploadState;
+  };
+
+  @action
+  setShowUploadModal = (v: boolean) => {
+    this.showUploadModal = v;
+  };
+
+  @action
+  setShowUploadToast = (v: boolean) => {
+    this.showUploadToast = v;
+  };
+
+  /**
+   * 设置云盘上传modal最小化
+   * @param v
+   */
+  @action
+  setShowUploadMinimize = (v: boolean) => {
+    this.showUploadMinimize = v;
+  };
+
+  /**
    * 删除个人资源
    * @returns
    */
   @action
-  removePersonalResources = async () => {
+  removePersonalResources = async (singleFileUuid?: string) => {
     const uuids: string[] = [];
     const { removePersonalResources } = this.classroomStore.cloudDriveStore;
-    if (this.isPersonalResSelectedAll) {
-      this.personalResources.forEach((item) => {
-        uuids.push(item.resourceUuid);
-      });
+    if (singleFileUuid) {
+      // 单个文件删除
+      uuids.push(singleFileUuid);
     } else {
-      this.personalResourcesCheckSet.forEach((uuid) => {
-        uuids.push(uuid);
-      });
+      if (this.isPersonalResSelectedAll) {
+        this.personalResources.forEach((item) => {
+          uuids.push(item.resourceUuid);
+        });
+      } else {
+        this.personalResourcesCheckSet.forEach((uuid) => {
+          uuids.push(uuid);
+        });
+      }
     }
     try {
       await removePersonalResources(uuids);
@@ -335,11 +427,30 @@ export class CloudUIStore extends EduUIStoreBase {
       (await this.fetchPersonalResources({
         pageNo: this.currentPersonalResPage,
         pageSize: this.pageSize,
+        resourceName: this.searchPersonalResourcesKeyword,
       })) || {};
     if (!list.length && this.currentPersonalResPage > 1) {
       this.setPersonalResCurrentPage(this.currentPersonalResPage - 1);
     }
   };
+
+  /**
+   * 设置检索公共资源字符串
+   * @param keyword
+   */
+  @action.bound
+  setSearchPublicResourcesKeyword(keyword: string) {
+    this.searchPublicResourcesKeyword = keyword;
+  }
+
+  /**
+   * 设置检索个人资源字符串
+   * @param keyword
+   */
+  @action.bound
+  setSearchPersonalResourcesKeyword(keyword: string) {
+    this.searchPersonalResourcesKeyword = keyword;
+  }
 
   onDestroy() {}
 }

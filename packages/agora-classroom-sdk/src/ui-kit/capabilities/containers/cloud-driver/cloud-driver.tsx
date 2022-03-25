@@ -1,12 +1,13 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Rnd } from 'react-rnd';
-import { TabPane, Tabs, transI18n, SvgImg, OverlayWrap } from '~ui-kit';
+import { TabPane, Tabs, transI18n, SvgImg, OverlayWrap, Popover } from '~ui-kit';
 import { PublicResourcesContainer } from './public-resource';
 import { PersonalResourcesContainer } from './person-resource';
 import './index.css';
 import { CloudDriverContainerProps } from '.';
 import { useDraggableDefaultCenterPosition } from '~ui-kit/utilities/hooks';
 import { throttle } from 'lodash';
+import CloudHelp from './cloud-help';
 
 export enum ActiveKeyEnum {
   public = '1',
@@ -60,6 +61,14 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
         default={defaultPos}>
         <div className="agora-board-resources cloud-wrap" style={modalSize}>
           <div className="btn-pin">
+            <Popover content={<CloudHelp />} placement={'bottom'}>
+              <span>
+                <SvgImg
+                  type="cloud-file-help"
+                  style={{ cursor: 'pointer', color: '#7B88A0', marginRight: 10 }}
+                />
+              </span>
+            </Popover>
             <SvgImg
               type="close"
               style={{ cursor: 'pointer', color: '#7B88A0' }}

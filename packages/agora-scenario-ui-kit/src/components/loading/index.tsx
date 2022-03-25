@@ -9,13 +9,19 @@ import './index.css';
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
 import { SvgImg } from '~ui-kit';
-
+export enum UploadItemStatus {
+  Pending = 'pending',
+  Success = 'success',
+  Failed = 'failed',
+  Canceled = 'canceled',
+}
 export interface UploadItem {
+  resourceUuid: string;
   iconType?: string;
   fileName?: string;
   fileSize?: string;
-  uploadComplete?: boolean;
   currentProgress?: number; // 当uploadComplete为true时生效
+  status: UploadItemStatus;
 }
 
 export interface LoadingProps extends BaseProps {
@@ -27,6 +33,9 @@ export interface LoadingProps extends BaseProps {
   uploadItemList?: UploadItem[];
   onClick?: (id: string, type: 'delete' | 'click') => void;
   noCloseBtn?: boolean;
+  showUploadOpeBtn?: boolean;
+  onRetry?: (resourceUuid: string) => void;
+  onCancel?: (resourceUuid: string) => void;
 }
 
 export interface CircleLoadingProps extends BaseProps {
@@ -44,6 +53,9 @@ export const Loading: FC<LoadingProps> = ({
   className,
   onClick,
   noCloseBtn,
+  showUploadOpeBtn = false,
+  onRetry,
+  onCancel,
   ...restProps
 }) => {
   const cls = classnames({
@@ -79,29 +91,65 @@ export const Loading: FC<LoadingProps> = ({
               <div>
                 <SvgImg type={item.iconType as any} style={{ color: '#F6B081' }} />
               </div>
-              <div className="loading-file-name">{item.fileName}</div>
+              <div className="loading-file-name" title={item.fileName}>
+                {item.fileName}
+              </div>
               <div className="loading-file-size">{item.fileSize}</div>
               <div>
-                {item.uploadComplete ? (
+                {item.status === UploadItemStatus.Success && (
                   <div className="loading-progress">
                     <Progress
                       width={60}
                       type="download"
                       progress={item.currentProgress as number}
                     />
-                    <span className="upload-pending-text">{item.currentProgress}%</span>
+                    {/* <span className="upload-pending-text">{item.currentProgress}%</span> */}
                     <span className="upload-success-text">
-                      {transI18n('whiteboard.converting')}
+                      {transI18n('whiteboard.upload-success')}
                     </span>
                   </div>
-                ) : (
+                )}
+                {(item.status === UploadItemStatus.Pending ||
+                  item.status === UploadItemStatus.Failed) && (
                   <div className="loading-progress">
-                    <Progress
-                      width={60}
-                      type="download"
-                      progress={item.currentProgress as number}
-                    />
-                    <span className="upload-pending-text">{item.currentProgress}%</span>
+                    {item.status === UploadItemStatus.Pending && (
+                      <>
+                        <Progress
+                          width={60}
+                          type="download"
+                          progress={item.currentProgress as number}
+                        />
+                        <span className="upload-pending-text">{item.currentProgress}%</span>
+                      </>
+                    )}
+                    {item.status === UploadItemStatus.Failed && (
+                      <span className="upload-error-text">
+                        {transI18n('whiteboard.upload-error')}
+                      </span>
+                    )}
+
+                    <span style={{ display: 'flex' }}>
+                      {item.status === UploadItemStatus.Failed && (
+                        <SvgImg
+                          type="cloud-refresh"
+                          size={24}
+                          style={{ color: '#7B88A0', cursor: 'pointer' }}
+                          onClick={() => {
+                            onRetry && onRetry(item.resourceUuid);
+                          }}
+                        />
+                      )}
+                      {item.status === UploadItemStatus.Pending && (
+                        <SvgImg
+                          type="close"
+                          size={24}
+                          style={{ color: '#7B88A0', cursor: 'pointer' }}
+                          onClick={() => {
+                            onCancel && onCancel(item.resourceUuid);
+                          }}
+                        />
+                      )}
+                    </span>
                   </div>
                 )}
               </div>

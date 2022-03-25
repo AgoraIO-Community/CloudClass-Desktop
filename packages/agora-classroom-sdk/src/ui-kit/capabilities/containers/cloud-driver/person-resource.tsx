@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
-import { ChangeEvent, useState, useRef, useEffect } from 'react';
+import { ChangeEvent, useRef, useEffect, useCallback } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import { CloudDriveCourseResource } from 'agora-edu-core';
 import {
@@ -19,7 +19,15 @@ import {
   CheckBox,
   Pagination,
   CircleLoading,
+  Popover,
+  UploadItem,
 } from '~ui-kit';
+import CloudToolbar from './cloud-toolbar';
+import CloudMinimize from './cloud-minimize';
+import CloudMoreMenu from './cloud-more-menu';
+import { FileTypeSvgColor, UploadItem as CloudUploadItem } from '@/infra/stores/common/cloud-ui';
+import { CloudDriveResourceUploadStatus } from '../../../../../../agora-edu-core/src/stores/domain/common/cloud-drive/type';
+import { debounce } from 'lodash';
 
 const UploadSuccessToast = () => {
   return (
@@ -33,6 +41,43 @@ const UploadSuccessToast = () => {
       }}>
       {transI18n('cloud.upload_success')}
     </Toast>
+  );
+};
+
+const UploadModal = () => {
+  const { cloudUIStore } = useStore();
+  const { setShowUploadMinimize, setShowUploadModal, uploadingProgresses, classroomStore } =
+    cloudUIStore;
+  const { cloudDriveStore } = classroomStore;
+  const { retryUpload, cancelUpload } = cloudDriveStore;
+
+  return (
+    <Modal
+      className="upload-modal"
+      modalType="minimize"
+      animate={false}
+      title={transI18n('cloud.upload')}
+      width={450}
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      }}
+      closable={true}
+      onCancel={() => {
+        setShowUploadModal(false);
+        setShowUploadMinimize(true);
+      }}>
+      <Loading
+        hasLoadingGif={false}
+        noCloseBtn={true}
+        showUploadOpeBtn={false}
+        uploadItemList={uploadingProgresses as unknown as UploadItem[]}
+        onRetry={retryUpload}
+        onCancel={cancelUpload}
+      />
+    </Modal>
   );
 };
 
@@ -52,39 +97,60 @@ export const PersonalResourcesContainer = observer(() => {
     personalResourcesTotalNum,
     pageSize,
     currentPersonalResPage,
-    setPersonalResCurrentPage,
     removePersonalResources,
     uploadPersonalResource,
     fetchPersonalResources,
     personalResources,
+    searchPersonalResourcesKeyword,
+    setSearchPersonalResourcesKeyword,
+    showUploadMinimize,
+    setShowUploadMinimize,
+    uploadState,
+    setUploadState,
+    showUploadModal,
+    setShowUploadModal,
+    showUploadToast,
+    setShowUploadToast,
   } = cloudUIStore;
 
-  const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
-  const [showUploadToast, setShowUploadToast] = useState<boolean>(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    fetchPersonalResources({ pageNo: currentPersonalResPage, pageSize });
+    fetchPersonalResources({
+      pageNo: currentPersonalResPage,
+      pageSize,
+      resourceName: searchPersonalResourcesKeyword,
+    });
   }, []);
-
+  const debouncedFetchPersonalResources = useCallback(
+    debounce(() => {
+      fetchPersonalResources({
+        pageNo: currentPersonalResPage,
+        pageSize,
+        resourceName: searchPersonalResourcesKeyword,
+      });
+    }, 500),
+    [currentPersonalResPage, pageSize, searchPersonalResourcesKeyword],
+  );
   useEffect(() => {
     if (!uploadingProgresses.length) {
       setShowUploadModal(false);
     }
-  }, [uploadingProgresses]);
-
-  const finishUpload = () => {
-    setShowUploadModal(false);
-    setShowUploadToast(true);
-    setTimeout(() => {
-      setShowUploadToast(false);
-    }, 1000);
-    if (currentPersonalResPage !== 1) {
-      setPersonalResCurrentPage(1);
-    } else {
-      fetchPersonalResources({ pageNo: currentPersonalResPage, pageSize });
+    if (
+      uploadingProgresses.length > 0 &&
+      uploadingProgresses.length ===
+        uploadingProgresses.filter(
+          (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
+        ).length
+    ) {
+      setShowUploadModal(false);
+      setUploadState('success');
+      setShowUploadToast(true);
+      setTimeout(() => {
+        setShowUploadToast(false);
+      }, 1000);
     }
-  };
+  }, [uploadingProgresses]);
 
   const onClickSelectAll = () => {
     setAllPersonalResourceSelected(!hasSelectedPersonalRes);
@@ -105,15 +171,19 @@ export const PersonalResourcesContainer = observer(() => {
       const files = evt.target.files || [];
       if (files?.length) {
         setShowUploadModal(true);
+        setUploadState('uploading');
         const taskArr = [];
         for (const file of files) {
-          taskArr.push(uploadPersonalResource(file));
+          taskArr.push(
+            uploadPersonalResource(file).finally(() => {
+              debouncedFetchPersonalResources();
+            }),
+          );
         }
-        await Promise.all(taskArr);
-        finishUpload();
       }
     } catch (e) {
       setShowUploadModal(false);
+      setUploadState('error');
       throw e;
     } finally {
       fileRef.current!.value = '';
@@ -133,49 +203,35 @@ export const PersonalResourcesContainer = observer(() => {
     });
   };
 
-  const UploadModal = () => {
-    return (
-      <Modal
-        animate={false}
-        title={transI18n('cloud.upload')}
-        width={450}
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}
-        closable={false}
-        onCancel={() => {
-          setShowUploadModal(false);
-        }}>
-        <Loading hasLoadingGif={false} noCloseBtn={true} uploadItemList={uploadingProgresses} />
-      </Modal>
-    );
+  const handleDeleteOneResource = (uuid: string) => {
+    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), () => {
+      removePersonalResources(uuid);
+    });
   };
+
+  const keyWordChangeHandle = useCallback(
+    (keyword: string) => {
+      setSearchPersonalResourcesKeyword(keyword);
+    },
+    [setSearchPersonalResourcesKeyword],
+  );
 
   return (
     <>
-      <Row style={{ paddingLeft: 19 }} className="btn-group margin-gap">
-        <input
-          ref={fileRef}
-          id="upload-image"
-          accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
-          onChange={handleUpload}
-          multiple
-          type="file"></input>
-        <Button type="primary" onClick={triggerUpload}>
-          {transI18n('cloud.upload')}
-        </Button>
-        <Button
-          disabled={!hasSelectedPersonalRes || !personalResourcesTotalNum}
-          type="ghost"
-          onClick={handleDelete}>
-          {transI18n('cloud.delete')}
-        </Button>
-        {showUploadToast ? <UploadSuccessToast></UploadSuccessToast> : null}
-        {showUploadModal ? <UploadModal></UploadModal> : null}
-      </Row>
+      {showUploadToast ? <UploadSuccessToast /> : null}
+      {showUploadModal ? <UploadModal /> : null}
+      <CloudToolbar
+        fileCounts={personalResourcesTotalNum}
+        keyword={searchPersonalResourcesKeyword}
+        onKeywordChange={keyWordChangeHandle}
+        onRefresh={() => {
+          fetchPersonalResources({
+            pageNo: 1,
+            pageSize,
+            resourceName: searchPersonalResourcesKeyword,
+          });
+        }}
+      />
       <Table>
         <TableHeader>
           <Col width={9}>
@@ -186,6 +242,7 @@ export const PersonalResourcesContainer = observer(() => {
             />
           </Col>
           <Col>{transI18n('cloud.fileName')}</Col>
+          <Col></Col>
           <Col></Col>
           <Col>{transI18n('cloud.size')}</Col>
           <Col>{transI18n('cloud.updated_at')}</Col>
@@ -210,7 +267,13 @@ export const PersonalResourcesContainer = observer(() => {
                     />
                   </Col>
                   <Col style={{ cursor: 'pointer' }} onClick={() => onClickCol(resourceUuid)}>
-                    <SvgImg type={fileNameToType(resourceName)} style={{ marginRight: '6px' }} />
+                    <SvgImg
+                      type={fileNameToType(resourceName)}
+                      style={{
+                        marginRight: '6px',
+                        color: FileTypeSvgColor[fileNameToType(resourceName)],
+                      }}
+                    />
                     <Inline className="filename" color="#191919" title={resourceName}>
                       {resourceName}
                     </Inline>
@@ -220,7 +283,7 @@ export const PersonalResourcesContainer = observer(() => {
                     item.resource?.taskProgress?.status === 'Converting' ? (
                       <>
                         <Inline color="#586376">
-                          <CircleLoading width="18" height="18"></CircleLoading>
+                          <CircleLoading width="18" height="18" />
                         </Inline>
                         <Inline color="#586376" style={{ marginLeft: '6px' }}>
                           {item.resource?.taskProgress?.convertedPercentage}%
@@ -229,12 +292,25 @@ export const PersonalResourcesContainer = observer(() => {
                     ) : null}
                   </Col>
                   <Col>
+                    <Popover
+                      content={
+                        <CloudMoreMenu
+                          resourceUuid={resourceUuid}
+                          deleteResource={handleDeleteOneResource}
+                        />
+                      }
+                      placement={'bottom'}>
+                      <span>
+                        <SvgImg type="cloud-more" style={{ cursor: 'pointer' }} canHover />
+                      </span>
+                    </Popover>
+                  </Col>
+
+                  <Col>
                     <Inline color="#586376">{formatFileSize(size)}</Inline>
                   </Col>
                   <Col>
-                    <Inline color="#586376">
-                      {dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')}
-                    </Inline>
+                    <Inline color="#586376">{dayjs(updateTime).format('YY-MM-DD HH:mm:ss')}</Inline>
                   </Col>
                 </Row>
               );
@@ -245,12 +321,54 @@ export const PersonalResourcesContainer = observer(() => {
           <Col className="bottom-col">
             <div className="pagination-wrapper">
               <Pagination
-                onChange={(page) => setPersonalResCurrentPage(page)}
+                onChange={(page) => {
+                  fetchPersonalResources({
+                    pageNo: page,
+                    pageSize,
+                    resourceName: searchPersonalResourcesKeyword,
+                  });
+                }}
                 current={currentPersonalResPage}
                 total={personalResourcesTotalNum}
                 pageSize={pageSize}></Pagination>
             </div>
           </Col>
+          <Row style={{ paddingLeft: 19 }} className="btn-group margin-gap cloud-btn-group">
+            <div
+              className="cloud-minimize-container"
+              onClick={() => {
+                if (showUploadMinimize) {
+                  setShowUploadMinimize(false);
+                  setShowUploadModal(true);
+                }
+              }}>
+              {showUploadMinimize ? (
+                <CloudMinimize
+                  state={uploadState}
+                  uploadingProgresses={uploadingProgresses as unknown as UploadItem[]}
+                />
+              ) : null}
+            </div>
+            <div>
+              <input
+                ref={fileRef}
+                id="upload-image"
+                accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
+                onChange={handleUpload}
+                multiple
+                type="file"></input>
+              <Button type="primary" onClick={triggerUpload}>
+                {transI18n('cloud.upload')}
+              </Button>
+              <Button
+                disabled={!hasSelectedPersonalRes || !personalResourcesTotalNum}
+                style={{ marginLeft: 15 }}
+                type="ghost"
+                onClick={handleDelete}>
+                {transI18n('cloud.delete')}
+              </Button>
+            </div>
+          </Row>
         </Table>
       </Table>
     </>
