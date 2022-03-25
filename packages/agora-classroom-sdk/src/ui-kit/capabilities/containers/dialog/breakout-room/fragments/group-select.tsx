@@ -1,14 +1,13 @@
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { transI18n } from '@/infra/stores/common/i18n';
 import { observer } from 'mobx-react';
-import { FC, Fragment, MouseEvent, useContext, useMemo, useState } from 'react';
+import { FC, Fragment, MouseEvent, useContext, useMemo, useState, useRef } from 'react';
 import { Button, MultiRootTree, TreeNode, TreeModel } from '~ui-kit';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
 import { GroupState } from 'agora-edu-core';
 import { cloneDeep } from 'lodash';
-import { interactionThrottleHandler } from '@/infra/utils/interaction';
 import React from 'react';
 
 type LinkButtonProps = {
@@ -292,18 +291,22 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   const [broadcastVisible, setBroadcastVisible] = useState(false);
 
   const [messageText, setMessageText] = useState('');
+  const cursorRef = useRef<boolean>(false);
 
-  const handleGroupState = interactionThrottleHandler(
-    () => {
-      if (groupState === GroupState.OPEN) {
-        stopGroup();
-        onNext();
-      } else {
-        startGroup();
-      }
-    },
-    (message) => groupUIStore.shareUIStore.addToast(message, 'warning'),
-  );
+  const handleGroupState = () => {
+    if (cursorRef.current) return;
+    cursorRef.current = true;
+    if (groupState === GroupState.OPEN) {
+      stopGroup().finally(() => {
+        cursorRef.current = false;
+      });
+      onNext();
+    } else {
+      startGroup().finally(() => {
+        cursorRef.current = false;
+      });
+    }
+  };
 
   const reCreateButton = (
     <Button

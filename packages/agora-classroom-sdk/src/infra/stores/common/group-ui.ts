@@ -412,17 +412,20 @@ export class GroupUIStore extends EduUIStoreBase {
         users: group.users,
       });
     });
-
-    this.classroomStore.groupStore
-      .startGroup(groupDetails)
-      .then(() => {
-        runInAction(() => {
-          this.localGroups = new Map();
+    return new Promise((resolve, reject) => {
+      this.classroomStore.groupStore
+        .startGroup(groupDetails)
+        .then(() => {
+          runInAction(() => {
+            this.localGroups = new Map();
+          });
+          resolve('');
+        })
+        .catch((e) => {
+          this.shareUIStore.addGenericErrorDialog(e as AGError);
+          reject('');
         });
-      })
-      .catch((e) => {
-        this.shareUIStore.addGenericErrorDialog(e as AGError);
-      });
+    });
   }
 
   /**
@@ -430,7 +433,16 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @bound
   stopGroup() {
-    this.classroomStore.groupStore.stopGroup();
+    return new Promise((resolve, reject) => {
+      this.classroomStore.groupStore
+        .stopGroup()
+        .then(() => {
+          resolve('');
+        })
+        .catch(() => {
+          reject('');
+        });
+    });
   }
 
   /**
