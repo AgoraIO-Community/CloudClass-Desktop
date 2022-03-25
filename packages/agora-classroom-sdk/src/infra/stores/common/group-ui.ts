@@ -468,6 +468,13 @@ export class GroupUIStore extends EduUIStoreBase {
   @bound
   async broadcastMessage(message: string) {
     try {
+      message = message.trim().replaceAll('\n', '');
+
+      if (!message) {
+        this.shareUIStore.addToast(transI18n('breakout_room.broadcast_message_cannot_be_empty'));
+        return;
+      }
+
       await this.classroomStore.groupStore.broadcastMessage(message);
       this.shareUIStore.addToast(transI18n('breakout_room.broadcast_message_success'));
     } catch (e) {

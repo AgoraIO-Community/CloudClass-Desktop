@@ -594,6 +594,7 @@ export const en = {
     send: 'Send',
     cancel: 'Cancel',
     broadcast_message_success: 'Message sent successfully',
+    broadcast_message_cannot_be_empty: 'Message cannot be empty',
   },
   begin_class: 'Begin class',
   edu_error: {

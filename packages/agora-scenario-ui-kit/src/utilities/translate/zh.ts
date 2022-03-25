@@ -580,6 +580,7 @@ export const zh = {
     send: '发送',
     cancel: '取消',
     broadcast_message_success: '消息发送成功',
+    broadcast_message_cannot_be_empty: '消息不能为空',
   },
   begin_class: '开始上课',
   edu_error: {
