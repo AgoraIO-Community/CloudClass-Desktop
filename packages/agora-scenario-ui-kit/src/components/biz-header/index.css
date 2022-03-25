@@ -106,3 +106,11 @@
 .fr {
   float: right;
 }
+
+.header-actions svg:hover {
+  background: #DFB635;
+}
+.header-actions svg:hover path {
+  color: #fff;
+  fill: #fff;
+}

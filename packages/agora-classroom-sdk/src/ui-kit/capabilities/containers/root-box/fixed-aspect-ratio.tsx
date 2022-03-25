@@ -25,7 +25,7 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
     return (
       <div
         className="flex bg-black justify-center items-center h-screen w-screen"
-        style={{ background: '#263487' }}>
+        style={{ background: '#191919' }}>
         <div
           style={style}
           className={`w-full h-full relative ${shareUIStore.classroomViewportClassName}`}>

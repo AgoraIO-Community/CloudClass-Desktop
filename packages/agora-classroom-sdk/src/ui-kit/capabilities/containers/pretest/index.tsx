@@ -430,7 +430,7 @@ export const RoomPretest: React.FC<PretestProps> = ({ className, onOK, ...restPr
   });
 
   return (
-    <div className="fixed-container">
+    <div className="fixed-container room-pretest">
       <Modal
         title={transI18n('pretest.settingTitle')}
         width={720}

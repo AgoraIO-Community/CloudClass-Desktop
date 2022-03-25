@@ -25,7 +25,6 @@ export const RoomMidStreamsContainer = observer(() => {
         style={{
           backgroundColor: '#364D9C',
           boxSizing: 'border-box',
-          borderBottom: '4px solid #75C0FE',
         }}>
         <TeacherStream />
         <div onMouseEnter={mouseHandler(true)} onMouseLeave={mouseHandler(false)}>
