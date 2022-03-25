@@ -334,8 +334,12 @@ export class ToolbarUIStore extends EduUIStoreBase {
   get cabinetItems(): CabinetItem[] {
     const { extensionAppInstances } = this.classroomStore.extensionAppStore;
 
-    const apps = Object.values(extensionAppInstances)
-      .map(
+    let apps: CabinetItem[] = [];
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (!isInSubRoom) {
+      apps = Object.values(extensionAppInstances).map(
         ({ appIdentifier, icon, appName }) =>
           ({
             id: appIdentifier,
@@ -343,7 +347,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
             icon: typeof icon === 'string' ? null : icon,
             name: appName,
           } as CabinetItem),
-      )
+      );
+    }
+
+    apps = apps
       .concat([
         {
           id: CabinetItemEnum.ScreenShare,
