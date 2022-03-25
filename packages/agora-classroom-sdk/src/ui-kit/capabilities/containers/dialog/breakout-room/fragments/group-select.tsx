@@ -45,6 +45,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
   const { groupUIStore } = useStore();
 
   const {
+    MAX_USER_COUNT,
     students,
     setGroupUsers,
     groupState,
@@ -52,6 +53,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
     joinSubRoom,
     getGroupUserCount,
     currentSubRoom,
+    toastFullOfStudents,
   } = groupUIStore;
 
   const [toggle, setToggle] = useState(false);
@@ -84,7 +86,11 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
       ) : (
         <UserPanel
           groupUuid={groupUuid}
-          users={students}
+          users={students.map((v) => v)}
+          limitCount={MAX_USER_COUNT}
+          onError={(message) => {
+            message === 'FULL' && toastFullOfStudents();
+          }}
           onChange={(users) => {
             setGroupUsers(groupUuid, users);
           }}>

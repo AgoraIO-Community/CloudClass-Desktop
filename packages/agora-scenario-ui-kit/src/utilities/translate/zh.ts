@@ -581,6 +581,7 @@ export const zh = {
     cancel: '取消',
     broadcast_message_success: '消息发送成功',
     broadcast_message_cannot_be_empty: '消息不能为空',
+    group_is_full: '该小组已满{reason}人',
   },
   begin_class: '开始上课',
   edu_error: {

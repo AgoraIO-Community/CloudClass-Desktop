@@ -1,21 +1,25 @@
 import { FC, ReactElement, useState, MouseEvent, useContext } from 'react';
-import { CheckBox } from '~ui-kit';
+import { CheckBox, transI18n } from '~ui-kit';
 import { Panel, PanelStateContext } from './panel';
 
 type UserPanelProps = {
   groupUuid: string;
   users: { userUuid: string; userName: string; groupUuid: string | undefined }[];
+  limitCount: number;
   onOpen?: () => void;
   onClose?: (users: string[]) => void;
   onChange?: (users: string[]) => void;
+  onError?: (message: string) => void;
 };
 
 export const UserPanel: FC<UserPanelProps> = ({
   children,
   users,
+  limitCount,
   onChange,
   onOpen,
   onClose,
+  onError,
   groupUuid,
 }) => {
   const [checkedUsers, setCheckedUsers] = useState(() => new Set<string>());
@@ -44,16 +48,22 @@ export const UserPanel: FC<UserPanelProps> = ({
               value={userUuid}
               onChange={() => {
                 const newCheckedUsers = new Set(checkedUsers);
+                let isFull = false;
                 if (newCheckedUsers.has(userUuid)) {
                   newCheckedUsers.delete(userUuid);
                 } else {
-                  newCheckedUsers.add(userUuid);
+                  newCheckedUsers.size < limitCount
+                    ? newCheckedUsers.add(userUuid)
+                    : (isFull = true);
                 }
                 setCheckedUsers(newCheckedUsers);
                 onChange && onChange(Array.from(newCheckedUsers));
+                isFull && onError && onError('FULL');
               }}
               disabled={userGroupUuid ? userGroupUuid !== groupUuid : false}
-              checked={checkedUsers.has(userUuid)}
+              checked={
+                checkedUsers.has(userUuid) || (userGroupUuid ? userGroupUuid !== groupUuid : false)
+              }
             />
           </div>
         ))}

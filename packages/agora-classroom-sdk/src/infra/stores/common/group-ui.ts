@@ -34,6 +34,8 @@ export class GroupUIStore extends EduUIStoreBase {
 
   private _groupNum = 0;
 
+  MAX_USER_COUNT = 15; // 学生最大15人
+
   /**
    * 分组列表
    */
@@ -103,7 +105,17 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @bound
   getUserGroupUuid(userUuid: string) {
-    return this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
+    const map: Map<string, string> = new Map();
+
+    this.groupDetails.forEach((group, groupUuid) => {
+      group.users.forEach(({ userUuid, notJoined }) => {
+        if (!notJoined) {
+          map.set(userUuid, groupUuid);
+        }
+      });
+    });
+
+    return map.get(userUuid);
   }
 
   /**
@@ -296,6 +308,13 @@ export class GroupUIStore extends EduUIStoreBase {
   @action.bound
   moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string) {
     if (this.groupState === GroupState.OPEN) {
+      let toUsersLength =
+        this.classroomStore.groupStore.groupDetails.get(toGroupUuid)?.users.length;
+      if (toUsersLength && toUsersLength >= this.MAX_USER_COUNT) {
+        this.toastFullOfStudents();
+        return;
+      }
+
       if (!fromGroupUuid) {
         this.classroomStore.groupStore.updateGroupUsers(
           [
@@ -312,6 +331,12 @@ export class GroupUIStore extends EduUIStoreBase {
     } else {
       const fromGroup = this.localGroups.get(fromGroupUuid);
       const toGroup = this.localGroups.get(toGroupUuid);
+
+      if (toGroup && toGroup.users.length >= this.MAX_USER_COUNT) {
+        this.toastFullOfStudents();
+        return;
+      }
+
       if (fromGroup && toGroup) {
         fromGroup.users = fromGroup.users.filter(({ userUuid: uuid }) => uuid !== userUuid);
         toGroup.users = toGroup.users.concat([{ userUuid }]);
@@ -320,6 +345,15 @@ export class GroupUIStore extends EduUIStoreBase {
       }
     }
   }
+
+  toastFullOfStudents = () => {
+    this.shareUIStore.addToast(
+      transI18n('breakout_room.group_is_full', {
+        reason: this.MAX_USER_COUNT,
+      }),
+      'warning',
+    );
+  };
 
   /**
    * 用户组互换

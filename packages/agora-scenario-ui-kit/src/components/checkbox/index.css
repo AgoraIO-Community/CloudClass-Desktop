@@ -130,13 +130,13 @@
 
 .pure-material-checkbox > input:disabled + span::before {
   border-color: #ececf1;
-  background: #f9f9fc;
+  background: #bbbbc8;
 }
 
 .pure-material-checkbox > input:checked:disabled + span::before,
 .pure-material-checkbox > input:indeterminate:disabled + span::before {
   border-color: transparent;
-  background-color: #f9f9fc;
+  background-color: #bbbbc8;
 }
 
 .pure-material-checkbox > span {
