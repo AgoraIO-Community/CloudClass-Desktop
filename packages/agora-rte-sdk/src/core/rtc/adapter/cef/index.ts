@@ -25,7 +25,7 @@ import {
 } from '../base';
 import { RtcAudioDeviceManagerCef, RtcVideoDeviceManagerCef } from './device';
 import { RtcNetworkQualityCef } from './stats';
-import { AgoraRteCefCameraThread } from './thread';
+import { AgoraRteCefCameraThread, AgoraRteCefMicThread } from './thread';
 import { AgoraRegion, AgoraRteEngineConfig } from '../../../../configs';
 import { AgoraMediaControlEventType } from '../../../media/control';
 import { AgoraRteEventType } from '../../../processor/channel-msg/handler';
@@ -64,6 +64,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
   private _configs: RtcAdapterCefConfig = {};
   private _screenEventBus: AGEventEmitter = new AGEventEmitter();
   cameraThread: AgoraRteCefCameraThread;
+  micThread: AgoraRteCefMicThread;
   private _localVideoEnabled = false;
   private _localAudioEnabled = false;
   // static get remote() {
@@ -116,6 +117,9 @@ export class RtcAdapterCef extends RtcAdapterBase {
       new AgoraCEF.AgoraRtcEngine.RtcEngineContext(AgoraRteEngineConfig.shared.appId),
     );
 
+    this.rtcEngine.setLogFile('C://Users/zqz/a.log');
+    window.rtcEngine = this.rtcEngine;
+
     this.rtcEngine.setParameters(
       `${JSON.stringify({
         'che.video.h264ProfileNegotiated': 66,
@@ -163,6 +167,7 @@ export class RtcAdapterCef extends RtcAdapterBase {
     this._adm = new RtcAudioDeviceManagerCef(this);
     this._vdm = new RtcVideoDeviceManagerCef(this);
     this.cameraThread = new AgoraRteCefCameraThread(this);
+    this.micThread = new AgoraRteCefMicThread(this);
   }
   createRtcChannel(channelName: string, base: RtcAdapterBase): RtcChannelAdapterBase {
     let channel = this._channels.get(channelName);
@@ -232,12 +237,8 @@ export class RtcAdapterCef extends RtcAdapterBase {
   enableLocalAudio(enable: boolean): number {
     this._localAudioEnabled = enable;
     this.updateRole();
-    this.rtcEngine.enableLocalAudio(enable);
-    this.emit(
-      AgoraMediaControlEventType.localAudioTrackChanged,
-      enable ? AgoraRteMediaSourceState.started : AgoraRteMediaSourceState.stopped,
-      AgoraRteAudioSourceType.Mic,
-    );
+    this.micThread.micEnable = enable;
+    this.micThread.run();
     return 0;
   }
   setupLocalVideo(canvas: AgoraRtcVideoCanvas, videoSourceType: AgoraRteVideoSourceType): number {
@@ -417,27 +418,32 @@ export class RtcAdapterCef extends RtcAdapterBase {
   }
 
   private _addEventListeners() {
+    this.rtcEngine.on('ClientRoleChanged', (oldRole: number, newRole: number) => {
+      this.logger.info(`client role changed: ${oldRole} to ${newRole}`);
+      this.micThread.clientRole = newRole;
+      this.micThread.run();
+    });
     this.rtcEngine.on('LocalVideoStateChanged', (state: any, reason: any) => {
       this.logger.info(`[rtc] video state changed ${state} ${reason}`);
       this.cameraThread.videoStreamState = state;
     });
-    // this.rtcEngine.on('LocalAudioStateChanged', (state: any) => {
-    //   this.logger.info(`[rtc] audio state changed ${state}`);
-    //   if (state === 0) {
-    //     this.emit(
-    //       AgoraMediaControlEventType.localAudioTrackChanged,
-    //       AgoraRteMediaSourceState.stopped,
-    //       AgoraRteAudioSourceType.Mic,
-    //     );
-    //   }
-    //   if (state === 2 || state === 1) {
-    //     this.emit(
-    //       AgoraMediaControlEventType.localAudioTrackChanged,
-    //       AgoraRteMediaSourceState.started,
-    //       AgoraRteAudioSourceType.Mic,
-    //     );
-    //   }
-    // });
+    this.rtcEngine.on('LocalAudioStateChanged', (state: any) => {
+      this.logger.info(`[rtc] audio state changed ${state}`);
+      if (state === 0) {
+        this.emit(
+          AgoraMediaControlEventType.localAudioTrackChanged,
+          AgoraRteMediaSourceState.stopped,
+          AgoraRteAudioSourceType.Mic,
+        );
+      }
+      if (state === 2 || state === 1) {
+        this.emit(
+          AgoraMediaControlEventType.localAudioTrackChanged,
+          AgoraRteMediaSourceState.started,
+          AgoraRteAudioSourceType.Mic,
+        );
+      }
+    });
     this.rtcEngine.on(
       'AudioVolumeIndication',
       (speakers: { uid: number; volume: number; vad: number }[]) => {
