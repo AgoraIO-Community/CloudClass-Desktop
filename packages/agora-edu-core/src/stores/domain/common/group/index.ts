@@ -1,5 +1,5 @@
 import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
-import { startsWith } from 'lodash';
+import { cloneDeep, startsWith } from 'lodash';
 import get from 'lodash/get';
 import { action, computed, observable } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
@@ -140,7 +140,8 @@ export class GroupStore extends EduStoreBase {
   @action.bound
   private _setDetails(details: GroupDetails, progress: Map<string, string[]>) {
     const newGroupDetails = new Map<string, GroupDetail>();
-    Object.entries(details).forEach(([groupUuid, groupDetail]) => {
+    const cloneDetails = cloneDeep(details);
+    Object.entries(cloneDetails).forEach(([groupUuid, groupDetail]) => {
       if (progress.has(groupUuid)) {
         const notJoinedUsers =
           progress
@@ -149,6 +150,7 @@ export class GroupStore extends EduStoreBase {
 
         groupDetail.users.unshift(...notJoinedUsers);
       }
+
       newGroupDetails.set(groupUuid, groupDetail);
     });
     this.groupDetails = newGroupDetails;

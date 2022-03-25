@@ -44,11 +44,11 @@ export class GroupUIStore extends EduUIStoreBase {
     const { users, studentList } = this.userData;
 
     this.groupDetails.forEach((group, groupUuid) => {
-      const students = [] as { id: string; text: string; notJoined?: boolean }[];
+      const students = new Map<string, { id: string; text: string; notJoined?: boolean }>();
 
       group.users.forEach(({ userUuid, notJoined }) => {
         if (studentList.has(userUuid)) {
-          students.push({
+          students.set(userUuid, {
             id: userUuid,
             text: users.get(userUuid)?.userName || 'unknown',
             notJoined,
@@ -59,7 +59,7 @@ export class GroupUIStore extends EduUIStoreBase {
       const tree = {
         id: groupUuid,
         text: group.groupName,
-        children: students,
+        children: [...students.values()],
       };
 
       list.push(tree);

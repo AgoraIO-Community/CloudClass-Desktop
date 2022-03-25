@@ -8,6 +8,7 @@ import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
 import { GroupState } from 'agora-edu-core';
 import { cloneDeep } from 'lodash';
+import { interactionThrottleHandler } from '@/infra/utils/interaction';
 import React from 'react';
 
 type LinkButtonProps = {
@@ -261,7 +262,6 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const { groups } = groupUIStore;
 
   const panelState = usePanelState();
-
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex-grow overflow-scroll py-2">
@@ -287,6 +287,18 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
 
   const [messageText, setMessageText] = useState('');
 
+  const handleGroupState = interactionThrottleHandler(
+    () => {
+      if (groupState === GroupState.OPEN) {
+        stopGroup();
+        onNext();
+      } else {
+        startGroup();
+      }
+    },
+    (message) => groupUIStore.shareUIStore.addToast(message, 'warning'),
+  );
+
   const reCreateButton = (
     <Button
       type="secondary"
@@ -306,17 +318,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   );
 
   const startButton = (
-    <Button
-      type="primary"
-      className="rounded-btn"
-      onClick={
-        groupState === GroupState.OPEN
-          ? () => {
-              stopGroup();
-              onNext();
-            }
-          : startGroup
-      }>
+    <Button type="primary" className="rounded-btn" onClick={handleGroupState}>
       {groupState === GroupState.OPEN
         ? transI18n('breakout_room.stop')
         : transI18n('breakout_room.start')}
