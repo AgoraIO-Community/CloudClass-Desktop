@@ -593,6 +593,7 @@ export const en = {
     broadcast_message: 'Send to all',
     send: 'Send',
     cancel: 'Cancel',
+    broadcast_message_success: 'Message sent successfully',
   },
   begin_class: 'Begin class',
   edu_error: {

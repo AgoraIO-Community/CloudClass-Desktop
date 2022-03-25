@@ -579,6 +579,7 @@ export const zh = {
     broadcast_message: '发送全体消息',
     send: '发送',
     cancel: '取消',
+    broadcast_message_success: '消息发送成功',
   },
   begin_class: '开始上课',
   edu_error: {

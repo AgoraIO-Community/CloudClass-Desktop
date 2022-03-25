@@ -469,6 +469,7 @@ export class GroupUIStore extends EduUIStoreBase {
   async broadcastMessage(message: string) {
     try {
       await this.classroomStore.groupStore.broadcastMessage(message);
+      this.shareUIStore.addToast(transI18n('breakout_room.broadcast_message_success'));
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
