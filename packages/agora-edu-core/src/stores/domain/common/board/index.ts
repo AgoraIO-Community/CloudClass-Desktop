@@ -327,8 +327,7 @@ export class BoardStore extends EduStoreBase {
     const teacherFirstLogin = this.room.state.globalState?.teacherFirstLogin;
     if (teacherFirstLogin) {
       if (
-        [EduRoleTypeEnum.teacher].includes(EduClassroomConfig.shared.sessionInfo.role) &&
-        this.windowManager.queryAll().length === 0
+        [EduRoleTypeEnum.teacher].includes(EduClassroomConfig.shared.sessionInfo.role)
       ) {
         await this.loadAppPublicCourseWareList();
       }
