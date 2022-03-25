@@ -22,7 +22,7 @@ export const ScenesController: FC<ScenesControllerProps> = ({
   const isLastScene = currentSceneIndex + 1 === scenesCount;
 
   return (
-    <Card className={classNames('scenes-controller-container')}>
+    <Card className={classNames('scenes-controller-container')} borderRadius={21}>
       <div className="scenes-controller-btn-list">
         <div className="scenes-controller-btn" onClick={addScene}>
           <SvgIcon type="add-scene" canHover hoverType="add-scene-active" />
