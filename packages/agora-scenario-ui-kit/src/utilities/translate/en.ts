@@ -709,7 +709,7 @@ export const en = {
     '30400412': 'Param "url" or "rootUrl" is required in web mode.',
     '30500420': 'Whiteboard failed to create room.',
     '30409440': 'Reward reached room limit.',
-    '30409430': 'Private speech conflict.',
+    '30409430': 'Operate conflict.',
     '30404430': 'Private speech not found.',
     '30404460': 'process not found.',
     '30404461': 'progress not found.',
