@@ -309,3 +309,8 @@ body,
 .room-pretest .modal {
   background: #DEF4FF;
 }
+
+.telebox-titlebar, .netless-app-docs-viewer-footer, .netless-app-slide-footer{
+  background: #75C0FF !important;
+  color: #fff !important;
+}
