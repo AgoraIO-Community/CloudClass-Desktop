@@ -160,6 +160,10 @@
   margin-right: 8px;
 }
 
+.expand-tool.pen {
+  margin: 5px;
+}
+
 .expand-tool.color {
   @apply flex justify-center items-center rounded-full;
   height: 22px;
@@ -293,10 +297,10 @@
 }
 
 .pens-colors-line {
-  width: 130px;
+  width: 140px;
   height: 1px;
   background: #ececf1;
-  margin: 12px 0 22px;
+  margin: 10px 0;
 }
 
 .tool.undo-disabled,
@@ -316,4 +320,8 @@
 .tool.undo:hover path,
 .tool.redo:hover path {
   fill: #0073ff;
+}
+
+.pen-slider {
+  position: relative;
 }

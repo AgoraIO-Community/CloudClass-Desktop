@@ -314,3 +314,18 @@ body,
   background: #75C0FF !important;
   color: #fff !important;
 }
+.telebox-title {
+  color: #fff !important;
+}
+.telebox-titlebar-icon-minimize {
+  background-image: url('./icon-zoomout.png') !important;
+}
+.telebox-titlebar-icon-maximize {
+  background-image: url('./icon-max.png') !important;
+}
+.telebox-titlebar-icon-maximize.is-active {
+  background-image: url('./icon-min.png') !important;
+}
+.telebox-titlebar-icon-close {
+  background-image: url('./icon-close.png') !important;
+}

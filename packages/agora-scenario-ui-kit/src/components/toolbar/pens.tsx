@@ -65,6 +65,7 @@ export const Pens: FC<PensProps> = ({
         <div className="pens-colors-line"></div>
 
         <Slider
+          className="pen-slider"
           style={{ width: '100%' }}
           defaultValue={strokeWidthValue}
           value={strokeWidthValue}
@@ -73,6 +74,9 @@ export const Pens: FC<PensProps> = ({
           step={colorSliderStep}
           onChange={onSliderChange}
         />
+
+        <div className="pens-colors-line"></div>
+
         {colors.map((color) => (
           <div
             key={color}
