@@ -329,3 +329,7 @@ body,
 .telebox-titlebar-icon-close {
   background-image: url('./icon-close.png') !important;
 }
+
+.biz-header-title-wrap > button {
+  border-left-width: 0 !important;
+}

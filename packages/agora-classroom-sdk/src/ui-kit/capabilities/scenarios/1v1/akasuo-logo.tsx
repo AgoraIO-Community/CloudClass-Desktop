@@ -9,6 +9,7 @@ export default function AkasuoLogo() {
         justifyContent: 'center',
         alignItems: 'center',
         height: 46,
+        marginTop: 4,
       }}>
       <img src={logo} />
     </div>
