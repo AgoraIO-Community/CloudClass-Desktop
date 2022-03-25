@@ -311,18 +311,26 @@ export class AgoraRteScene extends EventEmitter {
   private _handleUserAdded(users: AgoraUser[]) {
     let addedLocalStreams: AgoraStream[] = [];
     let addedRemoteStreams: AgoraStream[] = [];
+
     users.forEach((u) => {
+      this.logger.info('check streams with user', u);
       if (this.localUser?.userUuid === u.userUuid) {
         // local user added
         const streams = this.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
+        if (streams.length) {
+          this.logger.info('local streams come with user', streams);
           addedLocalStreams = addedLocalStreams.concat(streams);
+        } else {
+          this.logger.info('no local streams come with user', streams);
         }
       } else {
         // remote user added
         const streams = this.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
+        if (streams.length) {
+          this.logger.info('remote streams come with user', streams);
           addedRemoteStreams = addedRemoteStreams.concat(streams);
+        } else {
+          this.logger.info('no remote streams come with user', streams);
         }
       }
     });
@@ -330,6 +338,50 @@ export class AgoraRteScene extends EventEmitter {
     this.emit(AgoraRteEventType.LocalStreamAdded, addedLocalStreams);
     this.emit(AgoraRteEventType.RemoteStreamAdded, addedRemoteStreams);
     this.emit(AgoraRteEventType.UserAdded, users);
+  }
+
+  private _handleUserRemoved(users: AgoraUser[], type?: number) {
+    let removedLocalStreams: AgoraStream[] = [];
+    let removedRemoteStreams: AgoraStream[] = [];
+    users.forEach((u) => {
+      if (this.localUser?.userUuid === u.userUuid) {
+        // local user added
+        const streams = this.dataStore.findUserStreams(u.userUuid);
+        if (streams.length) {
+          removedLocalStreams = removedLocalStreams.concat(streams);
+        }
+      } else {
+        // remote user added
+        const streams = this.dataStore.findUserStreams(u.userUuid);
+        if (streams.length) {
+          removedRemoteStreams = removedRemoteStreams.concat(streams);
+        }
+      }
+    });
+
+    this._handleLocalStreamRemoved(removedLocalStreams);
+    this._handleRemoteStreamsRemoved(removedRemoteStreams);
+
+    this.emit(AgoraRteEventType.UserRemoved, users, type);
+  }
+
+  private _handleLocalStreamRemoved(streams: AgoraStream[], operator?: AgoraRteOperator) {
+    if (streams.length === 0) {
+      return;
+    }
+
+    this.logger.info(`_handleLocalStreamRemoved [${streams.join(',')}]`);
+
+    this.emit(AgoraRteEventType.LocalStreamRemove, streams, operator);
+  }
+
+  private _handleRemoteStreamsRemoved(streams: AgoraStream[], operator?: AgoraRteOperator) {
+    if (streams.length === 0) {
+      return;
+    }
+    this.logger.info(`_handleRemoteStreamsRemoved [${streams.join(',')}]`);
+
+    this.emit(AgoraRteEventType.RemoteStreamRemove, streams, operator);
   }
 
   private _addEventListeners(handler: AgoraRteChannelMessageHandle) {
@@ -368,7 +420,7 @@ export class AgoraRteScene extends EventEmitter {
 
     handler.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
       this.logger.info(`sceneId:${this.sceneId} user-added [${users.join(',')}]`);
-      this.emit(AgoraRteEventType.UserAdded, users);
+      this._handleUserAdded(users);
     });
 
     handler.on(AgoraRteEventType.UserUpdated, (user: AgoraUser) => {
@@ -377,7 +429,7 @@ export class AgoraRteScene extends EventEmitter {
 
     handler.on(AgoraRteEventType.UserRemoved, (users: AgoraUser[], type?: number) => {
       this.logger.info(`sceneId:${this.sceneId} user-removed [${users.join(',')}]`);
-      this.emit(AgoraRteEventType.UserRemoved, users, type);
+      this._handleUserRemoved(users, type);
     });
 
     handler.on(

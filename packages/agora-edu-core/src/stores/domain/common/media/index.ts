@@ -242,7 +242,6 @@ export class MediaStore extends EduStoreBase {
   };
 
   @computed get cameraAccessors() {
-    trace();
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
       cameraDeviceId: this.cameraDeviceId,
@@ -251,7 +250,6 @@ export class MediaStore extends EduStoreBase {
   }
 
   @computed get micAccessors() {
-    trace();
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
       recordingDeviceId: this.recordingDeviceId,
@@ -392,14 +390,21 @@ export class MediaStore extends EduStoreBase {
                 ) {
                   // once connected, should follow stream
                   if (!this.classroomStore.streamStore.localCameraStreamUuid) {
+                    this.logger.info(
+                      'enableLocalVideo => false. Reason: no local camera stream found.',
+                    );
                     // if no local stream
                     this._enableLocalVideo(false);
                   } else {
                     if (this.cameraDeviceId && this.cameraDeviceId !== DEVICE_DISABLE) {
                       const track = this.mediaControl.createCameraVideoTrack();
                       track.setDeviceId(this.cameraDeviceId);
+                      this.logger.info('enableLocalVideo => true. Reason: camera device selected');
                       this._enableLocalVideo(true);
                     } else {
+                      this.logger.info(
+                        'enableLocalVideo => false. Reason: camera device not selected',
+                      );
                       this._enableLocalVideo(false);
                     }
                   }
@@ -427,14 +432,21 @@ export class MediaStore extends EduStoreBase {
                 ) {
                   // once connected, should follow stream
                   if (!this.classroomStore.streamStore.localMicStreamUuid) {
+                    this.logger.info(
+                      'enableLocalAudio => false. Reason: no local mic stream found.',
+                    );
                     // if no local stream
                     this._enableLocalAudio(false);
                   } else {
                     if (this.recordingDeviceId && this.recordingDeviceId !== DEVICE_DISABLE) {
                       const track = this.mediaControl.createMicrophoneAudioTrack();
                       track.setRecordingDevice(this.recordingDeviceId);
+                      this.logger.info('enableLocalAudio => true. Reason: mic device selected');
                       this._enableLocalAudio(true);
                     } else {
+                      this.logger.info(
+                        'enableLocalAudio => false. Reason: mic device not selected',
+                      );
                       this._enableLocalAudio(false);
                     }
                   }
@@ -550,10 +562,8 @@ export class MediaStore extends EduStoreBase {
       () => this.localCameraTrackState,
       () => {
         const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-        const roomUuid = this.classroomStore.connectionStore.scene
-          ? this.classroomStore.connectionStore.sceneId
-          : EduClassroomConfig.shared.sessionInfo.roomUuid;
-        !EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
+        const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+        EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
           this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
           this.classroomStore.api.reportMicCameraStateLeagcy({
             userUuid,
@@ -567,10 +577,8 @@ export class MediaStore extends EduStoreBase {
       () => this.localMicTrackState,
       () => {
         const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-        const roomUuid = this.classroomStore.connectionStore.scene
-          ? this.classroomStore.connectionStore.sceneId
-          : EduClassroomConfig.shared.sessionInfo.roomUuid;
-        !EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
+        const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+        EduClassroomConfig.shared.isLowAPIVersionCompatibleRequired &&
           this.classroomStore.connectionStore.classroomState === ClassroomState.Connected &&
           this.classroomStore.api.reportMicCameraStateLeagcy({
             userUuid,

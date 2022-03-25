@@ -24,3 +24,18 @@ export interface PatchGroup {
   addUsers?: string[];
   removeUsers?: string[];
 }
+
+export enum BroadcastMessageRange {
+  MainRoom = 1,
+  SubRoom = 2,
+  All = 3,
+}
+
+export enum BroadcastMessageType {
+  Text = 'txt',
+  Image = 'img',
+  Location = 'loc',
+  Audio = 'audio',
+  Video = 'video',
+  File = 'file',
+}

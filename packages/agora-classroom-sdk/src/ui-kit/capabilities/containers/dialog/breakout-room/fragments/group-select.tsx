@@ -8,6 +8,7 @@ import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
 import { GroupState } from 'agora-edu-core';
 import { cloneDeep } from 'lodash';
+import React from 'react';
 
 type LinkButtonProps = {
   text: string;
@@ -21,7 +22,7 @@ const LinkButton = ({ onClick, text, hoverText = text }: LinkButtonProps) => {
 
   return (
     <div
-      className="link-btn py-1 px-3"
+      className="link-btn py-1 px-4"
       onClick={onClick}
       onMouseOver={() => {
         setHover(true);
@@ -70,7 +71,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
       {toggle ? btns : null}
       {groupState === GroupState.OPEN ? (
         currentSubRoom === groupUuid ? (
-          <div className="py-1 px-3">{transI18n('breakout_room.joined')}</div>
+          <div className="py-1 px-4">{transI18n('breakout_room.joined')}</div>
         ) : (
           <LinkButton
             className="pr-4"
@@ -257,7 +258,7 @@ type Props = {
 export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { groups, addGroup, groupState, startGroup, stopGroup } = groupUIStore;
+  const { groups } = groupUIStore;
 
   const panelState = usePanelState();
 
@@ -266,43 +267,163 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
       <div className="flex-grow overflow-scroll py-2">
         <PanelStateContext.Provider value={panelState}>
           <MultiRootTree
-            childClassName="pl-3"
+            childClassName="pl-4"
             data={groups}
             renderNode={(node, level) => <GroupTreeNode node={node} level={level} />}
           />
         </PanelStateContext.Provider>
       </div>
-      <div className="flex justify-between px-4 py-2">
-        <div>
-          <Button
-            type="secondary"
-            className="rounded-btn mr-2"
-            onClick={() => {
-              stopGroup();
-              onNext();
-            }}>
-            {transI18n('breakout_room.re_create')}
-          </Button>
-          <Button type="secondary" className="rounded-btn" onClick={addGroup}>
-            {transI18n('breakout_room.add_group')}
-          </Button>
-        </div>
-        <Button
-          type="primary"
-          className="rounded-btn"
-          onClick={
-            groupState === GroupState.OPEN
-              ? () => {
-                  stopGroup();
-                  onNext();
-                }
-              : startGroup
-          }>
-          {groupState === GroupState.OPEN
-            ? transI18n('breakout_room.stop')
-            : transI18n('breakout_room.start')}
-        </Button>
-      </div>
+      <Footer onNext={onNext} />
     </div>
   );
 });
+
+const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
+  const { groupUIStore } = useStore();
+
+  const { addGroup, groupState, startGroup, stopGroup, broadcastMessage } = groupUIStore;
+
+  const [broadcastVisible, setBroadcastVisible] = useState(false);
+
+  const [messageText, setMessageText] = useState('');
+
+  const reCreateButton = (
+    <Button
+      type="secondary"
+      className="rounded-btn mr-2"
+      onClick={() => {
+        stopGroup();
+        onNext();
+      }}>
+      {transI18n('breakout_room.re_create')}
+    </Button>
+  );
+
+  const addGroupButton = (
+    <Button type="secondary" className="rounded-btn" onClick={addGroup}>
+      {transI18n('breakout_room.add_group')}
+    </Button>
+  );
+
+  const startButton = (
+    <Button
+      type="primary"
+      className="rounded-btn"
+      onClick={
+        groupState === GroupState.OPEN
+          ? () => {
+              stopGroup();
+              onNext();
+            }
+          : startGroup
+      }>
+      {groupState === GroupState.OPEN
+        ? transI18n('breakout_room.stop')
+        : transI18n('breakout_room.start')}
+    </Button>
+  );
+
+  const broadcastButton = (
+    <Button
+      type="secondary"
+      className="rounded-btn mr-2"
+      onClick={() => {
+        setBroadcastVisible(true);
+      }}>
+      {transI18n('breakout_room.broadcast_message')}
+    </Button>
+  );
+
+  const handleSubmit = () => {
+    broadcastMessage(messageText);
+    setBroadcastVisible(false);
+  };
+
+  const initial = (
+    <div className="flex justify-between px-4 py-2">
+      <div>
+        {reCreateButton}
+        {addGroupButton}
+      </div>
+      {startButton}
+    </div>
+  );
+
+  const started = (
+    <div className="flex justify-between px-4 py-2">
+      {broadcastButton}
+      {startButton}
+    </div>
+  );
+
+  const broadcast = (
+    <React.Fragment>
+      <div className="px-4">
+        <BroadcastInput
+          limit={150}
+          onChange={(text) => {
+            setMessageText(text);
+          }}
+        />
+      </div>
+      <div className="flex justify-end px-4 py-2">
+        <Button
+          type="secondary"
+          className="rounded-btn mr-2"
+          onClick={() => {
+            setBroadcastVisible(false);
+          }}>
+          {transI18n('breakout_room.cancel')}
+        </Button>
+        <Button type="primary" className="rounded-btn" onClick={handleSubmit}>
+          {transI18n('breakout_room.send')}
+        </Button>
+      </div>
+    </React.Fragment>
+  );
+
+  let footer = null;
+
+  if (groupState === GroupState.OPEN) {
+    if (broadcastVisible) {
+      footer = broadcast;
+    } else {
+      footer = started;
+    }
+  } else {
+    footer = initial;
+  }
+
+  return footer;
+});
+
+const BroadcastInput = ({
+  limit,
+  onChange,
+}: {
+  limit: number;
+  onChange: (text: string) => void;
+}) => {
+  const [text, setText] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    let value = e.target.value;
+    if (value.length > 150) {
+      value = value.substring(0, 150);
+    }
+    if (text !== value) {
+      setText(value);
+
+      onChange(value);
+    }
+  };
+
+  return (
+    <div className="border rounded-sm p-1 relative">
+      <textarea className="w-full h-full" value={text} onChange={handleChange} />
+      <span className="absolute" style={{ bottom: 4, right: 4 }}>
+        {text.length}/{limit}
+      </span>
+    </div>
+  );
+};

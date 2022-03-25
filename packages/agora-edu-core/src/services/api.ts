@@ -4,7 +4,12 @@ import { EduSessionInfo, EduRoleTypeEnum } from '../type';
 import { ClassState } from '../stores/domain/common/room/type';
 import { escapeExtAppIdentifier } from '../stores/domain/common/room/command-handler';
 import { EduClassroomConfig } from '..';
-import { GroupDetail, PatchGroup } from '../stores/domain/common/group/type';
+import {
+  BroadcastMessageRange,
+  BroadcastMessageType,
+  GroupDetail,
+  PatchGroup,
+} from '../stores/domain/common/group/type';
 import { GroupState } from '../stores/domain/common/group/type';
 export class EduApiService extends ApiBase {
   async getConfig(): Promise<any> {
@@ -867,6 +872,29 @@ export class EduApiService extends ApiBase {
     const res = await this.fetch({
       path: `/v2/rooms/${roomUuid}/groups/info`,
       method: 'PATCH',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 发送全体消息
+   * @param roomUuid
+   * @param data
+   * @returns
+   */
+  async broadcastMessage(
+    roomUuid: string,
+    data: {
+      range: BroadcastMessageRange;
+      type: BroadcastMessageType;
+      msg: string;
+      toGroupUuids?: string[];
+    },
+  ) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/easemobIM/messages`,
+      method: 'POST',
       data,
     });
     return res.data;

@@ -5,8 +5,15 @@ import { action, computed, observable } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { EduEventCenter } from '../../../../event-center';
 import { AgoraEduClassroomEvent } from '../../../../type';
+import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
-import { GroupDetail, GroupUser, PatchGroup } from './type';
+import {
+  BroadcastMessageRange,
+  BroadcastMessageType,
+  GroupDetail,
+  GroupUser,
+  PatchGroup,
+} from './type';
 import { GroupDetails, GroupState } from './type';
 
 enum OperationType {
@@ -331,6 +338,23 @@ export class GroupStore extends EduStoreBase {
     }
   }
 
+  @bound
+  broadcastMessage(messageText: string) {
+    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+    try {
+      this.api.broadcastMessage(roomUuid, {
+        range: BroadcastMessageRange.All,
+        type: BroadcastMessageType.Text,
+        msg: messageText,
+      });
+    } catch (e) {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_GROUP_BROADCAST_FAIL,
+        e as Error,
+      );
+    }
+  }
+
   /**
    * 执行队列任务
    * @returns
@@ -363,6 +387,9 @@ export class GroupStore extends EduStoreBase {
     return this._currentGroupUuid;
   }
 
+  /**
+   * 用户所在组ID映射关系
+   */
   @computed
   get groupUuidByUserUuid() {
     const map: Map<string, string> = new Map();
@@ -378,6 +405,9 @@ export class GroupStore extends EduStoreBase {
     return map;
   }
 
+  /**
+   * 组内用户数据
+   */
   @computed
   get userByUuid() {
     const map: Map<string, GroupUser> = new Map();

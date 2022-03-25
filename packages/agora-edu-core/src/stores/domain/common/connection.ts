@@ -14,6 +14,7 @@ import {
   AgoraEduClassroomEvent,
   ClassroomState,
   EduRoomTypeEnum,
+  EduSessionInfo,
   WhiteboardState,
 } from '../../../type';
 import { EduClassroomConfig } from '../../../configs';
@@ -200,21 +201,7 @@ export class ConnectionStore extends EduStoreBase {
       retryAttempt(async () => {
         this.setClassroomState(ClassroomState.Connecting);
         const { sessionInfo } = EduClassroomConfig.shared;
-        const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
-        const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
-        this.setCheckInData(SceneType.Main, {
-          vid,
-          clientServerTime: ts,
-          classRoomSchedule: {
-            state,
-            startTime,
-            duration,
-            closeDelay,
-          },
-          rtcRegion,
-          rtmRegion,
-        });
-
+        await this.checkIn(sessionInfo, SceneType.Main);
         await engine.login(sessionInfo.token, sessionInfo.userUuid);
         const scene = engine.createAgoraRteScene(sessionInfo.roomUuid);
 
@@ -262,6 +249,23 @@ export class ConnectionStore extends EduStoreBase {
     EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Ready);
   }
 
+  async checkIn(sessionInfo: EduSessionInfo, sceneType: SceneType) {
+    const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
+    const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
+    this.setCheckInData(sceneType, {
+      vid,
+      clientServerTime: ts,
+      classRoomSchedule: {
+        state,
+        startTime,
+        duration,
+        closeDelay,
+      },
+      rtcRegion,
+      rtmRegion,
+    });
+  }
+
   @action.bound
   async joinSubRoom(roomUuid: string) {
     if (this.classroomState !== ClassroomState.Connected) {
@@ -276,20 +280,7 @@ export class ConnectionStore extends EduStoreBase {
         this.setSubRoomState(ClassroomState.Connecting);
         const { sessionInfo: baseSessionInfo } = EduClassroomConfig.shared;
         const sessionInfo = { ...baseSessionInfo, roomUuid, roomType: EduRoomTypeEnum.RoomGroup };
-        const { data, ts } = await this.classroomStore.api.checkIn(sessionInfo);
-        const { state = 0, startTime, duration, closeDelay = 0, rtcRegion, rtmRegion, vid } = data;
-        this.setCheckInData(SceneType.Sub, {
-          vid,
-          clientServerTime: ts,
-          classRoomSchedule: {
-            state,
-            startTime,
-            duration,
-            closeDelay,
-          },
-          rtcRegion,
-          rtmRegion,
-        });
+        await this.checkIn(sessionInfo, SceneType.Sub);
 
         const engine = this.getEngine();
         const scene = engine.createAgoraRteScene(sessionInfo.roomUuid);

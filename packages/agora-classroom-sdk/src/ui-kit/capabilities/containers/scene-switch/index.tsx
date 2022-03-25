@@ -1,4 +1,5 @@
 import { useStore } from '@/infra/hooks/use-edu-stores';
+import { transI18n } from '@/infra/stores/common/i18n';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { Card, Loading } from '~ui-kit';
@@ -21,7 +22,7 @@ const PageLoading = () => {
     <div className="page-loading">
       <Card width={120} height={120} className="card-loading-position flex flex-col">
         <Loading></Loading>
-        <p className="m-0">正在加入小组</p>
+        <p className="m-0">{transI18n('breakout_room.joining')}</p>
       </Card>
     </div>
   );

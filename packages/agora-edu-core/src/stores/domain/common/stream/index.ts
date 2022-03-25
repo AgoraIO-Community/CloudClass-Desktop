@@ -15,6 +15,8 @@ import {
   bound,
   Logger,
   RtcState,
+  Log,
+  Injectable,
 } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { AgoraEduClassroomEvent, ClassroomState, EduRoleTypeEnum } from '../../../../type';
@@ -379,6 +381,7 @@ class SceneEventHandler {
 
   @action.bound
   private _addLocalStream(streams: AgoraStream[]) {
+    console.info('Scene Id:', this._scene.sceneId, 'Add localStreams', streams);
     streams.forEach((stream) => {
       const eduStream = new EduStream(stream, this._scene);
       this.dataStore.streamByStreamUuid.set(stream.streamUuid, eduStream);
@@ -396,6 +399,7 @@ class SceneEventHandler {
   }
   @action.bound
   private _updateLocalStream(streams: AgoraStream[], operator?: AgoraRteOperator) {
+    console.info('Scene Id:', this._scene.sceneId, 'Update localStreams', streams);
     streams.forEach((stream) => {
       if (operator) {
         const { sessionInfo } = EduClassroomConfig.shared;

@@ -292,6 +292,7 @@ export const zh = {
     tools: '工具栏',
     user_list: '用户列表',
     breakout_room: '分组讨论',
+    in_progress: '-进行中',
   },
   cloud: {
     fileName: '文件名',
@@ -561,7 +562,7 @@ export const zh = {
     confirm_invite_teacher_btn_ok: '加入',
     confirm_invite_teacher_btn_cancel: '稍后加入',
     confirm_invite_student_title: '加入小组',
-    confirm_invite_student_content: '确定加入小组吗？',
+    confirm_invite_student_content: '老师邀请您加入{reason}',
     confirm_invite_student_btn_ok: '确定',
     confirm_invite_student_btn_cancel: '取消',
     confirm_ask_for_help_busy_content: '老师正在其他小组中，请稍后尝试',
@@ -574,6 +575,10 @@ export const zh = {
     not_accepted: '(未接受)',
     joined: '已加入',
     student: '学生',
+    joining: '正在加入小组',
+    broadcast_message: '发送全体消息',
+    send: '发送',
+    cancel: '取消',
   },
   begin_class: '开始上课',
   edu_error: {

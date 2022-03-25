@@ -10,19 +10,13 @@ import {
   WhiteboardState,
   WhiteboardTool,
 } from 'agora-edu-core';
-import {
-  AGError,
-  AgoraRteMediaPublishState,
-  AGRtcConnectionType,
-  bound,
-  Log,
-  RtcState,
-} from 'agora-rte-sdk';
+import { AGError, AGRtcConnectionType, bound, Log, RtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
 import { action, computed, observable, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import uuidv4 from 'uuid';
+import { SceneType } from '../../../../../agora-edu-core/src/stores/domain/common/connection';
 
 export enum GroupMethod {
   AUTO,
@@ -471,6 +465,15 @@ export class GroupUIStore extends EduUIStoreBase {
     }
   }
 
+  @bound
+  async broadcastMessage(message: string) {
+    try {
+      await this.classroomStore.groupStore.broadcastMessage(message);
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
+
   private _generateGroupName() {
     const nextSeq = (this._groupSeq += 1);
 
@@ -502,17 +505,6 @@ export class GroupUIStore extends EduUIStoreBase {
     if (this.joiningSubRoom) {
       await when(() => !this.joiningSubRoom);
     }
-  }
-
-  private async _publishStreams() {
-    // await this.classroomStore.streamStore.updateLocalPublishState({
-    //   videoState: AgoraRteMediaPublishState.Published,
-    //   audioState: AgoraRteMediaPublishState.Published,
-    // });
-    await this.classroomStore.mediaStore.updateLocalMediaState({
-      videoSourceState: this.classroomStore.mediaStore.localCameraTrackState,
-      audioSourceState: this.classroomStore.mediaStore.localMicTrackState,
-    });
   }
 
   private async _grantWhiteboard() {
@@ -549,12 +541,6 @@ export class GroupUIStore extends EduUIStoreBase {
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
         await this.classroomStore.connectionStore.joinRTC();
-
-        await when(
-          () => this.classroomStore.connectionStore.subRoomState === ClassroomState.Connected,
-        );
-
-        await this._publishStreams();
       } catch (e) {
         this.shareUIStore.addToast('Cannot join sub room');
       } finally {
@@ -582,6 +568,11 @@ export class GroupUIStore extends EduUIStoreBase {
       );
 
       await this.classroomStore.connectionStore.joinRTC();
+
+      await this.classroomStore.connectionStore.checkIn(
+        EduClassroomConfig.shared.sessionInfo,
+        SceneType.Main,
+      );
     } catch (e) {
       this.shareUIStore.addToast('Cannot leave sub room');
     } finally {
@@ -603,11 +594,6 @@ export class GroupUIStore extends EduUIStoreBase {
         await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
         await this.classroomStore.connectionStore.joinRTC();
-
-        await when(
-          () => this.classroomStore.connectionStore.subRoomState === ClassroomState.Connected,
-        );
-        await this._publishStreams();
       }
     } catch (e) {
       this.logger.error('cannot change sub room', e);
@@ -646,7 +632,7 @@ export class GroupUIStore extends EduUIStoreBase {
                 reason1: groupName,
                 reason2: inviter,
               })
-            : transI18n('breakout_room.confirm_invite_student_content');
+            : transI18n('breakout_room.confirm_invite_student_content', { reason: groupName });
 
         const ok =
           EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
