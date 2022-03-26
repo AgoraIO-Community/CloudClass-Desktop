@@ -117,15 +117,20 @@ export class RtcAdapterCef extends RtcAdapterBase {
       new AgoraCEF.AgoraRtcEngine.RtcEngineContext(AgoraRteEngineConfig.shared.appId),
     );
 
+    // checkout:
+    // https://confluence.agoralab.co/pages/viewpage.action?pageId=716638376
+    this.rtcEngine.setChannelProfile(1);
+
     this.rtcEngine.setLogFile('C://Users/zqz/a.log');
     window.rtcEngine = this.rtcEngine;
 
-    this.rtcEngine.setParameters(
-      `${JSON.stringify({
-        'che.video.h264ProfileNegotiated': 66,
-        'che.video.web_h264_interop_enable': true,
-      })}`,
-    );
+    // this.rtcEngine.setParameters(
+    //   `${JSON.stringify({
+    //     'che.video.h264ProfileNegotiated': 66,
+    //     'che.video.web_h264_interop_enable': true,
+    //   })}`,
+    // );
+    this.rtcEngine.enableWebSdkInteroperability(true);
 
     if (res !== 0)
       RteErrorCenter.shared.handleThrowableError(
