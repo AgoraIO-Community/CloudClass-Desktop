@@ -131,6 +131,23 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
       //     label: 'scaffold.user_list',
       //     icon: 'register',
       //   }
+      {
+        value: 'clear',
+        label: 'scaffold.clear',
+        icon: 'clear',
+      },
+      {
+        value: 'undo',
+        label: 'scaffold.undo',
+        icon: 'undo',
+        className: this.classroomStore.boardStore.undoSteps === 0 ? 'undo-disabled' : 'undo',
+      },
+      {
+        value: 'redo',
+        label: 'scaffold.redo',
+        icon: 'redo',
+        className: this.classroomStore.boardStore.redoSteps === 0 ? 'redo-disabled' : 'redo',
+      },
     ];
   }
 }
