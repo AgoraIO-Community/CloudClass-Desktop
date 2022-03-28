@@ -280,7 +280,7 @@ export class CloudDriveStore extends EduStoreBase {
         ossEndpoint,
         securityToken,
         ossKey,
-        preSignedUrl,
+        preSignedUrl: preSignedUrl.replace("http://","https://"),
         fileUrl,
       });
       const conversion = CloudDriveUtils.conversionOption(ext);
