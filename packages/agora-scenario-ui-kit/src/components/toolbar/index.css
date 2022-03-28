@@ -49,6 +49,7 @@
   @apply hidden;
   overflow-y: scroll;
   height: 100%;
+  scrollbar-width: none;
 }
 
 .toolbar > .tools::-webkit-scrollbar {
