@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
+import { AgoraRteScene } from '../../../scene';
 import { Log } from '../../decorator/log';
 import { Injectable } from '../../decorator/type';
-import { AgoraRteEngine } from '../../engine';
 import { AGRtmManager } from '../../rtm';
 import { AgoraRteSyncDataStore } from './data';
 import { AgoraRteChannelMessageHandle } from './handler';
@@ -10,7 +10,7 @@ import { AgoraRteMessageHandleTask, AgoraRteSyncSnapshotData } from './struct';
 @Log.attach({ proxyMethods: false })
 export class AgoraRteSynchronizer {
   protected logger!: Injectable.Logger;
-  sceneId: string;
+  private _scene: AgoraRteScene;
   userUuid: string;
   streamUuid: string;
   private _channelObserver: EventEmitter;
@@ -34,20 +34,20 @@ export class AgoraRteSynchronizer {
   constructor(
     dataStore: AgoraRteSyncDataStore,
     {
-      sceneId,
+      scene,
       userUuid,
       streamUuid,
       channelObserver,
       rtm,
     }: {
-      sceneId: string;
+      scene: AgoraRteScene;
       userUuid: string;
       streamUuid: string;
       channelObserver: EventEmitter;
       rtm: AGRtmManager;
     },
   ) {
-    this.sceneId = sceneId;
+    this._scene = scene;
     this.streamUuid = streamUuid;
     this.userUuid = userUuid;
     this._handleChannelMessage = this.handleChannelMessage.bind(this);
@@ -56,7 +56,7 @@ export class AgoraRteSynchronizer {
     this._channelObserver.on('ChannelMessage', this._handleChannelMessage);
     rtm.on('MessageFromPeer', this._handlePeerMessage);
     this.handle = new AgoraRteChannelMessageHandle(dataStore, {
-      sceneId,
+      sceneId: scene.sceneId,
       userUuid,
       streamUuid,
     });
@@ -86,7 +86,7 @@ export class AgoraRteSynchronizer {
   }) {
     // only process channel message from server
     if (memberId === 'server') {
-      this.logger.debug('channel message', message.text);
+      this.logger.debug(`channel message sceneId:${this._scene.sceneId}`, message.text);
       try {
         const sequence = JSON.parse(message.text);
         this.addTask({
@@ -231,9 +231,9 @@ export class AgoraRteSynchronizer {
     this.logger.info(`begin resolve gap ${lastSeq} - ${count}`);
     do {
       try {
-        const { list } = await AgoraRteEngine.engine
+        const { list } = await this._scene
           .getApiService()
-          .syncSequence(this.sceneId, lastSeq, count);
+          .syncSequence(this._scene.sceneId, lastSeq, count);
         const messageLength = Math.min(count, list.length);
         const tasks = list.slice(0, messageLength).map((m: any) => {
           return { sequence: m } as AgoraRteMessageHandleTask;

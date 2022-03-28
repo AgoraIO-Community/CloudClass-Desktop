@@ -1,16 +1,14 @@
 import { EduStoreBase } from '../base';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
-import { EduClassroomConfig } from '../../../..';
 import { bound } from 'agora-rte-sdk';
 import { PodiumSrouce } from './type';
 
 export class HandUpStore extends EduStoreBase {
   @bound
   async onPodium(userUuid: string, source: PodiumSrouce = PodiumSrouce.InvitedByTeacher) {
-    const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.acceptHandsUp({
-        roomUuid: sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         toUserUuid: userUuid,
       });
     } catch (err) {
@@ -25,10 +23,9 @@ export class HandUpStore extends EduStoreBase {
 
   @bound
   async offPodium(userUuid: string) {
-    const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.revokeCoVideo({
-        roomUuid: sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         toUserUuid: userUuid,
       });
     } catch (err) {
@@ -41,10 +38,9 @@ export class HandUpStore extends EduStoreBase {
 
   @bound
   async offPodiumAll() {
-    const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.revokeAllCoVideo({
-        roomUuid: sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
       });
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
@@ -56,10 +52,9 @@ export class HandUpStore extends EduStoreBase {
 
   @bound
   async rejectHandUp(userUuid: string) {
-    const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.refuseHandsUp({
-        roomUuid: sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         toUserUuid: userUuid,
       });
     } catch (err) {
@@ -72,10 +67,9 @@ export class HandUpStore extends EduStoreBase {
 
   @bound
   async cancelHandUp() {
-    const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.cancelHandsUp({
-        roomUuid: sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
       });
     } catch (err) {
       EduErrorCenter.shared.handleThrowableError(
@@ -87,10 +81,9 @@ export class HandUpStore extends EduStoreBase {
 
   @bound
   async handUp(teacherUuid: string) {
-    const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.startHandsUp({
-        roomUuid: sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         toUserUuid: teacherUuid,
       });
     } catch (err) {
@@ -103,10 +96,9 @@ export class HandUpStore extends EduStoreBase {
 
   @bound
   async waveArm(teacherUuid: string, duration: -1 | 3, payload?: object) {
-    const { sessionInfo } = EduClassroomConfig.shared;
     try {
       await this.api.waveArm({
-        roomUuid: sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         toUserUuid: teacherUuid,
         timout: duration,
         retry: true,

@@ -12,6 +12,15 @@ export enum ToolbarItemCategory {
   Cabinet,
 }
 
+export enum CabinetItemEnum {
+  ScreenShare = 'screenShare',
+  BreakoutRoom = 'breakoutRoom',
+  Laser = 'laser',
+  CountdownTimer = 'countdownTimer',
+  Poll = 'poll',
+  PopupQuiz = 'popupQuiz',
+}
+
 export interface CabinetItem {
   id: string;
   name: string;
@@ -53,11 +62,12 @@ export class ToolbarItem {
 
 export class ToolbarUIStore extends EduUIStoreBase {
   readonly allowedCabinetItems: string[] = [
-    'laser',
-    'screenShare',
-    'countdownTimer',
-    'poll',
-    'popupQuiz',
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.BreakoutRoom,
+    CabinetItemEnum.Laser,
+    CabinetItemEnum.CountdownTimer,
+    CabinetItemEnum.Poll,
+    CabinetItemEnum.PopupQuiz,
   ];
   readonly defaultColors: string[] = [
     '#ffffff',
@@ -86,6 +96,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   readonly paletteMap: Record<string, string> = {
     '#ffffff': '#E1E1EA',
   };
+
   onInstall() {
     reaction(
       () => this.classroomStore.mediaStore.localScreenShareTrackState,
@@ -169,11 +180,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
   handleCabinetItem(id: string) {
     const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
-      case 'screenShare':
+      case CabinetItemEnum.ScreenShare:
         if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
           this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'warning');
         }
-        this._activeCabinetItem = 'screenShare';
+        this._activeCabinetItem = CabinetItemEnum.ScreenShare;
         if (this.isScreenSharing) {
           this.classroomStore.mediaStore.stopScreenShareCapture();
         } else {
@@ -225,8 +236,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
           }
         }
         break;
-      case 'laser':
+      case CabinetItemEnum.Laser:
         this.setTool(id);
+        break;
+      case CabinetItemEnum.BreakoutRoom:
+        this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
         break;
       default:
         launchApp(id);
@@ -310,7 +324,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   get activeCabinetItem(): string | undefined {
-    return this.isScreenSharing ? 'screenShare' : undefined;
+    return this.isScreenSharing ? CabinetItemEnum.ScreenShare : undefined;
   }
 
   /**
@@ -320,8 +334,12 @@ export class ToolbarUIStore extends EduUIStoreBase {
   get cabinetItems(): CabinetItem[] {
     const { extensionAppInstances } = this.classroomStore.extensionAppStore;
 
-    const apps = Object.values(extensionAppInstances)
-      .map(
+    let apps: CabinetItem[] = [];
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (!isInSubRoom) {
+      apps = Object.values(extensionAppInstances).map(
         ({ appIdentifier, icon, appName }) =>
           ({
             id: appIdentifier,
@@ -329,15 +347,23 @@ export class ToolbarUIStore extends EduUIStoreBase {
             icon: typeof icon === 'string' ? null : icon,
             name: appName,
           } as CabinetItem),
-      )
+      );
+    }
+
+    apps = apps
       .concat([
         {
-          id: 'screenShare',
+          id: CabinetItemEnum.ScreenShare,
           iconType: 'share-screen',
           name: transI18n('scaffold.screen_share'),
         },
         {
-          id: 'laser',
+          id: CabinetItemEnum.BreakoutRoom,
+          iconType: 'group-discuss',
+          name: transI18n('scaffold.breakout_room'),
+        },
+        {
+          id: CabinetItemEnum.Laser,
           iconType: 'laser-pointer',
           name: transI18n('scaffold.laser_pointer'),
         },

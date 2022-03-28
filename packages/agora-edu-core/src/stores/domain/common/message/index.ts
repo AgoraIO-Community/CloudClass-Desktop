@@ -1,8 +1,6 @@
 import { AgoraRteEventType, AgoraRteScene } from 'agora-rte-sdk';
 import { AgoraChatMessage } from 'agora-rte-sdk/src/core/processor/channel-msg/struct';
-import { get } from 'lodash';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
-import { EduClassroomStore } from '..';
+import { action, computed, observable, runInAction } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { EduRoleTypeEnum } from '../../../../type';
 import { RteRole2EduRole } from '../../../../utils';
@@ -11,13 +9,45 @@ import { EduStoreBase } from '../base';
 import { Conversation, HistoryChatMessage, MessageItem } from './struct';
 
 export class MessagesStore extends EduStoreBase {
-  @observable roomChatMessages: MessageItem[] = []; // 房间消息
-  @observable roomChatConversations: Conversation[] = []; // 提供消息
-  @observable unreadMessageCount: number = 0;
-  @observable chatConvasationUserUuid: Map<string, Conversation> = new Map<string, Conversation>();
-  @observable chatConvasationMessageId: Map<string, MessageItem> = new Map<string, MessageItem>();
-  @observable roomChatMessagesMessageId: Map<string, MessageItem> = new Map<string, MessageItem>();
-  @observable newMessageFlag: boolean = false; // ⚠️ 用于判断是否为新消息进来
+  @observable
+  private _dataStore: DataStore = {
+    roomChatMessages: [],
+    roomChatConversations: [],
+    unreadMessageCount: 0,
+    chatConvasationUserUuid: new Map<string, Conversation>(),
+    chatConvasationMessageId: new Map<string, MessageItem>(),
+    roomChatMessagesMessageId: new Map<string, MessageItem>(),
+    newMessageFlag: false,
+  };
+
+  @computed
+  get roomChatMessages() {
+    return this._dataStore.roomChatMessages;
+  }
+  @computed
+  get roomChatConversations() {
+    return this._dataStore.roomChatConversations;
+  }
+  @computed
+  get unreadMessageCount() {
+    return this._dataStore.unreadMessageCount;
+  }
+  @computed
+  get chatConvasationUserUuid() {
+    return this._dataStore.chatConvasationUserUuid;
+  }
+  @computed
+  get chatConvasationMessageId() {
+    return this._dataStore.chatConvasationMessageId;
+  }
+  @computed
+  get roomChatMessagesMessageId() {
+    return this._dataStore.roomChatMessagesMessageId;
+  }
+  @computed
+  get newMessageFlag() {
+    return this._dataStore.newMessageFlag;
+  }
 
   @action.bound
   addChatMessage(args: MessageItem) {
@@ -53,9 +83,9 @@ export class MessagesStore extends EduStoreBase {
   @action.bound
   async getHistoryChatMessage(data: { nextId: string; sort: number }) {
     try {
-      const { roomUuid, userUuid } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
       const historyMessage = await this.classroomStore.api.getHistoryChatMessage({
-        roomUuid: roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         userUuid: userUuid,
         data,
       });
@@ -98,7 +128,7 @@ export class MessagesStore extends EduStoreBase {
   }) {
     try {
       const historyMessage = await this.classroomStore.api.getConversationHistoryChatMessage({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         data,
       });
 
@@ -161,7 +191,7 @@ export class MessagesStore extends EduStoreBase {
   async getConversationList(data: { nextId: string; sort: number }) {
     try {
       const conversation = await this.classroomStore.api.getConversationList({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         data,
       });
       runInAction(() => {
@@ -189,7 +219,7 @@ export class MessagesStore extends EduStoreBase {
   async muteChat() {
     try {
       await this.classroomStore.api.muteChat({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         muteChat: 1,
       });
     } catch (e) {
@@ -202,7 +232,7 @@ export class MessagesStore extends EduStoreBase {
   async unmuteChat() {
     try {
       await this.classroomStore.api.muteChat({
-        roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         muteChat: 0,
       });
     } catch (e) {
@@ -216,20 +246,20 @@ export class MessagesStore extends EduStoreBase {
 
   @action.bound
   resetUnreadMessageCount() {
-    this.unreadMessageCount = 0;
+    this._dataStore.unreadMessageCount = 0;
   }
 
   @action.bound
   incrementUnreadMessageCount() {
-    this.unreadMessageCount++;
+    this._dataStore.unreadMessageCount++;
   }
 
   sendMessage = async (message: string) => {
     try {
-      const { userUuid, roomUuid } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
       const ts = +Date.now();
       await this.classroomStore.api.sendChat({
-        roomUuid: roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         userUuid: userUuid,
         data: {
           message,
@@ -246,14 +276,11 @@ export class MessagesStore extends EduStoreBase {
 
   sendMessageToConversation = async (message: string, conversation: Conversation) => {
     try {
-      const {
-        userUuid: currentUserUuid,
-        userName,
-        roomUuid,
-      } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid: currentUserUuid, userName } = EduClassroomConfig.shared.sessionInfo;
+
       const ts = +Date.now();
       const result = await this.classroomStore.api.sendConversationChat({
-        roomUuid: roomUuid,
+        roomUuid: this.classroomStore.connectionStore.sceneId,
         userUuid: conversation.userUuid,
         data: {
           message,
@@ -281,76 +308,174 @@ export class MessagesStore extends EduStoreBase {
     }
   };
 
-  // eventhandlers
-  private _addEventHandlers(scene: AgoraRteScene) {
-    const { userUuid, userName, role, roomType } = EduClassroomConfig.shared.sessionInfo;
-    // to do
-    scene.on(AgoraRteEventType.ChatUserMessage, (evt: AgoraChatMessage) => {
-      runInAction(() => {
-        const { fromUser, sendTime, messageId, message: chatMessage } = evt;
-        let conversationMessageItem = new MessageItem({
-          id: fromUser.userUuid,
-          userName: fromUser.userName,
-          ts: sendTime,
-          messageId: messageId as string,
-          content: chatMessage,
-          role: RteRole2EduRole(roomType, fromUser.role),
-          isOwn: userUuid == fromUser.userUuid,
-        });
-        let conversationItem = {
-          // use from info
-          userName: fromUser.userName,
-          userUuid: fromUser.userUuid,
-          unreadMessageCount: 0,
-          messages: [conversationMessageItem],
-        };
-        if (role === EduRoleTypeEnum.student) {
-          conversationItem.userName = userName;
-          conversationItem.userUuid = userUuid;
-        }
-        let conversationList = new Conversation(conversationItem);
-
-        this.addConversationChatMessage(conversationMessageItem, conversationList);
-        this.newMessageFlag = true;
-      });
-    });
-    scene.on(AgoraRteEventType.ChatReceived, (evt: AgoraChatMessage) => {
-      const { userUuid: currentUserUuid, roomType } = EduClassroomConfig.shared.sessionInfo;
-      runInAction(() => {
-        const {
-          fromUser: { userUuid, userName, role },
-          sendTime,
-          messageId,
-          message: chatMessage,
-        } = evt;
-        let messageItem = new MessageItem({
-          id: userUuid,
-          ts: sendTime,
-          messageId: messageId as string,
-          content: chatMessage,
-          userName,
-          role: RteRole2EduRole(roomType, role),
-          isOwn: userUuid === currentUserUuid,
-        });
-        this.addChatMessage(messageItem);
-        this.newMessageFlag = true;
-      });
-    });
+  @action
+  private _setEventHandler(scene: AgoraRteScene) {
+    if (this.classroomStore.connectionStore.mainRoomScene === scene) {
+      let handler = SceneEventHandler.getEventHandler(scene);
+      if (!handler) {
+        handler = SceneEventHandler.createEventHandler(scene);
+      }
+      this._dataStore = handler.dataStore;
+    } else {
+      const handler = SceneEventHandler.createEventHandler(scene);
+      this._dataStore = handler.dataStore;
+    }
   }
 
   onInstall() {
-    let store = this.classroomStore;
-    reaction(
-      () => store.connectionStore.scene,
-      (scene) => {
-        if (scene) {
-          //bind events
-          this._addEventHandlers(scene);
-        } else {
-          //clean up
-        }
-      },
-    );
+    computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue, oldValue }) => {
+      if (newValue) {
+        this._setEventHandler(newValue);
+      }
+    });
   }
-  onDestroy() {}
+  onDestroy() {
+    SceneEventHandler.cleanup();
+  }
+}
+
+type DataStore = {
+  roomChatMessages: MessageItem[]; // 房间消息
+  roomChatConversations: Conversation[]; // 提供消息
+  unreadMessageCount: number;
+  chatConvasationUserUuid: Map<string, Conversation>;
+  chatConvasationMessageId: Map<string, MessageItem>;
+  roomChatMessagesMessageId: Map<string, MessageItem>;
+  newMessageFlag: boolean; // ⚠️ 用于判断是否为新消息进来
+};
+
+class SceneEventHandler {
+  private static _handlers: Record<string, SceneEventHandler> = {};
+
+  static createEventHandler(scene: AgoraRteScene) {
+    if (SceneEventHandler._handlers[scene.sceneId]) {
+      SceneEventHandler._handlers[scene.sceneId].removeEventHandlers();
+    }
+    const handler = new SceneEventHandler(scene);
+
+    handler.addEventHandlers();
+
+    SceneEventHandler._handlers[scene.sceneId] = handler;
+
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static getEventHandler(scene: AgoraRteScene) {
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static cleanup() {
+    Object.keys(SceneEventHandler._handlers).forEach((k) => {
+      SceneEventHandler._handlers[k].removeEventHandlers();
+    });
+
+    SceneEventHandler._handlers = {};
+  }
+
+  constructor(private _scene: AgoraRteScene) {}
+
+  @observable
+  dataStore: DataStore = {
+    roomChatMessages: [],
+    roomChatConversations: [],
+    unreadMessageCount: 0,
+    chatConvasationUserUuid: new Map<string, Conversation>(),
+    chatConvasationMessageId: new Map<string, MessageItem>(),
+    roomChatMessagesMessageId: new Map<string, MessageItem>(),
+    newMessageFlag: false,
+  };
+
+  addEventHandlers() {
+    this._scene.on(AgoraRteEventType.ChatUserMessage, this._receiveUserMessage);
+    this._scene.on(AgoraRteEventType.ChatReceived, this._receiveChat);
+  }
+
+  removeEventHandlers() {
+    this._scene.off(AgoraRteEventType.ChatUserMessage, this._receiveUserMessage);
+    this._scene.off(AgoraRteEventType.ChatReceived, this._receiveChat);
+  }
+
+  @action.bound
+  private _receiveChat(evt: AgoraChatMessage) {
+    const { userUuid: currentUserUuid, roomType } = EduClassroomConfig.shared.sessionInfo;
+    runInAction(() => {
+      const {
+        fromUser: { userUuid, userName, role },
+        sendTime,
+        messageId,
+        message: chatMessage,
+      } = evt;
+      let messageItem = new MessageItem({
+        id: userUuid,
+        ts: sendTime,
+        messageId: messageId as string,
+        content: chatMessage,
+        userName,
+        role: RteRole2EduRole(roomType, role),
+        isOwn: userUuid === currentUserUuid,
+      });
+      this.addChatMessage(messageItem);
+      this.dataStore.newMessageFlag = true;
+    });
+  }
+
+  @action.bound
+  addChatMessage(args: MessageItem) {
+    this.dataStore.roomChatMessages.push(args);
+    this.dataStore.roomChatMessagesMessageId.set(args.messageId, args);
+  }
+
+  @action.bound
+  private _receiveUserMessage(evt: AgoraChatMessage) {
+    const { userUuid, userName, role, roomType } = EduClassroomConfig.shared.sessionInfo;
+
+    runInAction(() => {
+      const { fromUser, sendTime, messageId, message: chatMessage } = evt;
+      let conversationMessageItem = new MessageItem({
+        id: fromUser.userUuid,
+        userName: fromUser.userName,
+        ts: sendTime,
+        messageId: messageId as string,
+        content: chatMessage,
+        role: RteRole2EduRole(roomType, fromUser.role),
+        isOwn: userUuid == fromUser.userUuid,
+      });
+      let conversationItem = {
+        // use from info
+        userName: fromUser.userName,
+        userUuid: fromUser.userUuid,
+        unreadMessageCount: 0,
+        messages: [conversationMessageItem],
+      };
+      if (role === EduRoleTypeEnum.student) {
+        conversationItem.userName = userName;
+        conversationItem.userUuid = userUuid;
+      }
+      let conversationList = new Conversation(conversationItem);
+
+      this.addConversationChatMessage(conversationMessageItem, conversationList);
+      this.dataStore.newMessageFlag = true;
+    });
+  }
+
+  @action.bound
+  addRoomChatConversation(conversation: Conversation) {
+    this.dataStore.roomChatConversations.push(conversation);
+    this.dataStore.chatConvasationUserUuid.set(conversation.userUuid, conversation);
+    conversation.messages.forEach((message: MessageItem) => {
+      this.dataStore.chatConvasationMessageId.set(message.messageId, message);
+    });
+  }
+
+  @action.bound
+  addConversationChatMessage(args: MessageItem, conversation: Conversation) {
+    let chatConversation = this.dataStore.chatConvasationUserUuid.get(conversation.userUuid);
+
+    if (!chatConversation) {
+      this.addRoomChatConversation(conversation);
+    } else {
+      !this.dataStore.chatConvasationMessageId.has(args.messageId) &&
+        chatConversation.messages.push(args);
+    }
+  }
 }

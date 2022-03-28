@@ -105,6 +105,58 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         },
       },
     ];
+    const studentActions: EduNavAction[] = [
+      {
+        title: 'AskForHelp',
+        iconType: 'ask-for-help',
+        onClick: () => {
+          const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
+
+          if (teachers.size) {
+            const teacherUuid = teachers.keys().next().value;
+            const { groupUuidByUserUuid, updateGroupUsers, currentSubRoom } =
+              this.classroomStore.groupStore;
+            const isTeacherInSubRoom = !!groupUuidByUserUuid.get(teacherUuid);
+
+            if (!isTeacherInSubRoom) {
+              if (currentSubRoom) {
+                this.shareUIStore.addConfirmDialog(
+                  transI18n('breakout_room.confirm_invite_teacher_title'),
+                  transI18n('breakout_room.confirm_ask_for_help_content'),
+                  () => {
+                    updateGroupUsers(
+                      [
+                        {
+                          groupUuid: currentSubRoom,
+                          addUsers: [teacherUuid],
+                        },
+                      ],
+                      true,
+                    );
+                  },
+                  ['ok', 'cancel'],
+                  () => {},
+                  {
+                    ok: transI18n('breakout_room.confirm_ask_for_help_btn_ok'),
+                    cancel: transI18n('breakout_room.confirm_ask_for_help_btn_cancel'),
+                  },
+                );
+              }
+            } else {
+              this.shareUIStore.addConfirmDialog(
+                transI18n('breakout_room.confirm_invite_teacher_title'),
+                transI18n('breakout_room.confirm_ask_for_help_busy_content'),
+              );
+            }
+          } else {
+            this.shareUIStore.addConfirmDialog(
+              transI18n('breakout_room.confirm_invite_teacher_title'),
+              transI18n('breakout_room.confirm_ask_for_help_absent_content'),
+            );
+          }
+        },
+      },
+    ];
     const commonActions: EduNavAction[] = [
       {
         title: 'Settings',
@@ -117,13 +169,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         title: 'Exit',
         iconType: 'exit',
         onClick: async () => {
-          this.shareUIStore.addConfirmDialog(
-            transI18n('toast.leave_room'),
-            transI18n('toast.quit_room'),
-            () => {
-              this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+          const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+          this.shareUIStore.addDialog(DialogCategory.Quit, {
+            onOk: (back: boolean) => {
+              if (back) {
+                this._leaveSubRoom();
+              } else {
+                this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+              }
             },
-          );
+            showOption: isInSubRoom,
+          });
         },
       },
     ];
@@ -131,6 +187,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     let actions = commonActions;
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
       actions = teacherActions.concat(actions);
+    }
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isInSubRoom) {
+      actions = studentActions.concat(actions);
     }
 
     return actions;
@@ -438,10 +500,27 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * 导航栏标题
    * @returns
    */
+  @computed
   get navigationTitle() {
-    return EduClassroomConfig.shared.sessionInfo.roomName;
+    return this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName;
   }
 
+  /**
+   * 所在房间名称
+   */
+  @computed
+  get currentSubRoomName() {
+    let groupName = null;
+    const { currentSubRoom, groupDetails } = this.classroomStore.groupStore;
+    if (currentSubRoom) {
+      groupDetails.forEach((group, groupUuid) => {
+        if (groupUuid === currentSubRoom) {
+          groupName = group.groupName;
+        }
+      });
+    }
+    return groupName;
+  }
   /**
    * 倒计时格式化
    * @param time
@@ -490,6 +569,14 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       await this.classroomStore.roomStore.updateClassState(ClassState.ongoing);
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
+
+  private _leaveSubRoom() {
+    const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    if (currentRoomUuid) {
+      this.classroomStore.groupStore.removeGroupUsers(currentRoomUuid, [userUuid]);
     }
   }
 

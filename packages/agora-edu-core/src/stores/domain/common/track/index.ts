@@ -6,6 +6,7 @@ import { action, observable, reaction, toJS } from 'mobx';
 import { forEach } from 'lodash';
 import { TrackState } from '../room/type';
 import { EduStoreBase } from '../base';
+import { EduClassroomConfig } from '../../../../configs';
 
 @Log.attach({ proxyMethods: false })
 export class TrackStore extends EduStoreBase {
@@ -99,7 +100,7 @@ export class TrackStore extends EduStoreBase {
     this._trackAdapter.updateTrackState(trackId, {
       position: { xaxis: position.x, yaxis: position.y },
       size: { width: size.width, height: size.height },
-      extra: { initial, userUuid: this.classroomStore.roomStore.userUuid },
+      extra: { initial, userUuid: EduClassroomConfig.shared.sessionInfo.userUuid },
     });
   }
 
@@ -153,7 +154,7 @@ export class TrackStore extends EduStoreBase {
         return;
       }
 
-      if (extra?.userUuid === this.classroomStore.roomStore.userUuid && hasTrack) {
+      if (extra?.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid && hasTrack) {
         this.logger.info('Skip self track update');
         return;
       }

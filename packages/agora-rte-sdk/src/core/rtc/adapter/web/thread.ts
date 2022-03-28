@@ -61,8 +61,8 @@ export class AgoraRteCameraThread extends AgoraRteMediaTrackThread {
   }
 
   async onExecution() {
+    this.logger.debug(`thread notify start...`);
     do {
-      this.logger.debug(`thread notify start...`);
       if (this.cameraEnable) {
         if (this._deviceChanged) {
           if (this.track) {
@@ -294,8 +294,8 @@ export class AgoraRteScreenShareThread extends AgoraRteMediaTrackThread {
   }
 
   async onExecution() {
+    this.logger.debug(`thread notify start...`);
     do {
-      this.logger.debug(`thread notify start...`);
       if (this.screenEnable) {
         if (!this.track) {
           this.logger.debug(`starting screenshare...`);
@@ -424,8 +424,8 @@ export class AgoraRtePublishThread extends AgoraRteThread {
 
   async onExecution() {
     this.logger.debug(`thread notify start...`);
+    let count = 0;
     do {
-      let count = 0;
       if (!this.mute) {
         if (this.track && !this.isTrackPublished(this.track)) {
           this.logger.debug(`publishing...`);
@@ -564,8 +564,8 @@ export class AgoraRteSubscribeThread extends AgoraRteThread {
 
   async onExecution() {
     this.logger.debug(`thread notify start...`);
+    let count = 0;
     do {
-      let count = 0;
       if (!this.mute) {
         if (!this.isTrackSubscribed()) {
           this.logger.debug(`[${this._user.uid}] subscribing ${this._mediaType}...`);

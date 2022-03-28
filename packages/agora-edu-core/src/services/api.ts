@@ -1,10 +1,16 @@
-import { ApiBase, AgoraRteEngineConfig } from 'agora-rte-sdk';
+import { ApiBase } from 'agora-rte-sdk';
 import { CloudDriveResourceInfo } from '../stores/domain/common/cloud-drive/type';
 import { EduSessionInfo, EduRoleTypeEnum } from '../type';
 import { ClassState } from '../stores/domain/common/room/type';
 import { escapeExtAppIdentifier } from '../stores/domain/common/room/command-handler';
 import { EduClassroomConfig } from '..';
-
+import {
+  BroadcastMessageRange,
+  BroadcastMessageType,
+  GroupDetail,
+  PatchGroup,
+} from '../stores/domain/common/group/type';
+import { GroupState } from '../stores/domain/common/group/type';
 export class EduApiService extends ApiBase {
   async getConfig(): Promise<any> {
     const res = await this.fetch({
@@ -764,6 +770,144 @@ export class EduApiService extends ApiBase {
     const res = await this.fetch({
       path,
       method: 'GET',
+    });
+    return res.data;
+  }
+
+  /**
+   *
+   * @param roomUuid
+   * @param data
+   * @returns
+   */
+  async addGroup(roomUuid: string, data: { groups: GroupDetail[]; inProgress: boolean }) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/states/1`,
+      method: 'POST',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 开启/关闭分组
+   * @param roomUuid
+   * @param state
+   * @param data
+   * @returns
+   */
+  async updateGroupState(
+    roomUuid: string,
+    data: { groups: GroupDetail[]; inProgress?: boolean },
+    state: GroupState = GroupState.OPEN,
+  ) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/states/${state}`,
+      method: 'PUT',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 删除组
+   * @param roomUuid
+   * @param data
+   * @returns
+   */
+  async removeGroup(roomUuid: string, data: { removeGroupUuids: string[] }) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/states/1`,
+      method: 'DELETE',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 接受邀请
+   * @param roomUuid
+   * @param groupUuid
+   */
+  async acceptGroupInvited(roomUuid: string, groupUuid: string) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/${groupUuid}/acceptance`,
+      method: 'POST',
+    });
+    return res.data;
+  }
+
+  /**
+   *
+   * @param roomUuid
+   * @param data  🔢 inProgress 是否邀请，true 发送邀请 false 直接加入
+   * @returns
+   */
+  async updateGroupUsers(roomUuid: string, data: { groups: PatchGroup[]; inProgress: boolean }) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/users`,
+      method: 'PATCH',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 发送全体消息
+   * @param roomUuid
+   * @param data
+   * rang: 1.大房间 2.指定组 3.全体（大房间+所有组）
+   * toGroupUuids: 当type=2时，传入指定小组id
+   * type: 消息类型；txt:文本消息，img：图片消息，loc：位置消息，audio：语音消息，video：视频消息，file：文件消息
+   * msg: 消息
+   * @returns
+   */
+  async sendNotificationMessage(
+    roomUuid: string,
+    data: { rang: number; toGroupUuids: string[]; type: string; msg: string },
+  ) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/easemobIM/messages`,
+      method: 'PATCH',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 修改分组信息
+   * @param roomUuid
+   * @param data
+   * @returns
+   */
+  async updateGroupInfo(roomUuid: string, data: { groups: PatchGroup[] }) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/info`,
+      method: 'PATCH',
+      data,
+    });
+    return res.data;
+  }
+
+  /**
+   * 发送全体消息
+   * @param roomUuid
+   * @param data
+   * @returns
+   */
+  async broadcastMessage(
+    roomUuid: string,
+    data: {
+      range: BroadcastMessageRange;
+      type: BroadcastMessageType;
+      msg: string;
+      toGroupUuids?: string[];
+    },
+  ) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/widgets/easemobIM/messages`,
+      method: 'POST',
+      data,
     });
     return res.data;
   }

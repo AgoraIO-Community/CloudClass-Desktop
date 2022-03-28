@@ -1,19 +1,16 @@
 import { Input, message, Modal, Switch, Popover } from 'antd';
 import { Button } from '../Button';
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import classnames from 'classnames';
 import { transI18n } from '~ui-kit';
-import { removeAllmute, setAllmute } from '../../api/mute';
 import { MSG_TYPE } from '../../contants';
 import { messageAction } from '../../redux/actions/messageAction';
-import store from '../../redux/store';
 // import emojiIcon from '../../themes/img/emoji.png';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import imgIcon from '../../themes/img/img.png';
 import screenshotIcon from '../../themes/img/screenshot.png';
 import ScreenshotMenu from './Screenshot';
-import { sendImgMsg } from '../../api/message';
 import isElctronPlatform from '../../utils/platform';
 
 import { Emoji } from '../../utils/emoji';
@@ -41,6 +38,8 @@ export const ShowEomji = ({ getEmoji }) => {
 
 export const InputMsg = ({ allMutePermission }) => {
   const state = useSelector((state) => state);
+  const store = useStore();
+  const { apis } = state;
   const loginUser = state?.propsData.userUuid;
   const roomId = state?.room.info.id;
   const roleType = state?.propsData.roleType;
@@ -80,9 +79,9 @@ export const InputMsg = ({ allMutePermission }) => {
   // 全局禁言开关
   const onChangeMute = (val) => {
     if (!val) {
-      setAllmute(roomId);
+      apis.muteAPI.setAllmute(roomId);
     } else {
-      removeAllmute(roomId);
+      apis.muteAPI.removeAllmute(roomId);
     }
   };
 
@@ -106,8 +105,8 @@ export const InputMsg = ({ allMutePermission }) => {
       message.error(transI18n('chat.enter_content_is_empty'));
       return;
     }
-    let id = WebIM.conn.getUniqueId(); // 生成本地消息id
-    let msg = new WebIM.message('txt', id); // 创建文本消息
+    let id = window.WebIM.conn.getUniqueId(); // 生成本地消息id
+    let msg = new window.WebIM.message('txt', id); // 创建文本消息
     let option = {
       msg: content, // 消息内容
       to: roomId, // 接收消息对象(聊天室id)
@@ -136,7 +135,7 @@ export const InputMsg = ({ allMutePermission }) => {
     };
     msg.set(option);
     setContent('');
-    WebIM.conn.send(msg.body);
+    window.WebIM.conn.send(msg.body);
     setInputStatus(false);
     inputRef.current.blur();
   };
@@ -190,7 +189,7 @@ export const InputMsg = ({ allMutePermission }) => {
                 <input
                   id="uploadImage"
                   onChange={() => {
-                    sendImgMsg(couterRef);
+                    apis.messageAPI.sendImgMsg(couterRef);
                   }}
                   type="file"
                   ref={couterRef}

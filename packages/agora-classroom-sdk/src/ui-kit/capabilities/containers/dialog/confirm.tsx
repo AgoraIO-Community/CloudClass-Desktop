@@ -9,6 +9,7 @@ export const Confirm: React.FC<
     content: string;
     opts?: {
       actions?: ConfirmDialogAction[];
+      btnText?: Record<ConfirmDialogAction, string>;
       onOk?: () => void;
       onCancel?: () => void;
     };
@@ -20,13 +21,13 @@ export const Confirm: React.FC<
       case 'ok':
         return (
           <Button type={'primary'} action="ok">
-            {t('toast.confirm')}
+            {opts?.btnText?.ok || t('toast.confirm')}
           </Button>
         );
       case 'cancel':
         return (
           <Button type={'secondary'} action="cancel">
-            {t('toast.cancel')}
+            {opts?.btnText?.cancel || t('toast.cancel')}
           </Button>
         );
       default:
@@ -36,7 +37,7 @@ export const Confirm: React.FC<
   return (
     <Modal
       id={id}
-      width={300}
+      style={{ width: 300 }}
       title={title}
       onOk={opts && opts.onOk ? opts.onOk : () => {}}
       onCancel={opts && opts.onCancel ? opts.onCancel : () => {}}

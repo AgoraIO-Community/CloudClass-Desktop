@@ -20,9 +20,12 @@ export const Widget: FC<WidgetProps> = observer(
   ({ className, widgetComponent, widgetProps = {}, ...restProps }) => {
     const ref = useRef<HTMLDivElement | null>(null);
     const uiStore = useStore();
-    const language = EduClassroomConfig.shared.rteEngineConfig.language;
-    widgetProps = { ...widgetProps, language, uiStore };
+
     useEffect(() => {
+      const language = EduClassroomConfig.shared.rteEngineConfig.language;
+
+      widgetProps = { ...widgetProps, language, uiStore };
+
       if (ref.current && widgetComponent) {
         // only run for very first time
         widgetComponent.widgetDidLoad(ref.current, widgetProps);
@@ -30,7 +33,7 @@ export const Widget: FC<WidgetProps> = observer(
       return () => {
         widgetComponent.widgetWillUnload();
       };
-    }, [ref, widgetComponent]);
+    }, [widgetComponent]);
 
     const cls = classnames({
       [`${className}`]: !!className,

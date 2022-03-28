@@ -1,17 +1,17 @@
 import { Button, Input } from 'antd';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useSelector, useStore } from 'react-redux';
 import { transI18n } from '~ui-kit';
-import { updateAnnouncement } from '../../api/chatroom';
 import { ANNOUNCEMENT_SIZE } from '../../contants';
 import { announcementStatus } from '../../redux/actions/roomAction';
-import store from '../../redux/store';
 import './index.css';
 
 const { TextArea } = Input;
 
-export const EditAnnouncement = ({ onEdit }) => {
+export const EditAnnouncement = () => {
   const state = useSelector((state) => state);
+  const store = useStore();
+  const { apis } = state;
   const roomId = state?.room.info.id;
   const announcement = state?.room.announcement;
   // 输入公告长度
@@ -60,7 +60,7 @@ export const EditAnnouncement = ({ onEdit }) => {
           type="primary"
           className="ok-btn"
           onClick={() => {
-            updateAnnouncement(roomId, content);
+            apis.chatRoomAPI.updateAnnouncement(roomId, content);
           }}>
           <span className="btn-text ok-btn-text">{transI18n('chat.publish')}</span>
         </Button>

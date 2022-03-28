@@ -14,6 +14,8 @@ export class EduUIStoreFactory {
         return new EduInteractiveUIClassStore(store);
       case EduRoomTypeEnum.RoomBigClass:
         return new EduLectureUIStore(store);
+      default:
+        return new EduClassroomUIStore(store); // return default
     }
   }
   static createWithTypeH5(type: EduRoomTypeEnum, store: EduClassroomStore): EduClassroomUIStore {

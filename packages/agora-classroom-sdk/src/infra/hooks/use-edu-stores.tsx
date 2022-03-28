@@ -21,5 +21,7 @@ export function useStore(): EduClassroomUIStore {
       return interactiveUIStores;
     case EduRoomTypeEnum.RoomBigClass:
       return lectureUIStores;
+    default:
+      throw new Error(`Unsupported room type ${type}`);
   }
 }

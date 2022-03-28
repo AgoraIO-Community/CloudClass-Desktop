@@ -1,6 +1,6 @@
 import { EduStoreBase } from '../base';
 import { PluginId, videoJsPlugin } from '@netless/video-js-plugin';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { BuiltinApps, MountParams, WindowManager } from '@netless/window-manager';
 import {
@@ -35,9 +35,16 @@ import { Color } from '../../../../type';
 import { EduRoleTypeEnum } from '../../../../type';
 import { EduEventCenter } from '../../../../event-center';
 import SlideApp from '@netless/app-slide';
-import { AgoraRteEventType, bound } from 'agora-rte-sdk';
+import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
 import get from 'lodash/get';
 import { AgoraEduClassroomEvent } from '../../../..';
+
+export interface WhiteboardConfig {
+  boardAppId: string;
+  boardId: string;
+  boardRegion: string;
+  boardToken: string;
+}
 
 const DEFAULT_COLOR: Color = {
   r: 0,
@@ -48,17 +55,66 @@ const DEFAULT_COLOR: Color = {
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
 
 export class BoardStore extends EduStoreBase {
+  private _disposers: (() => void)[] = [];
+  // ----------  other -------------
+  private _whiteBoardContainer?: HTMLElement;
+  private _room?: Room;
+  private _windowManager?: WindowManager;
+
   // ------ observables  -----------
-  @observable selectedTool: WhiteboardTool = WhiteboardTool.clicker;
-  @observable strokeColor: Color = DEFAULT_COLOR;
-  @observable strokeWidth: number = 2;
   @observable ready: boolean = false;
-  @observable grantUsers: Set<string> = new Set<string>();
-  @observable configReady = false;
-  @observable undoSteps = 0;
-  @observable redoSteps = 0;
-  @observable currentSceneIndex = 0;
-  @observable scenesCount = 0;
+  @observable managerReady: boolean = false;
+
+  @computed
+  get grantUsers() {
+    return this._dataStore.grantUsers;
+  }
+
+  @computed
+  get selectedTool() {
+    return this._dataStore.selectedTool;
+  }
+  @computed
+  get strokeColor() {
+    return this._dataStore.strokeColor;
+  }
+  @computed
+  get strokeWidth() {
+    return this._dataStore.strokeWidth;
+  }
+  @computed
+  get configReady() {
+    return this._dataStore.configReady;
+  }
+  @computed
+  get undoSteps() {
+    return this._dataStore.undoSteps;
+  }
+  @computed
+  get redoSteps() {
+    return this._dataStore.redoSteps;
+  }
+  @computed
+  get currentSceneIndex() {
+    return this._dataStore.currentSceneIndex;
+  }
+  @computed
+  get scenesCount() {
+    return this._dataStore.scenesCount;
+  }
+
+  @observable
+  private _dataStore: DataStore = {
+    configReady: false,
+    selectedTool: WhiteboardTool.clicker,
+    strokeColor: DEFAULT_COLOR,
+    strokeWidth: 2,
+    undoSteps: 0,
+    redoSteps: 0,
+    currentSceneIndex: 0,
+    scenesCount: 0,
+    grantUsers: new Set(),
+  };
 
   // ---------- computeds --------
   @computed
@@ -78,18 +134,8 @@ export class BoardStore extends EduStoreBase {
         disableCameraTransform,
         viewMode,
       } = getJoinRoomParams(role);
-      let { boardAppId, boardId, boardToken, boardRegion } =
-        EduClassroomConfig.shared.whiteboardConfig;
-      WindowManager.register({
-        kind: 'Slide',
-        appOptions: {
-          // 打开这个选项显示 debug 工具栏
-          debug: true,
-        },
-        src: async () => {
-          return SlideApp;
-        },
-      });
+      const { boardAppId, boardId, boardToken, boardRegion } = this._dataStore.whiteboardConfig!;
+
       const client = this._createBoardClient({
         identity,
         boardAppId,
@@ -115,7 +161,7 @@ export class BoardStore extends EduStoreBase {
       let globalState = room.state.globalState as AGGlobalState;
       if (globalState.grantUsers) {
         runInAction(() => {
-          this.grantUsers = new Set(globalState.grantUsers);
+          this._dataStore.grantUsers = new Set(globalState.grantUsers);
         });
       }
       if (
@@ -167,6 +213,7 @@ export class BoardStore extends EduStoreBase {
     })
       .then((manager) => {
         this._windowManager = manager;
+        this.setWindowManager(manager);
 
         this.restoreWhiteboardMemberStateTo(this.room);
 
@@ -192,20 +239,31 @@ export class BoardStore extends EduStoreBase {
 
   unmount = () => {
     this._windowManager?.destroy();
-    this._windowManager = undefined;
+    this.setWindowManager(undefined);
     this._whiteBoardContainer = undefined;
   };
 
+  @action.bound
+  protected setWindowManager(windowManager?: WindowManager) {
+    this._windowManager = windowManager;
+    this.managerReady = !!windowManager;
+  }
+
   @bound
   grantPermission(userUuid: string) {
-    let newSet = new Set(this.grantUsers);
+    let newSet = new Set(this._dataStore.grantUsers);
     newSet.add(userUuid);
     this.room.setGlobalState({ grantUsers: Array.from(newSet) });
   }
 
+  async setWritable(writable: boolean) {
+    await this.room.setWritable(writable);
+    this.room.disableDeviceInputs = !writable;
+  }
+
   @bound
   revokePermission(userUuid: string) {
-    let newSet = new Set(this.grantUsers);
+    let newSet = new Set(this._dataStore.grantUsers);
     newSet.delete(userUuid);
     this.room.setGlobalState({ grantUsers: Array.from(newSet) });
   }
@@ -235,7 +293,7 @@ export class BoardStore extends EduStoreBase {
         currentApplianceName: appliance,
         shapeType,
       });
-      this.selectedTool = tool;
+      this._dataStore.selectedTool = tool;
     }
   }
 
@@ -282,7 +340,7 @@ export class BoardStore extends EduStoreBase {
               currentApplianceName: appliance,
             });
           }
-          this.selectedTool = tool;
+          this._dataStore.selectedTool = tool;
         }
         break;
       }
@@ -415,7 +473,7 @@ export class BoardStore extends EduStoreBase {
     this.writableRoom.setMemberState({
       strokeWidth: value,
     });
-    this.strokeWidth = value;
+    this._dataStore.strokeWidth = value;
   }
 
   @action.bound
@@ -430,12 +488,12 @@ export class BoardStore extends EduStoreBase {
 
   @action.bound
   updateCurrentSceneIndex(currentSceneIndex: number): void {
-    this.currentSceneIndex = currentSceneIndex;
+    this._dataStore.currentSceneIndex = currentSceneIndex;
   }
 
   @action.bound
   updateScenesCount(scenesCount: number): void {
-    this.scenesCount = scenesCount;
+    this._dataStore.scenesCount = scenesCount;
   }
 
   @action.bound
@@ -469,43 +527,13 @@ export class BoardStore extends EduStoreBase {
     });
     this.windowManager?.emitter.on('canUndoStepsChange', (steps) => {
       runInAction(() => {
-        this.undoSteps = steps;
+        this._dataStore.undoSteps = steps;
       });
     });
     this.windowManager?.emitter.on('canRedoStepsChange', (steps) => {
       runInAction(() => {
-        this.redoSteps = steps;
+        this._dataStore.redoSteps = steps;
       });
-    });
-  }
-
-  // ----------  other -------------
-  private _whiteBoardContainer?: HTMLElement;
-  private _room?: Room;
-  private _windowManager?: WindowManager;
-
-  @action.bound
-  private handleRoomPropertiesChange(
-    changedRoomProperties: string[],
-    roomProperties: any,
-    operator: any,
-    cause: any,
-  ) {
-    changedRoomProperties.forEach((key) => {
-      if (key === 'widgets') {
-        const configs = get(roomProperties, 'widgets.netlessBoard.extra');
-
-        if (configs) {
-          const { boardAppId, boardId, boardRegion, boardToken } = configs;
-          EduClassroomConfig.shared.setWhiteboardConfig({
-            boardAppId,
-            boardId,
-            boardRegion,
-            boardToken,
-          });
-          this.configReady = true;
-        }
-      }
     });
   }
 
@@ -534,12 +562,12 @@ export class BoardStore extends EduStoreBase {
       runInAction(() => {
         let globalState = state.globalState as AGGlobalState | undefined;
         if (globalState && globalState.grantUsers) {
-          this.grantUsers = new Set(globalState.grantUsers);
+          this._dataStore.grantUsers = new Set(globalState.grantUsers);
         }
         // 监听颜色的变化，赋值给strokeColor
         if (state?.memberState?.strokeColor) {
           const [r, g, b] = state.memberState.strokeColor;
-          this.strokeColor = { r, g, b };
+          this._dataStore.strokeColor = { r, g, b };
         }
       });
     },
@@ -638,17 +666,39 @@ export class BoardStore extends EduStoreBase {
     return room;
   }
 
-  private _disposers: (() => void)[] = [];
+  @action
+  private _setEventHandler(scene: AgoraRteScene) {
+    if (this.classroomStore.connectionStore.mainRoomScene === scene) {
+      let handler = SceneEventHandler.getEventHandler(scene);
+      if (!handler) {
+        handler = SceneEventHandler.createEventHandler(scene);
+      }
+      this._dataStore = handler.dataStore;
+    } else {
+      const handler = SceneEventHandler.createEventHandler(scene);
+      this._dataStore = handler.dataStore;
+    }
+  }
 
   onInstall() {
+    WindowManager.register({
+      kind: 'Slide',
+      appOptions: {
+        // 打开这个选项显示 debug 工具栏
+        debug: true,
+      },
+      src: async () => {
+        return SlideApp;
+      },
+    });
+
     let { sessionInfo } = EduClassroomConfig.shared;
-    let store = this.classroomStore;
+
     this._disposers.push(
-      reaction(
-        () => store.connectionStore.scene,
-        (scene) => {
-          if (scene) {
-            scene.on(AgoraRteEventType.RoomPropertyUpdated, this.handleRoomPropertiesChange);
+      computed(() => this.classroomStore.connectionStore.scene).observe(
+        ({ newValue, oldValue }) => {
+          if (newValue) {
+            this._setEventHandler(newValue);
           }
         },
       ),
@@ -656,9 +706,17 @@ export class BoardStore extends EduStoreBase {
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
-        computed(() => this.grantUsers).observe(async ({ newValue, oldValue }) => {
+        computed(() => ({
+          grantUsers: this._dataStore.grantUsers,
+          ready: this.managerReady,
+        })).observe(async ({ newValue, oldValue }) => {
+          const { grantUsers: newGranted, ready } = newValue;
+          const oldGranted = oldValue?.grantUsers;
+          if (!ready) {
+            return;
+          }
           try {
-            if (newValue.has(sessionInfo.userUuid) && !oldValue?.has(sessionInfo.userUuid)) {
+            if (newGranted.has(sessionInfo.userUuid) && !oldGranted?.has(sessionInfo.userUuid)) {
               //granted
               await this.room.setWritable(true);
               this.room.disableDeviceInputs = false;
@@ -668,7 +726,7 @@ export class BoardStore extends EduStoreBase {
                 AgoraEduClassroomEvent.TeacherGrantPermission,
               );
             }
-            if (!newValue.has(sessionInfo.userUuid) && oldValue?.has(sessionInfo.userUuid)) {
+            if (!newGranted.has(sessionInfo.userUuid) && oldGranted?.has(sessionInfo.userUuid)) {
               //revoked
               await this.room.setWritable(false);
               this.room.disableDeviceInputs = true;
@@ -687,7 +745,94 @@ export class BoardStore extends EduStoreBase {
     }
   }
   onDestroy() {
+    SceneEventHandler.cleanup();
     this._disposers.forEach((d) => d());
     this.leaveBoard();
+  }
+}
+
+type DataStore = {
+  configReady: boolean;
+  whiteboardConfig?: WhiteboardConfig;
+  selectedTool: WhiteboardTool;
+  strokeColor: Color;
+  strokeWidth: number;
+  undoSteps: number;
+  redoSteps: number;
+  currentSceneIndex: number;
+  scenesCount: number;
+  grantUsers: Set<string>;
+};
+
+class SceneEventHandler {
+  private static _handlers: Record<string, SceneEventHandler> = {};
+
+  static createEventHandler(scene: AgoraRteScene) {
+    if (SceneEventHandler._handlers[scene.sceneId]) {
+      SceneEventHandler._handlers[scene.sceneId].removeEventHandlers();
+    }
+    const handler = new SceneEventHandler(scene);
+
+    handler.addEventHandlers();
+
+    SceneEventHandler._handlers[scene.sceneId] = handler;
+
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static getEventHandler(scene: AgoraRteScene) {
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static cleanup() {
+    Object.keys(SceneEventHandler._handlers).forEach((k) => {
+      SceneEventHandler._handlers[k].removeEventHandlers();
+    });
+
+    SceneEventHandler._handlers = {};
+  }
+
+  constructor(private _scene: AgoraRteScene) {}
+
+  @observable
+  dataStore: DataStore = {
+    configReady: false,
+    selectedTool: WhiteboardTool.clicker,
+    strokeColor: DEFAULT_COLOR,
+    strokeWidth: 2,
+    undoSteps: 0,
+    redoSteps: 0,
+    currentSceneIndex: 0,
+    scenesCount: 0,
+    grantUsers: new Set<string>(),
+  };
+
+  addEventHandlers() {
+    this._scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  removeEventHandlers() {
+    this._scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  @action.bound
+  private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
+    changedRoomProperties.forEach((key) => {
+      if (key === 'widgets') {
+        const configs = get(roomProperties, 'widgets.netlessBoard.extra');
+
+        if (configs) {
+          const { boardAppId, boardId, boardRegion, boardToken } = configs;
+
+          this.dataStore.whiteboardConfig = {
+            boardAppId,
+            boardId,
+            boardRegion,
+            boardToken,
+          };
+          this.dataStore.configReady = true;
+        }
+      }
+    });
   }
 }

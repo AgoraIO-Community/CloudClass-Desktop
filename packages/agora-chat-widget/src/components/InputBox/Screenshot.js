@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Menu } from 'antd';
-import { sendImgMsg } from '../../api/message';
+import { useSelector } from 'react-redux';
 import isElctronPlatform, { ipcElecteonRenderer } from '../../utils/platform';
 import { dataURLtoBlob } from '../../utils';
 import { transI18n } from '~ui-kit';
 
 const ScreenshotMenu = ({ couterRef }) => {
   const [isCloaking, setIsCloaking] = useState(true);
+  const state = useSelector((state) => state);
+  const { apis } = state;
   let isElectron = isElctronPlatform();
   let ipcRenderer = ipcElecteonRenderer();
   const captureScreen = (hideWindow) => {
@@ -28,7 +30,7 @@ const ScreenshotMenu = ({ couterRef }) => {
           from: 'screenShot',
           imgsrc: dataURL,
         };
-        sendImgMsg(couterRef, file);
+        apis.messageAPI.sendImgMsg(couterRef, file);
       });
     }
     return () => {

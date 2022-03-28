@@ -28,6 +28,8 @@ export const renderRoomSceneWith = (roomType: EduRoomTypeEnum) => {
     case EduRoomTypeEnum.RoomSmallClass: {
       return <MidClassScenario />;
     }
+    default:
+      return null;
   }
 };
 

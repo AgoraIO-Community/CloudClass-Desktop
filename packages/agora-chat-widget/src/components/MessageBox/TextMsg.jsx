@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import { Tag, Menu, Dropdown } from 'antd';
 import { ROLE, MSG_TYPE } from '../../contants';
 import { transI18n } from '~ui-kit';
-import store from '../../redux/store';
 import { messageAction } from '../../redux/actions/messageAction';
 import delete_icon from '../../themes/img/delete.png';
 import './index.css';
@@ -11,6 +9,7 @@ import './index.css';
 // 聊天页面
 export const TextMsg = ({ item }) => {
   const state = useSelector((state) => state);
+  const store = useStore();
   const roomId = state?.room.info.id;
   const roomUuid = state?.propsData.roomUuid;
   const loginUser = state?.propsData.userUuid;
@@ -38,8 +37,8 @@ export const TextMsg = ({ item }) => {
 
   // 删除消息
   const deleteMsg = (recallId) => {
-    var id = WebIM.conn.getUniqueId(); //生成本地消息id
-    var msg = new WebIM.message('cmd', id); //创建命令消息
+    var id = window.WebIM.conn.getUniqueId(); //生成本地消息id
+    var msg = new window.WebIM.message('cmd', id); //创建命令消息
     msg.set({
       to: roomId, //接收消息对象
       action: 'DEL', //用户自定义，cmd消息必填
@@ -62,7 +61,7 @@ export const TextMsg = ({ item }) => {
         console.log('Fail'); //如禁言、拉黑后发送消息会失败
       },
     });
-    WebIM.conn.send(msg.body);
+    window.WebIM.conn.send(msg.body);
   };
 
   return (

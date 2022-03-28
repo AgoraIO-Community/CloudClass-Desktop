@@ -433,9 +433,9 @@ export const RoomPretest: React.FC<PretestProps> = ({ className, onOK, ...restPr
     <div className="fixed-container">
       <Modal
         title={transI18n('pretest.settingTitle')}
-        width={720}
+        style={{ width: 720 }}
         footer={[
-          <Button action="ok" key="ok">
+          <Button key="ok" action="ok">
             {transI18n('pretest.finishTest')}
           </Button>,
         ]}

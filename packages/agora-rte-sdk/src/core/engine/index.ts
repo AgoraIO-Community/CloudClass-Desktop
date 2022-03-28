@@ -5,7 +5,6 @@ import { Logger } from '../logger';
 import { AgoraMediaControl } from '../media/control';
 import { AGRtcManager } from '../rtc';
 import { AGRtmManager } from '../rtm';
-import { AgoraRteService } from '../services/api';
 import { AgoraLogService } from '../services/log';
 import { ReportService } from '../services/report';
 import { to } from 'await-to-js';
@@ -16,12 +15,12 @@ import { TagInfo } from '../services/oss';
 
 export class AgoraRteEngine extends AGEventEmitter {
   private _mediaControl: AgoraMediaControl;
-  private _apiService: AgoraRteService;
+
   private _logService: AgoraLogService;
   private _rtmManager: AGRtmManager;
   private _rtcManager: AGRtcManager;
-
   private static _engine?: AgoraRteEngine;
+  private _apiServicePathPrefix = '';
 
   static get engine(): AgoraRteEngine {
     if (!this._engine) {
@@ -39,7 +38,6 @@ export class AgoraRteEngine extends AGEventEmitter {
     // so it's safe to overwrite the config directly into global shared variable
     AgoraRteEngineConfig.setConfig(config);
     Logger.setupConsoleHijack();
-    this._apiService = new AgoraRteService();
     this._logService = new AgoraLogService();
     this._rtmManager = new AGRtmManager();
     this._rtcManager = new AGRtcManager(config.rtcConfigs);
@@ -63,11 +61,15 @@ export class AgoraRteEngine extends AGEventEmitter {
     Logger.restoreConsoleHijack();
   }
 
+  get apiServicePathPrefix() {
+    return this._apiServicePathPrefix;
+  }
+
   async login(rtmToken: string, userId: string): Promise<void> {
     ReportService.shared.host = 'https://api.sd-rtn.com';
     ReportService.shared.pathPrefix = `/cn/v1.0/projects/${AgoraRteEngineConfig.shared.appId}/app-dev-report`;
     const ignoreUrlRegionPrefix = AgoraRteEngineConfig.shared.ignoreUrlRegionPrefix;
-    this._apiService.pathPrefix = `${
+    this._apiServicePathPrefix = `${
       ignoreUrlRegionPrefix ? '' : '/' + AgoraRteEngineConfig.shared.region.toLowerCase()
     }/scene/apps/${AgoraRteEngineConfig.shared.appId}`;
     AgoraRteEngineConfig.shared.token = rtmToken;
@@ -109,10 +111,6 @@ export class AgoraRteEngine extends AGEventEmitter {
 
   getAgoraMediaControl(): AgoraMediaControl {
     return this._mediaControl;
-  }
-
-  getApiService(): AgoraRteService {
-    return this._apiService;
   }
 
   async uploadSDKLogToAgoraService(tagInfo: TagInfo) {

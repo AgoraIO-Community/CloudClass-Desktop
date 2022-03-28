@@ -57,12 +57,12 @@ const UploadModal = () => {
       modalType="minimize"
       animate={false}
       title={transI18n('cloud.upload')}
-      width={450}
       style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
+        width: 450,
       }}
       closable={true}
       onCancel={() => {

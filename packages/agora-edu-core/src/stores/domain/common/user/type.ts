@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum } from '../../../..';
+import { EduRoleTypeEnum, EduRoomTypeEnum } from '../../../..';
 
 /**
  * 筛选用户类型 0:全部 1:禁言

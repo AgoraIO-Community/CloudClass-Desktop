@@ -58,7 +58,7 @@ export class ReportStore extends EduStoreBase {
       computed(() => this.classroomStore.connectionStore.rtcState).observe(
         ({ oldValue, newValue }) => {
           if (oldValue === RtcState.Idle && newValue === RtcState.Connecting) {
-            let vid = this.classroomStore.connectionStore.checkInData?.vid;
+            let vid = this.classroomStore.connectionStore.mainRoomCheckInData?.vid;
             let scene = this.classroomStore.connectionStore.scene;
 
             if (!vid || !scene) {

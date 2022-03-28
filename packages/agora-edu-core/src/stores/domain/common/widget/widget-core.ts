@@ -20,16 +20,21 @@ import {
   IAgoraExtensionRoomProperties,
 } from './type';
 import { dependencies } from './dependencies';
+import { EduClassroomStore } from '..';
 
 export class ExtensionController {
-  private roomUuid: string;
   private api: EduApiService;
   private widgetUuid: string;
+  private classroomStore: EduClassroomStore;
 
-  constructor({ roomUuid, api, widgetUuid }: any) {
-    this.roomUuid = roomUuid;
+  constructor({ api, widgetUuid, classroomStore }: any) {
     this.api = api;
     this.widgetUuid = widgetUuid;
+    this.classroomStore = classroomStore;
+  }
+
+  get roomUuid() {
+    return this.classroomStore.connectionStore.sceneId;
   }
 
   updateWidgetProperties = (data: any) =>
@@ -57,11 +62,7 @@ export class ExtensionController {
       userUuid: string;
       changeReward: number;
     }[],
-  ) =>
-    this.api.sendRewards(
-      { roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid, rewards },
-      true,
-    );
+  ) => this.api.sendRewards({ roomUuid: this.roomUuid, rewards }, true);
 }
 
 // 为每个 extension 定义一个 observable 对象
@@ -190,7 +191,8 @@ export class ExtensionAppStore extends EduStoreBase {
 
   private initialExtensionApp = (extension: IAgoraExtensionApp) => {
     // room & user data observable, controller
-    const { roomUuid, roomType, roomName } = this.classroomStore.roomStore;
+    const { roomType, roomName } = EduClassroomConfig.shared.sessionInfo;
+    const roomUuid = this.classroomStore.connectionStore.sceneId;
     const language = AgoraRteEngineConfig.shared.language;
     const { userUuid, role, userName } = EduClassroomConfig.shared.sessionInfo;
     const context = {
@@ -215,7 +217,7 @@ export class ExtensionAppStore extends EduStoreBase {
     let extensionStoreObserver = new ExtensionStoreEach(context);
     this.extensionAppStore[extension.appIdentifier] = extensionStoreObserver;
     let extensionControllerInstance = new ExtensionController({
-      roomUuid,
+      classroomStore: this.classroomStore,
       api: this.api,
       widgetUuid: extension.appIdentifier,
     });
@@ -318,7 +320,7 @@ export class ExtensionAppStore extends EduStoreBase {
   /** Methods */
   @bound
   async updateExtAppProperties(appId: string, properties: any, common: any, cause: any) {
-    const { roomUuid } = this.classroomStore.roomStore;
+    const roomUuid = this.classroomStore.connectionStore.sceneId;
     try {
       return await this.api.updateExtAppProperties(roomUuid, appId, { properties, common, cause });
     } catch (err) {
@@ -331,7 +333,7 @@ export class ExtensionAppStore extends EduStoreBase {
 
   @bound
   async deleteExtAppProperties(appId: string, properties: string[], cause: any) {
-    const { roomUuid } = this.classroomStore.roomStore;
+    const roomUuid = this.classroomStore.connectionStore.sceneId;
     try {
       return await this.api.deleteWidgetProperties(roomUuid, appId, { properties });
     } catch (err) {
@@ -344,13 +346,13 @@ export class ExtensionAppStore extends EduStoreBase {
 
   @bound
   async deleteExtappTrackState(extappId: string) {
-    const { roomUuid } = this.classroomStore.roomStore;
+    const roomUuid = this.classroomStore.connectionStore.sceneId;
     await this.api.deleteWidgetProperties(roomUuid, extappId, ['position', 'extra', 'size']);
   }
 
   @bound
   async updateExtappTrackState(extappId: string, data: TrackData) {
-    const { roomUuid } = this.classroomStore.roomStore;
+    const roomUuid = this.classroomStore.connectionStore.sceneId;
     await this.api.updateWidgetProperties(roomUuid, extappId, data);
   }
 

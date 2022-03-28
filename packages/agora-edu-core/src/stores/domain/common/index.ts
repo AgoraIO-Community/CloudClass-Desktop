@@ -12,12 +12,14 @@ import { MediaStore } from './media';
 import { WidgetStore } from './widget';
 import { HandUpStore } from './hand-up';
 import { RecordingStore } from './recording';
+import { GroupStore } from './group';
 import { EduStoreBase } from './base';
 import { TrackStore } from './track';
 import { ExtAppTrackAdapter } from './ext-app/track-adapter';
 import { WidgetTrackAdapter } from './widget/track-adapter';
 import { ReportStore } from './report';
 import { LogReporter } from '../../../log-reporter';
+import { SubscriptionStore } from './subscription';
 
 export class EduClassroomStore {
   private _api: EduApiService = new EduApiService();
@@ -26,6 +28,7 @@ export class EduClassroomStore {
     return this._api;
   }
 
+  readonly subscriptionStore: SubscriptionStore = new SubscriptionStore(this);
   readonly connectionStore: ConnectionStore = new ConnectionStore(this);
   readonly widgetStore: WidgetStore = new WidgetStore(this);
   readonly extensionAppStore: ExtensionAppStore = new ExtensionAppStore(this);
@@ -39,8 +42,10 @@ export class EduClassroomStore {
   readonly streamStore: StreamStore = new StreamStore(this);
   readonly handUpStore: HandUpStore = new HandUpStore(this);
   readonly recordingStore: RecordingStore = new RecordingStore(this);
+  readonly groupStore: GroupStore = new GroupStore(this);
   readonly extAppsTrackStore: TrackStore = new TrackStore(this, new ExtAppTrackAdapter(this), true);
   readonly widgetsTrackStore: TrackStore = new TrackStore(this, new WidgetTrackAdapter(this));
+
   private readonly reportStore: ReportStore = new ReportStore(this);
 
   initialize() {

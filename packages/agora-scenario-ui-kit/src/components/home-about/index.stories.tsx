@@ -15,7 +15,7 @@ const HomeAboutContainer = () => {
       {visible ? (
         <Modal
           title="关于"
-          width={366}
+          style={{ width: 366 }}
           onCancel={() => {
             setVisible(false);
           }}>
@@ -43,7 +43,7 @@ export const DocsBackModal = () => {
       {visible ? (
         <div className="mt-4">
           <Modal
-            width={560}
+            style={{ width: 560 }}
             title="免责声明"
             modalType="back"
             onCancel={() => {

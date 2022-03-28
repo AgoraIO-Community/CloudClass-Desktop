@@ -14,7 +14,7 @@ export const KickOut: React.FC<BaseDialogProps & { onOk: (ban: boolean) => void 
 
     return (
       <Modal
-        width={300}
+        style={{ width: 300 }}
         title={transI18n('kick.kick_out_student')}
         onOk={() => {
           onOk(type === 'kicked_ban');

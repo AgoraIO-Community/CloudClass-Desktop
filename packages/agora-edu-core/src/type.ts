@@ -13,6 +13,7 @@ export enum WhiteboardState {
   Connecting = 1,
   Connected = 2,
   Reconnecting = 3,
+  Disconnecting = 4,
 }
 
 /**
@@ -24,7 +25,7 @@ export enum EduRoomTypeEnum {
   Room1v1Class = 0,
   RoomSmallClass = 4,
   RoomBigClass = 2,
-  // RoomAcadosc = 3
+  RoomGroup = 101,
 }
 
 /**
@@ -162,4 +163,9 @@ export enum AgoraEduClassroomEvent {
   ScreenShareStarted = 115, // 屏幕共享开始
   ScreenShareEnded = 116, // 屏幕共享结束
   BatchRewardReceived = 117, // 批量奖励
+  InvitedToGroup = 118, //被邀请至小组
+  MoveToOtherGroup = 119, // 被移动至小组
+  JoinSubRoom = 120, //加入分组房间
+  LeaveSubRoom = 121, //离开分组房间
+  AcceptedToGroup = 122, //用户接收并加入小组
 }

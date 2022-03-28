@@ -9,3 +9,7 @@ export const isShowChat = (data) => {
 export const isShowMiniIcon = (data) => {
   return { type: 'MINI_ICON_STATUE', data };
 };
+
+export const setAPIs = (data) => {
+  return { type: 'SET_APIS', data };
+};

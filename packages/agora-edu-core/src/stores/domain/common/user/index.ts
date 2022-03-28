@@ -1,5 +1,5 @@
 import { AgoraRteEventType, AgoraRteScene, AgoraUser } from 'agora-rte-sdk';
-import { observable, reaction, runInAction, action, computed } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { EduStoreBase } from '../base';
 import { EduUser } from './struct';
 import { EduClassroomConfig, EduEventCenter } from '../../../..';
@@ -9,34 +9,64 @@ import { RteRole2EduRole } from '../../../../utils';
 import { FetchUserParam } from './type';
 import { BatchRecord } from '../../../../utils/batch';
 
-//for users
 export class UserStore extends EduStoreBase {
-  //observes
-  @observable users: Map<string, EduUser> = new Map<string, EduUser>();
-
-  @observable teacherList: Map<string, EduUser> = new Map<string, EduUser>();
-
-  @observable studentList: Map<string, EduUser> = new Map<string, EduUser>();
-
-  @observable assistantList: Map<string, EduUser> = new Map<string, EduUser>();
-
   @observable
-  rewards: Map<string, number> = new Map<string, number>();
+  private _dataStore: DataStore = {
+    users: new Map(),
+    teacherList: new Map(),
+    studentList: new Map(),
+    assistantList: new Map(),
+    rewards: new Map(),
+    localUser: undefined,
+  };
 
-  @observable
-  private _localUser?: EduUser;
+  @computed
+  get mainRoomDataStore() {
+    const scene = this.classroomStore.connectionStore.mainRoomScene;
+
+    const handler = SceneEventHandler.getEventHandler(scene!);
+
+    return handler.dataStore;
+  }
 
   @computed
   get localUser() {
-    return this._localUser;
+    return this._dataStore.localUser;
+  }
+
+  @computed
+  get users(): Map<string, EduUser> {
+    return this._dataStore.users;
+  }
+
+  @computed
+  get teacherList(): Map<string, EduUser> {
+    return this._dataStore.teacherList;
+  }
+
+  @computed
+  get studentList(): Map<string, EduUser> {
+    return this._dataStore.studentList;
+  }
+
+  @computed
+  get assistantList(): Map<string, EduUser> {
+    return this._dataStore.assistantList;
+  }
+
+  @computed
+  get rewards(): Map<string, number> {
+    return this._dataStore.rewards;
   }
 
   async fetchUserList(params: FetchUserParam) {
     try {
-      const { sessionInfo } = EduClassroomConfig.shared;
-      const data = await this.classroomStore.api.fetchUserList(sessionInfo.roomUuid, {
-        ...params,
-      });
+      const data = await this.classroomStore.api.fetchUserList(
+        this.classroomStore.connectionStore.sceneId,
+        {
+          ...params,
+        },
+      );
       return {
         total: data.total,
         count: data.count,
@@ -54,8 +84,11 @@ export class UserStore extends EduStoreBase {
   @action.bound
   async kickOutOnceOrBan(userUuid: string, isBan: boolean) {
     try {
-      const { sessionInfo } = EduClassroomConfig.shared;
-      await this.classroomStore.api.kickOutOnceOrBan(userUuid, isBan, sessionInfo.roomUuid);
+      await this.classroomStore.api.kickOutOnceOrBan(
+        userUuid,
+        isBan,
+        this.classroomStore.connectionStore.sceneId,
+      );
     } catch (error) {
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_KICK_OUT_FAIL,
@@ -64,12 +97,204 @@ export class UserStore extends EduStoreBase {
     }
   }
 
+  @action
+  private _setEventHandler(scene: AgoraRteScene) {
+    if (this.classroomStore.connectionStore.mainRoomScene === scene) {
+      let handler = SceneEventHandler.getEventHandler(scene);
+      if (!handler) {
+        handler = SceneEventHandler.createEventHandler(scene);
+      }
+      this._dataStore = handler.dataStore;
+    } else {
+      const handler = SceneEventHandler.createEventHandler(scene);
+      this._dataStore = handler.dataStore;
+    }
+  }
+
+  onInstall() {
+    computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue, oldValue }) => {
+      if (newValue) {
+        this._setEventHandler(newValue);
+      }
+    });
+  }
+  onDestroy() {
+    SceneEventHandler.cleanup();
+  }
+}
+
+type DataStore = {
+  users: Map<string, EduUser>;
+  teacherList: Map<string, EduUser>;
+  studentList: Map<string, EduUser>;
+  assistantList: Map<string, EduUser>;
+  rewards: Map<string, number>;
+  localUser?: EduUser;
+};
+
+class SceneEventHandler {
+  private static _handlers: Record<string, SceneEventHandler> = {};
+
+  static createEventHandler(scene: AgoraRteScene) {
+    if (SceneEventHandler._handlers[scene.sceneId]) {
+      SceneEventHandler._handlers[scene.sceneId].removeEventHandlers();
+    }
+    const handler = new SceneEventHandler(scene);
+
+    handler.addEventHandlers();
+
+    SceneEventHandler._handlers[scene.sceneId] = handler;
+
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static getEventHandler(scene: AgoraRteScene) {
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static cleanup() {
+    Object.keys(SceneEventHandler._handlers).forEach((k) => {
+      SceneEventHandler._handlers[k].removeEventHandlers();
+    });
+
+    SceneEventHandler._handlers = {};
+  }
+
+  constructor(private _scene: AgoraRteScene) {}
+
+  @observable
+  dataStore: DataStore = {
+    users: new Map(),
+    teacherList: new Map(),
+    studentList: new Map(),
+    assistantList: new Map(),
+    rewards: new Map(),
+    localUser: undefined,
+  };
+
+  addEventHandlers() {
+    this._scene.on(AgoraRteEventType.UserAdded, this._addUsers);
+    this._scene.on(AgoraRteEventType.UserRemoved, this._removeUsers);
+    this._scene.on(AgoraRteEventType.UserUpdated, this._updateUsers);
+    this._scene.on(AgoraRteEventType.UserPropertyUpdated, this._updateUserProperties);
+    this._scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+    this._scene.on(AgoraRteEventType.BatchUserPropertyUpdated, this._updateBatchUserProperties);
+  }
+
+  removeEventHandlers() {
+    this._scene.off(AgoraRteEventType.UserAdded, this._addUsers);
+    this._scene.off(AgoraRteEventType.UserRemoved, this._removeUsers);
+    this._scene.off(AgoraRteEventType.UserUpdated, this._updateUsers);
+    this._scene.off(AgoraRteEventType.UserPropertyUpdated, this._updateUserProperties);
+    this._scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+    this._scene.off(AgoraRteEventType.BatchUserPropertyUpdated, this._updateBatchUserProperties);
+  }
+
   @action.bound
-  async updateRewards(newRewards: Map<string, number>, isBatch: boolean) {
-    const oldRewards = this.rewards;
-    this.rewards = newRewards;
+  private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
+    if (changedRoomProperties.includes('students')) {
+      this.dataStore.rewards = new Map(
+        Object.entries(roomProperties['students']).map(([userUuid, { reward }]: any) => {
+          return [userUuid, reward];
+        }),
+      );
+    }
+  }
+
+  @action.bound
+  private _addUsers(users: AgoraUser[]) {
+    const { sessionInfo } = EduClassroomConfig.shared;
+    const newRewards = new Map(this.dataStore.rewards);
+    users.forEach((user) => {
+      let userItem = new EduUser(user);
+      if (userItem.userUuid === sessionInfo.userUuid) {
+        this.dataStore.localUser = userItem;
+      }
+      if (userItem.userRole === EduRoleTypeEnum.teacher) {
+        this.dataStore.teacherList.set(user.userUuid, userItem);
+      }
+      if (userItem.userRole === EduRoleTypeEnum.student) {
+        this.dataStore.studentList.set(user.userUuid, userItem);
+      }
+      if (userItem.userRole === EduRoleTypeEnum.assistant) {
+        this.dataStore.assistantList.set(user.userUuid, userItem);
+      }
+      this.dataStore.users.set(user.userUuid, userItem);
+      // initialize reward count when one comes in
+      const reward = user.userProperties.get('reward');
+      if (reward) {
+        newRewards.set(user.userUuid, reward.count || 0);
+      }
+    });
+    this.dataStore.rewards = newRewards;
+  }
+
+  @action.bound
+  private _removeUsers(users: AgoraUser[], type: number) {
+    const { sessionInfo } = EduClassroomConfig.shared;
+
+    users.forEach((user) => {
+      // 2 means user has been kicked out
+      if (type === 2) {
+        EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.KickOut, user);
+      }
+
+      const userRole = RteRole2EduRole(sessionInfo.roomType, user.userRole);
+
+      if (user.userUuid === sessionInfo.userUuid) {
+        this.dataStore.localUser = undefined;
+      }
+      if (userRole === EduRoleTypeEnum.teacher) {
+        this.dataStore.teacherList.delete(user.userUuid);
+      }
+      if (userRole === EduRoleTypeEnum.student) {
+        this.dataStore.studentList.delete(user.userUuid);
+      }
+      if (userRole === EduRoleTypeEnum.assistant) {
+        this.dataStore.assistantList.delete(user.userUuid);
+      }
+      this.dataStore.users.delete(user.userUuid);
+    });
+  }
+
+  @action.bound
+  private _updateUsers(users: AgoraUser[]) {
+    const { sessionInfo } = EduClassroomConfig.shared;
+
+    users.forEach((user) => {
+      let userItem = new EduUser(user);
+      if (userItem.userUuid === sessionInfo.userUuid) {
+        this.dataStore.localUser = userItem;
+      }
+      if (userItem.userRole === EduRoleTypeEnum.teacher) {
+        this.dataStore.teacherList.set(user.userUuid, userItem);
+      }
+      if (userItem.userRole === EduRoleTypeEnum.student) {
+        this.dataStore.studentList.set(user.userUuid, userItem);
+      }
+      if (userItem.userRole === EduRoleTypeEnum.assistant) {
+        this.dataStore.assistantList.set(user.userUuid, userItem);
+      }
+      this.dataStore.users.set(user.userUuid, userItem);
+    });
+  }
+
+  @action.bound
+  private _updateUserProperties(userUuid: string, userProperties: any, operator: any, cause: any) {
+    const { reward } = userProperties;
+    if (reward) {
+      const newRewards = new Map(this.dataStore.rewards);
+      newRewards.set(userUuid, reward.count || 0);
+      this._updateRewards(newRewards, false);
+    }
+  }
+
+  @action.bound
+  async _updateRewards(newRewards: Map<string, number>, isBatch: boolean) {
+    const oldRewards = this.dataStore.rewards;
+    this.dataStore.rewards = newRewards;
     if (isBatch) {
-      const userNames = this.getRewardedUsers(oldRewards, newRewards);
+      const userNames = this._getRewardedUsers(oldRewards, newRewards);
 
       if (userNames.length) {
         EduEventCenter.shared.emitClasroomEvents(
@@ -78,7 +303,7 @@ export class UserStore extends EduStoreBase {
         );
       }
     } else {
-      const userNames = this.getRewardedUsers(oldRewards, newRewards);
+      const userNames = this._getRewardedUsers(oldRewards, newRewards);
 
       if (userNames.length) {
         EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.RewardReceived, userNames);
@@ -86,7 +311,31 @@ export class UserStore extends EduStoreBase {
     }
   }
 
-  getRewardedUsers(oldRewards: Map<string, number>, newRewards: Map<string, number>) {
+  private _updateBatchUserProperties(
+    users: { userUuid: string; userName: string; userProperties: any }[],
+    operator: any,
+    cause: any,
+  ) {
+    const batchRecord = BatchRecord.getBatchRecord<typeof users>(cause.data, (batchArray) => {
+      const allUsers = batchArray.flat();
+      const newRewards = new Map(this.dataStore.rewards);
+      for (const user of allUsers) {
+        const { userUuid, userProperties } = user;
+
+        const { reward } = userProperties;
+
+        if (reward) {
+          newRewards.set(userUuid, reward.count || 0);
+        }
+      }
+
+      this._updateRewards(newRewards, true);
+    });
+
+    batchRecord.addBatch(users);
+  }
+
+  private _getRewardedUsers(oldRewards: Map<string, number>, newRewards: Map<string, number>) {
     let changedUserUuids: string[] = [];
     for (const [userUuid] of newRewards) {
       let previousReward = 0;
@@ -101,146 +350,11 @@ export class UserStore extends EduStoreBase {
 
     if (changedUserUuids.length > 0) {
       const userNames = changedUserUuids.map(
-        (userUuid) => this.studentList.get(userUuid)?.userName,
+        (userUuid) => this.dataStore.studentList.get(userUuid)?.userName,
       );
       return userNames;
     }
 
     return [];
   }
-
-  //others
-  private _addEventHandlers(scene: AgoraRteScene) {
-    scene.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
-      const { sessionInfo } = EduClassroomConfig.shared;
-      runInAction(() => {
-        const newRewards = new Map(this.rewards);
-        users.forEach((user) => {
-          let userItem = new EduUser(user);
-          if (userItem.userUuid === sessionInfo.userUuid) {
-            this._localUser = userItem;
-          }
-          if (userItem.userRole === EduRoleTypeEnum.teacher) {
-            this.teacherList.set(user.userUuid, userItem);
-          }
-          if (userItem.userRole === EduRoleTypeEnum.student) {
-            this.studentList.set(user.userUuid, userItem);
-          }
-          if (userItem.userRole === EduRoleTypeEnum.assistant) {
-            this.assistantList.set(user.userUuid, userItem);
-          }
-          this.users.set(user.userUuid, userItem);
-
-          // initialize reward count when one comes in
-          const reward = user.userProperties.get('reward');
-          if (reward) {
-            newRewards.set(user.userUuid, reward.count || 0);
-          }
-        });
-        this.rewards = newRewards;
-      });
-    });
-    scene.on(AgoraRteEventType.UserRemoved, (users: AgoraUser[], type: number) => {
-      const { sessionInfo } = EduClassroomConfig.shared;
-      runInAction(() => {
-        users.forEach((user) => {
-          // 2 means user has been kicked out
-          if (type === 2) {
-            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.KickOut, user);
-          }
-
-          const userRole = RteRole2EduRole(sessionInfo.roomType, user.userRole);
-
-          if (user.userUuid === sessionInfo.userUuid) {
-            this._localUser = undefined;
-          }
-          if (userRole === EduRoleTypeEnum.teacher) {
-            this.teacherList.delete(user.userUuid);
-          }
-          if (userRole === EduRoleTypeEnum.student) {
-            this.studentList.delete(user.userUuid);
-          }
-          if (userRole === EduRoleTypeEnum.assistant) {
-            this.assistantList.delete(user.userUuid);
-          }
-          this.users.delete(user.userUuid);
-        });
-      });
-    });
-    scene.on(AgoraRteEventType.UserUpdated, (users: AgoraUser[]) => {
-      const { sessionInfo } = EduClassroomConfig.shared;
-      runInAction(() => {
-        users.forEach((user) => {
-          let userItem = new EduUser(user);
-          if (userItem.userUuid === sessionInfo.userUuid) {
-            this._localUser = userItem;
-          }
-          if (userItem.userRole === EduRoleTypeEnum.teacher) {
-            this.teacherList.set(user.userUuid, userItem);
-          }
-          if (userItem.userRole === EduRoleTypeEnum.student) {
-            this.studentList.set(user.userUuid, userItem);
-          }
-          if (userItem.userRole === EduRoleTypeEnum.assistant) {
-            this.assistantList.set(user.userUuid, userItem);
-          }
-          this.users.set(user.userUuid, userItem);
-        });
-      });
-    });
-
-    scene.on(
-      AgoraRteEventType.UserPropertyUpdated,
-      (userUuid: string, userProperties: any, operator: any, cause: any) => {
-        const { reward } = userProperties;
-        if (reward) {
-          const newRewards = new Map(this.rewards);
-          newRewards.set(userUuid, reward.count || 0);
-          this.updateRewards(newRewards, false);
-        }
-      },
-    );
-
-    scene.on(
-      AgoraRteEventType.BatchUserPropertyUpdated,
-      (
-        users: { userUuid: string; userName: string; userProperties: any }[],
-        operator: any,
-        cause: any,
-      ) => {
-        const batchRecord = BatchRecord.getBatchRecord<typeof users>(cause.data, (batchArray) => {
-          const allUsers = batchArray.flat();
-          const newRewards = new Map(this.rewards);
-          for (const user of allUsers) {
-            const { userUuid, userProperties } = user;
-
-            const { reward } = userProperties;
-
-            if (reward) {
-              newRewards.set(userUuid, reward.count || 0);
-            }
-          }
-
-          this.updateRewards(newRewards, true);
-        });
-
-        batchRecord.addBatch(users);
-      },
-    );
-  }
-
-  onInstall() {
-    reaction(
-      () => this.classroomStore.connectionStore.scene,
-      (scene) => {
-        if (scene) {
-          //bind events
-          this._addEventHandlers(scene);
-        } else {
-          //clean up
-        }
-      },
-    );
-  }
-  onDestroy() {}
 }

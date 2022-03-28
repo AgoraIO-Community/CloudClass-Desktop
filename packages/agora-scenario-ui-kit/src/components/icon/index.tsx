@@ -2,10 +2,8 @@ import { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { IconTypes } from './icon-types';
-import './index.css';
 import './svg-style.css';
 export type { IconTypes } from './icon-types';
-
 export { StreamIcon } from './stream';
 
 export interface IconProps extends BaseProps {

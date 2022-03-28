@@ -311,10 +311,10 @@ export class RosterUIStore extends EduUIStoreBase {
   };
 
   clickStar = (profile: Profile) => {
-    const { roomUuid, sendRewards } = this.classroomStore.roomStore;
+    const { sendRewards } = this.classroomStore.roomStore;
 
     // send stars
-    sendRewards(roomUuid, [
+    sendRewards([
       {
         userUuid: profile.uid as string,
         changeReward: 1,
@@ -324,7 +324,6 @@ export class RosterUIStore extends EduUIStoreBase {
 
   clickKick = (profile: Profile) => {
     const { addDialog, addGenericErrorDialog } = this.shareUIStore;
-    const { roomUuid } = this.classroomStore.roomStore;
     const { kickOutOnceOrBan } = this.classroomStore.userStore;
     const onOk = (ban: boolean) => {
       kickOutOnceOrBan(profile.uid as string, ban).catch((e) => addGenericErrorDialog(e));
@@ -332,7 +331,6 @@ export class RosterUIStore extends EduUIStoreBase {
 
     addDialog(DialogCategory.KickOut, {
       id: 'kick-out',
-      roomUuid,
       onOk,
     });
   };
@@ -360,7 +358,24 @@ export class RosterUIStore extends EduUIStoreBase {
    */
   @computed
   get userList() {
-    const { list } = iterateMap(this.classroomStore.userStore.studentList, {
+    const isMainRoom =
+      this.classroomStore.connectionStore.sceneId ===
+      this.classroomStore.connectionStore.mainRoomScene?.sceneId;
+    let studentList = this.classroomStore.userStore.studentList;
+
+    if (isMainRoom) {
+      studentList = new Map();
+
+      const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+
+      this.classroomStore.userStore.studentList.forEach((user) => {
+        if (!groupUuidByUserUuid.has(user.userUuid)) {
+          studentList.set(user.userUuid, user);
+        }
+      });
+    }
+
+    const { list } = iterateMap(studentList, {
       onMap: (userUuid: string, { userName }) => {
         const { acceptedList, chatMuted } = this.classroomStore.roomStore;
         const { rewards } = this.classroomStore.userStore;
@@ -450,13 +465,18 @@ export class RosterUIStore extends EduUIStoreBase {
   @computed
   get rosterFunctions() {
     const { canKickOut, canOperateCarousel, canSearchInRoster } = this;
+
     const functions = ['podium', 'grant-board', 'stars'] as Array<
       'search' | 'carousel' | 'kick' | 'grant-board' | 'podium' | 'stars'
     >;
+    this.classroomStore.connectionStore.mainRoomScene?.sceneId;
+    const { mainRoomScene, sceneId } = this.classroomStore.connectionStore;
+    const isInMainRoom = mainRoomScene?.sceneId === sceneId;
+
     if (canKickOut) {
       functions.push('kick');
     }
-    if (canOperateCarousel) {
+    if (canOperateCarousel && isInMainRoom) {
       functions.push('carousel');
     }
     if (canSearchInRoster) {

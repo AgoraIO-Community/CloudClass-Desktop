@@ -46,6 +46,7 @@ type Delegate = {
   fireWidgetsTrackStateChange(trackState: TrackState): void;
   fireExtappsTrackStateChange(trackState: TrackState): void;
   getUserById(userUuid: string): EduUser | undefined;
+  getCurrentSceneId(): string;
 };
 
 export const escapeExtAppIdentifier = (appIdentifier: string, inverse?: boolean) => {
@@ -71,7 +72,13 @@ class CMDHandler {
 
   constructor(private _delegate: Delegate) {}
 
-  exec(operator: Operator, cause: Cause, changedProperties: any) {
+  exec(operator: Operator, cause: Cause, changedProperties: any, sceneId: string) {
+    const currentSceneId = this._delegate.getCurrentSceneId();
+
+    if (sceneId !== currentSceneId) {
+      return;
+    }
+
     // cause may be undefined at first time
     const { cmd, data } = cause || {};
     if (cmd === 501) {

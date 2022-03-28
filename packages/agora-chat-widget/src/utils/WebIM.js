@@ -5,6 +5,9 @@ export const initIMSDK = (appkey) => {
   let WebIM = window.WebIM || {};
   WebIM.config = config;
   WebIM.config.appkey = appkey;
+  if (WebIM.conn) {
+    WebIM.conn.close();
+  }
 
   let options = {
     isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
@@ -24,4 +27,4 @@ export const initIMSDK = (appkey) => {
   WebIM.conn = new websdk.connection(options);
 };
 
-export default WebIM;
+export default window.WebIM;

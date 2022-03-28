@@ -36,7 +36,7 @@ export class BoardUIStore extends EduUIStoreBase {
 
   @computed
   get isGrantedBoard() {
-    const { userUuid } = this.classroomStore.roomStore;
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
     const { grantUsers } = this.classroomStore.boardStore;
     return grantUsers.has(userUuid);
   }
@@ -87,7 +87,7 @@ export class BoardUIStore extends EduUIStoreBase {
    * @returns
    */
   get boardHeight() {
-    const { roomType } = this.classroomStore.roomStore;
+    const { roomType } = EduClassroomConfig.shared.sessionInfo;
     const viewportHeight = this.shareUIStore.classroomViewportSize.height;
     const height = this.uiOverrides.heightRatio * viewportHeight;
 

@@ -16,6 +16,8 @@ export class EduStoreFactory {
         return new EduInteractiveClassStore();
       case EduRoomTypeEnum.RoomBigClass:
         return new EduLectureStore();
+      default:
+        return new EduClassroomStore(); // return default
     }
   }
 }

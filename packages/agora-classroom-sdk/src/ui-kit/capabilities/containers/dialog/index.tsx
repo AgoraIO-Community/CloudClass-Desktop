@@ -11,6 +11,8 @@ import { GenericErrorDialog } from './error-generic';
 import { KickOut } from './kick-out';
 import { ScreenPickerDialog } from './screen-picker';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
+import { BreakoutRoomDialog } from './breakout-room';
+import { Quit } from './quit';
 
 const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode => {
   switch (category) {
@@ -31,6 +33,10 @@ const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode
       return <RoomDeviceSettingContainer {...props} id={id} />;
     case DialogCategory.ScreenPicker:
       return <ScreenPickerDialog {...props} id={id} />;
+    case DialogCategory.BreakoutRoom:
+      return <BreakoutRoomDialog {...props} id={id} />;
+    case DialogCategory.Quit:
+      return <Quit {...props} id={id} />;
   }
 };
 

@@ -130,14 +130,23 @@
 
 .pure-material-checkbox > input:disabled + span::before {
   border-color: #ececf1;
+  background: #bbbbc8;
 }
 
 .pure-material-checkbox > input:checked:disabled + span::before,
 .pure-material-checkbox > input:indeterminate:disabled + span::before {
   border-color: transparent;
-  background-color: #f9f9fc;
+  background-color: #bbbbc8;
 }
 
 .pure-material-checkbox > span {
   user-select: none;
+}
+
+.pure-material-checkbox.gap-1 > span::before {
+  margin-right: 4px;
+}
+
+.pure-material-checkbox.gap-2 > span::before {
+  margin-right: 8px;
 }

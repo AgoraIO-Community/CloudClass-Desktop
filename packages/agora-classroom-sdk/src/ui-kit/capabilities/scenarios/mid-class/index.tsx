@@ -14,7 +14,8 @@ import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import { ExtensionAppContainer } from '~containers/extension-app-container';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
-import { MidRosterBtn } from '../../containers/roster';
+import { MidRosterBtn } from '~containers/roster';
+import { SceneSwitch } from '~containers/scene-switch';
 import { Award } from '../../containers/award';
 
 export const MidClassScenario = observer(() => {
@@ -24,24 +25,26 @@ export const MidClassScenario = observer(() => {
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
-        <Layout className={layoutCls} direction="col">
-          <NavigationBarContainer />
-          <RoomMidStreamsContainer />
-          <WhiteboardContainer>
-            <ScreenShareContainer />
-          </WhiteboardContainer>
-          <Aside className="aisde-fixed">
-            <CollectorContainer />
-            <HandsUpContainer />
-            <MidRosterBtn />
-            <ChatWidgetPC />
-          </Aside>
-          <DialogContainer />
-          <LoadingContainer />
-        </Layout>
-        <ExtensionAppContainer />
-        <ToastContainer />
-        <Award />
+        <SceneSwitch>
+          <Layout className={layoutCls} direction="col">
+            <NavigationBarContainer />
+            <RoomMidStreamsContainer />
+            <WhiteboardContainer>
+              <ScreenShareContainer />
+            </WhiteboardContainer>
+            <Aside className="aisde-fixed">
+              <CollectorContainer />
+              <HandsUpContainer />
+              <MidRosterBtn />
+              <ChatWidgetPC />
+            </Aside>
+            <DialogContainer />
+            <LoadingContainer />
+          </Layout>
+          <ExtensionAppContainer />
+          <ToastContainer />
+          <Award />
+        </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
   );

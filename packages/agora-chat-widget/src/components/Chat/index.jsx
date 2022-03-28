@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector, useStore } from 'react-redux';
 import { Tabs } from 'antd';
 import { MessageBox } from '../MessageBox';
 import { InputBox } from '../InputBox';
 import { UserList } from '../UserList';
 import { Announcement } from '../Announcement';
 import { ROLE, CHAT_TABS_KEYS } from '../../contants';
-import store from '../../redux/store';
 import { isShowChat } from '../../redux/actions/propsAction';
 import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction';
 import { transI18n } from '~ui-kit';
@@ -24,6 +23,7 @@ export const Chat = () => {
   const [tabKey, setTabKey] = useState(CHAT_TABS_KEYS.chat);
   const [roomUserList, setRoomUserList] = useState([]);
   const state = useSelector((state) => state);
+  const store = useStore();
   const isLogin = _.get(state, 'isLogin');
   const announcement = _.get(state, 'room.announcement', '');
   const showRed = _.get(state, 'showRed');

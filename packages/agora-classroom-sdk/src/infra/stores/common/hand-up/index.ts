@@ -143,6 +143,15 @@ export class HandUpUIStore extends EduUIStoreBase {
         }
       });
     } else {
+      const teachers = this.classroomStore.userStore.teacherList;
+      const teacherCount = teachers.size;
+
+      if (!teacherCount) {
+        return;
+      }
+      // take first teacher's uuid
+      const teacherUuid = teachers.keys().next().value;
+
       this.classroomStore.handUpStore
         .waveArm(teacherUuid, duration, payload)
         .catch((e) => this.shareUIStore.addGenericErrorDialog(e));

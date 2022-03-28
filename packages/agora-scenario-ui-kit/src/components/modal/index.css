@@ -4,6 +4,7 @@
   border: 1px solid #e1e1ea;
   padding-bottom: 20px;
   @apply box-border bg-white;
+  width: 280px;
 }
 
 .top-level-modal {

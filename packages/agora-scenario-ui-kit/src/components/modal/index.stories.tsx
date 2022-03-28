@@ -37,39 +37,11 @@ export const Docs = ({ title }: DocsProps) => (
     <div className="mt-4">
       <Modal
         title={title}
-        width={320}
+        style={{ width: 320 }}
         footer={[<Button type="ghost">test</Button>, <Button>test</Button>]}>
         <Icon type="red-caution" color="#F04C36" size={50} />
         <p>课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件</p>
       </Modal>
-    </div>
-    <div className="mt-4">
-      <Button
-        onClick={() => {
-          Modal.show({
-            width: 280,
-            title: '自己封装的show方法',
-            closable: true,
-            footer: [
-              <Button type="secondary" action="cancel">
-                cancel
-              </Button>,
-              <Button action="ok">ok</Button>,
-            ],
-            onOk: asyncOkFunction,
-            onCancel: () => {
-              console.log('cancel');
-            },
-            children: (
-              <>
-                <Icon type="red-caution" color="#F04C36" size={50} />
-                <p>课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件</p>
-              </>
-            ),
-          });
-        }}>
-        show modal
-      </Button>
     </div>
   </>
 );
@@ -83,7 +55,7 @@ export const KickStudents = () => {
 
   return (
     <Modal
-      width={300}
+      style={{ width: 300 }}
       title={'移出学生'}
       onOk={() => {
         console.log(value);

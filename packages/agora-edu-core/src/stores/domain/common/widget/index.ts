@@ -1,10 +1,9 @@
 import { EduStoreBase } from '../base';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { IAgoraWidget } from './type';
-import { EduClassroomConfig } from '../../../..';
 import { TrackState } from '../room/type';
-import { action, observable, reaction } from 'mobx';
-import { AgoraRteEventType, bound } from 'agora-rte-sdk';
+import { action, computed, observable } from 'mobx';
+import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
 import { get } from 'lodash';
 
 /**
@@ -18,7 +17,14 @@ export class WidgetStore extends EduStoreBase {
   widgets: { [key: string]: IAgoraWidget } = {};
 
   @observable
-  widgetStateMap: Record<string, boolean> = {};
+  private _dataStore: DataStore = {
+    widgetStateMap: {},
+  };
+
+  @computed
+  get widgetStateMap() {
+    return this._dataStore.widgetStateMap;
+  }
 
   @observable
   widgetsTrackState: TrackState = {};
@@ -37,8 +43,7 @@ export class WidgetStore extends EduStoreBase {
 
   @bound
   setActive(widgetId: string, widgetProps: any, ownerUserUuid?: string) {
-    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-    this.api.updateWidgetProperties(roomUuid, widgetId, {
+    this.api.updateWidgetProperties(this.classroomStore.connectionStore.sceneId, widgetId, {
       state: 1,
       ownerUserUuid,
       ...widgetProps,
@@ -47,8 +52,7 @@ export class WidgetStore extends EduStoreBase {
 
   @bound
   setInactive(widgetId: string) {
-    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-    this.api.updateWidgetProperties(roomUuid, widgetId, {
+    this.api.updateWidgetProperties(this.classroomStore.connectionStore.sceneId, widgetId, {
       state: 0,
     });
   }
@@ -69,35 +73,91 @@ export class WidgetStore extends EduStoreBase {
     }, {});
   }
 
+  @action
+  private _setEventHandler(scene: AgoraRteScene) {
+    if (this.classroomStore.connectionStore.mainRoomScene === scene) {
+      let handler = SceneEventHandler.getEventHandler(scene);
+      if (!handler) {
+        handler = SceneEventHandler.createEventHandler(scene);
+      }
+      this._dataStore = handler.dataStore;
+    } else {
+      const handler = SceneEventHandler.createEventHandler(scene);
+      this._dataStore = handler.dataStore;
+    }
+  }
+
+  onInstall() {
+    computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue, oldValue }) => {
+      if (newValue) {
+        this._setEventHandler(newValue);
+      }
+    });
+  }
+
+  onDestroy() {
+    SceneEventHandler.cleanup();
+  }
+}
+
+type DataStore = {
+  widgetStateMap: Record<string, boolean>;
+};
+
+class SceneEventHandler {
+  private static _handlers: Record<string, SceneEventHandler> = {};
+
+  static createEventHandler(scene: AgoraRteScene) {
+    if (SceneEventHandler._handlers[scene.sceneId]) {
+      SceneEventHandler._handlers[scene.sceneId].removeEventHandlers();
+    }
+    const handler = new SceneEventHandler(scene);
+
+    handler.addEventHandlers();
+
+    SceneEventHandler._handlers[scene.sceneId] = handler;
+
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static getEventHandler(scene: AgoraRteScene) {
+    return SceneEventHandler._handlers[scene.sceneId];
+  }
+
+  static cleanup() {
+    Object.keys(SceneEventHandler._handlers).forEach((k) => {
+      SceneEventHandler._handlers[k].removeEventHandlers();
+    });
+
+    SceneEventHandler._handlers = {};
+  }
+
+  constructor(private _scene: AgoraRteScene) {}
+
+  @observable
+  dataStore: DataStore = {
+    widgetStateMap: {},
+  };
+
+  addEventHandlers() {
+    this._scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
+  removeEventHandlers() {
+    this._scene.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+  }
+
   @action.bound
-  private _handleRoomPropertiesChange(
-    changedRoomProperties: string[],
-    roomProperties: any,
-    operator: any,
-    cause: any,
-  ) {
+  private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
     changedRoomProperties.forEach((key) => {
       if (key === 'widgets') {
         const widgets = get(roomProperties, 'widgets', []);
 
-        this.widgetStateMap = Object.keys(widgets).reduce((prev, cur) => {
+        this.dataStore.widgetStateMap = Object.keys(widgets).reduce((prev, cur) => {
           prev[cur] = widgets[cur].state === 1;
           return prev;
         }, {} as Record<string, boolean>);
       }
     });
   }
-
-  onInstall() {
-    reaction(
-      () => this.classroomStore.connectionStore.scene,
-      (scene) => {
-        if (scene) {
-          scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
-        }
-      },
-    );
-  }
-
-  onDestroy() {}
 }

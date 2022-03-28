@@ -1,15 +1,10 @@
 import React, { FC, useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { Icon } from '~components/icon';
-import Notification from 'rc-notification';
 import './index.css';
 import { SvgImg } from '../svg-img';
 import { OverlayWrap } from '../overlay-wrap';
-import { AutoSizer } from 'react-virtualized';
 export interface ModalProps extends BaseProps {
-  /** 宽度 */
-  width?: string | number;
   /** 标题 */
   title?: string;
   /** 遮罩效果 */
@@ -38,12 +33,9 @@ export interface ModalProps extends BaseProps {
   animate?: boolean;
 }
 
-type ModalType = FC<ModalProps> & {
-  show: (params: ModalProps) => void;
-};
+type ModalType = FC<ModalProps>;
 
 export const Modal: ModalType = ({
-  width = 280,
   title = 'modal title',
   closable = false,
   footer,
@@ -94,7 +86,7 @@ export const Modal: ModalType = ({
   }, []);
 
   const modalJsx = (
-    <div className={cls} {...restProps} style={{ ...style, width }}>
+    <div className={cls} {...restProps} style={{ ...style }}>
       <div className={['modal-title', modalType === 'back' ? 'back-modal-title' : ''].join(' ')}>
         {modalType === 'normal' ? (
           <>
@@ -180,67 +172,4 @@ export const Modal: ModalType = ({
   );
 
   return hasMask ? <div className="modal-mask">{resultJsx}</div> : resultJsx;
-};
-
-Modal.show = ({
-  width = 280,
-  title = 'modal title',
-  closable = true,
-  footer,
-  onOk = () => {
-    console.log('ok');
-  },
-  onCancel = () => {
-    console.log('cancel');
-  },
-  children,
-  className,
-  component,
-  showMask,
-  maskClosable,
-  ...restProps
-}) => {
-  const cls = classnames({
-    [`rc-mask`]: !!showMask,
-  });
-  Notification.newInstance({ prefixCls: cls }, (notification) => {
-    const modalId = 'modal-' + Date.now();
-    const hideModal = () => {
-      notification.removeNotice(modalId);
-      notification.destroy();
-    };
-    const tmpOk = async (e: React.MouseEvent<HTMLElement>) => {
-      await onOk(e);
-      hideModal();
-    };
-    const tmpCancel = async (e: React.MouseEvent<HTMLElement>) => {
-      await onCancel(e);
-      hideModal();
-    };
-    const Comp = (
-      <Modal
-        title={title}
-        width={width}
-        closable={closable}
-        footer={footer}
-        onOk={tmpOk}
-        onCancel={tmpCancel}
-        children={children}
-        className={className}
-        component={component}
-        maskClosable={maskClosable}
-        {...restProps}></Modal>
-    );
-    notification.notice({
-      content: Comp,
-      duration: 0,
-      key: modalId,
-      style: {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      },
-    });
-  });
 };

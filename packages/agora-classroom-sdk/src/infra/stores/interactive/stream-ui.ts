@@ -1,5 +1,10 @@
-import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
-import { Log } from 'agora-rte-sdk';
+import {
+  AGEduErrorCode,
+  EduClassroomConfig,
+  EduErrorCenter,
+  EduRoleTypeEnum,
+} from 'agora-edu-core';
+import { AgoraRteVideoSourceType, Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { StreamUIStore } from '../common/stream';
@@ -28,13 +33,22 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
   @computed
   get carouselStreams(): EduStreamUI[] {
     const { acceptedList } = this.classroomStore.roomStore;
+    const { groupUuidByUserUuid } = this.classroomStore.groupStore;
 
     const streams = [];
 
-    const carouselStudentList = acceptedList.slice(
+    let carouselStudentList = acceptedList.slice(
       this.carouselPosition,
       this.carouselPosition + this.carouselStudentShowCount,
     );
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (!isInSubRoom) {
+      carouselStudentList = carouselStudentList.filter(
+        ({ userUuid }) => !groupUuidByUserUuid.has(userUuid),
+      );
+    }
 
     for (const student of carouselStudentList) {
       const streamUuids =
@@ -42,6 +56,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
 
       for (const streamUuid of streamUuids) {
         const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+
         if (stream) {
           const uiStream = new EduStreamUI(stream);
 
@@ -51,6 +66,72 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     }
 
     return streams;
+  }
+
+  @computed
+  get teacherCameraStream(): EduStreamUI | undefined {
+    const streamSet = new Set<EduStreamUI>();
+    const streams = this.teacherStreams;
+    for (const stream of streams) {
+      if (stream.stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
+        streamSet.add(stream);
+      }
+    }
+
+    if (streamSet.size > 1) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UNEXPECTED_TEACHER_STREAM_LENGTH,
+        new Error(`unexpected stream size ${streams.size}`),
+      );
+    }
+
+    const teacherCameraStream = Array.from(streamSet)[0];
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (!isInSubRoom) {
+      if (teacherCameraStream) {
+        const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+
+        const teacherUuid = teacherCameraStream.fromUser.userUuid;
+
+        if (groupUuidByUserUuid.has(teacherUuid)) return undefined;
+      }
+    }
+    return teacherCameraStream;
+  }
+
+  @computed
+  get assistantCameraStream(): EduStreamUI | undefined {
+    const streamSet = new Set<EduStreamUI>();
+    const streams = this.assistantStreams;
+    for (const stream of streams) {
+      if (stream.stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
+        streamSet.add(stream);
+      }
+    }
+
+    if (streamSet.size > 1) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UNEXPECTED_TEACHER_STREAM_LENGTH,
+        new Error(`unexpected stream size ${streams.size}`),
+      );
+    }
+
+    const assistantCameraStream = Array.from(streamSet)[0];
+
+    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+
+    if (!isInSubRoom) {
+      if (assistantCameraStream) {
+        const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+
+        const assistantUuid = assistantCameraStream.fromUser.userUuid;
+
+        if (groupUuidByUserUuid.has(assistantUuid)) return undefined;
+      }
+    }
+    return assistantCameraStream;
   }
 
   @computed get localStreamTools(): EduStreamTool[] {
