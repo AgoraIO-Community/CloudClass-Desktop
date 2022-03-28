@@ -496,23 +496,23 @@ export class ToolbarUIStore extends EduUIStoreBase {
       //   //   return <ColorsContainer {...props} />;
       //   // },
       // }),
-      {
-        value: 'clear',
-        label: 'scaffold.clear',
-        icon: 'clear',
-      },
-      {
-        value: 'undo',
-        label: 'scaffold.undo',
-        icon: 'undo',
-        className: this.classroomStore.boardStore.undoSteps === 0 ? 'undo-disabled' : 'undo',
-      },
-      {
-        value: 'redo',
-        label: 'scaffold.redo',
-        icon: 'redo',
-        className: this.classroomStore.boardStore.redoSteps === 0 ? 'redo-disabled' : 'redo',
-      },
+      // {
+      //   value: 'clear',
+      //   label: 'scaffold.clear',
+      //   icon: 'clear',
+      // },
+      // {
+      //   value: 'undo',
+      //   label: 'scaffold.undo',
+      //   icon: 'undo',
+      //   className: this.classroomStore.boardStore.undoSteps === 0 ? 'undo-disabled' : 'undo',
+      // },
+      // {
+      //   value: 'redo',
+      //   label: 'scaffold.redo',
+      //   icon: 'redo',
+      //   className: this.classroomStore.boardStore.redoSteps === 0 ? 'redo-disabled' : 'redo',
+      // },
     ];
   }
 
