@@ -203,6 +203,7 @@ export class RtcAudioDeviceManagerCef extends RtcAudioDeviceManagerBase {
   }
 
   private _fetchPlaybackDeviceList() {
+    // @ts-ignore
     let devices = AgoraCEF.AgoraRtcEngine.getAudioPlaybackDevices() as AGRtcDeviceInfo[];
     let newDevices: AGRtcDeviceInfo[] = [];
     this._playbackDeviceInfo.clear();

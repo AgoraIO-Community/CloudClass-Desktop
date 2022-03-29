@@ -121,7 +121,8 @@ export class RtcAdapterCef extends RtcAdapterBase {
     // https://confluence.agoralab.co/pages/viewpage.action?pageId=716638376
     this.rtcEngine.setChannelProfile(1);
 
-    this.rtcEngine.setLogFile('C://Users/zqz/a.log');
+    // this.rtcEngine.setLogFile('C://Users/zqz/a.log');
+    // @ts-ignore
     window.rtcEngine = this.rtcEngine;
 
     // this.rtcEngine.setParameters(
