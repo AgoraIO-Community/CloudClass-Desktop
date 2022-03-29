@@ -5,8 +5,9 @@ import _ from 'lodash';
 
 export class ChatHistoryAPI {
   store = null;
-  constructor(store) {
+  constructor(store, messageAPI) {
     this.store = store;
+    this.messageAPI = messageAPI;
   }
 
   getHistoryMessages = (roomId) => {
@@ -28,7 +29,8 @@ export class ChatHistoryAPI {
           } else if (deleteMsgId.includes(id)) {
             return;
           } else {
-            this.store.dispatch(messageAction(val, { showNotice: false, isHistory: true }));
+            const newMessage = this.messageAPI.convertCustomMessage(val);
+            this.store.dispatch(messageAction(newMessage, { showNotice: false, isHistory: true }));
           }
         });
       },

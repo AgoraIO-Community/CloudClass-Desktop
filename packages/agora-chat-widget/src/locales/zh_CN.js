@@ -51,6 +51,7 @@ const im_CN = {
     screenshots: '截图',
     hide_classroom_page_screenshots: '隐藏教室页面截图',
     screenshots_file: '截图文件',
+    send_to_all: '发送全体消息',
   },
 };
 export default im_CN;

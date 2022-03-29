@@ -112,4 +112,21 @@ export class MessageAPI {
       }
     };
   };
+
+  convertCustomMessage = (message) => {
+    if (message?.ext?.range === 3) {
+      const customMessage = {
+        ...message,
+        ext: {
+          ...message.ext,
+          avatarUrl:
+            'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png',
+          nickName: message.ext.nickname,
+          role: +message.ext.role,
+        },
+      };
+      return customMessage;
+    }
+    return message;
+  };
 }
