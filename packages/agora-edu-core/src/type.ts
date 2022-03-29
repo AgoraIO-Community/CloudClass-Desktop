@@ -167,5 +167,7 @@ export enum AgoraEduClassroomEvent {
   MoveToOtherGroup = 119, // 被移动至小组
   JoinSubRoom = 120, //加入分组房间
   LeaveSubRoom = 121, //离开分组房间
-  AcceptedToGroup = 122, //用户接收并加入小组
+  AcceptedToGroup = 122, //用户接收邀请
+  UserJoinGroup = 123, //用户加入小组
+  UserLeaveGroup = 124, //用户离开小组
 }

@@ -21,13 +21,13 @@ export const IconButton: FC<IconButtonProps> = ({
   ...restProps
 }) => {
   const cls = classnames({
-    [`icon-btn`]: 1,
+    [`fcr-icon-btn`]: 1,
     [`${className}`]: !!className,
   });
   return (
     <div className={cls} {...restProps} onClick={onClick}>
       {icon}
-      <span className="icon-btn-text" style={{ color: buttonTextColor }}>
+      <span className="fcr-icon-btn-text" style={{ color: buttonTextColor }}>
         {buttonText}
       </span>
     </div>

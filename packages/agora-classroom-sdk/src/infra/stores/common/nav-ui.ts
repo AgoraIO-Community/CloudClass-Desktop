@@ -184,15 +184,19 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       },
     ];
 
-    let actions = commonActions;
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-      actions = teacherActions.concat(actions);
-    }
-
     const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
 
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isInSubRoom) {
-      actions = studentActions.concat(actions);
+    let actions = commonActions;
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      if (!isInSubRoom) {
+        actions = teacherActions.concat(actions);
+      }
+    }
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+      if (isInSubRoom) {
+        actions = studentActions.concat(actions);
+      }
     }
 
     return actions;

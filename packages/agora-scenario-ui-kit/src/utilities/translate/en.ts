@@ -267,6 +267,12 @@ export const en = {
     fail_to_convert_resource: 'The resource conversion failed',
     interaction_too_frequent: 'The operation is too frequent, please try again later.',
     breakout_room_group_name_existed: 'The group name already exists',
+    teacher_enter_room: 'Teacher {reason} came in',
+    teacher_leave_room: 'Teacher {reason} left',
+    assistant_enter_room: 'Assistant {reason} came in',
+    assistant_leave_room: 'Assistant {reason} left',
+    student_enter_room: 'Student {reason} came in',
+    student_leave_room: 'Student {reason} left',
   },
   end_class_confirm: 'Confirm the end of class?',
   notice: {

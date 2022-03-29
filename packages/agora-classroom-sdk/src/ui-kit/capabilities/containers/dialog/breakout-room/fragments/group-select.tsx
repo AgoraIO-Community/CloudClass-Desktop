@@ -250,11 +250,15 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
       node.text
     );
 
-  if (level === 1 && (node as any).notJoined) {
+  const notJoined = (node as any).notJoined;
+
+  if (level === 1 && notJoined) {
     content += ` ${transI18n('breakout_room.not_accepted')}`;
   }
 
-  return <TreeNode content={content} tail={tialNode} />;
+  return (
+    <TreeNode content={content} tail={!notJoined ? tialNode : <div className="py-1">&nbsp;</div>} />
+  );
 };
 
 type Props = {
@@ -337,7 +341,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   const broadcastButton = (
     <Button
       type="secondary"
-      className="rounded-btn mr-2"
+      className="rounded-btn mr-2 px-1"
       onClick={() => {
         setBroadcastVisible(true);
       }}>
@@ -362,7 +366,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
 
   const started = (
     <div className="flex justify-between px-4 py-2">
-      {/* {broadcastButton} */}
+      {broadcastButton}
       <div />
       {startButton}
     </div>

@@ -121,6 +121,25 @@ export class GroupStore extends EduStoreBase {
           });
         }
       }
+
+      if (cmd === 11 && data.actionType === 4) {
+        const groups: { groupUuid: string; addUsers: []; removeUsers: [] }[] =
+          data.changeGroups || [];
+        groups.forEach(({ groupUuid, addUsers, removeUsers }) => {
+          if (addUsers.length) {
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.UserJoinGroup, {
+              groupUuid,
+              users: addUsers.map(({ userUuid }) => userUuid),
+            });
+          }
+          if (removeUsers.length) {
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.UserLeaveGroup, {
+              groupUuid,
+              users: removeUsers.map(({ userUuid }) => userUuid),
+            });
+          }
+        });
+      }
     }
   }
 

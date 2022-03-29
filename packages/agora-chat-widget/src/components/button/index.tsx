@@ -34,7 +34,7 @@ export const Button: FC<ButtonProps> = ({
   ...restProps
 }) => {
   const cls = classnames({
-    [`btn btn-${size} btn-${type}`]: 1,
+    [`fcr-btn fcr-btn-${size} fcr-btn-${type}`]: 1,
     [`${className}`]: !!className,
   });
   const buttonRef = useRef<HTMLButtonElement | null>(null);

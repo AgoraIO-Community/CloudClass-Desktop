@@ -258,6 +258,12 @@ export const zh = {
     fail_to_convert_resource: '文件转换失败',
     interaction_too_frequent: '操作过于频繁，请稍后再试',
     breakout_room_group_name_existed: '组名称已存在',
+    teacher_enter_room: '老师{reason}进入房间',
+    teacher_leave_room: '老师{reason}离开房间',
+    assistant_enter_room: '助教{reason}进入房间',
+    assistant_leave_room: '助教{reason}离开房间',
+    student_enter_room: '学生{reason}进入房间',
+    student_leave_room: '学生{reason}离开房间',
   },
   end_class_confirm: '确定要结束教室吗？',
   notice: {

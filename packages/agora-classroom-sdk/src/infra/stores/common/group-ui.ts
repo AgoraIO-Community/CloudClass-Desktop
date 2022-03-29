@@ -308,7 +308,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @action.bound
   moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string) {
     if (this.groupState === GroupState.OPEN) {
-      let toUsersLength =
+      const toUsersLength =
         this.classroomStore.groupStore.groupDetails.get(toGroupUuid)?.users.length;
       if (toUsersLength && toUsersLength >= this.MAX_USER_COUNT) {
         this.toastFullOfStudents();
@@ -665,12 +665,7 @@ export class GroupUIStore extends EduUIStoreBase {
         this._joinSubRoom();
       }
       if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
-        // this.shareUIStore.addToast('Leave sub room');
         this._leaveSubRoom();
-      }
-      if (type === AgoraEduClassroomEvent.AcceptedToGroup) {
-        // this.logger.info('Accepted to group', args);
-        // this.shareUIStore.addToast('Accepted to group');
       }
 
       if (type === AgoraEduClassroomEvent.InvitedToGroup) {

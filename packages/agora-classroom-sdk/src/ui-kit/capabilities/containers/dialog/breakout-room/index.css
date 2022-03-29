@@ -30,7 +30,7 @@
   @apply rounded !important;
 }
 
-.breakout-room .btn-secondary {
+.breakout-room .fcr-btn-secondary {
   color: var(--text-color);
 }
 
