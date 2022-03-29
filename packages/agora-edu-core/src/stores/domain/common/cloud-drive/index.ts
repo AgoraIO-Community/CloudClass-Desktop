@@ -176,7 +176,7 @@ export class CloudDriveStore extends EduStoreBase {
               checkPoint: cancelTokenSource,
             });
 
-          let percentCompleted = Math.floor(progressEvent.loaded / progressEvent.total);
+          let percentCompleted = progressEvent.loaded / progressEvent.total;
           runInAction(() => {
             this._updateProgress(resourceUuid, percentCompleted);
           });
