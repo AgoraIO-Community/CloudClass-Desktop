@@ -33,16 +33,15 @@ export const UserPanel: FC<UserPanelProps> = ({
       }}
       onOpen={onOpen}>
       <div
-        className="panel-content py-2 overflow-scroll flex flex-wrap justify-start"
+        className="panel-content py-2 px-1 overflow-scroll flex flex-wrap justify-start"
         style={{ width: 300, height: 200 }}
         onClick={(e: MouseEvent) => {
           e.stopPropagation();
         }}>
         {users.map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
-          <div
-            key={userUuid}
-            style={{ width: '33.33%', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div key={userUuid} style={{ width: '33.33%' }}>
             <CheckBox
+              style={{ width: '130%' }}
               gap={2}
               text={userName}
               value={userUuid}
