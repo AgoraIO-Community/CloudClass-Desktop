@@ -310,7 +310,7 @@ export const PersonalResourcesContainer = observer(() => {
                     <Inline color="#586376">{formatFileSize(size)}</Inline>
                   </Col>
                   <Col>
-                    <Inline color="#586376">{dayjs(updateTime).format('YY-MM-DD HH:mm:ss')}</Inline>
+                    <Inline color="#586376">{dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')}</Inline>
                   </Col>
                 </Row>
               );
