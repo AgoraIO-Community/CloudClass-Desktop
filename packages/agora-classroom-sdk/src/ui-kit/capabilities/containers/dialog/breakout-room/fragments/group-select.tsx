@@ -271,7 +271,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const panelState = usePanelState();
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="flex-grow overflow-scroll py-2">
+      <div className="flex-grow overflow-auto py-2">
         <PanelStateContext.Provider value={panelState}>
           <MultiRootTree
             childClassName="pl-4"

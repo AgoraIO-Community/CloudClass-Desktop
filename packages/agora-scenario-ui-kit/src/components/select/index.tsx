@@ -78,7 +78,7 @@ export const Select: FC<SelectProps> = ({
         {...restProps}
       />
       <CSSTransition in={showOption} timeout={180} className="options-container" unmountOnExit>
-        <div style={{ maxHeight: 200, overflow: 'scroll' }}>
+        <div style={{ maxHeight: 200, overflow: 'auto' }}>
           {wrappedOptions.map((item) => {
             const optionCls = classnames('option-item', {
               'text-center': isMenuTextCenter,
