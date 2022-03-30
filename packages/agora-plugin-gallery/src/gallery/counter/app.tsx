@@ -18,10 +18,10 @@ const App = observer(() => {
       extra: {
         state: 1,
         startTime: Date.now() + pluginStore.getTimestampGap,
-        duration: pluginStore.number != undefined ? pluginStore.number : 0,
+        duration: pluginStore.number !== null ? pluginStore.number : 0,
       },
     });
-    setDuration(pluginStore.number);
+    setDuration(pluginStore.number as number);
     play();
   };
 
@@ -62,7 +62,7 @@ const App = observer(() => {
   }, []);
 
   React.useEffect(() => {
-    if (durationRef.current !== duration && duration <= 3) {
+    if (durationRef.current !== duration && duration < 3) {
       setCaution(true);
     } else {
       setCaution(false);
@@ -70,10 +70,16 @@ const App = observer(() => {
     durationRef.current = duration;
   }, [duration]);
 
-  const handleNumberChange = React.useCallback((number: number) => {
-    number >= 3600 && (number = 3600);
-    pluginStore.setNumber(number);
-    formatDiff(number);
+  const handleNumberChange = React.useCallback((value: string) => {
+    if (value) {
+      let number = +value;
+      number >= 3600 && (number = 3600);
+      number < 1 && (number = 1);
+      pluginStore.setNumber(number);
+      formatDiff(number);
+    } else {
+      pluginStore.setNumber(null);
+    }
   }, []);
 
   return (
@@ -89,13 +95,13 @@ const App = observer(() => {
             <Input
               value={pluginStore.number}
               onChange={(e: any) => {
-                handleNumberChange(+e.target.value.replace(/\D+/g, ''));
+                handleNumberChange(e.target.value.replace(/\D+/g, ''));
               }}
               suffix={
                 <span
                   style={{
                     color:
-                      pluginStore.number != undefined &&
+                      pluginStore.number != null &&
                       pluginStore.number <= 3600 &&
                       pluginStore.number >= 1
                         ? '#333'
@@ -107,7 +113,7 @@ const App = observer(() => {
               maxNumber={3600}
               style={{
                 color:
-                  pluginStore.number != undefined &&
+                  pluginStore.number != null &&
                   pluginStore.number <= 3600 &&
                   pluginStore.number >= 1
                     ? '#333'
@@ -119,8 +125,9 @@ const App = observer(() => {
             className="btn-rewrite-disabled mt-3.5"
             onClick={handleSetting}
             disabled={
-              (pluginStore.number !== undefined && pluginStore.number > 3600) ||
-              pluginStore.number < 1
+              (pluginStore.number !== null && pluginStore.number > 3600) ||
+              (pluginStore.number !== null && pluginStore.number < 1) ||
+              pluginStore.number === null
             }>
             {transI18n('widget_answer.start')}
           </Button>
