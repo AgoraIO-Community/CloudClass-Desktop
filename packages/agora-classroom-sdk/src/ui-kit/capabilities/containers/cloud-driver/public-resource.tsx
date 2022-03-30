@@ -79,7 +79,7 @@ export const PublicResourcesContainer = observer(() => {
                   </Col>
                   <Col>
                     <Inline color="#586376">
-                      {!!updateTime ? dayjs(updateTime).format('YY-MM-DD HH:mm:ss') : '- -'}
+                      {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
                     </Inline>
                   </Col>
                 </Row>
