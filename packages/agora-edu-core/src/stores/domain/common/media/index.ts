@@ -495,8 +495,12 @@ export class MediaStore extends EduStoreBase {
             }
           }
         } else {
-          // initailize, pick the first device
-          newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+          if (EduClassroomConfig.shared.openCameraDeviceAfterLaunch) {
+            // initailize, pick the first device
+            newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+          } else {
+            this.setCameraDevice(DEVICE_DISABLE);
+          }
         }
       },
     );
@@ -518,8 +522,12 @@ export class MediaStore extends EduStoreBase {
             }
           }
         } else {
-          // initailize, pick the first device
-          newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+          if (EduClassroomConfig.shared.openRecordingDeviceAfterLaunch) {
+            // initailize, pick the first device
+            newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+          } else {
+            this.setRecordingDevice(DEVICE_DISABLE);
+          }
         }
       },
     );

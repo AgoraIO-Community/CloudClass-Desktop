@@ -46,6 +46,8 @@ export class EduClassroomConfig {
   private _currentAPIVersion = 'v3';
   private _compatibleVersions: string[] = [];
   private _i18nResources = {};
+  private _openCameraDeviceAfterLaunch = true;
+  private _openRecordingDeviceAfterLaunch = true;
   boardDefaults: WhiteboardDefaults = { scale: 1.2 };
   //by default use https://api.sd-rtn.com
   host: string = 'https://api.sd-rtn.com';
@@ -65,12 +67,20 @@ export class EduClassroomConfig {
     widgets: { [key: string]: IAgoraWidget } = {},
     platform: Platform = Platform.PC,
     i18nResources: Resource = {},
-    extensions?: IAgoraExtensionApp[],
+    extensions: IAgoraExtensionApp[] = [],
+    options?: {
+      openCameraDeviceAfterLaunch: boolean;
+      openRecordingDeviceAfterLaunch: boolean;
+    },
   ) {
     this.appId = appId;
     this.platform = platform;
     this._sessionInfo = sessionInfo;
     this.recordUrl = recordUrl;
+    if (options) {
+      this._openCameraDeviceAfterLaunch = options.openCameraDeviceAfterLaunch;
+      this._openRecordingDeviceAfterLaunch = options.openRecordingDeviceAfterLaunch;
+    }
     const rtcConfigs = merge(
       {
         defaultCameraEncoderConfigurations: EduClassroomConfig.defaultMediaOptions(
@@ -155,6 +165,14 @@ export class EduClassroomConfig {
 
   get extensions() {
     return this._extensions;
+  }
+
+  get openCameraDeviceAfterLaunch() {
+    return this._openCameraDeviceAfterLaunch;
+  }
+
+  get openRecordingDeviceAfterLaunch() {
+    return this._openRecordingDeviceAfterLaunch;
   }
 
   static getVersion(): string {
