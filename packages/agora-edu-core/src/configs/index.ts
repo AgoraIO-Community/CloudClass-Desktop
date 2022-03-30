@@ -194,20 +194,20 @@ export class EduClassroomConfig {
     if (userRole === EduRoleTypeEnum.teacher) {
       switch (roomType) {
         case EduRoomTypeEnum.Room1v1Class:
-          // stay 240p
+          // stay 480p
           cameraEncoderConfiguration = {
-            width: 320,
-            height: 240,
+            width: 640,
+            height: 480,
             frameRate: 15,
-            bitrate: 200,
+            bitrate: 800,
           };
           break;
         case EduRoomTypeEnum.RoomSmallClass:
           cameraEncoderConfiguration = {
-            width: 160,
-            height: 120,
-            bitrate: 65,
+            width: 640,
+            height: 480,
             frameRate: 15,
+            bitrate: 800,
           };
           break;
         case EduRoomTypeEnum.RoomBigClass:
@@ -215,7 +215,7 @@ export class EduClassroomConfig {
             width: 640,
             height: 480,
             frameRate: 15,
-            bitrate: 400,
+            bitrate: 800,
           };
           break;
       }

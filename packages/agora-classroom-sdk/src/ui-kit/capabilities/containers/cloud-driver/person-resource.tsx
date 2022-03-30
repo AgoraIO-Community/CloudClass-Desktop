@@ -82,6 +82,7 @@ const UploadModal = () => {
 };
 
 export const PersonalResourcesContainer = observer(() => {
+  const uploadingRef = useRef(false);
   const { cloudUIStore, shareUIStore } = useStore();
   const { addConfirmDialog } = shareUIStore;
   const {
@@ -137,12 +138,15 @@ export const PersonalResourcesContainer = observer(() => {
       setShowUploadModal(false);
     }
     if (
+      uploadingRef.current &&
+      showUploadModal &&
       uploadingProgresses.length > 0 &&
       uploadingProgresses.length ===
         uploadingProgresses.filter(
           (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
         ).length
     ) {
+      uploadingRef.current = false;
       setShowUploadModal(false);
       setUploadState('success');
       setShowUploadToast(true);
@@ -173,6 +177,7 @@ export const PersonalResourcesContainer = observer(() => {
         setShowUploadModal(true);
         setUploadState('uploading');
         const taskArr = [];
+        uploadingRef.current = true;
         for (const file of files) {
           taskArr.push(
             uploadPersonalResource(file).finally(() => {

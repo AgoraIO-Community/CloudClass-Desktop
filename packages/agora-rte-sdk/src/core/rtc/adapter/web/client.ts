@@ -4,6 +4,9 @@ import AgoraRTC, {
   EncryptionMode,
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
+  LowStreamParameter,
+  RemoteStreamType,
+  UID,
 } from 'agora-rtc-sdk-ng';
 import { RtcAdapterWeb, RtcAdapterWebConfig } from '.';
 import { AGEventEmitter } from '../../../utils/events';
@@ -69,7 +72,6 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
     if (encryption) {
       this._client.setEncryptionConfig(this._getEncryptionMode(encryption.mode), encryption.key);
     }
-
     this._videoPublishThread = new AgoraRtePublishThread(this._client);
     this._audioPublishThread = new AgoraRtePublishThread(this._client);
     this._screenPublishThread = new AgoraRtePublishThread(this._client);
@@ -398,6 +400,21 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
     return 0;
   }
 
+  enableDualStream(enable: boolean) {
+    if (enable) {
+      return this._client.enableDualStream();
+    } else {
+      return this._client.disableDualStream();
+    }
+  }
+  setLowStreamParameter(streamParameter: LowStreamParameter) {
+    this._client.setLowStreamParameter(streamParameter);
+    return 0;
+  }
+
+  setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType) {
+    return this._client.setRemoteVideoStreamType(Number(uid), streamType);
+  }
   async leave(): Promise<void> {
     await super.leave();
     this._remoteRtcUsers.clear();
@@ -413,4 +430,19 @@ export class AgoraRteWebClientMain extends AgoraRteWebClientBase {
   }
 }
 
-export class AgoraRteWebClientSub extends AgoraRteWebClientBase {}
+export class AgoraRteWebClientSub extends AgoraRteWebClientBase {
+  setLowStreamParameter(streamParameter: LowStreamParameter) {
+    this._client.setLowStreamParameter(streamParameter);
+    return 0;
+  }
+  setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType) {
+    return this._client.setRemoteVideoStreamType(Number(uid), streamType);
+  }
+  enableDualStream(enable: boolean) {
+    if (enable) {
+      return this._client.enableDualStream();
+    } else {
+      return this._client.disableDualStream();
+    }
+  }
+}

@@ -15,6 +15,7 @@ import { ExtensionAppContainer } from '~containers/extension-app-container';
 
 import { ToastContainer } from '~containers/toast';
 import { CollectorContainer } from '~containers/board';
+import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 
 const Content: FC = ({ children }) => {
   return <div className="flex-grow">{children}</div>;
@@ -30,9 +31,10 @@ export const OneToOneScenario = observer(() => {
           <NavigationBarContainer />
           <Layout className="horizontal">
             <Content>
-              <WhiteboardContainer>
-                <ScreenShareContainer />
-              </WhiteboardContainer>
+              <BigWidgetWindowContainer>
+                <WhiteboardContainer></WhiteboardContainer>
+              </BigWidgetWindowContainer>
+
               <Aside className="aisde-fixed">
                 <CollectorContainer />
               </Aside>

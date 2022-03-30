@@ -1,3 +1,5 @@
+import { LowStreamParameter, RemoteStreamType, UID } from 'agora-rtc-sdk-ng';
+
 export enum AGNetworkQuality {
   unknown = 99,
   bad = 1,
@@ -118,3 +120,15 @@ export interface BeautyEffect {
   rednessLevel: number; // 红润度
   smoothnessLevel: number; // 平滑度
 }
+export enum AgoraRteRemoteStreamType {
+  /**
+   * 0: High-quality video stream (high-bitrate, high-resolution).
+   */
+  HIGH_STREAM = 0,
+  /**
+   * 1: Low-quality video stream (low-bitrate, low-resolution).
+   */
+  LOW_STREAM = 1,
+}
+export type AgoraRteStreamUID = string | number;
+export interface AgoraRteLowStreamParameter extends LowStreamParameter {}

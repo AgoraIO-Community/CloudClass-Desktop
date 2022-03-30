@@ -1,3 +1,4 @@
+import { LowStreamParameter, RemoteStreamType, UID } from 'agora-rtc-sdk-ng';
 import { ChannelProfile, ClientRole } from '../../../type';
 import { AgoraRteAudioSourceType, AgoraRteVideoSourceType } from '../../media/track';
 import { AGEventEmitter } from '../../utils/events';
@@ -69,6 +70,16 @@ export abstract class RtcChannelAdapterBase extends AGEventEmitter {
   ): Promise<void>;
   abstract getSessionId(): string;
   abstract leave(connectionType?: AGRtcConnectionType): Promise<void>;
+  abstract enableDualStream(enable: boolean, connectionType?: AGRtcConnectionType): Promise<void>;
+  abstract setLowStreamParameter(
+    streamParameter: LowStreamParameter,
+    connectionType?: AGRtcConnectionType,
+  ): number;
+  abstract setRemoteVideoStreamType(
+    uid: UID,
+    streamType: RemoteStreamType,
+    connectionType: AGRtcConnectionType,
+  ): Promise<void>;
   abstract muteLocalVideo(mute: boolean, connectionType: AGRtcConnectionType): number;
   abstract muteLocalAudio(mute: boolean, connectionType: AGRtcConnectionType): number;
   abstract muteLocalScreenShare(mute: boolean, connectionType: AGRtcConnectionType): number;

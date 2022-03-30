@@ -4,6 +4,7 @@ import { EduClassroomUIStore } from '../common';
 import { OneToOneBoardUIStore } from './board-ui';
 import { OneToOneStreamUIStore } from './stream-ui';
 import { OneToOneToolbarUIStore } from './toolbar-ui';
+import { OneToOneWidgetUIStore } from './widget-ui';
 
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class Edu1v1ClassUIStore extends EduClassroomUIStore {
@@ -12,5 +13,9 @@ export class Edu1v1ClassUIStore extends EduClassroomUIStore {
     this._streamUIStore = new OneToOneStreamUIStore(store, this.shareUIStore);
     this._toolbarUIStore = new OneToOneToolbarUIStore(store, this.shareUIStore);
     this._boardUIStore = new OneToOneBoardUIStore(store, this.shareUIStore);
+    this._widgetUIStore = new OneToOneWidgetUIStore(store, this.shareUIStore);
+  }
+  get widgetUIStore() {
+    return this._widgetUIStore as OneToOneWidgetUIStore;
   }
 }

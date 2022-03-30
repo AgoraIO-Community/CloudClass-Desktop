@@ -4,17 +4,19 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { StreamPlayer, StreamPlaceholder } from '.';
 
-const Room1v1TeacherStream = observer(({ stream }: { stream?: EduStreamUI }) => {
-  return (
-    <>
-      {stream ? (
-        <StreamPlayer stream={stream}></StreamPlayer>
-      ) : (
-        <StreamPlaceholder role={EduRoleTypeEnum.teacher} />
-      )}
-    </>
-  );
-});
+export const Room1v1TeacherStream = observer(
+  ({ stream, isFullScreen = false }: { stream?: EduStreamUI; isFullScreen?: boolean }) => {
+    return (
+      <>
+        {stream ? (
+          <StreamPlayer stream={stream} isFullScreen={isFullScreen}></StreamPlayer>
+        ) : (
+          <StreamPlaceholder role={EduRoleTypeEnum.teacher} />
+        )}
+      </>
+    );
+  },
+);
 
 const Room1v1StudentStream = observer(({ stream }: { stream?: EduStreamUI }) => {
   return (

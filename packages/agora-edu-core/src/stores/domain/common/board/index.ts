@@ -182,10 +182,11 @@ export class BoardStore extends EduStoreBase {
       );
     }
   }
-
+  @action.bound
   leaveBoard = async () => {
     try {
       this.unmount();
+
       await this._room?.disconnect();
     } catch (err) {
       EduErrorCenter.shared.handleNonThrowableError(
@@ -236,7 +237,7 @@ export class BoardStore extends EduStoreBase {
         );
       });
   };
-
+  @action
   unmount = () => {
     this._windowManager?.destroy();
     this.setWindowManager(undefined);
@@ -537,6 +538,8 @@ export class BoardStore extends EduStoreBase {
     });
   }
 
+  // ----------  other -------------
+
   private restoreWhiteboardMemberStateTo(room: Room) {
     if (room.isWritable) {
       room.setMemberState({
@@ -703,6 +706,7 @@ export class BoardStore extends EduStoreBase {
         },
       ),
     );
+
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
@@ -819,18 +823,23 @@ class SceneEventHandler {
   private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
     changedRoomProperties.forEach((key) => {
       if (key === 'widgets') {
-        const configs = get(roomProperties, 'widgets.netlessBoard.extra');
+        const extensionProperties = get(roomProperties, `widgets`, {});
+        const whiteboardProperties = get(extensionProperties, 'netlessBoard');
+        if (whiteboardProperties) {
+          const whiteboardState = get(whiteboardProperties, 'state');
 
-        if (configs) {
-          const { boardAppId, boardId, boardRegion, boardToken } = configs;
-
-          this.dataStore.whiteboardConfig = {
-            boardAppId,
-            boardId,
-            boardRegion,
-            boardToken,
-          };
-          this.dataStore.configReady = true;
+          if (whiteboardState === 1) {
+            const whiteBoardConfig = get(whiteboardProperties, 'extra');
+            if (!this.dataStore.configReady) {
+              this.dataStore.whiteboardConfig = whiteBoardConfig;
+              this.dataStore.configReady = true;
+            }
+          } else {
+            if (this.dataStore.configReady) {
+              this.dataStore.whiteboardConfig = undefined;
+              this.dataStore.configReady = false;
+            }
+          }
         }
       }
     });

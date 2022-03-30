@@ -13,6 +13,8 @@ export { Pens } from './pens';
 
 export { ToolCabinet } from './tool-cabinet';
 
+export { BoardCleaners } from './board-cleaners';
+
 export type { ToolItem } from './tool';
 
 export interface ToolbarProps extends BaseProps {
@@ -105,14 +107,14 @@ export const Toolbar: FC<ToolbarProps> = ({
       className="toolbar-position"
       style={{
         maxHeight,
-        left: opened ? 10 : 0,
+        right: opened ? 10 : 0,
       }}
       ref={animContainer}>
       <div className={cls} style={style} ref={toolbarEl}>
         <div
           className={`menu ${opened ? 'unfold' : 'fold'}`}
           style={{
-            left: opened ? 34 : 0,
+            right: opened ? 30 : 0,
             // zIndex: opened ? -1 : 0,
           }}
           onMouseEnter={() => setMenuHover(true)}

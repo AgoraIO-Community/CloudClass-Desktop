@@ -49,6 +49,7 @@ import { Duration } from '../../../schedule/scheduler';
 import { ChannelProfile, ClientRole } from '../../../../type';
 import { Log } from '../../../decorator/log';
 import { Injectable } from '../../../decorator/type';
+import { LowStreamParameter, RemoteStreamType, UID } from 'agora-rtc-sdk-ng';
 
 declare global {
   interface Window {
@@ -448,7 +449,17 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
   getSessionId() {
     return this.base.rtcEngine.getCallId();
   }
-
+  enableDualStream(enable: boolean): Promise<void> {
+    const state = this.base.rtcEngine.enableDualStreamMode(enable);
+    return state === 0 ? Promise.resolve() : Promise.reject();
+  }
+  setLowStreamParameter(_streamParameter: LowStreamParameter): number {
+    return 0;
+  }
+  setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType): Promise<void> {
+    const state = this.base.rtcEngine.setRemoteVideoStreamType(uid, streamType);
+    return state === 0 ? Promise.resolve() : Promise.reject();
+  }
   onConnectionStateChanged(
     cb: (state: RtcState, connectionType: AGRtcConnectionType) => void,
   ): number {

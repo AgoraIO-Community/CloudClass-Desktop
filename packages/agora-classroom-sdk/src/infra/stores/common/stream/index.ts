@@ -5,6 +5,8 @@ import {
   AgoraRteVideoSourceType,
   AGRenderMode,
   bound,
+  AgoraRteStreamUID,
+  AgoraRteRemoteStreamType,
 } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
@@ -703,6 +705,11 @@ export class StreamUIStore extends EduUIStoreBase {
   @bound
   stopScreenShareCapture() {
     return this.classroomStore.mediaStore.stopScreenShareCapture();
+  }
+
+  @bound
+  setRemoteVideoStreamType(uid: AgoraRteStreamUID, streamType: AgoraRteRemoteStreamType) {
+    return this.classroomStore.connectionStore.setRemoteVideoStreamType(uid, streamType);
   }
 
   onDestroy() {

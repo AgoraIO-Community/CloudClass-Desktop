@@ -1,4 +1,4 @@
-import { action, computed, when, IReactionDisposer } from 'mobx';
+import { action, computed, when, IReactionDisposer, reaction } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import {
@@ -90,7 +90,6 @@ export class BoardUIStore extends EduUIStoreBase {
     const { roomType } = EduClassroomConfig.shared.sessionInfo;
     const viewportHeight = this.shareUIStore.classroomViewportSize.height;
     const height = this.uiOverrides.heightRatio * viewportHeight;
-
     if (roomType === EduRoomTypeEnum.Room1v1Class) {
       return height - this.shareUIStore.navBarHeight;
     }
@@ -117,9 +116,11 @@ export class BoardUIStore extends EduUIStoreBase {
     if (this._joinDisposer) {
       this._joinDisposer();
     }
-    this._joinDisposer = when(
+    this._joinDisposer = reaction(
       () => this.classroomStore.boardStore.configReady,
-      this.joinWhiteboard,
+      (ready) => {
+        ready ? this.joinWhiteboard() : this.classroomStore.connectionStore.leaveWhiteboard();
+      },
     );
   }
 

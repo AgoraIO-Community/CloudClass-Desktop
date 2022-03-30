@@ -9,7 +9,13 @@ import {
   RtcChannelAdapterBase,
   RtcVideoDeviceManagerBase,
 } from '../base';
-import AgoraRTC, { SDK_CODEC, SDK_MODE } from 'agora-rtc-sdk-ng';
+import AgoraRTC, {
+  LowStreamParameter,
+  RemoteStreamType,
+  SDK_CODEC,
+  SDK_MODE,
+  UID,
+} from 'agora-rtc-sdk-ng';
 import {
   AgoraRteCameraThread,
   AgoraRteMicrophoneThread,
@@ -300,7 +306,23 @@ export class RtcChannelAdapterWeb extends RtcChannelAdapterBase {
         );
     }
   }
-
+  enableDualStream(enable: boolean, connectionType: AGRtcConnectionType) {
+    return this.client(connectionType).enableDualStream(enable);
+  }
+  setLowStreamParameter(
+    streamParameter: LowStreamParameter,
+    connectionType: AGRtcConnectionType,
+  ): number {
+    this.client(connectionType).setLowStreamParameter(streamParameter);
+    return 0;
+  }
+  setRemoteVideoStreamType(
+    uid: UID,
+    streamType: RemoteStreamType,
+    connectionType: AGRtcConnectionType,
+  ): Promise<void> {
+    return this.client(connectionType).setRemoteVideoStreamType(uid, streamType);
+  }
   setClientRole(role: ClientRole): number {
     return 0;
   }

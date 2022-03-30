@@ -4,6 +4,8 @@
   height: 34px !important;
   left: 10px;
   bottom: 18px;
+  z-index: 2;
+  width: auto !important;
 }
 
 .scenes-controller-line {
@@ -38,4 +40,21 @@
 .scenes-controller-btn .backward-enabled path,
 .scenes-controller-btn .forward-enabled path {
   fill: rgb(123, 136, 160);
+}
+.scenes-controller-btn .icon-undo path,
+.scenes-controller-btn .icon-redo path {
+  fill: rgb(123, 136, 160);
+}
+.scenes-controller-btn .undo-disabled,
+.scenes-controller-btn .redo-disabled,
+.scenes-controller-btn .undo-disabled path,
+.scenes-controller-btn .redo-disabled path,
+.scenes-controller-btn .undo-disabled:hover path,
+.scenes-controller-btn .redo-disabled:hover path {
+  fill: rgb(226, 226, 238);
+}
+
+.scenes-controller-btn .icon-undo:hover path,
+.scenes-controller-btn .icon-redo:hover path {
+  fill: #0073ff;
 }

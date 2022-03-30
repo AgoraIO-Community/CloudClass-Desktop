@@ -52,7 +52,7 @@ export const Tool: FC<ToolProps> = (props) => {
           placement="bottomLeft"
           overlayClassName="translated-tooltip"
           align={{
-            offset: [30, 0],
+            offset: [-5, 0],
           }}>
           <div className={cls}>
             {icon ? (
