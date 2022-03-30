@@ -273,6 +273,7 @@ export const en = {
     assistant_leave_room: 'Assistant {reason} left',
     student_enter_room: 'Student {reason} came in',
     student_leave_room: 'Student {reason} left',
+    start_group: 'Please create a group first',
   },
   end_class_confirm: 'Confirm the end of class?',
   notice: {
@@ -585,7 +586,7 @@ export const en = {
     move_to: 'Move to',
     change_to: 'Change to',
     group_label: 'Group',
-    stop: 'Stop',
+    stop: 'Stop Discussion',
     rename: 'Rename',
     remove: 'Remove',
     not_grouped: 'Not grouped',
@@ -615,6 +616,10 @@ export const en = {
     broadcast_message_success: 'Message sent successfully',
     broadcast_message_cannot_be_empty: 'Message cannot be empty',
     group_is_full: 'Group is full of {reason}',
+    confirm_stop_group_title: 'Stop Discussion',
+    confirm_stop_group_content: 'Are you sure you want to end this discussion?',
+    confirm_delete_group_title: 'Delete Group',
+    confirm_delete_group_content: 'Are you sure you want to delete the group?',
   },
   begin_class: 'Begin class',
   edu_error: {

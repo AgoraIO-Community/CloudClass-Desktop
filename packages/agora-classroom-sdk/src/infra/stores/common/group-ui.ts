@@ -292,11 +292,17 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @action.bound
   removeGroup(groupUuid: string) {
-    if (this.groupState === GroupState.OPEN) {
-      this.classroomStore.groupStore.removeGroups([groupUuid]);
-    } else {
-      this.localGroups.delete(groupUuid);
-    }
+    this.shareUIStore.addConfirmDialog(
+      transI18n('breakout_room.confirm_delete_group_title'),
+      transI18n('breakout_room.confirm_delete_group_content'),
+      () => {
+        if (this.groupState === GroupState.OPEN) {
+          this.classroomStore.groupStore.removeGroups([groupUuid]);
+        } else {
+          this.localGroups.delete(groupUuid);
+        }
+      },
+    );
   }
 
   /**
@@ -406,24 +412,29 @@ export class GroupUIStore extends EduUIStoreBase {
   startGroup() {
     const groupDetails: GroupDetail[] = [];
 
+    if (!this.localGroups.size) {
+      this.shareUIStore.addToast(transI18n('toast.start_group'));
+      return Promise.resolve();
+    }
+
     this.localGroups.forEach((group) => {
       groupDetails.push({
         groupName: group.groupName,
         users: group.users,
       });
     });
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.classroomStore.groupStore
         .startGroup(groupDetails)
         .then(() => {
           runInAction(() => {
             this.localGroups = new Map();
           });
-          resolve('');
+          resolve();
         })
         .catch((e) => {
           this.shareUIStore.addGenericErrorDialog(e as AGError);
-          reject('');
+          reject();
         });
     });
   }
@@ -432,16 +443,20 @@ export class GroupUIStore extends EduUIStoreBase {
    * 结束分组
    */
   @bound
-  stopGroup() {
-    return new Promise((resolve, reject) => {
-      this.classroomStore.groupStore
-        .stopGroup()
-        .then(() => {
-          resolve('');
-        })
-        .catch(() => {
-          reject('');
-        });
+  stopGroup(cb: () => void) {
+    return new Promise<void>((resolve, reject) => {
+      if (this.groupState === GroupState.OPEN) {
+        this.shareUIStore.addConfirmDialog(
+          transI18n('breakout_room.confirm_stop_group_title'),
+          transI18n('breakout_room.confirm_stop_group_content'),
+          () => {
+            cb();
+            this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
+          },
+        );
+      } else {
+        cb();
+      }
     });
   }
 

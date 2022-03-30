@@ -15,14 +15,16 @@ type LinkButtonProps = {
   onClick?: (e: MouseEvent) => void;
   className?: string;
   hoverText?: string;
+  style?: any;
 };
 
-const LinkButton = ({ onClick, text, hoverText = text }: LinkButtonProps) => {
+const LinkButton = ({ onClick, text, hoverText = text, style }: LinkButtonProps) => {
   const [hover, setHover] = useState(false);
 
   return (
     <div
-      className="link-btn py-1 px-4"
+      style={style}
+      className="link-btn py-1 px-3"
       onClick={onClick}
       onMouseOver={() => {
         setHover(true);
@@ -55,27 +57,23 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
     toastFullOfStudents,
   } = groupUIStore;
 
-  const [toggle, setToggle] = useState(false);
-
-  const mouseHandler = (t: boolean) => () => {
-    setToggle(t);
-  };
-
   const userCount = groupUuid ? getGroupUserCount(groupUuid) : notGroupedCount;
   return (
     <div
       className="flex"
-      onMouseEnter={mouseHandler(true)}
-      onMouseLeave={mouseHandler(false)}
       onClick={(e) => {
         e.stopPropagation();
       }}>
-      {toggle ? btns : null}
+      {btns}
       {groupState === GroupState.OPEN ? (
         currentSubRoom === groupUuid ? (
           <div className="py-1 px-4">{transI18n('breakout_room.joined')}</div>
         ) : (
           <LinkButton
+            style={{
+              width: 52,
+              textAlign: 'right',
+            }}
             className="pr-4"
             text={`${userCount}`}
             onClick={() => groupUuid && joinSubRoom(groupUuid)}
@@ -301,10 +299,9 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
     if (cursorRef.current) return;
     cursorRef.current = true;
     if (groupState === GroupState.OPEN) {
-      stopGroup().finally(() => {
+      stopGroup(onNext).finally(() => {
         cursorRef.current = false;
       });
-      onNext();
     } else {
       startGroup().finally(() => {
         cursorRef.current = false;
@@ -317,8 +314,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
       type="secondary"
       className="rounded-btn mr-2"
       onClick={() => {
-        stopGroup();
-        onNext();
+        stopGroup(onNext);
       }}>
       {transI18n('breakout_room.re_create')}
     </Button>
