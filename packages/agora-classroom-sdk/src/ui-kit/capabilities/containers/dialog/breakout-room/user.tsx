@@ -33,7 +33,7 @@ export const UserPanel: FC<UserPanelProps> = ({
       }}
       onOpen={onOpen}>
       <div
-        className="panel-content py-2 px-1 overflow-scroll flex flex-wrap justify-start"
+        className="panel-content py-2 px-2 overflow-scroll flex flex-wrap justify-start"
         style={{ width: 300, height: 200 }}
         onClick={(e: MouseEvent) => {
           e.stopPropagation();

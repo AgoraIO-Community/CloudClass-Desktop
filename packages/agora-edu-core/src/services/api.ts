@@ -838,6 +838,20 @@ export class EduApiService extends ApiBase {
   }
 
   /**
+   * 拒绝邀请
+   * @param roomUuid
+   * @param groupUuid
+   * @returns
+   */
+  async rejectGroupInvited(roomUuid: string, groupUuid: string) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${roomUuid}/groups/${groupUuid}/progress`,
+      method: 'DELETE',
+    });
+    return res.data;
+  }
+
+  /**
    *
    * @param roomUuid
    * @param data  🔢 inProgress 是否邀请，true 发送邀请 false 直接加入

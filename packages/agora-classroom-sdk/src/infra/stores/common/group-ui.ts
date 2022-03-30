@@ -715,7 +715,9 @@ export class GroupUIStore extends EduUIStoreBase {
             this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
           },
           ['ok', 'cancel'],
-          () => {},
+          () => {
+            this.classroomStore.groupStore.rejectGroupInvited(groupUuid);
+          },
           {
             ok,
             cancel,
