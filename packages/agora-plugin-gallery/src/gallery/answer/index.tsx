@@ -22,7 +22,7 @@ export class AgoraSelector implements IAgoraExtensionApp {
   icon = 'answer';
   width = 370;
   height = 150; // 超过4个选项高度为220
-  minWidth = 360;
+  minWidth = 370;
   minHeight = 150; // 超过4个选项高度为220
   store?: PluginStore;
   customHeader = (<></>);

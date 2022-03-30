@@ -31,7 +31,7 @@ const Clock = ({
     }
   }, [startTime, stage]);
 
-  return stage ? <span style={{ paddingLeft: '10px' }}>{timeDiff}</span> : null;
+  return stage ? <span style={{ paddingLeft: '10px', color: '#fff' }}>{timeDiff}</span> : null;
 };
 
 export default Clock;
