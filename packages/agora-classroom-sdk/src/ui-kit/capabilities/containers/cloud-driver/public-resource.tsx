@@ -4,7 +4,7 @@ import { CloudDriveResource } from 'agora-edu-core';
 import { useStore } from '~hooks/use-edu-stores';
 import { Col, Inline, Placeholder, Row, Table, TableHeader, transI18n, SvgImg } from '~ui-kit';
 import CloudToolbar from './cloud-toolbar';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { FileTypeSvgColor } from '@/infra/stores/common/cloud-ui';
 
 export const PublicResourcesContainer = observer(() => {
@@ -17,6 +17,12 @@ export const PublicResourcesContainer = observer(() => {
     searchPublicResourcesKeyword,
     setSearchPublicResourcesKeyword,
   } = cloudUIStore;
+
+  useEffect(() => {
+    return () => {
+      setSearchPublicResourcesKeyword('')
+    }
+  }, [])
 
   const onClickCol = (resourceUuid: string) => {
     const res = publicResources.get(resourceUuid);

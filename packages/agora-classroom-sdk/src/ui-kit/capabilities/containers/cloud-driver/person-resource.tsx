@@ -116,6 +116,12 @@ export const PersonalResourcesContainer = observer(() => {
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    return () => {
+      setSearchPersonalResourcesKeyword('')
+    }
+  }, [])
+
+  useEffect(() => {
     fetchPersonalResources({
       pageNo: currentPersonalResPage,
       pageSize,
