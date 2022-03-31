@@ -10,6 +10,7 @@ import {
   AGScreenShareDevice,
   AGScreenShareType,
   BeautyEffect,
+  FcrAudioRawDataConfig,
   NetworkStats,
   RtcState,
 } from '../type';
@@ -60,6 +61,7 @@ export abstract class RtcAudioDeviceManagerBase extends AGEventEmitter {
   abstract onLocalAudioPlaybackTestVolumeChanged(
     cb: LocalAudioPlaybackVolumeIndicatorEvent,
   ): number;
+  abstract onAudioFrame(cb: (buffer: ArrayBuffer) => void): number;
 }
 
 export abstract class RtcChannelAdapterBase extends AGEventEmitter {
@@ -125,6 +127,9 @@ export abstract class RtcAdapterBase extends AGEventEmitter {
   abstract onLocalScreenShareTrackStateChanged(cb: LocalVideoTrackStateEvent): number;
   abstract destroy(): number;
   abstract setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number;
+  abstract setAudioRawDataConfig(config: FcrAudioRawDataConfig): number;
+  abstract setAudioFrameCallback(): number;
+  abstract stopAudioFrameCallback(): number;
   static getRtcVersion(): string {
     return '';
   }

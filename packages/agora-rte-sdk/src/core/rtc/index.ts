@@ -11,7 +11,13 @@ import {
 } from './adapter/base';
 import { AgoraRtcVideoCanvas } from './canvas';
 import { AGRtcChannel } from './channel';
-import { AGRtcDeviceInfo, AGScreenShareDevice, AGScreenShareType, BeautyEffect } from './type';
+import {
+  AGRtcDeviceInfo,
+  AGScreenShareDevice,
+  AGScreenShareType,
+  BeautyEffect,
+  FcrAudioRawDataConfig,
+} from './type';
 
 @Log.attach({ level: AgoraRteLogLevel.DEBUG })
 export class AGRtcManager {
@@ -113,6 +119,13 @@ export class AGRtcManager {
     return this._adapter.stopAudioPlaybackDeviceTest();
   }
 
+  setAudioFrameCallback() {
+    return this._adapter.setAudioFrameCallback();
+  }
+  stopAudioFrameCallback() {
+    return this._adapter.stopAudioFrameCallback();
+  }
+
   onLocalCameraListChanged(
     cb: (
       addNewDevice: boolean,
@@ -157,6 +170,10 @@ export class AGRtcManager {
 
   setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
     return this._adapter.setBeautyEffectOptions(enable, options);
+  }
+
+  setAudioRawDataConfig(config: FcrAudioRawDataConfig): number {
+    return this._adapter.setAudioRawDataConfig(config);
   }
 
   hasScreenSharePermission(): boolean {

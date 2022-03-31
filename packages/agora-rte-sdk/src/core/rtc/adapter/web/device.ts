@@ -116,6 +116,10 @@ export class RtcAudioDeviceManagerWeb extends RtcAudioDeviceManagerBase {
     return this.adapter.onLocalAudioPlaybackTestVolumeChanged(cb);
   }
 
+  onAudioFrame(cb: (buffer: ArrayBuffer) => void): number {
+    return this.adapter.onAudioFrame(cb);
+  }
+
   onLocalAudioTrackStateChanged(cb: LocalAudioTrackStateEvent): number {
     // this.adapter.micThread.on(AgoraMediaControlEventType.trackStateChanged, cb);
     return this.adapter.onLocalAudioTrackStateChanged(cb);

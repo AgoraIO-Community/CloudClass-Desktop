@@ -22,6 +22,7 @@ import {
   AGScreenShareDevice,
   AGScreenShareType,
   BeautyEffect,
+  FcrAudioRawDataConfig,
   NetworkStats,
   RtcState,
 } from '../../type';
@@ -294,8 +295,28 @@ export class RtcAdapterElectron extends RtcAdapterBase {
     return 0;
   }
 
+  onAudioFrame(cb: (buffer: ArrayBuffer) => void): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
+  }
+
   setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
     return this.rtcEngine.setBeautyEffectOptions(enable, options);
+  }
+
+  setAudioFrameCallback(): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
+  }
+
+  stopAudioFrameCallback(): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
+  }
+
+  setAudioRawDataConfig(config: FcrAudioRawDataConfig): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
   }
 
   hasScreenSharePermission(): boolean {

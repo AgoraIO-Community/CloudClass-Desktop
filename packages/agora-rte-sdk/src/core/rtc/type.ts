@@ -120,6 +120,10 @@ export interface BeautyEffect {
   rednessLevel: number; // 红润度
   smoothnessLevel: number; // 平滑度
 }
+
+export interface FcrAudioRawDataConfig {
+  frameSize: 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384;
+}
 export enum AgoraRteRemoteStreamType {
   /**
    * 0: High-quality video stream (high-bitrate, high-resolution).
