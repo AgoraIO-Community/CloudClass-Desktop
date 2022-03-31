@@ -614,6 +614,7 @@ export const zh = {
     confirm_delete_group_title: '删除小组',
     confirm_delete_group_content: '确定要删除小组吗？',
     leaving: '正在离开小组',
+    send_to_all_placeholder: '这是一条全体消息，最多300字',
   },
   begin_class: '开始上课',
   edu_error: {

@@ -372,7 +372,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
     <React.Fragment>
       <div className="px-4">
         <BroadcastInput
-          limit={150}
+          limit={300}
           onChange={(text) => {
             setMessageText(text);
           }}
@@ -420,8 +420,8 @@ const BroadcastInput = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     let value = e.target.value;
-    if (value.length > 150) {
-      value = value.substring(0, 150);
+    if (value.length > limit) {
+      value = value.substring(0, limit);
     }
     if (text !== value) {
       setText(value);
@@ -432,7 +432,12 @@ const BroadcastInput = ({
 
   return (
     <div className="border rounded-sm p-1 relative">
-      <textarea className="w-full h-full" value={text} onChange={handleChange} />
+      <textarea
+        className="w-full h-full"
+        value={text}
+        onChange={handleChange}
+        placeholder={transI18n('breakout_room.send_to_all_placeholder')}
+      />
       <span className="absolute" style={{ bottom: 4, right: 4 }}>
         {text.length}/{limit}
       </span>

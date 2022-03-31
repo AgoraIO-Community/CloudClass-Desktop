@@ -628,6 +628,7 @@ export const en = {
     confirm_delete_group_title: 'Delete Group',
     confirm_delete_group_content: 'Are you sure you want to delete the group?',
     leaving: 'Leaving room',
+    send_to_all_placeholder: 'This is a general message, 300 words Max',
   },
   begin_class: 'Begin class',
   edu_error: {
