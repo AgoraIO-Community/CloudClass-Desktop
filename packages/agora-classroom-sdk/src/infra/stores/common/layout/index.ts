@@ -7,6 +7,11 @@ export class LayoutUIStore extends EduUIStoreBase {
   @observable
   awardAnims: { id: string }[] = [];
 
+  @computed
+  get isInSubRoom() {
+    return !!this.classroomStore.groupStore.currentSubRoom;
+  }
+
   onInstall(): void {
     EduEventCenter.shared.onClassroomEvents((event) => {
       if (event === AgoraEduClassroomEvent.BatchRewardReceived) {

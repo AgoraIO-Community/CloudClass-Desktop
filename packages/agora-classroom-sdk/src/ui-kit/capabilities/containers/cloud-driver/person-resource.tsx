@@ -123,8 +123,8 @@ export const PersonalResourcesContainer = observer(() => {
       resourceName: searchPersonalResourcesKeyword,
     });
     return () => {
-      setSearchPersonalResourcesKeyword('')
-    }
+      setSearchPersonalResourcesKeyword('');
+    };
   }, []);
   const debouncedFetchPersonalResources = useCallback(
     debounce(() => {
@@ -206,14 +206,18 @@ export const PersonalResourcesContainer = observer(() => {
   };
 
   const handleDelete = () => {
-    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), () => {
-      removePersonalResources();
+    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), {
+      onOK: () => {
+        removePersonalResources();
+      },
     });
   };
 
   const handleDeleteOneResource = (uuid: string) => {
-    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), () => {
-      removePersonalResources(uuid);
+    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), {
+      onOK: () => {
+        removePersonalResources(uuid);
+      },
     });
   };
 
@@ -283,14 +287,15 @@ export const PersonalResourcesContainer = observer(() => {
                       }}
                     />
                     <Inline className="filename" color="#191919" title={resourceName}>
-                      <span dangerouslySetInnerHTML={{
-                        __html: searchPersonalResourcesKeyword 
-                          ? resourceName.replaceAll(
-                            searchPersonalResourcesKeyword, 
-                            `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`
-                          ) 
-                          : resourceName
-                      }}></span>
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: searchPersonalResourcesKeyword
+                            ? resourceName.replaceAll(
+                                searchPersonalResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
+                              )
+                            : resourceName,
+                        }}></span>
                     </Inline>
                   </Col>
                   <Col>

@@ -127,19 +127,19 @@ export const rgbToHexColor = (r: number, g: number, b: number): string => {
 };
 
 export const hexColorToWhiteboardColor = (val: string): number[] => {
-  const pattern = /^(#?)[a-fA-F0-9]{6}$/ // 16进制颜色校验规则
+  const pattern = /^(#?)[a-fA-F0-9]{6}$/; // 16进制颜色校验规则
   if (!pattern.test(val)) {
-    return [255, 255, 255]
+    return [255, 255, 255];
   }
-  const v = val.replace(/#/, '')
-  const rgbArr = []
+  const v = val.replace(/#/, '');
+  const rgbArr = [];
   for (let i = 0; i < 3; i++) {
-    const item = v.substring(i * 2, i * 2 + 2)
-    const num = parseInt(item, 16)
-    rgbArr.push(num)
+    const item = v.substring(i * 2, i * 2 + 2);
+    const num = parseInt(item, 16);
+    rgbArr.push(num);
   }
-  return rgbArr
-}
+  return rgbArr;
+};
 
 /**
  * Mimetypes

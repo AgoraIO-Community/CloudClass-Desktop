@@ -56,7 +56,7 @@ const DEFAULT_COLOR: Color = {
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
 
 export class BoardStore extends EduStoreBase {
-  private _defaultColors: string[] = []
+  private _defaultColors: string[] = [];
   private _disposers: (() => void)[] = [];
   // ----------  other -------------
   private _whiteBoardContainer?: HTMLElement;
@@ -598,7 +598,7 @@ export class BoardStore extends EduStoreBase {
   }
 
   setDefaultColors(colors: string[]) {
-    this._defaultColors = colors
+    this._defaultColors = colors;
   }
 
   protected get writableRoom(): Room {
@@ -655,7 +655,7 @@ export class BoardStore extends EduStoreBase {
         disappearCursor: true, // this.appStore.roomStore.isAssistant
       },
       floatBar: {
-        colors: this._defaultColors.map(color => hexColorToWhiteboardColor(color))
+        colors: this._defaultColors.map((color) => hexColorToWhiteboardColor(color)),
       },
       isAssistant: true, // this.appStore.roomStore.isAssistant
       disableNewPencil: true,

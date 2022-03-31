@@ -115,7 +115,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   };
 
   onInstall() {
-    this.classroomStore.boardStore.setDefaultColors(this.defaultColors)
+    this.classroomStore.boardStore.setDefaultColors(this.defaultColors);
     reaction(
       () => ({
         localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
@@ -261,8 +261,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
       this.shareUIStore.addConfirmDialog(
         transI18n('toast.clear_whiteboard'),
         transI18n('toast.clear_whiteboard_confirm'),
-        () => {
-          this.setTool(id);
+        {
+          onOK: () => {
+            this.setTool(id);
+          },
         },
       );
     } else {
@@ -391,18 +393,20 @@ export class ToolbarUIStore extends EduUIStoreBase {
           this.shareUIStore.addConfirmDialog(
             transI18n('toast.close_whitboard'),
             transI18n('toast.close_whiteboard_confirm'),
-            () => {
-              this.classroomStore.widgetStore.setInactive('netlessBoard');
-              if (!this.isScreenSharing)
-                this.classroomStore.widgetStore.setActive(
-                  `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
-                  {
-                    extra: {
-                      userUuid: this.teacherCameraStream?.fromUser.userUuid,
+            {
+              onOK: () => {
+                this.classroomStore.widgetStore.setInactive('netlessBoard');
+                if (!this.isScreenSharing)
+                  this.classroomStore.widgetStore.setActive(
+                    `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+                    {
+                      extra: {
+                        userUuid: this.teacherCameraStream?.fromUser.userUuid,
+                      },
                     },
-                  },
-                  this.teacherUuid,
-                );
+                    this.teacherUuid,
+                  );
+              },
             },
           );
         } else {

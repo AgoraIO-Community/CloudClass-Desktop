@@ -274,6 +274,7 @@ export const en = {
     student_enter_room: 'Student {reason} came in',
     student_leave_room: 'Student {reason} left',
     start_group: 'Please create a group first',
+    teacher_already_in_group: 'Teacher is already in group',
     close_whiteboard: 'Close Whitboard',
     close_whiteboard_confirm: 'Are you sure you want to close the whiteboard?',
     clear_whiteboard: 'Clear Content',
@@ -626,6 +627,7 @@ export const en = {
     confirm_stop_group_content: 'Are you sure you want to end this discussion?',
     confirm_delete_group_title: 'Delete Group',
     confirm_delete_group_content: 'Are you sure you want to delete the group?',
+    leaving: 'Leaving room',
   },
   begin_class: 'Begin class',
   edu_error: {

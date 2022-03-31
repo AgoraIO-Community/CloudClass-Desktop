@@ -61,8 +61,10 @@ export class NotificationUIStore extends EduUIStoreBase {
               this.shareUIStore.addConfirmDialog(
                 transI18n('toast.leave_room'),
                 transI18n('error.class_end'),
-                resolve,
-                ['ok'],
+                {
+                  onOK: resolve,
+                  actions: ['ok'],
+                },
               );
             }),
           );
@@ -82,8 +84,10 @@ export class NotificationUIStore extends EduUIStoreBase {
                 this._getStateErrorReason(
                   this.classroomStore.connectionStore.classroomStateErrorReason,
                 ),
-                resolve,
-                ['ok'],
+                {
+                  onOK: resolve,
+                  actions: ['ok'],
+                },
               );
             }),
           );
@@ -233,6 +237,20 @@ export class NotificationUIStore extends EduUIStoreBase {
               );
             }
           }
+        }
+      }
+
+      if (event === AgoraEduClassroomEvent.RejectedToGroup) {
+        const { inviting } = param;
+        const { role } = EduClassroomConfig.shared.sessionInfo;
+        if (role === EduRoleTypeEnum.student && inviting) {
+          this.shareUIStore.addConfirmDialog(
+            transI18n('breakout_room.confirm_invite_teacher_title'),
+            transI18n('breakout_room.confirm_ask_for_help_busy_content'),
+            {
+              actions: ['ok'],
+            },
+          );
         }
       }
     });

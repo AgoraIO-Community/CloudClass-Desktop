@@ -34,9 +34,9 @@ export const PublicResourcesContainer = observer(() => {
 
   useEffect(() => {
     return () => {
-      setSearchPublicResourcesKeyword('')
-    }
-  }, [])
+      setSearchPublicResourcesKeyword('');
+    };
+  }, []);
 
   return (
     <>
@@ -71,14 +71,15 @@ export const PublicResourcesContainer = observer(() => {
                       }}
                     />
                     <Inline className="filename" color="#191919" title={resourceName}>
-                      <span dangerouslySetInnerHTML={{
-                        __html: searchPublicResourcesKeyword 
-                          ? resourceName.replaceAll(
-                            searchPublicResourcesKeyword, 
-                            `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`
-                          ) 
-                          : resourceName
-                      }}></span>
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: searchPublicResourcesKeyword
+                            ? resourceName.replaceAll(
+                                searchPublicResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
+                              )
+                            : resourceName,
+                        }}></span>
                     </Inline>
                   </Col>
                   <Col>

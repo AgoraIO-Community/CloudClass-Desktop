@@ -163,7 +163,6 @@ export const zh = {
     whiteboard_unlock: '取消白板跟随',
     clear_whiteboard: '清空确认',
     clear_whiteboard_confirm: '是否清空白板内容',
-
     canceled_screen_share: '已取消屏幕共享',
     screen_sharing_failed: '屏幕分享失败, 原因：{reason}',
     recording_failed: '开启云录制失败, 原因：{reason}',
@@ -220,7 +219,7 @@ export const zh = {
     publish_rtc_success: '发布RTC成功',
     open_whiteboard_follow: '打开白板跟随',
     close_whiteboard_follow: '关闭白板跟随',
-    close_wihiteboard: '关闭白板',
+    close_whiteboard: '关闭白板',
     close_whiteboard_confirm: '是否关闭白板',
     i: '我',
     teacher: '老师',
@@ -270,6 +269,7 @@ export const zh = {
     student_enter_room: '学生{reason}进入房间',
     student_leave_room: '学生{reason}离开房间',
     start_group: '请先创建分组',
+    teacher_already_in_group: '老师已在小组内',
   },
   end_class_confirm: '确定要结束教室吗？',
   notice: {
@@ -613,6 +613,7 @@ export const zh = {
     confirm_stop_group_content: '确定要结束讨论吗？',
     confirm_delete_group_title: '删除小组',
     confirm_delete_group_content: '确定要删除小组吗？',
+    leaving: '正在离开小组',
   },
   begin_class: '开始上课',
   edu_error: {

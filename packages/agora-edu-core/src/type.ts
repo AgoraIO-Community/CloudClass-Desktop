@@ -170,4 +170,5 @@ export enum AgoraEduClassroomEvent {
   AcceptedToGroup = 122, //用户接收邀请
   UserJoinGroup = 123, //用户加入小组
   UserLeaveGroup = 124, //用户离开小组
+  RejectedToGroup = 125, //用户拒绝邀请
 }

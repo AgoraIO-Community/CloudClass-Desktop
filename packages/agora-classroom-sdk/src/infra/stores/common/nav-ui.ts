@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { bound } from 'agora-rte-sdk';
 import { transI18n } from './i18n';
 import {
+  ClassroomState,
   ClassState,
   EduClassroomConfig,
   EduRoleTypeEnum,
@@ -87,76 +88,74 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         title: recordingTitle,
         iconType: isRecording ? 'recording' : 'record',
-        iconColor: isRecording ? '#2962F4' : undefined,
         onClick: async () => {
-          this.shareUIStore.addConfirmDialog(recordingTitle, recordingBody, () => {
-            if (isRecording) {
-              this.classroomStore.recordingStore.stopRecording().catch((e: AGError) => {
-                this.shareUIStore.addGenericErrorDialog(e);
-                this.revertRecordingState();
+          this.shareUIStore.addConfirmDialog(recordingTitle, recordingBody, {
+            onOK: () => {
+              if (isRecording) {
+                this.classroomStore.recordingStore.stopRecording().catch((e: AGError) => {
+                  this.shareUIStore.addGenericErrorDialog(e);
+                  this.revertRecordingState();
+                });
+              } else {
+                this.classroomStore.recordingStore.startRecording().catch((e: AGError) => {
+                  this.shareUIStore.addGenericErrorDialog(e);
+                  this.revertRecordingState();
+                });
+              }
+              runInAction(() => {
+                this.isRecording = !isRecording;
               });
-            } else {
-              this.classroomStore.recordingStore.startRecording().catch((e: AGError) => {
-                this.shareUIStore.addGenericErrorDialog(e);
-                this.revertRecordingState();
-              });
-            }
-            runInAction(() => {
-              this.isRecording = !isRecording;
-            });
+            },
           });
         },
       },
     ];
+
     const studentActions: EduNavAction[] = [
       {
         title: 'AskForHelp',
         iconType: 'ask-for-help',
+        iconColor: this.teacherInCurrentRoom ? '#D2D2E2' : undefined,
         onClick: () => {
+          const { updateGroupUsers, currentSubRoom } = this.classroomStore.groupStore;
           const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
 
-          if (teachers.size) {
-            const teacherUuid = teachers.keys().next().value;
-            const { groupUuidByUserUuid, updateGroupUsers, currentSubRoom } =
-              this.classroomStore.groupStore;
-            const isTeacherInSubRoom = !!groupUuidByUserUuid.get(teacherUuid);
-
-            if (!isTeacherInSubRoom) {
-              if (currentSubRoom) {
-                this.shareUIStore.addConfirmDialog(
-                  transI18n('breakout_room.confirm_invite_teacher_title'),
-                  transI18n('breakout_room.confirm_ask_for_help_content'),
-                  () => {
-                    updateGroupUsers(
-                      [
-                        {
-                          groupUuid: currentSubRoom,
-                          addUsers: [teacherUuid],
-                        },
-                      ],
-                      true,
-                    );
-                  },
-                  ['ok', 'cancel'],
-                  () => {},
-                  {
-                    ok: transI18n('breakout_room.confirm_ask_for_help_btn_ok'),
-                    cancel: transI18n('breakout_room.confirm_ask_for_help_btn_cancel'),
-                  },
-                );
-              }
-            } else {
-              this.shareUIStore.addConfirmDialog(
-                transI18n('breakout_room.confirm_invite_teacher_title'),
-                transI18n('breakout_room.confirm_ask_for_help_busy_content'),
-              );
-            }
-          } else {
+          if (!teachers.size) {
             this.shareUIStore.addConfirmDialog(
               transI18n('breakout_room.confirm_invite_teacher_title'),
               transI18n('breakout_room.confirm_ask_for_help_absent_content'),
             );
+            return;
           }
+          if (this.teacherGroupUuid === currentSubRoom) {
+            this.shareUIStore.addToast(transI18n('toast.teacher_already_in_group'), 'warning');
+            return;
+          }
+
+          const teacherUuid = teachers.keys().next().value;
+
+          this.shareUIStore.addConfirmDialog(
+            transI18n('breakout_room.confirm_invite_teacher_title'),
+            transI18n('breakout_room.confirm_ask_for_help_content'),
+            {
+              onOK: () => {
+                updateGroupUsers(
+                  [
+                    {
+                      groupUuid: currentSubRoom as string,
+                      addUsers: [teacherUuid],
+                    },
+                  ],
+                  true,
+                );
+              },
+              actions: ['ok', 'cancel'],
+              btnText: {
+                ok: transI18n('breakout_room.confirm_ask_for_help_btn_ok'),
+                cancel: transI18n('breakout_room.confirm_ask_for_help_btn_cancel'),
+              },
+            },
+          );
         },
       },
     ];
@@ -203,6 +202,34 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     }
 
     return actions;
+  }
+
+  @computed
+  get teacherInCurrentRoom() {
+    return (
+      this.teacherGroupUuid &&
+      this.teacherGroupUuid === this.classroomStore.groupStore.currentSubRoom
+    );
+  }
+
+  /**
+   * 老师所在房间
+   */
+  @computed
+  get teacherGroupUuid() {
+    if (this.classroomStore.connectionStore.classroomState !== ClassroomState.Connected) {
+      return false;
+    }
+    const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
+
+    if (teachers.size) {
+      const teacherUuid = teachers.keys().next().value;
+      const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+
+      const teacherGroupUuid = groupUuidByUserUuid.get(teacherUuid);
+      return teacherGroupUuid;
+    }
+    return undefined;
   }
 
   /**

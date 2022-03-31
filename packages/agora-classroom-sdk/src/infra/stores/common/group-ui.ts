@@ -1,6 +1,5 @@
 import {
   AgoraEduClassroomEvent,
-  ClassroomState,
   EduClassroomConfig,
   EduEventCenter,
   EduRoleTypeEnum,
@@ -33,6 +32,7 @@ export class GroupUIStore extends EduUIStoreBase {
   localGroups: Map<string, GroupDetail> = new Map();
 
   private _groupNum = 0;
+  private _dialogsMap = new Map();
 
   MAX_USER_COUNT = 15; // 学生最大15人
 
@@ -295,12 +295,14 @@ export class GroupUIStore extends EduUIStoreBase {
     this.shareUIStore.addConfirmDialog(
       transI18n('breakout_room.confirm_delete_group_title'),
       transI18n('breakout_room.confirm_delete_group_content'),
-      () => {
-        if (this.groupState === GroupState.OPEN) {
-          this.classroomStore.groupStore.removeGroups([groupUuid]);
-        } else {
-          this.localGroups.delete(groupUuid);
-        }
+      {
+        onOK: () => {
+          if (this.groupState === GroupState.OPEN) {
+            this.classroomStore.groupStore.removeGroups([groupUuid]);
+          } else {
+            this.localGroups.delete(groupUuid);
+          }
+        },
       },
     );
   }
@@ -449,9 +451,11 @@ export class GroupUIStore extends EduUIStoreBase {
         this.shareUIStore.addConfirmDialog(
           transI18n('breakout_room.confirm_stop_group_title'),
           transI18n('breakout_room.confirm_stop_group_content'),
-          () => {
-            cb();
-            this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
+          {
+            onOK: () => {
+              cb();
+              this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
+            },
           },
         );
       } else {
@@ -555,19 +559,21 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private async _waitUntilLeft() {
-    await when(
-      () =>
-        this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
-        this.classroomStore.connectionStore.rtcState === RtcState.Idle,
-    );
+    await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Idle);
+    if (this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Disconnecting) {
+      await when(
+        () => this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle,
+      );
+    }
   }
 
   private async _waitUntilConnected() {
-    await when(
-      () =>
-        this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
-        this.classroomStore.connectionStore.rtcState === RtcState.Connected,
-    );
+    await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
+    if (this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connecting) {
+      await when(
+        () => this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected,
+      );
+    }
   }
 
   private async _waitUntilJoined() {
@@ -708,22 +714,32 @@ export class GroupUIStore extends EduUIStoreBase {
             ? transI18n('breakout_room.confirm_invite_teacher_btn_cancel')
             : transI18n('breakout_room.confirm_invite_student_btn_cancel');
 
-        this.shareUIStore.addConfirmDialog(
-          title,
-          content,
-          () => {
+        const dialogId = this.shareUIStore.addConfirmDialog(title, content, {
+          onOK: () => {
             this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
           },
-          ['ok', 'cancel'],
-          () => {
+          onCancel: () => {
             this.classroomStore.groupStore.rejectGroupInvited(groupUuid);
           },
-          {
+          actions: ['ok', 'cancel'],
+          btnText: {
             ok,
             cancel,
           },
-        );
+        });
+
+        this._dialogsMap.set(groupUuid, dialogId);
       }
+
+      if (type === AgoraEduClassroomEvent.RejectedToGroup) {
+        const { groupUuid } = args;
+        const dialogId = this._dialogsMap.get(groupUuid);
+        if (dialogId) {
+          this.shareUIStore.removeDialog(dialogId);
+          this._dialogsMap.delete(groupUuid);
+        }
+      }
+
       if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
         this._changeSubRoom();
       }

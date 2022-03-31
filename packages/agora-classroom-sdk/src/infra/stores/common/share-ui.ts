@@ -1,4 +1,4 @@
-import { AGError, bound, Lodash, AGRteErrorCode } from 'agora-rte-sdk';
+import { AGError, bound, Lodash, AGRteErrorCode, Scheduler } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from './i18n';
@@ -172,10 +172,19 @@ export class EduShareUIStore {
   addConfirmDialog(
     title: string,
     content: string,
-    onOK?: () => void,
-    actions?: ConfirmDialogAction[],
-    onCancel?: () => void,
-    btnText?: Record<ConfirmDialogAction, string>,
+    {
+      onOK,
+      actions,
+      onCancel,
+      btnText,
+      timeout,
+    }: {
+      onOK?: () => void;
+      actions?: ConfirmDialogAction[];
+      onCancel?: () => void;
+      btnText?: Record<ConfirmDialogAction, string>;
+      timeout?: number;
+    } = {},
   ) {
     const id = uuidv4();
     this.addDialog(DialogCategory.Confirm, {
@@ -195,6 +204,12 @@ export class EduShareUIStore {
         },
       },
     });
+    if (timeout) {
+      Scheduler.shared.addDelayTask(() => {
+        this.removeDialog(id);
+      }, timeout);
+    }
+    return id;
   }
 
   /**
