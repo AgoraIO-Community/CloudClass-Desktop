@@ -2,10 +2,16 @@ import {
   AGEduErrorCode,
   EduClassroomConfig,
   EduErrorCenter,
+  EduRoleTypeEnum,
   EduRoomTypeEnum,
 } from 'agora-edu-core';
-import { AgoraRteRemoteStreamType, AgoraRteVideoSourceType, RtcState } from 'agora-rte-sdk';
-import { computed, reaction, runInAction } from 'mobx';
+import {
+  AgoraRteMediaSourceState,
+  AgoraRteRemoteStreamType,
+  AgoraRteVideoSourceType,
+  RtcState,
+} from 'agora-rte-sdk';
+import { autorun, computed, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from './stream/struct';
 
@@ -99,6 +105,30 @@ export class WidgetUIStore extends EduUIStoreBase {
           );
       },
     );
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      const teacherUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
+
+      autorun(() => {
+        if (!this.classroomStore.boardStore.configReady) {
+          if (
+            this.classroomStore.mediaStore.localScreenShareTrackState !==
+            AgoraRteMediaSourceState.started
+          ) {
+            !this.isBigWidgetWindowTeacherStreamActive &&
+              this.classroomStore.widgetStore.setActive(
+                `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+                {
+                  extra: {
+                    userUuid: teacherUuid,
+                  },
+                },
+                teacherUuid,
+              );
+          }
+        }
+      });
+    }
+
     computed(() => this.classroomStore.widgetStore.widgetStateMap).observe(
       ({ oldValue = {}, newValue }) => {
         Object.keys(newValue).forEach((widgetId) => {

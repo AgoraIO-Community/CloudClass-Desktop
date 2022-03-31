@@ -220,7 +220,7 @@ export const zh = {
     publish_rtc_success: '发布RTC成功',
     open_whiteboard_follow: '打开白板跟随',
     close_whiteboard_follow: '关闭白板跟随',
-    close_confirm: '关闭确认',
+    close_wihiteboard: '关闭白板',
     close_whiteboard_confirm: '是否关闭白板',
     i: '我',
     teacher: '老师',

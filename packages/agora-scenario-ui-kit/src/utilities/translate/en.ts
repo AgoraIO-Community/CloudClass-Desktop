@@ -274,6 +274,10 @@ export const en = {
     student_enter_room: 'Student {reason} came in',
     student_leave_room: 'Student {reason} left',
     start_group: 'Please create a group first',
+    close_whiteboard: 'Close Whitboard',
+    close_whiteboard_confirm: 'Are you sure you want to close the whiteboard?',
+    clear_whiteboard: 'Clear Content',
+    clear_whiteboard_confirm: 'Are you sure you want to clear all content？',
   },
   end_class_confirm: 'Confirm the end of class?',
   notice: {

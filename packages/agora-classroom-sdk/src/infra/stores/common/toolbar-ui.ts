@@ -388,7 +388,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       case CabinetItemEnum.Whiteboard:
         if (this.isWhiteboardOpening) {
           this.shareUIStore.addConfirmDialog(
-            transI18n('toast.close_confirm'),
+            transI18n('toast.close_whitboard'),
             transI18n('toast.close_whiteboard_confirm'),
             () => {
               this.classroomStore.widgetStore.setInactive('netlessBoard');
