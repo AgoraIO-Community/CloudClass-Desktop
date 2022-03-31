@@ -115,8 +115,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         onClick: () => {
           const { updateGroupUsers, currentSubRoom } = this.classroomStore.groupStore;
           const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
+          const assistants = this.classroomStore.userStore.mainRoomDataStore.assistantList;
 
-          if (!teachers.size) {
+          if (!teachers.size && !assistants.size) {
             this.shareUIStore.addConfirmDialog(
               transI18n('breakout_room.confirm_invite_teacher_title'),
               transI18n('breakout_room.confirm_ask_for_help_absent_content'),
@@ -129,6 +130,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
           }
 
           const teacherUuid = teachers.keys().next().value;
+          const assistantUuids = Array.from(assistants.keys());
 
           this.shareUIStore.addConfirmDialog(
             transI18n('breakout_room.confirm_invite_teacher_title'),
@@ -139,7 +141,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
                   [
                     {
                       groupUuid: currentSubRoom as string,
-                      addUsers: [teacherUuid],
+                      addUsers: [teacherUuid].concat(assistantUuids),
                     },
                   ],
                   true,

@@ -250,6 +250,10 @@ export class BoardStore extends EduStoreBase {
   protected setWindowManager(windowManager?: WindowManager) {
     this._windowManager = windowManager;
     this.managerReady = !!windowManager;
+    const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
+    if (role === EduRoleTypeEnum.student) {
+      this._setLocalPermission(this.grantUsers.has(userUuid));
+    }
   }
 
   @bound
@@ -677,6 +681,31 @@ export class BoardStore extends EduStoreBase {
     return room;
   }
 
+  private async _setLocalPermission(granted: boolean) {
+    try {
+      if (!this.managerReady) {
+        return;
+      }
+      if (granted) {
+        //granted
+        await this.room.setWritable(true);
+        this.room.disableDeviceInputs = false;
+        this.setTool(WhiteboardTool.selector);
+        this.restoreWhiteboardMemberStateTo(this.room);
+      } else {
+        //revoked
+        this.setTool(WhiteboardTool.selector);
+        await this.room.setWritable(false);
+        this.room.disableDeviceInputs = true;
+      }
+    } catch (e) {
+      return EduErrorCenter.shared.handleNonThrowableError(
+        AGEduErrorCode.EDU_ERR_BOARD_SET_WRITABLE_FAILED,
+        e as Error,
+      );
+    }
+  }
+
   @action
   private _setEventHandler(scene: AgoraRteScene) {
     if (this.classroomStore.connectionStore.mainRoomScene === scene) {
@@ -718,38 +747,20 @@ export class BoardStore extends EduStoreBase {
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
-        computed(() => ({
-          grantUsers: this._dataStore.grantUsers,
-          ready: this.managerReady,
-        })).observe(async ({ newValue, oldValue }) => {
-          const { grantUsers: newGranted, ready } = newValue;
-          const oldGranted = oldValue?.grantUsers;
-          if (!ready) {
-            return;
+        computed(() => this._dataStore.grantUsers).observe(async ({ newValue, oldValue }) => {
+          const oldGranted = oldValue;
+          const newGranted = newValue;
+
+          if (newGranted.has(sessionInfo.userUuid) && !oldGranted?.has(sessionInfo.userUuid)) {
+            await this._setLocalPermission(true);
+
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.TeacherGrantPermission);
           }
-          try {
-            if (newGranted.has(sessionInfo.userUuid) && !oldGranted?.has(sessionInfo.userUuid)) {
-              //granted
-              await this.room.setWritable(true);
-              this.room.disableDeviceInputs = false;
-              this.setTool(WhiteboardTool.selector);
-              this.restoreWhiteboardMemberStateTo(this.room);
-              EduEventCenter.shared.emitClasroomEvents(
-                AgoraEduClassroomEvent.TeacherGrantPermission,
-              );
-            }
-            if (!newGranted.has(sessionInfo.userUuid) && oldGranted?.has(sessionInfo.userUuid)) {
-              //revoked
-              await this.room.setWritable(false);
-              this.room.disableDeviceInputs = true;
-              EduEventCenter.shared.emitClasroomEvents(
-                AgoraEduClassroomEvent.TeacherRevokePermission,
-              );
-            }
-          } catch (e) {
-            return EduErrorCenter.shared.handleNonThrowableError(
-              AGEduErrorCode.EDU_ERR_BOARD_SET_WRITABLE_FAILED,
-              e as Error,
+          if (!newGranted.has(sessionInfo.userUuid) && oldGranted?.has(sessionInfo.userUuid)) {
+            await this._setLocalPermission(false);
+
+            EduEventCenter.shared.emitClasroomEvents(
+              AgoraEduClassroomEvent.TeacherRevokePermission,
             );
           }
         }),

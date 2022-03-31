@@ -692,27 +692,27 @@ export class GroupUIStore extends EduUIStoreBase {
       if (type === AgoraEduClassroomEvent.InvitedToGroup) {
         const { groupUuid, groupName, inviter = transI18n('breakout_room.student') } = args;
 
-        const title =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_title')
-            : transI18n('breakout_room.confirm_invite_student_title');
-        const content =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_content', {
-                reason1: groupName,
-                reason2: inviter,
-              })
-            : transI18n('breakout_room.confirm_invite_student_content', { reason: groupName });
+        const isTeacher = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+          EduClassroomConfig.shared.sessionInfo.role,
+        );
 
-        const ok =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_btn_ok')
-            : transI18n('breakout_room.confirm_invite_student_btn_ok');
+        const title = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_title')
+          : transI18n('breakout_room.confirm_invite_student_title');
+        const content = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_content', {
+              reason1: groupName,
+              reason2: inviter,
+            })
+          : transI18n('breakout_room.confirm_invite_student_content', { reason: groupName });
 
-        const cancel =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_btn_cancel')
-            : transI18n('breakout_room.confirm_invite_student_btn_cancel');
+        const ok = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_btn_ok')
+          : transI18n('breakout_room.confirm_invite_student_btn_ok');
+
+        const cancel = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_btn_cancel')
+          : transI18n('breakout_room.confirm_invite_student_btn_cancel');
 
         const dialogId = this.shareUIStore.addConfirmDialog(title, content, {
           onOK: () => {
