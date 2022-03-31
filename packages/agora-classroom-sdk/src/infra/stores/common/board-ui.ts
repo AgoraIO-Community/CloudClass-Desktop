@@ -118,8 +118,11 @@ export class BoardUIStore extends EduUIStoreBase {
     }
     this._joinDisposer = reaction(
       () => this.classroomStore.boardStore.configReady,
-      (ready) => {
-        ready ? this.joinWhiteboard() : this.classroomStore.connectionStore.leaveWhiteboard();
+      (configReady) => {
+        configReady ? this.joinWhiteboard() : this.classroomStore.connectionStore.leaveWhiteboard();
+      },
+      {
+        fireImmediately: true,
       },
     );
   }
