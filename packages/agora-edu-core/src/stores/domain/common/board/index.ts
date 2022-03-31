@@ -9,6 +9,7 @@ import {
   MimeTypesKind,
   convertAGToolToWhiteTool,
   getJoinRoomParams,
+  hexColorToWhiteboardColor,
 } from './utils';
 import {
   RoomState,
@@ -55,6 +56,7 @@ const DEFAULT_COLOR: Color = {
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
 
 export class BoardStore extends EduStoreBase {
+  private _defaultColors: string[] = []
   private _disposers: (() => void)[] = [];
   // ----------  other -------------
   private _whiteBoardContainer?: HTMLElement;
@@ -595,6 +597,10 @@ export class BoardStore extends EduStoreBase {
     this.ready = !!room;
   }
 
+  setDefaultColors(colors: string[]) {
+    this._defaultColors = colors
+  }
+
   protected get writableRoom(): Room {
     if (!this.room.isWritable) {
       return EduErrorCenter.shared.handleThrowableError(
@@ -648,7 +654,9 @@ export class BoardStore extends EduStoreBase {
         cursorName: sessionInfo?.userName,
         disappearCursor: true, // this.appStore.roomStore.isAssistant
       },
-      floatBar: true,
+      floatBar: {
+        colors: this._defaultColors.map(color => hexColorToWhiteboardColor(color))
+      },
       isAssistant: true, // this.appStore.roomStore.isAssistant
       disableNewPencil: true,
       wrappedComponents: [],

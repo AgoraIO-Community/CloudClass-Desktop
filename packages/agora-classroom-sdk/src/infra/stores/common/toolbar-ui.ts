@@ -115,6 +115,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   };
 
   onInstall() {
+    this.classroomStore.boardStore.setDefaultColors(this.defaultColors)
     reaction(
       () => ({
         localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
