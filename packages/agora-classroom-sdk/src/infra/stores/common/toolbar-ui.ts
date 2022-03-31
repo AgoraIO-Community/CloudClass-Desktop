@@ -391,7 +391,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       case CabinetItemEnum.Whiteboard:
         if (this.isWhiteboardOpening) {
           this.shareUIStore.addConfirmDialog(
-            transI18n('toast.close_whitboard'),
+            transI18n('toast.close_whiteboard'),
             transI18n('toast.close_whiteboard_confirm'),
             {
               onOK: () => {
@@ -534,28 +534,49 @@ export class ToolbarUIStore extends EduUIStoreBase {
     }
 
     apps = apps
-      .concat([
-        {
-          id: CabinetItemEnum.ScreenShare,
-          iconType: 'share-screen',
-          name: transI18n('scaffold.screen_share'),
-        },
-        {
-          id: CabinetItemEnum.BreakoutRoom,
-          iconType: 'group-discuss',
-          name: transI18n('scaffold.breakout_room'),
-        },
-        {
-          id: CabinetItemEnum.Laser,
-          iconType: 'laser-pointer',
-          name: transI18n('scaffold.laser_pointer'),
-        },
-        {
-          id: CabinetItemEnum.Whiteboard,
-          iconType: 'whiteboard',
-          name: transI18n('scaffold.whiteboard'),
-        },
-      ])
+      .concat(
+        this.classroomStore.boardStore.configReady
+          ? [
+              {
+                id: CabinetItemEnum.ScreenShare,
+                iconType: 'share-screen',
+                name: transI18n('scaffold.screen_share'),
+              },
+              {
+                id: CabinetItemEnum.BreakoutRoom,
+                iconType: 'group-discuss',
+                name: transI18n('scaffold.breakout_room'),
+              },
+              {
+                id: CabinetItemEnum.Laser,
+                iconType: 'laser-pointer',
+                name: transI18n('scaffold.laser_pointer'),
+              },
+              {
+                id: CabinetItemEnum.Whiteboard,
+                iconType: 'whiteboard',
+                name: transI18n('scaffold.whiteboard'),
+              },
+            ]
+          : [
+              {
+                id: CabinetItemEnum.ScreenShare,
+                iconType: 'share-screen',
+                name: transI18n('scaffold.screen_share'),
+              },
+              {
+                id: CabinetItemEnum.BreakoutRoom,
+                iconType: 'group-discuss',
+                name: transI18n('scaffold.breakout_room'),
+              },
+
+              {
+                id: CabinetItemEnum.Whiteboard,
+                iconType: 'whiteboard',
+                name: transI18n('scaffold.whiteboard'),
+              },
+            ],
+      )
       .filter((it) => this.allowedCabinetItems.includes(it.id));
 
     return apps;
@@ -667,11 +688,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
     } else {
       return [
         {
-          value: 'cloud',
-          label: 'scaffold.cloud_storage',
-          icon: 'cloud',
-        },
-        {
           value: 'tools',
           label: 'scaffold.tools',
           icon: 'tools',
@@ -742,15 +758,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
         label: 'scaffold.register',
         icon: 'register',
       }),
-      // ToolbarItem.fromData({
-      //   value: 'color',
-      //   label: 'scaffold.color',
-      //   icon: 'circle',
-      //   category: ToolbarItemCategory.ColorPicker,
-      //   // component: (props: any) => {
-      //   //   return <ColorsContainer {...props} />;
-      //   // },
-      // }),
     ];
   }
 

@@ -6,12 +6,14 @@ import {
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import {
+  AgoraRteEventType,
   AgoraRteMediaSourceState,
   AgoraRteRemoteStreamType,
   AgoraRteVideoSourceType,
   RtcState,
 } from 'agora-rte-sdk';
-import { autorun, computed, reaction, runInAction } from 'mobx';
+import { get } from 'lodash';
+import { action, computed, reaction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from './stream/struct';
 
@@ -87,6 +89,42 @@ export class WidgetUIStore extends EduUIStoreBase {
       `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`
     ];
   }
+  @action.bound
+  private _handleRoomPropertiesChange(
+    changedRoomProperties: string[],
+    roomProperties: any,
+    operator: any,
+  ) {
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    if (!operator.userUuid) {
+      changedRoomProperties.forEach(async (key) => {
+        if (key === 'widgets') {
+          const whiteboardProperties = get(roomProperties, `widgets.netlessBoard`, {});
+          if (whiteboardProperties) {
+            const whiteboardState = get(whiteboardProperties, 'state');
+            if (whiteboardState === 0) {
+              await when(() => !!this.teacherCameraStream?.stream.streamUuid);
+              if (
+                this.classroomStore.mediaStore.localScreenShareTrackState !==
+                  AgoraRteMediaSourceState.started &&
+                !this.classroomStore.boardStore.configReady
+              ) {
+                this.classroomStore.widgetStore.setActive(
+                  `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+                  {
+                    extra: {
+                      userUuid: userUuid,
+                    },
+                  },
+                  userUuid,
+                );
+              }
+            }
+          }
+        }
+      });
+    }
+  }
   onInstall() {
     reaction(
       () => ({
@@ -106,27 +144,14 @@ export class WidgetUIStore extends EduUIStoreBase {
       },
     );
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-      const teacherUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
-
-      autorun(() => {
-        if (!this.classroomStore.boardStore.configReady) {
-          if (
-            this.classroomStore.mediaStore.localScreenShareTrackState !==
-            AgoraRteMediaSourceState.started
-          ) {
-            !this.isBigWidgetWindowTeacherStreamActive &&
-              this.classroomStore.widgetStore.setActive(
-                `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
-                {
-                  extra: {
-                    userUuid: teacherUuid,
-                  },
-                },
-                teacherUuid,
-              );
+      reaction(
+        () => this.classroomStore.connectionStore.scene,
+        (scene) => {
+          if (scene) {
+            scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
           }
-        }
-      });
+        },
+      );
     }
 
     computed(() => this.classroomStore.widgetStore.widgetStateMap).observe(

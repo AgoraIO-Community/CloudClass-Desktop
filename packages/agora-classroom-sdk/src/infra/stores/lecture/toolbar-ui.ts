@@ -66,11 +66,6 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
     } else {
       return [
         {
-          value: 'cloud',
-          label: 'scaffold.cloud_storage',
-          icon: 'cloud',
-        },
-        {
           value: 'tools',
           label: 'scaffold.tools',
           icon: 'tools',

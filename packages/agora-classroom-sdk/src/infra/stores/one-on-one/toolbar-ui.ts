@@ -10,7 +10,7 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
     'popupQuiz',
     'whiteboard',
   ];
-
+  @computed
   get teacherTools(): ToolbarItem[] {
     if (this.classroomStore.boardStore.configReady) {
       return [
@@ -42,20 +42,7 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
           icon: 'eraser',
           category: ToolbarItemCategory.Eraser,
         }),
-        // ToolbarItem.fromData({
-        //   value: 'color',
-        //   label: 'scaffold.color',
-        //   icon: 'circle',
-        //   category: ToolbarItemCategory.ColorPicker,
-        //   // component: (props: any) => {
-        //   //   return <ColorsContainer {...props} />;
-        //   // },
-        // }),
-        // ToolbarItem.fromData({
-        //   value: 'blank-page',
-        //   label: 'scaffold.blank_page',
-        //   icon: 'blank-page',
-        // }),
+
         ToolbarItem.fromData({
           value: 'hand',
           label: 'scaffold.move',
@@ -72,19 +59,9 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
           icon: 'tools',
           category: ToolbarItemCategory.Cabinet,
         },
-        //   {
-        //     value: 'register',
-        //     label: 'scaffold.user_list',
-        //     icon: 'register',
-        //   }
       ];
     } else {
       return [
-        {
-          value: 'cloud',
-          label: 'scaffold.cloud_storage',
-          icon: 'cloud',
-        },
         {
           value: 'tools',
           label: 'scaffold.tools',
@@ -103,12 +80,6 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
     );
 
     if (!whiteboardAuthorized) {
-      //allowed to view user list only if not granted
-      //   return [{
-      //     value: 'register',
-      //     label: 'scaffold.user_list',
-      //     icon: 'register',
-      //   }]
       return [];
     }
 
@@ -141,20 +112,6 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
         icon: 'eraser',
         category: ToolbarItemCategory.Eraser,
       }),
-      // ToolbarItem.fromData({
-      //   value: 'color',
-      //   label: 'scaffold.color',
-      //   icon: 'circle',
-      //   category: ToolbarItemCategory.ColorPicker,
-      //   // component: (props: any) => {
-      //   //   return <ColorsContainer {...props} />;
-      //   // },
-      // }),
-      //   {
-      //     value: 'register',
-      //     label: 'scaffold.user_list',
-      //     icon: 'register',
-      //   }
     ];
   }
 }

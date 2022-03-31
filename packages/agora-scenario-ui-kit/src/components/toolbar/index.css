@@ -35,7 +35,7 @@
 
 /* fold icon */
 .toolbar .menu.fold img {
-  transform: translateX(7px) rotate(180deg);
+  transform: translateX(10px) rotate(180deg);
 }
 
 .toolbar .menu.unfold {

@@ -139,14 +139,17 @@ const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) 
   );
 });
 
-const LocalStreamPlayerTools = observer(() => {
+const LocalStreamPlayerTools = observer(({ isFullScreen = true }: { isFullScreen?: boolean }) => {
   const { streamUIStore } = useStore();
-  const { localStreamTools, toolbarPlacement } = streamUIStore;
+  const { localStreamTools, toolbarPlacement, fullScreenToolTipPlacement } = streamUIStore;
 
   return localStreamTools.length > 0 ? (
     <div className={`video-player-tools`}>
       {localStreamTools.map((tool, key) => (
-        <Tooltip key={key} title={tool.toolTip} placement={toolbarPlacement}>
+        <Tooltip
+          key={key}
+          title={tool.toolTip}
+          placement={isFullScreen ? fullScreenToolTipPlacement : toolbarPlacement}>
           <span>
             <SvgIcon
               canHover={tool.interactable}
@@ -165,32 +168,37 @@ const LocalStreamPlayerTools = observer(() => {
   );
 });
 
-const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) => {
-  const { streamUIStore } = useStore();
-  const { remoteStreamTools, toolbarPlacement } = streamUIStore;
-  const toolList = remoteStreamTools(stream);
+const RemoteStreamPlayerTools = observer(
+  ({ stream, isFullScreen = true }: { stream: EduStreamUI; isFullScreen?: boolean }) => {
+    const { streamUIStore } = useStore();
+    const { remoteStreamTools, toolbarPlacement, fullScreenToolTipPlacement } = streamUIStore;
+    const toolList = remoteStreamTools(stream);
 
-  return toolList.length > 0 ? (
-    <div className={`video-player-tools`}>
-      {toolList.map((tool, idx) => (
-        <Tooltip key={`${idx}`} title={tool.toolTip} placement={toolbarPlacement}>
-          <span>
-            <SvgIcon
-              canHover={tool.interactable}
-              style={tool.style}
-              // hoverType={tool.hoverIconType}
-              type={tool.iconType}
-              size={22}
-              onClick={tool.interactable ? tool.onClick : () => {}}
-            />
-          </span>
-        </Tooltip>
-      ))}
-    </div>
-  ) : (
-    <></>
-  );
-});
+    return toolList.length > 0 ? (
+      <div className={`video-player-tools`}>
+        {toolList.map((tool, idx) => (
+          <Tooltip
+            key={`${idx}`}
+            title={tool.toolTip}
+            placement={isFullScreen ? fullScreenToolTipPlacement : toolbarPlacement}>
+            <span>
+              <SvgIcon
+                canHover={tool.interactable}
+                style={tool.style}
+                // hoverType={tool.hoverIconType}
+                type={tool.iconType}
+                size={22}
+                onClick={tool.interactable ? tool.onClick : () => {}}
+              />
+            </span>
+          </Tooltip>
+        ))}
+      </div>
+    ) : (
+      <></>
+    );
+  },
+);
 
 const StreamPlayerWhiteboardGranted = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -260,7 +268,7 @@ const StreamPlayerOverlay = observer(
     isFullscreen?: boolean;
   }) => {
     const { streamUIStore } = useStore();
-    const { toolbarPlacement, layerItems } = streamUIStore;
+    const { toolbarPlacement, layerItems, fullScreenToolbarPlacement } = streamUIStore;
 
     const rewardVisible = layerItems && layerItems.includes('reward');
 
@@ -280,12 +288,14 @@ const StreamPlayerOverlay = observer(
         overlayClassName="video-player-tools-popover"
         content={
           stream.stream.isLocal ? (
-            <LocalStreamPlayerTools />
+            <LocalStreamPlayerTools isFullScreen={isFullscreen} />
           ) : (
-            <RemoteStreamPlayerTools stream={stream}></RemoteStreamPlayerTools>
+            <RemoteStreamPlayerTools
+              isFullScreen={isFullscreen}
+              stream={stream}></RemoteStreamPlayerTools>
           )
         }
-        placement={toolbarPlacement}>
+        placement={isFullscreen ? fullScreenToolbarPlacement : toolbarPlacement}>
         <div className={cls}>
           <StreamPlayerCameraPlaceholder stream={stream} />
           {children ? children : null}
@@ -353,7 +363,6 @@ export const StreamPlayer = observer(
     return (
       <StreamPlayerOverlay
         isFullscreen={isFullScreen}
-        canSetupVideo={canSetupVideo}
         className={isFullScreen ? 'video-player-fullscreen' : ''}
         stream={stream}>
         {stream.stream.isLocal ? (

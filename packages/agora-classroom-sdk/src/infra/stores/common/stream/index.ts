@@ -27,6 +27,7 @@ import {
   EduStream,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
+import { TooltipPlacement } from '~ui-kit';
 
 export enum StreamIconColor {
   active = '#357bf6',
@@ -627,6 +628,20 @@ export class StreamUIStore extends EduUIStoreBase {
     return 'bottom';
   }
 
+  /**
+   * 大窗视频窗工具栏定位
+   * @returns
+   */
+  @computed get fullScreenToolbarPlacement(): 'left' | 'bottom' {
+    return 'bottom';
+  }
+  /**
+   * 大窗视频窗工具tooltip定位
+   * @returns
+   */
+  @computed get fullScreenToolTipPlacement(): TooltipPlacement {
+    return 'top';
+  }
   /**
    * 移除奖励动画
    * @param id
