@@ -283,7 +283,14 @@ export const PersonalResourcesContainer = observer(() => {
                       }}
                     />
                     <Inline className="filename" color="#191919" title={resourceName}>
-                      {resourceName}
+                      <span dangerouslySetInnerHTML={{
+                        __html: searchPersonalResourcesKeyword 
+                          ? resourceName.replaceAll(
+                            searchPersonalResourcesKeyword, 
+                            `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`
+                          ) 
+                          : resourceName
+                      }}></span>
                     </Inline>
                   </Col>
                   <Col>
