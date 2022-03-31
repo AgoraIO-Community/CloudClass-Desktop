@@ -57,10 +57,6 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
   //observables
   @observable isRecording = false;
-
-  buffer: ArrayBuffer[] = [];
-  pcmBlob: Blob | null = null;
-
   //computed
   /**
    * 准备好挂载到 DOM
@@ -605,31 +601,6 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
-
-  getBuffer = (_buffer: AudioBuffer) => {
-    for (let channel = 0; channel < _buffer.numberOfChannels; channel += 1) {
-      // Float32Array with PCM data
-      const currentChannelData = _buffer.getChannelData(channel);
-      this.buffer.push(currentChannelData.buffer);
-    }
-    this.pcmBlob = new Blob(this.buffer);
-  };
-
-  download = () => {
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(this.pcmBlob as Blob);
-    link.download = 'pcm.pcm';
-    link.click();
-    window.URL.revokeObjectURL(link.href);
-  };
-
-  addMediaListener = () => {
-    this.classroomStore.mediaStore.addRawDataListener(this.getBuffer);
-  };
-
-  removeMediaListner = () => {
-    this.classroomStore.mediaStore.removeRawDataListener(this.getBuffer);
-  };
 
   private _leaveSubRoom() {
     const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
