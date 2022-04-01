@@ -26,7 +26,6 @@ export class SubscriptionStore extends EduStoreBase {
 
       sub && SubscriptionStore._sceneSubscriptions.set(scene.sceneId, sub);
     }
-
     return SubscriptionStore._sceneSubscriptions.get(scene.sceneId);
   }
 
@@ -47,5 +46,7 @@ export class SubscriptionStore extends EduStoreBase {
     });
   }
 
-  onDestroy(): void {}
+  onDestroy(): void {
+    SubscriptionStore._sceneSubscriptions.clear();
+  }
 }

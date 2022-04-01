@@ -27,7 +27,7 @@ export const BigWidgetWindowContainer: FC = observer((props) => {
   return (
     <div
       className="w-full relative flex-shrink-0"
-      style={{ height: bigWidgetWindowHeight }}
+      style={{ height: bigWidgetWindowHeight, position: 'relative' }}
       ref={ref}>
       {props.children}
       <ScreenShareContainer />
@@ -38,7 +38,5 @@ export const BigWidgetWindowContainer: FC = observer((props) => {
   );
 });
 export const WhiteboardTrackArea = () => {
-  const { boardUIStore } = useStore();
-  const { readyToMount } = boardUIStore;
-  return readyToMount ? <TrackArea boundaryName="extapp-track-bounds" /> : null;
+  return <TrackArea boundaryName="extapp-track-bounds" />;
 };

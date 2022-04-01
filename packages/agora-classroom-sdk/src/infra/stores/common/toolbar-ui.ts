@@ -128,7 +128,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
         const teacherCameraStreamUuid = this.teacherCameraStream?.stream.streamUuid;
         runInAction(() => {
           if (localScreenShareTrackState === AgoraRteMediaSourceState.started) {
-            if (screenShareStreamUuid) {
+            if (screenShareStreamUuid && !this.isScreenSharing) {
               this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
               this.classroomStore.widgetStore.setActive(
                 `streamWindow-${screenShareStreamUuid}`,
