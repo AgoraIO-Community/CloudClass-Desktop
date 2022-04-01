@@ -292,9 +292,12 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @action.bound
   removeGroup(groupUuid: string) {
+    const group = this.groupDetails.get(groupUuid);
     this.shareUIStore.addConfirmDialog(
       transI18n('breakout_room.confirm_delete_group_title'),
-      transI18n('breakout_room.confirm_delete_group_content'),
+      transI18n('breakout_room.confirm_delete_group_content', {
+        reason: group?.groupName,
+      }),
       {
         onOK: () => {
           if (this.groupState === GroupState.OPEN) {

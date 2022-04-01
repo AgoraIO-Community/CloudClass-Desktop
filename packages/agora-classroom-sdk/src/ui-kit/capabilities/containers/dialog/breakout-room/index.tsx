@@ -47,7 +47,9 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
       }}
       closable
       title={`${transI18n('scaffold.breakout_room')} ${
-        groupState === GroupState.OPEN ? transI18n('scaffold.in_progress') : ''
+        groupState === GroupState.OPEN
+          ? transI18n('scaffold.in_progress')
+          : transI18n('scaffold.not_in_progress')
       }`}
       className="breakout-room"
       contentClassName="content-area">

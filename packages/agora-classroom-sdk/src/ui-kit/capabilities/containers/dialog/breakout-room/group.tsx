@@ -4,6 +4,7 @@ import { Panel, PanelStateContext } from './panel';
 
 type GroupPanelProps = {
   groups: { text: string; id: string }[];
+  panelId?: string;
   onOpen?: () => void;
   onClose?: (users: string[]) => void;
   onChange?: (users: string[]) => void;
@@ -19,9 +20,11 @@ export const GroupPanel: FC<GroupPanelProps> = ({
   onClose,
   canExpand,
   onNodeClick,
+  panelId,
 }) => {
   return (
     <Panel
+      panelId={panelId}
       className="breakout-room-group-panel"
       trigger={children as ReactElement}
       onClose={() => {}}>
@@ -32,7 +35,7 @@ export const GroupPanel: FC<GroupPanelProps> = ({
           e.stopPropagation();
         }}>
         <MultiRootTree
-          childClassName="px-4 py-1"
+          childClassName="breakout-room-tree px-4 py-1"
           disableExpansion={!canExpand}
           data={groups}
           renderNode={(node, level) => (
@@ -44,6 +47,7 @@ export const GroupPanel: FC<GroupPanelProps> = ({
               }}
             />
           )}
+          showArrowAlways
         />
       </div>
     </Panel>

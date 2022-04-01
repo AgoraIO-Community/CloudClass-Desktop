@@ -2,32 +2,26 @@ import { FC, useContext, useMemo, cloneElement, useState, createContext, useEffe
 import { Popover } from '~ui-kit';
 
 export const PanelStateContext = createContext<{
-  visiblePanelId: number;
-  state: unknown;
-  onTrigger: (panelId: number) => void;
-  getNextPanelId: () => number;
-  setState: (state: unknown) => void;
+  visiblePanelId: number | string;
+  onTrigger: (panelId: number | string) => void;
+  getNextPanelId: () => number | string;
   closeAll: () => void;
 }>({
   visiblePanelId: 0,
-  state: {},
   onTrigger: () => {},
   getNextPanelId: () => 0,
-  setState: () => {},
   closeAll: () => {},
 });
 
 export const usePanelState = () => {
-  const [visiblePanelId, setVisiblePanelId] = useState(0);
-  const [state, setState] = useState<unknown>({});
+  const [visiblePanelId, setVisiblePanelId] = useState<string | number>(0);
 
   const panelState = useMemo(() => {
     let nextId = 0;
     return {
       visiblePanelId,
-      state,
-      onTrigger: (panelId: number) => {
-        setVisiblePanelId((prevPanelId: number) => {
+      onTrigger: (panelId: number | string) => {
+        setVisiblePanelId((prevPanelId) => {
           if (prevPanelId === panelId) {
             return 0;
           }
@@ -36,9 +30,6 @@ export const usePanelState = () => {
       },
       getNextPanelId: () => {
         return Date.now() + nextId++;
-      },
-      setState: (state: unknown) => {
-        setState(state);
       },
       closeAll: () => {
         setVisiblePanelId(0);
@@ -54,12 +45,20 @@ type PanelProps = {
   className?: string;
   onOpen?: () => void;
   onClose?: () => void;
+  panelId?: string;
 };
 
-export const Panel: FC<PanelProps> = ({ children, trigger, className, onOpen, onClose }) => {
+export const Panel: FC<PanelProps> = ({
+  children,
+  trigger,
+  className,
+  onOpen,
+  onClose,
+  panelId: pid,
+}) => {
   const { visiblePanelId, onTrigger, getNextPanelId } = useContext(PanelStateContext);
 
-  const panelId = useMemo(() => getNextPanelId(), []);
+  const panelId = useMemo(() => pid || getNextPanelId(), []);
 
   const visible = visiblePanelId === panelId;
 

@@ -22,11 +22,13 @@ const PageLoading = () => {
 
   return (
     <div className="page-loading">
-      <Card width={120} height={120} className="card-loading-position flex flex-col">
+      <Card width={160} height={120} className="card-loading-position flex flex-col">
         <Loading></Loading>
-        <p className="m-0">
+        <p className="m-0 text-center truncate" style={{ width: 110 }}>
           {layoutUIStore.isInSubRoom
-            ? transI18n('breakout_room.joining')
+            ? transI18n('breakout_room.joining', {
+                reason: layoutUIStore.currentSubRoomName,
+              })
             : transI18n('breakout_room.leaving')}
         </p>
       </Card>

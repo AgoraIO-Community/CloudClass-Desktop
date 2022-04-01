@@ -1,14 +1,14 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
-import { transI18n } from '@/infra/stores/common/i18n';
 import { observer } from 'mobx-react';
 import { FC, Fragment, MouseEvent, useContext, useMemo, useState, useRef } from 'react';
+import { cloneDeep } from 'lodash';
+import { GroupState } from 'agora-edu-core';
+import { useStore } from '@/infra/hooks/use-edu-stores';
+import { transI18n } from '@/infra/stores/common/i18n';
 import { Button, MultiRootTree, TreeNode, TreeModel } from '~ui-kit';
+import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
-import { GroupState } from 'agora-edu-core';
-import { cloneDeep } from 'lodash';
-import React from 'react';
 
 type LinkButtonProps = {
   text: string;
@@ -16,15 +16,25 @@ type LinkButtonProps = {
   className?: string;
   hoverText?: string;
   style?: any;
+  hoverClassName?: string;
 };
 
-const LinkButton = ({ onClick, text, hoverText = text, style }: LinkButtonProps) => {
+const LinkButton = ({
+  onClick,
+  text,
+  hoverText = text,
+  hoverClassName,
+  style,
+  className,
+}: LinkButtonProps) => {
   const [hover, setHover] = useState(false);
+
+  const cls = classnames('link-btn text-center py-1', className, hover && hoverClassName);
 
   return (
     <div
       style={style}
-      className="link-btn py-1 px-3"
+      className={cls}
       onClick={onClick}
       onMouseOver={() => {
         setHover(true);
@@ -44,6 +54,9 @@ type GroupButtonsProps = {
 
 const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
   const { groupUIStore } = useStore();
+
+  const userPanelId = 'user-panel' + groupUuid;
+  const { visiblePanelId } = useContext(PanelStateContext);
 
   const {
     MAX_USER_COUNT,
@@ -67,21 +80,21 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
       {btns}
       {groupState === GroupState.OPEN ? (
         currentSubRoom === groupUuid ? (
-          <div className="py-1 px-4">{transI18n('breakout_room.joined')}</div>
+          <div className="link-width py-1 pr-4 text-center hl-text">
+            {transI18n('breakout_room.joined')}
+          </div>
         ) : (
           <LinkButton
-            style={{
-              width: 52,
-              textAlign: 'right',
-            }}
-            className="pr-4"
+            className="pr-4 hl-text text-right"
             text={`${userCount}`}
             onClick={() => groupUuid && joinSubRoom(groupUuid)}
             hoverText={groupUuid && transI18n('breakout_room.join_group')}
+            hoverClassName="hl-text pr-0"
           />
         )
       ) : (
         <UserPanel
+          panelId={userPanelId}
           groupUuid={groupUuid}
           users={students.map((v) => v)}
           limitCount={MAX_USER_COUNT}
@@ -91,7 +104,10 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
           onChange={(users) => {
             setGroupUsers(groupUuid, users);
           }}>
-          <LinkButton className="pr-4" text={transI18n('breakout_room.assign')} />
+          <LinkButton
+            className={visiblePanelId === userPanelId ? 'active-bg px-4' : 'hl-text px-4'}
+            text={transI18n('breakout_room.assign')}
+          />
         </UserPanel>
       )}
     </div>
@@ -105,10 +121,12 @@ type UserButtonsProps = {
 
 const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => {
   const { groupUIStore } = useStore();
+  const moveToPanelId = 'group-panel-move-to' + userUuid;
+  const changeToPanelId = 'group-panel-change-to' + userUuid;
 
   const { groupState, groups, moveUserToGroup, interchangeGroup } = groupUIStore;
 
-  const { closeAll } = useContext(PanelStateContext);
+  const { closeAll, visiblePanelId } = useContext(PanelStateContext);
 
   const filteredGroups = useMemo(() => {
     const newGroups = cloneDeep(groups.filter(({ id }) => id && id !== groupUuid));
@@ -125,15 +143,20 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
   return (
     <div className="flex">
       <GroupPanel
+        panelId={moveToPanelId}
         groups={filteredGroups}
         onNodeClick={(node) => {
           moveUserToGroup(groupUuid, node.id, userUuid);
           closeAll();
         }}>
-        <LinkButton text={transI18n('breakout_room.move_to')} />
+        <LinkButton
+          className={visiblePanelId === moveToPanelId ? 'active-bg' : undefined}
+          text={transI18n('breakout_room.move_to')}
+        />
       </GroupPanel>
       {groupState === GroupState.OPEN && groupUuid && (
         <GroupPanel
+          panelId={changeToPanelId}
           groups={filteredGroups}
           canExpand
           onNodeClick={(node, level) => {
@@ -142,7 +165,10 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
               closeAll();
             }
           }}>
-          <LinkButton text={transI18n('breakout_room.change_to')} />
+          <LinkButton
+            className={visiblePanelId === changeToPanelId ? 'active-bg' : undefined}
+            text={transI18n('breakout_room.change_to')}
+          />
         </GroupPanel>
       )}
     </div>
@@ -198,6 +224,8 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
 
   const [editing, setEditing] = useState(false);
 
+  const [mouseEnter, setMouseEnter] = useState(false);
+
   const handleRename = () => {
     setEditing(true);
   };
@@ -207,26 +235,16 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
   };
 
   const renameBtn = (
-    <LinkButton
-      key="rename"
-      className="pr-4"
-      text={transI18n('breakout_room.rename')}
-      onClick={handleRename}
-    />
+    <LinkButton key="rename" text={transI18n('breakout_room.rename')} onClick={handleRename} />
   );
 
   const removeBtn = (
-    <LinkButton
-      key="remove"
-      className="pr-4"
-      text={transI18n('breakout_room.remove')}
-      onClick={handleRemove}
-    />
+    <LinkButton key="remove" text={transI18n('breakout_room.remove')} onClick={handleRemove} />
   );
 
   const tialNode =
     level === 0 && node.id ? (
-      <GroupButtons groupUuid={node.id} btns={[renameBtn, removeBtn]} />
+      <GroupButtons groupUuid={node.id} btns={mouseEnter ? [renameBtn, removeBtn] : []} />
     ) : level === 1 ? (
       <UserButtons groupUuid={getUserGroupUuid(node.id) as string} userUuid={node.id} />
     ) : (
@@ -255,7 +273,16 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
   }
 
   return (
-    <TreeNode content={content} tail={!notJoined ? tialNode : <div className="py-1">&nbsp;</div>} />
+    <TreeNode
+      onMouseEnter={() => {
+        setMouseEnter(true);
+      }}
+      onMouseLeave={() => {
+        setMouseEnter(false);
+      }}
+      content={content}
+      tail={!notJoined ? tialNode : <div className="py-1">&nbsp;</div>}
+    />
   );
 };
 
@@ -274,9 +301,10 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
       <div className="flex-grow overflow-auto py-2">
         <PanelStateContext.Provider value={panelState}>
           <MultiRootTree
-            childClassName="pl-4"
+            childClassName="breakout-room-tree pl-4"
             data={groups}
             renderNode={(node, level) => <GroupTreeNode node={node} level={level} />}
+            showArrowAlways
           />
         </PanelStateContext.Provider>
       </div>
@@ -311,6 +339,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
 
   const reCreateButton = (
     <Button
+      size="xs"
       type="secondary"
       className="rounded-btn mr-2"
       onClick={() => {
@@ -321,13 +350,13 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   );
 
   const addGroupButton = (
-    <Button type="secondary" className="rounded-btn" onClick={addGroup}>
+    <Button size="xs" type="secondary" className="rounded-btn" onClick={addGroup}>
       {transI18n('breakout_room.add_group')}
     </Button>
   );
 
   const startButton = (
-    <Button type="primary" className="rounded-btn" onClick={handleGroupState}>
+    <Button size="xs" type="primary" className="rounded-btn" onClick={handleGroupState}>
       {groupState === GroupState.OPEN
         ? transI18n('breakout_room.stop')
         : transI18n('breakout_room.start')}
@@ -336,6 +365,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
 
   const broadcastButton = (
     <Button
+      size="xs"
       type="secondary"
       className="rounded-btn mr-2 px-1"
       onClick={() => {
@@ -369,7 +399,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   );
 
   const broadcast = (
-    <React.Fragment>
+    <Fragment>
       <div className="px-4">
         <BroadcastInput
           limit={300}
@@ -380,6 +410,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
       </div>
       <div className="flex justify-end px-4 py-2">
         <Button
+          size="xs"
           type="secondary"
           className="rounded-btn mr-2"
           onClick={() => {
@@ -387,11 +418,11 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
           }}>
           {transI18n('breakout_room.cancel')}
         </Button>
-        <Button type="primary" className="rounded-btn" onClick={handleSubmit}>
+        <Button size="xs" type="primary" className="rounded-btn" onClick={handleSubmit}>
           {transI18n('breakout_room.send')}
         </Button>
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 
   let footer = null;

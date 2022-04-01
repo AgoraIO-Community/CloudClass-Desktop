@@ -545,11 +545,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     let groupName = null;
     const { currentSubRoom, groupDetails } = this.classroomStore.groupStore;
     if (currentSubRoom) {
-      groupDetails.forEach((group, groupUuid) => {
-        if (groupUuid === currentSubRoom) {
-          groupName = group.groupName;
-        }
-      });
+      const group = groupDetails.get(currentSubRoom);
+
+      groupName = group?.groupName;
     }
     return groupName;
   }

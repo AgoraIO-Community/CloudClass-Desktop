@@ -10,6 +10,7 @@ type UserPanelProps = {
   onClose?: (users: string[]) => void;
   onChange?: (users: string[]) => void;
   onError?: (message: string) => void;
+  panelId?: string;
 };
 
 export const UserPanel: FC<UserPanelProps> = ({
@@ -21,11 +22,13 @@ export const UserPanel: FC<UserPanelProps> = ({
   onClose,
   onError,
   groupUuid,
+  panelId,
 }) => {
   const [checkedUsers, setCheckedUsers] = useState(() => new Set<string>());
 
   return (
     <Panel
+      panelId={panelId}
       className="breakout-room-group-panel"
       trigger={children as ReactElement}
       onClose={() => {

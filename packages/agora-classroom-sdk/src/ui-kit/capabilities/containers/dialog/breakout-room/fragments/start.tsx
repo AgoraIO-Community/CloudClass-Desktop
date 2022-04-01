@@ -31,9 +31,9 @@ export const Start: FC<Props> = observer(({ onNext }) => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      <div className="outline-box pt-3 flex justify-center">
+      <div className="outline-box items-center flex justify-center">
         <div className="inline-flex flex-col">
-          <div className="inline-flex items-center mb-2">
+          <div className="inline-flex items-center mb-3">
             <span className="mr-1">{transI18n('breakout_room.create_prefix')}</span>
             <Select
               className="group-select"
@@ -62,13 +62,17 @@ export const Start: FC<Props> = observer(({ onNext }) => {
         </div>
       </div>
       <div className="my-3">
+        {transI18n('breakout_room.wait_for_assign1', {
+          reason: `${numberToBeAssigned}`,
+        })}
         {numberToBeAssigned > 0 &&
-          transI18n('breakout_room.wait_for_assign', {
-            reason1: `${numberToBeAssigned}`,
-            reason2: `${perGroup}-${perGroup + 1}`,
+          transI18n('breakout_room.wait_for_assign2', {
+            reason: `${perGroup}-${perGroup + 1}`,
           })}
       </div>
       <Button
+        size="xs"
+        className="rounded-btn"
         onClick={() => {
           createGroups(type, groupNum);
           onNext({ groupNum });
