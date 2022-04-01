@@ -3,12 +3,11 @@
 import * as hx from 'agora-chat-widget';
 import {
   ClassroomState,
-  EduClassroomConfig,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   IAgoraWidget,
+  EduClassroomConfig,
 } from 'agora-edu-core';
-import { EduClassroomUIStore } from 'agora-classroom-sdk';
 import { set } from 'lodash';
 import { autorun, reaction } from 'mobx';
 import { observer } from 'mobx-react';
@@ -16,6 +15,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Context } from './chatContext';
 import { WidgetChatUIStore } from './store';
+
+type EduClassroomUIStore = any;
 
 type AppProps = {
   orgName: string;
@@ -48,15 +49,15 @@ const App: React.FC<AppProps> = observer((props) => {
   const localUserInfo = userUuid
     ? {
         userUuid,
-        userName: EduClassroomConfig.shared.sessionInfo.userName,
-        roleType: EduClassroomConfig.shared.sessionInfo.role,
+        userName: widgetStore.classroomConfig.sessionInfo.userName,
+        roleType: widgetStore.classroomConfig.sessionInfo.role,
       }
     : null;
 
   const roomInfo = {
-    roomUuid: EduClassroomConfig.shared.sessionInfo.roomUuid,
-    roomName: EduClassroomConfig.shared.sessionInfo.roomName,
-    roomType: EduClassroomConfig.shared.sessionInfo.roomType,
+    roomUuid: widgetStore.classroomConfig.sessionInfo.roomUuid,
+    roomName: widgetStore.classroomConfig.sessionInfo.roomName,
+    roomType: widgetStore.classroomConfig.sessionInfo.roomType,
   };
 
   const globalContext = {
@@ -65,13 +66,13 @@ const App: React.FC<AppProps> = observer((props) => {
     isShowMiniIcon: !widgetStore.showChat,
     configUIVisible: {
       showInputBox:
-        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible &&
-        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.observer, // 输入UI
-      memebers: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
+        widgetStore.classroomConfig.sessionInfo.role !== EduRoleTypeEnum.invisible &&
+        widgetStore.classroomConfig.sessionInfo.role !== EduRoleTypeEnum.observer, // 输入UI
+      memebers: widgetStore.classroomConfig.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
       announcement:
         !uiStore.classroomStore.groupStore.currentSubRoom &&
-        EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
-      allMute: EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
+        widgetStore.classroomConfig.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
+      allMute: widgetStore.classroomConfig.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
       isFullSize: widgetStore.isFullSize,
       emoji: typeof props.visibleEmoji !== 'undefined' ? props.visibleEmoji : true,
       btnSend: typeof props.visibleBtnSend !== 'undefined' ? props.visibleBtnSend : true,
@@ -134,11 +135,11 @@ export class AgoraHXChatWidget implements IAgoraWidget {
 
   private _dom?: Element;
 
-  constructor() {}
+  constructor(private _classroomConfig: EduClassroomConfig) {}
 
   widgetDidLoad(dom: Element, props: any): void {
     const { uiStore, ...resetProps } = props;
-    const widgetStore = new WidgetChatUIStore(uiStore);
+    const widgetStore = new WidgetChatUIStore(uiStore, this._classroomConfig);
     this._dom = dom;
     ReactDOM.render(
       <Context.Provider value={{ uiStore: uiStore, widgetStore }}>

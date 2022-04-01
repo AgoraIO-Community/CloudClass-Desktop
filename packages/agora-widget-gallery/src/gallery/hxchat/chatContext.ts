@@ -1,6 +1,7 @@
 import React from 'react';
-import { EduClassroomUIStore } from 'agora-classroom-sdk';
 import { WidgetChatUIStore } from './store';
+
+type EduClassroomUIStore = any;
 
 export const Context = React.createContext<{
   uiStore: EduClassroomUIStore | undefined;

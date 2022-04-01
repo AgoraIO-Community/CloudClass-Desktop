@@ -1,7 +1,7 @@
 import i18next, { i18n } from 'i18next';
-import { AgoraRteEngineConfig, bound } from 'agora-rte-sdk';
+import { bound } from 'agora-rte-sdk';
 import { isEmpty } from 'lodash';
-import { EduClassroomConfig } from 'agora-edu-core';
+import { EduClassroomConfig, EduRteEngineConfig } from 'agora-edu-core';
 
 class I18nTranslate {
   static get instance() {
@@ -28,7 +28,7 @@ class I18nTranslate {
 
     this._i18nInstance.init({
       resources: EduClassroomConfig.shared.i18nResources,
-      lng: AgoraRteEngineConfig.shared.language,
+      lng: EduRteEngineConfig.shared.language,
       interpolation: {
         escapeValue: false, // react already safes from xss
       },

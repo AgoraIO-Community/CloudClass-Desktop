@@ -39,7 +39,6 @@
     "@types/node": "14.14.22",
     "@types/ua-parser-js": "0.7.35",
     "@types/uuid": "8.3.0",
-    "agora-classroom-sdk": "1.1.2-rc.3",
     "cross-env": "6.0.3",
     "dayjs": "1.10.3",
     "deep-diff": "1.0.2",
@@ -58,6 +57,7 @@
     "postcss-loader": "4.0.3"
   },
   "dependencies": {
-    "dayjs": "1.10.4"
+    "dayjs": "1.10.4",
+    "agora-edu-core": "2.3.3"
   }
 }

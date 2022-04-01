@@ -1,18 +1,20 @@
+//@ts-nocheck
 import {
   ChatEvent,
   ChatListType,
   Conversation,
-  EduClassroomConfig,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   MessageItem,
+  EduClassroomConfig,
 } from 'agora-edu-core';
-import { AGError } from 'agora-rte-sdk';
-import { EduClassroomUIStore } from 'agora-classroom-sdk';
 import { get, isEmpty } from 'lodash';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { computedFn } from 'mobx-utils';
+
+type EduClassroomUIStore = any;
+type AGError = any;
 
 interface IChatConfigUI {
   visibleQuestion?: false;
@@ -26,8 +28,7 @@ export class WidgetChatUIStore {
   activeTab: ChatListType = 'room';
 
   @observable
-  minimize: boolean =
-    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass;
+  minimize: boolean = false;
 
   @observable
   activeConversation?: Conversation;
@@ -57,9 +58,10 @@ export class WidgetChatUIStore {
   @observable
   configUI: IChatConfigUI = {};
 
-  constructor(coreStore: EduClassroomUIStore) {
+  constructor(coreStore: EduClassroomUIStore, private _classroomConfig: EduClassroomConfig) {
     runInAction(() => {
       this.coreStore = coreStore;
+      this.minimize = _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass;
     });
 
     reaction(
@@ -99,7 +101,7 @@ export class WidgetChatUIStore {
       () => this.chatConversationList,
       (list) => {
         if (!this.coreStore.classroomStore.messageStore.newMessageFlag) return;
-        const { role } = EduClassroomConfig.shared.sessionInfo;
+        const { role } = this._classroomConfig.sessionInfo;
         let shoudleUpdate = false;
         if (role === EduRoleTypeEnum.student && this.activeTab === 'room') shoudleUpdate = true; // 当学生在 room tab 的更新
         if (role === EduRoleTypeEnum.teacher || role === EduRoleTypeEnum.assistant)
@@ -142,9 +144,13 @@ export class WidgetChatUIStore {
 
     this.setUI({
       showInputBox:
-        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible &&
-        EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.observer,
+        this._classroomConfig.sessionInfo.role !== EduRoleTypeEnum.invisible &&
+        this._classroomConfig.sessionInfo.role !== EduRoleTypeEnum.observer,
     });
+  }
+
+  get classroomConfig() {
+    return this._classroomConfig;
   }
 
   getHistoryChatMessage = async (data: { nextId: string; sort: number }) => {
@@ -307,7 +313,7 @@ export class WidgetChatUIStore {
 
   @computed
   get chatConversationList(): Conversation[] {
-    const { role, userUuid, userName } = EduClassroomConfig.shared.sessionInfo;
+    const { role, userUuid, userName } = this._classroomConfig.sessionInfo;
     let conversationList: Conversation[] = [];
 
     if (role === EduRoleTypeEnum.student) {
@@ -380,8 +386,8 @@ export class WidgetChatUIStore {
   @computed
   get isHost() {
     return (
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant
+      this._classroomConfig.sessionInfo.role === EduRoleTypeEnum.teacher ||
+      this._classroomConfig.sessionInfo.role === EduRoleTypeEnum.assistant
     );
   }
 

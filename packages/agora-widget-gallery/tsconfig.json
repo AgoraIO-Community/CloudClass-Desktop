@@ -4,9 +4,8 @@
     "outDir": "lib",
     "target": "es6",
     "paths": {
-      "agora-classroom-sdk": ["../agora-classroom-sdk/src"],
+      "agora-classroom-sdk": ["../agora-classroom-sdk/src/infra/api"],
       "agora-chat-widget": ["../agora-chat-widget/src"],
-      "agora-edu-core": ["../agora-edu-core/src"],
       "~ui-kit": ["../agora-scenario-ui-kit/src"],
       "~ui-kit/*": ["../agora-scenario-ui-kit/src/*"],
     },

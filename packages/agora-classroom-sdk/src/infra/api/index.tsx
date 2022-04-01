@@ -73,7 +73,9 @@ export type LaunchOption = {
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
 
 const ChatFactory = (region: EduRegion = EduRegion.CN) =>
-  region === EduRegion.CN ? new AgoraHXChatWidget() : new AgoraChatWidget();
+  region === EduRegion.CN
+    ? new AgoraHXChatWidget(EduClassroomConfig.shared)
+    : new AgoraChatWidget(EduClassroomConfig.shared);
 
 export class AgoraEduSDK {
   private static _config: any = {};
@@ -209,7 +211,6 @@ export class AgoraEduSDK {
         },
       },
       {
-        chat: ChatFactory(AgoraEduSDK.region) as IAgoraWidget,
         ...option.widgets,
       },
       platform,
@@ -227,6 +228,8 @@ export class AgoraEduSDK {
     }
 
     EduClassroomConfig.setConfig(config);
+
+    config.widgets.chat = ChatFactory(AgoraEduSDK.region) as IAgoraWidget;
 
     EduEventCenter.shared.onClassroomEvents((event: AgoraEduClassroomEvent, ...args) => {
       if (event === AgoraEduClassroomEvent.Destroyed) {
