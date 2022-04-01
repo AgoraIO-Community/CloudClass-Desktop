@@ -13,6 +13,7 @@ export {
   CloudDriveUploadingProgress,
 } from './common/cloud-drive/struct';
 export type { CloudDrivePagingOption } from './common/cloud-drive/type';
+export { CloudDriveResourceUploadStatus } from './common/cloud-drive/type';
 export { EduStream } from './common/stream/struct';
 export { escapeExtAppIdentifier } from './common/room/command-handler';
 export { LeaveReason, SceneType } from './common/connection';

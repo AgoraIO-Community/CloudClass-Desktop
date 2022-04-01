@@ -26,7 +26,7 @@ import CloudToolbar from './cloud-toolbar';
 import CloudMinimize from './cloud-minimize';
 import CloudMoreMenu from './cloud-more-menu';
 import { FileTypeSvgColor, UploadItem as CloudUploadItem } from '@/infra/stores/common/cloud-ui';
-import { CloudDriveResourceUploadStatus } from '../../../../../../agora-edu-core/src/stores/domain/common/cloud-drive/type';
+import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
 import { debounce } from 'lodash';
 
 const UploadSuccessToast = () => {
