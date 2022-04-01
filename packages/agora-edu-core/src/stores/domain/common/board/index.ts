@@ -849,7 +849,7 @@ class SceneEventHandler {
 
           if (whiteboardState === 1) {
             const whiteBoardConfig = get(whiteboardProperties, 'extra');
-            if (!this.dataStore.configReady) {
+            if (!this.dataStore.configReady && whiteBoardConfig) {
               this.dataStore.whiteboardConfig = whiteBoardConfig;
               this.dataStore.configReady = true;
             }
