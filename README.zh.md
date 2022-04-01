@@ -18,9 +18,6 @@ lerna bootstrap
 
 ```bash
 # 拷贝配置文件到demo目录
-# 开发环境
-cp .env.example packages/agora-classroom-sdk/.env.dev
-# 正式环境
 cp .env.example packages/agora-classroom-sdk/.env
 
 # 按照模板配置你的项目
@@ -29,7 +26,7 @@ cp .env.example packages/agora-classroom-sdk/.env
 ## 如何使用自己的 AppId 和 Secret 生成 RtmToken
 
 ```bash
-# 如果.env.dev 文件中包含 `REACT_APP_AGORA_APP_ID` 和 `REACT_APP_AGORA_APP_CERTIFICATE` 配置，客户端会为你自动生成 RTM Token
+# 如果.env 文件中包含 `REACT_APP_AGORA_APP_ID` 和 `REACT_APP_AGORA_APP_CERTIFICATE` 配置，客户端会为你自动生成 RTM Token
 REACT_APP_AGORA_APP_ID=
 REACT_APP_AGORA_APP_CERTIFICATE=
 ```
