@@ -8,6 +8,7 @@ import {
   PatchGroup,
   WhiteboardState,
   WhiteboardTool,
+  SceneType,
 } from 'agora-edu-core';
 import { AGError, AGRtcConnectionType, bound, Log, RtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
@@ -15,7 +16,6 @@ import { action, computed, observable, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import uuidv4 from 'uuid';
-import { SceneType } from '../../../../../agora-edu-core/src/stores/domain/common/connection';
 
 export enum GroupMethod {
   AUTO,
