@@ -478,7 +478,7 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
     return 0;
   }
   setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType): Promise<void> {
-    const state = this.base.rtcEngine.setRemoteVideoStreamType(uid, streamType);
+    const state = this.base.rtcEngine.setRemoteVideoStreamType(uid as number, streamType);
     return state === 0 ? Promise.resolve() : Promise.reject();
   }
   onConnectionStateChanged(

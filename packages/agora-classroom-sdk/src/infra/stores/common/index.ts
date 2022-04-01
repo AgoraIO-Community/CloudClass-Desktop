@@ -162,7 +162,7 @@ export class EduClassroomUIStore {
     try {
       await joinClassroom();
     } catch (e) {
-      if (AGError.isOf(e, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
+      if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
         return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
       } else {
         return this.classroomStore.connectionStore.leaveClassroomUntil(
