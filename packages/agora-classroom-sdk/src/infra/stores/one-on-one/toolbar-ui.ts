@@ -1,14 +1,18 @@
 import { EduClassroomConfig } from 'agora-edu-core';
 import { computed } from 'mobx';
-import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from '../common/toolbar-ui';
+import {
+  CabinetItemEnum,
+  ToolbarItem,
+  ToolbarItemCategory,
+  ToolbarUIStore,
+} from '../common/toolbar-ui';
 
 export class OneToOneToolbarUIStore extends ToolbarUIStore {
   readonly allowedCabinetItems: string[] = [
-    'laser',
-    'screenShare',
-    'countdownTimer',
-    'popupQuiz',
-    'whiteboard',
+    CabinetItemEnum.Laser,
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.CountdownTimer,
+    CabinetItemEnum.PopupQuiz,
   ];
   @computed
   get teacherTools(): ToolbarItem[] {

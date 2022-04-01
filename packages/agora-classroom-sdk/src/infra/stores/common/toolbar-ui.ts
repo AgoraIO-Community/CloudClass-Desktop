@@ -78,9 +78,9 @@ export class ToolbarItem {
 
 export class ToolbarUIStore extends EduUIStoreBase {
   readonly allowedCabinetItems: string[] = [
-    CabinetItemEnum.Whiteboard,
+    // CabinetItemEnum.Whiteboard,
     CabinetItemEnum.ScreenShare,
-    CabinetItemEnum.BreakoutRoom,
+    // CabinetItemEnum.BreakoutRoom,
     CabinetItemEnum.Laser,
     CabinetItemEnum.CountdownTimer,
     CabinetItemEnum.Poll,

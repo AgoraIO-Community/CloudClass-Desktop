@@ -1,13 +1,17 @@
 import { computed } from 'mobx';
-import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from '../common/toolbar-ui';
+import {
+  CabinetItemEnum,
+  ToolbarItem,
+  ToolbarItemCategory,
+  ToolbarUIStore,
+} from '../common/toolbar-ui';
 
 export class LectrueToolbarUIStore extends ToolbarUIStore {
   readonly allowedCabinetItems: string[] = [
-    'laser',
-    'screenShare',
-    'countdownTimer',
-    'poll',
-    'whiteboard',
+    CabinetItemEnum.Laser,
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.CountdownTimer,
+    CabinetItemEnum.Poll,
   ];
   /**
    * 老师工具栏工具列表
