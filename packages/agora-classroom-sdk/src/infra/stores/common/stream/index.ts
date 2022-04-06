@@ -5,6 +5,8 @@ import {
   AgoraRteVideoSourceType,
   AGRenderMode,
   bound,
+  AgoraRteStreamUID,
+  AgoraRteRemoteStreamType,
 } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
@@ -25,6 +27,7 @@ import {
   EduStream,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
+import { TooltipPlacement } from '~ui-kit';
 
 export enum StreamIconColor {
   active = '#357bf6',
@@ -626,6 +629,20 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 大窗视频窗工具栏定位
+   * @returns
+   */
+  @computed get fullScreenToolbarPlacement(): 'left' | 'bottom' {
+    return 'bottom';
+  }
+  /**
+   * 大窗视频窗工具tooltip定位
+   * @returns
+   */
+  @computed get fullScreenToolTipPlacement(): TooltipPlacement {
+    return 'top';
+  }
+  /**
    * 移除奖励动画
    * @param id
    */
@@ -703,6 +720,11 @@ export class StreamUIStore extends EduUIStoreBase {
   @bound
   stopScreenShareCapture() {
     return this.classroomStore.mediaStore.stopScreenShareCapture();
+  }
+
+  @bound
+  setRemoteVideoStreamType(uid: AgoraRteStreamUID, streamType: AgoraRteRemoteStreamType) {
+    return this.classroomStore.connectionStore.setRemoteVideoStreamType(uid, streamType);
   }
 
   onDestroy() {

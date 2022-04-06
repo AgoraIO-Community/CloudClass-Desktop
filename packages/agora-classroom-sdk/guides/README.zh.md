@@ -33,7 +33,7 @@
 
 - 请确保你已经完成 Agora e-Education 项目指南中的[前提条件](../README.zh.md#prerequisites)。
 - 配置阿里云 OSS，详见[阿里云 OSS 配置指南](https://github.com/AgoraIO-Usecase/eEducation/wiki/%E9%98%BF%E9%87%8C%E4%BA%91OSS%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97)。
-- 重命名 `.env.example` 为 `.env.dev`，并配置以下参数：
+- 重命名 `.env.example` 为 `.env`，并配置以下参数：
 
   - **（必填）你获取到的声网 App ID**
 

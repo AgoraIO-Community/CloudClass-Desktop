@@ -4,7 +4,7 @@ import { CloudDriveResource } from 'agora-edu-core';
 import { useStore } from '~hooks/use-edu-stores';
 import { Col, Inline, Placeholder, Row, Table, TableHeader, transI18n, SvgImg } from '~ui-kit';
 import CloudToolbar from './cloud-toolbar';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { FileTypeSvgColor } from '@/infra/stores/common/cloud-ui';
 
 export const PublicResourcesContainer = observer(() => {
@@ -31,6 +31,12 @@ export const PublicResourcesContainer = observer(() => {
     },
     [setSearchPublicResourcesKeyword],
   );
+
+  useEffect(() => {
+    return () => {
+      setSearchPublicResourcesKeyword('');
+    };
+  }, []);
 
   return (
     <>
@@ -65,7 +71,15 @@ export const PublicResourcesContainer = observer(() => {
                       }}
                     />
                     <Inline className="filename" color="#191919" title={resourceName}>
-                      {resourceName}
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: searchPublicResourcesKeyword
+                            ? resourceName.replaceAll(
+                                searchPublicResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
+                              )
+                            : resourceName,
+                        }}></span>
                     </Inline>
                   </Col>
                   <Col>
@@ -73,7 +87,7 @@ export const PublicResourcesContainer = observer(() => {
                   </Col>
                   <Col>
                     <Inline color="#586376">
-                      {!!updateTime ? dayjs(updateTime).format('YY-MM-DD HH:mm:ss') : '- -'}
+                      {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
                     </Inline>
                   </Col>
                 </Row>

@@ -214,4 +214,7 @@ export class RtcAudioDeviceManagerElectron extends RtcAudioDeviceManagerBase {
     });
     this._emitRecordingListChanged(true, newDevices, this.microphoneList);
   }
+  onAudioFrame(cb: (buffer: ArrayBuffer) => void): number {
+    return 0;
+  }
 }

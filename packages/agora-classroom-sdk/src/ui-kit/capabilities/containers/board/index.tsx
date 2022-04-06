@@ -1,24 +1,21 @@
 import { observer } from 'mobx-react';
-import { FC, useMemo, useEffect, useRef } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import 'video.js/dist/video-js.css';
 import '@netless/window-manager/dist/style.css';
 import { BoardPlaceHolder } from '~ui-kit';
 import './index.css';
 
-import { WhiteboardToolbar } from '~containers/toolbar';
-import { TrackArea } from '~containers/root-box/';
 import { ScenesController } from '../scenes-controller';
 
 export const WhiteboardContainer: FC = observer(({ children }) => {
-  const { boardUIStore } = useStore();
+  const { boardUIStore, toolbarUIStore } = useStore();
   const {
     readyToMount,
     mount,
     unmount,
     rejoinWhiteboard,
     connectionLost,
-    boardHeight,
     joinWhiteboardWhenConfigReady,
     leaveWhiteboard,
     currentSceneIndex,
@@ -28,8 +25,10 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
     toNextMainViewScene,
     isGrantedBoard,
     isTeacherOrAssistant,
+    redoSteps,
+    undoSteps,
   } = boardUIStore;
-
+  const { setTool } = toolbarUIStore;
   useEffect(() => {
     joinWhiteboardWhenConfigReady();
     return () => {
@@ -51,36 +50,40 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
     ),
     [mount, unmount],
   );
+  return readyToMount ? (
+    <>
+      {(isTeacherOrAssistant || isGrantedBoard) && (
+        <ScenesController
+          addScene={addMainViewScene}
+          preScene={toPreMainViewScene}
+          nextScene={toNextMainViewScene}
+          currentSceneIndex={currentSceneIndex}
+          scenesCount={scenesCount}
+          redoSteps={redoSteps}
+          undoSteps={undoSteps}
+          redo={() => {
+            setTool('redo');
+          }}
+          undo={() => {
+            setTool('undo');
+          }}
+        />
+      )}
 
-  return (
-    <div style={{ height: boardHeight }} className="w-full relative flex-shrink-0">
-      <WhiteboardTrackArea />
-      {readyToMount ? (
-        <div className="whiteboard-wrapper">
-          {children}
-          <div className="whiteboard">
-            {boardContainer}
-            {connectionLost ? (
-              <BoardPlaceHolder
-                style={{ position: 'absolute' }}
-                onReconnectClick={rejoinWhiteboard}
-              />
-            ) : null}
-            <WhiteboardToolbar />
-            {(isTeacherOrAssistant || isGrantedBoard) && (
-              <ScenesController
-                addScene={addMainViewScene}
-                preScene={toPreMainViewScene}
-                nextScene={toNextMainViewScene}
-                currentSceneIndex={currentSceneIndex}
-                scenesCount={scenesCount}
-              />
-            )}
-          </div>
+      <div className="whiteboard-wrapper">
+        {children}
+        <div className="whiteboard">
+          {boardContainer}
+          {connectionLost ? (
+            <BoardPlaceHolder
+              style={{ position: 'absolute' }}
+              onReconnectClick={rejoinWhiteboard}
+            />
+          ) : null}
         </div>
-      ) : null}
-    </div>
-  );
+      </div>
+    </>
+  ) : null;
 });
 
 export const CollectorContainer = observer(() => {
@@ -91,9 +94,3 @@ export const CollectorContainer = observer(() => {
       ref={(domRef) => domRef && (boardUIStore.collectorContainer = domRef)}></div>
   );
 });
-
-export const WhiteboardTrackArea = () => {
-  const { boardUIStore } = useStore();
-  const { readyToMount } = boardUIStore;
-  return readyToMount ? <TrackArea boundaryName="extapp-track-bounds" /> : null;
-};

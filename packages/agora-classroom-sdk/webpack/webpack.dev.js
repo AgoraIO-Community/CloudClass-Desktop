@@ -70,7 +70,7 @@ const config = {
   },
   plugins: [
     new dotenv({
-      path: './.env.dev',
+      path: './.env',
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',

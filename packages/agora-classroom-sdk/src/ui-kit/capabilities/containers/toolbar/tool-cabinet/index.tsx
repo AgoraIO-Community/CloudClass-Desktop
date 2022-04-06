@@ -4,9 +4,9 @@ import { SvgImg, t, ToolCabinet } from '~ui-kit';
 
 export const ToolCabinetContainer = observer(() => {
   const { toolbarUIStore } = useStore();
-  const { cabinetItems, activeCabinetItem, handleCabinetItem } = toolbarUIStore;
+  const { cabinetItems, activeCabinetItems, handleCabinetItem } = toolbarUIStore;
 
-  let mappedItems = cabinetItems.map((item) => {
+  const mappedItems = cabinetItems.map((item) => {
     const { id, icon, iconType, name } = item;
     return {
       id,
@@ -22,7 +22,7 @@ export const ToolCabinetContainer = observer(() => {
       icon="tools"
       cabinetList={mappedItems}
       onClick={handleCabinetItem}
-      activeItem={activeCabinetItem}
+      activeItems={activeCabinetItems}
     />
   );
 });

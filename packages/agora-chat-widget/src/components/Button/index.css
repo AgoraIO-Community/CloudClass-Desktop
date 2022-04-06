@@ -1,4 +1,4 @@
-.btn {
+.fcr-hx-btn {
   position: relative;
   cursor: pointer;
   font-size: 1rem /* 16px */;
@@ -7,114 +7,114 @@
   overflow: hidden;
 }
 
-.btn-primary {
+.fcr-hx-btn-primary {
   color: rgba(255, 255, 255, 1);
   background-color: rgba(53, 123, 246, 1);
 }
 
-.btn-primary:hover {
+.fcr-hx-btn-primary:hover {
   background-color: rgba(99, 154, 250, 1);
 }
 
-.btn-primary:active {
+.fcr-hx-btn-primary:active {
   background-color: rgba(38, 99, 208, 1);
 }
 
-.btn-danger {
+.fcr-hx-btn-danger {
   color: rgba(222, 87, 83, 1);
   background-color: rgba(255, 255, 255, 1);
   border-color: rgba(222, 87, 83, 1);
   border-width: 1px;
 }
 
-.btn-danger:hover {
+.fcr-hx-btn-danger:hover {
   color: rgba(245, 111, 107, 1);
   border-color: rgba(245, 111, 107, 1);
 }
 
-.btn-danger:active {
+.fcr-hx-btn-danger:active {
   color: rgba(192, 38, 33, 1);
   border-color: rgba(192, 38, 33, 1);
 }
 
-.btn-secondary {
+.fcr-hx-btn-secondary {
   color: rgba(53, 123, 246, 1);
   border-color: rgba(210, 210, 226, 1);
   background-color: rgba(255, 255, 255, 1);
   border-width: 1px;
 }
 
-.btn-secondary:hover {
+.fcr-hx-btn-secondary:hover {
   background-color: rgba(255, 255, 255, 1);
   border-width: 1px;
   color: rgba(99, 154, 250, 1);
   border-color: rgba(99, 154, 250, 1);
 }
 
-.btn-secondary:active {
+.fcr-hx-btn-secondary:active {
   background-color: rgba(255, 255, 255, 1);
   border-width: 1px;
   color: rgba(38, 99, 208, 1);
   border-color: rgba(38, 99, 208, 1);
 }
 
-.btn-ghost {
+.fcr-hx-btn-ghost {
   background-color: rgba(255, 255, 255, 1);
   border-width: 1px;
   color: rgba(103, 115, 134, 1);
   border-color: rgba(210, 210, 226, 1);
 }
 
-.btn-ghost:hover {
+.fcr-hx-btn-ghost:hover {
   background-color: rgba(255, 255, 255, 1);
   border-width: 1px;
   color: rgba(99, 154, 250, 1);
   border-color: rgba(99, 154, 250, 1);
 }
 
-.btn-ghost:active {
+.fcr-hx-btn-ghost:active {
   background-color: rgba(255, 255, 255, 1);
   border-width: 1px;
   color: rgba(38, 99, 208, 1);
   border-color: rgba(38, 99, 208, 1);
 }
 
-.btn-xs {
+.fcr-hx-btn-xs {
   width: 80px;
   height: 24px;
   font-size: 12px;
 }
 
-.btn-sm {
+.fcr-hx-btn-sm {
   width: 80px;
   height: 30px;
   font-size: 14px;
 }
 
-.btn-lg {
+.fcr-hx-btn-lg {
   width: 280px;
   height: 40px;
   font-size: 16px;
 }
 
-.btn:focus {
+.fcr-hx-btn:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
-.btn[disabled] {
+.fcr-hx-btn[disabled] {
   opacity: 0.5;
   pointer-events: none;
 }
 
-.btn.btn-xs[disabled],
-.btn.btn-sm[disabled] {
+.fcr-hx-btn.fcr-hx-btn-xs[disabled],
+.fcr-hx-btn.fcr-hx-btn-sm[disabled] {
   background-color: #ffffff;
   border: 1px solid #c2c2c8;
   color: #c2c2c8;
 }
 
-.ripple {
+.fcr-hx-ripple {
   position: absolute;
   top: 0;
   left: 0;
@@ -123,7 +123,7 @@
   overflow: hidden;
 }
 
-@keyframes ripple {
+@keyframes fcr-hx-ripple {
   from {
     transform: scale(0);
     opacity: 1;
@@ -134,12 +134,12 @@
   }
 }
 
-.btn .ripple-circle {
+.fcr-hx-btn .fcr-hx-ripple-circle {
   position: absolute;
   border: 1px solid transparent;
   border-radius: 50%;
   pointer-events: none;
-  animation: ripple 0.75s 1;
+  animation: fcr-hx-ripple 0.75s 1;
   top: 50%;
   left: 50%;
 }

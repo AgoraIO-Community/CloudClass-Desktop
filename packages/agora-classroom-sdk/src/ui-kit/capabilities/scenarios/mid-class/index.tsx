@@ -4,7 +4,6 @@ import classnames from 'classnames';
 import { NavigationBarContainer } from '~containers/nav';
 import { DialogContainer } from '~containers/dialog';
 import { LoadingContainer } from '~containers/loading';
-import { ScreenShareContainer } from '~containers/screen-share';
 import Room from '../room';
 import { RoomMidStreamsContainer } from '~containers/stream/room-mid-player';
 import { CollectorContainer } from '~containers/board';
@@ -14,9 +13,9 @@ import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import { ExtensionAppContainer } from '~containers/extension-app-container';
 import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
-import { MidRosterBtn } from '~containers/roster';
 import { SceneSwitch } from '~containers/scene-switch';
 import { Award } from '../../containers/award';
+import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 
 export const MidClassScenario = observer(() => {
   // layout
@@ -29,13 +28,12 @@ export const MidClassScenario = observer(() => {
           <Layout className={layoutCls} direction="col">
             <NavigationBarContainer />
             <RoomMidStreamsContainer />
-            <WhiteboardContainer>
-              <ScreenShareContainer />
-            </WhiteboardContainer>
+            <BigWidgetWindowContainer>
+              <WhiteboardContainer></WhiteboardContainer>
+            </BigWidgetWindowContainer>
             <Aside className="aisde-fixed">
               <CollectorContainer />
               <HandsUpContainer />
-              <MidRosterBtn />
               <ChatWidgetPC />
             </Aside>
             <DialogContainer />

@@ -3,11 +3,11 @@ import {
   ChatEvent,
   ChatListType,
   Conversation,
-  EduClassroomConfig,
   EduClassroomUIStore,
   EduRoomTypeEnum,
   IAgoraWidget,
   MessageItem,
+  EduClassroomConfig,
 } from 'agora-edu-core';
 import classnames from 'classnames';
 import { reaction } from 'mobx';
@@ -19,12 +19,11 @@ import { Context } from './chatContext';
 import { WidgetChatUIStore } from './chatStore';
 
 const App = observer(() => {
-  const defaultMinimize =
-    EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass;
   const chatContext = useContext(Context);
   const uiStore = chatContext.uiStore as EduClassroomUIStore;
   const widgetStore = chatContext.widgetStore as WidgetChatUIStore;
   const loading = uiStore.layoutUIStore.loading;
+  const defaultMinimize = widgetStore.minimize;
 
   const {
     roomChatMessages: messageList,
@@ -51,7 +50,7 @@ const App = observer(() => {
   useEffect(() => {
     if (loading) return;
     refreshMessageList();
-    if (EduClassroomConfig.shared.sessionInfo.role === 1) {
+    if (widgetStore.classroomConfig.sessionInfo.role === 1) {
       // refresh conv list for teacher
       refreshConversationList();
     }
@@ -61,8 +60,8 @@ const App = observer(() => {
     <div
       id="netless-white"
       style={{ display: 'flex', width: '100%', height: '100%' }}
-      className={`rtm-chat rtm-chat-${EduClassroomConfig.shared.sessionInfo.roomType}`}>
-      {EduClassroomConfig.shared.sessionInfo.roomType === 0 ? (
+      className={`rtm-chat rtm-chat-${widgetStore.classroomConfig.sessionInfo.roomType}`}>
+      {widgetStore.classroomConfig.sessionInfo.roomType === 0 ? (
         // display simple chat for 1v1
         <SimpleChatNew
           className="simple-chat"
@@ -70,7 +69,7 @@ const App = observer(() => {
           onCanChattingChange={onCanChattingChange}
           canChatting={canChatting}
           isHost={isHost}
-          uid={EduClassroomConfig.shared.sessionInfo.userUuid}
+          uid={widgetStore.classroomConfig.sessionInfo.userUuid}
           messages={messageList.map((message: MessageItem) => message.toMessage())}
           onCollapse={() => {
             toggleChatMinimize();
@@ -91,7 +90,7 @@ const App = observer(() => {
           onCanChattingChange={onCanChattingChange}
           canChatting={canChatting}
           isHost={isHost}
-          uid={EduClassroomConfig.shared.sessionInfo.userUuid}
+          uid={widgetStore.classroomConfig.sessionInfo.userUuid}
           messages={widgetStore.convertedMessageList}
           unReadMessageCount={unReadCount}
           unreadConversationCountFn={unreadConversationCountFn}
@@ -115,7 +114,7 @@ const App = observer(() => {
           }}
           unreadCount={unreadMessageCount}
           singleConversation={
-            EduClassroomConfig.shared.sessionInfo.role === 2 ? conversationList[0] : undefined
+            widgetStore.classroomConfig.sessionInfo.role === 2 ? conversationList[0] : undefined
           }
           conversations={conversationList}
           configUI={configUI}
@@ -128,10 +127,10 @@ const App = observer(() => {
 export class AgoraChatWidget implements IAgoraWidget {
   widgetId = 'io.agora.widget.chat';
 
-  constructor() {}
+  constructor(private _classroomConfig: EduClassroomConfig) {}
 
   widgetDidLoad(dom: Element, props: any): void {
-    const widgetStore = new WidgetChatUIStore(props.uiStore);
+    const widgetStore = new WidgetChatUIStore(props.uiStore, this._classroomConfig);
     ReactDOM.render(
       <Context.Provider value={{ uiStore: props.uiStore, widgetStore }}>
         <I18nProvider language={props.language}>

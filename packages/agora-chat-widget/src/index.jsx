@@ -19,9 +19,9 @@ export const HXChatRoom = ({ pluginStore }) => {
   const chatStore = React.useMemo(() => (store = createStore()), []);
 
   const chatAPIs = React.useMemo(() => {
-    const chatHistoryAPI = new ChatHistoryAPI(chatStore);
     const loginAPI = new LoginAPI(chatStore);
     const messageAPI = new MessageAPI(chatStore);
+    const chatHistoryAPI = new ChatHistoryAPI(chatStore, messageAPI);
     const muteAPI = new MuteAPI(chatStore, messageAPI);
     const userInfoAPI = new UserInfoAPI(chatStore);
     const chatRoomAPI = new ChatRoomAPI(chatStore, chatHistoryAPI, muteAPI, userInfoAPI);

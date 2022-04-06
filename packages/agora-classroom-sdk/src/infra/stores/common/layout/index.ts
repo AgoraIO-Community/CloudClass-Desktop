@@ -7,6 +7,26 @@ export class LayoutUIStore extends EduUIStoreBase {
   @observable
   awardAnims: { id: string }[] = [];
 
+  @computed
+  get isInSubRoom() {
+    return !!this.classroomStore.groupStore.currentSubRoom;
+  }
+
+  /**
+   * 所在房间名称
+   */
+  @computed
+  get currentSubRoomName() {
+    let groupName = null;
+    const { currentSubRoom, groupDetails } = this.classroomStore.groupStore;
+    if (currentSubRoom) {
+      const group = groupDetails.get(currentSubRoom);
+
+      groupName = group?.groupName;
+    }
+    return groupName;
+  }
+
   onInstall(): void {
     EduEventCenter.shared.onClassroomEvents((event) => {
       if (event === AgoraEduClassroomEvent.BatchRewardReceived) {

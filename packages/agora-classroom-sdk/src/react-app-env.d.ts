@@ -123,6 +123,10 @@ declare module 'agora-plugin-gallery' {
 }
 
 declare module 'agora-widget-gallery' {
-  declare class AgoraHXChatWidget {}
-  declare class AgoraChatWidget {}
+  declare class AgoraHXChatWidget {
+    constructor(classroomConfig: unknown) {}
+  }
+  declare class AgoraChatWidget {
+    constructor(classroomConfig: unknown) {}
+  }
 }

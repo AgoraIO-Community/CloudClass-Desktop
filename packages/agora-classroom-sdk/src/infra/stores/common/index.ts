@@ -15,7 +15,13 @@ import { ExtensionAppUIStore } from './ext-app';
 import { destoryI18n, transI18n } from './i18n';
 import { NotificationUIStore } from './notification-ui';
 import { PretestUIStore } from './pretest';
-import { AGServiceErrorCode, EduClassroomStore, LeaveReason } from 'agora-edu-core';
+import {
+  AGServiceErrorCode,
+  EduClassroomConfig,
+  EduClassroomStore,
+  EduRoleTypeEnum,
+  LeaveReason,
+} from 'agora-edu-core';
 import { WidgetUIStore } from './widget-ui';
 import { GroupUIStore } from './group-ui';
 
@@ -151,30 +157,44 @@ export class EduClassroomUIStore {
   /**
    * 加入 RTC 频道
    */
-  join() {
-    const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
-
-    joinClassroom()
-      .then(() => {
-        joinRTC().catch((e) => {
-          this.shareUIStore.addGenericErrorDialog(e as AGError);
-        });
-      })
-      .catch((e) => {
-        if (AGError.isOf(e, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
-          this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
-        } else {
-          this.classroomStore.connectionStore.leaveClassroomUntil(
-            LeaveReason.leave,
-            new Promise((resolve) => {
-              this.shareUIStore.addGenericErrorDialog(e as AGError, {
-                onOK: resolve,
-                okBtnText: transI18n('toast.leave_room'),
-              });
-            }),
-          );
-        }
-      });
+  async join() {
+    const { joinClassroom, joinRTC, enableDualStream } = this.classroomStore.connectionStore;
+    try {
+      await joinClassroom();
+    } catch (e) {
+      if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
+        return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
+      } else {
+        return this.classroomStore.connectionStore.leaveClassroomUntil(
+          LeaveReason.leave,
+          new Promise((resolve) => {
+            this.shareUIStore.addGenericErrorDialog(e as AGError, {
+              onOK: resolve,
+              okBtnText: transI18n('toast.leave_room'),
+            });
+          }),
+        );
+      }
+    }
+    try {
+      await joinRTC();
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+    if (this._boardUIStore.isTeacherOrAssistant) {
+      try {
+        await enableDualStream(true);
+        EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher &&
+          (await this.classroomStore.connectionStore.setLowStreamParameter({
+            width: 160,
+            height: 120,
+            framerate: 15,
+            bitrate: 100,
+          }));
+      } catch (e) {
+        this.shareUIStore.addGenericErrorDialog(e as AGError);
+      }
+    }
   }
 
   /**

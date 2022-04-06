@@ -1,3 +1,4 @@
+import { LowStreamParameter, RemoteStreamType, UID } from 'agora-rtc-sdk-ng';
 import { ChannelProfile, ClientRole } from '../../../type';
 import { AgoraRteAudioSourceType, AgoraRteVideoSourceType } from '../../media/track';
 import { AGEventEmitter } from '../../utils/events';
@@ -9,6 +10,7 @@ import {
   AGScreenShareDevice,
   AGScreenShareType,
   BeautyEffect,
+  FcrAudioRawDataConfig,
   NetworkStats,
   RtcState,
 } from '../type';
@@ -59,6 +61,7 @@ export abstract class RtcAudioDeviceManagerBase extends AGEventEmitter {
   abstract onLocalAudioPlaybackTestVolumeChanged(
     cb: LocalAudioPlaybackVolumeIndicatorEvent,
   ): number;
+  abstract onAudioFrame(cb: (buffer: ArrayBuffer) => void): number;
 }
 
 export abstract class RtcChannelAdapterBase extends AGEventEmitter {
@@ -69,6 +72,16 @@ export abstract class RtcChannelAdapterBase extends AGEventEmitter {
   ): Promise<void>;
   abstract getSessionId(): string;
   abstract leave(connectionType?: AGRtcConnectionType): Promise<void>;
+  abstract enableDualStream(enable: boolean, connectionType?: AGRtcConnectionType): Promise<void>;
+  abstract setLowStreamParameter(
+    streamParameter: LowStreamParameter,
+    connectionType?: AGRtcConnectionType,
+  ): number;
+  abstract setRemoteVideoStreamType(
+    uid: UID,
+    streamType: RemoteStreamType,
+    connectionType: AGRtcConnectionType,
+  ): Promise<void>;
   abstract muteLocalVideo(mute: boolean, connectionType: AGRtcConnectionType): number;
   abstract muteLocalAudio(mute: boolean, connectionType: AGRtcConnectionType): number;
   abstract muteLocalScreenShare(mute: boolean, connectionType: AGRtcConnectionType): number;
@@ -114,6 +127,9 @@ export abstract class RtcAdapterBase extends AGEventEmitter {
   abstract onLocalScreenShareTrackStateChanged(cb: LocalVideoTrackStateEvent): number;
   abstract destroy(): number;
   abstract setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number;
+  abstract setAudioRawDataConfig(config: FcrAudioRawDataConfig): number;
+  abstract setAudioFrameCallback(): number;
+  abstract stopAudioFrameCallback(): number;
   static getRtcVersion(): string {
     return '';
   }

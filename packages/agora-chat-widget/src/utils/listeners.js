@@ -60,7 +60,8 @@ export const createListener = (store) => {
       onTextMessage: (message) => {
         console.log('onTextMessage>>>', message);
         if (new_IM_Data.chatroomId === message.to) {
-          store.dispatch(messageAction(message, { isHistory: false }));
+          const newMessage = apis.messageAPI.convertCustomMessage(message);
+          store.dispatch(messageAction(newMessage, { isHistory: false }));
           const showChat = store.getState().showChat;
           const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
           store.dispatch(showRedNotification(isShowRed));

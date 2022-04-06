@@ -3,10 +3,18 @@
   height: 373px;
   padding-bottom: 0;
   --text-color: #586376;
-  --link-color: #357bf6;
+  --link-hover-bg-color: #e8f0ff;
   --link-active-color: #191919;
   --link-active-bg-color: #c7d3ed;
+  --link-hl-color: #357bf6;
   color: var(--text-color);
+  font-size: 12px;
+}
+
+.breakout-room-tree {
+  --text-color: #586376;
+  color: var(--text-color);
+  font-size: 12px;
 }
 
 .breakout-room .outline-box {
@@ -30,18 +38,13 @@
   @apply rounded !important;
 }
 
-.breakout-room .btn-secondary {
+.breakout-room .fcr-btn-secondary {
   color: var(--text-color);
 }
 
-.breakout-room .suffix-link {
-  font-size: 12px;
-  color: var(--link-color);
-}
-
-.breakout-room .suffix-link.active {
-  background: var(--link-active-bg-color);
-  color: var(--link-active-color);
+.breakout-room .active-bg {
+  background: var(--link-active-bg-color) !important;
+  color: var(--link-active-color) !important;
 }
 
 /** overwrite popover's default style */
@@ -64,12 +67,22 @@
 .breakout-room-group-panel .fcr-tree-node:hover {
   background: #f9f9fc;
 }
-
+.breakout-room .link-width {
+  width: 60px;
+}
 .breakout-room .link-btn {
   border-radius: 2px;
+  color: var(--text-color);
+  width: 60px;
 }
 
 .breakout-room .link-btn:hover {
-  background: var(--link-active-bg-color);
-  color: var(--link-active-color);
+  background: var(--link-hover-bg-color);
+}
+.breakout-room .fcr-tree-node {
+  color: var(--text-color);
+}
+
+.breakout-room .hl-text {
+  color: var(--link-hl-color) !important;
 }

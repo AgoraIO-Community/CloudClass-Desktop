@@ -13,9 +13,10 @@ export {
   CloudDriveUploadingProgress,
 } from './common/cloud-drive/struct';
 export type { CloudDrivePagingOption } from './common/cloud-drive/type';
+export { CloudDriveResourceUploadStatus } from './common/cloud-drive/type';
 export { EduStream } from './common/stream/struct';
 export { escapeExtAppIdentifier } from './common/room/command-handler';
-export { LeaveReason } from './common/connection';
+export { LeaveReason, SceneType } from './common/connection';
 export { ClassState, RecordStatus } from './common/room/type';
 
 export type { ChatEvent, ChatListType, IConversation, Conversation } from './common/message/type';

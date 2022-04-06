@@ -29,7 +29,7 @@
 
 - Make sure you have made the preparations mentioned in the [Agora e-Education Guide](../README.md#prerequisites).
 - Set up your Alibaba Cloud OSS Guide. For details, see [Alibaba Cloud OSS Guide](https://github.com/AgoraIO-Usecase/eEducation/wiki/Alibaba-Cloud-OSS-Guide).
-- Rename `.env.example` to `.env.dev` and configure the following parameters:
+- Rename `.env.example` to `.env` and configure the following parameters:
 
   - **(Required) The Agora App ID that you get**
 

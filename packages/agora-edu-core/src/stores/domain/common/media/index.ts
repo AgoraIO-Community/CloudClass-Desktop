@@ -14,15 +14,17 @@ import {
   lighteningLevel,
   Log,
   AGRteTrackErrorReason,
+  FcrAudioRawDataConfig,
 } from 'agora-rte-sdk';
 import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
 import { AgoraEduClassroomEvent, ClassroomState } from '../../../../type';
 import { EduClassroomConfig, EduEventCenter } from '../../../..';
 import { AGEduErrorCode, EduErrorCenter } from '../../../../utils/error';
 import { EduStoreBase } from '../base';
-import { trace } from 'mobx';
 
 export const DEVICE_DISABLE = 'DEVICE_DISABLE';
+
+type pcmFunc = (buffer: AudioBuffer) => void;
 
 @Log.attach({ proxyMethods: false })
 export class MediaStore extends EduStoreBase {
@@ -84,6 +86,13 @@ export class MediaStore extends EduStoreBase {
     smoothnessLevel: 0.5,
   };
 
+  @observable audioRawDataConfig: FcrAudioRawDataConfig = {
+    frameSize: 1024,
+  };
+
+  @observable
+  pcmListeners: pcmFunc[] = [];
+
   private _previousCameraId?: string;
   private _previousRecordingId?: string;
 
@@ -111,6 +120,21 @@ export class MediaStore extends EduStoreBase {
   @action
   setBeauty = (v: boolean) => {
     this.isBeauty = v;
+  };
+
+  @action
+  setAudioRawDataConfig = (config: FcrAudioRawDataConfig) => {
+    this.audioRawDataConfig = config;
+  };
+
+  @action
+  addRawDataListener = (cb: pcmFunc) => {
+    this.pcmListeners = [...this.pcmListeners, cb];
+  };
+
+  @action
+  removeRawDataListener = (cb: pcmFunc) => {
+    this.pcmListeners = this.pcmListeners.filter((cbs) => cbs !== cb);
   };
 
   setupLocalVideo = (dom: HTMLElement, mirror: boolean) => {
@@ -236,6 +260,7 @@ export class MediaStore extends EduStoreBase {
   setPlaybackDevice = (id: string) => {
     this.playbackDeviceId = id;
   };
+
   @action
   setBeautyEffect = (options: BeautyEffect) => {
     this.beautyEffectOptions = options;
@@ -364,6 +389,12 @@ export class MediaStore extends EduStoreBase {
               });
             },
           );
+
+          mediaControl.on(AgoraMediaControlEventType.localAudioFrame, (buffer: AudioBuffer) => {
+            this.pcmListeners.forEach((cb: (buffer: AudioBuffer) => void) => {
+              cb(buffer);
+            });
+          });
 
           this._disposers.add(
             autorun(() => {
@@ -495,8 +526,12 @@ export class MediaStore extends EduStoreBase {
             }
           }
         } else {
-          // initailize, pick the first device
-          newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+          if (EduClassroomConfig.shared.openCameraDeviceAfterLaunch) {
+            // initailize, pick the first device
+            newValue.length > 0 && this.setCameraDevice(newValue[0].deviceid);
+          } else {
+            this.setCameraDevice(DEVICE_DISABLE);
+          }
         }
       },
     );
@@ -518,8 +553,12 @@ export class MediaStore extends EduStoreBase {
             }
           }
         } else {
-          // initailize, pick the first device
-          newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+          if (EduClassroomConfig.shared.openRecordingDeviceAfterLaunch) {
+            // initailize, pick the first device
+            newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+          } else {
+            this.setRecordingDevice(DEVICE_DISABLE);
+          }
         }
       },
     );
@@ -585,6 +624,26 @@ export class MediaStore extends EduStoreBase {
             roomUuid,
             data: { mic: deviceStateConvertionMap[this.localMicTrackState] },
           });
+      },
+    );
+
+    reaction(
+      () => this.pcmListeners.map((v) => v),
+      () => {},
+      {
+        equals: (preListeners: pcmFunc[], currentListeners: pcmFunc[]) => {
+          const preCount = preListeners.length,
+            currentCount = currentListeners.length;
+          if (preCount && !currentCount) {
+            this.mediaControl.stopAudioFrameCallback();
+            return false;
+          }
+          if (!preCount && currentCount) {
+            this.mediaControl.setAudioFrameCallback();
+            return false;
+          }
+          return false;
+        },
       },
     );
   }

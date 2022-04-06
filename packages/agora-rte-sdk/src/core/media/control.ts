@@ -5,7 +5,7 @@ import {
   AgoraRteMicrophoneAudioTrack,
   AgoraRteScreenShareTrack,
 } from './track';
-import { AGRtcDeviceInfo, AGScreenShareDevice, BeautyEffect } from '../../';
+import { AGRtcDeviceInfo, AGScreenShareDevice, BeautyEffect, FcrAudioRawDataConfig } from '../../';
 
 export enum AgoraMediaControlEventType {
   cameraListChanged = 'camera-list-changed',
@@ -18,6 +18,7 @@ export enum AgoraMediaControlEventType {
   recordingDeviceListChanged = 'recording-device-list-changed',
   localAudioPlaybackVolumeIndicator = 'start-test-audio-playback-volume-indicator',
   audioPlaybackStateChanged = 'audio-playback-state-changed',
+  localAudioFrame = 'local-audio-frame',
 }
 
 export class AgoraMediaControl extends AGEventEmitter {
@@ -60,6 +61,10 @@ export class AgoraMediaControl extends AGEventEmitter {
     // 本地扬声器音量变化
     rtc.getAudioDeviceManager().onLocalAudioPlaybackTestVolumeChanged((volume) => {
       this.emit(AgoraMediaControlEventType.localAudioPlaybackVolumeIndicator, volume);
+    });
+    // 本地原始音频数据（PCM）
+    rtc.getAudioDeviceManager().onAudioFrame((buffer) => {
+      this.emit(AgoraMediaControlEventType.localAudioFrame, buffer);
     });
     // local screenshare
     rtc.onLocalScreenShareTrackStateChanged((...args: any[]) => {
@@ -131,7 +136,20 @@ export class AgoraMediaControl extends AGEventEmitter {
   stopAudioPlaybackDeviceTest() {
     return this._rtc.stopAudioPlaybackDeviceTest();
   }
+
+  setAudioFrameCallback() {
+    return this._rtc.setAudioFrameCallback();
+  }
+
+  stopAudioFrameCallback() {
+    return this._rtc.stopAudioFrameCallback();
+  }
+
   setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
     return this._rtc.setBeautyEffectOptions(enable, options);
+  }
+
+  setAudioRawDataConfig(config: FcrAudioRawDataConfig): number {
+    return this._rtc.setAudioRawDataConfig(config);
   }
 }

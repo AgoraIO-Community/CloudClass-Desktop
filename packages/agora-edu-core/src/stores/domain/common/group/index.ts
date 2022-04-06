@@ -53,6 +53,7 @@ export class GroupStore extends EduStoreBase {
   static readonly CMD_PROCESS_PREFIX = 'groups-';
 
   private _currentGroupUuid?: string;
+  private _inviting = false;
 
   @observable
   state: GroupState = GroupState.CLOSE;
@@ -103,6 +104,7 @@ export class GroupStore extends EduStoreBase {
           }[]) || [];
         const accepted = (data.addAccepted as { userUuid: string }[]) || [];
         const actionType = data.actionType as number;
+        const removeProgress = (data.removeProgress as { userUuid: string }[]) || [];
         const { userUuid: localUuid } = EduClassroomConfig.shared.sessionInfo;
 
         const invitedLocal = progress.find(({ userUuid }) => userUuid === localUuid);
@@ -113,13 +115,42 @@ export class GroupStore extends EduStoreBase {
             invitedLocal.payload,
           );
         }
-
-        if (actionType === 2 && accepted?.length) {
+        // accepted
+        if (actionType === 2 && accepted.length) {
           EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.AcceptedToGroup, {
             groupUuid,
             accepted,
           });
         }
+        // reject invitation
+        if ((actionType === 3 || actionType === 7) && removeProgress.length) {
+          const inviting = this._inviting;
+          this._inviting = false;
+          EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.RejectedToGroup, {
+            groupUuid,
+            removeProgress,
+            inviting,
+          });
+        }
+      }
+      // user in out
+      if (cmd === 11 && data.actionType === 4) {
+        const groups: { groupUuid: string; addUsers: []; removeUsers: [] }[] =
+          data.changeGroups || [];
+        groups.forEach(({ groupUuid, addUsers, removeUsers }) => {
+          if (addUsers.length) {
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.UserJoinGroup, {
+              groupUuid,
+              users: addUsers.map(({ userUuid }) => userUuid),
+            });
+          }
+          if (removeUsers.length) {
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.UserLeaveGroup, {
+              groupUuid,
+              users: removeUsers.map(({ userUuid }) => userUuid),
+            });
+          }
+        });
       }
     }
   }
@@ -265,6 +296,9 @@ export class GroupStore extends EduStoreBase {
   async updateGroupUsers(patches: PatchGroup[], sendInvitation: boolean = false) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.updateGroupUsers(roomUuid, { groups: patches, inProgress: sendInvitation });
+    if (sendInvitation) {
+      this._inviting = true;
+    }
   }
 
   /**
@@ -302,6 +336,12 @@ export class GroupStore extends EduStoreBase {
   async acceptGroupInvited(groupUuid: string) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
     await this.api.acceptGroupInvited(roomUuid, groupUuid);
+  }
+
+  @bound
+  async rejectGroupInvited(groupUuid: string) {
+    const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
+    await this.api.rejectGroupInvited(roomUuid, groupUuid);
   }
 
   /**
@@ -380,6 +420,13 @@ export class GroupStore extends EduStoreBase {
         this.moveIntoSubRoom(operation.fromGroupUuid!, operation.toGroupUuid!);
         break;
     }
+  }
+
+  /**
+   * 是否发送邀请
+   */
+  get inviting() {
+    return this._inviting;
   }
 
   /**

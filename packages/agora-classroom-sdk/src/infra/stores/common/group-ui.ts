@@ -1,6 +1,5 @@
 import {
   AgoraEduClassroomEvent,
-  ClassroomState,
   EduClassroomConfig,
   EduEventCenter,
   EduRoleTypeEnum,
@@ -9,6 +8,7 @@ import {
   PatchGroup,
   WhiteboardState,
   WhiteboardTool,
+  SceneType,
 } from 'agora-edu-core';
 import { AGError, AGRtcConnectionType, bound, Log, RtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
@@ -16,7 +16,6 @@ import { action, computed, observable, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import uuidv4 from 'uuid';
-import { SceneType } from '../../../../../agora-edu-core/src/stores/domain/common/connection';
 
 export enum GroupMethod {
   AUTO,
@@ -33,6 +32,7 @@ export class GroupUIStore extends EduUIStoreBase {
   localGroups: Map<string, GroupDetail> = new Map();
 
   private _groupNum = 0;
+  private _dialogsMap = new Map();
 
   MAX_USER_COUNT = 15; // 学生最大15人
 
@@ -292,11 +292,22 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @action.bound
   removeGroup(groupUuid: string) {
-    if (this.groupState === GroupState.OPEN) {
-      this.classroomStore.groupStore.removeGroups([groupUuid]);
-    } else {
-      this.localGroups.delete(groupUuid);
-    }
+    const group = this.groupDetails.get(groupUuid);
+    this.shareUIStore.addConfirmDialog(
+      transI18n('breakout_room.confirm_delete_group_title'),
+      transI18n('breakout_room.confirm_delete_group_content', {
+        reason: group?.groupName,
+      }),
+      {
+        onOK: () => {
+          if (this.groupState === GroupState.OPEN) {
+            this.classroomStore.groupStore.removeGroups([groupUuid]);
+          } else {
+            this.localGroups.delete(groupUuid);
+          }
+        },
+      },
+    );
   }
 
   /**
@@ -308,7 +319,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @action.bound
   moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string) {
     if (this.groupState === GroupState.OPEN) {
-      let toUsersLength =
+      const toUsersLength =
         this.classroomStore.groupStore.groupDetails.get(toGroupUuid)?.users.length;
       if (toUsersLength && toUsersLength >= this.MAX_USER_COUNT) {
         this.toastFullOfStudents();
@@ -406,24 +417,29 @@ export class GroupUIStore extends EduUIStoreBase {
   startGroup() {
     const groupDetails: GroupDetail[] = [];
 
+    if (!this.localGroups.size) {
+      this.shareUIStore.addToast(transI18n('toast.start_group'));
+      return Promise.resolve();
+    }
+
     this.localGroups.forEach((group) => {
       groupDetails.push({
         groupName: group.groupName,
         users: group.users,
       });
     });
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.classroomStore.groupStore
         .startGroup(groupDetails)
         .then(() => {
           runInAction(() => {
             this.localGroups = new Map();
           });
-          resolve('');
+          resolve();
         })
         .catch((e) => {
           this.shareUIStore.addGenericErrorDialog(e as AGError);
-          reject('');
+          reject();
         });
     });
   }
@@ -432,16 +448,22 @@ export class GroupUIStore extends EduUIStoreBase {
    * 结束分组
    */
   @bound
-  stopGroup() {
-    return new Promise((resolve, reject) => {
-      this.classroomStore.groupStore
-        .stopGroup()
-        .then(() => {
-          resolve('');
-        })
-        .catch(() => {
-          reject('');
-        });
+  stopGroup(cb: () => void) {
+    return new Promise<void>((resolve, reject) => {
+      if (this.groupState === GroupState.OPEN) {
+        this.shareUIStore.addConfirmDialog(
+          transI18n('breakout_room.confirm_stop_group_title'),
+          transI18n('breakout_room.confirm_stop_group_content'),
+          {
+            onOK: () => {
+              cb();
+              this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
+            },
+          },
+        );
+      } else {
+        cb();
+      }
     });
   }
 
@@ -540,19 +562,21 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private async _waitUntilLeft() {
-    await when(
-      () =>
-        this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
-        this.classroomStore.connectionStore.rtcState === RtcState.Idle,
-    );
+    await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Idle);
+    if (this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Disconnecting) {
+      await when(
+        () => this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle,
+      );
+    }
   }
 
   private async _waitUntilConnected() {
-    await when(
-      () =>
-        this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected &&
-        this.classroomStore.connectionStore.rtcState === RtcState.Connected,
-    );
+    await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
+    if (this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connecting) {
+      await when(
+        () => this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected,
+      );
+    }
   }
 
   private async _waitUntilJoined() {
@@ -665,53 +689,60 @@ export class GroupUIStore extends EduUIStoreBase {
         this._joinSubRoom();
       }
       if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
-        // this.shareUIStore.addToast('Leave sub room');
         this._leaveSubRoom();
-      }
-      if (type === AgoraEduClassroomEvent.AcceptedToGroup) {
-        // this.logger.info('Accepted to group', args);
-        // this.shareUIStore.addToast('Accepted to group');
       }
 
       if (type === AgoraEduClassroomEvent.InvitedToGroup) {
         const { groupUuid, groupName, inviter = transI18n('breakout_room.student') } = args;
 
-        const title =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_title')
-            : transI18n('breakout_room.confirm_invite_student_title');
-        const content =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_content', {
-                reason1: groupName,
-                reason2: inviter,
-              })
-            : transI18n('breakout_room.confirm_invite_student_content', { reason: groupName });
+        const isTeacher = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+          EduClassroomConfig.shared.sessionInfo.role,
+        );
 
-        const ok =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_btn_ok')
-            : transI18n('breakout_room.confirm_invite_student_btn_ok');
+        const title = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_title')
+          : transI18n('breakout_room.confirm_invite_student_title');
+        const content = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_content', {
+              reason1: groupName,
+              reason2: inviter,
+            })
+          : transI18n('breakout_room.confirm_invite_student_content', { reason: groupName });
 
-        const cancel =
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-            ? transI18n('breakout_room.confirm_invite_teacher_btn_cancel')
-            : transI18n('breakout_room.confirm_invite_student_btn_cancel');
+        const ok = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_btn_ok')
+          : transI18n('breakout_room.confirm_invite_student_btn_ok');
 
-        this.shareUIStore.addConfirmDialog(
-          title,
-          content,
-          () => {
+        const cancel = isTeacher
+          ? transI18n('breakout_room.confirm_invite_teacher_btn_cancel')
+          : transI18n('breakout_room.confirm_invite_student_btn_cancel');
+
+        const dialogId = this.shareUIStore.addConfirmDialog(title, content, {
+          onOK: () => {
             this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
           },
-          ['ok', 'cancel'],
-          () => {},
-          {
+          onCancel: () => {
+            this.classroomStore.groupStore.rejectGroupInvited(groupUuid);
+          },
+          actions: ['ok', 'cancel'],
+          btnText: {
             ok,
             cancel,
           },
-        );
+        });
+
+        this._dialogsMap.set(groupUuid, dialogId);
       }
+
+      if (type === AgoraEduClassroomEvent.RejectedToGroup) {
+        const { groupUuid } = args;
+        const dialogId = this._dialogsMap.get(groupUuid);
+        if (dialogId) {
+          this.shareUIStore.removeDialog(dialogId);
+          this._dialogsMap.delete(groupUuid);
+        }
+      }
+
       if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
         this._changeSubRoom();
       }

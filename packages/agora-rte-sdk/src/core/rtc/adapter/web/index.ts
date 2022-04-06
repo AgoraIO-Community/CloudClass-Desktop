@@ -9,7 +9,13 @@ import {
   RtcChannelAdapterBase,
   RtcVideoDeviceManagerBase,
 } from '../base';
-import AgoraRTC, { SDK_CODEC, SDK_MODE } from 'agora-rtc-sdk-ng';
+import AgoraRTC, {
+  LowStreamParameter,
+  RemoteStreamType,
+  SDK_CODEC,
+  SDK_MODE,
+  UID,
+} from 'agora-rtc-sdk-ng';
 import {
   AgoraRteCameraThread,
   AgoraRteMicrophoneThread,
@@ -21,7 +27,13 @@ import { AgoraRteVideoSourceType } from '../../../media/track';
 import { AgoraRteWebClientMain, AgoraRteWebClientSub } from './client';
 import { AGRtcConnectionType } from '../../channel';
 import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
-import { AGScreenShareDevice, AGScreenShareType, NetworkStats, RtcState } from '../../type';
+import {
+  AGScreenShareDevice,
+  AGScreenShareType,
+  FcrAudioRawDataConfig,
+  NetworkStats,
+  RtcState,
+} from '../../type';
 import to from 'await-to-js';
 import { RtcAudioDeviceManagerWeb, RtcVideoDeviceManagerWeb } from './device';
 import { AGWebAudioPlayer } from './player';
@@ -216,8 +228,28 @@ export class RtcAdapterWeb extends RtcAdapterBase {
     return 0;
   }
 
+  onAudioFrame(cb: (buffer: ArrayBuffer) => void): number {
+    this.micThread.on(AgoraMediaControlEventType.localAudioFrame, cb);
+    return 0;
+  }
+
   setBeautyEffectOptions(enable: boolean, options: object): number {
     this.logger.warn(`web platform does not support this`);
+    return 0;
+  }
+
+  setAudioFrameCallback(): number {
+    this.micThread.setAudioFrameCallback();
+    return 0;
+  }
+
+  stopAudioFrameCallback(): number {
+    this.micThread.stopAudioFrameCallback();
+    return 0;
+  }
+
+  setAudioRawDataConfig(config: FcrAudioRawDataConfig): number {
+    this.micThread.setAudioRawDataConfig(config);
     return 0;
   }
 
@@ -300,7 +332,23 @@ export class RtcChannelAdapterWeb extends RtcChannelAdapterBase {
         );
     }
   }
-
+  enableDualStream(enable: boolean, connectionType: AGRtcConnectionType) {
+    return this.client(connectionType).enableDualStream(enable);
+  }
+  setLowStreamParameter(
+    streamParameter: LowStreamParameter,
+    connectionType: AGRtcConnectionType,
+  ): number {
+    this.client(connectionType).setLowStreamParameter(streamParameter);
+    return 0;
+  }
+  setRemoteVideoStreamType(
+    uid: UID,
+    streamType: RemoteStreamType,
+    connectionType: AGRtcConnectionType,
+  ): Promise<void> {
+    return this.client(connectionType).setRemoteVideoStreamType(uid, streamType);
+  }
   setClientRole(role: ClientRole): number {
     return 0;
   }

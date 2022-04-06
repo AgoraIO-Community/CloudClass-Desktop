@@ -9,6 +9,7 @@ import {
   MimeTypesKind,
   convertAGToolToWhiteTool,
   getJoinRoomParams,
+  hexColorToWhiteboardColor,
 } from './utils';
 import {
   RoomState,
@@ -55,6 +56,7 @@ const DEFAULT_COLOR: Color = {
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
 
 export class BoardStore extends EduStoreBase {
+  private _defaultColors: string[] = [];
   private _disposers: (() => void)[] = [];
   // ----------  other -------------
   private _whiteBoardContainer?: HTMLElement;
@@ -182,10 +184,11 @@ export class BoardStore extends EduStoreBase {
       );
     }
   }
-
+  @action.bound
   leaveBoard = async () => {
     try {
       this.unmount();
+
       await this._room?.disconnect();
     } catch (err) {
       EduErrorCenter.shared.handleNonThrowableError(
@@ -236,7 +239,7 @@ export class BoardStore extends EduStoreBase {
         );
       });
   };
-
+  @action
   unmount = () => {
     this._windowManager?.destroy();
     this.setWindowManager(undefined);
@@ -247,6 +250,10 @@ export class BoardStore extends EduStoreBase {
   protected setWindowManager(windowManager?: WindowManager) {
     this._windowManager = windowManager;
     this.managerReady = !!windowManager;
+    const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
+    if (role === EduRoleTypeEnum.student) {
+      this._setLocalPermission(this.grantUsers.has(userUuid));
+    }
   }
 
   @bound
@@ -537,6 +544,8 @@ export class BoardStore extends EduStoreBase {
     });
   }
 
+  // ----------  other -------------
+
   private restoreWhiteboardMemberStateTo(room: Room) {
     if (room.isWritable) {
       room.setMemberState({
@@ -592,6 +601,10 @@ export class BoardStore extends EduStoreBase {
     this.ready = !!room;
   }
 
+  setDefaultColors(colors: string[]) {
+    this._defaultColors = colors;
+  }
+
   protected get writableRoom(): Room {
     if (!this.room.isWritable) {
       return EduErrorCenter.shared.handleThrowableError(
@@ -645,7 +658,9 @@ export class BoardStore extends EduStoreBase {
         cursorName: sessionInfo?.userName,
         disappearCursor: true, // this.appStore.roomStore.isAssistant
       },
-      floatBar: true,
+      floatBar: {
+        colors: this._defaultColors.map((color) => hexColorToWhiteboardColor(color)),
+      },
       isAssistant: true, // this.appStore.roomStore.isAssistant
       disableNewPencil: true,
       wrappedComponents: [],
@@ -664,6 +679,31 @@ export class BoardStore extends EduStoreBase {
       );
     }
     return room;
+  }
+
+  private async _setLocalPermission(granted: boolean) {
+    try {
+      if (!this.managerReady) {
+        return;
+      }
+      if (granted) {
+        //granted
+        await this.room.setWritable(true);
+        this.room.disableDeviceInputs = false;
+        this.setTool(WhiteboardTool.selector);
+        this.restoreWhiteboardMemberStateTo(this.room);
+      } else {
+        //revoked
+        this.setTool(WhiteboardTool.selector);
+        await this.room.setWritable(false);
+        this.room.disableDeviceInputs = true;
+      }
+    } catch (e) {
+      return EduErrorCenter.shared.handleNonThrowableError(
+        AGEduErrorCode.EDU_ERR_BOARD_SET_WRITABLE_FAILED,
+        e as Error,
+      );
+    }
   }
 
   @action
@@ -703,41 +743,24 @@ export class BoardStore extends EduStoreBase {
         },
       ),
     );
+
     if (sessionInfo.role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(
-        computed(() => ({
-          grantUsers: this._dataStore.grantUsers,
-          ready: this.managerReady,
-        })).observe(async ({ newValue, oldValue }) => {
-          const { grantUsers: newGranted, ready } = newValue;
-          const oldGranted = oldValue?.grantUsers;
-          if (!ready) {
-            return;
+        computed(() => this._dataStore.grantUsers).observe(async ({ newValue, oldValue }) => {
+          const oldGranted = oldValue;
+          const newGranted = newValue;
+
+          if (newGranted.has(sessionInfo.userUuid) && !oldGranted?.has(sessionInfo.userUuid)) {
+            await this._setLocalPermission(true);
+
+            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.TeacherGrantPermission);
           }
-          try {
-            if (newGranted.has(sessionInfo.userUuid) && !oldGranted?.has(sessionInfo.userUuid)) {
-              //granted
-              await this.room.setWritable(true);
-              this.room.disableDeviceInputs = false;
-              this.setTool(WhiteboardTool.selector);
-              this.restoreWhiteboardMemberStateTo(this.room);
-              EduEventCenter.shared.emitClasroomEvents(
-                AgoraEduClassroomEvent.TeacherGrantPermission,
-              );
-            }
-            if (!newGranted.has(sessionInfo.userUuid) && oldGranted?.has(sessionInfo.userUuid)) {
-              //revoked
-              await this.room.setWritable(false);
-              this.room.disableDeviceInputs = true;
-              EduEventCenter.shared.emitClasroomEvents(
-                AgoraEduClassroomEvent.TeacherRevokePermission,
-              );
-            }
-          } catch (e) {
-            return EduErrorCenter.shared.handleNonThrowableError(
-              AGEduErrorCode.EDU_ERR_BOARD_SET_WRITABLE_FAILED,
-              e as Error,
+          if (!newGranted.has(sessionInfo.userUuid) && oldGranted?.has(sessionInfo.userUuid)) {
+            await this._setLocalPermission(false);
+
+            EduEventCenter.shared.emitClasroomEvents(
+              AgoraEduClassroomEvent.TeacherRevokePermission,
             );
           }
         }),
@@ -819,18 +842,23 @@ class SceneEventHandler {
   private _handleRoomPropertiesChange(changedRoomProperties: string[], roomProperties: any) {
     changedRoomProperties.forEach((key) => {
       if (key === 'widgets') {
-        const configs = get(roomProperties, 'widgets.netlessBoard.extra');
+        const extensionProperties = get(roomProperties, `widgets`, {});
+        const whiteboardProperties = get(extensionProperties, 'netlessBoard');
+        if (whiteboardProperties) {
+          const whiteboardState = get(whiteboardProperties, 'state');
 
-        if (configs) {
-          const { boardAppId, boardId, boardRegion, boardToken } = configs;
-
-          this.dataStore.whiteboardConfig = {
-            boardAppId,
-            boardId,
-            boardRegion,
-            boardToken,
-          };
-          this.dataStore.configReady = true;
+          if (whiteboardState === 1) {
+            const whiteBoardConfig = get(whiteboardProperties, 'extra');
+            if (!this.dataStore.configReady && whiteBoardConfig) {
+              this.dataStore.whiteboardConfig = whiteBoardConfig;
+              this.dataStore.configReady = true;
+            }
+          } else {
+            if (this.dataStore.configReady) {
+              this.dataStore.whiteboardConfig = undefined;
+              this.dataStore.configReady = false;
+            }
+          }
         }
       }
     });

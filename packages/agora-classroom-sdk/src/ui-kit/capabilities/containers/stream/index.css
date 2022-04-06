@@ -9,7 +9,10 @@
   flex-shrink: 0;
   margin: 2px 2px 2px 0;
 }
-
+.video-player-fullscreen {
+  width: 100%;
+  height: 100%;
+}
 .video-player-overlay {
   position: relative;
 }

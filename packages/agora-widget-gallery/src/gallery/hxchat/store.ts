@@ -1,6 +1,7 @@
 import { action, autorun, computed, observable, reaction, runInAction } from 'mobx';
-import { EduClassroomConfig, EduRoomTypeEnum, UUAparser } from 'agora-edu-core';
-import { EduClassroomUIStore } from 'agora-classroom-sdk';
+import { EduRoomTypeEnum, UUAparser, EduClassroomConfig } from 'agora-edu-core';
+
+type EduClassroomUIStore = any;
 
 enum orientationEnum {
   portrait = 'portrait',
@@ -22,7 +23,7 @@ export class WidgetChatUIStore {
   @observable
   showChat: boolean = false;
 
-  constructor(coreStore: EduClassroomUIStore) {
+  constructor(coreStore: EduClassroomUIStore, private _classroomConfig: EduClassroomConfig) {
     runInAction(() => {
       this.coreStore = coreStore;
     });
@@ -30,14 +31,14 @@ export class WidgetChatUIStore {
     autorun(() => {
       let isFullSize = false;
       if (
-        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
+        _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
         UUAparser.mobileBrowser
       ) {
         isFullSize = this.orientation === 'portrait' ? false : true;
       } else {
         isFullSize =
-          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass ||
-          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class;
+          _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass ||
+          _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class;
       }
       runInAction(() => (this.isFullSize = isFullSize));
     });
@@ -45,19 +46,23 @@ export class WidgetChatUIStore {
     autorun(() => {
       let isShowChat = false;
       if (
-        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
+        _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
         UUAparser.mobileBrowser
       ) {
         isShowChat = this.orientation === 'portrait' ? false : true;
       } else if (
         [EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomBigClass].includes(
-          EduClassroomConfig.shared.sessionInfo.roomType,
+          _classroomConfig.sessionInfo.roomType,
         )
       ) {
         isShowChat = true;
       }
       runInAction(() => (this.showChat = isShowChat));
     });
+  }
+
+  get classroomConfig() {
+    return this._classroomConfig;
   }
 
   @action.bound

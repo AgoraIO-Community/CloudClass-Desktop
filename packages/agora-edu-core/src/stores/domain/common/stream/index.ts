@@ -15,6 +15,8 @@ import {
   bound,
   Logger,
   RtcState,
+  AgoraRteRemoteStreamType,
+  AgoraRteStreamUID,
   Log,
   Injectable,
 } from 'agora-rte-sdk';
@@ -123,9 +125,22 @@ export class StreamStore extends EduStoreBase {
   }
 
   //others
-  setupLocalVideo = (stream: EduStream, dom: HTMLElement, mirror: boolean = false) => {
+  setRemoteVideoStreamType = (
+    uid: AgoraRteStreamUID,
+    remoteVideoStreamType: AgoraRteRemoteStreamType,
+  ) => {
+    let scene = this.classroomStore.connectionStore.scene;
+    scene?.setRemoteVideoStreamType(uid, remoteVideoStreamType);
+  };
+
+  setupLocalVideo = (
+    stream: EduStream,
+    dom: HTMLElement,
+    mirror: boolean = false,
+    renderMode?: AGRenderMode,
+  ) => {
     let track = AgoraRteEngine.engine.getAgoraMediaControl().createCameraVideoTrack();
-    let canvas = new AgoraRtcVideoCanvas(stream.streamUuid, '', dom, mirror);
+    let canvas = new AgoraRtcVideoCanvas(stream.streamUuid, '', dom, mirror, { renderMode });
     track.setView(canvas);
   };
   setupRemoteVideo = (

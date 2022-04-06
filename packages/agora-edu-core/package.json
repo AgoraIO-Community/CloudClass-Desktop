@@ -1,6 +1,6 @@
 {
   "name": "agora-edu-core",
-  "version": "2.1.0",
+  "version": "2.3.3",
   "main": "lib/index.js",
   "keywords": [
     "Agora",
@@ -39,7 +39,7 @@
     "core-js": "3.20.1"
   },
   "dependencies": {
-    "@netless/app-slide": "0.0.56",
+    "@netless/app-slide": "0.1.0",
     "@netless/combine-player": "1.1.4",
     "@netless/cursor-tool": "0.0.7",
     "@netless/iframe-bridge": "2.1.4",
@@ -49,8 +49,8 @@
     "@netless/white-audio-plugin2": "2.0.5",
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
-    "@netless/window-manager": "0.4.11",
-    "agora-rte-sdk": "2.1.0",
+    "@netless/window-manager": "0.4.18",
+    "agora-rte-sdk": "2.3.1",
     "await-to-js": "3.0.0",
     "ali-oss": "6.15.2",
     "lodash": "4.17.21",

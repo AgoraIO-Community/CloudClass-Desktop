@@ -3,8 +3,11 @@ import {
   AgoraComponentRegion,
   AgoraRteEngine,
   AgoraRteEventType,
+  AgoraRteLowStreamParameter,
+  AgoraRteRemoteStreamType,
   AgoraRteScene,
   AgoraRteSceneJoinRTCOptions,
+  AgoraRteStreamUID,
   AGRtcConnectionType,
   bound,
   Log,
@@ -381,7 +384,42 @@ export class ConnectionStore extends EduStoreBase {
     let [err] = await to(this.scene?.joinRTC(options) || Promise.resolve());
     err && EduErrorCenter.shared.handleThrowableError(AGEduErrorCode.EDU_ERR_JOIN_RTC_FAIL, err);
   }
-
+  @bound
+  async enableDualStream(enable: boolean, connectionType?: AGRtcConnectionType) {
+    try {
+      await this.scene?.enableDualStream(enable, connectionType);
+    } catch (e) {
+      EduErrorCenter.shared.handleNonThrowableError(
+        AGEduErrorCode.EDU_ERR_ENABLE_DUAL_STREAM_FAIL,
+        new Error(`failed to enable dual stream`),
+      );
+    }
+  }
+  @bound
+  async setLowStreamParameter(
+    setLowStreamParameter: AgoraRteLowStreamParameter,
+    connectionType?: AGRtcConnectionType,
+  ) {
+    try {
+      await this.scene?.setLowStreamParameter(setLowStreamParameter, connectionType);
+    } catch (e) {
+      EduErrorCenter.shared.handleNonThrowableError(
+        AGEduErrorCode.EDU_ERR_SET_LOW_STREAM_PARAMETER_FAIL,
+        new Error(`failed to set low stream parameter`),
+      );
+    }
+  }
+  @bound
+  async setRemoteVideoStreamType(uid: AgoraRteStreamUID, streamType: AgoraRteRemoteStreamType) {
+    try {
+      await this.scene?.setRemoteVideoStreamType(uid, streamType);
+    } catch (e) {
+      EduErrorCenter.shared.handleNonThrowableError(
+        AGEduErrorCode.EDU_ERR_SET_REMOTE_VIDEO_STREAM_TYPE_FAIL,
+        new Error(`failed to set remote video stream type, streamId is ${uid}`),
+      );
+    }
+  }
   @bound
   async leaveRTC(connectionType?: AGRtcConnectionType) {
     //leave rtc
@@ -398,7 +436,6 @@ export class ConnectionStore extends EduStoreBase {
         new Error(`invalid join whiteboard state: ${this.whiteboardState}`),
       );
     }
-
     //join whiteboard
     let [err] = await to(
       this.classroomStore.boardStore.joinBoard(EduClassroomConfig.shared.sessionInfo.role),

@@ -1,30 +1,36 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, CSSProperties } from 'react';
 import { observer } from 'mobx-react';
 import { useLectureUIStores } from '~hooks/use-edu-stores';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { EduLectureUIStore } from '@/infra/stores/lecture';
 import { StreamPlayer, StreamPlaceholder, CarouselGroup, NavGroup } from '.';
 
-export const RoomBigTeacherStreamContainer = observer(() => {
-  const { streamUIStore } = useLectureUIStores() as EduLectureUIStore;
-  const { teacherCameraStream, teacherVideoStreamSize } = streamUIStore;
-  const teacherStreamContainer = useRef<HTMLDivElement | null>(null);
-
-  return (
-    <div
-      className="teacher-stream-container flex flex-col"
-      style={{
-        marginBottom: -2,
-      }}
-      ref={teacherStreamContainer}>
-      {teacherCameraStream ? (
-        <StreamPlayer stream={teacherCameraStream} style={teacherVideoStreamSize}></StreamPlayer>
-      ) : (
-        <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} />
-      )}
-    </div>
-  );
-});
+export const RoomBigTeacherStreamContainer = observer(
+  ({ isFullScreen = false }: { isFullScreen?: boolean }) => {
+    const { streamUIStore } = useLectureUIStores() as EduLectureUIStore;
+    const { teacherCameraStream, teacherVideoStreamSize } = streamUIStore;
+    const teacherStreamContainer = useRef<HTMLDivElement | null>(null);
+    const containerStyle: CSSProperties = isFullScreen ? { width: '100%', height: '100%' } : {};
+    return (
+      <div
+        className="teacher-stream-container flex flex-col"
+        style={{
+          marginBottom: -2,
+          ...containerStyle,
+        }}
+        ref={teacherStreamContainer}>
+        {teacherCameraStream ? (
+          <StreamPlayer
+            isFullScreen={isFullScreen}
+            stream={teacherCameraStream}
+            style={teacherVideoStreamSize}></StreamPlayer>
+        ) : (
+          <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} />
+        )}
+      </div>
+    );
+  },
+);
 
 export const RoomBigStudentStreamsContainer = observer(() => {
   const { streamUIStore } = useLectureUIStores() as EduLectureUIStore;

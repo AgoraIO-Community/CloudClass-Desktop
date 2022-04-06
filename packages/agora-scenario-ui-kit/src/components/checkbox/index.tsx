@@ -20,6 +20,7 @@ export const CheckBox: FC<CheckboxProps> = ({
   disabled = false,
   indeterminate = false,
   gap,
+  style,
   ...restProps
 }) => {
   const checkboxRef = useRef<null | HTMLInputElement>(null);
@@ -30,12 +31,12 @@ export const CheckBox: FC<CheckboxProps> = ({
     }
   }, [indeterminate]);
 
-  const cls = classNames('pure-material-checkbox', {
+  const cls = classNames('fcr-pure-material-checkbox', {
     [`gap-${gap}`]: !!gap,
   });
 
   return (
-    <label className={cls}>
+    <label className={cls} style={style}>
       <input
         ref={checkboxRef}
         type="checkbox"
@@ -44,7 +45,9 @@ export const CheckBox: FC<CheckboxProps> = ({
         disabled={disabled}
         {...restProps}
       />
-      <span>{text}</span>
+      <span>
+        <span className="flex-grow truncate">{text}</span>
+      </span>
     </label>
   );
 };

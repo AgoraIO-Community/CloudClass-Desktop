@@ -1,14 +1,15 @@
-.pure-material-checkbox {
+.fcr-pure-material-checkbox {
   z-index: 0;
   position: relative;
   display: inline-block;
   font-size: 16px;
   line-height: 1.5;
   transform: scale(0.7);
+  transform-origin: 0;
 }
 
 /* Input */
-.pure-material-checkbox > input {
+.fcr-pure-material-checkbox > input {
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -31,14 +32,14 @@
 }
 
 /* Span */
-.pure-material-checkbox > span {
-  display: inline-block;
+.fcr-pure-material-checkbox > span {
+  display: inline-flex;
   width: 100%;
   cursor: pointer;
 }
 
 /* Box */
-.pure-material-checkbox > span::before {
+.fcr-pure-material-checkbox > span::before {
   content: '';
   display: inline-block;
   box-sizing: border-box;
@@ -50,10 +51,11 @@
   height: 18px;
   vertical-align: top;
   transition: border-color 0.2s, background-color 0.2s;
+  flex-shrink: 0;
 }
 
 /* Checkmark */
-.pure-material-checkbox > span::after {
+.fcr-pure-material-checkbox > span::after {
   content: '';
   display: block;
   position: absolute;
@@ -66,87 +68,88 @@
   border-top: none;
   transform: translate(3px, 4px) rotate(-45deg);
   box-sizing: content-box;
+  flex-shrink: 0;
 }
 
 /* Checked, Indeterminate */
-.pure-material-checkbox > input:checked,
-.pure-material-checkbox > input:indeterminate {
+.fcr-pure-material-checkbox > input:checked,
+.fcr-pure-material-checkbox > input:indeterminate {
   background-color: #357bf6;
 }
 
-.pure-material-checkbox > input:checked + span::before,
-.pure-material-checkbox > input:indeterminate + span::before {
+.fcr-pure-material-checkbox > input:checked + span::before,
+.fcr-pure-material-checkbox > input:indeterminate + span::before {
   border-color: #357bf6;
   background-color: #357bf6;
 }
 
-.pure-material-checkbox > input:checked + span::after,
-.pure-material-checkbox > input:indeterminate + span::after {
+.fcr-pure-material-checkbox > input:checked + span::after,
+.fcr-pure-material-checkbox > input:indeterminate + span::after {
   border-color: #fff;
 }
 
-.pure-material-checkbox > input:indeterminate + span::after {
+.fcr-pure-material-checkbox > input:indeterminate + span::after {
   border-left: none;
   transform: translate(4px, 3px);
 }
 
 /* Hover, Focus */
-.pure-material-checkbox:hover > input {
+.fcr-pure-material-checkbox:hover > input {
   opacity: 0.04;
 }
 
-.pure-material-checkbox > input:focus {
+.fcr-pure-material-checkbox > input:focus {
   opacity: 0;
 }
 
-.pure-material-checkbox:hover > input:focus {
+.fcr-pure-material-checkbox:hover > input:focus {
   opacity: 0.16;
 }
 
 /* Active */
-.pure-material-checkbox > input:active {
+.fcr-pure-material-checkbox > input:active {
   opacity: 1;
   transform: scale(0);
   transition: transform 0s, opacity 0s;
 }
 
-.pure-material-checkbox > input:active + span::before {
+.fcr-pure-material-checkbox > input:active + span::before {
   border-color: #357bf6;
 }
 
-.pure-material-checkbox > input:checked:active + span::before {
+.fcr-pure-material-checkbox > input:checked:active + span::before {
   border-color: transparent;
   background-color: rgba(0, 0, 0, 0.6);
 }
 
 /* Disabled */
-.pure-material-checkbox > input:disabled {
+.fcr-pure-material-checkbox > input:disabled {
   opacity: 0;
 }
 
-.pure-material-checkbox > input:disabled + span {
+.fcr-pure-material-checkbox > input:disabled + span {
   cursor: not-allowed;
 }
 
-.pure-material-checkbox > input:disabled + span::before {
+.fcr-pure-material-checkbox > input:disabled + span::before {
   border-color: #ececf1;
   background: #bbbbc8;
 }
 
-.pure-material-checkbox > input:checked:disabled + span::before,
-.pure-material-checkbox > input:indeterminate:disabled + span::before {
+.fcr-pure-material-checkbox > input:checked:disabled + span::before,
+.fcr-pure-material-checkbox > input:indeterminate:disabled + span::before {
   border-color: transparent;
   background-color: #bbbbc8;
 }
 
-.pure-material-checkbox > span {
+.fcr-pure-material-checkbox > span {
   user-select: none;
 }
 
-.pure-material-checkbox.gap-1 > span::before {
+.fcr-pure-material-checkbox.gap-1 > span::before {
   margin-right: 4px;
 }
 
-.pure-material-checkbox.gap-2 > span::before {
+.fcr-pure-material-checkbox.gap-2 > span::before {
   margin-right: 8px;
 }

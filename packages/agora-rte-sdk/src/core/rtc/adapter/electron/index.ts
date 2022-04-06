@@ -22,6 +22,7 @@ import {
   AGScreenShareDevice,
   AGScreenShareType,
   BeautyEffect,
+  FcrAudioRawDataConfig,
   NetworkStats,
   RtcState,
 } from '../../type';
@@ -49,6 +50,7 @@ import { Duration } from '../../../schedule/scheduler';
 import { ChannelProfile, ClientRole } from '../../../../type';
 import { Log } from '../../../decorator/log';
 import { Injectable } from '../../../decorator/type';
+import { LowStreamParameter, RemoteStreamType, UID } from 'agora-rtc-sdk-ng';
 
 declare global {
   interface Window {
@@ -293,8 +295,28 @@ export class RtcAdapterElectron extends RtcAdapterBase {
     return 0;
   }
 
+  onAudioFrame(cb: (buffer: ArrayBuffer) => void): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
+  }
+
   setBeautyEffectOptions(enable: boolean, options: BeautyEffect): number {
     return this.rtcEngine.setBeautyEffectOptions(enable, options);
+  }
+
+  setAudioFrameCallback(): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
+  }
+
+  stopAudioFrameCallback(): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
+  }
+
+  setAudioRawDataConfig(config: FcrAudioRawDataConfig): number {
+    this.logger.warn(`electron platform does not support this for now`);
+    return 0;
   }
 
   hasScreenSharePermission(): boolean {
@@ -448,7 +470,17 @@ export class RtcChannelAdapterElectron extends RtcChannelAdapterBase {
   getSessionId() {
     return this.base.rtcEngine.getCallId();
   }
-
+  enableDualStream(enable: boolean): Promise<void> {
+    const state = this.base.rtcEngine.enableDualStreamMode(enable);
+    return state === 0 ? Promise.resolve() : Promise.reject();
+  }
+  setLowStreamParameter(_streamParameter: LowStreamParameter): number {
+    return 0;
+  }
+  setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType): Promise<void> {
+    const state = this.base.rtcEngine.setRemoteVideoStreamType(uid as number, streamType);
+    return state === 0 ? Promise.resolve() : Promise.reject();
+  }
   onConnectionStateChanged(
     cb: (state: RtcState, connectionType: AGRtcConnectionType) => void,
   ): number {

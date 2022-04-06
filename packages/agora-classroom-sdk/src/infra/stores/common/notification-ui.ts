@@ -9,6 +9,7 @@ import {
   ClassState,
   EduClassroomConfig,
   EduEventCenter,
+  EduRoleTypeEnum,
   LeaveReason,
 } from 'agora-edu-core';
 import { checkMinutesThrough } from '@/infra/utils/time';
@@ -20,6 +21,16 @@ export class NotificationUIStore extends EduUIStoreBase {
   /** Observables */
 
   /** Methods */
+
+  private _filterUsers(
+    users: string[],
+    userList: Map<string, { userUuid: string; userName: string }>,
+  ) {
+    return users
+      .filter((userUuid: string) => userList.has(userUuid))
+      .map((userUuid: string) => userList.get(userUuid)?.userName || 'unknown');
+  }
+
   onInstall() {
     // class is end
     reaction(
@@ -50,8 +61,10 @@ export class NotificationUIStore extends EduUIStoreBase {
               this.shareUIStore.addConfirmDialog(
                 transI18n('toast.leave_room'),
                 transI18n('error.class_end'),
-                resolve,
-                ['ok'],
+                {
+                  onOK: resolve,
+                  actions: ['ok'],
+                },
               );
             }),
           );
@@ -71,8 +84,10 @@ export class NotificationUIStore extends EduUIStoreBase {
                 this._getStateErrorReason(
                   this.classroomStore.connectionStore.classroomStateErrorReason,
                 ),
-                resolve,
-                ['ok'],
+                {
+                  onOK: resolve,
+                  actions: ['ok'],
+                },
               );
             }),
           );
@@ -80,10 +95,10 @@ export class NotificationUIStore extends EduUIStoreBase {
       },
     );
     // interaction events
-    EduEventCenter.shared.onClassroomEvents((event, ...args) => {
+    EduEventCenter.shared.onClassroomEvents((event, param) => {
       // kick out
       if (event === AgoraEduClassroomEvent.KickOut) {
-        const user = args[0];
+        const user = param;
 
         const { sessionInfo } = EduClassroomConfig.shared;
 
@@ -128,7 +143,7 @@ export class NotificationUIStore extends EduUIStoreBase {
         event === AgoraEduClassroomEvent.RewardReceived ||
         event === AgoraEduClassroomEvent.BatchRewardReceived
       ) {
-        const [userNames] = args;
+        const userNames = param;
         if (userNames.length > 3) {
           this.shareUIStore.addToast(
             transI18n('toast2.teacher.reward2', {
@@ -145,6 +160,98 @@ export class NotificationUIStore extends EduUIStoreBase {
       // capture screen permission denied received
       if (event === AgoraEduClassroomEvent.CaptureScreenPermissionDenied) {
         this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'error');
+      }
+      // user join group
+      if (event === AgoraEduClassroomEvent.UserJoinGroup) {
+        const { role } = EduClassroomConfig.shared.sessionInfo;
+        const { groupUuid, users }: { groupUuid: string; users: [] } = param;
+        const { teacherList, studentList, assistantList } =
+          this.classroomStore.userStore.mainRoomDataStore;
+
+        const teachers = this._filterUsers(users, teacherList);
+        const students = this._filterUsers(users, studentList);
+        const assistants = this._filterUsers(users, assistantList);
+
+        const isCurrentRoom = this.classroomStore.groupStore.currentSubRoom === groupUuid;
+
+        if (isCurrentRoom) {
+          if (teachers.length) {
+            if (role === EduRoleTypeEnum.student) {
+              this.shareUIStore.addToast(
+                transI18n('toast.teacher_enter_room', { reason: teachers.join(',') }),
+              );
+            }
+          }
+
+          if (assistants.length) {
+            if (role === EduRoleTypeEnum.student) {
+              this.shareUIStore.addToast(
+                transI18n('toast.assistant_enter_room', { reason: assistants.join(',') }),
+              );
+            }
+          }
+
+          if (students.length) {
+            if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+              this.shareUIStore.addToast(
+                transI18n('toast.student_enter_room', { reason: students.join(',') }),
+              );
+            }
+          }
+        }
+      }
+      // user leave group
+      if (event === AgoraEduClassroomEvent.UserLeaveGroup) {
+        const { role } = EduClassroomConfig.shared.sessionInfo;
+        const { groupUuid, users }: { groupUuid: string; users: [] } = param;
+        const { teacherList, studentList, assistantList } =
+          this.classroomStore.userStore.mainRoomDataStore;
+
+        const teachers = this._filterUsers(users, teacherList);
+        const students = this._filterUsers(users, studentList);
+        const assistants = this._filterUsers(users, assistantList);
+
+        const isCurrentRoom = this.classroomStore.groupStore.currentSubRoom === groupUuid;
+
+        if (isCurrentRoom) {
+          if (teachers.length) {
+            if (role === EduRoleTypeEnum.student) {
+              this.shareUIStore.addToast(
+                transI18n('toast.teacher_leave_room', { reason: teachers.join(',') }),
+              );
+            }
+          }
+
+          if (assistants.length) {
+            if (role === EduRoleTypeEnum.student) {
+              this.shareUIStore.addToast(
+                transI18n('toast.assistant_leave_room', { reason: assistants.join(',') }),
+              );
+            }
+          }
+
+          if (students.length) {
+            if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
+              this.shareUIStore.addToast(
+                transI18n('toast.student_leave_room', { reason: students.join(',') }),
+              );
+            }
+          }
+        }
+      }
+
+      if (event === AgoraEduClassroomEvent.RejectedToGroup) {
+        const { inviting } = param;
+        const { role } = EduClassroomConfig.shared.sessionInfo;
+        if (role === EduRoleTypeEnum.student && inviting) {
+          this.shareUIStore.addConfirmDialog(
+            transI18n('breakout_room.confirm_invite_teacher_title'),
+            transI18n('breakout_room.confirm_ask_for_help_busy_content'),
+            {
+              actions: ['ok'],
+            },
+          );
+        }
       }
     });
   }

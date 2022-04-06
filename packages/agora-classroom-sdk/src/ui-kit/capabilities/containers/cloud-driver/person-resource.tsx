@@ -26,7 +26,7 @@ import CloudToolbar from './cloud-toolbar';
 import CloudMinimize from './cloud-minimize';
 import CloudMoreMenu from './cloud-more-menu';
 import { FileTypeSvgColor, UploadItem as CloudUploadItem } from '@/infra/stores/common/cloud-ui';
-import { CloudDriveResourceUploadStatus } from '../../../../../../agora-edu-core/src/stores/domain/common/cloud-drive/type';
+import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
 import { debounce } from 'lodash';
 
 const UploadSuccessToast = () => {
@@ -82,6 +82,7 @@ const UploadModal = () => {
 };
 
 export const PersonalResourcesContainer = observer(() => {
+  const uploadingRef = useRef(false);
   const { cloudUIStore, shareUIStore } = useStore();
   const { addConfirmDialog } = shareUIStore;
   const {
@@ -121,6 +122,9 @@ export const PersonalResourcesContainer = observer(() => {
       pageSize,
       resourceName: searchPersonalResourcesKeyword,
     });
+    return () => {
+      setSearchPersonalResourcesKeyword('');
+    };
   }, []);
   const debouncedFetchPersonalResources = useCallback(
     debounce(() => {
@@ -137,12 +141,15 @@ export const PersonalResourcesContainer = observer(() => {
       setShowUploadModal(false);
     }
     if (
+      uploadingRef.current &&
+      showUploadModal &&
       uploadingProgresses.length > 0 &&
       uploadingProgresses.length ===
         uploadingProgresses.filter(
           (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
         ).length
     ) {
+      uploadingRef.current = false;
       setShowUploadModal(false);
       setUploadState('success');
       setShowUploadToast(true);
@@ -173,6 +180,7 @@ export const PersonalResourcesContainer = observer(() => {
         setShowUploadModal(true);
         setUploadState('uploading');
         const taskArr = [];
+        uploadingRef.current = true;
         for (const file of files) {
           taskArr.push(
             uploadPersonalResource(file).finally(() => {
@@ -198,14 +206,18 @@ export const PersonalResourcesContainer = observer(() => {
   };
 
   const handleDelete = () => {
-    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), () => {
-      removePersonalResources();
+    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), {
+      onOK: () => {
+        removePersonalResources();
+      },
     });
   };
 
   const handleDeleteOneResource = (uuid: string) => {
-    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), () => {
-      removePersonalResources(uuid);
+    addConfirmDialog(transI18n('confirm.delete'), transI18n('cloud.deleteTip'), {
+      onOK: () => {
+        removePersonalResources(uuid);
+      },
     });
   };
 
@@ -275,7 +287,15 @@ export const PersonalResourcesContainer = observer(() => {
                       }}
                     />
                     <Inline className="filename" color="#191919" title={resourceName}>
-                      {resourceName}
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: searchPersonalResourcesKeyword
+                            ? resourceName.replaceAll(
+                                searchPersonalResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
+                              )
+                            : resourceName,
+                        }}></span>
                     </Inline>
                   </Col>
                   <Col>
@@ -310,7 +330,9 @@ export const PersonalResourcesContainer = observer(() => {
                     <Inline color="#586376">{formatFileSize(size)}</Inline>
                   </Col>
                   <Col>
-                    <Inline color="#586376">{dayjs(updateTime).format('YY-MM-DD HH:mm:ss')}</Inline>
+                    <Inline color="#586376">
+                      {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
+                    </Inline>
                   </Col>
                 </Row>
               );

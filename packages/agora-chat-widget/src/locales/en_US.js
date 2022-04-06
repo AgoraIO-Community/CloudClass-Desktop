@@ -51,6 +51,7 @@ const enUS = {
     screenshots: 'Screenshots',
     hide_classroom_page_screenshots: 'Hide classroom page screenshot',
     screenshots_file: 'Screenshots_file',
+    send_to_all: 'Broadcast Message',
   },
 };
 

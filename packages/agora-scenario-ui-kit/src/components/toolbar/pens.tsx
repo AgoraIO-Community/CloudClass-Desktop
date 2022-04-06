@@ -109,7 +109,7 @@ export const Pens: FC<PensProps> = ({
         overlayClassName="expand-tools-popover"
         trigger="hover"
         content={content}
-        placement="right">
+        placement="left">
         <div
           className="tool"
           onClick={() => {

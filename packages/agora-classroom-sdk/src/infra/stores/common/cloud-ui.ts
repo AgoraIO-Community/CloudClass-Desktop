@@ -7,8 +7,8 @@ import {
   CloudDrivePagingOption,
   CloudDriveResource,
   EduClassroomConfig,
+  CloudDriveResourceUploadStatus,
 } from 'agora-edu-core';
-import { CloudDriveResourceUploadStatus } from '../../../../../agora-edu-core/src/stores/domain/common/cloud-drive/type';
 
 export enum FileTypeSvgColor {
   ppt = '#F6B081',

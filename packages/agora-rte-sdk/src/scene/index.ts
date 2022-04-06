@@ -21,13 +21,21 @@ import { AGRtcManager } from '../core/rtc';
 import { AGRtcChannel, AGRtcConnectionType } from '../core/rtc/channel';
 import { AgoraRteSyncDataStore } from '../core/processor/channel-msg/data';
 import { AGRteErrorCode, RteErrorCenter } from '../core/utils/error';
-import { NetworkStats, RtcState } from '../core/rtc/type';
+import {
+  AgoraRteLowStreamParameter,
+  AgoraRteRemoteStreamType,
+  AgoraRteStreamUID,
+  NetworkStats,
+  RtcState,
+} from '../core/rtc/type';
 import to from 'await-to-js';
 import { Injectable } from '../core/decorator/type';
 import { AgoraRteEngine } from '../core/engine';
 import { AgoraRteEngineConfig } from '../configs';
 import { Log } from '../core/decorator/log';
 import { AgoraRteConnectionState } from '../type';
+import { RemoteStreamType } from 'agora-rtc-sdk-ng';
+
 import { AgoraRteService } from '../core/services/api';
 export interface AgoraRteSceneJoinOptions {
   userName: string;
@@ -126,6 +134,22 @@ export class AgoraRteScene extends EventEmitter {
     return this._timestampGap;
   }
 
+  enableDualStream(enable: boolean, connectionType?: AGRtcConnectionType) {
+    return this._rtcChannel.enableDualStream(enable, connectionType);
+  }
+
+  setLowStreamParameter(
+    streamParameter: AgoraRteLowStreamParameter,
+    connectionType?: AGRtcConnectionType,
+  ) {
+    return this._rtcChannel.setLowStreamParameter(streamParameter, connectionType);
+  }
+  setRemoteVideoStreamType(uid: AgoraRteStreamUID, streamType: AgoraRteRemoteStreamType) {
+    return this._rtcChannel.setRemoteVideoStreamType(
+      uid,
+      streamType as unknown as RemoteStreamType,
+    );
+  }
   async joinScene(options: AgoraRteSceneJoinOptions) {
     if (this._sceneState !== AgoraRteConnectionState.Idle) {
       Logger.warn(`scene not idle`);

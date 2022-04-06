@@ -78,5 +78,6 @@ export type IconTypes =
   | 'search-zoom-in'
   | 'search-zoom-out'
   | 'test-speaker'
+  | 'white-board'
   | 'group-discuss'
   | 'ask-for-help';

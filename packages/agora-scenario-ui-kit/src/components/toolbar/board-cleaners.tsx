@@ -5,41 +5,38 @@ import { ToolItem } from './tool';
 import { transI18n } from '~components/i18n';
 import { SvgImg, SvgIcon } from '~components/svg-img';
 
-export interface CabinetItem {
+export interface CleanerItem {
   id: string;
   icon: React.ReactElement;
   name: string;
   disabled?: boolean;
 }
 
-export interface ToolCabinetProps extends ToolItem {
-  cabinetList: CabinetItem[];
+export interface BoardCleanersProps extends ToolItem {
+  cleanersList: CleanerItem[];
   onClick?: (value: string) => void;
-  activeItems?: Set<string>;
+  activeItem?: string;
   hover?: boolean;
 }
 
-export const ToolCabinet: FC<ToolCabinetProps> = ({
+export const BoardCleaners: FC<BoardCleanersProps> = ({
   label,
-  cabinetList = [],
+  cleanersList = [],
   onClick,
-  activeItems = new Set(),
-  hover = false,
+  activeItem = '',
+  isActive,
 }) => {
-  const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
   const handleClick = (cabinetId: string) => {
-    setPopoverVisible(false);
     onClick && onClick(cabinetId);
   };
   const content = () => (
-    <div className={`expand-tools tool-cabinet`}>
-      {cabinetList.map((item) => (
+    <div className={`expand-tools`}>
+      {cleanersList.map((item) => (
         <div
-          className={`cabinet-item ${activeItems.has(item.id) ? 'active' : ''}`}
+          className={`cleaner-item ${activeItem === item.id ? 'active' : ''}`}
           key={item.id}
           onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
           {item.icon}
-          <span>{item.name}</span>
         </div>
       ))}
     </div>
@@ -47,14 +44,16 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
   return (
     <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover
-        visible={popoverVisible}
-        onVisibleChange={(visible) => setPopoverVisible(visible)}
-        overlayClassName="expand-tools-popover"
+        overlayClassName="expand-tools-popover expand-tools-popover-board-cleaner"
         trigger="hover"
         content={content}
         placement="left">
-        <div className="tool">
-          <SvgIcon type="tools" canHover hoverType={'tools-active'} />
+        <div className="tool" onClick={() => handleClick('eraser')}>
+          <SvgIcon
+            type={`eraser${isActive ? '-active' : ''}`}
+            canHover
+            hoverType={'eraser-active'}
+          />
           <SvgImg size={6} type="triangle-down" className="triangle-icon" />
         </div>
       </Popover>

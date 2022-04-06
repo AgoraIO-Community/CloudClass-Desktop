@@ -1,15 +1,30 @@
-import { CustomBtoa, EduClassroomConfig, EduRoleTypeEnum, WhiteboardTool } from 'agora-edu-core';
-import { AgoraRteMediaSourceState, AGScreenShareDevice, bound } from 'agora-rte-sdk';
+import {
+  AGEduErrorCode,
+  CustomBtoa,
+  EduClassroomConfig,
+  EduErrorCenter,
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+  WhiteboardTool,
+} from 'agora-edu-core';
+import {
+  AgoraRteMediaSourceState,
+  AgoraRteVideoSourceType,
+  AGScreenShareDevice,
+  bound,
+} from 'agora-rte-sdk';
 import { isEqual } from 'lodash';
 import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import { DialogCategory } from './share-ui';
+import { EduStreamUI } from './stream/struct';
 
 export enum ToolbarItemCategory {
   PenPicker,
   ColorPicker,
   Cabinet,
+  Eraser,
 }
 
 export enum CabinetItemEnum {
@@ -19,6 +34,7 @@ export enum CabinetItemEnum {
   CountdownTimer = 'countdownTimer',
   Poll = 'poll',
   PopupQuiz = 'popupQuiz',
+  Whiteboard = 'whiteboard',
 }
 
 export interface CabinetItem {
@@ -62,8 +78,9 @@ export class ToolbarItem {
 
 export class ToolbarUIStore extends EduUIStoreBase {
   readonly allowedCabinetItems: string[] = [
+    // CabinetItemEnum.Whiteboard,
     CabinetItemEnum.ScreenShare,
-    CabinetItemEnum.BreakoutRoom,
+    // CabinetItemEnum.BreakoutRoom,
     CabinetItemEnum.Laser,
     CabinetItemEnum.CountdownTimer,
     CabinetItemEnum.Poll,
@@ -98,11 +115,69 @@ export class ToolbarUIStore extends EduUIStoreBase {
   };
 
   onInstall() {
+    this.classroomStore.boardStore.setDefaultColors(this.defaultColors);
     reaction(
-      () => this.classroomStore.mediaStore.localScreenShareTrackState,
-      (state: AgoraRteMediaSourceState) => {
+      () => ({
+        localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
+        screenShareStreamUuid:
+          this.classroomStore.roomStore.screenShareStreamUuid ||
+          this.classroomStore.streamStore.localShareStreamUuid,
+      }),
+
+      ({ localScreenShareTrackState, screenShareStreamUuid }) => {
+        const teacherCameraStreamUuid = this.teacherCameraStream?.stream.streamUuid;
         runInAction(() => {
-          this._screenSharing = state === AgoraRteMediaSourceState.started;
+          if (localScreenShareTrackState === AgoraRteMediaSourceState.started) {
+            if (screenShareStreamUuid && !this.isScreenSharing) {
+              this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
+              this.classroomStore.widgetStore.setActive(
+                `streamWindow-${screenShareStreamUuid}`,
+                {
+                  extra: {
+                    userUuid: this.teacherUuid,
+                  },
+                },
+                this.teacherUuid,
+              );
+              this.classroomStore.widgetStore.widgetStateMap[
+                `streamWindow-${teacherCameraStreamUuid}`
+              ] &&
+                this.classroomStore.widgetStore.deleteWidget(
+                  `streamWindow-${teacherCameraStreamUuid}`,
+                );
+            }
+          } else if (
+            localScreenShareTrackState === AgoraRteMediaSourceState.stopped ||
+            localScreenShareTrackState === AgoraRteMediaSourceState.error
+          ) {
+            if (screenShareStreamUuid) {
+              this.classroomStore.widgetStore.deleteWidget(`streamWindow-${screenShareStreamUuid}`);
+              this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
+              if (!this.isWhiteboardOpening)
+                this.classroomStore.widgetStore.setActive(
+                  `streamWindow-${teacherCameraStreamUuid}`,
+                  {
+                    extra: {
+                      userUuid: this.teacherUuid,
+                    },
+                  },
+                  this.teacherUuid,
+                );
+            }
+          }
+        });
+      },
+    );
+
+    reaction(
+      () => this.classroomStore.boardStore.configReady,
+      (configReady) => {
+        runInAction(() => {
+          if (configReady) {
+            this._activeCabinetItems.add(CabinetItemEnum.Whiteboard);
+          } else {
+            this._activeCabinetItems.delete(CabinetItemEnum.Whiteboard);
+          }
         });
       },
     );
@@ -110,8 +185,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
   // observables
   @observable activeMap: Record<string, boolean> = {};
-  @observable private _activeCabinetItem?: string;
-  @observable private _screenSharing = false;
+  @observable private _activeCabinetItems: Set<string> = new Set();
 
   //computed
   /**
@@ -168,23 +242,98 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed
   get isScreenSharing() {
-    return this._screenSharing;
+    return this._activeCabinetItems.has(CabinetItemEnum.ScreenShare);
+  }
+
+  /**
+   * 是否打开白板
+   * @returns
+   */
+  @computed
+  get isWhiteboardOpening() {
+    return this._activeCabinetItems.has(CabinetItemEnum.Whiteboard);
   }
 
   //actions
+  @action.bound
+  onBoradCleanerClick(id: string) {
+    if (id === 'clear') {
+      this.shareUIStore.addConfirmDialog(
+        transI18n('toast.clear_whiteboard'),
+        transI18n('toast.clear_whiteboard_confirm'),
+        {
+          onOK: () => {
+            this.setTool(id);
+          },
+        },
+      );
+    } else {
+      this.setTool(id);
+    }
+  }
+  @computed
+  get teacherUuid() {
+    const teacherList = this.classroomStore.userStore.teacherList;
+    const teachers = Array.from(teacherList.values());
+    if (teachers.length > 0) {
+      return teachers[0].userUuid;
+    }
+    return '';
+  }
+  /**
+   * 老师流信息列表
+   * @returns
+   */
+  @computed get teacherStreams(): Set<EduStreamUI> {
+    const streamSet = new Set<EduStreamUI>();
+    const teacherList = this.classroomStore.userStore.teacherList;
+    for (const teacher of teacherList.values()) {
+      const streamUuids =
+        this.classroomStore.streamStore.streamByUserUuid.get(teacher.userUuid) || new Set();
+      for (const streamUuid of streamUuids) {
+        const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+        if (stream) {
+          const uiStream = new EduStreamUI(stream);
+          streamSet.add(uiStream);
+        }
+      }
+    }
+    return streamSet;
+  }
+
+  /**
+   * 老师流信息（教室内只有一个老师时使用，如果有一个以上老师请使用 teacherStreams）
+   * @returns
+   */
+  @computed get teacherCameraStream(): EduStreamUI | undefined {
+    const streamSet = new Set<EduStreamUI>();
+    const streams = this.teacherStreams;
+    for (const stream of streams) {
+      if (stream.stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
+        streamSet.add(stream);
+      }
+    }
+
+    if (streamSet.size > 1) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UNEXPECTED_TEACHER_STREAM_LENGTH,
+        new Error(`unexpected stream size ${streams.size}`),
+      );
+    }
+    return Array.from(streamSet)[0];
+  }
   /**
    * 打开 ExtApp 扩展工具
    * @param id
    */
   @action.bound
-  handleCabinetItem(id: string) {
+  async handleCabinetItem(id: string) {
     const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
       case CabinetItemEnum.ScreenShare:
         if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
           this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'warning');
         }
-        this._activeCabinetItem = CabinetItemEnum.ScreenShare;
         if (this.isScreenSharing) {
           this.classroomStore.mediaStore.stopScreenShareCapture();
         } else {
@@ -239,6 +388,35 @@ export class ToolbarUIStore extends EduUIStoreBase {
       case CabinetItemEnum.Laser:
         this.setTool(id);
         break;
+      case CabinetItemEnum.Whiteboard:
+        if (this.isWhiteboardOpening) {
+          this.shareUIStore.addConfirmDialog(
+            transI18n('toast.close_whiteboard'),
+            transI18n('toast.close_whiteboard_confirm'),
+            {
+              onOK: () => {
+                this.classroomStore.widgetStore.setInactive('netlessBoard');
+                if (!this.isScreenSharing)
+                  this.classroomStore.widgetStore.setActive(
+                    `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+                    {
+                      extra: {
+                        userUuid: this.teacherCameraStream?.fromUser.userUuid,
+                      },
+                    },
+                    this.teacherUuid,
+                  );
+              },
+            },
+          );
+        } else {
+          this.classroomStore.widgetStore.setActive('netlessBoard', {});
+          this.classroomStore.widgetStore.deleteWidget(
+            `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+          );
+        }
+        break;
+
       case CabinetItemEnum.BreakoutRoom:
         this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
         break;
@@ -272,13 +450,18 @@ export class ToolbarUIStore extends EduUIStoreBase {
         this.activeMap = { ...this.activeMap, [tool]: true };
         break;
       case 'register': {
-        this.shareUIStore.addDialog(DialogCategory.Roster, {
-          onClose: () => {
-            runInAction(() => {
-              this.activeMap = { ...this.activeMap, [tool]: false };
-            });
+        this.shareUIStore.addDialog(
+          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass
+            ? DialogCategory.LectureRoster
+            : DialogCategory.Roster,
+          {
+            onClose: () => {
+              runInAction(() => {
+                this.activeMap = { ...this.activeMap, [tool]: false };
+              });
+            },
           },
-        });
+        );
         this.activeMap = { ...this.activeMap, [tool]: true };
         break;
       }
@@ -323,8 +506,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * 当前激活的 ExtApp
    * @returns
    */
-  get activeCabinetItem(): string | undefined {
-    return this.isScreenSharing ? CabinetItemEnum.ScreenShare : undefined;
+  get activeCabinetItems() {
+    return this._activeCabinetItems;
   }
 
   /**
@@ -351,28 +534,73 @@ export class ToolbarUIStore extends EduUIStoreBase {
     }
 
     apps = apps
-      .concat([
-        {
-          id: CabinetItemEnum.ScreenShare,
-          iconType: 'share-screen',
-          name: transI18n('scaffold.screen_share'),
-        },
-        {
-          id: CabinetItemEnum.BreakoutRoom,
-          iconType: 'group-discuss',
-          name: transI18n('scaffold.breakout_room'),
-        },
-        {
-          id: CabinetItemEnum.Laser,
-          iconType: 'laser-pointer',
-          name: transI18n('scaffold.laser_pointer'),
-        },
-      ])
+      .concat(
+        this.classroomStore.boardStore.configReady
+          ? [
+              {
+                id: CabinetItemEnum.ScreenShare,
+                iconType: 'share-screen',
+                name: transI18n('scaffold.screen_share'),
+              },
+              {
+                id: CabinetItemEnum.BreakoutRoom,
+                iconType: 'group-discuss',
+                name: transI18n('scaffold.breakout_room'),
+              },
+              {
+                id: CabinetItemEnum.Laser,
+                iconType: 'laser-pointer',
+                name: transI18n('scaffold.laser_pointer'),
+              },
+              {
+                id: CabinetItemEnum.Whiteboard,
+                iconType: 'whiteboard',
+                name: transI18n('scaffold.whiteboard'),
+              },
+            ]
+          : [
+              {
+                id: CabinetItemEnum.ScreenShare,
+                iconType: 'share-screen',
+                name: transI18n('scaffold.screen_share'),
+              },
+              {
+                id: CabinetItemEnum.BreakoutRoom,
+                iconType: 'group-discuss',
+                name: transI18n('scaffold.breakout_room'),
+              },
+
+              {
+                id: CabinetItemEnum.Whiteboard,
+                iconType: 'whiteboard',
+                name: transI18n('scaffold.whiteboard'),
+              },
+            ],
+      )
       .filter((it) => this.allowedCabinetItems.includes(it.id));
 
     return apps;
   }
+  /**
+   * 白板清除选项列表
+   * @returns
+   */
+  get boardCleanerItems(): CabinetItem[] {
+    const items = [
+      {
+        id: 'eraser',
+        iconType: 'eraser',
+        name: transI18n('scaffold.eraser'),
+      },
+      {
+        id: 'clear',
+        iconType: 'clear',
+        name: transI18n('scaffold.clear'),
+      },
+    ];
 
+    return items;
+  }
   /**
    * 工具栏工具列表
    * @returns
@@ -391,82 +619,87 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed
   get teacherTools(): ToolbarItem[] {
-    return [
-      ToolbarItem.fromData({
-        value: 'clicker',
-        label: 'scaffold.clicker',
-        icon: 'select',
-      }),
-      ToolbarItem.fromData({
-        // selector use clicker icon
-        value: 'selection',
-        label: 'scaffold.selector',
-        icon: 'clicker',
-      }),
-      ToolbarItem.fromData({
-        value: 'pen',
-        label: 'scaffold.pencil',
-        icon: 'pen',
-        category: ToolbarItemCategory.PenPicker,
-      }),
-      ToolbarItem.fromData({
-        value: 'text',
-        label: 'scaffold.text',
-        icon: 'text',
-      }),
-      ToolbarItem.fromData({
-        value: 'eraser',
-        label: 'scaffold.eraser',
-        icon: 'eraser',
-      }),
-      // ToolbarItem.fromData({
-      //   value: 'color',
-      //   label: 'scaffold.color',
-      //   icon: 'circle',
-      //   category: ToolbarItemCategory.ColorPicker,
-      //   // component: (props: any) => {
-      //   //   return <ColorsContainer {...props} />;
-      //   // },
-      // }),
-      // ToolbarItem.fromData({
-      //   value: 'blank-page',
-      //   label: 'scaffold.blank_page',
-      //   icon: 'blank-page',
-      // }),
-      ToolbarItem.fromData({
-        value: 'hand',
-        label: 'scaffold.move',
-        icon: 'hand',
-      }),
-      {
-        value: 'cloud',
-        label: 'scaffold.cloud_storage',
-        icon: 'cloud',
-      },
-      {
-        value: 'tools',
-        label: 'scaffold.tools',
-        icon: 'tools',
-        category: ToolbarItemCategory.Cabinet,
-      },
-      {
-        value: 'clear',
-        label: 'scaffold.clear',
-        icon: 'clear',
-      },
-      {
-        value: 'undo',
-        label: 'scaffold.undo',
-        icon: 'undo',
-        className: this.classroomStore.boardStore.undoSteps === 0 ? 'undo-disabled' : 'undo',
-      },
-      {
-        value: 'redo',
-        label: 'scaffold.redo',
-        icon: 'redo',
-        className: this.classroomStore.boardStore.redoSteps === 0 ? 'redo-disabled' : 'redo',
-      },
-    ];
+    if (this.classroomStore.boardStore.configReady) {
+      return [
+        ToolbarItem.fromData({
+          value: 'clicker',
+          label: 'scaffold.clicker',
+          icon: 'select',
+        }),
+        ToolbarItem.fromData({
+          // selector use clicker icon
+          value: 'selection',
+          label: 'scaffold.selector',
+          icon: 'clicker',
+        }),
+        ToolbarItem.fromData({
+          value: 'pen',
+          label: 'scaffold.pencil',
+          icon: 'pen',
+          category: ToolbarItemCategory.PenPicker,
+        }),
+        ToolbarItem.fromData({
+          value: 'text',
+          label: 'scaffold.text',
+          icon: 'text',
+        }),
+        ToolbarItem.fromData({
+          value: 'eraser',
+          label: 'scaffold.eraser',
+          icon: 'eraser',
+          category: ToolbarItemCategory.Eraser,
+        }),
+        // ToolbarItem.fromData({
+        //   value: 'color',
+        //   label: 'scaffold.color',
+        //   icon: 'circle',
+        //   category: ToolbarItemCategory.ColorPicker,
+        //   // component: (props: any) => {
+        //   //   return <ColorsContainer {...props} />;
+        //   // },
+        // }),
+        // ToolbarItem.fromData({
+        //   value: 'blank-page',
+        //   label: 'scaffold.blank_page',
+        //   icon: 'blank-page',
+        // }),
+        ToolbarItem.fromData({
+          value: 'hand',
+          label: 'scaffold.move',
+          icon: 'hand',
+        }),
+        {
+          value: 'cloud',
+          label: 'scaffold.cloud_storage',
+          icon: 'cloud',
+        },
+        {
+          value: 'tools',
+          label: 'scaffold.tools',
+          icon: 'tools',
+          category: ToolbarItemCategory.Cabinet,
+        },
+        {
+          value: 'register',
+          label: 'scaffold.register',
+          icon: 'register',
+        },
+      ];
+    } else {
+      return [
+        {
+          value: 'tools',
+          label: 'scaffold.tools',
+          icon: 'tools',
+          category: ToolbarItemCategory.Cabinet,
+        },
+        {
+          value: 'register',
+          label: 'scaffold.register',
+          icon: 'register',
+        },
+      ];
+    }
   }
 
   /**
@@ -482,7 +715,13 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
     if (!whiteboardAuthorized) {
       //allowed to view user list only if not granted
-      return [];
+      return [
+        ToolbarItem.fromData({
+          value: 'register',
+          label: 'scaffold.register',
+          icon: 'register',
+        }),
+      ];
     }
 
     return [
@@ -512,16 +751,13 @@ export class ToolbarUIStore extends EduUIStoreBase {
         value: 'eraser',
         label: 'scaffold.eraser',
         icon: 'eraser',
+        category: ToolbarItemCategory.Eraser,
       }),
-      // ToolbarItem.fromData({
-      //   value: 'color',
-      //   label: 'scaffold.color',
-      //   icon: 'circle',
-      //   category: ToolbarItemCategory.ColorPicker,
-      //   // component: (props: any) => {
-      //   //   return <ColorsContainer {...props} />;
-      //   // },
-      // }),
+      ToolbarItem.fromData({
+        value: 'register',
+        label: 'scaffold.register',
+        icon: 'register',
+      }),
     ];
   }
 

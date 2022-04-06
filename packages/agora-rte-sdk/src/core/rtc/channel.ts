@@ -1,3 +1,4 @@
+import { LowStreamParameter, RemoteStreamType, UID } from 'agora-rtc-sdk-ng';
 import { AgoraRteLogLevel } from '../../configs';
 import { ClientRole } from '../../type';
 import { Log } from '../decorator';
@@ -23,6 +24,27 @@ export class AGRtcChannel {
     return type === undefined ? AGRtcConnectionType.main : type;
   }
 
+  enableDualStream(enable: boolean, connectionType?: AGRtcConnectionType) {
+    return this._adapter.enableDualStream(enable, this.connectionType(connectionType));
+  }
+
+  setLowStreamParameter(streamParameter: LowStreamParameter, connectionType?: AGRtcConnectionType) {
+    return this._adapter.setLowStreamParameter(
+      streamParameter,
+      this.connectionType(connectionType),
+    );
+  }
+  setRemoteVideoStreamType(
+    uid: UID,
+    streamType: RemoteStreamType,
+    connectionType?: AGRtcConnectionType,
+  ) {
+    return this._adapter.setRemoteVideoStreamType(
+      uid,
+      streamType,
+      this.connectionType(connectionType),
+    );
+  }
   getRtcSid() {
     return this._adapter.getSessionId();
   }

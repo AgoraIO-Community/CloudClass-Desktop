@@ -1,7 +1,12 @@
 import { AgoraRteThread } from '../../../utils/thread';
 import { AgoraRtcVideoCanvas } from '../../canvas';
 import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
-import { AgoraRteMediaSourceState, AGRenderMode, AGRteTrackErrorReason } from '../../type';
+import {
+  AgoraRteMediaSourceState,
+  AGRenderMode,
+  AGRteTrackErrorReason,
+  FcrAudioRawDataConfig,
+} from '../../type';
 import AgoraRTC, {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -159,6 +164,7 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
   private _recordingDeviceChanged: boolean = false;
   trackState: AgoraRteMediaSourceState = AgoraRteMediaSourceState.stopped;
   private _volumePollingTask?: Scheduler.Task;
+  private _audioRawConfig: FcrAudioRawDataConfig = { frameSize: 1024 };
 
   setMicTrackState(state: AgoraRteMediaSourceState, reason?: string) {
     if (this.trackState === state) {
@@ -194,8 +200,25 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
     this._recordingDeviceChanged = true;
   }
 
+  setAudioRawDataConfig(config: FcrAudioRawDataConfig) {
+    this._audioRawConfig = { ...this._audioRawConfig, ...config };
+  }
+
+  setAudioFrameCallback() {
+    this.track &&
+      (this.track as ILocalAudioTrack).setAudioFrameCallback((buffer: AudioBuffer) => {
+        this.logger.info(`setAudioFrameCallback start...`);
+        this.emit(AgoraMediaControlEventType.localAudioFrame, buffer);
+      }, this._audioRawConfig.frameSize);
+  }
+
+  stopAudioFrameCallback() {
+    this.logger.info(`stopAudioFrameCallback`);
+    this.track && (this.track as ILocalAudioTrack).setAudioFrameCallback(null);
+  }
+
   async onExecution() {
-    this.logger.debug(`thread notify start...`);
+    this.logger.info(`thread notify start...`);
     do {
       if (this.micEnable) {
         if (this._recordingDeviceChanged) {
@@ -219,6 +242,7 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
         if (!this.track) {
           this.logger.debug(`starting mic...`);
           this.setMicTrackState(AgoraRteMediaSourceState.starting);
+
           try {
             this.track = await AgoraRTC.createMicrophoneAudioTrack({
               microphoneId: this._recordingDeviceId,
@@ -236,6 +260,7 @@ export class AgoraRteMicrophoneThread extends AgoraRteMediaTrackThread {
               e as Error,
             );
             this.setMicTrackState(AgoraRteMediaSourceState.error);
+
             break;
           }
 

@@ -466,14 +466,14 @@ export class RosterUIStore extends EduUIStoreBase {
   get rosterFunctions() {
     const { canKickOut, canOperateCarousel, canSearchInRoster } = this;
 
-    const functions = ['podium', 'grant-board', 'stars'] as Array<
+    const functions = ['podium', 'grant-board'] as Array<
       'search' | 'carousel' | 'kick' | 'grant-board' | 'podium' | 'stars'
     >;
     this.classroomStore.connectionStore.mainRoomScene?.sceneId;
     const { mainRoomScene, sceneId } = this.classroomStore.connectionStore;
     const isInMainRoom = mainRoomScene?.sceneId === sceneId;
 
-    if (canKickOut) {
+    if (canKickOut && isInMainRoom) {
       functions.push('kick');
     }
     if (canOperateCarousel && isInMainRoom) {
@@ -481,6 +481,9 @@ export class RosterUIStore extends EduUIStoreBase {
     }
     if (canSearchInRoster) {
       functions.push('search');
+    }
+    if (isInMainRoom) {
+      functions.push('stars');
     }
     return functions;
   }

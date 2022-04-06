@@ -5,6 +5,7 @@ import { TrackState } from '../room/type';
 import { action, computed, observable } from 'mobx';
 import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
 import { get } from 'lodash';
+import { EduClassroomConfig } from '../../../../configs';
 
 /**
  * 负责功能：
@@ -56,7 +57,11 @@ export class WidgetStore extends EduStoreBase {
       state: 0,
     });
   }
-
+  @bound
+  deleteWidget(widgetId: string) {
+    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
+    this.api.deleteWidgetProperties(roomUuid, widgetId, {});
+  }
   @action
   async deleteWidgetTrackState(widgetId: string) {
     this.setInactive(widgetId);

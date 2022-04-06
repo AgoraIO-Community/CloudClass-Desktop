@@ -16,6 +16,7 @@ type MultiRootTreeProps = {
   gap?: number;
   disableExpansion?: boolean;
   childClassName?: string;
+  showArrowAlways?: boolean;
 } & BaseProps;
 
 type TreeProps = {
@@ -25,6 +26,7 @@ type TreeProps = {
   renderNode?: (node: TreeModel, level: number) => JSX.Element | undefined;
   disableExpansion?: boolean;
   childClassName?: string;
+  showArrowAlways?: boolean;
 };
 
 export const MultiRootTree: FC<MultiRootTreeProps> = ({
@@ -33,6 +35,7 @@ export const MultiRootTree: FC<MultiRootTreeProps> = ({
   disableExpansion,
   childClassName,
   renderNode,
+  showArrowAlways,
 }) => {
   return (
     <div className="fcr-multi-tree-root">
@@ -45,6 +48,7 @@ export const MultiRootTree: FC<MultiRootTreeProps> = ({
           disableExpansion={disableExpansion}
           childClassName={childClassName}
           renderNode={renderNode}
+          showArrowAlways={showArrowAlways}
         />
       ))}
     </div>
@@ -58,8 +62,9 @@ export const Tree: FC<TreeProps> = ({
   disableExpansion,
   childClassName,
   renderNode,
+  showArrowAlways,
 }) => {
-  const hasChildren = data.children?.length;
+  const hasChildren = data.children?.length || showArrowAlways;
 
   const [expanded, setExtpanded] = useState(false);
 

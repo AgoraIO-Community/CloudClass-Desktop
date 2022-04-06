@@ -56,7 +56,7 @@ export const NavigationBarAction = observer(({ action }: { action: EduNavAction 
     <Tooltip title={action.title} placement="bottom">
       <SvgImg
         canHover
-        style={{ color: action.iconColor }}
+        color={action.iconColor}
         type={action.iconType}
         size={24}
         onClick={action.onClick}

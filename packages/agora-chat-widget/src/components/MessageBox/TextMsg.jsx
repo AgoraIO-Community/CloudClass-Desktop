@@ -24,6 +24,7 @@ export const TextMsg = ({ item }) => {
   const isTeacher =
     state.propsData.roleType === ROLE.teacher.id || state.propsData.roleType === ROLE.assistant.id;
 
+  const isSendToAll = item?.ext.range === 3;
   const menu = (
     <Menu>
       <Menu.Item key="1">
@@ -69,6 +70,11 @@ export const TextMsg = ({ item }) => {
       {sender && (
         <div>
           <div className="msg-user-me">
+            {isSendToAll && (
+              <span style={{ color: '#357BF6', fontSize: 12 }}>
+                {transI18n('chat.send_to_all')}
+              </span>
+            )}
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
             <span>{userNickName}</span>
@@ -98,6 +104,11 @@ export const TextMsg = ({ item }) => {
             <span>{userNickName}</span>
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
+            {isSendToAll && (
+              <span style={{ color: '#357BF6', fontSize: 12 }}>
+                {transI18n('chat.send_to_all')}
+              </span>
+            )}
           </div>
           {isTeacher && (
             <>

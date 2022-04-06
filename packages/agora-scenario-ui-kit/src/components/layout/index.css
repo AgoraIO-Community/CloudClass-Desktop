@@ -33,4 +33,6 @@
   @apply overflow-hidden;
   gap: 4px;
   margin-left: 2px;
+  position: relative;
+  z-index: 3;
 }

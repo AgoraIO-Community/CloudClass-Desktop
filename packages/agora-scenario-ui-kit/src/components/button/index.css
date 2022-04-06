@@ -1,83 +1,83 @@
-.btn {
+.fcr-btn {
   @apply cursor-pointer text-base rounded-full relative overflow-hidden;
 }
 
-.btn-primary {
+.fcr-btn-primary {
   @apply text-white bg-primary;
   @apply hover:bg-primary-hover;
   @apply active:bg-primary-active;
 }
 
-.btn-danger {
+.fcr-btn-danger {
   @apply text-danger bg-white border-danger border;
 }
 
-.btn-danger:hover {
+.fcr-btn-danger:hover {
   @apply text-danger-hover border-danger-hover;
 }
 
-.btn-danger:active {
+.fcr-btn-danger:active {
   @apply text-danger-active border-danger-active;
 }
 
-.btn-secondary {
+.fcr-btn-secondary {
   @apply bg-white border-secondary border text-secondary;
 }
 
-.btn-secondary:hover {
+.fcr-btn-secondary:hover {
   @apply bg-white border-secondary-hover border text-secondary-hover;
 }
 
-.btn-secondary:active {
+.fcr-btn-secondary:active {
   @apply text-secondary-active bg-white border-secondary-active border text-secondary-active;
 }
 
-.btn-ghost {
+.fcr-btn-ghost {
   @apply text-ghost bg-white border-secondary border;
 }
 
-.btn-ghost:hover {
+.fcr-btn-ghost:hover {
   @apply text-secondary-hover bg-white border-secondary-hover border;
 }
 
-.btn-ghost:active {
+.fcr-btn-ghost:active {
   @apply text-secondary-active bg-white border-secondary-active border;
 }
 
-.btn-xs {
-  width: 80px;
+.fcr-btn-xs {
+  min-width: 80px;
   height: 24px;
   font-size: 12px;
 }
 
-.btn-sm {
-  width: 80px;
+.fcr-btn-sm {
+  min-width: 80px;
   height: 30px;
   font-size: 14px;
 }
 
-.btn-lg {
-  width: 280px;
+.fcr-btn-lg {
+  min-width: 280px;
   height: 40px;
   font-size: 16px;
 }
 
-.btn:focus {
+.fcr-btn:focus {
   @apply outline-none;
 }
 
-.btn[disabled] {
+.fcr-btn[disabled] {
   @apply disabled:opacity-50 pointer-events-none;
 }
 
-.btn.btn-xs[disabled],
-.btn.btn-sm[disabled] {
+.fcr-btn.fcr-btn-xs[disabled],
+.fcr-btn.fcr-btn-sm[disabled] {
   background-color: #ffffff;
   border: 1px solid #c2c2c8;
   color: #c2c2c8;
 }
 
-.ripple {
+.fcr-ripple {
   position: absolute;
   top: 0;
   left: 0;
@@ -87,7 +87,7 @@
   overflow: hidden;
 }
 
-@keyframes ripple {
+@keyframes fcr-ripple {
   from {
     transform: scale(0);
     opacity: 1;
@@ -98,12 +98,12 @@
   }
 }
 
-.btn .ripple-circle {
+.fcr-btn .fcr-ripple-circle {
   position: absolute;
   border: 1px solid transparent;
   border-radius: 50%;
   pointer-events: none;
-  animation: ripple 0.75s 1;
+  animation: fcr-ripple 0.75s 1;
   top: 50%;
   left: 50%;
 }
