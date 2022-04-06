@@ -157,6 +157,7 @@ export class CloudDriveStore extends EduStoreBase {
       ossKey: string;
       preSignedUrl: string;
       fileUrl: string;
+      contentType: string;
     },
   ): Promise<string> {
     const { preSignedUrl, fileUrl } = ossConfig;
@@ -166,7 +167,7 @@ export class CloudDriveStore extends EduStoreBase {
       await axios.put(preSignedUrl, file, {
         cancelToken: cancelTokenSource.token,
         headers: {
-          'Content-Type': file.type,
+          'Content-Type': ossConfig.contentType,
         },
         onUploadProgress: (progressEvent: any) => {
           const checkpoint = this._checkpoints.get(resourceUuid)!;
@@ -224,15 +225,17 @@ export class CloudDriveStore extends EduStoreBase {
 
       // step 1. fetch sts token for futher operations
 
+      const contentType = CloudDriveUtils.fileExt2ContentType(ext);
+
       const uploadData = {
         userUuid: sessionInfo.userUuid,
         resourceName: name,
         resourceUuid,
-        contentType: CloudDriveUtils.fileExt2ContentType(ext),
+        contentType,
         ext: ext,
         size: file.size,
         updateTime: 0,
-      };
+      }; // presignedUrls body
       const progress = new CloudDriveUploadingProgress(uploadData);
       this._initProgress(progress);
       if (!this._checkpoints.get(resourceUuid)) {
@@ -281,6 +284,7 @@ export class CloudDriveStore extends EduStoreBase {
         ossKey,
         preSignedUrl,
         fileUrl,
+        contentType,
       });
       const conversion = CloudDriveUtils.conversionOption(ext);
 
