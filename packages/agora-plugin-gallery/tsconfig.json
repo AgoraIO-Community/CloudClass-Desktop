@@ -4,7 +4,6 @@
     "outDir": "lib",
     "target": "es6",
     "paths": {
-      "agora-edu-core": ["../agora-edu-core/src"],
       "~ui-kit": ["../agora-scenario-ui-kit/src"],
       "~ui-kit/*": ["../agora-scenario-ui-kit/src/*"],
     },
