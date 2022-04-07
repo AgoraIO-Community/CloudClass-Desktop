@@ -429,6 +429,11 @@ export class GroupUIStore extends EduUIStoreBase {
       });
     });
     return new Promise<void>((resolve, reject) => {
+      // stop carousel
+      this.classroomStore.roomStore.stopCarousel().catch((e) => {
+        this.shareUIStore.addGenericErrorDialog(e as AGError);
+        reject();
+      });
       this.classroomStore.groupStore
         .startGroup(groupDetails)
         .then(() => {

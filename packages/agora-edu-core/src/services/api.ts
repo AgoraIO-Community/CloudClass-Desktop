@@ -829,10 +829,15 @@ export class EduApiService extends ApiBase {
    * @param roomUuid
    * @param groupUuid
    */
-  async acceptGroupInvited(roomUuid: string, groupUuid: string) {
+  async acceptGroupInvited(
+    roomUuid: string,
+    groupUuid: string,
+    data?: { leaveGroupUuids: string[] },
+  ) {
     const res = await this.fetch({
       path: `/v2/rooms/${roomUuid}/groups/${groupUuid}/acceptance`,
       method: 'POST',
+      data,
     });
     return res.data;
   }

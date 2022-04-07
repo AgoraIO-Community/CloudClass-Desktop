@@ -58,7 +58,7 @@ export const Panel: FC<PanelProps> = ({
 }) => {
   const { visiblePanelId, onTrigger, getNextPanelId } = useContext(PanelStateContext);
 
-  const panelId = useMemo(() => pid || getNextPanelId(), []);
+  const panelId = useMemo(() => pid || getNextPanelId(), [pid]);
 
   const visible = visiblePanelId === panelId;
 

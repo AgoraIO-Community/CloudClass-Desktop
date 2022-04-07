@@ -725,7 +725,7 @@ export class BoardStore extends EduStoreBase {
       kind: 'Slide',
       appOptions: {
         // 打开这个选项显示 debug 工具栏
-        debug: true,
+        // debug: true,
       },
       src: async () => {
         return SlideApp;

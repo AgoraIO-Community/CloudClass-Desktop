@@ -335,7 +335,15 @@ export class GroupStore extends EduStoreBase {
   @bound
   async acceptGroupInvited(groupUuid: string) {
     const roomUuid = EduClassroomConfig.shared.sessionInfo.roomUuid;
-    await this.api.acceptGroupInvited(roomUuid, groupUuid);
+    await this.api.acceptGroupInvited(
+      roomUuid,
+      groupUuid,
+      this._currentGroupUuid
+        ? {
+            leaveGroupUuids: [this._currentGroupUuid],
+          }
+        : undefined,
+    );
   }
 
   @bound

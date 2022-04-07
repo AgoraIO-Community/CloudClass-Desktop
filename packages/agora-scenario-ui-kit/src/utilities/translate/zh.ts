@@ -594,7 +594,7 @@ export const zh = {
     confirm_invite_student_content: '老师邀请您加入{reason}',
     confirm_invite_student_btn_ok: '确定',
     confirm_invite_student_btn_cancel: '取消',
-    confirm_ask_for_help_busy_content: '老师在忙，稍后重试',
+    confirm_ask_for_help_busy_content: '老师正在忙，请稍后重试',
     confirm_ask_for_help_absent_content: '老师不在教室中',
     confirm_ask_for_help_content: '你可以邀请老师进入此房间',
     confirm_ask_for_help_btn_ok: '邀请',

@@ -18,6 +18,7 @@ import {
   AGServiceErrorCode,
   EduClassroomConfig,
   EduRoleTypeEnum,
+  GroupState,
   iterateMap,
 } from 'agora-edu-core';
 
@@ -476,7 +477,7 @@ export class RosterUIStore extends EduUIStoreBase {
     if (canKickOut && isInMainRoom) {
       functions.push('kick');
     }
-    if (canOperateCarousel && isInMainRoom) {
+    if (canOperateCarousel && isInMainRoom && !this.groupStarted) {
       functions.push('carousel');
     }
     if (canSearchInRoster) {
@@ -501,6 +502,11 @@ export class RosterUIStore extends EduUIStoreBase {
       onRandomValueChange: this.updatePartial<string>('randomValue'),
       onOpenCarousel: this.updatePartial<boolean>('isOpenCarousel'),
     };
+  }
+
+  @computed
+  get groupStarted() {
+    return this.classroomStore.groupStore.state === GroupState.OPEN;
   }
 
   /** Getters */

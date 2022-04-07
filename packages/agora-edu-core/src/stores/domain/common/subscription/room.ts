@@ -129,6 +129,10 @@ export class MainRoomSubscription extends SceneSubscription {
     }
     this.logger.info(`_handleLocalStreamAdded [${streams.join(',')}]`);
 
+    if (!this.active) {
+      return;
+    }
+
     streams.forEach((s) => {
       const type =
         s.streamName === 'secondary' || s.videoSourceType === AgoraRteVideoSourceType.ScreenShare
@@ -170,7 +174,13 @@ export class MainRoomSubscription extends SceneSubscription {
     if (streams.length === 0) {
       return;
     }
+
     this.logger.info(`_handleLocalStreamChanged [${streams.join(',')}]`);
+
+    if (!this.active) {
+      return;
+    }
+
     streams.forEach((s) => {
       const type =
         s.streamName === 'secondary' || s.videoSourceType === AgoraRteVideoSourceType.ScreenShare
@@ -214,6 +224,11 @@ export class MainRoomSubscription extends SceneSubscription {
     }
 
     this.logger.info(`_handleLocalStreamRemoved [${streams.join(',')}]`);
+
+    if (!this.active) {
+      return;
+    }
+
     streams.forEach((s) => {
       const type =
         s.streamName === 'secondary' || s.videoSourceType === AgoraRteVideoSourceType.ScreenShare
@@ -247,6 +262,11 @@ export class MainRoomSubscription extends SceneSubscription {
     }
 
     this.logger.info(`_handleRemoteStreamsAdded [${streams.join(',')}]`);
+
+    if (!this.active) {
+      return;
+    }
+
     // remote stream added, try subscribing
     streams.forEach((s) => {
       switch (s.videoState) {
@@ -272,6 +292,11 @@ export class MainRoomSubscription extends SceneSubscription {
   handleRemoteStreamUpdated(streams: AgoraStream[]) {
     const scene = this._scene;
     this.logger.info(`_handleRemoteStreamsChanged [${streams.join(',')}]`);
+
+    if (!this.active) {
+      return;
+    }
+
     // remote stream added, try subscribing
     streams.forEach((s) => {
       switch (s.videoState) {
@@ -300,11 +325,20 @@ export class MainRoomSubscription extends SceneSubscription {
       return;
     }
     this.logger.info(`_handleRemoteStreamsRemoved [${streams.join(',')}]`);
+
     // remote stream added, try subscribing
     streams.forEach((s) => {
       scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
       scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
     });
+  }
+
+  get active() {
+    if (!this._active) {
+      this.logger.info(`Scene with id: ${this._scene.sceneId} is inactive, do not operate stream`);
+      return;
+    }
+    return this._active;
   }
 
   setActive(active: boolean): void {

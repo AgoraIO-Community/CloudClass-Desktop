@@ -66,6 +66,11 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
           icon: 'tools',
           category: ToolbarItemCategory.Cabinet,
         },
+        {
+          value: 'register',
+          label: 'scaffold.register',
+          icon: 'register',
+        },
       ];
     } else {
       return [
