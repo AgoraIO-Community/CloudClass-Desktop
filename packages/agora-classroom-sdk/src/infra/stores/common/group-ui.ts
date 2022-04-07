@@ -318,14 +318,27 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @action.bound
   moveUserToGroup(fromGroupUuid: string, toGroupUuid: string, userUuid: string) {
-    if (this.groupState === GroupState.OPEN) {
-      const toUsersLength =
-        this.classroomStore.groupStore.groupDetails.get(toGroupUuid)?.users.length;
-      if (toUsersLength && toUsersLength >= this.MAX_USER_COUNT) {
+    const group = this.groupDetails.get(toGroupUuid);
+
+    if (group) {
+      let studentsCount = 0;
+      // let assistantsCount = 0;
+      // let teachersCount = 0;
+      group.users.forEach(({ userUuid }) => {
+        if (this.classroomStore.userStore.studentList.get(userUuid)) studentsCount += 1;
+        // if (this.classroomStore.userStore.assistantList.get(userUuid)) assistantsCount += 1;
+        // if (this.classroomStore.userStore.teacherList.get(userUuid)) teachersCount += 1;
+      });
+      // check students number
+      if (studentsCount >= this.MAX_USER_COUNT) {
         this.toastFullOfStudents();
         return;
       }
+      // check assistants number
+      // check teachers number
+    }
 
+    if (this.groupState === GroupState.OPEN) {
       if (!fromGroupUuid) {
         this.classroomStore.groupStore.updateGroupUsers(
           [
@@ -342,11 +355,6 @@ export class GroupUIStore extends EduUIStoreBase {
     } else {
       const fromGroup = this.localGroups.get(fromGroupUuid);
       const toGroup = this.localGroups.get(toGroupUuid);
-
-      if (toGroup && toGroup.users.length >= this.MAX_USER_COUNT) {
-        this.toastFullOfStudents();
-        return;
-      }
 
       if (fromGroup && toGroup) {
         fromGroup.users = fromGroup.users.filter(({ userUuid: uuid }) => uuid !== userUuid);

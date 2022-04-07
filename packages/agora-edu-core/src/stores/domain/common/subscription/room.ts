@@ -336,7 +336,6 @@ export class MainRoomSubscription extends SceneSubscription {
   get active() {
     if (!this._active) {
       this.logger.info(`Scene with id: ${this._scene.sceneId} is inactive, do not operate stream`);
-      return;
     }
     return this._active;
   }

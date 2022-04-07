@@ -39,7 +39,7 @@
     "core-js": "3.20.1"
   },
   "dependencies": {
-    "@netless/app-slide": "0.1.0",
+    "@netless/app-slide": "0.1.1",
     "@netless/combine-player": "1.1.4",
     "@netless/cursor-tool": "0.0.7",
     "@netless/iframe-bridge": "2.1.4",

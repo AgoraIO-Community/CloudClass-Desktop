@@ -3093,10 +3093,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-slide@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.npmmirror.com/@netless/app-slide/-/app-slide-0.1.0.tgz#eb8f6b1ecc8d0e0335f2f5fb14037df34ed2acbd"
-  integrity sha512-tivMMmd4vKr98AJixyxhHQkgheR8zOWV4mvq/yB2PCdkVpxfUtW4er9+mZ+CoOP6P/9X5kegL/vD49Gn8jYVeA==
+"@netless/app-slide@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.1.1.tgz#5a3b396cfcea7a4b77d11742f3a6470bfd6d8d79"
+  integrity sha512-eZZK9jUsfrnnpEvKKRnSDET7DwNvCltzRnsvWGjveQCb5eeGsYVleP13bY/foFlL6wpUInNXhdjS5J2/E5WXsw==
 
 "@netless/canvas-polyfill@^0.0.4":
   version "0.0.4"
@@ -3133,10 +3133,10 @@
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha512-smL1iufVg8XxsvO1GzLD4NZf3wFTev7FRIiHlIYDCjIgTS7/Yq6N2n8JMh2ZDjYi1nMBxDstkQPxZOEOpc/N8g==
 
-"@netless/telebox-insider@0.2.19", "@netless/telebox-insider@0.2.26":
-  version "0.2.19"
-  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.2.19.tgz#f5b06129a2aa789c9008f4c4e14a4167509da386"
-  integrity sha512-nb39pYGU+ltk5IMXPx7zGjA2rzkeu4r2EaBfrD/8h1QMov8or+T7tE5lJ3CNd6Bg/chVPjdfvOc8MleLztpjyg==
+"@netless/telebox-insider@0.2.26":
+  version "0.2.26"
+  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.2.26.tgz#cc6dd229a5131225855b5780f3c180ed27534fbb"
+  integrity sha512-HOBi9HWK0Zf0nvzfjM0V/0QmZ69ec7L/lCKMwRcfiQHxAAJ/zo9fEm468WocYFsliixWW5L7HwMN0eHb0mw7hA==
   dependencies:
     "@types/shallowequal" "^1.1.1"
     eventemitter3 "^4.0.7"
