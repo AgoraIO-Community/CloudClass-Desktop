@@ -14,6 +14,7 @@ import {
   Platform,
   IAgoraExtensionApp,
 } from 'agora-edu-core';
+import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-gallery';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
 import { EduContext } from '../contexts';
@@ -196,6 +197,14 @@ export class AgoraEduSDK {
       startTime,
     };
 
+    const extensions = [
+      new AgoraCountdown(),
+      new AgoraSelector(),
+      new AgoraPolling(),
+    ] as IAgoraExtensionApp[];
+
+    extensions.concat;
+
     const config = new EduClassroomConfig(
       AgoraEduSDK.appId,
       sessionInfo,
@@ -215,7 +224,7 @@ export class AgoraEduSDK {
       },
       platform,
       i18nResources,
-      option.extensions,
+      option.extensions ? extensions.concat(option.extensions) : extensions,
     );
 
     if (AgoraEduSDK._config.host) {

@@ -284,7 +284,7 @@ export class PluginStore {
 
   @computed
   get currentAnalysis() {
-    return `${(this.context.roomProperties.extra?.averageAccuracy || 0) * 100}%`;
+    return `${Math.floor((this.context.roomProperties.extra?.averageAccuracy || 0) * 100)}%`;
   }
 
   @computed
