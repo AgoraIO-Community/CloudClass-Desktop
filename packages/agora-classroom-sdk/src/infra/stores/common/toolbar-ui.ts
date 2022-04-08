@@ -119,9 +119,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
     reaction(
       () => ({
         localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
-        screenShareStreamUuid:
-          this.classroomStore.roomStore.screenShareStreamUuid ||
-          this.classroomStore.streamStore.localShareStreamUuid,
+        screenShareStreamUuid: this.classroomStore.streamStore.localShareStreamUuid,
       }),
 
       ({ localScreenShareTrackState, screenShareStreamUuid }) => {
