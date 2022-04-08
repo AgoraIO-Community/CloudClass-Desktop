@@ -1,8 +1,0 @@
-{
-  "entryPoints": ["./src"],
-  "out": "./docs",
-  "exclude": ["**/node_modules/**"],
-  "excludeExternals": true,
-  "excludePrivate": true,
-  "hideGenerator": true
-}
