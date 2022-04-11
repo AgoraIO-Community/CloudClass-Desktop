@@ -81,7 +81,6 @@ export class EduApiService extends ApiBase {
     const finalData = resourceUuids.map((resourceUuid) => ({
       resourceUuid,
       userUuid,
-      type: '1',
     }));
     const { data } = await this.fetch({
       path: `/v3/users/${userUuid}/resources`,
