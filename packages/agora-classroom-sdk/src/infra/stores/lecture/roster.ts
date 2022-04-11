@@ -9,6 +9,7 @@ import {
 import { RosterUIStore } from '../common/roster';
 import { DeviceState, Operations, Profile } from '../common/roster/type';
 import { DialogCategory } from '../common/share-ui';
+import { BoardGrantState } from '~ui-kit';
 
 export class LectureRosterUIStore extends RosterUIStore {
   get uiOverrides() {
@@ -103,12 +104,16 @@ export class LectureRosterUIStore extends RosterUIStore {
     const list = this._usersList.map(({ userUuid, userName }) => {
       const { acceptedList, chatMuted } = this.classroomStore.roomStore;
       const { rewards } = this.classroomStore.userStore;
-      const { grantUsers } = this.classroomStore.boardStore;
+      const { grantUsers, ready: boardReady } = this.classroomStore.boardStore;
       const uid = userUuid;
       const name = userName;
 
       const isOnPodium = acceptedList.some(({ userUuid: uid }) => userUuid === uid);
-      const isBoardGranted = grantUsers.has(userUuid);
+      const boardGrantState = boardReady
+        ? grantUsers.has(userUuid)
+          ? BoardGrantState.Granted
+          : BoardGrantState.NotGranted
+        : BoardGrantState.Disabled;
       const stars = rewards.get(userUuid) || 0;
       const isChatMuted = chatMuted;
       let cameraState = DeviceState.unavailable;
@@ -156,7 +161,7 @@ export class LectureRosterUIStore extends RosterUIStore {
         uid,
         name,
         isOnPodium,
-        isBoardGranted,
+        boardGrantState,
         isChatMuted,
         cameraState,
         microphoneState,

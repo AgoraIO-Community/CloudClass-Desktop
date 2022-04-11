@@ -21,6 +21,7 @@ import {
   GroupState,
   iterateMap,
 } from 'agora-edu-core';
+import { BoardGrantState } from '~ui-kit';
 
 export class RosterUIStore extends EduUIStoreBase {
   /**
@@ -380,12 +381,16 @@ export class RosterUIStore extends EduUIStoreBase {
       onMap: (userUuid: string, { userName }) => {
         const { acceptedList, chatMuted } = this.classroomStore.roomStore;
         const { rewards } = this.classroomStore.userStore;
-        const { grantUsers } = this.classroomStore.boardStore;
+        const { grantUsers, ready: boardReady } = this.classroomStore.boardStore;
         const uid = userUuid;
         const name = userName;
 
         const isOnPodium = acceptedList.some(({ userUuid: uid }) => userUuid === uid);
-        const isBoardGranted = grantUsers.has(userUuid);
+        const boardGrantState = boardReady
+          ? grantUsers.has(userUuid)
+            ? BoardGrantState.Granted
+            : BoardGrantState.NotGranted
+          : BoardGrantState.Disabled;
         const stars = rewards.get(userUuid) || 0;
         const isChatMuted = chatMuted;
         let cameraState = DeviceState.unavailable;
@@ -435,7 +440,7 @@ export class RosterUIStore extends EduUIStoreBase {
           uid,
           name,
           isOnPodium,
-          isBoardGranted,
+          boardGrantState,
           isChatMuted,
           cameraState,
           microphoneState,
@@ -525,7 +530,10 @@ export class RosterUIStore extends EduUIStoreBase {
    */
   get canGrantWhiteboardPermissions() {
     const { sessionInfo } = EduClassroomConfig.shared;
-    return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
+    return (
+      [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role) &&
+      this.classroomStore.boardStore.ready
+    );
   }
 
   /**

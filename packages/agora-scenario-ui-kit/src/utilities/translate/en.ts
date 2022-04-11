@@ -8,6 +8,7 @@ export const en = {
   'Clear Podium': 'Close Podium',
   'Clear Podiums': 'Clear Podiums',
   'Close Whiteboard': 'close whiteboard',
+  'Whiteboard Not Available': 'Whiteboard Not Available',
   'Open Whiteboard': 'open whiteboard',
   Star: 'star',
   'Open Private Call': 'open private call',

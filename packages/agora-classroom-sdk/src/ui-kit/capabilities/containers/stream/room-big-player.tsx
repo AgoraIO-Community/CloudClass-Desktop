@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, CSSProperties } from 'react';
+import { useRef, useState, useCallback, CSSProperties, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import { useLectureUIStores } from '~hooks/use-edu-stores';
 import { EduRoleTypeEnum } from 'agora-edu-core';
@@ -7,10 +7,16 @@ import { StreamPlayer, StreamPlaceholder, CarouselGroup, NavGroup } from '.';
 
 export const RoomBigTeacherStreamContainer = observer(
   ({ isFullScreen = false }: { isFullScreen?: boolean }) => {
-    const { streamUIStore } = useLectureUIStores() as EduLectureUIStore;
+    const { streamUIStore, widgetUIStore } = useLectureUIStores() as EduLectureUIStore;
     const { teacherCameraStream, teacherVideoStreamSize } = streamUIStore;
     const teacherStreamContainer = useRef<HTMLDivElement | null>(null);
     const containerStyle: CSSProperties = isFullScreen ? { width: '100%', height: '100%' } : {};
+    const { isBigWidgetWindowTeacherStreamActive } = widgetUIStore;
+    const canSetupVideo = useMemo(
+      () =>
+        isFullScreen ? isBigWidgetWindowTeacherStreamActive : !isBigWidgetWindowTeacherStreamActive,
+      [isBigWidgetWindowTeacherStreamActive, isFullScreen],
+    );
     return (
       <div
         className="teacher-stream-container flex flex-col"
@@ -21,6 +27,7 @@ export const RoomBigTeacherStreamContainer = observer(
         ref={teacherStreamContainer}>
         {teacherCameraStream ? (
           <StreamPlayer
+            canSetupVideo={canSetupVideo}
             isFullScreen={isFullScreen}
             stream={teacherCameraStream}
             style={teacherVideoStreamSize}></StreamPlayer>

@@ -44,7 +44,10 @@
 .icon-ruddy.ruddy {
   background-image: url('./assets/svg/ruddy.svg');
 }
-
+.icon-board-grant-disabled {
+  background-image: url('./assets/svg/board-grant-disabled.svg');
+  background-size: 100%;
+}
 .icon-board-granted {
   background-image: url('./assets/svg/board-granted.svg');
   background-size: 100%;

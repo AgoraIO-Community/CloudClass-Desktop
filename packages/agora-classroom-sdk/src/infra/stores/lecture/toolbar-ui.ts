@@ -12,6 +12,7 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
     CabinetItemEnum.ScreenShare,
     CabinetItemEnum.CountdownTimer,
     CabinetItemEnum.Poll,
+    CabinetItemEnum.Whiteboard,
   ];
   /**
    * 老师工具栏工具列表

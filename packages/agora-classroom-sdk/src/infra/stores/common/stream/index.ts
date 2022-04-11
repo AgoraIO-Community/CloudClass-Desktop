@@ -511,12 +511,21 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   remoteWhiteboardTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     const whiteboardAuthorized = this.whiteboardGrantUsers.has(stream.fromUser.userUuid);
+    const whiteboardReady = this.classroomStore.boardStore.ready;
     return new EduStreamTool(
       EduStreamToolCategory.whiteboard,
-      whiteboardAuthorized ? 'board-granted' : 'board-not-granted',
-      whiteboardAuthorized ? transI18n('Close Whiteboard') : transI18n('Open Whiteboard'),
+      whiteboardReady
+        ? whiteboardAuthorized
+          ? 'board-granted'
+          : 'board-not-granted'
+        : 'board-grant-disabled',
+      whiteboardReady
+        ? whiteboardAuthorized
+          ? transI18n('Close Whiteboard')
+          : transI18n('Open Whiteboard')
+        : transI18n('Whiteboard Not Available'),
       {
-        interactable: true,
+        interactable: whiteboardReady,
         style: {},
         hoverIconType: 'board-granted',
         onClick: () => {
@@ -593,32 +602,35 @@ export class StreamUIStore extends EduUIStoreBase {
    * 本地视频占位符
    * @returns
    */
-  cameraPlaceholder = computedFn((stream: EduStreamUI): CameraPlaceholderType => {
-    const isLocal =
-      stream.stream.streamUuid === this.classroomStore.streamStore.localCameraStreamUuid;
+  cameraPlaceholder = computedFn(
+    (stream: EduStreamUI, canSetupVideo: boolean): CameraPlaceholderType => {
+      if (!canSetupVideo) return CameraPlaceholderType.nosetup;
+      const isLocal =
+        stream.stream.streamUuid === this.classroomStore.streamStore.localCameraStreamUuid;
 
-    const videoSourceState = isLocal
-      ? this.classroomStore.mediaStore.localCameraTrackState
-      : stream.stream.videoSourceState;
+      const videoSourceState = isLocal
+        ? this.classroomStore.mediaStore.localCameraTrackState
+        : stream.stream.videoSourceState;
 
-    let placeholder = CameraPlaceholderType.none;
+      let placeholder = CameraPlaceholderType.none;
 
-    const deviceDisabled = videoSourceState === AgoraRteMediaSourceState.stopped;
+      const deviceDisabled = videoSourceState === AgoraRteMediaSourceState.stopped;
 
-    if (deviceDisabled) {
-      return CameraPlaceholderType.disabled;
-    }
+      if (deviceDisabled) {
+        return CameraPlaceholderType.disabled;
+      }
 
-    if (
-      stream.stream.videoState === AgoraRteMediaPublishState.Published &&
-      videoSourceState === AgoraRteMediaSourceState.started
-    ) {
-      placeholder = CameraPlaceholderType.none;
-    } else {
-      placeholder = CameraPlaceholderType.muted;
-    }
-    return placeholder;
-  });
+      if (
+        stream.stream.videoState === AgoraRteMediaPublishState.Published &&
+        videoSourceState === AgoraRteMediaSourceState.started
+      ) {
+        placeholder = CameraPlaceholderType.none;
+      } else {
+        placeholder = CameraPlaceholderType.muted;
+      }
+      return placeholder;
+    },
+  );
 
   /**
    * 视频窗工具栏定位

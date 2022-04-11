@@ -9,6 +9,7 @@ export const zh = {
   'Clear Podiums': '全体下台',
   'Close Whiteboard': '取消授权白板',
   'Open Whiteboard': '授权白板',
+  'Whiteboard Not Available': '白板已关闭',
   Star: '奖励',
   'Open Private Call': '开启私密语音',
   'Close Private Call': '关闭私密语音',

@@ -26,6 +26,10 @@ export enum CameraPlaceholderType {
    * 老师不在教室
    */
   notpresent = 'notpresent',
+  /**
+   * 老师摄像头占位符（大小窗场景）
+   */
+  nosetup = 'nosetup',
 }
 
 export enum DeviceStateChangedReason {

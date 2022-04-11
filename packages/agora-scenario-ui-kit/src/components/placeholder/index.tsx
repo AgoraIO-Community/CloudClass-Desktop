@@ -71,6 +71,7 @@ const cameraSvgTypeDict = {
   disabled: 'placeholder-camera-disabled',
   none: 'placeholder-no-body',
   notpresent: 'placeholder-not-present',
+  nosetup: 'placeholder-no-setup',
 };
 
 const cameraSvgSizeDict = {
@@ -80,6 +81,7 @@ const cameraSvgSizeDict = {
   disabled: 90,
   none: 90,
   notpresent: 80,
+  nosetup: 90,
 };
 
 const cameraSvgZIndex = {
@@ -91,7 +93,7 @@ const cameraSvgZIndex = {
 };
 
 export interface CameraPlaceHolderProps extends BaseProps {
-  state?: 'loading' | 'broken' | 'muted' | 'disabled' | 'none' | 'notpresent';
+  state?: 'loading' | 'broken' | 'muted' | 'disabled' | 'none' | 'notpresent' | 'nosetup';
   text?: string;
   placeholderSize?: number;
   children?: React.ReactNode;

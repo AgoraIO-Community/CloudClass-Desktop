@@ -229,17 +229,19 @@ const StreamPlayerOverlayAwardNo = observer(({ stream }: { stream: EduStreamUI }
   );
 });
 
-const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
-  const { streamUIStore } = useStore();
-  const { cameraPlaceholder } = streamUIStore;
-  return (
-    <CameraPlaceHolder
-      style={{ position: 'absolute', top: 0 }}
-      state={cameraPlaceholder(stream)}
-      text={''}
-    />
-  );
-});
+const StreamPlayerCameraPlaceholder = observer(
+  ({ stream, canSetupVideo = true }: { stream: EduStreamUI; canSetupVideo?: boolean }) => {
+    const { streamUIStore } = useStore();
+    const { cameraPlaceholder } = streamUIStore;
+    return (
+      <CameraPlaceHolder
+        style={{ position: 'absolute', top: 0 }}
+        state={cameraPlaceholder(stream, canSetupVideo)}
+        text={''}
+      />
+    );
+  },
+);
 
 const StreamPlaceholderWaveArmPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
@@ -261,11 +263,13 @@ const StreamPlayerOverlay = observer(
     className,
     children,
     isFullscreen = false,
+    canSetupVideo = true,
   }: {
     stream: EduStreamUI;
     className?: string;
     children: ReactNode;
     isFullscreen?: boolean;
+    canSetupVideo?: boolean;
   }) => {
     const { streamUIStore } = useStore();
     const { toolbarPlacement, layerItems, fullScreenToolbarPlacement } = streamUIStore;
@@ -287,37 +291,41 @@ const StreamPlayerOverlay = observer(
         }}
         overlayClassName="video-player-tools-popover"
         content={
-          stream.stream.isLocal ? (
-            <LocalStreamPlayerTools isFullScreen={isFullscreen} />
-          ) : (
-            <RemoteStreamPlayerTools
-              isFullScreen={isFullscreen}
-              stream={stream}></RemoteStreamPlayerTools>
-          )
+          canSetupVideo ? (
+            stream.stream.isLocal ? (
+              <LocalStreamPlayerTools isFullScreen={isFullscreen} />
+            ) : (
+              <RemoteStreamPlayerTools
+                isFullScreen={isFullscreen}
+                stream={stream}></RemoteStreamPlayerTools>
+            )
+          ) : null
         }
         placement={isFullscreen ? fullScreenToolbarPlacement : toolbarPlacement}>
         <div className={cls}>
-          <StreamPlayerCameraPlaceholder stream={stream} />
+          <StreamPlayerCameraPlaceholder canSetupVideo={canSetupVideo} stream={stream} />
           {children ? children : null}
           <AwardAnimations stream={stream} />
           <div className="top-right-info">
             {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}
           </div>
-          <div className="bottom-left-info">
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}>
-              {stream.stream.isLocal ? (
-                <LocalStreamPlayerVolume stream={stream} />
-              ) : (
-                <RemoteStreamPlayerVolume stream={stream} />
-              )}
+          {canSetupVideo && (
+            <div className="bottom-left-info">
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}>
+                {stream.stream.isLocal ? (
+                  <LocalStreamPlayerVolume stream={stream} />
+                ) : (
+                  <RemoteStreamPlayerVolume stream={stream} />
+                )}
+              </div>
+              <StreamPlayerOverlayName stream={stream} />
             </div>
-            <StreamPlayerOverlayName stream={stream} />
-          </div>
+          )}
           <div className="bottom-right-info">
             {grantVisible && <StreamPlayerWhiteboardGranted stream={stream} />}
           </div>
@@ -334,20 +342,16 @@ export const StreamPlayer = observer(
     className,
     style: css,
     isFullScreen = false,
+    canSetupVideo = true,
   }: {
     stream: EduStreamUI;
     className?: string;
     style?: CSSProperties;
     isFullScreen?: boolean;
+    canSetupVideo?: boolean;
   }) => {
     const { streamUIStore, widgetUIStore } = useStore();
     const { cameraPlaceholder } = streamUIStore;
-    const { isBigWidgetWindowTeacherStreamActive } = widgetUIStore;
-    const canSetupVideo = useMemo(
-      () =>
-        isFullScreen ? isBigWidgetWindowTeacherStreamActive : !isBigWidgetWindowTeacherStreamActive,
-      [isBigWidgetWindowTeacherStreamActive, isFullScreen],
-    );
     const cls = classnames({
       [`video-player`]: 1,
       [`${className}`]: !!className,
@@ -357,11 +361,12 @@ export const StreamPlayer = observer(
       ...(isFullScreen ? { width: '100%', height: '100%' } : {}),
     };
 
-    if (cameraPlaceholder(stream) !== CameraPlaceholderType.none) {
+    if (cameraPlaceholder(stream, true) !== CameraPlaceholderType.none) {
       style = { ...css, visibility: 'hidden' };
     }
     return (
       <StreamPlayerOverlay
+        canSetupVideo={canSetupVideo}
         isFullscreen={isFullScreen}
         className={isFullScreen ? 'video-player-fullscreen' : ''}
         stream={stream}>

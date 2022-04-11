@@ -60,12 +60,21 @@ export const microphoneIconType = {
   [DeviceState.unavailable]: 'mic-inactive',
   [DeviceState.unauthorized]: 'mic-forbidden',
 };
-
+export enum BoardGrantState {
+  Disabled = 'board-grant-disabled',
+  Granted = 'board-granted',
+  NotGranted = 'board-not-granted',
+}
+export const BoardGrantIconType = {
+  [BoardGrantState.Disabled]: 'board-grant-disabled',
+  [BoardGrantState.Granted]: 'board-granted',
+  [BoardGrantState.NotGranted]: 'board-not-granted',
+};
 export type Profile = {
   uid: string | number;
   name: string;
   isOnPodium: boolean;
-  isBoardGranted: boolean;
+  boardGrantState: BoardGrantState;
   isChatMuted: boolean;
   cameraState: DeviceState;
   microphoneState: DeviceState;

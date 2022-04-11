@@ -13,6 +13,7 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
     CabinetItemEnum.ScreenShare,
     CabinetItemEnum.CountdownTimer,
     CabinetItemEnum.PopupQuiz,
+    CabinetItemEnum.Whiteboard,
   ];
   @computed
   get teacherTools(): ToolbarItem[] {

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { DeviceState, SvgImg } from '..';
-import { Column, Profile, cameraIconType, microphoneIconType } from './index';
+import { Column, Profile, cameraIconType, microphoneIconType, BoardGrantIconType } from './index';
 
 const Icon = ({
   type,
@@ -88,8 +88,7 @@ export const grantBoardColumn: Column = {
   name: 'roster.granted',
   operation: 'grant-board',
   render: (profile: Profile, hovered) => {
-    const isActive = profile.isBoardGranted;
-    const iconType = isActive || hovered ? 'board-granted' : 'board-not-granted';
+    const iconType = BoardGrantIconType[profile.boardGrantState];
     return <Icon type={iconType} />;
   },
 };

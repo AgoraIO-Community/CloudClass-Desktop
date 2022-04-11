@@ -41,7 +41,7 @@ export const RoomMidStreamsContainer = observer(() => {
 
 export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
   const { isFullScreen = false } = props;
-  const { streamUIStore } = useInteractiveUIStores() as EduInteractiveUIClassStore;
+  const { streamUIStore, widgetUIStore } = useInteractiveUIStores() as EduInteractiveUIClassStore;
   const { teacherCameraStream, videoStreamSize, gap } = streamUIStore;
   const videoStreamStyle = useMemo(() => {
     return isFullScreen
@@ -51,13 +51,19 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
           height: videoStreamSize.height,
         };
   }, [videoStreamSize.width, videoStreamSize.height, isFullScreen]);
-
+  const { isBigWidgetWindowTeacherStreamActive } = widgetUIStore;
+  const canSetupVideo = useMemo(
+    () =>
+      isFullScreen ? isBigWidgetWindowTeacherStreamActive : !isBigWidgetWindowTeacherStreamActive,
+    [isBigWidgetWindowTeacherStreamActive, isFullScreen],
+  );
   return teacherCameraStream ? (
     <div style={{ marginRight: gap - 2 }} className={isFullScreen ? 'video-player-fullscreen' : ''}>
       <StreamPlayer
         stream={teacherCameraStream}
         style={videoStreamStyle}
-        isFullScreen={isFullScreen}></StreamPlayer>
+        isFullScreen={isFullScreen}
+        canSetupVideo={canSetupVideo}></StreamPlayer>
     </div>
   ) : null;
 });

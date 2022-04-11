@@ -260,7 +260,7 @@ export class BoardStore extends EduStoreBase {
   grantPermission(userUuid: string) {
     let newSet = new Set(this._dataStore.grantUsers);
     newSet.add(userUuid);
-    this.room.setGlobalState({ grantUsers: Array.from(newSet) });
+    this.room?.setGlobalState({ grantUsers: Array.from(newSet) });
   }
 
   async setWritable(writable: boolean) {
@@ -272,7 +272,7 @@ export class BoardStore extends EduStoreBase {
   revokePermission(userUuid: string) {
     let newSet = new Set(this._dataStore.grantUsers);
     newSet.delete(userUuid);
-    this.room.setGlobalState({ grantUsers: Array.from(newSet) });
+    this.room?.setGlobalState({ grantUsers: Array.from(newSet) });
   }
 
   getShapeType(tool: WhiteboardShapeTool): string {
