@@ -24,6 +24,7 @@ import {
 } from 'agora-edu-core';
 import { WidgetUIStore } from './widget-ui';
 import { GroupUIStore } from './group-ui';
+import { ConvertMediaOptionsConfig } from '@/infra/api';
 
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class EduClassroomUIStore {
@@ -155,10 +156,10 @@ export class EduClassroomUIStore {
   }
 
   /**
-   * 加入 RTC 频道
+   * 加入教室，之后加入 RTC 频道
    */
   async join() {
-    const { joinClassroom, joinRTC, enableDualStream } = this.classroomStore.connectionStore;
+    const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
     try {
       await joinClassroom();
     } catch (e) {
@@ -176,24 +177,28 @@ export class EduClassroomUIStore {
         );
       }
     }
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      try {
+        const launchLowStreamCameraEncoderConfigurations = (
+          EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
+        )?.defaultLowStreamCameraEncoderConfigurations;
+
+        await this.classroomStore.mediaStore.enableDualStream(true);
+
+        await this.classroomStore.mediaStore.setLowStreamParameter(
+          launchLowStreamCameraEncoderConfigurations ||
+            EduClassroomConfig.defaultLowStreamParameter(),
+        );
+      } catch (e) {
+        this.shareUIStore.addGenericErrorDialog(e as AGError);
+      }
+    }
+
     try {
       await joinRTC();
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
-    }
-    if (this._boardUIStore.isTeacherOrAssistant) {
-      try {
-        await enableDualStream(true);
-        EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher &&
-          (await this.classroomStore.connectionStore.setLowStreamParameter({
-            width: 160,
-            height: 120,
-            framerate: 15,
-            bitrate: 100,
-          }));
-      } catch (e) {
-        this.shareUIStore.addGenericErrorDialog(e as AGError);
-      }
     }
   }
 

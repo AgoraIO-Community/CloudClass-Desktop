@@ -51,5 +51,5 @@ export type {
 export type { AGRtcConfig } from './core/rtc/adapter/index';
 export { AGEventEmitter } from './core/utils/events';
 export { AgoraRteConnectionState } from './type';
-export type { MediaOptions } from './type';
+export type { MediaOptions, EduVideoEncoderConfiguration } from './type';
 export { AgoraRteThread } from './core/utils/thread';

@@ -722,9 +722,18 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.classroomStore.mediaStore.stopScreenShareCapture();
   }
 
+  /**
+   * 设置远端视频流的类型
+   * @param uid 流ID
+   * @param streamType 0大流，1小流
+   */
   @bound
   setRemoteVideoStreamType(uid: AgoraRteStreamUID, streamType: AgoraRteRemoteStreamType) {
-    return this.classroomStore.connectionStore.setRemoteVideoStreamType(uid, streamType);
+    try {
+      this.classroomStore.streamStore.setRemoteVideoStreamType(uid, streamType);
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
   }
 
   onDestroy() {

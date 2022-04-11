@@ -15,6 +15,8 @@ import {
   Log,
   AGRteTrackErrorReason,
   FcrAudioRawDataConfig,
+  AGRtcConnectionType,
+  AgoraRteLowStreamParameter,
 } from 'agora-rte-sdk';
 import { action, autorun, computed, Lambda, observable, reaction, runInAction } from 'mobx';
 import { AgoraEduClassroomEvent, ClassroomState } from '../../../../type';
@@ -301,6 +303,39 @@ export class MediaStore extends EduStoreBase {
       EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_MEDIA_UPDATE_DEVICE_STATE_FAIL,
         e as Error,
+      );
+    }
+  }
+
+  @bound
+  async enableDualStream(enable: boolean, connectionType?: AGRtcConnectionType) {
+    try {
+      const { scene } = this.classroomStore.connectionStore;
+      if (scene) {
+        await scene.enableDualStream(enable, connectionType);
+      }
+    } catch (e) {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_ENABLE_DUAL_STREAM_FAIL,
+        new Error(`failed to enable dual stream`),
+      );
+    }
+  }
+
+  @bound
+  setLowStreamParameter(
+    setLowStreamParameter: AgoraRteLowStreamParameter,
+    connectionType?: AGRtcConnectionType,
+  ) {
+    try {
+      const { scene } = this.classroomStore.connectionStore;
+      if (scene) {
+        scene.setLowStreamParameter(setLowStreamParameter, connectionType);
+      }
+    } catch (e) {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_SET_LOW_STREAM_PARAMETER_FAIL,
+        new Error(`failed to set low stream parameter`),
       );
     }
   }

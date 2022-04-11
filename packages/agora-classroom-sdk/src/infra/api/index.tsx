@@ -18,7 +18,7 @@ import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-galler
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
 import { EduContext } from '../contexts';
-import { MediaOptions } from 'agora-rte-sdk';
+import { EduVideoEncoderConfiguration, MediaOptions } from 'agora-rte-sdk';
 import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
 import { I18nProvider, i18nResources } from '~ui-kit';
 
@@ -44,6 +44,10 @@ export type ConfigParams = {
   region?: string;
 };
 
+export type LaunchMediaOptions = MediaOptions & {lowStreamCameraEncoderConfiguration?: EduVideoEncoderConfiguration};
+
+export type ConvertMediaOptionsConfig = EduRtcConfig & {defaultLowStreamCameraEncoderConfigurations?: EduVideoEncoderConfiguration}
+
 /**
  * LaunchOption 接口
  */
@@ -65,7 +69,7 @@ export type LaunchOption = {
   recordUrl?: string; // 回放页地址
   widgets?: { [key: string]: IAgoraWidget };
   userFlexProperties?: { [key: string]: any }; //用户自订属性
-  mediaOptions?: MediaOptions;
+  mediaOptions?: LaunchMediaOptions;
   latencyLevel?: 1 | 2;
   platform?: Platform;
   extensions?: IAgoraExtensionApp[]; // 新app插件
@@ -104,10 +108,10 @@ export class AgoraEduSDK {
     }
     return region as EduRegion;
   }
-  private static convertMediaOptions(opts?: MediaOptions): EduRtcConfig {
-    const config: EduRtcConfig = {};
+  private static convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
+    const config: ConvertMediaOptionsConfig = {};
     if (opts) {
-      const { cameraEncoderConfiguration, screenShareEncoderConfiguration, encryptionConfig } =
+      const { cameraEncoderConfiguration, screenShareEncoderConfiguration, encryptionConfig, lowStreamCameraEncoderConfiguration } =
         opts;
       if (cameraEncoderConfiguration) {
         config.defaultCameraEncoderConfigurations = {
@@ -123,6 +127,11 @@ export class AgoraEduSDK {
         config.encryption = {
           mode: encryptionConfig.mode as unknown as EduMediaEncryptionMode,
           key: encryptionConfig.key,
+        };
+      }
+      if (lowStreamCameraEncoderConfiguration) {
+        config.defaultLowStreamCameraEncoderConfigurations = {
+          ...lowStreamCameraEncoderConfiguration,
         };
       }
     }

@@ -125,12 +125,21 @@ export class StreamStore extends EduStoreBase {
   }
 
   //others
-  setRemoteVideoStreamType = (
+  setRemoteVideoStreamType = async (
     uid: AgoraRteStreamUID,
     remoteVideoStreamType: AgoraRteRemoteStreamType,
   ) => {
-    let scene = this.classroomStore.connectionStore.scene;
-    scene?.setRemoteVideoStreamType(uid, remoteVideoStreamType);
+    try {
+      let { scene } = this.classroomStore.connectionStore;
+      if (scene) {
+        await scene.setRemoteVideoStreamType(uid, remoteVideoStreamType);
+      }
+    } catch (e) {
+      EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_SET_REMOTE_VIDEO_STREAM_TYPE_FAIL,
+        new Error(`failed to set remote video stream type, streamId is ${uid}`),
+      );
+    }
   };
 
   setupLocalVideo = (

@@ -250,4 +250,13 @@ export class EduClassroomConfig {
     }
     return cameraEncoderConfiguration;
   }
+
+  static defaultLowStreamParameter () {
+    return {
+      width: 320,
+      height: 240,
+      framerate: 15,
+      bitrate: 200,
+    }
+  }
 }
