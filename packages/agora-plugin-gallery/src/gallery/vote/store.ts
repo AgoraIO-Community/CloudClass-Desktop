@@ -217,6 +217,8 @@ export class PluginStore {
     // 2.已经结束答题
     if (this.stagePanel === 1 && this.isController) {
       return true;
+    } else if (this.stagePanel === 1 && this.context.userProperties?.pollId) {
+      return true;
     } else if (this.stagePanel === 0) {
       return true;
     }
