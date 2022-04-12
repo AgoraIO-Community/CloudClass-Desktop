@@ -9,7 +9,7 @@ import {
   EduClassroomConfig,
 } from 'agora-edu-core';
 import { get, isEmpty } from 'lodash';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { computedFn } from 'mobx-utils';
 
@@ -58,88 +58,115 @@ export class WidgetChatUIStore {
   @observable
   configUI: IChatConfigUI = {};
 
+  private _disposers: IReactionDisposer[] = [];
+
   constructor(coreStore: EduClassroomUIStore, private _classroomConfig: EduClassroomConfig) {
     runInAction(() => {
       this.coreStore = coreStore;
       this.minimize = _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass;
     });
 
-    reaction(
-      () => this.coreStore.classroomStore.roomStore.chatMuted,
-      (chatmuted) => {
-        this.unmuted = !chatmuted;
-      },
-    );
-
-    reaction(
-      () => this.convertedMessageList,
-      (_) => {
-        if (!this.coreStore.classroomStore.messageStore.newMessageFlag) return;
-        if (this.activeTab !== 'room' || this.minimize) {
-          let id = uuidv4();
-          this.unreadMessageSet.add(id);
-        }
-      },
-    );
-
-    reaction(
-      () => this.activeTab,
-      () => {
-        this.unreadMessageSet.clear();
-      },
-      {
-        equals: (a, b) => {
-          if (a === 'room' || b === 'room') {
-            return false;
-          }
-          return true;
+    this._disposers.push(
+      reaction(
+        () => this.coreStore.classroomStore.roomStore.chatMuted,
+        (chatmuted) => {
+          this.unmuted = !chatmuted;
         },
-      },
+      ),
     );
-
-    reaction(
-      () => this.chatConversationList,
-      (list) => {
-        if (!this.coreStore.classroomStore.messageStore.newMessageFlag) return;
-        const { role } = this._classroomConfig.sessionInfo;
-        let shoudleUpdate = false;
-        if (role === EduRoleTypeEnum.student && this.activeTab === 'room') shoudleUpdate = true; // 当学生在 room tab 的更新
-        if (role === EduRoleTypeEnum.teacher || role === EduRoleTypeEnum.assistant)
-          shoudleUpdate = true; // 当为老师或者助教时都需要处理
-
-        if (shoudleUpdate) {
-          list.forEach((value: Conversation) => {
-            let messageLength = value.messages.length;
-            let unreadConversation = this.unreadCoversationMap.get(value.userUuid);
-            if (!unreadConversation) {
-              this.setUnreadConversationMap(value.userUuid, [0, messageLength]);
-            } else if (unreadConversation[1] !== messageLength) {
-              this.setUnreadConversationMap(value.userUuid, [unreadConversation[0], messageLength]);
+    this._disposers.push(
+      reaction(
+        () => this.convertedMessageList,
+        (_) => {
+          if (!this.coreStore.classroomStore.messageStore.newMessageFlag) return;
+          if (this.activeTab !== 'room' || this.minimize) {
+            let id = uuidv4();
+            this.unreadMessageSet.add(id);
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.activeTab,
+        () => {
+          this.unreadMessageSet.clear();
+        },
+        {
+          equals: (a, b) => {
+            if (a === 'room' || b === 'room') {
+              return false;
             }
-            // 当老师在当前的用户列表驻留时，更新为全部已读
-            if (this.activeConversation?.userUuid === value.userUuid) {
-              this.setUnreadConversationMap(value.userUuid, [messageLength, messageLength]);
-            }
-          });
-        }
-      },
-      {
-        equals: (a, b) => {
-          if ((isEmpty(a) || isEmpty(a[0]?.messages)) && !isEmpty(b[0]?.messages)) {
             return true;
-          }
-          return false;
+          },
         },
-      },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.chatConversationList,
+        (list) => {
+          if (!this.coreStore.classroomStore.messageStore.newMessageFlag) return;
+          const { role } = this._classroomConfig.sessionInfo;
+          let shoudleUpdate = false;
+          if (role === EduRoleTypeEnum.student && this.activeTab === 'room') shoudleUpdate = true; // 当学生在 room tab 的更新
+          if (role === EduRoleTypeEnum.teacher || role === EduRoleTypeEnum.assistant)
+            shoudleUpdate = true; // 当为老师或者助教时都需要处理
+
+          if (shoudleUpdate) {
+            list.forEach((value: Conversation) => {
+              let messageLength = value.messages.length;
+              let unreadConversation = this.unreadCoversationMap.get(value.userUuid);
+              if (!unreadConversation) {
+                this.setUnreadConversationMap(value.userUuid, [0, messageLength]);
+              } else if (unreadConversation[1] !== messageLength) {
+                this.setUnreadConversationMap(value.userUuid, [
+                  unreadConversation[0],
+                  messageLength,
+                ]);
+              }
+              // 当老师在当前的用户列表驻留时，更新为全部已读
+              if (this.activeConversation?.userUuid === value.userUuid) {
+                this.setUnreadConversationMap(value.userUuid, [messageLength, messageLength]);
+              }
+            });
+          }
+        },
+        {
+          equals: (a, b) => {
+            if ((isEmpty(a) || isEmpty(a[0]?.messages)) && !isEmpty(b[0]?.messages)) {
+              return true;
+            }
+            return false;
+          },
+        },
+      ),
     );
     // https://github.com/mobxjs/mobx/issues/385
     // Yes that is correct. The change in messages is only triggered when the changed elements are accessed. That's why it works with map( a => a ). Instead you can do a messages.slice().
     // 如果打开了聊天窗口那么需要清空聊天红点，打开聊天窗口的话 activetab 一定是 ’room‘ 因为这是逻辑上写的 😃
-    reaction(
-      () => this.minimize,
-      (minimize) => {
-        !minimize && this.unreadMessageSet.clear();
-      },
+    this._disposers.push(
+      reaction(
+        () => this.minimize,
+        (minimize) => {
+          !minimize && this.unreadMessageSet.clear();
+        },
+      ),
+    );
+
+    this._disposers.push(
+      reaction(
+        () => this.coreStore.classroomStore.connectionStore.scene,
+        (scene) => {
+          if (scene) {
+            this.refreshMessageList();
+            if (this._classroomConfig.sessionInfo.role === 1) {
+              // refresh conv list for teacher
+              this.refreshConversationList();
+            }
+          }
+        },
+      ),
     );
 
     this.setUI({
@@ -147,6 +174,11 @@ export class WidgetChatUIStore {
         this._classroomConfig.sessionInfo.role !== EduRoleTypeEnum.invisible &&
         this._classroomConfig.sessionInfo.role !== EduRoleTypeEnum.observer,
     });
+  }
+
+  destroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
 
   get classroomConfig() {

@@ -47,15 +47,6 @@ const App = observer(() => {
     toggleChatMinimize,
   } = widgetStore;
 
-  useEffect(() => {
-    if (loading) return;
-    refreshMessageList();
-    if (widgetStore.classroomConfig.sessionInfo.role === 1) {
-      // refresh conv list for teacher
-      refreshConversationList();
-    }
-  }, [loading]);
-
   return (
     <div
       id="netless-white"
@@ -126,11 +117,13 @@ const App = observer(() => {
 
 export class AgoraChatWidget implements IAgoraWidget {
   widgetId = 'io.agora.widget.chat';
+  private _chatStore: WidgetChatUIStore;
 
   constructor(private _classroomConfig: EduClassroomConfig) {}
 
   widgetDidLoad(dom: Element, props: any): void {
     const widgetStore = new WidgetChatUIStore(props.uiStore, this._classroomConfig);
+    this._chatStore = widgetStore;
     ReactDOM.render(
       <Context.Provider value={{ uiStore: props.uiStore, widgetStore }}>
         <I18nProvider language={props.language}>
@@ -141,5 +134,9 @@ export class AgoraChatWidget implements IAgoraWidget {
     );
   }
 
-  widgetWillUnload(): void {}
+  widgetWillUnload(): void {
+    if (this._chatStore) {
+      this._chatStore.destroy();
+    }
+  }
 }
