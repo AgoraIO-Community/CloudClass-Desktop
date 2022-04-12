@@ -5,6 +5,7 @@
 .loading-upload-list {
   max-height: 188px;
   overflow: auto;
+  scrollbar-width: none;
 }
 
 .loading-upload-list::-webkit-scrollbar {
