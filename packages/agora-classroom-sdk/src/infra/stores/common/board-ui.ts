@@ -1,4 +1,4 @@
-import { action, computed, when, IReactionDisposer, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, reaction } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import {
@@ -9,9 +9,9 @@ import {
   WhiteboardState,
 } from 'agora-edu-core';
 import { EduShareUIStore } from './share-ui';
+import { BUILTIN_WIDGETS } from './widget-ui';
 
 export class BoardUIStore extends EduUIStoreBase {
-  private _timeoutForConfig = 10000;
   private _joinDisposer?: IReactionDisposer;
 
   protected get uiOverrides() {
@@ -24,7 +24,19 @@ export class BoardUIStore extends EduUIStoreBase {
 
   private _collectorContainer: HTMLElement | undefined = undefined;
 
-  onInstall() {}
+  private _disposers: IReactionDisposer[] = [];
+
+  onInstall() {
+    this._disposers.push(
+      reaction(
+        () => this.grantedUsers,
+        (grantUsers) => {
+          this.classroomStore.boardStore.setGrantUsers(grantUsers);
+        },
+      ),
+    );
+  }
+
   get isTeacherOrAssistant() {
     const role = EduClassroomConfig.shared.sessionInfo.role;
     const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
@@ -35,10 +47,22 @@ export class BoardUIStore extends EduUIStoreBase {
   // computed
 
   @computed
+  get grantedUsers() {
+    const boardWidgetProps = this.classroomStore.widgetStore.widgetPropsMap[
+      BUILTIN_WIDGETS.boardWidget
+    ] as {
+      extra: { grantUsers: string[] };
+    };
+
+    const grantedUsers = boardWidgetProps?.extra?.grantUsers || {};
+
+    return new Set(Object.keys(grantedUsers).filter((k) => grantedUsers[k]));
+  }
+
+  @computed
   get isGrantedBoard() {
     const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-    const { grantUsers } = this.classroomStore.boardStore;
-    return grantUsers.has(userUuid);
+    return this.grantedUsers.has(userUuid);
   }
 
   @computed
@@ -225,5 +249,10 @@ export class BoardUIStore extends EduUIStoreBase {
     }
   }
 
-  onDestroy() {}
+  onDestroy() {
+    if (this._joinDisposer) {
+      this._joinDisposer();
+    }
+    this._disposers.forEach((d) => d());
+  }
 }

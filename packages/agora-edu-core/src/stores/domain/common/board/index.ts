@@ -53,6 +53,8 @@ const DEFAULT_COLOR: Color = {
   b: 255,
 };
 
+const BOARD_WIDGET_ID = 'netlessBoard';
+
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
 
 export class BoardStore extends EduStoreBase {
@@ -159,13 +161,6 @@ export class BoardStore extends EduStoreBase {
 
       this.setRoom(room);
 
-      // readin globalstate data, this must comes after setRoom
-      let globalState = room.state.globalState as AGGlobalState;
-      if (globalState.grantUsers) {
-        runInAction(() => {
-          this._dataStore.grantUsers = new Set(globalState.grantUsers);
-        });
-      }
       if (
         [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
           EduClassroomConfig.shared.sessionInfo.role,
@@ -256,23 +251,40 @@ export class BoardStore extends EduStoreBase {
     }
   }
 
-  @bound
-  grantPermission(userUuid: string) {
-    let newSet = new Set(this._dataStore.grantUsers);
-    newSet.add(userUuid);
-    this.room?.setGlobalState({ grantUsers: Array.from(newSet) });
-  }
-
   async setWritable(writable: boolean) {
     await this.room.setWritable(writable);
     this.room.disableDeviceInputs = !writable;
   }
 
+  @action.bound
+  setGrantUsers(grantUsers: Set<string>) {
+    this._dataStore.grantUsers = grantUsers;
+  }
+
+  /**
+   * 授权用户白板权限
+   * @param userUuid
+   */
+  @bound
+  grantPermission(userUuid: string) {
+    this.classroomStore.widgetStore.updateWidget(BOARD_WIDGET_ID, {
+      extra: {
+        [`grantUsers.${userUuid}`]: true,
+      },
+    });
+  }
+
+  /**
+   * 收回用户白板权限
+   * @param userUuid
+   */
   @bound
   revokePermission(userUuid: string) {
-    let newSet = new Set(this._dataStore.grantUsers);
-    newSet.delete(userUuid);
-    this.room?.setGlobalState({ grantUsers: Array.from(newSet) });
+    this.classroomStore.widgetStore.updateWidget(BOARD_WIDGET_ID, {
+      extra: {
+        [`grantUsers.${userUuid}`]: false,
+      },
+    });
   }
 
   getShapeType(tool: WhiteboardShapeTool): string {
@@ -569,10 +581,6 @@ export class BoardStore extends EduStoreBase {
     },
     onRoomStateChanged: (state: Partial<RoomState>) => {
       runInAction(() => {
-        let globalState = state.globalState as AGGlobalState | undefined;
-        if (globalState && globalState.grantUsers) {
-          this._dataStore.grantUsers = new Set(globalState.grantUsers);
-        }
         // 监听颜色的变化，赋值给strokeColor
         if (state?.memberState?.strokeColor) {
           const [r, g, b] = state.memberState.strokeColor;
@@ -843,7 +851,7 @@ class SceneEventHandler {
     changedRoomProperties.forEach((key) => {
       if (key === 'widgets') {
         const extensionProperties = get(roomProperties, `widgets`, {});
-        const whiteboardProperties = get(extensionProperties, 'netlessBoard');
+        const whiteboardProperties = get(extensionProperties, BOARD_WIDGET_ID);
         if (whiteboardProperties) {
           const whiteboardState = get(whiteboardProperties, 'state');
 

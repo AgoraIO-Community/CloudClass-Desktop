@@ -20,11 +20,17 @@ export class WidgetStore extends EduStoreBase {
   @observable
   private _dataStore: DataStore = {
     widgetStateMap: {},
+    widgetPropsMap: {},
   };
 
   @computed
   get widgetStateMap() {
     return this._dataStore.widgetStateMap;
+  }
+
+  @computed
+  get widgetPropsMap() {
+    return this._dataStore.widgetPropsMap;
   }
 
   @observable
@@ -57,11 +63,22 @@ export class WidgetStore extends EduStoreBase {
       state: 0,
     });
   }
+
   @bound
-  deleteWidget(widgetId: string) {
-    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-    this.api.deleteWidgetProperties(roomUuid, widgetId, {});
+  updateWidget(widgetId: string, widgetProps: any = {}) {
+    this.api.updateWidgetProperties(
+      this.classroomStore.connectionStore.sceneId,
+      widgetId,
+      widgetProps,
+    );
   }
+
+  @bound
+  deleteWidget(widgetId: string, widgetProps: any = {}) {
+    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
+    this.api.deleteWidgetProperties(roomUuid, widgetId, widgetProps);
+  }
+
   @action
   async deleteWidgetTrackState(widgetId: string) {
     this.setInactive(widgetId);
@@ -107,6 +124,7 @@ export class WidgetStore extends EduStoreBase {
 
 type DataStore = {
   widgetStateMap: Record<string, boolean>;
+  widgetPropsMap: Record<string, unknown>;
 };
 
 class SceneEventHandler {
@@ -142,6 +160,7 @@ class SceneEventHandler {
   @observable
   dataStore: DataStore = {
     widgetStateMap: {},
+    widgetPropsMap: {},
   };
 
   addEventHandlers() {
@@ -162,6 +181,17 @@ class SceneEventHandler {
           prev[cur] = widgets[cur].state === 1;
           return prev;
         }, {} as Record<string, boolean>);
+
+        Object.keys(widgets).forEach((widgetId) => {
+          const propsPrev = this.dataStore.widgetPropsMap[widgetId];
+          const propsNext = widgets[widgetId];
+          const rawPrev = JSON.stringify(propsPrev);
+          const rawNext = JSON.stringify(propsNext);
+
+          if (rawPrev !== rawNext) {
+            this.dataStore.widgetPropsMap[widgetId] = propsNext;
+          }
+        });
       }
     });
   }

@@ -608,40 +608,44 @@ export class GroupUIStore extends EduUIStoreBase {
   @bound
   private async _joinSubRoom() {
     await this._waitUntilJoined();
+
     this.setConnectionState(true);
+
     const roomUuid = this.classroomStore.groupStore.currentSubRoom;
-    if (roomUuid) {
-      try {
-        await this._waitUntilConnected();
 
-        if (this.classroomStore.connectionStore.rtcSubState !== RtcState.Idle) {
-          this.classroomStore.mediaStore.stopScreenShareCapture();
-          this.classroomStore.connectionStore.leaveRTC(AGRtcConnectionType.sub);
-        }
+    if (!roomUuid) {
+      this.logger.error('cannot find roomUuid');
+      return;
+    }
 
-        // workaround: room may not exist when whiteboard state is connected, it will no op  if leave board at this time
-        await new Promise((r) => setTimeout(r, 500));
+    try {
+      await this._waitUntilConnected();
 
-        await this.classroomStore.connectionStore.leaveRTC();
-        if (this.classroomStore.connectionStore.whiteboardState !== WhiteboardState.Disconnecting) {
-          await this.classroomStore.connectionStore.leaveWhiteboard();
-        }
-
-        await this._waitUntilLeft();
-
-        await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
-
-        await this.classroomStore.connectionStore.joinRTC();
-      } catch (e) {
-        this.shareUIStore.addToast('Cannot join sub room');
-      } finally {
-        this.setConnectionState(false);
+      if (this.classroomStore.connectionStore.rtcSubState !== RtcState.Idle) {
+        this.classroomStore.mediaStore.stopScreenShareCapture();
+        this.classroomStore.connectionStore.leaveRTC(AGRtcConnectionType.sub);
       }
-      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
-        this._grantWhiteboard();
+
+      // workaround: room may not exist when whiteboard state is connected, it will no op  if leave board at this time
+      await new Promise((r) => setTimeout(r, 500));
+
+      await this.classroomStore.connectionStore.leaveRTC();
+      if (this.classroomStore.connectionStore.whiteboardState !== WhiteboardState.Disconnecting) {
+        await this.classroomStore.connectionStore.leaveWhiteboard();
       }
-    } else {
-      this.shareUIStore.addToast('Cannot find room');
+
+      await this._waitUntilLeft();
+
+      await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+
+      await this.classroomStore.connectionStore.joinRTC();
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    } finally {
+      this.setConnectionState(false);
+    }
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+      this._grantWhiteboard();
     }
   }
 
@@ -665,7 +669,7 @@ export class GroupUIStore extends EduUIStoreBase {
         SceneType.Main,
       );
     } catch (e) {
-      this.shareUIStore.addToast('Cannot leave sub room');
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
     } finally {
       this.setConnectionState(false);
     }
@@ -674,6 +678,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @bound
   private async _changeSubRoom() {
     await this._waitUntilJoined();
+
     this.setConnectionState(true);
     try {
       const roomUuid = this.classroomStore.groupStore.currentSubRoom;

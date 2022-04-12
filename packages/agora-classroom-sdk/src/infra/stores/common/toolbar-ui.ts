@@ -19,6 +19,7 @@ import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import { DialogCategory } from './share-ui';
 import { EduStreamUI } from './stream/struct';
+import { BUILTIN_WIDGETS } from './widget-ui';
 
 export enum ToolbarItemCategory {
   PenPicker,
@@ -393,7 +394,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
             transI18n('toast.close_whiteboard_confirm'),
             {
               onOK: () => {
-                this.classroomStore.widgetStore.setInactive('netlessBoard');
+                this.classroomStore.widgetStore.setInactive(BUILTIN_WIDGETS.boardWidget);
                 if (!this.isScreenSharing)
                   this.classroomStore.widgetStore.setActive(
                     `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
@@ -408,7 +409,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
             },
           );
         } else {
-          this.classroomStore.widgetStore.setActive('netlessBoard', {});
+          this.classroomStore.widgetStore.setActive(BUILTIN_WIDGETS.boardWidget, {});
           this.classroomStore.widgetStore.deleteWidget(
             `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
           );

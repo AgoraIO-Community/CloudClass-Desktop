@@ -99,7 +99,11 @@ export class WidgetUIStore extends EduUIStoreBase {
     if (!operator.userUuid) {
       changedRoomProperties.forEach(async (key) => {
         if (key === 'widgets') {
-          const whiteboardProperties = get(roomProperties, `widgets.netlessBoard`, {});
+          const whiteboardProperties = get(
+            roomProperties,
+            `widgets.${BUILTIN_WIDGETS.boardWidget}`,
+            {},
+          );
           if (whiteboardProperties) {
             const whiteboardState = get(whiteboardProperties, 'state');
             if (whiteboardState === 0) {
@@ -175,3 +179,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   onDestroy() {}
 }
+
+export const BUILTIN_WIDGETS = {
+  boardWidget: 'netlessBoard',
+};
