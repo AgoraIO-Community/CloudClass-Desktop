@@ -169,10 +169,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
     );
 
     reaction(
-      () => this.classroomStore.boardStore.configReady,
-      (configReady) => {
+      () => this.classroomStore.boardStore.boardReady,
+      (boardReady) => {
         runInAction(() => {
-          if (configReady) {
+          if (boardReady) {
             this._activeCabinetItems.add(CabinetItemEnum.Whiteboard);
           } else {
             this._activeCabinetItems.delete(CabinetItemEnum.Whiteboard);
@@ -534,7 +534,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
     apps = apps
       .concat(
-        this.classroomStore.boardStore.configReady
+        this.classroomStore.boardStore.boardReady
           ? [
               {
                 id: CabinetItemEnum.ScreenShare,
@@ -618,7 +618,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed
   get teacherTools(): ToolbarItem[] {
-    if (this.classroomStore.boardStore.configReady) {
+    if (this.classroomStore.boardStore.boardReady) {
       return [
         ToolbarItem.fromData({
           value: 'clicker',

@@ -7,6 +7,7 @@ export interface Message {
   content: string;
   isOwn: boolean;
   unread: boolean;
+  isBroadcast: boolean;
 }
 
 export interface Conversation {

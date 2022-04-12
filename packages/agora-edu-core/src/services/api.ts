@@ -3,7 +3,7 @@ import { CloudDriveResourceInfo } from '../stores/domain/common/cloud-drive/type
 import { EduSessionInfo, EduRoleTypeEnum } from '../type';
 import { ClassState } from '../stores/domain/common/room/type';
 import { escapeExtAppIdentifier } from '../stores/domain/common/room/command-handler';
-import { EduClassroomConfig } from '..';
+import { EduClassroomConfig, EduRegion } from '..';
 import {
   BroadcastMessageRange,
   BroadcastMessageType,
@@ -922,11 +922,22 @@ export class EduApiService extends ApiBase {
       toGroupUuids?: string[];
     },
   ) {
-    const res = await this.fetch({
-      path: `/v2/rooms/${roomUuid}/widgets/easemobIM/messages`,
-      method: 'POST',
-      data,
-    });
-    return res.data;
+    if (EduClassroomConfig.shared.rteEngineConfig.region === EduRegion.CN) {
+      const res = await this.fetch({
+        path: `/v2/rooms/${roomUuid}/widgets/easemobIM/messages`,
+        method: 'POST',
+        data,
+      });
+
+      return res.data;
+    } else {
+      const res = await this.fetch({
+        path: `/v2/rooms/${roomUuid}/chat/messages`,
+        method: 'POST',
+        data,
+      });
+
+      return res.data;
+    }
   }
 }

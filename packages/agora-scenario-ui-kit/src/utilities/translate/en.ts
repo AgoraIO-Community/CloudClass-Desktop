@@ -18,6 +18,9 @@ export const en = {
     student: 'Student',
     assistant: 'Assistant',
   },
+  chat: {
+    send_to_all: 'Broadcast Message',
+  },
   disabled: 'Disabled',
   whiteboard: {
     'upload-success': 'Upload Success',

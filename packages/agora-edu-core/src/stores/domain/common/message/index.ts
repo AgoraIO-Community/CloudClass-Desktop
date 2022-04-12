@@ -83,22 +83,37 @@ export class MessagesStore extends EduStoreBase {
   @action.bound
   async getHistoryChatMessage(data: { nextId: string; sort: number }) {
     try {
-      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+      const { userUuid: currentUserUuid } = EduClassroomConfig.shared.sessionInfo;
       const historyMessage = await this.classroomStore.api.getHistoryChatMessage({
         roomUuid: this.classroomStore.connectionStore.sceneId,
-        userUuid: userUuid,
+        userUuid: currentUserUuid,
         data,
       });
       runInAction(() => {
         historyMessage.list.forEach((item: HistoryChatMessage) => {
+          let {
+            fromUser: { userUuid, userName, role },
+            message,
+            sendTime,
+            messageId,
+          } = item;
+
+          const isBroadcast = item.ext?.range === 3;
+
+          if (isBroadcast) {
+            userUuid = item.ext!.userUuid;
+            userName = item.ext!.userName;
+          }
+
           const formatedItem = new MessageItem({
-            content: item.message,
-            ts: item.sendTime,
-            id: item.fromUser.userUuid,
-            userName: item.fromUser.userName,
-            role: item.fromUser.role,
-            messageId: item.messageId,
-            isOwn: item.fromUser.userUuid === userUuid,
+            content: message,
+            ts: sendTime,
+            id: userUuid,
+            userName,
+            role: role,
+            messageId: messageId,
+            isOwn: userUuid === userUuid,
+            isBroadcast,
           });
           if (!this.roomChatMessagesMessageId.has(formatedItem.messageId)) {
             this.roomChatMessages.unshift(formatedItem);
@@ -144,6 +159,7 @@ export class MessagesStore extends EduStoreBase {
             role: message.fromUser.role,
             messageId: message.peerMessageId,
             isOwn: message.fromUser.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid,
+            isBroadcast: false,
           });
           messages.unshift(conversationMessage);
         }
@@ -168,6 +184,7 @@ export class MessagesStore extends EduStoreBase {
                 role: message.fromUser.role,
                 messageId: message.peerMessageId,
                 isOwn: message.fromUser.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid,
+                isBroadcast: false,
               });
               (conversation as Conversation).messages.unshift(conversationMessage);
               this.chatConvasationMessageId.set(message.peerMessageId, conversationMessage);
@@ -296,6 +313,7 @@ export class MessagesStore extends EduStoreBase {
         isOwn: true,
         messageId: result.peerMessageId,
         role: result.role as EduRoleTypeEnum,
+        isBroadcast: false,
       });
       conversation.messages = [conversationMessage];
 
@@ -399,12 +417,19 @@ class SceneEventHandler {
   private _receiveChat(evt: AgoraChatMessage) {
     const { userUuid: currentUserUuid, roomType } = EduClassroomConfig.shared.sessionInfo;
     runInAction(() => {
-      const {
+      const { sendTime, messageId, message: chatMessage } = evt;
+
+      let {
         fromUser: { userUuid, userName, role },
-        sendTime,
-        messageId,
-        message: chatMessage,
       } = evt;
+
+      const isBroadcast = evt.ext?.range === 3;
+
+      if (isBroadcast) {
+        userUuid = evt.ext!.userUuid;
+        userName = evt.ext!.userName;
+      }
+
       let messageItem = new MessageItem({
         id: userUuid,
         ts: sendTime,
@@ -413,6 +438,7 @@ class SceneEventHandler {
         userName,
         role: RteRole2EduRole(roomType, role),
         isOwn: userUuid === currentUserUuid,
+        isBroadcast,
       });
       this.addChatMessage(messageItem);
       this.dataStore.newMessageFlag = true;
@@ -439,6 +465,7 @@ class SceneEventHandler {
         content: chatMessage,
         role: RteRole2EduRole(roomType, fromUser.role),
         isOwn: userUuid == fromUser.userUuid,
+        isBroadcast: false,
       });
       let conversationItem = {
         // use from info

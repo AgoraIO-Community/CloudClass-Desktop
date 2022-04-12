@@ -18,6 +18,9 @@ export const zh = {
     student: '学生',
     assistant: '助教',
   },
+  chat: {
+    send_to_all: '发送全体消息',
+  },
   disabled: '禁用',
   whiteboard: {
     'upload-success': '上传成功',

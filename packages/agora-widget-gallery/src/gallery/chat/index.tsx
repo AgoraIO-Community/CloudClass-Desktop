@@ -90,7 +90,7 @@ const App = observer(() => {
             toggleChatMinimize();
           }}
           onSend={handleSendText}
-          showCloseIcon={defaultMinimize}
+          showCloseIcon={widgetStore.classroomConfig.sessionInfo.roomType === 2 ? false : !minimize}
           onPullRefresh={(evt: ChatEvent) => {
             if (evt.type === 'conversation' && evt.conversation) {
               refreshConversationMessageList(evt.conversation);

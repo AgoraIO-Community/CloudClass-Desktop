@@ -4,6 +4,23 @@
   margin-top: 18px;
 }
 
+.chat-message-name-row {
+  display: flex;
+}
+
+.chat-message-name-row span {
+  color: rgb(53, 123, 246);
+  font-size: 12px;
+}
+
+.chat-message-right .chat-message-name-row span {
+  margin-right: 4px;
+}
+
+.chat-message-left .chat-message-name-row span {
+  margin-left: 4px;
+}
+
 .chat-message-right {
   display: flex;
   flex-direction: column;

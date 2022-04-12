@@ -36,13 +36,12 @@ export const BigClassScenario = observer(() => {
             <Content>
               <RoomBigStudentStreamsContainer />
               <BigWidgetWindowContainer>
-                <WhiteboardContainer>
-                  <Aside className="aisde-fixed">
-                    <CollectorContainer />
+                <WhiteboardContainer></WhiteboardContainer>
+                <Aside className="aisde-fixed">
+                  <CollectorContainer />
 
-                    <HandsUpContainer />
-                  </Aside>
-                </WhiteboardContainer>
+                  <HandsUpContainer />
+                </Aside>
               </BigWidgetWindowContainer>
             </Content>
             <Aside>

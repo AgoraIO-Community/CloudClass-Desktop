@@ -14,6 +14,12 @@ export type AgoraFromUser = {
   role: string;
 };
 
+export type MessageExt = {
+  range: number;
+  userName: string;
+  userUuid: string;
+};
+
 export class AgoraRteSyncSnapshotData {
   static fromData(data: any): AgoraRteSyncSnapshotData {
     const snapshot = new AgoraRteSyncSnapshotData(data);
@@ -211,6 +217,7 @@ export interface IAgoraChatMessage {
   sensitiveWords: string[];
   messageId?: string;
   peerMessageId?: string;
+  ext?: MessageExt;
 }
 export class AgoraChatMessage {
   static fromData(data: IAgoraChatMessage) {
@@ -223,6 +230,7 @@ export class AgoraChatMessage {
   sendTime: number;
   sensitiveWords: string[];
   messageId?: string;
+  ext?: MessageExt;
 
   constructor(data: IAgoraChatMessage) {
     this.fromUser = data.fromUser;
@@ -231,6 +239,7 @@ export class AgoraChatMessage {
     this.sendTime = data.sendTime;
     this.sensitiveWords = data.sensitiveWords;
     this.messageId = data.messageId || data.peerMessageId;
+    this.ext = data.ext;
   }
 
   toString() {

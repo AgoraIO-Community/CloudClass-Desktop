@@ -106,7 +106,10 @@ export class BoardStore extends EduStoreBase {
   get scenesCount() {
     return this._dataStore.scenesCount;
   }
-
+  @computed
+  get boardReady() {
+    return this.managerReady;
+  }
   @observable
   private _dataStore: DataStore = {
     configReady: false,

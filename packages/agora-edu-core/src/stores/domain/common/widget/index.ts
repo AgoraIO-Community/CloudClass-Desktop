@@ -75,8 +75,11 @@ export class WidgetStore extends EduStoreBase {
 
   @bound
   deleteWidget(widgetId: string, widgetProps: any = {}) {
-    const { roomUuid } = EduClassroomConfig.shared.sessionInfo;
-    this.api.deleteWidgetProperties(roomUuid, widgetId, widgetProps);
+    this.api.deleteWidgetProperties(
+      this.classroomStore.connectionStore.sceneId,
+      widgetId,
+      widgetProps,
+    );
   }
 
   @action

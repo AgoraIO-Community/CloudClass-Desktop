@@ -20,7 +20,7 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
    */
   @computed
   get teacherTools(): ToolbarItem[] {
-    if (this.classroomStore.boardStore.configReady) {
+    if (this.classroomStore.boardStore.boardReady) {
       return [
         ToolbarItem.fromData({
           value: 'clicker',

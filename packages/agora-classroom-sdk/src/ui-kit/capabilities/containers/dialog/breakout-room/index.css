@@ -86,3 +86,9 @@
 .breakout-room .hl-text {
   color: var(--link-hl-color) !important;
 }
+
+.breakout-room-broadcast-input textarea {
+  outline: none;
+  resize: none;
+  border: none;
+}

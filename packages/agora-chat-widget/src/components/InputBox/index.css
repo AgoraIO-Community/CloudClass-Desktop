@@ -84,7 +84,7 @@
   user-select: none;
 }
 
-textarea {
+textarea.input-chat {
   outline: none !important;
   resize: none !important;
   border: none !important;

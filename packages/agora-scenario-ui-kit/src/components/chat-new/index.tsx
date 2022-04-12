@@ -218,7 +218,6 @@ export const ChatNew: FC<ChatProps> = ({
             style={{
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center',
             }}>
             {isHost ? (
               <span onClick={() => onCanChattingChange(!!canChatting)}>

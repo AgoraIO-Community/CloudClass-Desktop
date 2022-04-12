@@ -6,12 +6,19 @@ interface UserInfo {
   userName: string;
   role: EduRoleTypeEnum;
 }
+
+export interface MessageExt {
+  range: number;
+  userName: string;
+  userUuid: string;
+}
 export interface IHistoryChatMessage {
   message: string;
   sendTime: number;
   sequences: string;
   fromUser: UserInfo;
   messageId: string;
+  ext?: MessageExt;
 }
 
 export class HistoryChatMessage {
@@ -20,6 +27,7 @@ export class HistoryChatMessage {
   sequences: string;
   fromUser: UserInfo;
   messageId: string;
+  ext?: MessageExt;
 
   constructor(data: IHistoryChatMessage) {
     this.message = data.message;
@@ -27,6 +35,7 @@ export class HistoryChatMessage {
     this.sequences = data.sequences;
     this.messageId = data.messageId;
     this.fromUser = data.fromUser;
+    this.ext = data.ext;
   }
 }
 
@@ -39,6 +48,7 @@ export class MessageItem {
   isOwn?: boolean;
   userName: string;
   unread?: boolean;
+  isBroadcast: boolean;
 
   constructor(data: {
     id: string;
@@ -49,6 +59,7 @@ export class MessageItem {
     isOwn?: boolean;
     userName: string;
     unread?: boolean;
+    isBroadcast: boolean;
   }) {
     this.id = data.id;
     this.ts = data.ts;
@@ -58,6 +69,7 @@ export class MessageItem {
     this.unread = data.unread;
     this.userName = data.userName;
     this.content = data.content;
+    this.isBroadcast = data.isBroadcast;
   }
 
   toMessage() {
@@ -70,6 +82,7 @@ export class MessageItem {
       content: this.content,
       isOwn: this.isOwn,
       unread: this.unread,
+      isBroadcast: this.isBroadcast,
     };
   }
 }
