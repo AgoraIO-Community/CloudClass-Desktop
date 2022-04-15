@@ -15,6 +15,7 @@ import {
   SoundPlayer,
   SvgIcon,
   AudioVolume,
+  transI18n,
 } from '~ui-kit';
 import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
@@ -48,16 +49,24 @@ export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) =>
 });
 
 export const StreamPlaceholder = observer(
-  ({ className, style }: { role: EduRoleTypeEnum; className?: string; style?: CSSProperties }) => {
+  ({ className, style, role }: { role: EduRoleTypeEnum; className?: string; style?: CSSProperties }) => {
     const cls = classnames({
       [`video-player`]: 1,
       [`${className}`]: !!className,
     });
 
+    let placeholderText = ''
+    if (role === EduRoleTypeEnum.student) {
+      placeholderText = transI18n('placeholder.wait_student')
+    } else if (role === EduRoleTypeEnum.teacher) {
+      placeholderText = transI18n('placeholder.wait_teacher')
+    }
+
+
     return (
       // <StreamPlayerOverlay stream={stream}>
       <div style={style} className={cls}>
-        <CameraPlaceHolder state={CameraPlaceholderType.notpresent} text={''} />
+        <CameraPlaceHolder state={CameraPlaceholderType.notpresent} text={placeholderText} />
       </div>
       // </StreamPlayerOverlay>
     );

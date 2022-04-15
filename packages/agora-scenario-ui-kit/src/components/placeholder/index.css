@@ -23,8 +23,10 @@
 }
 
 .camera-placeholder span {
-  color: #677386;
   font-size: 12px;
+  font-family: PingFangSC-Semibold, PingFang SC;
+  font-weight: 600;
+  color: #022491;
 }
 
 .pretest .camera-placeholder {

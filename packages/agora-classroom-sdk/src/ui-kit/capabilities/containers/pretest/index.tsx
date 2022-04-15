@@ -17,6 +17,7 @@ import './index.css';
 import { useStore } from '~hooks/use-edu-stores';
 import { Slider } from '~ui-kit/components/slider';
 import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
+import { CameraPlaceholderType } from '@/infra/stores/common/type';
 declare global {
   interface Window {
     process: {
@@ -42,8 +43,12 @@ const LocalAudioVolumeIndicator: React.FC<any> = observer(() => {
 export const PretestVideoPlayerLocalCameraPlaceholder = observer(() => {
   const { pretestUIStore } = useStore();
   const { localCameraPlaceholder } = pretestUIStore;
+  let placeholderText = ''
+  if (localCameraPlaceholder === CameraPlaceholderType.loading) {
+    placeholderText = transI18n('placeholder.loading')
+  }
   return (
-    <CameraPlaceHolder style={{ position: 'absolute', top: 0 }} state={localCameraPlaceholder} />
+    <CameraPlaceHolder style={{ position: 'absolute', top: 0 }} state={localCameraPlaceholder} text={placeholderText}/>
   );
 });
 

@@ -119,6 +119,9 @@ export const en = {
     empty_quiz: 'Empty Question',
     enable_chat_muted: 'Student Chat Muted',
     input_message: 'Please Input Message',
+    loading: 'Loading',
+    wait_student: 'Waiting for student to enter the classroom',
+    wait_teacher: 'The tutor leaved the classroom'
   },
   error: {
     banned: 'Prohibited',
