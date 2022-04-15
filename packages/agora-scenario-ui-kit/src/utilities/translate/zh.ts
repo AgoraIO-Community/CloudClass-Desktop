@@ -110,8 +110,8 @@ export const zh = {
     enable_chat_muted: '已开启学生禁言',
     input_message: '请输入消息',
     loading: '加载中',
-    wait_student: '学生未进入教室',
-    wait_teacher: '外教未进入教室'
+    wait_student: '等待学生进入教室',
+    wait_teacher: '外教已离开教室'
   },
   signal: {
     delay: '网络延迟',
