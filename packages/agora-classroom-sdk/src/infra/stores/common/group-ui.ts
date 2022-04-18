@@ -581,6 +581,7 @@ export class GroupUIStore extends EduUIStoreBase {
         () => this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle,
       );
     }
+    await when(() => !this.classroomStore.boardStore.boardReady);
   }
 
   private async _waitUntilConnected() {
@@ -615,10 +616,18 @@ export class GroupUIStore extends EduUIStoreBase {
 
     if (!roomUuid) {
       this.logger.error('cannot find roomUuid');
+      this.setConnectionState(false);
       return;
     }
 
+    let joinSuccess = false;
     try {
+      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+        this.logger.info("remove teacher's stream");
+        await this.classroomStore.connectionStore.scene?.localUser?.deleteLocalMediaStream();
+        this.logger.info("remove teacher's stream success");
+      }
+
       await this._waitUntilConnected();
 
       if (this.classroomStore.connectionStore.rtcSubState !== RtcState.Idle) {
@@ -639,12 +648,15 @@ export class GroupUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
       await this.classroomStore.connectionStore.joinRTC();
+
+      joinSuccess = true;
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     } finally {
       this.setConnectionState(false);
     }
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+
+    if (joinSuccess && EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
       this._grantWhiteboard();
     }
   }
@@ -680,23 +692,38 @@ export class GroupUIStore extends EduUIStoreBase {
     await this._waitUntilJoined();
 
     this.setConnectionState(true);
+
+    const roomUuid = this.classroomStore.groupStore.currentSubRoom;
+
+    if (!roomUuid) {
+      this.logger.error('cannot find roomUuid');
+      this.setConnectionState(false);
+      return;
+    }
+
+    let joinSuccess = false;
     try {
-      const roomUuid = this.classroomStore.groupStore.currentSubRoom;
-      if (roomUuid) {
-        await this.classroomStore.connectionStore.leaveSubRoom();
-
-        await this._waitUntilLeft();
-
-        await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
-
-        await this.classroomStore.connectionStore.joinRTC();
+      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+        this.logger.info("remove teacher's stream");
+        await this.classroomStore.connectionStore.scene?.localUser?.deleteLocalMediaStream();
+        this.logger.info("remove teacher's stream success");
       }
+
+      await this.classroomStore.connectionStore.leaveSubRoom();
+
+      await this._waitUntilLeft();
+
+      await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+
+      await this.classroomStore.connectionStore.joinRTC();
+
+      joinSuccess = true;
     } catch (e) {
       this.logger.error('cannot change sub room', e);
     } finally {
       this.setConnectionState(false);
     }
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+    if (joinSuccess && EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
       this._grantWhiteboard();
     }
   }

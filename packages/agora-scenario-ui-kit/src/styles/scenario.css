@@ -292,6 +292,7 @@ body,
   padding-left: 0px !important;
 }
 .rtm-chat {
+  background: transparent;
   background: #fff;
   border-radius: 50%;
 }

@@ -11,7 +11,7 @@ import AgoraRTC, {
 import { RtcAdapterWeb, RtcAdapterWebConfig } from '.';
 import { AGEventEmitter } from '../../../utils/events';
 import { RtcAdapterBase } from '../base';
-import { RtcNetworkQualityWeb } from './stats';
+import { RtcNetworkQualityWeb, PacketStats } from './stats';
 import { AgoraRtePublishThread, AgoraRteSubscribeThread } from './thread';
 import to from 'await-to-js';
 import { AGRteErrorCode, RteErrorCenter } from '../../../utils/error';
@@ -39,6 +39,8 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
   protected readonly channelName: string;
   readonly connectionType: AGRtcConnectionType;
   private _networkStats: RtcNetworkQualityWeb = new RtcNetworkQualityWeb();
+  private _recentLocalPacketStats: PacketStats[] = [];
+  private _recentRemotePacketStats: PacketStats[] = [];
 
   constructor(
     channelName: string,
@@ -94,8 +96,14 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
       const rtcStats = this._client.getRTCStats();
 
       this._networkStats.rtt = rtcStats.RTT;
-      this._networkStats.txVideoPacketLoss =
-        localVideoTrackStats.sendPacketsLost / localVideoTrackStats.sendPackets;
+
+      const localPacketStats = {
+        lossPackets: localVideoTrackStats.sendPacketsLost,
+        totalPackets: localVideoTrackStats.sendPackets,
+      };
+
+      this._recentLocalPacketStats.unshift(localPacketStats);
+      this._recentLocalPacketStats = this._recentLocalPacketStats.slice(0, 10);
 
       let totalLoss = 0,
         totalPacket = 0,
@@ -106,13 +114,45 @@ export class AgoraRteWebClientBase extends AGEventEmitter {
         totalPacket += s.receivePackets;
         totalDelay += s.end2EndDelay;
       }
+      const remotePacketStats = {
+        lossPackets: totalLoss,
+        totalPackets: totalPacket,
+      };
+
+      this._recentRemotePacketStats.unshift(remotePacketStats);
+      this._recentRemotePacketStats = this._recentRemotePacketStats.slice(0, 10);
 
       if (remoteStatsValues.length > 0) {
-        this._networkStats.rxVideoPacketLoss = totalLoss / totalPacket;
-        this._networkStats.end2EndDelay = totalDelay / remoteStatsValues.length;
+        this._networkStats.end2EndDelay =
+          remoteStatsValues.length === 0 ? 0 : totalDelay / remoteStatsValues.length;
       }
+
+      const { rx, tx } = this._getRecentPacketLoss();
+
+      this._networkStats.rxVideoPacketLoss = rx;
+      this._networkStats.txVideoPacketLoss = tx;
+
       this.emit('network-stats-changed', this._networkStats.networkStats(), this.connectionType);
     });
+  }
+
+  private _getRecentPacketLoss() {
+    const newestLocal = this._recentLocalPacketStats[0];
+    const oldestLocal = this._recentLocalPacketStats[this._recentLocalPacketStats.length - 1];
+
+    const recentLocalLoss = newestLocal.lossPackets - oldestLocal.lossPackets;
+    const recentLocalTotal = newestLocal.totalPackets - oldestLocal.totalPackets;
+
+    const newestRemote = this._recentRemotePacketStats[0];
+    const oldestRemote = this._recentRemotePacketStats[this._recentRemotePacketStats.length - 1];
+
+    const recentRemoteLoss = newestRemote.lossPackets - oldestRemote.lossPackets;
+    const recentRemoteTotal = newestRemote.totalPackets - oldestRemote.totalPackets;
+
+    return {
+      rx: Math.abs(recentLocalTotal > 0 ? recentLocalLoss / recentLocalTotal : 0),
+      tx: Math.abs(recentRemoteTotal > 0 ? recentRemoteLoss / recentRemoteTotal : 0),
+    };
   }
 
   get ready() {

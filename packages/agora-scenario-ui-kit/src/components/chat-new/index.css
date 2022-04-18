@@ -229,6 +229,7 @@
 .simple-chat.chat-panel {
   margin-left: 0;
   border-left: 0;
+  background: #fff;
 }
 
 .simple-chat .chat-header {

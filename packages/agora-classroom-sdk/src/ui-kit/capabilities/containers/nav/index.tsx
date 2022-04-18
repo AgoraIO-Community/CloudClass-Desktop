@@ -16,16 +16,18 @@ export const SignalContent = observer(() => {
   return (
     <>
       <table>
-        <tr>
-          <td className="biz-col label left">{transI18n('signal.status')}:</td>
-          <td className="biz-col value left">{networkQualityLabel}</td>
-          <td className="biz-col label right">{transI18n('signal.delay')}:</td>
-          <td className="biz-col value right">{delay}</td>
-        </tr>
-        <tr>
-          <td className="biz-col label left">{transI18n('signal.lose')}:</td>
-          <td className="biz-col value left">{packetLoss}</td>
-        </tr>
+        <tbody>
+          <tr>
+            <td className="biz-col label left">{transI18n('signal.status')}:</td>
+            <td className="biz-col value left">{networkQualityLabel}</td>
+            <td className="biz-col label right">{transI18n('signal.delay')}:</td>
+            <td className="biz-col value right">{delay}</td>
+          </tr>
+          <tr>
+            <td className="biz-col label left">{transI18n('signal.lose')}:</td>
+            <td className="biz-col value left">{packetLoss}</td>
+          </tr>
+        </tbody>
       </table>
     </>
   );

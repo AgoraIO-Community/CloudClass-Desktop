@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { bound } from 'agora-rte-sdk';
 import { transI18n } from './i18n';
 import {
+  AGServiceErrorCode,
   ClassroomState,
   ClassState,
   EduClassroomConfig,
@@ -145,7 +146,19 @@ export class NavigationBarUIStore extends EduUIStoreBase {
                     },
                   ],
                   true,
-                );
+                ).catch((e) => {
+                  if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
+                    this.shareUIStore.addConfirmDialog(
+                      transI18n('breakout_room.confirm_invite_teacher_title'),
+                      transI18n('breakout_room.being_invited'),
+                      {
+                        actions: ['ok'],
+                      },
+                    );
+                  } else {
+                    this.shareUIStore.addGenericErrorDialog(e as AGError);
+                  }
+                });
               },
               actions: ['ok', 'cancel'],
               btnText: {

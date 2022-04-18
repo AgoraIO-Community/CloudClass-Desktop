@@ -51,10 +51,10 @@ export class BoardUIStore extends EduUIStoreBase {
     const boardWidgetProps = this.classroomStore.widgetStore.widgetPropsMap[
       BUILTIN_WIDGETS.boardWidget
     ] as {
-      extra: { grantUsers: string[] };
+      extra: { grantedUsers: string[] };
     };
 
-    const grantedUsers = boardWidgetProps?.extra?.grantUsers || {};
+    const grantedUsers = boardWidgetProps?.extra?.grantedUsers || {};
 
     return new Set(Object.keys(grantedUsers).filter((k) => grantedUsers[k]));
   }

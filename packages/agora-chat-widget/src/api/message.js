@@ -121,7 +121,7 @@ export class MessageAPI {
           ...message.ext,
           avatarUrl:
             'https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png',
-          nickName: message.ext.nickname,
+          nickName: message.ext.nickName,
           role: +message.ext.role,
         },
       };

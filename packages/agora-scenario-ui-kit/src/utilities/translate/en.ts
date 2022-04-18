@@ -635,6 +635,7 @@ export const en = {
     confirm_delete_group_content: 'Are you sure you want to delete the {reason} group ?',
     leaving: 'Leaving room',
     send_to_all_placeholder: 'This is a general message, 300 words Max',
+    being_invited: 'The teacher is helping other students, please try again later',
   },
   begin_class: 'Begin class',
   edu_error: {
@@ -758,5 +759,6 @@ export const en = {
     '30410460': 'process unable.',
     '30429460': 'progress reached max wait.',
     '30429461': 'accept reached max count.',
+    '30409601': 'user is being invited',
   },
 };

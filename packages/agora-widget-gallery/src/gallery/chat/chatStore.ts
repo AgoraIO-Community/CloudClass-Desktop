@@ -428,6 +428,10 @@ export class WidgetChatUIStore {
     return this.unreadMessageSet.size;
   }
 
+  get readyToFetch() {
+    return !!this.coreStore.classroomStore.connectionStore.scene;
+  }
+
   unreadConversationCountFn = computedFn((id: string) => {
     if (id) {
       let unreadArray = this.unreadCoversationMap.get(id);

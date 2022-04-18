@@ -58,6 +58,6 @@
   },
   "dependencies": {
     "dayjs": "1.10.4",
-    "agora-edu-core": "2.3.5"
+    "agora-edu-core": "2.4.0"
   }
 }

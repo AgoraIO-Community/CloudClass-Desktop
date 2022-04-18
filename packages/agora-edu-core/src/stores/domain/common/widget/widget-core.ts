@@ -2,12 +2,7 @@
  * 生命周期 oninstall
  */
 
-import {
-  AgoraRteEngineConfig,
-  AgoraRteEventType,
-  AgoraRteRemoteStreamType,
-  bound,
-} from 'agora-rte-sdk';
+import { AgoraRteEngineConfig, AgoraRteEventType, AgoraUser, bound } from 'agora-rte-sdk';
 import { forEach, get } from 'lodash';
 import { action, reaction, runInAction, observable, computed } from 'mobx';
 import {
@@ -169,6 +164,14 @@ export class ExtensionAppStore extends EduStoreBase {
     if (userUuid === localUserUuid) {
       this.setExtensionUserProperties(get(userProperties, `widgets`, {}));
     }
+  }
+
+  @action.bound
+  private _handleUserAdded(users: AgoraUser[]) {
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    const currentUser = users.find((user: AgoraUser) => user.userUuid === userUuid);
+    currentUser &&
+      this._handleUserPropertiesChange(userUuid, currentUser.userProperties.toObject(), {}, {});
   }
 
   @bound
@@ -376,6 +379,7 @@ export class ExtensionAppStore extends EduStoreBase {
           scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
 
           scene.on(AgoraRteEventType.UserPropertyUpdated, this._handleUserPropertiesChange);
+          scene.on(AgoraRteEventType.UserAdded, this._handleUserAdded);
 
           forEach(EduClassroomConfig.shared.extensions, this.registerExtensionApp);
           forEach(EduClassroomConfig.shared.extensions, this.initialExtensionApp);

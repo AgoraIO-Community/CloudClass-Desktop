@@ -125,6 +125,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
       ({ localScreenShareTrackState, screenShareStreamUuid }) => {
         const teacherCameraStreamUuid = this.teacherCameraStream?.stream.streamUuid;
+        const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+
         runInAction(() => {
           if (localScreenShareTrackState === AgoraRteMediaSourceState.started) {
             if (screenShareStreamUuid && !this.isScreenSharing) {
@@ -133,10 +135,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
                 `streamWindow-${screenShareStreamUuid}`,
                 {
                   extra: {
-                    userUuid: this.teacherUuid,
+                    userUuid,
                   },
                 },
-                this.teacherUuid,
+                userUuid,
               );
               this.classroomStore.widgetStore.widgetStateMap[
                 `streamWindow-${teacherCameraStreamUuid}`
@@ -157,10 +159,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
                   `streamWindow-${teacherCameraStreamUuid}`,
                   {
                     extra: {
-                      userUuid: this.teacherUuid,
+                      userUuid,
                     },
                   },
-                  this.teacherUuid,
+                  userUuid,
                 );
             }
           }
@@ -270,15 +272,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       this.setTool(id);
     }
   }
-  @computed
-  get teacherUuid() {
-    const teacherList = this.classroomStore.userStore.teacherList;
-    const teachers = Array.from(teacherList.values());
-    if (teachers.length > 0) {
-      return teachers[0].userUuid;
-    }
-    return '';
-  }
+
   /**
    * 老师流信息列表
    * @returns
@@ -395,7 +389,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
             {
               onOK: () => {
                 this.classroomStore.widgetStore.setInactive(BUILTIN_WIDGETS.boardWidget);
-                if (!this.isScreenSharing)
+                if (!this.isScreenSharing && this.teacherCameraStream)
                   this.classroomStore.widgetStore.setActive(
                     `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
                     {
@@ -403,7 +397,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
                         userUuid: this.teacherCameraStream?.fromUser.userUuid,
                       },
                     },
-                    this.teacherUuid,
+                    this.teacherCameraStream?.fromUser.userUuid,
                   );
               },
             },

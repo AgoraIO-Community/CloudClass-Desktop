@@ -42,6 +42,7 @@ const App = observer(() => {
     refreshMessageList,
     refreshConversationList,
     refreshConversationMessageList,
+    readyToFetch,
     updateActiveTab,
     unreadConversationCountFn,
     toggleChatMinimize,
@@ -68,7 +69,9 @@ const App = observer(() => {
           onSend={handleSendText}
           showCloseIcon={false}
           onPullRefresh={() => {
-            refreshMessageList();
+            if (readyToFetch) {
+              refreshMessageList();
+            }
           }}
           unreadCount={unreadMessageCount}
           configUI={configUI}
@@ -92,12 +95,14 @@ const App = observer(() => {
           onSend={handleSendText}
           showCloseIcon={widgetStore.classroomConfig.sessionInfo.roomType === 2 ? false : !minimize}
           onPullRefresh={(evt: ChatEvent) => {
-            if (evt.type === 'conversation' && evt.conversation) {
-              refreshConversationMessageList(evt.conversation);
-            } else if (evt.type === 'conversation-list') {
-              refreshConversationList();
-            } else {
-              refreshMessageList();
+            if (readyToFetch) {
+              if (evt.type === 'conversation' && evt.conversation) {
+                refreshConversationMessageList(evt.conversation);
+              } else if (evt.type === 'conversation-list') {
+                refreshConversationList();
+              } else {
+                refreshMessageList();
+              }
             }
           }}
           onChangeActiveTab={(activeTab: ChatListType, conversation?: Conversation) => {

@@ -185,16 +185,17 @@ export class BoardStore extends EduStoreBase {
   @action.bound
   leaveBoard = async () => {
     try {
+      const room = this._room;
+
       this.unmount();
 
-      await this._room?.disconnect();
+      await room?.disconnect();
     } catch (err) {
       EduErrorCenter.shared.handleNonThrowableError(
         AGEduErrorCode.EDU_ERR_BOARD_LEAVE_FAILED,
         err as Error,
       );
     }
-    this.setRoom(undefined);
   };
 
   mount = (
@@ -242,6 +243,7 @@ export class BoardStore extends EduStoreBase {
     this._windowManager?.destroy();
     this.setWindowManager(undefined);
     this._whiteBoardContainer = undefined;
+    this.setRoom(undefined);
   };
 
   @action.bound
@@ -272,7 +274,7 @@ export class BoardStore extends EduStoreBase {
   grantPermission(userUuid: string) {
     this.classroomStore.widgetStore.updateWidget(BOARD_WIDGET_ID, {
       extra: {
-        [`grantUsers.${userUuid}`]: true,
+        [`grantedUsers.${userUuid}`]: true,
       },
     });
   }
@@ -283,11 +285,9 @@ export class BoardStore extends EduStoreBase {
    */
   @bound
   revokePermission(userUuid: string) {
-    this.classroomStore.widgetStore.updateWidget(BOARD_WIDGET_ID, {
-      extra: {
-        [`grantUsers.${userUuid}`]: false,
-      },
-    });
+    this.classroomStore.widgetStore.removeWidgetExtra(BOARD_WIDGET_ID, [
+      `grantedUsers.${userUuid}`,
+    ]);
   }
 
   getShapeType(tool: WhiteboardShapeTool): string {
@@ -697,17 +697,18 @@ export class BoardStore extends EduStoreBase {
       if (!this.managerReady) {
         return;
       }
+      const room = this.room;
       if (granted) {
         //granted
-        await this.room.setWritable(true);
-        this.room.disableDeviceInputs = false;
+        await room.setWritable(true);
+        room.disableDeviceInputs = false;
         this.setTool(WhiteboardTool.selector);
-        this.restoreWhiteboardMemberStateTo(this.room);
+        this.restoreWhiteboardMemberStateTo(room);
       } else {
         //revoked
         this.setTool(WhiteboardTool.selector);
-        await this.room.setWritable(false);
-        this.room.disableDeviceInputs = true;
+        await room.setWritable(false);
+        room.disableDeviceInputs = true;
       }
     } catch (e) {
       return EduErrorCenter.shared.handleNonThrowableError(

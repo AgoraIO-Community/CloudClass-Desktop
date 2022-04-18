@@ -358,7 +358,7 @@ export const StreamPlayer = observer(
     });
     let style: CSSProperties = {
       ...css,
-      ...(isFullScreen ? { width: '100%', height: '100%' } : {}),
+      ...(isFullScreen ? { width: '100%', height: '100%', flex: 1 } : {}),
     };
 
     if (cameraPlaceholder(stream, true) !== CameraPlaceholderType.none) {

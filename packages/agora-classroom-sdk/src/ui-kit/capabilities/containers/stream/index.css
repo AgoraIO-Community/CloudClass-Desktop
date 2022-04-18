@@ -15,6 +15,7 @@
 }
 .video-player-overlay {
   position: relative;
+  display: flex;
 }
 
 .video-player-overlay .top-right-info {

@@ -621,6 +621,7 @@ export const zh = {
     confirm_delete_group_content: '确定要删除小组 {reason} 吗？',
     leaving: '正在回到大频道...',
     send_to_all_placeholder: '这是一条全体消息，最多300字',
+    being_invited: '老师正在帮助其他学生，请稍后重试',
   },
   begin_class: '开始上课',
   edu_error: {
@@ -748,5 +749,6 @@ export const zh = {
     '30410460': '配置举手功能未开启',
     '30429460': '举手人数到达最大上限',
     '30429461': '上台到达最大上限',
+    '30409601': '用户正在被邀请',
   },
 };

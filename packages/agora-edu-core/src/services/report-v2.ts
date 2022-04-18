@@ -1,4 +1,4 @@
-import { ApiBase } from 'agora-rte-sdk';
+import { ApiBase, Logger } from 'agora-rte-sdk';
 import md5 from 'js-md5';
 import {
   ApaasUserJoin,
@@ -248,6 +248,7 @@ export class ReportServiceV2 extends ApiBase {
     );
   }
   initReportUserParams(params: ReportUserParams) {
+    Logger.info('init report user params', params);
     this.reportUserParams = params;
   }
   async reportApaasUserJoin(lts: number, errorCode: number) {

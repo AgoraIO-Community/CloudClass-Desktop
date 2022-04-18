@@ -1,7 +1,10 @@
 import type { AgoraNetworkQuality } from 'agora-electron-sdk/types/Api/native_type';
+import { Injectable, Log } from '../../../decorator';
 import { QualityCalc } from '../../../utils/networkutils';
 import { NetworkStats } from '../../type';
+@Log.attach({ proxyMethods: false })
 export class RtcNetworkQualityElectron {
+  protected logger!: Injectable.Logger;
   rtt?: number;
   downlinkNetworkQuality: AgoraNetworkQuality = 0;
   uplinkNetworkQuality: AgoraNetworkQuality = 0;
@@ -14,8 +17,9 @@ export class RtcNetworkQualityElectron {
   private _uplinkNetworkQualityClacInstance = new QualityCalc();
 
   networkStats(): NetworkStats {
-    let packetLoss = Math.max(this.txVideoPacketLoss, this.rxVideoPacketLoss);
-    return {
+    const packetLoss = Math.max(this.txVideoPacketLoss, this.rxVideoPacketLoss);
+
+    const networkStats = {
       packetLoss,
       // cpu is not supported in web
       cpu: -1,
@@ -27,5 +31,7 @@ export class RtcNetworkQualityElectron {
         this.downlinkNetworkQuality,
       ),
     };
+
+    return networkStats;
   }
 }

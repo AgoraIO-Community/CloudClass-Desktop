@@ -185,15 +185,7 @@ export class AgoraRteScene extends EventEmitter {
       await this._rtmManager.join(this._rtmChannel, this._rtmChannelObserver, this.sceneId);
 
       // 3. initialize object models
-      const {
-        streamUuid,
-        userName,
-        userUuid,
-        userRole,
-        rtcToken,
-        streams = [],
-        userProperties,
-      } = user;
+      const { streamUuid, userName, userUuid, role, rtcToken, streams = [], userProperties } = user;
       let agStreams = streams.map((s: IAgoraStreamData) => {
         return AgoraStream.fromData({
           streamUuid: s.streamUuid,
@@ -201,7 +193,7 @@ export class AgoraRteScene extends EventEmitter {
           fromUser: {
             userName,
             userUuid,
-            role: userRole,
+            role,
           },
           videoSourceState: s.videoSourceState,
           audioSourceState: s.audioSourceState,
@@ -215,7 +207,7 @@ export class AgoraRteScene extends EventEmitter {
       this._localUser = new AgoraRteLocalUser(this, {
         userUuid: AgoraRteEngineConfig.shared.userId,
         userName,
-        userRole,
+        userRole: role,
         streamUuid,
         sceneId: this.sceneId,
         rtcToken,
@@ -419,13 +411,14 @@ export class AgoraRteScene extends EventEmitter {
           new Error('local user not exist'),
         );
       }
+      const localUserData = this.localUser.toData();
       // put local user into data store as user in-out events may not receive in some types of scenes
-      this.dataStore.setUser(this.localUser.userUuid, AgoraUser.fromData(this.localUser.toData()));
+      this.dataStore.setUser(this.localUser.userUuid, AgoraUser.fromData(localUserData));
       //do not fire local user event from snapshot, as this has been done in entry api phase
       const users = Array.from(this.dataStore.users.values()).filter(
         (u) => u.userUuid !== this.localUser!.userUuid,
       );
-      users.push(this.localUser.toData());
+      users.push(localUserData);
       if (users.length > 0) {
         this._handleUserAdded(users);
       }

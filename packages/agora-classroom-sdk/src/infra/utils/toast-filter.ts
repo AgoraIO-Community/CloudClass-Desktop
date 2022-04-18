@@ -6,6 +6,7 @@ const errorsShouldBlockToast = new Set([
   AGServiceErrorCode.SERV_PROCESS_CONFLICT,
   AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT,
   AGServiceErrorCode.SERV_HAND_UP_CONFLICT,
+  AGServiceErrorCode.SERV_USER_BEING_INVITED,
 ]);
 
 export abstract class ToastFilter {

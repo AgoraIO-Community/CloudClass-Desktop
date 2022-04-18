@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { FC, useMemo, useEffect } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import 'video.js/dist/video-js.css';
 import '@netless/window-manager/dist/style.css';
@@ -12,8 +12,6 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
   const { boardUIStore, toolbarUIStore } = useStore();
   const {
     readyToMount,
-    mount,
-    unmount,
     rejoinWhiteboard,
     connectionLost,
     joinWhiteboardWhenConfigReady,
@@ -29,6 +27,7 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
     undoSteps,
   } = boardUIStore;
   const { setTool } = toolbarUIStore;
+
   useEffect(() => {
     joinWhiteboardWhenConfigReady();
     return () => {
@@ -36,20 +35,6 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
     };
   }, [leaveWhiteboard, joinWhiteboardWhenConfigReady]);
 
-  const boardContainer = useMemo(
-    () => (
-      <div
-        id="netless"
-        ref={(dom) => {
-          if (dom) {
-            mount(dom);
-          } else {
-            unmount();
-          }
-        }}></div>
-    ),
-    [mount, unmount],
-  );
   return readyToMount ? (
     <>
       {(isTeacherOrAssistant || isGrantedBoard) && (
@@ -73,7 +58,7 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
       <div className="whiteboard-wrapper">
         {children}
         <div className="whiteboard">
-          {boardContainer}
+          <BoardWrapper />
           {connectionLost ? (
             <BoardPlaceHolder
               style={{ position: 'absolute' }}
@@ -84,6 +69,24 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
       </div>
     </>
   ) : null;
+});
+
+const BoardWrapper = observer(() => {
+  const { boardUIStore } = useStore();
+  const { mount, unmount } = boardUIStore;
+
+  const divRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (divRef.current) {
+      mount(divRef.current);
+    }
+    return () => {
+      unmount();
+    };
+  }, []);
+
+  return <div id="netless" ref={divRef} />;
 });
 
 export const CollectorContainer = observer(() => {

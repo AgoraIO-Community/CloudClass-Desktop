@@ -1,7 +1,7 @@
-import { AgoraRteEventType, AgoraRteScene, bound } from 'agora-rte-sdk';
+import { AgoraRteEventType, AgoraRteScene, bound, Log } from 'agora-rte-sdk';
 import { cloneDeep, startsWith } from 'lodash';
 import get from 'lodash/get';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, toJS } from 'mobx';
 import { EduClassroomConfig } from '../../../../configs';
 import { EduEventCenter } from '../../../../event-center';
 import { AgoraEduClassroomEvent } from '../../../../type';
@@ -46,6 +46,7 @@ type OperationQueue = {
  *  11.用户接收邀请进入房间
  *  12.用户移动至指定房间
  */
+@Log.attach({ proxyMethods: false })
 export class GroupStore extends EduStoreBase {
   static readonly MAX_GROUP_COUNT = 20; // 最大分组数量
   static readonly MIN_GROUP_COUNT = 2;
@@ -189,6 +190,7 @@ export class GroupStore extends EduStoreBase {
 
   private _checkSubRoom() {
     const { userUuid: localUuid } = EduClassroomConfig.shared.sessionInfo;
+    this.logger.info('check user in sub room');
 
     let lastGroupUuid = '';
     for (const [groupUuid, group] of this.groupDetails.entries()) {
@@ -196,6 +198,7 @@ export class GroupStore extends EduStoreBase {
         ({ userUuid, notJoined }) => userUuid === localUuid && !notJoined,
       );
       if (local) {
+        this.logger.info('found user has joined sub room', groupUuid);
         lastGroupUuid = groupUuid;
         break;
       }
@@ -203,12 +206,16 @@ export class GroupStore extends EduStoreBase {
 
     if (lastGroupUuid) {
       if (this._currentGroupUuid && lastGroupUuid !== this._currentGroupUuid) {
+        this.logger.info(
+          `user move into group ${lastGroupUuid}, from group ${this._currentGroupUuid}`,
+        );
         this.operationQueue.push({
           fromGroupUuid: this._currentGroupUuid,
           toGroupUuid: lastGroupUuid,
           type: OperationType.Move,
         });
       } else if (!this._currentGroupUuid) {
+        this.logger.info(`user join group ${lastGroupUuid}`);
         this.operationQueue.push({
           toGroupUuid: lastGroupUuid,
           type: OperationType.Join,
@@ -216,6 +223,7 @@ export class GroupStore extends EduStoreBase {
       }
     } else {
       if (this._currentGroupUuid) {
+        this.logger.info(`user leave group ${this._currentGroupUuid}`);
         this.operationQueue.push({
           fromGroupUuid: this._currentGroupUuid,
           type: OperationType.Leave,
@@ -416,6 +424,8 @@ export class GroupStore extends EduStoreBase {
     if (!operation) {
       return;
     }
+
+    this.logger.info(`handle group operation`, toJS(operation));
 
     switch (operation.type) {
       case OperationType.Join:

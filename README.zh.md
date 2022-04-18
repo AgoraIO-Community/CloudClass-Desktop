@@ -1,7 +1,5 @@
 > _Read this in another language: [English](README.md)_
 
-> \*提示：这个分支处于开发阶段，暂不接受外部开发者的 PR
-
 ## 云课堂 Electron App
 
 ## Install
