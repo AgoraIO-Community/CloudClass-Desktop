@@ -82,6 +82,13 @@ export class WidgetStore extends EduStoreBase {
     );
   }
 
+  @bound
+  removeWidgetExtra(widgetId: string, propKeys: string[]) {
+    this.api.removeWidgetExtraProperties(this.classroomStore.connectionStore.sceneId, widgetId, {
+      properties: propKeys,
+    });
+  }
+
   @action
   async deleteWidgetTrackState(widgetId: string) {
     this.setInactive(widgetId);

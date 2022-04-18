@@ -293,8 +293,6 @@ body,
 }
 .rtm-chat {
   background: transparent;
-  background: #fff;
-  border-radius: 50%;
 }
 .rtm-chat-2 .small-class-chat-fixed {
   height: 100% !important;
