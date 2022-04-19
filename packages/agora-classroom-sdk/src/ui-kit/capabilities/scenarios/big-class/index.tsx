@@ -18,6 +18,7 @@ import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
 import { CollectorContainer } from '~containers/board';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
+import { useStore } from '@/infra/hooks/use-edu-stores';
 
 const Content: FC = ({ children }) => {
   return <div className="flex-col flex-grow">{children}</div>;
@@ -26,7 +27,9 @@ const Content: FC = ({ children }) => {
 export const BigClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'big-class-room');
-
+  const { classroomStore } = useStore();
+  const { boardStore } = classroomStore;
+  const { whiteboardWidgetActive } = boardStore;
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
@@ -36,7 +39,7 @@ export const BigClassScenario = observer(() => {
             <Content>
               <RoomBigStudentStreamsContainer />
               <BigWidgetWindowContainer>
-                <WhiteboardContainer></WhiteboardContainer>
+                {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
                 <Aside className="aisde-fixed">
                   <CollectorContainer />
 

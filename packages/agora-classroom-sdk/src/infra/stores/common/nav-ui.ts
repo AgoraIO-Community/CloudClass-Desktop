@@ -120,13 +120,13 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
           if (!teachers.size && !assistants.size) {
             this.shareUIStore.addConfirmDialog(
-              transI18n('breakout_room.confirm_invite_teacher_title'),
+              transI18n('fcr_group_help_title'),
               transI18n('breakout_room.confirm_ask_for_help_absent_content'),
             );
             return;
           }
           if (this.teacherGroupUuid === currentSubRoom) {
-            this.shareUIStore.addToast(transI18n('toast.teacher_already_in_group'), 'warning');
+            this.shareUIStore.addToast(transI18n('fcr_group_teacher_exist_hint'), 'warning');
             return;
           }
 
@@ -134,8 +134,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
           const assistantUuids = Array.from(assistants.keys());
 
           this.shareUIStore.addConfirmDialog(
-            transI18n('breakout_room.confirm_invite_teacher_title'),
-            transI18n('breakout_room.confirm_ask_for_help_content'),
+            transI18n('fcr_group_help_title'),
+            transI18n('fcr_group_help_content'),
             {
               onOK: () => {
                 updateGroupUsers(
@@ -149,8 +149,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
                 ).catch((e) => {
                   if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
                     this.shareUIStore.addConfirmDialog(
-                      transI18n('breakout_room.confirm_invite_teacher_title'),
-                      transI18n('breakout_room.being_invited'),
+                      transI18n('fcr_group_help_title'),
+                      transI18n('fcr_group_teacher_is_helping_others_msg'),
                       {
                         actions: ['ok'],
                       },
@@ -162,7 +162,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
               },
               actions: ['ok', 'cancel'],
               btnText: {
-                ok: transI18n('breakout_room.confirm_ask_for_help_btn_ok'),
+                ok: transI18n('fcr_group_invite'),
                 cancel: transI18n('breakout_room.confirm_ask_for_help_btn_cancel'),
               },
             },

@@ -1,5 +1,3 @@
-//@ts-ignore
-// const hx = require()
 import * as hx from 'agora-chat-widget';
 import {
   ClassroomState,

@@ -23,7 +23,7 @@ export const WhiteboardH5Container: FC = observer(({ children }) => {
     unmount,
     rejoinWhiteboard,
     connectionLost,
-    joinWhiteboardWhenConfigReady,
+    joinWhiteboard,
     leaveWhiteboard,
     iconBorderZoomType,
     iconZoomVisibleCls,
@@ -33,11 +33,11 @@ export const WhiteboardH5Container: FC = observer(({ children }) => {
   } = boardUIStore;
 
   useEffect(() => {
-    joinWhiteboardWhenConfigReady();
+    joinWhiteboard();
     return () => {
       leaveWhiteboard();
     };
-  }, [leaveWhiteboard, joinWhiteboardWhenConfigReady]);
+  }, [leaveWhiteboard, joinWhiteboard]);
 
   const boardContainer = useMemo(
     () => (

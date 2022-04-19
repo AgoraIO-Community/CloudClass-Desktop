@@ -19,9 +19,7 @@
       "~hooks": ["./src/infra/hooks"],
       "~hooks/*": ["./src/infra/hooks/*"],
       "~contexts": ["./src/infra/contexts"],
-      "~contexts/*": ["./src/infra/contexts/*"],
-      "agora-rte-sdk": ["../agora-rte-sdk/src"],
-      "agora-edu-core": ["../agora-edu-core/src"]
+      "~contexts/*": ["./src/infra/contexts/*"]
     }
   }
 }

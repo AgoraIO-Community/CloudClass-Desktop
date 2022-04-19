@@ -16,6 +16,7 @@ import { ExtensionAppContainer } from '~containers/extension-app-container';
 import { ToastContainer } from '~containers/toast';
 import { CollectorContainer } from '~containers/board';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
+import { useStore } from '@/infra/hooks/use-edu-stores';
 
 const Content: FC = ({ children }) => {
   return <div className="flex-grow">{children}</div>;
@@ -23,7 +24,9 @@ const Content: FC = ({ children }) => {
 
 export const OneToOneScenario = observer(() => {
   const layoutCls = classnames('edu-room');
-
+  const { classroomStore } = useStore();
+  const { boardStore } = classroomStore;
+  const { whiteboardWidgetActive } = boardStore;
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
@@ -32,7 +35,7 @@ export const OneToOneScenario = observer(() => {
           <Layout className="horizontal">
             <Content>
               <BigWidgetWindowContainer>
-                <WhiteboardContainer></WhiteboardContainer>
+                {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
               </BigWidgetWindowContainer>
 
               <Aside className="aisde-fixed">

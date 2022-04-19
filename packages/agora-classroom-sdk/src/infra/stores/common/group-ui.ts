@@ -6,8 +6,6 @@ import {
   GroupDetail,
   GroupState,
   PatchGroup,
-  WhiteboardState,
-  WhiteboardTool,
   SceneType,
 } from 'agora-edu-core';
 import { AGError, AGRtcConnectionType, bound, Log, RtcState } from 'agora-rte-sdk';
@@ -576,21 +574,10 @@ export class GroupUIStore extends EduUIStoreBase {
 
   private async _waitUntilLeft() {
     await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Idle);
-    if (this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Disconnecting) {
-      await when(
-        () => this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle,
-      );
-    }
-    await when(() => !this.classroomStore.boardStore.boardReady);
   }
 
   private async _waitUntilConnected() {
     await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
-    if (this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connecting) {
-      await when(
-        () => this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Connected,
-      );
-    }
   }
 
   private async _waitUntilJoined() {
@@ -600,9 +587,6 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private async _grantWhiteboard() {
-    await when(() => this.classroomStore.boardStore.managerReady);
-    await this.classroomStore.boardStore.setWritable(true);
-    this.classroomStore.boardStore.setTool(WhiteboardTool.selector);
     this.classroomStore.boardStore.grantPermission(EduClassroomConfig.shared.sessionInfo.userUuid);
   }
 
@@ -635,13 +619,7 @@ export class GroupUIStore extends EduUIStoreBase {
         this.classroomStore.connectionStore.leaveRTC(AGRtcConnectionType.sub);
       }
 
-      // workaround: room may not exist when whiteboard state is connected, it will no op  if leave board at this time
-      await new Promise((r) => setTimeout(r, 500));
-
       await this.classroomStore.connectionStore.leaveRTC();
-      if (this.classroomStore.connectionStore.whiteboardState !== WhiteboardState.Disconnecting) {
-        await this.classroomStore.connectionStore.leaveWhiteboard();
-      }
 
       await this._waitUntilLeft();
 
@@ -668,11 +646,7 @@ export class GroupUIStore extends EduUIStoreBase {
     try {
       await this.classroomStore.connectionStore.leaveSubRoom();
 
-      await when(
-        () =>
-          this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle &&
-          this.classroomStore.connectionStore.rtcState === RtcState.Idle,
-      );
+      await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Idle);
 
       await this.classroomStore.connectionStore.joinRTC();
 
@@ -744,22 +718,20 @@ export class GroupUIStore extends EduUIStoreBase {
           EduClassroomConfig.shared.sessionInfo.role,
         );
 
-        const title = isTeacher
-          ? transI18n('breakout_room.confirm_invite_teacher_title')
-          : transI18n('breakout_room.confirm_invite_student_title');
+        const title = isTeacher ? transI18n('fcr_group_help_title') : transI18n('fcr_group_join');
         const content = isTeacher
           ? transI18n('breakout_room.confirm_invite_teacher_content', {
               reason1: groupName,
               reason2: inviter,
             })
-          : transI18n('breakout_room.confirm_invite_student_content', { reason: groupName });
+          : transI18n('fcr_group_invitation', { reason: groupName });
 
         const ok = isTeacher
-          ? transI18n('breakout_room.confirm_invite_teacher_btn_ok')
+          ? transI18n('fcr_group_button_join')
           : transI18n('breakout_room.confirm_invite_student_btn_ok');
 
         const cancel = isTeacher
-          ? transI18n('breakout_room.confirm_invite_teacher_btn_cancel')
+          ? transI18n('fcr_group_button_later')
           : transI18n('breakout_room.confirm_invite_student_btn_cancel');
 
         const dialogId = this.shareUIStore.addConfirmDialog(title, content, {

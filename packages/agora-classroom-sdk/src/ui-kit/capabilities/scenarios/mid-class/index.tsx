@@ -16,11 +16,14 @@ import { HandsUpContainer } from '~containers/hand-up';
 import { SceneSwitch } from '~containers/scene-switch';
 import { Award } from '../../containers/award';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
+import { useStore } from '@/infra/hooks/use-edu-stores';
 
 export const MidClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'mid-class-room');
-
+  const { classroomStore } = useStore();
+  const { boardStore } = classroomStore;
+  const { whiteboardWidgetActive } = boardStore;
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
@@ -29,7 +32,7 @@ export const MidClassScenario = observer(() => {
             <NavigationBarContainer />
             <RoomMidStreamsContainer />
             <BigWidgetWindowContainer>
-              <WhiteboardContainer></WhiteboardContainer>
+              {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
             </BigWidgetWindowContainer>
             <Aside className="aisde-fixed">
               <CollectorContainer />

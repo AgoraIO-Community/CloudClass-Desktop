@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, reaction, when } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import {
@@ -90,10 +90,7 @@ export class BoardUIStore extends EduUIStoreBase {
    */
   @computed
   get connectionLost() {
-    return (
-      this.readyToMount &&
-      this.classroomStore.connectionStore.whiteboardState === WhiteboardState.Idle
-    );
+    return this.readyToMount && this.classroomStore.boardStore.state === WhiteboardState.Idle;
   }
 
   @computed
@@ -133,25 +130,6 @@ export class BoardUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 等待白板配置就绪后连接白板
-   */
-  @action.bound
-  joinWhiteboardWhenConfigReady() {
-    if (this._joinDisposer) {
-      this._joinDisposer();
-    }
-    this._joinDisposer = reaction(
-      () => this.classroomStore.boardStore.configReady,
-      (configReady) => {
-        configReady ? this.joinWhiteboard() : this.classroomStore.connectionStore.leaveWhiteboard();
-      },
-      {
-        fireImmediately: true,
-      },
-    );
-  }
-
-  /**
    * 重连白板
    */
   @bound
@@ -182,9 +160,6 @@ export class BoardUIStore extends EduUIStoreBase {
   @bound
   async leaveWhiteboard() {
     try {
-      if (this._joinDisposer) {
-        this._joinDisposer();
-      }
       await this.classroomStore.connectionStore.leaveWhiteboard();
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
@@ -250,9 +225,6 @@ export class BoardUIStore extends EduUIStoreBase {
   }
 
   onDestroy() {
-    if (this._joinDisposer) {
-      this._joinDisposer();
-    }
     this._disposers.forEach((d) => d());
   }
 }

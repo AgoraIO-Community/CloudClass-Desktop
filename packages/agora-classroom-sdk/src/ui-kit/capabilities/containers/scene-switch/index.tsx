@@ -26,10 +26,10 @@ const PageLoading = () => {
         <Loading></Loading>
         <p className="m-0 text-center truncate" style={{ width: 110 }}>
           {layoutUIStore.isInSubRoom
-            ? transI18n('breakout_room.joining', {
+            ? transI18n('fcr_group_joining', {
                 reason: layoutUIStore.currentSubRoomName,
               })
-            : transI18n('breakout_room.leaving')}
+            : transI18n('fcr_group_back_main_room')}
         </p>
       </Card>
     </div>

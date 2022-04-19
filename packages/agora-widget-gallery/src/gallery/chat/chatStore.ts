@@ -166,6 +166,9 @@ export class WidgetChatUIStore {
             }
           }
         },
+        {
+          fireImmediately: true,
+        },
       ),
     );
 

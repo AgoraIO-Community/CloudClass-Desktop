@@ -8,7 +8,9 @@ const { ROOT_PATH } = require('./utils/index');
 const classroomSdkVersion = require('../package.json').version;
 
 module.exports = {
-  externals: { 'agora-electron-sdk': 'commonjs2 agora-electron-sdk' },
+  externals: {
+    'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
+  },
   resolve: {
     fallback: {
       crypto: require.resolve('crypto-browserify'),
@@ -29,8 +31,8 @@ module.exports = {
       'agora-plugin-gallery': path.resolve(ROOT_PATH, '../agora-plugin-gallery/src'),
       'agora-widget-gallery': path.resolve(ROOT_PATH, '../agora-widget-gallery/src'),
       'agora-chat-widget': path.resolve(ROOT_PATH, '../agora-chat-widget/src'),
-      'agora-rte-sdk': path.resolve(ROOT_PATH, '../agora-rte-sdk/src'),
       'agora-edu-core': path.resolve(ROOT_PATH, '../agora-edu-core/src'),
+      'agora-rte-sdk': path.resolve(ROOT_PATH, '../agora-rte-sdk/src'),
     },
   },
   module: {
@@ -40,9 +42,6 @@ module.exports = {
         test: /\.js(x)?$/,
         exclude: /node_modules/,
         use: [
-          {
-            loader: 'thread-loader',
-          },
           {
             loader: 'babel-loader',
             options: {
@@ -81,6 +80,7 @@ module.exports = {
                     loose: true,
                   },
                 ],
+                '@babel/plugin-transform-modules-commonjs',
               ],
             },
           },
@@ -90,9 +90,6 @@ module.exports = {
         test: /\.ts(x)?$/,
         exclude: /node_modules/,
         use: [
-          {
-            loader: 'thread-loader',
-          },
           {
             loader: 'babel-loader',
             options: {
@@ -138,6 +135,7 @@ module.exports = {
                     loose: true,
                   },
                 ],
+                '@babel/plugin-transform-modules-commonjs',
               ],
             },
           },
@@ -165,4 +163,7 @@ module.exports = {
       RTE_RUNTIME_PLATFORM: JSON.stringify(process.env.RTE_RUNTIME_PLATFORM),
     }),
   ],
+  stats: {
+    children: true,
+  },
 };

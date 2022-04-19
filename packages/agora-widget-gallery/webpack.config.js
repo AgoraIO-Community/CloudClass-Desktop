@@ -92,9 +92,6 @@ module.exports = {
               },
             },
           },
-          {
-            loader: 'thread-loader',
-          },
         ],
       },
     ],

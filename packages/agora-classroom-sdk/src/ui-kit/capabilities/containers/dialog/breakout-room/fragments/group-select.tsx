@@ -88,7 +88,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
             className="pr-4 hl-text text-right"
             text={`${userCount}`}
             onClick={() => groupUuid && joinSubRoom(groupUuid)}
-            hoverText={groupUuid && transI18n('breakout_room.join_group')}
+            hoverText={groupUuid && transI18n('fcr_group_button_join')}
             hoverClassName="hl-text pr-0"
           />
         )

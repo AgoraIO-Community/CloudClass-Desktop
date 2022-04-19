@@ -42,11 +42,11 @@ export const Quit: React.FC<
               checked={type === 'back'}
               onChange={() => setType('back')}
             />
-            <span className="ml-2">{transI18n('toast.quit_room_option1')}</span>
+            <span className="ml-2">{transI18n('fcr_group_back_to_main_room')}</span>
           </label>
           <label className="customize-radio">
             <input type="radio" name="kickType" value="quit" onChange={() => setType('quit')} />
-            <span className="ml-2">{transI18n('toast.quit_room_option2')}</span>
+            <span className="ml-2">{transI18n('fcr_group_exit_room')}</span>
           </label>
         </div>
       ) : (

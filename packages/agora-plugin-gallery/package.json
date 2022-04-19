@@ -56,7 +56,6 @@
   },
   "dependencies": {
     "dayjs": "1.10.4",
-    "rebass": "4.0.0",
-    "agora-edu-core": "2.4.0"
+    "rebass": "4.0.0"
   }
 }

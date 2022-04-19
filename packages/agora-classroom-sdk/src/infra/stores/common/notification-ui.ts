@@ -178,7 +178,10 @@ export class NotificationUIStore extends EduUIStoreBase {
           if (teachers.length) {
             if (role === EduRoleTypeEnum.student) {
               this.shareUIStore.addToast(
-                transI18n('toast.teacher_enter_room', { reason: teachers.join(',') }),
+                transI18n('fcr_group_enter_group', {
+                  reason1: transI18n('role.teacher'),
+                  reason2: teachers.join(','),
+                }),
               );
             }
           }
@@ -186,7 +189,10 @@ export class NotificationUIStore extends EduUIStoreBase {
           if (assistants.length) {
             if (role === EduRoleTypeEnum.student) {
               this.shareUIStore.addToast(
-                transI18n('toast.assistant_enter_room', { reason: assistants.join(',') }),
+                transI18n('fcr_group_enter_group', {
+                  reason1: transI18n('role.assistant'),
+                  reason2: assistants.join(','),
+                }),
               );
             }
           }
@@ -194,7 +200,10 @@ export class NotificationUIStore extends EduUIStoreBase {
           if (students.length) {
             if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
               this.shareUIStore.addToast(
-                transI18n('toast.student_enter_room', { reason: students.join(',') }),
+                transI18n('fcr_group_enter_group', {
+                  reason1: transI18n('role.student'),
+                  reason2: students.join(','),
+                }),
               );
             }
           }
@@ -217,7 +226,10 @@ export class NotificationUIStore extends EduUIStoreBase {
           if (teachers.length) {
             if (role === EduRoleTypeEnum.student) {
               this.shareUIStore.addToast(
-                transI18n('toast.teacher_leave_room', { reason: teachers.join(',') }),
+                transI18n('fcr_group_exit_group', {
+                  reason1: transI18n('role.teacher'),
+                  reason2: teachers.join(','),
+                }),
               );
             }
           }
@@ -225,7 +237,10 @@ export class NotificationUIStore extends EduUIStoreBase {
           if (assistants.length) {
             if (role === EduRoleTypeEnum.student) {
               this.shareUIStore.addToast(
-                transI18n('toast.assistant_leave_room', { reason: assistants.join(',') }),
+                transI18n('fcr_group_exit_group', {
+                  reason1: transI18n('role.assistant'),
+                  reason2: assistants.join(','),
+                }),
               );
             }
           }
@@ -233,7 +248,10 @@ export class NotificationUIStore extends EduUIStoreBase {
           if (students.length) {
             if ([EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)) {
               this.shareUIStore.addToast(
-                transI18n('toast.student_leave_room', { reason: students.join(',') }),
+                transI18n('fcr_group_exit_group', {
+                  reason1: transI18n('role.student'),
+                  reason2: students.join(','),
+                }),
               );
             }
           }
@@ -245,8 +263,8 @@ export class NotificationUIStore extends EduUIStoreBase {
         const { role } = EduClassroomConfig.shared.sessionInfo;
         if (role === EduRoleTypeEnum.student && inviting) {
           this.shareUIStore.addConfirmDialog(
-            transI18n('breakout_room.confirm_invite_teacher_title'),
-            transI18n('breakout_room.confirm_ask_for_help_busy_content'),
+            transI18n('fcr_group_help_title'),
+            transI18n('fcr_group_help_teacher_busy_msg'),
             {
               actions: ['ok'],
             },

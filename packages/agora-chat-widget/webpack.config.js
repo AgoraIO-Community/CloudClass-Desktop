@@ -33,9 +33,6 @@ module.exports = {
               ...babelConfig,
             },
           },
-          {
-            loader: 'thread-loader',
-          },
         ],
       },
       {

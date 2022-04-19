@@ -14,7 +14,7 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
     readyToMount,
     rejoinWhiteboard,
     connectionLost,
-    joinWhiteboardWhenConfigReady,
+    joinWhiteboard,
     leaveWhiteboard,
     currentSceneIndex,
     scenesCount,
@@ -29,11 +29,11 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
   const { setTool } = toolbarUIStore;
 
   useEffect(() => {
-    joinWhiteboardWhenConfigReady();
+    joinWhiteboard();
     return () => {
       leaveWhiteboard();
     };
-  }, [leaveWhiteboard, joinWhiteboardWhenConfigReady]);
+  }, [leaveWhiteboard, joinWhiteboard]);
 
   return readyToMount ? (
     <>
@@ -54,7 +54,6 @@ export const WhiteboardContainer: FC = observer(({ children }) => {
           }}
         />
       )}
-
       <div className="whiteboard-wrapper">
         {children}
         <div className="whiteboard">
