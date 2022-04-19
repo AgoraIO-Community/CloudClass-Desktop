@@ -1,8 +1,5 @@
 #git submodule add ssh://git@git.agoralab.co/aduc/agora-scene-sdk.git packages/agora-rte-sdk
 #git submodule add ssh://git@git.agoralab.co/aduc/agora-edu-core-desktop.git packages/agora-edu-core
-rm -rf packages/agora-rte-sdk
-rm -rf packages/agora-edu-core
-
 git submodule update --init --recursive
 
 yarn install
