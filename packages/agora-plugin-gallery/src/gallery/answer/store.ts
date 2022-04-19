@@ -3,7 +3,8 @@ import {
   EduRoleTypeEnum,
   ExtensionStoreEach as ExtensionStore,
 } from 'agora-edu-core';
-import { action, autorun, computed, observable, runInAction } from 'mobx';
+import { Lodash } from 'agora-rte-sdk';
+import { action, autorun, computed, observable, reaction, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
 const answerConfine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -31,6 +32,15 @@ export class PluginStore {
           (this.answerList = this.context.roomProperties.extra.items);
       });
     });
+
+    reaction(
+      () => this.context.roomProperties,
+      () => {
+        if (this.isTeacherType && this.context.roomProperties.extra?.answerState) {
+          this.fetchList();
+        }
+      },
+    );
   }
 
   @observable
@@ -319,4 +329,37 @@ export class PluginStore {
   isSelectedAnswer = computedFn((value: string): boolean => {
     return this.selectedAnswers.some((answer: string) => answer === value);
   });
+
+  @observable
+  rslist: any[] = [];
+
+  private _nextId = 0;
+
+  private _extractPerson(arr: any) {
+    var tempMap = new Map();
+    arr.forEach((value: any) => {
+      tempMap.set(value.ownerUserUuid, value);
+    });
+    return [...tempMap.values()];
+  }
+
+  @Lodash.throttled(1000)
+  async fetchList() {
+    try {
+      const res = await this.getAnswerList(0, 100);
+      const resultData = res.data;
+      const list = this._extractPerson([...this.rslist, ...resultData.list]);
+
+      this.setList(list);
+
+      this._nextId = resultData.nextId;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  @action.bound
+  setList(list: any[]) {
+    this.rslist = list;
+  }
 }

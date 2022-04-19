@@ -77,38 +77,19 @@ const Content = observer(() => {
 
 const ResultDetail = observer(() => {
   const pluginStore = usePluginStore();
-  const [list, setList] = useState<any>([]);
-  const [nextId, setNextId] = useState(0);
 
   useEffect(() => {
-    if (pluginStore.context.roomProperties.extra?.answerState) {
-      fetchList();
+    pluginStore.setList([]);
+    if (pluginStore.isTeacherType) {
+      pluginStore.fetchList();
     }
-  }, [pluginStore.context.roomProperties]);
+  }, []);
 
   const formatTime = useCallback((startTime: number, endTime: number) => {
     const duration = endTime - startTime;
     const durationStr = dayjs.duration(duration, 'ms').format('HH:mm:ss');
     return durationStr;
   }, []);
-
-  const extractPerson = React.useCallback((arr: any) => {
-    var tempMap = new Map();
-    arr.forEach((value: any) => {
-      tempMap.set(value.ownerUserUuid, value);
-    });
-    return [...tempMap.values()];
-  }, []);
-
-  const fetchList = useCallback(async () => {
-    if (pluginStore.isTeacherType) {
-      const res = await pluginStore.getAnswerList(nextId, 50);
-      const resultData = res.data;
-
-      setList((pre: any) => extractPerson([...pre, ...resultData.list]));
-      setNextId(resultData.nextId);
-    }
-  }, [nextId]);
 
   return (
     <div className="answer-userlist">
@@ -125,7 +106,7 @@ const ResultDetail = observer(() => {
           </Col>
         </TableHeader>
         <Table className="table-container">
-          {list?.map((student: any) => (
+          {pluginStore.rslist.map((student: any) => (
             <Row className={'border-bottom-width-1'} key={student.ownerUserUuid}>
               {['ownerUserName', 'lastCommitTime', 'selectedItems'].map(
                 (col: string, idx: number) => (
@@ -215,7 +196,10 @@ const AnswerBtns = observer(() => {
   );
 });
 
-const AwardButton: FC<{ onAward: (type: 'winner' | 'all') => void }> = ({ children, onAward }) => {
+const AwardButton: FC<{ onAward: (type: 'winner' | 'all') => void; children: React.ReactNode }> = ({
+  children,
+  onAward,
+}) => {
   const [listVisible, setListVisible] = useState(false);
 
   return (
