@@ -3235,10 +3235,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-slide@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.1.3.tgz#7af96198ef29f2f987dd5c7cdf0293ad92f91091"
-  integrity sha512-aowmWQODg3Gd5wWDNXvhjwZTjJMwwkyEzhmmkBGuMG5mYeiy4+l1dwf0for1SnQ3PeDcB1mVl/WAoEYwsJ7Ykg==
+"@netless/app-slide@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.1.1.tgz#5a3b396cfcea7a4b77d11742f3a6470bfd6d8d79"
+  integrity sha512-eZZK9jUsfrnnpEvKKRnSDET7DwNvCltzRnsvWGjveQCb5eeGsYVleP13bY/foFlL6wpUInNXhdjS5J2/E5WXsw==
 
 "@netless/canvas-polyfill@^0.0.4":
   version "0.0.4"

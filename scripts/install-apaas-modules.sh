@@ -4,7 +4,9 @@ git submodule update --init --recursive
 
 yarn install
 
-lerna exec --scope=agora-rte-sdk 'yarn build && yarn build:types'
-lerna exec --scope=agora-edu-core 'yarn proto && yarn build && yarn build:types'
+bin_path=node_modules/.bin
+
+$bin_path/lerna exec --scope=agora-rte-sdk 'yarn build && yarn build:types'
+$bin_path/lerna exec --scope=agora-edu-core 'yarn proto && yarn build && yarn build:types'
 
 yarn bootstrap

@@ -252,7 +252,7 @@
     "stream-browserify": "3.0.0",
     "buffer": "6.0.3",
     "matchmedia-polyfill": "0.3.2",
-    "agora-edu-core": "2.3.5",
-    "agora-rte-sdk": "2.3.4"
+    "agora-edu-core": "2.4.0",
+    "agora-rte-sdk": "2.4.0"
   }
 }
