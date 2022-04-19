@@ -113,17 +113,18 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
 
   onInstall(): void {
     super.onInstall();
-
-    reaction(
-      () => this.studentStreams,
-      () => {
-        if (
-          this.studentStreams.size - this.carouselPosition < this._carouselShowCount &&
-          this.carouselPosition > 0
-        ) {
-          this.carouselPrev();
-        }
-      },
+    this._disposers.push(
+      reaction(
+        () => this.studentStreams,
+        () => {
+          if (
+            this.studentStreams.size - this.carouselPosition < this._carouselShowCount &&
+            this.carouselPosition > 0
+          ) {
+            this.carouselPrev();
+          }
+        },
+      ),
     );
 
     this.classroomStore.mediaStore.setMirror(true);

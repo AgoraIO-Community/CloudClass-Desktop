@@ -296,7 +296,7 @@ export const en = {
     pentagram: 'pentagram',
     rhombus: 'rhombus',
     triangle: 'triangle',
-    selector: 'popupQuiz',
+    selector: 'selector',
     clicker: 'mouse',
     eraser: 'eraser',
     color: 'color',

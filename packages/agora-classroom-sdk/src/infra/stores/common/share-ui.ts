@@ -71,19 +71,6 @@ export class EduShareUIStore {
   @observable
   orientation: OrientationEnum = OrientationEnum.portrait;
 
-  constructor() {
-    EduErrorCenter.shared.on('error', (code: string, error: Error) => {
-      if (ToastFilter.shouldBlockToast(error)) {
-        return;
-      }
-      const emsg =
-        getEduErrorMessage(error) ||
-        (error.message.length > 64 ? `${error.message.substr(0, 64)}...` : error.message);
-
-      this.addToast(emsg, 'error');
-    });
-  }
-
   /**
    * 显示一条 Toast 信息
    * @param desc

@@ -8,7 +8,7 @@ import {
   AgoraRteStreamUID,
   AgoraRteRemoteStreamType,
 } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, observable, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, Lambda, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 
 import { EduUIStoreBase } from '../base';
@@ -36,34 +36,36 @@ export enum StreamIconColor {
 }
 
 export class StreamUIStore extends EduUIStoreBase {
-  private _disposers: IReactionDisposer[] = [];
+  protected _disposers: (IReactionDisposer | Lambda)[] = [];
 
   onInstall() {
-    computed(() => this.classroomStore.userStore.rewards).observe(({ newValue, oldValue }) => {
-      const anims: { id: string; userUuid: string }[] = [];
-      for (const [userUuid] of newValue) {
-        let previousReward = 0;
-        if (oldValue) {
-          previousReward = oldValue.get(userUuid) || 0;
+    this._disposers.push(
+      computed(() => this.classroomStore.userStore.rewards).observe(({ newValue, oldValue }) => {
+        const anims: { id: string; userUuid: string }[] = [];
+        for (const [userUuid] of newValue) {
+          let previousReward = 0;
+          if (oldValue) {
+            previousReward = oldValue.get(userUuid) || 0;
+          }
+          const reward = newValue.get(userUuid) || 0;
+          const onPodium = this.classroomStore.roomStore.acceptedList.some(
+            ({ userUuid: thisUuid }) => thisUuid === userUuid,
+          );
+          const haveAnimation =
+            EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
+            onPodium;
+          // Add an animation to the award animation queue only if the student is on podium
+          if (reward > previousReward && haveAnimation) {
+            anims.push({ id: uuidv4(), userUuid: userUuid });
+          }
         }
-        const reward = newValue.get(userUuid) || 0;
-        const onPodium = this.classroomStore.roomStore.acceptedList.some(
-          ({ userUuid: thisUuid }) => thisUuid === userUuid,
-        );
-        const haveAnimation =
-          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
-          onPodium;
-        // Add an animation to the award animation queue only if the student is on podium
-        if (reward > previousReward && haveAnimation) {
-          anims.push({ id: uuidv4(), userUuid: userUuid });
+        if (anims.length > 0) {
+          runInAction(() => {
+            this.awardAnims = this.awardAnims.concat(anims);
+          });
         }
-      }
-      if (anims.length > 0) {
-        runInAction(() => {
-          this.awardAnims = this.awardAnims.concat(anims);
-        });
-      }
-    });
+      }),
+    );
   }
 
   /**

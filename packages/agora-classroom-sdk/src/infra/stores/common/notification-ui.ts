@@ -1,6 +1,6 @@
-import { action, computed, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, reaction } from 'mobx';
 import dayjs from 'dayjs';
-import { Scheduler } from 'agora-rte-sdk';
+import { bound, Scheduler } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import {
@@ -8,15 +8,19 @@ import {
   ClassroomState,
   ClassState,
   EduClassroomConfig,
+  EduErrorCenter,
   EduEventCenter,
   EduRoleTypeEnum,
   LeaveReason,
 } from 'agora-edu-core';
 import { checkMinutesThrough } from '@/infra/utils/time';
+import { ToastFilter } from '@/infra/utils/toast-filter';
+import { getEduErrorMessage } from '@/infra/utils/error';
 
 export class NotificationUIStore extends EduUIStoreBase {
   private _notificationTask?: Scheduler.Task;
   private _prevClassState = ClassState.beforeClass;
+  private _disposers: IReactionDisposer[] = [];
 
   /** Observables */
 
@@ -31,69 +35,90 @@ export class NotificationUIStore extends EduUIStoreBase {
       .map((userUuid: string) => userList.get(userUuid)?.userName || 'unknown');
   }
 
+  @bound
+  private _handleError(code: string, error: Error) {
+    if (ToastFilter.shouldBlockToast(error)) {
+      return;
+    }
+    const emsg =
+      getEduErrorMessage(error) ||
+      (error.message.length > 64 ? `${error.message.substr(0, 64)}...` : error.message);
+
+    this.shareUIStore.addToast(emsg, 'error');
+  }
+
   onInstall() {
+    EduErrorCenter.shared.on('error', this._handleError);
     // class is end
-    reaction(
-      () => this.classroomStore.roomStore.classroomSchedule.state,
-      (state) => {
-        this._notificationTask?.stop();
-        if (ClassState.ongoing === state) {
-          this._notificationTask = Scheduler.shared.addIntervalTask(
-            this.checkClassroomNotification,
-            Scheduler.Duration.second(1),
-          );
-          this._prevClassState = ClassState.ongoing;
-        } else if (ClassState.afterClass === state && ClassState.ongoing === this._prevClassState) {
-          const { classroomSchedule } = this.classroomStore.roomStore;
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.roomStore.classroomSchedule.state,
+        (state) => {
+          this._notificationTask?.stop();
+          if (ClassState.ongoing === state) {
+            this._notificationTask = Scheduler.shared.addIntervalTask(
+              this.checkClassroomNotification,
+              Scheduler.Duration.second(1),
+            );
+            this._prevClassState = ClassState.ongoing;
+          } else if (
+            ClassState.afterClass === state &&
+            ClassState.ongoing === this._prevClassState
+          ) {
+            const { classroomSchedule } = this.classroomStore.roomStore;
 
-          const delayDuration = dayjs.duration({ seconds: classroomSchedule.closeDelay });
+            const delayDuration = dayjs.duration({ seconds: classroomSchedule.closeDelay });
 
-          this.addClassStateNotification(state, delayDuration.asMinutes());
+            this.addClassStateNotification(state, delayDuration.asMinutes());
 
-          this._notificationTask = Scheduler.shared.addIntervalTask(
-            this.checkClassroomNotification,
-            Scheduler.Duration.second(1),
-          );
-        } else if (ClassState.close === state) {
-          this.classroomStore.connectionStore.leaveClassroomUntil(
-            LeaveReason.leave,
-            new Promise((resolve) => {
-              this.shareUIStore.addConfirmDialog(
-                transI18n('toast.leave_room'),
-                transI18n('error.class_end'),
-                {
-                  onOK: resolve,
-                  actions: ['ok'],
-                },
-              );
-            }),
-          );
-        }
-      },
+            this._notificationTask = Scheduler.shared.addIntervalTask(
+              this.checkClassroomNotification,
+              Scheduler.Duration.second(1),
+            );
+          } else if (ClassState.close === state) {
+            this.classroomStore.connectionStore.leaveClassroomUntil(
+              LeaveReason.leave,
+              new Promise((resolve) => {
+                this.shareUIStore.addConfirmDialog(
+                  transI18n('toast.leave_room'),
+                  transI18n('error.class_end'),
+                  {
+                    onOK: resolve,
+                    actions: ['ok'],
+                  },
+                );
+              }),
+            );
+          }
+        },
+      ),
     );
     // connection error
-    reaction(
-      () => this.classroomStore.connectionStore.classroomState,
-      (state) => {
-        if (ClassroomState.Error === state) {
-          this.classroomStore.connectionStore.leaveClassroomUntil(
-            LeaveReason.leave,
-            new Promise((resolve) => {
-              this.shareUIStore.addConfirmDialog(
-                transI18n('toast.leave_room'),
-                this._getStateErrorReason(
-                  this.classroomStore.connectionStore.classroomStateErrorReason,
-                ),
-                {
-                  onOK: resolve,
-                  actions: ['ok'],
-                },
-              );
-            }),
-          );
-        }
-      },
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.connectionStore.classroomState,
+        (state) => {
+          if (ClassroomState.Error === state) {
+            this.classroomStore.connectionStore.leaveClassroomUntil(
+              LeaveReason.leave,
+              new Promise((resolve) => {
+                this.shareUIStore.addConfirmDialog(
+                  transI18n('toast.leave_room'),
+                  this._getStateErrorReason(
+                    this.classroomStore.connectionStore.classroomStateErrorReason,
+                  ),
+                  {
+                    onOK: resolve,
+                    actions: ['ok'],
+                  },
+                );
+              }),
+            );
+          }
+        },
+      ),
     );
+
     // interaction events
     EduEventCenter.shared.onClassroomEvents((event, param) => {
       // kick out
@@ -275,7 +300,10 @@ export class NotificationUIStore extends EduUIStoreBase {
   }
 
   onDestroy() {
+    EduErrorCenter.shared.off('error', this._handleError);
     this._notificationTask?.stop();
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
 
   /**

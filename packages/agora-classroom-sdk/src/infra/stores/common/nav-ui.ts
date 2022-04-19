@@ -5,7 +5,7 @@ import {
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
 } from 'agora-rte-sdk';
-import { computed, action, observable, reaction, runInAction } from 'mobx';
+import { computed, action, observable, reaction, runInAction, IReactionDisposer } from 'mobx';
 import { EduUIStoreBase } from './base';
 import dayjs from 'dayjs';
 import { bound } from 'agora-rte-sdk';
@@ -35,25 +35,30 @@ export enum TimeFormatType {
 }
 
 export class NavigationBarUIStore extends EduUIStoreBase {
+  private _disposers: IReactionDisposer[] = [];
   onInstall() {
-    reaction(
-      () => this.classroomStore.roomStore.recordStatus,
-      (recordStatus: RecordStatus) => {
-        this.isRecording = recordStatus === RecordStatus.started;
-      },
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.roomStore.recordStatus,
+        (recordStatus: RecordStatus) => {
+          this.isRecording = recordStatus === RecordStatus.started;
+        },
+      ),
     );
 
-    reaction(
-      () => this.networkQuality,
-      (networkQuality) => {
-        if (networkQuality === AGNetworkQuality.bad) {
-          this.shareUIStore.addToast(transI18n('nav.singal_poor_tip'), 'warning');
-        }
+    this._disposers.push(
+      reaction(
+        () => this.networkQuality,
+        (networkQuality) => {
+          if (networkQuality === AGNetworkQuality.bad) {
+            this.shareUIStore.addToast(transI18n('nav.singal_poor_tip'), 'warning');
+          }
 
-        if (networkQuality === AGNetworkQuality.down) {
-          this.shareUIStore.addToast(transI18n('nav.singal_down_tip'), 'error');
-        }
-      },
+          if (networkQuality === AGNetworkQuality.down) {
+            this.shareUIStore.addToast(transI18n('nav.singal_down_tip'), 'error');
+          }
+        },
+      ),
     );
   }
   //observables
@@ -623,5 +628,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     }
   }
 
-  onDestroy() {}
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
 }

@@ -202,20 +202,22 @@ export class LectureRosterUIStore extends RosterUIStore {
   onInstall() {
     super.onInstall();
 
-    reaction(
-      () => this._usersList.length,
-      () => {
-        if (this._usersList.length < 10) {
-          this.fetchNextUsersList({ nextId: null }, true);
-        }
-      },
-      {
-        equals: (preCount: number, currentCount: number) => {
-          //用户被移除且当前总数不足10个 则请求拉取用户
-          const isFetchUser = currentCount < 10 && preCount > currentCount;
-          return !isFetchUser;
+    this._disposers.push(
+      reaction(
+        () => this._usersList.length,
+        () => {
+          if (this._usersList.length < 10) {
+            this.fetchNextUsersList({ nextId: null }, true);
+          }
         },
-      },
+        {
+          equals: (preCount: number, currentCount: number) => {
+            //用户被移除且当前总数不足10个 则请求拉取用户
+            const isFetchUser = currentCount < 10 && preCount > currentCount;
+            return !isFetchUser;
+          },
+        },
+      ),
     );
   }
 }

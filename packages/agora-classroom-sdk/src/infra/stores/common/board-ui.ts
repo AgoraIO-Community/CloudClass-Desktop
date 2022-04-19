@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, reaction, when } from 'mobx';
+import { action, computed, IReactionDisposer, reaction } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import {
@@ -12,8 +12,6 @@ import { EduShareUIStore } from './share-ui';
 import { BUILTIN_WIDGETS } from './widget-ui';
 
 export class BoardUIStore extends EduUIStoreBase {
-  private _joinDisposer?: IReactionDisposer;
-
   protected get uiOverrides() {
     return {
       ...super.uiOverrides,
@@ -24,14 +22,14 @@ export class BoardUIStore extends EduUIStoreBase {
 
   private _collectorContainer: HTMLElement | undefined = undefined;
 
-  private _disposers: IReactionDisposer[] = [];
+  protected _disposers: IReactionDisposer[] = [];
 
   onInstall() {
     this._disposers.push(
       reaction(
         () => this.grantedUsers,
         (grantUsers) => {
-          this.classroomStore.boardStore.setGrantUsers(grantUsers);
+          this.classroomStore.boardStore.setGrantedUsers(grantUsers);
         },
       ),
     );
@@ -226,5 +224,6 @@ export class BoardUIStore extends EduUIStoreBase {
 
   onDestroy() {
     this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
 }

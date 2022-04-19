@@ -14,7 +14,7 @@ import {
   bound,
 } from 'agora-rte-sdk';
 import { isEqual } from 'lodash';
-import { action, computed, observable, reaction, runInAction, toJS } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import { DialogCategory } from './share-ui';
@@ -115,48 +115,27 @@ export class ToolbarUIStore extends EduUIStoreBase {
     '#ffffff': '#E1E1EA',
   };
 
+  private _disposers: IReactionDisposer[] = [];
+
   onInstall() {
     this.classroomStore.boardStore.setDefaultColors(this.defaultColors);
-    reaction(
-      () => ({
-        localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
-        screenShareStreamUuid: this.classroomStore.streamStore.localShareStreamUuid,
-      }),
+    this._disposers.push(
+      reaction(
+        () => ({
+          localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
+          screenShareStreamUuid: this.classroomStore.streamStore.localShareStreamUuid,
+        }),
 
-      ({ localScreenShareTrackState, screenShareStreamUuid }) => {
-        const teacherCameraStreamUuid = this.teacherCameraStream?.stream.streamUuid;
-        const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+        ({ localScreenShareTrackState, screenShareStreamUuid }) => {
+          const teacherCameraStreamUuid = this.teacherCameraStream?.stream.streamUuid;
+          const { userUuid } = EduClassroomConfig.shared.sessionInfo;
 
-        runInAction(() => {
-          if (localScreenShareTrackState === AgoraRteMediaSourceState.started) {
-            if (screenShareStreamUuid && !this.isScreenSharing) {
-              this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
-              this.classroomStore.widgetStore.setActive(
-                `streamWindow-${screenShareStreamUuid}`,
-                {
-                  extra: {
-                    userUuid,
-                  },
-                },
-                userUuid,
-              );
-              this.classroomStore.widgetStore.widgetStateMap[
-                `streamWindow-${teacherCameraStreamUuid}`
-              ] &&
-                this.classroomStore.widgetStore.deleteWidget(
-                  `streamWindow-${teacherCameraStreamUuid}`,
-                );
-            }
-          } else if (
-            localScreenShareTrackState === AgoraRteMediaSourceState.stopped ||
-            localScreenShareTrackState === AgoraRteMediaSourceState.error
-          ) {
-            if (screenShareStreamUuid) {
-              this.classroomStore.widgetStore.deleteWidget(`streamWindow-${screenShareStreamUuid}`);
-              this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
-              if (!this.isWhiteboardOpening)
+          runInAction(() => {
+            if (localScreenShareTrackState === AgoraRteMediaSourceState.started) {
+              if (screenShareStreamUuid && !this.isScreenSharing) {
+                this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
                 this.classroomStore.widgetStore.setActive(
-                  `streamWindow-${teacherCameraStreamUuid}`,
+                  `streamWindow-${screenShareStreamUuid}`,
                   {
                     extra: {
                       userUuid,
@@ -164,23 +143,51 @@ export class ToolbarUIStore extends EduUIStoreBase {
                   },
                   userUuid,
                 );
+                this.classroomStore.widgetStore.widgetStateMap[
+                  `streamWindow-${teacherCameraStreamUuid}`
+                ] &&
+                  this.classroomStore.widgetStore.deleteWidget(
+                    `streamWindow-${teacherCameraStreamUuid}`,
+                  );
+              }
+            } else if (
+              localScreenShareTrackState === AgoraRteMediaSourceState.stopped ||
+              localScreenShareTrackState === AgoraRteMediaSourceState.error
+            ) {
+              if (screenShareStreamUuid) {
+                this.classroomStore.widgetStore.deleteWidget(
+                  `streamWindow-${screenShareStreamUuid}`,
+                );
+                this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
+                if (!this.isWhiteboardOpening)
+                  this.classroomStore.widgetStore.setActive(
+                    `streamWindow-${teacherCameraStreamUuid}`,
+                    {
+                      extra: {
+                        userUuid,
+                      },
+                    },
+                    userUuid,
+                  );
+              }
             }
-          }
-        });
-      },
+          });
+        },
+      ),
     );
-
-    reaction(
-      () => this.classroomStore.boardStore.boardReady,
-      (boardReady) => {
-        runInAction(() => {
-          if (boardReady) {
-            this._activeCabinetItems.add(CabinetItemEnum.Whiteboard);
-          } else {
-            this._activeCabinetItems.delete(CabinetItemEnum.Whiteboard);
-          }
-        });
-      },
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.boardStore.boardReady,
+        (boardReady) => {
+          runInAction(() => {
+            if (boardReady) {
+              this._activeCabinetItems.add(CabinetItemEnum.Whiteboard);
+            } else {
+              this._activeCabinetItems.delete(CabinetItemEnum.Whiteboard);
+            }
+          });
+        },
+      ),
     );
   }
 
@@ -836,5 +843,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
     return '';
   }
 
-  onDestroy() {}
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
 }

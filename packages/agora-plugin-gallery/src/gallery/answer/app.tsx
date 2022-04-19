@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, FC } from 'react';
 import { observer } from 'mobx-react';
-import { reaction } from 'mobx';
 import dayjs from 'dayjs';
 import { usePluginStore } from './hooks';
 import addSvg from './add.svg';
@@ -82,24 +81,18 @@ const ResultDetail = observer(() => {
   const [nextId, setNextId] = useState(0);
 
   useEffect(() => {
-    fetchList();
-    reaction(
-      () => pluginStore.context.roomProperties,
-      () => {
-        if (pluginStore.context.roomProperties.extra?.answerState) {
-          fetchList();
-        }
-      },
-    );
-  }, []);
+    if (pluginStore.context.roomProperties.extra?.answerState) {
+      fetchList();
+    }
+  }, [pluginStore.context.roomProperties]);
 
-  const formatTime = useCallback((startTime, endTime) => {
+  const formatTime = useCallback((startTime: number, endTime: number) => {
     const duration = endTime - startTime;
     const durationStr = dayjs.duration(duration, 'ms').format('HH:mm:ss');
     return durationStr;
   }, []);
 
-  const extractPerson = React.useCallback((arr) => {
+  const extractPerson = React.useCallback((arr: any) => {
     var tempMap = new Map();
     arr.forEach((value: any) => {
       tempMap.set(value.ownerUserUuid, value);

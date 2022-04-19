@@ -13,11 +13,13 @@ import {
   RtcState,
 } from 'agora-rte-sdk';
 import { get } from 'lodash';
-import { action, computed, reaction, when } from 'mobx';
+import { action, computed, IReactionDisposer, reaction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from './stream/struct';
 
 export class WidgetUIStore extends EduUIStoreBase {
+  private _disposers: IReactionDisposer[] = [];
+
   protected get uiOverrides() {
     return {
       ...super.uiOverrides,
@@ -130,54 +132,44 @@ export class WidgetUIStore extends EduUIStoreBase {
     }
   }
   onInstall() {
-    reaction(
-      () => ({
-        isBigWidgetWindowTeacherStreamActive: this.isBigWidgetWindowTeacherStreamActive,
-        teacherCameraStream: this.teacherCameraStream,
-        rtcState: this.classroomStore.connectionStore.rtcState,
-      }),
-      ({ isBigWidgetWindowTeacherStreamActive, teacherCameraStream, rtcState }) => {
-        teacherCameraStream?.stream.streamUuid &&
-          rtcState === RtcState.Connected &&
-          this.classroomStore.streamStore.setRemoteVideoStreamType(
-            Number(teacherCameraStream.stream.streamUuid),
-            isBigWidgetWindowTeacherStreamActive
-              ? AgoraRteRemoteStreamType.HIGH_STREAM
-              : AgoraRteRemoteStreamType.LOW_STREAM,
-          );
-      },
-    );
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+    this._disposers.push(
       reaction(
-        () => this.classroomStore.connectionStore.scene,
-        (scene) => {
-          if (scene) {
-            scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
-          }
+        () => ({
+          isBigWidgetWindowTeacherStreamActive: this.isBigWidgetWindowTeacherStreamActive,
+          teacherCameraStream: this.teacherCameraStream,
+          rtcState: this.classroomStore.connectionStore.rtcState,
+        }),
+        ({ isBigWidgetWindowTeacherStreamActive, teacherCameraStream, rtcState }) => {
+          teacherCameraStream?.stream.streamUuid &&
+            rtcState === RtcState.Connected &&
+            this.classroomStore.streamStore.setRemoteVideoStreamType(
+              Number(teacherCameraStream.stream.streamUuid),
+              isBigWidgetWindowTeacherStreamActive
+                ? AgoraRteRemoteStreamType.HIGH_STREAM
+                : AgoraRteRemoteStreamType.LOW_STREAM,
+            );
         },
+      ),
+    );
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      this._disposers.push(
+        reaction(
+          () => this.classroomStore.connectionStore.scene,
+          (scene) => {
+            if (scene) {
+              scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+            }
+          },
+        ),
       );
     }
-
-    computed(() => this.classroomStore.widgetStore.widgetStateMap).observe(
-      ({ oldValue = {}, newValue }) => {
-        Object.keys(newValue).forEach((widgetId) => {
-          if (oldValue[widgetId] !== newValue[widgetId]) {
-            if (newValue[widgetId]) {
-              this.onWidgetActive(widgetId);
-            } else {
-              this.onWidgetInActive(widgetId);
-            }
-          }
-        });
-      },
-    );
   }
 
-  onWidgetActive(widgetId: string) {}
-
-  onWidgetInActive(widgetId: string) {}
-
-  onDestroy() {}
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
 }
 
 export const BUILTIN_WIDGETS = {

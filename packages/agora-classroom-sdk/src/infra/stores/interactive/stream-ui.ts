@@ -210,19 +210,20 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
 
   onInstall(): void {
     super.onInstall();
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.roomStore.acceptedList,
+        () => {
+          const { acceptedList } = this.classroomStore.roomStore;
 
-    reaction(
-      () => this.classroomStore.roomStore.acceptedList,
-      () => {
-        const { acceptedList } = this.classroomStore.roomStore;
-
-        if (
-          acceptedList.length - this.carouselPosition < this.carouselStudentShowCount &&
-          this.carouselPosition > 0
-        ) {
-          this.carouselPrev();
-        }
-      },
+          if (
+            acceptedList.length - this.carouselPosition < this.carouselStudentShowCount &&
+            this.carouselPosition > 0
+          ) {
+            this.carouselPrev();
+          }
+        },
+      ),
     );
 
     this.classroomStore.mediaStore.setMirror(true);

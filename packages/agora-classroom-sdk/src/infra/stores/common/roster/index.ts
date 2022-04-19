@@ -31,7 +31,7 @@ export class RosterUIStore extends EduUIStoreBase {
     return { ...super.uiOverrides, width: 710 };
   }
 
-  private _disposers: IReactionDisposer[] = [];
+  protected _disposers: IReactionDisposer[] = [];
   onInstall() {
     // update carousel when room properties change
     this._disposers.push(
@@ -592,5 +592,6 @@ export class RosterUIStore extends EduUIStoreBase {
 
   onDestroy() {
     this._disposers.forEach((disposer) => disposer());
+    this._disposers = [];
   }
 }

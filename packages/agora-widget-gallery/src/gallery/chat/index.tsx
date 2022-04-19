@@ -10,7 +10,6 @@ import {
   EduClassroomConfig,
 } from 'agora-edu-core';
 import classnames from 'classnames';
-import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffect, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
