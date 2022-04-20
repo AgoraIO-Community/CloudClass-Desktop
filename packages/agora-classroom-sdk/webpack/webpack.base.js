@@ -135,7 +135,6 @@ module.exports = {
                     loose: true,
                   },
                 ],
-                '@babel/plugin-transform-modules-commonjs',
               ],
             },
           },
