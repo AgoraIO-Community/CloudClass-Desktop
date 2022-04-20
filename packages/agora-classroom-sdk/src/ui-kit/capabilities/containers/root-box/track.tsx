@@ -18,6 +18,7 @@ type TrackSyncingProps = {
   maxWidth?: number;
   maxHeight?: number;
   boundaryName?: string;
+  children?: React.ReactNode;
 };
 
 const forceUpdateRndBounds = (rnd: Rnd, boundary: HTMLDivElement) => {

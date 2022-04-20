@@ -22,7 +22,10 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
     (eventType: 'change' | 'blur') => (e: any) => onTimesChange(e.target.value, eventType),
     [onTimesChange],
   );
-  const openEventTransform = useCallback((e) => onOpenCarousel(e.target.checked), [onTimesChange]);
+  const openEventTransform = useCallback(
+    (e: any) => onOpenCarousel(e.target.checked),
+    [onTimesChange],
+  );
 
   return (
     <div className="carousel-menu">

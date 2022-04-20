@@ -88,7 +88,11 @@ const H5TeacherStreamChatContainer = observer(() => {
   );
 });
 
-const H5LayoutContainer: FC<React.Attributes> = observer(({ children }) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+const H5LayoutContainer: FC<Props> = observer(({ children }) => {
   const {
     layoutUIStore: { h5ContainerCls },
     shareUIStore: { classroomViewportClassName },

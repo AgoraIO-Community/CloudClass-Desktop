@@ -1,6 +1,6 @@
-import { FC, ReactElement, useState, MouseEvent, useContext } from 'react';
-import { CheckBox, transI18n } from '~ui-kit';
-import { Panel, PanelStateContext } from './panel';
+import React, { FC, ReactElement, useState, MouseEvent } from 'react';
+import { CheckBox } from '~ui-kit';
+import { Panel } from './panel';
 
 type UserPanelProps = {
   groupUuid?: string;
@@ -11,6 +11,7 @@ type UserPanelProps = {
   onChange?: (users: string[]) => void;
   onError?: (message: string) => void;
   panelId?: string;
+  children?: React.ReactNode;
 };
 
 export const UserPanel: FC<UserPanelProps> = ({

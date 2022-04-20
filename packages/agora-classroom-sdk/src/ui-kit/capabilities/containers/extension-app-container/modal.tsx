@@ -13,6 +13,7 @@ type ModalProps = {
   onResize: ({ width, height }: { width: number; height: number }) => void;
   header?: React.ReactNode;
   className?: string;
+  children?: React.ReactNode;
 };
 
 export const Modal: FC<ModalProps> = ({

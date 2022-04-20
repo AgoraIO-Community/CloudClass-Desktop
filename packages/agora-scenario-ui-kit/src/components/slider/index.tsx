@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';

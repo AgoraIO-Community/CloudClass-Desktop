@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/react": "17.0.44",
     "@storybook/addon-actions": "6.2.8",
     "@storybook/addon-controls": "6.2.8",
     "@storybook/addon-essentials": "6.2.8",

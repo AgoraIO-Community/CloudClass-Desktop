@@ -46,6 +46,7 @@ type PanelProps = {
   onOpen?: () => void;
   onClose?: () => void;
   panelId?: string;
+  children?: React.ReactNode;
 };
 
 export const Panel: FC<PanelProps> = ({

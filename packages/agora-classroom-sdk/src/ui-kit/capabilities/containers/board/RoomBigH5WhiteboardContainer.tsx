@@ -12,7 +12,11 @@ import './index.css';
 
 import { WhiteboardToolbar } from '~containers/toolbar';
 
-export const WhiteboardH5Container: FC = observer(({ children }) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+export const WhiteboardH5Container: FC<Props> = observer(({ children }) => {
   const {
     boardUIStore,
     streamUIStore: { containerH5VisibleCls },

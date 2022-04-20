@@ -1,6 +1,6 @@
-import { FC, ReactElement, MouseEvent, useContext } from 'react';
+import { FC, ReactElement, MouseEvent } from 'react';
 import { MultiRootTree, TreeModel, TreeNode } from '~ui-kit';
-import { Panel, PanelStateContext } from './panel';
+import { Panel } from './panel';
 
 type GroupPanelProps = {
   groups: { text: string; id: string }[];
@@ -10,6 +10,7 @@ type GroupPanelProps = {
   onChange?: (users: string[]) => void;
   canExpand?: boolean;
   onNodeClick?: (node: TreeModel, level: number) => void;
+  children?: React.ReactNode;
 };
 
 export const GroupPanel: FC<GroupPanelProps> = ({

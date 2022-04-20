@@ -59,7 +59,7 @@ export const RoomBigStudentStreamsH5Container: FC<any> = observer(() => {
   const [navigationVisible, setNavigationVisible] = useState(false);
 
   const mouseHandler = useCallback(
-    (visible) => () => {
+    (visible: boolean) => () => {
       setNavigationVisible(visible);
     },
     [],

@@ -24,7 +24,7 @@ const ExtensionApp = ({ extApp, canClose, canDrag, onClose, onResize }: any) => 
   }, [onClose, extApp.appIdentifier]);
 
   const handleResize = useCallback(
-    ({ width, height }) => {
+    ({ width, height }: { width: number; height: number }) => {
       onResize(appIdentifier, width, height);
     },
     [appIdentifier],

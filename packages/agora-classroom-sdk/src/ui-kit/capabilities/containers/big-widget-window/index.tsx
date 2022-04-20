@@ -9,7 +9,11 @@ import { Room1v1TeacherStream } from '../stream/room-1v1-player';
 import { WhiteboardToolbar } from '../toolbar';
 import { TrackArea } from '../root-box';
 
-export const BigWidgetWindowContainer: FC = observer((props) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+export const BigWidgetWindowContainer: FC<Props> = observer((props) => {
   const { widgetUIStore, streamUIStore } = useStore();
   const { bigWidgetWindowHeight, isBigWidgetWindowTeacherStreamActive } = widgetUIStore;
   const { teacherCameraStream } = streamUIStore;

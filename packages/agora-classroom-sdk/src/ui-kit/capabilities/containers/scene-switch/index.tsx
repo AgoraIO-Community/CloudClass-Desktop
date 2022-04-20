@@ -4,7 +4,9 @@ import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { Card, Loading } from '~ui-kit';
 
-type Props = {};
+type Props = {
+  children?: React.ReactNode;
+};
 
 export const SceneSwitch: FC<Props> = observer(({ children }) => {
   const { groupUIStore } = useStore();
