@@ -97,23 +97,19 @@
       "output": "release"
     }
   },
-  "resolutions": {
-    "react": "17.0.0",
-    "react-dom": "17.0.0"
-  },
   "scripts": {
     "electron": "cross-env NODE_ENV=development RTE_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npm run electron:client\"",
     "electron:client": "cross-env electron ./app/",
     "electron:copy:electron": "cpx ./app/**/*.js ./build",
-    "dev": "webpack serve --config ./webpack/webpack.dev.js",
-    "build": "webpack --config ./webpack/webpack.prod.js",
+    "dev": "cross-env NODE_OPTIONS=--max_old_space_size=8192 webpack serve --config ./webpack/webpack.dev.js",
+    "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 webpack --config ./webpack/webpack.prod.js",
     "build:types": "tsc -p tsconfig.json",
     "build:docs": "npx typedoc",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "pack:mac": "yarn electron:copy:electron && electron-builder --mac",
     "pack:win": "yarn electron:copy:electron && electron-builder --win",
     "pack:npm": "run-s bundle:npm build:types",
-    "bundle:npm": "webpack --config ./webpack/webpack.pack.js"
+    "bundle:npm": "cross-env NODE_OPTIONS=--max_old_space_size=8192 webpack --config ./webpack/webpack.pack.js"
   },
   "eslintConfig": {
     "extends": [
@@ -155,11 +151,11 @@
     "@types/lodash": "4.14.145",
     "@types/node": "12.12.47",
     "@types/raf": "3.4.0",
-    "@types/react": "16.9.9",
+    "@types/react": "17.0.44",
     "@types/react-datepicker": "3.1.8",
     "@types/react-dom": "16.9.2",
     "@types/react-helmet": "6.1.5",
-    "@types/react-router-dom": "5.1.0",
+    "@types/react-router-dom": "5.3.3",
     "@types/react-select": "4.0.15",
     "@types/react-transition-group": "4.4.1",
     "@types/ua-parser-js": "0.7.33",
@@ -226,7 +222,7 @@
     "react-dom": "17.0.0",
     "react-draggable": "4.4.3",
     "react-gtm-module": "2.0.8",
-    "react-i18next": "11.8.12",
+    "react-i18next": "11.16.7",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-select": "4.3.0",
@@ -252,7 +248,7 @@
     "stream-browserify": "3.0.0",
     "buffer": "6.0.3",
     "matchmedia-polyfill": "0.3.2",
-    "agora-edu-core": "2.3.5",
-    "agora-rte-sdk": "2.3.4"
+    "agora-edu-core": "2.4.0",
+    "agora-rte-sdk": "2.4.0"
   }
 }

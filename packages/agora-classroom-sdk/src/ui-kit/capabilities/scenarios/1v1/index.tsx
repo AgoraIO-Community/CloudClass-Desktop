@@ -6,7 +6,6 @@ import { DialogContainer } from '~containers/dialog';
 import { LoadingContainer } from '~containers/loading';
 import { NavigationBarContainer } from '~containers/nav';
 import { Aside, Layout } from '~components/layout';
-import { ScreenShareContainer } from '~containers/screen-share';
 import { Room1v1StreamsContainer } from '~containers/stream/room-1v1-player';
 import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import Room from '../room';
@@ -18,7 +17,11 @@ import { CollectorContainer } from '~containers/board';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 
-const Content: FC = ({ children }) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+const Content: FC<Props> = ({ children }) => {
   return <div className="flex-grow">{children}</div>;
 };
 

@@ -14,6 +14,7 @@ type FixedAspectRatioProps = {
     maxHeight: number;
     maxWidth: number;
   }>;
+  children?: React.ReactNode;
 };
 
 const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(

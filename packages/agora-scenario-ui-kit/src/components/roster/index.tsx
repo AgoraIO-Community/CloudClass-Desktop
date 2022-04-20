@@ -131,4 +131,6 @@ export type RosterProps = {
    * 拖动区域所在范围dom的class
    */
   bounds?: string;
+
+  children?: React.ReactNode;
 };

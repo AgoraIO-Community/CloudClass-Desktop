@@ -2,8 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpackMerge = require('webpack-merge');
 const baseConfig = require('./webpack.base');
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
-const { PUBLIC_PATH, DEFAULT_PORT, ROOT_PATH, DIST_PATH } = require('./utils/index');
+const { DEFAULT_PORT, ROOT_PATH } = require('./utils/index');
 const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -16,7 +15,6 @@ const config = {
   devtool: 'source-map',
   entry: entry,
   output: {
-    // path: path.resolve(ROOT_PATH + './build'),
     publicPath: '/',
     filename: 'bundle-[contenthash].js',
   },

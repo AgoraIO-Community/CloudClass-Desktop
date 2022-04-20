@@ -8,11 +8,11 @@ import {
 import { transI18n } from '~ui-kit';
 import { Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
-import App, { PollingType } from './app';
+import App from './app';
 import { PluginStore } from './store';
 import { POLLING } from '../../constants';
 import './i18n/config';
-import { autorun, reaction } from 'mobx';
+import { autorun } from 'mobx';
 import React from 'react';
 
 export class AgoraPolling implements IAgoraExtensionApp {

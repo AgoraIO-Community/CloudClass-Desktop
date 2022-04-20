@@ -8,7 +8,11 @@ import './index.css';
 
 import { ScenesController } from '../scenes-controller';
 
-export const WhiteboardContainer: FC = observer(({ children }) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
   const { boardUIStore, toolbarUIStore } = useStore();
   const {
     readyToMount,

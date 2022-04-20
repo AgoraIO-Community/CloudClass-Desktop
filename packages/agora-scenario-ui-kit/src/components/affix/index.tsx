@@ -1,4 +1,5 @@
-import React, { FC, ReactNode } from 'react';
+// @ts-nocheck
+import { FC, ReactNode } from 'react';
 import { BaseProps } from '../interface/base-props';
 import { CSSTransition } from 'react-transition-group';
 

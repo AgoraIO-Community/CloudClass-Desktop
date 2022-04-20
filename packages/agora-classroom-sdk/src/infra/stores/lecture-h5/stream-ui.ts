@@ -1,7 +1,5 @@
-import { EduClassroomStore } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
-import { EduShareUIStore } from '../common/share-ui';
 import { StreamUIStore } from '../common/stream';
 
 @Log.attach({ proxyMethods: false })
@@ -10,17 +8,19 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
   private _gapInPx = 2;
 
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
-    super(store, shareUIStore);
+  onInstall(): void {
+    super.onInstall();
 
-    reaction(
-      () => this.shareUIStore.orientation,
-      (value) => {
-        value === 'portrait' &&
-          runInAction(() => {
-            this.streamZoomStatus = 'zoom-out';
-          });
-      },
+    this._disposers.push(
+      reaction(
+        () => this.shareUIStore.orientation,
+        (value) => {
+          value === 'portrait' &&
+            runInAction(() => {
+              this.streamZoomStatus = 'zoom-out';
+            });
+        },
+      ),
     );
   }
 

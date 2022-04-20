@@ -12,6 +12,7 @@
     "@babel/runtime-corejs3": "7.13.10"
   },
   "devDependencies": {
+    "@types/react": "17.0.44",
     "@babel/core": "7.13.15",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/plugin-proposal-decorators": "7.15.8",
@@ -78,7 +79,7 @@
   "version": "2.0.0",
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "release:classroom:sdk": "run-s build:proto pack:classroom:sdk",
+    "release:classroom:sdk": "run-s pack:classroom:sdk",
     "release:electron:mac": "run-s build:apaas pack:electron:mac",
     "release:electron:win": "run-s build:apaas pack:electron:win",
     "dev": "lerna exec --scope=agora-classroom-sdk yarn dev",
@@ -88,7 +89,7 @@
     "pack:classroom:sdk": "lerna exec --scope=agora-classroom-sdk npm run pack:npm",
     "pack:electron:mac": "lerna exec --scope=agora-classroom-sdk npm run pack:mac",
     "pack:electron:win": "lerna exec --scope=agora-classroom-sdk npm run pack:win",
-    "build:apaas": "run-s build:proto build:demo",
+    "build:apaas": "run-s build:demo",
     "build:plugin": "lerna exec --scope=agora-plugin-gallery npm run build",
     "build:widget": "lerna exec --scope=agora-widget-gallery npm run build",
     "build:demo": "lerna exec --scope=agora-classroom-sdk npm run build",

@@ -1,28 +1,4 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { IReactionOptions, IReactionPublic, reaction } from 'mobx';
-
-export const useReaction = <T>(
-  expression: (reaction: IReactionPublic) => T,
-  effect: (value: T, prev: T | null) => void,
-  options?: IReactionOptions,
-): void => {
-  const effectRef = useRef(effect);
-
-  const prevRef = useRef<T | null>(null);
-
-  useEffect(
-    () =>
-      reaction(
-        expression,
-        (value: T, reaction: IReactionPublic) => {
-          effectRef.current(value, prevRef.current);
-          prevRef.current = value;
-        },
-        options,
-      ),
-    [],
-  );
-};
 
 type UseWatchCallback<T> = (prev: T | undefined) => void;
 type UseWatchConfig = {

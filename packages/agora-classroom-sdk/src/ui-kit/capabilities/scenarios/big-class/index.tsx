@@ -20,7 +20,11 @@ import { CollectorContainer } from '~containers/board';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 
-const Content: FC = ({ children }) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+const Content: FC<Props> = ({ children }) => {
   return <div className="flex-col flex-grow">{children}</div>;
 };
 

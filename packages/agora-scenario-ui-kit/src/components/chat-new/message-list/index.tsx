@@ -1,3 +1,4 @@
+//@ts-nocheck
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
@@ -83,7 +84,7 @@ export const MessageList: FC<MessageListProps> = observer(
           {({ measure, registerChild }) => {
             return (
               // cellMeasurer 对于计算margin padding 有问题，必须要包一层才可以
-              <div key={messages[index].id} ref={registerChild} style={style}>
+              <div key={messages[index].id} ref={registerChild as any} style={style}>
                 <ChatMessage
                   key={messages[index].id}
                   {...messages[index]}

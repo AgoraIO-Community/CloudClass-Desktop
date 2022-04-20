@@ -34,6 +34,7 @@ export interface HomeProps extends HomeModule<HomeAttributes> {
   SDKVersion: string;
   publishDate: string;
   loading: boolean;
+  children?: React.ReactNode;
 }
 
 export const Home: React.FC<HomeProps> = ({

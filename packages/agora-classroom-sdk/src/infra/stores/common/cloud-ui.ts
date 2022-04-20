@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import {
@@ -33,41 +33,48 @@ export interface UploadItem {
 let _lastFetchPersonalResourcesOptions: CloudDrivePagingOption;
 export class CloudUIStore extends EduUIStoreBase {
   readonly pageSize: number = 6;
+
+  private _disposers: IReactionDisposer[] = [];
+
   onInstall() {
-    reaction(
-      () => this.personalResourcesList,
-      (personalResourcesList) => {
-        if (personalResourcesList.length) {
-          const hasConverting = personalResourcesList.some(
-            (item) =>
-              item?.resource instanceof CloudDriveCourseResource &&
-              item?.resource?.taskProgress?.status === 'Converting',
-          );
-          if (hasConverting) {
-            this.fetchPersonalResources({
-              pageNo: this.currentPersonalResPage,
-              pageSize: this.pageSize,
-              resourceName: this.searchPersonalResourcesKeyword,
-            });
+    this._disposers.push(
+      reaction(
+        () => this.personalResourcesList,
+        (personalResourcesList) => {
+          if (personalResourcesList.length) {
+            const hasConverting = personalResourcesList.some(
+              (item) =>
+                item?.resource instanceof CloudDriveCourseResource &&
+                item?.resource?.taskProgress?.status === 'Converting',
+            );
+            if (hasConverting) {
+              this.fetchPersonalResources({
+                pageNo: this.currentPersonalResPage,
+                pageSize: this.pageSize,
+                resourceName: this.searchPersonalResourcesKeyword,
+              });
+            }
           }
-        }
-      },
-      {
-        delay: 1500,
-      },
+        },
+        {
+          delay: 1500,
+        },
+      ),
     );
-    reaction(
-      () => this.searchPersonalResourcesKeyword,
-      (keyword) => {
-        this.fetchPersonalResources({
-          pageNo: 1,
-          pageSize: this.pageSize,
-          resourceName: keyword,
-        });
-      },
-      {
-        delay: 500,
-      },
+    this._disposers.push(
+      reaction(
+        () => this.searchPersonalResourcesKeyword,
+        (keyword) => {
+          this.fetchPersonalResources({
+            pageNo: 1,
+            pageSize: this.pageSize,
+            resourceName: keyword,
+          });
+        },
+        {
+          delay: 500,
+        },
+      ),
     );
   }
 
@@ -450,5 +457,8 @@ export class CloudUIStore extends EduUIStoreBase {
     this.searchPersonalResourcesKeyword = keyword;
   }
 
-  onDestroy() {}
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
 }

@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { BaseProps } from '~components/interface/base-props';
+//@ts-nocheck
+import { FC } from 'react';
 import RcPagination, { PaginationProps } from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import './index.css';

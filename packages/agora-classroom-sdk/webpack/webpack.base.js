@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const webpackbar = require('webpackbar');
 const eduCoreVersion = require('agora-edu-core/package.json').version;
 const rteVersion = require('agora-rte-sdk/package.json').version;
-const { ROOT_PATH } = require('./utils/index');
+const { ROOT_PATH, ALIAS } = require('./utils/index');
 
 const classroomSdkVersion = require('../package.json').version;
 
@@ -31,8 +31,7 @@ module.exports = {
       'agora-plugin-gallery': path.resolve(ROOT_PATH, '../agora-plugin-gallery/src'),
       'agora-widget-gallery': path.resolve(ROOT_PATH, '../agora-widget-gallery/src'),
       'agora-chat-widget': path.resolve(ROOT_PATH, '../agora-chat-widget/src'),
-      'agora-edu-core': path.resolve(ROOT_PATH, '../agora-edu-core/src'),
-      'agora-rte-sdk': path.resolve(ROOT_PATH, '../agora-rte-sdk/src'),
+      ...ALIAS,
     },
   },
   module: {
@@ -135,7 +134,6 @@ module.exports = {
                     loose: true,
                   },
                 ],
-                '@babel/plugin-transform-modules-commonjs',
               ],
             },
           },

@@ -1,4 +1,4 @@
-import { action, autorun, computed, observable, reaction, runInAction } from 'mobx';
+import { action, autorun, observable, runInAction } from 'mobx';
 import { EduRoomTypeEnum, UUAparser, EduClassroomConfig } from 'agora-edu-core';
 
 type EduClassroomUIStore = any;

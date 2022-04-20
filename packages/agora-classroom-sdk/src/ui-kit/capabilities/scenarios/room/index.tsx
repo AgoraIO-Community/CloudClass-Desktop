@@ -3,7 +3,11 @@ import { useEffectOnce } from '@/infra/hooks/utilites';
 import { observer } from 'mobx-react';
 import React, { FC } from 'react';
 
-const Room: FC = observer(({ children }) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+const Room: FC<Props> = observer(({ children }) => {
   const { initialize, join, destroy } = useStore();
 
   useEffectOnce(() => {

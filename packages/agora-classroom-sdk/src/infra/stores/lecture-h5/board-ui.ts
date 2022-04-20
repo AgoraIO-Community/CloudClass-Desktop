@@ -1,7 +1,5 @@
-import { EduClassroomStore } from 'agora-edu-core';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { BoardUIStore } from '../common/board-ui';
-import { EduShareUIStore } from '../common/share-ui';
 
 export class LectureH5BoardUIStore extends BoardUIStore {
   protected get uiOverrides() {
@@ -12,17 +10,18 @@ export class LectureH5BoardUIStore extends BoardUIStore {
     };
   }
 
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
-    super(store, shareUIStore);
-
-    reaction(
-      () => this.shareUIStore.orientation,
-      (value) => {
-        value === 'portrait' &&
-          runInAction(() => {
-            this.borderZoomStatus = 'zoom-out';
-          });
-      },
+  onInstall(): void {
+    super.onInstall();
+    this._disposers.push(
+      reaction(
+        () => this.shareUIStore.orientation,
+        (value) => {
+          value === 'portrait' &&
+            runInAction(() => {
+              this.borderZoomStatus = 'zoom-out';
+            });
+        },
+      ),
     );
   }
 
