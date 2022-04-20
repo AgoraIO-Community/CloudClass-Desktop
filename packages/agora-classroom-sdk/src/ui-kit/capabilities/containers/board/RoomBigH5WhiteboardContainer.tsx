@@ -10,8 +10,6 @@ import { BoardPlaceHolder, Icon, IconTypes } from '~ui-kit';
 import classnames from 'classnames';
 import './index.css';
 
-import { WhiteboardToolbar } from '~containers/toolbar';
-
 type Props = {
   children?: React.ReactNode;
 };
@@ -74,7 +72,6 @@ export const WhiteboardH5Container: FC<Props> = observer(({ children }) => {
                 onReconnectClick={rejoinWhiteboard}
               />
             ) : null}
-            <WhiteboardToolbar />
           </div>
         </div>
       ) : null}
