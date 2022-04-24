@@ -3,6 +3,6 @@ build
 coverage
 dist
 lib
-*.lock
+yarn.lock
 package-lock.json
 tsconfig.json
