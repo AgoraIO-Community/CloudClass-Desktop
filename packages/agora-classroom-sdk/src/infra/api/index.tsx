@@ -4,6 +4,7 @@ import {
   EduClassroomConfig,
   EduRoleTypeEnum,
   CourseWareList,
+  RecordOptions,
   EduRegion,
   EduLanguage,
   EduRtcConfig,
@@ -73,6 +74,7 @@ export type LaunchOption = {
   latencyLevel?: 1 | 2;
   platform?: Platform;
   extensions?: IAgoraExtensionApp[]; // 新app插件
+  recordOptions?: RecordOptions;
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
@@ -191,6 +193,7 @@ export class AgoraEduSDK {
       duration,
       platform = Platform.PC,
       startTime,
+      recordOptions,
     } = option;
 
     const sessionInfo = {
@@ -243,6 +246,10 @@ export class AgoraEduSDK {
 
     if (courseWareList) {
       config.setCourseWareList(courseWareList);
+    }
+
+    if (recordOptions) {
+      config.setRecordOptions(recordOptions)
     }
 
     EduClassroomConfig.setConfig(config);

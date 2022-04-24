@@ -62,7 +62,18 @@
         userRole,
         translateLanguage,
         region,
+        minFPS = 1,
+        maxFPS = 5,
+        resolution = 0.8,
       } = useParams(window.location);
+
+      const recordOptions = {
+        minFPS,
+        maxFPS,
+        resolution, // 这三个是上次测试出来可以接受的配置,
+        autoResolution: false,
+        autoFPS: false, // 这两个值必须设置 false
+      }
 
       // const options = paramsObject
       // if(!options) {
@@ -97,6 +108,7 @@
         userRole,
         // translateLanguage: language,
         courseWareList: [],
+        recordOptions,
         listener: (evt, args) => {
           console.log('evt', evt, args);
         },
