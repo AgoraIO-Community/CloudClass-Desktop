@@ -215,8 +215,6 @@ export class AgoraEduSDK {
       new AgoraPolling(),
     ] as IAgoraExtensionApp[];
 
-    extensions.concat;
-
     const config = new EduClassroomConfig(
       AgoraEduSDK.appId,
       sessionInfo,

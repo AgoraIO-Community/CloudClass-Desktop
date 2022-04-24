@@ -1,5 +1,12 @@
 import { CourseWareList } from 'agora-edu-core';
 
+/**
+ * h5 urls
+ * "https://courseware2.miaocode.com/v4-2/index.html?courseName=course-k1a-20",
+ * "https://courseware2.miaocode.com/v4-2/index.html?courseName=course-disappear-dinosaur",
+ * "https://courseware2.miaocode.com/v4-2/index.html?courseName=course-adventure-in-the-universe-hard"
+ */
+
 export default [
   {
     resourceUuid: '20c2281deddefa96a97fe16b3628b456',
@@ -167,4 +174,13 @@ export default [
       prefix: 'https://convertcdn.netless.link/dynamicConvert',
     },
   },
+  {
+    resourceName: 'H5 Demo',
+    resourceUuid: Date.now(),
+    ext: 'ice',
+    // url: 'https://courseware2.miaocode.com/v4-2/index.html?courseName=course-k1a-20',
+    url: 'https://agora-adc-artifacts.oss-cn-beijing.aliyuncs.com/test/index.html',
+    size: 0,
+    updateTime: Date.now()
+  }
 ] as CourseWareList;

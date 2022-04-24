@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { ChangeEvent, useRef, useEffect, useCallback } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
-import { CloudDriveCourseResource } from 'agora-edu-core';
+import { CloudDriveCourseResource, CloudDriveResource } from 'agora-edu-core';
 import {
   Col,
   Inline,
@@ -375,7 +375,7 @@ export const PersonalResourcesContainer = observer(() => {
               <input
                 ref={fileRef}
                 id="upload-image"
-                accept=".bmp,.jpg,.png,.gif,.pdf,.jpeg,.pptx,.ppt,.doc,.docx,.mp3,.mp4"
+                accept={CloudDriveResource.supportedTypes.map(item => '.' + item).join(',')}
                 onChange={handleUpload}
                 multiple
                 type="file"></input>
