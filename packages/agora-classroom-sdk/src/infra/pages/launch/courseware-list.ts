@@ -170,7 +170,7 @@ export default [
   {
     resourceName: 'H5 Demo 1',
     resourceUuid: Math.random() + Date.now(),
-    ext: 'ice',
+    ext: 'ah5',
     url: 'https://courseware2.miaocode.com/v4-2/index.html?courseName=course-k1a-20',
     size: 0,
     updateTime: Date.now(),
@@ -179,7 +179,7 @@ export default [
   {
     resourceName: 'H5 Demo 2',
     resourceUuid: Math.random() + Date.now(),
-    ext: 'ice',
+    ext: 'ah5',
     url: 'https://courseware2.miaocode.com/v4-2/index.html?courseName=course-disappear-dinosaur',
     size: 0,
     updateTime: Date.now(),
