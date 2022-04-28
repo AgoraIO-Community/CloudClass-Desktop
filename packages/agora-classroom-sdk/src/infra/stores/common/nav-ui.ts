@@ -4,11 +4,11 @@ import {
   AgoraRteAudioSourceType,
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
+  bound,
 } from 'agora-rte-sdk';
 import { computed, action, observable, reaction, runInAction, IReactionDisposer } from 'mobx';
 import { EduUIStoreBase } from './base';
 import dayjs from 'dayjs';
-import { bound } from 'agora-rte-sdk';
 import { transI18n } from './i18n';
 import {
   AGServiceErrorCode,
@@ -18,6 +18,7 @@ import {
   EduRoleTypeEnum,
   LeaveReason,
   RecordStatus,
+  RecordMode,
 } from 'agora-edu-core';
 import { DialogCategory } from './share-ui';
 import { number2Percent } from '@/infra/utils';
@@ -99,10 +100,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
                   this.revertRecordingState();
                 });
               } else {
-                this.classroomStore.recordingStore.startRecording().catch((e: AGError) => {
-                  this.shareUIStore.addGenericErrorDialog(e);
-                  this.revertRecordingState();
-                });
+                this.classroomStore.recordingStore
+                  .startRecording(this.recordArgs)
+                  .catch((e: AGError) => {
+                    this.shareUIStore.addGenericErrorDialog(e);
+                    this.revertRecordingState();
+                  });
               }
               runInAction(() => {
                 this.isRecording = !isRecording;
@@ -568,6 +571,20 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       groupName = group?.groupName;
     }
     return groupName;
+  }
+
+  get recordArgs() {
+    const { recordUrl, rteEngineConfig } = EduClassroomConfig.shared;
+
+    const args = {
+      webRecordConfig: {
+        rootUrl: `${recordUrl}?language=${rteEngineConfig.language}`,
+        mode: RecordMode.Web,
+      },
+      videoBitrate: 3000,
+    };
+
+    return args;
   }
   /**
    * 倒计时格式化

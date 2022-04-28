@@ -627,7 +627,7 @@ export const en = {
   fcr_group_invitation: '	Teacher invites you to join {reason}',
   fcr_group_button_join: 'Join',
   fcr_group_button_later: 'Later',
-  fcr_group_joining: 'Joing {reason}',
+  fcr_group_joining: 'Joining {reason}',
   fcr_group_join: 'Join group',
   fcr_group_enter_welcome: 'Welcome to join {reason} and discuss with everyone',
   fcr_group_enter_group: '{reason1}{reason2} has joined group',
