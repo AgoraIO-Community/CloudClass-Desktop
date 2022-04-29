@@ -73,7 +73,7 @@
         resolution, // 这三个是上次测试出来可以接受的配置,
         autoResolution: false,
         autoFPS: false, // 这两个值必须设置 false
-      }
+      };
 
       // const options = paramsObject
       // if(!options) {
@@ -111,6 +111,13 @@
         recordOptions,
         listener: (evt, args) => {
           console.log('evt', evt, args);
+          if (evt === 1) {
+            fetch(`https://api.sd-rtn.com/edu/apps/${appId}/v2/rooms/${roomUuid}/records/ready`, {
+              method: 'PUT',
+              cors: true,
+            });
+            // Send a web request to notify the server side that the recording page was fully loaded.
+          }
         },
       }).then(() => {
         console.log('start launch');

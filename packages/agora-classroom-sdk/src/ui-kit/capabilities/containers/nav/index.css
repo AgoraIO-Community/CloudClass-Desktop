@@ -52,6 +52,7 @@ td.biz-col.label.right {
 
 .header-actions {
   display: flex;
+  align-items: center;
 }
 
 .header-actions > svg {
@@ -67,6 +68,22 @@ td.biz-col.label.right {
   cursor: pointer;
 }
 
+.header-actions .record-heartbeat {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d9011b;
+  margin-right: 5px;
+}
+.header-actions .record-icon {
+  margin-left: 7px;
+}
+.header-actions .record-tips {
+  color: #677386;
+  font-size: 12px;
+  line-height: 12px;
+}
 /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
 .biz-signal-quality {
   text-align: center;

@@ -411,6 +411,7 @@ export const en = {
     recording: 'Recording',
     start_record: 'Start Recording',
     stop_record: 'Stop Recording',
+    record_starting: 'Recording is preparing, please wait',
   },
   nav: {
     delay: 'Delay: ',

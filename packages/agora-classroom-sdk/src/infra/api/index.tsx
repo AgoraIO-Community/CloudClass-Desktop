@@ -45,9 +45,13 @@ export type ConfigParams = {
   region?: string;
 };
 
-export type LaunchMediaOptions = MediaOptions & {lowStreamCameraEncoderConfiguration?: EduVideoEncoderConfiguration};
+export type LaunchMediaOptions = MediaOptions & {
+  lowStreamCameraEncoderConfiguration?: EduVideoEncoderConfiguration;
+};
 
-export type ConvertMediaOptionsConfig = EduRtcConfig & {defaultLowStreamCameraEncoderConfigurations?: EduVideoEncoderConfiguration}
+export type ConvertMediaOptionsConfig = EduRtcConfig & {
+  defaultLowStreamCameraEncoderConfigurations?: EduVideoEncoderConfiguration;
+};
 
 /**
  * LaunchOption 接口
@@ -74,7 +78,8 @@ export type LaunchOption = {
   latencyLevel?: 1 | 2;
   platform?: Platform;
   extensions?: IAgoraExtensionApp[]; // 新app插件
-  recordOptions?: RecordOptions;
+  recordOptions?: RecordOptions; // 白板录制参数
+  recordRetryTimeout?: number; // 录制重试间隔
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
@@ -113,8 +118,12 @@ export class AgoraEduSDK {
   private static convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
     const config: ConvertMediaOptionsConfig = {};
     if (opts) {
-      const { cameraEncoderConfiguration, screenShareEncoderConfiguration, encryptionConfig, lowStreamCameraEncoderConfiguration } =
-        opts;
+      const {
+        cameraEncoderConfiguration,
+        screenShareEncoderConfiguration,
+        encryptionConfig,
+        lowStreamCameraEncoderConfiguration,
+      } = opts;
       if (cameraEncoderConfiguration) {
         config.defaultCameraEncoderConfigurations = {
           ...cameraEncoderConfiguration,
@@ -194,6 +203,7 @@ export class AgoraEduSDK {
       platform = Platform.PC,
       startTime,
       recordOptions,
+      recordRetryTimeout,
     } = option;
 
     const sessionInfo = {
@@ -235,6 +245,7 @@ export class AgoraEduSDK {
       platform,
       i18nResources,
       option.extensions ? extensions.concat(option.extensions) : extensions,
+      recordRetryTimeout ? { recordRetryTimeout } : undefined,
     );
 
     if (AgoraEduSDK._config.host) {
@@ -247,7 +258,7 @@ export class AgoraEduSDK {
     }
 
     if (recordOptions) {
-      config.setRecordOptions(recordOptions)
+      config.setRecordOptions(recordOptions);
     }
 
     EduClassroomConfig.setConfig(config);

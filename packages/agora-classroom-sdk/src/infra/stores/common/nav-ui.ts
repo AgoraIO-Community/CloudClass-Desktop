@@ -6,7 +6,7 @@ import {
   AgoraRteVideoSourceType,
   bound,
 } from 'agora-rte-sdk';
-import { computed, action, observable, reaction, runInAction, IReactionDisposer } from 'mobx';
+import { computed, reaction, IReactionDisposer } from 'mobx';
 import { EduUIStoreBase } from './base';
 import dayjs from 'dayjs';
 import { transI18n } from './i18n';
@@ -23,11 +23,18 @@ import {
 import { DialogCategory } from './share-ui';
 import { number2Percent } from '@/infra/utils';
 
-export interface EduNavAction {
+export interface EduNavAction<P = undefined> {
+  id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit';
   title: string;
   iconType: string;
   iconColor?: string;
   onClick: () => void;
+  payload?: P;
+}
+
+export interface EduNavRecordActionPayload {
+  text: string;
+  recordStatus: RecordStatus;
 }
 
 export enum TimeFormatType {
@@ -38,15 +45,6 @@ export enum TimeFormatType {
 export class NavigationBarUIStore extends EduUIStoreBase {
   private _disposers: IReactionDisposer[] = [];
   onInstall() {
-    this._disposers.push(
-      reaction(
-        () => this.classroomStore.roomStore.recordStatus,
-        (recordStatus: RecordStatus) => {
-          this.isRecording = recordStatus === RecordStatus.started;
-        },
-      ),
-    );
-
     this._disposers.push(
       reaction(
         () => this.networkQuality,
@@ -62,8 +60,6 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       ),
     );
   }
-  //observables
-  @observable isRecording = false;
   //computed
   /**
    * 准备好挂载到 DOM
@@ -74,42 +70,76 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return this.classroomStore.connectionStore.engine !== undefined;
   }
 
+  @computed
+  get recordStatus() {
+    if (
+      this.classroomStore.roomStore.recordStatus === RecordStatus.started &&
+      this.classroomStore.roomStore.recordReady
+    ) {
+      return RecordStatus.started;
+    } else if (
+      this.classroomStore.roomStore.recordStatus === RecordStatus.starting ||
+      (this.classroomStore.roomStore.recordStatus === RecordStatus.started &&
+        !this.classroomStore.roomStore.recordReady)
+    ) {
+      return RecordStatus.starting;
+    } else {
+      return RecordStatus.stopped;
+    }
+  }
+  @computed
+  get isRecording() {
+    return this.recordStatus === RecordStatus.started;
+  }
+  @computed
+  get isRecordStarting() {
+    return this.recordStatus === RecordStatus.starting;
+  }
+  @computed
+  get isRecordStoped() {
+    return this.recordStatus === RecordStatus.stopped;
+  }
+
   /**
    * 顶部导航栏按钮列表
    * @returns
    */
   @computed
-  get actions(): EduNavAction[] {
-    const { isRecording } = this;
+  get actions(): EduNavAction<EduNavRecordActionPayload | undefined>[] {
+    const { isRecording, isRecordStarting, recordStatus } = this;
     const recordingTitle = isRecording
       ? transI18n('toast.stop_recording.title')
       : transI18n('toast.start_recording.title');
     const recordingBody = isRecording
       ? transI18n('toast.stop_recording.body')
       : transI18n('toast.start_recording.body');
-    const teacherActions: EduNavAction[] = [
+    const teacherActions: EduNavAction<EduNavRecordActionPayload>[] = [
       {
+        id: 'Record',
         title: recordingTitle,
-        iconType: isRecording ? 'recording' : 'record',
+        iconType: isRecording || isRecordStarting ? 'recording' : 'record',
+        payload: {
+          text: isRecordStarting
+            ? transI18n('biz-header.record_starting')
+            : isRecording
+            ? transI18n('biz-header.recording')
+            : '',
+          recordStatus: recordStatus,
+        },
         onClick: async () => {
           this.shareUIStore.addConfirmDialog(recordingTitle, recordingBody, {
             onOK: () => {
               if (isRecording) {
                 this.classroomStore.recordingStore.stopRecording().catch((e: AGError) => {
                   this.shareUIStore.addGenericErrorDialog(e);
-                  this.revertRecordingState();
                 });
-              } else {
+              } else if (this.isRecordStoped) {
                 this.classroomStore.recordingStore
                   .startRecording(this.recordArgs)
                   .catch((e: AGError) => {
                     this.shareUIStore.addGenericErrorDialog(e);
-                    this.revertRecordingState();
                   });
               }
-              runInAction(() => {
-                this.isRecording = !isRecording;
-              });
             },
           });
         },
@@ -118,6 +148,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
     const studentActions: EduNavAction[] = [
       {
+        id: 'AskForHelp',
         title: 'AskForHelp',
         iconType: 'ask-for-help',
         iconColor: this.teacherInCurrentRoom ? '#D2D2E2' : undefined,
@@ -180,6 +211,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     ];
     const commonActions: EduNavAction[] = [
       {
+        id: 'Settings',
         title: 'Settings',
         iconType: 'set',
         onClick: () => {
@@ -187,6 +219,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         },
       },
       {
+        id: 'Exit',
         title: 'Exit',
         iconType: 'exit',
         onClick: async () => {
@@ -207,19 +240,20 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
     const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
 
-    let actions = commonActions;
+    let actions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [];
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
       if (!isInSubRoom) {
-        actions = teacherActions.concat(actions);
+        actions = actions.concat(teacherActions);
       }
     }
 
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
       if (isInSubRoom) {
-        actions = studentActions.concat(actions);
+        actions = actions.concat(studentActions);
       }
     }
 
+    actions = actions.concat(commonActions);
     return actions;
   }
 
@@ -541,13 +575,6 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return `${Math.floor(this.classroomStore.statisticsStore.delay)} ${transI18n('nav.ms')}`;
   }
 
-  /**
-   * 设置录制状态
-   */
-  @action revertRecordingState() {
-    this.isRecording = this.classroomStore.roomStore.recordStatus === RecordStatus.started;
-  }
-
   //others
   /**
    * 导航栏标题
@@ -574,7 +601,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   get recordArgs() {
-    const { recordUrl, rteEngineConfig } = EduClassroomConfig.shared;
+    const { recordUrl, rteEngineConfig, recordRetryTimeout } = EduClassroomConfig.shared;
 
     const args = {
       webRecordConfig: {
@@ -582,6 +609,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         mode: RecordMode.Web,
       },
       videoBitrate: 3000,
+      retryTimeout: recordRetryTimeout,
     };
 
     return args;

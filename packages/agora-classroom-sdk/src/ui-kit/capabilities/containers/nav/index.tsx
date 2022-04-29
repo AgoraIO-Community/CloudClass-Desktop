@@ -1,7 +1,9 @@
-import { EduNavAction } from '@/infra/stores/common/nav-ui';
+import { EduNavAction, EduNavRecordActionPayload } from '@/infra/stores/common/nav-ui';
 import { observer } from 'mobx-react';
 import { useStore } from '~hooks/use-edu-stores';
-import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n } from '~ui-kit';
+import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n, SvgaPlayer } from '~ui-kit';
+import { RecordStatus } from 'agora-edu-core';
+import RecordLoading from './assets/svga/record-loading.svga';
 import './index.css';
 
 export const ClassStatusComponent = observer(() => {
@@ -53,6 +55,34 @@ export const NavigationBarContainer = observer(() => {
   return <>{readyToMount ? <NavigationBar></NavigationBar> : null}</>;
 });
 
+const NavigationBarRecordAction = observer(
+  ({ action }: { action: EduNavAction<EduNavRecordActionPayload> }) => {
+    const { payload } = action;
+    return payload ? (
+      <>
+        {payload.recordStatus === RecordStatus.started && (
+          <i className="record-heartbeat animate-pulse"></i>
+        )}
+        {payload.text && <span className="record-tips">{payload.text}</span>}
+        {payload.recordStatus === RecordStatus.starting ? (
+          <SvgaPlayer className="record-icon" url={RecordLoading} width={24} height={24} loops />
+        ) : (
+          <Tooltip key={action.title} title={action.title} placement="bottom">
+            <SvgImg
+              className="record-icon"
+              canHover
+              color={action.iconColor}
+              type={action.iconType}
+              size={24}
+              onClick={action.onClick}
+            />
+          </Tooltip>
+        )}
+      </>
+    ) : null;
+  },
+);
+
 export const NavigationBarAction = observer(({ action }: { action: EduNavAction }) => {
   return (
     <Tooltip title={action.title} placement="bottom">
@@ -71,29 +101,6 @@ export const NavigationBar = observer(() => {
   const { navigationBarUIStore } = useStore();
   const { navigationTitle, actions, isBeforeClass, startClass } = navigationBarUIStore;
 
-  // const { isRecording } = useRecordingContext();
-  // const { roomInfo } = useRoomContext();
-
-  // const { addDialog } = useUIStore();
-
-  // const addRecordDialog = useCallback(() => {
-  //   return addDialog(Record, { starting: isRecording });
-  // }, [addDialog, Record, isRecording]);
-
-  // const [perfState, setPerfState] = useState<boolean>(false);
-
-  // const bizHeaderDialogs = {
-  //   perf: () => setPerfState(true),
-  //   setting: () => addDialog(SettingContainer),
-  //   exit: () => addDialog(Exit),
-  //   record: () => addRecordDialog(),
-  // };
-
-  // function handleClick(type: string) {
-  //   const showDialog = bizHeaderDialogs[type];
-  //   showDialog && showDialog(type);
-  // }
-
   return (
     <Header className="biz-header">
       <div>
@@ -111,9 +118,15 @@ export const NavigationBar = observer(() => {
         ) : null}
       </div>
       <div className="header-actions">
-        {actions.map((a) => (
-          <NavigationBarAction key={a.iconType} action={a} />
-        ))}
+        {actions.map((a) =>
+          a.id === 'Record' ? (
+            <NavigationBarRecordAction
+              key={a.iconType}
+              action={a as EduNavAction<EduNavRecordActionPayload>}></NavigationBarRecordAction>
+          ) : (
+            <NavigationBarAction key={a.iconType} action={a as EduNavAction} />
+          ),
+        )}
       </div>
     </Header>
   );

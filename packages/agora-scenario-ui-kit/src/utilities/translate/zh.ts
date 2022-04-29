@@ -374,6 +374,7 @@ export const zh = {
     recording: '录制中',
     start_record: '开启录制',
     stop_record: '停止录制',
+    record_starting: '录制正在准备，请稍后',
   },
   message: '消息',
   quiz: '提问',

@@ -10,6 +10,7 @@ export interface SvgaPlayerProps extends BaseProps {
   height?: number;
   url: string;
   onFinish?: () => void;
+  loops?: boolean;
 }
 
 export const SvgaPlayer: React.FC<SvgaPlayerProps> = ({
@@ -20,6 +21,7 @@ export const SvgaPlayer: React.FC<SvgaPlayerProps> = ({
   url,
   id,
   onFinish,
+  loops = false,
   ...restProps
 }) => {
   const cls = classnames({
@@ -35,7 +37,14 @@ export const SvgaPlayer: React.FC<SvgaPlayerProps> = ({
         height: height ? height : 'auto',
         ...style,
       }}>
-      <SvgaResource url={url} onFinish={onFinish} {...restProps} />
+      <SvgaResource
+        width={width}
+        height={height}
+        loops={loops}
+        url={url}
+        onFinish={onFinish}
+        {...restProps}
+      />
     </div>
   );
 };
@@ -43,9 +52,18 @@ export const SvgaPlayer: React.FC<SvgaPlayerProps> = ({
 type SvgaResourceProps = {
   url: string;
   onFinish?: () => void;
+  loops?: boolean;
+  width?: number | string;
+  height?: number | string;
 };
 
-const SvgaResource: React.FC<SvgaResourceProps> = ({ url, onFinish }) => {
+const SvgaResource: React.FC<SvgaResourceProps> = ({
+  url,
+  onFinish,
+  loops = false,
+  width = 'auto',
+  height = 'auto',
+}) => {
   const loadResource = useCallback(
     async (canvas: HTMLCanvasElement | null) => {
       if (canvas) {
@@ -53,7 +71,7 @@ const SvgaResource: React.FC<SvgaResourceProps> = ({ url, onFinish }) => {
         const player = new Player(canvas);
         parser.load(url, (videoItem) => {
           player.setVideoItem(videoItem);
-          player.loops = 1;
+          player.loops = loops ? 0 : 1;
           player.onFinished(() => {
             onFinish && onFinish();
           });
@@ -72,5 +90,5 @@ const SvgaResource: React.FC<SvgaResourceProps> = ({ url, onFinish }) => {
     }
   }, [ref.current]);
 
-  return <canvas ref={ref}></canvas>;
+  return <canvas width={width} height={height} ref={ref}></canvas>;
 };
