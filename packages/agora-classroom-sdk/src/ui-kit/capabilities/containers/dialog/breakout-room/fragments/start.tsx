@@ -3,7 +3,8 @@ import { GroupMethod } from '@/infra/stores/common/group-ui';
 import { range } from 'lodash';
 import { observer } from 'mobx-react';
 import { useMemo, useState, FC } from 'react';
-import { Button, RadioGroup, Select, transI18n } from '~ui-kit';
+import { Button, RadioGroup, transI18n, Input } from '~ui-kit';
+import './index.css'
 
 type Props = {
   onNext: (params: { groupNum: number }) => void;
@@ -30,22 +31,29 @@ export const Start: FC<Props> = observer(({ onNext }) => {
   const perGroup = Math.floor(numberToBeAssigned / groupNum);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
-      <div className="outline-box items-center flex justify-center">
-        <div className="inline-flex flex-col">
-          <div className="inline-flex items-center mb-3">
-            <span className="mr-1">{transI18n('breakout_room.create_prefix')}</span>
-            <Select
-              className="group-select"
-              size="sm"
-              options={groupNumOptions}
-              onChange={(num) => {
-                setGroupNum(num);
-              }}
-              value={groupNum}
-            />
-            <span className="ml-1">{transI18n('breakout_room.create_suffix')}</span>
-          </div>
+    <>
+      <div className='group-start-content'>
+        <div className='start-main-title'>{transI18n('breakout_room.create_group')}</div>
+        <div className='start-sub-title'>{transI18n('breakout_room.group_number')}</div>
+        <Input
+          type="number"
+          value={groupNum}
+          onChange={(e) => {
+            let num = Number(e.target.value)
+            if (num > 32) {
+              num = 32
+            }
+            if (num <= 1) {
+              num = 1
+            }
+            setGroupNum(num);
+          }}
+          min={1}
+          max={32}
+          width={150}
+        />
+        <div className='start-sub-title'>{transI18n('breakout_room.group_type')}</div>
+        <div className='flex justify-start'>
           <RadioGroup
             gap={3}
             direction="vertical"
@@ -59,26 +67,28 @@ export const Start: FC<Props> = observer(({ onNext }) => {
               setType(value);
             }}
           />
+          <div style={{ marginLeft: 16 }} className="inline-flex">
+            {transI18n('breakout_room.wait_for_assign1', {
+              reason: `${numberToBeAssigned}`,
+            })}
+            {numberToBeAssigned > 0 &&
+              transI18n('breakout_room.wait_for_assign2', {
+                reason: `${perGroup}-${perGroup + 1}`,
+              })}
+          </div>
         </div>
       </div>
-      <div className="my-3">
-        {transI18n('breakout_room.wait_for_assign1', {
-          reason: `${numberToBeAssigned}`,
-        })}
-        {numberToBeAssigned > 0 &&
-          transI18n('breakout_room.wait_for_assign2', {
-            reason: `${perGroup}-${perGroup + 1}`,
-          })}
+      <div className="group-start-footer">
+        <Button
+          size="xs"
+          className="rounded-btn"
+          onClick={() => {
+            createGroups(type, groupNum);
+            onNext({ groupNum });
+          }}>
+          {transI18n('breakout_room.create_submit')}
+        </Button>
       </div>
-      <Button
-        size="xs"
-        className="rounded-btn"
-        onClick={() => {
-          createGroups(type, groupNum);
-          onNext({ groupNum });
-        }}>
-        {transI18n('breakout_room.create_submit')}
-      </Button>
-    </div>
+    </>
   );
 });

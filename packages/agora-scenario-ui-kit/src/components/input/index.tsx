@@ -17,6 +17,9 @@ export interface InputProps extends BaseProps {
   rule?: RegExp;
   errorMsg?: string;
   errorMsgPositionLeft?: number;
+  min?: number;
+  max?: number;
+  width?: number;
   maxLength?: string | number;
   maxNumber?: number; // 配合type=number使用，最大值限制
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -37,6 +40,7 @@ export const Input: FC<InputProps> = ({
   errorMsgPositionLeft = 0,
   maxLength = 'infinite', // 调研后，数字字符串生效，非法字符串则无限制
   maxNumber = 0,
+  width,
   onFocus = () => {},
   onBlur = () => {},
   onChange = () => {},
@@ -86,7 +90,7 @@ export const Input: FC<InputProps> = ({
     ['input-wrapper-error']: showErrMsg,
   };
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div style={{ position: 'relative', width: width ? width : '100%', height: '100%' }}>
       <span className={classnames(classNamesRule)}>
         {prefix ? (
           <span className="input-prefix" style={{ width: inputPrefixWidth }}>

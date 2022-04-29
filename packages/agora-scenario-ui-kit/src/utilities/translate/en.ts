@@ -615,6 +615,10 @@ export const en = {
     confirm_delete_group_title: 'Delete Group',
     confirm_delete_group_content: 'Are you sure you want to delete the {reason} group ?',
     send_to_all_placeholder: 'This is a general message, 300 words Max',
+    create_group: 'Create Breakout Room',
+    group_number: 'Breakout Rooms',
+    group_type: 'Attendees',
+    group_tips: 'Copy classroom content to group',
   },
   /** Breakout Room  */
   fcr_group_help_title: 'Ask for help',

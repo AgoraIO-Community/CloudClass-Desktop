@@ -30,6 +30,7 @@
 
 /** 40px for header, 20px for bottom padding */
 .breakout-room .content-area {
+  position: relative;
   height: calc(100% - 40px + 20px);
 }
 

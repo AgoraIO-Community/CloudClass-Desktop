@@ -4,11 +4,12 @@ import { cloneDeep } from 'lodash';
 import { GroupState } from 'agora-edu-core';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { transI18n } from '@/infra/stores/common/i18n';
-import { Button, MultiRootTree, TreeNode, TreeModel } from '~ui-kit';
+import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox } from '~ui-kit';
 import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
+import './index.css'
 
 type LinkButtonProps = {
   text: string;
@@ -293,7 +294,7 @@ type Props = {
 export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { groups } = groupUIStore;
+  const { groups, isCopyContent, setCopyContent } = groupUIStore;
 
   const panelState = usePanelState();
   return (
@@ -307,6 +308,15 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
             showArrowAlways
           />
         </PanelStateContext.Provider>
+      </div>
+      <div className='flex justify-start items-center group-tips-wrap'>
+        <CheckBox 
+          checked={isCopyContent}
+          onChange={(e: any) => {
+            setCopyContent(e.target.checked);
+          }}
+        /> 
+        <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
       </div>
       <Footer onNext={onNext} />
     </div>

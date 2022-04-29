@@ -602,6 +602,10 @@ export const zh = {
     confirm_delete_group_title: '删除小组',
     confirm_delete_group_content: '确定要删除小组 {reason} 吗？',
     send_to_all_placeholder: '这是一条全体消息，最多300字',
+    create_group: '创建讨论组',
+    group_number: '讨论组个数',
+    group_type: '分配方式',
+    group_tips: '将教室内容复制到讨论组',
   },
   /** Breakout Room  */
   fcr_group_help_title: '请求帮助',

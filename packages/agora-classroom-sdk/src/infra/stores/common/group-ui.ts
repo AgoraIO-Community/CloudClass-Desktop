@@ -10,7 +10,7 @@ import {
 } from 'agora-edu-core';
 import { AGError, AGRtcConnectionType, bound, Log, RtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
-import { action, computed, observable, runInAction, when } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import uuidv4 from 'uuid';
@@ -22,9 +22,12 @@ export enum GroupMethod {
 
 @Log.attach({ proxyMethods: false })
 export class GroupUIStore extends EduUIStoreBase {
+  private _disposers: IReactionDisposer[] = [];
   private _groupSeq = 0;
   @observable
   joiningSubRoom = false;
+  @observable
+  isCopyContent = true;
 
   @observable
   localGroups: Map<string, GroupDetail> = new Map();
@@ -442,7 +445,8 @@ export class GroupUIStore extends EduUIStoreBase {
       });
       this.classroomStore.groupStore
         .startGroup(groupDetails)
-        .then(() => {
+        .then(async () => {
+          await this.classroomStore.boardStore.exportWindowManagerAttributes()
           runInAction(() => {
             this.localGroups = new Map();
           });
@@ -640,6 +644,17 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   @bound
+  private async _copyRoomContent () {
+    const { localUser } = this.classroomStore.userStore;
+    const inital = localUser?.userProperties.get('widgets')?.netlessBoard.inital
+    if (inital) {
+        await this.classroomStore.boardStore.importWindowManagerAttributes()
+        const roomUuid = this.classroomStore.groupStore.currentSubRoom;
+        this.classroomStore.boardStore.copyScenes(roomUuid)
+    }
+  }
+
+  @bound
   private async _leaveSubRoom() {
     await this._waitUntilJoined();
     this.setConnectionState(true);
@@ -702,7 +717,31 @@ export class GroupUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 设置是否要复制内容到讨论组
+   * @param v 开启或关闭
+   */
+   @action.bound
+   setCopyContent(v: boolean) {
+     this.isCopyContent = v;
+   }
+
   onInstall() {
+    this._disposers.push(
+      reaction(
+        () => (
+          {
+            managerReady: this.classroomStore.boardStore.managerReady,
+            isWritable: this.classroomStore.boardStore.isWritable
+          }
+        ),
+        ({ managerReady, isWritable }) => {
+          if (managerReady && isWritable) {
+            this._copyRoomContent()
+          }
+        },
+      ),
+    );
     EduEventCenter.shared.onClassroomEvents((type, args) => {
       if (type === AgoraEduClassroomEvent.JoinSubRoom) {
         this._joinSubRoom();
@@ -765,5 +804,8 @@ export class GroupUIStore extends EduUIStoreBase {
       }
     });
   }
-  onDestroy() {}
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
 }
