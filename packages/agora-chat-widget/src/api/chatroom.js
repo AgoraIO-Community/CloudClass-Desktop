@@ -30,7 +30,7 @@ export class ChatRoomAPI {
     WebIM.conn.mr_cache = [];
 
     WebIM.conn.joinChatRoom(options).then((res) => {
-      message.success(transI18n('chat.join_room_success'));
+      // message.success(transI18n('chat.join_room_success'));
       this.getRoomInfo(options.roomId);
       if (roleType === ROLE.student.id) {
         this.muteAPI.isChatRoomWhiteUser(userUuid);
