@@ -606,9 +606,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const args = {
       webRecordConfig: {
         rootUrl: `${recordUrl}?language=${rteEngineConfig.language}`,
-        mode: RecordMode.Web,
+        videoBitrate: 3000,
       },
-      videoBitrate: 3000,
+      mode: RecordMode.Web,
       retryTimeout: recordRetryTimeout,
     };
 
