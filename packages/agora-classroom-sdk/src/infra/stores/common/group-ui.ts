@@ -444,9 +444,9 @@ export class GroupUIStore extends EduUIStoreBase {
         reject();
       });
       this.classroomStore.groupStore
-        .startGroup(groupDetails)
+        .startGroup(groupDetails, this.isCopyContent)
         .then(async () => {
-          await this.classroomStore.boardStore.exportWindowManagerAttributes();
+          await this.classroomStore.boardStore.exportWindowManagerAttributes(this.isCopyContent);
           runInAction(() => {
             this.localGroups = new Map();
           });
@@ -649,8 +649,6 @@ export class GroupUIStore extends EduUIStoreBase {
     const inital = localUser?.userProperties.get('widgets')?.netlessBoard.inital;
     if (inital) {
       await this.classroomStore.boardStore.importWindowManagerAttributes();
-      const roomUuid = this.classroomStore.groupStore.currentSubRoom;
-      this.classroomStore.boardStore.copyScenes(roomUuid!);
     }
   }
 
