@@ -22,7 +22,7 @@ export const createListener = (store) => {
       onOpened: () => {
         console.log('onOpened>>>');
         store.dispatch(statusAction(true));
-        message.success(transI18n('chat.login_success'));
+        // message.success(transI18n('chat.login_success'));
         apis.userInfoAPI.setUserInfo(new_IM_Data);
         apis.chatRoomAPI.joinRoom(new_IM_Data);
       },
