@@ -18,7 +18,6 @@ import { HomeApi } from './home-api';
 import { Helmet } from 'react-helmet';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
-const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
 export const HomeH5Page = observer(() => {
@@ -137,7 +136,6 @@ export const HomeH5Page = observer(() => {
       <H5Login
         version={EduClassroomConfig.getVersion()}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
-        publishDate={REACT_APP_PUBLISH_DATE}
         roomId={roomUuid}
         userId={userUuid}
         roomName={roomName}
