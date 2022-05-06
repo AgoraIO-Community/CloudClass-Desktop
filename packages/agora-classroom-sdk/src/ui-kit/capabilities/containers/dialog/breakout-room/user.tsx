@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useState, MouseEvent } from 'react';
-import { CheckBox } from '~ui-kit';
+import { CheckBox, Search, SvgImg, transI18n } from '~ui-kit';
 import { Panel } from './panel';
 
 type UserPanelProps = {
@@ -26,6 +26,7 @@ export const UserPanel: FC<UserPanelProps> = ({
   panelId,
 }) => {
   const [checkedUsers, setCheckedUsers] = useState(() => new Set<string>());
+  const [keyword, setKeyword] = useState('')
 
   return (
     <Panel
@@ -36,13 +37,25 @@ export const UserPanel: FC<UserPanelProps> = ({
         onClose && onClose(Array.from(checkedUsers));
       }}
       onOpen={onOpen}>
-      <div style={{ width: 300, height: 200 }}>
+      <div style={{ width: users.length ? 300 : 'auto', height: users.length ? 200 : 'auto' }}>
         <div
           className="panel-content py-2 px-2 overflow-auto flex flex-wrap justify-start"
           onClick={(e: MouseEvent) => {
             e.stopPropagation();
           }}>
-          {users.map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
+          {users.length ? (
+            <Search
+              prefix={<SvgImg type="search" />}
+              value={keyword}
+              onSearch={setKeyword}
+              inputPrefixWidth={32}
+              placeholder={transI18n('scaffold.search')}
+            />
+          ) : (<span className='user-panel-empty'>{transI18n('breakout_room.user_panel_empty')}</span>)}  
+          {users.filter(item => {
+            if (!keyword) return true
+            return item.userName.includes(keyword)
+          }).map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
             <div key={userUuid} style={{ width: '33.33%' }}>
               <CheckBox
                 style={{ width: '130%' }}

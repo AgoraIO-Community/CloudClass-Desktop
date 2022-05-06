@@ -32,6 +32,7 @@
 .breakout-room .content-area {
   position: relative;
   height: calc(100% - 40px + 20px);
+  background: #F8F9FB;
 }
 
 .breakout-room .rounded-btn,
@@ -93,3 +94,15 @@
   resize: none;
   border: none;
 }
+
+.panel-content .user-panel-empty {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #BDBDCA;
+}
+
+.panel-content .input-prefix {
+  opacity: 0.5;
+}
+
