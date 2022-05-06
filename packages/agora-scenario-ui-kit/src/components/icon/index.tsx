@@ -14,7 +14,7 @@ export interface IconProps extends BaseProps {
 }
 
 export const Icon: FC<IconProps> = ({ type, className, style, size, color, ...restProps }) => {
-  let cls = classnames(`iconfont icon-${type}`, {
+  let cls = classnames(`icon-${type}`, {
     [`${className}`]: !!className,
   });
   const iconAssets = (

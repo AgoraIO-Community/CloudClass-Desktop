@@ -1,4 +1,4 @@
-.students-hands-up .card {
+.students-hands-up .fcr-card {
   @apply block overflow-y-scroll;
 }
 
@@ -14,7 +14,7 @@
   cursor: pointer;
 }
 
-.hands-up .card {
+.hands-up .fcr-card {
   position: relative;
 }
 

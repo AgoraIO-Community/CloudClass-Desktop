@@ -106,9 +106,9 @@ export const NavigationBar = observer(() => {
       <div>
         <SignalQualityComponent />
       </div>
-      <div className="biz-header-title-wrap">
-        <div className="biz-header-title">{navigationTitle}</div>
-        <div className="biz-header-title biz-subtitle">
+      <div className="fcr-biz-header-title-wrap">
+        <div className="fcr-biz-header-title">{navigationTitle}</div>
+        <div className="fcr-biz-header-title fcr-biz-subtitle">
           <ClassStatusComponent />
         </div>
         {isBeforeClass ? (

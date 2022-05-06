@@ -23,7 +23,7 @@ td.biz-col.label.right {
   padding-left: 7px;
 }
 
-.biz-header {
+.fcr-biz-header {
   background: white;
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
@@ -31,21 +31,21 @@ td.biz-col.label.right {
   border: 1px solid #ececf1;
 }
 
-.biz-header-title-wrap {
+.fcr-biz-header-title-wrap {
   display: flex;
   align-items: center;
 }
 
-.biz-subtitle .line:first-child {
+.fcr-biz-subtitle .line:first-child {
   padding-right: 8px;
 }
 
-.biz-header-title-wrap > div {
+.fcr-biz-header-title-wrap > div {
   padding: 0 19px;
   border-color: #d2d2e2;
 }
 
-.biz-header-title {
+.fcr-biz-header-title {
   color: #191919;
   font-size: 13px;
 }

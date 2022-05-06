@@ -41,7 +41,7 @@ export const Tabs: FC<TabsProps> = ({ type, className, onEdit, centered, ...prop
       {...props}
       className={classNames(
         {
-          [`${prefixCls}-card`]: ['card', 'editable-card'].includes(type as string),
+          [`${prefixCls}-card`]: ['fcr-card', 'editable-card'].includes(type as string),
           [`${prefixCls}-editable-card`]: type === 'editable-card',
           [`${prefixCls}-centered`]: centered,
         },

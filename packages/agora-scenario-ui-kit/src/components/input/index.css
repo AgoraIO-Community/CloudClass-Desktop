@@ -1,4 +1,4 @@
-.input-wrapper {
+.fcr-input-wrapper {
   position: relative;
   display: inline-block;
   width: 100%;
@@ -17,10 +17,10 @@
   align-items: center;
 }
 
-.input-wrapper-error {
+.fcr-input-wrapper-error {
   border-color: #f04c36 !important;
 }
-.input-error-msg {
+.fcr-input-error-msg {
   position: absolute;
   color: #f04c36;
   font-size: 10px;
@@ -31,30 +31,30 @@
   text-align: center;
 }
 
-.input-wrapper:not(.input-wrapper-disabled):hover {
+.fcr-input-wrapper:not(.fcr-input-wrapper-disabled):hover {
   border-color: #357bf6;
   border-right-width: 1px !important;
   background-color: #fff;
   z-index: 1;
 }
 
-.input-wrapper-disabled {
+.fcr-input-wrapper-disabled {
   color: #7b88a0;
 }
 
-.input-wrapper-focused {
+.fcr-input-wrapper-focused {
   border-color: #357bf6;
   border-right-width: 1px !important;
   background-color: #fff;
   outline: 0;
 }
 
-.input-wrapper .input-prefix {
+.fcr-input-wrapper .fcr-input-prefix {
   margin-right: 4px;
   white-space: nowrap;
 }
 
-.input-wrapper input {
+.fcr-input-wrapper input {
   padding: 0;
   border: none;
   outline: none;
@@ -62,18 +62,14 @@
   width: 100%;
 }
 
-.input-wrapper input::-webkit-input-placeholder {
+.fcr-input-wrapper input::-webkit-input-placeholder {
   /* WebKit browsers */
   color: #7b88a0;
   font-size: 14px;
 }
 
-.input-search-wrapper {
+.fcr-input-search-wrapper {
   padding-top: 0;
   padding-bottom: 0;
   padding-right: 0;
-}
-
-.input-search + .input-suffix .btn {
-  border-radius: 0;
 }

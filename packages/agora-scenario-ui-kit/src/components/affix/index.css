@@ -1,9 +1,9 @@
-.collapse-enter {
+.fcr-affix-collapse-enter {
   opacity: 0;
   transform: scale(0.9);
 }
 
-.collapse-enter-active {
+.fcr-affix-collapse-enter-active {
   opacity: 1;
   transform: translateX(0);
   transition: opacity 300ms, transform 300ms;
