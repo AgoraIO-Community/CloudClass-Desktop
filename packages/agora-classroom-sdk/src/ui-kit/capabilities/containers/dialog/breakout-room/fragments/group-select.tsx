@@ -301,7 +301,7 @@ type Props = {
 export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { groups, isCopyContent, setCopyContent } = groupUIStore;
+  const { groupState, groups, isCopyContent, setCopyContent } = groupUIStore;
 
   const panelState = usePanelState();
   return (
@@ -316,15 +316,17 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
           />
         </PanelStateContext.Provider>
       </div>
-      <div className='flex justify-start items-center group-tips-wrap'>
-        <CheckBox
-          checked={isCopyContent}
-          onChange={(e: any) => {
-            setCopyContent(e.target.checked);
-          }}
-        />
-        <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
-      </div>
+      {groupState === GroupState.OPEN ? null : (
+        <div className='flex justify-start items-center group-tips-wrap'>
+          <CheckBox
+            checked={isCopyContent}
+            onChange={(e: any) => {
+              setCopyContent(e.target.checked);
+            }}
+          />
+          <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
+        </div>
+      )}
       <Footer onNext={onNext} />
     </div>
   );
