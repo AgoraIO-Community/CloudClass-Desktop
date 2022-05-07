@@ -743,8 +743,14 @@ export class GroupUIStore extends EduUIStoreBase {
           isWritable: this.classroomStore.boardStore.isWritable,
         }),
         ({ managerReady, isWritable }) => {
-          if (managerReady && isWritable) {
-            this._copyRoomContent();
+          // isWritable only for student
+          if (managerReady) {
+            if (
+              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(EduClassroomConfig.shared.sessionInfo.role)
+              || (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isWritable)
+            ) {
+              this._copyRoomContent();
+            }
           }
         },
       ),
