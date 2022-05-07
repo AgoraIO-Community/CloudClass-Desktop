@@ -159,6 +159,8 @@ module.exports = {
       EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
       CLASSROOM_SDK_VERSION: JSON.stringify(classroomSdkVersion),
       RTE_RUNTIME_PLATFORM: JSON.stringify(process.env.RTE_RUNTIME_PLATFORM),
+      BUILD_TIME: JSON.stringify(Date.now()),
+      BUILD_COMMIT_ID: JSON.stringify(process.env.FCR_BUILD_COMMIT_ID),
     }),
   ],
   stats: {

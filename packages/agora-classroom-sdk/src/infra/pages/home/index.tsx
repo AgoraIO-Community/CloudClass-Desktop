@@ -14,15 +14,17 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import MD5 from 'js-md5';
 import { ToastType } from '@/infra/stores/common/share-ui';
+import dayjs from 'dayjs';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
-const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
 const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
 const REACT_APP_AGORA_APP_CERTIFICATE = process.env.REACT_APP_AGORA_APP_CERTIFICATE;
 
 declare const CLASSROOM_SDK_VERSION: string;
+declare const BUILD_TIME: string;
+declare const BUILD_COMMIT_ID: string;
 
 const regionByLang = {
   zh: EduRegion.CN,
@@ -159,13 +161,17 @@ export const HomePage = observer(() => {
     tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
   }
 
+  const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
+  const commitID = BUILD_COMMIT_ID;
+
   return language !== '' ? (
     <React.Fragment>
       <MessageDialog />
       <Home
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
-        publishDate={REACT_APP_PUBLISH_DATE}
+        buildTime={buildTime}
+        commitID={commitID}
         roomId={roomUuid}
         userId={userUuid}
         roomName={roomName}

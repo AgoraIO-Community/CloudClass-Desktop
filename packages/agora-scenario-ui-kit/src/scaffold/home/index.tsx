@@ -31,7 +31,8 @@ export interface HomeProps extends HomeModule<HomeAttributes> {
   onClick: () => void | Promise<void>;
   version: string;
   SDKVersion: string;
-  publishDate: string;
+  buildTime: string;
+  commitID: string;
   loading: boolean;
   children?: React.ReactNode;
 }
@@ -46,10 +47,10 @@ export const Home: React.FC<HomeProps> = ({
   duration,
   version,
   SDKVersion,
-  publishDate,
+  buildTime,
+  commitID,
   language,
   region,
-  debug = false,
   encryptionMode,
   encryptionKey,
   loading,
@@ -114,7 +115,7 @@ export const Home: React.FC<HomeProps> = ({
   const userNameReg = /^[\u4e00-\u9fa5a-zA-Z0-9\s]{3,50}$/;
 
   return (
-    <Layout className={debug ? 'home-page debug' : 'home-page'} direction="col">
+    <Layout className="home-page" direction="col">
       <Header className="home-page-header">
         <div className="header-left">
           <div className="header-left-logo"></div>
@@ -199,8 +200,9 @@ export const Home: React.FC<HomeProps> = ({
             }}
             version={version}
             SDKVersion={SDKVersion}
-            publishDate={publishDate}
+            buildTime={buildTime}
             classroomVersion={version}
+            commitID={commitID}
           />
         </Modal>
       ) : null}
@@ -235,43 +237,6 @@ export const Home: React.FC<HomeProps> = ({
         direction="row">
         <Table className="w-5 home-bg"></Table>
         <Table className="home-form">
-          {/* <div className="form-title">{transI18n('home.form_title')}</div> */}
-          {debug ? (
-            <Row className="home-row-item">
-              <Col>
-                <Input
-                  inputPrefixWidth={language === 'en' ? 70 : 75}
-                  prefix={<span title="RoomId">RoomId</span>}
-                  id="roomId"
-                  type="text"
-                  className="block w-full"
-                  value={roomId}
-                  onChange={(evt) => onChangeRoomId(evt.currentTarget.value)}
-                  placeholder={transI18n('home.roomId_placeholder')}
-                />
-              </Col>
-            </Row>
-          ) : (
-            <></>
-          )}
-          {debug ? (
-            <Row className="home-row-item">
-              <Col>
-                <Input
-                  inputPrefixWidth={language === 'en' ? 70 : 75}
-                  prefix={<span title="UserId">UserId</span>}
-                  id="userId"
-                  type="text"
-                  className="block w-full"
-                  value={userId}
-                  onChange={(evt) => onChangeUserId(evt.currentTarget.value)}
-                  placeholder={transI18n('home.userId_placeholder')}
-                />
-              </Col>
-            </Row>
-          ) : (
-            <></>
-          )}
           <Row className="home-row-item can-error-item">
             <Col>
               <Input
@@ -393,43 +358,6 @@ export const Home: React.FC<HomeProps> = ({
               />
             </Col>
           </Row> */}
-          {debug ? (
-            <Row className="home-row-item">
-              <Col>
-                <Select
-                  prefix={
-                    <span title={transI18n('home.language')}>{transI18n('home.language')}</span>
-                  }
-                  id="language"
-                  value={language}
-                  onChange={(value) => {
-                    onChangeLanguage(value);
-                  }}
-                  placeholder={transI18n('home.language_placeholder')}
-                  options={languageOptions}></Select>
-              </Col>
-            </Row>
-          ) : (
-            <></>
-          )}
-          {debug ? (
-            <Row className="home-row-item">
-              <Col>
-                <Select
-                  prefix={<span title={transI18n('home.region')}>{transI18n('home.region')}</span>}
-                  id="region"
-                  value={region}
-                  onChange={(value) => {
-                    onChangeRegion(value);
-                  }}
-                  placeholder={transI18n('home.region_placeholder')}
-                  options={regionOptions}></Select>
-              </Col>
-            </Row>
-          ) : (
-            <></>
-          )}
-
           <Row className="home-row-item">
             <Col>
               <Input
@@ -470,15 +398,7 @@ export const Home: React.FC<HomeProps> = ({
             }>
             {transI18n('home.enter_classroom')}
           </Button>
-          <Row className="text-center home-align-center">
-            <div
-              onClick={() => {
-                return;
-                onChangeDebug(!debug);
-              }}>
-              Version: Flexible Classroom_{version}
-            </div>
-          </Row>
+          <Row className="text-center home-align-center">Version: Flexible Classroom_{version}</Row>
         </Table>
       </Layout>
       {restProps.children}
