@@ -102,7 +102,7 @@ export const NavigationBar = observer(() => {
   const { navigationTitle, actions, isBeforeClass, startClass } = navigationBarUIStore;
 
   return (
-    <Header className="biz-header">
+    <Header className="fcr-biz-header">
       <div>
         <SignalQualityComponent />
       </div>
