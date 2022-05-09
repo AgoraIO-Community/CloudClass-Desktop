@@ -652,6 +652,7 @@ export const en = {
   fcr_group_back_exit: 'Exit',
   fcr_group_back_to_main_room: 'Return to main session',
   fcr_group_exit_room: 'Leave Room',
+  fcr_group_student_not_in_room: "The student didn't enter the group",
   /** Breakout Room  */
   begin_class: 'Begin class',
   edu_error: {

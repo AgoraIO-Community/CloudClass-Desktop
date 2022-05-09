@@ -20,6 +20,8 @@ export enum GroupMethod {
   MANUAL,
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 @Log.attach({ proxyMethods: false })
 export class GroupUIStore extends EduUIStoreBase {
   private _disposers: IReactionDisposer[] = [];
@@ -50,13 +52,12 @@ export class GroupUIStore extends EduUIStoreBase {
       const students = new Map<string, { id: string; text: string; notJoined?: boolean }>();
 
       group.users.forEach(({ userUuid, notJoined }) => {
-        if (studentList.has(userUuid)) {
-          students.set(userUuid, {
-            id: userUuid,
-            text: users.get(userUuid)?.userName || 'unknown',
-            notJoined,
-          });
-        }
+        const unknownName = transI18n('fcr_group_student_not_in_room');
+        students.set(userUuid, {
+          id: userUuid,
+          text: users.get(userUuid)?.userName || unknownName,
+          notJoined,
+        });
       });
 
       const tree = {
@@ -592,7 +593,13 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private async _waitUntilConnected() {
-    await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
+    if (
+      [RtcState.Connecting, RtcState.Reconnecting].includes(
+        this.classroomStore.connectionStore.rtcState,
+      )
+    ) {
+      await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
+    }
   }
 
   private async _waitUntilJoined() {
@@ -637,10 +644,18 @@ export class GroupUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.leaveRTC();
 
       await this._waitUntilLeft();
+      while (true) {
+        try {
+          await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
-      await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
-
-      await this.classroomStore.connectionStore.joinRTC();
+          await this.classroomStore.connectionStore.joinRTC();
+        } catch (e) {
+          this.logger.error('change sub room err', e);
+          await sleep(1000);
+          continue;
+        }
+        break;
+      }
 
       joinSuccess = true;
     } catch (e) {
@@ -711,9 +726,18 @@ export class GroupUIStore extends EduUIStoreBase {
 
       await this._waitUntilLeft();
 
-      await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+      while (true) {
+        try {
+          await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
-      await this.classroomStore.connectionStore.joinRTC();
+          await this.classroomStore.connectionStore.joinRTC();
+        } catch (e) {
+          this.logger.error('join sub room err', e);
+          await sleep(1000);
+          continue;
+        }
+        break;
+      }
 
       joinSuccess = true;
     } catch (e) {
