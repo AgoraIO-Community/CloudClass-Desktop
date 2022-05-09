@@ -637,6 +637,7 @@ export const zh = {
   fcr_group_back_exit: '退出',
   fcr_group_back_to_main_room: '回到大房间',
   fcr_group_exit_room: '离开教室',
+  fcr_group_student_not_in_room: '学生未进入小组',
   /** Breakout Room  */
   begin_class: '开始上课',
   edu_error: {
