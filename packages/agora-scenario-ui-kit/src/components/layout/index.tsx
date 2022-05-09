@@ -15,7 +15,7 @@ export const Layout: FC<LayoutProps> = ({
   ...restProps
 }) => {
   const cls = classnames({
-    [`layout layout-${direction}`]: 1,
+    [`fcr-layout fcr-layout-${direction}`]: 1,
     [`${className}`]: !!className,
   });
   return (
@@ -27,7 +27,7 @@ export const Layout: FC<LayoutProps> = ({
 
 export const Header: FC<BaseProps> = ({ className, children, ...restProps }) => {
   const cls = classnames({
-    [`layout-header`]: 1,
+    [`fcr-layout-header`]: 1,
     [`${className}`]: !!className,
   });
 
@@ -40,7 +40,7 @@ export const Header: FC<BaseProps> = ({ className, children, ...restProps }) => 
 
 export const Aside: FC<BaseProps> = ({ className, children, ...restProps }) => {
   const cls = classnames({
-    [`layout-aside`]: 1,
+    [`fcr-layout-aside`]: 1,
     [`${className}`]: !!className,
   });
   return (
@@ -52,7 +52,7 @@ export const Aside: FC<BaseProps> = ({ className, children, ...restProps }) => {
 
 export const Content: FC<BaseProps> = ({ className, children, ...restProps }) => {
   const cls = classnames({
-    [`layout-content`]: 1,
+    [`fcr-layout-content`]: 1,
     [`${className}`]: !!className,
   });
   return (

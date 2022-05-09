@@ -269,7 +269,7 @@ body,
   fill: #fff;
 }
 
-.hands-up-manager > .card:hover,
+.hands-up-manager > .fcr-card:hover,
 .hands-up-sender:hover,
 .roster-btn:hover,
 .chat-panel:hover .show-chat-icon,
@@ -277,7 +277,7 @@ body,
   background-color: #0073ff;
 }
 
-.hands-up-manager > .card:hover path,
+.hands-up-manager > .fcr-card:hover path,
 .hands-up-sender:hover path,
 .roster-btn:hover path,
 .chat-panel:hover path {

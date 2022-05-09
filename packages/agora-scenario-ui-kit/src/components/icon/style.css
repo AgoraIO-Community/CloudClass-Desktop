@@ -7,7 +7,7 @@
   max-width: 29px;
 }
 
-.biz-header .icon-box-hover:hover::before {
+.fcr-biz-header .icon-box-hover:hover::before {
   height: 28px !important;
   width: 28px !important;
   display: flex;

@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { Progress } from '~components/progress';
-import { Icon } from '~components/icon';
 import { transI18n } from '../i18n';
 import './index.css';
 
@@ -59,7 +58,7 @@ export const Loading: FC<LoadingProps> = ({
   ...restProps
 }) => {
   const cls = classnames({
-    [`loading`]: 1,
+    [`fcr-loading`]: 1,
     [`${className}`]: !!className,
   });
   return (
@@ -75,43 +74,43 @@ export const Loading: FC<LoadingProps> = ({
       ) : (
         ''
       )}
-      {loadingText ? <span className="loading-text">{loadingText}</span> : ''}
+      {loadingText ? <span className="fcr-loading-text">{loadingText}</span> : ''}
       {hasProgress ? (
-        <div className="loading-progress">
+        <div className="fcr-loading-progress">
           <Progress width={160} type="download" progress={currentProgress} />
-          <span className="loading-progress-number">{currentProgress}%</span>
+          <span className="fcr-loading-progress-number">{currentProgress}%</span>
         </div>
       ) : (
         ''
       )}
       {uploadItemList && uploadItemList.length ? (
-        <div className="loading-upload-list">
+        <div className="fcr-loading-upload-list">
           {uploadItemList.map((item, index) => (
-            <div className="loading-upload-item" key={index}>
+            <div className="fcr-loading-upload-item" key={index}>
               <div>
                 <SvgImg type={item.iconType as any} style={{ color: '#F6B081' }} />
               </div>
-              <div className="loading-file-name" title={item.fileName}>
+              <div className="fcr-loading-file-name" title={item.fileName}>
                 {item.fileName}
               </div>
-              <div className="loading-file-size">{item.fileSize}</div>
+              <div className="fcr-loading-file-size">{item.fileSize}</div>
               <div>
                 {item.status === UploadItemStatus.Success && (
-                  <div className="loading-progress">
+                  <div className="fcr-loading-progress">
                     <Progress
                       width={60}
                       type="download"
                       progress={item.currentProgress as number}
                     />
                     {/* <span className="upload-pending-text">{item.currentProgress}%</span> */}
-                    <span className="upload-success-text">
+                    <span className="fcr-upload-success-text">
                       {transI18n('whiteboard.upload-success')}
                     </span>
                   </div>
                 )}
                 {(item.status === UploadItemStatus.Pending ||
                   item.status === UploadItemStatus.Failed) && (
-                  <div className="loading-progress">
+                  <div className="fcr-loading-progress">
                     {item.status === UploadItemStatus.Pending && (
                       <>
                         <Progress
@@ -119,11 +118,11 @@ export const Loading: FC<LoadingProps> = ({
                           type="download"
                           progress={item.currentProgress as number}
                         />
-                        <span className="upload-pending-text">{item.currentProgress}%</span>
+                        <span className="fcr-upload-pending-text">{item.currentProgress}%</span>
                       </>
                     )}
                     {item.status === UploadItemStatus.Failed && (
-                      <span className="upload-error-text">
+                      <span className="fcr-upload-error-text">
                         {transI18n('whiteboard.upload-error')}
                       </span>
                     )}
@@ -175,7 +174,7 @@ export const Loading: FC<LoadingProps> = ({
         ''
       )}
       {footer && footer.length ? (
-        <div className="loading-btn-line">
+        <div className="fcr-loading-btn-line">
           {footer.map((item: any, index) => (
             <span key={index} style={{ margin: '0px 5px' }}>
               {React.cloneElement(item, {})}
@@ -190,5 +189,5 @@ export const Loading: FC<LoadingProps> = ({
 };
 
 export const CircleLoading: FC<CircleLoadingProps> = ({ width = '60', height = '60' }) => {
-  return <img src={circleLoadingGif} width={width} height={height} style={{}} alt="loading gif" />;
+  return <img src={circleLoadingGif} width={width} height={height} alt="loading gif" />;
 };

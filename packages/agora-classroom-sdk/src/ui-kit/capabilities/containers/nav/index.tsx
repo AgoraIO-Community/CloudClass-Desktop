@@ -102,13 +102,13 @@ export const NavigationBar = observer(() => {
   const { navigationTitle, actions, isBeforeClass, startClass } = navigationBarUIStore;
 
   return (
-    <Header className="biz-header">
+    <Header className="fcr-biz-header">
       <div>
         <SignalQualityComponent />
       </div>
-      <div className="biz-header-title-wrap">
-        <div className="biz-header-title">{navigationTitle}</div>
-        <div className="biz-header-title biz-subtitle">
+      <div className="fcr-biz-header-title-wrap">
+        <div className="fcr-biz-header-title">{navigationTitle}</div>
+        <div className="fcr-biz-header-title fcr-biz-subtitle">
           <ClassStatusComponent />
         </div>
         {isBeforeClass ? (

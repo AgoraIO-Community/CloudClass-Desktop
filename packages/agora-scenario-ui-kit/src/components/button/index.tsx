@@ -1,4 +1,4 @@
-import React, { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
+import { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import './index.css';
@@ -7,7 +7,7 @@ type ButtonType = 'primary' | 'secondary' | 'ghost' | 'danger';
 
 function createRipple(container: HTMLDivElement, y: number, x: number, type: ButtonType) {
   const circleElement = document.createElement('div');
-  circleElement.className = 'ripple-circle';
+  circleElement.className = 'fcr-btn-ripple-circle';
   circleElement.style.top = y + 'px';
   circleElement.style.left = x + 'px';
   circleElement.style.background = type === 'primary' ? 'rgba(38, 99, 208, 1)' : '#fff';
@@ -62,7 +62,7 @@ export const Button: FC<ButtonProps> = ({
   }, []);
   return (
     <button ref={buttonRef} className={cls} disabled={disabled} {...restProps}>
-      {animate ? <div className="ripple" ref={rippleRef}></div> : null}
+      {animate ? <div className="fcr-btn-ripple" ref={rippleRef}></div> : null}
       <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
     </button>
   );
