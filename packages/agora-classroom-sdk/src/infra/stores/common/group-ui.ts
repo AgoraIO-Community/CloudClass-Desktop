@@ -672,7 +672,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @bound
   private async _copyRoomContent() {
     const { localUser } = this.classroomStore.userStore;
-    const initial = localUser?.userProperties.get('widgets')?.netlessBoard.initial;
+    const initial = localUser?.userProperties.get('widgets')?.netlessBoard?.initial;
     if (initial) {
       await this.classroomStore.boardStore.importWindowManagerAttributes();
     }
@@ -770,8 +770,10 @@ export class GroupUIStore extends EduUIStoreBase {
           // isWritable only for student
           if (managerReady) {
             if (
-              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(EduClassroomConfig.shared.sessionInfo.role)
-              || (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isWritable)
+              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+                EduClassroomConfig.shared.sessionInfo.role,
+              ) ||
+              (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isWritable)
             ) {
               this._copyRoomContent();
             }
