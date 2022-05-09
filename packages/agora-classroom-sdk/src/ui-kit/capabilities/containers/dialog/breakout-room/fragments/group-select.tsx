@@ -266,9 +266,11 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
             renameGroupName(node.id, text);
           }}
         />
-        <span className='tree-node-tips'>{childrenLength ? transI18n('breakout_room.group_current_has_students', {
-          reason: `${childrenLength}`,
-        }) : transI18n('breakout_room.group_current_empty')}</span>
+        {editing ? null : (
+          <span className='tree-node-tips'>{childrenLength ? transI18n('breakout_room.group_current_has_students', {
+            reason: `${childrenLength}`,
+          }) : transI18n('breakout_room.group_current_empty')}</span>
+        )}
       </>
     ) : (
       node.text

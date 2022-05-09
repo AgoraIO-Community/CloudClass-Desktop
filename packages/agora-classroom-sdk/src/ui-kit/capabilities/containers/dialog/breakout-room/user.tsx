@@ -25,6 +25,7 @@ export const UserPanel: FC<UserPanelProps> = ({
   groupUuid,
   panelId,
 }) => {
+  
   const [checkedUsers, setCheckedUsers] = useState(() => new Set<string>());
   const [keyword, setKeyword] = useState('')
 
@@ -37,13 +38,9 @@ export const UserPanel: FC<UserPanelProps> = ({
         onClose && onClose(Array.from(checkedUsers));
       }}
       onOpen={onOpen}>
-      <div style={{ width: users.length ? 300 : 'auto', height: users.length ? 200 : 'auto' }}>
-        <div
-          className="panel-content py-2 px-2 overflow-auto flex flex-wrap justify-start"
-          onClick={(e: MouseEvent) => {
-            e.stopPropagation();
-          }}>
-          {users.length ? (
+      <div style={{ width: users.length ? 214 : 122, height: users.length ? 200 : 50, position: 'relative' }}>
+        {users.length ? (
+          <div className="group-search-wrap">
             <Search
               prefix={<SvgImg type="search" />}
               value={keyword}
@@ -51,40 +48,51 @@ export const UserPanel: FC<UserPanelProps> = ({
               inputPrefixWidth={32}
               placeholder={transI18n('scaffold.search')}
             />
-          ) : (<span className='user-panel-empty'>{transI18n('breakout_room.user_panel_empty')}</span>)}  
-          {users.filter(item => {
-            if (!keyword) return true
-            return item.userName.includes(keyword)
-          }).map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
-            <div key={userUuid} style={{ width: '33.33%' }}>
-              <CheckBox
-                style={{ width: '130%' }}
-                gap={2}
-                text={userName}
-                value={userUuid}
-                onChange={() => {
-                  const newCheckedUsers = new Set(checkedUsers);
-                  let isFull = false;
-                  if (newCheckedUsers.has(userUuid)) {
-                    newCheckedUsers.delete(userUuid);
-                  } else {
-                    newCheckedUsers.size < limitCount
-                      ? newCheckedUsers.add(userUuid)
-                      : (isFull = true);
+          </div>
+        ) : (<div className='user-panel-empty'>{transI18n('breakout_room.user_panel_empty')}</div>)}
+        {users.length ? (
+          <div
+            className="panel-content py-2 px-2 overflow-auto flex flex-wrap justify-start"
+            style={{
+              height: 'calc(100% - 20px)'
+            }}
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+            }}>
+            {users.filter(item => {
+              if (!keyword) return true
+              return item.userName.includes(keyword)
+            }).map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
+              <div key={userUuid} style={{ width: '50%' }}>
+                <CheckBox
+                  style={{ width: '130%' }}
+                  gap={2}
+                  text={userName}
+                  value={userUuid}
+                  onChange={() => {
+                    const newCheckedUsers = new Set(checkedUsers);
+                    let isFull = false;
+                    if (newCheckedUsers.has(userUuid)) {
+                      newCheckedUsers.delete(userUuid);
+                    } else {
+                      newCheckedUsers.size < limitCount
+                        ? newCheckedUsers.add(userUuid)
+                        : (isFull = true);
+                    }
+                    setCheckedUsers(newCheckedUsers);
+                    onChange && onChange(Array.from(newCheckedUsers));
+                    isFull && onError && onError('FULL');
+                  }}
+                  disabled={userGroupUuid ? userGroupUuid !== groupUuid : false}
+                  checked={
+                    checkedUsers.has(userUuid) ||
+                    (userGroupUuid ? userGroupUuid !== groupUuid : false)
                   }
-                  setCheckedUsers(newCheckedUsers);
-                  onChange && onChange(Array.from(newCheckedUsers));
-                  isFull && onError && onError('FULL');
-                }}
-                disabled={userGroupUuid ? userGroupUuid !== groupUuid : false}
-                checked={
-                  checkedUsers.has(userUuid) ||
-                  (userGroupUuid ? userGroupUuid !== groupUuid : false)
-                }
-              />
-            </div>
-          ))}
-        </div>
+                />
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </Panel>
   );

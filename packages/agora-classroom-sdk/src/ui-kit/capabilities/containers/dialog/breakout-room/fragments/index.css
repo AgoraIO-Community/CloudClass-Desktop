@@ -76,3 +76,8 @@
     color: #BDBDCA;
     margin-left: 10px;
 }
+
+.group-select-footer .fcr-btn-danger:hover{
+    background: #F04C36;
+    color: #fff;
+}

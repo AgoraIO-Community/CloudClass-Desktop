@@ -95,14 +95,36 @@
   border: none;
 }
 
-.panel-content .user-panel-empty {
+.breakout-room-group-panel .user-panel-empty {
+  position: absolute;
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #BDBDCA;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  height: 17px;
 }
 
-.panel-content .input-prefix {
+.panel-content {
+  scrollbar-width: none;
+  margin-left: 10px;
+}
+
+.panel-content::-webkit-scrollbar {
+  width: 0;
+}
+
+.group-search-wrap {
+  margin-top: 15px;
+  height: 22px;
+  padding: 0 17px;
+}
+
+.group-search-wrap .input-prefix {
   opacity: 0.5;
 }
-
