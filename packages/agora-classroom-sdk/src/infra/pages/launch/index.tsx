@@ -39,7 +39,7 @@ export const LaunchPage = observer(() => {
 
       const recordUrl = `https://solutions-apaas.agora.io/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
 
-      await AgoraEduSDK.launch(dom, {
+      AgoraEduSDK.launch(dom, {
         ...launchOption,
         // TODO:  Here you need to pass in the address of the recording page posted by the developer himself
         recordUrl,

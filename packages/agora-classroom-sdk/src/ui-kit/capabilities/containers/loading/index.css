@@ -10,3 +10,8 @@
   left: 0;
   top: 0;
 }
+.page-loading-text {
+  position: absolute;
+  bottom: -50px;
+  white-space: nowrap;
+}

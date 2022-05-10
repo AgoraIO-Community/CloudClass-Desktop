@@ -37,6 +37,11 @@
     ]
   },
   "build": {
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/agora-rdc-core/**/*",
+      "node_modules/agora-electron-sdk/**/*"
+    ],
     "extraMetadata": {
       "main": "build/index.js"
     },
@@ -98,16 +103,17 @@
     }
   },
   "scripts": {
-    "electron": "cross-env NODE_ENV=development RTE_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npm run electron:client\"",
-    "electron:client": "cross-env electron ./app/",
-    "electron:copy:electron": "cpx ./app/**/*.js ./build",
+    "electron": "cross-env NODE_ENV=development RTE_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron ./app/\"",
+    "electron:client": "cross-env NODE_ENV=development ELECTRON_START_URL=http://localhost:3000 electron ./app/",
+    "electron:copy:electron:mac": "cpx './app/**/*.js' ./build",
+    "electron:copy:electron:win": "cpx ./app/**/*.js ./build",
     "dev": "cross-env NODE_OPTIONS=--max_old_space_size=8192 webpack serve --config ./webpack/webpack.dev.js",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 webpack --config ./webpack/webpack.prod.js",
     "build:types": "tsc -p tsconfig.json",
     "build:docs": "npx typedoc",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "pack:mac": "yarn electron:copy:electron && electron-builder --mac",
-    "pack:win": "yarn electron:copy:electron && electron-builder --win",
+    "pack:mac": "yarn electron:copy:electron:mac && electron-builder --mac",
+    "pack:win": "yarn electron:copy:electron:win && electron-builder --win",
     "pack:npm": "run-s bundle:npm build:types",
     "bundle:npm": "cross-env NODE_OPTIONS=--max_old_space_size=8192 webpack --config ./webpack/webpack.pack.js"
   },
@@ -170,7 +176,6 @@
   },
   "dependencies": {
     "adm-zip": "0.4.14",
-    "agora-electron-sdk": "3.5.1-build.1116",
     "@vitejs/plugin-react-refresh": "1.3.1",
     "@zip.js/zip.js": "2.2.22",
     "agora-access-token": "2.0.4",
@@ -249,6 +254,9 @@
     "buffer": "6.0.3",
     "matchmedia-polyfill": "0.3.2",
     "agora-edu-core": "2.5.0",
-    "agora-rte-sdk": "2.5.0"
+    "agora-rte-sdk": "2.5.0",
+    "react-use-measure": "2.1.1",
+    "@use-gesture/react": "10.2.11",
+    "react-spring": "9.4.4"
   }
 }

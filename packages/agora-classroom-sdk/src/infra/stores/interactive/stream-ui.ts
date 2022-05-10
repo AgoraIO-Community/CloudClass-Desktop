@@ -1,16 +1,17 @@
+import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 import {
   AGEduErrorCode,
   EduClassroomConfig,
   EduErrorCenter,
   EduRoleTypeEnum,
 } from 'agora-edu-core';
-import { AgoraRteVideoSourceType, Log } from 'agora-rte-sdk';
+import { AGError, AgoraRteVideoSourceType, Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
+import { transI18n } from '../common/i18n';
 import { StreamUIStore } from '../common/stream';
 import { EduStreamUI } from '../common/stream/struct';
 import { EduStreamTool, EduStreamToolCategory } from '../common/stream/tool';
-
 @Log.attach({ proxyMethods: false })
 export class InteractiveRoomStreamUIStore extends StreamUIStore {
   // 1 teacher + 6 students
@@ -41,7 +42,6 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       this.carouselPosition,
       this.carouselPosition + this.carouselStudentShowCount,
     );
-
     const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
 
     if (!isInSubRoom) {
@@ -53,18 +53,16 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     for (const student of carouselStudentList) {
       const streamUuids =
         this.classroomStore.streamStore.streamByUserUuid.get(student.userUuid) || new Set();
-
       for (const streamUuid of streamUuids) {
         const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
 
-        if (stream) {
+        if (stream && stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare) {
           const uiStream = new EduStreamUI(stream);
 
           streams.push(uiStream);
         }
       }
     }
-
     return streams;
   }
 
@@ -134,16 +132,57 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     return assistantCameraStream;
   }
 
+  /**
+   * 所有人离开组件区域
+   */
+  localOffAllStreamWindow = computedFn((): EduStreamTool => {
+    return new EduStreamTool(
+      EduStreamToolCategory.stream_window_off,
+      'stream-window-off',
+      transI18n('Camera Pos Reset'),
+      {
+        //host can control
+        interactable: true,
+        hoverIconType: 'stream-window-off',
+        onClick: async () => {
+          try {
+            EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.offStreamWindow); // stream window off event
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+    );
+  });
+
   @computed get localStreamTools(): EduStreamTool[] {
     const { sessionInfo } = EduClassroomConfig.shared;
-    let tools: EduStreamTool[] = [];
-    tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
+    const tools: EduStreamTool[] = [];
+    // 摄像头和麦克风开关已移入 nav
+
+    // if (sessionInfo.role !== EduRoleTypeEnum.teacher) {
+    //   tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
+    // }
 
     if (sessionInfo.role === EduRoleTypeEnum.teacher) {
       tools.push(this.localPodiumTool());
     }
+    // 如果当前为老师 并且 讲台存在的话显示移除图标
+    if (sessionInfo.role === EduRoleTypeEnum.teacher && this.stageVisible) {
+      tools.unshift(this.localOffAllStreamWindow());
+    }
 
     return tools;
+  }
+
+  /**
+   * 讲台区域开关
+   */
+  @computed
+  get stageVisible() {
+    return typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined'
+      ? this.classroomStore.roomStore.flexProps.stage
+      : true;
   }
 
   remoteStreamTools = computedFn((stream: EduStreamUI): EduStreamTool[] => {

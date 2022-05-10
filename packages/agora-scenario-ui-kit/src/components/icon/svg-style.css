@@ -212,3 +212,23 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+.icon-stream-window-off {
+  background-image: url('./assets/svg/stream-window-off.svg');
+  background-size: 100%;
+}
+.icon-ghost-camera-on {
+  background-image: url('./assets/svg/ghost-camera-on.svg');
+  background-size: 100%;
+}
+.icon-ghost-camera-off {
+  background-image: url('./assets/svg/ghost-camera-off.svg');
+  background-size: 100%;
+}
+.icon-ghost-mic-on {
+  background-image: url('./assets/svg/ghost-mic-on.svg');
+  background-size: 100%;
+}
+.icon-ghost-mic-off {
+  background-image: url('./assets/svg/ghost-mic-off.svg');
+  background-size: 100%;
+}

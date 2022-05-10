@@ -66,6 +66,9 @@
   background-color: #f9f9fc;
   border-radius: 4px;
 }
+.video-player-tools-popover.popover-placement-bottom {
+  padding-top: 18px;
+}
 
 .stream-player-enter {
   width: 0;

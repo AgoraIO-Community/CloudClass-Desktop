@@ -4,7 +4,7 @@ import { range } from 'lodash';
 import { observer } from 'mobx-react';
 import { useMemo, useState, FC } from 'react';
 import { Button, RadioGroup, transI18n, Input } from '~ui-kit';
-import './index.css'
+import './index.css';
 
 type Props = {
   onCancel: () => void;
@@ -24,19 +24,19 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
 
   return (
     <>
-      <div className='group-start-content'>
-        <div className='start-main-title'>{transI18n('breakout_room.create_group')}</div>
-        <div className='start-sub-title'>{transI18n('breakout_room.group_number')}</div>
+      <div className="group-start-content">
+        <div className="start-main-title">{transI18n('breakout_room.create_group')}</div>
+        <div className="start-sub-title">{transI18n('breakout_room.group_number')}</div>
         <Input
           type="number"
           value={groupNum}
           onChange={(e) => {
-            let num = Number(e.target.value)
+            let num = Number(e.target.value);
             if (num > 32) {
-              num = 32
+              num = 32;
             }
             if (num <= 1) {
-              num = 1
+              num = 1;
             }
             setGroupNum(num);
           }}
@@ -44,8 +44,8 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
           max={32}
           width={150}
         />
-        <div className='start-sub-title'>{transI18n('breakout_room.group_type')}</div>
-        <div className='flex justify-start'>
+        <div className="start-sub-title">{transI18n('breakout_room.group_type')}</div>
+        <div className="flex justify-start">
           <RadioGroup
             gap={3}
             direction="vertical"
@@ -71,13 +71,23 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
         </div>
       </div>
       <div className="group-start-footer">
-      <Button
+        <Button
           type="secondary"
           size="xs"
           className="rounded-btn"
-          style={{marginRight: 15}}
+          style={{ marginRight: 15 }}
           onClick={() => {
-            onCancel()
+            onCancel();
+          }}>
+          {transI18n('breakout_room.cancel_submit')}
+        </Button>
+        <Button
+          type="secondary"
+          size="xs"
+          className="rounded-btn"
+          style={{ marginRight: 15 }}
+          onClick={() => {
+            onCancel();
           }}>
           {transI18n('breakout_room.cancel_submit')}
         </Button>

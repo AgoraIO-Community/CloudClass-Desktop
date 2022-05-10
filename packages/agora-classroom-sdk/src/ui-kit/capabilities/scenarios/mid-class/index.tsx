@@ -30,10 +30,12 @@ export const MidClassScenario = observer(() => {
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
             <NavigationBarContainer />
-            <RoomMidStreamsContainer />
-            <BigWidgetWindowContainer>
-              {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
-            </BigWidgetWindowContainer>
+            <div className="flex flex-1 flex-col justify-center items-center">
+              <RoomMidStreamsContainer />
+              <BigWidgetWindowContainer>
+                {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
+              </BigWidgetWindowContainer>
+            </div>
             <Aside className="aisde-fixed">
               <CollectorContainer />
               <HandsUpContainer />

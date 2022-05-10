@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
-import './index.css'
+import './index.css';
 
 type LinkButtonProps = {
   text: string;
@@ -236,11 +236,21 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
   };
 
   const renameBtn = (
-    <LinkButton className="rename-btn" key="rename" text={transI18n('breakout_room.rename')} onClick={handleRename} />
+    <LinkButton
+      className="rename-btn"
+      key="rename"
+      text={transI18n('breakout_room.rename')}
+      onClick={handleRename}
+    />
   );
 
   const removeBtn = (
-    <LinkButton className="remove-btn" key="remove" text={transI18n('breakout_room.remove')} onClick={handleRemove} />
+    <LinkButton
+      className="remove-btn"
+      key="remove"
+      text={transI18n('breakout_room.remove')}
+      onClick={handleRemove}
+    />
   );
 
   const tialNode =
@@ -252,7 +262,7 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
       <div className="py-1">&nbsp;</div>
     );
 
-  const childrenLength = node?.children?.length
+  const childrenLength = node?.children?.length;
 
   let content =
     level === 0 ? (
@@ -267,9 +277,13 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
           }}
         />
         {editing ? null : (
-          <span className='tree-node-tips'>{childrenLength ? transI18n('breakout_room.group_current_has_students', {
-            reason: `${childrenLength}`,
-          }) : transI18n('breakout_room.group_current_empty')}</span>
+          <span className="tree-node-tips">
+            {childrenLength
+              ? transI18n('breakout_room.group_current_has_students', {
+                  reason: `${childrenLength}`,
+                })
+              : transI18n('breakout_room.group_current_empty')}
+          </span>
         )}
       </>
     ) : (
@@ -319,7 +333,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
         </PanelStateContext.Provider>
       </div>
       {groupState === GroupState.OPEN ? null : (
-        <div className='flex justify-start items-center group-tips-wrap'>
+        <div className="flex justify-start items-center group-tips-wrap">
           <CheckBox
             checked={isCopyContent}
             onChange={(e: any) => {
@@ -377,7 +391,11 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   );
 
   const startButton = (
-    <Button size="xs" type={groupState === GroupState.OPEN ? 'danger' : 'primary'} className="rounded-btn" onClick={handleGroupState}>
+    <Button
+      size="xs"
+      type={groupState === GroupState.OPEN ? 'danger' : 'primary'}
+      className="rounded-btn"
+      onClick={handleGroupState}>
       {groupState === GroupState.OPEN
         ? transI18n('breakout_room.stop')
         : transI18n('breakout_room.start')}
@@ -455,9 +473,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
     footer = initial;
   }
 
-  return <div className="group-select-footer">
-    {footer}
-  </div>;
+  return <div className="group-select-footer">{footer}</div>;
 });
 
 const BroadcastInput = ({

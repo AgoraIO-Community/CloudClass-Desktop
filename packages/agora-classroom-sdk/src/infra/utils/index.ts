@@ -233,3 +233,6 @@ export const appendBuffer = (buffer1: Float32Array, buffer2: Float32Array) => {
   tmp.set(new Float32Array(buffer2), buffer1.length);
   return tmp;
 };
+export const mapToObject = (map: Map<any, any>) => {
+  return [...map.entries()].reduce((obj, [key, value]) => ((obj[key] = value), obj), {});
+};

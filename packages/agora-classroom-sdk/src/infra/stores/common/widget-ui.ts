@@ -37,7 +37,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
     const viewportHeight = this.shareUIStore.classroomViewportSize.height;
     const height = this.uiOverrides.heightRatio * viewportHeight;
-    if (roomType === EduRoomTypeEnum.Room1v1Class) {
+    if (roomType === EduRoomTypeEnum.Room1v1Class || roomType === EduRoomTypeEnum.RoomBigClass) {
       return height - this.shareUIStore.navBarHeight;
     }
 

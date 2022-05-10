@@ -1,0 +1,21 @@
+.remote-control-confirm-container {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+.remote-control-confirm-container .remote-control-confirm-content {
+  position: absolute;
+  top: 350px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.remote-control-confirm-container .remote-control-confirm-content-text {
+  font-size: 14px;
+  color: #fff;
+  padding-top: 20px;
+}

@@ -41,7 +41,6 @@ export const BigClassScenario = observer(() => {
           <NavigationBarContainer />
           <Layout className="horizontal">
             <Content>
-              <RoomBigStudentStreamsContainer />
               <BigWidgetWindowContainer>
                 {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
                 <Aside className="aisde-fixed">

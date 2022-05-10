@@ -64,12 +64,55 @@ export const PlaybackSelect = observer(() => {
   );
 });
 
+const StageChoose = observer(() => {
+  const {
+    deviceSettingUIStore: { stageVisible, setStageVisible },
+  } = useStore();
+
+  return (
+    <div
+      className="device-title"
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+      }}>
+      <div>{transI18n('device.stage_area')}</div>
+      <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '40px',
+          }}>
+          {[true, false].map((value) => (
+            <label htmlFor={`${value}`} key={`${+value}`}>
+              <input
+                type="radio"
+                id={`${value}`}
+                name="device-selection"
+                onChange={(_) => setStageVisible(value)}
+                checked={value ? stageVisible : !stageVisible}
+              />
+              <span className="device-desc" style={{ marginLeft: 5 }}>
+                {value ? transI18n('stage.visible') : transI18n('stage.hidden')}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+});
+
 type SettingProps = {
   className?: string;
   restProps?: object;
 };
 
 const Setting: React.FC<SettingProps> = observer(({ className, ...restProps }) => {
+  const {
+    deviceSettingUIStore: { deviceStage },
+  } = useStore();
   const cls = classnames({
     [`setting`]: 1,
     [`${className}`]: !!className,
@@ -108,6 +151,11 @@ const Setting: React.FC<SettingProps> = observer(({ className, ...restProps }) =
         <div className="device-title">{transI18n('device.speaker')}</div>
         <PlaybackSelect />
       </div>
+      {deviceStage ? (
+        <div className="device-choose">
+          <StageChoose />
+        </div>
+      ) : null}
     </div>
   );
 });

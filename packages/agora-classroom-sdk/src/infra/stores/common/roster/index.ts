@@ -482,7 +482,7 @@ export class RosterUIStore extends EduUIStoreBase {
     if (canKickOut && isInMainRoom) {
       functions.push('kick');
     }
-    if (canOperateCarousel && isInMainRoom && !this.groupStarted) {
+    if (canOperateCarousel && isInMainRoom && !this.groupStarted && this.stageVisible) {
       functions.push('carousel');
     }
     if (canSearchInRoster) {
@@ -512,6 +512,13 @@ export class RosterUIStore extends EduUIStoreBase {
   @computed
   get groupStarted() {
     return this.classroomStore.groupStore.state === GroupState.OPEN;
+  }
+
+  @computed
+  get stageVisible() {
+    return typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined'
+      ? this.classroomStore.roomStore.flexProps.stage
+      : false;
   }
 
   /** Getters */

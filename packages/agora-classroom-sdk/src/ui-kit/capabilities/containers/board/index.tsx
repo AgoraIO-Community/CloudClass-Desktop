@@ -13,7 +13,13 @@ type Props = {
 };
 
 export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
-  const { boardUIStore, toolbarUIStore } = useStore();
+  const {
+    boardUIStore,
+    toolbarUIStore,
+    classroomStore: {
+      remoteControlStore: { isHost },
+    },
+  } = useStore();
   const {
     readyToMount,
     rejoinWhiteboard,
@@ -41,7 +47,7 @@ export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
 
   return readyToMount ? (
     <>
-      {(isTeacherOrAssistant || isGrantedBoard) && (
+      {(isTeacherOrAssistant || isGrantedBoard) && !isHost && (
         <ScenesController
           addScene={addMainViewScene}
           preScene={toPreMainViewScene}

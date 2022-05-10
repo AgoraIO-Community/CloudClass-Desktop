@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, Lambda, reaction } from 'mobx';
 import dayjs from 'dayjs';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
@@ -16,11 +16,14 @@ import {
 import { checkMinutesThrough } from '@/infra/utils/time';
 import { ToastFilter } from '@/infra/utils/toast-filter';
 import { getEduErrorMessage } from '@/infra/utils/error';
+import { ChannelType, listenChannelMessage } from '@/infra/utils/ipc';
+import { IPCMessageType } from '@/infra/types';
+import { WindowID } from '@/infra/api';
 
 export class NotificationUIStore extends EduUIStoreBase {
   private _notificationTask?: Scheduler.Task;
   private _prevClassState = ClassState.beforeClass;
-  private _disposers: IReactionDisposer[] = [];
+  private _disposers: (IReactionDisposer | Lambda)[] = [];
 
   /** Observables */
 

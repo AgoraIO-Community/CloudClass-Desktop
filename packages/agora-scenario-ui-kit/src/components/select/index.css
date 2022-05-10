@@ -11,6 +11,12 @@
   border: 1px solid #e2e2f0;
   transform-origin: top;
   right: 0;
+}
+.direction-up {
+  bottom: 42px;
+  transform-origin: bottom;
+}
+.direction-down {
   top: 42px;
 }
 .options-container.enter {
@@ -172,6 +178,10 @@
   padding: 0 8px;
 }
 
-.react-select-sm .options-container {
+.react-select-sm .direction-up {
+  bottom: 26px;
+  transform-origin: bottom;
+}
+.react-select-sm .direction-down {
   top: 26px;
 }

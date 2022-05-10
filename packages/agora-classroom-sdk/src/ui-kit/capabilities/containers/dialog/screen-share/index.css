@@ -1,0 +1,41 @@
+.screen-share-dialog-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+.screen-share-dialog-container .card {
+  cursor: pointer;
+}
+.screen-share-dialog-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: left;
+}
+.screen-share-dialog-content h4 {
+  width: 100%;
+  padding-top: 20px;
+}
+.screen-share-dialog-content ul {
+  width: 150px;
+}
+.screen-share-dialog-content li {
+  list-style: disc inside;
+  color: #586376;
+  font-size: 12px;
+}
+.screen-share-teacher-logo {
+  width: 90px;
+  height: 58px;
+  background: url('../assets/screen-share/teacher.png') no-repeat top center;
+  background-size: contain;
+  font-size: 0;
+}
+.screen-share-student-logo {
+  width: 90px;
+  height: 58px;
+  background: url('../assets/screen-share/student.png') no-repeat top center;
+  background-size: contain;
+  font-size: 0;
+}

@@ -6,7 +6,7 @@ import {
   AgoraRteVideoSourceType,
   bound,
 } from 'agora-rte-sdk';
-import { computed, reaction, IReactionDisposer } from 'mobx';
+import { computed, reaction, IReactionDisposer, action, observable } from 'mobx';
 import { EduUIStoreBase } from './base';
 import dayjs from 'dayjs';
 import { transI18n } from './i18n';
@@ -18,13 +18,15 @@ import {
   EduRoleTypeEnum,
   LeaveReason,
   RecordStatus,
+  RteRole2EduRole,
   RecordMode,
 } from 'agora-edu-core';
 import { DialogCategory } from './share-ui';
 import { number2Percent } from '@/infra/utils';
+import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 
 export interface EduNavAction<P = undefined> {
-  id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit';
+  id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic';
   title: string;
   iconType: string;
   iconColor?: string;
@@ -59,7 +61,14 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         },
       ),
     );
+
+    EduEventUICenter.shared.onClassroomUIEvents(this._handleStreamWindowChange);
   }
+  //observables
+  // @observable isRecording = false;
+
+  // 老师流是否在大窗中展示
+  @observable teacherStreamWindow = false;
   //computed
   /**
    * 准备好挂载到 DOM
@@ -98,6 +107,50 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   @computed
   get isRecordStoped() {
     return this.recordStatus === RecordStatus.stopped;
+  }
+
+  /**
+   * 本地摄像头设备是否关闭
+   * @returns
+   */
+  @computed get localCameraOff() {
+    return (
+      this.classroomStore.mediaStore.localCameraTrackState !== AgoraRteMediaSourceState.started
+    );
+  }
+
+  /**
+   * 本地麦克风设备是否关闭
+   */
+  @computed
+  get localMicOff() {
+    return this.classroomStore.mediaStore.localMicTrackState !== AgoraRteMediaSourceState.started;
+  }
+
+  /**
+   * 当前 camera 的状态根据讲台的隐藏展示 + camera 的状态来更新状态
+   * stage --> 讲台
+   * camera --> camera 状态
+   *
+   * stage === true 那么控制摄像头开关
+   * stage === flase 控制老师窗口的展示和关闭
+   */
+  @computed
+  get localNavCameraOff() {
+    if (
+      (typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
+        this.classroomStore.roomStore.flexProps.stage) ||
+      typeof this.classroomStore.roomStore.flexProps.stage === 'undefined'
+    ) {
+      return this.localCameraOff;
+    }
+    if (
+      typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
+      !this.classroomStore.roomStore.flexProps.stage
+    ) {
+      return !this.teacherStreamWindow;
+    }
+    return this.localCameraOff;
   }
 
   /**
@@ -142,6 +195,30 @@ export class NavigationBarUIStore extends EduUIStoreBase {
               }
             },
           });
+        },
+      },
+      {
+        id: 'Camera',
+        title: 'camera',
+        iconType: this.localNavCameraOff ? 'ghost-camera-off' : 'ghost-camera-on', // 根据讲台的隐藏和设备的开发控制 icon
+        onClick: () => {
+          try {
+            this._toggleNavCamera();
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+      {
+        id: 'Mic',
+        title: 'mic',
+        iconType: this.localMicOff ? 'ghost-mic-off' : 'ghost-mic-on',
+        onClick: async () => {
+          try {
+            this._toggleLocalAudio();
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
         },
       },
     ];
@@ -209,7 +286,34 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         },
       },
     ];
-    const commonActions: EduNavAction[] = [
+
+    const studentMediaActions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [
+      {
+        id: 'Camera',
+        title: 'camera',
+        iconType: this.localCameraOff ? 'ghost-camera-off' : 'ghost-camera-on',
+        onClick: () => {
+          try {
+            this._toggleLocalVideo();
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+      {
+        id: 'Mic',
+        title: 'mic',
+        iconType: this.localMicOff ? 'ghost-mic-off' : 'ghost-mic-on',
+        onClick: async () => {
+          try {
+            this._toggleLocalAudio();
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
+        },
+      },
+    ];
+    const commonActions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [
       {
         id: 'Settings',
         title: 'Settings',
@@ -248,6 +352,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     }
 
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+      actions = studentMediaActions.concat(actions);
       if (isInSubRoom) {
         actions = actions.concat(studentActions);
       }
@@ -582,9 +687,20 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get navigationTitle() {
-    return this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName;
+    return (
+      (this.currScreenShareTitle || '') +
+      (this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName)
+    );
   }
-
+  /**
+   * 当前屏幕分享人名称
+   */
+  @computed
+  get currScreenShareTitle() {
+    const currSharedUser = this.classroomStore.remoteControlStore.currSharedUser;
+    if (currSharedUser)
+      return `(${transI18n('fcr_share_sharing', { reason: currSharedUser.userName })})`;
+  }
   /**
    * 所在房间名称
    */
@@ -665,6 +781,82 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 切换本地摄像头设备开关状态
+   */
+  @bound
+  private _toggleLocalVideo() {
+    if (this.localCameraOff) {
+      this.classroomStore.mediaStore.enableLocalVideo(true);
+    } else {
+      this.classroomStore.mediaStore.enableLocalVideo(false);
+    }
+  }
+
+  /**
+   * 切换本地麦克风设备开关状态
+   */
+  @bound
+  private _toggleLocalAudio() {
+    if (this.localMicOff) {
+      this.classroomStore.mediaStore.enableLocalAudio(true);
+    } else {
+      this.classroomStore.mediaStore.enableLocalAudio(false);
+    }
+  }
+
+  /**
+   * 打开关闭老师的 streamWindow
+   */
+  _toggleStreamWindow() {
+    EduEventUICenter.shared.emitClassroomUIEvents(
+      AgoraEduClassroomUIEvent.toggleTeacherStreamWindow,
+      this.localNavCameraOff,
+    );
+  }
+
+  /**
+   * stage === true 那么控制摄像头开关
+   * stage === flase 控制老师窗口的展示和关闭
+   */
+  @bound
+  private _toggleNavCamera() {
+    if (
+      (typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
+        this.classroomStore.roomStore.flexProps.stage) ||
+      typeof this.classroomStore.roomStore.flexProps.stage === 'undefined'
+    ) {
+      this._toggleLocalVideo();
+      return;
+    }
+    if (
+      typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
+      !this.classroomStore.roomStore.flexProps.stage
+    ) {
+      // 🖊️ streamwindowMap 中是否有 teacher stream uuid
+      this._toggleStreamWindow();
+      return;
+    }
+    console.warn('[nav camera] not more action to trigger ');
+  }
+
+  @action.bound
+  private _handleStreamWindowChange(type: AgoraEduClassroomUIEvent, streamUuids: string[]) {
+    if (type === AgoraEduClassroomUIEvent.streamWindowsChange) {
+      const teacherStreamWindow = streamUuids.find((streamUuid: string) => {
+        const targetStream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+        return (
+          targetStream &&
+          RteRole2EduRole(
+            EduClassroomConfig.shared.sessionInfo.roomType,
+            targetStream.fromUser.role,
+          ) === EduRoleTypeEnum.teacher
+        );
+      });
+      this.teacherStreamWindow = !!teacherStreamWindow;
+    }
+  }
+
   private _leaveSubRoom() {
     const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
     const { userUuid } = EduClassroomConfig.shared.sessionInfo;
@@ -676,5 +868,6 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   onDestroy() {
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    EduEventUICenter.shared.offClassroomUIEvents(this._handleStreamWindowChange);
   }
 }

@@ -3,8 +3,10 @@ import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { Edu1v1ClassUIStore } from '@/infra/stores/one-on-one';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useMemo } from 'react';
-import { StreamPlayer, StreamPlaceholder } from '.';
+import { useEffect, useMemo } from 'react';
+import useMeasure from 'react-use-measure';
+import { StreamPlayer, StreamPlaceholder, VisibilityDOM, MeasuerContainer } from '.';
+import { DragableContainer } from './room-mid-player';
 
 export const Room1v1TeacherStream = observer(
   ({ stream, isFullScreen = false }: { stream?: EduStreamUI; isFullScreen?: boolean }) => {
@@ -43,14 +45,60 @@ const Room1v1StudentStream = observer(({ stream }: { stream?: EduStreamUI }) => 
   );
 });
 
+const DragableStream = observer(
+  ({
+    stream,
+    isFullScreen,
+    role,
+  }: {
+    stream?: EduStreamUI;
+    isFullScreen?: boolean;
+    role: EduRoleTypeEnum;
+  }) => {
+    const { streamWindowUIStore, streamUIStore } = useStore();
+    const { setStreamBoundsByStreamUuid } = streamUIStore;
+    const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+
+    const handleStreamDoubleClick = () => {
+      streamDragable && stream && handleStreamWindowContain(stream);
+    };
+
+    return (
+      <>
+        {stream ? (
+          <div style={{ position: 'relative' }}>
+            <div onDoubleClick={handleStreamDoubleClick}>
+              <MeasuerContainer streamUuid={stream.stream.streamUuid}>
+                {visibleStream(stream.stream.streamUuid) ? (
+                  <VisibilityDOM style={{ width: '300px', height: '168px' }} />
+                ) : (
+                  <StreamPlayer stream={stream} isFullScreen={isFullScreen}></StreamPlayer>
+                )}
+                <DragableContainer
+                  stream={stream}
+                  dragable={!visibleStream(stream.stream.streamUuid)}
+                />
+              </MeasuerContainer>
+            </div>
+          </div>
+        ) : (
+          <StreamPlaceholder role={role} />
+        )}
+      </>
+    );
+  },
+);
+
 export const Room1v1StreamsContainer = observer(({ children }: any) => {
   const { streamUIStore } = useStore();
   const { teacherCameraStream, studentCameraStream } = streamUIStore;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: -2 }}>
-      <Room1v1TeacherStream stream={teacherCameraStream} />
-      <Room1v1StudentStream stream={studentCameraStream} />
+    <div
+      id="aisde-streams-container"
+      style={{ display: 'flex', flexDirection: 'column', marginBottom: -2 }}>
+      <DragableStream stream={teacherCameraStream} role={EduRoleTypeEnum.teacher} />
+      <DragableStream stream={studentCameraStream} role={EduRoleTypeEnum.student} />
     </div>
   );
 });

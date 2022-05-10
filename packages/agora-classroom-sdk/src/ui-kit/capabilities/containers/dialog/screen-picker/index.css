@@ -6,9 +6,10 @@
 }
 
 .programs {
-  margin-top: 20px;
   width: 100%;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .program-item {
@@ -45,4 +46,14 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100px;
+}
+.screen-picker-footer {
+  position: relative;
+  top: 40px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.screen-picker-footer-confirm-btn {
+  margin-left: 15px;
 }

@@ -1,83 +1,84 @@
 .group-start-content {
-    box-sizing: border-box;
-    padding-top: 30px;
-    padding-left: 30px;
+  box-sizing: border-box;
+  padding-top: 30px;
+  padding-left: 30px;
 }
 
-.start-main-title, .start-sub-title {
-    font-size: 16px;
-    font-family: PingFang-SC-Bold, PingFang-SC;
-    font-weight: bold;
-    color: #191919;
+.start-main-title,
+.start-sub-title {
+  font-size: 16px;
+  font-family: PingFang-SC-Bold, PingFang-SC;
+  font-weight: bold;
+  color: #191919;
 }
 
 .start-sub-title {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 12px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 12px;
 }
 
 .group-start-footer {
-    box-sizing: border-box;
-    padding-right: 20px;
-    display: flex;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 58px;
-    border-top: 1px solid #EEEEF7;
-    justify-content: flex-end;
-    align-items: center;
+  box-sizing: border-box;
+  padding-right: 20px;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 58px;
+  border-top: 1px solid #eeeef7;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .group-tips-wrap {
-    margin-left: 1rem;
+  margin-left: 1rem;
 }
 
 .group-tips {
-    font-size: 12px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #677386;
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #677386;
 }
 
 .group-select-footer {
-    border-top: 1px solid #EEEEF7;
+  border-top: 1px solid #eeeef7;
 }
 
 .group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root {
-    background: #fff;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #E2E2EE;
+  background: #fff;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #e2e2ee;
 }
 
 .group-scroll-overflow {
-    margin-left: 15px;
-    margin-right: 15px;
-    scrollbar-width: none;
+  margin-left: 15px;
+  margin-right: 15px;
+  scrollbar-width: none;
 }
 .group-scroll-overflow::-webkit-scrollbar {
-    width: 0;
+  width: 0;
 }
 .rename-btn {
-    color: #357BF6 !important;
-    margin-right: 15px;
+  color: #357bf6 !important;
+  margin-right: 15px;
 }
 .remove-btn {
-    color: #FF3C34 !important;
-    margin-right: 15px;
+  color: #ff3c34 !important;
+  margin-right: 15px;
 }
 
 .tree-node-tips {
-    font-size: 12px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #BDBDCA;
-    margin-left: 10px;
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #bdbdca;
+  margin-left: 10px;
 }
 
-.group-select-footer .fcr-btn-danger:hover{
-    background: #F04C36;
-    color: #fff;
+.group-select-footer .fcr-btn-danger:hover {
+  background: #f04c36;
+  color: #fff;
 }

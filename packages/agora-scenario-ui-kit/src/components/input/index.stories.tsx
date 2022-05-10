@@ -17,21 +17,21 @@ export const Docs = () => {
   const [input2, setInput2] = useState('');
   const [input3, setInput3] = useState('');
   const [input4, setInput4] = useState('');
-  const [input5, setInput5] = useState(1)
+  const [input5, setInput5] = useState(1);
   return (
     <>
       <h1>Input 组件</h1>
-      <div className='mt-4'>
-        <Input 
+      <div className="mt-4">
+        <Input
           type="number"
           value={input5}
           onChange={(e) => {
-            let num = e.target.value
+            let num = e.target.value;
             if (num > 32) {
-              num = 32
+              num = 32;
             }
             if (num <= 1) {
-              num = 1
+              num = 1;
             }
             setInput5(num);
           }}

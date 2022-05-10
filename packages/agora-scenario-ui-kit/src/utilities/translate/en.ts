@@ -13,6 +13,7 @@ export const en = {
   Star: 'star',
   'Open Private Call': 'open private call',
   'Close Private Call': 'close private call',
+  'Camera Pos Reset': 'reset camera position',
   role: {
     teacher: 'Teacher',
     student: 'Student',
@@ -53,6 +54,7 @@ export const en = {
     microphone: 'Microphone',
     microphone_volume: 'Microphone Volume',
     speaker_volume: 'Speaker Volume',
+    stage_area: 'Stage Area',
   },
   student: {
     student_name: 'Name',
@@ -149,7 +151,35 @@ export const en = {
     revoke_board_success: 'Revoke Permission success',
     create_screen_share_failed: 'Create screen share failed',
     kick_by_other_side: 'Kick out by other client',
-    screen_share: 'Screen Share',
+    screen_share: {
+      title: 'Screen Share',
+      teacher_screen_share: {
+        title: 'Teacher Screen Share',
+        tip1: 'Support singel window sharing',
+        tip2: 'Support full screen sharing',
+        tip3: 'Sound not support	',
+      },
+      student_screen_share: {
+        title: 'Shareing for all student',
+        tip1: 'You can share any student screen',
+        tip2: 'Support full screen sharing',
+        tip3: 'Sound not support	',
+      },
+      tips: {
+        no_student_device_supported:
+          'Shareing for all student is not supported as all student device does not support remote control',
+        no_student: 'Shareing for all student is not supported as no students in classroom',
+        stop_share: 'The teacher has stopped sharing your screen',
+        share_confirm:
+          'The teacher is requesting to share and operate your screen.Please choose Agree or Not deal with it',
+        request_share_loading:
+          '{studentName} has not agreed to share his/her screen,reminded {studentName} to click on the "Agree" button to share his/her own screen',
+        student_leave: '{studentName} left classroom，Remote control disconnected',
+        device_not_support: '{studentName} ‘s device does not support remote control',
+        revoke_control: 'The teacher has forbidden your screen control',
+        authorize_control: 'The teacher has authorized you to control the screen',
+      },
+    },
     close_ppt: 'Close CourseWare',
     sure_close_ppt: 'Are you sure to close?',
     end_class: 'End Class',
@@ -366,6 +396,10 @@ export const en = {
     ruddy: 'Ruddy',
     default: 'Default',
   },
+  stage: {
+    visible: 'visible',
+    hidden: 'hidden',
+  },
   tool: {
     board_name: 'Whiteboard',
     screen_share: 'Screen Share',
@@ -538,6 +572,7 @@ export const en = {
       'Congratulations to {reason1} and {reason2} other students for getting a star',
     screen_permission_denied:
       'Before using screen sharing, please turn on the screenshot permission',
+    stream_window_full: 'The video window has reached the limitation of {reason}',
   },
   cabinet: {
     answer: {
@@ -654,6 +689,38 @@ export const en = {
   fcr_group_exit_room: 'Leave Room',
   fcr_group_student_not_in_room: "The student didn't enter the group",
   /** Breakout Room  */
+  /** Remote Control */
+  fcr_share_title_teacher: 'Teacher Screen Share',
+  fcr_share_title_singel_window: 'Support singel window sharing',
+  fcr_share_title_full_screen: 'Support full screen sharing',
+  fcr_share_title_sound: 'Sound not support',
+  fcr_share_title_all_student: 'Shareing for all student',
+  fcr_share_title_any_student: 'You can share any student screen',
+  fcr_share_selected: 'Selected{reason}',
+  fcr_share_sharing: 'Sharing {reason} screen',
+  fcr_share_authorized_control: 'The teacher has authorized you to control the screen',
+  fcr_share_forbidden_control: 'The teacher has forbidden your screen control',
+  fcr_share_device_not_support: '{reason}‘s device does not support remote control',
+  fcr_share_Remote_control_disconnected: '{reason} left classroom，Remote control disconnected',
+  fcr_share_reminded_student_agree:
+    '{reason1} has not agreed to share his/her screen,reminded {reason2} to click on the "Agree" button to share his/her own screen',
+  fcr_share_teacher_requesting_share:
+    'The teacher is requesting to share and operate your screen.Please choose Agree or Not deal with it',
+  fcr_share_stopped_student_share: 'The teacher has stopped sharing your screen',
+  fcr_share_no_student: 'Shareing for all student is not supported as no students in classroom',
+  fcr_share_device_no_support:
+    'Shareing for all student is not supported as all student device does not support remote control',
+  fcr_rc_control_bar_allow_student_control: 'Students are allowed to control remotely',
+  fcr_rc_control_bar_disallow_student_control: 'Students are not allowed to control remotely',
+  fcr_share_title_select_window_share: 'Select a window to share',
+  fcr_share_title_desktop: 'Desktop',
+  fcr_share_title_application: 'Application',
+  fcr_share_title_share_window: 'Share this window',
+  fcr_share_button_agree: 'Agree',
+  fcr_share_title_controling: 'Controling',
+  fcr_share_switch: 'Switch application share',
+
+  /** Remote Control */
   begin_class: 'Begin class',
   edu_error: {
     '600000': 'Failed to join the classroom',
@@ -732,6 +799,7 @@ export const en = {
     '600073': 'Failed to report information',
     '600074': 'The resource is already opened',
     '600077': 'Failed to get upload checkpoint',
+    '600090': 'Failed to join rdc room',
   },
   edu_serv_error: {
     '20400200': 'UserUuid is required!',

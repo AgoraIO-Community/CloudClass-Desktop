@@ -39,6 +39,11 @@ const RouteContainer = () => (
         path={'/recordation-search/:p'}
         component={routesMap[BizPageRouter.RecordationSearchPage].component}
       />
+      <Route
+        key={'window'}
+        path={'/window'}
+        component={routesMap[BizPageRouter.Window].component}
+      />
     </Switch>
   </HashRouter>
 );

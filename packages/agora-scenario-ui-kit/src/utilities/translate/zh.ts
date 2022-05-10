@@ -13,6 +13,7 @@ export const zh = {
   Star: '奖励',
   'Open Private Call': '开启私密语音',
   'Close Private Call': '关闭私密语音',
+  'Camera Pos Reset': '视频复位',
   role: {
     teacher: '老师',
     student: '学生',
@@ -53,6 +54,7 @@ export const zh = {
     speaker: '扬声器',
     microphone_volume: '麦克风音量',
     speaker_volume: '扬声器音量',
+    stage_area: '讲台区域',
   },
   student: {
     student_name: '学生姓名',
@@ -146,7 +148,32 @@ export const zh = {
     revoke_board_success: '收回白板成功',
     create_screen_share_failed: '创建屏幕分享失败',
     kick_by_other_side: '远端重复登录, 当前账号已离开房间',
-    screen_share: '屏幕共享',
+    screen_share: {
+      title: '屏幕共享',
+      teacher_screen_share: {
+        title: '教师屏幕共享',
+        tip1: '支持单个窗口共享',
+        tip2: '支持全屏共享',
+        tip3: '不支持声音',
+      },
+      student_screen_share: {
+        title: '学生屏幕共享',
+        tip1: '可指定任意学生屏幕',
+        tip2: '支持全屏共享',
+        tip3: '不支持声音',
+      },
+      tips: {
+        no_student_device_supported: '学生设备不支持远程控制，无法开启学生屏幕共享',
+        no_student: '当前教室没有学生，无法开启学生屏幕共享',
+        stop_share: '老师已停止共享你的屏幕',
+        share_confirm: '老师正在请求分享并操作你的屏幕，请选择同意或暂不处理',
+        request_share_loading:
+          '{studentName} 尚未同意共享屏幕，提醒{studentName} 单击“同意”按钮共享自己的屏幕',
+        student_leave: '{用户名} 上课设备不支持远程控制',
+        revoke_control: '老师已回收你的屏幕控制权',
+        authorize_control: '老师已授权你控制屏幕',
+      },
+    },
     close_ppt: '关闭当前课件',
     sure_close_ppt: '你确定要关闭吗？',
     end_class: '课程已结束',
@@ -354,6 +381,10 @@ export const zh = {
     ruddy: '红润',
     default: '默认',
   },
+  stage: {
+    visible: '显示',
+    hidden: '隐藏',
+  },
   pretest: {
     title: '设备检测',
     settingTitle: '设备设置',
@@ -525,6 +556,7 @@ export const zh = {
     'teacher.reward': '祝贺{reason}获得奖励',
     'teacher.reward2': '祝贺{reason1}等{reason2}位同学获得奖励',
     screen_permission_denied: '使用屏幕共享前，请先打开屏幕录制权限',
+    stream_window_full: '视频窗口数量已达{reason}人上限',
   },
   cabinet: {
     answer: {
@@ -639,6 +671,35 @@ export const zh = {
   fcr_group_exit_room: '离开教室',
   fcr_group_student_not_in_room: '学生未进入小组',
   /** Breakout Room  */
+  /** Remote Control */
+  fcr_share_title_teacher: '教师屏幕共享',
+  fcr_share_title_singel_window: '支持单个窗口共享',
+  fcr_share_title_full_screen: '支持全屏共享',
+  fcr_share_title_sound: '不支持声音',
+  fcr_share_title_all_student: '学生屏幕共享',
+  fcr_share_title_any_student: '可指定任意学生屏幕',
+  fcr_share_selected: '已选择{reason}',
+  fcr_share_sharing: '正在分享{reason}屏幕',
+  fcr_share_authorized_control: '老师已授权你控制屏幕',
+  fcr_share_forbidden_control: '老师已回收你的屏幕控制权',
+  fcr_share_device_not_support: '{reason} 上课设备不支持远程控制',
+  fcr_share_Remote_control_disconnected: '{reason} 离开房间，已断开远程控制权',
+  fcr_share_reminded_student_agree:
+    '{reason1} 尚未同意共享屏幕，提醒{reason2} 单击“同意”按钮共享自己的屏幕',
+  fcr_share_teacher_requesting_share: '老师正在请求分享并操作你的屏幕，请选择同意或暂不处理',
+  fcr_share_stopped_student_share: '老师已停止共享你的屏幕',
+  fcr_share_no_student: '当前教室没有学生，无法开启学生屏幕共享',
+  fcr_share_device_no_support: '学生设备不支持远程控制，无法开启学生屏幕共享',
+  fcr_rc_control_bar_allow_student_control: '允许学生控制',
+  fcr_rc_control_bar_disallow_student_control: '不允许学生控制',
+  fcr_share_title_select_window_share: '请选择一个要共享的窗口',
+  fcr_share_title_desktop: '桌面',
+  fcr_share_title_application: '应用',
+  fcr_share_title_share_window: '开始共享',
+  fcr_share_button_agree: '同意',
+  fcr_share_title_controling: '正在控制',
+  fcr_share_switch: '切换共享内容',
+  /** Remote Control */
   begin_class: '开始上课',
   edu_error: {
     '600000': '房间资源未获取',
@@ -721,6 +782,7 @@ export const zh = {
     '600078': '切换大小流失败',
     '600079': '开启大小流失败',
     '600080': '设置小流参数失败',
+    '600090': '加入RDC房间失败',
   },
   edu_serv_error: {
     '20400200': '未传入用户唯一标识',

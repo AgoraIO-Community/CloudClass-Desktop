@@ -13,6 +13,8 @@ import { ScreenPickerDialog } from './screen-picker';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
 import { BreakoutRoomDialog } from './breakout-room';
 import { Quit } from './quit';
+import { ScreenShareDialog } from './screen-share';
+import { RemoteControlConfirm } from './remote-control-confirm';
 
 const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode => {
   switch (category) {
@@ -37,6 +39,10 @@ const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode
       return <BreakoutRoomDialog {...props} id={id} />;
     case DialogCategory.Quit:
       return <Quit {...props} id={id} />;
+    case DialogCategory.ScreenShare:
+      return <ScreenShareDialog {...props} id={id} />;
+    case DialogCategory.RemoteControlConfirm:
+      return <RemoteControlConfirm {...props} id={id}></RemoteControlConfirm>;
   }
 };
 
@@ -54,11 +60,13 @@ export const DialogContainer: React.FC<unknown> = observer(() => {
 
   return (
     <div className={cls}>
-      {dialogQueue.map(({ id, category, props }) => (
-        <div key={id} className="fixed-container">
-          {getDialog(category, id, props)}
-        </div>
-      ))}
+      {dialogQueue.map(({ id, category, props }) => {
+        return (
+          <div key={id} className="fixed-container">
+            {getDialog(category, id, props)}
+          </div>
+        );
+      })}
     </div>
   );
 });

@@ -5,7 +5,7 @@
     <link rel="icon" href="./favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Web site created using create-react-app" />
+    <meta name="description" content="Agora online classroom aPaaS project" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -21,7 +21,25 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Agora Flexible Classroom</title>
+    <script>
+      if (location.search) {
+        const params = new URLSearchParams(location.search.split('?')[1]);
+
+        const windowID = params.get('id');
+
+        const language = params.get('language');
+
+        const args = params.get('args') ? JSON.parse(params.get('args')) : null;
+
+        window.__launchWindowID = windowID;
+        window.__launchLanguage = language;
+        window.__launchArgs = args;
+
+        this.location.hash = 'window';
+      }
+    </script>
   </head>
+
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>

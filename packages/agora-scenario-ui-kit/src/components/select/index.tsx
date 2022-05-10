@@ -11,6 +11,7 @@ export type SelectOption = {
   value: any;
 };
 export interface SelectProps extends BaseProps {
+  defaultValue?: any;
   value?: any;
   placeholder?: string;
   options: SelectOption[];
@@ -21,6 +22,9 @@ export interface SelectProps extends BaseProps {
   maxMenuHeight?: number;
   onChange?: (value: any) => unknown;
   size?: 'sm';
+  direction?: 'up' | 'down';
+  onOpen?: () => void;
+  onClose?: () => void;
 }
 
 // 基于react-select封装 https://github.com/JedWatson/react-select/blob/master/README.md
@@ -36,13 +40,16 @@ export const Select: FC<SelectProps> = ({
   onChange,
   className,
   size,
+  direction = 'down',
+  defaultValue,
+  onOpen = () => {},
+  onClose = () => {},
   ...restProps
 }) => {
   const wrappedOptions = options.map((item: any) => ({
     label: item.i18n ? transI18n(item.label) : item.label,
     value: item.value,
   }));
-
   const timerRef = useRef<null | ReturnType<typeof setTimeout>>(null);
 
   const [showOption, setShowOpton] = useState<boolean>(defaultMenuIsOpen);
@@ -60,6 +67,7 @@ export const Select: FC<SelectProps> = ({
     <div className={containerCls}>
       {prefix && <div className={'select-prefix'}>{prefix}</div>}
       <ReactSelect
+        defaultValue={defaultValue}
         className={cls}
         classNamePrefix="react-select"
         value={wrappedOptions.find((item) => item.value === value)}
@@ -70,14 +78,20 @@ export const Select: FC<SelectProps> = ({
           timerRef.current && clearTimeout(timerRef.current);
           timerRef.current = setTimeout(() => {
             setShowOpton(false);
+            onClose();
           }, 100);
         }}
         onMenuOpen={() => {
           setShowOpton(true);
+          onOpen();
         }}
         {...restProps}
       />
-      <CSSTransition in={showOption} timeout={180} className="options-container" unmountOnExit>
+      <CSSTransition
+        in={showOption}
+        timeout={180}
+        className={`options-container direction-${direction}`}
+        unmountOnExit>
         <div style={{ maxHeight: 200, overflow: 'auto' }}>
           {wrappedOptions.map((item) => {
             const optionCls = classnames('option-item', {

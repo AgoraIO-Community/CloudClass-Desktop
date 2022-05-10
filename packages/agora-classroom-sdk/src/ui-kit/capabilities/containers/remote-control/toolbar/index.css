@@ -1,0 +1,10 @@
+.remote-control-tool-bar {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  /* todo */
+  z-index: 9999999;
+}
