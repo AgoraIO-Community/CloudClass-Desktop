@@ -14,6 +14,7 @@ import { TrackUIStore } from './layout/track';
 import { ExtensionAppUIStore } from './ext-app';
 import { destoryI18n, transI18n } from './i18n';
 import { NotificationUIStore } from './notification-ui';
+import { StreamWindowUIStore } from './stream-window-ui';
 import { PretestUIStore } from './pretest';
 import {
   AGServiceErrorCode,
@@ -45,6 +46,7 @@ export class EduClassroomUIStore {
   protected _pretestUIStore: PretestUIStore;
   protected _widgetUIStore: WidgetUIStore;
   protected _groupUIStore: GroupUIStore;
+  protected _streamWindowUIStore: StreamWindowUIStore;
   private _installed = false;
 
   constructor(store: EduClassroomStore) {
@@ -65,6 +67,7 @@ export class EduClassroomUIStore {
     this._extensionAppUIStore = new ExtensionAppUIStore(store, this.shareUIStore);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
     this._groupUIStore = new GroupUIStore(store, this.shareUIStore);
+    this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore);
   }
 
   /**
@@ -122,6 +125,9 @@ export class EduClassroomUIStore {
   get groupUIStore() {
     return this._groupUIStore;
   }
+  get streamWindowUIStore() {
+    return this._streamWindowUIStore;
+  }
 
   /**
    * 初始化所有 UIStore
@@ -177,23 +183,23 @@ export class EduClassroomUIStore {
         );
       }
     }
+    // 默认开启大小流
+    // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+    try {
+      const launchLowStreamCameraEncoderConfigurations = (
+        EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
+      )?.defaultLowStreamCameraEncoderConfigurations;
 
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-      try {
-        const launchLowStreamCameraEncoderConfigurations = (
-          EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
-        )?.defaultLowStreamCameraEncoderConfigurations;
+      await this.classroomStore.mediaStore.enableDualStream(true);
 
-        await this.classroomStore.mediaStore.enableDualStream(true);
-
-        await this.classroomStore.mediaStore.setLowStreamParameter(
-          launchLowStreamCameraEncoderConfigurations ||
-            EduClassroomConfig.defaultLowStreamParameter(),
-        );
-      } catch (e) {
-        this.shareUIStore.addGenericErrorDialog(e as AGError);
-      }
+      await this.classroomStore.mediaStore.setLowStreamParameter(
+        launchLowStreamCameraEncoderConfigurations ||
+          EduClassroomConfig.defaultLowStreamParameter(),
+      );
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
+    // }
 
     try {
       await joinRTC();

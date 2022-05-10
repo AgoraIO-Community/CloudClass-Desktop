@@ -13,6 +13,7 @@ export const en = {
   Star: 'star',
   'Open Private Call': 'open private call',
   'Close Private Call': 'close private call',
+  'Camera Pos Reset': 'reset camera position',
   role: {
     teacher: 'Teacher',
     student: 'Student',
@@ -53,6 +54,7 @@ export const en = {
     microphone: 'Microphone',
     microphone_volume: 'Microphone Volume',
     speaker_volume: 'Speaker Volume',
+    stage_area: 'Stage Area',
   },
   student: {
     student_name: 'Name',
@@ -366,6 +368,10 @@ export const en = {
     ruddy: 'Ruddy',
     default: 'Default',
   },
+  stage: {
+    visible: 'visible',
+    hidden: 'hidden',
+  },
   tool: {
     board_name: 'Whiteboard',
     screen_share: 'Screen Share',
@@ -537,6 +543,7 @@ export const en = {
       'Congratulations to {reason1} and {reason2} other students for getting a star',
     screen_permission_denied:
       'Before using screen sharing, please turn on the screenshot permission',
+    stream_window_full: 'The video window has reached the limitation of {reason}',
   },
   cabinet: {
     answer: {

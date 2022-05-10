@@ -446,7 +446,7 @@ export class GroupUIStore extends EduUIStoreBase {
       this.classroomStore.groupStore
         .startGroup(groupDetails)
         .then(async () => {
-          await this.classroomStore.boardStore.exportWindowManagerAttributes()
+          await this.classroomStore.boardStore.exportWindowManagerAttributes();
           runInAction(() => {
             this.localGroups = new Map();
           });
@@ -644,13 +644,13 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   @bound
-  private async _copyRoomContent () {
+  private async _copyRoomContent() {
     const { localUser } = this.classroomStore.userStore;
-    const inital = localUser?.userProperties.get('widgets')?.netlessBoard.inital
+    const inital = localUser?.userProperties.get('widgets')?.netlessBoard.inital;
     if (inital) {
-        await this.classroomStore.boardStore.importWindowManagerAttributes()
-        const roomUuid = this.classroomStore.groupStore.currentSubRoom;
-        this.classroomStore.boardStore.copyScenes(roomUuid)
+      await this.classroomStore.boardStore.importWindowManagerAttributes();
+      const roomUuid = this.classroomStore.groupStore.currentSubRoom;
+      this.classroomStore.boardStore.copyScenes(roomUuid);
     }
   }
 
@@ -721,23 +721,21 @@ export class GroupUIStore extends EduUIStoreBase {
    * 设置是否要复制内容到讨论组
    * @param v 开启或关闭
    */
-   @action.bound
-   setCopyContent(v: boolean) {
-     this.isCopyContent = v;
-   }
+  @action.bound
+  setCopyContent(v: boolean) {
+    this.isCopyContent = v;
+  }
 
   onInstall() {
     this._disposers.push(
       reaction(
-        () => (
-          {
-            managerReady: this.classroomStore.boardStore.managerReady,
-            isWritable: this.classroomStore.boardStore.isWritable
-          }
-        ),
+        () => ({
+          managerReady: this.classroomStore.boardStore.managerReady,
+          isWritable: this.classroomStore.boardStore.isWritable,
+        }),
         ({ managerReady, isWritable }) => {
           if (managerReady && isWritable) {
-            this._copyRoomContent()
+            this._copyRoomContent();
           }
         },
       ),

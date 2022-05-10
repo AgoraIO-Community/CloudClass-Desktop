@@ -8,6 +8,7 @@ export enum EduStreamToolCategory {
   podium,
   podium_all,
   star,
+  stream_window_off,
 }
 
 /**

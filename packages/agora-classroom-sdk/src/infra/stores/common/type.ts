@@ -40,3 +40,15 @@ export enum DeviceStateChangedReason {
   micUnplugged = 'pretest.mic_move_out',
   playbackUnplugged = 'pretest.playback_move_out',
 }
+
+export interface widgetTrackStruct {
+  state: number;
+  position: { xaxis: number; yaxis: number };
+  size: { width: number; height: number };
+  extra: {
+    contain: boolean;
+    zIndex: number;
+    userUuid: string;
+    [key: string]: any;
+  };
+}

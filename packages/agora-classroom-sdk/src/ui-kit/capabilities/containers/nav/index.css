@@ -57,11 +57,11 @@ td.biz-col.label.right {
 
 .header-actions > svg {
   margin-left: 27px;
-  font-size: 24px;
+  font-size: 18px;
   color: #3f5c8f;
   cursor: pointer;
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -14,7 +14,7 @@ import { computedFn } from 'mobx-utils';
 import { EduUIStoreBase } from '../base';
 import { transI18n } from '../i18n';
 import { CameraPlaceholderType } from '../type';
-import { EduStreamUI } from './struct';
+import { EduStreamUI, StreamBounds } from './struct';
 import { EduStreamTool, EduStreamToolCategory } from './tool';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -37,6 +37,15 @@ export enum StreamIconColor {
 
 export class StreamUIStore extends EduUIStoreBase {
   protected _disposers: (IReactionDisposer | Lambda)[] = [];
+
+  /**
+   * 视频窗位置信息
+   */
+  /** @en
+   * video stream bounds
+   */
+  @observable
+  streamsBounds: Map<string, StreamBounds> = new Map();
 
   onInstall() {
     this._disposers.push(
@@ -569,7 +578,7 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @computed get localStreamTools(): EduStreamTool[] {
     let tools: EduStreamTool[] = [];
-    tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
+    // tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
     return tools;
   }
@@ -748,6 +757,16 @@ export class StreamUIStore extends EduUIStoreBase {
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
+  }
+
+  @action.bound
+  setStreamBoundsByStreamUuid(streamUuid: string, bounds: StreamBounds) {
+    this.streamsBounds.set(streamUuid, bounds);
+  }
+
+  @action.bound
+  removeStreamBoundsByStreamUuid(streamUuid: string) {
+    this.streamsBounds.delete(streamUuid);
   }
 
   onDestroy() {

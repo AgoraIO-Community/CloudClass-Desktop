@@ -1,9 +1,11 @@
 import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, { CSSProperties, FC, Fragment, ReactNode, useEffect, useMemo, useRef } from 'react';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore, useInteractiveUIStores } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import useMeasure from 'react-use-measure';
+import { useDrag } from '@use-gesture/react';
 import { useDebounce } from '~ui-kit/utilities/hooks';
 import './index.css';
 import {
@@ -20,7 +22,8 @@ import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { CameraPlaceholderType } from '@/infra/stores/common/type';
-import { AGRenderMode } from 'agora-rte-sdk';
+import { DragableContainer } from './room-mid-player';
+import { divide } from 'lodash';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -139,36 +142,38 @@ const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) 
   );
 });
 
-const LocalStreamPlayerTools = observer(({ isFullScreen = true }: { isFullScreen?: boolean }) => {
-  const { streamUIStore } = useStore();
-  const { localStreamTools, toolbarPlacement, fullScreenToolTipPlacement } = streamUIStore;
+export const LocalStreamPlayerTools = observer(
+  ({ isFullScreen = true }: { isFullScreen?: boolean }) => {
+    const { streamUIStore } = useStore();
+    const { localStreamTools, toolbarPlacement, fullScreenToolTipPlacement } = streamUIStore;
 
-  return localStreamTools.length > 0 ? (
-    <div className={`video-player-tools`}>
-      {localStreamTools.map((tool, key) => (
-        <Tooltip
-          key={key}
-          title={tool.toolTip}
-          placement={isFullScreen ? fullScreenToolTipPlacement : toolbarPlacement}>
-          <span>
-            <SvgIcon
-              canHover={tool.interactable}
-              style={tool.style}
-              // hoverType={tool.hoverIconType}
-              type={tool.iconType}
-              size={22}
-              onClick={tool.interactable ? tool.onClick : () => {}}
-            />
-          </span>
-        </Tooltip>
-      ))}
-    </div>
-  ) : (
-    <></>
-  );
-});
+    return localStreamTools.length > 0 ? (
+      <div className={`video-player-tools`}>
+        {localStreamTools.map((tool, key) => (
+          <Tooltip
+            key={key}
+            title={tool.toolTip}
+            placement={isFullScreen ? fullScreenToolTipPlacement : toolbarPlacement}>
+            <span>
+              <SvgIcon
+                canHover={tool.interactable}
+                style={tool.style}
+                // hoverType={tool.hoverIconType}
+                type={tool.iconType}
+                size={22}
+                onClick={tool.interactable ? tool.onClick : () => {}}
+              />
+            </span>
+          </Tooltip>
+        ))}
+      </div>
+    ) : (
+      <></>
+    );
+  },
+);
 
-const RemoteStreamPlayerTools = observer(
+export const RemoteStreamPlayerTools = observer(
   ({ stream, isFullScreen = true }: { stream: EduStreamUI; isFullScreen?: boolean }) => {
     const { streamUIStore } = useStore();
     const { remoteStreamTools, toolbarPlacement, fullScreenToolTipPlacement } = streamUIStore;
@@ -257,7 +262,7 @@ const StreamPlayerOverlayName = observer(({ stream }: { stream: EduStreamUI }) =
   );
 });
 
-const StreamPlayerOverlay = observer(
+export const StreamPlayerOverlay = observer(
   ({
     stream,
     className,
@@ -401,11 +406,15 @@ export const CarouselGroup = observer(
     videoHeight,
     gap,
     carouselStreams,
+    invisible,
+    handleDBClick,
   }: {
     videoWidth: number;
     videoHeight: number;
     carouselStreams: EduStreamUI[];
     gap: number;
+    invisible?: (streamUuid: string) => boolean;
+    handleDBClick?: (stream: EduStreamUI) => void;
   }) => {
     const videoStreamStyle = useMemo(
       () => ({
@@ -426,8 +435,30 @@ export const CarouselGroup = observer(
             key={`${stream.stream.streamUuid}`}
             timeout={ANIMATION_DELAY}
             classNames="stream-player">
-            <div style={{ marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2 }}>
-              <StreamPlayer stream={stream} style={videoStreamStyle}></StreamPlayer>
+            <div
+              style={{
+                marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2,
+                position: 'relative',
+              }}
+              onDoubleClick={() => {
+                handleDBClick && handleDBClick(stream);
+              }}>
+              <MeasuerContainer streamUuid={stream.stream.streamUuid}>
+                {invisible && invisible(stream.stream.streamUuid) ? (
+                  <VisibilityDOM style={videoStreamStyle} />
+                ) : (
+                  <StreamPlayer
+                    key={`carouse-${stream.stream.streamUuid}`}
+                    stream={stream}
+                    style={videoStreamStyle}></StreamPlayer>
+                )}
+                {invisible ? (
+                  <DragableContainer
+                    stream={stream}
+                    dragable={!invisible(stream.stream.streamUuid)}
+                  />
+                ) : null}
+              </MeasuerContainer>
             </div>
           </CSSTransition>
         ))}
@@ -457,3 +488,21 @@ export const NavGroup: FC<{ onNext: () => void; onPrev: () => void; visible: boo
     </Fragment>
   );
 };
+
+export const VisibilityDOM = ({ style }: { style?: CSSProperties }) => {
+  return <div style={style} className="invisible"></div>;
+};
+
+export const MeasuerContainer = observer(
+  ({ children, streamUuid }: { children: ReactNode; streamUuid: string }) => {
+    const [ref, bounds] = useMeasure();
+    const {
+      streamUIStore: { setStreamBoundsByStreamUuid },
+    } = useStore();
+    useEffect(() => {
+      streamUuid && setStreamBoundsByStreamUuid(streamUuid, bounds);
+      console.log('MeasuerContainer', streamUuid, bounds);
+    }, [bounds]);
+    return <div ref={ref}>{children}</div>;
+  },
+);

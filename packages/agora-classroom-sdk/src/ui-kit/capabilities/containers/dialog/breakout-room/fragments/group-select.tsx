@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
-import './index.css'
+import './index.css';
 
 type LinkButtonProps = {
   text: string;
@@ -309,13 +309,13 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
           />
         </PanelStateContext.Provider>
       </div>
-      <div className='flex justify-start items-center group-tips-wrap'>
-        <CheckBox 
+      <div className="flex justify-start items-center group-tips-wrap">
+        <CheckBox
           checked={isCopyContent}
           onChange={(e: any) => {
             setCopyContent(e.target.checked);
           }}
-        /> 
+        />
         <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
       </div>
       <Footer onNext={onNext} />

@@ -13,6 +13,7 @@ export const zh = {
   Star: '奖励',
   'Open Private Call': '开启私密语音',
   'Close Private Call': '关闭私密语音',
+  'Camera Pos Reset': '视频复位',
   role: {
     teacher: '老师',
     student: '学生',
@@ -53,6 +54,7 @@ export const zh = {
     speaker: '扬声器',
     microphone_volume: '麦克风音量',
     speaker_volume: '扬声器音量',
+    stage_area: '讲台区域',
   },
   student: {
     student_name: '学生姓名',
@@ -354,6 +356,10 @@ export const zh = {
     ruddy: '红润',
     default: '默认',
   },
+  stage: {
+    visible: '显示',
+    hidden: '隐藏',
+  },
   pretest: {
     title: '设备检测',
     settingTitle: '设备设置',
@@ -524,6 +530,7 @@ export const zh = {
     'teacher.reward': '祝贺{reason}获得奖励',
     'teacher.reward2': '祝贺{reason1}等{reason2}位同学获得奖励',
     screen_permission_denied: '使用屏幕共享前，请先打开屏幕录制权限',
+    stream_window_full: '视频窗口数量已达{reason}人上限',
   },
   cabinet: {
     answer: {

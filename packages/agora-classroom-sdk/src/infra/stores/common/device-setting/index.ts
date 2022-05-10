@@ -1,10 +1,17 @@
-import { AgoraRteMediaSourceState, bound, Logger } from 'agora-rte-sdk';
+import { AGError, AgoraRteMediaSourceState, bound, Logger } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { CameraPlaceholderType } from '../type';
 import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from '../i18n';
-import { DEVICE_DISABLE } from 'agora-edu-core';
+import {
+  AGServiceErrorCode,
+  DEVICE_DISABLE,
+  EduClassroomConfig,
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+} from 'agora-edu-core';
+import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 
 export type SettingToast = {
   id: string;
@@ -149,6 +156,33 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 是否可设置隐藏/显示讲台区域
+   */
+  get deviceStage() {
+    if (EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.teacher) return;
+    switch (EduClassroomConfig.shared.sessionInfo.roomType) {
+      case EduRoomTypeEnum.Room1v1Class:
+        return false;
+      case EduRoomTypeEnum.RoomBigClass:
+        return false;
+      case EduRoomTypeEnum.RoomSmallClass:
+        return true;
+    }
+  }
+
+  /**
+   * 讲台状态
+   */
+  @computed
+  get stageVisible() {
+    if (EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass)
+      return typeof this.classroomStore.roomStore.flexProps.stage === 'undefined'
+        ? true
+        : this.classroomStore.roomStore.flexProps?.stage;
+    return false;
+  }
+
+  /**
    * 本地视频状态显示的占位符类型
    * @returns
    */
@@ -256,6 +290,38 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @bound
   setPlaybackDevice(id: string) {
     this.classroomStore.mediaStore.setPlaybackDevice(id);
+  }
+
+  /**
+   * 设置讲台开关
+   * 停止轮询 业务逻辑
+   * @param stage
+   */
+  @bound
+  setStageVisible(stage: boolean) {
+    try {
+      const isMainRoom =
+        this.classroomStore.connectionStore.sceneId ===
+        this.classroomStore.connectionStore.mainRoomScene?.sceneId;
+      if (isMainRoom) {
+        this.classroomStore.roomStore.updateFlexProperties({ stage: +stage }, { cmd: 1 });
+        !stage &&
+          EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
+        !stage && this.classroomStore.roomStore.stopCarousel();
+      } else {
+        console.error('不支持小房间隐藏');
+      }
+    } catch (e) {
+      if (
+        !AGError.isOf(
+          e as Error,
+          AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+          AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+        )
+      ) {
+        this.shareUIStore.addGenericErrorDialog(e as AGError);
+      }
+    }
   }
   onDestroy() {}
 }

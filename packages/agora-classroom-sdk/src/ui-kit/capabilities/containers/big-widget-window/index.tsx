@@ -1,6 +1,7 @@
 import { useStore } from '~hooks/use-edu-stores';
-import { FC, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
+import useMeasure from 'react-use-measure';
 import { ScreenShareContainer } from '../screen-share';
 import { TeacherStream } from '../stream/room-mid-player';
 import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
@@ -8,16 +9,17 @@ import { RoomBigTeacherStreamContainer } from '../stream/room-big-player';
 import { Room1v1TeacherStream } from '../stream/room-1v1-player';
 import { WhiteboardToolbar } from '../toolbar';
 import { TrackArea } from '../root-box';
+import StreamWindowsContainer from '../stream-windows-container';
 
 type Props = {
   children?: React.ReactNode;
 };
 
 export const BigWidgetWindowContainer: FC<Props> = observer((props) => {
-  const { widgetUIStore, streamUIStore } = useStore();
+  const { widgetUIStore, streamUIStore, streamWindowUIStore } = useStore();
+  const [measureRef, bounds] = useMeasure();
   const { bigWidgetWindowHeight, isBigWidgetWindowTeacherStreamActive } = widgetUIStore;
   const { teacherCameraStream } = streamUIStore;
-  const ref = useRef<HTMLDivElement>(null);
   const renderStreamPlayer = () => {
     switch (EduClassroomConfig.shared.sessionInfo.roomType) {
       case EduRoomTypeEnum.Room1v1Class:
@@ -28,16 +30,21 @@ export const BigWidgetWindowContainer: FC<Props> = observer((props) => {
         return <TeacherStream isFullScreen />;
     }
   };
+
+  useEffect(() => {
+    streamWindowUIStore.setMiddleContainerBounds(bounds);
+  }, [bounds]);
   return (
     <div
-      className="w-full relative flex-shrink-0"
+      className="w-full relative flex-shrink-0 middle-container"
       style={{ height: bigWidgetWindowHeight, position: 'relative' }}
-      ref={ref}>
+      ref={measureRef}>
       {props.children}
       <ScreenShareContainer />
-      {isBigWidgetWindowTeacherStreamActive && renderStreamPlayer()}
+      {/* {isBigWidgetWindowTeacherStreamActive && renderStreamPlayer()} */}
       <WhiteboardTrackArea />
       <WhiteboardToolbar />
+      <StreamWindowsContainer />
     </div>
   );
 });

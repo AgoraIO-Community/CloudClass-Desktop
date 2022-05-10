@@ -1,5 +1,6 @@
 import { AGError, bound, Lodash, AGRteErrorCode, Scheduler } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
+import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';

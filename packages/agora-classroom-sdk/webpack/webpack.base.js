@@ -10,6 +10,7 @@ const classroomSdkVersion = require('../package.json').version;
 module.exports = {
   externals: {
     'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
+    'agora-rdc-core': 'commonjs2 agora-rdc-core',
   },
   resolve: {
     fallback: {

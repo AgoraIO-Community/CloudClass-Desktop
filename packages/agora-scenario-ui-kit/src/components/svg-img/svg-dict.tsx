@@ -2196,6 +2196,10 @@ export const getPath = (name: string, props?: any) => {
 export const getViewBox = (name: string) => {
   switch (name) {
     case 'open-arrow':
+    case 'ghost-camera-on':
+    case 'ghost-camera-off':
+    case 'ghost-mic-on':
+    case 'ghost-mic-off':
       return '0 0 16 16';
     case 'close-arrow':
       return '0 0 24 24';
@@ -2556,6 +2560,8 @@ export const getViewBox = (name: string) => {
       return '0 0 18 18';
     case 'triangle-solid':
       return '0 0 14 14';
+    case 'stream-window-off':
+      return '0 0 22 22';
     default:
       return '0 0 1024 1024';
   }

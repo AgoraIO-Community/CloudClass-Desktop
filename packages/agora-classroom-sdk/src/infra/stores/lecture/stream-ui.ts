@@ -36,7 +36,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   @computed get localStreamTools(): EduStreamTool[] {
     const { sessionInfo } = EduClassroomConfig.shared;
     let tools: EduStreamTool[] = [];
-    tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
+    // tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
     if (sessionInfo.role === EduRoleTypeEnum.teacher) {
       tools.push(this.localPodiumTool());

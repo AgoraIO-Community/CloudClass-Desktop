@@ -1,9 +1,12 @@
-import { useRef, useState, useCallback, CSSProperties, useMemo } from 'react';
+import { useRef, useState, useCallback, CSSProperties, useMemo, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { useLectureUIStores } from '~hooks/use-edu-stores';
+import { useLectureUIStores, useStore } from '~hooks/use-edu-stores';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { EduLectureUIStore } from '@/infra/stores/lecture';
-import { StreamPlayer, StreamPlaceholder, CarouselGroup, NavGroup } from '.';
+import { StreamPlayer, StreamPlaceholder, CarouselGroup, NavGroup, VisibilityDOM } from '.';
+import useMeasure from 'react-use-measure';
+import { EduStreamUI } from '@/infra/stores/common/stream/struct';
+import { DragableContainer } from './room-mid-player';
 
 export const RoomBigTeacherStreamContainer = observer(
   ({ isFullScreen = false }: { isFullScreen?: boolean }) => {
@@ -20,21 +23,74 @@ export const RoomBigTeacherStreamContainer = observer(
     return (
       <div
         className="teacher-stream-container flex flex-col"
+        id="aisde-streams-container"
         style={{
           marginBottom: -2,
           ...containerStyle,
         }}
         ref={teacherStreamContainer}>
-        {teacherCameraStream ? (
-          <StreamPlayer
-            canSetupVideo={canSetupVideo}
-            isFullScreen={isFullScreen}
-            stream={teacherCameraStream}
-            style={teacherVideoStreamSize}></StreamPlayer>
-        ) : (
-          <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} />
-        )}
+        <DragableStream
+          stream={teacherCameraStream}
+          role={EduRoleTypeEnum.teacher}
+          style={teacherVideoStreamSize}
+          canSetupVideo={canSetupVideo}
+        />
       </div>
+    );
+  },
+);
+
+const DragableStream = observer(
+  ({
+    stream,
+    isFullScreen,
+    role,
+    style,
+    canSetupVideo,
+  }: {
+    stream?: EduStreamUI;
+    isFullScreen?: boolean;
+    role: EduRoleTypeEnum;
+    style?: CSSProperties;
+    canSetupVideo?: boolean;
+  }) => {
+    const [ref, bounds] = useMeasure();
+    const { streamWindowUIStore, streamUIStore } = useStore();
+    const { setStreamBoundsByStreamUuid } = streamUIStore;
+    const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+
+    const handleStreamDoubleClick = () => {
+      streamDragable && stream && handleStreamWindowContain(stream);
+    };
+
+    useEffect(() => {
+      stream && setStreamBoundsByStreamUuid(stream.stream.streamUuid, bounds);
+    }, [bounds]);
+
+    return (
+      <>
+        {stream ? (
+          <div style={{ position: 'relative' }}>
+            <div ref={ref} onDoubleClick={handleStreamDoubleClick}>
+              {visibleStream(stream.stream.streamUuid) ? (
+                <VisibilityDOM style={style} />
+              ) : (
+                <StreamPlayer
+                  canSetupVideo={canSetupVideo}
+                  stream={stream}
+                  isFullScreen={isFullScreen}
+                  style={style}></StreamPlayer>
+              )}
+              <DragableContainer
+                stream={stream}
+                dragable={!visibleStream(stream.stream.streamUuid)}
+              />
+            </div>
+          </div>
+        ) : (
+          <StreamPlaceholder role={role} />
+        )}
+      </>
     );
   },
 );
