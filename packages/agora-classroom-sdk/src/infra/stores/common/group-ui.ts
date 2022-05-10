@@ -444,9 +444,9 @@ export class GroupUIStore extends EduUIStoreBase {
         reject();
       });
       this.classroomStore.groupStore
-        .startGroup(groupDetails)
+        .startGroup(groupDetails, this.isCopyContent)
         .then(async () => {
-          await this.classroomStore.boardStore.exportWindowManagerAttributes();
+          await this.classroomStore.boardStore.exportWindowManagerAttributes(this.isCopyContent);
           runInAction(() => {
             this.localGroups = new Map();
           });
@@ -532,20 +532,31 @@ export class GroupUIStore extends EduUIStoreBase {
       return;
     }
 
-    if (!this.classroomStore.groupStore.currentSubRoom) {
-      this.classroomStore.groupStore.updateGroupUsers([
-        {
-          groupUuid: groupUuid,
-          addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
+    const group = this.groupDetails.get(groupUuid);
+    this.shareUIStore.addConfirmDialog(
+      transI18n('breakout_room.confirm_join_group_title'),
+      transI18n('breakout_room.confirm_join_group_content', {
+        reason: group?.groupName,
+      }),
+      {
+        onOK: () => {
+          if (!this.classroomStore.groupStore.currentSubRoom) {
+            this.classroomStore.groupStore.updateGroupUsers([
+              {
+                groupUuid: groupUuid,
+                addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
+              },
+            ]);
+          } else {
+            this.classroomStore.groupStore.moveUsersToGroup(
+              this.classroomStore.groupStore.currentSubRoom,
+              groupUuid,
+              [EduClassroomConfig.shared.sessionInfo.userUuid],
+            );
+          }
         },
-      ]);
-    } else {
-      this.classroomStore.groupStore.moveUsersToGroup(
-        this.classroomStore.groupStore.currentSubRoom,
-        groupUuid,
-        [EduClassroomConfig.shared.sessionInfo.userUuid],
-      );
-    }
+      },
+    );
   }
 
   @bound
@@ -646,11 +657,9 @@ export class GroupUIStore extends EduUIStoreBase {
   @bound
   private async _copyRoomContent() {
     const { localUser } = this.classroomStore.userStore;
-    const inital = localUser?.userProperties.get('widgets')?.netlessBoard.inital;
-    if (inital) {
+    const initial = localUser?.userProperties.get('widgets')?.netlessBoard.initial;
+    if (initial) {
       await this.classroomStore.boardStore.importWindowManagerAttributes();
-      const roomUuid = this.classroomStore.groupStore.currentSubRoom;
-      this.classroomStore.boardStore.copyScenes(roomUuid);
     }
   }
 
@@ -734,8 +743,14 @@ export class GroupUIStore extends EduUIStoreBase {
           isWritable: this.classroomStore.boardStore.isWritable,
         }),
         ({ managerReady, isWritable }) => {
-          if (managerReady && isWritable) {
-            this._copyRoomContent();
+          // isWritable only for student
+          if (managerReady) {
+            if (
+              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(EduClassroomConfig.shared.sessionInfo.role)
+              || (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isWritable)
+            ) {
+              this._copyRoomContent();
+            }
           }
         },
       ),

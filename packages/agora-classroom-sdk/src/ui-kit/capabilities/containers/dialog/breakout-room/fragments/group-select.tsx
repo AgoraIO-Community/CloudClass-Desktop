@@ -236,11 +236,21 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
   };
 
   const renameBtn = (
-    <LinkButton key="rename" text={transI18n('breakout_room.rename')} onClick={handleRename} />
+    <LinkButton
+      className="rename-btn"
+      key="rename"
+      text={transI18n('breakout_room.rename')}
+      onClick={handleRename}
+    />
   );
 
   const removeBtn = (
-    <LinkButton key="remove" text={transI18n('breakout_room.remove')} onClick={handleRemove} />
+    <LinkButton
+      className="remove-btn"
+      key="remove"
+      text={transI18n('breakout_room.remove')}
+      onClick={handleRemove}
+    />
   );
 
   const tialNode =
@@ -252,17 +262,28 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
       <div className="py-1">&nbsp;</div>
     );
 
+  const childrenLength = node?.children?.length;
+
   let content =
     level === 0 ? (
-      <RenameInput
-        key={`group-rename-input-${node.id}`}
-        editing={editing}
-        text={node.text}
-        onSubmit={(text) => {
-          setEditing(false);
-          renameGroupName(node.id, text);
-        }}
-      />
+      <>
+        <RenameInput
+          key={`group-rename-input-${node.id}`}
+          editing={editing}
+          text={node.text}
+          onSubmit={(text) => {
+            setEditing(false);
+            renameGroupName(node.id, text);
+          }}
+        />
+        <span className="tree-node-tips">
+          {childrenLength
+            ? transI18n('breakout_room.group_current_has_students', {
+                reason: `${childrenLength}`,
+              })
+            : transI18n('breakout_room.group_current_empty')}
+        </span>
+      </>
     ) : (
       node.text
     );
@@ -294,12 +315,12 @@ type Props = {
 export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { groups, isCopyContent, setCopyContent } = groupUIStore;
+  const { groupState, groups, isCopyContent, setCopyContent } = groupUIStore;
 
   const panelState = usePanelState();
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="flex-grow overflow-auto py-2">
+      <div className="flex-grow overflow-auto py-2 group-scroll-overflow">
         <PanelStateContext.Provider value={panelState}>
           <MultiRootTree
             childClassName="breakout-room-tree pl-4"
@@ -309,15 +330,17 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
           />
         </PanelStateContext.Provider>
       </div>
-      <div className="flex justify-start items-center group-tips-wrap">
-        <CheckBox
-          checked={isCopyContent}
-          onChange={(e: any) => {
-            setCopyContent(e.target.checked);
-          }}
-        />
-        <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
-      </div>
+      {groupState === GroupState.OPEN ? null : (
+        <div className="flex justify-start items-center group-tips-wrap">
+          <CheckBox
+            checked={isCopyContent}
+            onChange={(e: any) => {
+              setCopyContent(e.target.checked);
+            }}
+          />
+          <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
+        </div>
+      )}
       <Footer onNext={onNext} />
     </div>
   );
@@ -360,13 +383,17 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   );
 
   const addGroupButton = (
-    <Button size="xs" type="secondary" className="rounded-btn" onClick={addGroup}>
+    <Button size="xs" type="secondary" className="rounded-btn mr-2" onClick={addGroup}>
       {transI18n('breakout_room.add_group')}
     </Button>
   );
 
   const startButton = (
-    <Button size="xs" type="primary" className="rounded-btn" onClick={handleGroupState}>
+    <Button
+      size="xs"
+      type={groupState === GroupState.OPEN ? 'danger' : 'primary'}
+      className="rounded-btn"
+      onClick={handleGroupState}>
       {groupState === GroupState.OPEN
         ? transI18n('breakout_room.stop')
         : transI18n('breakout_room.start')}
@@ -391,19 +418,16 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   };
 
   const initial = (
-    <div className="flex justify-between px-4 py-2">
-      <div>
-        {reCreateButton}
-        {addGroupButton}
-      </div>
+    <div className="flex justify-end px-4 py-2">
+      {reCreateButton}
+      {addGroupButton}
       {startButton}
     </div>
   );
 
   const started = (
-    <div className="flex justify-between px-4 py-2">
+    <div className="flex justify-end px-4 py-2">
       {broadcastButton}
-      <div />
       {startButton}
     </div>
   );
@@ -447,7 +471,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
     footer = initial;
   }
 
-  return footer;
+  return <div className="group-select-footer">{footer}</div>;
 });
 
 const BroadcastInput = ({

@@ -26,6 +26,7 @@ import {
 import { WidgetUIStore } from './widget-ui';
 import { GroupUIStore } from './group-ui';
 import { ConvertMediaOptionsConfig } from '@/infra/api';
+import { RemoteControlUIStore } from './remote-control';
 
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class EduClassroomUIStore {
@@ -46,6 +47,7 @@ export class EduClassroomUIStore {
   protected _pretestUIStore: PretestUIStore;
   protected _widgetUIStore: WidgetUIStore;
   protected _groupUIStore: GroupUIStore;
+  protected _remoteControlUIStore: RemoteControlUIStore;
   protected _streamWindowUIStore: StreamWindowUIStore;
   private _installed = false;
 
@@ -67,6 +69,7 @@ export class EduClassroomUIStore {
     this._extensionAppUIStore = new ExtensionAppUIStore(store, this.shareUIStore);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
     this._groupUIStore = new GroupUIStore(store, this.shareUIStore);
+    this._remoteControlUIStore = new RemoteControlUIStore(store, this.shareUIStore);
     this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore);
   }
 
@@ -124,6 +127,9 @@ export class EduClassroomUIStore {
   }
   get groupUIStore() {
     return this._groupUIStore;
+  }
+  get remoteControlUIStore() {
+    return this._remoteControlUIStore;
   }
   get streamWindowUIStore() {
     return this._streamWindowUIStore;

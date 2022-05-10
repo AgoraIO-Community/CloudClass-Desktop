@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { Modal } from '~ui-kit';
 import './index.css';
@@ -17,11 +17,16 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
     groupState === GroupState.OPEN ? 'select' : 'start',
   );
 
+  const onCancel = useCallback(() => {
+    removeDialog(id);
+  }, [removeDialog, id])
+
   const fragment = useMemo(() => {
     switch (stage) {
       case 'start':
         return (
           <Start
+            onCancel={onCancel}
             onNext={() => {
               setStage('select');
             }}
@@ -42,9 +47,7 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
 
   return (
     <Modal
-      onCancel={() => {
-        removeDialog(id);
-      }}
+      onCancel={onCancel}
       closable
       title={`${transI18n('scaffold.breakout_room')} ${
         groupState === GroupState.OPEN

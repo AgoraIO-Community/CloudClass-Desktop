@@ -1,13 +1,14 @@
-import { AGError, bound, Lodash, AGRteErrorCode, Scheduler } from 'agora-rte-sdk';
+import { AGError, bound, Lodash, AGRteErrorCode, Scheduler, Injectable, Log } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
 import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
 import { ConfirmDialogAction, OrientationEnum } from '@/infra/types';
-import { EduErrorCenter } from 'agora-edu-core';
 import { getEduErrorMessage, getErrorServCode } from '@/infra/utils/error';
-import { ToastFilter } from '@/infra/utils/toast-filter';
+import { WindowID } from '@/infra/api';
+import { ChannelType, sendToMainProcess } from '@/infra/utils/ipc';
+import { EduClassroomConfig } from 'agora-edu-core';
 
 export enum DialogCategory {
   CloudDriver,
@@ -20,6 +21,8 @@ export enum DialogCategory {
   ScreenPicker,
   BreakoutRoom,
   Quit,
+  ScreenShare,
+  RemoteControlConfirm,
 }
 
 export interface ToastType {
@@ -36,7 +39,9 @@ export interface DialogType {
   props?: unknown;
 }
 
+@Log.attach({ proxyMethods: false })
 export class EduShareUIStore {
+  protected logger!: Injectable.Logger;
   readonly classroomViewportClassName = 'classroom-viewport';
   readonly classroomViewportTransitionDuration = 300;
   readonly navBarHeight = 27;
@@ -311,6 +316,38 @@ export class EduShareUIStore {
   @bound
   removeOrientationchange() {
     this._matchMedia.removeListener(this.handleOrientationchange);
+  }
+
+  @bound
+  showWindow(windowID: WindowID) {
+    sendToMainProcess(ChannelType.ShowBrowserWindow, windowID);
+  }
+
+  @bound
+  hideWindow(windowID: WindowID) {
+    sendToMainProcess(ChannelType.HideBrowserWindow, windowID);
+  }
+
+  @bound
+  openWindow(
+    windowID: WindowID,
+    payload: {
+      args?: Record<string, string | number | boolean>;
+      options?: Record<string, string | number | boolean>;
+    },
+  ) {
+    sendToMainProcess(
+      ChannelType.OpenBrowserWindow,
+      windowID,
+      payload.args,
+      payload.options,
+      EduClassroomConfig.shared.rteEngineConfig.language,
+    );
+  }
+
+  @bound
+  closeWindow(windowID: WindowID) {
+    sendToMainProcess(ChannelType.CloseBrowserWindow, windowID);
   }
 
   addViewportResizeObserver(callback: () => void) {

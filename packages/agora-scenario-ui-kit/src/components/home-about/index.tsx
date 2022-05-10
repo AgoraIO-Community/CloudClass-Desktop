@@ -1,26 +1,27 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { Icon } from '~components/icon';
 import './index.css';
 import { t } from '~components/i18n';
 import { SvgImg } from '../svg-img';
 
 export interface HomeAboutProps extends BaseProps {
   version?: string;
-  publishDate?: string;
   SDKVersion?: string;
   classroomVersion?: string;
   onLookPrivate?: Function;
   onLookDeclare?: Function;
   onRegiste?: Function;
+  commitID?: string;
+  buildTime?: string;
 }
 
 export const HomeAbout: FC<HomeAboutProps> = ({
-  version = '1.1.0',
-  publishDate = '2021.02.22',
-  SDKVersion = '3.3.0',
-  classroomVersion = '1.0',
+  version = '',
+  buildTime = '',
+  SDKVersion = '',
+  classroomVersion = '',
+  commitID = '',
   onLookPrivate = () => {
     console.log('onLookPrivate');
   },
@@ -86,6 +87,18 @@ export const HomeAbout: FC<HomeAboutProps> = ({
           <div className="main-text">{t('home-about.classroom-version')}</div>
           <div className="main-desc">{`Ver ${classroomVersion}`}</div>
         </div>
+        {buildTime && (
+          <div className="about-main-item">
+            <div className="main-text">{t('home-about.build-time')}</div>
+            <div className="main-desc">{`${buildTime}`}</div>
+          </div>
+        )}
+        {commitID && (
+          <div className="about-main-item">
+            <div className="main-text">{t('home-about.commit-id')}</div>
+            <div className="main-desc">{`${commitID}`.substring(0, 10)}</div>
+          </div>
+        )}
       </div>
     </div>
   );

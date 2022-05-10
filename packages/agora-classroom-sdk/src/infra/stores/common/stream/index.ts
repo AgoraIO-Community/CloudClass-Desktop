@@ -257,7 +257,11 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @computed get localScreenShareOff() {
     return (
-      this.classroomStore.mediaStore.localScreenShareTrackState !== AgoraRteMediaSourceState.started
+      (EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.student &&
+        this.classroomStore.mediaStore.localScreenShareTrackState !==
+          AgoraRteMediaSourceState.started) ||
+      (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student &&
+        !this.classroomStore.remoteControlStore.isControlled)
     );
   }
 
@@ -742,7 +746,11 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @bound
   stopScreenShareCapture() {
-    return this.classroomStore.mediaStore.stopScreenShareCapture();
+    if (this.classroomStore.remoteControlStore.isRemoteControlling) {
+      this.classroomStore.remoteControlStore.quitControlRequest();
+    } else {
+      return this.classroomStore.mediaStore.stopScreenShareCapture();
+    }
   }
 
   /**

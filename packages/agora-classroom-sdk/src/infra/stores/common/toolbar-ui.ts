@@ -1,3 +1,5 @@
+import { IPCMessageType } from '@/infra/types';
+import { ChannelType, listenChannelMessage } from '@/infra/utils/ipc';
 import {
   AGEduErrorCode,
   CustomBtoa,
@@ -5,21 +7,28 @@ import {
   EduErrorCenter,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
+  iterateMap,
   WhiteboardTool,
 } from 'agora-edu-core';
 import {
+  AgoraRteEngineConfig,
   AgoraRteMediaSourceState,
+  AgoraRteRuntimePlatform,
   AgoraRteVideoSourceType,
   AGScreenShareDevice,
   bound,
 } from 'agora-rte-sdk';
 import { isEqual } from 'lodash';
-import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
+import { action, computed, observable, reaction, runInAction, toJS, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
 import { DialogCategory } from './share-ui';
 import { EduStreamUI } from './stream/struct';
 import { BUILTIN_WIDGETS } from './widget-ui';
+export enum ScreenShareRoleType {
+  Teacher = 'teacher',
+  Student = 'student',
+}
 
 export enum ToolbarItemCategory {
   PenPicker,
@@ -115,66 +124,44 @@ export class ToolbarUIStore extends EduUIStoreBase {
     '#ffffff': '#E1E1EA',
   };
 
-  private _disposers: IReactionDisposer[] = [];
+  private _disposers: (() => void)[] = [];
 
   onInstall() {
     this.classroomStore.boardStore.setDefaultColors(this.defaultColors);
-    this._disposers.push(
-      reaction(
-        () => ({
-          localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
-          screenShareStreamUuid: this.classroomStore.streamStore.localShareStreamUuid,
+    if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+      this._disposers.push(
+        listenChannelMessage(ChannelType.Message, async (event, message) => {
+          switch (message.type) {
+            case IPCMessageType.SwitchScreenShareDevice:
+              this.selectScreenShareDevice();
+              break;
+          }
         }),
-
-        ({ localScreenShareTrackState, screenShareStreamUuid }) => {
-          const teacherCameraStreamUuid = this.teacherCameraStream?.stream.streamUuid;
+      );
+    }
+    this._disposers.push(
+      computed(() => this.classroomStore.streamStore.localShareStreamUuid).observe(
+        ({ newValue, oldValue }) => {
           const { userUuid } = EduClassroomConfig.shared.sessionInfo;
 
-          runInAction(() => {
-            if (localScreenShareTrackState === AgoraRteMediaSourceState.started) {
-              if (screenShareStreamUuid && !this.isScreenSharing) {
-                this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
-                this.classroomStore.widgetStore.setActive(
-                  `streamWindow-${screenShareStreamUuid}`,
-                  {
-                    extra: {
-                      userUuid,
-                    },
-                  },
+          if (newValue && !oldValue) {
+            this.classroomStore.widgetStore.setActive(
+              `streamWindow-${newValue}`,
+              {
+                extra: {
                   userUuid,
-                );
-                this.classroomStore.widgetStore.widgetStateMap[
-                  `streamWindow-${teacherCameraStreamUuid}`
-                ] &&
-                  this.classroomStore.widgetStore.deleteWidget(
-                    `streamWindow-${teacherCameraStreamUuid}`,
-                  );
-              }
-            } else if (
-              localScreenShareTrackState === AgoraRteMediaSourceState.stopped ||
-              localScreenShareTrackState === AgoraRteMediaSourceState.error
-            ) {
-              if (screenShareStreamUuid) {
-                this.classroomStore.widgetStore.deleteWidget(
-                  `streamWindow-${screenShareStreamUuid}`,
-                );
-                this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
-                if (!this.isWhiteboardOpening)
-                  this.classroomStore.widgetStore.setActive(
-                    `streamWindow-${teacherCameraStreamUuid}`,
-                    {
-                      extra: {
-                        userUuid,
-                      },
-                    },
-                    userUuid,
-                  );
-              }
-            }
-          });
+                },
+              },
+              userUuid,
+            );
+          }
+          if (!newValue && oldValue) {
+            this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
+          }
         },
       ),
     );
+
     this._disposers.push(
       reaction(
         () => this.classroomStore.boardStore.boardReady,
@@ -196,6 +183,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   @observable private _activeCabinetItems: Set<string> = new Set();
 
   //computed
+
   /**
    * 当前激活的工具
    * @returns
@@ -322,6 +310,75 @@ export class ToolbarUIStore extends EduUIStoreBase {
     }
     return Array.from(streamSet)[0];
   }
+  @action.bound
+  startLocalScreenShare() {
+    if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
+      this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'warning');
+    }
+    if (this.isScreenSharing) {
+      this.classroomStore.mediaStore.stopScreenShareCapture();
+    } else {
+      if (this.classroomStore.mediaStore.isScreenDeviceEnumerateSupported()) {
+        this.selectScreenShareDevice();
+      } else {
+        //not supported, start directly
+        this.classroomStore.mediaStore.startScreenShareCapture();
+      }
+    }
+  }
+  selectScreenShareDevice() {
+    let displays = this.classroomStore.mediaStore.getDisplayDevices();
+    let windows = this.classroomStore.mediaStore.getWindowDevices();
+
+    const haveImage = ({ image }: AGScreenShareDevice) => !!image;
+
+    displays = displays.filter(haveImage);
+    windows = windows.filter(haveImage);
+
+    displays = displays.map((d, idx) => {
+      return {
+        ...d,
+        title: transI18n('screenshare.display', { reason: idx }),
+        imagebase64: CustomBtoa(d.image),
+      };
+    });
+
+    windows = windows
+      .map((d) => {
+        return {
+          ...d,
+          imagebase64: CustomBtoa(d.image),
+        };
+      })
+      .filter((win) => !win.isCurrent);
+    const collections = [...displays, ...windows];
+    this.shareUIStore.addDialog(DialogCategory.ScreenPicker, {
+      onOK: async (itemId: string) => {
+        const id = toJS(itemId);
+        const item = collections.find((c) => {
+          return isEqual(c.id, id);
+        });
+        if (item) {
+          if (
+            this.classroomStore.mediaStore.localScreenShareTrackState ===
+            AgoraRteMediaSourceState.started
+          ) {
+            this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+            this.classroomStore.mediaStore.stopScreenShareCapture();
+            await when(() => {
+              return this.classroomStore.streamStore.shareStreamTokens.size === 0;
+            });
+          }
+          setTimeout(() => {
+            this.classroomStore.mediaStore.startScreenShareCapture(itemId, item.type);
+            this.classroomStore.mediaStore.setCurrentScreenShareDevice(item);
+          }, 0);
+        }
+      },
+      desktopList: displays,
+      windowList: windows,
+    });
+  }
   /**
    * 打开 ExtApp 扩展工具
    * @param id
@@ -331,59 +388,36 @@ export class ToolbarUIStore extends EduUIStoreBase {
     const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
       case CabinetItemEnum.ScreenShare:
-        if (!this.classroomStore.mediaStore.hasScreenSharePermission()) {
-          this.shareUIStore.addToast(transI18n('toast2.screen_permission_denied'), 'warning');
-        }
-        if (this.isScreenSharing) {
-          this.classroomStore.mediaStore.stopScreenShareCapture();
-        } else {
-          if (this.classroomStore.mediaStore.isScreenDeviceEnumerateSupported()) {
-            //supported, show picker first
-            let displays = this.classroomStore.mediaStore.getDisplayDevices();
-            let windows = this.classroomStore.mediaStore.getWindowDevices();
+        if (
+          AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
+        ) {
+          this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
+            onOK: (screenShareType: ScreenShareRoleType) => {
+              if (screenShareType === ScreenShareRoleType.Teacher) {
+                this.startLocalScreenShare();
+              } else {
+                const studentList = this.classroomStore.userStore.studentList;
+                if (studentList.size <= 0)
+                  return this.shareUIStore.addToast(transI18n('fcr_share_no_student'), 'warning');
+                const canControlledStudentList =
+                  this.classroomStore.remoteControlStore.canControlledStudentList;
 
-            const haveImage = ({ image }: AGScreenShareDevice) => !!image;
-
-            displays = displays.filter(haveImage);
-            windows = windows.filter(haveImage);
-
-            displays = displays.map((d, idx) => {
-              return {
-                ...d,
-                title: transI18n('screenshare.display', { reason: idx }),
-                imagebase64: CustomBtoa(d.image),
-              };
-            });
-
-            windows = windows
-              .map((d) => {
-                return {
-                  ...d,
-                  imagebase64: CustomBtoa(d.image),
-                };
-              })
-              .filter((win) => !win.isCurrent);
-
-            const collections = [...displays, ...windows];
-            this.shareUIStore.addDialog(DialogCategory.ScreenPicker, {
-              onOK: (itemId: string) => {
-                const id = toJS(itemId);
-                setTimeout(() => {
-                  const item = collections.find((c) => {
-                    return isEqual(c.id, id);
+                if (canControlledStudentList.size > 0) {
+                  const { list } = iterateMap(canControlledStudentList, {
+                    onMap: (_key, item) => item,
                   });
-                  if (item) {
-                    this.classroomStore.mediaStore.startScreenShareCapture(itemId, item.type);
-                  }
-                }, 0);
-              },
-              items: collections,
-            });
-          } else {
-            //not supported, start directly
-            this.classroomStore.mediaStore.startScreenShareCapture();
-          }
+                  this.classroomStore.remoteControlStore.sendControlRequst(list[0]?.userUuid);
+                } else {
+                  this.shareUIStore.addToast(transI18n('fcr_share_device_no_support'), 'warning');
+                }
+              }
+            },
+          });
+        } else {
+          this.startLocalScreenShare();
         }
+
         break;
       case CabinetItemEnum.Laser:
         this.setTool(id);
@@ -619,7 +653,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed
   get teacherTools(): ToolbarItem[] {
-    if (this.classroomStore.boardStore.boardReady) {
+    if (
+      this.classroomStore.boardStore.boardReady &&
+      !this.classroomStore.remoteControlStore.isHost
+    ) {
       return [
         ToolbarItem.fromData({
           value: 'clicker',
@@ -713,7 +750,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       sessionInfo.userUuid,
     );
 
-    if (!whiteboardAuthorized) {
+    if (!whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
       //allowed to view user list only if not granted
       return [
         ToolbarItem.fromData({

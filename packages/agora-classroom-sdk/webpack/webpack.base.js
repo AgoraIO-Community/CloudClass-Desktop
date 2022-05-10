@@ -11,6 +11,7 @@ module.exports = {
   externals: {
     'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
     'agora-rdc-core': 'commonjs2 agora-rdc-core',
+    'agora-rdc-electron': 'commonjs2 agora-rdc-electron',
   },
   resolve: {
     fallback: {
@@ -160,6 +161,8 @@ module.exports = {
       EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
       CLASSROOM_SDK_VERSION: JSON.stringify(classroomSdkVersion),
       RTE_RUNTIME_PLATFORM: JSON.stringify(process.env.RTE_RUNTIME_PLATFORM),
+      BUILD_TIME: JSON.stringify(Date.now()),
+      BUILD_COMMIT_ID: JSON.stringify(process.env.FCR_BUILD_COMMIT_ID),
     }),
   ],
   stats: {

@@ -2,6 +2,7 @@ import { AgoraEduClassroomEvent, ClassroomState, EduEventCenter } from 'agora-ed
 import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import uuidv4 from 'uuid';
+import { transI18n } from '../i18n';
 
 export class LayoutUIStore extends EduUIStoreBase {
   @observable
@@ -10,6 +11,18 @@ export class LayoutUIStore extends EduUIStoreBase {
   @computed
   get isInSubRoom() {
     return !!this.classroomStore.groupStore.currentSubRoom;
+  }
+
+  @computed
+  get loadingText() {
+    if (this.classroomStore.remoteControlStore.remoteControlRequesting) {
+      const studentName = this.classroomStore.remoteControlStore.currentStudent?.userName;
+      return transI18n('fcr_share_reminded_student_agree', {
+        reason1: studentName,
+        reason2: studentName,
+      });
+    }
+    return '';
   }
 
   /**
@@ -48,8 +61,11 @@ export class LayoutUIStore extends EduUIStoreBase {
    */
   @computed get loading(): boolean {
     const classroomState = this.classroomStore.connectionStore.classroomState;
+    const remoteControlRequesting = this.classroomStore.remoteControlStore.remoteControlRequesting;
     return (
-      classroomState === ClassroomState.Connecting || classroomState === ClassroomState.Reconnecting
+      classroomState === ClassroomState.Connecting ||
+      classroomState === ClassroomState.Reconnecting ||
+      remoteControlRequesting
     );
   }
 

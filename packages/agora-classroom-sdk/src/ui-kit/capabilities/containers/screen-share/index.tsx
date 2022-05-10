@@ -53,6 +53,9 @@ const ScreenShareRemoteTrackPlayer = observer(
 export const ScreenShareContainer = observer(() => {
   const {
     streamUIStore: { localScreenShareOff, screenShareStream },
+    classroomStore: {
+      remoteControlStore: { isControlled, isHost },
+    },
   } = useStore();
   const remotecls = classnames({
     [`remote-screen-share-container`]: 1,
@@ -60,17 +63,17 @@ export const ScreenShareContainer = observer(() => {
   const localcls = classnames({
     [`local-screen-share-container`]: 1,
   });
-  return screenShareStream ? (
+  return screenShareStream || isControlled ? (
     <>
-      {screenShareStream.isLocal ? (
+      {screenShareStream?.isLocal || isControlled ? (
         <div className={localcls}>
           <ScreenShareLocalTrackPlayer />
         </div>
-      ) : (
+      ) : screenShareStream && !screenShareStream.isLocal && !isHost ? (
         <div className={remotecls}>
           <ScreenShareRemoteTrackPlayer stream={screenShareStream} />
         </div>
-      )}
+      ) : null}
     </>
   ) : null;
 });

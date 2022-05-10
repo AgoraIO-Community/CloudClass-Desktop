@@ -17,7 +17,10 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
   ];
   @computed
   get teacherTools(): ToolbarItem[] {
-    if (this.classroomStore.boardStore.boardReady) {
+    if (
+      this.classroomStore.boardStore.boardReady &&
+      !this.classroomStore.remoteControlStore.isHost
+    ) {
       return [
         ToolbarItem.fromData({
           value: 'clicker',
@@ -84,7 +87,7 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
       sessionInfo.userUuid,
     );
 
-    if (!whiteboardAuthorized) {
+    if (!whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
       return [];
     }
 

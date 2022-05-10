@@ -9,6 +9,8 @@ import { RoomBigTeacherStreamContainer } from '../stream/room-big-player';
 import { Room1v1TeacherStream } from '../stream/room-1v1-player';
 import { WhiteboardToolbar } from '../toolbar';
 import { TrackArea } from '../root-box';
+import { RemoteControlToolbar } from '../remote-control/toolbar';
+import { RemoteControlTrackArea } from '../remote-control/track-area';
 import StreamWindowsContainer from '../stream-windows-container';
 
 type Props = {
@@ -44,6 +46,8 @@ export const BigWidgetWindowContainer: FC<Props> = observer((props) => {
       {/* {isBigWidgetWindowTeacherStreamActive && renderStreamPlayer()} */}
       <WhiteboardTrackArea />
       <WhiteboardToolbar />
+      <RemoteControlToolbar></RemoteControlToolbar>
+      <RemoteControlTrackArea></RemoteControlTrackArea>
       <StreamWindowsContainer />
     </div>
   );

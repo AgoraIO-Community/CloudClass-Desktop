@@ -687,9 +687,20 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get navigationTitle() {
-    return this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName;
+    return (
+      (this.currScreenShareTitle || '') +
+      (this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName)
+    );
   }
-
+  /**
+   * 当前屏幕分享人名称
+   */
+  @computed
+  get currScreenShareTitle() {
+    const currSharedUser = this.classroomStore.remoteControlStore.currSharedUser;
+    if (currSharedUser)
+      return `(${transI18n('fcr_share_sharing', { reason: currSharedUser.userName })})`;
+  }
   /**
    * 所在房间名称
    */
@@ -711,9 +722,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const args = {
       webRecordConfig: {
         rootUrl: `${recordUrl}?language=${rteEngineConfig.language}`,
-        mode: RecordMode.Web,
+        videoBitrate: 3000,
       },
-      videoBitrate: 3000,
+      mode: RecordMode.Web,
       retryTimeout: recordRetryTimeout,
     };
 

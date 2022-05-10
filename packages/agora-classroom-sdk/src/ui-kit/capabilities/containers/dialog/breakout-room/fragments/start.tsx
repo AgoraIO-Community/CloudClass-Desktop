@@ -7,22 +7,14 @@ import { Button, RadioGroup, transI18n, Input } from '~ui-kit';
 import './index.css';
 
 type Props = {
+  onCancel: () => void;
   onNext: (params: { groupNum: number }) => void;
 };
 
-export const Start: FC<Props> = observer(({ onNext }) => {
+export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
   const { groupUIStore } = useStore();
 
   const { createGroups, numberToBeAssigned } = groupUIStore;
-
-  const groupNumOptions = useMemo(
-    () =>
-      range(1, 32).map((i) => ({
-        label: `${i}`,
-        value: i,
-      })),
-    [],
-  );
 
   const [groupNum, setGroupNum] = useState(1);
 
@@ -79,6 +71,16 @@ export const Start: FC<Props> = observer(({ onNext }) => {
         </div>
       </div>
       <div className="group-start-footer">
+        <Button
+          type="secondary"
+          size="xs"
+          className="rounded-btn"
+          style={{ marginRight: 15 }}
+          onClick={() => {
+            onCancel();
+          }}>
+          {transI18n('breakout_room.cancel_submit')}
+        </Button>
         <Button
           size="xs"
           className="rounded-btn"

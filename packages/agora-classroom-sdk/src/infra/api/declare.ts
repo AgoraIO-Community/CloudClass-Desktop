@@ -81,3 +81,8 @@ export enum PPTProgressPhase {
   Uploading,
   Converting,
 }
+
+export enum WindowID {
+  Main = 'main',
+  RemoteControlBar = 'remote-control-bar',
+}

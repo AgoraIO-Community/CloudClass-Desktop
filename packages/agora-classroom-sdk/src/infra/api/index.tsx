@@ -1,4 +1,5 @@
 import { Scenarios } from '@/ui-kit/capabilities/scenarios';
+import { ControlBar } from '@/ui-kit/capabilities/containers/fragments';
 import {
   EduRoomTypeEnum,
   EduClassroomConfig,
@@ -17,7 +18,7 @@ import {
 } from 'agora-edu-core';
 import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-gallery';
 import { render, unmountComponentAtNode } from 'react-dom';
-import { ListenerCallback } from './declare';
+import { ListenerCallback, WindowID } from './declare';
 import { EduContext } from '../contexts';
 import { EduVideoEncoderConfiguration, MediaOptions } from 'agora-rte-sdk';
 import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
@@ -80,6 +81,15 @@ export type LaunchOption = {
   extensions?: IAgoraExtensionApp[]; // 新app插件
   recordOptions?: RecordOptions; // 白板录制参数
   recordRetryTimeout?: number; // 录制重试间隔
+};
+
+/**
+ *  运行窗口选项
+ */
+export type LaunchWindowOption = {
+  windowID: WindowID; //窗口ID
+  language: LanguageEnum; // 语言
+  args: any; // 传入属性
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
@@ -186,7 +196,7 @@ export class AgoraEduSDK {
     }
   }
 
-  static async launch(dom: HTMLElement, option: LaunchOption): Promise<void> {
+  static launch(dom: HTMLElement, option: LaunchOption) {
     EduContext.reset();
     AgoraEduSDK.validateOptions(option);
     const {
@@ -278,6 +288,27 @@ export class AgoraEduSDK {
       </I18nProvider>,
       dom,
     );
+  }
+
+  static getWindowByID(id: WindowID, props: any) {
+    switch (id) {
+      case WindowID.RemoteControlBar:
+        return <ControlBar {...props} />;
+    }
+    return <div />;
+  }
+
+  static launchWindow(dom: HTMLElement, option: LaunchWindowOption) {
+    render(
+      <I18nProvider language={AgoraEduSDK.convertLanguage(option.language)}>
+        {this.getWindowByID(option.windowID, option.args)}
+      </I18nProvider>,
+      dom,
+    );
+
+    return () => {
+      unmountComponentAtNode(dom);
+    };
   }
 }
 

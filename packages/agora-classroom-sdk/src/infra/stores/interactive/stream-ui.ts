@@ -42,7 +42,6 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       this.carouselPosition,
       this.carouselPosition + this.carouselStudentShowCount,
     );
-
     const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
 
     if (!isInSubRoom) {
@@ -54,11 +53,10 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     for (const student of carouselStudentList) {
       const streamUuids =
         this.classroomStore.streamStore.streamByUserUuid.get(student.userUuid) || new Set();
-
       for (const streamUuid of streamUuids) {
         const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
 
-        if (stream) {
+        if (stream && stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare) {
           const uiStream = new EduStreamUI(stream);
 
           streams.push(uiStream);
