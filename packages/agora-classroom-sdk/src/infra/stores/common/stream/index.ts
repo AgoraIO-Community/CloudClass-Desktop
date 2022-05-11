@@ -186,10 +186,10 @@ export class StreamUIStore extends EduUIStoreBase {
       }
     }
 
-    if (streams.size > 1) {
+    if (streamSet.size > 1) {
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_UNEXPECTED_STUDENT_STREAM_LENGTH,
-        new Error(`unexpected stream size ${streams.size}`),
+        new Error(`unexpected stream size ${streamSet.size}`),
       );
     }
     return Array.from(streamSet)[0];
