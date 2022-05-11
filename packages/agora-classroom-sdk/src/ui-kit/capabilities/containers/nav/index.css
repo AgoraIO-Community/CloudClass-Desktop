@@ -29,6 +29,7 @@ td.biz-col.label.right {
   padding: 0 15px 0 8px;
   border-top: 0px;
   border: 1px solid #ececf1;
+  position: relative;
 }
 
 .fcr-biz-header-title-wrap {
@@ -50,9 +51,16 @@ td.biz-col.label.right {
   font-size: 13px;
 }
 
+.header-signal {
+  position: absolute;
+  left: 8px;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
+  position: absolute;
+  right: 15px;
 }
 
 .header-actions > svg {
@@ -103,18 +111,6 @@ td.biz-col.label.right {
 
 .biz-signal-quality.unknown path {
   fill: #bdbdca;
-}
-
-.biz-signal-content-row {
-  display: flex;
-  justify-content: space-between;
-}
-.biz-signal-content-row.margin-top-9 {
-  margin-top: 9px;
-}
-
-.biz-signal-content-row > .padding-right-27 {
-  padding-right: 27px;
 }
 
 .biz-col {

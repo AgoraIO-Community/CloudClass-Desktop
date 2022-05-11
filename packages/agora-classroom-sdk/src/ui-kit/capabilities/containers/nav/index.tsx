@@ -103,7 +103,7 @@ export const NavigationBar = observer(() => {
 
   return (
     <Header className="fcr-biz-header">
-      <div>
+      <div className="header-signal">
         <SignalQualityComponent />
       </div>
       <div className="fcr-biz-header-title-wrap">

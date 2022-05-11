@@ -21,7 +21,7 @@
 }
 
 .fcr-layout-header {
-  @apply flex flex-row justify-between items-center border-b border-gray-100 w-full;
+  @apply flex flex-row justify-center items-center border-b border-gray-100 w-full;
   flex: 0 0 27px;
 }
 
