@@ -41,7 +41,7 @@ export const OneToOneScenario = observer(() => {
                 {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
               </BigWidgetWindowContainer>
 
-              <Aside className="aisde-fixed">
+              <Aside className="aisde-fixed fcr-room-1v1">
                 <CollectorContainer />
               </Aside>
             </Content>

@@ -36,7 +36,7 @@ export const MidClassScenario = observer(() => {
                 {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
               </BigWidgetWindowContainer>
             </div>
-            <Aside className="aisde-fixed">
+            <Aside className="aisde-fixed fcr-room-mid">
               <CollectorContainer />
               <HandsUpContainer />
               <ChatWidgetPC />

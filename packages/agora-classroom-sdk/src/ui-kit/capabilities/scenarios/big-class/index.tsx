@@ -43,7 +43,7 @@ export const BigClassScenario = observer(() => {
             <Content>
               <BigWidgetWindowContainer>
                 {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
-                <Aside className="aisde-fixed">
+                <Aside className="aisde-fixed fcr-room-big">
                   <CollectorContainer />
 
                   <HandsUpContainer />
