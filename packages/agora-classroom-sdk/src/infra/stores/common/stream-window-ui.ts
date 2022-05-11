@@ -12,7 +12,13 @@ import {
   RteRole2EduRole,
 } from 'agora-edu-core';
 import { widgetTrackStruct } from './type';
-import { AGError, AgoraRteEventType, AgoraRteRemoteStreamType, bound } from 'agora-rte-sdk';
+import {
+  AGError,
+  AgoraRteEventType,
+  AgoraRteRemoteStreamType,
+  bound,
+  RtcState,
+} from 'agora-rte-sdk';
 import { DraggableData } from 'react-draggable';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 
@@ -732,7 +738,8 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       );
       return;
     }
-    if (!this.streamWindowMap.has(streamUuid) && info.userUuid !== localUserUuid) {
+    const rtcConnected = RtcState.Connected === this.classroomStore.connectionStore.rtcState;
+    if (!this.streamWindowMap.has(streamUuid) && info.userUuid !== localUserUuid && rtcConnected) {
       this.classroomStore.streamStore.setRemoteVideoStreamType(
         +streamUuid,
         AgoraRteRemoteStreamType.HIGH_STREAM,
@@ -756,10 +763,13 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   private _removeStreamWindowByUuid = (streamUuid: string) => {
     this.streamWindowMap.delete(streamUuid);
-    this.classroomStore.streamStore.setRemoteVideoStreamType(
-      +streamUuid,
-      AgoraRteRemoteStreamType.LOW_STREAM,
-    );
+    const rtcConnected = RtcState.Connected === this.classroomStore.connectionStore.rtcState;
+    if (rtcConnected) {
+      this.classroomStore.streamStore.setRemoteVideoStreamType(
+        +streamUuid,
+        AgoraRteRemoteStreamType.LOW_STREAM,
+      );
+    }
   };
 
   @action.bound
