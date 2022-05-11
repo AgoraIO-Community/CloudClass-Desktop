@@ -437,6 +437,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
                       extra: {
                         userUuid: this.teacherCameraStream?.fromUser.userUuid,
                       },
+                      position: { xaxis: 0, yaxis: 0 },
+                      size: { width: 1, height: 1 },
                     },
                     this.teacherCameraStream?.fromUser.userUuid,
                   );

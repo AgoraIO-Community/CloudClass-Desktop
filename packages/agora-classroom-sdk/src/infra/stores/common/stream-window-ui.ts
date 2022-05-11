@@ -1133,10 +1133,19 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         const widgetStreamWindowUuid = key.match(/streamWindow-(.*)/);
         if (widgetStreamWindowUuid?.length) {
           const streamUuid = widgetStreamWindowUuid[1];
-          const { extra, size } = value;
+          const { extra, size, position } = value;
           const hasTrack = this.streamWindowMap.has(`${streamUuid}`);
+          const notTrack = !size || !position;
 
-          if (extra?.operatorUuid === EduClassroomConfig.shared.sessionInfo.userUuid && hasTrack) {
+          if (
+            extra?.operatorUuid === EduClassroomConfig.shared.sessionInfo.userUuid &&
+            hasTrack &&
+            notTrack
+          ) {
+            return;
+          }
+
+          if (notTrack) {
             return;
           }
 
