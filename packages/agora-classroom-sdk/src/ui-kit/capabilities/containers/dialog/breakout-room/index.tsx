@@ -19,7 +19,7 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
 
   const onCancel = useCallback(() => {
     removeDialog(id);
-  }, [removeDialog, id])
+  }, [removeDialog, id]);
 
   const fragment = useMemo(() => {
     switch (stage) {

@@ -136,9 +136,10 @@ const DragableStreamWindow = observer(
       minRect,
     } = streamWindowUIStore;
 
-    return (
+    return streamWindowStreams.get(streamUuid) ? (
       <Rnd
         ref={rndRef}
+        key={streamUuid}
         className="stream-window"
         style={style}
         minWidth={minRect.minWidth}
@@ -183,24 +184,22 @@ const DragableStreamWindow = observer(
             ? !streamWindowLocked(streamWindowStreams.get(streamUuid))
             : true
         }>
-        {streamWindowStreams.get(streamUuid) ? (
-          <DragableOverlay
-            stream={streamWindowStreams.get(streamUuid)}
-            style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
-            isFullScreen={true}>
-            <div
-              style={{
-                width: info.width,
-                height: info.height,
-                minWidth: minRect.minWidth,
-                minHeight: minRect.minHeight,
-                background: 'transparent',
-              }}
-              onClick={handleStreamWindowClick(streamWindowStreams.get(streamUuid))}></div>
-          </DragableOverlay>
-        ) : null}
+        <DragableOverlay
+          stream={streamWindowStreams.get(streamUuid)}
+          style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
+          isFullScreen={true}>
+          <div
+            style={{
+              width: info.width,
+              height: info.height,
+              minWidth: minRect.minWidth,
+              minHeight: minRect.minHeight,
+              background: 'transparent',
+            }}
+            onClick={handleStreamWindowClick(streamWindowStreams.get(streamUuid))}></div>
+        </DragableOverlay>
       </Rnd>
-    );
+    ) : null;
   },
 );
 

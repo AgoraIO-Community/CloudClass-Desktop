@@ -32,7 +32,7 @@
 .breakout-room .content-area {
   position: relative;
   height: calc(100% - 40px + 20px);
-  background: #F8F9FB;
+  background: #f8f9fb;
 }
 
 .breakout-room .rounded-btn,
@@ -100,7 +100,7 @@
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #BDBDCA;
+  color: #bdbdca;
   top: 0;
   right: 0;
   bottom: 0;

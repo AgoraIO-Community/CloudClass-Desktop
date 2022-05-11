@@ -8,3 +8,6 @@
 .stream-window {
   pointer-events: all;
 }
+.stream-window-container .video-player-overlay .camera-placeholder {
+  border: 0;
+}

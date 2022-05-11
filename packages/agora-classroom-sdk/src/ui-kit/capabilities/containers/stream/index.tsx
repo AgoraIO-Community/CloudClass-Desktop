@@ -1,11 +1,19 @@
 import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import React, { CSSProperties, FC, Fragment, ReactNode, useEffect, useMemo, useRef } from 'react';
-import { useStore, useInteractiveUIStores } from '~hooks/use-edu-stores';
+import React, {
+  CSSProperties,
+  FC,
+  Fragment,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import { useStore } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import useMeasure from 'react-use-measure';
-import { useDrag } from '@use-gesture/react';
 import { useDebounce } from '~ui-kit/utilities/hooks';
 import './index.css';
 import {
@@ -24,6 +32,7 @@ import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { CameraPlaceholderType } from '@/infra/stores/common/type';
 import { DragableContainer } from './room-mid-player';
 import { divide } from 'lodash';
+import { debounce } from 'lodash';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -499,10 +508,20 @@ export const MeasuerContainer = observer(
     const {
       streamUIStore: { setStreamBoundsByStreamUuid },
     } = useStore();
-    useEffect(() => {
-      streamUuid && setStreamBoundsByStreamUuid(streamUuid, bounds);
-      console.log('MeasuerContainer', streamUuid, bounds);
-    }, [bounds]);
+
+    const handleStreamBoundsUpdate = useCallback(
+      debounce((id, bounds) => {
+        setStreamBoundsByStreamUuid(id, bounds);
+      }, 330),
+      [],
+    );
+
+    useEffect(
+      debounce(() => {
+        streamUuid && handleStreamBoundsUpdate(streamUuid, bounds);
+      }, 330),
+      [bounds],
+    );
     return <div ref={ref}>{children}</div>;
   },
 );
