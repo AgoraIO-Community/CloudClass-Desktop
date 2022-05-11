@@ -71,7 +71,7 @@ const DragableStream = observer(
       <>
         {stream ? (
           <div style={{ position: 'relative' }}>
-            <div ref={ref} onDoubleClick={handleStreamDoubleClick}>
+            <div ref={ref}>
               {visibleStream(stream.stream.streamUuid) ? (
                 <VisibilityDOM style={style} />
               ) : (
@@ -84,6 +84,8 @@ const DragableStream = observer(
               <DragableContainer
                 stream={stream}
                 dragable={!visibleStream(stream.stream.streamUuid)}
+                onDoubleClick={handleStreamDoubleClick}
+                toolbarPlacement="left"
               />
             </div>
           </div>

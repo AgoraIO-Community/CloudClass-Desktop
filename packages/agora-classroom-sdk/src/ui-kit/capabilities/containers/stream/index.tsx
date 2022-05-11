@@ -448,9 +448,6 @@ export const CarouselGroup = observer(
               style={{
                 marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2,
                 position: 'relative',
-              }}
-              onDoubleClick={() => {
-                handleDBClick && handleDBClick(stream);
               }}>
               <MeasuerContainer streamUuid={stream.stream.streamUuid}>
                 {invisible && invisible(stream.stream.streamUuid) ? (
@@ -465,6 +462,9 @@ export const CarouselGroup = observer(
                   <DragableContainer
                     stream={stream}
                     dragable={!invisible(stream.stream.streamUuid)}
+                    onDoubleClick={() => {
+                      handleDBClick && handleDBClick(stream);
+                    }}
                   />
                 ) : null}
               </MeasuerContainer>

@@ -728,6 +728,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   private _addStreamWindowByUuid = (streamUuid: string, info: StreamWindowWidget) => {
     const localUserUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
 
+    // 判断条件需处理 ⭐
     // 添加 streamwindow 的时候判断当前窗口数量
     if (this.streamWindowMap.size >= this.minRect.calculateCount) {
       this.shareUIStore.addToast(

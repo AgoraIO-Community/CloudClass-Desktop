@@ -103,8 +103,7 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
     <div
       ref={ref}
       style={{ marginRight: gap - 2, position: 'relative' }}
-      className={isFullScreen ? 'video-player-fullscreen' : ''}
-      onDoubleClick={handleStreamDoubleClick}>
+      className={isFullScreen ? 'video-player-fullscreen' : ''}>
       {visibleStream(teacherCameraStream.stream.streamUuid) ? (
         <VisibilityDOM style={videoStreamStyle} />
       ) : (
@@ -117,16 +116,26 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
       <DragableContainer
         stream={teacherCameraStream}
         dragable={!visibleStream(teacherCameraStream.stream.streamUuid)}
+        onDoubleClick={handleStreamDoubleClick}
       />
     </div>
   ) : null;
 });
 
 export const DragableContainer = observer(
-  ({ stream, dragable }: { stream: EduStreamUI; dragable: boolean }) => {
+  ({
+    stream,
+    onDoubleClick,
+    toolbarPlacement,
+  }: {
+    stream: EduStreamUI;
+    dragable: boolean;
+    onDoubleClick?: (...args: any) => void;
+    toolbarPlacement?: 'left' | 'bottom';
+  }) => {
     const [ref, bounds] = useMeasure();
     const [translate, setTranslate] = useState([0, 0]);
-    const { streamWindowUIStore, streamUIStore } = useStore();
+    const { streamWindowUIStore } = useStore();
     const { setStreamDragInfomation, streamDragable } = streamWindowUIStore;
 
     const handleDragStream = ({
@@ -142,7 +151,7 @@ export const DragableContainer = observer(
     };
 
     const bind = useDrag(({ args: [stream], active, xy }) => {
-      let delta = [xy[0] - bounds.x, xy[1] - bounds.y];
+      const delta = [xy[0] - bounds.x, xy[1] - bounds.y];
       setTranslate(delta);
 
       !active && setTranslate([0, 0]);
@@ -152,10 +161,12 @@ export const DragableContainer = observer(
     return (
       <DragableOverlay
         stream={stream}
-        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}>
+        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
+        toolbarPlacement={toolbarPlacement}>
         <div
           ref={ref}
           {...bind(stream)}
+          onDoubleClick={onDoubleClick}
           style={{
             touchAction: 'none',
             position: 'absolute',
@@ -179,15 +190,17 @@ export const DragableOverlay = ({
   style,
   children,
   isFullScreen,
+  toolbarPlacement,
 }: {
   stream: EduStreamUI;
   className?: string;
   children: ReactNode;
   style?: CSSProperties;
   isFullScreen?: boolean;
+  toolbarPlacement?: 'left' | 'bottom';
 }) => {
   const {
-    streamUIStore: { toolbarPlacement, fullScreenToolbarPlacement },
+    streamUIStore: { toolbarPlacement: streamToolbarPlacement, fullScreenToolbarPlacement },
   } = useStore();
   return (
     <Popover
@@ -205,7 +218,13 @@ export const DragableOverlay = ({
             isFullScreen={isFullScreen}></RemoteStreamPlayerTools>
         )
       }
-      placement={isFullScreen ? fullScreenToolbarPlacement : toolbarPlacement}>
+      placement={
+        isFullScreen
+          ? fullScreenToolbarPlacement
+          : toolbarPlacement
+          ? toolbarPlacement
+          : streamToolbarPlacement
+      }>
       {children}
     </Popover>
   );

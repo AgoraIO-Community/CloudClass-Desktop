@@ -55,8 +55,7 @@ const DragableStream = observer(
     isFullScreen?: boolean;
     role: EduRoleTypeEnum;
   }) => {
-    const { streamWindowUIStore, streamUIStore } = useStore();
-    const { setStreamBoundsByStreamUuid } = streamUIStore;
+    const { streamWindowUIStore } = useStore();
     const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
 
     const handleStreamDoubleClick = () => {
@@ -67,19 +66,18 @@ const DragableStream = observer(
       <>
         {stream ? (
           <div style={{ position: 'relative' }}>
-            <div onDoubleClick={handleStreamDoubleClick}>
-              <MeasuerContainer streamUuid={stream.stream.streamUuid}>
-                {visibleStream(stream.stream.streamUuid) ? (
-                  <VisibilityDOM style={{ width: '300px', height: '168px' }} />
-                ) : (
-                  <StreamPlayer stream={stream} isFullScreen={isFullScreen}></StreamPlayer>
-                )}
-                <DragableContainer
-                  stream={stream}
-                  dragable={!visibleStream(stream.stream.streamUuid)}
-                />
-              </MeasuerContainer>
-            </div>
+            <MeasuerContainer streamUuid={stream.stream.streamUuid}>
+              {visibleStream(stream.stream.streamUuid) ? (
+                <VisibilityDOM style={{ width: '300px', height: '168px' }} />
+              ) : (
+                <StreamPlayer stream={stream} isFullScreen={isFullScreen}></StreamPlayer>
+              )}
+              <DragableContainer
+                stream={stream}
+                dragable={!visibleStream(stream.stream.streamUuid)}
+                onDoubleClick={handleStreamDoubleClick}
+              />
+            </MeasuerContainer>
           </div>
         ) : (
           <StreamPlaceholder role={role} />
