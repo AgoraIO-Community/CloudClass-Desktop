@@ -3,8 +3,7 @@ import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { Edu1v1ClassUIStore } from '@/infra/stores/one-on-one';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useEffect, useMemo } from 'react';
-import useMeasure from 'react-use-measure';
+import { useMemo } from 'react';
 import { StreamPlayer, StreamPlaceholder, VisibilityDOM, MeasuerContainer } from '.';
 import { DragableContainer } from './room-mid-player';
 
@@ -56,10 +55,10 @@ const DragableStream = observer(
     role: EduRoleTypeEnum;
   }) => {
     const { streamWindowUIStore } = useStore();
-    const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+    const { streamDragable, visibleStream, handleDBClickStreamWindow } = streamWindowUIStore;
 
     const handleStreamDoubleClick = () => {
-      streamDragable && stream && handleStreamWindowContain(stream);
+      streamDragable && stream && handleDBClickStreamWindow(stream);
     };
 
     return (

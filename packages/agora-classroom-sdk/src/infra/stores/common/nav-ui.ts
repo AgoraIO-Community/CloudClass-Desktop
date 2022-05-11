@@ -841,19 +841,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  private _handleStreamWindowChange(type: AgoraEduClassroomUIEvent, streamUuids: string[]) {
+  private _handleStreamWindowChange(type: AgoraEduClassroomUIEvent, streamUserUuids: string[]) {
     if (type === AgoraEduClassroomUIEvent.streamWindowsChange) {
-      const teacherStreamWindow = streamUuids.find((streamUuid: string) => {
-        const targetStream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-        return (
-          targetStream &&
-          RteRole2EduRole(
-            EduClassroomConfig.shared.sessionInfo.roomType,
-            targetStream.fromUser.role,
-          ) === EduRoleTypeEnum.teacher
-        );
-      });
-      this.teacherStreamWindow = !!teacherStreamWindow;
+      const isContainTeacher = streamUserUuids.find(
+        (userUuid) => userUuid === EduClassroomConfig.shared.sessionInfo.userUuid,
+      );
+      this.teacherStreamWindow = !!isContainTeacher;
     }
   }
 

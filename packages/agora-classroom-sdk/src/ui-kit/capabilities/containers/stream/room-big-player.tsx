@@ -57,10 +57,10 @@ const DragableStream = observer(
     const [ref, bounds] = useMeasure();
     const { streamWindowUIStore, streamUIStore } = useStore();
     const { setStreamBoundsByStreamUuid } = streamUIStore;
-    const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+    const { streamDragable, visibleStream, handleDBClickStreamWindow } = streamWindowUIStore;
 
     const handleStreamDoubleClick = () => {
-      streamDragable && stream && handleStreamWindowContain(stream);
+      streamDragable && stream && handleDBClickStreamWindow(stream);
     };
 
     useEffect(() => {

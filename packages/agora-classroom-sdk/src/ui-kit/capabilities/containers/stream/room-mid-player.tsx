@@ -19,7 +19,7 @@ import { Popover } from '~ui-kit';
 export const RoomMidStreamsContainer = observer(() => {
   const {
     streamUIStore,
-    streamWindowUIStore: { visibleStream, streamDragable, handleStreamWindowContain },
+    streamWindowUIStore: { visibleStream, streamDragable, handleDBClickStreamWindow },
   } = useInteractiveUIStores() as EduInteractiveUIClassStore;
   const {
     videoStreamSize,
@@ -41,7 +41,7 @@ export const RoomMidStreamsContainer = observer(() => {
   );
 
   const handleStreamDoubleClick = (stream: EduStreamUI) => {
-    streamDragable && stream && handleStreamWindowContain(stream);
+    streamDragable && stream && handleDBClickStreamWindow(stream);
   };
 
   return (
@@ -74,7 +74,7 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
   const { streamUIStore, widgetUIStore, streamWindowUIStore } =
     useInteractiveUIStores() as EduInteractiveUIClassStore;
   const { teacherCameraStream, videoStreamSize, gap, setStreamBoundsByStreamUuid } = streamUIStore;
-  const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+  const { streamDragable, visibleStream, handleDBClickStreamWindow } = streamWindowUIStore;
   const videoStreamStyle = useMemo(() => {
     return isFullScreen
       ? { width: '100%', height: '100%' }
@@ -91,7 +91,7 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
   );
 
   const handleStreamDoubleClick = () => {
-    streamDragable && teacherCameraStream && handleStreamWindowContain(teacherCameraStream);
+    streamDragable && teacherCameraStream && handleDBClickStreamWindow(teacherCameraStream);
   };
 
   useEffect(() => {
