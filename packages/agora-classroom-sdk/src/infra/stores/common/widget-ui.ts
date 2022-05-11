@@ -8,9 +8,7 @@ import {
 import {
   AgoraRteEventType,
   AgoraRteMediaSourceState,
-  AgoraRteRemoteStreamType,
   AgoraRteVideoSourceType,
-  RtcState,
 } from 'agora-rte-sdk';
 import { get } from 'lodash';
 import { action, computed, IReactionDisposer, reaction, when } from 'mobx';
@@ -132,26 +130,6 @@ export class WidgetUIStore extends EduUIStoreBase {
     }
   }
   onInstall() {
-    this._disposers.push(
-      reaction(
-        () => ({
-          isBigWidgetWindowTeacherStreamActive: this.isBigWidgetWindowTeacherStreamActive,
-          teacherCameraStream: this.teacherCameraStream,
-          rtcState: this.classroomStore.connectionStore.rtcState,
-        }),
-        ({ isBigWidgetWindowTeacherStreamActive, teacherCameraStream, rtcState }) => {
-          teacherCameraStream?.stream.streamUuid &&
-            rtcState === RtcState.Connected &&
-            this.classroomStore.streamStore.setRemoteVideoStreamType(
-              Number(teacherCameraStream.stream.streamUuid),
-              isBigWidgetWindowTeacherStreamActive
-                ? AgoraRteRemoteStreamType.HIGH_STREAM
-                : AgoraRteRemoteStreamType.LOW_STREAM,
-            );
-        },
-      ),
-    );
-
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
       this._disposers.push(
         reaction(

@@ -1,6 +1,6 @@
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
-import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, Lambda } from 'mobx';
 import { EduStreamUI, StreamBounds } from './stream/struct';
 import { computedFn } from 'mobx-utils';
 import { cloneDeep, debounce, forEach, isNaN } from 'lodash';
@@ -428,8 +428,10 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   private snapshotPostion = [0, 0]; // 视频第一次拉到区域内的point
   private streamWindowFirstOffset = [0, 0]; // 视频第一次拉到区域的偏移量
   private streamWindowUpdatedFromRooom = false; // 收到widget更新标志位
+  private _highUuids = new Set();
+  private _lowUuids = new Set();
 
-  protected _disposers: IReactionDisposer[] = [];
+  protected _disposers: (IReactionDisposer | Lambda)[] = [];
 
   get minRect() {
     if (
@@ -614,6 +616,21 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     );
   }
 
+  /**
+   * 小流ID
+   */
+  @computed
+  get lowStreamUuids() {
+    const uuids = new Set<string>();
+    this.classroomStore.streamStore.streamByStreamUuid.forEach((stream, streamUuid) => {
+      if (!this.streamWindowMap.has(streamUuid)) {
+        uuids.add(streamUuid);
+      }
+    });
+
+    return uuids;
+  }
+
   get needDragable() {
     return EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
   }
@@ -733,15 +750,6 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
   @action.bound
   private _addStreamWindowByUuid = (streamUuid: string, info: StreamWindowWidget) => {
-    const localUserUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
-
-    const rtcConnected = RtcState.Connected === this.classroomStore.connectionStore.rtcState;
-    if (!this.streamWindowMap.has(streamUuid) && info.userUuid !== localUserUuid && rtcConnected) {
-      this.classroomStore.streamStore.setRemoteVideoStreamType(
-        +streamUuid,
-        AgoraRteRemoteStreamType.HIGH_STREAM,
-      );
-    }
     // 当宽高度小于最小宽高度的时候修改为最小宽高度
     const { width, height } = this.streamWindowContainerBounds;
     const { minWidth, minHeight } = this.minRect;
@@ -760,13 +768,6 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   private _removeStreamWindowByUuid = (streamUuid: string) => {
     this.streamWindowMap.delete(streamUuid);
-    const rtcConnected = RtcState.Connected === this.classroomStore.connectionStore.rtcState;
-    if (rtcConnected) {
-      this.classroomStore.streamStore.setRemoteVideoStreamType(
-        +streamUuid,
-        AgoraRteRemoteStreamType.LOW_STREAM,
-      );
-    }
   };
 
   @action.bound
@@ -1489,6 +1490,30 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     });
   }
 
+  private _setRemoteStreamType(highStreamUuids: Set<string>, lowStreamUuids: Set<string>) {
+    if (highStreamUuids.size || lowStreamUuids.size) {
+      this.classroomStore.streamStore.streamByStreamUuid.forEach(async (stream, streamUuid) => {
+        const isLow = this._lowUuids.has(streamUuid);
+        const isHigh = this._highUuids.has(streamUuid);
+        if (highStreamUuids.has(streamUuid) && !isHigh) {
+          await this.classroomStore.streamStore.setRemoteVideoStreamType(
+            streamUuid,
+            AgoraRteRemoteStreamType.HIGH_STREAM,
+          );
+          this._highUuids.add(streamUuid);
+          this._lowUuids.delete(streamUuid);
+        } else if (lowStreamUuids.has(streamUuid) && !isLow) {
+          await this.classroomStore.streamStore.setRemoteVideoStreamType(
+            streamUuid,
+            AgoraRteRemoteStreamType.LOW_STREAM,
+          );
+          this._lowUuids.add(streamUuid);
+          this._highUuids.delete(streamUuid);
+        }
+      });
+    }
+  }
+
   onInstall() {
     this._disposers.push(
       reaction(
@@ -1535,6 +1560,43 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         },
       ),
     );
+
+    this._disposers.push(
+      computed(() => ({
+        rtcState: this.classroomStore.connectionStore.rtcState,
+        lowStreamUuids: this.lowStreamUuids,
+        windowStreamUuids: new Set(this.streamWindowMap.keys()),
+      })).observe(
+        ({
+          newValue,
+          oldValue = {
+            rtcState: RtcState.Idle,
+            windowStreamUuids: new Set(),
+            lowStreamUuids: new Set(),
+          },
+        }) => {
+          const { rtcState } = newValue;
+          const newSet = newValue.windowStreamUuids;
+          const oldSet = oldValue?.windowStreamUuids || new Set();
+          const lowUuids = this.lowStreamUuids;
+          const highUuids = new Set<string>();
+
+          if (rtcState === RtcState.Connected) {
+            for (const i of oldSet) {
+              if (!newSet.has(i)) {
+                lowUuids.add(i);
+              }
+            }
+            for (const i of newSet) {
+              if (!oldSet.has(i)) {
+                highUuids.add(i);
+              }
+            }
+            this._setRemoteStreamType(highUuids, lowUuids);
+          }
+        },
+      ),
+    );
     EduEventUICenter.shared.onClassroomUIEvents(this._handleClassroomUIEvents);
   }
 
@@ -1542,5 +1604,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     EduEventUICenter.shared.offClassroomUIEvents(this._handleClassroomUIEvents);
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    this._highUuids.clear();
+    this._lowUuids.clear();
   }
 }

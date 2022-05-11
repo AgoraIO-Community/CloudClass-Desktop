@@ -5,8 +5,6 @@ import {
   AgoraRteVideoSourceType,
   AGRenderMode,
   bound,
-  AgoraRteStreamUID,
-  AgoraRteRemoteStreamType,
 } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
@@ -581,7 +579,7 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get localStreamTools(): EduStreamTool[] {
-    let tools: EduStreamTool[] = [];
+    const tools: EduStreamTool[] = [];
     // tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
     return tools;
@@ -750,20 +748,6 @@ export class StreamUIStore extends EduUIStoreBase {
       this.classroomStore.remoteControlStore.quitControlRequest();
     } else {
       return this.classroomStore.mediaStore.stopScreenShareCapture();
-    }
-  }
-
-  /**
-   * 设置远端视频流的类型
-   * @param uid 流ID
-   * @param streamType 0大流，1小流
-   */
-  @bound
-  setRemoteVideoStreamType(uid: AgoraRteStreamUID, streamType: AgoraRteRemoteStreamType) {
-    try {
-      this.classroomStore.streamStore.setRemoteVideoStreamType(uid, streamType);
-    } catch (e) {
-      this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
 
