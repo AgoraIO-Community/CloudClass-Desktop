@@ -65,7 +65,7 @@ export class RemoteControlUIStore extends EduUIStoreBase {
       this.classroomStore.remoteControlStore.sendControlRequst(studentUuid);
     } else {
       this.shareUIStore.addToast(
-        transI18n('fcr_share_stopped_student_share', { reason: student?.userName }),
+        transI18n('fcr_share_device_not_support', { reason: student?.userName }),
       );
     }
   }
