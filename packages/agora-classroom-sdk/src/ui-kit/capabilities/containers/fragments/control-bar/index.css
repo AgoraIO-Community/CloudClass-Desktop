@@ -1,5 +1,4 @@
 .fcr-remote-control-bar {
-  -webkit-app-region: drag;
   display: flex;
   align-items: center;
   justify-content: space-between;
