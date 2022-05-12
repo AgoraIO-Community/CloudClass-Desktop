@@ -745,7 +745,12 @@ export class StreamUIStore extends EduUIStoreBase {
   @bound
   stopScreenShareCapture() {
     if (this.classroomStore.remoteControlStore.isRemoteControlling) {
-      this.classroomStore.remoteControlStore.quitControlRequest();
+      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+        this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+        this.classroomStore.mediaStore.stopScreenShareCapture();
+      } else {
+        this.classroomStore.remoteControlStore.quitControlRequest();
+      }
     } else {
       return this.classroomStore.mediaStore.stopScreenShareCapture();
     }
