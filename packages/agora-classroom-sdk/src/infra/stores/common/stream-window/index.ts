@@ -205,16 +205,16 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
   @computed
   get streamWindowRealBoundsMap() {
-    const _streamWindowRealBoundsMap: Map<string, StreamWindow> = new Map();
-    this.streamWindowMap.size &&
-      this.streamWindowMap.forEach((value: StreamWindow, streamUuid: string) => {
-        const x = value.x * this._streamWindowContainerBounds.width,
-          y = value.y * this._streamWindowContainerBounds.height,
-          width = value.width * this._streamWindowContainerBounds.width,
-          height = value.height * this._streamWindowContainerBounds.height;
-        _streamWindowRealBoundsMap.set(streamUuid, { ...value, x, y, width, height });
-      });
-    return _streamWindowRealBoundsMap;
+    const streamWindowRealBoundsMap: Map<string, StreamWindow> = new Map();
+
+    this.streamWindowMap.forEach((value: StreamWindow, streamUuid: string) => {
+      const x = value.x * this._streamWindowContainerBounds.width,
+        y = value.y * this._streamWindowContainerBounds.height,
+        width = value.width * this._streamWindowContainerBounds.width,
+        height = value.height * this._streamWindowContainerBounds.height;
+      streamWindowRealBoundsMap.set(streamUuid, { ...value, x, y, width, height });
+    });
+    return streamWindowRealBoundsMap;
   }
 
   /**
@@ -1136,6 +1136,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       this._lowUuids = handler.lowUuids;
       this._highUuids = handler.highUuids;
       this._streamWindowUpdatedFromRoom = handler.streamWindowUpdatedFromRoom;
+      this._dataStore.transitionStreams = new Map();
     } else {
       const handler = SceneEventHandler.createEventHandler(scene, this);
       this._dataStore = handler.dataStore;

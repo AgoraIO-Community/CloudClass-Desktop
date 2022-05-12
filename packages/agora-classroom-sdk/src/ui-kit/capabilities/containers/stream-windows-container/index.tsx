@@ -13,15 +13,11 @@ import { DragableOverlay } from '../stream/room-mid-player';
 const StreamWindowsContainer = observer(() => {
   const { streamWindowUIStore, streamUIStore } = useStore();
   const { streamsBounds } = streamUIStore;
-  const { streamWindows, streamWindowStreams, needDragable } = streamWindowUIStore;
+  const { streamWindows, needDragable } = streamWindowUIStore;
 
   return (
     <div className="stream-window-container" id="stream-window-container">
-      <TransitionStreamWindow
-        streamWindows={streamWindows.slice()}
-        streamsBounds={streamsBounds}
-        streamWindowStreams={streamWindowStreams}
-      />
+      <TransitionStreamWindow streamWindows={streamWindows.slice()} streamsBounds={streamsBounds} />
       {needDragable
         ? streamWindows.map(([streamUuid, streamWindow]) => (
             <DragableStreamWindow key={streamUuid} info={streamWindow} streamUuid={streamUuid} />
@@ -35,11 +31,9 @@ export const TransitionStreamWindow = observer(
   ({
     streamWindows,
     streamsBounds,
-    streamWindowStreams,
   }: {
     streamWindows: [string, StreamWindow][];
     streamsBounds: Map<string, StreamBounds>;
-    streamWindowStreams: Map<string, EduStreamUI>;
   }) => {
     const {
       streamWindowUIStore: { getStream, minRect, setTransitionStreams, removeTransitionStreams },
