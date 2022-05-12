@@ -167,10 +167,8 @@ export class RemoteControlUIStore extends EduUIStoreBase {
       );
       this._disposers.push(
         reaction(
-          () => this.classroomStore.userStore.studentList,
-          () => {
-            this.sendStudentListToRemoteControlBar();
-          },
+          () => this.classroomStore.userStore.studentList.size,
+          this.sendStudentListToRemoteControlBar,
         ),
       );
       this._disposers.push(
