@@ -82,6 +82,22 @@ export class RemoteControlUIStore extends EduUIStoreBase {
   onInstall(): void {
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       this.openRemoteControlToolbar();
+      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+        this._disposers.push(
+          reaction(
+            () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
+            (isScreenSharingOrRemoteControlling) => {
+              if (!isScreenSharingOrRemoteControlling)
+                sendToRendererProcess(WindowID.RemoteControlBar, ChannelType.Message, {
+                  type: IPCMessageType.ControlStateChanged,
+                  payload: {
+                    state: ControlState.NotAllowedControlled,
+                  },
+                });
+            },
+          ),
+        );
+      }
       if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
         this._disposers.push(
           reaction(

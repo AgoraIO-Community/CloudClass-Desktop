@@ -101,6 +101,20 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
   const { changeControlState, selectScreen, hide, close, updateWindowSize } = useActions();
   const [controlState, setControlState] = useState<string>(ControlState.NotAllowedControlled);
   const { studentList } = useStudentList();
+  useEffect(() => {
+    const cleaner = listenChannelMessage(ChannelType.Message, (_e, message) => {
+      if (message.type === IPCMessageType.ControlStateChanged) {
+        setControlState(
+          (
+            message.payload as {
+              state: string;
+            }
+          ).state,
+        );
+      }
+    });
+    return cleaner;
+  }, []);
   const onStudentChange = useCallback(
     (studentUuid: string) => {
       const student = studentList.find((i) => i.userUuid === studentUuid);
