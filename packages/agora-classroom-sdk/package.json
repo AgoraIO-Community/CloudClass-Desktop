@@ -75,7 +75,8 @@
       "icon": "icons/favicon.png",
       "target": [
         "nsis"
-      ]
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "nsis": {
       "oneClick": false,
