@@ -7,6 +7,7 @@ export enum AgoraEduClassroomUIEvent {
   streamWindowsChange = 'stream-window-change',
   toggleTeacherStreamWindow = 'toggle-teacher-stream-window',
   hiddenStage = 'hidden-stage',
+  toggleWhiteboard = 'toggle-whiteboard',
 }
 
 type EventCallback = (type: AgoraEduClassroomUIEvent, ...args: any[]) => void;

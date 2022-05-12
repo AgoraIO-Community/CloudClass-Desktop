@@ -1,7 +1,7 @@
 import { EduUIStoreBase } from '../base';
 import { EduStreamUI, StreamBounds } from '../stream/struct';
 import { transI18n } from '../i18n';
-import { action, computed, IReactionDisposer, observable, reaction, Lambda } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, Lambda, when } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { cloneDeep, forEach } from 'lodash';
 import {
@@ -14,6 +14,7 @@ import {
 import {
   AGError,
   AgoraRteEventType,
+  AgoraRteMediaSourceState,
   AgoraRteRemoteStreamType,
   AgoraRteScene,
   bound,
@@ -58,6 +59,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   private _lowUuids = new Set<string>();
   private _highUuids = new Set<string>();
 
+  @observable
   private _streamWindowContainerBounds = {
     left: 0,
     top: 0,
@@ -205,16 +207,15 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
   @computed
   get streamWindowRealBoundsMap() {
-    const streamWindowRealBoundsMap: Map<string, StreamWindow> = new Map();
-
+    const _streamWindowRealBoundsMap: Map<string, StreamWindow> = new Map();
     this.streamWindowMap.forEach((value: StreamWindow, streamUuid: string) => {
       const x = value.x * this._streamWindowContainerBounds.width,
         y = value.y * this._streamWindowContainerBounds.height,
         width = value.width * this._streamWindowContainerBounds.width,
         height = value.height * this._streamWindowContainerBounds.height;
-      streamWindowRealBoundsMap.set(streamUuid, { ...value, x, y, width, height });
+      _streamWindowRealBoundsMap.set(streamUuid, { ...value, x, y, width, height });
     });
-    return streamWindowRealBoundsMap;
+    return _streamWindowRealBoundsMap;
   }
 
   /**
@@ -295,6 +296,9 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     return this.transitionStreams.has(streamUuid);
   });
 
+  /**
+   * 返回当前是否有学生流
+   */
   @bound
   getStream(streamUuid: string) {
     const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
@@ -612,6 +616,11 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     });
   }
 
+  @bound
+  _setStreamWindowUpdate(status: boolean) {
+    this._streamWindowUpdatedFromRoom = status;
+  }
+
   /**
    * 双击视频窗口逻辑处理
    * @param stream
@@ -795,10 +804,18 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     const deleteStreams: string[] = [];
     this.streamWindowMap.forEach((value: StreamWindowWidget, streamUuid: string) => {
       const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-
-      if (!stream) {
-        deleteStreams.push(streamUuid);
+      if (
+        stream &&
+        RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, stream.fromUser.role) ===
+          EduRoleTypeEnum.teacher
+      ) {
+        return;
       }
+      const leavedStreams = this.studentStreams.find(
+        (value: EduStreamUI) => value.stream.streamUuid === streamUuid,
+      );
+
+      !leavedStreams && deleteStreams.push(streamUuid);
     });
 
     // 当讲台隐藏的时候添加 streamwindow
@@ -833,6 +850,9 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         break;
       case AgoraEduClassroomUIEvent.hiddenStage:
         this._handleOffPodium();
+        break;
+      case AgoraEduClassroomUIEvent.toggleWhiteboard:
+        this._handleToggleWhiteboard(args[0]);
         break;
       default:
         break;
@@ -937,7 +957,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @param streamUuid
    * @param streamWindowInfo
    */
-  @bound
+  @action.bound
   handleStreamWindowInfo(
     stream: EduStreamUI,
     streamWindowInfo: {
@@ -1026,15 +1046,6 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     return this._createNewTempStreamWindow();
   }
 
-  // /**
-  //  * 在讲台上的学生 stream
-  //  * @param streams
-  //  */
-  // @action.bound
-  // handleStreamsOnStageUpdate(streams: EduStreamUI[]) {
-  //   this.streamsOnStage = streams;
-  // }
-
   /**
    * 把不在指定区域的学生 streams 下台
    */
@@ -1054,6 +1065,29 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         }
       });
     });
+  }
+
+  @action.bound
+  private _handleToggleWhiteboard(status: boolean) {
+    // 白板关闭并且没有大窗的情况下，添加大窗
+    if (status && !this.streamWindowMap.size && this.teacherStream) {
+      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+
+      const streamwindow = {
+        width: 1,
+        height: 1,
+        x: 0,
+        y: 0,
+        contain: true,
+        zIndex: ZINDEX,
+        userUuid: userUuid,
+      };
+      this._addStreamWindowByUuid(
+        this.teacherStream.stream.streamUuid,
+        new StreamWindowWidget(streamwindow),
+      );
+      this.sendWigetDataToServer();
+    }
   }
 
   private _setRemoteStreamType(highStreamUuids: Set<string>, lowStreamUuids: Set<string>) {
@@ -1091,25 +1125,18 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       const widgetStreamWindowUuid = key.match(/streamWindow-(.*)/);
       if (widgetStreamWindowUuid?.length) {
         const streamUuid = widgetStreamWindowUuid[1];
-        const { extra, size, position } = value;
-        const hasTrack = this._dataStore.streamWindowMap.has(`${streamUuid}`);
+        const { size, position } = value;
         const notTrack = !size || !position;
         // 防止没有位置信息的 streamwindow
         if (notTrack) {
           return;
         }
-        if (extra?.operatorUuid === EduClassroomConfig.shared.sessionInfo.userUuid && hasTrack) {
-          return;
-        }
-
-        if (!hasTrack || extra?.operatorUuid !== EduClassroomConfig.shared.sessionInfo.userUuid) {
-          const streamWindowValue = this._decodeWidgetRect(value);
-          size &&
-            this._setStreamWindowMap(`${streamUuid}`, {
-              ...streamWindowValue,
-              userUuid: value.extra.userUuid,
-            });
-        }
+        const streamWindowValue = this._decodeWidgetRect(value);
+        size &&
+          this._setStreamWindowMap(`${streamUuid}`, {
+            ...streamWindowValue,
+            userUuid: value.extra.userUuid,
+          });
       }
     });
   }
@@ -1135,14 +1162,12 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       this._dataStore = handler.dataStore;
       this._lowUuids = handler.lowUuids;
       this._highUuids = handler.highUuids;
-      this._streamWindowUpdatedFromRoom = handler.streamWindowUpdatedFromRoom;
       this._dataStore.transitionStreams = new Map();
     } else {
       const handler = SceneEventHandler.createEventHandler(scene, this);
       this._dataStore = handler.dataStore;
       this._lowUuids = handler.lowUuids;
       this._highUuids = handler.highUuids;
-      this._streamWindowUpdatedFromRoom = handler.streamWindowUpdatedFromRoom;
     }
   }
 
@@ -1162,10 +1187,20 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       reaction(
         () => this.studentStreams,
         () => {
-          // if (typeof this.classroomStore.roomStore.flexProps.stage === 'undefined') return; // 如果没有讲台关闭的属性，那么不处理
-          if (EduClassroomConfig.shared.sessionInfo.roomType == EduRoomTypeEnum.Room1v1Class)
+          // 1v1 只处理学生离开了课堂需要把大窗口移除掉
+          if (
+            EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class &&
+            this._streamWindowUpdatedFromRoom &&
+            !this.studentStreams.length
+          ) {
+            this._handleOnOrOffPodium();
             return;
-          if (this._streamWindowUpdatedFromRoom) {
+          }
+
+          if (
+            EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class &&
+            this._streamWindowUpdatedFromRoom
+          ) {
             this._handleOnOrOffPodium();
           }
         },
@@ -1309,15 +1344,18 @@ class SceneEventHandler {
     if (changedRoomProperties.includes('widgets')) {
       if (isEmpty(cause)) {
         this._store.handleWidgetInfomationFromServer(roomProperties.widgets);
-        this.streamWindowUpdatedFromRoom = true;
+        this._store._setStreamWindowUpdate(true);
       } else {
         const {
           data: { actionType, widgetUuid },
         } = cause;
-        const { role } = EduClassroomConfig.shared.sessionInfo;
 
-        // 当角色不为老师的话
-        if (role !== EduRoleTypeEnum.teacher) {
+        // 当操作者角色为老师的话, 不为当前用户的话
+        if (
+          RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, operator.role) ===
+            EduRoleTypeEnum.teacher &&
+          operator.userUuid !== EduClassroomConfig.shared.sessionInfo.userUuid
+        ) {
           if (actionType === 2) {
             const widgetStreamWindowUuid = widgetUuid.match(/streamWindow-(.*)/);
             if (widgetStreamWindowUuid?.length) {

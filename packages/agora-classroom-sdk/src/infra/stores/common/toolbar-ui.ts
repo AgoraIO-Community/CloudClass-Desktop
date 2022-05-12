@@ -1,4 +1,5 @@
 import { IPCMessageType } from '@/infra/types';
+import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 import { ChannelType, listenChannelMessage } from '@/infra/utils/ipc';
 import {
   AGEduErrorCode,
@@ -460,26 +461,20 @@ export class ToolbarUIStore extends EduUIStoreBase {
             transI18n('toast.close_whiteboard_confirm'),
             {
               onOK: () => {
+                // send whiteboard close
                 this.classroomStore.widgetStore.setInactive(BUILTIN_WIDGETS.boardWidget);
-                if (!this.isScreenSharing && this.teacherCameraStream)
-                  this.classroomStore.widgetStore.setActive(
-                    `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
-                    {
-                      extra: {
-                        userUuid: this.teacherCameraStream?.fromUser.userUuid,
-                      },
-                      position: { xaxis: 0, yaxis: 0 },
-                      size: { width: 1, height: 1 },
-                    },
-                    this.teacherCameraStream?.fromUser.userUuid,
-                  );
+                EduEventUICenter.shared.emitClassroomUIEvents(
+                  AgoraEduClassroomUIEvent.toggleWhiteboard,
+                  true,
+                );
               },
             },
           );
         } else {
           this.classroomStore.widgetStore.setActive(BUILTIN_WIDGETS.boardWidget, {});
-          this.classroomStore.widgetStore.deleteWidget(
-            `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+          EduEventUICenter.shared.emitClassroomUIEvents(
+            AgoraEduClassroomUIEvent.toggleWhiteboard,
+            false,
           );
         }
         break;

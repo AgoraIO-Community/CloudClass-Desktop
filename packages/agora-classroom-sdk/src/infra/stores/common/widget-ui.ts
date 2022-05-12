@@ -96,38 +96,38 @@ export class WidgetUIStore extends EduUIStoreBase {
     operator: any,
   ) {
     const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-    if (!operator.userUuid) {
-      changedRoomProperties.forEach(async (key) => {
-        if (key === 'widgets') {
-          const whiteboardProperties = get(
-            roomProperties,
-            `widgets.${BUILTIN_WIDGETS.boardWidget}`,
-            {},
-          );
-          if (whiteboardProperties) {
-            const whiteboardState = get(whiteboardProperties, 'state');
-            if (whiteboardState === 0) {
-              await when(() => !!this.teacherCameraStream?.stream.streamUuid);
-              if (
-                this.classroomStore.mediaStore.localScreenShareTrackState !==
-                  AgoraRteMediaSourceState.started &&
-                !this.classroomStore.boardStore.configReady
-              ) {
-                this.classroomStore.widgetStore.setActive(
-                  `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
-                  {
-                    extra: {
-                      userUuid: userUuid,
-                    },
-                  },
-                  userUuid,
-                );
-              }
-            }
-          }
-        }
-      });
-    }
+    // if (!operator.userUuid) {
+    //   changedRoomProperties.forEach(async (key) => {
+    //     if (key === 'widgets') {
+    //       const whiteboardProperties = get(
+    //         roomProperties,
+    //         `widgets.${BUILTIN_WIDGETS.boardWidget}`,
+    //         {},
+    //       );
+    //       if (whiteboardProperties) {
+    //         const whiteboardState = get(whiteboardProperties, 'state');
+    //         if (whiteboardState === 0) {
+    //           await when(() => !!this.teacherCameraStream?.stream.streamUuid);
+    //           if (
+    //             this.classroomStore.mediaStore.localScreenShareTrackState !==
+    //               AgoraRteMediaSourceState.started &&
+    //             !this.classroomStore.boardStore.configReady
+    //           ) {
+    //             this.classroomStore.widgetStore.setActive(
+    //               `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+    //               {
+    //                 extra: {
+    //                   userUuid: userUuid,
+    //                 },
+    //               },
+    //               userUuid,
+    //             );
+    //           }
+    //         }
+    //       }
+    //     }
+    //   });
+    // }
   }
   onInstall() {
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
