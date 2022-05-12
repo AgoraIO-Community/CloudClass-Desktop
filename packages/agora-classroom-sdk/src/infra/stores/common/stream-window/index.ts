@@ -937,6 +937,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @param streamUuid
    * @param streamWindowInfo
    */
+  @bound
   handleStreamWindowInfo(
     stream: EduStreamUI,
     streamWindowInfo: {
