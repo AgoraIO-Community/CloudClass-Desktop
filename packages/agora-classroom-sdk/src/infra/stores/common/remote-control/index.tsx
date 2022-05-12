@@ -50,7 +50,7 @@ export class RemoteControlUIStore extends EduUIStoreBase {
         transparent: true,
         resizable: false,
         hasShadow: false,
-        focusable: false,
+        focusable: true,
         backgroundColor: '#00000000',
         show: false,
       },
