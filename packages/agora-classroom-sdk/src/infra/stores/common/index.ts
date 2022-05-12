@@ -14,13 +14,12 @@ import { TrackUIStore } from './layout/track';
 import { ExtensionAppUIStore } from './ext-app';
 import { destoryI18n, transI18n } from './i18n';
 import { NotificationUIStore } from './notification-ui';
-import { StreamWindowUIStore } from './stream-window-ui';
+import { StreamWindowUIStore } from './stream-window';
 import { PretestUIStore } from './pretest';
 import {
   AGServiceErrorCode,
   EduClassroomConfig,
   EduClassroomStore,
-  EduRoleTypeEnum,
   LeaveReason,
 } from 'agora-edu-core';
 import { WidgetUIStore } from './widget-ui';

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { StreamWindow } from '@/infra/stores/common/stream-window-ui';
+import { StreamWindow } from '@/infra/stores/common/stream-window/type';
 import { observer } from 'mobx-react';
 import { Rnd } from 'react-rnd';
 import { animated, useTransition } from 'react-spring';

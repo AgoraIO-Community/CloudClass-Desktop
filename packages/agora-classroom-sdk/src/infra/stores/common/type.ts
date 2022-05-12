@@ -41,7 +41,7 @@ export enum DeviceStateChangedReason {
   playbackUnplugged = 'pretest.playback_move_out',
 }
 
-export interface widgetTrackStruct {
+export interface WidgetTrackStruct {
   state: number;
   position: { xaxis: number; yaxis: number };
   size: { width: number; height: number };
