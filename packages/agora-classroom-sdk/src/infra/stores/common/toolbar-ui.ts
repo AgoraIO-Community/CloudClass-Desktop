@@ -176,6 +176,20 @@ export class ToolbarUIStore extends EduUIStoreBase {
         },
       ),
     );
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
+        (isScreenSharingOrRemoteControlling) => {
+          runInAction(() => {
+            if (isScreenSharingOrRemoteControlling) {
+              this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
+            } else {
+              this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
+            }
+          });
+        },
+      ),
+    );
   }
 
   // observables
@@ -392,6 +406,23 @@ export class ToolbarUIStore extends EduUIStoreBase {
           AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
           EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
         ) {
+          if (this.isScreenSharing) {
+            if (this.classroomStore.remoteControlStore.isRemoteControlling) {
+              const isTeacher =
+                EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
+              const isTeacherControlStudent =
+                this.classroomStore.remoteControlStore.isHost && isTeacher;
+              if (isTeacherControlStudent) {
+                this.classroomStore.remoteControlStore.quitControlRequest();
+              } else {
+                this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+                this.classroomStore.mediaStore.stopScreenShareCapture();
+              }
+            } else {
+              this.classroomStore.mediaStore.stopScreenShareCapture();
+            }
+            return;
+          }
           this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
             onOK: (screenShareType: ScreenShareRoleType) => {
               if (screenShareType === ScreenShareRoleType.Teacher) {
