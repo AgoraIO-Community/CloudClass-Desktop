@@ -191,6 +191,7 @@ export const DragableOverlay = ({
   children,
   isFullScreen,
   toolbarPlacement,
+  visible,
 }: {
   stream: EduStreamUI;
   className?: string;
@@ -198,6 +199,7 @@ export const DragableOverlay = ({
   style?: CSSProperties;
   isFullScreen?: boolean;
   toolbarPlacement?: 'left' | 'bottom';
+  visible?: boolean;
 }) => {
   const {
     streamUIStore: { toolbarPlacement: streamToolbarPlacement, fullScreenToolbarPlacement },
@@ -207,6 +209,7 @@ export const DragableOverlay = ({
       align={{
         offset: isFullScreen ? [0, -58] : [0, -8],
       }}
+      visible={visible}
       style={style}
       overlayClassName="video-player-tools-popover"
       content={

@@ -352,7 +352,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
     // 如果结束了视频拖拽，并且鼠标在区域内，那么更新位置到远端
     if (!active && this._isMatchWindowContainer(pos[0], pos[1])) {
-      this.sendWigetDataToServer(); // todo ⭐  发送单个 widget 数据
+      this.sendWigetDataToServer(streamUuid);
     }
   };
 
@@ -726,6 +726,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   handleStreamWindowSingalClick = (stream: EduStreamUI) => {
     let maxZindex = 2;
+
     this.streamWindowMap.forEach((value: StreamWindow, _: string) => {
       maxZindex = Math.max(maxZindex, value.zIndex);
     });
@@ -898,10 +899,15 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * 发送数据到远端，teacher only
    */
   @Lodash.debounced(300)
-  sendWigetDataToServer() {
+  sendWigetDataToServer(streamUuid?: string) {
     const { role } = EduClassroomConfig.shared.sessionInfo;
     if (role === EduRoleTypeEnum.teacher) {
       const widgetsData = this._encodeWidgetRect();
+      if (streamUuid) {
+        const value = widgetsData.get(streamUuid);
+        this.classroomStore.widgetStore.updateWidget(`streamWindow-${streamUuid}`, value);
+        return;
+      }
       widgetsData.forEach((value, streamUuid) => {
         const widgetUuid = `streamWindow-${streamUuid}`;
         this.classroomStore.widgetStore.updateWidget(widgetUuid, value);

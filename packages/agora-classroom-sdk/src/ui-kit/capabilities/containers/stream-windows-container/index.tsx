@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { StreamWindow } from '@/infra/stores/common/stream-window/type';
 import { observer } from 'mobx-react';
 import { Rnd } from 'react-rnd';
@@ -128,9 +128,8 @@ const DragableStreamWindow = observer(
       sendWigetDataToServer,
       streamWindowLocked,
       minRect,
-      getStream,
     } = streamWindowUIStore;
-
+    const [visible, setVisible] = useState<boolean>(false);
     return (
       <Rnd
         ref={rndRef}
@@ -149,13 +148,16 @@ const DragableStreamWindow = observer(
           y: info.y,
         }}
         onDrag={(e, d) => {
+          visible && setVisible(false);
           handleDrag(e, d, streamUuid, info.x);
         }}
+        // onDragStart={()=> { setVisible(false)}}
         onDragStop={() => {
           // sent to server
-          sendWigetDataToServer();
+          sendWigetDataToServer(streamUuid);
         }}
         onResize={(e, direction, ref, delta, position) => {
+          visible && setVisible(false);
           handleStreamWindowInfo(
             streamWindowStreams.get(streamUuid),
             {
@@ -167,8 +169,15 @@ const DragableStreamWindow = observer(
           );
         }}
         onResizeStop={() => {
-          sendWigetDataToServer();
+          sendWigetDataToServer(streamUuid);
         }}
+        onMouseEnter={() => {
+          setVisible(true);
+        }}
+        onMouseLeave={() => {
+          setVisible(false);
+        }}
+        onClick={handleStreamWindowClick(streamWindowStreams.get(streamUuid))}
         disableDragging={
           streamWindowStreams.get(streamUuid)
             ? streamWindowLocked(streamWindowStreams.get(streamUuid))
@@ -183,7 +192,8 @@ const DragableStreamWindow = observer(
           <DragableOverlay
             stream={streamWindowStreams.get(streamUuid)}
             style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
-            isFullScreen={true}>
+            isFullScreen={true}
+            visible={visible}>
             <div
               style={{
                 width: info.width,
@@ -191,8 +201,7 @@ const DragableStreamWindow = observer(
                 minWidth: minRect.minWidth,
                 minHeight: minRect.minHeight,
                 background: 'transparent',
-              }}
-              onClick={handleStreamWindowClick(streamWindowStreams.get(streamUuid))}></div>
+              }}></div>
           </DragableOverlay>
         ) : null}
       </Rnd>
