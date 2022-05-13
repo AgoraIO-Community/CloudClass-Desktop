@@ -719,7 +719,8 @@ export const en = {
   fcr_share_button_agree: 'Agree',
   fcr_share_title_controling: 'Controling',
   fcr_share_switch: 'Switch application share',
-
+  fcr_rc_control_anti_virus_software_conflict:
+    'If the remote control function cannot be used, please close the anti-virus software and computer housekeeper.',
   /** Remote Control */
   begin_class: 'Begin class',
   edu_error: {

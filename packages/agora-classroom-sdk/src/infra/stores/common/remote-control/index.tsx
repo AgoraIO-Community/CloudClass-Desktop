@@ -76,13 +76,15 @@ export class RemoteControlUIStore extends EduUIStoreBase {
   onDestroy(): void {
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       this._disposers.forEach((f) => f());
-      this.closeRemoteControlToolbar();
+      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher)
+        this.closeRemoteControlToolbar();
     }
   }
   onInstall(): void {
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
-      this.openRemoteControlToolbar();
       if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+        this.openRemoteControlToolbar();
+
         this._disposers.push(
           reaction(
             () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
@@ -94,6 +96,25 @@ export class RemoteControlUIStore extends EduUIStoreBase {
                     state: ControlState.NotAllowedControlled,
                   },
                 });
+            },
+          ),
+        );
+        this._disposers.push(
+          reaction(
+            () => ({
+              localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
+              currentScreenShareDevice: this.classroomStore.mediaStore.currentScreenShareDevice,
+            }),
+            ({ localScreenShareTrackState, currentScreenShareDevice }) => {
+              if (
+                localScreenShareTrackState === AgoraRteMediaSourceState.started &&
+                currentScreenShareDevice?.type === AGScreenShareType.Screen
+              ) {
+                this.shareUIStore.showWindow(WindowID.RemoteControlBar);
+                this.sendStudentListToRemoteControlBar();
+              } else {
+                this.shareUIStore.hideWindow(WindowID.RemoteControlBar);
+              }
             },
           ),
         );
@@ -185,25 +206,6 @@ export class RemoteControlUIStore extends EduUIStoreBase {
         reaction(
           () => this.classroomStore.userStore.studentList.size,
           this.sendStudentListToRemoteControlBar,
-        ),
-      );
-      this._disposers.push(
-        reaction(
-          () => ({
-            localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
-            currentScreenShareDevice: this.classroomStore.mediaStore.currentScreenShareDevice,
-          }),
-          ({ localScreenShareTrackState, currentScreenShareDevice }) => {
-            if (
-              localScreenShareTrackState === AgoraRteMediaSourceState.started &&
-              currentScreenShareDevice?.type === AGScreenShareType.Screen
-            ) {
-              this.shareUIStore.showWindow(WindowID.RemoteControlBar);
-              this.sendStudentListToRemoteControlBar();
-            } else {
-              this.shareUIStore.hideWindow(WindowID.RemoteControlBar);
-            }
-          },
         ),
       );
     }

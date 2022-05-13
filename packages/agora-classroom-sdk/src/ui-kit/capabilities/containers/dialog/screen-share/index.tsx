@@ -40,12 +40,19 @@ interface IScreenShareDialogContentPropsType {
 const ScreenShareDialogContent: FC<IScreenShareDialogContentPropsType> = (props) => {
   return (
     <div className="screen-share-dialog-container">
-      <Card width={190} height={210}>
-        <ScreenShareCardContent onClick={props.onSelect} type={ScreenShareRoleType.Teacher} />
-      </Card>
-      <Card width={190} height={210}>
-        <ScreenShareCardContent onClick={props.onSelect} type={ScreenShareRoleType.Student} />
-      </Card>
+      <div className="screen-share-dialog-card-container">
+        <Card width={190} height={210}>
+          <ScreenShareCardContent onClick={props.onSelect} type={ScreenShareRoleType.Teacher} />
+        </Card>
+        <Card width={190} height={210}>
+          <ScreenShareCardContent onClick={props.onSelect} type={ScreenShareRoleType.Student} />
+        </Card>
+      </div>
+
+      <div className="screen-share-dialog-container-tips">
+        <span>*</span>
+        <span>{t('fcr_rc_control_anti_virus_software_conflict')}</span>
+      </div>
     </div>
   );
 };

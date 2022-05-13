@@ -405,7 +405,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
       case CabinetItemEnum.ScreenShare:
         if (
           AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
+          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass &&
+          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
         ) {
           if (this.isScreenSharing) {
             if (this.classroomStore.remoteControlStore.isRemoteControlling) {

@@ -1,5 +1,10 @@
 .screen-share-dialog-container {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.screen-share-dialog-card-container {
+  display: flex;
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
@@ -38,4 +43,18 @@
   background: url('../assets/screen-share/student.png') no-repeat top center;
   background-size: contain;
   font-size: 0;
+}
+.screen-share-dialog-container-tips {
+  position: relative;
+  top: 25px;
+  font-size: 12px;
+  color: #586376;
+  text-align: center;
+}
+.screen-share-dialog-container-tips > span:first-child {
+  color: #f21d00;
+  padding-right: 4px;
+}
+.screen-share-dialog-container .fcr-card {
+  cursor: pointer;
 }

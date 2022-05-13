@@ -699,6 +699,8 @@ export const zh = {
   fcr_share_button_agree: '同意',
   fcr_share_title_controling: '正在控制',
   fcr_share_switch: '切换共享内容',
+  fcr_rc_control_anti_virus_software_conflict:
+    '如无法正常使用远程控制功能，请关闭杀毒软件和电脑管家。',
   /** Remote Control */
   begin_class: '开始上课',
   edu_error: {
