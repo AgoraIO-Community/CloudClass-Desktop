@@ -113,6 +113,10 @@
           console.log('evt', evt, args);
           if (evt === 1) {
             fetch(`https://api.sd-rtn.com/edu/apps/${appId}/v2/rooms/${roomUuid}/records/ready`, {
+              headers: {
+                'Content-Type': 'application/json',
+                'x-agora-token': rtmToken,
+              },
               method: 'PUT',
               cors: true,
             });
