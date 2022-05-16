@@ -36,14 +36,21 @@ export const TransitionStreamWindow = observer(
     streamsBounds: Map<string, StreamBounds>;
   }) => {
     const {
-      streamWindowUIStore: { getStream, minRect, setTransitionStreams, removeTransitionStreams },
+      streamWindowUIStore: {
+        getStream,
+        minRect,
+        setTransitionStreams,
+        removeTransitionStreams,
+        stageVisible,
+      },
     } = useStore();
 
     const calcInitPosition = (streamUuid: string) => {
       const targetStreamBounds = streamsBounds.get(streamUuid);
       const parent = document.querySelector('#stream-window-container');
       const parentBounds = parent?.getBoundingClientRect();
-      if (targetStreamBounds && parentBounds) {
+
+      if (stageVisible && targetStreamBounds && parentBounds) {
         const { left: targetLeft, top: targetTop, width, height } = targetStreamBounds;
         const { left: parentLeft, top: parentTop } = parentBounds;
 
