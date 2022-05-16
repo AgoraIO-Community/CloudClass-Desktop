@@ -136,7 +136,7 @@ export const DragableContainer = observer(
     const [ref, bounds] = useMeasure();
     const [translate, setTranslate] = useState([0, 0]);
     const { streamWindowUIStore } = useStore();
-    const { setStreamDragInfomation, streamDragable } = streamWindowUIStore;
+    const { setStreamDragInfomation, streamDragable, visibleStream } = streamWindowUIStore;
 
     const handleDragStream = ({
       stream,
@@ -150,12 +150,13 @@ export const DragableContainer = observer(
       streamDragable && setStreamDragInfomation({ stream, active, pos: xy });
     };
 
-    const bind = useDrag(({ args: [stream], active, xy }) => {
+    const bind = useDrag(({ args: [stream], active, xy, movement: [mx, my] }) => {
       const delta = [xy[0] - bounds.x, xy[1] - bounds.y];
       setTranslate(delta);
-
       !active && setTranslate([0, 0]);
-      handleDragStream({ stream, active, xy });
+      if (Math.abs(mx) >= 3 || Math.abs(my) >= 3) {
+        handleDragStream({ stream, active, xy });
+      }
     });
 
     return (
@@ -166,7 +167,7 @@ export const DragableContainer = observer(
         <div
           ref={ref}
           {...bind(stream)}
-          onDoubleClick={onDoubleClick}
+          onDoubleClick={visibleStream(stream.stream.streamUuid) ? () => {} : onDoubleClick}
           style={{
             touchAction: 'none',
             position: 'absolute',
