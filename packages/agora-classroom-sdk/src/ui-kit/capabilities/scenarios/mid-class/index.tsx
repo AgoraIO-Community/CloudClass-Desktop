@@ -17,11 +17,15 @@ import { SceneSwitch } from '~containers/scene-switch';
 import { Award } from '../../containers/award';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 import { useStore } from '@/infra/hooks/use-edu-stores';
+import { ScenesController } from '../../containers/scenes-controller';
 
 export const MidClassScenario = observer(() => {
   // layout
   const layoutCls = classnames('edu-room', 'mid-class-room');
-  const { classroomStore } = useStore();
+  const {
+    classroomStore,
+    streamWindowUIStore: { containedStreamWindowCoverOpacity },
+  } = useStore();
   const { boardStore } = classroomStore;
   const { whiteboardWidgetActive } = boardStore;
   return (
@@ -36,7 +40,11 @@ export const MidClassScenario = observer(() => {
                 {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
               </BigWidgetWindowContainer>
             </div>
-            <Aside className="aisde-fixed fcr-room-mid">
+            <ScenesController />
+
+            <Aside
+              className="aisde-fixed fcr-room-mid"
+              style={{ opacity: containedStreamWindowCoverOpacity }}>
               <CollectorContainer />
               <HandsUpContainer />
               <ChatWidgetPC />

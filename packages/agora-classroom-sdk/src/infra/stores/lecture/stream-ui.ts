@@ -12,7 +12,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   //5 students
   private _carouselShowCount = 5;
 
-  private _gapInPx = 8;
+  private _gapInPx = 4;
 
   @observable
   carouselPosition = 0;

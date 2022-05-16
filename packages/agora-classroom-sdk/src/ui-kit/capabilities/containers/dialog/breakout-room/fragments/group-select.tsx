@@ -10,6 +10,8 @@ import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
 import './index.css';
+import { ConfirmPanel } from '../confirm-panel';
+import { ConfirmDialog } from '../confirm-dialog';
 
 type LinkButtonProps = {
   text: string;
@@ -57,6 +59,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
   const { groupUIStore } = useStore();
 
   const userPanelId = 'user-panel' + groupUuid;
+  const confirmPanelId = 'confirm-panel' + groupUuid;
   const { visiblePanelId } = useContext(PanelStateContext);
 
   const {
@@ -69,9 +72,15 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
     getGroupUserCount,
     currentSubRoom,
     toastFullOfStudents,
+    groupDetails,
   } = groupUIStore;
 
-  const userCount = groupUuid ? getGroupUserCount(groupUuid) : notGroupedCount;
+  const { closeAll } = useContext(PanelStateContext);
+
+  const existGroupName = groupDetails.get(groupUuid)?.groupName
+
+  const groupName = existGroupName || transI18n('breakout_room.not_grouped');
+
   return (
     <div
       className="flex"
@@ -84,15 +93,24 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
           <div className="link-width py-1 pr-4 text-center hl-text">
             {transI18n('breakout_room.joined')}
           </div>
-        ) : (
-          <LinkButton
-            className="pr-4 hl-text text-right"
-            text={`${userCount}`}
-            onClick={() => groupUuid && joinSubRoom(groupUuid)}
-            hoverText={groupUuid && transI18n('fcr_group_button_join')}
-            hoverClassName="hl-text pr-0"
-          />
-        )
+        ) : existGroupName ? (
+          <ConfirmPanel
+            panelId={confirmPanelId}
+            title={transI18n('breakout_room.confirm_join_group_content', {
+              reason: groupName
+            })}
+            onOk={() => {
+              groupUuid && joinSubRoom(groupUuid);
+            }}
+            onCancel={() => {
+              closeAll();
+            }}>
+            <LinkButton
+              className="pr-4 hl-text text-right"
+              text={groupUuid && transI18n('fcr_group_button_join')}
+            />
+          </ConfirmPanel>
+        ) : null
       ) : (
         <UserPanel
           panelId={userPanelId}
@@ -200,7 +218,7 @@ const RenameInput: FC<RenameInputProps> = ({ editing, text, onSubmit }) => {
   return editing ? (
     <input
       maxLength={16}
-      className="px-1"
+      className="px-1 group-rename-input"
       ref={(ref) => {
         ref?.focus();
       }}
@@ -257,7 +275,16 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
     level === 0 && node.id ? (
       <GroupButtons groupUuid={node.id} btns={mouseEnter ? [renameBtn, removeBtn] : []} />
     ) : level === 1 ? (
-      <UserButtons groupUuid={getUserGroupUuid(node.id) as string} userUuid={node.id} />
+      <GroupButtons
+        groupUuid={node.id}
+        btns={
+          mouseEnter ? (
+            <UserButtons groupUuid={getUserGroupUuid(node.id) as string} userUuid={node.id} />
+          ) : (
+            []
+          )
+        }
+      />
     ) : (
       <div className="py-1">&nbsp;</div>
     );
@@ -280,8 +307,8 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
           <span className="tree-node-tips">
             {childrenLength
               ? transI18n('breakout_room.group_current_has_students', {
-                  reason: `${childrenLength}`,
-                })
+                reason: `${childrenLength}`,
+              })
               : transI18n('breakout_room.group_current_empty')}
           </span>
         )}
@@ -317,12 +344,47 @@ type Props = {
 export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { groupState, groups, isCopyContent, setCopyContent } = groupUIStore;
+  const { groupState, groups, isCopyContent, setCopyContent, stopGroup } = groupUIStore;
+
+  const [showConfirmDialog, setConfirmDialog] = useState<boolean>(false)
 
   const panelState = usePanelState();
+
+  const [broadcastVisible, setBroadcastVisible] = useState(false);
+
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="flex-grow overflow-auto py-2 group-scroll-overflow">
+      {showConfirmDialog ? (
+        <ConfirmDialog
+          onOk={() => {
+            stopGroup(onNext).finally(() => {
+              setConfirmDialog(false)
+            });
+           }}
+          onCancel={() => {
+            setConfirmDialog(false)
+           }}
+          onCancelText={transI18n('breakout_room.confirm_stop_group_sure')}
+        >
+          <div className="stop-group-main-text">
+            <div className="stop-group-main-title">
+              {transI18n('breakout_room.confirm_stop_group_title')}
+            </div>
+            <div className="stop-group-sub-title">
+              {transI18n('breakout_room.confirm_stop_group_content')}
+            </div>
+          </div>
+        </ConfirmDialog>
+      ) : null}
+      <div
+        className="overflow-auto py-2 group-scroll-overflow"
+        style={{
+          height: broadcastVisible ? 330 : 354, 
+          flexGrow: broadcastVisible ? 0 : 1
+        }}
+        onClick={() => {
+          panelState.closeAll();
+        }}>
         <PanelStateContext.Provider value={panelState}>
           <MultiRootTree
             childClassName="breakout-room-tree pl-4"
@@ -343,29 +405,35 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
           <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
         </div>
       )}
-      <Footer onNext={onNext} />
+      <Footer 
+        onNext={onNext} 
+        setConfirmDialog={setConfirmDialog}
+        broadcastVisible={broadcastVisible}
+        setBroadcastVisible={setBroadcastVisible}
+      />
     </div>
   );
 });
 
-const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
+const Footer: FC<{
+  onNext: () => void,
+  setConfirmDialog: (v: boolean) => void,
+  broadcastVisible: boolean,
+  setBroadcastVisible: (v: boolean) => void,
+}> = observer(({ onNext, setConfirmDialog, broadcastVisible, setBroadcastVisible }) => {
   const { groupUIStore } = useStore();
 
   const { addGroup, groupState, startGroup, stopGroup, broadcastMessage } = groupUIStore;
-
-  const [broadcastVisible, setBroadcastVisible] = useState(false);
 
   const [messageText, setMessageText] = useState('');
   const cursorRef = useRef<boolean>(false);
 
   const handleGroupState = () => {
-    if (cursorRef.current) return;
-    cursorRef.current = true;
     if (groupState === GroupState.OPEN) {
-      stopGroup(onNext).finally(() => {
-        cursorRef.current = false;
-      });
+      setConfirmDialog(true)
     } else {
+      if (cursorRef.current) return;
+      cursorRef.current = true;
       startGroup().finally(() => {
         cursorRef.current = false;
       });
@@ -376,7 +444,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
     <Button
       size="xs"
       type="secondary"
-      className="rounded-btn mr-2"
+      className="rounded-btn mr-2 recreate-btn"
       onClick={() => {
         stopGroup(onNext);
       }}>
@@ -385,7 +453,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
   );
 
   const addGroupButton = (
-    <Button size="xs" type="secondary" className="rounded-btn mr-2" onClick={addGroup}>
+    <Button size="xs" type="secondary" className="rounded-btn mr-2 add-group-btn" onClick={addGroup}>
       {transI18n('breakout_room.add_group')}
     </Button>
   );
@@ -394,7 +462,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
     <Button
       size="xs"
       type={groupState === GroupState.OPEN ? 'danger' : 'primary'}
-      className="rounded-btn"
+      className="rounded-btn start-btn"
       onClick={handleGroupState}>
       {groupState === GroupState.OPEN
         ? transI18n('breakout_room.stop')
@@ -406,7 +474,7 @@ const Footer: FC<{ onNext: () => void }> = observer(({ onNext }) => {
     <Button
       size="xs"
       type="secondary"
-      className="rounded-btn mr-2 px-1"
+      className="rounded-btn mr-2 px-1 broadcast-btn"
       onClick={() => {
         setBroadcastVisible(true);
       }}>

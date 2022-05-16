@@ -17,7 +17,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
   // 1 teacher + 6 students
   private _carouselShowCount = 7;
 
-  private _gapInPx = 8;
+  private _gapInPx = 4;
 
   @observable
   carouselPosition = 0;
@@ -143,7 +143,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       {
         //host can control
         interactable: true,
-        hoverIconType: 'stream-window-off',
+        hoverIconType: 'stream-window-on',
         onClick: async () => {
           try {
             EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.offStreamWindow); // stream window off event

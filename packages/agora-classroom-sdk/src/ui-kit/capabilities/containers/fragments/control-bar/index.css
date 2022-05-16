@@ -19,3 +19,6 @@
   padding-right: 10px;
   margin-right: 10px;
 }
+.fcr-remote-control-bar-select .react-select__control {
+  cursor: pointer;
+}

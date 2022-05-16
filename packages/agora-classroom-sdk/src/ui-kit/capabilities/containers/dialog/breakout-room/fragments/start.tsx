@@ -32,8 +32,8 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
           value={groupNum}
           onChange={(e) => {
             let num = Number(e.target.value);
-            if (num > 32) {
-              num = 32;
+            if (num > 20) {
+              num = 20;
             }
             if (num <= 1) {
               num = 1;
@@ -41,7 +41,7 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
             setGroupNum(num);
           }}
           min={1}
-          max={32}
+          max={20}
           width={150}
         />
         <div className="start-sub-title">{transI18n('breakout_room.group_type')}</div>
@@ -71,16 +71,6 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
         </div>
       </div>
       <div className="group-start-footer">
-        <Button
-          type="secondary"
-          size="xs"
-          className="rounded-btn"
-          style={{ marginRight: 15 }}
-          onClick={() => {
-            onCancel();
-          }}>
-          {transI18n('breakout_room.cancel_submit')}
-        </Button>
         <Button
           type="secondary"
           size="xs"

@@ -7,7 +7,7 @@ import {
 } from '@/infra/utils/ipc';
 import { WindowID } from '@/infra/api';
 import { ControlState, IPCMessageType } from '@/infra/types';
-import { Select, SvgImg, Tooltip, t } from '~ui-kit';
+import { Select, Tooltip, t, SvgIcon } from '~ui-kit';
 import './index.css';
 import { EduUser, DevicePlatform } from 'agora-edu-core';
 
@@ -92,7 +92,16 @@ type IconButtonProps = {
 const IconButton: FC<IconButtonProps> = ({ title, color, type, onClick }) => {
   return (
     <Tooltip title={title} placement="bottom">
-      <SvgImg canHover color={color} type={type} size={24} onClick={onClick} />
+      <span>
+        <SvgIcon
+          canHover
+          hoverType={type === 'switch-screen-share' ? type + '-active' : type}
+          color={color}
+          type={type}
+          size={24}
+          onClick={onClick}
+        />
+      </span>
     </Tooltip>
   );
 };
@@ -153,11 +162,11 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
                 document.querySelector('.fcr-remote-control-bar-select .options-container')
                   ?.clientHeight || 0;
 
-              updateWindowSize(46 + height);
+              updateWindowSize(92 + height);
             });
           }}
           onClose={() => {
-            updateWindowSize(46, 180);
+            updateWindowSize(92, 180);
           }}
         />
       </div>
@@ -170,7 +179,7 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
       {/* padding */}
       <div style={{ marginRight: 10 }} />
       <IconButton
-        title="关闭"
+        title={t('fcr_close')}
         color="#7B88A0"
         type="close"
         onClick={() => {

@@ -31,7 +31,6 @@ import RewardSound from './assets/audio/reward.mp3';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { CameraPlaceholderType } from '@/infra/stores/common/type';
 import { DragableContainer } from './room-mid-player';
-import { divide } from 'lodash';
 import { debounce } from 'lodash';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
@@ -167,7 +166,7 @@ export const LocalStreamPlayerTools = observer(
               <SvgIcon
                 canHover={tool.interactable}
                 style={tool.style}
-                // hoverType={tool.hoverIconType}
+                hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
                 onClick={tool.interactable ? tool.onClick : () => {}}
@@ -199,7 +198,7 @@ export const RemoteStreamPlayerTools = observer(
               <SvgIcon
                 canHover={tool.interactable}
                 style={tool.style}
-                // hoverType={tool.hoverIconType}
+                hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
                 onClick={tool.interactable ? tool.onClick : () => {}}
@@ -458,7 +457,7 @@ export const CarouselGroup = observer(
                     stream={stream}
                     style={videoStreamStyle}></StreamPlayer>
                 )}
-                {invisible ? (
+                {invisible && !invisible(stream.stream.streamUuid) ? (
                   <DragableContainer
                     stream={stream}
                     dragable={!invisible(stream.stream.streamUuid)}

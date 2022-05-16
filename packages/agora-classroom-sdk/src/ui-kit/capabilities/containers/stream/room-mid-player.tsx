@@ -8,7 +8,6 @@ import {
   NavGroup,
   RemoteStreamPlayerTools,
   StreamPlayer,
-  StreamPlayerOverlay,
   VisibilityDOM,
 } from '.';
 import useMeasure from 'react-use-measure';
@@ -98,13 +97,13 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
     teacherCameraStream &&
       setStreamBoundsByStreamUuid(teacherCameraStream.stream.streamUuid, bounds);
   }, [bounds]);
-
+  const visibleTeacherStream = visibleStream(teacherCameraStream?.stream.streamUuid);
   return teacherCameraStream ? (
     <div
       ref={ref}
       style={{ marginRight: gap - 2, position: 'relative' }}
       className={isFullScreen ? 'video-player-fullscreen' : ''}>
-      {visibleStream(teacherCameraStream.stream.streamUuid) ? (
+      {visibleTeacherStream ? (
         <VisibilityDOM style={videoStreamStyle} />
       ) : (
         <StreamPlayer
@@ -113,11 +112,13 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
           isFullScreen={isFullScreen}
           canSetupVideo={canSetupVideo}></StreamPlayer>
       )}
-      <DragableContainer
-        stream={teacherCameraStream}
-        dragable={!visibleStream(teacherCameraStream.stream.streamUuid)}
-        onDoubleClick={handleStreamDoubleClick}
-      />
+      {!visibleTeacherStream && (
+        <DragableContainer
+          stream={teacherCameraStream}
+          dragable={!visibleStream(teacherCameraStream.stream.streamUuid)}
+          onDoubleClick={handleStreamDoubleClick}
+        />
+      )}
     </div>
   ) : null;
 });

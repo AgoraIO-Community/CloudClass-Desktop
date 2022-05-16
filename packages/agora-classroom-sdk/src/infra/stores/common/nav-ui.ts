@@ -30,7 +30,7 @@ export interface EduNavAction<P = undefined> {
   title: string;
   iconType: string;
   iconColor?: string;
-  onClick: () => void;
+  onClick?: () => void;
   payload?: P;
 }
 
@@ -356,6 +356,16 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       if (isInSubRoom) {
         actions = actions.concat(studentActions);
       }
+      if (isRecording)
+        actions.unshift({
+          id: 'Record',
+          title: recordingTitle,
+          iconType: 'recording',
+          payload: {
+            text: transI18n('biz-header.recording'),
+            recordStatus: recordStatus,
+          },
+        });
     }
 
     actions = actions.concat(commonActions);
@@ -687,10 +697,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get navigationTitle() {
-    return (
-      (this.currScreenShareTitle || '') +
-      (this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName)
-    );
+    return this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName;
   }
   /**
    * 当前屏幕分享人名称
@@ -699,7 +706,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   get currScreenShareTitle() {
     const currSharedUser = this.classroomStore.remoteControlStore.currSharedUser;
     if (currSharedUser)
-      return `(${transI18n('fcr_share_sharing', { reason: currSharedUser.userName })})`;
+      return `${transI18n('fcr_share_sharing', {
+        reason: currSharedUser.userName,
+      })}`;
   }
   /**
    * 所在房间名称

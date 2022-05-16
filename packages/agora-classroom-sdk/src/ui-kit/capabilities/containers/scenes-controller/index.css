@@ -6,6 +6,7 @@
   bottom: 18px;
   z-index: 2;
   width: auto !important;
+  border-radius: 20px;
 }
 
 .scenes-controller-line {

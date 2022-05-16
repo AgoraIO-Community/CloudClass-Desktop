@@ -47,13 +47,34 @@
   white-space: nowrap;
   max-width: 100px;
 }
+.programs h5 {
+  border-bottom: 1px solid #eeeef7;
+  color: #191919;
+  font-weight: bold;
+  font-size: 14px;
+  padding-bottom: 5px;
+  margin-bottom: 14px;
+}
 .screen-picker-footer {
   position: relative;
-  top: 40px;
+  top: 25px;
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
+.screen-picker-footer .fcr-btn-secondary {
+  color: #677386;
+}
 .screen-picker-footer-confirm-btn {
   margin-left: 15px;
+}
+.screen-picker-footer-text {
+  flex: 1;
+  font-size: 14px;
+  color: #191919;
+  font-weight: bold;
+  padding-right: 40px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

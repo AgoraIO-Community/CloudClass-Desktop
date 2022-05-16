@@ -26,7 +26,15 @@ export const ScreenPickerDialog = ({
   const [activeId, setActiveId] = useState<string>('');
 
   return (
-    <Modal id={id} style={{ width: 662 }} title={t('fcr_share_title_select_window_share')}>
+    <Modal
+      id={id}
+      style={{ width: 662 }}
+      onCancel={() => {
+        removeDialog(id);
+        onCancel && onCancel();
+      }}
+      closable
+      title={t('fcr_share_title_select_window_share')}>
       <ScreenPicker
         onCancel={() => {
           removeDialog(id);
@@ -148,7 +156,9 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
         </div>
       </div>
       <div className="screen-picker-footer" key="screen-picker-footer">
-        <div>{activeTitle && transI18n('fcr_share_selected', { reason: activeTitle })}</div>
+        <div className="screen-picker-footer-text">
+          {activeTitle && transI18n('fcr_share_selected', { reason: activeTitle })}
+        </div>
         <div>
           <Button key="cancel" type={'secondary'} onClick={onCancel} action="cancel">
             {t('toast.cancel')}

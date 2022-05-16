@@ -1,6 +1,6 @@
 .breakout-room {
-  width: 420px;
-  height: 373px;
+  width: 490px;
+  height: 472px;
   padding-bottom: 0;
   --text-color: #586376;
   --link-hover-bg-color: #e8f0ff;
@@ -8,6 +8,18 @@
   --link-active-bg-color: #c7d3ed;
   --link-hl-color: #357bf6;
   color: var(--text-color);
+  font-size: 12px;
+  border-radius: 10px !important;
+  padding-bottom: 10px !important;
+  overflow: hidden;
+}
+
+.breakout-room .modal-title {
+  height: 28px;
+  background: #fff;
+}
+
+.breakout-room .modal-title .modal-title-text {
   font-size: 12px;
 }
 
@@ -35,6 +47,10 @@
   background: #f8f9fb;
 }
 
+.breakout-room .content-area.start {
+  background: #fff;
+}
+
 .breakout-room .rounded-btn,
 .breakout-room .ripple-circle {
   @apply rounded !important;
@@ -44,10 +60,10 @@
   color: var(--text-color);
 }
 
-.breakout-room .active-bg {
+/* .breakout-room .active-bg {
   background: var(--link-active-bg-color) !important;
   color: var(--link-active-color) !important;
-}
+} */
 
 /** overwrite popover's default style */
 .breakout-room-group-panel .popover-inner-content {
@@ -65,10 +81,14 @@
   display: none;
 }
 
-.breakout-room .fcr-tree-node:hover,
 .breakout-room-group-panel .fcr-tree-node:hover {
   background: #f9f9fc;
 }
+
+.breakout-room .fcr-tree-node:hover {
+  background: #EDEFF2;
+}
+
 .breakout-room .link-width {
   width: 60px;
 }
@@ -78,15 +98,20 @@
   width: 60px;
 }
 
-.breakout-room .link-btn:hover {
+/* .breakout-room .link-btn:hover {
   background: var(--link-hover-bg-color);
-}
+} */
+
 .breakout-room .fcr-tree-node {
   color: var(--text-color);
 }
 
 .breakout-room .hl-text {
   color: var(--link-hl-color) !important;
+}
+
+.breakout-room-broadcast-input {
+  top: 9px;
 }
 
 .breakout-room-broadcast-input textarea {
@@ -127,4 +152,84 @@
 
 .group-search-wrap .input-prefix {
   opacity: 0.5;
+}
+
+.group-user-checkbox + span > span {
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #586376;
+}
+
+.group-user-checkbox:checked + span > span {
+  color: #191919;
+}
+
+.panel-content .fcr-pure-material-checkbox:hover  span > span {
+  color: #357BF6;
+}
+
+.confirm-panel-wrap .confirm-panel-title {
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #191919;
+  margin-bottom: 48px;
+  width: 214px;
+}
+
+.confirm-panel-footer button{
+  border-radius: 0.25rem !important;
+}
+
+.confirm-dialog-without-title-container {
+  position: absolute;
+  top: -28px;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: calc(100% + 30px);
+  z-index: 999;
+}
+
+.confirm-dialog-withoout-title-main{
+  position: absolute;
+  width: 400px;
+  height: 189px;
+  background: #FFFFFF;
+  box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 10px;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.confirm-dialog-withoout-title-main .main-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stop-group-main-title {
+  font-size: 16px;
+  font-family: PingFang-SC-Bold, PingFang-SC;
+  font-weight: bold;
+  color: #191919;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.stop-group-sub-title {
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #586376;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.group-user-checkbox + span {
+  align-items: center;
 }

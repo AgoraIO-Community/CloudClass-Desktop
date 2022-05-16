@@ -90,7 +90,7 @@ export const Tree: FC<TreeProps> = ({
               type="triangle-solid"
               size={14}
               style={{
-                transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)',
+                transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
                 transition: 'transform .2s',
               }}
               className="mr-2"

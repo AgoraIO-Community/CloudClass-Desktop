@@ -7,7 +7,6 @@
   color: #fff;
   overflow: hidden;
   flex-shrink: 0;
-  margin: 2px 2px 2px 0;
 }
 .video-player-fullscreen {
   width: 100%;
@@ -16,6 +15,7 @@
 .video-player-overlay {
   position: relative;
   display: flex;
+  margin: 2px 0;
 }
 
 .video-player-overlay .top-right-info {
@@ -29,7 +29,7 @@
 
 .video-player-overlay .bottom-left-info {
   position: absolute;
-  bottom: 7px;
+  bottom: 4px;
   left: -3px;
   display: flex;
   align-items: center;
@@ -41,7 +41,7 @@
 }
 
 .video-player-overlay .bottom-left-info .username2 {
-  margin-left: 5px;
+  margin-left: 4px;
   margin-top: 2px;
   cursor: default;
 }
@@ -67,7 +67,7 @@
   border-radius: 4px;
 }
 .video-player-tools-popover.popover-placement-bottom {
-  padding-top: 18px;
+  /* padding-top: 18px; */
 }
 
 .stream-player-enter {
@@ -173,7 +173,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background-size: 100px 100px;
+  background-size: auto 67.7%;
   background-repeat: no-repeat;
   background-position: center bottom;
   background-image: url('./assets/svga/wave-arm.gif');

@@ -49,6 +49,18 @@ td.biz-col.label.right {
 .fcr-biz-header-title {
   color: #191919;
   font-size: 13px;
+  position: relative;
+}
+.fcr-biz-header-title .fcr-biz-header-title-share-name {
+  position: absolute;
+  right: 100%;
+  width: max-content;
+}
+.fcr-biz-header-split-line {
+  width: 2px;
+  height: 13px;
+  padding: 0 !important;
+  background-color: #e2e2ee;
 }
 
 .header-signal {

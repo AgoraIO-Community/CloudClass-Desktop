@@ -52,15 +52,21 @@ export const Pens: FC<PensProps> = ({
   const content = useCallback(
     () => (
       <div className={`expand-tools pens colors`}>
-        {pens.map((pen) => (
-          <div key={pen} onClick={() => handleClick(pen)} className="expand-tool pen">
-            <SvgIcon
-              color={activePen === pen ? activePaletteColor : '#7B88A0'}
-              type={activePen === pen ? pen + '-active' : pen}
-              canHover
-            />
-          </div>
-        ))}
+        <div className="flex flex-wrap justify-between">
+          {pens.map((pen) => (
+            <div
+              key={pen}
+              onClick={() => handleClick(pen)}
+              className="expand-tool pen"
+              style={{ width: '21%' }}>
+              <SvgIcon
+                color={activePen === pen ? activePaletteColor : '#7B88A0'}
+                type={activePen === pen ? pen + '-active' : pen}
+                canHover
+              />
+            </div>
+          ))}
+        </div>
 
         <div className="pens-colors-line"></div>
 
@@ -73,21 +79,27 @@ export const Pens: FC<PensProps> = ({
           step={colorSliderStep}
           onChange={onSliderChange}
         />
-        {colors.map((color) => (
-          <div
-            key={color}
-            onClick={() => handleColorClick(color)}
-            className="expand-tool color"
-            style={{ border: activeColor === color ? `1px solid ${activePaletteColor}` : 'none' }}>
+
+        <div className="pens-colors-line"></div>
+        <div className="flex flex-wrap justify-between">
+          {colors.map((color) => (
             <div
-              className="circle"
+              key={color}
+              onClick={() => handleColorClick(color)}
+              className="expand-tool color"
               style={{
-                backgroundColor: color,
-                border: `1px solid ${paletteMap[color] || 'transparent'}`,
-              }}
-            />
-          </div>
-        ))}
+                border: activeColor === color ? `1px solid ${activePaletteColor}` : 'none',
+              }}>
+              <div
+                className="circle"
+                style={{
+                  backgroundColor: color,
+                  border: `1px solid ${paletteMap[color] || 'transparent'}`,
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     ),
     [pens, activePen, handleClick, colors, activeColor, handleColorClick],

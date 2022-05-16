@@ -6,37 +6,14 @@ import '@netless/window-manager/dist/style.css';
 import { BoardPlaceHolder } from '~ui-kit';
 import './index.css';
 
-import { ScenesController } from '../scenes-controller';
-
 type Props = {
   children?: React.ReactNode;
 };
 
 export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
-  const {
-    boardUIStore,
-    toolbarUIStore,
-    classroomStore: {
-      remoteControlStore: { isHost },
-    },
-  } = useStore();
-  const {
-    readyToMount,
-    rejoinWhiteboard,
-    connectionLost,
-    joinWhiteboard,
-    leaveWhiteboard,
-    currentSceneIndex,
-    scenesCount,
-    addMainViewScene,
-    toPreMainViewScene,
-    toNextMainViewScene,
-    isGrantedBoard,
-    isTeacherOrAssistant,
-    redoSteps,
-    undoSteps,
-  } = boardUIStore;
-  const { setTool } = toolbarUIStore;
+  const { boardUIStore } = useStore();
+  const { readyToMount, rejoinWhiteboard, connectionLost, joinWhiteboard, leaveWhiteboard } =
+    boardUIStore;
 
   useEffect(() => {
     joinWhiteboard();
@@ -47,23 +24,6 @@ export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
 
   return readyToMount ? (
     <>
-      {(isTeacherOrAssistant || isGrantedBoard) && !isHost && (
-        <ScenesController
-          addScene={addMainViewScene}
-          preScene={toPreMainViewScene}
-          nextScene={toNextMainViewScene}
-          currentSceneIndex={currentSceneIndex}
-          scenesCount={scenesCount}
-          redoSteps={redoSteps}
-          undoSteps={undoSteps}
-          redo={() => {
-            setTool('redo');
-          }}
-          undo={() => {
-            setTool('undo');
-          }}
-        />
-      )}
       <div className="whiteboard-wrapper">
         {children}
         <div className="whiteboard">

@@ -55,7 +55,7 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
           : transI18n('scaffold.not_in_progress')
       }`}
       className="breakout-room"
-      contentClassName="content-area">
+      contentClassName={`content-area ${stage}`}>
       {fragment}
     </Modal>
   );

@@ -16,6 +16,7 @@ import { ToastContainer } from '~containers/toast';
 import { CollectorContainer } from '~containers/board';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 import { useStore } from '@/infra/hooks/use-edu-stores';
+import { ScenesController } from '../../containers/scenes-controller';
 
 type Props = {
   children?: React.ReactNode;
@@ -27,7 +28,10 @@ const Content: FC<Props> = ({ children }) => {
 
 export const OneToOneScenario = observer(() => {
   const layoutCls = classnames('edu-room');
-  const { classroomStore } = useStore();
+  const {
+    classroomStore,
+    streamWindowUIStore: { containedStreamWindowCoverOpacity },
+  } = useStore();
   const { boardStore } = classroomStore;
   const { whiteboardWidgetActive } = boardStore;
   return (
@@ -40,8 +44,11 @@ export const OneToOneScenario = observer(() => {
               <BigWidgetWindowContainer>
                 {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
               </BigWidgetWindowContainer>
+              <ScenesController />
 
-              <Aside className="aisde-fixed fcr-room-1v1">
+              <Aside
+                className="aisde-fixed fcr-room-1v1"
+                style={{ opacity: containedStreamWindowCoverOpacity }}>
                 <CollectorContainer />
               </Aside>
             </Content>

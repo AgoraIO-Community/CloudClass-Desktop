@@ -5,6 +5,9 @@
 .setting .device-choose {
   margin-bottom: 30px;
 }
+.setting .device-choose:last-child {
+  margin-bottom: 0;
+}
 .setting .device-title,
 .setting .device-text,
 .setting .beauty-text {
@@ -35,4 +38,37 @@
   font-size: 12px;
   font-weight: 400;
   color: #586376;
+}
+.beauty-desc,
+.device-desc {
+  color: #191919;
+}
+
+input[name='device-selection'] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.device-desc::before {
+  content: '';
+  width: 13px;
+  height: 13px;
+  background: #f9f9fc;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 1px solid #ececf1;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  left: -4px;
+}
+
+input[name='device-selection']:checked + .device-desc::before {
+  width: 13px;
+  height: 13px;
+  background: #fff;
+  border-radius: 50%;
+  border: 3px solid #357bf6;
+  box-sizing: border-box;
+  display: inline-block;
 }

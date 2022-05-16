@@ -44,7 +44,7 @@ export class RemoteControlUIStore extends EduUIStoreBase {
       options: {
         y: 0,
         width: 262,
-        height: 46,
+        height: 92,
         frame: false,
         alwaysOnTop: true,
         transparent: true,

@@ -467,16 +467,8 @@ export class GroupUIStore extends EduUIStoreBase {
   stopGroup(cb: () => void) {
     return new Promise<void>((resolve, reject) => {
       if (this.groupState === GroupState.OPEN) {
-        this.shareUIStore.addConfirmDialog(
-          transI18n('breakout_room.confirm_stop_group_title'),
-          transI18n('breakout_room.confirm_stop_group_content'),
-          {
-            onOK: () => {
-              cb();
-              this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
-            },
-          },
-        );
+        cb();
+        this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
       } else {
         cb();
       }
@@ -532,32 +524,20 @@ export class GroupUIStore extends EduUIStoreBase {
       this.shareUIStore.addToast(transI18n('breakout_room.already_in_room'));
       return;
     }
-
-    const group = this.groupDetails.get(groupUuid);
-    this.shareUIStore.addConfirmDialog(
-      transI18n('breakout_room.confirm_join_group_title'),
-      transI18n('breakout_room.confirm_join_group_content', {
-        reason: group?.groupName,
-      }),
-      {
-        onOK: () => {
-          if (!this.classroomStore.groupStore.currentSubRoom) {
-            this.classroomStore.groupStore.updateGroupUsers([
-              {
-                groupUuid: groupUuid,
-                addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
-              },
-            ]);
-          } else {
-            this.classroomStore.groupStore.moveUsersToGroup(
-              this.classroomStore.groupStore.currentSubRoom,
-              groupUuid,
-              [EduClassroomConfig.shared.sessionInfo.userUuid],
-            );
-          }
+    if (!this.classroomStore.groupStore.currentSubRoom) {
+      this.classroomStore.groupStore.updateGroupUsers([
+        {
+          groupUuid: groupUuid,
+          addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
         },
-      },
-    );
+      ]);
+    } else {
+      this.classroomStore.groupStore.moveUsersToGroup(
+        this.classroomStore.groupStore.currentSubRoom,
+        groupUuid,
+        [EduClassroomConfig.shared.sessionInfo.userUuid],
+      );
+    }
   }
 
   @bound
@@ -566,7 +546,10 @@ export class GroupUIStore extends EduUIStoreBase {
       message = message.trim().replaceAll('\n', '');
 
       if (!message) {
-        this.shareUIStore.addToast(transI18n('breakout_room.broadcast_message_cannot_be_empty'));
+        this.shareUIStore.addToast(
+          transI18n('breakout_room.broadcast_message_cannot_be_empty'),
+          'warning',
+        );
         return;
       }
 
@@ -580,7 +563,7 @@ export class GroupUIStore extends EduUIStoreBase {
   private _generateGroupName() {
     const nextSeq = (this._groupSeq += 1);
 
-    return `${transI18n('breakout_room.group_label')} ${nextSeq}`;
+    return `${transI18n('breakout_room.group_label')} ${nextSeq.toString().padStart(2, '0')}`;
   }
 
   @action

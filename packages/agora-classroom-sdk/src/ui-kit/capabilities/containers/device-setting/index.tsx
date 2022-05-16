@@ -75,6 +75,7 @@ const StageChoose = observer(() => {
       style={{
         display: 'flex',
         justifyContent: 'space-between',
+        marginBottom: 0,
       }}>
       <div>{transI18n('device.stage_area')}</div>
       <div style={{ display: 'flex' }}>
@@ -85,7 +86,10 @@ const StageChoose = observer(() => {
             gap: '40px',
           }}>
           {[true, false].map((value) => (
-            <label htmlFor={`${value}`} key={`${+value}`}>
+            <label
+              style={{ display: 'flex', alignItems: 'center' }}
+              htmlFor={`${value}`}
+              key={`${+value}`}>
               <input
                 type="radio"
                 id={`${value}`}
@@ -127,7 +131,7 @@ const Setting: React.FC<SettingProps> = observer(({ className, ...restProps }) =
             display: 'flex',
             justifyContent: 'space-between',
           }}>
-          <div>{transI18n('device.camera')}</div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>{transI18n('device.camera')}</div>
           <div style={{ display: 'flex' }}>
             <div
               style={{
@@ -135,9 +139,7 @@ const Setting: React.FC<SettingProps> = observer(({ className, ...restProps }) =
                 alignItems: 'center',
               }}>
               <CameraMirrorCheckBox />
-              <span className="beauty-desc" style={{ marginLeft: 5 }}>
-                {transI18n('media.mirror')}
-              </span>
+              <span className="beauty-desc">{transI18n('media.mirror')}</span>
             </div>
           </div>
         </div>
@@ -167,7 +169,7 @@ export const RoomDeviceSettingContainer = observer(({ id }: any) => {
 
   return (
     <Modal
-      title={transI18n('pretest.settingTitle')}
+      title={<span style={{ color: '#191919' }}>{transI18n('pretest.settingTitle')}</span>}
       style={{ width: 360 }}
       footer={[
         <Button key="ok" action="ok">

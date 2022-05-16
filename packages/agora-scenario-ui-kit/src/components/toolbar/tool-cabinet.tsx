@@ -1,8 +1,8 @@
-import React, { useCallback, FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
+import clsn from 'classnames';
 import { ToolItem } from './tool';
-import { transI18n } from '~components/i18n';
 import { SvgImg, SvgIcon } from '~components/svg-img';
 
 export interface CabinetItem {
@@ -33,15 +33,22 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
   };
   const content = () => (
     <div className={`expand-tools tool-cabinet`}>
-      {cabinetList.map((item) => (
-        <div
-          className={`cabinet-item ${activeItems.has(item.id) ? 'active' : ''}`}
-          key={item.id}
-          onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
-          {item.icon}
-          <span>{item.name}</span>
-        </div>
-      ))}
+      {cabinetList.map((item, idx, array) => {
+        const cls = clsn('cabinet-item', {
+          active: activeItems.has(item.id),
+          'cabinet-item-last': idx + 1 > array.length - (array.length % 3),
+        });
+
+        return (
+          <div
+            className={cls}
+            key={item.id}
+            onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
+            {item.icon}
+            <span>{item.name}</span>
+          </div>
+        );
+      })}
     </div>
   );
   return (
@@ -49,7 +56,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => setPopoverVisible(visible)}
-        overlayClassName="expand-tools-popover"
+        overlayClassName="tool-cabinet-popover"
         trigger="hover"
         content={content}
         placement="left">

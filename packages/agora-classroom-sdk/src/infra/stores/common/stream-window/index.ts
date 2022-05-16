@@ -236,7 +236,13 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   get containedStreamWindow() {
     return [...this.streamWindowMap.values()].find((item) => item.contain);
   }
-
+  /**
+   * 覆盖组件透明度（底部工具栏，侧边工具栏，举手按钮，聊天按钮）
+   */
+  @computed
+  get containedStreamWindowCoverOpacity() {
+    return this.containedStreamWindow ? 0.9 : 1;
+  }
   /**
    * 全屏展示的 streamWindow 数量
    */
@@ -1032,7 +1038,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     const size = this.streamWindowMap.size;
     const width = 0.135,
       height = 0.16,
-      offset = 0.009; // 根据设计稿比例
+      offset = 0.05; // 根据设计稿比例
 
     let x = 0.00625,
       y = 0.00625;

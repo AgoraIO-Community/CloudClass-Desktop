@@ -46,7 +46,7 @@ export const UserPanel: FC<UserPanelProps> = ({
         {users.length ? (
           <div className="group-search-wrap">
             <Search
-              prefix={<SvgImg type="search" />}
+              prefix={<SvgImg type="search" size={18}/>}
               value={keyword}
               onSearch={setKeyword}
               inputPrefixWidth={32}
@@ -73,6 +73,7 @@ export const UserPanel: FC<UserPanelProps> = ({
               .map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
                 <div key={userUuid} style={{ width: '50%' }}>
                   <CheckBox
+                    className="group-user-checkbox"
                     style={{ width: '130%' }}
                     gap={2}
                     text={userName}

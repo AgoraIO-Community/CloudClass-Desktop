@@ -18,12 +18,27 @@
   font-size: 12px;
 }
 
+.start-sub-title + div > .fcr-input-wrapper, .group-search-wrap .fcr-input-wrapper {
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #D2D2E2;
+}
+
+.group-search-wrap .fcr-input-wrapper {
+  padding-left: 6px;
+}
+
+.group-search-wrap .fcr-input-wrapper .fcr-input-prefix {
+  opacity: 0.5;
+  margin-right: -6px !important;
+}
+
 .group-start-footer {
   box-sizing: border-box;
   padding-right: 20px;
   display: flex;
   position: absolute;
-  bottom: 0;
+  bottom: 0px;
   width: 100%;
   height: 58px;
   border-top: 1px solid #eeeef7;
@@ -44,6 +59,15 @@
 
 .group-select-footer {
   border-top: 1px solid #eeeef7;
+  background: #fff;
+  height: 58px;
+}
+
+.group-select-footer > div {
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  background: #fff;
 }
 
 .group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root {
@@ -51,6 +75,10 @@
   margin-bottom: 10px;
   border-radius: 4px;
   border: 1px solid #e2e2ee;
+}
+
+.group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root .fcr-tree-node {
+  height: 36px;
 }
 
 .group-scroll-overflow {
@@ -61,6 +89,11 @@
 .group-scroll-overflow::-webkit-scrollbar {
   width: 0;
 }
+
+.group-scroll-overflow > .fcr-multi-tree-root {
+  margin-top: 8px;
+}
+
 .rename-btn {
   color: #357bf6 !important;
   margin-right: 15px;
@@ -70,7 +103,11 @@
   margin-right: 15px;
 }
 
-.tree-node-tips {
+.breakout-room .fcr-tree-node span {
+  color: #191919;
+}
+
+.breakout-room .fcr-tree-node .tree-node-tips {
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -81,4 +118,63 @@
 .group-select-footer .fcr-btn-danger:hover {
   background: #f04c36;
   color: #fff;
+}
+
+input[name="breakout-room-type"] + span {
+  color: #191919;
+}
+
+input[name="breakout-room-type"] {
+  position: relative;
+}
+
+input[name="breakout-room-type"]:checked:after{
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  background: #fff;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 3px solid #357BF6;
+}
+
+
+.group-rename-input {
+  outline: 1px solid #357BF6;
+}
+
+.group-start-footer button, .group-select-footer button, .confirm-panel-footer button {
+  display: flex;
+  min-width: 80px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 26px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.group-start-footer  .fcr-btn-secondary, .group-select-footer  .fcr-btn-secondary, .confirm-panel-footer  .fcr-btn-secondary {
+  color: #357BF6 !important;
+}
+
+.group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root > .fcr-tree-node + .fcr-tree-root {
+  border-top: 1px solid #E2E2EE;
+}
+
+.breakout-room-group-panel .popover-arrow {
+  display: block;
+}
+
+.group-select-footer .recreate-btn {
+  padding: 5px 22px !important;
+}
+
+.group-select-footer .add-group-btn {
+  padding: 5px 15px !important;
+}
+
+.group-select-footer .start-btn,  .group-select-footer .broadcast-btn{
+  padding: 5px 12px !important;
 }
