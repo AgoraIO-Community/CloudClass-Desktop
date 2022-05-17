@@ -46,7 +46,7 @@ export const UserPanel: FC<UserPanelProps> = ({
         {users.length ? (
           <div className="group-search-wrap">
             <Search
-              prefix={<SvgImg type="search" size={18}/>}
+              prefix={<SvgImg type="search" size={18} />}
               value={keyword}
               onSearch={setKeyword}
               inputPrefixWidth={32}

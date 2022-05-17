@@ -457,7 +457,7 @@ export const CarouselGroup = observer(
                     stream={stream}
                     style={videoStreamStyle}></StreamPlayer>
                 )}
-                {invisible && !invisible(stream.stream.streamUuid) ? (
+                {invisible ? (
                   <DragableContainer
                     stream={stream}
                     dragable={!invisible(stream.stream.streamUuid)}

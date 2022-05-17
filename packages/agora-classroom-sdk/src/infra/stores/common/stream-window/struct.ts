@@ -52,7 +52,7 @@ export class StreamWindowWidget {
     this.userUuid = userUuid || '';
   }
 
-  get infomation() {
+  get information() {
     return {
       x: this.x,
       y: this.y,
@@ -64,7 +64,7 @@ export class StreamWindowWidget {
     };
   }
 
-  set infomation({
+  set information({
     width,
     height,
     x,
@@ -141,7 +141,7 @@ export class WidgetInfo {
     this.extra = extra;
   }
 
-  get infomation() {
+  get information() {
     return {
       state: this.state,
       ownerUserUuid: this.ownerUserUuid,

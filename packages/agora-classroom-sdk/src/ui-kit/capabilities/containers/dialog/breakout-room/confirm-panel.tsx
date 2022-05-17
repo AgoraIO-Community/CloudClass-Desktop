@@ -21,29 +21,28 @@ export const ConfirmPanel: FC<ConfirmPanelProps> = ({
     <Panel
       panelId={panelId}
       className="breakout-room-confirm-panel"
-      trigger={children as ReactElement}
-    > 
+      trigger={children as ReactElement}>
       <div className="confirm-panel-wrap">
         <div className="confirm-panel-title">{title}</div>
         <div className="confirm-panel-footer flex justify-end">
-        <Button
-          type="secondary"
-          size="xs"
-          className="rounded-btn"
-          style={{ marginRight: 15 }}
-          onClick={() => {
-            onCancel();
-          }}>
-          {transI18n('breakout_room.cancel_submit')}
-        </Button>
-        <Button
-          size="xs"
-          className="rounded-btn"
-          onClick={() => {
-            onOk()
-          }}>
-          {transI18n('breakout_room.sure_submit')}
-        </Button>
+          <Button
+            type="secondary"
+            size="xs"
+            className="rounded-btn"
+            style={{ marginRight: 15 }}
+            onClick={() => {
+              onCancel();
+            }}>
+            {transI18n('breakout_room.cancel_submit')}
+          </Button>
+          <Button
+            size="xs"
+            className="rounded-btn"
+            onClick={() => {
+              onOk();
+            }}>
+            {transI18n('breakout_room.sure_submit')}
+          </Button>
         </div>
       </div>
     </Panel>

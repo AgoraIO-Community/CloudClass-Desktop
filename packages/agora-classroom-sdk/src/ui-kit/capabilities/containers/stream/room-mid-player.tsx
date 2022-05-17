@@ -112,13 +112,11 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
           isFullScreen={isFullScreen}
           canSetupVideo={canSetupVideo}></StreamPlayer>
       )}
-      {!visibleTeacherStream && (
-        <DragableContainer
-          stream={teacherCameraStream}
-          dragable={!visibleStream(teacherCameraStream.stream.streamUuid)}
-          onDoubleClick={handleStreamDoubleClick}
-        />
-      )}
+      <DragableContainer
+        stream={teacherCameraStream}
+        dragable={!visibleStream(teacherCameraStream.stream.streamUuid)}
+        onDoubleClick={handleStreamDoubleClick}
+      />
     </div>
   ) : null;
 });
@@ -135,9 +133,10 @@ export const DragableContainer = observer(
     toolbarPlacement?: 'left' | 'bottom';
   }) => {
     const [ref, bounds] = useMeasure();
+    const [visible, setVisible] = useState<boolean>(false);
     const [translate, setTranslate] = useState([0, 0]);
     const { streamWindowUIStore } = useStore();
-    const { setStreamDragInfomation, streamDragable, visibleStream } = streamWindowUIStore;
+    const { setStreamDragInformation, streamDragable, visibleStream } = streamWindowUIStore;
 
     const handleDragStream = ({
       stream,
@@ -148,7 +147,7 @@ export const DragableContainer = observer(
       active: boolean;
       xy: [number, number];
     }) => {
-      streamDragable && setStreamDragInfomation({ stream, active, pos: xy });
+      streamDragable && setStreamDragInformation({ stream, active, pos: xy });
     };
 
     const bind = useDrag(({ args: [stream], active, xy, movement: [mx, my] }) => {
@@ -162,6 +161,7 @@ export const DragableContainer = observer(
 
     return (
       <DragableOverlay
+        visible={visible}
         stream={stream}
         style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
         toolbarPlacement={toolbarPlacement}>
@@ -169,6 +169,12 @@ export const DragableContainer = observer(
           ref={ref}
           {...bind(stream)}
           onDoubleClick={visibleStream(stream.stream.streamUuid) ? () => {} : onDoubleClick}
+          onMouseEnter={() => {
+            !visibleStream(stream.stream.streamUuid) && setVisible(true);
+          }}
+          onMouseLeave={() => {
+            setVisible(false);
+          }}
           style={{
             touchAction: 'none',
             position: 'absolute',

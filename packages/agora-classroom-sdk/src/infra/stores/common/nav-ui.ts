@@ -197,6 +197,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
           });
         },
       },
+    ];
+
+    const teacherMediaActions: EduNavAction[] = [
       {
         id: 'Camera',
         title: 'camera',
@@ -349,6 +352,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       if (!isInSubRoom) {
         actions = actions.concat(teacherActions);
       }
+      actions = actions.concat(teacherMediaActions);
     }
 
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {

@@ -42,6 +42,7 @@ export const TransitionStreamWindow = observer(
         setTransitionStreams,
         removeTransitionStreams,
         stageVisible,
+        draggingStreamUuid,
       },
     } = useStore();
 
@@ -49,7 +50,6 @@ export const TransitionStreamWindow = observer(
       const targetStreamBounds = streamsBounds.get(streamUuid);
       const parent = document.querySelector('#stream-window-container');
       const parentBounds = parent?.getBoundingClientRect();
-
       if (stageVisible && targetStreamBounds && parentBounds) {
         const { left: targetLeft, top: targetTop, width, height } = targetStreamBounds;
         const { left: parentLeft, top: parentTop } = parentBounds;
@@ -74,19 +74,22 @@ export const TransitionStreamWindow = observer(
           width: streamWindow.width,
           height: streamWindow.height,
           opacity: 1,
+          id: streamUuid,
         };
       }, // 进入位置
       leave: ([streamUuid, _]) => {
         return calcInitPosition(streamUuid);
       }, // 离开的时候
-      update: ([, streamWindow]) => {
+      update: ([streamUuid, streamWindow]) => {
         return {
           x: streamWindow.x,
           y: streamWindow.y,
           width: streamWindow.width,
           height: streamWindow.height,
+          id: streamUuid,
         };
       }, // 更新数据
+      immediate: () => !!draggingStreamUuid,
       onDestroyed: (item: [string, StreamWindow]) => {
         removeTransitionStreams(item[0]);
       },
@@ -133,6 +136,8 @@ const DragableStreamWindow = observer(
       streamWindowStreams,
       handleStreamWindowClick,
       sendWigetDataToServer,
+      updateDraggingStreamUuid,
+      resetDraggingStreamUuid,
       streamWindowLocked,
       minRect,
     } = streamWindowUIStore;
@@ -161,10 +166,12 @@ const DragableStreamWindow = observer(
         // onDragStart={()=> { setVisible(false)}}
         onDragStop={() => {
           // sent to server
+          resetDraggingStreamUuid();
           sendWigetDataToServer(streamUuid);
         }}
         onResize={(e, direction, ref, delta, position) => {
           visible && setVisible(false);
+          updateDraggingStreamUuid(streamUuid);
           handleStreamWindowInfo(
             streamWindowStreams.get(streamUuid),
             {
@@ -176,6 +183,7 @@ const DragableStreamWindow = observer(
           );
         }}
         onResizeStop={() => {
+          resetDraggingStreamUuid();
           sendWigetDataToServer(streamUuid);
         }}
         onMouseEnter={() => {

@@ -77,7 +77,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
 
   const { closeAll } = useContext(PanelStateContext);
 
-  const existGroupName = groupDetails.get(groupUuid)?.groupName
+  const existGroupName = groupDetails.get(groupUuid)?.groupName;
 
   const groupName = existGroupName || transI18n('breakout_room.not_grouped');
 
@@ -97,7 +97,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
           <ConfirmPanel
             panelId={confirmPanelId}
             title={transI18n('breakout_room.confirm_join_group_content', {
-              reason: groupName
+              reason: groupName,
             })}
             onOk={() => {
               groupUuid && joinSubRoom(groupUuid);
@@ -307,8 +307,8 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
           <span className="tree-node-tips">
             {childrenLength
               ? transI18n('breakout_room.group_current_has_students', {
-                reason: `${childrenLength}`,
-              })
+                  reason: `${childrenLength}`,
+                })
               : transI18n('breakout_room.group_current_empty')}
           </span>
         )}
@@ -346,7 +346,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
 
   const { groupState, groups, isCopyContent, setCopyContent, stopGroup } = groupUIStore;
 
-  const [showConfirmDialog, setConfirmDialog] = useState<boolean>(false)
+  const [showConfirmDialog, setConfirmDialog] = useState<boolean>(false);
 
   const panelState = usePanelState();
 
@@ -358,14 +358,13 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
         <ConfirmDialog
           onOk={() => {
             stopGroup(onNext).finally(() => {
-              setConfirmDialog(false)
+              setConfirmDialog(false);
             });
-           }}
+          }}
           onCancel={() => {
-            setConfirmDialog(false)
-           }}
-          onCancelText={transI18n('breakout_room.confirm_stop_group_sure')}
-        >
+            setConfirmDialog(false);
+          }}
+          onCancelText={transI18n('breakout_room.confirm_stop_group_sure')}>
           <div className="stop-group-main-text">
             <div className="stop-group-main-title">
               {transI18n('breakout_room.confirm_stop_group_title')}
@@ -379,8 +378,8 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
       <div
         className="overflow-auto py-2 group-scroll-overflow"
         style={{
-          height: broadcastVisible ? 330 : 354, 
-          flexGrow: broadcastVisible ? 0 : 1
+          height: broadcastVisible ? 330 : 354,
+          flexGrow: broadcastVisible ? 0 : 1,
         }}
         onClick={() => {
           panelState.closeAll();
@@ -405,8 +404,8 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
           <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
         </div>
       )}
-      <Footer 
-        onNext={onNext} 
+      <Footer
+        onNext={onNext}
         setConfirmDialog={setConfirmDialog}
         broadcastVisible={broadcastVisible}
         setBroadcastVisible={setBroadcastVisible}
@@ -416,10 +415,10 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
 });
 
 const Footer: FC<{
-  onNext: () => void,
-  setConfirmDialog: (v: boolean) => void,
-  broadcastVisible: boolean,
-  setBroadcastVisible: (v: boolean) => void,
+  onNext: () => void;
+  setConfirmDialog: (v: boolean) => void;
+  broadcastVisible: boolean;
+  setBroadcastVisible: (v: boolean) => void;
 }> = observer(({ onNext, setConfirmDialog, broadcastVisible, setBroadcastVisible }) => {
   const { groupUIStore } = useStore();
 
@@ -430,7 +429,7 @@ const Footer: FC<{
 
   const handleGroupState = () => {
     if (groupState === GroupState.OPEN) {
-      setConfirmDialog(true)
+      setConfirmDialog(true);
     } else {
       if (cursorRef.current) return;
       cursorRef.current = true;
@@ -453,7 +452,11 @@ const Footer: FC<{
   );
 
   const addGroupButton = (
-    <Button size="xs" type="secondary" className="rounded-btn mr-2 add-group-btn" onClick={addGroup}>
+    <Button
+      size="xs"
+      type="secondary"
+      className="rounded-btn mr-2 add-group-btn"
+      onClick={addGroup}>
       {transI18n('breakout_room.add_group')}
     </Button>
   );
