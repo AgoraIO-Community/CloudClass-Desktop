@@ -45,7 +45,6 @@ function createBrowserWindow(queryStr, options) {
       backgroundThrottling: false,
     },
   });
-
   window.loadURL(`${startUrl}?${queryStr}`).finally(() => {
     electron.app.allowRendererProcessReuse = false;
   });
@@ -152,7 +151,23 @@ function addListeners() {
       console.log(`window with ID [${windowID}] not exist`);
     }
   });
+  delegate.on('move-window-to-target-screen', (event, windowID, screenId, options) => {
+    const window = getWindow(windowID);
 
+    if (window) {
+      const display =
+        electron.screen.getAllDisplays().find((i) => i.id === screenId.id) ||
+        electron.screen.getPrimaryDisplay();
+      const offsetX = (display.workAreaSize.width - options.width) / 2;
+      const offsetY = (display.workAreaSize.height - options.height) / 2;
+      const x = display.bounds.x + offsetX;
+      const y = options.y ?? display.bounds.y + offsetY;
+      window.setBounds({ x: parseInt(x), y: parseInt(y) });
+      console.log(`set window [${windowID}] bounds to screen`, screenId);
+    } else {
+      console.log(`window with ID [${windowID}] not exist`);
+    }
+  });
   mainWindow.current.on('closed', () => {
     Object.keys(windowMap).forEach((k) => {
       windowMap[k].close();

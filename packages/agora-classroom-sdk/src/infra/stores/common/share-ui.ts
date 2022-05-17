@@ -1,6 +1,5 @@
 import { AGError, bound, Lodash, AGRteErrorCode, Scheduler, Injectable, Log } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
-import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
@@ -344,7 +343,14 @@ export class EduShareUIStore {
       EduClassroomConfig.shared.rteEngineConfig.language,
     );
   }
-
+  @bound
+  moveWindowToTargetScreen(
+    windowID: WindowID,
+    screenId: string,
+    options: Record<string, string | number | boolean>,
+  ) {
+    sendToMainProcess(ChannelType.MoveWindowToTargetScreen, windowID, screenId, options);
+  }
   @bound
   closeWindow(windowID: WindowID) {
     sendToMainProcess(ChannelType.CloseBrowserWindow, windowID);

@@ -26,6 +26,7 @@ export enum ChannelType {
   HideBrowserWindow = 'hide-browser-window',
   Message = 'browser-window-message',
   UpdateBrowserWindow = 'update-browser-window',
+  MoveWindowToTargetScreen = 'move-window-to-target-screen',
 }
 
 const withTimeout = (p: Promise<unknown>, timeout = 3000) =>

@@ -1,19 +1,21 @@
 import { WindowID } from '@/infra/api';
 import { ControlState, IPCMessageType } from '@/infra/types';
 import { ChannelType, listenChannelMessage, sendToRendererProcess } from '@/infra/utils/ipc';
-import { EduClassroomConfig, EduRoleTypeEnum, iterateMap } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduRoomTypeEnum, iterateMap } from 'agora-edu-core';
 import {
   AgoraRteEngineConfig,
   AgoraRteMediaSourceState,
   AgoraRteRuntimePlatform,
+  AGScreenShareDevice,
   AGScreenShareType,
   bound,
 } from 'agora-rte-sdk';
-import { computed, reaction } from 'mobx';
+import { computed, reaction, toJS } from 'mobx';
 import { transI18n } from '../i18n';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share-ui';
 import { mapToObject } from '@/infra/utils';
+import { RemoteControlBarUIParams } from '../type';
 
 export class RemoteControlUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
@@ -43,8 +45,8 @@ export class RemoteControlUIStore extends EduUIStoreBase {
     this.shareUIStore.openWindow(WindowID.RemoteControlBar, {
       options: {
         y: 0,
-        width: 262,
-        height: 92,
+        width: RemoteControlBarUIParams.width,
+        height: RemoteControlBarUIParams.height,
         frame: false,
         alwaysOnTop: true,
         transparent: true,
@@ -56,7 +58,15 @@ export class RemoteControlUIStore extends EduUIStoreBase {
       },
     });
   }
-
+  @bound
+  moveWindowToTargetScreen(shareDevice: AGScreenShareDevice | undefined) {
+    shareDevice &&
+      this.shareUIStore.moveWindowToTargetScreen(WindowID.RemoteControlBar, toJS(shareDevice.id), {
+        width: RemoteControlBarUIParams.width,
+        height: RemoteControlBarUIParams.height,
+        y: 0,
+      });
+  }
   @bound
   sendControlRequst(studentUuid: string) {
     const studentList = this.classroomStore.userStore.studentList;
@@ -74,17 +84,28 @@ export class RemoteControlUIStore extends EduUIStoreBase {
     this.shareUIStore.closeWindow(WindowID.RemoteControlBar);
   }
   onDestroy(): void {
-    if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+    if (
+      AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+      EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
+    ) {
       this._disposers.forEach((f) => f());
       if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher)
         this.closeRemoteControlToolbar();
     }
   }
   onInstall(): void {
-    if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+    if (
+      AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+      EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
+    ) {
       if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
         this.openRemoteControlToolbar();
-
+        this._disposers.push(
+          reaction(
+            () => this.classroomStore.mediaStore.currentScreenShareDevice,
+            this.moveWindowToTargetScreen,
+          ),
+        );
         this._disposers.push(
           reaction(
             () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,

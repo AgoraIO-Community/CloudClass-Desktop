@@ -10,6 +10,7 @@ import { ControlState, IPCMessageType } from '@/infra/types';
 import { Select, Tooltip, t, SvgIcon } from '~ui-kit';
 import './index.css';
 import { EduUser, DevicePlatform } from 'agora-edu-core';
+import { RemoteControlBarUIParams } from '@/infra/stores/common/type';
 
 type Props = {
   canReSelectScreen?: boolean;
@@ -162,11 +163,11 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
                 document.querySelector('.fcr-remote-control-bar-select .options-container')
                   ?.clientHeight || 0;
 
-              updateWindowSize(92 + height);
+              updateWindowSize(RemoteControlBarUIParams.height + height);
             });
           }}
           onClose={() => {
-            updateWindowSize(92, 180);
+            updateWindowSize(RemoteControlBarUIParams.height, 180);
           }}
         />
       </div>

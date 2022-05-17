@@ -52,3 +52,7 @@ export interface WidgetTrackStruct {
     [key: string]: any;
   };
 }
+export enum RemoteControlBarUIParams {
+  width = 262,
+  height = 92,
+}
