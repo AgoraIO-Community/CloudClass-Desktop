@@ -153,6 +153,7 @@ export const DragableContainer = observer(
     const bind = useDrag(({ args: [stream], active, xy, movement: [mx, my] }) => {
       const delta = [xy[0] - bounds.x, xy[1] - bounds.y];
       setTranslate(delta);
+      active && setVisible(false);
       !active && setTranslate([0, 0]);
       if (Math.abs(mx) >= 3 || Math.abs(my) >= 3) {
         handleDragStream({ stream, active, xy });

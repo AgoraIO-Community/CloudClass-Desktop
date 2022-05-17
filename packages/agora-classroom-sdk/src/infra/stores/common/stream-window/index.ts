@@ -905,6 +905,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         const contain = this.streamWindowMap.get(this.teacherStream.stream.streamUuid)?.contain;
         this._removeStreamWindowByUuid(this.teacherStream.stream.streamUuid);
         this._deleteStreamWindowWidegtToServer(this.teacherStream.stream.streamUuid);
+        this.tempStreamWindowPosMap.delete(this.teacherStream.stream.streamUuid);
         contain && this._handleCalculateContains(); // 如果之前为全屏那么重新计算
       }
     }
