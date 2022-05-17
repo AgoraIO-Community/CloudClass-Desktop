@@ -208,7 +208,7 @@ const DragableStreamWindow = observer(
             stream={streamWindowStreams.get(streamUuid)}
             style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
             isFullScreen={true}
-            visible={visible}>
+            visibleTools={visible}>
             <div
               style={{
                 width: info.width,
