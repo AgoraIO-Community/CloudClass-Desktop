@@ -57,7 +57,7 @@
 }
 .screen-picker-footer {
   position: relative;
-  top: 25px;
+  top: 30px;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -77,4 +77,8 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  line-height: 30px;
+}
+.screen-picker-dialog .modal-content {
+  padding-top: 15px;
 }

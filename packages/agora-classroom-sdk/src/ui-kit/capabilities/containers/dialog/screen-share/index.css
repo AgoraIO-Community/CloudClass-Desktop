@@ -17,6 +17,7 @@
   align-items: center;
   flex-direction: column;
   text-align: left;
+  padding-top: 5px;
 }
 .screen-share-dialog-content h4 {
   width: 100%;
@@ -24,6 +25,8 @@
   font-size: 14px;
   font-weight: bold;
   color: #191919;
+  margin-bottom: 6px;
+  line-height: 20px;
 }
 .screen-share-dialog-content ul {
   width: 150px;
@@ -32,6 +35,8 @@
   list-style: disc inside;
   color: #586376;
   font-size: 12px;
+  line-height: 22px;
+  font-weight: 400;
 }
 .screen-share-dialog-content li::marker {
   color: #7b88a0;
@@ -52,7 +57,7 @@
 }
 .screen-share-dialog-container-tips {
   position: relative;
-  top: 25px;
+  top: 20px;
   font-size: 12px;
   color: #586376;
   text-align: center;
@@ -70,4 +75,7 @@
 .screen-share-dialog-container .fcr-card:hover {
   box-shadow: 0px 2px 12px 0px rgba(47, 65, 146, 0.12);
   border: none;
+}
+.screen-share-dialog .modal {
+  padding-bottom: 12px;
 }

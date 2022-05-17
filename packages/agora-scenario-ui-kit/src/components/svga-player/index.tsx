@@ -64,18 +64,20 @@ const SvgaResource: React.FC<SvgaResourceProps> = ({
   width = 'auto',
   height = 'auto',
 }) => {
+  const playerRef = useRef<Player>();
   const loadResource = useCallback(
     async (canvas: HTMLCanvasElement | null) => {
       if (canvas) {
         const parser = new Parser();
-        const player = new Player(canvas);
+        playerRef.current = new Player(canvas);
         parser.load(url, (videoItem) => {
-          player.setVideoItem(videoItem);
-          player.loops = loops ? 0 : 1;
-          player.onFinished(() => {
+          playerRef.current?.setVideoItem(videoItem);
+          playerRef.current?.onFinished(() => {
             onFinish && onFinish();
           });
-          player.startAnimation();
+          if (playerRef.current) playerRef.current.loops = loops ? 0 : 1;
+
+          playerRef.current?.startAnimation();
         });
       }
     },
@@ -88,7 +90,8 @@ const SvgaResource: React.FC<SvgaResourceProps> = ({
     if (ref.current) {
       loadResource(ref.current);
     }
-  }, [ref.current]);
+    return () => playerRef.current?.clear();
+  }, []);
 
   return <canvas width={width} height={height} ref={ref}></canvas>;
 };

@@ -29,11 +29,13 @@ export const ScreenPickerDialog = ({
     <Modal
       id={id}
       style={{ width: 662 }}
+      hasMask={false}
       onCancel={() => {
         removeDialog(id);
         onCancel && onCancel();
       }}
       closable
+      className="screen-picker-dialog"
       title={t('fcr_share_title_select_window_share')}>
       <ScreenPicker
         onCancel={() => {

@@ -17,7 +17,9 @@
   display: flex;
   margin: 2px 0;
 }
-
+.video-player-overlay-no-margin {
+  margin: 0;
+}
 .video-player-overlay .top-right-info {
   position: absolute;
   top: 0;

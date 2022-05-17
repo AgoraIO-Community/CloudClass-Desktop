@@ -24,6 +24,8 @@ export const ScreenShareDialog = ({
         removeDialog(id);
         onCancel && onCancel();
       }}
+      className={'screen-share-dialog'}
+      hasMask={false}
       title={t('toast.screen_share.title')}>
       <ScreenShareDialogContent
         onSelect={(role) => {

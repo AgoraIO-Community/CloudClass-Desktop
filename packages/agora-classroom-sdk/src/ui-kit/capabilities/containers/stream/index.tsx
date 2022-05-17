@@ -293,6 +293,7 @@ export const StreamPlayerOverlay = observer(
 
     const cls = classnames({
       [`video-player-overlay`]: 1,
+      ['video-player-overlay-no-margin']: isFullscreen,
       [`${className}`]: !!className,
     });
 
