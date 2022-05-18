@@ -31,3 +31,4 @@ export * from './volume';
 export * from './tree';
 export * from './radio';
 export * from './remote-control-action-bar';
+export * from './input-number';
