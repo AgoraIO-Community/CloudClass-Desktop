@@ -10,6 +10,7 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .program-item {
@@ -81,4 +82,15 @@
 }
 .screen-picker-dialog .modal-content {
   padding-top: 15px;
+  position: relative;
+}
+.screen-picker-dialog .modal-content .mask {
+  position: absolute;
+  bottom: 60px;
+  right: 0;
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+  z-index: 1;
+  pointer-events: none;
 }

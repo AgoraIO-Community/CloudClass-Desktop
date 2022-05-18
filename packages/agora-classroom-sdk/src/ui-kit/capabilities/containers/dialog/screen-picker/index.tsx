@@ -87,7 +87,8 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
   return (
     <>
       <div className={cls}>{screenShareTitle}</div>
-      <div className={'programs'} style={{ maxHeight: scrollHeight }}>
+      <div className="mask"></div>
+      <div className={'programs'} style={{ height: scrollHeight }}>
         <div>
           <h5>{transI18n('fcr_share_title_desktop')}</h5>
           {desktopList.map((item) => {
