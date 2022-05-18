@@ -48,16 +48,23 @@ export class GroupUIStore extends EduUIStoreBase {
 
     const { users, studentList } = this.userData;
 
+    const unknownName = transI18n('fcr_group_student_not_in_room');
+
+    const teacherList = this.classroomStore.userStore.teacherList
+
+    const assistantList = this.classroomStore.userStore.assistantList
+
     this.groupDetails.forEach((group, groupUuid) => {
       const students = new Map<string, { id: string; text: string; notJoined?: boolean }>();
 
       group.users.forEach(({ userUuid, notJoined }) => {
-        const unknownName = transI18n('fcr_group_student_not_in_room');
-        students.set(userUuid, {
-          id: userUuid,
-          text: users.get(userUuid)?.userName || unknownName,
-          notJoined,
-        });
+        if (!teacherList.has(userUuid) && !assistantList.has(userUuid)) {
+          students.set(userUuid, {
+            id: userUuid,
+            text: users.get(userUuid)?.userName || unknownName,
+            notJoined,
+          });
+        }
       });
 
       const tree = {
@@ -782,9 +789,9 @@ export class GroupUIStore extends EduUIStoreBase {
         const title = isTeacher ? transI18n('fcr_group_help_title') : transI18n('fcr_group_join');
         const content = isTeacher
           ? transI18n('breakout_room.confirm_invite_teacher_content', {
-              reason1: groupName,
-              reason2: inviter,
-            })
+            reason1: groupName,
+            reason2: inviter,
+          })
           : transI18n('fcr_group_invitation', { reason: groupName });
 
         const ok = isTeacher
