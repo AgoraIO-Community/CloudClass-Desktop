@@ -1,0 +1,48 @@
+.fcr-input-number-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding-left: 15px;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 14px;
+  line-height: 1.5715;
+  border-radius: 4px;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #d2d2e2;
+  width: 150px;
+}
+.fcr-input-number-wrapper:hover,
+.fcr-input-number-focus {
+  border-color: #357bf6;
+}
+
+.fcr-input-number-wrapper input {
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.fcr-input-number-wrapper input::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #7b88a0;
+  font-size: 14px;
+}
+
+.fcr-input-number-tail {
+  padding-right: 6px;
+}
+
+.fcr-input-number-add:hover,
+.fcr-input-number-sub:hover {
+  cursor: pointer;
+}
+
+.fcr-input-number-add.disabled polyline,
+.fcr-input-number-sub.disabled polyline {
+  stroke: #a5adbb !important;
+}

@@ -10,6 +10,7 @@
   font-family: PingFang-SC-Bold, PingFang-SC;
   font-weight: bold;
   color: #191919;
+  user-select: none;
 }
 
 .start-sub-title {
