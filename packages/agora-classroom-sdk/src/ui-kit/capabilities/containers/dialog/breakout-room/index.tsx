@@ -47,6 +47,7 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
 
   return (
     <Modal
+      hasMask={false}
       onCancel={onCancel}
       closable
       title={`${transI18n('scaffold.breakout_room')} ${
