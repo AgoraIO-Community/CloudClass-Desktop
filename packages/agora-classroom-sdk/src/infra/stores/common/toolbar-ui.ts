@@ -642,6 +642,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
       )
       .filter((it) => this.allowedCabinetItems.includes(it.id));
 
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant) {
+      apps = apps.filter((it) => it.id !== CabinetItemEnum.BreakoutRoom);
+    }
+
     return apps;
   }
   /**
