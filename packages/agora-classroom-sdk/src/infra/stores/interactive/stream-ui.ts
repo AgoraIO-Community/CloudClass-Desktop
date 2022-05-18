@@ -142,7 +142,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       transI18n('Camera Pos Reset'),
       {
         //host can control
-        interactable: true,
+        interactable: !!this._streamWindowUserUuids.size,
         hoverIconType: 'stream-window-on',
         onClick: async () => {
           try {
@@ -247,6 +247,21 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     return super.studentStreams.size > this.carouselStudentShowCount;
   }
 
+  @observable
+  private _streamWindowUserUuids = new Set();
+
+  @action.bound
+  private _handleClassroomUIEvents(type: AgoraEduClassroomUIEvent, ...args: any[]) {
+    switch (type) {
+      case AgoraEduClassroomUIEvent.streamWindowsChange:
+        console.log(args);
+        this._streamWindowUserUuids = new Set(args[0]);
+        break;
+      default:
+        break;
+    }
+  }
+
   onInstall(): void {
     super.onInstall();
     this._disposers.push(
@@ -266,5 +281,13 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     );
 
     this.classroomStore.mediaStore.setMirror(true);
+
+    EduEventUICenter.shared.onClassroomUIEvents(this._handleClassroomUIEvents);
+  }
+
+  onDestroy(): void {
+    super.onDestroy();
+
+    EduEventUICenter.shared.offClassroomUIEvents(this._handleClassroomUIEvents);
   }
 }
