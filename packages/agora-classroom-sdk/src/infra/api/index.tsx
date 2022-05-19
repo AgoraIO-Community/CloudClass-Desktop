@@ -22,7 +22,7 @@ import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
 import { I18nProvider, i18nResources } from '~ui-kit';
 import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-gallery';
 
-export type LanguageEnum = 'en' | 'zh';
+export type LanguageEnum = 'en' | 'zh' | 'zh-hk';
 export type TranslateEnum =
   | ''
   | 'auto'
@@ -215,11 +215,7 @@ export class AgoraEduSDK {
       },
       platform,
       i18nResources,
-      [
-        new AgoraCountdown(),
-        new AgoraSelector(),
-        new AgoraPolling(),
-      ] as IAgoraExtensionApp[]
+      [new AgoraCountdown(), new AgoraSelector(), new AgoraPolling()] as IAgoraExtensionApp[],
     );
 
     if (AgoraEduSDK._config.host) {

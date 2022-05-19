@@ -85,6 +85,7 @@ export const Home: React.FC<HomeProps> = ({
   const languageOptions = [
     { label: '中文', value: 'zh' },
     { label: 'English', value: 'en' },
+    { label: '繁体中文', value: 'zh-hk' },
   ];
   const regionOptions = [
     { label: 'NA', value: 'NA' },

@@ -1,7 +1,7 @@
 import { createElement, useContext, createContext } from 'react';
 import { Z_INDEX_RULES } from './style-config';
 
-export type I18nLanguage = 'zh' | 'en';
+export type I18nLanguage = 'zh' | 'en' | 'zh-hk';
 
 export const makeContainer = (name: string) => {
   const Context = createContext(null as any);

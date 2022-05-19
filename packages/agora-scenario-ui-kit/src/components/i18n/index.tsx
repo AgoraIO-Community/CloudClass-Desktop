@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next';
 import { en } from '../../utilities/translate/en';
 import { zh } from '../../utilities/translate/zh';
+import { zhHK } from '../../utilities/translate/zh-hk';
 
 export const i18nResources = {
   en: {
@@ -14,6 +15,11 @@ export const i18nResources = {
   zh: {
     translation: {
       ...zh,
+    },
+  },
+  'zh-HK': {
+    translation: {
+      ...zhHK,
     },
   },
 };
@@ -105,7 +111,7 @@ export class CustomStorage {
 
 export const storage = new CustomStorage();
 
-export const getLanguage = () => (storage.getLanguage().match(/zh/) ? 'zh' : 'en');
+export const getLanguage = () => storage.getLanguage() ?? 'zh';
 
 export const transI18n = (text: string, options?: any) => {
   let content = i18n.t(text);
