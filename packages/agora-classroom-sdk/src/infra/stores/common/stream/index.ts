@@ -5,8 +5,6 @@ import {
   AgoraRteVideoSourceType,
   AGRenderMode,
   bound,
-  AgoraRteStreamUID,
-  AgoraRteRemoteStreamType,
 } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
@@ -188,10 +186,10 @@ export class StreamUIStore extends EduUIStoreBase {
       }
     }
 
-    if (streams.size > 1) {
+    if (streamSet.size > 1) {
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_UNEXPECTED_STUDENT_STREAM_LENGTH,
-        new Error(`unexpected stream size ${streams.size}`),
+        new Error(`unexpected stream size ${streamSet.size}`),
       );
     }
     return Array.from(streamSet)[0];
@@ -581,7 +579,7 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get localStreamTools(): EduStreamTool[] {
-    let tools: EduStreamTool[] = [];
+    const tools: EduStreamTool[] = [];
     // tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
     return tools;
@@ -747,23 +745,14 @@ export class StreamUIStore extends EduUIStoreBase {
   @bound
   stopScreenShareCapture() {
     if (this.classroomStore.remoteControlStore.isRemoteControlling) {
-      this.classroomStore.remoteControlStore.quitControlRequest();
+      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+        this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+        this.classroomStore.mediaStore.stopScreenShareCapture();
+      } else {
+        this.classroomStore.remoteControlStore.quitControlRequest();
+      }
     } else {
       return this.classroomStore.mediaStore.stopScreenShareCapture();
-    }
-  }
-
-  /**
-   * 设置远端视频流的类型
-   * @param uid 流ID
-   * @param streamType 0大流，1小流
-   */
-  @bound
-  setRemoteVideoStreamType(uid: AgoraRteStreamUID, streamType: AgoraRteRemoteStreamType) {
-    try {
-      this.classroomStore.streamStore.setRemoteVideoStreamType(uid, streamType);
-    } catch (e) {
-      this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
 

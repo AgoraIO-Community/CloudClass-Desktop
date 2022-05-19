@@ -30,7 +30,7 @@ export interface EduNavAction<P = undefined> {
   title: string;
   iconType: string;
   iconColor?: string;
-  onClick: () => void;
+  onClick?: () => void;
   payload?: P;
 }
 
@@ -197,6 +197,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
           });
         },
       },
+    ];
+
+    const teacherMediaActions: EduNavAction[] = [
       {
         id: 'Camera',
         title: 'camera',
@@ -349,6 +352,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       if (!isInSubRoom) {
         actions = actions.concat(teacherActions);
       }
+      actions = actions.concat(teacherMediaActions);
     }
 
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
@@ -356,6 +360,16 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       if (isInSubRoom) {
         actions = actions.concat(studentActions);
       }
+      if (isRecording)
+        actions.unshift({
+          id: 'Record',
+          title: recordingTitle,
+          iconType: 'recording',
+          payload: {
+            text: transI18n('biz-header.recording'),
+            recordStatus: recordStatus,
+          },
+        });
     }
 
     actions = actions.concat(commonActions);
@@ -687,10 +701,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get navigationTitle() {
-    return (
-      (this.currScreenShareTitle || '') +
-      (this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName)
-    );
+    return this.currentSubRoomName || EduClassroomConfig.shared.sessionInfo.roomName;
   }
   /**
    * 当前屏幕分享人名称
@@ -699,7 +710,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   get currScreenShareTitle() {
     const currSharedUser = this.classroomStore.remoteControlStore.currSharedUser;
     if (currSharedUser)
-      return `(${transI18n('fcr_share_sharing', { reason: currSharedUser.userName })})`;
+      return `${transI18n('fcr_share_sharing', {
+        reason: currSharedUser.userName,
+      })}`;
   }
   /**
    * 所在房间名称
@@ -841,19 +854,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  private _handleStreamWindowChange(type: AgoraEduClassroomUIEvent, streamUuids: string[]) {
+  private _handleStreamWindowChange(type: AgoraEduClassroomUIEvent, streamUserUuids: string[]) {
     if (type === AgoraEduClassroomUIEvent.streamWindowsChange) {
-      const teacherStreamWindow = streamUuids.find((streamUuid: string) => {
-        const targetStream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-        return (
-          targetStream &&
-          RteRole2EduRole(
-            EduClassroomConfig.shared.sessionInfo.roomType,
-            targetStream.fromUser.role,
-          ) === EduRoleTypeEnum.teacher
-        );
-      });
-      this.teacherStreamWindow = !!teacherStreamWindow;
+      const isContainTeacher = streamUserUuids.find(
+        (userUuid) => userUuid === EduClassroomConfig.shared.sessionInfo.userUuid,
+      );
+      this.teacherStreamWindow = !!isContainTeacher;
     }
   }
 

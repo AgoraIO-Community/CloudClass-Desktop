@@ -1,10 +1,7 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, useState } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { Button } from '~components/button';
 import './index.css';
-import { transI18n } from '../i18n';
-import { ReactElement } from 'react';
 
 export interface InputProps extends BaseProps {
   type?: string;
@@ -79,21 +76,21 @@ export const Input: FC<InputProps> = ({
     onChange && onChange(e);
   }
   const cls = classnames({
-    [`input`]: 1,
+    [`fcr-input`]: 1,
     [`${className}`]: !!className,
   });
   const classNamesRule = {
-    [`input-wrapper`]: 1,
-    ['input-wrapper-focused']: focused,
-    ['input-wrapper-disabled']: disabled,
-    ['input-search-wrapper']: cls.includes('input-search'),
-    ['input-wrapper-error']: showErrMsg,
+    [`fcr-input-wrapper`]: 1,
+    ['fcr-input-wrapper-focused']: focused,
+    ['fcr-input-wrapper-disabled']: disabled,
+    ['fcr-input-search-wrapper']: cls.includes('input-search'),
+    ['fcr-input-wrapper-error']: showErrMsg,
   };
   return (
     <div style={{ position: 'relative', width: width ? width : '100%', height: '100%' }}>
       <span className={classnames(classNamesRule)}>
         {prefix ? (
-          <span className="input-prefix" style={{ width: inputPrefixWidth }}>
+          <span className="fcr-input-prefix" style={{ width: inputPrefixWidth }}>
             {prefix}
           </span>
         ) : (
@@ -111,11 +108,11 @@ export const Input: FC<InputProps> = ({
           onChange={_onChange}
           {...restProps}
         />
-        {suffix ? <span className="input-suffix">{suffix}</span> : ''}
+        {suffix ? <span className="fcr-input-suffix">{suffix}</span> : ''}
       </span>
       {showErrMsg && errorMsg ? (
         <div
-          className="input-error-msg"
+          className="fcr-input-error-msg"
           style={{
             transform: `translateX(${errorMsgPositionLeft}px)`,
           }}>

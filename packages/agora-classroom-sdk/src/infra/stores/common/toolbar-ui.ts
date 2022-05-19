@@ -1,4 +1,5 @@
 import { IPCMessageType } from '@/infra/types';
+import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 import { ChannelType, listenChannelMessage } from '@/infra/utils/ipc';
 import {
   AGEduErrorCode,
@@ -171,6 +172,20 @@ export class ToolbarUIStore extends EduUIStoreBase {
               this._activeCabinetItems.add(CabinetItemEnum.Whiteboard);
             } else {
               this._activeCabinetItems.delete(CabinetItemEnum.Whiteboard);
+            }
+          });
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
+        (isScreenSharingOrRemoteControlling) => {
+          runInAction(() => {
+            if (isScreenSharingOrRemoteControlling) {
+              this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
+            } else {
+              this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
             }
           });
         },
@@ -390,8 +405,26 @@ export class ToolbarUIStore extends EduUIStoreBase {
       case CabinetItemEnum.ScreenShare:
         if (
           AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
+          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass &&
+          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
         ) {
+          if (this.isScreenSharing) {
+            if (this.classroomStore.remoteControlStore.isRemoteControlling) {
+              const isTeacher =
+                EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
+              const isTeacherControlStudent =
+                this.classroomStore.remoteControlStore.isHost && isTeacher;
+              if (isTeacherControlStudent) {
+                this.classroomStore.remoteControlStore.quitControlRequest();
+              } else {
+                this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+                this.classroomStore.mediaStore.stopScreenShareCapture();
+              }
+            } else {
+              this.classroomStore.mediaStore.stopScreenShareCapture();
+            }
+            return;
+          }
           this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
             onOK: (screenShareType: ScreenShareRoleType) => {
               if (screenShareType === ScreenShareRoleType.Teacher) {
@@ -429,24 +462,20 @@ export class ToolbarUIStore extends EduUIStoreBase {
             transI18n('toast.close_whiteboard_confirm'),
             {
               onOK: () => {
+                // send whiteboard close
                 this.classroomStore.widgetStore.setInactive(BUILTIN_WIDGETS.boardWidget);
-                if (!this.isScreenSharing && this.teacherCameraStream)
-                  this.classroomStore.widgetStore.setActive(
-                    `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
-                    {
-                      extra: {
-                        userUuid: this.teacherCameraStream?.fromUser.userUuid,
-                      },
-                    },
-                    this.teacherCameraStream?.fromUser.userUuid,
-                  );
+                EduEventUICenter.shared.emitClassroomUIEvents(
+                  AgoraEduClassroomUIEvent.toggleWhiteboard,
+                  true,
+                );
               },
             },
           );
         } else {
           this.classroomStore.widgetStore.setActive(BUILTIN_WIDGETS.boardWidget, {});
-          this.classroomStore.widgetStore.deleteWidget(
-            `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
+          EduEventUICenter.shared.emitClassroomUIEvents(
+            AgoraEduClassroomUIEvent.toggleWhiteboard,
+            false,
           );
         }
         break;
@@ -612,6 +641,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
             ],
       )
       .filter((it) => this.allowedCabinetItems.includes(it.id));
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant) {
+      apps = apps.filter((it) => it.id !== CabinetItemEnum.BreakoutRoom);
+    }
 
     return apps;
   }

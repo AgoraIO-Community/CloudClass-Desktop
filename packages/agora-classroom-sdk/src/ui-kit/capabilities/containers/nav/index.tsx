@@ -65,7 +65,7 @@ const NavigationBarRecordAction = observer(
         )}
         {payload.text && <span className="record-tips">{payload.text}</span>}
         {payload.recordStatus === RecordStatus.starting ? (
-          <SvgaPlayer className="record-icon" url={RecordLoading} width={24} height={24} loops />
+          <SvgaPlayer className="record-icon" url={RecordLoading} width={18} height={18} loops />
         ) : (
           <Tooltip key={action.title} title={action.title} placement="bottom">
             <SvgImg
@@ -99,16 +99,24 @@ export const NavigationBarAction = observer(({ action }: { action: EduNavAction 
 
 export const NavigationBar = observer(() => {
   const { navigationBarUIStore } = useStore();
-  const { navigationTitle, actions, isBeforeClass, startClass } = navigationBarUIStore;
+  const { navigationTitle, currScreenShareTitle, actions, isBeforeClass, startClass } =
+    navigationBarUIStore;
 
   return (
-    <Header className="biz-header">
-      <div>
+    <Header className="fcr-biz-header">
+      <div className="header-signal">
         <SignalQualityComponent />
       </div>
-      <div className="biz-header-title-wrap">
-        <div className="biz-header-title">{navigationTitle}</div>
-        <div className="biz-header-title biz-subtitle">
+
+      <div className="fcr-biz-header-title-wrap">
+        <div className="fcr-biz-header-title">
+          {currScreenShareTitle && (
+            <div className="fcr-biz-header-title-share-name">{currScreenShareTitle}</div>
+          )}
+          {navigationTitle}
+        </div>
+        <div className="fcr-biz-header-split-line"></div>
+        <div className="fcr-biz-header-title fcr-biz-subtitle">
           <ClassStatusComponent />
         </div>
         {isBeforeClass ? (

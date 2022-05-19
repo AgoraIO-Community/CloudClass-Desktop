@@ -8,7 +8,6 @@ import {
   NavGroup,
   RemoteStreamPlayerTools,
   StreamPlayer,
-  StreamPlayerOverlay,
   VisibilityDOM,
 } from '.';
 import useMeasure from 'react-use-measure';
@@ -19,7 +18,7 @@ import { Popover } from '~ui-kit';
 export const RoomMidStreamsContainer = observer(() => {
   const {
     streamUIStore,
-    streamWindowUIStore: { visibleStream, streamDragable, handleStreamWindowContain },
+    streamWindowUIStore: { visibleStream, streamDragable, handleDBClickStreamWindow },
   } = useInteractiveUIStores() as EduInteractiveUIClassStore;
   const {
     videoStreamSize,
@@ -41,7 +40,7 @@ export const RoomMidStreamsContainer = observer(() => {
   );
 
   const handleStreamDoubleClick = (stream: EduStreamUI) => {
-    streamDragable && stream && handleStreamWindowContain(stream);
+    streamDragable && stream && handleDBClickStreamWindow(stream);
   };
 
   return (
@@ -74,7 +73,7 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
   const { streamUIStore, widgetUIStore, streamWindowUIStore } =
     useInteractiveUIStores() as EduInteractiveUIClassStore;
   const { teacherCameraStream, videoStreamSize, gap, setStreamBoundsByStreamUuid } = streamUIStore;
-  const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+  const { streamDragable, visibleStream, handleDBClickStreamWindow } = streamWindowUIStore;
   const videoStreamStyle = useMemo(() => {
     return isFullScreen
       ? { width: '100%', height: '100%' }
@@ -91,20 +90,18 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
   );
 
   const handleStreamDoubleClick = () => {
-    streamDragable && teacherCameraStream && handleStreamWindowContain(teacherCameraStream);
+    streamDragable && teacherCameraStream && handleDBClickStreamWindow(teacherCameraStream);
   };
 
   useEffect(() => {
     teacherCameraStream &&
       setStreamBoundsByStreamUuid(teacherCameraStream.stream.streamUuid, bounds);
   }, [bounds]);
-
   return teacherCameraStream ? (
     <div
       ref={ref}
       style={{ marginRight: gap - 2, position: 'relative' }}
-      className={isFullScreen ? 'video-player-fullscreen' : ''}
-      onDoubleClick={handleStreamDoubleClick}>
+      className={isFullScreen ? 'video-player-fullscreen' : ''}>
       {visibleStream(teacherCameraStream.stream.streamUuid) ? (
         <VisibilityDOM style={videoStreamStyle} />
       ) : (
@@ -116,18 +113,29 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
       )}
       <DragableContainer
         stream={teacherCameraStream}
-        dragable={!visibleStream(teacherCameraStream.stream.streamUuid)}
+        visibleTools={!visibleStream(teacherCameraStream.stream.streamUuid)}
+        onDoubleClick={handleStreamDoubleClick}
       />
     </div>
   ) : null;
 });
 
 export const DragableContainer = observer(
-  ({ stream, dragable }: { stream: EduStreamUI; dragable: boolean }) => {
+  ({
+    stream,
+    onDoubleClick,
+    visibleTools,
+    toolbarPlacement,
+  }: {
+    stream: EduStreamUI;
+    visibleTools: boolean;
+    onDoubleClick?: (...args: any) => void;
+    toolbarPlacement?: 'left' | 'bottom';
+  }) => {
     const [ref, bounds] = useMeasure();
     const [translate, setTranslate] = useState([0, 0]);
-    const { streamWindowUIStore, streamUIStore } = useStore();
-    const { setStreamDragInfomation, streamDragable } = streamWindowUIStore;
+    const { streamWindowUIStore } = useStore();
+    const { setStreamDragInformation, streamDragable, visibleStream } = streamWindowUIStore;
 
     const handleDragStream = ({
       stream,
@@ -138,24 +146,30 @@ export const DragableContainer = observer(
       active: boolean;
       xy: [number, number];
     }) => {
-      streamDragable && setStreamDragInfomation({ stream, active, pos: xy });
+      streamDragable && setStreamDragInformation({ stream, active, pos: xy });
     };
 
-    const bind = useDrag(({ args: [stream], active, xy }) => {
-      let delta = [xy[0] - bounds.x, xy[1] - bounds.y];
-      setTranslate(delta);
+    const bind = useDrag(({ args: [stream], active, xy, movement: [mx, my] }) => {
+      const delta = [xy[0] - bounds.x, xy[1] - bounds.y];
 
+      setTranslate(delta);
       !active && setTranslate([0, 0]);
-      handleDragStream({ stream, active, xy });
+      if (Math.abs(mx) >= 3 || Math.abs(my) >= 3) {
+        handleDragStream({ stream, active, xy });
+        // active && setVisible(false);
+      }
     });
 
     return (
       <DragableOverlay
+        visibleTools={visibleTools}
         stream={stream}
-        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}>
+        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
+        toolbarPlacement={toolbarPlacement}>
         <div
           ref={ref}
           {...bind(stream)}
+          onDoubleClick={visibleStream(stream.stream.streamUuid) ? () => {} : onDoubleClick}
           style={{
             touchAction: 'none',
             position: 'absolute',
@@ -179,15 +193,19 @@ export const DragableOverlay = ({
   style,
   children,
   isFullScreen,
+  toolbarPlacement,
+  visibleTools = true,
 }: {
   stream: EduStreamUI;
   className?: string;
   children: ReactNode;
   style?: CSSProperties;
   isFullScreen?: boolean;
+  toolbarPlacement?: 'left' | 'bottom';
+  visibleTools?: boolean;
 }) => {
   const {
-    streamUIStore: { toolbarPlacement, fullScreenToolbarPlacement },
+    streamUIStore: { toolbarPlacement: streamToolbarPlacement, fullScreenToolbarPlacement },
   } = useStore();
   return (
     <Popover
@@ -197,15 +215,23 @@ export const DragableOverlay = ({
       style={style}
       overlayClassName="video-player-tools-popover"
       content={
-        stream.stream.isLocal ? (
-          <LocalStreamPlayerTools isFullScreen={isFullScreen} />
-        ) : (
-          <RemoteStreamPlayerTools
-            stream={stream}
-            isFullScreen={isFullScreen}></RemoteStreamPlayerTools>
-        )
+        visibleTools ? (
+          stream.stream.isLocal ? (
+            <LocalStreamPlayerTools isFullScreen={isFullScreen} />
+          ) : (
+            <RemoteStreamPlayerTools
+              stream={stream}
+              isFullScreen={isFullScreen}></RemoteStreamPlayerTools>
+          )
+        ) : null
       }
-      placement={isFullScreen ? fullScreenToolbarPlacement : toolbarPlacement}>
+      placement={
+        isFullScreen
+          ? fullScreenToolbarPlacement
+          : toolbarPlacement
+          ? toolbarPlacement
+          : streamToolbarPlacement
+      }>
       {children}
     </Popover>
   );

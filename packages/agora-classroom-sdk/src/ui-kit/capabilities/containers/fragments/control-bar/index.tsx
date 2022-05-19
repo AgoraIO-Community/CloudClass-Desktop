@@ -7,9 +7,10 @@ import {
 } from '@/infra/utils/ipc';
 import { WindowID } from '@/infra/api';
 import { ControlState, IPCMessageType } from '@/infra/types';
-import { Select, SvgImg, Tooltip, t } from '~ui-kit';
+import { Select, Tooltip, t, SvgIcon } from '~ui-kit';
 import './index.css';
 import { EduUser, DevicePlatform } from 'agora-edu-core';
+import { RemoteControlBarUIParams } from '@/infra/stores/common/type';
 
 type Props = {
   canReSelectScreen?: boolean;
@@ -92,7 +93,16 @@ type IconButtonProps = {
 const IconButton: FC<IconButtonProps> = ({ title, color, type, onClick }) => {
   return (
     <Tooltip title={title} placement="bottom">
-      <SvgImg canHover color={color} type={type} size={24} onClick={onClick} />
+      <span>
+        <SvgIcon
+          canHover
+          hoverType={type === 'switch-screen-share' ? type + '-active' : type}
+          color={color}
+          type={type}
+          size={24}
+          onClick={onClick}
+        />
+      </span>
     </Tooltip>
   );
 };
@@ -101,6 +111,20 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
   const { changeControlState, selectScreen, hide, close, updateWindowSize } = useActions();
   const [controlState, setControlState] = useState<string>(ControlState.NotAllowedControlled);
   const { studentList } = useStudentList();
+  useEffect(() => {
+    const cleaner = listenChannelMessage(ChannelType.Message, (_e, message) => {
+      if (message.type === IPCMessageType.ControlStateChanged) {
+        setControlState(
+          (
+            message.payload as {
+              state: string;
+            }
+          ).state,
+        );
+      }
+    });
+    return cleaner;
+  }, []);
   const onStudentChange = useCallback(
     (studentUuid: string) => {
       const student = studentList.find((i) => i.userUuid === studentUuid);
@@ -139,11 +163,11 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
                 document.querySelector('.fcr-remote-control-bar-select .options-container')
                   ?.clientHeight || 0;
 
-              updateWindowSize(46 + height);
+              updateWindowSize(RemoteControlBarUIParams.height + height);
             });
           }}
           onClose={() => {
-            updateWindowSize(46, 180);
+            updateWindowSize(RemoteControlBarUIParams.height, 180);
           }}
         />
       </div>
@@ -156,7 +180,7 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
       {/* padding */}
       <div style={{ marginRight: 10 }} />
       <IconButton
-        title="关闭"
+        title={t('fcr_close')}
         color="#7B88A0"
         type="close"
         onClick={() => {

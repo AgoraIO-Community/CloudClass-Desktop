@@ -41,7 +41,7 @@ export enum DeviceStateChangedReason {
   playbackUnplugged = 'pretest.playback_move_out',
 }
 
-export interface widgetTrackStruct {
+export interface WidgetTrackStruct {
   state: number;
   position: { xaxis: number; yaxis: number };
   size: { width: number; height: number };
@@ -51,4 +51,8 @@ export interface widgetTrackStruct {
     userUuid: string;
     [key: string]: any;
   };
+}
+export enum RemoteControlBarUIParams {
+  width = 262,
+  height = 92,
 }

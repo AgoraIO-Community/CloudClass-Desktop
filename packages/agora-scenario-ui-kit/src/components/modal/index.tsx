@@ -6,7 +6,7 @@ import { SvgImg } from '../svg-img';
 import { OverlayWrap } from '../overlay-wrap';
 export interface ModalProps extends BaseProps {
   /** 标题 */
-  title?: string;
+  title?: string | React.ReactNode;
   /** 遮罩效果 */
   showMask?: boolean;
   /** 是否显示右上角的关闭按钮 */

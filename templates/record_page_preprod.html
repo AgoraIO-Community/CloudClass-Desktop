@@ -114,7 +114,15 @@
           if (evt === 1) {
             fetch(
               `https://api-test.agora.io/preview/edu/apps/${appId}/v2/rooms/${roomUuid}/records/ready`,
-              { method: 'PUT', cors: true },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-agora-token': rtmToken,
+                  'x-agora-uid': userUuid,
+                },
+                method: 'PUT',
+                cors: true,
+              },
             );
             // Send a web request to notify the server side that the recording page was fully loaded.
           }

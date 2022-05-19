@@ -442,7 +442,7 @@ export const en = {
     perf: 'Perf',
     setting: 'Setting',
     exit: 'Exit',
-    recording: 'Recording',
+    recording: 'Recording...',
     start_record: 'Start Recording',
     stop_record: 'Stop Recording',
     record_starting: 'Recording is preparing, please wait',
@@ -649,6 +649,7 @@ export const en = {
     group_is_full: 'Group is full of {reason}',
     confirm_stop_group_title: 'Stop Discussion',
     confirm_stop_group_content: 'Are you sure you want to end this discussion?',
+    confirm_stop_group_sure: 'End',
     confirm_delete_group_title: 'Delete Group',
     confirm_delete_group_content: 'Are you sure you want to delete the {reason} group ?',
     confirm_join_group_title: 'Join Group',
@@ -687,6 +688,7 @@ export const en = {
   fcr_group_back_exit: 'Exit',
   fcr_group_back_to_main_room: 'Return to main session',
   fcr_group_exit_room: 'Leave Room',
+  fcr_group_student_not_in_room: 'The user didn‘t enter the group',
   /** Breakout Room  */
   /** Remote Control */
   fcr_share_title_teacher: 'Teacher Screen Share',
@@ -718,7 +720,9 @@ export const en = {
   fcr_share_button_agree: 'Agree',
   fcr_share_title_controling: 'Controling',
   fcr_share_switch: 'Switch application share',
-
+  fcr_rc_control_anti_virus_software_conflict:
+    'If the remote control function cannot be used, please close the anti-virus software and computer housekeeper.',
+  fcr_close: 'Close',
   /** Remote Control */
   begin_class: 'Begin class',
   edu_error: {

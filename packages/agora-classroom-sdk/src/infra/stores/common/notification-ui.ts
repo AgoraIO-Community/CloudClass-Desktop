@@ -258,6 +258,7 @@ export class NotificationUIStore extends EduUIStoreBase {
                   reason1: transI18n('role.teacher'),
                   reason2: teachers.join(','),
                 }),
+                'warning',
               );
             }
           }
@@ -269,6 +270,7 @@ export class NotificationUIStore extends EduUIStoreBase {
                   reason1: transI18n('role.assistant'),
                   reason2: assistants.join(','),
                 }),
+                'warning',
               );
             }
           }
@@ -280,6 +282,7 @@ export class NotificationUIStore extends EduUIStoreBase {
                   reason1: transI18n('role.student'),
                   reason2: students.join(','),
                 }),
+                'warning',
               );
             }
           }

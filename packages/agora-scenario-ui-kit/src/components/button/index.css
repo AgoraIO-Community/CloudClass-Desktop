@@ -77,7 +77,7 @@
   color: #c2c2c8;
 }
 
-.fcr-ripple {
+.fcr-btn-ripple {
   position: absolute;
   top: 0;
   left: 0;
@@ -87,7 +87,7 @@
   overflow: hidden;
 }
 
-@keyframes fcr-ripple {
+@keyframes fcr-btn-ripple {
   from {
     transform: scale(0);
     opacity: 1;
@@ -98,12 +98,12 @@
   }
 }
 
-.fcr-btn .fcr-ripple-circle {
+.fcr-btn .fcr-btn-ripple-circle {
   position: absolute;
   border: 1px solid transparent;
   border-radius: 50%;
   pointer-events: none;
-  animation: fcr-ripple 0.75s 1;
+  animation: fcr-btn-ripple 0.75s 1;
   top: 50%;
   left: 50%;
 }

@@ -1,11 +1,19 @@
 import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import React, { CSSProperties, FC, Fragment, ReactNode, useEffect, useMemo, useRef } from 'react';
-import { useStore, useInteractiveUIStores } from '~hooks/use-edu-stores';
+import React, {
+  CSSProperties,
+  FC,
+  Fragment,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import { useStore } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import useMeasure from 'react-use-measure';
-import { useDrag } from '@use-gesture/react';
 import { useDebounce } from '~ui-kit/utilities/hooks';
 import './index.css';
 import {
@@ -23,7 +31,7 @@ import RewardSound from './assets/audio/reward.mp3';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { CameraPlaceholderType } from '@/infra/stores/common/type';
 import { DragableContainer } from './room-mid-player';
-import { divide } from 'lodash';
+import { debounce } from 'lodash';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -158,7 +166,7 @@ export const LocalStreamPlayerTools = observer(
               <SvgIcon
                 canHover={tool.interactable}
                 style={tool.style}
-                // hoverType={tool.hoverIconType}
+                hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
                 onClick={tool.interactable ? tool.onClick : () => {}}
@@ -190,7 +198,7 @@ export const RemoteStreamPlayerTools = observer(
               <SvgIcon
                 canHover={tool.interactable}
                 style={tool.style}
-                // hoverType={tool.hoverIconType}
+                hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
                 onClick={tool.interactable ? tool.onClick : () => {}}
@@ -285,6 +293,7 @@ export const StreamPlayerOverlay = observer(
 
     const cls = classnames({
       [`video-player-overlay`]: 1,
+      ['video-player-overlay-no-margin']: isFullscreen,
       [`${className}`]: !!className,
     });
 
@@ -439,9 +448,6 @@ export const CarouselGroup = observer(
               style={{
                 marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2,
                 position: 'relative',
-              }}
-              onDoubleClick={() => {
-                handleDBClick && handleDBClick(stream);
               }}>
               <MeasuerContainer streamUuid={stream.stream.streamUuid}>
                 {invisible && invisible(stream.stream.streamUuid) ? (
@@ -455,7 +461,10 @@ export const CarouselGroup = observer(
                 {invisible ? (
                   <DragableContainer
                     stream={stream}
-                    dragable={!invisible(stream.stream.streamUuid)}
+                    visibleTools={!invisible(stream.stream.streamUuid)}
+                    onDoubleClick={() => {
+                      handleDBClick && handleDBClick(stream);
+                    }}
                   />
                 ) : null}
               </MeasuerContainer>
@@ -499,10 +508,20 @@ export const MeasuerContainer = observer(
     const {
       streamUIStore: { setStreamBoundsByStreamUuid },
     } = useStore();
-    useEffect(() => {
-      streamUuid && setStreamBoundsByStreamUuid(streamUuid, bounds);
-      console.log('MeasuerContainer', streamUuid, bounds);
-    }, [bounds]);
+
+    const handleStreamBoundsUpdate = useCallback(
+      debounce((id, bounds) => {
+        setStreamBoundsByStreamUuid(id, bounds);
+      }, 330),
+      [],
+    );
+
+    useEffect(
+      debounce(() => {
+        streamUuid && handleStreamBoundsUpdate(streamUuid, bounds);
+      }, 330),
+      [bounds],
+    );
     return <div ref={ref}>{children}</div>;
   },
 );

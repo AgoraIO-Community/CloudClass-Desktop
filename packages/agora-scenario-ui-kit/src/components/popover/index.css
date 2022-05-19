@@ -203,7 +203,7 @@
 .popover-placement-left > .popover-content > .popover-arrow,
 .popover-placement-leftTop > .popover-content > .popover-arrow,
 .popover-placement-leftBottom > .popover-content > .popover-arrow {
-  right: 6px;
+  right: 7px;
   border-top-color: #fff;
   border-right-color: #fff;
   border-bottom-color: transparent;

@@ -19,7 +19,7 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
 
   const onCancel = useCallback(() => {
     removeDialog(id);
-  }, [removeDialog, id])
+  }, [removeDialog, id]);
 
   const fragment = useMemo(() => {
     switch (stage) {
@@ -47,6 +47,7 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
 
   return (
     <Modal
+      hasMask={false}
       onCancel={onCancel}
       closable
       title={`${transI18n('scaffold.breakout_room')} ${
@@ -55,7 +56,7 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
           : transI18n('scaffold.not_in_progress')
       }`}
       className="breakout-room"
-      contentClassName="content-area">
+      contentClassName={`content-area ${stage}`}>
       {fragment}
     </Modal>
   );

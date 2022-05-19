@@ -23,7 +23,7 @@ export const Card: FC<CardProps> = ({
   ...restProps
 }) => {
   const cls = classnames({
-    [`card`]: 1,
+    [`fcr-card`]: 1,
     [`${className}`]: !!className,
   });
   return (

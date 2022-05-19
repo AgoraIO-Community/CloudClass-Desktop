@@ -3,8 +3,7 @@ import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { Edu1v1ClassUIStore } from '@/infra/stores/one-on-one';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useEffect, useMemo } from 'react';
-import useMeasure from 'react-use-measure';
+import { useMemo } from 'react';
 import { StreamPlayer, StreamPlaceholder, VisibilityDOM, MeasuerContainer } from '.';
 import { DragableContainer } from './room-mid-player';
 
@@ -55,31 +54,29 @@ const DragableStream = observer(
     isFullScreen?: boolean;
     role: EduRoleTypeEnum;
   }) => {
-    const { streamWindowUIStore, streamUIStore } = useStore();
-    const { setStreamBoundsByStreamUuid } = streamUIStore;
-    const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+    const { streamWindowUIStore } = useStore();
+    const { streamDragable, visibleStream, handleDBClickStreamWindow } = streamWindowUIStore;
 
     const handleStreamDoubleClick = () => {
-      streamDragable && stream && handleStreamWindowContain(stream);
+      streamDragable && stream && handleDBClickStreamWindow(stream);
     };
 
     return (
       <>
         {stream ? (
           <div style={{ position: 'relative' }}>
-            <div onDoubleClick={handleStreamDoubleClick}>
-              <MeasuerContainer streamUuid={stream.stream.streamUuid}>
-                {visibleStream(stream.stream.streamUuid) ? (
-                  <VisibilityDOM style={{ width: '300px', height: '168px' }} />
-                ) : (
-                  <StreamPlayer stream={stream} isFullScreen={isFullScreen}></StreamPlayer>
-                )}
-                <DragableContainer
-                  stream={stream}
-                  dragable={!visibleStream(stream.stream.streamUuid)}
-                />
-              </MeasuerContainer>
-            </div>
+            <MeasuerContainer streamUuid={stream.stream.streamUuid}>
+              {visibleStream(stream.stream.streamUuid) ? (
+                <VisibilityDOM style={{ width: '300px', height: '168px' }} />
+              ) : (
+                <StreamPlayer stream={stream} isFullScreen={isFullScreen}></StreamPlayer>
+              )}
+              <DragableContainer
+                stream={stream}
+                visibleTools={!visibleStream(stream.stream.streamUuid)}
+                onDoubleClick={handleStreamDoubleClick}
+              />
+            </MeasuerContainer>
           </div>
         ) : (
           <StreamPlaceholder role={role} />

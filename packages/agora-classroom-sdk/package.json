@@ -39,9 +39,9 @@
   "build": {
     "asar": true,
     "asarUnpack": [
-      "node_modules/agora-rdc-core/**/*",
-      "node_modules/agora-electron-sdk/**/*"
+      "node_modules/agora-rdc-core/**/*"
     ],
+    "afterPack": "./after-pack.js",
     "extraMetadata": {
       "main": "build/index.js"
     },
@@ -75,7 +75,8 @@
       "icon": "icons/favicon.png",
       "target": [
         "nsis"
-      ]
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "nsis": {
       "oneClick": false,

@@ -11,7 +11,6 @@ module.exports = {
   externals: {
     'agora-electron-sdk': 'commonjs2 agora-electron-sdk',
     'agora-rdc-core': 'commonjs2 agora-rdc-core',
-    'agora-rdc-electron': 'commonjs2 agora-rdc-electron',
   },
   resolve: {
     fallback: {

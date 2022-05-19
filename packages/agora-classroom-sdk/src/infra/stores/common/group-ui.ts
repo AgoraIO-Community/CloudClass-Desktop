@@ -20,6 +20,8 @@ export enum GroupMethod {
   MANUAL,
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 @Log.attach({ proxyMethods: false })
 export class GroupUIStore extends EduUIStoreBase {
   private _disposers: IReactionDisposer[] = [];
@@ -46,14 +48,20 @@ export class GroupUIStore extends EduUIStoreBase {
 
     const { users, studentList } = this.userData;
 
+    const unknownName = transI18n('fcr_group_student_not_in_room');
+
+    const teacherList = this.classroomStore.userStore.teacherList
+
+    const assistantList = this.classroomStore.userStore.assistantList
+
     this.groupDetails.forEach((group, groupUuid) => {
       const students = new Map<string, { id: string; text: string; notJoined?: boolean }>();
 
       group.users.forEach(({ userUuid, notJoined }) => {
-        if (studentList.has(userUuid)) {
+        if (!teacherList.has(userUuid) && !assistantList.has(userUuid)) {
           students.set(userUuid, {
             id: userUuid,
-            text: users.get(userUuid)?.userName || 'unknown',
+            text: users.get(userUuid)?.userName || unknownName,
             notJoined,
           });
         }
@@ -466,16 +474,8 @@ export class GroupUIStore extends EduUIStoreBase {
   stopGroup(cb: () => void) {
     return new Promise<void>((resolve, reject) => {
       if (this.groupState === GroupState.OPEN) {
-        this.shareUIStore.addConfirmDialog(
-          transI18n('breakout_room.confirm_stop_group_title'),
-          transI18n('breakout_room.confirm_stop_group_content'),
-          {
-            onOK: () => {
-              cb();
-              this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
-            },
-          },
-        );
+        cb();
+        this.classroomStore.groupStore.stopGroup().then(resolve).catch(reject);
       } else {
         cb();
       }
@@ -531,32 +531,20 @@ export class GroupUIStore extends EduUIStoreBase {
       this.shareUIStore.addToast(transI18n('breakout_room.already_in_room'));
       return;
     }
-
-    const group = this.groupDetails.get(groupUuid);
-    this.shareUIStore.addConfirmDialog(
-      transI18n('breakout_room.confirm_join_group_title'),
-      transI18n('breakout_room.confirm_join_group_content', {
-        reason: group?.groupName,
-      }),
-      {
-        onOK: () => {
-          if (!this.classroomStore.groupStore.currentSubRoom) {
-            this.classroomStore.groupStore.updateGroupUsers([
-              {
-                groupUuid: groupUuid,
-                addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
-              },
-            ]);
-          } else {
-            this.classroomStore.groupStore.moveUsersToGroup(
-              this.classroomStore.groupStore.currentSubRoom,
-              groupUuid,
-              [EduClassroomConfig.shared.sessionInfo.userUuid],
-            );
-          }
+    if (!this.classroomStore.groupStore.currentSubRoom) {
+      this.classroomStore.groupStore.updateGroupUsers([
+        {
+          groupUuid: groupUuid,
+          addUsers: [EduClassroomConfig.shared.sessionInfo.userUuid],
         },
-      },
-    );
+      ]);
+    } else {
+      this.classroomStore.groupStore.moveUsersToGroup(
+        this.classroomStore.groupStore.currentSubRoom,
+        groupUuid,
+        [EduClassroomConfig.shared.sessionInfo.userUuid],
+      );
+    }
   }
 
   @bound
@@ -565,7 +553,10 @@ export class GroupUIStore extends EduUIStoreBase {
       message = message.trim().replaceAll('\n', '');
 
       if (!message) {
-        this.shareUIStore.addToast(transI18n('breakout_room.broadcast_message_cannot_be_empty'));
+        this.shareUIStore.addToast(
+          transI18n('breakout_room.broadcast_message_cannot_be_empty'),
+          'warning',
+        );
         return;
       }
 
@@ -579,7 +570,7 @@ export class GroupUIStore extends EduUIStoreBase {
   private _generateGroupName() {
     const nextSeq = (this._groupSeq += 1);
 
-    return `${transI18n('breakout_room.group_label')} ${nextSeq}`;
+    return `${transI18n('breakout_room.group_label')} ${nextSeq.toString().padStart(2, '0')}`;
   }
 
   @action
@@ -592,7 +583,13 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private async _waitUntilConnected() {
-    await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
+    if (
+      [RtcState.Connecting, RtcState.Reconnecting].includes(
+        this.classroomStore.connectionStore.rtcState,
+      )
+    ) {
+      await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
+    }
   }
 
   private async _waitUntilJoined() {
@@ -637,10 +634,18 @@ export class GroupUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.leaveRTC();
 
       await this._waitUntilLeft();
+      while (true) {
+        try {
+          await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
-      await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
-
-      await this.classroomStore.connectionStore.joinRTC();
+          await this.classroomStore.connectionStore.joinRTC();
+        } catch (e) {
+          this.logger.error('change sub room err', e);
+          await sleep(1000);
+          continue;
+        }
+        break;
+      }
 
       joinSuccess = true;
     } catch (e) {
@@ -657,7 +662,7 @@ export class GroupUIStore extends EduUIStoreBase {
   @bound
   private async _copyRoomContent() {
     const { localUser } = this.classroomStore.userStore;
-    const initial = localUser?.userProperties.get('widgets')?.netlessBoard.initial;
+    const initial = localUser?.userProperties.get('widgets')?.netlessBoard?.initial;
     if (initial) {
       await this.classroomStore.boardStore.importWindowManagerAttributes();
     }
@@ -711,9 +716,18 @@ export class GroupUIStore extends EduUIStoreBase {
 
       await this._waitUntilLeft();
 
-      await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
+      while (true) {
+        try {
+          await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
 
-      await this.classroomStore.connectionStore.joinRTC();
+          await this.classroomStore.connectionStore.joinRTC();
+        } catch (e) {
+          this.logger.error('join sub room err', e);
+          await sleep(1000);
+          continue;
+        }
+        break;
+      }
 
       joinSuccess = true;
     } catch (e) {
@@ -746,8 +760,10 @@ export class GroupUIStore extends EduUIStoreBase {
           // isWritable only for student
           if (managerReady) {
             if (
-              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(EduClassroomConfig.shared.sessionInfo.role)
-              || (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isWritable)
+              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+                EduClassroomConfig.shared.sessionInfo.role,
+              ) ||
+              (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isWritable)
             ) {
               this._copyRoomContent();
             }
@@ -773,9 +789,9 @@ export class GroupUIStore extends EduUIStoreBase {
         const title = isTeacher ? transI18n('fcr_group_help_title') : transI18n('fcr_group_join');
         const content = isTeacher
           ? transI18n('breakout_room.confirm_invite_teacher_content', {
-              reason1: groupName,
-              reason2: inviter,
-            })
+            reason1: groupName,
+            reason2: inviter,
+          })
           : transI18n('fcr_group_invitation', { reason: groupName });
 
         const ok = isTeacher

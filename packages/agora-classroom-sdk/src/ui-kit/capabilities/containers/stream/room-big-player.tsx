@@ -57,10 +57,10 @@ const DragableStream = observer(
     const [ref, bounds] = useMeasure();
     const { streamWindowUIStore, streamUIStore } = useStore();
     const { setStreamBoundsByStreamUuid } = streamUIStore;
-    const { streamDragable, visibleStream, handleStreamWindowContain } = streamWindowUIStore;
+    const { streamDragable, visibleStream, handleDBClickStreamWindow } = streamWindowUIStore;
 
     const handleStreamDoubleClick = () => {
-      streamDragable && stream && handleStreamWindowContain(stream);
+      streamDragable && stream && handleDBClickStreamWindow(stream);
     };
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const DragableStream = observer(
       <>
         {stream ? (
           <div style={{ position: 'relative' }}>
-            <div ref={ref} onDoubleClick={handleStreamDoubleClick}>
+            <div ref={ref}>
               {visibleStream(stream.stream.streamUuid) ? (
                 <VisibilityDOM style={style} />
               ) : (
@@ -83,7 +83,9 @@ const DragableStream = observer(
               )}
               <DragableContainer
                 stream={stream}
-                dragable={!visibleStream(stream.stream.streamUuid)}
+                visibleTools={!visibleStream(stream.stream.streamUuid)}
+                onDoubleClick={handleStreamDoubleClick}
+                toolbarPlacement="left"
               />
             </div>
           </div>

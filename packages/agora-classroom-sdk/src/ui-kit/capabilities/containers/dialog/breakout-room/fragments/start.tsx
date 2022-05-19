@@ -1,9 +1,8 @@
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { GroupMethod } from '@/infra/stores/common/group-ui';
-import { range } from 'lodash';
 import { observer } from 'mobx-react';
-import { useMemo, useState, FC } from 'react';
-import { Button, RadioGroup, transI18n, Input } from '~ui-kit';
+import { useState, FC } from 'react';
+import { Button, RadioGroup, transI18n, InputNumber } from '~ui-kit';
 import './index.css';
 
 type Props = {
@@ -27,22 +26,13 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
       <div className="group-start-content">
         <div className="start-main-title">{transI18n('breakout_room.create_group')}</div>
         <div className="start-sub-title">{transI18n('breakout_room.group_number')}</div>
-        <Input
-          type="number"
+        <InputNumber
           value={groupNum}
-          onChange={(e) => {
-            let num = Number(e.target.value);
-            if (num > 32) {
-              num = 32;
-            }
-            if (num <= 1) {
-              num = 1;
-            }
+          onChange={(num) => {
             setGroupNum(num);
           }}
           min={1}
-          max={32}
-          width={150}
+          max={20}
         />
         <div className="start-sub-title">{transI18n('breakout_room.group_type')}</div>
         <div className="flex justify-start">

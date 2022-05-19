@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import React, { FC, useState } from 'react';
-import { Chat, ChatProps } from '~components/chat';
+import { Chat, ChatProps } from '~components/chat-new';
 
 const meta: Meta = {
   title: 'Components/Chat',

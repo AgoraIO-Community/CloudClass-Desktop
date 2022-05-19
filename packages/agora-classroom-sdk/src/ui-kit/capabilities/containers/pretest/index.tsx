@@ -337,9 +337,7 @@ const CameraMirrorCheckBoxContainer = () => {
   return (
     <span className="media-choice-box">
       <CameraMirrorCheckBox />
-      <span className="camera-mode" style={{ marginLeft: 5 }}>
-        {transI18n('media.mirror')}
-      </span>
+      <span className="camera-mode">{transI18n('media.mirror')}</span>
     </span>
   );
 };

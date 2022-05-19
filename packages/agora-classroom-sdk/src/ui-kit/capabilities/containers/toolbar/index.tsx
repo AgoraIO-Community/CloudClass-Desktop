@@ -7,7 +7,10 @@ import { ToolCabinetContainer } from './tool-cabinet';
 import { BoardCleanersContainer } from './board-cleaners';
 
 export const WhiteboardToolbar = observer(({ children }: any) => {
-  const { toolbarUIStore } = useStore();
+  const {
+    toolbarUIStore,
+    streamWindowUIStore: { containedStreamWindowCoverOpacity },
+  } = useStore();
   const { activeTool, activeMap, tools, setTool } = toolbarUIStore;
 
   const mappedTools = tools.map((tool) => {
@@ -38,6 +41,7 @@ export const WhiteboardToolbar = observer(({ children }: any) => {
 
   return mappedTools.length > 0 ? (
     <Toolbar
+      style={{ opacity: containedStreamWindowCoverOpacity }}
       active={activeTool}
       activeMap={activeMap}
       tools={mappedTools}
