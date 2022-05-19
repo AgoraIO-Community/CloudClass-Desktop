@@ -112,15 +112,8 @@
         listener: (evt, args) => {
           console.log('evt', evt, args);
           if (evt === 1) {
-            fetch(`https://api.sd-rtn.com/edu/apps/${appId}/v2/rooms/${roomUuid}/records/ready`, {
-              headers: {
-                'Content-Type': 'application/json',
-                'x-agora-token': rtmToken,
-                'x-agora-uid': userUuid,
-              },
-              method: 'PUT',
-              cors: true,
-            });
+            AgoraEduSDK.setRecordReady();
+
             // Send a web request to notify the server side that the recording page was fully loaded.
           }
         },
