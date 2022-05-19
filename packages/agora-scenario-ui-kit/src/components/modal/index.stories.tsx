@@ -104,7 +104,7 @@ export const KickStudents = () => {
           />
           <span className="ml-2">{transI18n('radio.kicked_once')}</span>
         </label>
-        <label className="customize-radio">
+        {/* <label className="customize-radio">
           <input
             type="radio"
             name="kickType"
@@ -112,7 +112,7 @@ export const KickStudents = () => {
             onClick={() => setValue('kicked_ban')}
           />
           <span className="ml-2">{transI18n('radio.ban')}</span>
-        </label>
+        </label> */}
       </div>
     </Modal>
   );

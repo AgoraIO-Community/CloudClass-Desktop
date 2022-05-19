@@ -67,7 +67,8 @@
   height: calc(var(--size) / 16);
   transform-origin: 50% 50%;
   transform: rotate(-33deg);
-  background: var(--main-color);
+  /* background: var(--main-color); */
+  background: rgba(222, 87, 83, 1);
   border-left: calc(var(--size) / 50) solid var(--main-color);
   z-index: 1;
   outline: calc(var(--size) / 50) solid var(--bg-color);

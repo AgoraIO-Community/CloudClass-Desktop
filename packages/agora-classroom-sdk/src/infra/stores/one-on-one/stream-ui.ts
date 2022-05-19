@@ -4,7 +4,7 @@ import { StreamUIStore } from '../common/stream';
 export class OneToOneStreamUIStore extends StreamUIStore {
   //override
   @computed get toolbarPlacement(): 'bottom' | 'left' {
-    return 'left';
+    return 'bottom';
   }
 
   onInstall(): void {
