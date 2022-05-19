@@ -312,13 +312,17 @@ export class AgoraEduSDK {
   }
   static setRecordReady() {
     const {
+      rteEngineConfig: { ignoreUrlRegionPrefix, region },
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
+    const pathPrefix = `${
+      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+    }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',
-      pathPrefix: `/edu/apps/${appId}`,
+      pathPrefix,
     });
   }
 }
