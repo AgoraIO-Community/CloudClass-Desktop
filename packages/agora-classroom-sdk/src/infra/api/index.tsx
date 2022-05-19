@@ -69,6 +69,9 @@ export type LaunchOption = {
   latencyLevel?: 1 | 2;
   platform?: Platform;
   extensions?: IAgoraExtensionApp[]; // 新app插件
+  videoDirection?: 'left' | 'right';
+  recordLanguage?: LanguageEnum;
+  recordDirection?: 'left' | 'right';
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
