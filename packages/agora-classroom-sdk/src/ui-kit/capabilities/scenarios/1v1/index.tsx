@@ -16,9 +16,14 @@ import { ExtensionAppContainer } from '~containers/extension-app-container';
 import { ToastContainer } from '~containers/toast';
 import { CollectorContainer } from '~containers/board';
 import AkasuoLogo from './akasuo-logo';
+import { EduClassroomConfig } from 'agora-edu-core';
 
 const Content: FC = ({ children }) => {
-  return <div className="flex-grow" style={{position: 'relative'}}>{children}</div>;
+  return (
+    <div className="flex-grow" style={{ position: 'relative' }}>
+      {children}
+    </div>
+  );
 };
 
 export const OneToOneScenario = observer(() => {
@@ -29,7 +34,14 @@ export const OneToOneScenario = observer(() => {
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
         <Layout className={layoutCls} direction="col">
           <NavigationBarContainer />
-          <Layout className="horizontal">
+          <Layout
+            className="horizontal"
+            style={{
+              flexDirection:
+                EduClassroomConfig.shared.languageAndVideoDirectionConfig.videoDirection === 'left'
+                  ? 'row-reverse'
+                  : 'row',
+            }}>
             <Content>
               <WhiteboardContainer>
                 <ScreenShareContainer />

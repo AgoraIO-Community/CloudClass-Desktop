@@ -23,6 +23,7 @@ import { I18nProvider, i18nResources } from '~ui-kit';
 import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-gallery';
 
 export type LanguageEnum = 'en' | 'zh' | 'zh-hk';
+export type VideoDirectionEnum = 'left' | 'right';
 export type TranslateEnum =
   | ''
   | 'auto'
@@ -69,9 +70,9 @@ export type LaunchOption = {
   latencyLevel?: 1 | 2;
   platform?: Platform;
   extensions?: IAgoraExtensionApp[]; // 新app插件
-  videoDirection?: 'left' | 'right';
+  videoDirection?: VideoDirectionEnum;
   recordLanguage?: LanguageEnum;
-  recordDirection?: 'left' | 'right';
+  recordDirection?: VideoDirectionEnum;
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
@@ -183,6 +184,10 @@ export class AgoraEduSDK {
       duration,
       platform = Platform.PC,
       startTime,
+      language,
+      videoDirection = 'right',
+      recordDirection = 'left',
+      recordLanguage = 'zh',
     } = option;
 
     const sessionInfo = {
@@ -229,6 +234,13 @@ export class AgoraEduSDK {
     if (courseWareList) {
       config.setCourseWareList(courseWareList);
     }
+
+    config.setLanguageAndVideoDirectionConfig({
+      language,
+      videoDirection,
+      recordLanguage,
+      recordDirection,
+    });
 
     EduClassroomConfig.setConfig(config);
 

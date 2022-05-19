@@ -27,6 +27,16 @@ export enum Platform {
   H5 = 'H5',
 }
 
+export type LanguageEnum = 'en' | 'zh' | 'zh-hk';
+export type VideoDirectionEnum = 'left' | 'right';
+
+export interface LanguageAndVideoDirectionConfig {
+  language?: LanguageEnum;
+  videoDirection?: VideoDirectionEnum;
+  recordLanguage?: LanguageEnum;
+  recordDirection?: VideoDirectionEnum;
+}
+
 export class EduClassroomConfig {
   private static _classroomConfig?: EduClassroomConfig;
   static get shared(): EduClassroomConfig {
@@ -54,6 +64,7 @@ export class EduClassroomConfig {
   private _currentAPIVersion = 'v3';
   private _compatibleVersions: string[] = [];
   private _i18nResources = {};
+  private _languageAndVideoDirectionConfig: LanguageAndVideoDirectionConfig = {};
   boardDefaults: WhiteboardDefaults = { scale: 1.2 };
   //by default use https://api.sd-rtn.com
   host: string = 'https://api.sd-rtn.com';
@@ -162,6 +173,14 @@ export class EduClassroomConfig {
 
   get courseWareList(): CloudDriveResource[] {
     return this._courseWareList || [];
+  }
+
+  setLanguageAndVideoDirectionConfig(config: LanguageAndVideoDirectionConfig) {
+    this._languageAndVideoDirectionConfig = config;
+  }
+
+  get languageAndVideoDirectionConfig(): LanguageAndVideoDirectionConfig {
+    return this._languageAndVideoDirectionConfig;
   }
 
   get rteEngineConfig(): AgoraRteEngineConfig {

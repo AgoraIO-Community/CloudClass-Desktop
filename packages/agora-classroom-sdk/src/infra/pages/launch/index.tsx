@@ -56,6 +56,7 @@ export const LaunchPage = observer(() => {
             history.push(`/?reason=${type}`);
           }
         },
+        videoDirection: 'left',
       });
     }
   }, []);
