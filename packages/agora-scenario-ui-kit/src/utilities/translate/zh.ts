@@ -605,7 +605,6 @@ export const zh = {
     wait_for_assign2: '，每组{reason}人',
     create_submit: '创建',
     cancel_submit: '取消',
-    sure_submit: '确定',
     assign: '分配',
     re_create: '重新创建',
     add_group: '添加讨论组',
@@ -672,6 +671,7 @@ export const zh = {
   fcr_group_back_to_main_room: '回到大房间',
   fcr_group_exit_room: '离开教室',
   fcr_group_student_not_in_room: '用户未进入分组',
+  fcr_group_sure: '确定',
   /** Breakout Room  */
   /** Remote Control */
   fcr_share_title_teacher: '教师屏幕共享',

@@ -648,7 +648,8 @@ export const en = {
     broadcast_message_cannot_be_empty: 'Message cannot be empty',
     group_is_full: 'Group is full of {reason}',
     confirm_stop_group_title: 'Stop Discussion',
-    confirm_stop_group_content: 'Are you sure you want to end this discussion?',
+    confirm_stop_group_content:
+      'Are you sure you want to close the breakout room? When closed, all students will be returned to the main session',
     confirm_stop_group_sure: 'End',
     confirm_delete_group_title: 'Delete Group',
     confirm_delete_group_content: 'Are you sure you want to delete the {reason} group ?',
@@ -689,6 +690,7 @@ export const en = {
   fcr_group_back_to_main_room: 'Return to main session',
   fcr_group_exit_room: 'Leave Room',
   fcr_group_student_not_in_room: 'The user didn‘t enter the group',
+  fcr_group_sure: 'Sure',
   /** Breakout Room  */
   /** Remote Control */
   fcr_share_title_teacher: 'Teacher Screen Share',

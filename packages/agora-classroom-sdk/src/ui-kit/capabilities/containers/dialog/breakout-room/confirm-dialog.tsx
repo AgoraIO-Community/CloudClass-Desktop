@@ -37,7 +37,7 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = ({
             onClick={() => {
               onOk();
             }}>
-            {onCancelText ? onCancelText : transI18n('breakout_room.sure_submit')}
+            {onCancelText ? onCancelText : transI18n('fcr_group_sure')}
           </Button>
         </div>
       </div>

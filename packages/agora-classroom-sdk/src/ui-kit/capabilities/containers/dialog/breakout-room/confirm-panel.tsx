@@ -41,7 +41,7 @@ export const ConfirmPanel: FC<ConfirmPanelProps> = ({
             onClick={() => {
               onOk();
             }}>
-            {transI18n('breakout_room.sure_submit')}
+            {transI18n('fcr_group_sure')}
           </Button>
         </div>
       </div>
