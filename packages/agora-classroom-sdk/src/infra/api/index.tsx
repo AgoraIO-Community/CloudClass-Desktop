@@ -319,18 +319,11 @@ export class AgoraEduSDK {
     const pathPrefix = `${
       ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
     }/edu/apps/${appId}`;
-    new ApiBase()
-      .fetch({
-        path: `/v2/rooms/${roomUuid}/records/ready`,
-        method: 'PUT',
-        pathPrefix,
-      })
-      .then(() => {
-        alert('ready success');
-      })
-      .catch((err) => {
-        alert('failed to set ready:' + err.message);
-      });
+    new ApiBase().fetch({
+      path: `/v2/rooms/${roomUuid}/records/ready`,
+      method: 'PUT',
+      pathPrefix,
+    });
   }
 }
 
