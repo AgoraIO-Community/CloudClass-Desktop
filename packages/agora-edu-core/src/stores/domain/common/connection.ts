@@ -10,7 +10,12 @@ import {
   Log,
   RtcState,
 } from 'agora-rte-sdk';
-import { AgoraEduClassroomEvent, ClassroomState, WhiteboardState } from '../../../type';
+import {
+  AgoraEduClassroomEvent,
+  ClassroomState,
+  EduRoleTypeEnum,
+  WhiteboardState,
+} from '../../../type';
 import { EduClassroomConfig } from '../../../configs';
 import { EduRole2RteRole } from '../../../utils';
 import { EduStoreBase } from './base';
@@ -197,14 +202,43 @@ export class ConnectionStore extends EduStoreBase {
 
     this.setClassroomState(ClassroomState.Connected);
     EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Ready);
+
+    // handle record
     const { languageAndVideoDirectionConfig, sessionInfo } = EduClassroomConfig.shared;
+    const { roomUuid, role } = sessionInfo;
     this.classroomStore.api.setRoomProperties({
-      roomUuid: sessionInfo.roomUuid,
+      roomUuid,
       data: {
         language: languageAndVideoDirectionConfig.recordLanguage,
         videoDirection: languageAndVideoDirectionConfig.recordDirection,
       },
     });
+    // set room properties：teacherFirstLogin studentFirstLogin
+    const flexProps = this.classroomStore.roomStore.flexProps;
+    if (role === EduRoleTypeEnum.teacher) {
+      const teacherFirstLogin = flexProps?.teacherFirstLogin;
+      if (!teacherFirstLogin) {
+        this.classroomStore.api.updateFlexProperties(
+          roomUuid,
+          {
+            teacherFirstLogin: true,
+          },
+          {},
+        );
+      }
+    }
+    if (role === EduRoleTypeEnum.student) {
+      const studentFirstLogin = flexProps?.studentFirstLogin;
+      if (!studentFirstLogin) {
+        this.classroomStore.api.updateFlexProperties(
+          roomUuid,
+          {
+            studentFirstLogin: true,
+          },
+          {},
+        );
+      }
+    }
   }
 
   @bound

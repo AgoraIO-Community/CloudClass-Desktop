@@ -68,6 +68,10 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @observable awardAnims: { id: string; userUuid: string }[] = [];
 
+  @computed get flexProps() {
+    return this.classroomStore.roomStore.flexProps;
+  }
+
   /**
    * 老师流信息列表
    * @returns

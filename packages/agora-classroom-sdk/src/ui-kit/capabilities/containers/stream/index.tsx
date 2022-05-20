@@ -54,10 +54,12 @@ export const StreamPlaceholder = observer(
     className,
     style,
     role,
+    flexProps,
   }: {
     role: EduRoleTypeEnum;
     className?: string;
     style?: CSSProperties;
+    flexProps?: any;
   }) => {
     const cls = classnames({
       [`video-player`]: 1,
@@ -66,9 +68,15 @@ export const StreamPlaceholder = observer(
 
     let placeholderText = '';
     if (role === EduRoleTypeEnum.student) {
-      placeholderText = transI18n('placeholder.wait_student');
+      const studentFirstLogin = flexProps.studentFirstLogin;
+      placeholderText = transI18n(
+        studentFirstLogin ? 'placeholder.student_left' : 'placeholder.wait_student',
+      );
     } else if (role === EduRoleTypeEnum.teacher) {
-      placeholderText = transI18n('placeholder.wait_teacher');
+      const teacherFirstLogin = flexProps.teacherFirstLogin;
+      placeholderText = transI18n(
+        teacherFirstLogin ? 'placeholder.teacher_left' : 'placeholder.wait_teacher',
+      );
     }
 
     return (
