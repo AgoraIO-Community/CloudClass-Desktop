@@ -21,6 +21,7 @@ import RewardSVGA from './assets/svga/reward.svga';
 import RewardSound from './assets/audio/reward.mp3';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { CameraPlaceholderType } from '@/infra/stores/common/type';
+import { debounce } from 'lodash';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -49,19 +50,26 @@ export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) =>
 });
 
 export const StreamPlaceholder = observer(
-  ({ className, style, role }: { role: EduRoleTypeEnum; className?: string; style?: CSSProperties }) => {
+  ({
+    className,
+    style,
+    role,
+  }: {
+    role: EduRoleTypeEnum;
+    className?: string;
+    style?: CSSProperties;
+  }) => {
     const cls = classnames({
       [`video-player`]: 1,
       [`${className}`]: !!className,
     });
 
-    let placeholderText = ''
+    let placeholderText = '';
     if (role === EduRoleTypeEnum.student) {
-      placeholderText = transI18n('placeholder.wait_student')
+      placeholderText = transI18n('placeholder.wait_student');
     } else if (role === EduRoleTypeEnum.teacher) {
-      placeholderText = transI18n('placeholder.wait_teacher')
+      placeholderText = transI18n('placeholder.wait_teacher');
     }
-
 
     return (
       // <StreamPlayerOverlay stream={stream}>
@@ -160,7 +168,7 @@ const LocalStreamPlayerTools = observer(() => {
               // hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
-              onClick={tool.interactable ? tool.onClick : () => {}}
+              onClick={tool.interactable ? debounce(tool.onClick, 300) : () => {}}
             />
           </span>
         </Tooltip>
@@ -187,7 +195,7 @@ const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) =
               // hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
-              onClick={tool.interactable ? tool.onClick : () => {}}
+              onClick={tool.interactable ? debounce(tool.onClick, 300) : () => {}}
             />
           </span>
         </Tooltip>
@@ -298,6 +306,9 @@ const StreamPlayerOverlay = observer(
             {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}
           </div>
           <div className="bottom-left-info">
+            <StreamPlayerOverlayName stream={stream} />
+          </div>
+          <div className="bottom-right-info">
             <div
               style={{
                 display: 'flex',
@@ -310,9 +321,6 @@ const StreamPlayerOverlay = observer(
                 <RemoteStreamPlayerVolume stream={stream} />
               )}
             </div>
-            <StreamPlayerOverlayName stream={stream} />
-          </div>
-          <div className="bottom-right-info">
             {grantVisible && <StreamPlayerWhiteboardGranted stream={stream} />}
           </div>
           <StreamPlaceholderWaveArmPlaceholder stream={stream} />
