@@ -197,6 +197,14 @@ export class ConnectionStore extends EduStoreBase {
 
     this.setClassroomState(ClassroomState.Connected);
     EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.Ready);
+    const { languageAndVideoDirectionConfig, sessionInfo } = EduClassroomConfig.shared;
+    this.classroomStore.api.setRoomProperties({
+      roomUuid: sessionInfo.roomUuid,
+      data: {
+        language: languageAndVideoDirectionConfig.recordLanguage,
+        videoDirection: languageAndVideoDirectionConfig.recordDirection,
+      },
+    });
   }
 
   @bound

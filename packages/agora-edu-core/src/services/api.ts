@@ -767,4 +767,17 @@ export class EduApiService extends ApiBase {
     });
     return res.data;
   }
+
+  async setRoomProperties(payload: { roomUuid: string; data: any }) {
+    const res = await this.fetch({
+      path: `/v2/rooms/${payload.roomUuid}/properties`,
+      method: 'PUT',
+      data: {
+        properties: {
+          ...payload.data,
+        },
+      },
+    });
+    return res.data;
+  }
 }
