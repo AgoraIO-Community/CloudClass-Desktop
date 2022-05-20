@@ -162,6 +162,9 @@ export class RoomStore extends EduStoreBase {
       if (key === 'extAppsCommon') {
         this.extAppsCommon = get(roomProperties, `extAppsCommon`, {});
       }
+      if (key === 'flexProps') {
+        this.flexProps = get(roomProperties, 'flexProps', {});
+      }
     });
     // // execute commands
     this._cmdHandler.exec(operator, cause, roomProperties);
