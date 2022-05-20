@@ -121,7 +121,9 @@ export const en = {
     input_message: 'Please Input Message',
     loading: 'Loading',
     wait_student: 'Waiting for student to enter the classroom',
-    wait_teacher: 'The tutor leaved the classroom',
+    wait_teacher: 'Waiting for tutor to enter the classroom',
+    student_left: 'The student has left the classroom',
+    teacher_left: 'The tutor has left the classroom',
   },
   error: {
     banned: 'Prohibited',

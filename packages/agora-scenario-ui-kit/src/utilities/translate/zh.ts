@@ -27,7 +27,7 @@ export const zh = {
     'courseWare-loading': '课件加载中，请稍候…',
     'h5-courseWare': 'H5课件',
     'test-courseWare': 'test课件',
-    'clear-whiteboard': '你想清空白板内容吗？'
+    'clear-whiteboard': '你想清空白板内容吗？',
   },
   screen_share: '屏幕共享',
   kick: {
@@ -111,7 +111,9 @@ export const zh = {
     input_message: '请输入消息',
     loading: '加载中',
     wait_student: '等待学生进入教室',
-    wait_teacher: '外教已离开教室'
+    wait_teacher: '等待外教进入教室',
+    student_left: '学生已离开教室',
+    teacher_left: '外教已离开教室',
   },
   signal: {
     delay: '网络延迟',
@@ -489,7 +491,7 @@ export const zh = {
   },
   confirm: {
     delete: '删除提示',
-    clear: '清屏提示'
+    clear: '清屏提示',
   },
   stream: {
     'placeholder.loading': '正在打开摄像头',

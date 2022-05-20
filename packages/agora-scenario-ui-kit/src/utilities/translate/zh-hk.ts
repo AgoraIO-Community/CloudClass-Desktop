@@ -111,7 +111,9 @@ export const zhHK = {
     input_message: '請輸入消息',
     loading: '加載中',
     wait_student: '等待學生進入教室',
-    wait_teacher: '外教已離開教室',
+    wait_teacher: '等待外教進入教室',
+    student_left: '學生已離開教室',
+    teacher_left: '外教已離開教室',
   },
   signal: {
     delay: '網絡延遲',
