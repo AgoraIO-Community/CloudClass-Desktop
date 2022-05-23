@@ -1,6 +1,6 @@
 const answer_en = {
   widget_answer: {
-    appName: 'counter',
+    appName: 'Counter',
     start: 'start',
     seconds: 's',
     restart: 'restart',

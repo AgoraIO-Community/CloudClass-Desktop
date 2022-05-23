@@ -1,6 +1,6 @@
 const selector_en = {
   widget_selector: {
-    appName: 'Pop-up quiz',
+    appName: 'Pop-up Quiz',
     start: 'Begin Answering',
     submit: 'Post',
     change: 'Change My Answer',

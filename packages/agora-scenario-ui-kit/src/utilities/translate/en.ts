@@ -531,7 +531,7 @@ export const en = {
   },
   cabinet: {
     answer: {
-      appName: 'Pop-up quiz',
+      appName: 'Pop-up Quiz',
     },
     countdown: {
       appName: 'Countdown',
@@ -541,7 +541,7 @@ export const en = {
     },
   },
   answer: {
-    appName: 'Pop-up quiz',
+    appName: 'Pop-up Quiz',
     start: 'Begin Answering',
     submit: 'Post',
     change: 'Change My Answer',
