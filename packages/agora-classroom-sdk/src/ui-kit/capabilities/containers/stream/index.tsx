@@ -68,12 +68,12 @@ export const StreamPlaceholder = observer(
 
     let placeholderText = '';
     if (role === EduRoleTypeEnum.student) {
-      const studentFirstLogin = flexProps.studentFirstLogin;
+      const studentFirstLogin = flexProps?.studentFirstLogin;
       placeholderText = transI18n(
         studentFirstLogin ? 'placeholder.student_left' : 'placeholder.wait_student',
       );
     } else if (role === EduRoleTypeEnum.teacher) {
-      const teacherFirstLogin = flexProps.teacherFirstLogin;
+      const teacherFirstLogin = flexProps?.teacherFirstLogin;
       placeholderText = transI18n(
         teacherFirstLogin ? 'placeholder.teacher_left' : 'placeholder.wait_teacher',
       );
@@ -295,7 +295,7 @@ const StreamPlayerOverlay = observer(
       <Popover
         // trigger={'click'} // 调试使用
         align={{
-          offset: [0, -8],
+          offset: [0, -58],
         }}
         overlayClassName="video-player-tools-popover"
         content={
