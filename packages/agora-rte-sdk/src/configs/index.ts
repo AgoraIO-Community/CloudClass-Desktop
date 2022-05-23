@@ -33,6 +33,7 @@ export interface AgoraRteServiceConfig {
 export enum RteLanguage {
   zh = 'zh',
   en = 'en',
+  'zh-hk' = 'zh-hk',
 }
 
 export enum AgoraRegion {

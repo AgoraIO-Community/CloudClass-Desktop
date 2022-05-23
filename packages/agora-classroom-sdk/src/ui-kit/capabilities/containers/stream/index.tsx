@@ -176,7 +176,7 @@ const LocalStreamPlayerTools = observer(() => {
               // hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
-              onClick={tool.interactable ? debounce(tool.onClick, 300) : () => {}}
+              onClick={tool.interactable ? debounce(tool.onClick!, 300) : () => {}}
             />
           </span>
         </Tooltip>
@@ -203,7 +203,7 @@ const RemoteStreamPlayerTools = observer(({ stream }: { stream: EduStreamUI }) =
               // hoverType={tool.hoverIconType}
               type={tool.iconType}
               size={22}
-              onClick={tool.interactable ? debounce(tool.onClick, 300) : () => {}}
+              onClick={tool.interactable ? debounce(tool.onClick!, 300) : () => {}}
             />
           </span>
         </Tooltip>

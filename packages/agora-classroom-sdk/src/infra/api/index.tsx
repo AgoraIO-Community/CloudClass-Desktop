@@ -91,6 +91,10 @@ export class AgoraEduSDK {
         return EduLanguage.zh;
       case 'en':
         return EduLanguage.en;
+      case 'zh-hk':
+        return EduLanguage['zh-hk'];
+      default:
+        return EduLanguage.zh;
     }
   }
   private static convertRegion(region: string): EduRegion {
