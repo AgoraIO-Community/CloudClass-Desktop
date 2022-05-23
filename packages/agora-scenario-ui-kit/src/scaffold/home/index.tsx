@@ -11,7 +11,6 @@ import { Modal } from '~components/modal';
 import { HomeAbout, Disclaimer } from '~components/home-about';
 import { Card } from '~ui-kit';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
 
 export interface HomeAttributes {
   roomId: string;
@@ -26,6 +25,9 @@ export interface HomeAttributes {
   debug: boolean;
   encryptionMode: string;
   encryptionKey: string;
+  videoDirection?: 'left' | 'right';
+  recordLanguage?: string;
+  recordDirection?: 'left' | 'right';
 }
 
 export interface HomeProps extends HomeModule<HomeAttributes> {
@@ -53,6 +55,9 @@ export const Home: React.FC<HomeProps> = ({
   encryptionMode,
   encryptionKey,
   loading,
+  recordLanguage = 'zh',
+  videoDirection = 'left',
+  recordDirection = 'left',
   onChangeEncryptionMode,
   onChangeEncryptionKey,
   onChangeRole,
@@ -65,6 +70,9 @@ export const Home: React.FC<HomeProps> = ({
   onChangeUserName,
   onChangeRoomName,
   onChangeDebug,
+  onChangeVideoDirection,
+  onChangeRecordLanguage,
+  onChangeRecordDirection,
   onClick,
   ...restProps
 }) => {
@@ -86,6 +94,19 @@ export const Home: React.FC<HomeProps> = ({
     { label: '中文', value: 'zh' },
     { label: 'English', value: 'en' },
     { label: '繁体中文', value: 'zh-hk' },
+  ];
+  const recordLanguageOptions = [
+    { label: '中文', value: 'zh' },
+    { label: 'English', value: 'en' },
+    { label: '繁体中文', value: 'zh-hk' },
+  ];
+  const videoDirectionOptions = [
+    { label: '左', value: 'left' },
+    { label: '右', value: 'right' },
+  ];
+  const recordDirectionOptions = [
+    { label: '左', value: 'left' },
+    { label: '右', value: 'right' },
   ];
   const regionOptions = [
     { label: 'NA', value: 'NA' },
@@ -122,6 +143,36 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
+          <div>
+            <Select
+              prefix={<span>视频方向</span>}
+              value={videoDirection}
+              onChange={(value) => {
+                // @ts-ignore
+                onChangeVideoDirection(value);
+              }}
+              options={videoDirectionOptions}></Select>
+          </div>
+          <div>
+            <Select
+              prefix={<span>录制方向</span>}
+              value={recordDirection}
+              onChange={(value) => {
+                // @ts-ignore
+                onChangeRecordDirection(value);
+              }}
+              options={recordDirectionOptions}></Select>
+          </div>
+          <div>
+            <Select
+              prefix={<span>录制语言</span>}
+              value={recordLanguage}
+              onChange={(value) => {
+                // @ts-ignore
+                onChangeRecordLanguage(value);
+              }}
+              options={recordLanguageOptions}></Select>
+          </div>
           {/* <Link
             className="header-right-item"
             to={`/recordation-search/${Buffer.from(

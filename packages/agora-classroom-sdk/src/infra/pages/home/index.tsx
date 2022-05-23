@@ -47,6 +47,9 @@ export const HomePage = observer(() => {
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [recordLanguage, setRecordLanguage] = useState<string>('zh');
+  const [videoDirection, setVideoDirection] = useState<'left' | 'right'>('left');
+  const [recordDirection, setRecordDirection] = useState<'left' | 'right'>('left');
 
   useEffect(() => {
     const lang = homeStore.launchOption.language || getBrowserLanguage();
@@ -163,6 +166,15 @@ export const HomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
+        recordLanguage={recordLanguage}
+        // @ts-ignore
+        onChangeRecordLanguage={setRecordLanguage}
+        videoDirection={videoDirection}
+        // @ts-ignore
+        onChangeVideoDirection={setVideoDirection}
+        recordDirection={recordDirection}
+        // @ts-ignore
+        onChangeRecordDirection={setRecordDirection}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
         publishDate={REACT_APP_PUBLISH_DATE}
@@ -237,6 +249,10 @@ export const HomePage = observer(() => {
               latencyLevel: 2,
               userRole,
               curScenario,
+              // @ts-ignore
+              recordLanguage,
+              videoDirection,
+              recordDirection,
             };
 
             config.appId = REACT_APP_AGORA_APP_ID || config.appId;
