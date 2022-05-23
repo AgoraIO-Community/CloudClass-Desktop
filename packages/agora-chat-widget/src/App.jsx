@@ -25,6 +25,7 @@ import { CHAT_TABS_KEYS } from './contants';
 import { SvgImg } from './components/SvgImg';
 import im_CN from './locales/zh_CN';
 import im_US from './locales/en_US';
+import im_HK from './locales/zh_HK';
 import './App.css';
 import 'antd/dist/antd.css';
 const App = function (props) {
@@ -42,6 +43,7 @@ const App = function (props) {
   const configUIVisible = state?.configUIVisible;
   i18n.addResourceBundle('zh', 'translation', im_CN);
   i18n.addResourceBundle('en', 'translation', im_US);
+  i18n.addResourceBundle('zh-hk', 'translation', im_HK);
 
   useEffect(() => {
     const isPropsValue = store.getState()?.propsData || {};
