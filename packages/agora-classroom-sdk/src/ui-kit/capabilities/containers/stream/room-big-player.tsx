@@ -21,10 +21,7 @@ export const RoomBigTeacherStreamContainer = observer(() => {
       }}
       ref={teacherStreamContainer}>
       {teacherCameraStream ? (
-        <StreamPlayer
-          stream={teacherCameraStream}
-          style={teacherVideoStreamSize}
-          toolbarStyle={{ offsetY: -58 }}></StreamPlayer>
+        <StreamPlayer stream={teacherCameraStream} style={teacherVideoStreamSize}></StreamPlayer>
       ) : (
         <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} noText />
       )}
