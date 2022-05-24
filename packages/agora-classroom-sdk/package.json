@@ -1,6 +1,6 @@
 {
   "name": "agora-classroom-sdk",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "homepage": ".",
   "sideEffects": [
     "*.css"
@@ -248,7 +248,7 @@
     "stream-browserify": "3.0.0",
     "buffer": "6.0.3",
     "matchmedia-polyfill": "0.3.2",
-    "agora-edu-core": "2.4.1",
+    "agora-edu-core": "2.4.2",
     "agora-rte-sdk": "2.4.0"
   }
 }
