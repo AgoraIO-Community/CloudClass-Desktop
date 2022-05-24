@@ -43,7 +43,7 @@ const App = function (props) {
   const configUIVisible = state?.configUIVisible;
   i18n.addResourceBundle('zh', 'translation', im_CN);
   i18n.addResourceBundle('en', 'translation', im_US);
-  i18n.addResourceBundle('zh-hk', 'translation', im_HK);
+  i18n.addResourceBundle('zh-HK', 'translation', im_HK);
 
   useEffect(() => {
     const isPropsValue = store.getState()?.propsData || {};

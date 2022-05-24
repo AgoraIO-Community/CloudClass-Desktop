@@ -5,4 +5,4 @@ import zhHK from './zh-hk';
 
 i18n.addResourceBundle('zh', 'translation', zh);
 i18n.addResourceBundle('en', 'translation', en);
-i18n.addResourceBundle('zh-hk', 'translation', zhHK);
+i18n.addResourceBundle('zh-HK', 'translation', zhHK);
