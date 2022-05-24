@@ -36,13 +36,24 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
   },
 );
 
-export const TrackArea = ({ top = 0, boundaryName }: { top?: number; boundaryName: string }) => {
+export const TrackArea = ({
+  top = 0,
+  boundaryName,
+  offsetLevel = 1,
+}: {
+  top?: number;
+  boundaryName: string;
+  offsetLevel?: number;
+}) => {
   const { trackUIStore, shareUIStore } = useStore();
   const dom = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = shareUIStore.addViewportResizeObserver(() => {
-      const { offsetTop, offsetLeft } = dom.current!.parentElement!;
+      const offsetNode = Array.from({ length: offsetLevel }).reduce((node: HTMLElement | null) => {
+        return node ? node.parentElement : null;
+      }, dom.current);
+      const { offsetTop, offsetLeft } = offsetNode!;
       trackUIStore.updateTrackContext(boundaryName, { top: offsetTop, left: offsetLeft });
     });
     return () => {

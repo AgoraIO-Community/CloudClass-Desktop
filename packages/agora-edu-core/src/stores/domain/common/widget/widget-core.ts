@@ -138,14 +138,11 @@ export class ExtensionAppStore extends EduStoreBase {
     operator: any,
     cause: any,
   ) {
-    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-    if (operator.userUuid !== userUuid) {
-      changedRoomProperties.forEach((key) => {
-        if (key === 'widgets') {
-          this.setExtensionRoomProperties(get(roomProperties, `widgets`, {})); // 需要更新activeappids to do
-        }
-      });
-    }
+    changedRoomProperties.forEach((key) => {
+      if (key === 'widgets') {
+        this.setExtensionRoomProperties(get(roomProperties, `widgets`, {})); // 需要更新activeappids to do
+      }
+    });
   }
 
   @action.bound

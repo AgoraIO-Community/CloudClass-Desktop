@@ -43,7 +43,7 @@ export const OneToOneScenario = observer(() => {
                   : 'row',
             }}>
             <Content>
-              <WhiteboardContainer>
+              <WhiteboardContainer trackAreaOffsetLevel={2}>
                 <ScreenShareContainer />
               </WhiteboardContainer>
               <Aside className="aside-fixed">
