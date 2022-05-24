@@ -149,15 +149,7 @@ export class AgoraRteScene extends EventEmitter {
       await this._rtmManager.join(this._rtmChannel, this._rtmChannelObserver, this.sceneId);
 
       // 3. initialize object models
-      const {
-        streamUuid,
-        userName,
-        userUuid,
-        userRole,
-        rtcToken,
-        streams = [],
-        userProperties,
-      } = user;
+      const { streamUuid, userName, userUuid, role, rtcToken, streams = [], userProperties } = user;
       let agStreams = streams.map((s: IAgoraStreamData) => {
         return AgoraStream.fromData({
           streamUuid: s.streamUuid,
@@ -165,7 +157,7 @@ export class AgoraRteScene extends EventEmitter {
           fromUser: {
             userName,
             userUuid,
-            role: userRole,
+            role,
           },
           videoSourceState: s.videoSourceState,
           audioSourceState: s.audioSourceState,
@@ -179,7 +171,7 @@ export class AgoraRteScene extends EventEmitter {
       this._localUser = new AgoraRteLocalUser(this, {
         userUuid: AgoraRteEngineConfig.shared.userId,
         userName,
-        userRole,
+        userRole: role,
         streamUuid,
         sceneId: this.sceneId,
         rtcToken,

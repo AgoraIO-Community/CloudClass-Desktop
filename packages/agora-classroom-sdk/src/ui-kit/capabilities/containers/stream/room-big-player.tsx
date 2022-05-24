@@ -10,6 +10,9 @@ export const RoomBigTeacherStreamContainer = observer(() => {
   const { teacherCameraStream, teacherVideoStreamSize } = streamUIStore;
   const teacherStreamContainer = useRef<HTMLDivElement | null>(null);
 
+  if (teacherVideoStreamSize.width < 300) {
+    teacherVideoStreamSize.width = 300;
+  }
   return (
     <div
       className="teacher-stream-container flex flex-col"
@@ -18,9 +21,12 @@ export const RoomBigTeacherStreamContainer = observer(() => {
       }}
       ref={teacherStreamContainer}>
       {teacherCameraStream ? (
-        <StreamPlayer stream={teacherCameraStream} style={teacherVideoStreamSize}></StreamPlayer>
+        <StreamPlayer
+          stream={teacherCameraStream}
+          style={teacherVideoStreamSize}
+          toolbarStyle={{ offsetY: -58 }}></StreamPlayer>
       ) : (
-        <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} />
+        <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} noText />
       )}
     </div>
   );
@@ -44,7 +50,7 @@ export const RoomBigStudentStreamsContainer = observer(() => {
       className="flex-grow relative"
       onMouseEnter={mouseHandler(true)}
       onMouseLeave={mouseHandler(false)}
-      style={{ marginTop: 2, marginBottom: 2, height: studentVideoStreamSize.height }}>
+      style={{ marginBottom: 4, height: studentVideoStreamSize.height }}>
       {scrollable && (
         <NavGroup visible={navigationVisible} onPrev={carouselPrev} onNext={carouselNext} />
       )}

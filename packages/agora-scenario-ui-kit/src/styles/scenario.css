@@ -307,11 +307,13 @@ body,
 }
 
 .room-pretest .modal {
-  background: #DEF4FF;
+  background: #def4ff;
 }
 
-.telebox-titlebar, .netless-app-docs-viewer-footer, .netless-app-slide-footer{
-  background: #75C0FF !important;
+.telebox-titlebar,
+.netless-app-docs-viewer-footer,
+.netless-app-slide-footer {
+  background: #75c0ff !important;
   color: #fff !important;
 }
 .telebox-title {
@@ -332,4 +334,39 @@ body,
 
 .biz-header-title-wrap > button {
   border-left-width: 0 !important;
+}
+
+.aisde-fixed {
+  transition: 0.5s;
+  margin-right: 0;
+  min-width: unset;
+  z-index: 201;
+  height: unset;
+  position: absolute;
+  overflow: unset;
+  transform: translateX(0);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  bottom: 15px;
+  right: 10px;
+  pointer-events: none;
+}
+.aisde-fixed > div {
+  margin-right: 8px;
+  pointer-events: auto;
+}
+.aisde-fixed:last-child {
+  margin-right: 0;
+}
+.aisde-fixed .chat-panel {
+  min-width: unset;
+}
+
+.aisde-fixed-full-collapse {
+  transition: 0.5s;
+  margin-right: -300px;
+}
+.aisde-fixed .show-chat-icon {
+  position: initial;
 }

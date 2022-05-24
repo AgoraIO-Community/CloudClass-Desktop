@@ -55,11 +55,13 @@ export const StreamPlaceholder = observer(
     style,
     role,
     flexProps,
+    noText,
   }: {
     role: EduRoleTypeEnum;
     className?: string;
     style?: CSSProperties;
     flexProps?: any;
+    noText?: boolean;
   }) => {
     const cls = classnames({
       [`video-player`]: 1,
@@ -77,6 +79,10 @@ export const StreamPlaceholder = observer(
       placeholderText = transI18n(
         teacherFirstLogin ? 'placeholder.teacher_left' : 'placeholder.wait_teacher',
       );
+    }
+
+    if (noText) {
+      placeholderText = '';
     }
 
     return (
@@ -274,10 +280,14 @@ const StreamPlayerOverlay = observer(
     stream,
     className,
     children,
+    offsetY,
+    marginBottom,
   }: {
     stream: EduStreamUI;
     className?: string;
     children: ReactNode;
+    offsetY?: number;
+    marginBottom?: number;
   }) => {
     const { streamUIStore } = useStore();
     const { toolbarPlacement, layerItems } = streamUIStore;
@@ -295,7 +305,7 @@ const StreamPlayerOverlay = observer(
       <Popover
         // trigger={'click'} // 调试使用
         align={{
-          offset: [0, -58],
+          offset: [0, offsetY ?? -8],
         }}
         overlayClassName="video-player-tools-popover"
         content={
@@ -306,7 +316,7 @@ const StreamPlayerOverlay = observer(
           )
         }
         placement={toolbarPlacement}>
-        <div className={cls}>
+        <div className={cls} style={{ marginBottom }}>
           <StreamPlayerCameraPlaceholder stream={stream} />
           {children ? children : null}
           <AwardAnimations stream={stream} />
@@ -317,11 +327,13 @@ const StreamPlayerOverlay = observer(
             <StreamPlayerOverlayName stream={stream} />
           </div>
           <div className="bottom-right-info">
+            {grantVisible && <StreamPlayerWhiteboardGranted stream={stream} />}
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                marginLeft: 6,
               }}>
               {stream.stream.isLocal ? (
                 <LocalStreamPlayerVolume stream={stream} />
@@ -329,7 +341,6 @@ const StreamPlayerOverlay = observer(
                 <RemoteStreamPlayerVolume stream={stream} />
               )}
             </div>
-            {grantVisible && <StreamPlayerWhiteboardGranted stream={stream} />}
           </div>
           <StreamPlaceholderWaveArmPlaceholder stream={stream} />
         </div>
@@ -343,10 +354,15 @@ export const StreamPlayer = observer(
     stream,
     className,
     style: css,
+    toolbarStyle,
   }: {
     stream: EduStreamUI;
     className?: string;
     style?: CSSProperties;
+    toolbarStyle?: {
+      offsetY?: number;
+      marginBottom?: number;
+    };
   }) => {
     const { streamUIStore } = useStore();
     const { cameraPlaceholder } = streamUIStore;
@@ -362,7 +378,10 @@ export const StreamPlayer = observer(
     }
 
     return (
-      <StreamPlayerOverlay stream={stream}>
+      <StreamPlayerOverlay
+        stream={stream}
+        offsetY={toolbarStyle?.offsetY}
+        marginBottom={toolbarStyle?.marginBottom}>
         {stream.stream.isLocal ? (
           <LocalTrackPlayer className={cls} style={style} stream={stream.stream} />
         ) : (

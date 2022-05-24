@@ -37,7 +37,7 @@ export class AgoraRteLocalUser {
     return AgoraUser.fromData({
       userName,
       userUuid,
-      userRole,
+      role: userRole,
       userProperties,
     });
   }

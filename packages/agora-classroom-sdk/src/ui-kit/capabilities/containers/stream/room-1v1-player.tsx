@@ -9,7 +9,7 @@ const Room1v1TeacherStream = observer(
     return (
       <>
         {stream ? (
-          <StreamPlayer stream={stream}></StreamPlayer>
+          <StreamPlayer stream={stream} toolbarStyle={{ offsetY: -58 }}></StreamPlayer>
         ) : (
           <StreamPlaceholder role={EduRoleTypeEnum.teacher} flexProps={flexProps} />
         )}
@@ -23,7 +23,7 @@ const Room1v1StudentStream = observer(
     return (
       <>
         {stream ? (
-          <StreamPlayer stream={stream}></StreamPlayer>
+          <StreamPlayer stream={stream} toolbarStyle={{ offsetY: -58 }}></StreamPlayer>
         ) : (
           <StreamPlaceholder role={EduRoleTypeEnum.student} flexProps={flexProps} />
         )}
@@ -37,7 +37,9 @@ export const Room1v1StreamsContainer = observer(({ children }: any) => {
   const { teacherCameraStream, studentCameraStream, flexProps } = streamUIStore;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: -2 }}>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', marginBottom: -2 }}
+      className="room-1v1-stream-container">
       <Room1v1TeacherStream stream={teacherCameraStream} flexProps={flexProps} />
       <Room1v1StudentStream stream={studentCameraStream} flexProps={flexProps} />
     </div>
