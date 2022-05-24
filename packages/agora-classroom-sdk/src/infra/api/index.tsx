@@ -20,7 +20,7 @@ import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-galler
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback, WindowID } from './declare';
 import { EduContext } from '../contexts';
-import { EduVideoEncoderConfiguration, MediaOptions } from 'agora-rte-sdk';
+import { ApiBase, EduVideoEncoderConfiguration, MediaOptions } from 'agora-rte-sdk';
 import { AgoraHXChatWidget, AgoraChatWidget } from 'agora-widget-gallery';
 import { I18nProvider, i18nResources } from '~ui-kit';
 
@@ -309,6 +309,21 @@ export class AgoraEduSDK {
     return () => {
       unmountComponentAtNode(dom);
     };
+  }
+  static setRecordReady() {
+    const {
+      rteEngineConfig: { ignoreUrlRegionPrefix, region },
+      sessionInfo: { roomUuid },
+      appId,
+    } = EduClassroomConfig.shared;
+    const pathPrefix = `${
+      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+    }/edu/apps/${appId}`;
+    new ApiBase().fetch({
+      path: `/v2/rooms/${roomUuid}/records/ready`,
+      method: 'PUT',
+      pathPrefix,
+    });
   }
 }
 
