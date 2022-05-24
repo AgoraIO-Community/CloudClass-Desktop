@@ -7,6 +7,7 @@ import {
   EduRoomTypeEnum,
   CourseWareList,
   CourseWareItem,
+  RecordOptions,
 } from '../type';
 import { CloudDriveResource } from '../stores/domain/common/cloud-drive/struct';
 import { AGEduErrorCode, EduErrorCenter } from '../utils/error';
@@ -65,6 +66,7 @@ export class EduClassroomConfig {
   private _compatibleVersions: string[] = [];
   private _i18nResources = {};
   private _languageAndVideoDirectionConfig: LanguageAndVideoDirectionConfig = {};
+  private _recordOptions?: RecordOptions;
   boardDefaults: WhiteboardDefaults = { scale: 1.2 };
   //by default use https://api.sd-rtn.com
   host: string = 'https://api.sd-rtn.com';
@@ -164,6 +166,14 @@ export class EduClassroomConfig {
 
     // handleThrowableError will throw an error so it's not possible to return undefined here
     return this._boardConfig;
+  }
+
+  setRecordOptions(recordOptions: RecordOptions) {
+    this._recordOptions = recordOptions;
+  }
+
+  get recordOptions() {
+    return this._recordOptions;
   }
 
   setCourseWareList(list?: CourseWareList) {

@@ -80,11 +80,13 @@ export class BoardStore extends EduStoreBase {
       } = getJoinRoomParams(role);
       let { boardAppId, boardId, boardToken, boardRegion } =
         EduClassroomConfig.shared.whiteboardConfig;
+      let { recordOptions } = EduClassroomConfig.shared;
       WindowManager.register({
         kind: 'Slide',
         appOptions: {
           // 打开这个选项显示 debug 工具栏
           debug: true,
+          ...recordOptions,
         },
         src: async () => {
           return SlideApp;
@@ -326,9 +328,7 @@ export class BoardStore extends EduStoreBase {
     // @ts-ignore
     const teacherFirstLogin = this.room.state.globalState?.teacherFirstLogin;
     if (teacherFirstLogin) {
-      if (
-        [EduRoleTypeEnum.teacher].includes(EduClassroomConfig.shared.sessionInfo.role)
-      ) {
+      if ([EduRoleTypeEnum.teacher].includes(EduClassroomConfig.shared.sessionInfo.role)) {
         await this.loadAppPublicCourseWareList();
       }
     } else {
@@ -350,7 +350,7 @@ export class BoardStore extends EduStoreBase {
 
   @action.bound
   async openResource(resource: CloudDriveResource) {
-    let openedFlag = false
+    let openedFlag = false;
     const ext = resource.ext?.toLowerCase?.();
     if (!CloudDriveResource.supportedTypes.includes(ext))
       return EduErrorCenter.shared.handleThrowableError(
@@ -361,7 +361,7 @@ export class BoardStore extends EduStoreBase {
     if (resource instanceof CloudDriveCourseResource) {
       const opened = curResources.find(({ options }) => options?.title === resource.resourceName);
       if (opened) {
-        openedFlag = true
+        openedFlag = true;
         // EduErrorCenter.shared.handleThrowableError(
         //   AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
         //   Error('resource already opened'),
@@ -372,7 +372,7 @@ export class BoardStore extends EduStoreBase {
     if (resource instanceof CloudDriveMediaResource) {
       const opened = curResources.find(({ options }) => options?.title === resource.url);
       if (opened) {
-        openedFlag = true
+        openedFlag = true;
         // EduErrorCenter.shared.handleThrowableError(
         //   AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_ALREADY_OPENED,
         //   Error('resource already opened'),
@@ -383,7 +383,7 @@ export class BoardStore extends EduStoreBase {
     if (resource instanceof CloudDriveImageResource) {
       await this.putImageResource(resource);
     }
-    return openedFlag
+    return openedFlag;
   }
 
   @action.bound

@@ -28,7 +28,7 @@ export {
   WhiteboardState,
   AgoraEduClassroomEvent,
 } from './type';
-export type { CourseWareList } from './type';
+export type { CourseWareList, RecordOptions } from './type';
 export { ChatStorage, RteRole2EduRole, EduRole2RteRole, UUAparser, CustomBtoa } from './utils';
 export { AGEduErrorCode, EduErrorCenter } from './utils/error';
 export * from './utils/collection';

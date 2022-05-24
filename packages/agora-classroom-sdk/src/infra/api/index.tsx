@@ -13,6 +13,7 @@ import {
   IAgoraWidget,
   Platform,
   IAgoraExtensionApp,
+  RecordOptions,
 } from 'agora-edu-core';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ListenerCallback } from './declare';
@@ -73,6 +74,7 @@ export type LaunchOption = {
   videoDirection?: VideoDirectionEnum;
   recordLanguage?: LanguageEnum;
   recordDirection?: VideoDirectionEnum;
+  recordOptions?: RecordOptions; // 白板录制参数
 };
 
 export { AgoraEduClassroomEvent } from 'agora-edu-core';
@@ -192,6 +194,7 @@ export class AgoraEduSDK {
       videoDirection = 'right',
       recordDirection = 'left',
       recordLanguage = 'zh',
+      recordOptions,
     } = option;
 
     const sessionInfo = {
@@ -237,6 +240,10 @@ export class AgoraEduSDK {
 
     if (courseWareList) {
       config.setCourseWareList(courseWareList);
+    }
+
+    if (recordOptions) {
+      config.setRecordOptions(recordOptions);
     }
 
     config.setLanguageAndVideoDirectionConfig({

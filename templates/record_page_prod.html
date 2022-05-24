@@ -63,9 +63,9 @@
         userRole,
         translateLanguage,
         region,
-        // minFPS = 1,
-        // maxFPS = 5,
-        // resolution = 0.8,
+        minFPS = 1,
+        maxFPS = 5,
+        resolution = 0.8,
       } = useParams(window.location);
 
       const recordOptions = {
@@ -110,7 +110,7 @@
         userRole,
         // translateLanguage: language,
         courseWareList: [],
-        // recordOptions,
+        recordOptions,
         listener: (evt, args) => {
           console.log('evt', evt, args);
           if (evt === 1) {

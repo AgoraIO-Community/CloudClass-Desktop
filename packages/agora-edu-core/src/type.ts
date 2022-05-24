@@ -164,3 +164,11 @@ export enum AgoraEduClassroomEvent {
   ScreenShareEnded = 116, // 屏幕共享结束
   BatchRewardReceived = 117, // 批量奖励
 }
+
+export type RecordOptions = {
+  minFPS: number;
+  maxFPS: number;
+  resolution: number;
+  autoResolution: boolean;
+  autoFPS: boolean;
+};
