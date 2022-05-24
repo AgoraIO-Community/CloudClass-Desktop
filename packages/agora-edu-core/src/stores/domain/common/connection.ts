@@ -206,13 +206,16 @@ export class ConnectionStore extends EduStoreBase {
     // handle record
     const { languageAndVideoDirectionConfig, sessionInfo } = EduClassroomConfig.shared;
     const { roomUuid, role } = sessionInfo;
-    this.classroomStore.api.setRoomProperties({
-      roomUuid,
-      data: {
-        language: languageAndVideoDirectionConfig.recordLanguage,
-        videoDirection: languageAndVideoDirectionConfig.recordDirection,
-      },
-    });
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      this.classroomStore.api.setRoomProperties({
+        roomUuid,
+        data: {
+          language: languageAndVideoDirectionConfig.recordLanguage,
+          videoDirection: languageAndVideoDirectionConfig.recordDirection,
+        },
+      });
+    }
     // set room properties：teacherFirstLogin studentFirstLogin
     const flexProps = this.classroomStore.roomStore.flexProps;
     if (role === EduRoleTypeEnum.teacher) {
