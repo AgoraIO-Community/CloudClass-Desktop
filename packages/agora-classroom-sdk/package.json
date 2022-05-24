@@ -1,6 +1,6 @@
 {
   "name": "agora-classroom-sdk",
-  "version": "2.2.0",
+  "version": "2.2.105",
   "homepage": ".",
   "sideEffects": [
     "*.css"
