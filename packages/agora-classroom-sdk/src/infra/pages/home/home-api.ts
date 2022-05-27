@@ -1,15 +1,24 @@
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import axios from 'axios';
 
 export class HomeApi {
   static shared = new HomeApi();
   domain = '';
 
-  async login(userUuid: string): Promise<{
-    rtmToken: string;
-    userUuid: string;
+  async login(
+    userUuid: string,
+    roomUuid: string,
+    role: string,
+  ): Promise<{
     appId: string;
+    roomUuid: string;
+    userUuid: string;
+    role: number;
+    token: string;
   }> {
-    const { data } = await axios.get(`${this.domain}/edu/v2/users/${userUuid}/token`);
+    const { data } = await axios.get(
+      `${this.domain}/edu/v3/rooms/${roomUuid}/roles/${EduRoleTypeEnum[role]}/users/${userUuid}/token`,
+    );
     return data.data;
   }
 

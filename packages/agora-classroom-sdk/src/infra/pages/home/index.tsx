@@ -222,8 +222,8 @@ export const HomePage = observer(() => {
 
             HomeApi.shared.domain = tokenDomain;
 
-            const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
-            console.log('## get rtm Token from demo server', rtmToken);
+            const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, userRole);
+            console.log('## get rtm Token from demo server', token);
 
             const config: HomeLaunchOption = {
               appId,
@@ -232,7 +232,7 @@ export const HomePage = observer(() => {
               courseWareList: courseWareList.slice(0, 1),
               language: language as LanguageEnum,
               userUuid: `${userUuid}`,
-              rtmToken,
+              rtmToken: token,
               roomUuid: `${roomUuid}`,
               roomType: scenario,
               roomName: `${roomName}`,
