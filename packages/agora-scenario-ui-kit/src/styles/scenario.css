@@ -370,3 +370,15 @@ body,
 .aisde-fixed .show-chat-icon {
   position: initial;
 }
+
+.aside-1v1 .chat-panel .message-box {
+  height: calc(100% - 148px) !important;
+}
+
+.aside-1v1 .chat-panel .ant-tabs-nav {
+  display: none;
+}
+
+.aside-1v1 .input-box .input-chat {
+  margin-bottom: 45px !important;
+}
