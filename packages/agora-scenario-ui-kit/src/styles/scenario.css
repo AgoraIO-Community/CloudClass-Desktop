@@ -375,6 +375,10 @@ body,
   height: calc(100% - 148px) !important;
 }
 
+.aside-1v1 .message-box.no-input-box {
+  height: 100% !important;
+}
+
 .aside-1v1 .chat-panel .ant-tabs-nav {
   display: none;
 }

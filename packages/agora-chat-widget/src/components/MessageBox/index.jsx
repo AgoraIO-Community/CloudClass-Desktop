@@ -15,6 +15,7 @@ export const MessageBox = () => {
   const msgs = state?.messages;
   const isTabKey = state?.isTabKey;
   const isHaveNotice = state?.room?.announcement;
+  const showInputBox = state.configUIVisible.showInputBox;
   let isHaveMsg = msgs && msgs.length > 0;
 
   const activeTab = isTabKey === CHAT_TABS_KEYS.chat;
@@ -32,7 +33,7 @@ export const MessageBox = () => {
     <>
       {isHaveMsg ? (
         <div
-          className="message-box"
+          className={'message-box' + (!showInputBox ? ' no-input-box' : '')}
           id="chat-messages"
           style={{
             height: isHaveNotice
