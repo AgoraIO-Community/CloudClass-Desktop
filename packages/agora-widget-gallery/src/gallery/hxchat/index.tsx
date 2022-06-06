@@ -49,6 +49,7 @@ const App: React.FC<AppProps> = observer((props) => {
         userUuid,
         userName: widgetStore.classroomConfig.sessionInfo.userName,
         roleType: widgetStore.classroomConfig.sessionInfo.role,
+        token: widgetStore.classroomConfig.sessionInfo.token,
       }
     : null;
 
@@ -118,7 +119,6 @@ const App: React.FC<AppProps> = observer((props) => {
     globalContext,
     context: { ...props, chatroomId, appName, orgName, ...roomInfo, ...localUserInfo },
   };
-
   const domRef = useRef<HTMLDivElement>(null);
 
   return (
