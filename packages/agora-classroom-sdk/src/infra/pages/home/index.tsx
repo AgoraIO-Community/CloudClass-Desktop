@@ -222,7 +222,7 @@ export const HomePage = observer(() => {
 
             HomeApi.shared.domain = tokenDomain;
 
-            const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, userRole);
+            const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
             console.log('## get rtm Token from demo server', token);
 
             const config: HomeLaunchOption = {

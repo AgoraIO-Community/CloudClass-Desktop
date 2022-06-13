@@ -168,7 +168,7 @@ export const HomeH5Page = observer(() => {
           }
 
           HomeApi.shared.domain = tokenDomain;
-          const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, userRole);
+          const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
 
           const config: HomeLaunchOption = {
             appId,

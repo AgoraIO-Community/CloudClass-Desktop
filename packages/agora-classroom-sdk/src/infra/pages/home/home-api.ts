@@ -1,4 +1,3 @@
-import { EduRoleTypeEnum } from 'agora-edu-core';
 import axios from 'axios';
 
 export class HomeApi {
@@ -8,7 +7,7 @@ export class HomeApi {
   async login(
     userUuid: string,
     roomUuid: string,
-    role: string,
+    role: number,
   ): Promise<{
     appId: string;
     roomUuid: string;
@@ -17,7 +16,7 @@ export class HomeApi {
     token: string;
   }> {
     const { data } = await axios.get(
-      `${this.domain}/edu/v3/rooms/${roomUuid}/roles/${EduRoleTypeEnum[role]}/users/${userUuid}/token`,
+      `${this.domain}/edu/v3/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
     );
     return data.data;
   }
