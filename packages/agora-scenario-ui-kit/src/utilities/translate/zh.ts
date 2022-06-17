@@ -603,6 +603,7 @@ export const zh = {
     manual: '手动分配',
     wait_for_assign1: '待分配{reason}人',
     wait_for_assign2: '，每组{reason}人',
+    wait_for_assign3: '每组{reason}人',
     create_submit: '创建',
     cancel_submit: '取消',
     assign: '分配',

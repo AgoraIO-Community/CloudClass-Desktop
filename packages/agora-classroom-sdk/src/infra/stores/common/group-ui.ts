@@ -50,9 +50,9 @@ export class GroupUIStore extends EduUIStoreBase {
 
     const unknownName = transI18n('fcr_group_student_not_in_room');
 
-    const teacherList = this.classroomStore.userStore.teacherList
+    const teacherList = this.classroomStore.userStore.teacherList;
 
-    const assistantList = this.classroomStore.userStore.assistantList
+    const assistantList = this.classroomStore.userStore.assistantList;
 
     this.groupDetails.forEach((group, groupUuid) => {
       const students = new Map<string, { id: string; text: string; notJoined?: boolean }>();
@@ -488,7 +488,7 @@ export class GroupUIStore extends EduUIStoreBase {
    * @param group
    */
   @action.bound
-  createGroups(type: GroupMethod, count?: number) {
+  createGroups(type: GroupMethod, count: number) {
     if (count) {
       this._groupNum = count;
     }
@@ -505,9 +505,31 @@ export class GroupUIStore extends EduUIStoreBase {
 
         this.localGroups.set(`${uuidv4()}`, groupDetail);
       });
-    }
+    } else if (type === GroupMethod.AUTO) {
+      const groupIds: string[] = [];
+      range(0, this._groupNum).forEach(() => {
+        const groupDetail = {
+          groupName: this._generateGroupName(),
+          users: [],
+        };
 
-    // Not supported
+        const groupId = `${uuidv4()}`;
+
+        groupIds.push(groupId);
+
+        this.localGroups.set(groupId, groupDetail);
+      });
+      let index = 0;
+      this.classroomStore.userStore.studentList.forEach((user, userUuid) => {
+        index = index % this._groupNum;
+        const groupId = groupIds[index];
+        const groupDetail = this.localGroups.get(groupId);
+        if (groupDetail && groupDetail.users.length < this.MAX_USER_COUNT) {
+          groupDetail.users.push({ userUuid });
+        }
+        index += 1;
+      });
+    }
   }
 
   private _isGroupExisted({ groupName, groupUuid }: { groupName: string; groupUuid: string }) {
@@ -789,9 +811,9 @@ export class GroupUIStore extends EduUIStoreBase {
         const title = isTeacher ? transI18n('fcr_group_help_title') : transI18n('fcr_group_join');
         const content = isTeacher
           ? transI18n('breakout_room.confirm_invite_teacher_content', {
-            reason1: groupName,
-            reason2: inviter,
-          })
+              reason1: groupName,
+              reason2: inviter,
+            })
           : transI18n('fcr_group_invitation', { reason: groupName });
 
         const ok = isTeacher

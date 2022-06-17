@@ -3,7 +3,6 @@ const enUS = {
     help: 'Help',
     personalCenter: 'Personal center',
     logout: 'Sign out',
-
     login_success: 'Login IM Success',
     login_again: 'Please login again',
     join_room_success: 'Join room success',
@@ -28,7 +27,7 @@ const enUS = {
     enter_contents: 'Please enter message',
     enter_content_is_empty: 'The message cannot be empty',
     no_message: 'No Message',
-    default_announcement: 'No Announcement,',
+    default_announcement: 'No Announcement',
     publish: 'Publish',
     to_publish: 'To Publish',
     message_incloud_illegal_content: 'Send faild,message contain sensitive word',
@@ -52,6 +51,7 @@ const enUS = {
     hide_classroom_page_screenshots: 'Hide classroom page screenshot',
     screenshots_file: 'Screenshots_file',
     send_to_all: 'Broadcast Message',
+    sentence_connector: ',',
   },
 };
 

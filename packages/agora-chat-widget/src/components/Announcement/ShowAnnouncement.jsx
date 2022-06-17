@@ -81,6 +81,9 @@ export const ShowAnnouncement = () => {
             <img src={announcement} className="announcement-icon" />
             <div className="no-notice">
               <span className="no-notice-text"> {transI18n('chat.default_announcement')}</span>
+              {(isTeacher || isAssistant) && (
+                <span className="no-notice-text"> {transI18n('chat.sentence_connector')}</span>
+              )}
               {(isTeacher || isAssistant) && <Edit onChangeStatus={onChangeStatus} />}
             </div>
           </div>

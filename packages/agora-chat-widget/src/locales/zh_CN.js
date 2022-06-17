@@ -28,7 +28,7 @@ const im_CN = {
     enter_contents: '请输入内容',
     enter_content_is_empty: '消息内容不能为空',
     no_message: '还没有消息',
-    default_announcement: '暂无公告，',
+    default_announcement: '暂无公告',
     publish: '发布',
     to_publish: '去发布',
     message_incloud_illegal_content: '发送失败，消息包含非法字符',
@@ -52,6 +52,7 @@ const im_CN = {
     hide_classroom_page_screenshots: '隐藏教室页面截图',
     screenshots_file: '截图文件',
     send_to_all: '发送全体消息',
+    sentence_connector: '，',
   },
 };
 export default im_CN;

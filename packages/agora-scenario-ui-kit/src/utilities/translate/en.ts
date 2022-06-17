@@ -619,6 +619,7 @@ export const en = {
     manual: 'Manual',
     wait_for_assign1: 'To be assigned {reason} persons',
     wait_for_assign2: ', per group {reason} persons',
+    wait_for_assign3: 'Per group {reason} persons',
     create_submit: 'Create',
     cancel_submit: 'Cancel',
     assign: 'Assign',

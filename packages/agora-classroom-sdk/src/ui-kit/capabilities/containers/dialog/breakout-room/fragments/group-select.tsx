@@ -271,23 +271,20 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
     />
   );
 
-  const tialNode =
-    level === 0 && node.id ? (
-      <GroupButtons groupUuid={node.id} btns={mouseEnter ? [renameBtn, removeBtn] : []} />
-    ) : level === 1 ? (
-      <GroupButtons
-        groupUuid={node.id}
-        btns={
-          mouseEnter ? (
-            <UserButtons groupUuid={getUserGroupUuid(node.id) as string} userUuid={node.id} />
-          ) : (
-            []
-          )
-        }
-      />
-    ) : (
-      <div className="py-1">&nbsp;</div>
-    );
+  // there will be a `Not grouped` group which is denoted by an empty node id
+  const isGroupTreeNode = level === 0 && node.id;
+  const isUserTreeNode = level === 1;
+
+  const tialNode = isGroupTreeNode ? (
+    // action buttons which can operate on groups
+    <GroupButtons groupUuid={node.id} btns={mouseEnter ? [renameBtn, removeBtn] : []} />
+  ) : isUserTreeNode ? (
+    // action buttons which can operate on users
+    <UserButtons groupUuid={getUserGroupUuid(node.id) as string} userUuid={node.id} />
+  ) : (
+    // No action buttons
+    <div className="py-1">&nbsp;</div>
+  );
 
   const childrenLength = node?.children?.length;
 

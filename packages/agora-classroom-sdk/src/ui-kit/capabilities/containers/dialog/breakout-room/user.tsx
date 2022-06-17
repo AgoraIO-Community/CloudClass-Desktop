@@ -58,48 +58,47 @@ export const UserPanel: FC<UserPanelProps> = ({
         )}
         {users.length ? (
           <div
-            className="panel-content py-2 px-2 overflow-auto flex flex-wrap justify-start"
+            className="panel-content py-2 px-2 overflow-auto"
             style={{
               height: 'calc(100% - 20px)',
             }}
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
             }}>
-            {users
-              .filter((item) => {
-                if (!keyword) return true;
-                return item.userName.includes(keyword);
-              })
-              .map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
-                <div key={userUuid} style={{ width: '50%' }}>
-                  <CheckBox
-                    className="group-user-checkbox"
-                    style={{ width: '130%' }}
-                    gap={2}
-                    text={userName}
-                    value={userUuid}
-                    onChange={() => {
-                      const newCheckedUsers = new Set(checkedUsers);
-                      let isFull = false;
-                      if (newCheckedUsers.has(userUuid)) {
-                        newCheckedUsers.delete(userUuid);
-                      } else {
-                        newCheckedUsers.size < limitCount
-                          ? newCheckedUsers.add(userUuid)
-                          : (isFull = true);
-                      }
-                      setCheckedUsers(newCheckedUsers);
-                      onChange && onChange(Array.from(newCheckedUsers));
-                      isFull && onError && onError('FULL');
-                    }}
-                    disabled={userGroupUuid ? userGroupUuid !== groupUuid : false}
-                    checked={
-                      checkedUsers.has(userUuid) ||
-                      (userGroupUuid ? userGroupUuid !== groupUuid : false)
-                    }
-                  />
-                </div>
-              ))}
+            <div className="flex flex-wrap justify-start">
+              {users
+                .filter((item) => {
+                  if (!keyword) return true;
+                  return item.userName.includes(keyword);
+                })
+                .map(({ userUuid, userName, groupUuid: userGroupUuid }) => (
+                  <div key={userUuid} style={{ width: '50%' }}>
+                    <CheckBox
+                      className="group-user-checkbox"
+                      style={{ width: '130%' }}
+                      gap={2}
+                      text={userName}
+                      value={userUuid}
+                      onChange={() => {
+                        const newCheckedUsers = new Set(checkedUsers);
+                        let isFull = false;
+                        if (newCheckedUsers.has(userUuid)) {
+                          newCheckedUsers.delete(userUuid);
+                        } else {
+                          newCheckedUsers.size < limitCount
+                            ? newCheckedUsers.add(userUuid)
+                            : (isFull = true);
+                        }
+                        setCheckedUsers(newCheckedUsers);
+                        onChange && onChange(Array.from(newCheckedUsers));
+                        isFull && onError && onError('FULL');
+                      }}
+                      disabled={userGroupUuid ? userGroupUuid !== groupUuid : false}
+                      checked={checkedUsers.has(userUuid) || !!userGroupUuid}
+                    />
+                  </div>
+                ))}
+            </div>
           </div>
         ) : null}
       </div>
