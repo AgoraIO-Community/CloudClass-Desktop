@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>gift</title>
+    <g id="职教大班课-CDN课堂" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="（老师端）大班课-CDN课堂-学员列表-web" transform="translate(-956.000000, -673.000000)">
+            <g id="举手备份" transform="translate(950.000000, 667.000000)">
+                <g id="gift" transform="translate(6.000000, 6.000000)">
+                    <rect id="矩形" x="0" y="0" width="26" height="26"></rect>
+                    <g id="编组-2" transform="translate(3.000000, 3.000000)">
+                        <path d="M10,2.28571429 L11.8334405,1.12162511 C12.8216884,0.494166079 14.1286965,0.755280747 14.8,1.71428571 C15.4704311,2.67204448 15.2654516,3.98822738 14.3355175,4.69674861 L10,8 L10,8 L5.66448255,4.69674861 C4.73454844,3.98822738 4.52956886,2.67204448 5.2,1.71428571 C5.87130348,0.755280747 7.17831157,0.494166079 8.16655955,1.12162511 L10,2.28571429 L10,2.28571429 Z" id="路径-3" fill="#8E8E8E"></path>
+                        <path d="M1.5,9 L18.5,9 L18.5,17 C18.5,18.1045695 17.6045695,19 16.5,19 L3.5,19 C2.3954305,19 1.5,18.1045695 1.5,17 L1.5,9 L1.5,9 Z" id="矩形备份" fill="#565556"></path>
+                        <rect id="矩形备份-2" fill="#8E8E8E" x="8" y="9" width="4" height="10"></rect>
+                        <rect id="矩形" fill="#8E8E8E" x="0" y="5" width="20" height="5"></rect>
+                        <rect id="矩形" fill="#212021" opacity="0.192988804" x="1.5" y="10" width="17" height="3"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

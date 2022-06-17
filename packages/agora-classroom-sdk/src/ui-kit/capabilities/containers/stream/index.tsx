@@ -9,6 +9,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import classnames from 'classnames';
@@ -32,6 +33,7 @@ import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { CameraPlaceholderType } from '@/infra/stores/common/type';
 import { DragableContainer } from './room-mid-player';
 import { debounce } from 'lodash';
+import { AgoraRteMediaSourceState, MediaPlayerEvents } from 'agora-rte-sdk';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -104,19 +106,94 @@ export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
 
 export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
   ({ style, stream, className, mirrorMode = true, canSetupVideo = true }) => {
+    const [readyPlay, setReadyPlay] = useState(false);
+    const [interactiveNeeded, setInteractiveNeeded] = useState(false);
     const { classroomStore } = useStore();
-    const { streamStore } = classroomStore;
-    const { setupRemoteVideo } = streamStore;
+    const { streamStore, mediaStore, roomStore } = classroomStore;
+    const { setupRemoteVideo, muteRemoteAudioStream, muteRemoteVideoStream } = streamStore;
+    const { isCDNMode } = roomStore;
 
     const ref = useRef<HTMLDivElement | null>(null);
 
+    const handleReadyPlay = () => setReadyPlay(true);
+    const handleInteractiveNeeded = (interactiveNeeded: boolean) =>
+      setInteractiveNeeded(interactiveNeeded);
+
+    const handlePlay = useCallback(async () => {
+      const { streamHlsUrl } = stream;
+      if (!streamHlsUrl || !isCDNMode) {
+        return;
+      }
+      const player = mediaStore.getMediaTrackPlayer(streamHlsUrl);
+      if (!player) {
+        return;
+      }
+      player.play(
+        stream.videoSourceState === AgoraRteMediaSourceState.started,
+        stream.audioSourceState === AgoraRteMediaSourceState.started,
+      );
+    }, [mediaStore, stream]);
+
     useEffect(() => {
-      if (ref.current && canSetupVideo) {
+      if (ref.current && canSetupVideo && stream.streamHlsUrl && isCDNMode) {
+        muteRemoteVideoStream(stream, true);
+        muteRemoteAudioStream(stream, true);
+        mediaStore.setupMediaStream(
+          stream.streamHlsUrl,
+          ref.current,
+          true,
+          stream.audioSourceState === AgoraRteMediaSourceState.started,
+          stream.videoSourceState === AgoraRteMediaSourceState.started,
+        );
+      }
+      if (ref.current && canSetupVideo && stream.streamHlsUrl && !isCDNMode) {
+        const mediaTrackPlayer = mediaStore.getMediaTrackPlayer(stream.streamHlsUrl);
+        if (mediaTrackPlayer) {
+          mediaTrackPlayer.dispose();
+        }
+        muteRemoteVideoStream(stream, false);
+        muteRemoteAudioStream(stream, false);
+      }
+      if (ref.current && canSetupVideo && !isCDNMode) {
         setupRemoteVideo(stream, ref.current, mirrorMode);
       }
-    }, [stream, setupRemoteVideo, canSetupVideo]);
+    }, [
+      stream,
+      setupRemoteVideo,
+      muteRemoteAudioStream,
+      muteRemoteVideoStream,
+      canSetupVideo,
+      isCDNMode,
+      mediaStore,
+    ]);
 
-    return <div style={style} className={className} ref={ref}></div>;
+    useEffect(() => {
+      const { streamHlsUrl } = stream;
+      if (!streamHlsUrl || !isCDNMode) {
+        return;
+      }
+      const player = mediaStore.getMediaTrackPlayer(streamHlsUrl);
+      if (!player) {
+        return;
+      }
+      player.on(MediaPlayerEvents.ReadyToPlay, handleReadyPlay);
+      player.on(MediaPlayerEvents.InteractiveNeeded, handleInteractiveNeeded);
+      return () => {
+        player.off(MediaPlayerEvents.ReadyToPlay, handleReadyPlay);
+        player.off(MediaPlayerEvents.InteractiveNeeded, handleInteractiveNeeded);
+      };
+    }, [stream, mediaStore, handleReadyPlay, handleInteractiveNeeded]);
+    return (
+      <>
+        <div style={style} className={className} ref={ref}></div>
+        {isCDNMode && !interactiveNeeded && !readyPlay ? (
+          <div className="video-player-video-loading"></div>
+        ) : null}
+        {isCDNMode && interactiveNeeded ? (
+          <div className="video-player-play-btn" onClick={handlePlay}></div>
+        ) : null}
+      </>
+    );
   },
 );
 

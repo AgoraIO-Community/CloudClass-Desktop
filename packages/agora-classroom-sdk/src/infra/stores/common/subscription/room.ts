@@ -17,6 +17,15 @@ export abstract class SceneSubscription {
   protected logger!: Injectable.Logger;
 
   protected _active = false;
+  protected _isCdnMode: boolean = false;
+
+  get active() {
+    return this._active;
+  }
+
+  get isCDNMode() {
+    return this._isCdnMode;
+  }
 
   constructor(protected _scene: AgoraRteScene) {
     const scene = _scene;
@@ -117,6 +126,10 @@ export abstract class SceneSubscription {
 
   setActive(active: boolean) {
     this._active = active;
+  }
+
+  setCDNMode(cdnMode: boolean) {
+    this._isCdnMode = cdnMode;
   }
 }
 
@@ -271,7 +284,10 @@ export class MainRoomSubscription extends SceneSubscription {
     streams.forEach((s) => {
       switch (s.videoState) {
         case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, false);
+          scene.rtcChannel.muteRemoteVideoStream(
+            s.streamUuid,
+            s.playUrl && this.isCDNMode ? true : false,
+          );
           break;
         case AgoraRteMediaPublishState.Unpublished:
           scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
@@ -280,7 +296,10 @@ export class MainRoomSubscription extends SceneSubscription {
 
       switch (s.audioState) {
         case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, false);
+          scene.rtcChannel.muteRemoteAudioStream(
+            s.streamUuid,
+            s.playUrl && this.isCDNMode ? true : false,
+          );
           break;
         case AgoraRteMediaPublishState.Unpublished:
           scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
@@ -301,7 +320,10 @@ export class MainRoomSubscription extends SceneSubscription {
     streams.forEach((s) => {
       switch (s.videoState) {
         case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, false);
+          scene.rtcChannel.muteRemoteVideoStream(
+            s.streamUuid,
+            s.playUrl && this.isCDNMode ? true : false,
+          );
           break;
         case AgoraRteMediaPublishState.Unpublished:
           scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
@@ -310,7 +332,10 @@ export class MainRoomSubscription extends SceneSubscription {
 
       switch (s.audioState) {
         case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, false);
+          scene.rtcChannel.muteRemoteAudioStream(
+            s.streamUuid,
+            s.playUrl && this.isCDNMode ? true : false,
+          );
           break;
         case AgoraRteMediaPublishState.Unpublished:
           scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, true);

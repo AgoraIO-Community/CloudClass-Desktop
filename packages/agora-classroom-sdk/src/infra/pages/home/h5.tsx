@@ -20,6 +20,8 @@ import { Helmet } from 'react-helmet';
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
+declare const CLASSROOM_SDK_VERSION: string;
+
 export const HomeH5Page = observer(() => {
   const homeStore = useHomeStore();
 
@@ -134,7 +136,7 @@ export const HomeH5Page = observer(() => {
       </Helmet>
       <MessageDialog />
       <H5Login
-        version={EduClassroomConfig.getVersion()}
+        version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
         roomId={roomUuid}
         userId={userUuid}

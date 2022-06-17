@@ -3,9 +3,10 @@ import { Button } from '../Button';
 import React, { useRef, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import classnames from 'classnames';
-import { transI18n } from '~ui-kit';
+import { Icon, transI18n } from '~ui-kit';
 import { MSG_TYPE } from '../../contants';
 import { messageAction } from '../../redux/actions/messageAction';
+import { setQuestioinStateAction } from '../../redux/actions/roomAction';
 // import emojiIcon from '../../themes/img/emoji.png';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import imgIcon from '../../themes/img/img.png';
@@ -47,6 +48,7 @@ export const InputMsg = ({ allMutePermission }) => {
   const userNickName = state?.propsData.userName;
   const userAvatarUrl = state?.loginUserInfo.avatarurl;
   const isAllMute = state?.room.allMute;
+  const isQuestion = state?.isQuestion;
   const configUIVisible = state?.configUIVisible;
   let isElectron = isElctronPlatform();
 
@@ -91,6 +93,11 @@ export const InputMsg = ({ allMutePermission }) => {
     setContent(msgContent);
   };
 
+  // 切换提问状态
+  const toggleQuestionState = () => {
+    store.dispatch(setQuestioinStateAction(!isQuestion));
+  };
+
   const couterRef = useRef();
   const updateImage = () => {
     couterRef.current.focus();
@@ -118,6 +125,7 @@ export const InputMsg = ({ allMutePermission }) => {
         role: roleType,
         avatarUrl: userAvatarUrl || '',
         nickName: userNickName,
+        isQuestion: isQuestion,
       }, // 扩展消息
       success: function (id, serverId) {
         handleCancel();
@@ -137,6 +145,7 @@ export const InputMsg = ({ allMutePermission }) => {
     setContent('');
     window.WebIM.conn.send(msg.body);
     setInputStatus(false);
+    store.dispatch(setQuestioinStateAction(false));
     inputRef.current.blur();
   };
 
@@ -171,13 +180,13 @@ export const InputMsg = ({ allMutePermission }) => {
         />
       );
     }
-  }, [configUIVisible.inputBox, content, inputStatus]);
+  }, [configUIVisible.inputBox, content, inputStatus, isQuestion]);
 
   return (
     <>
       <div>
         <div className="chat-icon">
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             {configUIVisible.emoji && (
               <Popover content={<ShowEomji getEmoji={getEmoji} />} trigger="click">
                 <img src={emojiIcon} className="emoji-icon" />
@@ -204,6 +213,24 @@ export const InputMsg = ({ allMutePermission }) => {
                 <img src={screenshotIcon} className="emoji-icon" alt="" />
               </Popover>
             )}
+            {configUIVisible.showQuestionBox && (
+            <>
+              <div className="divider" />
+              <div className="chat-question-container" onClick={toggleQuestionState}>
+                <Icon
+                  type={isQuestion ? 'radio-checked' : 'radio'}
+                  style={{
+                    height: '24px',
+                    width: '24px',
+                  }}
+                  size={24}
+                />
+                <div className={isQuestion ? 'question-text question-selected' : 'question-text'}>
+                  {transI18n('question')}
+                </div>
+              </div>
+            </>
+          )}
           </div>
           {!configUIVisible.allMute
             ? null

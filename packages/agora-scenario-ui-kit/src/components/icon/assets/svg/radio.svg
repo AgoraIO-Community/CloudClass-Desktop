@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>点选-未选（浅色）</title>
+    <g id="直录播一体化服务" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="点选-未选（浅色）">
+            <rect id="矩形" x="0" y="0" width="30" height="30"></rect>
+            <rect id="矩形" stroke="#ECECF1" stroke-width="1.5" fill="#F9F9FC" x="6.75" y="6.75" width="16.5" height="16.5" rx="8.25"></rect>
+        </g>
+    </g>
+</svg>

@@ -42,3 +42,7 @@ export const announcementNotice = (data) => {
 };
 // 设置 UI 配置
 export const setVisibleUI = (data) => ({ type: 'SET_VISIBLE_UI', data });
+// 切换提问状态
+export const setQuestioinStateAction = (data) => {
+  return { type: 'SET_QUESTION_STATE', data };
+};

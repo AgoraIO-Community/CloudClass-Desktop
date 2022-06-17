@@ -1,4 +1,4 @@
-import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoomTypeEnum, EduRoomSubtypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useLayoutEffect, useState } from 'react';
 import { useStore } from '@/infra/hooks/use-edu-stores';
@@ -7,13 +7,28 @@ import { OneToOneScenario } from './1v1';
 import { MidClassScenario } from './mid-class';
 import { BigClassScenario } from './big-class';
 import { BigClassScenarioH5 } from './big-class-h5';
+import { VocationalClassScenarioH5 } from './vocational-class-h5';
+import { VocationalClassScenario } from './vocational-class';
 
 export type ScenariosProps = {
   pretest: boolean;
   roomType: EduRoomTypeEnum;
+  roomSubtype: EduRoomSubtypeEnum;
 };
 
-export const renderRoomSceneWith = (roomType: EduRoomTypeEnum) => {
+const VocationalClass = () => {
+  if (EduClassroomConfig.shared.platform === 'H5') {
+    // 这里返回职业教育 移动端的组件
+    return <VocationalClassScenarioH5 />;
+  }
+  // 这里返回职业教育 desktop 端的组件
+  return <VocationalClassScenario />;
+};
+
+export const renderRoomSceneWith = (roomType: EduRoomTypeEnum, roomSubtype: EduRoomSubtypeEnum) => {
+  if (roomSubtype === EduRoomSubtypeEnum.Vocational) {
+    return <VocationalClass />;
+  }
   switch (roomType) {
     case EduRoomTypeEnum.Room1v1Class: {
       return <OneToOneScenario />;
@@ -33,7 +48,7 @@ export const renderRoomSceneWith = (roomType: EduRoomTypeEnum) => {
   }
 };
 
-export const Scenarios: React.FC<ScenariosProps> = observer(({ pretest, roomType }) => {
+export const Scenarios: React.FC<ScenariosProps> = observer(({ pretest, roomType, roomSubtype }) => {
   const { initialize } = useStore();
   const [initialized, setInitialized] = useState(false);
 
@@ -48,7 +63,7 @@ export const Scenarios: React.FC<ScenariosProps> = observer(({ pretest, roomType
     showPretest ? (
       <RoomPretestContainer onOK={() => setPretest(false)} />
     ) : (
-      renderRoomSceneWith(roomType)
+      renderRoomSceneWith(roomType, roomSubtype)
     )
   ) : null;
 });

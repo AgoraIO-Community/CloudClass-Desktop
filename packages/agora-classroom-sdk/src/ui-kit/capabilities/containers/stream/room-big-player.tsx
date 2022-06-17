@@ -10,7 +10,7 @@ import { DragableContainer } from './room-mid-player';
 
 export const RoomBigTeacherStreamContainer = observer(
   ({ isFullScreen = false }: { isFullScreen?: boolean }) => {
-    const { streamUIStore, widgetUIStore } = useLectureUIStores() as EduLectureUIStore;
+    const { streamUIStore, widgetUIStore } = useStore() as EduLectureUIStore;
     const { teacherCameraStream, teacherVideoStreamSize } = streamUIStore;
     const teacherStreamContainer = useRef<HTMLDivElement | null>(null);
     const containerStyle: CSSProperties = isFullScreen ? { width: '100%', height: '100%' } : {};
@@ -98,7 +98,7 @@ const DragableStream = observer(
 );
 
 export const RoomBigStudentStreamsContainer = observer(() => {
-  const { streamUIStore } = useLectureUIStores() as EduLectureUIStore;
+  const { streamUIStore } = useStore() as EduLectureUIStore;
   const { studentVideoStreamSize, carouselNext, carouselPrev, scrollable, gap, carouselStreams } =
     streamUIStore;
   const [navigationVisible, setNavigationVisible] = useState(false);

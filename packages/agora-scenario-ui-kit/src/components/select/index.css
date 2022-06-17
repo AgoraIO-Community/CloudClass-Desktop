@@ -92,6 +92,13 @@
 .react-select__single-value {
   color: #191919 !important;
 }
+.react-select__placeholder,
+.react-select__single-value {
+  width: calc(100% - 71px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .react-select__single-value,
 .react-select__option {
   font-size: 14px !important;

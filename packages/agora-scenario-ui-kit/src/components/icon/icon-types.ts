@@ -80,4 +80,13 @@ export type IconTypes =
   | 'test-speaker'
   | 'white-board'
   | 'group-discuss'
-  | 'ask-for-help';
+  | 'ask-for-help'
+  | 'radio'
+  | 'radio-checked'
+  | 'm-camera'
+  | 'm-camera-off'
+  | 'm-micphone'
+  | 'm-micphone-off'
+  | 'm-switch-camera-disabled'
+  | 'm-switch-camera';
+  

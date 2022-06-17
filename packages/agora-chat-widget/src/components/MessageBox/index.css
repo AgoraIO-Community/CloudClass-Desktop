@@ -24,6 +24,13 @@
   color: #586376 !important;
 }
 
+.msg-user-name {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .msg-user-other {
   display: flex;
   align-items: center;
@@ -58,7 +65,7 @@
 
 .msg-data {
   /* width: 200px; */
-  height: 20px;
+  min-height: 20px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
@@ -150,4 +157,21 @@
 .max-img .ant-modal-content {
   background: none;
   box-shadow: none;
+}
+
+.msg-question {
+  height: 16px;
+  background: #357bf6;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 18px 8px 0px 0px;
+  padding: 0 4px;
+}
+
+.receive-msg-border {
+  display: flex;
 }

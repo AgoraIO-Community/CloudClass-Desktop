@@ -21,6 +21,7 @@ let defaultState = {
   showRed: false, // 不在聊天Tab消息提示
   announcementStatus: true, // 公告编辑状态
   showAnnouncementNotice: false, //公告更新提示
+  isQuestion: false, //是否选中提问
   configUIVisible: {
     showInputBox: true, //是否显示输入UI
     memebers: true, // 成员 tab
@@ -210,6 +211,11 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         apis: data,
+      };
+    case 'SET_QUESTION_STATE':
+      return {
+        ...state,
+        isQuestion: data,
       };
     default:
       break;

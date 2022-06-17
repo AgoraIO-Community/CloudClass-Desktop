@@ -22,6 +22,14 @@ export class SubscriptionUIStore extends EduUIStoreBase {
     });
   }
 
+  setCDNMode(cdnMode: boolean) {
+    SubscriptionUIStore._sceneSubscriptions.forEach((sub) => {
+      if (sub.active) {
+        sub.setCDNMode(cdnMode);
+      }
+    });
+  }
+
   createSceneSubscription(scene: AgoraRteScene) {
     if (!SubscriptionUIStore._sceneSubscriptions.has(scene.sceneId)) {
       const sub = SubscriptionFactory.createSubscription(scene);
@@ -49,6 +57,14 @@ export class SubscriptionUIStore extends EduUIStoreBase {
           SubscriptionUIStore._sceneSubscriptions.delete(oldValue.sceneId);
         }
       }),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.roomStore.isCDNMode,
+        (isCDNMode) => {
+          this.setCDNMode(isCDNMode);
+        },
+      ),
     );
   }
 

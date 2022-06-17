@@ -15,6 +15,8 @@ import {
   IAgoraWidget,
   Platform,
   IAgoraExtensionApp,
+  EduRoomSubtypeEnum,
+  EduRoomServiceTypeEnum,
 } from 'agora-edu-core';
 import { AgoraCountdown, AgoraPolling, AgoraSelector } from 'agora-plugin-gallery';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -63,6 +65,8 @@ export type LaunchOption = {
   roomUuid: string; // 房间uuid
   roleType: EduRoleTypeEnum; // 角色
   roomType: EduRoomTypeEnum; // 房间类型
+  roomSubtype?: EduRoomSubtypeEnum; // 房间子类型
+  roomServiceType?: EduRoomServiceTypeEnum; // 房间服务类型
   roomName: string; // 房间名称
   listener: ListenerCallback; // launch状态
   pretest: boolean; // 开启设备检测
@@ -133,6 +137,8 @@ export class AgoraEduSDK {
         screenShareEncoderConfiguration,
         encryptionConfig,
         lowStreamCameraEncoderConfiguration,
+        channelProfile,
+        web,
       } = opts;
       if (cameraEncoderConfiguration) {
         config.defaultCameraEncoderConfigurations = {
@@ -154,6 +160,12 @@ export class AgoraEduSDK {
         config.defaultLowStreamCameraEncoderConfigurations = {
           ...lowStreamCameraEncoderConfiguration,
         };
+      }
+      if (typeof channelProfile !== 'undefined') {
+        config.channelProfile = channelProfile;
+      }
+      if (web) {
+        config.web = web;
       }
     }
     return config;
@@ -204,6 +216,8 @@ export class AgoraEduSDK {
       userUuid,
       userName,
       roleType,
+      roomSubtype = EduRoomSubtypeEnum.Standard,
+      roomServiceType = EduRoomServiceTypeEnum.Live,
       rtmToken,
       roomUuid,
       roomName,
@@ -223,6 +237,8 @@ export class AgoraEduSDK {
       roomUuid,
       roomName,
       roomType,
+      roomSubtype,
+      roomServiceType,
       duration,
       flexProperties: {},
       token: rtmToken,
@@ -284,7 +300,11 @@ export class AgoraEduSDK {
 
     render(
       <I18nProvider language={AgoraEduSDK.convertLanguage(option.language)}>
-        <Scenarios pretest={pretest} roomType={sessionInfo.roomType} />
+        <Scenarios
+          pretest={pretest}
+          roomType={sessionInfo.roomType}
+          roomSubtype={sessionInfo.roomSubtype}
+        />
       </I18nProvider>,
       dom,
     );

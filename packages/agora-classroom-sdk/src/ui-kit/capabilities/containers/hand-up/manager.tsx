@@ -4,6 +4,8 @@ import classnames from 'classnames';
 import { Card, Popover, SvgImg } from '~components';
 import { throttle } from 'lodash';
 import { useInterval } from '@/infra/hooks/utilites';
+import { useStore } from '~hooks/use-edu-stores';
+import { DialogCategory } from '@/infra/stores/common/share-ui';
 
 export interface WaveArmManagerProps extends BaseWaveArmProps {
   hasWaveArmUser: boolean;
@@ -25,6 +27,8 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
   });
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
   const [twinkleFlag, setTwinkleFlag] = useState(false);
+  const { handUpUIStore, shareUIStore } = useStore();
+  const { isVocational } = handUpUIStore;
 
   useInterval(
     (timer: ReturnType<typeof setInterval>) => {
@@ -46,6 +50,12 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
     return restProps.children;
   }, []);
 
+  const showInviteContainer = useCallback(() => {
+    if (isVocational) {
+      shareUIStore.addDialog(DialogCategory.InvitePodium);
+    }
+  }, [isVocational]);
+
   return (
     <div className={cls} {...restProps}>
       <Popover
@@ -57,21 +67,40 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
         trigger="hover"
         content={content}
         placement="leftBottom">
-        <Card
-          width={width}
-          height={height}
-          borderRadius={borderRadius}
-          className={twinkleFlag ? 'card-hands-up-active' : ''}>
-          <div className="hands-box-line">
-            <SvgImg
-              type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
-              size={24}
-            />
-          </div>
-          {waveArmCount ? (
-            <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
-          ) : null}
-        </Card>
+        {
+          isVocational ? (
+            <Card
+              width={width}
+              height={height}
+              borderRadius={borderRadius}
+              className={twinkleFlag ? 'card-hands-up-active' : ''}>
+              <div className="hands-box-line">
+                <SvgImg
+                  onClick={showInviteContainer}
+                  type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
+                  size={24}
+                />
+              </div>
+            </Card>
+          ) : (
+            <Card
+              width={width}
+              height={height}
+              borderRadius={borderRadius}
+              className={twinkleFlag ? 'card-hands-up-active' : ''}>
+              <div className="hands-box-line">
+                <SvgImg
+                  type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
+                  size={24}
+                />
+              </div>
+              {waveArmCount ? (
+                <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
+              ) : null}
+            </Card>
+          )
+        }
+
       </Popover>
     </div>
   );

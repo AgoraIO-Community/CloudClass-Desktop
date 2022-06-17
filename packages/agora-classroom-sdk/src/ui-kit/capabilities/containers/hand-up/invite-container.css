@@ -1,0 +1,26 @@
+.inviteContainer {
+  box-shadow: 0px 2px 6px 0px rgb(0 0 0 / 18%);
+  border-radius: 6px;
+  border-top: 1px solid #eeeef7;
+  position: relative;
+  overflow-y: hidden;
+  width: 400px;
+  /* color: #191919; */
+  background: #fff;
+}
+.inviteContainer .inviteTitle {
+  background: #f9f9fc;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  border: 0;
+  outline: 0;
+  width: 100%;
+  padding-left: 19px;
+  /* border-bottom: 1px solid #3e3f40; */
+  border-bottom: 1px solid #eeeef7;
+  color: #191919;
+}

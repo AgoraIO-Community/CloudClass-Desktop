@@ -144,7 +144,6 @@ export const PersonalResourcesContainer = observer(() => {
     }
     if (
       uploadingRef.current &&
-      showUploadModal &&
       uploadingProgresses.length > 0 &&
       uploadingProgresses.length ===
         uploadingProgresses.filter(
@@ -152,9 +151,9 @@ export const PersonalResourcesContainer = observer(() => {
         ).length
     ) {
       uploadingRef.current = false;
-      setShowUploadModal(false);
       setUploadState('success');
       setShowUploadToast(true);
+      showUploadModal && setShowUploadModal(false);
       setTimeout(() => {
         setShowUploadToast(false);
       }, 1000);

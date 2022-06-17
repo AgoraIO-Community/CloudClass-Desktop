@@ -137,3 +137,17 @@ textarea.input-chat {
   flex-wrap: wrap;
   gap: 12px;
 }
+.chat-question-container {
+  display: flex;
+  font-size: 12px;
+  cursor: pointer;
+}
+.chat-question-container .question-text {
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+  color: #7b88a0;
+}
+.chat-question-container .question-text.question-selected {
+  color: #7b88a0;
+}

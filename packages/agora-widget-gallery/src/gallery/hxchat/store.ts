@@ -1,5 +1,5 @@
 import { action, autorun, observable, runInAction } from 'mobx';
-import { EduRoomTypeEnum, UUAparser, EduClassroomConfig } from 'agora-edu-core';
+import { EduRoomTypeEnum, UUAparser, EduClassroomConfig, EduRoomSubtypeEnum } from 'agora-edu-core';
 
 type EduClassroomUIStore = any;
 
@@ -32,6 +32,12 @@ export class WidgetChatUIStore {
       let isFullSize = false;
       if (
         _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
+        UUAparser.mobileBrowser &&
+        EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational
+      ) {
+        isFullSize = true;
+      } else if (
+        _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
         UUAparser.mobileBrowser
       ) {
         isFullSize = this.orientation === 'portrait' ? false : true;
@@ -46,6 +52,12 @@ export class WidgetChatUIStore {
     autorun(() => {
       let isShowChat = false;
       if (
+        _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
+        UUAparser.mobileBrowser &&
+        EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational
+      ) {
+        isShowChat = true;
+      } else if (
         _classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
         UUAparser.mobileBrowser
       ) {

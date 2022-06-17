@@ -1,16 +1,16 @@
+import classnames from 'classnames';
 import React, { useState } from 'react';
 import { Button } from '~components/button';
-import { Layout, Header } from '~components/layout';
+import { Disclaimer, HomeAbout } from '~components/home-about';
+import { transI18n } from '~components/i18n';
 import { Input } from '~components/input';
+import { Header, Layout } from '~components/layout';
+import { Modal } from '~components/modal';
 import { Select } from '~components/select';
 import { Col, Row, Table } from '~components/table';
-import { transI18n } from '~components/i18n';
-import './index.css';
-import { HomeModule } from '~utilities/types';
-import { Modal } from '~components/modal';
-import { HomeAbout, Disclaimer } from '~components/home-about';
 import { Card } from '~ui-kit';
-import classnames from 'classnames';
+import { HomeModule } from '~utilities/types';
+import './index.css';
 
 export interface HomeAttributes {
   roomId: string;
@@ -19,6 +19,7 @@ export interface HomeAttributes {
   roomName: string;
   role: string;
   scenario: string;
+  service: string;
   duration: number;
   language: string;
   region: string;
@@ -29,6 +30,7 @@ export interface HomeAttributes {
 
 export interface HomeProps extends HomeModule<HomeAttributes> {
   onClick: () => void | Promise<void>;
+  isVocational?: boolean;
   version: string;
   SDKVersion: string;
   buildTime: string;
@@ -38,12 +40,14 @@ export interface HomeProps extends HomeModule<HomeAttributes> {
 }
 
 export const Home: React.FC<HomeProps> = ({
+  isVocational,
   roomId,
   userId,
   userName,
   roomName,
   role,
   scenario,
+  service,
   duration,
   version,
   SDKVersion,
@@ -58,6 +62,7 @@ export const Home: React.FC<HomeProps> = ({
   onChangeEncryptionKey,
   onChangeRole,
   onChangeScenario,
+  onChangeService,
   onChangeLanguage,
   onChangeDuration,
   onChangeRegion,
@@ -76,12 +81,24 @@ export const Home: React.FC<HomeProps> = ({
     { label: transI18n('home.roomType_interactiveSmallClass'), value: 'mid-class' },
     { label: transI18n('home.roomType_interactiveBigClass'), value: 'big-class' },
   ];
+  if (isVocational) {
+    scenarioOptions.push({
+      label: transI18n('home.roomType_vocationalClass'),
+      value: 'vocational-class',
+    });
+  }
   const roleOptions = [
     { label: transI18n('home.role_teacher'), value: 'teacher' },
     { label: transI18n('home.role_student'), value: 'student' },
     { label: transI18n('home.role_assistant'), value: 'assistant' },
     { label: transI18n('home.role_audience'), value: 'incognito' },
     // { label: transI18n('home.role_observer'), value: 'observer' },
+  ];
+  const serviceOptions = [
+    { label: transI18n('home.serviceType_premium'), value: 'premium-service' },
+    { label: transI18n('home.serviceType_standard'), value: 'standard-service' },
+    { label: transI18n('home.serviceType_latency'), value: 'latency-service' },
+    { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
   const languageOptions = [
     { label: '中文', value: 'zh' },
@@ -115,7 +132,7 @@ export const Home: React.FC<HomeProps> = ({
   const userNameReg = /^[\u4e00-\u9fa5a-zA-Z0-9\s]{3,50}$/;
 
   return (
-    <Layout className="home-page" direction="col">
+    <Layout className={isVocational ? 'home-page home-vocational' : 'home-page'} direction="col">
       <Header className="home-page-header">
         <div className="header-left">
           <div className="header-left-logo"></div>
@@ -297,6 +314,31 @@ export const Home: React.FC<HomeProps> = ({
                 placeholder={transI18n('home.roomType_placeholder')}></Select>
             </Col>
           </Row>
+          {scenario === 'vocational-class' ? (
+            <Row className="home-row-item">
+              <Col>
+                <Select
+                  prefix={
+                    <span
+                      id="et_room_type"
+                      className="home-label"
+                      title={transI18n('home.serviceType')}>
+                      {transI18n('home.serviceType')}
+                    </span>
+                  }
+                  id="service"
+                  value={service}
+                  options={serviceOptions}
+                  isMenuTextCenter={true}
+                  onChange={(value) => {
+                    onChangeService(value);
+                  }}
+                  placeholder={transI18n('home.serviceType_placeholder')}></Select>
+              </Col>
+            </Row>
+          ) : (
+            <></>
+          )}
           <Row className="home-row-item">
             <Col>
               <Select
@@ -393,7 +435,8 @@ export const Home: React.FC<HomeProps> = ({
                 !!role &&
                 !!scenario &&
                 roomNameReg.test(roomName) &&
-                userNameReg.test(userName)
+                userNameReg.test(userName) &&
+                (scenario === 'vocational-class' ? !!service : true)
               )
             }>
             {transI18n('home.enter_classroom')}

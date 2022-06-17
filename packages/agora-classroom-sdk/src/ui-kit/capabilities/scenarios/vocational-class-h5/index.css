@@ -1,0 +1,245 @@
+.m-vocational-class {
+  height: 100vh;
+  width: 100vw;
+}
+
+.m-vocational-class .main-section {
+  width: 100vw;
+  height: calc(100vw * (9 / 16));
+  position: relative;
+}
+
+.m-vocational-class .podiums-section {
+  width: 100%;
+  height: 74px;
+  padding: 2px 0px;
+  overflow-y: scroll;
+  background-color: #212021;
+}
+
+.podiums-section.hide {
+  display: none;
+}
+
+.podiums-section .podium-streams {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.podium-stream {
+  width: 123px;
+  height: 70px;
+  border-radius: 2px;
+  margin-right: 3px;
+}
+.podium-stream .video-player-overlay {
+  width: 123px !important;
+  height: 70px !important;
+}
+.podium-streams:last-child {
+  margin-right: 0;
+}
+
+.m-vocational-class .im-section {
+  width: 100%;
+  height: calc(100vh - (100vw * (9 / 16)));
+  overflow: auto;
+  position: relative;
+}
+
+.m-vocational-class .im-section.with-podiums {
+  height: calc(100vh - (100vw * (9 / 16)) - 74px);
+}
+
+.m-vocational-class .im-section .aisde-fixed {
+  position: initial;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  right: 0;
+}
+
+.m-vocational-class .im-section .vocational-chat-panel {
+  width: 100vw;
+  min-width: 100vw;
+}
+.m-vocational-class .im-section .app.w-full.chat-tab-dark-theme {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  border-radius: 0;
+  border: none;
+}
+.m-vocational-class .im-section .chat-tab-dark-theme .notice {
+  width: 100vw;
+}
+.m-vocational-class .im-section .chat-icon {
+  justify-content: flex-start;
+  flex-direction: row-reverse;
+}
+.m-vocational-class .im-section .chat-question-container {
+  padding-right: 40px;
+}
+.m-vocational-class .im-section .emoji-icon {
+  margin-left: 10px;
+  margin-right: 30px;
+}
+.m-vocational-class .im-section.blend-cdn .emoji-icon {
+  margin-right: 50px;
+}
+.mix-cdn-rtc-class.m-vocational-class .im-section.blend-cdn .emoji-icon {
+  margin-right: 80px;
+}
+.m-vocational-class .im-section .divider {
+  width: 1px;
+  height: 13px;
+  background-color: #8e8e8e;
+}
+
+.m-vocational-class .im-section .ant-input.inline-input-chat {
+  margin-bottom: 30px;
+}
+
+.m-vocational-class .ant-tabs-nav-list {
+  width: 100%;
+}
+
+.m-vocational-class .ant-tabs-tab {
+  flex: 1;
+}
+.m-vocational-class .ant-tabs-nav {
+  margin: 0;
+}
+
+.m-vocational-class .ant-tabs-ink-bar {
+  width: 50px !important;
+  margin: 0 calc((50vw - 50px) / 2) !important;
+  height: 2px !important;
+}
+
+/* reset unnecessary property  */
+.m-vocational-class .vocational-whiteboard .whiteboard {
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  background: none;
+}
+
+/* remove unnecessary content  */
+.m-vocational-class .vocational-whiteboard .netless-window-manager-sizer:before,
+.m-vocational-class .vocational-whiteboard .netless-window-manager-sizer:after {
+  display: none;
+}
+
+.m-vocational-class .vocational-whiteboard .telebox-box-main {
+  border-radius: 0;
+  border: none;
+}
+
+.m-vocational-class .host-stream,
+.m-vocational-class .vocational-whiteboard {
+  width: 100%;
+  height: 100%;
+}
+
+.m-vocational-class .host-stream.minimize,
+.m-vocational-class .vocational-whiteboard.minimize {
+  position: absolute;
+  top: 0;
+  transform: translate(calc(100vw - 123px), 0);
+  height: 70px;
+  width: 123px;
+  border-radius: 2px;
+  z-index: 99;
+}
+
+.m-vocational-class .vocational-whiteboard .whiteboard-wrapper {
+  position: relative;
+  background: #fff;
+}
+
+.m-vocational-class .vocational-whiteboard .whiteboard-wrapper .whiteboard-overlay,
+.m-vocational-class .vocational-whiteboard .whiteboard-wrapper .whiteboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.m-vocational-class .vocational-whiteboard .whiteboard-wrapper .whiteboard-overlay {
+  z-index: 9;
+}
+
+.m-vocational-class .podium-stream .video-player,
+.m-vocational-class .podium-stream .video-player-overlay,
+.m-vocational-class .host-stream .video-player,
+.m-vocational-class .host-stream .video-player-overlay {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.m-vocational-class .host-stream .video-player .camera-placeholder,
+.m-vocational-class .host-stream .video-player-overlay .camera-placeholder {
+  border: none;
+}
+
+.m-vocational-class .hands-up {
+  position: absolute;
+  right: 15px;
+  bottom: 65px;
+}
+.hands-up-popover .popover-inner {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.hands-up-popover .popover-inner-content {
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.hands-up-popover .popover-arrow {
+  display: none;
+}
+
+.hands-up-popover .hands-up-content {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.hands-up-popover .hands-up-content .iconfont {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  font-size: 30px;
+  margin-right: 20px;
+}
+
+.hands-up-popover .hands-up-btn {
+  height: 26px;
+  min-width: 68px;
+  background: #357bf6;
+  padding: 0 8px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 26px;
+  text-align: center;
+}
+
+.hands-up-popover .hands-up-btn:disabled {
+  background: #404040;
+}
+.hands-up-popover .hands-up-btn:active {
+  opacity: 0.7;
+}
+.hands-up-popover .hands-up-btn:active,
+.hands-up-popover .hands-up-btn:focus {
+  outline: none;
+}

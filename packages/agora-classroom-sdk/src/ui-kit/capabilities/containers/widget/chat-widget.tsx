@@ -1,4 +1,4 @@
-import { EduClassroomConfig, UUAparser } from 'agora-edu-core';
+import { EduClassroomConfig, UUAparser, EduRoomSubtypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { Widget } from '~containers/widget';
@@ -12,16 +12,24 @@ export const ChatWidget: FC<{
   visibleBtnSend?: boolean;
   inputBoxStatus?: string;
 }> = (props) => {
+  const isVocational =  EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational;
   return (
     <Widget
       widgetComponent={EduClassroomConfig.shared.widgets['chat']}
       widgetProps={props}
-      className="chat-panel"
+      className={classnames({
+        'chat-panel': 1,
+        'vocational-chat-panel': isVocational
+      })}
     />
   );
 };
 
-export const ChatWidgetH5: FC = observer(() => {
+export interface ChatWidgetH5Props {
+  visibleEmoji?: boolean;
+}
+
+export const ChatWidgetH5: FC<ChatWidgetH5Props> = observer(({ visibleEmoji = false }) => {
   const { layoutUIStore, streamUIStore } = useLectureH5UIStores();
   return (
     <Layout
@@ -30,7 +38,7 @@ export const ChatWidgetH5: FC = observer(() => {
         streamUIStore.containerH5VisibleCls,
         'h5-chat-pannel',
       )}>
-      <ChatWidget visibleEmoji={false} visibleBtnSend={false} inputBoxStatus="inline" />
+      <ChatWidget visibleEmoji={visibleEmoji} visibleBtnSend={false} inputBoxStatus="inline" />
     </Layout>
   );
 });

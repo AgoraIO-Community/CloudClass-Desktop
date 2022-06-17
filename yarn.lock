@@ -6453,6 +6453,26 @@ agora-rtc-sdk-ng@4.7.3:
   resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.7.3.tgz#21108c51d1469b90804794c314275e73a3f52e06"
   integrity sha512-6SX3S4KJmiJVqITYAoicM2aBhthzvfrM+Fwccdd3vFsBeIetbI2Ajsz3Uhm6+7gotbcorHgm47eKNZWaqpUULg==
 
+agora-rte-sdk@2.5.0:
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/agora-rte-sdk/-/agora-rte-sdk-2.5.0.tgz#368bdf3f53924c2904c838ecf05dd73286f5197f"
+  integrity sha512-7nzcJng9gURTIt3JcSOZ3aCGvZzgYet2Gu7SzG5vRPp9exMYjf9I5Qko32DBQ4sZXe4Y3v/wtokomgzPK+1dTg==
+  dependencies:
+    agora-electron-sdk "3.5.1-build.1116"
+    agora-rdc-electron "1.0.0"
+    agora-rtc-sdk-ng "4.7.3"
+    agora-rtm-sdk "1.4.3"
+    ali-oss "6.15.2"
+    async-await-retry "1.2.3"
+    await-to-js "3.0.0"
+    axios "0.19.2"
+    dayjs "1.10.3"
+    immutable "4.0.0"
+    js-md5 "0.7.3"
+    lodash "4.17.21"
+    ua-parser-js "0.7.23"
+    uuid "8.3.2"
+
 agora-rtm-sdk@1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/agora-rtm-sdk/-/agora-rtm-sdk-1.4.3.tgz#cfdbf95b65a1b36ae83d1cd857d96e6e3fed3734"

@@ -14,6 +14,8 @@ export enum BizPageRouter {
   TestAdapteHomePage = 'test_adapte_home',
   RecordationSearchPage = 'recordation-search',
   Window = 'window',
+  VocationalHomePage = 'vocational_home',
+  VocationalHomeH5Page = 'vocational_h5_home',
 }
 
 export enum OrientationEnum {
