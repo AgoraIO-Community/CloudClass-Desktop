@@ -1,6 +1,7 @@
 import { IPCMessageType } from '@/infra/types';
+import { dataURIToFile } from '@/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
-import { ChannelType, listenChannelMessage } from '@/infra/utils/ipc';
+import { ChannelType, listenChannelMessage, sendToMainProcess } from '@/infra/utils/ipc';
 import {
   AGEduErrorCode,
   CustomBtoa,
@@ -12,6 +13,7 @@ import {
   WhiteboardTool,
 } from 'agora-edu-core';
 import {
+  AGError,
   AgoraRteEngineConfig,
   AgoraRteMediaSourceState,
   AgoraRteRuntimePlatform,
@@ -36,6 +38,7 @@ export enum ToolbarItemCategory {
   ColorPicker,
   Cabinet,
   Eraser,
+  Slice,
 }
 
 export enum CabinetItemEnum {
@@ -125,6 +128,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
     '#ffffff': '#E1E1EA',
   };
 
+  readonly module: string = 'screenshot-toolbar';
+
   private _disposers: (() => void)[] = [];
 
   onInstall() {
@@ -138,6 +143,19 @@ export class ToolbarUIStore extends EduUIStoreBase {
               break;
           }
         }),
+      );
+      this._disposers.push(
+        listenChannelMessage(
+          ChannelType.ShortCutCapture,
+          (event, { type, payload }: { type: string; payload?: any }) => {
+            if (
+              type === IPCMessageType.ShortCutCaptureDone &&
+              this.module === (payload.module as string)
+            ) {
+              this._pastToBoard(payload.dataURL as any);
+            }
+          },
+        ),
       );
     }
     this._disposers.push(
@@ -489,6 +507,29 @@ export class ToolbarUIStore extends EduUIStoreBase {
     }
   }
 
+  @action.bound
+  handleSliceItem(id: string) {
+    try {
+      switch (id) {
+        case 'slice':
+          // 截图
+          sendToMainProcess(ChannelType.ShortCutCapture, {
+            hideWindow: false,
+            module: this.module,
+          });
+          break;
+        case 'slice-window':
+          // 隐藏教室截图
+          sendToMainProcess(ChannelType.ShortCutCapture, { hideWindow: true, module: this.module });
+          break;
+        default:
+          break;
+      }
+    } catch (e) {
+      e && this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
+
   /**
    * 选中工具
    * @param tool
@@ -681,16 +722,38 @@ export class ToolbarUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 截图选项列表
+   * @returns
+   */
+  get sliceItems(): CabinetItem[] {
+    const items = [
+      {
+        id: 'slice',
+        iconType: 'slice',
+        name: transI18n('scaffold.slice'),
+      },
+      {
+        id: 'slice-window',
+        iconType: 'slice-window',
+        name: transI18n('scaffold.slice-window'),
+      },
+    ];
+
+    return items;
+  }
+
+  /**
    * 老师工具栏工具列表
    * @returns
    */
   @computed
   get teacherTools(): ToolbarItem[] {
+    let _tools: ToolbarItem[] = [];
     if (
       this.classroomStore.boardStore.boardReady &&
       !this.classroomStore.remoteControlStore.isHost
     ) {
-      return [
+      _tools = [
         ToolbarItem.fromData({
           value: 'clicker',
           label: 'scaffold.clicker',
@@ -719,6 +782,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           icon: 'eraser',
           category: ToolbarItemCategory.Eraser,
         }),
+
         // ToolbarItem.fromData({
         //   value: 'color',
         //   label: 'scaffold.color',
@@ -755,8 +819,21 @@ export class ToolbarUIStore extends EduUIStoreBase {
           icon: 'register',
         },
       ];
+
+      if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+        _tools.splice(
+          5,
+          0,
+          ToolbarItem.fromData({
+            value: 'slice',
+            label: 'scaffold.slice',
+            icon: 'slice',
+            category: ToolbarItemCategory.Slice,
+          }),
+        );
+      }
     } else {
-      return [
+      _tools = [
         {
           value: 'tools',
           label: 'scaffold.tools',
@@ -770,6 +847,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
         },
       ];
     }
+
+    return _tools;
   }
 
   /**
@@ -912,6 +991,15 @@ export class ToolbarUIStore extends EduUIStoreBase {
     }
     return '';
   }
+
+  /**
+   * 把截图贴到白板中
+   * @param dataURL
+   */
+  private _pastToBoard = async (dataURL: string) => {
+    const file = dataURIToFile(dataURL, `agora-screen-shot-${Date.now()}.png`);
+    this.classroomStore.boardStore.dropImage(file, 0, 0);
+  };
 
   onDestroy() {
     this._disposers.forEach((d) => d());

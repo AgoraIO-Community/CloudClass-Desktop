@@ -32,6 +32,7 @@ export const en = {
     'courseWare-loading': 'Courseware Loading...',
     'h5-courseWare': 'HTML5 Courseware',
     'test-courseWare': 'Test Courseware',
+    loading: 'Please wait...',
   },
   screen_share: 'Screen Share',
   kick: {
@@ -344,6 +345,8 @@ export const en = {
     in_progress: '-In progress',
     not_in_progress: '-Not started',
     register: 'Roster',
+    slice: 'Slice',
+    slice_window: 'Slice without classroom',
   },
   message: 'Message',
   quiz: 'Question',

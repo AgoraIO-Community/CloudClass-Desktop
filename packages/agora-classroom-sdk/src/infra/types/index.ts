@@ -41,6 +41,8 @@ export enum IPCMessageType {
   StopScreenShareAndRemoteControl = 'StopScreenShareAndRemoteControl',
   //切换分享内容
   SwitchScreenShareDevice = 'SwitchScreenShareDevice',
+  // 截图完成
+  ShortCutCaptureDone = 'ShortCutCaptureDone',
 }
 export enum ControlState {
   NotAllowedControlled = '0',

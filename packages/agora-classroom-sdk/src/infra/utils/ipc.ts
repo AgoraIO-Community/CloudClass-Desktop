@@ -14,7 +14,11 @@ type ChannelMessage = {
   payload?: unknown;
 };
 
-type ChannelMessageCallback = (event: IpcRendererEvent, message: ChannelMessage) => void;
+type ChannelMessageCallback = (
+  event: IpcRendererEvent,
+  message: ChannelMessage,
+  ...args: any
+) => void;
 type ChannelMessageListenerOptions = {
   once?: boolean;
 };
@@ -27,6 +31,7 @@ export enum ChannelType {
   Message = 'browser-window-message',
   UpdateBrowserWindow = 'update-browser-window',
   MoveWindowToTargetScreen = 'move-window-to-target-screen',
+  ShortCutCapture = 'short-cut-capture', // 环信截图事件
 }
 
 const withTimeout = (p: Promise<unknown>, timeout = 3000) =>
@@ -109,8 +114,7 @@ export const listenChannelMessage = (
   options?: ChannelMessageListenerOptions,
 ) => {
   if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
-    const _callback = (event: IpcRendererEvent, args: unknown[]) => {
-      const message = args[0] as ChannelMessage;
+    const _callback = (event: IpcRendererEvent, message: ChannelMessage) => {
       Logger.info(`receive channel message with type ${message.type} and payload`, message.payload);
       callback(event, message);
     };

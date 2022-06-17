@@ -32,6 +32,7 @@ export const zh = {
     'courseWare-loading': '课件加载中，请稍候…',
     'h5-courseWare': 'H5课件',
     'test-courseWare': 'test课件',
+    loading: '插入课件中……',
   },
   screen_share: '屏幕共享',
   kick: {
@@ -332,6 +333,8 @@ export const zh = {
     in_progress: '-进行中',
     not_in_progress: '-未开始',
     register: '花名册',
+    slice: '截图',
+    slice_window: '隐藏教室截图',
   },
   cloud: {
     fileName: '文件名',

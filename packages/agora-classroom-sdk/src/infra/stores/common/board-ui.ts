@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import {
@@ -10,6 +10,7 @@ import {
 } from 'agora-edu-core';
 import { EduShareUIStore } from './share-ui';
 import { BUILTIN_WIDGETS } from './widget-ui';
+import { isSupportedImageType } from '@/infra/utils';
 
 export class BoardUIStore extends EduUIStoreBase {
   protected get uiOverrides() {
@@ -23,6 +24,9 @@ export class BoardUIStore extends EduUIStoreBase {
   private _collectorContainer: HTMLElement | undefined = undefined;
 
   protected _disposers: IReactionDisposer[] = [];
+
+  @observable
+  isCopying = false;
 
   onInstall() {
     this._disposers.push(
@@ -221,6 +225,62 @@ export class BoardUIStore extends EduUIStoreBase {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
+
+  /**
+   * for teacher and assistent only
+   *
+   * @param event
+   */
+  @action.bound
+  handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (
+      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
+      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant
+    ) {
+      const file = event.dataTransfer.files[0];
+      if (file && isSupportedImageType(file)) {
+        event.dataTransfer.dropEffect = 'copy';
+      }
+    }
+  }
+
+  /**
+   * for teacher and assistent only
+   * @param event
+   */
+  @action.bound
+  hanldeDropImage = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (
+      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
+      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant
+    ) {
+      try {
+        const file = event.dataTransfer.files[0];
+        if (file) {
+          if (isSupportedImageType(file)) {
+            runInAction(() => {
+              this.isCopying = true;
+            });
+
+            const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+            const rx = event.clientX - rect.left;
+            const ry = event.clientY - rect.top;
+            const { x, y } = this.classroomStore.boardStore.convertToPointInWorld({ x: rx, y: ry });
+            await this.classroomStore.boardStore.dropImage(file, x, y);
+            runInAction(() => {
+              this.isCopying = false;
+            });
+          }
+        }
+      } catch (e) {
+        runInAction(() => {
+          this.isCopying = false;
+        });
+      }
+    }
+  };
 
   onDestroy() {
     this._disposers.forEach((d) => d());

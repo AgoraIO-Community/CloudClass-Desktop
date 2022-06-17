@@ -14,6 +14,7 @@ export { Pens } from './pens';
 export { ToolCabinet } from './tool-cabinet';
 
 export { BoardCleaners } from './board-cleaners';
+export { Slice } from './slice';
 
 export type { ToolItem } from './tool';
 
