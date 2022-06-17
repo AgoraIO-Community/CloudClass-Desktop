@@ -345,6 +345,7 @@ export const en = {
     in_progress: '-In progress',
     not_in_progress: '-Not started',
     register: 'Roster',
+    save: 'Save',
     slice: 'Slice',
     slice_window: 'Slice without classroom',
   },
@@ -576,6 +577,8 @@ export const en = {
     screen_permission_denied:
       'Before using screen sharing, please turn on the screenshot permission',
     stream_window_full: 'The video window has reached the limitation of {reason}',
+    save_success: 'Success',
+    save_error: 'Error',
   },
   cabinet: {
     answer: {

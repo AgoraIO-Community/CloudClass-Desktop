@@ -333,6 +333,7 @@ export const zh = {
     in_progress: '-进行中',
     not_in_progress: '-未开始',
     register: '花名册',
+    save: '保存',
     slice: '截图',
     slice_window: '隐藏教室截图',
   },
@@ -560,6 +561,8 @@ export const zh = {
     'teacher.reward2': '祝贺{reason1}等{reason2}位同学获得奖励',
     screen_permission_denied: '使用屏幕共享前，请先打开屏幕录制权限',
     stream_window_full: '视频窗口数量已达{reason}人上限',
+    save_success: '保存成功',
+    save_error: '保存失败',
   },
   cabinet: {
     answer: {

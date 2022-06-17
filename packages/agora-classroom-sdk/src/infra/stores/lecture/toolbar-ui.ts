@@ -59,6 +59,11 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
           label: 'scaffold.move',
           icon: 'hand',
         }),
+        ToolbarItem.fromData({
+          value: 'save',
+          label: 'scaffold.save',
+          icon: 'save-ghost',
+        }),
         {
           value: 'cloud',
           label: 'scaffold.cloud_storage',

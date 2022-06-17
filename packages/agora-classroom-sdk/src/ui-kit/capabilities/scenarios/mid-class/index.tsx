@@ -35,6 +35,7 @@ export const MidClassScenario = observer(() => {
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
             <NavigationBarContainer />
+
             <div className="flex flex-1 flex-col justify-center items-center">
               <RoomMidStreamsContainer />
               <BigWidgetWindowContainer>

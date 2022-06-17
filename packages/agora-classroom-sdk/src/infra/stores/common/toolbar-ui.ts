@@ -21,7 +21,8 @@ import {
   AGScreenShareDevice,
   bound,
 } from 'agora-rte-sdk';
-import { isEqual } from 'lodash';
+import dayjs from 'dayjs';
+import { forEach, isEmpty, isEqual } from 'lodash';
 import { action, computed, observable, reaction, runInAction, toJS, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
@@ -569,8 +570,62 @@ export class ToolbarUIStore extends EduUIStoreBase {
         this.activeMap = { ...this.activeMap, [tool]: true };
         break;
       }
+      case 'save':
+        const scenes = this.classroomStore.boardStore.getSaveAnnotationImages();
+        this._fuseIntoOneImage(scenes);
+        break;
       default:
         break;
+    }
+  }
+
+  @bound
+  private async _fuseIntoOneImage(scenes: (() => Promise<HTMLCanvasElement | null>)[]) {
+    if (isEmpty(scenes)) {
+      return;
+    }
+
+    let width = 0,
+      height = 0;
+    const bigCanvas = document.createElement('canvas');
+    const ctx = bigCanvas.getContext('2d');
+    const canvasArray = [];
+    try {
+      for (const canvasPromise of scenes) {
+        const canvas = await canvasPromise();
+
+        if (canvas) {
+          width = Math.max(canvas.width, width);
+          height = Math.max(canvas.height, height);
+          canvasArray.push(canvas);
+        }
+      }
+      bigCanvas.setAttribute('width', `${width}`);
+      bigCanvas.setAttribute('height', `${height * canvasArray.length}`);
+
+      canvasArray.forEach((canvas, index) => {
+        ctx && ctx.drawImage(canvas, 0, index * height, width, height);
+      });
+      const fileName = `${EduClassroomConfig.shared.sessionInfo.roomName}_${dayjs().format(
+        'YYYYMMDD_HHmmSSS',
+      )}.jpg`;
+      this._download(bigCanvas, fileName);
+      this.shareUIStore.addToast(transI18n('toast2.save_success'));
+      // return bigCanvas
+    } catch (e) {
+      this.shareUIStore.addToast(transI18n('toast2.save_error'));
+    }
+  }
+
+  @bound
+  private _download(canvas: HTMLCanvasElement, filename = 'apaas.jpg'): void {
+    try {
+      const a = document.createElement('a');
+      a.download = filename;
+      a.href = canvas.toDataURL();
+      a.click();
+    } catch (err) {
+      this.shareUIStore.addToast(transI18n('toast2.save_error'));
     }
   }
 
@@ -801,6 +856,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
           value: 'hand',
           label: 'scaffold.move',
           icon: 'hand',
+        }),
+        ToolbarItem.fromData({
+          value: 'save',
+          label: 'scaffold.save',
+          icon: 'save-ghost',
         }),
         {
           value: 'cloud',

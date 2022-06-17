@@ -2369,6 +2369,31 @@ export const getPath = (name: string, props?: any) => {
           </g>
         </g>
       );
+    case 'save-ghost-active':
+      return (
+        <g id="保存板书" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+          <g id="v2.6.0（老师）保存板书" transform="translate(-1167.000000, -426.000000)">
+            <g id="保存板书-已选" transform="translate(1167.000000, 426.000000)">
+              <rect id="矩形" x="0" y="0" width="26" height="26"></rect>
+              <g id="保存板书" transform="translate(4.000000, 4.000000)">
+                <rect id="矩形" fill="#0073FF" x="0.5" y="0" width="17" height="18" rx="2"></rect>
+                <path
+                  d="M5,1 L13,1 C13.5522847,1 14,1.44771525 14,2 L14,6 C14,6.55228475 13.5522847,7 13,7 L5,7 C4.44771525,7 4,6.55228475 4,6 L4,2 C4,1.44771525 4.44771525,1 5,1 Z"
+                  id="矩形"
+                  fill="#FFFFFF"></path>
+                <rect
+                  id="矩形"
+                  fill="#FFFFFF"
+                  x="4.5"
+                  y="11"
+                  width="9"
+                  height="1.2"
+                  rx="0.6"></rect>
+              </g>
+            </g>
+          </g>
+        </g>
+      );
     case 'slice':
       return (
         <g id="截屏&amp;拖拽图片" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -2383,6 +2408,42 @@ export const getPath = (name: string, props?: any) => {
                   id="形状结合"
                   fill="#7B88A0"
                   fillRule="nonzero"></path>
+              </g>
+            </g>
+          </g>
+        </g>
+      );
+    case 'save-ghost':
+      return (
+        <g id="保存板书" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+          <g id="v2.6.0（老师）保存板书" transform="translate(-1235.000000, -426.000000)">
+            <g id="侧边工具栏" transform="translate(1231.000000, 200.000000)">
+              <g id="保存板书-未选" transform="translate(4.000000, 226.000000)">
+                <rect id="矩形" x="0" y="0" width="26" height="26"></rect>
+                <g id="保存板书" transform="translate(4.000000, 4.000000)">
+                  <rect
+                    id="矩形"
+                    stroke="#7B88A0"
+                    strokeWidth="1.2"
+                    x="1.1"
+                    y="0.6"
+                    width="15.8"
+                    height="16.8"
+                    rx="2"></rect>
+                  <path
+                    d="M13.4,0.6 L13.4,6 L5,6.4 L4.6,0.6 L13.4,0.6 Z"
+                    id="矩形"
+                    stroke="#7B88A0"
+                    strokeWidth="1.2"></path>
+                  <rect
+                    id="矩形"
+                    fill="#7B88A0"
+                    x="4.5"
+                    y="11"
+                    width="9"
+                    height="1.2"
+                    rx="0.6"></rect>
+                </g>
               </g>
             </g>
           </g>
@@ -2467,6 +2528,8 @@ export const getViewBox = (name: string) => {
     case 'rhombus-active':
     case 'triangle':
     case 'triangle-active':
+    case 'save-ghost':
+    case 'save-ghost-active':
       return '0 0 26 26';
     case 'clear':
       return '0 0 26 26';
