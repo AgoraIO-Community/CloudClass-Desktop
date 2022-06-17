@@ -44,7 +44,9 @@ const WidgetContainer = observer(
       widgetUIStore: { setWidgetToFullScreen },
     } = useStore();
     const { widgetController } = props;
-    const { id, widgetRoomProperties, track } = props.widget;
+    const { id, widgetRoomProperties, track, title } = props.widget as AgoraWidgetBase & {
+      title?: string;
+    };
     const memo = useMemo(() => {
       return (
         <div
@@ -99,7 +101,7 @@ const WidgetContainer = observer(
             widgetController.sendMessageToWidget(id, AgoraWidgetCustomEventType.WidgetReload);
           }}
           className="widget-track-modal"
-          title={props.widget.title}
+          title={title || ''}
           onCancel={() => {
             widgetController.deleteWidget(id);
           }}

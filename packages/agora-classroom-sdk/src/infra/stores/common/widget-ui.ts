@@ -6,9 +6,9 @@ import {
   AgoraWidgetEventType,
   AgoraWidgetBase,
 } from 'agora-edu-core';
-import { WidgetsConfigMap } from 'agora-plugin-gallery';
+import { WidgetsConfigMap, AgoraWidgetPrefix } from 'agora-plugin-gallery';
 import { AgoraRteVideoSourceType, bound } from 'agora-rte-sdk';
-import { computed, IReactionDisposer } from 'mobx';
+import { computed, IReactionDisposer, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from './stream/struct';
 
@@ -141,6 +141,19 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   onInstall() {
     this.classroomStore.widgetStore.setWidgetsConfigMap(WidgetsConfigMap);
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.boardStore.boardReady,
+        (boardReady) => {
+          if (!boardReady) {
+            this.classroomStore.widgetStore.widgetController?.widgetsMap.forEach((widget) => {
+              if (widget.id.includes(AgoraWidgetPrefix.Webview))
+                this.classroomStore.widgetStore.widgetController?.deleteWidget(widget.id);
+            });
+          }
+        },
+      ),
+    );
   }
 
   onDestroy() {

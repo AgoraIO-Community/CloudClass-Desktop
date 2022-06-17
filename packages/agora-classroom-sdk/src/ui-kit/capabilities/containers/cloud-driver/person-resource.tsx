@@ -449,7 +449,7 @@ const UploadOnlineCoursewareModal = (props: {
         /(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/,
       )
     ) {
-      addToast('fcr_online_courseware_valid_url', 'warning');
+      addToast(transI18n('fcr_online_courseware_valid_url'), 'warning');
       return;
     }
     await onOk(formData);
@@ -468,7 +468,7 @@ const UploadOnlineCoursewareModal = (props: {
         <Button key={1} action="cancel" type="ghost">
           {transI18n('fcr_online_courseware_button_close')}
         </Button>,
-        <Button key={2} action="ok" disableAGModalClose>
+        <Button key={2} action="ok" className="disableAGModalClose">
           {transI18n('fcr_online_courseware_button_upload')}
         </Button>,
       ]}>
