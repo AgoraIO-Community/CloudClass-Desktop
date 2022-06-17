@@ -78,13 +78,23 @@ export const Modal: ModalType = ({
   });
 
   const [opened, setOpened] = useState(false);
-  const [eventSource, setEventSource] =
-    useState<{ action: 'ok' | 'cancel'; event: React.MouseEvent<HTMLElement> }>();
 
   useEffect(() => {
     setOpened(true);
   }, []);
-
+  const triggerModalAction = (eventSource: {
+    action: 'ok' | 'cancel';
+    event: React.MouseEvent<HTMLElement>;
+  }) => {
+    switch (eventSource.action) {
+      case 'ok':
+        onOk && onOk(eventSource.event);
+        break;
+      case 'cancel':
+        onCancel && onCancel(eventSource.event);
+        break;
+    }
+  };
   const modalJsx = (
     <div className={cls} {...restProps} style={{ ...style }}>
       <div className={['modal-title', modalType === 'back' ? 'back-modal-title' : ''].join(' ')}>
@@ -95,7 +105,7 @@ export const Modal: ModalType = ({
               <div
                 className="modal-title-close"
                 onClick={(e: React.MouseEvent<HTMLElement>) => {
-                  setEventSource({ action: 'cancel', event: e });
+                  triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
                 <SvgImg type="close" size={20} style={{ color: '#7B88A0' }} />
@@ -112,9 +122,8 @@ export const Modal: ModalType = ({
               <div
                 className="modal-title-close"
                 onClick={(e: React.MouseEvent<HTMLElement>) => {
-                  setEventSource({ action: 'cancel', event: e });
+                  triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
-                  onCancel && onCancel(e);
                 }}>
                 <SvgImg type="close-arrow" size={20} style={{ color: '#7B88A0' }} />
               </div>
@@ -129,7 +138,7 @@ export const Modal: ModalType = ({
               style={{ cursor: 'pointer' }}
               className="back-icon"
               onClick={(e: React.MouseEvent<HTMLElement>) => {
-                setEventSource({ action: 'cancel', event: e });
+                triggerModalAction({ action: 'cancel', event: e });
                 setOpened(false);
               }}>
               <SvgImg type="backward" style={{ color: '#7B88A0' }} />
@@ -147,9 +156,9 @@ export const Modal: ModalType = ({
               {React.cloneElement(item, {
                 style: { width: 90 },
                 onClick: (e: React.MouseEvent<HTMLElement>) => {
-                  const { action } = item.props;
-                  setEventSource({ action, event: e });
-                  setOpened(false);
+                  const { action, disableAGModalClose } = item.props;
+                  triggerModalAction({ action, event: e });
+                  !disableAGModalClose && setOpened(false);
                 },
               })}
             </div>
@@ -158,18 +167,7 @@ export const Modal: ModalType = ({
     </div>
   );
 
-  const resultJsx = animate ? (
-    <OverlayWrap
-      opened={opened}
-      onExited={() => {
-        eventSource?.action === 'ok' && onOk && onOk(eventSource.event);
-        eventSource?.action === 'cancel' && onCancel && onCancel(eventSource.event);
-      }}>
-      {modalJsx}
-    </OverlayWrap>
-  ) : (
-    modalJsx
-  );
+  const resultJsx = animate ? <OverlayWrap opened={opened}>{modalJsx}</OverlayWrap> : modalJsx;
 
   return hasMask ? <div className="modal-mask">{resultJsx}</div> : resultJsx;
 };

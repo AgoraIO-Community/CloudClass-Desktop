@@ -43,6 +43,11 @@ const cloudHelpTips: {
     supportType: ['txt'],
   },
   {
+    svgType: 'alf',
+    desc: transI18n('fcr_online_courseware_label_file_type'),
+    supportType: ['alf'],
+  },
+  {
     svgType: 'image',
     desc: transI18n('cloud.photo'),
     supportType: ['png', 'jpg', 'gif'],

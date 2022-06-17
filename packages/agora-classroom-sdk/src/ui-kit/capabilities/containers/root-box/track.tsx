@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import React, { useRef, useLayoutEffect, useMemo } from 'react';
 import { DraggableData, ResizableDelta, Rnd, Position } from 'react-rnd';
 import { useStore } from '~hooks/use-edu-stores';
-import { Track, Point, Dimensions } from 'agora-edu-core';
+import { Track, Point, Dimensions, AgoraWidgetBase } from 'agora-edu-core';
 
 type TrackSyncingProps = {
   trackId: string;
@@ -166,13 +166,149 @@ export const TrackCore: React.FC<
     ) : null;
   },
 );
+export const WidgetTrackCore: React.FC<TrackSyncingProps> = observer(
+  ({
+    children,
+    trackId,
+    draggable,
+    resizable,
+    style,
+    handle,
+    syncOn = 'drop',
+    controlled,
+    minHeight,
+    minWidth,
+    maxWidth,
+    maxHeight,
+    cancel,
+    boundaryName,
+  }) => {
+    const {
+      classroomStore: {
+        widgetStore: { widgetController },
+      },
+      widgetUIStore: { setWidgetZIndexToTop },
+    } = useStore();
+    const widget = widgetController?.widgetsMap.get(trackId) as AgoraWidgetBase;
+    const track = widget.track;
 
+    const rootRef = useRef<Rnd | null>(null);
+
+    const boundsClz = `.${boundaryName}`;
+
+    const handleEvents = useMemo(
+      () =>
+        ({
+          drag: {
+            onDrag: (_: unknown, pos: DraggableData) => {
+              widgetController?.setTrack(widget.id, true, { ...pos, real: true });
+            },
+            onResize: (
+              _: unknown,
+              __: unknown,
+              ref: HTMLElement,
+              delta: ResizableDelta,
+              pos: Position,
+            ) => {
+              widgetController?.setTrack(
+                widget.id,
+                true,
+                { ...pos, real: true },
+                {
+                  width: ref.clientWidth,
+                  height: ref.clientHeight,
+                  real: true,
+                },
+              );
+            },
+          },
+          drop: {
+            onDrag: (_: unknown, pos: DraggableData) => {
+              widgetController?.setTrack(widget.id, false, { ...pos, real: true });
+            },
+            onDragStart: () => {
+              setWidgetZIndexToTop(trackId);
+            },
+            onDragStop: (_: unknown, pos: DraggableData) => {
+              widgetController?.setTrack(widget.id, true, { ...pos, real: true });
+            },
+            onResize: (
+              _: unknown,
+              __: unknown,
+              ref: HTMLElement,
+              delta: ResizableDelta,
+              pos: Position,
+            ) => {
+              widgetController?.setTrack(
+                widget.id,
+                false,
+                { ...pos, real: true },
+                {
+                  width: ref.clientWidth,
+                  height: ref.clientHeight,
+                  real: true,
+                },
+              );
+            },
+            onResizeStop: (
+              _: unknown,
+              __: unknown,
+              ref: HTMLElement,
+              delta: ResizableDelta,
+              pos: Position,
+            ) => {
+              widgetController?.setTrack(
+                widget.id,
+                true,
+                { ...pos, real: true },
+                {
+                  width: ref.clientWidth,
+                  height: ref.clientHeight,
+                  real: true,
+                },
+              );
+            },
+          },
+        }[syncOn]),
+      [syncOn, trackId, widget],
+    );
+
+    useLayoutEffect(() => {
+      const rnd = rootRef.current;
+      const boundary = boundsClz && (document.querySelector(boundsClz) as HTMLDivElement);
+      if (rnd && boundary) {
+        // fix rnd bug
+        forceUpdateRndBounds(rnd, boundary);
+      }
+    }, [boundsClz]);
+
+    const postStyle = useMemo(
+      () => Object.assign({}, style, track?.needTransition ? { transition: 'all .3s' } : null),
+      [style, track?.needTransition],
+    );
+    return track && track.isContextInitialized ? (
+      <Rnd
+        {...handleEvents}
+        style={postStyle}
+        bounds={boundsClz}
+        cancel={cancel}
+        dragHandleClassName={handle}
+        disableDragging={!controlled || !draggable}
+        enableResizing={controlled && resizable}
+        ref={rootRef}
+        minHeight={minHeight}
+        minWidth={minWidth}
+        maxHeight={maxHeight}
+        maxWidth={maxWidth}
+        size={track.realVal.dimensions}
+        position={track.realVal.position}>
+        {children}
+      </Rnd>
+    ) : null;
+  },
+);
 export const WidgetTrack: React.FC<TrackSyncingProps> = observer((props) => {
-  const { trackUIStore } = useStore();
-
-  const { widgetTrackById, setWidgetTrackById } = trackUIStore;
-
-  return <TrackCore {...props} setTrackById={setWidgetTrackById} trackById={widgetTrackById} />;
+  return <WidgetTrackCore {...props} />;
 });
 
 export const ExtAppTrack: React.FC<TrackSyncingProps> = observer((props) => {

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
-import { ChangeEvent, useRef, useEffect, useCallback } from 'react';
+import { ChangeEvent, useRef, useEffect, useCallback, useState } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import { CloudDriveCourseResource, CloudDriveResource } from 'agora-edu-core';
 import {
@@ -21,13 +21,14 @@ import {
   CircleLoading,
   Popover,
   UploadItem,
+  Input,
 } from '~ui-kit';
 import CloudToolbar from './cloud-toolbar';
 import CloudMinimize from './cloud-minimize';
 import CloudMoreMenu from './cloud-more-menu';
 import { FileTypeSvgColor, UploadItem as CloudUploadItem } from '@/infra/stores/common/cloud-ui';
 import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
-import { debounce } from 'lodash';
+import { debounce, divide } from 'lodash';
 
 const UploadSuccessToast = () => {
   return (
@@ -82,6 +83,7 @@ const UploadModal = () => {
 };
 
 export const PersonalResourcesContainer = observer(() => {
+  const [onlineCoursewareModalVisible, setOnlineCoursewareModalVisible] = useState(false);
   const uploadingRef = useRef(false);
   const { cloudUIStore, shareUIStore } = useStore();
   const { addConfirmDialog } = shareUIStore;
@@ -227,7 +229,9 @@ export const PersonalResourcesContainer = observer(() => {
     },
     [setSearchPersonalResourcesKeyword],
   );
-
+  const onOnlineCoursewareSubmit = async (formData: IUploadOnlineCoursewareData) => {
+    await uploadPersonalResource(formData);
+  };
   return (
     <>
       {showUploadToast ? <UploadSuccessToast /> : null}
@@ -264,6 +268,7 @@ export const PersonalResourcesContainer = observer(() => {
             personalResourcesList.map((item) => {
               const {
                 resourceName = '',
+                ext,
                 updateTime,
                 size = 0,
                 resourceUuid = '',
@@ -280,7 +285,7 @@ export const PersonalResourcesContainer = observer(() => {
                   </Col>
                   <Col style={{ cursor: 'pointer' }} onClick={() => onClickCol(resourceUuid)}>
                     <SvgImg
-                      type={fileNameToType(resourceName)}
+                      type={fileNameToType(ext)}
                       style={{
                         marginRight: '6px',
                         color: FileTypeSvgColor[fileNameToType(resourceName)],
@@ -371,17 +376,31 @@ export const PersonalResourcesContainer = observer(() => {
                 />
               ) : null}
             </div>
-            <div>
+            <div className="cloud-btn-group-right">
               <input
                 ref={fileRef}
                 id="upload-image"
-                accept={CloudDriveResource.supportedTypes.map(item => '.' + item).join(',')}
+                accept={CloudDriveResource.supportedTypes.map((item) => '.' + item).join(',')}
                 onChange={handleUpload}
                 multiple
                 type="file"></input>
-              <Button type="primary" onClick={triggerUpload}>
-                {transI18n('cloud.upload')}
-              </Button>
+              <div className="upload-btn-group">
+                <Button type="primary" onClick={triggerUpload}>
+                  {transI18n('cloud.upload')}
+                </Button>
+                <Popover
+                  content={
+                    <div
+                      className="upload-btn-popover"
+                      onClick={() => setOnlineCoursewareModalVisible(true)}>
+                      {transI18n('fcr_online_courseware_button_upload_online_file')}
+                    </div>
+                  }
+                  getPopupContainer={(dom) => (dom.parentNode as HTMLElement) || dom}>
+                  <Button type="primary">···</Button>
+                </Popover>
+              </div>
+
               <Button
                 disabled={!hasSelectedPersonalRes || !personalResourcesTotalNum}
                 style={{ marginLeft: 15 }}
@@ -393,6 +412,94 @@ export const PersonalResourcesContainer = observer(() => {
           </Row>
         </Table>
       </Table>
+      <UploadOnlineCoursewareModal
+        visible={onlineCoursewareModalVisible}
+        onOk={onOnlineCoursewareSubmit}
+        onCancel={() => {
+          setOnlineCoursewareModalVisible(false);
+          debouncedFetchPersonalResources();
+        }}></UploadOnlineCoursewareModal>
     </>
   );
 });
+export interface IUploadOnlineCoursewareData {
+  url: string;
+  resourceName: string;
+}
+const UploadOnlineCoursewareModal = (props: {
+  visible: boolean;
+  onCancel: () => void;
+  onOk: (formData: IUploadOnlineCoursewareData) => Promise<void>;
+}) => {
+  const { visible, onCancel, onOk } = props;
+  const [formData, setFormData] = useState({
+    url: '',
+    resourceName: '',
+  });
+  const {
+    shareUIStore: { addToast },
+  } = useStore();
+  const onSubmit = async () => {
+    if (!formData.url || !formData.resourceName) {
+      addToast(transI18n('fcr_online_courseware_input_content'), 'warning');
+      return;
+    }
+    if (
+      !formData.url.match(
+        /(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/,
+      )
+    ) {
+      addToast('fcr_online_courseware_valid_url', 'warning');
+      return;
+    }
+    await onOk(formData);
+
+    addToast(transI18n('cloud.upload_success'), 'success');
+    onCancel();
+  };
+  return visible ? (
+    <Modal
+      className="cloud-upload-form-modal"
+      title={transI18n('fcr_online_courseware_label_uploadpage')}
+      closable
+      onCancel={onCancel}
+      onOk={onSubmit}
+      footer={[
+        <Button key={1} action="cancel" type="ghost">
+          {transI18n('fcr_online_courseware_button_close')}
+        </Button>,
+        <Button key={2} action="ok" disableAGModalClose>
+          {transI18n('fcr_online_courseware_button_upload')}
+        </Button>,
+      ]}>
+      <div className="cloud-upload-form-modal-form">
+        <div className="cloud-upload-form-item">
+          <span>{transI18n('fcr_online_courseware_label_link')}:</span>
+          <Input
+            maxLength={512}
+            placeholder={transI18n('fcr_please_input')}
+            value={formData.url}
+            onChange={(e) => {
+              setFormData((prev) => ({
+                ...prev,
+                url: e.target.value,
+              }));
+            }}></Input>
+        </div>
+        <div className="cloud-upload-form-item">
+          <span>{transI18n('fcr_online_courseware_label_file_name')}:</span>
+          <Input
+            maxLength={100}
+            placeholder={transI18n('fcr_please_input')}
+            value={formData.resourceName}
+            onChange={(e) => {
+              setFormData((prev) => ({
+                ...prev,
+                resourceName: e.target.value,
+              }));
+            }}></Input>
+        </div>
+      </div>
+    </Modal>
+  ) : null;
+};

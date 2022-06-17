@@ -117,7 +117,33 @@
   padding-right: 20px;
   border-top: 1px solid #eeeef7;
 }
-
+.cloud-btn-group-right {
+  display: flex;
+}
+.cloud-btn-group .upload-btn-group {
+  display: flex;
+  align-items: center;
+}
+.cloud-btn-group .upload-btn-group .fcr-btn:first-child {
+  width: 52px;
+  border-radius: 6px 0 0 6px;
+  min-width: auto;
+}
+.cloud-btn-group .upload-btn-group .popover-inner-content {
+  padding: 7px 0;
+  font-size: 12px;
+  color: #191919;
+  font-weight: 400;
+  cursor: pointer;
+}
+.cloud-btn-group .upload-btn-group .fcr-btn:nth-child(2) {
+  border-radius: 0 6px 6px 0;
+  width: 28px;
+  min-width: auto;
+}
+.cloud-btn-group .fcr-btn {
+  border-radius: 6px;
+}
 .cloud-minimize-container {
   min-width: 138px;
 }
@@ -168,4 +194,34 @@
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #586376;
+}
+.cloud-upload-form-modal-form {
+  width: 100%;
+}
+.cloud-upload-form-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+.cloud-upload-form-item > span {
+  display: inline-block;
+  color: #586376;
+  font-size: 12px;
+  width: 80px;
+  padding-right: 5px;
+  text-align: right;
+}
+.cloud-upload-form-item > div {
+  width: 230px;
+}
+.cloud-upload-form-modal {
+  width: 360px;
+}
+.cloud-upload-form-modal .fcr-btn {
+  border-radius: 6px;
+}
+.upload-btn-group .upload-btn-popover {
+  padding: 0 14px;
 }

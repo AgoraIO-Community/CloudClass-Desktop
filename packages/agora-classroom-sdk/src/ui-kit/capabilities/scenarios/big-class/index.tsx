@@ -17,6 +17,7 @@ import { CollectorContainer } from '~containers/board';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { ScenesController } from '../../containers/scenes-controller';
+import { WidgetTrackContiner } from '../../containers/widget-track';
 
 type Props = {
   children?: React.ReactNode;
@@ -61,6 +62,8 @@ export const BigClassScenario = observer(() => {
           <LoadingContainer />
         </Layout>
         <ExtensionAppContainer />
+        <WidgetTrackContiner></WidgetTrackContiner>
+
         <ToastContainer />
       </FixedAspectRatioRootBox>
     </Room>

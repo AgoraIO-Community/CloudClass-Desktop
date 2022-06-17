@@ -726,6 +726,17 @@ export const en = {
   fcr_rc_control_anti_virus_software_conflict:
     'If the remote control function cannot be used, please close the anti-virus software and computer housekeeper.',
   fcr_close: 'Close',
+  fcr_online_courseware_label_file_type: 'Sharing courseware',
+  fcr_online_courseware: 'Online courseware',
+  fcr_online_courseware_button_upload_online_file: 'Upload online courseware',
+  fcr_online_courseware_button_upload: 'Upload',
+  fcr_online_courseware_button_close: 'Close',
+  fcr_online_courseware_label_link: 'Link',
+  fcr_online_courseware_label_file_name: 'File name',
+  fcr_online_courseware_label_uploadpage: 'Upload online courseware',
+  fcr_please_input: 'Please input',
+  fcr_online_courseware_input_content: 'Please input the link and file name',
+  fcr_online_courseware_valid_url: 'Please input the correct link',
   /** Remote Control */
   begin_class: 'Begin class',
   edu_error: {

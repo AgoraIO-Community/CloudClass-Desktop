@@ -1,11 +1,12 @@
 import { EduUIStoreBase } from '../base';
 import { EduShareUIStore } from '../share-ui';
 import { bound, Log } from 'agora-rte-sdk';
-import { action, computed } from 'mobx';
+import { action, computed, reaction } from 'mobx';
 import { Dimensions, EduClassroomStore, Margin, Offset, Point, TrackContext } from 'agora-edu-core';
 
 @Log.attach({ proxyMethods: false })
 export class TrackUIStore extends EduUIStoreBase {
+  private _disposers: (() => void)[] = [];
   private _extAppTrackContext: TrackContext = {
     margin: {
       top: 0,
@@ -162,6 +163,10 @@ export class TrackUIStore extends EduUIStoreBase {
 
         context.offset = offset;
       });
+      this.classroomStore.widgetStore.widgetController?.widgetsMap.forEach((w) => {
+        w.track.updateContext({ outerSize: { width, height }, offset });
+        w.track.reposition();
+      });
     }
 
     // this.logger.info(
@@ -178,6 +183,23 @@ export class TrackUIStore extends EduUIStoreBase {
     this.classroomStore.widgetsTrackStore.reposition();
   }
 
-  onDestroy(): void {}
-  onInstall(): void {}
+  onDestroy(): void {
+    this._disposers.forEach((f) => f());
+  }
+  onInstall(): void {
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.widgetStore.widgetController?.widgetsMap.size,
+        () => {
+          this.classroomStore.widgetStore.widgetController?.widgetsMap.forEach((w) => {
+            w.track.updateContext({
+              outerSize: { ...this._widgetTrackContext.outerSize },
+              offset: { ...this._widgetTrackContext.offset },
+            });
+            w.track.reposition();
+          });
+        },
+      ),
+    );
+  }
 }

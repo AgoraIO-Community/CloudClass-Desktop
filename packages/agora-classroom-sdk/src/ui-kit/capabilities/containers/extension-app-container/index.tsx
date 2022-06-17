@@ -75,7 +75,7 @@ export const ExtensionAppContainer = observer(() => {
   const { canClose, canDrag, shutdownApp, activeApps, updateTrackState } = extesionAppUIStore;
 
   return (
-    <React.Fragment>
+    <div className="w-full h-full absolute ext-container" style={{ left: 0, top: 0, zIndex: 2 }}>
       {activeApps.map((extApp) => (
         <ExtensionApp
           key={extApp.appIdentifier}
@@ -86,6 +86,6 @@ export const ExtensionAppContainer = observer(() => {
           onResize={updateTrackState}
         />
       ))}
-    </React.Fragment>
+    </div>
   );
 });

@@ -705,6 +705,18 @@ export const zh = {
   fcr_rc_control_anti_virus_software_conflict:
     '如无法正常使用远程控制功能，请关闭杀毒软件和电脑管家。',
   fcr_close: '关闭',
+  fcr_online_courseware_label_file_type: '外部分享课件',
+  fcr_online_courseware: '在线课件',
+  fcr_online_courseware_button_upload_online_file: '上传在线课件',
+  fcr_online_courseware_button_upload: '上传',
+  fcr_online_courseware_button_close: '关闭',
+  fcr_online_courseware_label_link: '课件链接',
+  fcr_online_courseware_label_file_name: '课件名',
+  fcr_online_courseware_label_uploadpage: '上传在线课件',
+  fcr_please_input: '请输入',
+  fcr_online_courseware_input_content: '请输入课件链接以及课件名',
+  fcr_online_courseware_valid_url: '请输入正确的课件链接',
+
   /** Remote Control */
   begin_class: '开始上课',
   edu_error: {
