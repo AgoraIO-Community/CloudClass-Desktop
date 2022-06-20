@@ -53,6 +53,7 @@ const WidgetContainer = observer(
           className={'w-full h-full'}
           ref={(dom) => {
             if (dom) {
+              // @ts-ignore
               props.widget.render(dom);
             }
           }}></div>

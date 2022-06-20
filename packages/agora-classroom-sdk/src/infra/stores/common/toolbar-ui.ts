@@ -573,7 +573,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
         break;
       }
       case 'save':
-        const scenes = this.classroomStore.boardStore.getSaveAnnotationImages();
+        const scenes = this.classroomStore.boardStore.getAnnotationImages();
         this._fuseIntoOneImage(scenes);
         break;
       default:

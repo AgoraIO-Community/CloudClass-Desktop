@@ -90,10 +90,10 @@ export class HandUpUIStore extends EduUIStoreBase {
     const _acceptedList = this.classroomStore.roomStore.acceptedList;
     const _waveArmList = this.classroomStore.roomStore.waveArmList;
     const _inviteList = this.classroomStore.roomStore.inviteList;
-    let acceptedList: UserHandUpInfo[] = [];
-    let waveArmList: UserHandUpInfo[] = [];
-    let inviteList: UserHandUpInfo[] = [];
-    let idleList: UserHandUpInfo[] = [];
+    const acceptedList: UserHandUpInfo[] = [];
+    const waveArmList: UserHandUpInfo[] = [];
+    const inviteList: UserHandUpInfo[] = [];
+    const idleList: UserHandUpInfo[] = [];
     this._userList.forEach(({ userUuid, userName, role }) => {
       const userRole = RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, role);
       if (userRole === EduRoleTypeEnum.student) {
@@ -262,7 +262,7 @@ export class HandUpUIStore extends EduUIStoreBase {
  * 邀请学生上台
  * @param userUuid
  */
-  invite(userUuid: string, duration: number, payload?: object) {
+  invite(userUuid: string, duration: number, payload?: any) {
     console.warn('邀请');
     this.classroomStore.handUpStore
       .invitePodium(userUuid, duration, payload)
@@ -352,7 +352,7 @@ export class HandUpUIStore extends EduUIStoreBase {
       const teacherUuid = teachers.keys().next().value;
 
       this.classroomStore.handUpStore
-        .waveArm(teacherUuid, duration, payload)
+        .waveArm(teacherUuid, duration as (3 | -1), payload)
         .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
     }
   }
