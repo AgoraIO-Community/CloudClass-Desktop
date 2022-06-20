@@ -4,9 +4,10 @@ import React, { useMemo, useState } from 'react';
 import { Icon, Popover, SvgImg } from '~ui-kit';
 import { WaveArmSender } from '../../containers/hand-up/sender';
 import { EduClassroomConfig } from 'agora-edu-core';
+import { EduVocationalH5UIStore } from '@/infra/stores/vocational-h5';
 
 export const HandsUp = observer(() => {
-  const { handUpUIStore, classroomStore, streamUIStore, deviceSettingUIStore } = useVocationalH5UIStores();
+  const { handUpUIStore, classroomStore, streamUIStore, deviceSettingUIStore } = useVocationalH5UIStores() as EduVocationalH5UIStore;
   const [visible, setVisible] = useState(false);
   const {
     waveArm,

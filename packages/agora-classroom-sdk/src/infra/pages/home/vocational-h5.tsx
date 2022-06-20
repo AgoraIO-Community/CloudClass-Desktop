@@ -224,6 +224,8 @@ export const VocationalHomeH5Page = observer(() => {
             duration: duration * 60,
             latencyLevel: 2,
             platform: Platform.H5,
+            curScenario,
+            userRole,
             mediaOptions: {
               channelProfile: channelProfile,
               web: {

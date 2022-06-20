@@ -19,8 +19,9 @@ import { HomeApi } from './home-api';
 import { v4 as uuidv4 } from 'uuid';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import { ToastType } from '@/infra/stores/ui';
 import MD5 from 'js-md5';
+import { ToastType } from '@/infra/stores/common/share-ui';
+import dayjs from 'dayjs';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -43,6 +44,8 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
 };
 
 declare const CLASSROOM_SDK_VERSION: string;
+declare const BUILD_TIME: string;
+declare const BUILD_COMMIT_ID: string;
 
 const regionByLang = {
   zh: EduRegion.CN,
@@ -131,8 +134,10 @@ export const VocationalHomePage = observer(() => {
     setScenario(value);
   };
 
-  const onChangeService = (value: string) => {
-    setService(value);
+  const onChangeService = (value?: string) => {
+    if(value){
+      setService(value);
+    }
   };
 
   const text: Record<string, CallableFunction> = {
@@ -185,6 +190,9 @@ export const VocationalHomePage = observer(() => {
     tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
   }
 
+  const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
+  const commitID = BUILD_COMMIT_ID;
+
   return language !== '' ? (
     <React.Fragment>
       <MessageDialog />
@@ -192,7 +200,8 @@ export const VocationalHomePage = observer(() => {
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
-        publishDate={REACT_APP_PUBLISH_DATE}
+        buildTime={buildTime}
+        commitID={commitID}
         roomId={roomUuid}
         userId={userUuid}
         roomName={roomName}
@@ -274,6 +283,8 @@ export const VocationalHomePage = observer(() => {
               region,
               duration: duration * 60,
               latencyLevel: 2,
+              curScenario,
+              userRole,
               mediaOptions: {
                 channelProfile,
                 web: {

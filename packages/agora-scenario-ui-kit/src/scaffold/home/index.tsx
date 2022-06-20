@@ -19,7 +19,7 @@ export interface HomeAttributes {
   roomName: string;
   role: string;
   scenario: string;
-  service: string;
+  service?: string;
   duration: number;
   language: string;
   region: string;
@@ -331,7 +331,7 @@ export const Home: React.FC<HomeProps> = ({
                   options={serviceOptions}
                   isMenuTextCenter={true}
                   onChange={(value) => {
-                    onChangeService(value);
+                    onChangeService && onChangeService(value);
                   }}
                   placeholder={transI18n('home.serviceType_placeholder')}></Select>
               </Col>
