@@ -360,9 +360,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
       }
     }
   }
-  selectScreenShareDevice() {
-    let displays = this.classroomStore.mediaStore.getDisplayDevices();
-    let windows = this.classroomStore.mediaStore.getWindowDevices();
+  async selectScreenShareDevice() {
+    let [displays, windows] = await Promise.all([
+      this.classroomStore.mediaStore.getDisplayDevices(),
+      this.classroomStore.mediaStore.getWindowDevices(),
+    ]);
 
     const haveImage = ({ image }: AGScreenShareDevice) => !!image;
 
