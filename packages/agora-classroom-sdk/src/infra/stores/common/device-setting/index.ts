@@ -292,6 +292,17 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     this.classroomStore.mediaStore.setPlaybackDevice(id);
   }
 
+  @bound
+  toggleCamera() {
+    const nextDevice = this.cameraDevicesList
+      .filter((camera) => camera.value !== DEVICE_DISABLE)
+      .find((camera) => camera.value !== this.currentCameraDeviceId);
+    if (!nextDevice) {
+      return;
+    }
+    this.setCameraDevice(nextDevice.value);
+  }
+
   /**
    * 设置讲台开关
    * 停止轮询 业务逻辑

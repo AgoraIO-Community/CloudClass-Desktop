@@ -168,6 +168,7 @@ function addListeners() {
       console.log(`window with ID [${windowID}] not exist`);
     }
   });
+
   mainWindow.current.on('closed', () => {
     Object.keys(windowMap).forEach((k) => {
       windowMap[k].close();

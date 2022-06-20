@@ -7,10 +7,10 @@ import './index.css';
 
 export const WaveArmManagerContainer = observer(() => {
   const { handUpUIStore } = useStore();
-  const { waveArmCount, hasWaveArmUser } = handUpUIStore;
+  const { waveArmCount, hasWaveArmUser, isVocational } = handUpUIStore;
   return (
     <WaveArmManager hasWaveArmUser={hasWaveArmUser} waveArmCount={waveArmCount}>
-      <WaveArmListContainer />
+      {isVocational ? null : <WaveArmListContainer />}
     </WaveArmManager>
   );
 });

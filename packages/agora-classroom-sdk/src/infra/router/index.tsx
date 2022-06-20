@@ -2,6 +2,8 @@ import * as React from 'react';
 import { BizPageRouter } from '@/infra/types';
 import { HomePage } from '@/infra/pages/home';
 import { HomeH5Page } from '@/infra/pages/home/h5';
+import { VocationalHomePage } from '@/infra/pages/home/vocational';
+import { VocationalHomeH5Page } from '@/infra/pages/home/vocational-h5';
 import { LaunchPage } from '@/infra/pages/launch';
 import { LaunchWindow } from '@/infra/pages/launch-window';
 import { RecordationSearchPage } from '@/infra/pages/recordation-search';
@@ -42,6 +44,14 @@ export const routesMap: Record<string, AppRouteComponent> = {
   [BizPageRouter.TestH5HomePage]: {
     path: '/h5login',
     component: () => PageSFC(HomeH5Page),
+  },
+  [BizPageRouter.VocationalHomePage]: {
+    path: '/vocational',
+    component: () => PageSFC(VocationalHomePage),
+  },
+  [BizPageRouter.VocationalHomeH5Page]: {
+    path: '/vocational/h5login',
+    component: () => PageSFC(VocationalHomeH5Page),
   },
   [BizPageRouter.RecordationSearchPage]: {
     path: '/recordation-search/:p',

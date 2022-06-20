@@ -160,14 +160,22 @@ export const DragableContainer = observer(
       }
     });
 
+    const [pressed, setPressed] = useState(false);
+
+    const handleMouse = (v: boolean) => () => {
+      setPressed(v);
+    };
+
     return (
       <DragableOverlay
-        visibleTools={visibleTools}
+        visibleTools={!pressed && visibleTools}
         stream={stream}
         style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
         toolbarPlacement={toolbarPlacement}>
         <div
           ref={ref}
+          onMouseDown={handleMouse(true)}
+          onMouseUp={handleMouse(false)}
           {...bind(stream)}
           onDoubleClick={visibleStream(stream.stream.streamUuid) ? () => {} : onDoubleClick}
           style={{

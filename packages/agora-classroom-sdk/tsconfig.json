@@ -48,7 +48,7 @@
       "~hooks": ["./src/infra/hooks"],
       "~hooks/*": ["./src/infra/hooks/*"],
       "~contexts": ["./src/infra/contexts"],
-      "~contexts/*": ["./src/infra/contexts/*"]
+      "~contexts/*": ["./src/infra/contexts/*"],
     }
   },
   "include": [

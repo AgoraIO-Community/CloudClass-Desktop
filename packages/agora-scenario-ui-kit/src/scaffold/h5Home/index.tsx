@@ -6,6 +6,8 @@ import { Col, Row, Table } from '~components/table';
 import { transI18n } from '~components/i18n';
 import './style.css';
 
+const VALIDATE_REGULAR = /^[a-zA-Z0-9]{6,50}$/;
+
 export const H5Login: React.FC<any> = ({
   roomName,
   onChangeRoomName,
@@ -17,14 +19,33 @@ export const H5Login: React.FC<any> = ({
   scenario,
   onChangeScenario,
   version,
+  service,
+  onChangeService,
+  isVocational,
 }) => {
   const scenarioOptions = [
     { label: transI18n('home.roomType_interactiveBigClass'), value: 'big-class' },
   ];
 
+  if (isVocational) {
+    scenarioOptions.push({
+      label: transI18n('home.roomType_vocationalClass'),
+      value: 'vocational-class',
+    });
+  }
+
+  const serviceOptions = [
+    { label: transI18n('home.serviceType_premium'), value: 'premium-service' },
+    { label: transI18n('home.serviceType_standard'), value: 'standard-service' },
+    { label: transI18n('home.serviceType_latency'), value: 'latency-service' },
+    { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
+  ];
+
   return (
-    <div style={{ height: '100vh', background: '#fff', overflow: 'auto' }}>
-      <div className="h5-header">{transI18n('home.system_name')}</div>
+    <div className={isVocational ? 'h5-home-vocational' : 'h5-home'}>
+      <div className="h5-header">
+        <div className="h5-title">{transI18n('home.system_name')}</div>
+      </div>
       <Table className="home-h5-form">
         <Row className="home-row-item can-error-item">
           <Col>
@@ -41,7 +62,7 @@ export const H5Login: React.FC<any> = ({
               value={roomName}
               onChange={(evt) => onChangeRoomName(evt.currentTarget.value)}
               placeholder={transI18n('home.roomName_placeholder')}
-              rule={/^[a-zA-Z0-9]{1,50}$/}
+              rule={VALIDATE_REGULAR}
               errorMsg={transI18n('home.input-error-msg')}
               maxLength={50}
             />
@@ -62,7 +83,7 @@ export const H5Login: React.FC<any> = ({
               value={userName}
               onChange={(evt) => onChangeUserName(evt.currentTarget.value)}
               placeholder={transI18n('home.nickName_placeholder')}
-              rule={/^[a-zA-Z0-9]{1,50}$/}
+              rule={VALIDATE_REGULAR}
               errorMsg={transI18n('home.input-error-msg')}
               maxLength={50}
             />
@@ -88,6 +109,31 @@ export const H5Login: React.FC<any> = ({
           </Col>
         </Row>
 
+        {scenario === 'vocational-class' ? (
+          <Row className="home-row-item">
+            <Col>
+              <Select
+                prefix={
+                  <span
+                    id="et_room_type"
+                    className="home-label"
+                    title={transI18n('home.serviceType')}>
+                    {transI18n('home.serviceType')}
+                  </span>
+                }
+                id="service"
+                value={service}
+                options={serviceOptions}
+                isMenuTextCenter={true}
+                onChange={(value) => {
+                  onChangeService(value);
+                }}
+                placeholder={transI18n('home.serviceType_placeholder')}
+              />
+            </Col>
+          </Row>
+        ) : null}
+
         <Button
           id="btn_join"
           className="mt-4 h5-btn-submit"
@@ -102,7 +148,8 @@ export const H5Login: React.FC<any> = ({
               !!role &&
               !!scenario &&
               /^[a-zA-Z0-9]{1,50}$/.test(roomName) &&
-              /^[a-zA-Z0-9]{1,50}$/.test(userName)
+              /^[a-zA-Z0-9]{1,50}$/.test(userName) &&
+              (scenario === 'vocational-class' ? !!service : true)
             )
           }>
           {transI18n('home.enter_classroom')}

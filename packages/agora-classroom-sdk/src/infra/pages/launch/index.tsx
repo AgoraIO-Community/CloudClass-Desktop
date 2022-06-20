@@ -1,9 +1,11 @@
 import { useHomeStore } from '@/infra/hooks';
+import { GlobalStorage } from '@/infra/utils';
+import { EduRoomSubtypeEnum } from 'agora-edu-core';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AgoraEduSDK, AgoraEduClassroomEvent } from '../../api';
+import { AgoraEduClassroomEvent, AgoraEduSDK } from '../../api';
 import courseWareList from './courseware-list';
 
 declare const CLASSROOM_SDK_VERSION: string;
@@ -47,6 +49,16 @@ export const LaunchPage = observer(() => {
         courseWareList,
         listener: (evt: AgoraEduClassroomEvent, type) => {
           console.log('launch#listener ', evt);
+          if (
+            evt === AgoraEduClassroomEvent.Destroyed &&
+            launchOption.roomSubtype === EduRoomSubtypeEnum.Vocational
+          ) {
+            const url = `/vocational${
+              GlobalStorage.read('platform') == 'h5' ? '/h5login' : ''
+            }?reason=${type}`;
+            history.push(url);
+            return;
+          }
           if (evt === AgoraEduClassroomEvent.Destroyed) {
             history.push(`/?reason=${type}`);
           }

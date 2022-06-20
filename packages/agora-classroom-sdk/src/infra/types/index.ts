@@ -14,6 +14,8 @@ export enum BizPageRouter {
   TestAdapteHomePage = 'test_adapte_home',
   RecordationSearchPage = 'recordation-search',
   Window = 'window',
+  VocationalHomePage = 'vocational_home',
+  VocationalHomeH5Page = 'vocational_h5_home',
 }
 
 export enum OrientationEnum {
@@ -41,6 +43,8 @@ export enum IPCMessageType {
   StopScreenShareAndRemoteControl = 'StopScreenShareAndRemoteControl',
   //切换分享内容
   SwitchScreenShareDevice = 'SwitchScreenShareDevice',
+  // 截图完成
+  ShortCutCaptureDone = 'ShortCutCaptureDone',
 }
 export enum ControlState {
   NotAllowedControlled = '0',

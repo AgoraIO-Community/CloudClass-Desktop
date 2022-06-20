@@ -220,7 +220,6 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
 
   return (
     <RcTooltip
-      {...props}
       trigger={getOS().isTablet || getOS().isPhone ? 'click' : 'hover'}
       prefixCls={prefixCls}
       overlayClassName={customOverlayClassName}
@@ -236,7 +235,8 @@ export const Tooltip = forwardRef<unknown, TooltipProps>((props, ref) => {
       motion={{
         motionName: getTransitionName(rootPrefixCls, 'zoom-big-fast', props.transitionName),
         motionDeadline: 100,
-      }}>
+      }}
+      {...props}>
       {tempVisible ? cloneElement(child, { className: childCls }) : child}
     </RcTooltip>
   );

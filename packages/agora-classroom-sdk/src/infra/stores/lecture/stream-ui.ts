@@ -35,7 +35,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
 
   @computed get localStreamTools(): EduStreamTool[] {
     const { sessionInfo } = EduClassroomConfig.shared;
-    let tools: EduStreamTool[] = [];
+    const tools: EduStreamTool[] = [];
     // tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
     if (sessionInfo.role === EduRoleTypeEnum.teacher) {
@@ -62,7 +62,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
       tools = tools.concat([this.remoteCameraTool(stream), this.remoteMicTool(stream)]);
 
       if (stream.role === EduRoleTypeEnum.student) {
-        tools = tools.concat([this.remotePodiumTool(stream)]);
+        tools = tools.concat([this.remoteWhiteboardTool(stream), this.remotePodiumTool(stream)]);
       }
     }
 
@@ -108,7 +108,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   }
 
   get layerItems() {
-    return [];
+    return ['grant'];
   }
 
   onInstall(): void {

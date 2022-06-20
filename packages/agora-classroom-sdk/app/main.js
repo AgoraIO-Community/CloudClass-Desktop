@@ -1,6 +1,5 @@
 const electron = require('electron');
 const path = require('path');
-const ShortcutCapture = require('electron-screenshots');
 
 const startUrl =
   process.env.ELECTRON_START_URL ||
@@ -199,42 +198,6 @@ const createMainWindow = function () {
       return;
     }
     currentWindow.close();
-  });
-
-  let shortcutCapture = new ShortcutCapture.default();
-  let isCapturing = false;
-  let stopScreen = () => {
-    _mainWindow.show();
-    isCapturing = false;
-  };
-  shortcutCapture.on('ok', (e, { dataURL, viewer }) => {
-    _mainWindow.webContents.send('shortcutCaptureDone', dataURL, viewer);
-    stopScreen();
-  });
-  shortcutCapture.on('finish', (e, { dataURL, viewer }) => {
-    _mainWindow.webContents.send('shortcutCaptureDone', dataURL, viewer);
-    stopScreen();
-  });
-  shortcutCapture.on('cancel', (e) => {
-    stopScreen();
-  });
-  shortcutCapture.on('save', (e) => {
-    stopScreen();
-  });
-  const showScreenShot = (event) => {
-    if (shortcutCapture) {
-      shortcutCapture.startCapture();
-    }
-  };
-  ipcMain.on('shortcutcapture', (event, { hideWindow }) => {
-    if (!isCapturing) {
-      isCapturing = true;
-      hideWindow && _mainWindow.hide();
-      if (!shortcutCapture) {
-        shortcutCapture = new ShortcutCapture.default();
-      }
-      showScreenShot(event);
-    }
   });
 };
 

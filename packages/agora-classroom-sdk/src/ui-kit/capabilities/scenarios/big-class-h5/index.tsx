@@ -15,6 +15,7 @@ import Room from '../room';
 import { useEffect } from 'react';
 import { ExtensionAppContainer } from '~containers/extension-app-container';
 import { Helmet } from 'react-helmet';
+import { WidgetTrackContiner } from '../../containers/widget-track';
 
 require('matchmedia-polyfill');
 require('matchmedia-polyfill/matchMedia.addListener');
@@ -38,6 +39,7 @@ export const BigClassScenarioH5 = observer(() => {
           <H5TeacherStreamChatContainer />
         </LayoutOrientation>
         <ExtensionAppContainer />
+        <WidgetTrackContiner></WidgetTrackContiner>
       </H5LayoutContainer>
     </Room>
   );

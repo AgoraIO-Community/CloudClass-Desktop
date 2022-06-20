@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { useLectureUIStores } from '~hooks/use-edu-stores';
+import { useLectureUIStores, useStore } from '~hooks/use-edu-stores';
 import { Roster, InfiniteScrollRosterTable } from '~ui-kit';
 import { EduLectureUIStore } from '@/infra/stores/lecture';
 
@@ -9,7 +9,7 @@ export type LectureRosterContainerProps = {
 };
 
 export const LectureRosterContainer: FC<LectureRosterContainerProps> = observer(({ onClose }) => {
-  const { rosterUIStore } = useLectureUIStores() as EduLectureUIStore;
+  const { rosterUIStore } = useStore() as EduLectureUIStore;
   const {
     teacherName,
     setKeyword,
@@ -46,7 +46,7 @@ export const LectureRosterContainer: FC<LectureRosterContainerProps> = observer(
 });
 
 const RosterTableContainer: FC<unknown> = observer(() => {
-  const { rosterUIStore } = useLectureUIStores() as EduLectureUIStore;
+  const { rosterUIStore } = useStore() as EduLectureUIStore;
   const {
     rosterFunctions: functions,
     userList,

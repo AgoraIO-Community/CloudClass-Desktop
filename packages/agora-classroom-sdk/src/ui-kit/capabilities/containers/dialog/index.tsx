@@ -15,6 +15,8 @@ import { BreakoutRoomDialog } from './breakout-room';
 import { Quit } from './quit';
 import { ScreenShareDialog } from './screen-share';
 import { RemoteControlConfirm } from './remote-control-confirm';
+import { InviteConfirmContainer } from '../hand-up/invite-confirm';
+import { InvitePodiumContainer } from '../hand-up/invite-container';
 
 const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode => {
   switch (category) {
@@ -43,6 +45,10 @@ const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode
       return <ScreenShareDialog {...props} id={id} />;
     case DialogCategory.RemoteControlConfirm:
       return <RemoteControlConfirm {...props} id={id}></RemoteControlConfirm>;
+    case DialogCategory.InvitePodium:
+      return <InvitePodiumContainer {...props} id={id} />;
+    case DialogCategory.InviteConfirm:
+      return <InviteConfirmContainer {...props} id={id} />;
   }
 };
 

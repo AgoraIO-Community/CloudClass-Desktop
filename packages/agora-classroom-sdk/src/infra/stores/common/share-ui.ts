@@ -22,6 +22,8 @@ export enum DialogCategory {
   Quit,
   ScreenShare,
   RemoteControlConfirm,
+  InvitePodium,
+  InviteConfirm,
 }
 
 export interface ToastType {

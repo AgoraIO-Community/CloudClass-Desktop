@@ -1,10 +1,17 @@
 import ReactDOM from 'react-dom';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'mobx-react';
 import { routesMap } from '@/infra/router';
 import { HomeStore } from '@/infra/stores/home';
 import { BizPageRouter } from './infra/types';
 import { GlobalStorage } from './infra/utils';
+
+const EDU_CATEGORY = process.env.EDU_CATEGORY || 'general';
+
+const REDIRECT_MAPS: { [key: string]: string } = {
+  general: '/',
+  vocational: '/vocational',
+};
 
 const routes: BizPageRouter[] = [
   BizPageRouter.PretestPage,
@@ -17,6 +24,7 @@ const routes: BizPageRouter[] = [
 
 const RouteContainer = () => (
   <HashRouter>
+    <Redirect from="/" to={REDIRECT_MAPS[EDU_CATEGORY]} />
     <Switch>
       {routes.map((item, index) => {
         const route = routesMap[item];
@@ -33,6 +41,17 @@ const RouteContainer = () => (
         key={'h5login'}
         path={'/h5login'}
         component={routesMap[BizPageRouter.TestH5HomePage].component}
+      />
+      <Route
+        key={'vocational'}
+        path={'/vocational'}
+        exact
+        component={routesMap[BizPageRouter.VocationalHomePage].component}
+      />
+      <Route
+        key={'vocational-h5login'}
+        path={'/vocational/h5login'}
+        component={routesMap[BizPageRouter.VocationalHomeH5Page].component}
       />
       <Route
         key={'recordation'}

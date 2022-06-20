@@ -13,11 +13,11 @@ type Props = {
 export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
   const { groupUIStore } = useStore();
 
-  const { createGroups, numberToBeAssigned } = groupUIStore;
+  const { createGroups, numberToBeAssigned, MAX_USER_COUNT } = groupUIStore;
 
   const [groupNum, setGroupNum] = useState(1);
 
-  const [type, setType] = useState(GroupMethod.MANUAL);
+  const [type, setType] = useState(GroupMethod.AUTO);
 
   const perGroup = Math.floor(numberToBeAssigned / groupNum);
 
@@ -40,7 +40,7 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
             gap={3}
             direction="vertical"
             radios={[
-              // { label: transI18n('breakout_room.auto'), value: GroupMethod.AUTO },
+              { label: transI18n('breakout_room.auto'), value: GroupMethod.AUTO },
               { label: transI18n('breakout_room.manual'), value: GroupMethod.MANUAL },
             ]}
             name="breakout-room-type"
@@ -49,14 +49,35 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
               setType(value);
             }}
           />
-          <div style={{ marginLeft: 16 }} className="inline-flex">
-            {transI18n('breakout_room.wait_for_assign1', {
-              reason: `${numberToBeAssigned}`,
-            })}
-            {numberToBeAssigned > 0 &&
-              transI18n('breakout_room.wait_for_assign2', {
-                reason: `${perGroup}-${perGroup + 1}`,
+          <div className="inline-flex flex-col">
+            <div
+              style={{
+                marginLeft: 16,
+                visibility:
+                  type === GroupMethod.AUTO && numberToBeAssigned > 0 ? 'visible' : 'hidden',
+              }}
+              className="mb-3">
+              {transI18n('breakout_room.wait_for_assign3', {
+                reason:
+                  perGroup >= MAX_USER_COUNT ? `${MAX_USER_COUNT}` : `${perGroup}-${perGroup + 1}`,
               })}
+            </div>
+            <div
+              style={{
+                marginLeft: 16,
+                visibility: type === GroupMethod.MANUAL ? 'visible' : 'hidden',
+              }}>
+              {transI18n('breakout_room.wait_for_assign1', {
+                reason: `${numberToBeAssigned}`,
+              })}
+              {numberToBeAssigned > 0 &&
+                transI18n('breakout_room.wait_for_assign2', {
+                  reason:
+                    perGroup >= MAX_USER_COUNT
+                      ? `${MAX_USER_COUNT}`
+                      : `${perGroup}-${perGroup + 1}`,
+                })}
+            </div>
           </div>
         </div>
       </div>

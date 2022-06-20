@@ -236,3 +236,44 @@ export const appendBuffer = (buffer1: Float32Array, buffer2: Float32Array) => {
 export const mapToObject = (map: Map<any, any>) => {
   return [...map.entries()].reduce((obj, [key, value]) => ((obj[key] = value), obj), {});
 };
+
+const ImageFileTypes = [
+  'image/png',
+  'image/jpg',
+  'image/jpeg',
+  'image/webp',
+  'image/apng',
+  'image/svg+xml',
+  'image/gif',
+  'image/bmp',
+  'image/avif',
+  'image/tiff',
+];
+
+export function isSupportedImageType(file: File): boolean {
+  return ImageFileTypes.includes(file.type);
+}
+
+export const dataURIToFile = (dataURI: string, filename: string) => {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  const byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  // write the bytes of the string to an ArrayBuffer
+  const ab = new ArrayBuffer(byteString.length);
+
+  // create a view into the buffer
+  const ia = new Uint8Array(ab);
+
+  // set the bytes of the buffer to the correct values
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  // write the ArrayBuffer to a file, and you're done
+  const file = new File([ab], filename, { type: mimeString });
+  return file;
+};

@@ -32,6 +32,10 @@
   background: url('./assets/bg.png') no-repeat center / 380px 500px;
 }
 
+.home-vocational .home-bg {
+  background: url('./assets/bg-vocational.png') no-repeat center / 380px 500px;
+}
+
 .facade .table-flex-container {
   width: 420px;
   height: 500px;

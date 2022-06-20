@@ -2,16 +2,13 @@ import {
   AGEduErrorCode,
   EduClassroomConfig,
   EduErrorCenter,
-  EduRoleTypeEnum,
   EduRoomTypeEnum,
+  AgoraWidgetEventType,
+  AgoraWidgetBase,
 } from 'agora-edu-core';
-import {
-  AgoraRteEventType,
-  AgoraRteMediaSourceState,
-  AgoraRteVideoSourceType,
-} from 'agora-rte-sdk';
-import { get } from 'lodash';
-import { action, computed, IReactionDisposer, reaction, when } from 'mobx';
+import { WidgetsConfigMap, AgoraWidgetPrefix } from 'agora-plugin-gallery';
+import { AgoraRteVideoSourceType, bound } from 'agora-rte-sdk';
+import { computed, IReactionDisposer, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from './stream/struct';
 
@@ -89,59 +86,74 @@ export class WidgetUIStore extends EduUIStoreBase {
       `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`
     ];
   }
-  @action.bound
-  private _handleRoomPropertiesChange(
-    changedRoomProperties: string[],
-    roomProperties: any,
-    operator: any,
-  ) {
-    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-    // if (!operator.userUuid) {
-    //   changedRoomProperties.forEach(async (key) => {
-    //     if (key === 'widgets') {
-    //       const whiteboardProperties = get(
-    //         roomProperties,
-    //         `widgets.${BUILTIN_WIDGETS.boardWidget}`,
-    //         {},
-    //       );
-    //       if (whiteboardProperties) {
-    //         const whiteboardState = get(whiteboardProperties, 'state');
-    //         if (whiteboardState === 0) {
-    //           await when(() => !!this.teacherCameraStream?.stream.streamUuid);
-    //           if (
-    //             this.classroomStore.mediaStore.localScreenShareTrackState !==
-    //               AgoraRteMediaSourceState.started &&
-    //             !this.classroomStore.boardStore.configReady
-    //           ) {
-    //             this.classroomStore.widgetStore.setActive(
-    //               `streamWindow-${this.teacherCameraStream?.stream.streamUuid}`,
-    //               {
-    //                 extra: {
-    //                   userUuid: userUuid,
-    //                 },
-    //               },
-    //               userUuid,
-    //             );
-    //           }
-    //         }
-    //       }
-    //     }
-    //   });
-    // }
+  @bound
+  setWidgetToFullScreen(widgetId: string) {
+    const widget = this.classroomStore.widgetStore.widgetController?.widgetsMap.get(widgetId);
+    if (widget) {
+      this.classroomStore.widgetStore.widgetController?.sendMessageToWidget(
+        widgetId,
+        AgoraWidgetEventType.WidegtTrackSet,
+        true,
+        { x: 0, y: 0, real: false },
+        {
+          width: widget.track.trackContext.outerSize.width,
+          height: widget.track.trackContext.outerSize.height,
+          real: true,
+        },
+      );
+    } else {
+      this.logger.warn('Widget Controller [setWidgetToFullScreen] => failed. Widget not exist.');
+    }
+  }
+  @bound
+  setWidgetZIndexToTop(widgetId: string) {
+    const widget = this.classroomStore.widgetStore.widgetController?.widgetsMap.get(widgetId);
+    const widgetZIndexSorter = (a: AgoraWidgetBase, b: AgoraWidgetBase) => {
+      const zIndexA = (a.widgetRoomProperties.extra as any)?.zIndex ?? 0;
+      const zIndexB = (b.widgetRoomProperties.extra as any)?.zIndex ?? 0;
+      return zIndexA - zIndexB;
+    };
+    if (widget) {
+      const updatedWidgetProperties = {
+        ...widget.widgetRoomProperties,
+        extra: {
+          ...widget.widgetRoomProperties?.extra,
+          zIndex:
+            ((
+              [...this.classroomStore.widgetStore.widgetController!.widgetsMap.entries()].sort(
+                (a, b) => widgetZIndexSorter(a[1], b[1]),
+              )[length - 1][1].widgetRoomProperties.extra as any
+            )?.zIndex ?? 0) + 1,
+        },
+      };
+      this.classroomStore.widgetStore.widgetController?.sendMessageToWidget(
+        widgetId,
+        AgoraWidgetEventType.WidgetRoomPropertiesUpdate,
+        updatedWidgetProperties,
+      );
+      this.classroomStore.widgetStore.widgetController?.updateWidgetProperties(
+        widgetId,
+        updatedWidgetProperties,
+      );
+    } else {
+      this.logger.warn('Widget Controller [setWidgetZIndexToTop] => failed. Widget not exist.');
+    }
   }
   onInstall() {
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-      this._disposers.push(
-        reaction(
-          () => this.classroomStore.connectionStore.scene,
-          (scene) => {
-            if (scene) {
-              scene.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
-            }
-          },
-        ),
-      );
-    }
+    this.classroomStore.widgetStore.setWidgetsConfigMap(WidgetsConfigMap);
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.boardStore.boardReady,
+        (boardReady) => {
+          if (!boardReady) {
+            this.classroomStore.widgetStore.widgetController?.widgetsMap.forEach((widget) => {
+              if (widget.id.includes(AgoraWidgetPrefix.Webview))
+                this.classroomStore.widgetStore.widgetController?.deleteWidget(widget.id);
+            });
+          }
+        },
+      ),
+    );
   }
 
   onDestroy() {

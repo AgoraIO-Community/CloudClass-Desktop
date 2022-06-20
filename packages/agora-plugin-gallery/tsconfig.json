@@ -31,6 +31,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "files": ["../agora-classroom-sdk/src/react-app-env.d.ts"],
+
   "include": ["src"],
   "exclude": ["node_modules"]
 }

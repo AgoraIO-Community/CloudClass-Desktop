@@ -7,6 +7,7 @@ import { Scheduler } from 'agora-rte-sdk';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { observer } from 'mobx-react';
 import { EduClassroomConfig } from 'agora-edu-core';
+import { useInvitedModal } from './invite-confirm';
 
 export enum WaveArmStateEnum {
   waveArmBefore = 'wave-arm-before',
@@ -42,7 +43,7 @@ class FSM {
    * @param newState
    * @returns
    */
-  changeState(newState: WaveArmStateEnum) {
+  changeState(newState: WaveArmStateEnum, durationTime: number) {
     const oldState = this.currentState;
     switch (newState) {
       case WaveArmStateEnum.waveArming:
@@ -62,7 +63,7 @@ class FSM {
               WaveArmStateEnum.waveArmAfter,
               WaveArmStateEnum.waveArmBefore,
             );
-          }, 3000);
+          }, durationTime * 1000);
         }
         break;
     }
@@ -86,15 +87,26 @@ class FSM {
   }
 }
 
-export const WaveArmSender: FC<BaseWaveArmProps> = observer(() => {
-  const { handUpUIStore } = useStore();
-  const { waveArm, teacherUuid } = handUpUIStore;
+export const WaveArmSender: FC<BaseWaveArmProps> = observer(({ isH5, isOnPodium, onOffPodium }) => {
+  const { handUpUIStore, shareUIStore } = useStore();
+  const {
+    waveArm,
+    teacherUuid,
+    waveArmDurationTime,
+    inviteListMaxLimit,
+    acceptedListMaxLimit,
+    isMixCDNRTC,
+    beingInvited,
+  } = handUpUIStore;
   const fsm = useMemo(() => new FSM(WaveArmStateEnum.waveArmBefore), []);
   const [firstTip, setFirstTip] = useState<boolean>(false);
   const [showTip, setShowTip] = useState<boolean>(false);
 
   const [countDownNum, setCountDownNum] = useState<number>(0);
   const [startCountDown, setStartCountDown] = useState<boolean>(false);
+  const isMaxLimit = isMixCDNRTC && (inviteListMaxLimit || acceptedListMaxLimit);
+
+  useInvitedModal(beingInvited, handUpUIStore, shareUIStore);
 
   useEffect(() => {
     let task: Scheduler.Task | undefined = undefined;
@@ -104,22 +116,22 @@ export const WaveArmSender: FC<BaseWaveArmProps> = observer(() => {
     let promise: Promise<void> | null = null;
 
     fsm.whenAfter(WaveArmStateEnum.waveArmBefore, WaveArmStateEnum.waveArming, () => {
-      setCountDownNum(3);
+      setCountDownNum(waveArmDurationTime);
       setStartCountDown(false);
       promise = new Promise(async (resolve) => {
         task = Scheduler.shared.addPollingTask(async () => {
-          await waveArm(teacherUuid, 3, { userName });
-        }, Scheduler.Duration.second(3));
+          await waveArm(teacherUuid, waveArmDurationTime, { userName });
+        }, Scheduler.Duration.second(waveArmDurationTime));
         resolve();
       });
     });
 
     fsm.whenAfter(WaveArmStateEnum.waveArming, WaveArmStateEnum.waveArmAfter, () => {
-      setCountDownNum(3);
+      setCountDownNum(waveArmDurationTime);
       setStartCountDown(true);
       promise?.then(async () => {
         task?.stop();
-        await waveArm(teacherUuid, 3, { userName });
+        await waveArm(teacherUuid, waveArmDurationTime, { userName });
         promise = null;
       });
     });
@@ -130,12 +142,18 @@ export const WaveArmSender: FC<BaseWaveArmProps> = observer(() => {
   }, []);
 
   const handleMouseDown = () => {
+    if (isMaxLimit) {
+      return;
+    }
     setFirstTip(true);
-    fsm.changeState(WaveArmStateEnum.waveArming);
+    fsm.changeState(WaveArmStateEnum.waveArming, waveArmDurationTime);
   };
 
   const handleMouseUp = () => {
-    fsm.changeState(WaveArmStateEnum.waveArmAfter);
+    if (isMaxLimit) {
+      return;
+    }
+    fsm.changeState(WaveArmStateEnum.waveArmAfter, waveArmDurationTime);
   };
 
   useEffect(() => {
@@ -144,7 +162,7 @@ export const WaveArmSender: FC<BaseWaveArmProps> = observer(() => {
       const timer = setTimeout(() => {
         setShowTip(false);
         clearTimeout(timer);
-      }, 3000);
+      }, waveArmDurationTime * 1000);
       return () => clearTimeout(timer);
     }
   }, [firstTip]);
@@ -165,6 +183,30 @@ export const WaveArmSender: FC<BaseWaveArmProps> = observer(() => {
     1000,
     startCountDown,
   );
+
+  // vocational h5
+  if (isH5) {
+    // 已上台
+    if (isOnPodium) {
+      return (
+        <button className="hands-up-btn" onClick={onOffPodium} disabled={!!countDownNum}>
+          {transI18n('vocational.offPodium')}
+        </button>
+      );
+    }
+    // 未上台
+    return (
+      <button
+        className="hands-up-btn"
+        onTouchStart={!isOnPodium ? handleMouseDown : undefined}
+        onTouchEnd={!isOnPodium ? handleMouseUp : undefined}
+        disabled={!!countDownNum || isMaxLimit}>
+        {!countDownNum
+          ? transI18n('vocational.handsUp')
+          : `${transI18n('vocational.handsUpReviewing')} ${countDownNum}s`}
+      </button>
+    );
+  }
 
   return (
     <Card

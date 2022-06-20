@@ -7,7 +7,7 @@ import './index.css';
 interface OverlayWrapProps extends BaseProps {
   opened: boolean;
   centered?: boolean;
-  onExited: (() => void) | undefined;
+  onExited?: (() => void) | undefined;
 }
 
 export const OverlayWrap: FC<OverlayWrapProps> = ({

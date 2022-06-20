@@ -18,6 +18,7 @@ import { Award } from '../../containers/award';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { ScenesController } from '../../containers/scenes-controller';
+import { WidgetTrackContiner } from '../../containers/widget-track';
 
 export const MidClassScenario = observer(() => {
   // layout
@@ -34,6 +35,7 @@ export const MidClassScenario = observer(() => {
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
             <NavigationBarContainer />
+
             <div className="flex flex-1 flex-col justify-center items-center">
               <RoomMidStreamsContainer />
               <BigWidgetWindowContainer>
@@ -53,6 +55,8 @@ export const MidClassScenario = observer(() => {
             <LoadingContainer />
           </Layout>
           <ExtensionAppContainer />
+          <WidgetTrackContiner></WidgetTrackContiner>
+
           <ToastContainer />
           <Award />
         </SceneSwitch>

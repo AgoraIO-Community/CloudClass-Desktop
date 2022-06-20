@@ -1,3 +1,14 @@
+.h5-home {
+  height: 100vh;
+  background: #fff;
+  overflow: auto;
+}
+.h5-home-vocational {
+  background: url('./assets/h5-home-bg.png') no-repeat center;
+  background-size: cover;
+  height: 100vh;
+  overflow: auto;
+}
 .h5-header {
   width: 100%;
   height: 150px;
@@ -48,4 +59,56 @@
 }
 .home-h5-form .h5-btn-submit {
   margin-top: 80px;
+}
+.h5-home-vocational .h5-header {
+  background: none;
+}
+.h5-home-vocational .h5-title {
+  position: absolute;
+  bottom: -130px;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+.h5-home-vocational .home-h5-form {
+  margin-top: 120px;
+}
+.h5-home-vocational .table-col-item .fcr-input-prefix .home-label,
+.h5-home-vocational .react-select-container .select-prefix .home-label,
+.h5-home-vocational .fcr-input-wrapper input,
+.h5-home-vocational .home-align-center {
+  color: #fff;
+}
+.h5-home-vocational .fcr-input-wrapper {
+  background: unset;
+  border: none;
+  border-radius: unset;
+  border-bottom: 1px solid #e3e3ec;
+}
+.h5-home-vocational .fcr-input-wrapper:not(.fcr-input-wrapper-disabled):hover {
+  border-color: #357bf6;
+  border-right-width: 0 !important;
+  background-color: unset;
+  z-index: 1;
+}
+.h5-home-vocational .react-select__control .h5-home-vocational .react-select-prefix > span {
+  border: unset;
+}
+.h5-home-vocational .react-select__single-value {
+  color: #fff !important;
+}
+.h5-home-vocational .react-select__control {
+  background-color: transparent !important;
+  border-bottom: 1px solid #e3e3ec;
+  border-color: unset !important;
+  border-radius: unset !important;
+  border-style: unset !important;
+  border-width: unset !important;
+  box-shadow: unset !important;
+}
+.h5-home-vocational .react-select__control--is-focused:hover {
+  border: unset !important;
+}
+.h5-home-vocational .react-select__control:hover {
+  border-color: #357bf6;
 }

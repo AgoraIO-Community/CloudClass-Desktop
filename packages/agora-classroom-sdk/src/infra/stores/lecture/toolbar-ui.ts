@@ -1,3 +1,4 @@
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import {
   CabinetItemEnum,
@@ -20,8 +21,10 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
    */
   @computed
   get teacherTools(): ToolbarItem[] {
+    let _tools: ToolbarItem[] = [];
+
     if (this.classroomStore.boardStore.boardReady) {
-      return [
+      _tools = [
         ToolbarItem.fromData({
           value: 'clicker',
           label: 'scaffold.clicker',
@@ -56,6 +59,11 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
           label: 'scaffold.move',
           icon: 'hand',
         }),
+        ToolbarItem.fromData({
+          value: 'save',
+          label: 'scaffold.save',
+          icon: 'save-ghost',
+        }),
         {
           value: 'cloud',
           label: 'scaffold.cloud_storage',
@@ -73,8 +81,21 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
           icon: 'register',
         },
       ];
+
+      if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+        _tools.splice(
+          5,
+          0,
+          ToolbarItem.fromData({
+            value: 'slice',
+            label: 'scaffold.slice',
+            icon: 'slice',
+            category: ToolbarItemCategory.Slice,
+          }),
+        );
+      }
     } else {
-      return [
+      _tools = [
         {
           value: 'tools',
           label: 'scaffold.tools',
@@ -88,5 +109,6 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
         },
       ];
     }
+    return _tools;
   }
 }

@@ -5,6 +5,7 @@ import {
   EduRoomTypeEnum,
   IAgoraWidget,
   EduClassroomConfig,
+  EduRoomSubtypeEnum,
 } from 'agora-edu-core';
 import { set } from 'lodash';
 import { autorun, reaction } from 'mobx';
@@ -71,10 +72,14 @@ const App: React.FC<AppProps> = observer((props) => {
         !uiStore.classroomStore.groupStore.currentSubRoom &&
         widgetStore.classroomConfig.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: widgetStore.classroomConfig.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
+      showQuestionBox:
+        EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational &&
+        EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student, //职教课的学生显示提问
       isFullSize: widgetStore.isFullSize,
       emoji: typeof props.visibleEmoji !== 'undefined' ? props.visibleEmoji : true,
       btnSend: typeof props.visibleBtnSend !== 'undefined' ? props.visibleBtnSend : true,
       inputBox: props.inputBoxStatus,
+      platform: EduClassroomConfig.shared.platform,
     },
   };
 

@@ -3,7 +3,7 @@ import { FC, useEffect, useRef } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
 import 'video.js/dist/video-js.css';
 import '@netless/window-manager/dist/style.css';
-import { BoardPlaceHolder } from '~ui-kit';
+import { BoardPlaceHolder, transI18n } from '~ui-kit';
 import './index.css';
 
 type Props = {
@@ -12,8 +12,16 @@ type Props = {
 
 export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
   const { boardUIStore } = useStore();
-  const { readyToMount, rejoinWhiteboard, connectionLost, joinWhiteboard, leaveWhiteboard } =
-    boardUIStore;
+  const {
+    readyToMount,
+    rejoinWhiteboard,
+    connectionLost,
+    joinWhiteboard,
+    leaveWhiteboard,
+    isCopying,
+    hanldeDropImage,
+    handleDragOver,
+  } = boardUIStore;
 
   useEffect(() => {
     joinWhiteboard();
@@ -24,7 +32,7 @@ export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
 
   return readyToMount ? (
     <>
-      <div className="whiteboard-wrapper">
+      <div className="whiteboard-wrapper" onDrop={hanldeDropImage} onDragOver={handleDragOver}>
         {children}
         <div className="whiteboard">
           <BoardWrapper />
@@ -35,6 +43,7 @@ export const WhiteboardContainer: FC<Props> = observer(({ children }) => {
             />
           ) : null}
         </div>
+        {isCopying && <Spinner />}
       </div>
     </>
   ) : null;
@@ -66,3 +75,13 @@ export const CollectorContainer = observer(() => {
       ref={(domRef) => domRef && (boardUIStore.collectorContainer = domRef)}></div>
   );
 });
+
+const Spinner = () => {
+  return (
+    <div className="spinner-container">
+      <div className="spinner-contianer-innner">
+        <div className="spinner"></div> {transI18n('whiteboard.loading')}
+      </div>
+    </div>
+  );
+};

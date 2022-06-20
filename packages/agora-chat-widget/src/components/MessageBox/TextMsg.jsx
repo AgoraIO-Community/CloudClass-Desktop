@@ -20,6 +20,7 @@ export const TextMsg = ({ item }) => {
   const msgData = item?.msg || item?.data;
   const useAvatarUrl = item?.ext.avatarUrl;
   const userNickName = item?.ext.nickName;
+  const isQuestion = item?.ext.isQuestion;
   const loginNickName = state?.propsData.userName;
   const isTeacher =
     state.propsData.roleType === ROLE.teacher.id || state.propsData.roleType === ROLE.assistant.id;
@@ -77,7 +78,7 @@ export const TextMsg = ({ item }) => {
             )}
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
-            <span>{userNickName}</span>
+            <span className="msg-user-name">{userNickName}</span>
             <img src={useAvatarUrl} className="msg-avatar" />
           </div>
           {isTeacher ? (
@@ -90,6 +91,7 @@ export const TextMsg = ({ item }) => {
             </Dropdown>
           ) : (
             <div className="msg-border">
+              {isQuestion && <span className="msg-question">{transI18n('question')}</span>}
               <div className="msg-text msg-text-me">
                 <span className="msg-data">{msgData}</span>
               </div>
@@ -101,7 +103,7 @@ export const TextMsg = ({ item }) => {
         <div>
           <div className="msg-user-other">
             <img src={useAvatarUrl} className="msg-avatar" />
-            <span>{userNickName}</span>
+            <span className="msg-user-name">{userNickName}</span>
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
             {isSendToAll && (
@@ -110,16 +112,19 @@ export const TextMsg = ({ item }) => {
               </span>
             )}
           </div>
-          {isTeacher && (
-            <>
-              <Dropdown overlay={menu} trigger={['contextMenu']}>
-                <div className="msg-text msg-text-other">
-                  <span className="msg-data">{msgData}</span>
-                </div>
-              </Dropdown>
-            </>
-          )}
-          {!isTeacher && <div className="msg-text msg-text-other">{msgData}</div>}
+          <div className="receive-msg-border">
+            {isTeacher && (
+              <>
+                <Dropdown overlay={menu} trigger={['contextMenu']}>
+                  <div className="msg-text msg-text-other">
+                    <span className="msg-data">{msgData}</span>
+                  </div>
+                </Dropdown>
+              </>
+            )}
+            {!isTeacher && <div className="msg-text msg-text-other">{msgData}</div>}
+            {isQuestion && <span className="msg-question">{transI18n('question')}</span>}
+          </div>
         </div>
       )}
     </div>

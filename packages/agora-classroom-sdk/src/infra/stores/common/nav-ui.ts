@@ -5,6 +5,7 @@ import {
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
   bound,
+  RtcState,
 } from 'agora-rte-sdk';
 import { computed, reaction, IReactionDisposer, action, observable } from 'mobx';
 import { EduUIStoreBase } from './base';
@@ -18,7 +19,6 @@ import {
   EduRoleTypeEnum,
   LeaveReason,
   RecordStatus,
-  RteRole2EduRole,
   RecordMode,
 } from 'agora-edu-core';
 import { DialogCategory } from './share-ui';

@@ -236,3 +236,29 @@
   background-image: url('./assets/svg/ghost-mic-off.svg');
   background-size: 100%;
 }
+.icon-radio-checked {
+  background-image: url('./assets/svg/radio-checked.svg');
+  background-position-y: center;
+}
+.icon-radio {
+  background-image: url('./assets/svg/radio.svg');
+  background-position-y: center;
+}
+.icon-m-camera-off {
+  background-image: url('./assets/svg/m-camera-off.svg');
+}
+.icon-m-micphone-off {
+  background-image: url('./assets/svg/m-micphone-off.svg');
+}
+.icon-m-micphone {
+  background-image: url('./assets/svg/m-micphone.svg');
+}
+.icon-m-camera {
+  background-image: url('./assets/svg/m-camera.svg');
+}
+.icon-m-switch-camera {
+  background-image: url('./assets/svg/m-switch-camera.svg');
+}
+.icon-m-switch-camera-disabled {
+  background-image: url('./assets/svg/m-switch-camera-disabled.svg');
+}

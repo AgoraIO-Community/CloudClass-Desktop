@@ -100,7 +100,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   borderColor: item.id === currentActiveId ? '#357BF6' : '#E8E8F2',
                 }}
                 onClick={() => {
-                  onActiveItem(item.id!);
+                  onActiveItem(item.id! as string);
                 }}>
                 <div
                   className="program-item-img"
@@ -134,7 +134,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   borderColor: item.id === currentActiveId ? '#357BF6' : '#E8E8F2',
                 }}
                 onClick={() => {
-                  onActiveItem(item.id!);
+                  onActiveItem(item.id! as string);
                 }}>
                 <div
                   className="program-item-img"

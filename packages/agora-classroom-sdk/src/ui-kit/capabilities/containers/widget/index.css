@@ -6,3 +6,8 @@
 .h5-chat-pannel {
   background: unset;
 }
+
+.vocational-chat-panel {
+  width: 230px;
+  /* min-width: 230px; */
+}

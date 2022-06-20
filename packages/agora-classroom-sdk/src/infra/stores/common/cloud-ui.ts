@@ -8,7 +8,11 @@ import {
   CloudDriveResource,
   EduClassroomConfig,
   CloudDriveResourceUploadStatus,
+  AgoraWidgetEventType,
+  IAgoraWidgetRoomProperties,
 } from 'agora-edu-core';
+import { IUploadOnlineCoursewareData } from '@/ui-kit/capabilities/containers/cloud-driver/person-resource';
+import { AgoraWidgetPrefix } from 'agora-plugin-gallery';
 
 export enum FileTypeSvgColor {
   ppt = '#F6B081',
@@ -108,6 +112,9 @@ export class CloudUIStore extends EduUIStoreBase {
     if (name.match(/h5/i)) {
       return 'h5';
     }
+    if (name.match(/alf/i)) {
+      return 'alf';
+    }
     return 'unknown';
   }
 
@@ -150,7 +157,7 @@ export class CloudUIStore extends EduUIStoreBase {
    * @returns
    */
   @bound
-  async uploadPersonalResource(file: File) {
+  async uploadPersonalResource(file: File | IUploadOnlineCoursewareData) {
     try {
       const data = await this.classroomStore.cloudDriveStore.uploadPersonalResource(file);
       return data;
@@ -165,18 +172,47 @@ export class CloudUIStore extends EduUIStoreBase {
    */
   @bound
   async openResource(resource: CloudDriveResource) {
-    try {
-      await this.classroomStore.boardStore.openResource(resource);
-    } catch (e) {
-      const error = e as AGError;
-      // this.shareUIStore.addGenericErrorDialog(e as AGError);
-      if (error.codeList && error.codeList.length) {
-        const code = error.codeList[error.codeList.length - 1];
-        if (
-          code == AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_CONVERSION_CONVERTING &&
-          _lastFetchPersonalResourcesOptions
-        ) {
-          this.fetchPersonalResources(_lastFetchPersonalResourcesOptions);
+    if (resource.ext === 'alf') {
+      this.classroomStore.widgetStore.widgetController?.eventBus.once(
+        AgoraWidgetEventType.WidgetActive,
+        (widgetId: string, widgetProperties: IAgoraWidgetRoomProperties) => {
+          if (widgetId === AgoraWidgetPrefix.Webview + '-' + resource.resourceUuid) {
+            this.classroomStore.widgetStore.widgetController?.sendMessageToWidget(
+              widgetId,
+              AgoraWidgetEventType.WidegtTrackUpdate,
+              widgetProperties,
+            );
+          }
+        },
+      );
+      this.classroomStore.widgetStore.createWidget(AgoraWidgetPrefix.Webview, {
+        widgetId: resource.resourceUuid,
+        widgetRoomProperties: {
+          position: { xaxis: 0.5, yaxis: 0.5 },
+          size: {
+            width: 0.54,
+            height: 0.71,
+          },
+          extra: {
+            webViewUrl: resource.url,
+            zIndex: 0,
+          },
+        },
+      });
+    } else {
+      try {
+        await this.classroomStore.boardStore.openResource(resource);
+      } catch (e) {
+        const error = e as AGError;
+        // this.shareUIStore.addGenericErrorDialog(e as AGError);
+        if (error.codeList && error.codeList.length) {
+          const code = error.codeList[error.codeList.length - 1];
+          if (
+            code == AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_CONVERSION_CONVERTING &&
+            _lastFetchPersonalResourcesOptions
+          ) {
+            this.fetchPersonalResources(_lastFetchPersonalResourcesOptions);
+          }
         }
       }
     }
