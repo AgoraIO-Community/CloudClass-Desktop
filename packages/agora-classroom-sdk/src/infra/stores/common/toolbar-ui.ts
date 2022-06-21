@@ -792,7 +792,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       {
         id: 'slice-window',
         iconType: 'slice-window',
-        name: transI18n('scaffold.slice-window'),
+        name: transI18n('scaffold.slice_window'),
       },
     ];
 
