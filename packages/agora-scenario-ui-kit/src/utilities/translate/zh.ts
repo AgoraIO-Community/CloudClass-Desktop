@@ -570,6 +570,7 @@ export const zh = {
     stream_window_full: '视频窗口数量已达{reason}人上限',
     save_success: '保存成功',
     save_error: '保存失败',
+    saving: '正在导出，请稍候…',
   },
   cabinet: {
     answer: {

@@ -101,7 +101,6 @@ export const NavigationBar = observer(() => {
   const { navigationBarUIStore } = useStore();
   const { navigationTitle, currScreenShareTitle, actions, isBeforeClass, startClass } =
     navigationBarUIStore;
-
   return (
     <Header className="fcr-biz-header">
       <div className="header-signal">

@@ -2,6 +2,7 @@ import { IPCMessageType } from '@/infra/types';
 import { dataURIToFile } from '@/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 import { ChannelType, listenChannelMessage, sendToMainProcess } from '@/infra/utils/ipc';
+import DialogProgressApi from '@/ui-kit/capabilities/containers/dialog/progress';
 import {
   AGEduErrorCode,
   CustomBtoa,
@@ -587,6 +588,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       return;
     }
 
+    DialogProgressApi.show({ key: 'saveImage', progress: 1, width: 100, auto: true });
     let width = 0,
       height = 0;
     const bigCanvas = document.createElement('canvas');
@@ -612,6 +614,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
         'YYYYMMDD_HHmmSSS',
       )}.jpg`;
       this._download(bigCanvas, fileName);
+      DialogProgressApi.destroy('saveImage');
       this.shareUIStore.addToast(transI18n('toast2.save_success'));
       // return bigCanvas
     } catch (e) {

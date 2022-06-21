@@ -586,6 +586,7 @@ export const en = {
     stream_window_full: 'The video window has reached the limitation of {reason}',
     save_success: 'Success',
     save_error: 'Error',
+    saving: 'Please wait…',
   },
   cabinet: {
     answer: {
