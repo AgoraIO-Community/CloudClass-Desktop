@@ -254,8 +254,8 @@
     "stream-browserify": "3.0.0",
     "buffer": "6.0.3",
     "matchmedia-polyfill": "0.3.2",
-    "agora-edu-core": "2.5.0",
-    "agora-rte-sdk": "2.5.0",
+    "agora-edu-core": "2.5.2",
+    "agora-rte-sdk": "2.5.1",
     "react-use-measure": "2.1.1",
     "@use-gesture/react": "10.2.11",
     "react-spring": "9.4.4"
