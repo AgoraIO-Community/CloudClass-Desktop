@@ -158,7 +158,7 @@ export const Modal: ModalType = ({
                 onClick: (e: React.MouseEvent<HTMLElement>) => {
                   const { action, className } = item.props;
                   triggerModalAction({ action, event: e });
-                  !className.includes('disableAGModalClose') && setOpened(false);
+                  !className?.includes('disableAGModalClose') && setOpened(false);
                 },
               })}
             </div>

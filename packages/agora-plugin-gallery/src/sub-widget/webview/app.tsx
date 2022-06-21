@@ -5,7 +5,9 @@ export const Webview = (props: { id: string; url: string; controller: AgoraWidge
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const iframeContainerRef = useRef<HTMLIFrameElement>(null);
   const webViewUrl = useMemo(() => {
-    return props.url.replace('youtube.com/watch?v=', 'youtube.com/embed/');
+    return decodeURIComponent(props.url)
+      .replace('youtube.com/watch?v=', 'youtube.com/embed/')
+      .replace('youtu.be/', 'youtube.com/embed/');
   }, [props.url]);
   const handleWidgetReload = useCallback(
     (_e) => {
