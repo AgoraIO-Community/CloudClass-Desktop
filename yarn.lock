@@ -3294,10 +3294,10 @@
   resolved "https://registry.yarnpkg.com/@netless/white-audio-plugin/-/white-audio-plugin-1.2.23.tgz#8867c4a90a23f297a8cb01701ce068846b847c67"
   integrity sha512-qwUVDhJheKaQnXiVIJVEuL5lMil82nIdBoh8QW4K/HFxWz8z4ok7xAOQj16nkH+3627Usk0YXKqK5RzErSSvCg==
 
-"@netless/white-snapshot@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@netless/white-snapshot/-/white-snapshot-0.4.0.tgz#2d2790ad0c2856d6d6d37df52dfe4417a667594d"
-  integrity sha512-jrh6Iq4I6jO2TfBCNGsomnGa+jc0qjjvfgOi2Tyyj5/4SwYIkXDOr4e4TnRg0VMtfH4vDfSbTsSIsKxewgQOCw==
+"@netless/white-snapshot@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@netless/white-snapshot/-/white-snapshot-0.4.1.tgz#93277ce148ff091d8f682c39e13f178e33b9ab4e"
+  integrity sha512-1de6d7e8reCTr8EiordR25WpgYryFh+OpL6k4k5bz35opr3WTeWesKi7RZTrS08hQgtVV8JOcavUeb/dfbF08Q==
   dependencies:
     html2canvas "^1.4.1"
 
