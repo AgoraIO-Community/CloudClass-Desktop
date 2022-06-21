@@ -113,8 +113,9 @@ export const listenChannelMessage = (
   callback: ChannelMessageCallback,
   options?: ChannelMessageListenerOptions,
 ) => {
+  let _callback: (event: IpcRendererEvent, message: ChannelMessage) => void = () => {};
   if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
-    const _callback = (event: IpcRendererEvent, message: ChannelMessage) => {
+    _callback = (event: IpcRendererEvent, message: ChannelMessage) => {
       Logger.info(`receive channel message with type ${message.type} and payload`, message.payload);
       callback(event, message);
     };
@@ -134,7 +135,7 @@ export const listenChannelMessage = (
   return () => {
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       const ipc = window.require('electron').ipcRenderer;
-      ipc.off(channel, callback);
+      ipc.off(channel, _callback);
     }
   };
 };
