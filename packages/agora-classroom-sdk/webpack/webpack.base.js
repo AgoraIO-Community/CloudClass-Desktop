@@ -162,6 +162,7 @@ module.exports = {
       RTE_RUNTIME_PLATFORM: JSON.stringify(process.env.RTE_RUNTIME_PLATFORM),
       BUILD_TIME: JSON.stringify(Date.now()),
       BUILD_COMMIT_ID: JSON.stringify(process.env.FCR_BUILD_COMMIT_ID),
+      EDU_CATEGORY: JSON.stringify(process.env.EDU_CATEGORY),
     }),
   ],
   stats: {
