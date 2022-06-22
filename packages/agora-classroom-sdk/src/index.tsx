@@ -5,6 +5,7 @@ import { routesMap } from '@/infra/router';
 import { HomeStore } from '@/infra/stores/home';
 import { BizPageRouter } from './infra/types';
 import { GlobalStorage } from './infra/utils';
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 
 const EDU_CATEGORY = process.env.EDU_CATEGORY || 'general';
 
@@ -21,11 +22,11 @@ const routes: BizPageRouter[] = [
   BizPageRouter.BigClass,
   BizPageRouter.LaunchPage,
 ];
-
+const isElectron = AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron;
 const RouteContainer = () => (
   <HashRouter>
     <Switch>
-      {REDIRECT_MAPS[EDU_CATEGORY] !== '/' && (
+      {isElectron && REDIRECT_MAPS[EDU_CATEGORY] !== '/' && (
         <Redirect exact from="/" to={REDIRECT_MAPS[EDU_CATEGORY]} />
       )}
 
