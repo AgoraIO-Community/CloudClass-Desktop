@@ -97,7 +97,7 @@ export const sendToRendererProcess = async (
   return await sendToMainProcess(ChannelType.Message, {
     to: windowID,
     channel,
-    args: [message],
+    args: message,
   });
 };
 

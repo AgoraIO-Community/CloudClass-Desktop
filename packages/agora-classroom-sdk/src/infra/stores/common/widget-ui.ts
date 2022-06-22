@@ -107,6 +107,11 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @bound
   setWidgetZIndexToTop(widgetId: string) {
+    if (
+      this.classroomStore.widgetStore.widgetController &&
+      this.classroomStore.widgetStore.widgetController.widgetsMap.size <= 1
+    )
+      return;
     const widget = this.classroomStore.widgetStore.widgetController?.widgetsMap.get(widgetId);
     const widgetZIndexSorter = (a: AgoraWidgetBase, b: AgoraWidgetBase) => {
       const zIndexA = (a.widgetRoomProperties.extra as any)?.zIndex ?? 0;

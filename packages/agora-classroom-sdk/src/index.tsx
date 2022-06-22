@@ -24,8 +24,11 @@ const routes: BizPageRouter[] = [
 
 const RouteContainer = () => (
   <HashRouter>
-    <Redirect from="/" to={REDIRECT_MAPS[EDU_CATEGORY]} />
     <Switch>
+      {REDIRECT_MAPS[EDU_CATEGORY] !== '/' && (
+        <Redirect exact from="/" to={REDIRECT_MAPS[EDU_CATEGORY]} />
+      )}
+
       {routes.map((item, index) => {
         const route = routesMap[item];
         if (!route) return null;
