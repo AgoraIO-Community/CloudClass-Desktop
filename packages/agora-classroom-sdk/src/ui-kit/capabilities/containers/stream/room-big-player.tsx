@@ -90,7 +90,7 @@ const DragableStream = observer(
             </div>
           </div>
         ) : (
-          <StreamPlaceholder role={role} />
+          <StreamPlaceholder style={style} role={role} />
         )}
       </>
     );
