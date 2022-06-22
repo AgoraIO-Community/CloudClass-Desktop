@@ -195,7 +195,7 @@ export const VocationalHomeH5Page = observer(() => {
           }
 
           HomeApi.shared.domain = tokenDomain;
-          const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
+          const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
           const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
           const webRTCCodec =
@@ -211,7 +211,7 @@ export const VocationalHomeH5Page = observer(() => {
             courseWareList: courseWareList.slice(0, 1),
             language: language as LanguageEnum,
             userUuid: `${userUuid}`,
-            rtmToken,
+            rtmToken: token,
             roomUuid: `${roomUuid}`,
             roomType: scenario,
             roomSubtype,

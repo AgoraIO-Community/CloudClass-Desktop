@@ -41,8 +41,10 @@ export const TrackArea = ({ top = 0, boundaryName }: { top?: number; boundaryNam
 
   useEffect(() => {
     const observer = shareUIStore.addViewportResizeObserver(() => {
-      const { offsetTop, offsetLeft } = dom.current!.parentElement!;
-      trackUIStore.updateTrackContext(boundaryName, { top: offsetTop, left: offsetLeft });
+      if (dom.current?.parentElement) {
+        const { offsetTop, offsetLeft } = dom.current.parentElement;
+        trackUIStore.updateTrackContext(boundaryName, { top: offsetTop, left: offsetLeft });
+      }
     });
     return () => {
       observer.disconnect();

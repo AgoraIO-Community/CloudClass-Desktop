@@ -69,16 +69,14 @@ export const StreamPlaceholder = observer(
     });
 
     return (
-      // <StreamPlayerOverlay stream={stream}>
       <div style={style} className={cls}>
         <CameraPlaceHolder state={CameraPlaceholderType.notpresent} text={''} />
       </div>
-      // </StreamPlayerOverlay>
     );
   },
 );
 
-type TrackPlayerProps = {
+type RemoteTrackPlayerProps = {
   stream: EduStream;
   style?: CSSProperties;
   className?: string;
@@ -87,8 +85,10 @@ type TrackPlayerProps = {
   isFullScreen?: boolean;
 };
 
-export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
-  ({ style, stream, className, canSetupVideo = true }) => {
+type LocalTrackPlayerProps = Omit<RemoteTrackPlayerProps, 'stream'>;
+
+export const LocalTrackPlayer: React.FC<LocalTrackPlayerProps> = observer(
+  ({ style, className, canSetupVideo = true }) => {
     const {
       streamUIStore: { setupLocalVideo, isMirror },
     } = useStore();
@@ -96,15 +96,15 @@ export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
 
     useEffect(() => {
       if (ref.current && canSetupVideo) {
-        setupLocalVideo(stream, ref.current, isMirror);
+        setupLocalVideo(ref.current, isMirror);
       }
-    }, [stream, isMirror, setupLocalVideo, canSetupVideo]);
+    }, [isMirror, setupLocalVideo, canSetupVideo]);
 
     return <div style={style} className={className} ref={ref}></div>;
   },
 );
 
-export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
+export const RemoteTrackPlayer: React.FC<RemoteTrackPlayerProps> = observer(
   ({ style, stream, className, mirrorMode = true, canSetupVideo = true }) => {
     const [readyPlay, setReadyPlay] = useState(false);
     const [interactiveNeeded, setInteractiveNeeded] = useState(false);
@@ -466,7 +466,6 @@ export const StreamPlayer = observer(
             canSetupVideo={canSetupVideo}
             className={cls}
             style={style}
-            stream={stream.stream}
             isFullScreen={isFullScreen}
           />
         ) : (

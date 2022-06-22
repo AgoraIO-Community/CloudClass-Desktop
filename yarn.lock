@@ -6428,7 +6428,7 @@ agora-electron-sdk@3.6.1-rc.4-build.406:
     yuv-buffer "^1.0.0"
     yuv-canvas "^1.2.1"
 
-agora-rdc-core@^1.0.0:
+agora-rdc-core@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/agora-rdc-core/-/agora-rdc-core-1.0.1.tgz#f3ca11b82b53b8228921b6b051e260f47d821085"
   integrity sha512-Y3T5p9WrZ5xcT7RAD/R5g/sPiUQs+eggXyVlQjG8PKWXJDwRHMAYV+vDYMuQe4LLbqn7DP6v/AHttc8cPCHatA==
@@ -6441,12 +6441,12 @@ agora-rdc-core@^1.0.0:
     ora "^5.4.1"
     rimraf "^3.0.2"
 
-agora-rdc-electron@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/agora-rdc-electron/-/agora-rdc-electron-1.0.0.tgz#8b74c055bd6bebc18ab45d0a11f0c6465dcfdbd6"
-  integrity sha512-YSEGc9kTSTx6yhn1k79W0aQDSvCtbvA2PQ8mQff+I5RTxUWPsPsVwgvqdGWXqu/9SmYod4US4j/YAKPBCwYrKQ==
+agora-rdc-electron@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/agora-rdc-electron/-/agora-rdc-electron-1.1.0.tgz#0c8c48923a7614575626afad65363c80e7c08caf"
+  integrity sha512-SRcxrnvwhcA5ekkJUJXrNbWRTpnd6xpNpZHl9prXMJ3lMOTLiDU84xBLZym7qvOE7jzV+ukRcAxUh0QixTP7Kg==
   dependencies:
-    agora-rdc-core "^1.0.0"
+    agora-rdc-core "^1.0.1"
 
 agora-rtc-sdk-ng@4.7.3:
   version "4.7.3"

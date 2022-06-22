@@ -707,8 +707,8 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @bound
-  setupLocalVideo(stream: EduStream, dom: HTMLElement, mirror?: boolean) {
-    return this.classroomStore.streamStore.setupLocalVideo(stream, dom, mirror);
+  setupLocalVideo(dom: HTMLElement, mirror = false) {
+    return this.classroomStore.mediaStore.setupLocalVideo(dom, mirror);
   }
 
   /**

@@ -1,6 +1,6 @@
 import {
+  AgoraMediaControl,
   AgoraRteAudioSourceType,
-  AgoraRteEngine,
   AgoraRteEventType,
   AgoraRteMediaPublishState,
   AgoraRteOperator,
@@ -12,12 +12,16 @@ import {
   Injectable,
   Log,
 } from 'agora-rte-sdk';
+import { AGRtcChannel } from 'agora-rte-sdk/lib/core/rtc/channel';
 
 export abstract class SceneSubscription {
   protected logger!: Injectable.Logger;
 
   protected _active = false;
-  protected _isCdnMode: boolean = false;
+  protected _isCdnMode = false;
+
+  protected _rtcChannel: AGRtcChannel;
+  protected _mediaControl: AgoraMediaControl;
 
   get active() {
     return this._active;
@@ -29,6 +33,8 @@ export abstract class SceneSubscription {
 
   constructor(protected _scene: AgoraRteScene) {
     const scene = _scene;
+    this._rtcChannel = _scene.rtcChannel;
+    this._mediaControl = _scene.engine.getAgoraMediaControl();
     this._active = true;
 
     scene.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
@@ -250,18 +256,17 @@ export class MainRoomSubscription extends SceneSubscription {
 
       if (s.videoSourceType === AgoraRteVideoSourceType.Camera) {
         scene.rtcChannel.muteLocalVideoStream(true, type);
-        AgoraRteEngine.engine.getAgoraMediaControl().createCameraVideoTrack().stop();
+        this._mediaControl.createCameraVideoTrack().stop();
       } else if (s.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
         scene.rtcChannel.muteLocalScreenStream(true, type);
-        AgoraRteEngine.engine.getAgoraMediaControl().createScreenShareTrack().stop();
+        this._mediaControl.createScreenShareTrack().stop();
       } else if (s.videoSourceType === AgoraRteVideoSourceType.None) {
         // no action needed
       }
 
       if (s.audioSourceType === AgoraRteAudioSourceType.Mic) {
         scene.rtcChannel.muteLocalAudioStream(true, type);
-        type === AGRtcConnectionType.main &&
-          AgoraRteEngine.engine.getAgoraMediaControl().createMicrophoneAudioTrack().stop();
+        type === AGRtcConnectionType.main && this._mediaControl.createMicrophoneAudioTrack().stop();
       } else if (s.audioSourceType === AgoraRteAudioSourceType.None) {
         // no action needed
       }
