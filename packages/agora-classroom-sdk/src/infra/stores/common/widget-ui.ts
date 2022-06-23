@@ -107,41 +107,40 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @bound
   setWidgetZIndexToTop(widgetId: string) {
-    if (
-      this.classroomStore.widgetStore.widgetController &&
-      this.classroomStore.widgetStore.widgetController.widgetsMap.size <= 1
-    )
-      return;
-    const widget = this.classroomStore.widgetStore.widgetController?.widgetsMap.get(widgetId);
-    const widgetZIndexSorter = (a: AgoraWidgetBase, b: AgoraWidgetBase) => {
-      const zIndexA = (a.widgetRoomProperties.extra as any)?.zIndex ?? 0;
-      const zIndexB = (b.widgetRoomProperties.extra as any)?.zIndex ?? 0;
-      return zIndexA - zIndexB;
-    };
-    if (widget) {
-      const updatedWidgetProperties = {
-        ...widget.widgetRoomProperties,
-        extra: {
-          ...widget.widgetRoomProperties?.extra,
-          zIndex:
-            ((
-              [...this.classroomStore.widgetStore.widgetController!.widgetsMap.entries()].sort(
-                (a, b) => widgetZIndexSorter(a[1], b[1]),
-              )[length - 1][1].widgetRoomProperties.extra as any
-            )?.zIndex ?? 0) + 1,
-        },
+    if (this.classroomStore.widgetStore.widgetController) {
+      const length = this.classroomStore.widgetStore.widgetController?.widgetsMap.size;
+      if (length <= 1) return;
+      const widget = this.classroomStore.widgetStore.widgetController?.widgetsMap.get(widgetId);
+      const widgetZIndexSorter = (a: AgoraWidgetBase, b: AgoraWidgetBase) => {
+        const zIndexA = (a.widgetRoomProperties.extra as any)?.zIndex ?? 0;
+        const zIndexB = (b.widgetRoomProperties.extra as any)?.zIndex ?? 0;
+        return zIndexA - zIndexB;
       };
-      this.classroomStore.widgetStore.widgetController?.sendMessageToWidget(
-        widgetId,
-        AgoraWidgetEventType.WidgetRoomPropertiesUpdate,
-        updatedWidgetProperties,
-      );
-      this.classroomStore.widgetStore.widgetController?.updateWidgetProperties(
-        widgetId,
-        updatedWidgetProperties,
-      );
-    } else {
-      this.logger.warn('Widget Controller [setWidgetZIndexToTop] => failed. Widget not exist.');
+      if (widget) {
+        const updatedWidgetProperties = {
+          ...widget.widgetRoomProperties,
+          extra: {
+            ...widget.widgetRoomProperties?.extra,
+            zIndex:
+              ((
+                [...this.classroomStore.widgetStore.widgetController!.widgetsMap.entries()].sort(
+                  (a, b) => widgetZIndexSorter(a[1], b[1]),
+                )[length - 1][1].widgetRoomProperties.extra as any
+              )?.zIndex ?? 0) + 1,
+          },
+        };
+        this.classroomStore.widgetStore.widgetController?.sendMessageToWidget(
+          widgetId,
+          AgoraWidgetEventType.WidgetRoomPropertiesUpdate,
+          updatedWidgetProperties,
+        );
+        this.classroomStore.widgetStore.widgetController?.updateWidgetProperties(
+          widgetId,
+          updatedWidgetProperties,
+        );
+      } else {
+        this.logger.warn('Widget Controller [setWidgetZIndexToTop] => failed. Widget not exist.');
+      }
     }
   }
   onInstall() {
