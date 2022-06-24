@@ -7,7 +7,7 @@ import {
 } from '@/infra/utils/ipc';
 import { WindowID } from '@/infra/api';
 import { ControlState, IPCMessageType } from '@/infra/types';
-import { Select, Tooltip, t, SvgIcon } from '~ui-kit';
+import { Select, Tooltip, t, SvgIcon, transI18n } from '~ui-kit';
 import './index.css';
 import { EduUser, DevicePlatform } from 'agora-edu-core';
 import { RemoteControlBarUIParams } from '@/infra/stores/common/type';
@@ -154,7 +154,12 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
               value: ControlState.NotAllowedControlled as string,
               label: t('fcr_rc_control_bar_disallow_student_control'),
             },
-          ].concat(studentList.map((i) => ({ value: i.userUuid, label: i.userName })))}
+          ].concat(
+            studentList.map((i) => ({
+              value: i.userUuid,
+              label: transI18n('fcr_rc_control_bar_allow_student_control', { reason: i.userName }),
+            })),
+          )}
           onChange={onStudentChange}
           value={controlState}
           onOpen={() => {

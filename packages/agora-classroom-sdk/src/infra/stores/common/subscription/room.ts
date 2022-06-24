@@ -176,14 +176,15 @@ export class MainRoomSubscription extends SceneSubscription {
           break;
         }
       }
-
-      switch (s.audioState) {
-        case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteLocalAudioStream(false);
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          scene.rtcChannel.muteLocalAudioStream(true);
-          break;
+      if (s.videoSourceType !== AgoraRteVideoSourceType.ScreenShare) {
+        switch (s.audioState) {
+          case AgoraRteMediaPublishState.Published:
+            scene.rtcChannel.muteLocalAudioStream(false);
+            break;
+          case AgoraRteMediaPublishState.Unpublished:
+            scene.rtcChannel.muteLocalAudioStream(true);
+            break;
+        }
       }
     });
   }

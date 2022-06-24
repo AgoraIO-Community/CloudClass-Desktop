@@ -728,7 +728,7 @@ export const en = {
   fcr_share_no_student: 'Shareing for all student is not supported as no students in classroom',
   fcr_share_device_no_support:
     'Shareing for all student is not supported as all student device does not support remote control',
-  fcr_rc_control_bar_allow_student_control: 'Students are allowed to control remotely',
+  fcr_rc_control_bar_allow_student_control: '{reason} are allowed to control remotely',
   fcr_rc_control_bar_disallow_student_control: 'Students are not allowed to control remotely',
   fcr_share_title_select_window_share: 'Select a window to share',
   fcr_share_title_desktop: 'Desktop',

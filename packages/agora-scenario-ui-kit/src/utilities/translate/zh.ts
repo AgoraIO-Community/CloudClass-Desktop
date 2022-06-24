@@ -707,7 +707,7 @@ export const zh = {
   fcr_share_stopped_student_share: '老师已停止共享你的屏幕',
   fcr_share_no_student: '当前教室没有学生，无法开启学生屏幕共享',
   fcr_share_device_no_support: '学生设备不支持远程控制，无法开启学生屏幕共享',
-  fcr_rc_control_bar_allow_student_control: '允许学生控制',
+  fcr_rc_control_bar_allow_student_control: '允许{reason}控制',
   fcr_rc_control_bar_disallow_student_control: '不允许学生控制',
   fcr_share_title_select_window_share: '请选择一个要共享的窗口',
   fcr_share_title_desktop: '桌面',

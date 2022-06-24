@@ -67,7 +67,6 @@ export class RemoteControlUIStore extends EduUIStoreBase {
         {
           width: RemoteControlBarUIParams.width,
           height: RemoteControlBarUIParams.height,
-          y: 0,
         },
       );
   }
