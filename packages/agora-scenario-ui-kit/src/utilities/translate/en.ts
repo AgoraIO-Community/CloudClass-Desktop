@@ -193,7 +193,6 @@ export const en = {
     cancel: 'Cancel',
     leave_room: 'Leave Classroom',
     quit_room: 'You want to exit the classroom?',
-    kick: 'Account remote login',
     login_failure: 'login failure',
     whiteboard_lock: 'Whiteboard follow',
     whiteboard_unlock: 'Whiteboard nofollow',
