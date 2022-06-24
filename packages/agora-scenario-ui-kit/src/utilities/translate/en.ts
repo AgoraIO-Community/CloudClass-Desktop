@@ -695,7 +695,7 @@ export const en = {
   fcr_group_join: 'Join group',
   fcr_group_enter_welcome: 'Welcome to join {reason} and discuss with everyone',
   fcr_group_enter_group: '{reason1}{reason2} has joined group',
-  fcr_group_exit_group: '{reason1}{reason2} has left group',
+  fcr_group_exit_group: '{reason1} {reason2} has left group',
   fcr_group_close_group: 'The teacher closed breakout rooms',
   fcr_group_invite_back_main_room: 'The teacher is inviting you to return to main session',
   fcr_group_back_main_room: 'Returning to main session...',
