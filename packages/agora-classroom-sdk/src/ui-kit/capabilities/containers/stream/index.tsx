@@ -113,7 +113,8 @@ export const RemoteTrackPlayer: React.FC<RemoteTrackPlayerProps> = observer(
     const { setupRemoteVideo, muteRemoteAudioStream, muteRemoteVideoStream } = streamStore;
     const { isCDNMode } = roomStore;
 
-    const ref = useRef<HTMLDivElement | null>(null);
+    const rtcRef = useRef<HTMLDivElement | null>(null);
+    const cdnRef = useRef<HTMLDivElement | null>(null);
 
     const handleReadyPlay = () => setReadyPlay(true);
     const handleInteractiveNeeded = (interactiveNeeded: boolean) =>
@@ -135,18 +136,18 @@ export const RemoteTrackPlayer: React.FC<RemoteTrackPlayerProps> = observer(
     }, [mediaStore, stream]);
 
     useEffect(() => {
-      if (ref.current && canSetupVideo && stream.streamHlsUrl && isCDNMode) {
+      if (cdnRef.current && canSetupVideo && stream.streamHlsUrl && isCDNMode) {
         muteRemoteVideoStream(stream, true);
         muteRemoteAudioStream(stream, true);
         mediaStore.setupMediaStream(
           stream.streamHlsUrl,
-          ref.current,
+          cdnRef.current,
           true,
           stream.audioSourceState === AgoraRteMediaSourceState.started,
           stream.videoSourceState === AgoraRteMediaSourceState.started,
         );
       }
-      if (ref.current && canSetupVideo && stream.streamHlsUrl && !isCDNMode) {
+      if (rtcRef.current && canSetupVideo && stream.streamHlsUrl && !isCDNMode) {
         const mediaTrackPlayer = mediaStore.getMediaTrackPlayer(stream.streamHlsUrl);
         if (mediaTrackPlayer) {
           mediaTrackPlayer.dispose();
@@ -154,8 +155,8 @@ export const RemoteTrackPlayer: React.FC<RemoteTrackPlayerProps> = observer(
         muteRemoteVideoStream(stream, false);
         muteRemoteAudioStream(stream, false);
       }
-      if (ref.current && canSetupVideo && !isCDNMode) {
-        setupRemoteVideo(stream, ref.current, mirrorMode);
+      if (rtcRef.current && canSetupVideo && !isCDNMode) {
+        setupRemoteVideo(stream, rtcRef.current, mirrorMode);
       }
     }, [
       stream,
@@ -185,7 +186,14 @@ export const RemoteTrackPlayer: React.FC<RemoteTrackPlayerProps> = observer(
     }, [stream, mediaStore, handleReadyPlay, handleInteractiveNeeded]);
     return (
       <>
-        <div style={style} className={className} ref={ref}></div>
+        <div
+          style={style}
+          className={`${className} ${isCDNMode ? '' : 'hidden'}`}
+          ref={cdnRef}></div>
+        <div
+          style={style}
+          className={`${className} ${isCDNMode ? 'hidden ' : ''}`}
+          ref={rtcRef}></div>
         {isCDNMode && !interactiveNeeded && !readyPlay ? (
           <div className="video-player-video-loading"></div>
         ) : null}
