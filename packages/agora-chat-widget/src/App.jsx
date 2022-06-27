@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import i18n from 'i18next';
 import { useSelector, useStore } from 'react-redux';
 import { initIMSDK } from './utils/WebIM';
-import { propsAction, isShowChat, isShowMiniIcon } from './redux/actions/propsAction';
+import { propsAction, isShowChat, isShowMiniIcon, setAgoraTokenConfig } from './redux/actions/propsAction';
 import { showRedNotification } from './redux/actions/messageAction';
 import { setVisibleUI } from './redux/actions/roomAction';
 import { Chat } from './components/Chat';
@@ -10,6 +10,7 @@ import { SvgImg } from './components/SvgImg';
 import im_CN from './locales/zh_CN';
 import im_US from './locales/en_US';
 import { createListener } from './utils/listeners';
+import { EduClassroomConfig } from 'agora-edu-core'
 import './App.css';
 import 'antd/dist/antd.css';
 
@@ -21,6 +22,15 @@ const App = function (props) {
     isShowMiniIcon: miniIconStatus,
     configUIVisible: config,
   } = props.pluginStore.globalContext;
+
+  // get token config
+  const { appId, host, _sessionInfo } = EduClassroomConfig.shared;
+  const agoraTokenData = {
+    appId,
+    host,
+    roomUuid: _sessionInfo.roomUuid,
+    userUuid: _sessionInfo.userUuid,
+  }
   const state = useSelector((state) => state);
   const apis = state?.apis;
   const showChat = state?.showChat;
@@ -33,6 +43,7 @@ const App = function (props) {
     store.dispatch(isShowChat(globalShowChat));
     store.dispatch(isShowMiniIcon(miniIconStatus));
     store.dispatch(setVisibleUI(config));
+    store.dispatch(setAgoraTokenConfig(agoraTokenData))
     i18n.addResourceBundle('zh', 'translation', im_CN);
     i18n.addResourceBundle('en', 'translation', im_US);
   }, []);
@@ -61,7 +72,7 @@ const App = function (props) {
 
       createListen(propsData, appkey);
 
-      apis.loginAPI.loginIM(appkey);
+      apis.loginAPI.loginWithToken(appkey, userUuid);
     }
   }, [props.pluginStore, createListen, store, apis]);
 

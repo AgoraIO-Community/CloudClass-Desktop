@@ -68,7 +68,8 @@
     "web-vitals": "1.0.1"
   },
   "dependencies": {
-    "easemob-websdk": "3.6.3",
+    "agora-chat": "^1.0.4",
+    "axios": "^0.27.2",
     "react": "17.0.0",
     "react-dom": "17.0.0",
     "react-intl": "5.20.6",

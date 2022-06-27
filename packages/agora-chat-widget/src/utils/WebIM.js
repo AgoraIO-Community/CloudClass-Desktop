@@ -1,4 +1,4 @@
-import websdk from 'easemob-websdk';
+import websdk from 'agora-chat';
 import config from './WebIMConfig';
 
 export const initIMSDK = (appkey) => {

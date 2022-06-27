@@ -13,3 +13,8 @@ export const isShowMiniIcon = (data) => {
 export const setAPIs = (data) => {
   return { type: 'SET_APIS', data };
 };
+
+// token config
+export const setAgoraTokenConfig = data => {
+  return { type: 'SET_AGORATOKEN_CONFIG', data };
+}

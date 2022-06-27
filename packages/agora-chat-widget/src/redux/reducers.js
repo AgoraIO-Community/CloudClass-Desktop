@@ -34,6 +34,7 @@ let defaultState = {
     imgIcon: true, // 是否展示图片图标
     screenshotIcon: true, // 是否展示截图图标
   },
+  agoraTokenConfig: {}, // token config
 };
 const reducer = (state = defaultState, action) => {
   const { type, data } = action;
@@ -216,6 +217,11 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         isQuestion: data,
+      };
+    case 'SET_AGORATOKEN_CONFIG':
+      return {
+        ...state,
+        agoraTokenConfig: data,
       };
     default:
       break;
