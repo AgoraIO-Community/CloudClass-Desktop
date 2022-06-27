@@ -8,19 +8,24 @@ const DEFAULT_PORT = 3000;
 
 const libs = ['agora-rte-sdk', 'agora-edu-core'];
 
-const ALIAS = libs.reduce((prev, cur) => {
-  const libName = cur;
+let ALIAS = {};
 
-  const libPath = path.resolve(ROOT_PATH, `../${libName}/src`);
+// only load from source in development env
+if (process.env.NODE_ENV === 'development') {
+  ALIAS = libs.reduce((prev, cur) => {
+    const libName = cur;
 
-  const libExists = fs.existsSync(libPath);
+    const libPath = path.resolve(ROOT_PATH, `../${libName}/src`);
 
-  if (libExists) {
-    prev[libName] = libPath;
-  }
+    const libExists = fs.existsSync(libPath);
 
-  return prev;
-}, {});
+    if (libExists) {
+      prev[libName] = libPath;
+    }
+
+    return prev;
+  }, {});
+}
 
 module.exports = {
   DIST_PATH,
