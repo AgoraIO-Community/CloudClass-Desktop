@@ -43,19 +43,6 @@ export const createListener = (store) => {
           return message.error(transI18n('chat.login_again'));
         }
         if (err.type === 604) return;
-        const type = JSON.parse(_.get(err, 'data.data')).error_description;
-        const resetName = store.getState().propsData.userUuid;
-        if (type === 'user not found') {
-          let options = {
-            username: resetName.toLocaleLowerCase(),
-            password: resetName,
-            appKey: appkey,
-            success: function () {
-              apis.loginAPI.loginIM(appkey);
-            },
-          };
-          WebIM.conn.registerUser(options);
-        }
       },
       onTextMessage: (message) => {
         console.log('onTextMessage>>>', message);
