@@ -5,7 +5,6 @@ import {
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
   bound,
-  RtcState,
 } from 'agora-rte-sdk';
 import { computed, reaction, IReactionDisposer, action, observable } from 'mobx';
 import { EduUIStoreBase } from './base';

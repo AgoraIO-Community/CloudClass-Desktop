@@ -9,18 +9,19 @@ import { WindowID } from '@/infra/api';
 import { ControlState, IPCMessageType } from '@/infra/types';
 import { Select, Tooltip, t, SvgIcon, transI18n } from '~ui-kit';
 import './index.css';
-import { EduUser, DevicePlatform } from 'agora-edu-core';
+import { DevicePlatform } from 'agora-edu-core';
 import { RemoteControlBarUIParams } from '@/infra/stores/common/type';
+import { EduUserStruct } from 'agora-edu-core/lib/stores/domain/common/user/struct';
 
 type Props = {
   canReSelectScreen?: boolean;
 };
 const useStudentList = () => {
-  const [studentList, setStudentList] = useState<EduUser[]>([]);
+  const [studentList, setStudentList] = useState<EduUserStruct[]>([]);
   useEffect(() => {
     const cleaner = listenChannelMessage(ChannelType.Message, (_e, message) => {
       if (message.type === IPCMessageType.StudentListUpdated) {
-        setStudentList(message.payload as EduUser[]);
+        setStudentList(message.payload as EduUserStruct[]);
       }
     });
     sendToRendererProcess(WindowID.Main, ChannelType.Message, {

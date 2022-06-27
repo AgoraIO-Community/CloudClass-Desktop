@@ -108,7 +108,7 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
   }
 
   get layerItems() {
-    return ['grant'];
+    return ['reward', 'grant'];
   }
 
   onInstall(): void {

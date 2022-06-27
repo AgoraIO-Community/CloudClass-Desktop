@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, {
   CSSProperties,
@@ -246,7 +246,7 @@ export const LocalStreamPlayerTools = observer(
                 hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
-                onClick={tool.interactable ? tool.onClick : () => {}}
+                onClick={tool.interactable ? tool.onClick : () => { }}
               />
             </span>
           </Tooltip>
@@ -278,7 +278,7 @@ export const RemoteStreamPlayerTools = observer(
                 hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
-                onClick={tool.interactable ? tool.onClick : () => {}}
+                onClick={tool.interactable ? tool.onClick : () => { }}
               />
             </span>
           </Tooltip>
@@ -294,9 +294,11 @@ const StreamPlayerWhiteboardGranted = observer(({ stream }: { stream: EduStreamU
   const {
     streamUIStore: { whiteboardGrantUsers },
   } = useStore();
+  const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(EduClassroomConfig.shared.sessionInfo.role)
+
   return (
     <>
-      {whiteboardGrantUsers.has(stream.fromUser.userUuid) ? (
+      {!isTeacherOrAssistant && whiteboardGrantUsers.has(stream.fromUser.userUuid) ? (
         <div className="bottom-right-granted"></div>
       ) : null}
     </>
