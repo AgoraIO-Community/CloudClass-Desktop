@@ -11,7 +11,7 @@ import { Select, Tooltip, t, SvgIcon, transI18n } from '~ui-kit';
 import './index.css';
 import { DevicePlatform } from 'agora-edu-core';
 import { RemoteControlBarUIParams } from '@/infra/stores/common/type';
-import { EduUserStruct } from 'agora-edu-core/lib/stores/domain/common/user/struct';
+import { EduUserStruct } from 'agora-edu-core';
 
 type Props = {
   canReSelectScreen?: boolean;

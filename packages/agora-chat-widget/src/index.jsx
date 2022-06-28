@@ -15,7 +15,7 @@ import { UserInfoAPI } from './api/userInfo';
 
 let store = null;
 
-export const HXChatRoom = ({ pluginStore }) => {
+export const HXChatRoom = ({ pluginStore, agoraTokenData }) => {
   const chatStore = React.useMemo(() => (store = createStore()), []);
 
   const chatAPIs = React.useMemo(() => {
@@ -48,7 +48,7 @@ export const HXChatRoom = ({ pluginStore }) => {
     // <React.StrictMode>
     <Provider store={chatStore} apis={chatAPIs}>
       <MemoryRouter>
-        <App pluginStore={pluginStore} />
+        <App pluginStore={pluginStore} agoraTokenData={agoraTokenData} />
       </MemoryRouter>
     </Provider>
     // </React.StrictMode>

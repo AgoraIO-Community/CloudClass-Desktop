@@ -1,6 +1,5 @@
 import * as hx from 'agora-chat-widget';
 import {
-  ClassroomState,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   IAgoraWidget,
@@ -125,10 +124,19 @@ const App: React.FC<AppProps> = observer((props) => {
     context: { ...props, chatroomId, appName, orgName, ...roomInfo, ...localUserInfo },
   };
   const domRef = useRef<HTMLDivElement>(null);
-
+  const { appId, host, sessionInfo } = EduClassroomConfig.shared;
   return (
     <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>
-      <hx.HXChatRoom pluginStore={hxStore} />
+      <hx.HXChatRoom
+        pluginStore={hxStore}
+        agoraTokenData={{
+          appId,
+          host,
+          roomUuid: sessionInfo.roomUuid,
+          userUuid: sessionInfo.userUuid,
+          token: sessionInfo.token,
+        }}
+      />
     </div>
   );
 });
