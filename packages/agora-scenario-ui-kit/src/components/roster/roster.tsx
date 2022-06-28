@@ -93,7 +93,7 @@ export const Roster: FC<RosterProps> = ({
                   alignItems: 'center',
                 }}>
                 <div className="search-teacher-name">
-                  <label>{transI18n('roster.teacher_name')}</label>
+                  <label>&nbsp;{transI18n('roster.teacher_name')}</label>
                   <span title={hostname} className="roster-username">
                     {hostname}
                   </span>

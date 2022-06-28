@@ -254,7 +254,7 @@ export const LocalStreamPlayerTools = observer(
                 hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
-                onClick={tool.interactable ? tool.onClick : () => { }}
+                onClick={tool.interactable ? tool.onClick : () => {}}
               />
             </span>
           </Tooltip>
@@ -286,7 +286,7 @@ export const RemoteStreamPlayerTools = observer(
                 hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
-                onClick={tool.interactable ? tool.onClick : () => { }}
+                onClick={tool.interactable ? tool.onClick : () => {}}
               />
             </span>
           </Tooltip>
@@ -302,7 +302,10 @@ const StreamPlayerWhiteboardGranted = observer(({ stream }: { stream: EduStreamU
   const {
     streamUIStore: { whiteboardGrantUsers },
   } = useStore();
-  const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(EduClassroomConfig.shared.sessionInfo.role)
+
+  const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+    stream.role,
+  );
 
   return (
     <>
