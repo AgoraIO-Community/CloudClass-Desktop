@@ -1,3 +1,3 @@
-export * from './gallery/chat/index';
-export * from './gallery/hxchat/index';
+export * from './gallery/chat';
+export * from './gallery/hxchat';
 // export class AgoraHXChatWidget {} // todo

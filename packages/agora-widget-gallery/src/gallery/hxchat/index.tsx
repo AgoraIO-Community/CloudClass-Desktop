@@ -1,4 +1,4 @@
-import * as hx from 'agora-chat-widget';
+import { dispatchVisibleUI, dispatchShowChat, dispatchShowMiniIcon, HXChatRoom } from 'agora-chat-widget';
 import {
   EduRoleTypeEnum,
   EduRoomTypeEnum,
@@ -102,14 +102,14 @@ const App: React.FC<AppProps> = observer((props) => {
   }, []);
 
   autorun(() => {
-    hx.dispatchVisibleUI({ isFullSize: widgetStore.isFullSize });
+    dispatchVisibleUI({ isFullSize: widgetStore.isFullSize });
   });
 
   reaction(
     () => widgetStore.showChat,
     (value) => {
-      hx.dispatchShowChat(value);
-      hx.dispatchShowMiniIcon(!value);
+      dispatchShowChat(value);
+      dispatchShowMiniIcon(!value);
     },
   );
 
@@ -127,7 +127,7 @@ const App: React.FC<AppProps> = observer((props) => {
   const { appId, host, sessionInfo } = EduClassroomConfig.shared;
   return (
     <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>
-      <hx.HXChatRoom
+      <HXChatRoom
         pluginStore={hxStore}
         agoraTokenData={{
           appId,

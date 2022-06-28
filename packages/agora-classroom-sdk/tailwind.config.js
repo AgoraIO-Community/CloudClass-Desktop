@@ -4,7 +4,7 @@ module.exports = {
   purge: ['./src/**/*.{ts,tsx}'],
   darkMode: false, // or 'media' or 'class'
   colors: {
-    gray: colors.coolGray,
+    gray: colors.gray,
     blue: '#357BF6',
     red: colors.rose,
     pink: colors.fuchsia,

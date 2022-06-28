@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~components/interface/base-props';
 import { getPath, getViewBox } from './svg-dict';
 import './index.css';
 

@@ -5,9 +5,11 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const baseConfig = require('./webpack.base');
 const { ROOT_PATH } = require('./utils/index');
+const { pack } = require('./utils/loaders');
 const packageJson = require('../package.json');
 
 const { swSrcPath = '' } = packageJson;
@@ -25,35 +27,7 @@ const config = {
     clean: true,
   },
   module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: [
-          {
-            loader: 'thread-loader',
-          },
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ident: 'postcss',
-                config: path.resolve(ROOT_PATH, './postcss.config.js'),
-              },
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
-        type: 'asset/inline',
-      },
-    ],
+    rules: [...pack],
   },
   optimization: {
     minimize: true,
@@ -61,14 +35,15 @@ const config = {
     nodeEnv: 'production',
     minimizer: [
       new TerserPlugin({
-        parallel: require('os').cpus().length, // 多线程并行构建
+        // parallel: require('os').cpus().length, // 多线程并行构建
+        parallel: false,
+        extractComments: false,
         terserOptions: {
           compress: {
             warnings: false, // 删除无用代码时是否给出警告
             drop_debugger: true, // 删除所有的debugger
           },
         },
-        extractComments: false,
       }),
       new CssMinimizerPlugin(),
     ],
@@ -80,6 +55,7 @@ const config = {
     new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production'),
     }),
+    // new BundleAnalyzerPlugin(),
   ],
 };
 

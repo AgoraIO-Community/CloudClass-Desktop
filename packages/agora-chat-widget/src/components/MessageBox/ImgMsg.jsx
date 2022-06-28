@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Tag, Dropdown, Modal } from 'antd';
 import { ROLE } from '../../contants';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 import './index.css';
 
 export const ImgMsg = ({ item }) => {

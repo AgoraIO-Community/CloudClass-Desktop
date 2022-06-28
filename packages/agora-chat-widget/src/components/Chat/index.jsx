@@ -8,7 +8,7 @@ import { Announcement } from '../Announcement';
 import { ROLE, CHAT_TABS_KEYS } from '../../contants';
 import { isShowChat } from '../../redux/actions/propsAction';
 import { selectTabAction, showRedNotification } from '../../redux/actions/messageAction';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 import { announcementNotice } from '../../redux/actions/roomAction';
 // import minimize from '../../themes/img/minimize.png';
 import minimize from '../../themes/svg/minimize.svg';

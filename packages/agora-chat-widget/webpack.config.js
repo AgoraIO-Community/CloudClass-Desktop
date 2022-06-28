@@ -1,11 +1,8 @@
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
-
-const packageInfo = require('./package.json');
-
-const babelConfig = packageInfo.babel;
+const { base, pack } = require('../agora-classroom-sdk/webpack/utils/loaders');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: {
@@ -20,72 +17,35 @@ module.exports = {
     path: path.resolve(__dirname, 'lib'),
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '~ui-kit': path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
+      '~components': path.resolve(__dirname, '../agora-scenario-ui-kit/src/components'),
+      '~styles': path.resolve(__dirname, '../agora-scenario-ui-kit/src/styles'),
+      '~utilities': path.resolve(__dirname, '../agora-scenario-ui-kit/src/utilities'),
+    },
   },
   module: {
-    rules: [
-      {
-        test: /\.js(x)?$/i,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              ...babelConfig,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.css$/,
-        exclude: [/node_modules/],
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              plugins: (loader) => [require('postcss-cssnext')()],
-            },
-          },
-        ],
-      },
-      {
-        test: /\.css$/,
-        exclude: [/src/],
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
-        loader: 'url-loader',
-        options: {
-          esModule: false,
-        },
-      },
-    ],
+    unknownContextCritical: false,
+    rules: [...base, ...pack],
   },
   optimization: {
+    minimize: true,
+    sideEffects: true,
+    nodeEnv: 'production',
     minimizer: [
       new TerserPlugin({
-        parallel: require('os').cpus().length,
-      }),
-      new OptimizeCssAssetsPlugin({
-        assetNameRegExp: /\.css$/g,
-        cssProcessorOptions: {
-          safe: true,
-          autoprefixer: { disable: true },
-          mergeLonghand: false,
-          discardComments: {
-            removeAll: true,
+        parallel: require('os').cpus().length, // 多线程并行构建
+        terserOptions: {
+          compress: {
+            warnings: false, // 删除无用代码时是否给出警告
+            drop_debugger: true, // 删除所有的debugger
           },
         },
-        canPrint: true,
+        extractComments: false,
       }),
+      new CssMinimizerPlugin(),
     ],
   },
-  plugins: [new MiniCssExtractPlugin()],
+  plugins: [new BundleAnalyzerPlugin()],
 };

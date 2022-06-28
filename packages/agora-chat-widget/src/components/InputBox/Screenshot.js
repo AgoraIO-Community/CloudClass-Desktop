@@ -3,7 +3,7 @@ import { Menu } from 'antd';
 import { useSelector } from 'react-redux';
 import isElctronPlatform, { ipcElecteonRenderer } from '../../utils/platform';
 import { dataURLtoBlob } from '../../utils';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 
 const ScreenshotMenu = ({ couterRef }) => {
   const [isCloaking, setIsCloaking] = useState(true);

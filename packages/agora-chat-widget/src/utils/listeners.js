@@ -1,4 +1,4 @@
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 import { statusAction, clearStore } from '../redux/actions/userAction';
 import { messageAction, showRedNotification } from '../redux/actions/messageAction';
 import {

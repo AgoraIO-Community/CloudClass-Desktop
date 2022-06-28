@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { InputMsg } from './InputMsg';
 import { ROLE } from '../../contants';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 import './index.css';
 
 const AllMute = () => {

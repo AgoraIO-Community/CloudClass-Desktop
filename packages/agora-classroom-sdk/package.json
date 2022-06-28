@@ -108,15 +108,15 @@
     "electron:client": "cross-env ELECTRON_START_URL=http://localhost:3000 electron ./app/",
     "electron:copy:electron:mac": "cpx './app/**/*.js' ./build",
     "electron:copy:electron:win": "cpx ./app/**/*.js ./build",
-    "dev": "cross-env NODE_ENV=development NODE_OPTIONS=--max_old_space_size=8192 webpack serve --config ./webpack/webpack.dev.js",
-    "build": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=8192 webpack --config ./webpack/webpack.prod.js",
+    "dev": "cross-env NODE_ENV=development NODE_OPTIONS=--max_old_space_size=4096 webpack serve --config ./webpack/webpack.dev.js",
+    "build": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack/webpack.prod.js",
     "build:types": "tsc -p tsconfig.json",
     "build:docs": "npx typedoc",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "pack:mac": "yarn electron:copy:electron:mac && electron-builder --mac",
     "pack:win": "yarn electron:copy:electron:win && electron-builder --win",
     "pack:npm": "run-s bundle:npm build:types",
-    "bundle:npm": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=8192 webpack --config ./webpack/webpack.pack.js"
+    "bundle:npm": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack/webpack.pack.js"
   },
   "eslintConfig": {
     "extends": [
