@@ -6,8 +6,10 @@ import {
   AgoraRteMediaPublishState,
   AgoraRteVideoSourceType,
   Lodash,
+  bound,
 } from 'agora-rte-sdk';
 import { toLower } from 'lodash';
+import { computedFn } from 'mobx-utils';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share-ui';
 
@@ -15,14 +17,17 @@ import { Operations, DeviceState, Operation, Profile } from './type';
 import { transI18n } from '../i18n';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
 import {
+  AGEduErrorCode,
   AGServiceErrorCode,
   EduClassroomConfig,
+  EduErrorCenter,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   GroupState,
   iterateMap,
 } from 'agora-edu-core';
 import { BoardGrantState } from '~ui-kit';
+import { EduStreamUI } from '../stream/struct';
 
 export class RosterUIStore extends EduUIStoreBase {
   /**
@@ -209,7 +214,9 @@ export class RosterUIStore extends EduUIStoreBase {
           this.clickKick(profile);
           break;
         }
-        case 'chat': {
+        case 'supervise-student': {
+          this.chickStudentView(profile);
+          break;
         }
       }
     },
@@ -337,6 +344,64 @@ export class RosterUIStore extends EduUIStoreBase {
       onOk,
     });
   };
+
+  chickStudentView = (profile: Profile) => {
+    const uid = profile.uid;
+    this.subcribeUsers(1, { publishUserUuids: [`${uid}`] });
+    this.shareUIStore.addDialog(DialogCategory.StreamView, { id: uid });
+  };
+
+  /**
+   * 获取指定学生 stream
+   * @param uid
+   * @returns
+   */
+  getStudentStream = computedFn((uid: string) => {
+    const streamSet = new Set<EduStreamUI>();
+    const streamUuids = this.classroomStore.streamStore.streamByUserUuid.get(uid) || new Set();
+    for (const streamUuid of streamUuids) {
+      const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+      if (stream) {
+        const uiStream = new EduStreamUI(stream);
+        streamSet.add(uiStream);
+      }
+    }
+    if (streamSet.size > 1) {
+      return EduErrorCenter.shared.handleThrowableError(
+        AGEduErrorCode.EDU_ERR_UNEXPECTED_STUDENT_STREAM_LENGTH,
+        new Error(`unexpected stream size ${streamSet.size}`),
+      );
+    }
+    return Array.from(streamSet)[0];
+  });
+
+  /**
+   * 关闭视频监听
+   */
+  @bound
+  closeStudentView() {
+    this.subcribeUsers(0);
+  }
+
+  /**
+   * 开启扩展屏状态，并且发布需要订阅的学生流信息
+   * @param state
+   * @param data
+   */
+  @bound
+  async subcribeUsers(
+    state: 1 | 0,
+    data?: {
+      publishUserUuids?: string[] | undefined;
+      unpublishUserUuids?: string[];
+    },
+  ) {
+    try {
+      await this.classroomStore.streamStore.updateExpandedScopeAndStreams(state, data);
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
 
   /** Computed */
 
@@ -474,7 +539,7 @@ export class RosterUIStore extends EduUIStoreBase {
     const { canKickOut, canOperateCarousel, canSearchInRoster } = this;
 
     const functions = ['podium', 'grant-board'] as Array<
-      'search' | 'carousel' | 'kick' | 'grant-board' | 'podium' | 'stars'
+      'search' | 'carousel' | 'kick' | 'grant-board' | 'podium' | 'stars' | 'supervise-student'
     >;
     this.classroomStore.connectionStore.mainRoomScene?.sceneId;
     const { mainRoomScene, sceneId } = this.classroomStore.connectionStore;
@@ -596,6 +661,16 @@ export class RosterUIStore extends EduUIStoreBase {
    * @returns
    */
   get canSendRewards() {
+    const { sessionInfo } = EduClassroomConfig.shared;
+    return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
+  }
+
+  get canSubscribeUser() {
+    const { sessionInfo } = EduClassroomConfig.shared;
+    return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
+  }
+
+  get canSuperviseStudent() {
     const { sessionInfo } = EduClassroomConfig.shared;
     return [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role);
   }

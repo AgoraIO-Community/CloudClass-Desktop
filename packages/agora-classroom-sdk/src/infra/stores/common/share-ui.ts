@@ -22,6 +22,7 @@ export enum DialogCategory {
   Quit,
   ScreenShare,
   RemoteControlConfirm,
+  StreamView,
   InvitePodium,
   InviteConfirm,
 }

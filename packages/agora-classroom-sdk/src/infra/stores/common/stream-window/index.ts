@@ -1228,8 +1228,9 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
     this._disposers.push(
       // 只控制上下台逻辑的变更
+      // 需修改为监听下上台逻辑
       reaction(
-        () => this.studentStreams,
+        () => this.classroomStore.roomStore.acceptedList,
         () => {
           // 1v1 只处理学生离开了课堂需要把大窗口移除掉
           if (

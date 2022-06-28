@@ -5,6 +5,7 @@ import {
   podiumColumn,
   grantBoardColumn,
   starsColumn,
+  superviseColumn,
 } from './columns';
 import { Column } from './';
 import { SupportedFunction } from '~ui-kit';
@@ -29,6 +30,10 @@ export const useColumns = (functions: SupportedFunction[]) => {
     if (functions.includes('stars')) {
       cols.push(starsColumn);
     }
+
+    // if (functions.includes('supervise-student')) {
+    //   cols.push(superviseColumn);
+    // }
 
     return sortBy(cols, ['order']);
   }, [showKickOut]);

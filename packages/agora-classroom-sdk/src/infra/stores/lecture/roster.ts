@@ -155,6 +155,7 @@ export class LectureRosterUIStore extends RosterUIStore {
         },
         star: { interactable: this.canSendRewards },
         'grant-board': { interactable: this.canGrantWhiteboardPermissions },
+        'supervise-student': { interactable: this.canSuperviseStudent },
       };
 
       return {
@@ -188,7 +189,7 @@ export class LectureRosterUIStore extends RosterUIStore {
   get rosterFunctions() {
     const { canKickOut, canSearchInRoster } = this;
     const functions = [] as Array<
-      'search' | 'carousel' | 'kick' | 'grant-board' | 'podium' | 'stars'
+      'search' | 'carousel' | 'kick' | 'grant-board' | 'podium' | 'stars' | 'supervise-student'
     >;
     if (canKickOut) {
       functions.push('kick');
@@ -196,6 +197,7 @@ export class LectureRosterUIStore extends RosterUIStore {
     if (canSearchInRoster) {
       functions.push('search');
     }
+    functions.push('supervise-student');
     return functions;
   }
 
