@@ -18,6 +18,7 @@ import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
 import { useStore } from '@/infra/hooks/use-edu-stores';
 import { ScenesController } from '../../containers/scenes-controller';
 import { WidgetTrackContiner } from '../../containers/widget-track';
+import { EduLectureUIStore } from '@/infra/stores/lecture';
 
 type Props = {
   children?: React.ReactNode;
@@ -33,7 +34,8 @@ export const BigClassScenario = observer(() => {
   const {
     classroomStore,
     streamWindowUIStore: { containedStreamWindowCoverOpacity },
-  } = useStore();
+    streamUIStore
+  } = useStore() as EduLectureUIStore;
   const { boardStore } = classroomStore;
   const { whiteboardWidgetActive } = boardStore;
   return (
@@ -53,7 +55,7 @@ export const BigClassScenario = observer(() => {
               </BigWidgetWindowContainer>
               <ScenesController />
             </Content>
-            <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>
+            <Aside style={{ opacity: containedStreamWindowCoverOpacity, width: streamUIStore.teacherVideoStreamSize.width }}>
               <RoomBigTeacherStreamContainer />
               <ChatWidgetPC />
             </Aside>
