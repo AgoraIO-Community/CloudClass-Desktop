@@ -55,7 +55,7 @@
    ```
 3. Release the Web demo. Before the release, you need to change the `"homepage": "Your domain/address"` in `package.json`. For example, you need to change `https://solutions.agora.io/education/web` to `"homepage": "https://solutions.agora.io/education/web"`
    ```
-   npm run build:apaas
+   npm run build:demo
    ```
 
 ## Run the Electron demo

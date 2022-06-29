@@ -80,8 +80,8 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "release:classroom:sdk": "run-s pack:classroom:sdk",
-    "release:electron:mac": "run-s build:apaas pack:electron:mac",
-    "release:electron:win": "run-s build:apaas pack:electron:win",
+    "release:electron:mac": "run-s build:demo pack:electron:mac",
+    "release:electron:win": "run-s build:demo pack:electron:win",
     "dev": "lerna exec --scope=agora-classroom-sdk yarn dev",
     "dev:electron": "lerna exec --scope=agora-classroom-sdk yarn electron",
     "dev:ui-kit": "lerna exec --scope=agora-scenario-ui-kit yarn storybook",
@@ -89,11 +89,10 @@
     "pack:classroom:sdk": "lerna exec --scope=agora-classroom-sdk npm run pack:npm",
     "pack:electron:mac": "lerna exec --scope=agora-classroom-sdk npm run pack:mac",
     "pack:electron:win": "lerna exec --scope=agora-classroom-sdk npm run pack:win",
-    "build:apaas": "run-s build:demo",
     "build:plugin": "lerna exec --scope=agora-plugin-gallery npm run build",
     "build:widget": "lerna exec --scope=agora-widget-gallery npm run build",
     "build:demo": "lerna exec --scope=agora-classroom-sdk npm run build",
-    "ci:build:web": "yarn build:apaas",
+    "ci:build:web": "yarn build:demo",
     "ci:build:electron:win": "yarn release:electron:win",
     "ci:build:electron:mac": "yarn release:electron:mac",
     "prepare": "husky install"
