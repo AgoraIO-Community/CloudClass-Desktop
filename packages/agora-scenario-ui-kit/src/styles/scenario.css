@@ -52,14 +52,6 @@ body,
   padding-top: 2px;
 }
 
-.card-loading-position {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-}
 .fixed-container {
   display: flex;
   justify-content: center;

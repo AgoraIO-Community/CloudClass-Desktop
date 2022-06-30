@@ -1,9 +1,9 @@
 const answer_en = {
   widget_answer: {
-    appName: 'counter',
-    start: 'start',
+    appName: 'Countdown',
+    start: 'Start',
     seconds: 's',
-    restart: 'restart',
+    restart: 'Restart',
   },
 };
 
