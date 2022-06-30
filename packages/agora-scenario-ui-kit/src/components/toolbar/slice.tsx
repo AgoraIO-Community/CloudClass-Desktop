@@ -29,7 +29,8 @@ export const Slice: FC<SliceProps> = ({ label, slicersList = [], onClick }) => {
           className={`slice-item`}
           key={item.id}
           onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
-          {item.icon}
+          <div className="slice-item-icon">{item.icon}</div>
+          {item.name}
         </div>
       ))}
     </div>

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  purge: ['./src/**/*.{ts,tsx}'],
+  purge: ['./src/**/*.{ts,tsx}', '../agora-scenario-ui-kit/src/**/*.{ts,tsx}'],
   darkMode: false, // or 'media' or 'class'
   colors: {
-    gray: colors.coolGray,
+    gray: colors.gray,
     blue: '#357BF6',
     red: colors.rose,
     pink: colors.fuchsia,

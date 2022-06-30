@@ -67,40 +67,37 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
         trigger="hover"
         content={content}
         placement="leftBottom">
-        {
-          isVocational ? (
-            <Card
-              width={width}
-              height={height}
-              borderRadius={borderRadius}
-              className={twinkleFlag ? 'card-hands-up-active' : ''}>
-              <div className="hands-box-line">
-                <SvgImg
-                  onClick={showInviteContainer}
-                  type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
-                  size={24}
-                />
-              </div>
-            </Card>
-          ) : (
-            <Card
-              width={width}
-              height={height}
-              borderRadius={borderRadius}
-              className={twinkleFlag ? 'card-hands-up-active' : ''}>
-              <div className="hands-box-line">
-                <SvgImg
-                  type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
-                  size={24}
-                />
-              </div>
-              {waveArmCount ? (
-                <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
-              ) : null}
-            </Card>
-          )
-        }
-
+        {isVocational ? (
+          <Card
+            width={width}
+            height={height}
+            borderRadius={borderRadius}
+            className={twinkleFlag ? 'card-hands-up-active' : ''}>
+            <div className="hands-box-line">
+              <SvgImg
+                onClick={showInviteContainer}
+                type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
+                size={24}
+              />
+            </div>
+          </Card>
+        ) : (
+          <Card
+            width={width}
+            height={height}
+            borderRadius={borderRadius}
+            className={twinkleFlag ? 'card-hands-up-active' : ''}>
+            <div className="hands-box-line">
+              <SvgImg
+                type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
+                size={24}
+              />
+            </div>
+            {waveArmCount ? (
+              <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
+            ) : null}
+          </Card>
+        )}
       </Popover>
     </div>
   );

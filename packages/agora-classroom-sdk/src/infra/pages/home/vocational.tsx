@@ -114,7 +114,7 @@ export const VocationalHomePage = observer(() => {
 
   const userUuid = useMemo(() => {
     if (!debug) {
-       return `${MD5(userName)}${role}`;
+      return `${MD5(userName)}${role}`;
     }
     return `${userId}`;
   }, [role, userName, debug, userId]);
@@ -135,7 +135,7 @@ export const VocationalHomePage = observer(() => {
   };
 
   const onChangeService = (value?: string) => {
-    if(value){
+    if (value) {
       setService(value);
     }
   };
@@ -254,16 +254,16 @@ export const VocationalHomePage = observer(() => {
 
             HomeApi.shared.domain = tokenDomain;
 
-            const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
-            console.log('## get rtm Token from demo server', rtmToken);
+            const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
+            console.log('## get rtm Token from demo server', token);
             const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
             const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
             const webRTCCodec =
-            roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-            roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
-              ? 'h264'
-              : 'vp8';
-          const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
+              roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
+              roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+                ? 'h264'
+                : 'vp8';
+            const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
 
             const config: HomeLaunchOption = {
               appId,
@@ -272,7 +272,7 @@ export const VocationalHomePage = observer(() => {
               courseWareList: courseWareList.slice(0, 1),
               language: language as LanguageEnum,
               userUuid: `${userUuid}`,
-              rtmToken,
+              rtmToken: token,
               roomUuid: `${roomUuid}`,
               roomType: scenario,
               roomSubtype,

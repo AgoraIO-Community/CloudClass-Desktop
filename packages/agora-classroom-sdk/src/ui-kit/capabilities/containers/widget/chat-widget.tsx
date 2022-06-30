@@ -12,14 +12,15 @@ export const ChatWidget: FC<{
   visibleBtnSend?: boolean;
   inputBoxStatus?: string;
 }> = (props) => {
-  const isVocational =  EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational;
+  const isVocational =
+    EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational;
   return (
     <Widget
       widgetComponent={EduClassroomConfig.shared.widgets['chat']}
       widgetProps={props}
       className={classnames({
         'chat-panel': 1,
-        'vocational-chat-panel': isVocational
+        'vocational-chat-panel': isVocational,
       })}
     />
   );

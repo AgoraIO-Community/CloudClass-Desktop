@@ -13,6 +13,7 @@ import {
   iterateMap,
   WhiteboardTool,
 } from 'agora-edu-core';
+import { AgoraWidgetPrefix } from 'agora-plugin-gallery';
 import {
   AGError,
   AgoraRteEngineConfig,
@@ -486,6 +487,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
               onOK: () => {
                 // send whiteboard close
                 this.classroomStore.widgetStore.setInactive(BUILTIN_WIDGETS.boardWidget);
+                this.classroomStore.widgetStore.widgetController?.widgetsMap.forEach((widget) => {
+                  if (widget.id.includes(AgoraWidgetPrefix.Webview))
+                    this.classroomStore.widgetStore.widgetController?.deleteWidget(widget.id);
+                });
                 EduEventUICenter.shared.emitClassroomUIEvents(
                   AgoraEduClassroomUIEvent.toggleWhiteboard,
                   true,
@@ -795,7 +800,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       {
         id: 'slice-window',
         iconType: 'slice-window',
-        name: transI18n('scaffold.slice-window'),
+        name: transI18n('scaffold.slice_window'),
       },
     ];
 

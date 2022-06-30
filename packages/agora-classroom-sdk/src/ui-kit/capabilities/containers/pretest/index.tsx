@@ -111,12 +111,7 @@ const BeautyControllerBar = observer(() => {
       <div className="beauty-bar">
         <div className="beauty-bar-left">
           {['whitening', 'buffing', 'ruddy'].map((item) => (
-            <Tooltip
-              key={item}
-              title={transI18n(`media.${item}`)}
-              placement="top"
-              color="rgba(0,0,0,0.6)"
-              overlayInnerStyle={{ color: '#fff' }}>
+            <Tooltip key={item} title={transI18n(`media.${item}`)} placement="top">
               <Icon
                 className={classnames('beauty-type-icon')}
                 type={activeBeautyTypeIcon(item)}
@@ -324,7 +319,6 @@ const BeautyCheckBox = observer(() => {
   } = useStore();
   return (
     <CheckBox
-      style={{ width: 12, height: 12 }}
       checked={isBeauty}
       onChange={(e: any) => {
         setBeauty(e.target.checked);

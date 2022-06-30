@@ -1,12 +1,19 @@
-import { EduUser } from 'agora-edu-core';
 import { FC, useState } from 'react';
 import { t } from '../i18n';
 import { Select } from '../select';
 import { SvgImg } from '../svg-img';
 import './index.css';
+
+
+type UserStruct = {
+  userUuid: string;
+  userName: string;
+  userRole: number;
+  userProperties: any;
+};
 interface IPropsTypes {
   value: string;
-  studentList: EduUser[];
+  studentList: UserStruct[];
   onChange: (studentUuid: string) => void;
   onClose: () => void;
 }

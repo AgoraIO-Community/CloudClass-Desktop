@@ -8,7 +8,7 @@ import {
 } from 'agora-edu-core';
 import { WidgetsConfigMap, AgoraWidgetPrefix } from 'agora-plugin-gallery';
 import { AgoraRteVideoSourceType, bound } from 'agora-rte-sdk';
-import { computed, IReactionDisposer, reaction } from 'mobx';
+import { computed, IReactionDisposer, reaction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { EduStreamUI } from './stream/struct';
 
@@ -107,50 +107,49 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @bound
   setWidgetZIndexToTop(widgetId: string) {
-    const widget = this.classroomStore.widgetStore.widgetController?.widgetsMap.get(widgetId);
-    const widgetZIndexSorter = (a: AgoraWidgetBase, b: AgoraWidgetBase) => {
-      const zIndexA = (a.widgetRoomProperties.extra as any)?.zIndex ?? 0;
-      const zIndexB = (b.widgetRoomProperties.extra as any)?.zIndex ?? 0;
-      return zIndexA - zIndexB;
-    };
-    if (widget) {
-      const updatedWidgetProperties = {
-        ...widget.widgetRoomProperties,
-        extra: {
-          ...widget.widgetRoomProperties?.extra,
-          zIndex:
-            ((
-              [...this.classroomStore.widgetStore.widgetController!.widgetsMap.entries()].sort(
-                (a, b) => widgetZIndexSorter(a[1], b[1]),
-              )[length - 1][1].widgetRoomProperties.extra as any
-            )?.zIndex ?? 0) + 1,
-        },
+    if (this.classroomStore.widgetStore.widgetController) {
+      const length = this.classroomStore.widgetStore.widgetController?.widgetsMap.size;
+      if (length <= 1) return;
+      const widget = this.classroomStore.widgetStore.widgetController?.widgetsMap.get(widgetId);
+      const widgetZIndexSorter = (a: AgoraWidgetBase, b: AgoraWidgetBase) => {
+        const zIndexA = (a.widgetRoomProperties.extra as any)?.zIndex ?? 0;
+        const zIndexB = (b.widgetRoomProperties.extra as any)?.zIndex ?? 0;
+        return zIndexA - zIndexB;
       };
-      this.classroomStore.widgetStore.widgetController?.sendMessageToWidget(
-        widgetId,
-        AgoraWidgetEventType.WidgetRoomPropertiesUpdate,
-        updatedWidgetProperties,
-      );
-      this.classroomStore.widgetStore.widgetController?.updateWidgetProperties(
-        widgetId,
-        updatedWidgetProperties,
-      );
-    } else {
-      this.logger.warn('Widget Controller [setWidgetZIndexToTop] => failed. Widget not exist.');
+      if (widget) {
+        const updatedWidgetProperties = {
+          ...widget.widgetRoomProperties,
+          extra: {
+            ...widget.widgetRoomProperties?.extra,
+            zIndex:
+              ((
+                [...this.classroomStore.widgetStore.widgetController!.widgetsMap.entries()].sort(
+                  (a, b) => widgetZIndexSorter(a[1], b[1]),
+                )[length - 1][1].widgetRoomProperties.extra as any
+              )?.zIndex ?? 0) + 1,
+          },
+        };
+        this.classroomStore.widgetStore.widgetController?.sendMessageToWidget(
+          widgetId,
+          AgoraWidgetEventType.WidgetRoomPropertiesUpdate,
+          updatedWidgetProperties,
+        );
+        this.classroomStore.widgetStore.widgetController?.updateWidgetProperties(
+          widgetId,
+          updatedWidgetProperties,
+        );
+      } else {
+        this.logger.warn('Widget Controller [setWidgetZIndexToTop] => failed. Widget not exist.');
+      }
     }
   }
   onInstall() {
-    this.classroomStore.widgetStore.setWidgetsConfigMap(WidgetsConfigMap);
     this._disposers.push(
       reaction(
-        () => this.classroomStore.boardStore.boardReady,
-        (boardReady) => {
-          if (!boardReady) {
-            this.classroomStore.widgetStore.widgetController?.widgetsMap.forEach((widget) => {
-              if (widget.id.includes(AgoraWidgetPrefix.Webview))
-                this.classroomStore.widgetStore.widgetController?.deleteWidget(widget.id);
-            });
-          }
+        () => this.classroomStore.connectionStore.scene,
+        async () => {
+          await when(() => !!this.classroomStore.widgetStore.widgetController);
+          this.classroomStore.widgetStore.setWidgetsConfigMap(WidgetsConfigMap);
         },
       ),
     );

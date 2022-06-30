@@ -50,7 +50,7 @@
 
 .inviteConfirm.h5 .footer .button.disable,
 .inviteConfirm.h5 .footer .button.disable :hover {
-  color: rgb(77, 77, 77);
+  color: rgb(187, 187, 187);
   pointer-events: none;
   cursor: not-allowed;
 }

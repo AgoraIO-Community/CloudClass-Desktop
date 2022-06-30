@@ -8,5 +8,5 @@ export const Podiums = () => {
   for (let stream of streamUIStore.studentStreams) {
     streams.push(<PodiumStream stream={stream} />);
   }
-  return <div className='podium-streams'>{streams}</div>;
+  return <div className="podium-streams">{streams}</div>;
 };

@@ -10,7 +10,7 @@ export interface BaseWaveArmProps extends BaseProps {
   borderRadius?: number;
   isH5?: boolean;
   isOnPodium?: boolean;
-  onOffPodium?:() => void;
+  onOffPodium?: () => void;
 }
 
 export type UserWaveArmInfo = {

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 import { ROLE } from '../../contants';
 import icon_cautions from '../../themes/img/icon-cautions.png';
 

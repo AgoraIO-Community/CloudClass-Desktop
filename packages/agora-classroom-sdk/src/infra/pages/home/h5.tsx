@@ -170,7 +170,7 @@ export const HomeH5Page = observer(() => {
           }
 
           HomeApi.shared.domain = tokenDomain;
-          const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
+          const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
 
           const config: HomeLaunchOption = {
             appId,
@@ -179,7 +179,7 @@ export const HomeH5Page = observer(() => {
             courseWareList: courseWareList.slice(0, 1),
             language: language as LanguageEnum,
             userUuid: `${userUuid}`,
-            rtmToken,
+            rtmToken: token,
             roomUuid: `${roomUuid}`,
             roomType: scenario,
             roomName: `${roomName}`,

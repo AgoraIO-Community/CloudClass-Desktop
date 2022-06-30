@@ -816,13 +816,15 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   private _handleOnOrOffPodium() {
     const newStreams = this.studentStreams.filter(
-      (value: EduStreamUI) => !this.streamWindowMap.has(value.stream.streamUuid),
+      (value: EduStreamUI) => !this.streamWindowMap.has(value.stream.streamUuid) && this.classroomStore.roomStore.acceptedList.find(item=> item.userUuid === value.fromUser.userUuid)
     );
+    
     const deleteStreams: string[] = [];
     this.streamWindowMap.forEach((value: StreamWindowWidget, streamUuid: string) => {
       const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+      const acceptedUser = this.classroomStore.roomStore.acceptedList.find(item => item.userUuid === value.userUuid)
       if (
-        stream &&
+        stream && acceptedUser &&
         RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, stream.fromUser.role) ===
           EduRoleTypeEnum.teacher
       ) {
@@ -1228,6 +1230,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
     this._disposers.push(
       // 只控制上下台逻辑的变更
+      // 需修改为监听下上台逻辑
       reaction(
         () => this.studentStreams,
         () => {

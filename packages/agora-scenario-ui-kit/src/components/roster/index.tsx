@@ -11,11 +11,19 @@ export type Operation =
   | 'microphone'
   | 'kick'
   | 'chat'
-  | 'star';
+  | 'star'
+  | 'supervise-student';
 
 export type Operations = Partial<Record<Operation, { interactable: boolean }>>;
 
-export type SupportedFunction = 'carousel' | 'search' | 'kick' | 'grant-board' | 'podium' | 'stars';
+export type SupportedFunction =
+  | 'carousel'
+  | 'search'
+  | 'kick'
+  | 'grant-board'
+  | 'podium'
+  | 'stars'
+  | 'supervise-student';
 
 export type ColumnKey =
   | 'name'
@@ -25,7 +33,8 @@ export type ColumnKey =
   | 'cameraState'
   | 'microphoneState'
   | 'stars'
-  | 'kick';
+  | 'kick'
+  | 'superviseStudent';
 
 export type Column = {
   key: ColumnKey;

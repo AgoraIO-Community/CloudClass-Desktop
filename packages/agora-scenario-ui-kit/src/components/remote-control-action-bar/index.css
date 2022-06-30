@@ -9,6 +9,7 @@
   justify-content: space-between;
   padding: 0 10px 0 20px;
   font-size: 12px;
+  pointer-events: auto;
 }
 .remote-control-action-bar .divide {
   width: 1px;

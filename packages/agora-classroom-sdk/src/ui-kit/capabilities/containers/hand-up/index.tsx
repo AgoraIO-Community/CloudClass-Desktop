@@ -24,7 +24,7 @@ export const WaveArmListContainer = observer(() => {
 
 export const HandsUpContainer = observer(() => {
   const userRole = EduClassroomConfig.shared.sessionInfo.role;
-  if (userRole === EduRoleTypeEnum.teacher || userRole === EduRoleTypeEnum.assistant) {
+  if (userRole === EduRoleTypeEnum.teacher) {
     return <WaveArmManagerContainer />;
   }
   if (userRole === EduRoleTypeEnum.student) {

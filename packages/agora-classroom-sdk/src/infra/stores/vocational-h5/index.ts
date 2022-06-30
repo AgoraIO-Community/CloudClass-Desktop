@@ -1,6 +1,6 @@
 import { EduClassroomStore } from 'agora-edu-core';
 import { EduClassroomUIStore } from '../common';
-import { EduVocationalH5BoardUIStor} from './board-ui';
+import { EduVocationalH5BoardUIStor } from './board-ui';
 import { LectureRosterUIStore } from '../lecture/roster';
 import { LectureRoomStreamUIStore } from '../lecture/stream-ui';
 

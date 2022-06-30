@@ -85,7 +85,7 @@
 3. 发布 Web demo。发布前需要修改 `package.json` 中的 "homepage": "你的域名/地址"。例如，`https://solutions.agora.io/education/web` 需修改为 `"homepage": "https://solutions.agora.io/education/web"`
 
    ```
-   npm run build:apaas
+   npm run build:demo
    ```
 
 ## 运行和发布 Electron demo

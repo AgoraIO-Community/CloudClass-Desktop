@@ -153,16 +153,17 @@ function addListeners() {
   });
   delegate.on('move-window-to-target-screen', (event, windowID, screenId, options) => {
     const window = getWindow(windowID);
-
     if (window) {
       const display =
-        electron.screen.getAllDisplays().find((i) => i.id === screenId.id) ||
+        electron.screen.getAllDisplays().find((i) => i.id === screenId) ||
         electron.screen.getPrimaryDisplay();
+
       const offsetX = (display.workAreaSize.width - options.width) / 2;
       const offsetY = (display.workAreaSize.height - options.height) / 2;
-      const x = display.bounds.x + offsetX;
-      const y = options.y ?? display.bounds.y + offsetY;
+      const x = options.x ?? display.bounds.x + offsetX;
+      const y = options.y ?? display.bounds.y;
       window.setBounds({ x: parseInt(x), y: parseInt(y) });
+
       console.log(`set window [${windowID}] bounds to screen`, screenId);
     } else {
       console.log(`window with ID [${windowID}] not exist`);

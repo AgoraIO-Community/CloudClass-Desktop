@@ -7,4 +7,5 @@
   justify-content: center;
   /* todo */
   z-index: 9999999;
+  pointer-events: none;
 }

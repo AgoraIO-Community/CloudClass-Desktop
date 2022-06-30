@@ -17,6 +17,10 @@
   display: flex;
   margin: 2px 0;
 }
+.video-player-overlay .hidden {
+  display: none;
+}
+
 .video-player-overlay-no-margin {
   margin: 0;
 }

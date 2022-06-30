@@ -79,7 +79,7 @@ export enum OnPodiumStateEnum {
 /**
  * 筛选用户类型 0:全部 1:禁言
  */
- export enum FetchUserType {
+export enum FetchUserType {
   /**
    * 筛选全部的用户
    */
@@ -93,7 +93,7 @@ export enum OnPodiumStateEnum {
 /**
  * 分页查询用户参数
  */
- export interface FetchUserParam {
+export interface FetchUserParam {
   /**
    * 下一页的ID
    */

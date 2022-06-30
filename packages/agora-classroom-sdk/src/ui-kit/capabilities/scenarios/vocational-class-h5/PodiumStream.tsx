@@ -9,7 +9,7 @@ export interface PodiumStreamProps {
 
 export const PodiumStream: FC<PodiumStreamProps> = ({ stream }) => {
   return (
-    <div className='podium-stream'>
+    <div className="podium-stream">
       {stream ? (
         <StreamPlayer canSetupVideo={true} stream={stream}></StreamPlayer>
       ) : (

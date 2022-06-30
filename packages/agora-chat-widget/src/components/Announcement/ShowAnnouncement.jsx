@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import { useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 import { ROLE } from '../../contants';
 import { announcementStatus } from '../../redux/actions/roomAction';
 import announcement from '../../themes/img/announcement.png';

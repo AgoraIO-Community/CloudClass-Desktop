@@ -94,7 +94,7 @@
 }
 .react-select__placeholder,
 .react-select__single-value {
-  width: calc(100% - 71px);
+  max-width: calc(100% - 71px);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

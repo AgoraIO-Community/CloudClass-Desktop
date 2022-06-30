@@ -7,7 +7,7 @@ import addSvg from './add.svg';
 import './index.css';
 import { debounce, isEmpty } from 'lodash';
 
-const MAX_LENGTH = 30;
+const MAX_LENGTH = 50;
 
 const App = () => (
   <>

@@ -87,11 +87,7 @@ class FSM {
   }
 }
 
-export const WaveArmSender: FC<BaseWaveArmProps> = observer(({
-  isH5,
-  isOnPodium,
-  onOffPodium,
-}) => {
+export const WaveArmSender: FC<BaseWaveArmProps> = observer(({ isH5, isOnPodium, onOffPodium }) => {
   const { handUpUIStore, shareUIStore } = useStore();
   const {
     waveArm,

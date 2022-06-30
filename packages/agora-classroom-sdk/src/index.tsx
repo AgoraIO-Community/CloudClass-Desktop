@@ -5,13 +5,9 @@ import { routesMap } from '@/infra/router';
 import { HomeStore } from '@/infra/stores/home';
 import { BizPageRouter } from './infra/types';
 import { GlobalStorage } from './infra/utils';
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 
-const EDU_CATEGORY = process.env.EDU_CATEGORY || 'general';
-
-const REDIRECT_MAPS: { [key: string]: string } = {
-  general: '/',
-  vocational: '/vocational',
-};
+declare const EDU_CATEGORY: string;
 
 const routes: BizPageRouter[] = [
   BizPageRouter.PretestPage,
@@ -22,10 +18,14 @@ const routes: BizPageRouter[] = [
   BizPageRouter.LaunchPage,
 ];
 
+const redirect =
+  AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+  EDU_CATEGORY === 'vocational';
+
 const RouteContainer = () => (
   <HashRouter>
-    <Redirect from="/" to={REDIRECT_MAPS[EDU_CATEGORY]} />
     <Switch>
+      {redirect ? <Redirect exact from="/" to="/vocational" /> : null}
       {routes.map((item, index) => {
         const route = routesMap[item];
         if (!route) return null;

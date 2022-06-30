@@ -228,12 +228,21 @@
   color: #7b88a0;
   @apply flex flex-col justify-center items-center cursor-pointer float-left;
 }
-.expand-tools .cleaner-item,
-.expand-tools .slice-item {
+.expand-tools .cleaner-item {
   width: 30px;
   height: 30px;
   color: #7b88a0;
   @apply flex flex-col justify-center items-center cursor-pointer float-left;
+}
+.expand-tools .slice-item {
+  width: 70px;
+  color: #7b88a0;
+  @apply flex flex-col justify-center items-center cursor-pointer float-left;
+}
+.expand-tools .slice-item .slice-item-icon {
+  width: 40px;
+  height: 40px;
+  @apply flex  justify-center items-center cursor-pointer;
 }
 .expand-tools .cabinet-item img,
 .expand-tools .cleaner-item img,

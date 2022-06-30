@@ -61,11 +61,14 @@ export class RemoteControlUIStore extends EduUIStoreBase {
   @bound
   moveWindowToTargetScreen(shareDevice: AGScreenShareDevice | undefined) {
     shareDevice &&
-      this.shareUIStore.moveWindowToTargetScreen(WindowID.RemoteControlBar, toJS(shareDevice.id) as string, {
-        width: RemoteControlBarUIParams.width,
-        height: RemoteControlBarUIParams.height,
-        y: 0,
-      });
+      this.shareUIStore.moveWindowToTargetScreen(
+        WindowID.RemoteControlBar,
+        toJS(shareDevice.id) as string,
+        {
+          width: RemoteControlBarUIParams.width,
+          height: RemoteControlBarUIParams.height,
+        },
+      );
   }
   @bound
   sendControlRequst(studentUuid: string) {

@@ -3,7 +3,8 @@ import { Button } from '../Button';
 import React, { useRef, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import classnames from 'classnames';
-import { Icon, transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
+import { Icon } from '~components/icon';
 import { MSG_TYPE } from '../../contants';
 import { messageAction } from '../../redux/actions/messageAction';
 import { setQuestioinStateAction } from '../../redux/actions/roomAction';
@@ -214,23 +215,23 @@ export const InputMsg = ({ allMutePermission }) => {
               </Popover>
             )}
             {configUIVisible.showQuestionBox && (
-            <>
-              <div className="divider" />
-              <div className="chat-question-container" onClick={toggleQuestionState}>
-                <Icon
-                  type={isQuestion ? 'radio-checked' : 'radio'}
-                  style={{
-                    height: '24px',
-                    width: '24px',
-                  }}
-                  size={24}
-                />
-                <div className={isQuestion ? 'question-text question-selected' : 'question-text'}>
-                  {transI18n('question')}
+              <>
+                <div className="divider" />
+                <div className="chat-question-container" onClick={toggleQuestionState}>
+                  <Icon
+                    type={isQuestion ? 'radio-checked' : 'radio'}
+                    style={{
+                      height: '24px',
+                      width: '24px',
+                    }}
+                    size={24}
+                  />
+                  <div className={isQuestion ? 'question-text question-selected' : 'question-text'}>
+                    {transI18n('question')}
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
+              </>
+            )}
           </div>
           {!configUIVisible.allMute
             ? null

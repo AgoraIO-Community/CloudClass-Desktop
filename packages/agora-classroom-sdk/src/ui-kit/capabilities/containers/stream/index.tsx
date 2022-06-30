@@ -1,4 +1,4 @@
-import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, {
   CSSProperties,
@@ -69,16 +69,14 @@ export const StreamPlaceholder = observer(
     });
 
     return (
-      // <StreamPlayerOverlay stream={stream}>
       <div style={style} className={cls}>
         <CameraPlaceHolder state={CameraPlaceholderType.notpresent} text={''} />
       </div>
-      // </StreamPlayerOverlay>
     );
   },
 );
 
-type TrackPlayerProps = {
+type RemoteTrackPlayerProps = {
   stream: EduStream;
   style?: CSSProperties;
   className?: string;
@@ -87,8 +85,10 @@ type TrackPlayerProps = {
   isFullScreen?: boolean;
 };
 
-export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
-  ({ style, stream, className, canSetupVideo = true }) => {
+type LocalTrackPlayerProps = Omit<RemoteTrackPlayerProps, 'stream'>;
+
+export const LocalTrackPlayer: React.FC<LocalTrackPlayerProps> = observer(
+  ({ style, className, canSetupVideo = true }) => {
     const {
       streamUIStore: { setupLocalVideo, isMirror },
     } = useStore();
@@ -96,15 +96,15 @@ export const LocalTrackPlayer: React.FC<TrackPlayerProps> = observer(
 
     useEffect(() => {
       if (ref.current && canSetupVideo) {
-        setupLocalVideo(stream, ref.current, isMirror);
+        setupLocalVideo(ref.current, isMirror);
       }
-    }, [stream, isMirror, setupLocalVideo, canSetupVideo]);
+    }, [isMirror, setupLocalVideo, canSetupVideo]);
 
     return <div style={style} className={className} ref={ref}></div>;
   },
 );
 
-export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
+export const RemoteTrackPlayer: React.FC<RemoteTrackPlayerProps> = observer(
   ({ style, stream, className, mirrorMode = true, canSetupVideo = true }) => {
     const [readyPlay, setReadyPlay] = useState(false);
     const [interactiveNeeded, setInteractiveNeeded] = useState(false);
@@ -113,7 +113,8 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
     const { setupRemoteVideo, muteRemoteAudioStream, muteRemoteVideoStream } = streamStore;
     const { isCDNMode } = roomStore;
 
-    const ref = useRef<HTMLDivElement | null>(null);
+    const rtcRef = useRef<HTMLDivElement | null>(null);
+    const cdnRef = useRef<HTMLDivElement | null>(null);
 
     const handleReadyPlay = () => setReadyPlay(true);
     const handleInteractiveNeeded = (interactiveNeeded: boolean) =>
@@ -135,18 +136,18 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
     }, [mediaStore, stream]);
 
     useEffect(() => {
-      if (ref.current && canSetupVideo && stream.streamHlsUrl && isCDNMode) {
+      if (cdnRef.current && canSetupVideo && stream.streamHlsUrl && isCDNMode) {
         muteRemoteVideoStream(stream, true);
         muteRemoteAudioStream(stream, true);
         mediaStore.setupMediaStream(
           stream.streamHlsUrl,
-          ref.current,
+          cdnRef.current,
           true,
           stream.audioSourceState === AgoraRteMediaSourceState.started,
           stream.videoSourceState === AgoraRteMediaSourceState.started,
         );
       }
-      if (ref.current && canSetupVideo && stream.streamHlsUrl && !isCDNMode) {
+      if (rtcRef.current && canSetupVideo && stream.streamHlsUrl && !isCDNMode) {
         const mediaTrackPlayer = mediaStore.getMediaTrackPlayer(stream.streamHlsUrl);
         if (mediaTrackPlayer) {
           mediaTrackPlayer.dispose();
@@ -154,8 +155,8 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
         muteRemoteVideoStream(stream, false);
         muteRemoteAudioStream(stream, false);
       }
-      if (ref.current && canSetupVideo && !isCDNMode) {
-        setupRemoteVideo(stream, ref.current, mirrorMode);
+      if (rtcRef.current && canSetupVideo && !isCDNMode) {
+        setupRemoteVideo(stream, rtcRef.current, mirrorMode);
       }
     }, [
       stream,
@@ -185,7 +186,14 @@ export const RemoteTrackPlayer: React.FC<TrackPlayerProps> = observer(
     }, [stream, mediaStore, handleReadyPlay, handleInteractiveNeeded]);
     return (
       <>
-        <div style={style} className={className} ref={ref}></div>
+        <div
+          style={style}
+          className={`${className} ${isCDNMode ? '' : 'hidden'}`}
+          ref={cdnRef}></div>
+        <div
+          style={style}
+          className={`${className} ${isCDNMode ? 'hidden ' : ''}`}
+          ref={rtcRef}></div>
         {isCDNMode && !interactiveNeeded && !readyPlay ? (
           <div className="video-player-video-loading"></div>
         ) : null}
@@ -294,9 +302,14 @@ const StreamPlayerWhiteboardGranted = observer(({ stream }: { stream: EduStreamU
   const {
     streamUIStore: { whiteboardGrantUsers },
   } = useStore();
+
+  const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+    stream.role,
+  );
+
   return (
     <>
-      {whiteboardGrantUsers.has(stream.fromUser.userUuid) ? (
+      {!isTeacherOrAssistant && whiteboardGrantUsers.has(stream.fromUser.userUuid) ? (
         <div className="bottom-right-granted"></div>
       ) : null}
     </>
@@ -466,7 +479,6 @@ export const StreamPlayer = observer(
             canSetupVideo={canSetupVideo}
             className={cls}
             style={style}
-            stream={stream.stream}
             isFullScreen={isFullScreen}
           />
         ) : (

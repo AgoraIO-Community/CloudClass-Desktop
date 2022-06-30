@@ -116,3 +116,13 @@ export const kickOutColumn: Column = {
     return <Icon type={hovered ? 'kick-out-hover' : 'kick-out'} />;
   },
 };
+
+export const superviseColumn: Column = {
+  key: 'superviseStudent',
+  order: 8,
+  name: 'roster.supervise_student',
+  operation: 'supervise-student',
+  render: (profile: Profile, hovered) => {
+    return <Icon type={'triangle'} />;
+  },
+};

@@ -3,6 +3,7 @@ const webpackMerge = require('webpack-merge');
 const baseConfig = require('./webpack.base');
 const path = require('path');
 const { DEFAULT_PORT, ROOT_PATH } = require('./utils/index');
+const { dev } = require('./utils/loaders');
 const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -23,42 +24,7 @@ const config = {
     port: DEFAULT_PORT,
   },
   module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: [
-          {
-            loader: 'thread-loader',
-          },
-          {
-            loader: 'style-loader',
-            options: {},
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              import: true,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ident: 'postcss',
-                config: path.resolve(ROOT_PATH, './postcss.config.js'),
-              },
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf)$/,
-        type: 'asset',
-        generator: {
-          filename: 'static/[name].[hash:8].[ext]',
-        },
-      },
-    ],
+    rules: [...dev],
   },
   optimization: {
     nodeEnv: 'development',

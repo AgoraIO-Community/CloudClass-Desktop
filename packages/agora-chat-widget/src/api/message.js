@@ -2,7 +2,7 @@ import WebIM from '../utils/WebIM';
 import { MSG_TYPE } from '../contants';
 import { messageAction } from '../redux/actions/messageAction';
 import { message } from 'antd';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 
 export class MessageAPI {
   store = null;

@@ -11,10 +11,10 @@ import {
   EduRoomServiceTypeEnum,
   HandUpProgress,
   RteRole2EduRole,
-  EduRoomTypeEnum
+  EduRoomTypeEnum,
 } from 'agora-edu-core';
 
-import { OnPodiumStateEnum, FetchUserType, FetchUserParam } from '../type'
+import { OnPodiumStateEnum, FetchUserType, FetchUserParam } from '../type';
 
 export type UserWaveArmInfo = {
   userUuid: string;
@@ -30,7 +30,7 @@ export type UserHandUpInfo = {
 };
 
 export class HandUpUIStore extends EduUIStoreBase {
-  onInstall() { }
+  onInstall() {}
 
   private _curInvitedInfo: HandUpProgress | undefined = undefined;
   private _refuseInvitedTs = 0;
@@ -63,8 +63,8 @@ export class HandUpUIStore extends EduUIStoreBase {
   }
 
   /**
- * 查询下一页的参数
- */
+   * 查询下一页的参数
+   */
   get fetchUserListParams() {
     return {
       nextId: this._nextPageId,
@@ -259,9 +259,9 @@ export class HandUpUIStore extends EduUIStoreBase {
   }
 
   /**
- * 邀请学生上台
- * @param userUuid
- */
+   * 邀请学生上台
+   * @param userUuid
+   */
   invite(userUuid: string, duration: number, payload?: any) {
     console.warn('邀请');
     this.classroomStore.handUpStore
@@ -281,9 +281,9 @@ export class HandUpUIStore extends EduUIStoreBase {
   }
 
   /**
-* 学生拒绝上台邀请
-* @param userUuid
-*/
+   * 学生拒绝上台邀请
+   * @param userUuid
+   */
   @bound
   refuseInvited() {
     if (this._curInvitedInfo) this._refuseInvitedTs = this._curInvitedInfo.ts;
@@ -352,14 +352,14 @@ export class HandUpUIStore extends EduUIStoreBase {
       const teacherUuid = teachers.keys().next().value;
 
       this.classroomStore.handUpStore
-        .waveArm(teacherUuid, duration as (3 | -1), payload)
+        .waveArm(teacherUuid, duration as 3 | -1, payload)
         .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
     }
   }
 
   /**
- * 获取下一页的用户列表
- */
+   * 获取下一页的用户列表
+   */
   @Lodash.debounced(300, { trailing: true })
   fetchUsersList(override?: Partial<FetchUserParam>, reset?: boolean) {
     const params = {
@@ -405,5 +405,5 @@ export class HandUpUIStore extends EduUIStoreBase {
     }
   }
 
-  onDestroy() { }
+  onDestroy() {}
 }

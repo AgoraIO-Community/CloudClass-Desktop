@@ -172,7 +172,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
             type={'primary'}
             onClick={onOK}
             action="ok"
-            disabled={!currentActiveId}>
+            disabled={currentActiveId === ''}>
             {t('fcr_share_title_share_window')}
           </Button>
         </div>

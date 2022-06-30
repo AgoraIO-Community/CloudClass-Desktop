@@ -15,6 +15,7 @@ import { BreakoutRoomDialog } from './breakout-room';
 import { Quit } from './quit';
 import { ScreenShareDialog } from './screen-share';
 import { RemoteControlConfirm } from './remote-control-confirm';
+import { StudentStream } from '../supervise-student';
 import { InviteConfirmContainer } from '../hand-up/invite-confirm';
 import { InvitePodiumContainer } from '../hand-up/invite-container';
 
@@ -45,6 +46,8 @@ const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode
       return <ScreenShareDialog {...props} id={id} />;
     case DialogCategory.RemoteControlConfirm:
       return <RemoteControlConfirm {...props} id={id}></RemoteControlConfirm>;
+    case DialogCategory.StreamView:
+      return <StudentStream {...props} id={id} />;
     case DialogCategory.InvitePodium:
       return <InvitePodiumContainer {...props} id={id} />;
     case DialogCategory.InviteConfirm:

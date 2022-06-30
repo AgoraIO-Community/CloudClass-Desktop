@@ -7,7 +7,7 @@
 .invite-table-wrap .search .input-search-wrapper {
   padding-left: 12px;
   border: 1px #595959 solid;
-  border-bottom: 1px solid #eeeef7
+  border-bottom: 1px solid #eeeef7;
 }
 
 .invite-table-wrap .search .input-search-wrapper .input-search {
@@ -32,7 +32,7 @@
   border-top: 1px solid #eeeef7;
 }
 
-.table-row-item.table-header .table-col-item{
+.table-row-item.table-header .table-col-item {
   color: #7b88a0;
 }
 
@@ -40,10 +40,10 @@
   font-size: 13px;
   padding: 8px 20px 8px 20px;
   background-color: #fff;
-  border-bottom: 1px solid  #eeeef7;
+  border-bottom: 1px solid #eeeef7;
 }
-.invite-table-wrap .table-header.table-row-item{
-  border-bottom: 2px solid  #eeeef7;
+.invite-table-wrap .table-header.table-row-item {
+  border-bottom: 2px solid #eeeef7;
   background-color: #f9f9fc;
 }
 

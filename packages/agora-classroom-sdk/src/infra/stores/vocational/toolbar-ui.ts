@@ -1,8 +1,4 @@
-import {
-  ToolbarItem,
-  ToolbarItemCategory,
-  ToolbarUIStore,
-} from '../common/toolbar-ui';
+import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from '../common/toolbar-ui';
 
 export class VocationalToolbarUIStore extends ToolbarUIStore {
   readonly allowedCabinetItems: string[] = [

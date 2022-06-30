@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components/i18n';
 import { ROLE } from '../contants';
 import {
   announcementStatus,

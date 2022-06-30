@@ -1,6 +1,5 @@
-import * as hx from 'agora-chat-widget';
+import { dispatchVisibleUI, dispatchShowChat, dispatchShowMiniIcon, HXChatRoom } from 'agora-chat-widget';
 import {
-  ClassroomState,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   IAgoraWidget,
@@ -50,6 +49,7 @@ const App: React.FC<AppProps> = observer((props) => {
         userUuid,
         userName: widgetStore.classroomConfig.sessionInfo.userName,
         roleType: widgetStore.classroomConfig.sessionInfo.role,
+        token: widgetStore.classroomConfig.sessionInfo.token,
       }
     : null;
 
@@ -102,14 +102,14 @@ const App: React.FC<AppProps> = observer((props) => {
   }, []);
 
   autorun(() => {
-    hx.dispatchVisibleUI({ isFullSize: widgetStore.isFullSize });
+    dispatchVisibleUI({ isFullSize: widgetStore.isFullSize });
   });
 
   reaction(
     () => widgetStore.showChat,
     (value) => {
-      hx.dispatchShowChat(value);
-      hx.dispatchShowMiniIcon(!value);
+      dispatchShowChat(value);
+      dispatchShowMiniIcon(!value);
     },
   );
 
@@ -123,12 +123,20 @@ const App: React.FC<AppProps> = observer((props) => {
     globalContext,
     context: { ...props, chatroomId, appName, orgName, ...roomInfo, ...localUserInfo },
   };
-
   const domRef = useRef<HTMLDivElement>(null);
-
+  const { appId, host, sessionInfo } = EduClassroomConfig.shared;
   return (
     <div id="hx-chatroom" ref={domRef} style={{ display: 'flex', width: '100%', height: '100%' }}>
-      <hx.HXChatRoom pluginStore={hxStore} />
+      <HXChatRoom
+        pluginStore={hxStore}
+        agoraTokenData={{
+          appId,
+          host,
+          roomUuid: sessionInfo.roomUuid,
+          userUuid: sessionInfo.userUuid,
+          token: sessionInfo.token,
+        }}
+      />
     </div>
   );
 });

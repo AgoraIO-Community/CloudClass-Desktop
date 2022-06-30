@@ -48,22 +48,24 @@ export const renderRoomSceneWith = (roomType: EduRoomTypeEnum, roomSubtype: EduR
   }
 };
 
-export const Scenarios: React.FC<ScenariosProps> = observer(({ pretest, roomType, roomSubtype }) => {
-  const { initialize } = useStore();
-  const [initialized, setInitialized] = useState(false);
+export const Scenarios: React.FC<ScenariosProps> = observer(
+  ({ pretest, roomType, roomSubtype }) => {
+    const { initialize } = useStore();
+    const [initialized, setInitialized] = useState(false);
 
-  useLayoutEffect(() => {
-    initialize();
-    setInitialized(true);
-  }, [initialize]);
+    useLayoutEffect(() => {
+      initialize();
+      setInitialized(true);
+    }, [initialize]);
 
-  const [showPretest, setPretest] = useState(pretest);
+    const [showPretest, setPretest] = useState(pretest);
 
-  return initialized ? (
-    showPretest ? (
-      <RoomPretestContainer onOK={() => setPretest(false)} />
-    ) : (
-      renderRoomSceneWith(roomType, roomSubtype)
-    )
-  ) : null;
-});
+    return initialized ? (
+      showPretest ? (
+        <RoomPretestContainer onOK={() => setPretest(false)} />
+      ) : (
+        renderRoomSceneWith(roomType, roomSubtype)
+      )
+    ) : null;
+  },
+);

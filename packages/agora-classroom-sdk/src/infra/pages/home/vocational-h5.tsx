@@ -18,6 +18,7 @@ import {
 import { MessageDialog } from './message-dialog';
 import { HomeApi } from './home-api';
 import { Helmet } from 'react-helmet';
+import MD5 from 'js-md5';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -90,7 +91,7 @@ export const VocationalHomeH5Page = observer(() => {
 
   const userUuid = useMemo(() => {
     if (!debug) {
-      return `${userName}${role}`;
+      return `${MD5(userName)}${role}`;
     }
     return `${userId}`;
   }, [role, userName, debug, userId]);
@@ -195,7 +196,7 @@ export const VocationalHomeH5Page = observer(() => {
           }
 
           HomeApi.shared.domain = tokenDomain;
-          const { rtmToken, appId } = await HomeApi.shared.login(userUuid);
+          const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
           const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
           const webRTCCodec =
@@ -211,7 +212,7 @@ export const VocationalHomeH5Page = observer(() => {
             courseWareList: courseWareList.slice(0, 1),
             language: language as LanguageEnum,
             userUuid: `${userUuid}`,
-            rtmToken,
+            rtmToken: token,
             roomUuid: `${roomUuid}`,
             roomType: scenario,
             roomSubtype,

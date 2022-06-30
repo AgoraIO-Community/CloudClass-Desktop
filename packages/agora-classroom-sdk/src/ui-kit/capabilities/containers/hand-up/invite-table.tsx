@@ -17,7 +17,7 @@ import { useStore } from '@/infra/hooks/use-edu-stores';
 import SearchSvg from './assets/search.svg';
 import './invite-table.css';
 import { EduRoleTypeEnum } from 'agora-edu-core';
-import { OnPodiumStateEnum} from '@/infra/stores/common/type'
+import { OnPodiumStateEnum } from '@/infra/stores/common/type';
 
 interface InviteTableProps {
   onSearchChange?: (keyword: string) => void;
@@ -104,7 +104,9 @@ export const InviteTable: React.FC<InviteTableProps> = observer(() => {
                 return (
                   <Row height={10} border={1} key={uid}>
                     <Col>
-                      <div className="table-user-name" title={name}>{name}</div>
+                      <div className="table-user-name" title={name}>
+                        {name}
+                      </div>
                     </Col>
                     <Col>{getRoleString(role)}</Col>
                     <Col

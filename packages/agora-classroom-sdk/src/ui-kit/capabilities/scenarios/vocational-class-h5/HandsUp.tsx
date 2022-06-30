@@ -7,13 +7,10 @@ import { EduClassroomConfig } from 'agora-edu-core';
 import { EduVocationalH5UIStore } from '@/infra/stores/vocational-h5';
 
 export const HandsUp = observer(() => {
-  const { handUpUIStore, classroomStore, streamUIStore, deviceSettingUIStore } = useVocationalH5UIStores() as EduVocationalH5UIStore;
+  const { handUpUIStore, classroomStore, streamUIStore, deviceSettingUIStore } =
+    useVocationalH5UIStores() as EduVocationalH5UIStore;
   const [visible, setVisible] = useState(false);
-  const {
-    waveArm,
-    teacherUuid,
-    offPodium,
-  } = handUpUIStore;
+  const { waveArm, teacherUuid, offPodium } = handUpUIStore;
   const { acceptedList } = classroomStore.roomStore;
   const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
   const {} = streamUIStore;
@@ -57,11 +54,7 @@ export const HandsUp = observer(() => {
         onClick={() => streamUIStore.toggleLocalAudio()}
       />
       {/* 举手上台 */}
-      <WaveArmSender
-        isH5={true}
-        isOnPodium={isOnPodium}
-        onOffPodium={handleOffPodium}
-        />
+      <WaveArmSender isH5={true} isOnPodium={isOnPodium} onOffPodium={handleOffPodium} />
     </div>
   );
   return (

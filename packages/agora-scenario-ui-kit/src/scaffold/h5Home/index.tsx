@@ -27,8 +27,11 @@ export const H5Login: React.FC<any> = ({
     { label: transI18n('home.roomType_interactiveBigClass'), value: 'big-class' },
   ];
 
-  if(isVocational) {
-    scenarioOptions.push({ label: transI18n('home.roomType_vocationalClass'), value: 'vocational-class' })
+  if (isVocational) {
+    scenarioOptions.push({
+      label: transI18n('home.roomType_vocationalClass'),
+      value: 'vocational-class',
+    });
   }
 
   const serviceOptions = [

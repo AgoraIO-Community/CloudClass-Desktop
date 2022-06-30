@@ -89,4 +89,3 @@ export type IconTypes =
   | 'm-micphone-off'
   | 'm-switch-camera-disabled'
   | 'm-switch-camera';
-  

@@ -4,6 +4,7 @@ const webpackbar = require('webpackbar');
 const eduCoreVersion = require('agora-edu-core/package.json').version;
 const rteVersion = require('agora-rte-sdk/package.json').version;
 const { ROOT_PATH, ALIAS } = require('./utils/index');
+const { base } = require('./utils/loaders');
 
 const classroomSdkVersion = require('../package.json').version;
 
@@ -37,118 +38,7 @@ module.exports = {
   },
   module: {
     unknownContextCritical: false,
-    rules: [
-      {
-        test: /\.js(x)?$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    useBuiltIns: 'usage',
-                    debug: false,
-                    corejs: {
-                      version: 3,
-                      proposals: true,
-                    },
-                  },
-                ],
-                [
-                  '@babel/preset-react',
-                  {
-                    runtime: 'automatic',
-                  },
-                ],
-              ],
-              plugins: [
-                '@babel/plugin-proposal-object-rest-spread',
-                '@babel/plugin-proposal-optional-chaining',
-                '@babel/plugin-proposal-nullish-coalescing-operator',
-                [
-                  '@babel/plugin-proposal-decorators',
-                  {
-                    legacy: true,
-                  },
-                ],
-                [
-                  '@babel/plugin-proposal-class-properties',
-                  {
-                    loose: true,
-                  },
-                ],
-                '@babel/plugin-transform-modules-commonjs',
-              ],
-            },
-          },
-        ],
-      },
-      {
-        test: /\.ts(x)?$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    useBuiltIns: 'usage',
-                    debug: false,
-                    corejs: {
-                      version: 3,
-                      proposals: true,
-                    },
-                  },
-                ],
-                [
-                  '@babel/preset-react',
-                  {
-                    runtime: 'automatic',
-                  },
-                ],
-                '@babel/preset-typescript',
-              ],
-              plugins: [
-                [
-                  '@babel/plugin-transform-typescript',
-                  {
-                    allowDeclareFields: true,
-                  },
-                ],
-                '@babel/plugin-proposal-object-rest-spread',
-                '@babel/plugin-proposal-optional-chaining',
-                '@babel/plugin-proposal-nullish-coalescing-operator',
-                [
-                  '@babel/plugin-proposal-decorators',
-                  {
-                    legacy: true,
-                  },
-                ],
-                [
-                  '@babel/plugin-proposal-class-properties',
-                  {
-                    loose: true,
-                  },
-                ],
-              ],
-            },
-          },
-        ],
-      },
-      {
-        test: /\.worker\.js$/,
-        use: { loader: 'worker-loader' },
-      },
-      {
-        test: /\.svga$/,
-        use: { loader: 'url-loader' },
-      },
-    ],
+    rules: [...base],
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -162,6 +52,7 @@ module.exports = {
       RTE_RUNTIME_PLATFORM: JSON.stringify(process.env.RTE_RUNTIME_PLATFORM),
       BUILD_TIME: JSON.stringify(Date.now()),
       BUILD_COMMIT_ID: JSON.stringify(process.env.FCR_BUILD_COMMIT_ID),
+      EDU_CATEGORY: JSON.stringify(process.env.EDU_CATEGORY),
     }),
   ],
   stats: {
