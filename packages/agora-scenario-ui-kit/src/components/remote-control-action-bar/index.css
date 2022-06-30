@@ -17,6 +17,10 @@
   background: #e5e5f0;
   margin: 0 5px;
 }
+.remote-control-action-bar .student-list {
+  display: flex;
+  align-items: center;
+}
 .remote-control-action-bar .student-list span {
   padding-right: 5px;
 }

@@ -152,29 +152,6 @@ export const zh = {
     kick_by_other_side: '远端重复登录, 当前账号已离开房间',
     screen_share: {
       title: '屏幕共享',
-      teacher_screen_share: {
-        title: '教师屏幕共享',
-        tip1: '支持单个窗口共享',
-        tip2: '支持全屏共享',
-        tip3: '不支持声音',
-      },
-      student_screen_share: {
-        title: '学生屏幕共享',
-        tip1: '可指定任意学生屏幕',
-        tip2: '支持全屏共享',
-        tip3: '不支持声音',
-      },
-      tips: {
-        no_student_device_supported: '学生设备不支持远程控制，无法开启学生屏幕共享',
-        no_student: '当前教室没有学生，无法开启学生屏幕共享',
-        stop_share: '老师已停止共享你的屏幕',
-        share_confirm: '老师正在请求分享并操作你的屏幕，请选择同意或暂不处理',
-        request_share_loading:
-          '{studentName} 尚未同意共享屏幕，提醒{studentName} 单击“同意”按钮共享自己的屏幕',
-        student_leave: '{用户名} 上课设备不支持远程控制',
-        revoke_control: '老师已回收你的屏幕控制权',
-        authorize_control: '老师已授权你控制屏幕',
-      },
     },
     close_ppt: '关闭当前课件',
     sure_close_ppt: '你确定要关闭吗？',
