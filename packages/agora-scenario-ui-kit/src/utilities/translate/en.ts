@@ -5,7 +5,7 @@ export const en = {
   'Microphone Not Available': 'Microphone Not Available',
   'Close Camera': 'Close camera',
   'Open Camera': 'Open camera',
-  'Clear Podium': 'Off the stage',
+  'Clear Podium': 'Down stage',
   'Clear Podiums': 'Clear the stage',
   'Close Whiteboard': 'Cancel Authorize',
   'Whiteboard Not Available': 'Whiteboard Not Available',
@@ -508,8 +508,8 @@ export const en = {
     'teacher.grant.permission': 'You can now annotate on the whiteboard',
     'teacher.revoke.permission': 'Your access to the whiteboard has been revoked by the teacher',
     'teacher.accept.onpodium':
-      'You are on stage now,You are in presentation mode now. Please feel free to interact with others',
-    'teacher.revoke.onpodium': 'You are off the stage now/You are no longer in presentation mode',
+      'You are on stage now, you are in presentation mode now. Please feel free to interact with others',
+    'teacher.revoke.onpodium': 'You are off the stage now, you are no longer in presentation mode',
     'teacher.reward': '{reason} has been rewarded by the teacher',
     'teacher.reward2':
       'Congratulations to {reason1} and {reason2} other students for getting a star',

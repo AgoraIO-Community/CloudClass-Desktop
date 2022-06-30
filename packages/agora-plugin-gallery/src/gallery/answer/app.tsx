@@ -96,13 +96,13 @@ const ResultDetail = observer(() => {
       <Table className="answer-table">
         <TableHeader>
           <Col key="student-name" style={{ justifyContent: 'center' }}>
-            {transI18n('answer.student-name')}
+            {transI18n('widget_selector.student-name')}
           </Col>
           <Col key="answer-time" style={{ justifyContent: 'center' }}>
-            {transI18n('answer.answer-time')}
+            {transI18n('widget_selector.answer-time')}
           </Col>
           <Col key="selected-answer" style={{ justifyContent: 'center' }}>
-            {transI18n('answer.selected-answer')}
+            {transI18n('widget_selector.selected-answer')}
           </Col>
         </TableHeader>
         <Table className="table-container">
