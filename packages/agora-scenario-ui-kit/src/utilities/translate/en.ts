@@ -36,7 +36,7 @@ export const en = {
   },
   screen_share: 'Screen Share',
   kick: {
-    kick_out_student: 'Kick Out',
+    kick_out_student: 'Remove students',
   },
   radio: {
     kicked_once: 'Remove the student from the classroom',
