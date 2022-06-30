@@ -574,7 +574,7 @@ export const en = {
     group_current_empty: 'Empty',
   },
   /** Breakout Room  */
-  fcr_group_help_title: 'Ask for help',
+  fcr_group_help_title: 'Request help',
   fcr_group_help_content: 'You can invite the teacher to this group for assistance.',
   fcr_group_help_teacher_busy_msg:
     'The teacher is currently helping others. Please try again later.',
