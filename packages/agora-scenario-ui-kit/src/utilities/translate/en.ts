@@ -60,7 +60,7 @@ export const en = {
   roster: {
     chat: 'Mute Chat',
     teacher_name: 'Teacher:',
-    user_list: 'Student roster',
+    user_list: 'Roster',
     student_name: 'Student',
     student_co_video: 'Stage',
     camera_state: 'Camera',
