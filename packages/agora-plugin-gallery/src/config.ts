@@ -20,4 +20,14 @@ export const WidgetsConfigMap: Record<AgoraWidgetPrefix, AgoraWidgetConfig> = {
 };
 export enum AgoraWidgetCustomEventType {
   WidgetReload = 'WidgetReload',
+  ControlledStateChange = 'ControlledStateChange',
+  GetControlledState = 'GetControlledState',
+}
+declare global {
+  interface Window {
+    YT: {
+      Player: new (domId: string, opts?: any) => void;
+    };
+    onYouTubeIframeAPIReady: () => void;
+  }
 }

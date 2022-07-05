@@ -22,6 +22,8 @@ declare module 'agora-plugin-gallery' {
   declare class AgoraSelector {}
   declare enum AgoraWidgetCustomEventType {
     WidgetReload = 'WidgetReload',
+    ControlledStateChange = 'ControlledStateChange',
+    GetControlledState = 'GetControlledState',
   }
   declare enum AgoraWidgetPrefix {
     Webview = 'webView',

@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx';
 import { AGError, bound } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
 import {
@@ -11,6 +11,7 @@ import {
 import { EduShareUIStore } from './share-ui';
 import { BUILTIN_WIDGETS } from './widget-ui';
 import { isSupportedImageType } from '@/infra/utils';
+import { AgoraWidgetCustomEventType } from 'agora-plugin-gallery';
 
 export class BoardUIStore extends EduUIStoreBase {
   protected get uiOverrides() {
@@ -23,7 +24,7 @@ export class BoardUIStore extends EduUIStoreBase {
 
   private _collectorContainer: HTMLElement | undefined = undefined;
 
-  protected _disposers: IReactionDisposer[] = [];
+  protected _disposers: (() => void | IReactionDisposer)[] = [];
 
   @observable
   isCopying = false;
@@ -34,6 +35,32 @@ export class BoardUIStore extends EduUIStoreBase {
         () => this.grantedUsers,
         (grantUsers) => {
           this.classroomStore.boardStore.setGrantedUsers(grantUsers);
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.isGrantedBoard,
+        (isGrantedBoard) => {
+          this.sendControlledStateToWidget(isGrantedBoard);
+        },
+      ),
+    );
+    this._disposers.push(
+      computed(() => this.classroomStore.widgetStore.widgetController).observe(
+        ({ newValue, oldValue }) => {
+          if (newValue) {
+            newValue.eventBus.on(
+              AgoraWidgetCustomEventType.GetControlledState,
+              this.onGetControlledState,
+            );
+          }
+          if (oldValue) {
+            oldValue.eventBus.off(
+              AgoraWidgetCustomEventType.GetControlledState,
+              this.onGetControlledState,
+            );
+          }
         },
       ),
     );
@@ -281,7 +308,18 @@ export class BoardUIStore extends EduUIStoreBase {
       }
     }
   };
-
+  sendControlledStateToWidget = (isGrantedBoard: boolean) => {
+    this.classroomStore.widgetStore.widgetController?.eventBus.emit(
+      AgoraWidgetCustomEventType.ControlledStateChange,
+      {
+        isTeacherOrAssistant: this.isTeacherOrAssistant,
+        isGrantedBoard,
+      },
+    );
+  };
+  onGetControlledState = () => {
+    this.sendControlledStateToWidget(this.isGrantedBoard);
+  };
   onDestroy() {
     this._disposers.forEach((d) => d());
     this._disposers = [];
