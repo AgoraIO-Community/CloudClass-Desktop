@@ -55,7 +55,7 @@ export const PublicResourcesContainer = observer(() => {
         <Table className="table-container">
           {publicResources.size > 0 ? (
             [...publicResources].map(
-              ([key, { resourceName, updateTime, size, resourceUuid }]: [
+              ([key, { resourceName, updateTime, size, resourceUuid, ext }]: [
                 string,
                 CloudDriveResource,
               ]) => (
@@ -64,7 +64,7 @@ export const PublicResourcesContainer = observer(() => {
                     style={{ cursor: 'pointer', paddingLeft: 19 }}
                     onClick={() => onClickCol(resourceUuid)}>
                     <SvgImg
-                      type={fileNameToType(resourceName)}
+                      type={fileNameToType(ext)}
                       style={{
                         marginRight: '6px',
                         color: FileTypeSvgColor[fileNameToType(resourceName)],
@@ -75,9 +75,9 @@ export const PublicResourcesContainer = observer(() => {
                         dangerouslySetInnerHTML={{
                           __html: searchPublicResourcesKeyword
                             ? resourceName.replaceAll(
-                                searchPublicResourcesKeyword,
-                                `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
-                              )
+                              searchPublicResourcesKeyword,
+                              `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
+                            )
                             : resourceName,
                         }}></span>
                     </Inline>
