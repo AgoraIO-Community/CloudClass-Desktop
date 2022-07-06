@@ -44,28 +44,56 @@ const useYoutubePlayer = (initialState: {
   url: string;
   isYoutube: boolean;
   domId: string;
-  controls?: boolean;
+  controlled?: boolean;
+  onPlaybackRateChange: (suggestedRate: { target: any; data: number }) => void;
+  onPlaybackQualityChange: (suggestedQuality: { target: any; data: string }) => void;
+  onStateChange: (e: { data: number; target: any }) => void;
 }) => {
-  const { url, isYoutube, domId, controls } = initialState;
+  const {
+    url,
+    isYoutube,
+    domId,
+    controlled,
+    onPlaybackRateChange,
+    onPlaybackQualityChange,
+    onStateChange,
+  } = initialState;
   const [playerReady, setPlayerReady] = useState(false);
   const playerRef = useRef<any>(null);
   const onPlayerReady = useCallback(() => {
     setPlayerReady(true);
+    playerRef.current?.addEventListener('onStateChange', onStateChange);
   }, []);
-
-  const createYTBPlayer = (domId: string) => {
-    playerRef.current = new window.YT.Player(domId, {
-      height: document.querySelector(`#${domId}`)?.clientHeight,
-      width: document.querySelector(`#${domId}`)?.clientWidth,
-      videoId: getYouTubeVideoIdFromUrl(url),
-      playerVar: { controls: controls ? 1 : 0 },
-      events: {
-        onReady: onPlayerReady,
-      },
-    });
-  };
+  const reload = useCallback(() => {
+    setPlayerReady(false);
+    playerRef.current?.destroy();
+    playerRef.current = null;
+    initialize();
+  }, [controlled]);
+  const createYTBPlayer = useCallback(
+    (domId: string) => {
+      playerRef.current = new window.YT.Player(domId, {
+        height: document.querySelector(`#${domId}`)?.clientHeight,
+        width: document.querySelector(`#${domId}`)?.clientWidth,
+        videoId: getYouTubeVideoIdFromUrl(url),
+        playerVars: {
+          controls: controlled ? 1 : 0,
+          fs: 0,
+          modestbranding: 0,
+          cc_load_policy: 0,
+          iv_load_policy: 3,
+        },
+        events: {
+          onReady: onPlayerReady,
+          onPlaybackRateChange: controlled && onPlaybackRateChange,
+          onPlaybackQualityChange: controlled && onPlaybackQualityChange,
+        },
+      });
+    },
+    [controlled],
+  );
   const initialize = useCallback(async () => {
-    if (playerRef.current || controls === undefined) return;
+    if (playerRef.current || controlled === undefined) return;
     if (isYoutube) {
       if (window.YT) {
         createYTBPlayer(domId);
@@ -74,19 +102,20 @@ const useYoutubePlayer = (initialState: {
         loadYoutubeIframeAPI();
       }
     }
-  }, [domId, controls]);
+  }, [domId, controlled]);
 
   useEffect(() => {
     initialize();
-  }, [controls]);
+  }, [controlled]);
   useEffect(() => () => playerRef.current?.destroy(), []);
-  return { playerInstance: playerRef, playerReady };
+  return { playerInstance: playerRef, playerReady, reloadPlayer: reload };
 };
 export const Webview = observer((props: { widget: WebviewWidget }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const iframeContainerRef = useRef<HTMLIFrameElement>(null);
+  const controlledRef = useRef<boolean>();
   const controlledState = useControlledState(props.widget);
-  const canControlled = useMemo(() => controlledState.isTeacherOrAssistant, [controlledState]);
+
   const domId = `YoutubePlayer-${props.widget.id}`;
   const webViewUrl = useMemo(() => {
     return decodeURIComponent(props.widget.widgetRoomProperties.extra?.webViewUrl || '');
@@ -94,15 +123,47 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
   const isYoutube = useMemo(() => {
     return webViewUrl.includes('youtube.com') || webViewUrl.includes('youtu.be') || false;
   }, [webViewUrl]);
-  const { playerInstance, playerReady } = useYoutubePlayer({
+
+  const onPlaybackQualityChange = (suggestedQuality: { target: any; data: string }) => {
+    props.widget.widgetController.updateWidgetProperties(props.widget.id, {
+      extra: { playbackQuality: suggestedQuality.data },
+    });
+  };
+  const onPlaybackRateChange = (suggestedRate: { target: any; data: number }) => {
+    props.widget.widgetController.updateWidgetProperties(props.widget.id, {
+      extra: { playbackRate: suggestedRate.data },
+    });
+  };
+  const onStateChange = (e: { data: number; target: any }) => {
+    if (controlledRef.current) {
+      if (e.data === 1 || e.data === 3) {
+        props.widget.widgetController.updateWidgetProperties(props.widget.id, {
+          extra: { isPlaying: true },
+        });
+      }
+      if (e.data === 2) {
+        props.widget.widgetController.updateWidgetProperties(props.widget.id, {
+          extra: { isPlaying: false },
+        });
+      }
+      postPlayerStateToServer();
+    }
+  };
+  useEffect(() => {
+    controlledRef.current = controlledState.isTeacherOrAssistant;
+  }, [controlledState]);
+  const { playerInstance, playerReady, reloadPlayer } = useYoutubePlayer({
     url: webViewUrl,
     isYoutube,
     domId,
-    controls: canControlled,
+    controlled: controlledState.isTeacherOrAssistant,
+    onPlaybackQualityChange,
+    onPlaybackRateChange,
+    onStateChange: debounce(onStateChange, 1000),
   });
+
   useEffect(() => {
     if (playerReady) {
-      playerInstance.current?.addEventListener('onStateChange', debounce(onStateChange, 1000));
       syncPlayerStateFromRoomProperties();
     }
     const dispose = startInterval();
@@ -120,12 +181,19 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
         handleWidgetRoomPropertiesUpdate,
       );
     };
-  }, [canControlled, playerInstance.current, props.widget.widgetRoomProperties]);
+  }, [
+    props.widget.widgetRoomProperties.extra?.currentTime,
+    props.widget.widgetRoomProperties.extra?.isPlaying,
+    props.widget.widgetRoomProperties.extra?.isMuted,
+    props.widget.widgetRoomProperties.extra?.volume,
+    props.widget.widgetRoomProperties.extra?.playbackRate,
+    props.widget.widgetRoomProperties.extra?.playbackQuality,
+  ]);
 
   useEffect(() => {
     addListeners();
     return removeListeners;
-  }, []);
+  }, [controlledState.isTeacherOrAssistant]);
   const addListeners = () => {
     props.widget.widgetController.eventBus.on(
       AgoraWidgetCustomEventType.WidgetReload,
@@ -144,38 +212,32 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
     document.removeEventListener('mousedown', handleMousedown);
     document.removeEventListener('mouseup', handleMouseup);
   };
+
   const handleMousedown = useCallback(() => {
     if (iframeContainerRef.current) iframeContainerRef.current.style.pointerEvents = 'auto';
   }, []);
   const handleMouseup = useCallback(() => {
     if (iframeContainerRef.current) iframeContainerRef.current.style.pointerEvents = 'none';
   }, []);
-  const postCurrentTimeToServer = useCallback(() => {
+  const postPlayerStateToServer = useCallback(() => {
     const currentTime = playerInstance.current?.getCurrentTime();
+    const isMuted = playerInstance.current?.isMuted();
+    const volume = playerInstance.current?.getVolume();
+
     props.widget.widgetController.updateWidgetProperties(props.widget.id, {
-      extra: { currentTime },
+      extra: { currentTime, isMuted, volume },
     });
   }, []);
-  const onStateChange = (e: { data: number; target: any }) => {
-    if (canControlled) {
-      if (e.data === 1 || e.data === 3) {
-        props.widget.widgetController.updateWidgetProperties(props.widget.id, {
-          extra: { isPlaying: true },
-        });
-      }
-      if (e.data === 2) {
-        props.widget.widgetController.updateWidgetProperties(props.widget.id, {
-          extra: { isPlaying: false },
-        });
-      }
-      postCurrentTimeToServer();
-    }
-  };
+
   const handleWidgetReload = useCallback(
     (widgetId: string) => {
       if (widgetId === props.widget.id) {
         if (isYoutube) {
-          playerInstance.current.getIframe().src = playerInstance.current.getIframe().src;
+          reloadPlayer();
+          if (controlledRef.current)
+            props.widget.widgetController.updateWidgetProperties(props.widget.id, {
+              extra: { isPlaying: false },
+            });
         } else {
           if (iframeRef.current) {
             iframeRef.current.src = webViewUrl;
@@ -183,45 +245,63 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
         }
       }
     },
-    [webViewUrl, isYoutube],
+    [webViewUrl, isYoutube, controlledState.isTeacherOrAssistant],
   );
   const syncPlayerStateFromRoomProperties = useCallback(() => {
-    if (
-      Math.abs(
-        (props.widget.widgetRoomProperties.extra?.currentTime || 0) -
-          (playerInstance.current?.getCurrentTime() || 0),
-      ) > 3
-    ) {
-      playerInstance.current?.seekTo(props.widget.widgetRoomProperties.extra?.currentTime);
+    const { extra } = props.widget.widgetRoomProperties;
+
+    if (Math.abs((extra?.currentTime || 0) - (playerInstance.current?.getCurrentTime() || 0)) > 3) {
+      playerInstance.current?.seekTo(extra?.currentTime);
     }
-    if (props.widget.widgetRoomProperties.extra?.isPlaying) {
+    if (extra?.isPlaying) {
       playerInstance.current?.playVideo();
     } else {
       playerInstance.current?.pauseVideo();
     }
+    if (extra?.playbackRate) {
+      const currentPlaybackRate = playerInstance.current.getPlaybackRate();
+      if (extra.playbackRate !== currentPlaybackRate)
+        playerInstance.current.setPlaybackRate(extra.playbackRate);
+    }
+    if (extra?.playbackQuality) {
+      const currentPlaybackQuality = playerInstance.current.getPlaybackQuality();
+      if (extra.playbackQuality !== currentPlaybackQuality) {
+        playerInstance.current.setPlaybackQuality(extra.playbackQuality);
+      }
+    }
+    if (extra?.volume) {
+      const currentVolume = playerInstance.current.getVolume();
+      if (currentVolume !== extra.volume) playerInstance.current.setVolume(extra.volume);
+    }
+    if (extra?.isMuted !== undefined) {
+      const isMute = playerInstance.current.isMuted();
+      if (isMute !== extra.isMuted)
+        extra.isMuted ? playerInstance.current.mute() : playerInstance.current.unMute();
+    }
   }, [
     props.widget.widgetRoomProperties.extra?.currentTime,
     props.widget.widgetRoomProperties.extra?.isPlaying,
+    props.widget.widgetRoomProperties.extra?.isMuted,
+    props.widget.widgetRoomProperties.extra?.volume,
+    props.widget.widgetRoomProperties.extra?.playbackRate,
+    props.widget.widgetRoomProperties.extra?.playbackQuality,
   ]);
-  const handleWidgetRoomPropertiesUpdate = useCallback(
-    (widgetId: string) => {
-      if (widgetId === props.widget.id) {
-        syncPlayerStateFromRoomPropertiesWithoutControlled();
-      }
-    },
-    [canControlled],
-  );
+  const handleWidgetRoomPropertiesUpdate = useCallback((widgetId: string) => {
+    if (widgetId === props.widget.id) {
+      syncPlayerStateFromRoomPropertiesWithoutControlled();
+    }
+  }, []);
   const syncPlayerStateFromRoomPropertiesWithoutControlled = useCallback(() => {
-    if (!canControlled) {
+    if (!controlledRef.current) {
       syncPlayerStateFromRoomProperties();
     }
-  }, [canControlled]);
+  }, []);
 
   const sync = useCallback(() => {
-    if (canControlled) {
-      postCurrentTimeToServer();
+    if (controlledRef.current) {
+      postPlayerStateToServer();
     }
-  }, [canControlled]);
+  }, []);
   const startInterval = () => {
     const timer = setInterval(sync, 5000);
     return () => {
@@ -248,7 +328,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
             style={{
               width: '100%',
               height: '100%',
-              pointerEvents: canControlled ? 'auto' : 'none',
+              pointerEvents: controlledState.isTeacherOrAssistant ? 'auto' : 'none',
             }}></div>
         ) : (
           <iframe
@@ -258,7 +338,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
         )}
       </div>
     ),
-    [webViewUrl, isYoutube, canControlled],
+    [webViewUrl, isYoutube, controlledState.isTeacherOrAssistant],
   );
   return memo;
 });

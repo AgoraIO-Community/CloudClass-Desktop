@@ -10,6 +10,10 @@ export interface IWebviewWidgetExtraProperties {
   type: WebviewTypeEnum;
   isPlaying?: boolean;
   currentTime?: number;
+  playbackQuality?: string;
+  playbackRate?: number;
+  volume?: number;
+  isMuted?: boolean;
 }
 export enum WebviewTypeEnum {
   WebView = 'WebView',
