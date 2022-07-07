@@ -141,7 +141,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
           extra: { isPlaying: true },
         });
       }
-      if (e.data === 2) {
+      if (e.data === 2 || e.data === 0) {
         props.widget.widgetController.updateWidgetProperties(props.widget.id, {
           extra: { isPlaying: false },
         });
@@ -249,9 +249,9 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
   );
   const syncPlayerStateFromRoomProperties = useCallback(() => {
     const { extra } = props.widget.widgetRoomProperties;
-
     if (Math.abs((extra?.currentTime || 0) - (playerInstance.current?.getCurrentTime() || 0)) > 3) {
       playerInstance.current?.seekTo(extra?.currentTime);
+      playerInstance.current?.pauseVideo();
     }
     if (extra?.isPlaying) {
       playerInstance.current?.playVideo();
