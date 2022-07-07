@@ -53,6 +53,20 @@ function addScreenShotListeners() {
   };
 
   screenShot.on('short-cut-capture', (event, payload) => {
+
+    
+    if (payload.hideWindow) {
+      const permission = electron.systemPreferences.getMediaAccessStatus('screen') 
+      if (permission !== 'granted') {
+       // send denied
+        mainWindow.current.webContents.send('short-cut-capture', {
+          type: 'ShortCutCaptureDenied',
+          payload: {},
+        });
+        return
+      }
+    }
+
     if (!isCapturing) {
       isCapturing = true;
       let hideWindow = false;

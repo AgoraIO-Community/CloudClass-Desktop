@@ -519,6 +519,7 @@ export const en = {
     save_success: 'Save successfully',
     save_error: 'Failed to save snapshot of the whiteboard',
     saving: 'Please wait…',
+    screen_shot_permission_denied: 'Before using screen shot, please turn on the permission'
   },
   breakout_room: {
     create_prefix: 'Create',

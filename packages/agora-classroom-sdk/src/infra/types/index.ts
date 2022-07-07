@@ -45,6 +45,8 @@ export enum IPCMessageType {
   SwitchScreenShareDevice = 'SwitchScreenShareDevice',
   // 截图完成
   ShortCutCaptureDone = 'ShortCutCaptureDone',
+  // 未授权
+  ShortCutCaptureDenied = 'ShortCutCaptureDenied'
 }
 export enum ControlState {
   NotAllowedControlled = '0',

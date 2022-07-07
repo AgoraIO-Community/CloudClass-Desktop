@@ -157,6 +157,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
             ) {
               this._pastToBoard(payload.dataURL as any);
             }
+            if (type === IPCMessageType.ShortCutCaptureDenied) {
+              this.shareUIStore.addToast(transI18n('toast2.screen_shot_permission_denied'), 'error');
+            }
           },
         ),
       );
