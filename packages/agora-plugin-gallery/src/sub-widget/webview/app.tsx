@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AgoraWidgetBase, AgoraWidgetEventType } from 'agora-edu-core';
 import { AgoraWidgetCustomEventType } from '../../config';
-import { WebviewWidget } from './webview';
+import { IWebviewWidgetExtraProperties, WebviewWidget } from './webview';
 import { observer } from 'mobx-react';
 import { debounce } from 'lodash';
 
@@ -137,16 +137,11 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
   const onStateChange = (e: { data: number; target: any }) => {
     if (controlledRef.current) {
       if (e.data === 1 || e.data === 3) {
-        props.widget.widgetController.updateWidgetProperties(props.widget.id, {
-          extra: { isPlaying: true },
-        });
+        postPlayerStateToServer({ isPlaying: true });
       }
       if (e.data === 2 || e.data === 0) {
-        props.widget.widgetController.updateWidgetProperties(props.widget.id, {
-          extra: { isPlaying: false },
-        });
+        postPlayerStateToServer({ isPlaying: false });
       }
-      postPlayerStateToServer();
     }
   };
   useEffect(() => {
@@ -159,7 +154,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
     controlled: controlledState.isTeacherOrAssistant,
     onPlaybackQualityChange,
     onPlaybackRateChange,
-    onStateChange: debounce(onStateChange, 1000),
+    onStateChange: debounce(onStateChange, 300),
   });
 
   useEffect(() => {
@@ -219,13 +214,13 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
   const handleMouseup = useCallback(() => {
     if (iframeContainerRef.current) iframeContainerRef.current.style.pointerEvents = 'none';
   }, []);
-  const postPlayerStateToServer = useCallback(() => {
+  const postPlayerStateToServer = useCallback((extra?: Partial<IWebviewWidgetExtraProperties>) => {
     const currentTime = playerInstance.current?.getCurrentTime();
     const isMuted = playerInstance.current?.isMuted();
     const volume = playerInstance.current?.getVolume();
 
     props.widget.widgetController.updateWidgetProperties(props.widget.id, {
-      extra: { currentTime, isMuted, volume },
+      extra: { currentTime, isMuted, volume, ...extra },
     });
   }, []);
 
@@ -288,11 +283,6 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
   ]);
   const handleWidgetRoomPropertiesUpdate = useCallback((widgetId: string) => {
     if (widgetId === props.widget.id) {
-      syncPlayerStateFromRoomPropertiesWithoutControlled();
-    }
-  }, []);
-  const syncPlayerStateFromRoomPropertiesWithoutControlled = useCallback(() => {
-    if (!controlledRef.current) {
       syncPlayerStateFromRoomProperties();
     }
   }, []);
