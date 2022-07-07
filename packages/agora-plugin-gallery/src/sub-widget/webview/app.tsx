@@ -7,7 +7,7 @@ import { debounce } from 'lodash';
 
 const useControlledState = (widget: AgoraWidgetBase) => {
   const [controlledState, setControlledState] =
-    useState<{ isTeacherOrAssistant: boolean; isGrantedBoard: boolean }>();
+    useState<{ isTeacher: boolean; isGrantedBoard: boolean }>();
 
   useEffect(() => {
     widget.widgetController.eventBus.on(
@@ -145,13 +145,13 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
     }
   };
   useEffect(() => {
-    controlledRef.current = controlledState.isTeacherOrAssistant;
+    controlledRef.current = controlledState.isTeacher;
   }, [controlledState]);
   const { playerInstance, playerReady, reloadPlayer } = useYoutubePlayer({
     url: webViewUrl,
     isYoutube,
     domId,
-    controlled: controlledState.isTeacherOrAssistant,
+    controlled: controlledState.isTeacher,
     onPlaybackQualityChange,
     onPlaybackRateChange,
     onStateChange: debounce(onStateChange, 300),
@@ -188,7 +188,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
   useEffect(() => {
     addListeners();
     return removeListeners;
-  }, [controlledState.isTeacherOrAssistant]);
+  }, [controlledState.isTeacher]);
   const addListeners = () => {
     props.widget.widgetController.eventBus.on(
       AgoraWidgetCustomEventType.WidgetReload,
@@ -240,7 +240,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
         }
       }
     },
-    [webViewUrl, isYoutube, controlledState.isTeacherOrAssistant],
+    [webViewUrl, isYoutube, controlledState.isTeacher],
   );
   const syncPlayerStateFromRoomProperties = useCallback(() => {
     const { extra } = props.widget.widgetRoomProperties;
@@ -318,7 +318,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
             style={{
               width: '100%',
               height: '100%',
-              pointerEvents: controlledState.isTeacherOrAssistant ? 'auto' : 'none',
+              pointerEvents: controlledState.isTeacher ? 'auto' : 'none',
             }}></div>
         ) : (
           <iframe
@@ -328,7 +328,7 @@ export const Webview = observer((props: { widget: WebviewWidget }) => {
         )}
       </div>
     ),
-    [webViewUrl, isYoutube, controlledState.isTeacherOrAssistant],
+    [webViewUrl, isYoutube, controlledState.isTeacher],
   );
   return memo;
 });

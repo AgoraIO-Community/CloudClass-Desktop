@@ -1,8 +1,13 @@
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
-import { ChangeEvent, useRef, useEffect, useCallback, useState } from 'react';
+import { ChangeEvent, useRef, useEffect, useCallback, useState, useMemo } from 'react';
 import { useStore } from '~hooks/use-edu-stores';
-import { CloudDriveCourseResource, CloudDriveResource } from 'agora-edu-core';
+import {
+  CloudDriveCourseResource,
+  CloudDriveResource,
+  EduClassroomConfig,
+  EduRoleTypeEnum,
+} from 'agora-edu-core';
 import {
   Col,
   Inline,
@@ -231,6 +236,10 @@ export const PersonalResourcesContainer = observer(() => {
   const onOnlineCoursewareSubmit = async (formData: IUploadOnlineCoursewareData) => {
     await uploadPersonalResource(formData);
   };
+  const isAssistant = useMemo(
+    () => EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant,
+    [],
+  );
   return (
     <>
       {showUploadToast ? <UploadSuccessToast /> : null}
@@ -264,83 +273,90 @@ export const PersonalResourcesContainer = observer(() => {
         </TableHeader>
         <Table className="table-container upload-table-container">
           {personalResourcesList.length > 0 ? (
-            personalResourcesList.map((item) => {
-              const {
-                resourceName = '',
-                ext,
-                updateTime,
-                size = 0,
-                resourceUuid = '',
-              } = item.resource || {};
-              const checked = item.checked;
-              return (
-                <Row height={10} border={1} key={resourceUuid}>
-                  <Col style={{ paddingLeft: 19 }} width={9}>
-                    <CheckBox
-                      key={resourceUuid}
-                      onChange={() => onItemCheckClick(resourceUuid, checked)}
-                      checked={checked}
-                    />
-                  </Col>
-                  <Col style={{ cursor: 'pointer' }} onClick={() => onClickCol(resourceUuid)}>
-                    <SvgImg
-                      type={fileNameToType(ext)}
-                      style={{
-                        marginRight: '6px',
-                        color: FileTypeSvgColor[fileNameToType(resourceName)],
-                      }}
-                    />
-                    <Inline className="filename" color="#191919" title={resourceName}>
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: searchPersonalResourcesKeyword
-                            ? resourceName.replaceAll(
-                                searchPersonalResourcesKeyword,
-                                `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
-                              )
-                            : resourceName,
-                        }}></span>
-                    </Inline>
-                  </Col>
-                  <Col>
-                    {item.resource instanceof CloudDriveCourseResource &&
-                    item.resource?.taskProgress?.status === 'Converting' ? (
-                      <>
-                        <Inline color="#586376">
-                          <CircleLoading width="18" height="18" />
-                        </Inline>
-                        <Inline color="#586376" style={{ marginLeft: '6px' }}>
-                          {item.resource?.taskProgress?.convertedPercentage}%
-                        </Inline>
-                      </>
-                    ) : null}
-                  </Col>
-                  <Col>
-                    <Popover
-                      content={
-                        <CloudMoreMenu
-                          resourceUuid={resourceUuid}
-                          deleteResource={handleDeleteOneResource}
-                        />
-                      }
-                      placement={'bottom'}>
-                      <span>
-                        <SvgImg type="cloud-more" style={{ cursor: 'pointer' }} canHover />
-                      </span>
-                    </Popover>
-                  </Col>
+            personalResourcesList
+              .filter((i) => {
+                if (isAssistant) {
+                  return i.resource.ext !== 'alf';
+                }
+                return true;
+              })
+              .map((item) => {
+                const {
+                  resourceName = '',
+                  ext,
+                  updateTime,
+                  size = 0,
+                  resourceUuid = '',
+                } = item.resource || {};
+                const checked = item.checked;
+                return (
+                  <Row height={10} border={1} key={resourceUuid}>
+                    <Col style={{ paddingLeft: 19 }} width={9}>
+                      <CheckBox
+                        key={resourceUuid}
+                        onChange={() => onItemCheckClick(resourceUuid, checked)}
+                        checked={checked}
+                      />
+                    </Col>
+                    <Col style={{ cursor: 'pointer' }} onClick={() => onClickCol(resourceUuid)}>
+                      <SvgImg
+                        type={fileNameToType(ext)}
+                        style={{
+                          marginRight: '6px',
+                          color: FileTypeSvgColor[fileNameToType(resourceName)],
+                        }}
+                      />
+                      <Inline className="filename" color="#191919" title={resourceName}>
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: searchPersonalResourcesKeyword
+                              ? resourceName.replaceAll(
+                                  searchPersonalResourcesKeyword,
+                                  `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
+                                )
+                              : resourceName,
+                          }}></span>
+                      </Inline>
+                    </Col>
+                    <Col>
+                      {item.resource instanceof CloudDriveCourseResource &&
+                      item.resource?.taskProgress?.status === 'Converting' ? (
+                        <>
+                          <Inline color="#586376">
+                            <CircleLoading width="18" height="18" />
+                          </Inline>
+                          <Inline color="#586376" style={{ marginLeft: '6px' }}>
+                            {item.resource?.taskProgress?.convertedPercentage}%
+                          </Inline>
+                        </>
+                      ) : null}
+                    </Col>
+                    <Col>
+                      <Popover
+                        content={
+                          <CloudMoreMenu
+                            resourceUuid={resourceUuid}
+                            deleteResource={handleDeleteOneResource}
+                          />
+                        }
+                        placement={'bottom'}>
+                        <span>
+                          <SvgImg type="cloud-more" style={{ cursor: 'pointer' }} canHover />
+                        </span>
+                      </Popover>
+                    </Col>
 
-                  <Col>
-                    <Inline color="#586376">{formatFileSize(size)}</Inline>
-                  </Col>
-                  <Col>
-                    <Inline color="#586376">
-                      {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
-                    </Inline>
-                  </Col>
-                </Row>
-              );
-            })
+                    <Col>
+                      <Inline color="#586376">{formatFileSize(size)}</Inline>
+                    </Col>
+                    <Col>
+                      <Inline color="#586376">
+                        {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
+                      </Inline>
+                    </Col>
+                  </Row>
+                );
+              })
           ) : (
             <Placeholder placeholderType="noFile" />
           )}
@@ -384,20 +400,25 @@ export const PersonalResourcesContainer = observer(() => {
                 multiple
                 type="file"></input>
               <div className="upload-btn-group">
-                <Button type="primary" onClick={triggerUpload}>
+                <Button
+                  type="primary"
+                  className={isAssistant ? 'full-btn' : ''}
+                  onClick={triggerUpload}>
                   {transI18n('cloud.upload')}
                 </Button>
-                <Popover
-                  content={
-                    <div
-                      className="upload-btn-popover"
-                      onClick={() => setOnlineCoursewareModalVisible(true)}>
-                      {transI18n('fcr_online_courseware_button_upload_online_file')}
-                    </div>
-                  }
-                  getPopupContainer={(dom) => (dom.parentNode as HTMLElement) || dom}>
-                  <Button type="primary">···</Button>
-                </Popover>
+                {!isAssistant && (
+                  <Popover
+                    content={
+                      <div
+                        className="upload-btn-popover"
+                        onClick={() => setOnlineCoursewareModalVisible(true)}>
+                        {transI18n('fcr_online_courseware_button_upload_online_file')}
+                      </div>
+                    }
+                    getPopupContainer={(dom) => (dom.parentNode as HTMLElement) || dom}>
+                    <Button type="primary">···</Button>
+                  </Popover>
+                )}
               </div>
 
               <Button

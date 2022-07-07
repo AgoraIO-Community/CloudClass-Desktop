@@ -312,7 +312,7 @@ export class BoardUIStore extends EduUIStoreBase {
     this.classroomStore.widgetStore.widgetController?.eventBus.emit(
       AgoraWidgetCustomEventType.ControlledStateChange,
       {
-        isTeacherOrAssistant: this.isTeacherOrAssistant,
+        isTeacher: EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher,
         isGrantedBoard,
       },
     );
