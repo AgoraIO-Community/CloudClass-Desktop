@@ -101,6 +101,22 @@
   z-index: 9;
 }
 
+.cdn-player-video-loading {
+  background: url('./assets/svga/video-loadings.gif') no-repeat center;
+}
+
+.cdn-player-play-btn {
+  background: url('./assets/svga/video-play.svg') no-repeat center;
+  background-color: #9a9a9a;
+  z-index: 9;
+}
+
+.video-live-player-play-btn {
+  background: url('./assets/svga/video-play.svg') no-repeat center;
+  background-color: #9a9a9a;
+  z-index: 9;
+}
+
 .stream-player-enter {
   width: 0;
   opacity: 0;

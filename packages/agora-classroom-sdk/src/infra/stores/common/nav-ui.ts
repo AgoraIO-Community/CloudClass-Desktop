@@ -1,3 +1,16 @@
+import { number2Percent } from '@/infra/utils';
+import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
+import {
+  AGServiceErrorCode,
+  ClassroomState,
+  ClassState,
+  EduClassroomConfig,
+  EduRoleTypeEnum,
+  EduRoomServiceTypeEnum,
+  LeaveReason,
+  RecordMode,
+  RecordStatus,
+} from 'agora-edu-core';
 import {
   AGError,
   AGNetworkQuality,
@@ -6,23 +19,11 @@ import {
   AgoraRteVideoSourceType,
   bound,
 } from 'agora-rte-sdk';
-import { computed, reaction, IReactionDisposer, action, observable } from 'mobx';
-import { EduUIStoreBase } from './base';
 import dayjs from 'dayjs';
+import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { EduUIStoreBase } from './base';
 import { transI18n } from './i18n';
-import {
-  AGServiceErrorCode,
-  ClassroomState,
-  ClassState,
-  EduClassroomConfig,
-  EduRoleTypeEnum,
-  LeaveReason,
-  RecordStatus,
-  RecordMode,
-} from 'agora-edu-core';
 import { DialogCategory } from './share-ui';
-import { number2Percent } from '@/infra/utils';
-import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 
 export interface EduNavAction<P = undefined> {
   id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic';
@@ -165,6 +166,39 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const recordingBody = isRecording
       ? transI18n('toast.stop_recording.body')
       : transI18n('toast.start_recording.body');
+
+    const exitAction: EduNavAction<EduNavRecordActionPayload | undefined> = {
+      id: 'Exit',
+      title: 'Exit',
+      iconType: 'exit',
+      onClick: async () => {
+        const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+        this.shareUIStore.addDialog(DialogCategory.Quit, {
+          onOk: (back: boolean) => {
+            if (back) {
+              this._leaveSubRoom();
+            } else {
+              this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+            }
+          },
+          showOption: isInSubRoom,
+        });
+      },
+    };
+
+    // 合流转推场景&&学生角色
+    const isMixStreamCDNModelStudent =
+      EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.teacher &&
+      EduClassroomConfig.shared.sessionInfo.roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN;
+
+    // 伪直播
+    const isHostingScene =
+      EduClassroomConfig.shared.sessionInfo.roomServiceType === EduRoomServiceTypeEnum.HostingScene;
+
+    if (isMixStreamCDNModelStudent || isHostingScene) {
+      return [exitAction];
+    }
+
     const teacherActions: EduNavAction<EduNavRecordActionPayload>[] = [
       {
         id: 'Record',
@@ -315,6 +349,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         },
       },
     ];
+
     const commonActions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [
       {
         id: 'Settings',
@@ -324,24 +359,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
           this.shareUIStore.addDialog(DialogCategory.DeviceSetting);
         },
       },
-      {
-        id: 'Exit',
-        title: 'Exit',
-        iconType: 'exit',
-        onClick: async () => {
-          const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
-          this.shareUIStore.addDialog(DialogCategory.Quit, {
-            onOk: (back: boolean) => {
-              if (back) {
-                this._leaveSubRoom();
-              } else {
-                this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
-              }
-            },
-            showOption: isInSubRoom,
-          });
-        },
-      },
+      exitAction,
     ];
 
     const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;

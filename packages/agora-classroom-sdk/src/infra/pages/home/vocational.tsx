@@ -1,27 +1,27 @@
-import { useHomeStore } from '@/infra/hooks';
-import { changeLanguage, Home, transI18n, Toast } from '~ui-kit';
-import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
-import { observer } from 'mobx-react';
-import React, { useState, useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router';
 import { LanguageEnum } from '@/infra/api';
+import { useHomeStore } from '@/infra/hooks';
+import { ToastType } from '@/infra/stores/common/share-ui';
 import { HomeLaunchOption } from '@/infra/stores/home';
+import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import {
   EduClassroomConfig,
   EduRegion,
   EduRoleTypeEnum,
-  EduRoomTypeEnum,
-  EduRoomSubtypeEnum,
   EduRoomServiceTypeEnum,
+  EduRoomSubtypeEnum,
+  EduRoomTypeEnum,
 } from 'agora-edu-core';
-import { MessageDialog } from './message-dialog';
-import { HomeApi } from './home-api';
-import { v4 as uuidv4 } from 'uuid';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import MD5 from 'js-md5';
-import { ToastType } from '@/infra/stores/common/share-ui';
 import dayjs from 'dayjs';
+import MD5 from 'js-md5';
+import { observer } from 'mobx-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { v4 as uuidv4 } from 'uuid';
+import { changeLanguage, Home, Toast, transI18n } from '~ui-kit';
+import { HomeApi } from './home-api';
+import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -41,6 +41,8 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
   'standard-service': EduRoomServiceTypeEnum.Live,
   'latency-service': EduRoomServiceTypeEnum.BlendCDN,
   'mix-service': EduRoomServiceTypeEnum.MixRTCCDN,
+  'mix-stream-cdn-service': EduRoomServiceTypeEnum.MixStreamCDN,
+  'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
 
 declare const CLASSROOM_SDK_VERSION: string;
@@ -54,15 +56,15 @@ const regionByLang = {
 
 export const VocationalHomePage = observer(() => {
   const homeStore = useHomeStore();
-
+  const { launchConfig } = homeStore;
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
-  const [roomName, setRoomName] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
-  const [userRole, setRole] = useState<string>('');
-  const [curScenario, setScenario] = useState<string>('');
-  const [curService, setService] = useState<string>('');
-  const [duration, setDuration] = useState<number>(30);
+  const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
+  const [userName, setUserName] = useState<string>(launchConfig.userName || '');
+  const [userRole, setRole] = useState<string>(launchConfig.userRole || '');
+  const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
+  const [curService, setService] = useState<string>(launchConfig.curService || '');
+  const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
   const [language, setLanguage] = useState<string>('');
   const [region, setRegion] = useState<EduRegion>(EduRegion.CN);
   const [debug, setDebug] = useState<boolean>(false);
@@ -110,7 +112,6 @@ export const VocationalHomePage = observer(() => {
   }, [curScenario]);
 
   const roomSubtype = SCENARIOS_ROOM_SUBTYPE_MAP[curScenario];
-  const serviceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
 
   const userUuid = useMemo(() => {
     if (!debug) {
@@ -191,7 +192,113 @@ export const VocationalHomePage = observer(() => {
   }
 
   const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
+
   const commitID = BUILD_COMMIT_ID;
+
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+      const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
+      if (!tokenDomain && tokenDomainCollection) {
+        switch (region) {
+          case 'CN':
+            tokenDomain = tokenDomainCollection['prod_cn'];
+            break;
+          case 'AP':
+            tokenDomain = tokenDomainCollection['prod_ap'];
+            break;
+          case 'NA':
+            tokenDomain = tokenDomainCollection['prod_na'];
+            break;
+          case 'EU':
+            tokenDomain = tokenDomainCollection['prod_eu'];
+            break;
+        }
+      }
+
+      HomeApi.shared.domain = tokenDomain;
+
+      const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
+      console.log('## get rtm Token from demo server', token);
+      const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
+      const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
+      const webRTCCodec =
+        roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
+        roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+          ? 'h264'
+          : 'vp8';
+      const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
+
+      const config: HomeLaunchOption = {
+        appId,
+        sdkDomain: domain,
+        pretest: true,
+        courseWareList: courseWareList.slice(0, 1),
+        language: language as LanguageEnum,
+        userUuid: `${userUuid}`,
+        rtmToken: token,
+        roomUuid: `${roomUuid}`,
+        roomType: scenario,
+        roomSubtype,
+        roomServiceType,
+        roomName: `${roomName}`,
+        userName: userName,
+        roleType: role,
+        region,
+        duration: duration * 60,
+        latencyLevel: 2,
+        curScenario,
+        curService,
+        userRole,
+        mediaOptions: {
+          channelProfile,
+          web: {
+            codec: webRTCCodec,
+            mode: webRTCMode,
+          },
+        },
+      };
+
+      config.appId = REACT_APP_AGORA_APP_ID || config.appId;
+      // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
+      // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
+      if (REACT_APP_AGORA_APP_CERTIFICATE) {
+        config.rtmToken = RtmTokenBuilder.buildToken(
+          config.appId,
+          REACT_APP_AGORA_APP_CERTIFICATE,
+          config.userUuid,
+          RtmRole.Rtm_User,
+          0,
+        );
+
+        console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
+      }
+
+      if (encryptionKey && encryptionMode) {
+        config.mediaOptions = {
+          ...config.mediaOptions,
+          encryptionConfig: {
+            key: encryptionKey,
+            mode: parseInt(encryptionMode),
+          },
+        };
+      }
+      GlobalStorage.save('platform', 'web');
+      homeStore.setLaunchConfig(config);
+      history.push('/launch');
+    } catch (e) {
+      homeStore.addToast({
+        id: uuidv4(),
+        desc:
+          (e as Error).message === 'Network Error'
+            ? transI18n('home.network_error')
+            : (e as Error).message,
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return language !== '' ? (
     <React.Fragment>
@@ -231,109 +338,7 @@ export const VocationalHomePage = observer(() => {
         language={language}
         onChangeLanguage={onChangeLanguage}
         loading={loading}
-        onClick={async () => {
-          try {
-            setLoading(true);
-            const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-            if (!tokenDomain && tokenDomainCollection) {
-              switch (region) {
-                case 'CN':
-                  tokenDomain = tokenDomainCollection['prod_cn'];
-                  break;
-                case 'AP':
-                  tokenDomain = tokenDomainCollection['prod_ap'];
-                  break;
-                case 'NA':
-                  tokenDomain = tokenDomainCollection['prod_na'];
-                  break;
-                case 'EU':
-                  tokenDomain = tokenDomainCollection['prod_eu'];
-                  break;
-              }
-            }
-
-            HomeApi.shared.domain = tokenDomain;
-
-            const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
-            console.log('## get rtm Token from demo server', token);
-            const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
-            const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
-            const webRTCCodec =
-              roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-              roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
-                ? 'h264'
-                : 'vp8';
-            const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
-
-            const config: HomeLaunchOption = {
-              appId,
-              sdkDomain: domain,
-              pretest: true,
-              courseWareList: courseWareList.slice(0, 1),
-              language: language as LanguageEnum,
-              userUuid: `${userUuid}`,
-              rtmToken: token,
-              roomUuid: `${roomUuid}`,
-              roomType: scenario,
-              roomSubtype,
-              roomServiceType,
-              roomName: `${roomName}`,
-              userName: userName,
-              roleType: role,
-              region,
-              duration: duration * 60,
-              latencyLevel: 2,
-              curScenario,
-              userRole,
-              mediaOptions: {
-                channelProfile,
-                web: {
-                  codec: webRTCCodec,
-                  mode: webRTCMode,
-                },
-              },
-            };
-
-            config.appId = REACT_APP_AGORA_APP_ID || config.appId;
-            // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
-            // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
-            if (REACT_APP_AGORA_APP_CERTIFICATE) {
-              config.rtmToken = RtmTokenBuilder.buildToken(
-                config.appId,
-                REACT_APP_AGORA_APP_CERTIFICATE,
-                config.userUuid,
-                RtmRole.Rtm_User,
-                0,
-              );
-
-              console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
-            }
-
-            if (encryptionKey && encryptionMode) {
-              config.mediaOptions = {
-                ...config.mediaOptions,
-                encryptionConfig: {
-                  key: encryptionKey,
-                  mode: parseInt(encryptionMode),
-                },
-              };
-            }
-            GlobalStorage.save('platform', 'web');
-            homeStore.setLaunchConfig(config);
-            history.push('/launch');
-          } catch (e) {
-            homeStore.addToast({
-              id: uuidv4(),
-              desc:
-                (e as Error).message === 'Network Error'
-                  ? transI18n('home.network_error')
-                  : (e as Error).message,
-              type: 'error',
-            });
-          } finally {
-            setLoading(false);
-          }
-        }}>
+        onClick={onSubmit}>
         <HomeToastContainer />
       </Home>
     </React.Fragment>

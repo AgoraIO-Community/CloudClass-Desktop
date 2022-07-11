@@ -499,6 +499,8 @@ export const en = {
     serviceType_standard: 'Interactive Live Streaming Standard',
     serviceType_latency: 'Standard Latency Streaming (CDN)',
     serviceType_mix: 'Mix Streaming（CDN&RTC）',
+    serviceType_mix_stream_cdn: 'Mix Streaming CDN',
+    serviceType_hosting_scene: 'Hosting Scene',
     roomType_1v1: 'One to One Classroom',
     roomType_interactiveSmallClass: 'Interactive Small Classroom',
     roomType_interactiveBigClass: 'Lecture Hall',

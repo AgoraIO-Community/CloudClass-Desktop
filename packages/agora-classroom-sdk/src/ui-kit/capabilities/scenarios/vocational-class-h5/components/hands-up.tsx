@@ -1,10 +1,10 @@
 import { useVocationalH5UIStores } from '@/infra/hooks/use-edu-stores';
-import { observer } from 'mobx-react';
-import React, { useMemo, useState } from 'react';
-import { Icon, Popover, SvgImg } from '~ui-kit';
-import { WaveArmSender } from '../../containers/hand-up/sender';
-import { EduClassroomConfig } from 'agora-edu-core';
 import { EduVocationalH5UIStore } from '@/infra/stores/vocational-h5';
+import { EduClassroomConfig } from 'agora-edu-core';
+import { observer } from 'mobx-react';
+import { useMemo, useState } from 'react';
+import { Icon, Popover, SvgImg } from '~ui-kit';
+import { WaveArmSender } from '../../../containers/hand-up/sender';
 
 export const HandsUp = observer(() => {
   const { handUpUIStore, classroomStore, streamUIStore, deviceSettingUIStore } =

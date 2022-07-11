@@ -1,6 +1,6 @@
-import { EduRegion } from 'agora-edu-core';
-import { autorun, observable, action, toJS } from 'mobx';
 import { LaunchOption } from '@/infra/api';
+import { EduRegion } from 'agora-edu-core';
+import { action, autorun, observable, toJS } from 'mobx';
 import { GlobalStorage } from '../utils';
 import { ToastType } from './common/share-ui';
 
@@ -10,6 +10,7 @@ export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   region: EduRegion;
   userRole: string;
   curScenario: string;
+  curService?:string;
 };
 const regionKey = `home_store_demo_launch_region`;
 const launchKey = `home_store_demo_launch_options`;

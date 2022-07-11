@@ -1,3 +1,4 @@
+import { isProduction } from '@/infra/utils/env';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 import { Button } from '~components/button';
@@ -100,6 +101,14 @@ export const Home: React.FC<HomeProps> = ({
     { label: transI18n('home.serviceType_latency'), value: 'latency-service' },
     { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
+
+  if (!isProduction) {
+    serviceOptions.push(
+      { label: transI18n('home.serviceType_mix_stream_cdn'), value: 'mix-stream-cdn-service' },
+      { label: transI18n('home.serviceType_hosting_scene'), value: 'hosting-scene' },
+    );
+  }
+
   const languageOptions = [
     { label: '中文', value: 'zh' },
     { label: 'English', value: 'en' },

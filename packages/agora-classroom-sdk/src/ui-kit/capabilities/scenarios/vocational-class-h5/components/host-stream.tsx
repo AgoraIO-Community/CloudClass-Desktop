@@ -1,11 +1,11 @@
-import React, { FC, useRef } from 'react';
-import cls from 'classnames';
 import { useVocationalH5UIStores } from '@/infra/hooks/use-edu-stores';
 import { EduVocationalH5UIStore } from '@/infra/stores/vocational-h5';
-import { StreamPlaceholder, StreamPlayer } from '../../containers/stream';
 import { EduRoleTypeEnum } from 'agora-edu-core';
+import cls from 'classnames';
 import { observer } from 'mobx-react';
-import { useDrag } from './hooks/useDrag';
+import React, { FC, useRef } from 'react';
+import { StreamPlaceholder, StreamPlayer } from '../../../containers/stream';
+import { useDrag } from '../hooks/useDrag';
 
 export interface HostStreamProps {
   onClick?: React.EventHandler<React.MouseEvent>;

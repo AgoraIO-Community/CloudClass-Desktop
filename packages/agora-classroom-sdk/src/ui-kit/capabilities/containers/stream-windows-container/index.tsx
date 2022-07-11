@@ -1,14 +1,14 @@
-import { useRef, useState } from 'react';
 import { StreamWindow } from '@/infra/stores/common/stream-window/type';
+import { EduStreamUI, StreamBounds } from '@/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
+import { useRef, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { animated, useTransition } from 'react-spring';
-import { useStore } from '~hooks/use-edu-stores';
-import './index.css';
-import { StreamPlayer } from '../stream';
 import { CSSProperties } from 'styled-components';
-import { EduStreamUI, StreamBounds } from '@/infra/stores/common/stream/struct';
+import { useStore } from '~hooks/use-edu-stores';
+import { StreamPlayer } from '../stream';
 import { DragableOverlay } from '../stream/room-mid-player';
+import './index.css';
 
 const StreamWindowsContainer = observer(() => {
   const { streamWindowUIStore, streamUIStore } = useStore();

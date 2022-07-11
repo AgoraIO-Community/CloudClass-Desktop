@@ -486,6 +486,8 @@ export const zh = {
     serviceType_standard: '轻互动（极速直播）',
     serviceType_latency: '弱互动（CDN）',
     serviceType_mix: '混合服务（CDN&RTC）',
+    serviceType_mix_stream_cdn: '合流转推',
+    serviceType_hosting_scene: '伪直播',
     roomType_1v1: '1对1',
     roomType_interactiveSmallClass: '互动小班课',
     roomType_interactiveBigClass: '大班课',

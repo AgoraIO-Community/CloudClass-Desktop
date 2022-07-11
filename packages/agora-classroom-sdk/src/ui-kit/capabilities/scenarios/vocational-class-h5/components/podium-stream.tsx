@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
-import { EduRoleTypeEnum } from 'agora-edu-core';
-import { StreamPlaceholder, StreamPlayer } from '../../containers/stream';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
+import { EduRoleTypeEnum } from 'agora-edu-core';
+import { FC } from 'react';
+import { StreamPlaceholder, StreamPlayer } from '../../../containers/stream';
 
 export interface PodiumStreamProps {
   stream: EduStreamUI;

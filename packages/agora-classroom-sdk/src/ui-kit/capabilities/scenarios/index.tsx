@@ -1,14 +1,14 @@
-import { EduClassroomConfig, EduRoomTypeEnum, EduRoomSubtypeEnum } from 'agora-edu-core';
+import { useStore } from '@/infra/hooks/use-edu-stores';
+import { EduClassroomConfig, EduRoomSubtypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useLayoutEffect, useState } from 'react';
-import { useStore } from '@/infra/hooks/use-edu-stores';
 import { RoomPretestContainer } from '~containers/pretest';
 import { OneToOneScenario } from './1v1';
-import { MidClassScenario } from './mid-class';
 import { BigClassScenario } from './big-class';
 import { BigClassScenarioH5 } from './big-class-h5';
-import { VocationalClassScenarioH5 } from './vocational-class-h5';
+import { MidClassScenario } from './mid-class';
 import { VocationalClassScenario } from './vocational-class';
+import { VocationalClassScenarioH5 } from './vocational-class-h5';
 
 export type ScenariosProps = {
   pretest: boolean;

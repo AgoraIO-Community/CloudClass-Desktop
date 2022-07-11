@@ -15,6 +15,7 @@ export class HomeApi {
     role: number;
     token: string;
   }> {
+    // TODO: axios 加入 sso Token 鉴权
     const { data } = await axios.get(
       `${this.domain}/edu/v3/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
     );

@@ -1,9 +1,10 @@
+import { isProduction } from '@/infra/utils/env';
 import React from 'react';
 import { Button } from '~components/button';
+import { transI18n } from '~components/i18n';
 import { Input } from '~components/input';
 import { Select } from '~components/select';
 import { Col, Row, Table } from '~components/table';
-import { transI18n } from '~components/i18n';
 import './style.css';
 
 const VALIDATE_REGULAR = /^[a-zA-Z0-9]{6,50}$/;
@@ -40,6 +41,13 @@ export const H5Login: React.FC<any> = ({
     { label: transI18n('home.serviceType_latency'), value: 'latency-service' },
     { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
+
+  if (!isProduction) {
+    serviceOptions.push(
+      { label: transI18n('home.serviceType_mix_stream_cdn'), value: 'mix-stream-cdn-service' },
+      { label: transI18n('home.serviceType_hosting_scene'), value: 'hosting-scene' },
+    );
+  }
 
   return (
     <div className={isVocational ? 'h5-home-vocational' : 'h5-home'}>

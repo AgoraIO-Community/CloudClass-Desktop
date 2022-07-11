@@ -17,6 +17,7 @@ import './index.css';
 import { useStore } from '~hooks/use-edu-stores';
 import { Slider } from '~ui-kit/components/slider';
 import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
+import { isProduction } from '@/infra/utils/env';
 declare global {
   interface Window {
     process: {
@@ -25,7 +26,7 @@ declare global {
   }
 }
 
-declare const NODE_ENV: string;
+
 interface IBeautySiderProps {
   value: number;
   className?: string;
@@ -220,7 +221,6 @@ const PlaybackTestPlayer = observer(() => {
 
   useEffect(() => {
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
-      const isProduction = NODE_ENV === 'production';
       const path = window.require('path');
       urlRef.current = isProduction
         ? `${window.process.resourcesPath}/pretest-audio.mp3`

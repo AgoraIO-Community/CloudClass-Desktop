@@ -1,10 +1,9 @@
-import React, { FC, useMemo } from 'react';
-import { observer } from 'mobx-react';
 import { useVocationalH5UIStores } from '@/infra/hooks/use-edu-stores';
-import { useEffect } from 'react';
-import { BoardPlaceHolder } from '~ui-kit';
 import cls from 'classnames';
-import { useDrag } from './hooks/useDrag';
+import { observer } from 'mobx-react';
+import React, { FC, useEffect, useMemo } from 'react';
+import { BoardPlaceHolder } from '~ui-kit';
+import { useDrag } from '../hooks/useDrag';
 
 export interface WhiteboardProps {
   onClick?: React.EventHandler<React.MouseEvent>;

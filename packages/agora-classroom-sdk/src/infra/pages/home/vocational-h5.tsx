@@ -1,24 +1,24 @@
-import { useHomeStore } from '@/infra/hooks';
-import { changeLanguage, H5Login } from '~ui-kit';
-import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
-import { observer } from 'mobx-react';
-import React, { useState, useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router';
 import { LanguageEnum } from '@/infra/api';
+import { useHomeStore } from '@/infra/hooks';
 import { HomeLaunchOption } from '@/infra/stores/home';
+import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
 import {
   EduClassroomConfig,
   EduRegion,
   EduRoleTypeEnum,
-  EduRoomSubtypeEnum,
   EduRoomServiceTypeEnum,
+  EduRoomSubtypeEnum,
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
-import { MessageDialog } from './message-dialog';
-import { HomeApi } from './home-api';
-import { Helmet } from 'react-helmet';
 import MD5 from 'js-md5';
+import { observer } from 'mobx-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { useHistory } from 'react-router';
+import { changeLanguage, H5Login } from '~ui-kit';
+import { HomeApi } from './home-api';
+import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -37,18 +37,21 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
   'standard-service': EduRoomServiceTypeEnum.Live,
   'latency-service': EduRoomServiceTypeEnum.BlendCDN,
   'mix-service': EduRoomServiceTypeEnum.MixRTCCDN,
+  'mix-stream-cdn-service': EduRoomServiceTypeEnum.MixStreamCDN,
+  'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
 
 export const VocationalHomeH5Page = observer(() => {
   const homeStore = useHomeStore();
+  const { launchConfig } = homeStore;
 
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
-  const [roomName, setRoomName] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
+  const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
+  const [userName, setUserName] = useState<string>(launchConfig.userName || '');
   const [userRole, setRole] = useState<string>('student');
-  const [curScenario, setScenario] = useState<string>('');
-  const [curService, setService] = useState<string>('');
+  const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
+  const [curService, setService] = useState<string>(launchConfig.curService || '');
   const [duration] = useState<number>(30);
   const [language, setLanguage] = useState<string>('');
   const [region] = useState<EduRegion>(EduRegion.CN);
@@ -226,6 +229,7 @@ export const VocationalHomeH5Page = observer(() => {
             latencyLevel: 2,
             platform: Platform.H5,
             curScenario,
+            curService,
             userRole,
             mediaOptions: {
               channelProfile: channelProfile,
