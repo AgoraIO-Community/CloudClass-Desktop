@@ -1,6 +1,5 @@
 import { WindowID } from '@/infra/api';
-import { ControlState, IPCMessageType } from '@/infra/types';
-import { ChannelType, listenChannelMessage, sendToRendererProcess } from '@/infra/utils/ipc';
+import { listenChannelMessage, sendToRendererProcess } from '@/infra/utils/ipc';
 import { EduClassroomConfig, EduRoleTypeEnum, EduRoomTypeEnum, iterateMap } from 'agora-edu-core';
 import {
   AgoraRteEngineConfig,
@@ -11,11 +10,13 @@ import {
   bound,
 } from 'agora-rte-sdk';
 import { computed, reaction, toJS } from 'mobx';
-import { transI18n } from '../i18n';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share-ui';
 import { mapToObject } from '@/infra/utils';
 import { RemoteControlBarUIParams } from '../type';
+import { ChannelType, IPCMessageType } from '@/infra/utils/ipc-channels';
+import { ControlState } from './type';
+import { transI18n } from '~ui-kit';
 
 export class RemoteControlUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];

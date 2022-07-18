@@ -2,8 +2,8 @@ import { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import './index.css';
-import { t } from '~components/i18n';
 import { SvgImg } from '../svg-img';
+import { useI18n } from '../i18n';
 
 export interface HomeAboutProps extends BaseProps {
   version?: string;
@@ -34,6 +34,7 @@ export const HomeAbout: FC<HomeAboutProps> = ({
   className,
   ...restProps
 }) => {
+  const t = useI18n();
   const cls = classnames({
     [`home-about`]: 1,
     [`${className}`]: !!className,
@@ -105,6 +106,7 @@ export const HomeAbout: FC<HomeAboutProps> = ({
 };
 
 export const Disclaimer: FC = () => {
+  const t = useI18n();
   return (
     <div className="disclaimer">
       <div className="disclaimer-main">

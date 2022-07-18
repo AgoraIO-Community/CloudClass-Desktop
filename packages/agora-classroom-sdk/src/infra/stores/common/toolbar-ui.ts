@@ -1,8 +1,9 @@
-import { IPCMessageType } from '@/infra/types';
+import { FcrBoardShape, FcrBoardTool } from '@/infra/protocol/type';
 import { dataURIToFile } from '@/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
-import { ChannelType, listenChannelMessage, sendToMainProcess } from '@/infra/utils/ipc';
-import DialogProgressApi from '@/ui-kit/capabilities/containers/dialog/progress';
+import { listenChannelMessage, sendToMainProcess } from '@/infra/utils/ipc';
+import { ChannelType, IPCMessageType } from '@/infra/utils/ipc-channels';
+
 import {
   AGEduErrorCode,
   CustomBtoa,
@@ -11,9 +12,7 @@ import {
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   iterateMap,
-  WhiteboardTool,
 } from 'agora-edu-core';
-import { AgoraWidgetPrefix } from 'agora-plugin-gallery';
 import {
   AGError,
   AgoraRteEngineConfig,
@@ -23,87 +22,24 @@ import {
   AGScreenShareDevice,
   bound,
 } from 'agora-rte-sdk';
-import dayjs from 'dayjs';
-import { forEach, isEmpty, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { action, computed, observable, reaction, runInAction, toJS, when } from 'mobx';
 import { EduUIStoreBase } from './base';
-import { transI18n } from './i18n';
 import { DialogCategory } from './share-ui';
 import { EduStreamUI } from './stream/struct';
-import { BUILTIN_WIDGETS } from './widget-ui';
-export enum ScreenShareRoleType {
-  Teacher = 'teacher',
-  Student = 'student',
-}
-
-export enum ToolbarItemCategory {
-  PenPicker,
-  ColorPicker,
-  Cabinet,
-  Eraser,
-  Slice,
-}
-
-export enum CabinetItemEnum {
-  ScreenShare = 'screenShare',
-  BreakoutRoom = 'breakoutRoom',
-  Laser = 'laser',
-  CountdownTimer = 'countdownTimer',
-  Poll = 'poll',
-  PopupQuiz = 'popupQuiz',
-  Whiteboard = 'whiteboard',
-}
-
-export interface CabinetItem {
-  id: string;
-  name: string;
-  iconType: string;
-  icon?: React.ReactElement;
-}
-
-export class ToolbarItem {
-  static fromData(data: {
-    value: string;
-    label: string;
-    icon: string;
-    category?: ToolbarItemCategory;
-    className?: string;
-  }) {
-    return new ToolbarItem(data.icon, data.value, data.label, data.category, data.className);
-  }
-
-  value: string;
-  label: string;
-  icon: string;
-  category?: ToolbarItemCategory;
-  className?: string;
-
-  constructor(
-    icon: string,
-    value: string,
-    label: string,
-    category?: ToolbarItemCategory,
-    className?: string,
-  ) {
-    this.value = value;
-    this.label = label;
-    this.icon = icon;
-    this.category = category;
-    this.className = className;
-  }
-}
+import {
+  CabinetItem,
+  CabinetItemEnum,
+  ScreenShareRoleType,
+  ToolbarItem,
+  ToolbarItemCategory,
+} from './type';
+import { rgbToHexColor } from '../../utils/board-utils';
+import { conversionOption, fileExt2ContentType } from './cloud-drive/helper';
+import { transI18n } from '~ui-kit';
 
 export class ToolbarUIStore extends EduUIStoreBase {
-  readonly allowedCabinetItems: string[] = [
-    CabinetItemEnum.Whiteboard,
-    CabinetItemEnum.ScreenShare,
-    CabinetItemEnum.BreakoutRoom,
-    CabinetItemEnum.Laser,
-    CabinetItemEnum.CountdownTimer,
-    CabinetItemEnum.Poll,
-    CabinetItemEnum.PopupQuiz,
-  ];
-  readonly defaultColors: string[] = [
+  readonly defaultColors = [
     '#ffffff',
     '#9b9b9b',
     '#4a4a4a',
@@ -117,7 +53,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
     '#0073ff',
     '#ffc8e2',
   ];
-  readonly defaultPens: string[] = [
+  readonly defaultPens = [
     'pen',
     'square',
     'circle',
@@ -133,10 +69,18 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
   readonly module: string = 'screenshot-toolbar';
 
+  readonly allowedCabinetItems: string[] = [
+    CabinetItemEnum.Whiteboard,
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.BreakoutRoom,
+    CabinetItemEnum.Laser,
+  ];
+
   private _disposers: (() => void)[] = [];
 
   onInstall() {
-    this.classroomStore.boardStore.setDefaultColors(this.defaultColors);
+    this.classroomStore.widgetStore.widgetController;
+
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       this._disposers.push(
         listenChannelMessage(ChannelType.Message, async (event, message) => {
@@ -155,7 +99,13 @@ export class ToolbarUIStore extends EduUIStoreBase {
               type === IPCMessageType.ShortCutCaptureDone &&
               this.module === (payload.module as string)
             ) {
-              this._pastToBoard(payload.dataURL as any);
+              this._pastToBoard(payload.dataURL);
+            }
+            if (type === IPCMessageType.ShortCutCaptureDenied) {
+              this.shareUIStore.addToast(
+                transI18n('toast2.screen_shot_permission_denied'),
+                'error',
+              );
             }
           },
         ),
@@ -178,7 +128,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
             );
           }
           if (!newValue && oldValue) {
-            this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
+            // this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
           }
         },
       ),
@@ -186,10 +136,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
     this._disposers.push(
       reaction(
-        () => this.classroomStore.boardStore.boardReady,
-        (boardReady) => {
+        () => this.boardApi.mounted,
+        (mounted) => {
           runInAction(() => {
-            if (boardReady) {
+            if (mounted) {
               this._activeCabinetItems.add(CabinetItemEnum.Whiteboard);
             } else {
               this._activeCabinetItems.delete(CabinetItemEnum.Whiteboard);
@@ -225,8 +175,12 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed
-  get activeTool(): string {
-    return this.convertEduTools2UITools(this.classroomStore.boardStore.selectedTool);
+  get activeTool() {
+    const tool = this._convertEduTools2UITools(
+      this.boardApi.selectedTool,
+      this.boardApi.selectedShape,
+    );
+    return tool;
   }
 
   /**
@@ -234,7 +188,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed
-  get selectedPenTool(): string {
+  get selectedPenTool() {
     if (this.isPenToolActive) {
       return this.activeTool;
     }
@@ -246,8 +200,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed
-  get isPenToolActive(): boolean {
-    return this.penTools.includes(this.activeTool);
+  get isPenToolActive() {
+    return this.activeTool && this.penTools.includes(this.activeTool);
   }
 
   /**
@@ -256,7 +210,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed
   get currentColor() {
-    return this.classroomStore.boardStore.currentColor;
+    const { r, g, b } = this.boardApi.strokeColor;
+    return rgbToHexColor(r, g, b);
   }
 
   /**
@@ -265,7 +220,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed
   get strokeWidth() {
-    return this.classroomStore.boardStore.strokeWidth;
+    return this.boardApi.strokeWidth;
   }
 
   /**
@@ -288,7 +243,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
   //actions
   @action.bound
-  onBoradCleanerClick(id: string) {
+  handleBoradCleaner(id: string) {
     if (id === 'clear') {
       this.shareUIStore.addConfirmDialog(
         transI18n('toast.clear_whiteboard'),
@@ -418,12 +373,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
     });
   }
   /**
-   * 打开 ExtApp 扩展工具
+   * 打开内建工具
    * @param id
    */
   @action.bound
-  async handleCabinetItem(id: string) {
-    const { launchApp } = this.classroomStore.extensionAppStore;
+  async openBuiltinCabinet(id: string) {
     switch (id) {
       case CabinetItemEnum.ScreenShare:
         if (
@@ -473,7 +427,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
         } else {
           this.startLocalScreenShare();
         }
-
         break;
       case CabinetItemEnum.Laser:
         this.setTool(id);
@@ -485,12 +438,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
             transI18n('toast.close_whiteboard_confirm'),
             {
               onOK: () => {
-                // send whiteboard close
-                this.classroomStore.widgetStore.setInactive(BUILTIN_WIDGETS.boardWidget);
-                this.classroomStore.widgetStore.widgetController?.widgetsMap.forEach((widget) => {
-                  if (widget.id.includes(AgoraWidgetPrefix.Webview))
-                    this.classroomStore.widgetStore.widgetController?.deleteWidget(widget.id);
-                });
+                this.boardApi.disable();
                 EduEventUICenter.shared.emitClassroomUIEvents(
                   AgoraEduClassroomUIEvent.toggleWhiteboard,
                   true,
@@ -499,19 +447,15 @@ export class ToolbarUIStore extends EduUIStoreBase {
             },
           );
         } else {
-          this.classroomStore.widgetStore.setActive(BUILTIN_WIDGETS.boardWidget, {});
+          this.boardApi.enable();
           EduEventUICenter.shared.emitClassroomUIEvents(
             AgoraEduClassroomUIEvent.toggleWhiteboard,
             false,
           );
         }
         break;
-
       case CabinetItemEnum.BreakoutRoom:
         this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
-        break;
-      default:
-        launchApp(id);
         break;
     }
   }
@@ -535,7 +479,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           break;
       }
     } catch (e) {
-      e && this.shareUIStore.addGenericErrorDialog(e as AGError);
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
 
@@ -546,97 +490,71 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @action.bound
   setTool(tool: string) {
-    const eduTool = this.convertUITools2EduTools(tool);
-    if (eduTool !== WhiteboardTool.unknown) {
-      return this.classroomStore.boardStore.setTool(eduTool);
+    const eduTool = this._convertUITools2EduTools(tool);
+
+    if (eduTool.length === 1) {
+      this.boardApi.selectTool(eduTool[0] as FcrBoardTool);
+    }
+
+    if (eduTool.length === 2) {
+      this.boardApi.drawShape(eduTool[1] as FcrBoardShape);
     }
 
     switch (tool) {
+      case 'clear':
+        this.boardApi.clean();
+        break;
+      case 'undo':
+        this.boardApi.undo();
+        break;
+      case 'redo':
+        this.boardApi.redo();
+        break;
       case 'cloud':
-        this.shareUIStore.addDialog(DialogCategory.CloudDriver, {
-          onClose: () => {
-            runInAction(() => {
-              this.activeMap = { ...this.activeMap, [tool]: false };
-            });
-          },
-        });
-        this.activeMap = { ...this.activeMap, [tool]: true };
+        this._openCloudDrive(tool);
         break;
-      case 'register': {
-        this.shareUIStore.addDialog(
-          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass
-            ? DialogCategory.LectureRoster
-            : DialogCategory.Roster,
-          {
-            onClose: () => {
-              runInAction(() => {
-                this.activeMap = { ...this.activeMap, [tool]: false };
-              });
-            },
-          },
-        );
-        this.activeMap = { ...this.activeMap, [tool]: true };
+      case 'register':
+        this._openRoster(tool);
         break;
-      }
       case 'save':
-        const scenes = this.classroomStore.boardStore.getAnnotationImages();
-        this._fuseIntoOneImage(scenes);
-        break;
-      default:
+        this._saveBoardSnapshot();
         break;
     }
   }
 
-  @bound
-  private async _fuseIntoOneImage(scenes: (() => Promise<HTMLCanvasElement | null>)[]) {
-    if (isEmpty(scenes)) {
-      return;
-    }
-
-    DialogProgressApi.show({ key: 'saveImage', progress: 1, width: 100, auto: true });
-    let width = 0,
-      height = 0;
-    const bigCanvas = document.createElement('canvas');
-    const ctx = bigCanvas.getContext('2d');
-    const canvasArray = [];
-    try {
-      for (const canvasPromise of scenes) {
-        const canvas = await canvasPromise();
-
-        if (canvas) {
-          width = Math.max(canvas.width, width);
-          height = Math.max(canvas.height, height);
-          canvasArray.push(canvas);
-        }
-      }
-      bigCanvas.setAttribute('width', `${width}`);
-      bigCanvas.setAttribute('height', `${height * canvasArray.length}`);
-
-      canvasArray.forEach((canvas, index) => {
-        ctx && ctx.drawImage(canvas, 0, index * height, width, height);
-      });
-      const fileName = `${EduClassroomConfig.shared.sessionInfo.roomName}_${dayjs().format(
-        'YYYYMMDD_HHmmSSS',
-      )}.jpg`;
-      this._download(bigCanvas, fileName);
-      DialogProgressApi.destroy('saveImage');
-      this.shareUIStore.addToast(transI18n('toast2.save_success'));
-      // return bigCanvas
-    } catch (e) {
-      this.shareUIStore.addToast(transI18n('toast2.save_error'));
-    }
+  private _openCloudDrive(tool: string) {
+    this.shareUIStore.addDialog(DialogCategory.CloudDriver, {
+      onClose: () => {
+        this._setToolInactive(tool);
+      },
+    });
+    this._setToolActive(tool);
   }
 
-  @bound
-  private _download(canvas: HTMLCanvasElement, filename = 'apaas.jpg'): void {
-    try {
-      const a = document.createElement('a');
-      a.download = filename;
-      a.href = canvas.toDataURL();
-      a.click();
-    } catch (err) {
-      this.shareUIStore.addToast(transI18n('toast2.save_error'));
-    }
+  private _openRoster(tool: string) {
+    this.shareUIStore.addDialog(
+      EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass
+        ? DialogCategory.LectureRoster
+        : DialogCategory.Roster,
+      {
+        onClose: () => {
+          this._setToolInactive(tool);
+        },
+      },
+    );
+    this._setToolActive(tool);
+  }
+
+  private _saveBoardSnapshot() {
+    this.boardApi.getSnapshotImageList();
+  }
+  @action
+  private _setToolActive(tool: string) {
+    this.activeMap = { ...this.activeMap, [tool]: true };
+  }
+  @action
+  private _setToolInactive(tool: string) {
+    this.activeMap = { ...this.activeMap, [tool]: false };
   }
 
   // others
@@ -657,22 +575,25 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   @bound
-  changeStroke(value: any) {
-    return this.classroomStore.boardStore.changeStroke(value);
+  changeStroke(value: number) {
+    return this.boardApi.changeStrokeWidth(value);
   }
 
   /**
-   * 设置画笔颜色，支持 Hex 色值
+   * 设置画笔颜色，支持 RGB 色值
    * @param value
    * @returns
    */
   @bound
-  changeHexColor(value: any) {
-    return this.classroomStore.boardStore.changeHexColor(value);
+  changeHexColor(value: string) {
+    const r = parseInt(value.slice(1, 3), 16);
+    const g = parseInt(value.slice(3, 5), 16);
+    const b = parseInt(value.slice(5, 7), 16);
+    return this.boardApi.changeStrokeColor({ r, g, b });
   }
 
   /**
-   * 当前激活的 ExtApp
+   * 当前激活的工具
    * @returns
    */
   get activeCabinetItems() {
@@ -680,77 +601,53 @@ export class ToolbarUIStore extends EduUIStoreBase {
   }
 
   /**
-   * ExtApp 列表
+   * 工具箱列表
    * @returns
    */
   get cabinetItems(): CabinetItem[] {
-    const { extensionAppInstances } = this.classroomStore.extensionAppStore;
+    const apps = this.extensionApi.cabinetItems.concat(
+      this.boardApi.mounted
+        ? [
+            {
+              id: CabinetItemEnum.ScreenShare,
+              iconType: 'share-screen',
+              name: transI18n('scaffold.screen_share'),
+            },
+            {
+              id: CabinetItemEnum.BreakoutRoom,
+              iconType: 'group-discuss',
+              name: transI18n('scaffold.breakout_room'),
+            },
+            {
+              id: CabinetItemEnum.Laser,
+              iconType: 'laser-pointer',
+              name: transI18n('scaffold.laser_pointer'),
+            },
+            {
+              id: CabinetItemEnum.Whiteboard,
+              iconType: 'whiteboard',
+              name: transI18n('scaffold.whiteboard'),
+            },
+          ].filter((item) => this.allowedCabinetItems.includes(item.id))
+        : [
+            {
+              id: CabinetItemEnum.ScreenShare,
+              iconType: 'share-screen',
+              name: transI18n('scaffold.screen_share'),
+            },
+            {
+              id: CabinetItemEnum.BreakoutRoom,
+              iconType: 'group-discuss',
+              name: transI18n('scaffold.breakout_room'),
+            },
 
-    let apps: CabinetItem[] = [];
-
-    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
-
-    if (!isInSubRoom) {
-      apps = Object.values(extensionAppInstances).map(
-        ({ appIdentifier, icon, appName }) =>
-          ({
-            id: appIdentifier,
-            iconType: typeof icon === 'string' ? icon : '',
-            icon: typeof icon === 'string' ? null : icon,
-            name: appName,
-          } as CabinetItem),
-      );
-    }
-
-    apps = apps
-      .concat(
-        this.classroomStore.boardStore.boardReady
-          ? [
-              {
-                id: CabinetItemEnum.ScreenShare,
-                iconType: 'share-screen',
-                name: transI18n('scaffold.screen_share'),
-              },
-              {
-                id: CabinetItemEnum.BreakoutRoom,
-                iconType: 'group-discuss',
-                name: transI18n('scaffold.breakout_room'),
-              },
-              {
-                id: CabinetItemEnum.Laser,
-                iconType: 'laser-pointer',
-                name: transI18n('scaffold.laser_pointer'),
-              },
-              {
-                id: CabinetItemEnum.Whiteboard,
-                iconType: 'whiteboard',
-                name: transI18n('scaffold.whiteboard'),
-              },
-            ]
-          : [
-              {
-                id: CabinetItemEnum.ScreenShare,
-                iconType: 'share-screen',
-                name: transI18n('scaffold.screen_share'),
-              },
-              {
-                id: CabinetItemEnum.BreakoutRoom,
-                iconType: 'group-discuss',
-                name: transI18n('scaffold.breakout_room'),
-              },
-
-              {
-                id: CabinetItemEnum.Whiteboard,
-                iconType: 'whiteboard',
-                name: transI18n('scaffold.whiteboard'),
-              },
-            ],
-      )
-      .filter((it) => this.allowedCabinetItems.includes(it.id));
-
-    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant) {
-      apps = apps.filter((it) => it.id !== CabinetItemEnum.BreakoutRoom);
-    }
+            {
+              id: CabinetItemEnum.Whiteboard,
+              iconType: 'whiteboard',
+              name: transI18n('scaffold.whiteboard'),
+            },
+          ],
+    );
 
     return apps;
   }
@@ -779,9 +676,9 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get tools(): ToolbarItem[] {
-    const { sessionInfo } = EduClassroomConfig.shared;
+    const { role } = EduClassroomConfig.shared.sessionInfo;
 
-    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(sessionInfo.role)
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role)
       ? this.teacherTools
       : this.studentTools;
   }
@@ -814,10 +711,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   @computed
   get teacherTools(): ToolbarItem[] {
     let _tools: ToolbarItem[] = [];
-    if (
-      this.classroomStore.boardStore.boardReady &&
-      !this.classroomStore.remoteControlStore.isHost
-    ) {
+    if (this.boardApi.mounted && !this.classroomStore.remoteControlStore.isHost) {
       _tools = [
         ToolbarItem.fromData({
           value: 'clicker',
@@ -848,20 +742,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
           category: ToolbarItemCategory.Eraser,
         }),
 
-        // ToolbarItem.fromData({
-        //   value: 'color',
-        //   label: 'scaffold.color',
-        //   icon: 'circle',
-        //   category: ToolbarItemCategory.ColorPicker,
-        //   // component: (props: any) => {
-        //   //   return <ColorsContainer {...props} />;
-        //   // },
-        // }),
-        // ToolbarItem.fromData({
-        //   value: 'blank-page',
-        //   label: 'scaffold.blank_page',
-        //   icon: 'blank-page',
-        // }),
         ToolbarItem.fromData({
           value: 'hand',
           label: 'scaffold.move',
@@ -927,12 +807,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
    */
   @computed
   get studentTools(): ToolbarItem[] {
-    const { sessionInfo } = EduClassroomConfig.shared;
-    const whiteboardAuthorized = this.classroomStore.boardStore.grantUsers.has(
-      sessionInfo.userUuid,
-    );
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    const mounted = this.boardApi.mounted;
+    const whiteboardAuthorized = this.boardApi.grantedUsers.has(userUuid);
 
-    if (!whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
+    if (!mounted || !whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
       //allowed to view user list only if not granted
       return [
         ToolbarItem.fromData({
@@ -985,44 +864,38 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @param tool
    * @returns
    */
-  convertUITools2EduTools(tool: string): WhiteboardTool {
+  private _convertUITools2EduTools(tool: string): Array<number | undefined> {
     switch (tool) {
       case 'clicker':
-        return WhiteboardTool.clicker;
+        return [FcrBoardTool.Clicker];
       case 'selection':
-        return WhiteboardTool.selector;
-      case 'pen':
-        return WhiteboardTool.pen;
-      case 'square':
-        return WhiteboardTool.rectangle;
-      case 'circle':
-        return WhiteboardTool.ellipse;
-      case 'line':
-        return WhiteboardTool.straight;
-      case 'text':
-        return WhiteboardTool.text;
+        return [FcrBoardTool.Selector];
       case 'eraser':
-        return WhiteboardTool.eraser;
+        return [FcrBoardTool.Eraser];
       case 'hand':
-        return WhiteboardTool.hand;
+        return [FcrBoardTool.Hand];
       case 'laser':
-        return WhiteboardTool.laserPointer;
+        return [FcrBoardTool.LaserPointer];
+      case 'text':
+        return [FcrBoardTool.Text];
       case 'arrow':
-        return WhiteboardTool.arrow;
+        return [, FcrBoardShape.Arrow];
+      case 'pen':
+        return [, FcrBoardShape.Curve];
+      case 'square':
+        return [, FcrBoardShape.Rectangle];
+      case 'circle':
+        return [, FcrBoardShape.Ellipse];
+      case 'line':
+        return [, FcrBoardShape.Straight];
       case 'pentagram':
-        return WhiteboardTool.pentagram;
+        return [, FcrBoardShape.Pentagram];
       case 'rhombus':
-        return WhiteboardTool.rhombus;
+        return [, FcrBoardShape.Rhombus];
       case 'triangle':
-        return WhiteboardTool.triangle;
-      case 'clear':
-        return WhiteboardTool.clear;
-      case 'undo':
-        return WhiteboardTool.undo;
-      case 'redo':
-        return WhiteboardTool.redo;
+        return [, FcrBoardShape.Triangle];
     }
-    return WhiteboardTool.unknown;
+    return [];
   }
 
   /**
@@ -1030,46 +903,62 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @param tool
    * @returns
    */
-  convertEduTools2UITools(tool: WhiteboardTool): string {
+  private _convertEduTools2UITools(tool?: FcrBoardTool, shape?: FcrBoardShape) {
     switch (tool) {
-      case WhiteboardTool.clicker:
+      case FcrBoardTool.Clicker:
         return 'clicker';
-      case WhiteboardTool.selector:
+      case FcrBoardTool.Selector:
         return 'selection';
-      case WhiteboardTool.pen:
-        return 'pen';
-      case WhiteboardTool.rectangle:
-        return 'square';
-      case WhiteboardTool.ellipse:
-        return 'circle';
-      case WhiteboardTool.straight:
-        return 'line';
-      case WhiteboardTool.arrow:
-        return 'arrow';
-      case WhiteboardTool.pentagram:
-        return 'pentagram';
-      case WhiteboardTool.triangle:
-        return 'triangle';
-      case WhiteboardTool.rhombus:
-        return 'rhombus';
-      case WhiteboardTool.text:
-        return 'text';
-      case WhiteboardTool.eraser:
+      case FcrBoardTool.Eraser:
         return 'eraser';
-      case WhiteboardTool.hand:
+      case FcrBoardTool.Hand:
         return 'hand';
+      case FcrBoardTool.Text:
+        return 'text';
     }
-    return '';
+    switch (shape) {
+      case FcrBoardShape.Curve:
+        return 'pen';
+      case FcrBoardShape.Rectangle:
+        return 'square';
+      case FcrBoardShape.Ellipse:
+        return 'circle';
+      case FcrBoardShape.Straight:
+        return 'line';
+      case FcrBoardShape.Arrow:
+        return 'arrow';
+      case FcrBoardShape.Pentagram:
+        return 'pentagram';
+      case FcrBoardShape.Triangle:
+        return 'triangle';
+      case FcrBoardShape.Rhombus:
+        return 'rhombus';
+    }
   }
 
   /**
    * 把截图贴到白板中
    * @param dataURL
    */
-  private _pastToBoard = async (dataURL: string) => {
-    const file = dataURIToFile(dataURL, `agora-screen-shot-${Date.now()}.png`);
-    this.classroomStore.boardStore.dropImage(file, 0, 0);
-  };
+  private async _pastToBoard(dataURL: string) {
+    const ext = 'png';
+    const file = dataURIToFile(dataURL, `agora-screen-shot-${Date.now()}.${ext}`);
+
+    const resourceUuid = await this.classroomStore.cloudDriveStore.calcResourceUuid(file);
+    const contentType = fileExt2ContentType(ext);
+    const conversion = conversionOption(ext);
+
+    const resourceInfo = await this.classroomStore.cloudDriveStore.uploadPersonalResource(
+      file,
+      resourceUuid,
+      ext,
+      contentType,
+      conversion,
+    );
+    if (resourceInfo?.url) {
+      this.boardApi.putImageResource(resourceInfo.url);
+    }
+  }
 
   onDestroy() {
     this._disposers.forEach((d) => d());

@@ -1,4 +1,4 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { GroupMethod } from '@/infra/stores/common/group-ui';
 import { observer } from 'mobx-react';
 import { useState, FC } from 'react';

@@ -1,12 +1,7 @@
-import { ToolbarItem, ToolbarItemCategory, ToolbarUIStore } from '../common/toolbar-ui';
+import { ToolbarUIStore } from '../common/toolbar-ui';
+import { ToolbarItem, ToolbarItemCategory } from '../common/type';
 
 export class VocationalToolbarUIStore extends ToolbarUIStore {
-  readonly allowedCabinetItems: string[] = [
-    'screenShare',
-    // 'io.agora.countdown',
-    // 'io.agora.answer',
-    // 'io.agora.vote',
-  ];
   readonly defaultPens: string[] = ['pen', 'line', 'square', 'circle', 'arrow', 'shape'];
   readonly penTools = ['pen', 'square', 'circle', 'line', 'arrow', 'shape'];
   /**

@@ -1,5 +1,5 @@
 import { EduRoleTypeEnum, EduClassroomConfig } from 'agora-edu-core';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { WaveArmSender as WaveArmSenderContainer } from './sender';
 import { WaveArmManager, StudentsWaveArmList } from './manager';

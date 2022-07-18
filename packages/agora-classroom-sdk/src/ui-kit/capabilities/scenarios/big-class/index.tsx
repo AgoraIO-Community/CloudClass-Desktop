@@ -1,73 +1,56 @@
 import classnames from 'classnames';
-import { observer } from 'mobx-react';
-import { FC } from 'react';
-import { Aside, Layout } from '~components/layout';
-import { LoadingContainer } from '~containers/loading';
-import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
-import { NavigationBarContainer } from '~containers/nav';
-import { WhiteboardContainer } from '~containers/board';
+import { Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
-import { RoomBigTeacherStreamContainer } from '~containers/stream/room-big-player';
-import Room from '../room';
-import { ExtensionAppContainer } from '~containers/extension-app-container';
-import { ChatWidgetPC } from '~containers/widget/chat-widget';
-import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
-import { CollectorContainer } from '~containers/board';
+import { LoadingContainer } from '~containers/loading';
+import { NavigationBarContainer } from '~containers/nav';
+import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
+import { RoomBigTeacherStreamContainer } from '~containers/stream/room-big-player';
+import { ToastContainer } from '~containers/toast';
+import { Float } from '~ui-kit';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { SceneSwitch } from '../../containers/scene-switch';
 import { ScenesController } from '../../containers/scenes-controller';
-import { WidgetTrackContiner } from '../../containers/widget-track';
-import { EduLectureUIStore } from '@/infra/stores/lecture';
+import { ScreenShareContainer } from '../../containers/screen-share';
+import { WhiteboardToolbar } from '../../containers/toolbar';
+import { WidgetContainer } from '../../containers/widget';
+import { Chat, Whiteboard } from '../../containers/widget/slots';
+import { BigClassAside as Aside } from '~containers/aside';
+import Room from '../room';
 
-type Props = {
-  children?: React.ReactNode;
-};
-
-const Content: FC<Props> = ({ children }) => {
-  return <div className="flex-col flex-grow">{children}</div>;
-};
-
-export const BigClassScenario = observer(() => {
+export const BigClassScenario = () => {
   // layout
   const layoutCls = classnames('edu-room', 'big-class-room');
-  const {
-    classroomStore,
-    streamWindowUIStore: { containedStreamWindowCoverOpacity },
-    streamUIStore
-  } = useStore() as EduLectureUIStore;
-  const { boardStore } = classroomStore;
-  const { whiteboardWidgetActive } = boardStore;
+
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
-        <Layout className={layoutCls} direction="col">
-          <NavigationBarContainer />
-          <Layout className="horizontal">
-            <Content>
-              <BigWidgetWindowContainer>
-                {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
-                <Aside className="aisde-fixed fcr-room-big">
-                  <CollectorContainer />
-
+        <SceneSwitch>
+          <Layout className={layoutCls} direction="col">
+            <NavigationBarContainer />
+            <Layout className="flex-grow items-stretch fcr-room-bg">
+              <Layout className="flex-grow items-stretch relative" direction="col" style={{ paddingTop: 2 }}>
+                <Whiteboard />
+                <ScreenShareContainer />
+                <WhiteboardToolbar />
+                <ScenesController />
+                <Float bottom={15} right={10} align="end" gap={2}>
                   <HandsUpContainer />
-                </Aside>
-              </BigWidgetWindowContainer>
-              <ScenesController />
-            </Content>
-            <Aside style={{ opacity: containedStreamWindowCoverOpacity, width: streamUIStore.teacherVideoStreamSize.width }}>
-              <RoomBigTeacherStreamContainer />
-              <ChatWidgetPC />
-            </Aside>
+                </Float>
+                <BigWidgetWindowContainer />
+              </Layout>
+              <Aside>
+                <RoomBigTeacherStreamContainer />
+                <Chat />
+              </Aside>
+            </Layout>
+            <DialogContainer />
+            <LoadingContainer />
           </Layout>
-          <DialogContainer />
-          <LoadingContainer />
-        </Layout>
-        <ExtensionAppContainer />
-        <WidgetTrackContiner></WidgetTrackContiner>
-
-        <ToastContainer />
+          <WidgetContainer />
+          <ToastContainer />
+        </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
   );
-});
+};

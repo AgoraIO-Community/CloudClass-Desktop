@@ -2,6 +2,7 @@ import { AgoraRteEngineConfig, AgoraRteRuntimePlatform, Logger } from 'agora-rte
 import uuid from 'uuid';
 import { WindowID } from '../api';
 import type { IpcRendererEvent } from 'electron';
+import { ChannelType } from './ipc-channels';
 
 type IPCResponse = {
   code: number;
@@ -23,21 +24,10 @@ type ChannelMessageListenerOptions = {
   once?: boolean;
 };
 
-export enum ChannelType {
-  OpenBrowserWindow = 'open-browser-window',
-  CloseBrowserWindow = 'close-browser-window',
-  ShowBrowserWindow = 'show-browser-window',
-  HideBrowserWindow = 'hide-browser-window',
-  Message = 'browser-window-message',
-  UpdateBrowserWindow = 'update-browser-window',
-  MoveWindowToTargetScreen = 'move-window-to-target-screen',
-  ShortCutCapture = 'short-cut-capture', // 环信截图事件
-}
-
-const withTimeout = (p: Promise<unknown>, timeout = 3000) =>
+export const withTimeout = <T>(p: Promise<T>, timeout = 3000) =>
   Promise.race([
     p,
-    new Promise((_, reject) => {
+    new Promise<T>((_, reject) => {
       setTimeout(reject, timeout);
     }),
   ]);

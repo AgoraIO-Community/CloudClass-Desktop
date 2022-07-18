@@ -14,7 +14,7 @@ import { useMounted, useTimeout } from '~ui-kit/utilities/hooks';
 import { Volume } from '~ui-kit/components/volume';
 import PretestAudio from './assets/pretest-audio.mp3';
 import './index.css';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { Slider } from '~ui-kit/components/slider';
 import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 import { isProduction } from '@/infra/utils/env';

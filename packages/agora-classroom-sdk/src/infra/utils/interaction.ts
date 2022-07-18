@@ -1,4 +1,4 @@
-import { transI18n } from '../stores/common/i18n';
+import { transI18n } from '~ui-kit';
 
 type Delegate = (message: string) => void;
 

@@ -1,7 +1,6 @@
 import { EduUIStoreBase } from '../base';
 import { EduStreamUI, StreamBounds } from '../stream/struct';
-import { transI18n } from '../i18n';
-import { action, computed, IReactionDisposer, observable, reaction, Lambda, when } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, Lambda } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { cloneDeep, forEach } from 'lodash';
 import {
@@ -14,7 +13,6 @@ import {
 import {
   AGError,
   AgoraRteEventType,
-  AgoraRteMediaSourceState,
   AgoraRteRemoteStreamType,
   AgoraRteScene,
   bound,
@@ -34,6 +32,7 @@ import {
   convertToWidgetTrackPos,
   isNum,
 } from './helper';
+import { transI18n } from '~ui-kit';
 
 const SCALE = 0.5; // 大窗口默认与显示区域的比例
 const ZINDEX = 2; // 大窗口默认的层级
@@ -816,15 +815,22 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   private _handleOnOrOffPodium() {
     const newStreams = this.studentStreams.filter(
-      (value: EduStreamUI) => !this.streamWindowMap.has(value.stream.streamUuid) && this.classroomStore.roomStore.acceptedList.find(item=> item.userUuid === value.fromUser.userUuid)
+      (value: EduStreamUI) =>
+        !this.streamWindowMap.has(value.stream.streamUuid) &&
+        this.classroomStore.roomStore.acceptedList.find(
+          (item) => item.userUuid === value.fromUser.userUuid,
+        ),
     );
-    
+
     const deleteStreams: string[] = [];
     this.streamWindowMap.forEach((value: StreamWindowWidget, streamUuid: string) => {
       const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-      const acceptedUser = this.classroomStore.roomStore.acceptedList.find(item => item.userUuid === value.userUuid)
+      const acceptedUser = this.classroomStore.roomStore.acceptedList.find(
+        (item) => item.userUuid === value.userUuid,
+      );
       if (
-        stream && acceptedUser &&
+        stream &&
+        acceptedUser &&
         RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, stream.fromUser.role) ===
           EduRoleTypeEnum.teacher
       ) {
@@ -924,12 +930,12 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       const widgetsData = this._encodeWidgetRect();
       if (streamUuid) {
         const value = widgetsData.get(streamUuid);
-        this.classroomStore.widgetStore.updateWidget(`streamWindow-${streamUuid}`, value);
+        this.classroomStore.widgetStore.updateWidgetProperties(`streamWindow-${streamUuid}`, value);
         return;
       }
       widgetsData.forEach((value, streamUuid) => {
         const widgetUuid = `streamWindow-${streamUuid}`;
-        this.classroomStore.widgetStore.updateWidget(widgetUuid, value);
+        this.classroomStore.widgetStore.updateWidgetProperties(widgetUuid, value);
       });
     }
   }

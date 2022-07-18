@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useState } from 'react';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { Button, Modal, transI18n } from '~ui-kit';
 import { BaseDialogProps } from '.';
 

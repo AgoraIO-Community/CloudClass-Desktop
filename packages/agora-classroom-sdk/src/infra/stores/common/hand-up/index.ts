@@ -1,7 +1,6 @@
 import { computed, observable, action, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { bound, AGError, Lodash } from 'agora-rte-sdk';
-import { transI18n } from '../i18n';
 import {
   AGServiceErrorCode,
   EduClassroomConfig,
@@ -15,6 +14,7 @@ import {
 } from 'agora-edu-core';
 
 import { OnPodiumStateEnum, FetchUserType, FetchUserParam } from '../type';
+import { transI18n } from '~ui-kit';
 
 export type UserWaveArmInfo = {
   userUuid: string;

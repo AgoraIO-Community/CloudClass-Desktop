@@ -7,24 +7,3 @@ declare module '*.mp4';
 declare module '*.png';
 declare module '*.gif';
 declare module '*.jpg';
-
-declare module 'agora-widget-gallery' {
-  declare class AgoraHXChatWidget {
-    constructor(classroomConfig: unknown) {}
-  }
-  declare class AgoraChatWidget {
-    constructor(classroomConfig: unknown) {}
-  }
-}
-declare module 'agora-plugin-gallery' {
-  declare class AgoraCountdown {}
-  declare class AgoraPolling {}
-  declare class AgoraSelector {}
-  declare enum AgoraWidgetCustomEventType {
-    WidgetReload = 'WidgetReload',
-  }
-  declare enum AgoraWidgetPrefix {
-    Webview = 'webView',
-  }
-  declare const WidgetsConfigMap = any;
-}

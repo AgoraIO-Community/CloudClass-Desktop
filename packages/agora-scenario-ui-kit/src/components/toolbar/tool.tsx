@@ -1,10 +1,10 @@
 import React, { FC, ReactEventHandler } from 'react';
-import { t } from '~components/i18n';
 import { IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
 import { SvgIcon } from '~components/svg-img';
 import classnames from 'classnames';
 import { BaseProps } from '../interface/base-props';
+import { useI18n } from '../i18n';
 
 export interface ToolItem extends BaseProps {
   value: string;
@@ -33,6 +33,9 @@ export const Tool: FC<ToolProps> = (props) => {
     component: Component,
     className,
   } = props;
+
+
+  const t = useI18n();
 
   const handleToolClick = (value: any) => {
     onClick(value);

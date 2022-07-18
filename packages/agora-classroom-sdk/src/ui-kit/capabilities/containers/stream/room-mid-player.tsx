@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
-import { useInteractiveUIStores, useStore } from '~hooks/use-edu-stores';
-import { useCallback, useEffect, useMemo, useState, useRef, ReactNode, CSSProperties } from 'react';
+import { useInteractiveUIStores, useStore } from '@/infra/hooks/ui-store';
+import { useCallback, useEffect, useMemo, useState, ReactNode, CSSProperties } from 'react';
 import { EduInteractiveUIClassStore } from '@/infra/stores/interactive';
 import {
   CarouselGroup,
@@ -70,7 +70,7 @@ export const RoomMidStreamsContainer = observer(() => {
 export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
   const [ref, bounds] = useMeasure();
   const { isFullScreen = false } = props;
-  const { streamUIStore, widgetUIStore, streamWindowUIStore } =
+  const { streamUIStore, streamWindowUIStore } =
     useInteractiveUIStores() as EduInteractiveUIClassStore;
   const { teacherCameraStream, videoStreamSize, gap, setStreamBoundsByStreamUuid } = streamUIStore;
   const { streamDragable, visibleStream, handleDBClickStreamWindow } = streamWindowUIStore;
@@ -82,7 +82,7 @@ export const TeacherStream = observer((props: { isFullScreen?: boolean }) => {
           height: videoStreamSize.height,
         };
   }, [videoStreamSize.width, videoStreamSize.height, isFullScreen]);
-  const { isBigWidgetWindowTeacherStreamActive } = widgetUIStore;
+  const isBigWidgetWindowTeacherStreamActive = false;
   const canSetupVideo = useMemo(
     () =>
       isFullScreen ? isBigWidgetWindowTeacherStreamActive : !isBigWidgetWindowTeacherStreamActive,
@@ -185,7 +185,7 @@ export const DragableContainer = observer(
             left: 0,
             bottom: 0,
             right: 0,
-            background: 'transparnt',
+            background: 'transparent',
             width: '100%',
             height: '100%',
             zIndex: 3,

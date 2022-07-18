@@ -1,66 +1,58 @@
-import { Aside, Layout } from '~components/layout';
-import { observer } from 'mobx-react';
 import classnames from 'classnames';
-import { NavigationBarContainer } from '~containers/nav';
+import { Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
-import { LoadingContainer } from '~containers/loading';
-import Room from '../room';
-import { RoomMidStreamsContainer } from '~containers/stream/room-mid-player';
-import { CollectorContainer } from '~containers/board';
-import { WhiteboardContainer } from '~containers/board';
-import { FixedAspectRatioRootBox } from '~containers/root-box';
-import { ChatWidgetPC } from '~containers/widget/chat-widget';
-import { ExtensionAppContainer } from '~containers/extension-app-container';
-import { ToastContainer } from '~containers/toast';
 import { HandsUpContainer } from '~containers/hand-up';
+import { LoadingContainer } from '~containers/loading';
+import { NavigationBarContainer } from '~containers/nav';
+import { FixedAspectRatioRootBox } from '~containers/root-box';
 import { SceneSwitch } from '~containers/scene-switch';
+import { RoomMidStreamsContainer } from '~containers/stream/room-mid-player';
+import { ToastContainer } from '~containers/toast';
 import { Award } from '../../containers/award';
-import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
-import { useStore } from '@/infra/hooks/use-edu-stores';
-import { ScenesController } from '../../containers/scenes-controller';
-import { WidgetTrackContiner } from '../../containers/widget-track';
+import Room from '../room';
 
-export const MidClassScenario = observer(() => {
+import { useStore } from '@/infra/hooks/ui-store';
+import { Float } from '~ui-kit';
+import { RemoteControlContainer } from '../../containers/remote-control';
+import { ScenesController } from '../../containers/scenes-controller';
+import { ScreenShareContainer } from '../../containers/screen-share';
+import { WhiteboardToolbar } from '../../containers/toolbar';
+import { WidgetContainer } from '../../containers/widget';
+import { Chat, Whiteboard } from '../../containers/widget/slots';
+import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
+
+export const MidClassScenario = () => {
   // layout
   const layoutCls = classnames('edu-room', 'mid-class-room');
-  const {
-    classroomStore,
-    streamWindowUIStore: { containedStreamWindowCoverOpacity },
-  } = useStore();
-  const { boardStore } = classroomStore;
-  const { whiteboardWidgetActive } = boardStore;
+  const { shareUIStore } = useStore();
+
   return (
     <Room>
-      <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
+      <FixedAspectRatioRootBox trackMargin={{ top: shareUIStore.navHeight }}>
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
             <NavigationBarContainer />
-
-            <div className="flex flex-1 flex-col justify-center items-center">
+            <Layout className="flex-grow items-stretch relative justify-center fcr-room-bg" direction="col">
               <RoomMidStreamsContainer />
-              <BigWidgetWindowContainer>
-                {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
-              </BigWidgetWindowContainer>
-            </div>
+              <Whiteboard />
+              <ScreenShareContainer />
+              <RemoteControlContainer />
+              <BigWidgetWindowContainer />
+            </Layout>
+            <WhiteboardToolbar />
             <ScenesController />
-
-            <Aside
-              className="aisde-fixed fcr-room-mid"
-              style={{ opacity: containedStreamWindowCoverOpacity }}>
-              <CollectorContainer />
+            <Float bottom={15} right={10} align="end" gap={2}>
               <HandsUpContainer />
-              <ChatWidgetPC />
-            </Aside>
+              <Chat />
+            </Float>
             <DialogContainer />
             <LoadingContainer />
           </Layout>
-          <ExtensionAppContainer />
-          <WidgetTrackContiner></WidgetTrackContiner>
-
+          <WidgetContainer />
           <ToastContainer />
           <Award />
         </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
   );
-});
+};

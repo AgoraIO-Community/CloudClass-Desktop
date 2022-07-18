@@ -1,8 +1,12 @@
 import { Injectable } from 'agora-rte-sdk';
 import { EduClassroomStore } from 'agora-edu-core';
 import { EduShareUIStore } from './share-ui';
+import { Board } from '@/infra/protocol/board';
+import { Extension } from '@/infra/protocol';
 
 export abstract class EduUIStoreBase {
+  private static _boardApi = new Board();
+  private static _extensionApi = new Extension();
   protected logger!: Injectable.Logger;
   /**
    * 参数覆盖
@@ -38,4 +42,18 @@ export abstract class EduUIStoreBase {
    * 销毁
    */
   abstract onDestroy(): void;
+
+  /**
+   * 白板API服务
+   */
+  get boardApi() {
+    return EduUIStoreBase._boardApi;
+  }
+
+  /**
+   * 扩展API
+   */
+  get extensionApi() {
+    return EduUIStoreBase._extensionApi;
+  }
 }

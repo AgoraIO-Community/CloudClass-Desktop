@@ -1,0 +1,50 @@
+.hands-up-popover .popover-inner {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.hands-up-popover .popover-inner-content {
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.hands-up-popover .popover-arrow {
+  display: none;
+}
+
+.hands-up-popover .hands-up-content {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.hands-up-popover .hands-up-content .iconfont {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  font-size: 30px;
+  margin-right: 20px;
+}
+
+.hands-up-popover .hands-up-btn {
+  height: 26px;
+  min-width: 68px;
+  background: #357bf6;
+  padding: 0 8px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 26px;
+  text-align: center;
+}
+
+.hands-up-popover .hands-up-btn:disabled {
+  background: #404040;
+}
+.hands-up-popover .hands-up-btn:active {
+  opacity: 0.7;
+}
+.hands-up-popover .hands-up-btn:active,
+.hands-up-popover .hands-up-btn:focus {
+  outline: none;
+}

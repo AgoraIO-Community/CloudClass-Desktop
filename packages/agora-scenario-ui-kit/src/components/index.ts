@@ -32,3 +32,5 @@ export * from './tree';
 export * from './radio';
 export * from './remote-control-action-bar';
 export * from './input-number';
+export * from './modal/widget-modal';
+export * from './float';

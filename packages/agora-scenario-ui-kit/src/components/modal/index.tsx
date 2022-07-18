@@ -103,7 +103,7 @@ export const Modal: ModalType = ({
             <div className="modal-title-text">{title}</div>
             {closable ? (
               <div
-                className="modal-title-close"
+                className="modal-title-action modal-title-close"
                 onClick={(e: React.MouseEvent<HTMLElement>) => {
                   triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
@@ -120,7 +120,7 @@ export const Modal: ModalType = ({
             <div className="modal-title-text">{title}</div>
             {closable ? (
               <div
-                className="modal-title-close"
+                className="modal-title-action modal-title-close"
                 onClick={(e: React.MouseEvent<HTMLElement>) => {
                   triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);

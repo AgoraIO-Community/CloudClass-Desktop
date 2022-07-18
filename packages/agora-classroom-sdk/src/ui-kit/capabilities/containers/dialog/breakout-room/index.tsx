@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useStore } from '@/infra/hooks/use-edu-stores';
-import { Modal } from '~ui-kit';
+import { useStore } from '@/infra/hooks/ui-store';
+import { Modal, useI18n } from '~ui-kit';
 import './index.css';
-import { transI18n } from '@/infra/stores/common/i18n';
 import { Start } from './fragments/start';
 import { GroupSelect } from './fragments/group-select';
 import { GroupState } from 'agora-edu-core';
@@ -10,6 +9,7 @@ import { observer } from 'mobx-react';
 
 export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
   const { shareUIStore, groupUIStore } = useStore();
+  const t = useI18n();
   const { removeDialog } = shareUIStore;
   const { groupState } = groupUIStore;
 
@@ -50,11 +50,10 @@ export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
       hasMask={false}
       onCancel={onCancel}
       closable
-      title={`${transI18n('scaffold.breakout_room')} ${
-        groupState === GroupState.OPEN
-          ? transI18n('scaffold.in_progress')
-          : transI18n('scaffold.not_in_progress')
-      }`}
+      title={`${t('scaffold.breakout_room')} ${groupState === GroupState.OPEN
+        ? t('scaffold.in_progress')
+        : t('scaffold.not_in_progress')
+        }`}
       className="breakout-room"
       contentClassName={`content-area ${stage}`}>
       {fragment}

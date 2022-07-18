@@ -1,10 +1,10 @@
-import { transI18n } from '@/infra/stores/common/i18n';
-import { Button, t } from '~ui-kit';
+import { Button, useI18n } from '~ui-kit';
 import './index.css';
 interface IPropsTypes {
   onOK: () => void;
 }
 export const RemoteControlConfirm = (props: IPropsTypes) => {
+  const t = useI18n();
   return (
     <div className="remote-control-confirm-container">
       <div className="remote-control-confirm-content">
@@ -14,7 +14,7 @@ export const RemoteControlConfirm = (props: IPropsTypes) => {
           </Button>
         </div>
         <div className="remote-control-confirm-content-text">
-          {transI18n('fcr_share_teacher_requesting_share')}
+          {t('fcr_share_teacher_requesting_share')}
         </div>
       </div>
     </div>

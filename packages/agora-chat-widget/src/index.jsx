@@ -40,7 +40,7 @@ export const HXChatRoom = ({ pluginStore, agoraTokenData }) => {
     chatStore.dispatch(setAPIs(chatAPIs));
     return () => {
       chatAPIs.chatRoomAPI.logoutChatroom();
-      chatStore.dispatch({ type: 'RESET_ACTION' });
+      // chatStore.dispatch({ type: 'RESET_ACTION' });
     };
   }, [chatStore, chatAPIs]);
 

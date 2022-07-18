@@ -1,13 +1,13 @@
 import { AGError, bound, Lodash, AGRteErrorCode, Scheduler, Injectable, Log } from 'agora-rte-sdk';
 import { observable, action, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import { transI18n } from './i18n';
 import { getRootDimensions } from './layout/helper';
-import { ConfirmDialogAction, OrientationEnum } from '@/infra/types';
 import { getEduErrorMessage, getErrorServCode } from '@/infra/utils/error';
-import { WindowID } from '@/infra/api';
-import { ChannelType, sendToMainProcess } from '@/infra/utils/ipc';
-import { EduClassroomConfig } from 'agora-edu-core';
+import { AgoraEduSDK, WindowID } from '@/infra/api';
+import { sendToMainProcess } from '@/infra/utils/ipc';
+import { ConfirmDialogAction, OrientationEnum } from './type';
+import { ChannelType } from '@/infra/utils/ipc-channels';
+import { transI18n } from '~ui-kit';
 
 export enum DialogCategory {
   CloudDriver,
@@ -46,12 +46,18 @@ export class EduShareUIStore {
   protected logger!: Injectable.Logger;
   readonly classroomViewportClassName = 'classroom-viewport';
   readonly classroomViewportTransitionDuration = 300;
-  readonly navBarHeight = 27;
-  private _aspectRatio = 9 / 16;
+  readonly navHeight = 27;
+  private _viewportAspectRatio = 9 / 16;
   private _classroomMinimumSize = { width: 1024, height: 576 };
   private _containerNode = window;
   private _matchMedia = window.matchMedia('(orientation: portrait)');
-  private _classroomViewportTransitionDuration = 300;
+  private _resizeEventListenerAdded = false;
+
+  /**
+   * 教室UI布局完毕
+   */
+  @observable
+  layoutReady = false;
 
   /**
    * 模态框列表
@@ -247,7 +253,7 @@ export class EduShareUIStore {
   updateClassroomViewportSize() {
     const { width, height } = getRootDimensions(this._containerNode);
 
-    const aspectRatio = this._aspectRatio;
+    const aspectRatio = this._viewportAspectRatio;
 
     const curAspectRatio = height / width;
 
@@ -296,9 +302,13 @@ export class EduShareUIStore {
    */
   @bound
   addWindowResizeEventListener() {
-    this._containerNode.addEventListener('resize', this.updateClassroomViewportSize);
+    if (!this._resizeEventListenerAdded) {
+      this._containerNode.addEventListener('resize', this.updateClassroomViewportSize);
 
-    this.updateClassroomViewportSize();
+      this.updateClassroomViewportSize();
+
+      this._resizeEventListenerAdded = true;
+    }
   }
 
   /**
@@ -306,7 +316,11 @@ export class EduShareUIStore {
    */
   @bound
   removeWindowResizeEventListener() {
-    this._containerNode.removeEventListener('resize', this.updateClassroomViewportSize);
+    if (this._resizeEventListenerAdded) {
+      this._containerNode.removeEventListener('resize', this.updateClassroomViewportSize);
+
+      this._resizeEventListenerAdded = false;
+    }
   }
 
   @bound
@@ -343,7 +357,7 @@ export class EduShareUIStore {
       windowID,
       payload.args,
       payload.options,
-      EduClassroomConfig.shared.rteEngineConfig.language,
+      AgoraEduSDK.language,
     );
   }
   @bound
@@ -367,5 +381,10 @@ export class EduShareUIStore {
       observer.observe(viewport);
     }
     return observer;
+  }
+
+  @action.bound
+  setLayoutReady(ready: boolean) {
+    this.layoutReady = ready;
   }
 }

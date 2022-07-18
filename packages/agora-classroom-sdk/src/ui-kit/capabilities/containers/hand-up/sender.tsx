@@ -4,7 +4,7 @@ import { Card, SvgImg } from '~components';
 import { transI18n } from '~ui-kit';
 import { useInterval } from '@/infra/hooks/utilites';
 import { Scheduler } from 'agora-rte-sdk';
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { useInvitedModal } from './invite-confirm';

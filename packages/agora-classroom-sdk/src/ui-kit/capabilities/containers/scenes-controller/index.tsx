@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Card, SvgIcon, SvgImg } from '~ui-kit';
 import './index.css';
 import { observer } from 'mobx-react';
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 
 export const ScenesController: FC = observer(() => {
   const {

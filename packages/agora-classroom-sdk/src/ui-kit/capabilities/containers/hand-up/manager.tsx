@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { Card, Popover, SvgImg } from '~components';
 import { throttle } from 'lodash';
 import { useInterval } from '@/infra/hooks/utilites';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
 
 export interface WaveArmManagerProps extends BaseWaveArmProps {

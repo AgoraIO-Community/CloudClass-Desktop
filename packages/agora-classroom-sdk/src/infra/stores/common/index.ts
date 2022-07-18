@@ -1,6 +1,6 @@
 import { AGError, AgoraRteLogLevel, Log } from 'agora-rte-sdk';
 import { BoardUIStore } from './board-ui';
-import { CloudUIStore } from './cloud-ui';
+import { CloudUIStore } from './cloud-drive';
 import { DeviceSettingUIStore } from './device-setting/index';
 import { HandUpUIStore } from './hand-up';
 import { NavigationBarUIStore } from './nav-ui';
@@ -10,9 +10,6 @@ import { StreamUIStore } from './stream';
 import { ToolbarUIStore } from './toolbar-ui';
 import { LayoutUIStore } from './layout';
 import { EduUIStoreBase } from './base';
-import { TrackUIStore } from './layout/track';
-import { ExtensionAppUIStore } from './ext-app';
-import { destoryI18n, transI18n } from './i18n';
 import { NotificationUIStore } from './notification-ui';
 import { StreamWindowUIStore } from './stream-window';
 import { PretestUIStore } from './pretest';
@@ -22,12 +19,12 @@ import {
   EduClassroomStore,
   LeaveReason,
 } from 'agora-edu-core';
-import { WidgetUIStore } from './widget-ui';
+import { WidgetUIStore } from './widget';
 import { GroupUIStore } from './group-ui';
 import { ConvertMediaOptionsConfig } from '@/infra/api';
 import { RemoteControlUIStore } from './remote-control';
 import { SubscriptionUIStore } from './subscription';
-
+import { transI18n } from '~ui-kit';
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;
@@ -41,8 +38,6 @@ export class EduClassroomUIStore {
   protected _navigationBarUIStore: NavigationBarUIStore;
   protected _toolbarUIStore: ToolbarUIStore;
   protected _layoutUIStore: LayoutUIStore;
-  protected _trackUIStore: TrackUIStore;
-  protected _extensionAppUIStore: ExtensionAppUIStore;
   protected _notificationUIStore: NotificationUIStore;
   protected _pretestUIStore: PretestUIStore;
   protected _widgetUIStore: WidgetUIStore;
@@ -66,8 +61,6 @@ export class EduClassroomUIStore {
     this._toolbarUIStore = new ToolbarUIStore(store, this.shareUIStore);
     this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore);
     this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore);
-    this._trackUIStore = new TrackUIStore(store, this.shareUIStore);
-    this._extensionAppUIStore = new ExtensionAppUIStore(store, this.shareUIStore);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
     this._groupUIStore = new GroupUIStore(store, this.shareUIStore);
     this._remoteControlUIStore = new RemoteControlUIStore(store, this.shareUIStore);
@@ -114,12 +107,6 @@ export class EduClassroomUIStore {
   }
   get notificationUIStore() {
     return this._notificationUIStore;
-  }
-  get trackUIStore() {
-    return this._trackUIStore;
-  }
-  get extesionAppUIStore() {
-    return this._extensionAppUIStore;
   }
   get pretestUIStore() {
     return this._pretestUIStore;
@@ -229,8 +216,6 @@ export class EduClassroomUIStore {
         }
       }
     });
-
-    destoryI18n();
 
     this.classroomStore.destroy();
   }

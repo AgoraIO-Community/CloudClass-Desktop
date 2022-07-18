@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
-import { useEffect, useRef, useState } from 'react';
-import { useStore } from '~hooks/use-edu-stores';
+import React, { useEffect, useRef, useState } from 'react';
+import { useStore } from '@/infra/hooks/ui-store';
 import { EduStream } from 'agora-edu-core';
 import classnames from 'classnames';
 import './index.css';
@@ -52,28 +52,30 @@ const ScreenShareRemoteTrackPlayer = observer(
 
 export const ScreenShareContainer = observer(() => {
   const {
-    streamUIStore: { localScreenShareOff, screenShareStream },
+    boardUIStore: {
+      boardAreaHeight
+    },
+    streamUIStore: { screenShareStream },
     classroomStore: {
       remoteControlStore: { isControlled, isHost },
     },
   } = useStore();
-  const remotecls = classnames({
-    [`remote-screen-share-container`]: 1,
-  });
-  const localcls = classnames({
-    [`local-screen-share-container`]: 1,
-  });
+
+  const remotecls = classnames('remote-screen-share-container', 'absolute', 'bottom-0');
+
+  const localcls = classnames('local-screen-share-container');
+
   return screenShareStream || isControlled ? (
-    <>
+    <React.Fragment>
       {screenShareStream?.isLocal || isControlled ? (
-        <div className={localcls}>
+        <div className={localcls} style={{ top: `calc(100% - ${boardAreaHeight}px)` }}>
           <ScreenShareLocalTrackPlayer />
         </div>
       ) : screenShareStream && !screenShareStream.isLocal && !isHost ? (
-        <div className={remotecls}>
+        <div className={remotecls} style={{ height: boardAreaHeight }}>
           <ScreenShareRemoteTrackPlayer stream={screenShareStream} />
         </div>
       ) : null}
-    </>
+    </React.Fragment>
   ) : null;
 });

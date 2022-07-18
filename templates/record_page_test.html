@@ -10,12 +10,12 @@
 
   <body>
     <style>
-      #root1 {
+      #root {
         width: 100%;
         height: 100%;
       }
     </style>
-    <div id="root1"></div>
+    <div id="root"></div>
     <script type="text/javascript">
       function useParams(location) {
         const searchString = location.href.split('?').pop();
@@ -29,22 +29,6 @@
       }
 
       const {
-        // appId,
-        // userUuid,
-        // userName,
-        // roomUuid,
-        // userRole,
-        // roomType,
-        // roomName,
-        // pretest = false,
-        // rtmUid,
-        // rtmToken,
-        // language,
-        // translateLanguage = 'auto',
-        // startTime,
-        // duration,
-        // courseWareList = [],
-        // personalCourseWareList = [],
         userUuid,
         userName,
         roomUuid,
@@ -70,16 +54,11 @@
       const recordOptions = {
         minFPS,
         maxFPS,
-        resolution, // 这三个是上次测试出来可以接受的配置,
+        resolution,
         autoResolution: false,
-        autoFPS: false, // 这两个值必须设置 false
+        autoFPS: false,
       };
 
-      // const options = paramsObject
-      // if(!options) {
-      //     document.querySelector("#root1").textContent = "options missing"
-      // } else {
-      //AgoraEduSDK.setParameters()
       AgoraEduSDK.setParameters(
         JSON.stringify({
           host: `https://api-solutions-dev.bj2.agoralab.co`,
@@ -90,7 +69,7 @@
         cachePath: undefined,
         region: region ? region : 'CN',
       });
-      AgoraEduSDK.launch(document.querySelector('#root1'), {
+      AgoraEduSDK.launch(document.querySelector('#root'), {
         userUuid,
         userName,
         roomUuid,
@@ -106,20 +85,15 @@
         recordUrl,
         appId,
         userRole,
-        // translateLanguage: language,
         courseWareList: [],
         recordOptions,
         listener: (evt, args) => {
-          console.log('evt', evt, args);
+          console.log('connected to classroom', evt, args);
           if (evt === 1) {
-            AgoraEduSDK.setRecordReady();
-            // Send a web request to notify the server side that the recording page was fully loaded.
+            // do something when classroom is connected
           }
         },
-      }).then(() => {
-        console.log('start launch');
       });
-      // }
     </script>
   </body>
 </html>

@@ -1,4 +1,3 @@
-import { isProduction } from '@/infra/utils/env';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 import { Button } from '~components/button';
@@ -9,7 +8,7 @@ import { Header, Layout } from '~components/layout';
 import { Modal } from '~components/modal';
 import { Select } from '~components/select';
 import { Col, Row, Table } from '~components/table';
-import { Card } from '~ui-kit';
+import { Card } from '~components/card';
 import { HomeModule } from '~utilities/types';
 import './index.css';
 
@@ -27,9 +26,10 @@ export interface HomeAttributes {
   debug: boolean;
   encryptionMode: string;
   encryptionKey: string;
+  showServiceOptions: boolean;
 }
 
-export interface HomeProps extends HomeModule<HomeAttributes> {
+export interface HomeProps extends Omit<HomeModule<HomeAttributes>, 'onChangeShowServiceOptions'> {
   onClick: () => void | Promise<void>;
   isVocational?: boolean;
   version: string;
@@ -73,10 +73,12 @@ export const Home: React.FC<HomeProps> = ({
   onChangeRoomName,
   onChangeDebug,
   onClick,
+  showServiceOptions,
   ...restProps
 }) => {
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
+
   const scenarioOptions = [
     { label: transI18n('home.roomType_1v1'), value: '1v1' },
     { label: transI18n('home.roomType_interactiveSmallClass'), value: 'mid-class' },
@@ -102,12 +104,14 @@ export const Home: React.FC<HomeProps> = ({
     { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
 
-  if (!isProduction) {
+
+  if (showServiceOptions) {
     serviceOptions.push(
       { label: transI18n('home.serviceType_mix_stream_cdn'), value: 'mix-stream-cdn-service' },
       { label: transI18n('home.serviceType_hosting_scene'), value: 'hosting-scene' },
     );
   }
+
 
   const languageOptions = [
     { label: '中文', value: 'zh' },
@@ -139,7 +143,6 @@ export const Home: React.FC<HomeProps> = ({
 
   const roomNameReg = /^[a-zA-Z0-9]{6,50}$/;
   const userNameReg = /^[\u4e00-\u9fa5a-zA-Z0-9\s]{3,50}$/;
-
   return (
     <Layout className={isVocational ? 'home-page home-vocational' : 'home-page'} direction="col">
       <Header className="home-page-header">
@@ -176,7 +179,7 @@ export const Home: React.FC<HomeProps> = ({
               }}
               placeholder={transI18n('home.region_placeholder')}
               options={regionOptions}
-              // defaultMenuIsOpen={true}
+            // defaultMenuIsOpen={true}
             ></Select>
           </div>
           <div
@@ -191,7 +194,7 @@ export const Home: React.FC<HomeProps> = ({
               }}
               placeholder={transI18n('home.language_placeholder')}
               options={languageOptions}
-              // defaultMenuIsOpen={true}
+            // defaultMenuIsOpen={true}
             ></Select>
           </div>
           <div

@@ -36,7 +36,9 @@ const App = function (props) {
   const showRed = state?.showRed;
   const showAnnouncementNotice = state?.showAnnouncementNotice;
   const configUIVisible = state?.configUIVisible;
-  const { createListen } = useMemo(() => createListener(store), [store]);
+  const { createListen } = useMemo(() => {
+    return createListener(store);
+  }, [store]);
 
   useEffect(() => {
     store.dispatch(isShowChat(globalShowChat));
@@ -58,9 +60,9 @@ const App = function (props) {
   useEffect(() => {
     const propsData = { ...props.pluginStore.context };
 
-    const { orgName, appName, chatroomId, userUuid } = propsData;
+    const { orgName, appName, chatRoomId, userUuid } = propsData;
 
-    if (orgName && appName && chatroomId && userUuid && !loggedIn.current && apis) {
+    if (orgName && appName && chatRoomId && userUuid && !loggedIn.current && apis) {
       loggedIn.current = true;
 
       const appkey = orgName + '#' + appName;

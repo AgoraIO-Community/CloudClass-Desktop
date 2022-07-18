@@ -1,16 +1,16 @@
-import { ToolbarItemCategory } from '@/infra/stores/common/toolbar-ui';
 import { observer } from 'mobx-react';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { Toolbar, ToolItem } from '~ui-kit';
 import { PensContainer } from './pens';
 import { ToolCabinetContainer } from './tool-cabinet';
 import { BoardCleanersContainer } from './board-cleaners';
 import { SliceContainer } from './slice';
-
-export const WhiteboardToolbar = observer(({ children }: any) => {
+import { ToolbarItemCategory } from '@/infra/stores/common/type';
+export const WhiteboardToolbar = observer(() => {
   const {
     toolbarUIStore,
     streamWindowUIStore: { containedStreamWindowCoverOpacity },
+    boardUIStore
   } = useStore();
   const { activeTool, activeMap, tools, setTool } = toolbarUIStore;
 
@@ -18,29 +18,29 @@ export const WhiteboardToolbar = observer(({ children }: any) => {
     if (tool.category === ToolbarItemCategory.PenPicker) {
       return {
         ...tool,
-        component: (props: any) => {
-          return <PensContainer {...props} />;
+        component: () => {
+          return <PensContainer />;
         },
       } as ToolItem;
     } else if (tool.category === ToolbarItemCategory.Cabinet) {
       return {
         ...tool,
-        component: (props: any) => {
-          return <ToolCabinetContainer {...props} />;
+        component: () => {
+          return <ToolCabinetContainer />;
         },
       } as ToolItem;
     } else if (tool.category === ToolbarItemCategory.Eraser) {
       return {
         ...tool,
-        component: (props: any) => {
-          return <BoardCleanersContainer {...props} />;
+        component: () => {
+          return <BoardCleanersContainer />;
         },
       } as ToolItem;
     } else if (tool.category === ToolbarItemCategory.Slice) {
       return {
         ...tool,
-        component: (props: any) => {
-          return <SliceContainer {...props} />;
+        component: () => {
+          return <SliceContainer />;
         },
       } as ToolItem;
     }
@@ -48,13 +48,15 @@ export const WhiteboardToolbar = observer(({ children }: any) => {
   });
 
   return mappedTools.length > 0 ? (
-    <Toolbar
-      style={{ opacity: containedStreamWindowCoverOpacity }}
-      active={activeTool}
-      activeMap={activeMap}
-      tools={mappedTools}
-      onClick={setTool}
-      defaultOpened={true}
-    />
+    <div className='absolute bottom-0 w-full overflow-hidden' style={{ height: boardUIStore.boardAreaHeight, pointerEvents: 'none' }}>
+      <Toolbar
+        style={{ opacity: containedStreamWindowCoverOpacity, pointerEvents: 'all' }}
+        active={activeTool}
+        activeMap={activeMap}
+        tools={mappedTools}
+        onClick={setTool}
+        defaultOpened={true}
+      />
+    </div>
   ) : null;
 });

@@ -1,4 +1,4 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { iterateMap } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { RemoteControlActionBar } from '~ui-kit';

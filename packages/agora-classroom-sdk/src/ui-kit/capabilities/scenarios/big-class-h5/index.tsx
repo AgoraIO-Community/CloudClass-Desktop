@@ -1,24 +1,18 @@
+import { useLectureH5UIStores } from '@/infra/hooks/ui-store';
+import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { Layout, LayoutProps } from '~components/layout';
-import { useLectureH5UIStores } from '~hooks/use-edu-stores';
+import { ScreenShareContainer } from '~containers/screen-share';
 import {
   RoomBigStudentStreamsH5Container,
   RoomBigTeacherStreamH5Container,
 } from '~containers/stream/room-big-h5-player';
-import { ChatWidgetH5 } from '~containers/widget/chat-widget';
-import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
-import { WhiteboardH5Container } from '~containers/board/RoomBigH5WhiteboardContainer';
-import { ScreenShareContainer } from '~containers/screen-share';
+import { WidgetContainer } from '../../containers/widget';
+import { ChatH5, WhiteboardH5 } from '../../containers/widget/slots';
 import Room from '../room';
-import { useEffect } from 'react';
-import { ExtensionAppContainer } from '~containers/extension-app-container';
-import { Helmet } from 'react-helmet';
-import { WidgetTrackContiner } from '../../containers/widget-track';
-
-require('matchmedia-polyfill');
-require('matchmedia-polyfill/matchMedia.addListener');
 
 export const BigClassScenarioH5 = observer(() => {
   return (
@@ -38,8 +32,7 @@ export const BigClassScenarioH5 = observer(() => {
           <H5LayoutStudentStreamBoardContainer />
           <H5TeacherStreamChatContainer />
         </LayoutOrientation>
-        <ExtensionAppContainer />
-        <WidgetTrackContiner></WidgetTrackContiner>
+        <WidgetContainer />
       </H5LayoutContainer>
     </Room>
   );
@@ -70,10 +63,9 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
 const H5LayoutStudentStreamBoardContainer = () => {
   return (
     <Layout className="flex-1" direction="col">
+      <WhiteboardH5 />
       <RoomBigStudentStreamsH5Container />
-      <WhiteboardH5Container>
-        <ScreenShareContainer />
-      </WhiteboardH5Container>
+      <ScreenShareContainer />
     </Layout>
   );
 };
@@ -85,7 +77,7 @@ const H5TeacherStreamChatContainer = observer(() => {
   return (
     <Layout direction="col" className={classnames(containerH5VisibleCls)}>
       <RoomBigTeacherStreamH5Container />
-      <ChatWidgetH5 />
+      <ChatH5 />
     </Layout>
   );
 });

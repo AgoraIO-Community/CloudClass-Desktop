@@ -4,7 +4,6 @@ import { LectureBoardUIStore } from './board-ui';
 import { LectureRosterUIStore } from './roster';
 import { LectureRoomStreamUIStore } from './stream-ui';
 import { LectrueToolbarUIStore } from './toolbar-ui';
-import { LectureWidgetUIStore } from './widget-ui';
 
 export class EduLectureUIStore extends EduClassroomUIStore {
   constructor(store: EduClassroomStore) {
@@ -13,7 +12,6 @@ export class EduLectureUIStore extends EduClassroomUIStore {
     this._rosterUIStore = new LectureRosterUIStore(store, this.shareUIStore);
     this._boardUIStore = new LectureBoardUIStore(store, this.shareUIStore);
     this._toolbarUIStore = new LectrueToolbarUIStore(store, this.shareUIStore);
-    this._widgetUIStore = new LectureWidgetUIStore(store, this.shareUIStore);
   }
 
   get streamUIStore() {
@@ -22,8 +20,5 @@ export class EduLectureUIStore extends EduClassroomUIStore {
 
   get rosterUIStore() {
     return this._rosterUIStore as LectureRosterUIStore;
-  }
-  get widgetUIStore() {
-    return this._widgetUIStore as LectureWidgetUIStore;
   }
 }

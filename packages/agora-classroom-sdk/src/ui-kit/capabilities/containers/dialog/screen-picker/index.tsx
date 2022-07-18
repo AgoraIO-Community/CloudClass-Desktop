@@ -1,11 +1,11 @@
 import classnames from 'classnames';
 import { FC, useMemo, useState } from 'react';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { Button, Modal, SvgImg, t } from '~ui-kit';
+import { Button, Modal, SvgImg, useI18n } from '~ui-kit';
 import './index.css';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { AGScreenShareDevice } from 'agora-rte-sdk';
-import { transI18n } from '@/infra/stores/common/i18n';
+import { transI18n } from '~ui-kit';
 
 export const ScreenPickerDialog = ({
   id,
@@ -21,6 +21,7 @@ export const ScreenPickerDialog = ({
   desktopList: (AGScreenShareDevice & { imagebase64: string })[];
 }) => {
   const { shareUIStore } = useStore();
+  const t = useI18n();
   const { removeDialog } = shareUIStore;
 
   const [activeId, setActiveId] = useState<string>('');
@@ -84,6 +85,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
   const activeTitle = useMemo(() => {
     return [...windowList, ...desktopList].find((i) => currentActiveId === i.id)?.title;
   }, [currentActiveId, windowList, desktopList]);
+  const t = useI18n();
   return (
     <>
       <div className={cls}>{screenShareTitle}</div>
@@ -107,8 +109,8 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   style={
                     item.imagebase64
                       ? {
-                          backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
-                        }
+                        backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
+                      }
                       : {}
                   }></div>
                 <div className="program-item-title">
@@ -141,8 +143,8 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   style={
                     item.imagebase64
                       ? {
-                          backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
-                        }
+                        backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
+                      }
                       : {}
                   }></div>
                 <div className="program-item-title">

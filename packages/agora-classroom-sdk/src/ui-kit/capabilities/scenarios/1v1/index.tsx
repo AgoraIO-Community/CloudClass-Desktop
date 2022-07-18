@@ -1,71 +1,52 @@
+import { useStore } from '@/infra/hooks/ui-store';
 import classnames from 'classnames';
-import { observer } from 'mobx-react';
-import { FC } from 'react';
-import { WhiteboardContainer } from '~containers/board';
+import { Aside, Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
 import { LoadingContainer } from '~containers/loading';
 import { NavigationBarContainer } from '~containers/nav';
-import { Aside, Layout } from '~components/layout';
-import { Room1v1StreamsContainer } from '~containers/stream/room-1v1-player';
-import { ChatWidgetPC } from '~containers/widget/chat-widget';
-import Room from '../room';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
-import { ExtensionAppContainer } from '~containers/extension-app-container';
-
+import { Room1v1StreamsContainer } from '~containers/stream/room-1v1-player';
 import { ToastContainer } from '~containers/toast';
-import { CollectorContainer } from '~containers/board';
 import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { RemoteControlContainer } from '../../containers/remote-control';
+import { SceneSwitch } from '../../containers/scene-switch';
 import { ScenesController } from '../../containers/scenes-controller';
-import { WidgetTrackContiner } from '../../containers/widget-track';
+import { ScreenShareContainer } from '../../containers/screen-share';
+import { WhiteboardToolbar } from '../../containers/toolbar';
+import { WidgetContainer } from '../../containers/widget';
+import { Chat, Whiteboard } from '../../containers/widget/slots';
+import Room from '../room';
 
-type Props = {
-  children?: React.ReactNode;
-};
-
-const Content: FC<Props> = ({ children }) => {
-  return <div className="flex-grow">{children}</div>;
-};
-
-export const OneToOneScenario = observer(() => {
-  const layoutCls = classnames('edu-room');
-  const {
-    classroomStore,
-    streamWindowUIStore: { containedStreamWindowCoverOpacity },
-  } = useStore();
-  const { boardStore } = classroomStore;
-  const { whiteboardWidgetActive } = boardStore;
+export const OneToOneScenario = () => {
+  const layoutCls = classnames('edu-room', 'one-on-one-class-room');
+  const { shareUIStore } = useStore();
   return (
     <Room>
-      <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
-        <Layout className={layoutCls} direction="col">
-          <NavigationBarContainer />
-          <Layout className="horizontal">
-            <Content>
-              <BigWidgetWindowContainer>
-                {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
-              </BigWidgetWindowContainer>
-              <ScenesController />
-
-              <Aside
-                className="aisde-fixed fcr-room-1v1"
-                style={{ opacity: containedStreamWindowCoverOpacity }}>
-                <CollectorContainer />
+      <FixedAspectRatioRootBox trackMargin={{ top: shareUIStore.navHeight }}>
+        <SceneSwitch>
+          <Layout className={layoutCls} direction="col">
+            <NavigationBarContainer />
+            <Layout className="flex-grow items-stretch fcr-room-bg">
+              <Layout className="flex-grow items-stretch relative" direction="col" style={{ paddingTop: 2 }}>
+                <Whiteboard />
+                <ScreenShareContainer />
+                <WhiteboardToolbar />
+                <ScenesController />
+                <RemoteControlContainer />
+                <BigWidgetWindowContainer />
+              </Layout>
+              <Aside>
+                <Room1v1StreamsContainer />
+                <Chat />
               </Aside>
-            </Content>
-            <Aside>
-              <Room1v1StreamsContainer />
-              <ChatWidgetPC />
-            </Aside>
+            </Layout>
+            <DialogContainer />
+            <LoadingContainer />
           </Layout>
-          <DialogContainer />
-          <LoadingContainer />
-        </Layout>
-        {/* <ExtAppContainer /> */}
-        <ExtensionAppContainer />
-        <WidgetTrackContiner></WidgetTrackContiner>
-        <ToastContainer />
+          <WidgetContainer />
+          <ToastContainer />
+        </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
   );
-});
+};

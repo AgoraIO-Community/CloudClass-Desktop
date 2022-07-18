@@ -135,12 +135,12 @@ export const number2Percent = (v: number, fixed = 0): string => {
 export function audioBufferToWav(buffer: any, opt?: any) {
   opt = opt || {};
 
-  var numChannels = buffer.numberOfChannels;
-  var sampleRate = buffer.sampleRate;
-  var format = opt.float32 ? 3 : 1;
-  var bitDepth = format === 3 ? 32 : 16;
+  const numChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const format = opt.float32 ? 3 : 1;
+  const bitDepth = format === 3 ? 32 : 16;
 
-  var result;
+  let result;
   if (numChannels === 2) {
     result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
   } else {
@@ -151,11 +151,11 @@ export function audioBufferToWav(buffer: any, opt?: any) {
 }
 
 function encodeWAV(samples: any, format: any, sampleRate: any, numChannels: any, bitDepth: any) {
-  var bytesPerSample = bitDepth / 8;
-  var blockAlign = numChannels * bytesPerSample;
+  const bytesPerSample = bitDepth / 8;
+  const blockAlign = numChannels * bytesPerSample;
 
-  var buffer = new ArrayBuffer(44 + samples.length * bytesPerSample);
-  var view = new DataView(buffer);
+  const buffer = new ArrayBuffer(44 + samples.length * bytesPerSample);
+  const view = new DataView(buffer);
 
   /* RIFF identifier */
   writeString(view, 0, 'RIFF');
@@ -194,11 +194,11 @@ function encodeWAV(samples: any, format: any, sampleRate: any, numChannels: any,
 }
 
 function interleave(inputL: any, inputR: any) {
-  var length = inputL.length + inputR.length;
-  var result = new Float32Array(length);
+  const length = inputL.length + inputR.length;
+  const result = new Float32Array(length);
 
-  var index = 0;
-  var inputIndex = 0;
+  let index = 0;
+  let inputIndex = 0;
 
   while (index < length) {
     result[index++] = inputL[inputIndex];
@@ -209,20 +209,20 @@ function interleave(inputL: any, inputR: any) {
 }
 
 function writeFloat32(output: any, offset: any, input: any) {
-  for (var i = 0; i < input.length; i++, offset += 4) {
+  for (let i = 0; i < input.length; i++, offset += 4) {
     output.setFloat32(offset, input[i], true);
   }
 }
 
 function floatTo16BitPCM(output: any, offset: any, input: any) {
-  for (var i = 0; i < input.length; i++, offset += 2) {
-    var s = Math.max(-1, Math.min(1, input[i]));
+  for (let i = 0; i < input.length; i++, offset += 2) {
+    const s = Math.max(-1, Math.min(1, input[i]));
     output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
   }
 }
 
 function writeString(view: any, offset: any, string: any) {
-  for (var i = 0; i < string.length; i++) {
+  for (let i = 0; i < string.length; i++) {
     view.setUint8(offset + i, string.charCodeAt(i));
   }
 }

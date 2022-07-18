@@ -1,17 +1,13 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import {
-  sendToRendererProcess,
-  ChannelType,
-  sendToMainProcess,
-  listenChannelMessage,
-} from '@/infra/utils/ipc';
+import { sendToRendererProcess, sendToMainProcess, listenChannelMessage } from '@/infra/utils/ipc';
 import { WindowID } from '@/infra/api';
-import { ControlState, IPCMessageType } from '@/infra/types';
-import { Select, Tooltip, t, SvgIcon, transI18n } from '~ui-kit';
 import './index.css';
 import { DevicePlatform } from 'agora-edu-core';
 import { RemoteControlBarUIParams } from '@/infra/stores/common/type';
+import { ChannelType, IPCMessageType } from '@/infra/utils/ipc-channels';
+import { ControlState } from '@/infra/stores/common/remote-control/type';
 import { EduUserStruct } from 'agora-edu-core';
+import { Select, SvgIcon, useI18n, Tooltip, transI18n } from '~ui-kit';
 
 type Props = {
   canReSelectScreen?: boolean;
@@ -111,6 +107,7 @@ const IconButton: FC<IconButtonProps> = ({ title, color, type, onClick }) => {
 export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
   const { changeControlState, selectScreen, hide, close, updateWindowSize } = useActions();
   const [controlState, setControlState] = useState<string>(ControlState.NotAllowedControlled);
+  const t = useI18n();
   const { studentList } = useStudentList();
   useEffect(() => {
     const cleaner = listenChannelMessage(ChannelType.Message, (_e, message) => {

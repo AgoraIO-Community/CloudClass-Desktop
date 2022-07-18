@@ -5,7 +5,6 @@ export class OneToOneBoardUIStore extends BoardUIStore {
     return {
       ...super.uiOverrides,
       heightRatio: 1,
-      aspectRatio: 0.706,
     };
   }
 }

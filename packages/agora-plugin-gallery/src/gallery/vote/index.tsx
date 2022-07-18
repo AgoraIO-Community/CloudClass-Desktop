@@ -1,63 +1,92 @@
-import 'promise-polyfill/src/polyfill';
-import {
-  IAgoraExtensionApp,
-  AgoraExtensionAppTypeEnum,
-  ExtensionStoreEach as ExtensionStore,
-  ExtensionController,
-} from 'agora-edu-core';
-import { transI18n } from '~ui-kit';
 import { Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
 import App from './app';
 import { PluginStore } from './store';
-import { POLLING } from '../../constants';
 import './i18n/config';
-import { autorun } from 'mobx';
-import React from 'react';
+import { observable, action } from 'mobx';
+import { transI18n, WidgetModal } from '~ui-kit';
+import { AgoraEduToolWidget } from '../../common/edu-tool-widget';
+import { AgoraWidgetController, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import { AgoraExtensionWidgetEvent } from '@/infra/api';
 
-export class AgoraPolling implements IAgoraExtensionApp {
-  static store: PluginStore | null = null;
-  appIdentifier = POLLING;
-  appName = transI18n('widget_polling.appName');
-  customHeader = React.createElement('span');
-  icon = 'vote';
-  type = AgoraExtensionAppTypeEnum.POPUP;
-  width = 360;
-  height = 283;
-  minWidth = 360;
-  minHeight = 283;
-  trackPath = true;
+export class AgoraPolling extends AgoraEduToolWidget {
+  private _store?: PluginStore;
+  private _dom?: HTMLElement;
+  @observable
+  roomProperties: any = {};
+  @observable
+  userProperties: any = {};
 
-  apply = (storeobserver: ExtensionStore, controller: ExtensionController) => {
-    this.appName = transI18n('widget_polling.appName');
-    AgoraPolling.store = new PluginStore(controller, storeobserver);
-    let self = this;
-    autorun(() => {
-      if (!AgoraPolling.store?.isController) {
-        let customHeader =
-          AgoraPolling.store?.type === 'radio'
-            ? transI18n('widget_polling.single-sel')
-            : transI18n('widget_polling.mul-sel');
-        self.customHeader = React.createElement(
-          'span',
-          { className: 'vote-type-tip' },
-          customHeader,
-        );
-      }
-    });
-  };
-
-  render(dom: Element | null) {
-    dom &&
-      ReactDOM.render(
-        <Provider store={AgoraPolling.store}>
-          <App />
-        </Provider>,
-        dom,
-      );
+  get widgetName(): string {
+    return 'poll';
+  }
+  get hasPrivilege() {
+    const { role } = this.classroomConfig.sessionInfo
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role);
   }
 
-  destory() {
-    AgoraPolling.store?.resetStore();
+  get minWidth() {
+    return 360;
+  }
+  get minHeight() {
+    return 283;
+  }
+
+  onInstall(controller: AgoraWidgetController) {
+    if (controller.classroomConfig.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class) {
+      controller.broadcast(AgoraExtensionWidgetEvent.RegisterCabinetTool, {
+        id: this.widgetName,
+        name: transI18n('widget_polling.appName'),
+        iconType: 'vote'
+      },
+      );
+    }
+  }
+
+  @action
+  onCreate(properties: any, userProperties: any) {
+    this._store = new PluginStore(this);
+    this.roomProperties = properties;
+    this.userProperties = userProperties;
+  }
+  @action
+  onPropertiesUpdate(properties: any): void {
+    this.roomProperties = properties;
+  }
+
+  @action
+  onUserPropertiesUpdate(userProperties: any): void {
+    this.userProperties = userProperties;
+  }
+
+  onDestroy(): void {
+    if (this._store) {
+      this._store.resetStore();
+    }
+  }
+
+  render(dom: HTMLElement) {
+    this._dom = dom;
+    ReactDOM.render(
+      <Provider store={this._store}>
+        <WidgetModal title={transI18n('widget_polling.appName')} closable={this.controlled} onCancel={this.handleClose} onResize={
+          this.handleResize
+        }>
+          <App />
+        </WidgetModal>
+      </Provider>,
+      dom,
+    );
+  }
+
+  unload() {
+    if (this._dom) {
+      ReactDOM.unmountComponentAtNode(this._dom);
+      this._dom = undefined;
+    }
+  }
+
+  onUninstall(controller: AgoraWidgetController) {
+    controller.broadcast(AgoraExtensionWidgetEvent.UnregisterCabinetTool, this.widgetName)
   }
 }

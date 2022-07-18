@@ -20,10 +20,11 @@ import {
   bound,
 } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
+import { DialogCategory } from './share-ui';
+import { AgoraEduSDK } from '@/infra/api';
+import { transI18n } from '~ui-kit';
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
-import { transI18n } from './i18n';
-import { DialogCategory } from './share-ui';
 
 export interface EduNavAction<P = undefined> {
   id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic';
@@ -747,11 +748,11 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   get recordArgs() {
-    const { recordUrl, rteEngineConfig, recordRetryTimeout } = EduClassroomConfig.shared;
+    const { recordUrl, recordRetryTimeout } = EduClassroomConfig.shared;
 
     const args = {
       webRecordConfig: {
-        rootUrl: `${recordUrl}?language=${rteEngineConfig.language}`,
+        rootUrl: `${recordUrl}?language=${AgoraEduSDK.language}`,
         videoBitrate: 3000,
       },
       mode: RecordMode.Web,

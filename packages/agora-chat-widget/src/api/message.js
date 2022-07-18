@@ -12,7 +12,7 @@ export class MessageAPI {
   // 禁言消息
   sendCmdMsg = (action, userId) => {
     const state = this.store.getState();
-    const roomId = state?.propsData.chatroomId;
+    const roomId = state?.propsData.chatRoomId;
     const roomUuid = state?.propsData.roomUuid;
     const roleType = state?.propsData.roleType;
     const loginName = state?.propsData.userName;
@@ -50,7 +50,7 @@ export class MessageAPI {
     // e.preventDefault();
     const state = this.store.getState();
     const loginUser = state?.propsData.userUuid;
-    const publicRoomId = state?.propsData?.chatroomId;
+    const publicRoomId = state?.propsData?.chatRoomId;
     const roleType = state?.propsData.roleType;
     const roomUuid = state?.propsData.roomUuid;
     const userNickName = state?.propsData.userName;

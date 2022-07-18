@@ -1,0 +1,36 @@
+.podiums-section {
+  width: 100%;
+  height: 74px;
+  padding: 2px 0px;
+  overflow-y: scroll;
+  background-color: #212021;
+}
+
+.podiums-section .podium-streams {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.podium-streams:last-child {
+  margin-right: 0;
+}
+
+.podium-stream {
+  width: 123px;
+  height: 70px;
+  border-radius: 2px;
+  margin-right: 3px;
+}
+.podium-stream .video-player-overlay {
+  width: 123px !important;
+  height: 70px !important;
+}
+
+.podium-stream .video-player,
+.podium-stream .video-player-overlay {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}

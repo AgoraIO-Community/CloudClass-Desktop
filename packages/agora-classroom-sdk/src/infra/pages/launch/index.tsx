@@ -1,11 +1,11 @@
 import { useHomeStore } from '@/infra/hooks';
 import { GlobalStorage } from '@/infra/utils';
-import { EduRoomSubtypeEnum } from 'agora-edu-core';
+import { AgoraEduClassroomEvent, EduRoomSubtypeEnum } from 'agora-edu-core';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AgoraEduClassroomEvent, AgoraEduSDK } from '../../api';
+import { AgoraEduSDK } from '../../api';
 import courseWareList from './courseware-list';
 
 declare const CLASSROOM_SDK_VERSION: string;
@@ -36,8 +36,6 @@ export const LaunchPage = observer(() => {
         appId: launchOption.appId,
         region: launchOption.region ?? 'CN',
       });
-
-      launchOption.extensions = [];
 
       // const recordUrl = `https://solutions-apaas.agora.io/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
       const recordUrl = `https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;

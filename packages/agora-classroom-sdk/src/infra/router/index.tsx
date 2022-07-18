@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { BizPageRouter } from '@/infra/types';
 import { HomePage } from '@/infra/pages/home';
 import { HomeH5Page } from '@/infra/pages/home/h5';
 import { VocationalHomePage } from '@/infra/pages/home/vocational';
@@ -15,6 +14,26 @@ export type AppRouteComponent = {
   path: string;
   component: React.FC<any>;
 };
+
+export enum BizPageRouter {
+  Setting = 'setting',
+  OneToOne = '1v1',
+  MidClass = 'small',
+  BigClass = 'big',
+  OneToOneIncognito = '1v1_incognito',
+  SmallClassIncognito = 'small_incognito',
+  LaunchPage = 'launch',
+  PretestPage = 'pretest',
+  TestHomePage = 'test_home',
+  Incognito = 'Incognito',
+  TestRecordPage = 'test_record',
+  TestH5HomePage = 'test_h5_home',
+  TestAdapteHomePage = 'test_adapte_home',
+  RecordationSearchPage = 'recordation-search',
+  Window = 'window',
+  VocationalHomePage = 'vocational_home',
+  VocationalHomeH5Page = 'vocational_h5_home',
+}
 
 // TODO: need fix tsx
 const PageSFC = (Component: React.FC<any>) => {

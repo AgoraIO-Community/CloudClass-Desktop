@@ -1,0 +1,8 @@
+@import 'plyr/dist/plyr.css';
+.player-not-controlled .plyr__controls {
+  display: none;
+}
+.plyr--video {
+  width: 100%;
+  height: 100%;
+}

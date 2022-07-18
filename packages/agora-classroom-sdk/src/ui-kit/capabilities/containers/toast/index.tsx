@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { Toast } from '~ui-kit';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './index.css';
 import { ToastType } from '@/infra/stores/common/share-ui';

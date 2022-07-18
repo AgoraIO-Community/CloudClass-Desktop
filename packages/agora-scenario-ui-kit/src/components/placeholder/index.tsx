@@ -3,9 +3,6 @@ import './index.css';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/interface/base-props';
 import { SvgImg } from '../svg-img';
-import boardDisconnected from './assets/board-disconnected.png';
-import { transI18n } from '~components/i18n';
-import { Button } from '~components/button';
 import { Z_INDEX_RULES } from '~utilities/style-config';
 
 type PlaceholderType =
@@ -124,29 +121,6 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
         size={placeholderSize ? placeholderSize : cameraSvgSizeDict[state]}
       />
       <span>{text}</span>
-    </div>
-  );
-};
-
-export interface BoardPlaceHolderProps extends BaseProps {
-  onReconnectClick: any;
-}
-
-export const BoardPlaceHolder: React.FC<BoardPlaceHolderProps> = ({
-  onReconnectClick,
-  className,
-  style,
-}) => {
-  const cls = classnames({
-    [`board-placeholder`]: 1,
-    [`${className}`]: !!className,
-  });
-  return (
-    <div className={cls} style={{ ...style }}>
-      <img src={boardDisconnected} alt={transI18n('whiteboard.disconnect-img-alt')} />
-      <Button className="reconnect-btn" onClick={onReconnectClick}>
-        {transI18n('whiteboard.disconnect-btn')}
-      </Button>
     </div>
   );
 };

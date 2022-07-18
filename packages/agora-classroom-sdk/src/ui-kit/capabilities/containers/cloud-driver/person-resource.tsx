@@ -1,8 +1,7 @@
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { ChangeEvent, useRef, useEffect, useCallback, useState } from 'react';
-import { useStore } from '~hooks/use-edu-stores';
-import { CloudDriveCourseResource, CloudDriveResource } from 'agora-edu-core';
+import { useStore } from '@/infra/hooks/ui-store';
 import {
   Col,
   Inline,
@@ -26,14 +25,16 @@ import {
 import CloudToolbar from './cloud-toolbar';
 import CloudMinimize from './cloud-minimize';
 import CloudMoreMenu from './cloud-more-menu';
-import { FileTypeSvgColor, UploadItem as CloudUploadItem } from '@/infra/stores/common/cloud-ui';
+import { FileTypeSvgColor, UploadItem as CloudUploadItem } from '@/infra/stores/common/cloud-drive';
 import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
-import { debounce, divide } from 'lodash';
+import { debounce } from 'lodash';
+import { CloudDriveCourseResource } from '@/infra/stores/common/cloud-drive/struct';
+import { supportedTypes } from '@/infra/stores/common/cloud-drive/helper';
 
 const UploadSuccessToast = () => {
   return (
     <Toast
-      closeToast={() => {}}
+      closeToast={() => { }}
       style={{
         position: 'absolute',
         left: '50%',
@@ -102,6 +103,7 @@ export const PersonalResourcesContainer = observer(() => {
     currentPersonalResPage,
     removePersonalResources,
     uploadPersonalResource,
+    addOnlineCourseware,
     fetchPersonalResources,
     personalResources,
     searchPersonalResourcesKeyword,
@@ -146,9 +148,9 @@ export const PersonalResourcesContainer = observer(() => {
       uploadingRef.current &&
       uploadingProgresses.length > 0 &&
       uploadingProgresses.length ===
-        uploadingProgresses.filter(
-          (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
-        ).length
+      uploadingProgresses.filter(
+        (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
+      ).length
     ) {
       uploadingRef.current = false;
       setUploadState('success');
@@ -229,7 +231,7 @@ export const PersonalResourcesContainer = observer(() => {
     [setSearchPersonalResourcesKeyword],
   );
   const onOnlineCoursewareSubmit = async (formData: IUploadOnlineCoursewareData) => {
-    await uploadPersonalResource(formData);
+    await addOnlineCourseware(formData);
   };
   return (
     <>
@@ -295,16 +297,16 @@ export const PersonalResourcesContainer = observer(() => {
                         dangerouslySetInnerHTML={{
                           __html: searchPersonalResourcesKeyword
                             ? resourceName.replaceAll(
-                                searchPersonalResourcesKeyword,
-                                `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
-                              )
+                              searchPersonalResourcesKeyword,
+                              `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
+                            )
                             : resourceName,
                         }}></span>
                     </Inline>
                   </Col>
                   <Col>
                     {item.resource instanceof CloudDriveCourseResource &&
-                    item.resource?.taskProgress?.status === 'Converting' ? (
+                      item.resource?.taskProgress?.status === 'Converting' ? (
                       <>
                         <Inline color="#586376">
                           <CircleLoading width="18" height="18" />
@@ -379,7 +381,7 @@ export const PersonalResourcesContainer = observer(() => {
               <input
                 ref={fileRef}
                 id="upload-image"
-                accept={CloudDriveResource.supportedTypes.map((item) => '.' + item).join(',')}
+                accept={supportedTypes.map((item) => '.' + item).join(',')}
                 onChange={handleUpload}
                 multiple
                 type="file"></input>

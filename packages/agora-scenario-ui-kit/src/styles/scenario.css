@@ -7,19 +7,6 @@ body,
   background-color: unset !important;
 }
 
-.form-checkbox {
-  border: 1px solid #ececf1;
-  background: #f9f9fc;
-  -webkit-appearance: none;
-}
-
-.form-checkbox:checked {
-  -webkit-appearance: checkbox;
-}
-.form-checkbox:checked + span {
-  color: #191919;
-}
-
 .btn-pin {
   position: absolute;
   right: 16px;
@@ -52,14 +39,6 @@ body,
   padding-top: 2px;
 }
 
-.card-loading-position {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-}
 .fixed-container {
   display: flex;
   justify-content: center;
@@ -77,38 +56,6 @@ body,
   flex: 1;
   border-radius: 4px;
   min-width: 300px;
-}
-
-.full-student-1v1 {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: 0.5s;
-}
-
-.full-screen-chat {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  height: 514px;
-}
-
-.rtc-video {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: 0;
-}
-
-.rtc-screen-share {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: 0;
-  background: black;
-}
-
-.rtc-screen-share video {
-  object-fit: contain !important;
 }
 
 .edu-room {
@@ -137,14 +84,6 @@ body,
 
 .mirror video {
   transform: scaleX(1) !important;
-}
-
-#netless {
-  z-index: 0;
-  top: 0px;
-  left: 0;
-  height: 100%;
-  width: 100%;
 }
 
 .filename {
@@ -207,34 +146,15 @@ body,
 .aisde-fixed:last-child {
   margin-right: 0;
 }
-.aisde-fixed .chat-panel {
-  min-width: unset;
-}
 
 .aisde-fixed-full-collapse {
   transition: 0.5s;
   margin-right: -300px;
 }
-.aisde-fixed .show-chat-icon {
-  position: initial;
-}
 
 .telebox-collector img {
   display: inline-block !important;
 }
-
-#window-manager-collector .telebox-collector {
-  position: unset !important;
-  right: unset !important;
-  bottom: unset !important;
-}
-
-/* .big-class-room .hands-up-manager,
-.big-class-room .hands-up-sender {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-} */
 
 .teacher-stream-container .video-player-overlay {
   display: flex;
@@ -244,9 +164,6 @@ body,
   flex: 1;
 }
 
-.big-class-room #hx-chatroom .app {
-  height: 100% !important;
-}
 .big-class-h5 {
   transition: all 0.3s ease;
 }
@@ -292,6 +209,7 @@ body,
 .table-col-item .roster-username {
   padding-left: 0px !important;
 }
+
 .rtm-chat {
   background: transparent;
 }
@@ -304,12 +222,19 @@ body,
   height: 100% !important;
 }
 
-.fcr-room-1v1 {
-  right: 310px;
+.mid-class-room .chat-panel {
+  min-width: unset;
+  background: transparent;
 }
 
-.fcr-room-mid {
+.h5-chat-pannel {
+  background: unset;
 }
 
-.fcr-room-big {
+#stage-container {
+  /* background: #f9f9fc; */
+}
+
+.fcr-room-bg {
+  background: #f9f9fc;
 }

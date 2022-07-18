@@ -6,7 +6,6 @@ export class EduVocationalH5BoardUIStor extends BoardUIStore {
     return {
       ...super.uiOverrides,
       heightRatio: 1,
-      aspectRatio: 9 / 16,
     };
   }
 
@@ -49,14 +48,6 @@ export class EduVocationalH5BoardUIStor extends BoardUIStore {
   @computed
   get whiteboardContainerCls() {
     return this.shareUIStore.orientation !== 'portrait' ? 'flex-1' : '';
-  }
-
-  @computed
-  get boardContainerHeight() {
-    if (this.borderZoomStatus !== 'zoom-out') {
-      return this.shareUIStore.classroomViewportSize.h5Height;
-    }
-    return (this.boardContainerWidth as number) * this.uiOverrides.aspectRatio;
   }
 
   @computed

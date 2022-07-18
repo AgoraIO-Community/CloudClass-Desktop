@@ -2,7 +2,6 @@ import { action, computed, IReactionDisposer, Lambda, reaction } from 'mobx';
 import dayjs from 'dayjs';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { EduUIStoreBase } from './base';
-import { transI18n } from './i18n';
 import {
   AgoraEduClassroomEvent,
   ClassroomState,
@@ -13,12 +12,10 @@ import {
   EduRoleTypeEnum,
   LeaveReason,
 } from 'agora-edu-core';
-import { checkMinutesThrough } from '@/infra/utils/time';
 import { ToastFilter } from '@/infra/utils/toast-filter';
 import { getEduErrorMessage } from '@/infra/utils/error';
-import { ChannelType, listenChannelMessage } from '@/infra/utils/ipc';
-import { IPCMessageType } from '@/infra/types';
-import { WindowID } from '@/infra/api';
+import { Duration } from 'dayjs/plugin/duration';
+import { transI18n } from '~ui-kit';
 
 export class NotificationUIStore extends EduUIStoreBase {
   private _notificationTask?: Scheduler.Task;
@@ -347,19 +344,32 @@ export class NotificationUIStore extends EduUIStoreBase {
           break;
         case ClassState.ongoing:
           //距离下课的时间
-          checkMinutesThrough([5, 1], this.durationToClassEnd, (minutes) => {
+          this._checkMinutesThrough([5, 1], this.durationToClassEnd, (minutes) => {
             this.addClassStateNotification(ClassState.ongoing, minutes);
           });
           break;
         case ClassState.afterClass:
           //距离教室关闭的时间
-          checkMinutesThrough([1], this.durationToRoomClose, (minutes) => {
+          this._checkMinutesThrough([1], this.durationToRoomClose, (minutes) => {
             this.addClassStateNotification(ClassState.afterClass, minutes);
           });
           break;
       }
     }
   }
+
+  private _checkMinutesThrough = (
+    throughMinutes: number[],
+    duration: Duration,
+    cb: (minutes: number) => void,
+  ) => {
+    throughMinutes.forEach((minutes) => {
+      if (duration.hours() === 0 && duration.minutes() === minutes && duration.seconds() === 0) {
+        cb(minutes);
+      }
+    });
+  };
+
   /** Computed */
   /**
    * 根据课堂状态获取时长，

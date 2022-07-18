@@ -1,15 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useStore } from '~hooks/use-edu-stores';
-
-export const useInitialize = (trackMargin: { top: number }) => {
-  const { trackUIStore } = useStore();
-  const { initialize, destroy } = trackUIStore;
-
-  useEffect(() => {
-    initialize({ margin: trackMargin });
-    return destroy;
-  }, []);
-};
+import { useStore } from '@/infra/hooks/ui-store';
 
 export const useClassroomStyle = ({
   minimumHeight,
@@ -25,6 +15,13 @@ export const useClassroomStyle = ({
   const { shareUIStore } = useStore();
 
   const { classroomViewportSize, classroomViewportTransitionDuration } = shareUIStore;
+
+  useEffect(() => {
+    shareUIStore.addWindowResizeEventListener();
+    return () => {
+      shareUIStore.removeWindowResizeEventListener();
+    };
+  }, []);
 
   const postStyle = useMemo(
     () =>

@@ -1,10 +1,9 @@
 import { observer } from 'mobx-react';
-import { FC, Fragment, MouseEvent, useContext, useMemo, useState, useRef } from 'react';
+import { CSSProperties, FC, Fragment, MouseEvent, useContext, useMemo, useState, useRef } from 'react';
 import { cloneDeep } from 'lodash';
 import { GroupState } from 'agora-edu-core';
-import { useStore } from '@/infra/hooks/use-edu-stores';
-import { transI18n } from '@/infra/stores/common/i18n';
-import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox } from '~ui-kit';
+import { useStore } from '@/infra/hooks/ui-store';
+import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox, useI18n } from '~ui-kit';
 import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
@@ -18,7 +17,7 @@ type LinkButtonProps = {
   onClick?: (e: MouseEvent) => void;
   className?: string;
   hoverText?: string;
-  style?: any;
+  style?: CSSProperties;
   hoverClassName?: string;
 };
 
@@ -77,9 +76,11 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
 
   const { closeAll } = useContext(PanelStateContext);
 
+  const t = useI18n();
+
   const existGroupName = groupDetails.get(groupUuid)?.groupName;
 
-  const groupName = existGroupName || transI18n('breakout_room.not_grouped');
+  const groupName = existGroupName || t('breakout_room.not_grouped');
 
   return (
     <div
@@ -91,12 +92,12 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
       {groupState === GroupState.OPEN ? (
         currentSubRoom === groupUuid ? (
           <div className="link-width py-1 pr-4 text-center hl-text">
-            {transI18n('breakout_room.joined')}
+            {t('breakout_room.joined')}
           </div>
         ) : existGroupName ? (
           <ConfirmPanel
             panelId={confirmPanelId}
-            title={transI18n('breakout_room.confirm_join_group_content', {
+            title={t('breakout_room.confirm_join_group_content', {
               reason: groupName,
             })}
             onOk={() => {
@@ -107,7 +108,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
             }}>
             <LinkButton
               className="pr-4 hl-text text-right"
-              text={groupUuid && transI18n('fcr_group_button_join')}
+              text={groupUuid && t('fcr_group_button_join')}
             />
           </ConfirmPanel>
         ) : null
@@ -125,7 +126,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
           }}>
           <LinkButton
             className={visiblePanelId === userPanelId ? 'active-bg px-4' : 'hl-text px-4'}
-            text={transI18n('breakout_room.assign')}
+            text={t('breakout_room.assign')}
           />
         </UserPanel>
       )}
@@ -146,6 +147,8 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
   const { groupState, groups, moveUserToGroup, interchangeGroup } = groupUIStore;
 
   const { closeAll, visiblePanelId } = useContext(PanelStateContext);
+
+  const t = useI18n();
 
   const filteredGroups = useMemo(() => {
     const newGroups = cloneDeep(groups.filter(({ id }) => id && id !== groupUuid));
@@ -170,7 +173,7 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
         }}>
         <LinkButton
           className={visiblePanelId === moveToPanelId ? 'active-bg' : undefined}
-          text={transI18n('breakout_room.move_to')}
+          text={t('breakout_room.move_to')}
         />
       </GroupPanel>
       {groupState === GroupState.OPEN && groupUuid && (
@@ -186,7 +189,7 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
           }}>
           <LinkButton
             className={visiblePanelId === changeToPanelId ? 'active-bg' : undefined}
-            text={transI18n('breakout_room.change_to')}
+            text={t('breakout_room.change_to')}
           />
         </GroupPanel>
       )}
@@ -245,6 +248,8 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
 
   const [mouseEnter, setMouseEnter] = useState(false);
 
+  const t = useI18n();
+
   const handleRename = () => {
     setEditing(true);
   };
@@ -257,7 +262,7 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
     <LinkButton
       className="rename-btn"
       key="rename"
-      text={transI18n('breakout_room.rename')}
+      text={t('breakout_room.rename')}
       onClick={handleRename}
     />
   );
@@ -266,7 +271,7 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
     <LinkButton
       className="remove-btn"
       key="remove"
-      text={transI18n('breakout_room.remove')}
+      text={t('breakout_room.remove')}
       onClick={handleRemove}
     />
   );
@@ -303,10 +308,10 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
         {editing ? null : (
           <span className="tree-node-tips">
             {childrenLength
-              ? transI18n('breakout_room.group_current_has_students', {
-                  reason: `${childrenLength}`,
-                })
-              : transI18n('breakout_room.group_current_empty')}
+              ? t('breakout_room.group_current_has_students', {
+                reason: `${childrenLength}`,
+              })
+              : t('breakout_room.group_current_empty')}
           </span>
         )}
       </>
@@ -317,7 +322,7 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
   const notJoined = (node as any).notJoined;
 
   if (level === 1 && notJoined) {
-    content += ` ${transI18n('breakout_room.not_accepted')}`;
+    content += ` ${t('breakout_room.not_accepted')}`;
   }
 
   return (
@@ -349,6 +354,8 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
 
   const [broadcastVisible, setBroadcastVisible] = useState(false);
 
+  const t = useI18n();
+
   return (
     <div className="h-full w-full flex flex-col">
       {showConfirmDialog ? (
@@ -361,13 +368,13 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
           onCancel={() => {
             setConfirmDialog(false);
           }}
-          onCancelText={transI18n('breakout_room.confirm_stop_group_sure')}>
+          onCancelText={t('breakout_room.confirm_stop_group_sure')}>
           <div className="stop-group-main-text">
             <div className="stop-group-main-title">
-              {transI18n('breakout_room.confirm_stop_group_title')}
+              {t('breakout_room.confirm_stop_group_title')}
             </div>
             <div className="stop-group-sub-title">
-              {transI18n('breakout_room.confirm_stop_group_content')}
+              {t('breakout_room.confirm_stop_group_content')}
             </div>
           </div>
         </ConfirmDialog>
@@ -398,7 +405,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
               setCopyContent(e.target.checked);
             }}
           />
-          <span className="group-tips">{transI18n('breakout_room.group_tips')}</span>
+          <span className="group-tips">{t('breakout_room.group_tips')}</span>
         </div>
       )}
       <Footer
@@ -424,6 +431,8 @@ const Footer: FC<{
   const [messageText, setMessageText] = useState('');
   const cursorRef = useRef<boolean>(false);
 
+  const t = useI18n();
+
   const handleGroupState = () => {
     if (groupState === GroupState.OPEN) {
       setConfirmDialog(true);
@@ -444,7 +453,7 @@ const Footer: FC<{
       onClick={() => {
         stopGroup(onNext);
       }}>
-      {transI18n('breakout_room.re_create')}
+      {t('breakout_room.re_create')}
     </Button>
   );
 
@@ -454,7 +463,7 @@ const Footer: FC<{
       type="secondary"
       className="rounded-btn mr-2 add-group-btn"
       onClick={addGroup}>
-      {transI18n('breakout_room.add_group')}
+      {t('breakout_room.add_group')}
     </Button>
   );
 
@@ -465,8 +474,8 @@ const Footer: FC<{
       className="rounded-btn start-btn"
       onClick={handleGroupState}>
       {groupState === GroupState.OPEN
-        ? transI18n('breakout_room.stop')
-        : transI18n('breakout_room.start')}
+        ? t('breakout_room.stop')
+        : t('breakout_room.start')}
     </Button>
   );
 
@@ -478,7 +487,7 @@ const Footer: FC<{
       onClick={() => {
         setBroadcastVisible(true);
       }}>
-      {transI18n('breakout_room.broadcast_message')}
+      {t('breakout_room.broadcast_message')}
     </Button>
   );
 
@@ -520,10 +529,10 @@ const Footer: FC<{
           onClick={() => {
             setBroadcastVisible(false);
           }}>
-          {transI18n('breakout_room.cancel')}
+          {t('breakout_room.cancel')}
         </Button>
         <Button size="xs" type="primary" className="rounded-btn" onClick={handleSubmit}>
-          {transI18n('breakout_room.send')}
+          {t('breakout_room.send')}
         </Button>
       </div>
     </Fragment>
@@ -553,6 +562,8 @@ const BroadcastInput = ({
 }) => {
   const [text, setText] = useState('');
 
+  const t = useI18n();
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     let value = e.target.value;
     if (value.length > limit) {
@@ -571,7 +582,7 @@ const BroadcastInput = ({
         className="w-full h-full"
         value={text}
         onChange={handleChange}
-        placeholder={transI18n('breakout_room.send_to_all_placeholder')}
+        placeholder={t('breakout_room.send_to_all_placeholder')}
       />
       <span className="absolute" style={{ bottom: 4, right: 4 }}>
         {text.length}/{limit}

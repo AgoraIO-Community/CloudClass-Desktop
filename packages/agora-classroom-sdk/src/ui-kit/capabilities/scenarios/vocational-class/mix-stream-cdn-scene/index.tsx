@@ -1,22 +1,22 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
+import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
+import { Chat } from '@/ui-kit/capabilities/containers/widget/slots';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 import { Aside, Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
-import { ExtensionAppContainer } from '~containers/extension-app-container';
+
 import { LoadingContainer } from '~containers/loading';
 import { NavigationBarContainer } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { ToastContainer } from '~containers/toast';
-import { ChatWidgetPC } from '~containers/widget/chat-widget';
 import { CDNPlayer } from '../../../containers/stream/cdn-player';
 import Room from '../../room';
 
-export const MixStreamCDNClassScenario = observer(() => {
-  // layout
-  const layoutCls = classnames('edu-room', 'big-class-room');
+const layoutCls = classnames('edu-room', 'big-class-room', 'bg-white');
 
+export const MixStreamCDNClassScenario = observer(() => {
   const { streamWindowUIStore, classroomStore } = useStore();
   const { containedStreamWindowCoverOpacity } = streamWindowUIStore;
   const {
@@ -40,16 +40,20 @@ export const MixStreamCDNClassScenario = observer(() => {
           <NavigationBarContainer />
           <Layout className="horizontal">
             <div className="flex-col flex-grow">
-              <CDNPlayer stream={stream} state={recordStatus} placeholderText="老师当前不在教室中" />
+              <CDNPlayer
+                stream={stream}
+                state={recordStatus}
+                placeholderText="老师当前不在教室中"
+              />
             </div>
             <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>
-              <ChatWidgetPC />
+              <Chat />
             </Aside>
           </Layout>
           <DialogContainer />
           <LoadingContainer />
         </Layout>
-        <ExtensionAppContainer />
+        <WidgetContainer />
         <ToastContainer />
       </FixedAspectRatioRootBox>
     </Room>

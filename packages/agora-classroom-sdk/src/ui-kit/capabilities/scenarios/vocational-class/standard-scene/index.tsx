@@ -1,21 +1,23 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
+import { BigWidgetWindowContainer } from '@/ui-kit/capabilities/containers/big-widget-window';
+import { ScreenShareContainer } from '@/ui-kit/capabilities/containers/screen-share';
+import { WhiteboardToolbar } from '@/ui-kit/capabilities/containers/toolbar';
+import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
+import { Chat, Whiteboard } from '@/ui-kit/capabilities/containers/widget/slots';
 import { EduClassroomConfig, EduRoleTypeEnum, EduRoomServiceTypeEnum } from 'agora-edu-core';
 import { MediaPlayerEvents } from 'agora-rte-sdk';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useEffect, useMemo } from 'react';
 import { Aside, Layout } from '~components/layout';
-import { CollectorContainer, WhiteboardContainer } from '~containers/board';
 import { DialogContainer } from '~containers/dialog';
-import { ExtensionAppContainer } from '~containers/extension-app-container';
+
 import { HandsUpContainer } from '~containers/hand-up';
 import { LoadingContainer } from '~containers/loading';
 import { NavigationBarContainer } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { RoomBigTeacherStreamContainer } from '~containers/stream/room-big-player';
 import { ToastContainer } from '~containers/toast';
-import { ChatWidgetPC } from '~containers/widget/chat-widget';
-import { BigWidgetWindowContainer } from '../../../containers/big-widget-window';
 import { ScenesController } from '../../../containers/scenes-controller';
 import Room from '../../room';
 
@@ -24,20 +26,20 @@ type Props = {
 };
 
 const Content: FC<Props> = ({ children }) => {
-  return <div className="flex-col flex-grow">{children}</div>;
+  return <div className="flex-col flex-grow relative">{children}</div>;
 };
+const layoutCls = classnames('edu-room', 'big-class-room', 'bg-white');
 
 export const StandardClassScenario = observer(() => {
   // layout
-  const layoutCls = classnames('edu-room', 'big-class-room');
   const {
     classroomStore,
     streamUIStore,
+    boardUIStore,
     streamWindowUIStore: { containedStreamWindowCoverOpacity },
   } = useStore();
   const { teacherCameraStream } = streamUIStore;
-  const { boardStore, streamStore, mediaStore, roomStore } = classroomStore;
-  const { whiteboardWidgetActive } = boardStore;
+  const { streamStore, mediaStore, roomStore } = classroomStore;
   const teacherCameraStreamAudioState = useMemo(
     () => teacherCameraStream?.stream.audioState,
     [teacherCameraStream],
@@ -51,10 +53,6 @@ export const StandardClassScenario = observer(() => {
   const showHandsUpContainer =
     EduClassroomConfig.shared.sessionInfo.roomServiceType !== EduRoomServiceTypeEnum.BlendCDN &&
     EduClassroomConfig.shared.sessionInfo.roomServiceType !== EduRoomServiceTypeEnum.MixStreamCDN;
-
-  const handleCDNDelayUpdate = (cdnDelay: number) => {
-    boardStore.setDelay(cdnDelay);
-  };
 
   useEffect(() => {
     if (
@@ -86,11 +84,12 @@ export const StandardClassScenario = observer(() => {
     if (!player) {
       return;
     }
+    const handleCDNDelayUpdate = boardUIStore.setDelay;
     player.on(MediaPlayerEvents.CdnDelayUpdated, handleCDNDelayUpdate);
     return () => {
       player.off(MediaPlayerEvents.CdnDelayUpdated, handleCDNDelayUpdate);
     };
-  }, [boardStore, mediaStore, handleCDNDelayUpdate]);
+  }, [mediaStore, teacherCameraStream, boardUIStore.setDelay]);
 
   return (
     <Room>
@@ -99,24 +98,24 @@ export const StandardClassScenario = observer(() => {
           <NavigationBarContainer />
           <Layout className="horizontal">
             <Content>
-              <BigWidgetWindowContainer>
-                {whiteboardWidgetActive && <WhiteboardContainer></WhiteboardContainer>}
-                <Aside className="aisde-fixed fcr-room-big">
-                  <CollectorContainer />
-                  {showHandsUpContainer ? <HandsUpContainer /> : null}
-                </Aside>
-              </BigWidgetWindowContainer>
+              <Whiteboard />
+              <ScreenShareContainer />
+              <WhiteboardToolbar />
               <ScenesController />
+              <BigWidgetWindowContainer />
+              <Aside className="aisde-fixed">
+                {showHandsUpContainer ? <HandsUpContainer /> : null}
+              </Aside>
             </Content>
             <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>
               <RoomBigTeacherStreamContainer />
-              <ChatWidgetPC />
+              <Chat />
             </Aside>
           </Layout>
           <DialogContainer />
           <LoadingContainer />
         </Layout>
-        <ExtensionAppContainer />
+        <WidgetContainer />
         <ToastContainer />
       </FixedAspectRatioRootBox>
     </Room>

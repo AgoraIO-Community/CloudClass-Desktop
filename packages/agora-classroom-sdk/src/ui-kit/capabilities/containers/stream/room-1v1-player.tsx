@@ -1,6 +1,5 @@
-import { use1v1UIStores, useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
-import { Edu1v1ClassUIStore } from '@/infra/stores/one-on-one';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';
@@ -9,9 +8,8 @@ import { DragableContainer } from './room-mid-player';
 
 export const Room1v1TeacherStream = observer(
   ({ stream, isFullScreen = false }: { stream?: EduStreamUI; isFullScreen?: boolean }) => {
-    const { widgetUIStore } = use1v1UIStores() as Edu1v1ClassUIStore;
+    const isBigWidgetWindowTeacherStreamActive = false;
 
-    const { isBigWidgetWindowTeacherStreamActive } = widgetUIStore;
     const canSetupVideo = useMemo(
       () =>
         isFullScreen ? isBigWidgetWindowTeacherStreamActive : !isBigWidgetWindowTeacherStreamActive,

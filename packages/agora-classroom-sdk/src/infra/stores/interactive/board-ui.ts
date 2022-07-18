@@ -4,8 +4,7 @@ export class InteractiveBoardUIStore extends BoardUIStore {
   protected get uiOverrides() {
     return {
       ...super.uiOverrides,
-      heightRatio: 0.819,
-      aspectRatio: 0.461,
+      heightRatio: 0.84,
     };
   }
 }

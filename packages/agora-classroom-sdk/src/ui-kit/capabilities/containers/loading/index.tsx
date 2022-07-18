@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { Card, Loading } from '~ui-kit';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
 
 export const LoadingContainer = observer(() => {

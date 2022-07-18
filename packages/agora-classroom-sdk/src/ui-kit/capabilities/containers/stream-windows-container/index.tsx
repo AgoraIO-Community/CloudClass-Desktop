@@ -1,14 +1,15 @@
-import { StreamWindow } from '@/infra/stores/common/stream-window/type';
+import { CSSProperties, useRef, useState } from 'react';
 import { EduStreamUI, StreamBounds } from '@/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
-import { useRef, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { animated, useTransition } from 'react-spring';
-import { CSSProperties } from 'styled-components';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
+import './index.css';
 import { StreamPlayer } from '../stream';
+
 import { DragableOverlay } from '../stream/room-mid-player';
 import './index.css';
+import { StreamWindow } from '@/infra/stores/common/stream-window/type';
 
 const StreamWindowsContainer = observer(() => {
   const { streamWindowUIStore, streamUIStore } = useStore();
@@ -20,8 +21,8 @@ const StreamWindowsContainer = observer(() => {
       <TransitionStreamWindow streamWindows={streamWindows.slice()} streamsBounds={streamsBounds} />
       {needDragable
         ? streamWindows.map(([streamUuid, streamWindow]) => (
-            <DragableStreamWindow key={streamUuid} info={streamWindow} streamUuid={streamUuid} />
-          ))
+          <DragableStreamWindow key={streamUuid} info={streamWindow} streamUuid={streamUuid} />
+        ))
         : null}
     </div>
   );

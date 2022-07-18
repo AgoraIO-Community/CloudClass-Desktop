@@ -1,5 +1,5 @@
 import React from 'react';
-import { useVocationalH5UIStores } from '@/infra/hooks/use-edu-stores';
+import { useVocationalH5UIStores } from '@/infra/hooks/ui-store';
 import { transI18n } from '~ui-kit';
 import { observer } from 'mobx-react';
 import { Helmet } from 'react-helmet';

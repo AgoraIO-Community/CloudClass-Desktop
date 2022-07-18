@@ -1,4 +1,4 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { useEffectOnce } from '@/infra/hooks/utilites';
 import { observer } from 'mobx-react';
 import React, { FC } from 'react';

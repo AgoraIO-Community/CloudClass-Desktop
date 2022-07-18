@@ -14,7 +14,6 @@ import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share-ui';
 
 import { Operations, DeviceState, Operation, Profile } from './type';
-import { transI18n } from '../i18n';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
 import {
   AGEduErrorCode,
@@ -26,7 +25,7 @@ import {
   GroupState,
   iterateMap,
 } from 'agora-edu-core';
-import { BoardGrantState } from '~ui-kit';
+import { BoardGrantState, transI18n } from '~ui-kit';
 import { EduStreamUI } from '../stream/struct';
 
 export class RosterUIStore extends EduUIStoreBase {
@@ -257,18 +256,13 @@ export class RosterUIStore extends EduUIStoreBase {
   };
 
   clickGrantBoard = (profile: Profile) => {
-    const { addGenericErrorDialog } = this.shareUIStore;
-    const { grantUsers, grantPermission, revokePermission } = this.classroomStore.boardStore;
+    const { grantedUsers, grantPrivilege } = this.boardApi;
     const userUuid = profile.uid as string;
 
-    try {
-      if (grantUsers.has(userUuid)) {
-        revokePermission(userUuid);
-      } else {
-        grantPermission(userUuid);
-      }
-    } catch (e) {
-      addGenericErrorDialog(e as AGError);
+    if (grantedUsers.has(userUuid)) {
+      grantPrivilege(userUuid, false);
+    } else {
+      grantPrivilege(userUuid, true);
     }
   };
 
@@ -447,13 +441,13 @@ export class RosterUIStore extends EduUIStoreBase {
       onMap: (userUuid: string, { userName }) => {
         const { acceptedList, chatMuted } = this.classroomStore.roomStore;
         const { rewards } = this.classroomStore.userStore;
-        const { grantUsers, ready: boardReady } = this.classroomStore.boardStore;
+        const { grantedUsers, connected: boardReady } = this.boardApi;
         const uid = userUuid;
         const name = userName;
 
         const isOnPodium = acceptedList.some(({ userUuid: uid }) => userUuid === uid);
         const boardGrantState = boardReady
-          ? grantUsers.has(userUuid)
+          ? grantedUsers.has(userUuid)
             ? BoardGrantState.Granted
             : BoardGrantState.NotGranted
           : BoardGrantState.Disabled;
@@ -607,7 +601,7 @@ export class RosterUIStore extends EduUIStoreBase {
     const { sessionInfo } = EduClassroomConfig.shared;
     return (
       [EduRoleTypeEnum.assistant, EduRoleTypeEnum.teacher].includes(sessionInfo.role) &&
-      this.classroomStore.boardStore.ready
+      this.boardApi.mounted
     );
   }
 

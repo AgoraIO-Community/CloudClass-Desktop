@@ -1,14 +1,14 @@
-import { useStore } from '~hooks/use-edu-stores';
-
+import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { Pens, t } from '~ui-kit';
+import { Pens, useI18n } from '~ui-kit';
 
 export type PensContainerProps = {
   onClick: (pen: string) => void;
 };
 
-export const PensContainer = observer((props: PensContainerProps) => {
+export const PensContainer = observer(() => {
   const { toolbarUIStore } = useStore();
+  const t = useI18n();
   const {
     setTool,
     selectedPenTool,
@@ -39,7 +39,7 @@ export const PensContainer = observer((props: PensContainerProps) => {
       colors={defaultColors}
       paletteMap={paletteMap}
       value="pen"
-      label={t(mapLineSelectorToLabel[selectedPenTool])}
+      label={selectedPenTool ? t(mapLineSelectorToLabel[selectedPenTool]) : ''}
       icon="pen"
       activePen={selectedPenTool}
       onClick={setTool}
@@ -50,7 +50,7 @@ export const PensContainer = observer((props: PensContainerProps) => {
       colorSliderStep={1}
       onSliderChange={changeStroke}
       activeColor={currentColor}
-      onColorClick={(value: any) => {
+      onColorClick={(value) => {
         changeHexColor(value);
       }}
     />

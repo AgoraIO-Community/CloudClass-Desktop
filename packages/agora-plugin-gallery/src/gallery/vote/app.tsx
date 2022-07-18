@@ -5,16 +5,16 @@ import { usePluginStore } from './hooks';
 import reduceSvg from './reduce.svg';
 import addSvg from './add.svg';
 import './index.css';
-import { debounce, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 
 const MAX_LENGTH = 50;
 
 const App = () => (
-  <>
+  <div style={{ padding: '21px 14px' }}>
     <Title />
     <Content />
     <VoteBtns />
-  </>
+  </div>
 );
 
 const Title = observer(() => {
@@ -225,20 +225,5 @@ const SelectionSection = observer(() => {
   );
 });
 
-export const PollingType = observer(() => {
-  const pluginStore = usePluginStore();
-
-  return (
-    <>
-      {pluginStore?.stagePanel !== 2 && (
-        <span className="polling-title-tip">
-          {pluginStore?.type === 'radio'
-            ? transI18n('widget_polling.singal-sel')
-            : transI18n('widget_polling.mul-sel')}
-        </span>
-      )}
-    </>
-  );
-});
 
 export default App;

@@ -3,11 +3,9 @@ import { action, computed, Lambda, observable } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { CameraPlaceholderType, DeviceStateChangedReason } from '../type';
 import { v4 as uuidv4 } from 'uuid';
-
-import { transI18n } from '../i18n';
-
 import { computedFn } from 'mobx-utils';
 import { AgoraEduClassroomEvent, BeautyType, DEVICE_DISABLE, EduEventCenter } from 'agora-edu-core';
+import { transI18n } from '~ui-kit';
 
 export type PretestToast = {
   id: string;

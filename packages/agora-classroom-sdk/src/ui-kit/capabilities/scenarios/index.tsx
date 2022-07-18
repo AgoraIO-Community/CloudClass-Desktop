@@ -1,4 +1,4 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { EduClassroomConfig, EduRoomSubtypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useLayoutEffect, useState } from 'react';

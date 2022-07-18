@@ -1,8 +1,8 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { RootBox } from '~ui-kit';
-import { useClassroomStyle, useInitialize } from './hooks';
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useClassroomStyle } from './hooks';
+import { useStore } from '@/infra/hooks/ui-store';
 
 type FixedAspectRatioProps = {
   minimumWidth?: number;
@@ -36,20 +36,7 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
 );
 
 export const TrackArea = ({ top = 0, boundaryName }: { top?: number; boundaryName: string }) => {
-  const { trackUIStore, shareUIStore } = useStore();
   const dom = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = shareUIStore.addViewportResizeObserver(() => {
-      if (dom.current?.parentElement) {
-        const { offsetTop, offsetLeft } = dom.current.parentElement;
-        trackUIStore.updateTrackContext(boundaryName, { top: offsetTop, left: offsetLeft });
-      }
-    });
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
 
   return (
     <div
@@ -67,8 +54,6 @@ export const FixedAspectRatioRootBox: FC<FixedAspectRatioProps> = ({
   trackMargin,
   ...props
 }) => {
-  useInitialize({ top: trackMargin?.top || 0 });
-
   return (
     <FixedAspectRatioContainer
       minimumWidth={minimumWidth || 1024}

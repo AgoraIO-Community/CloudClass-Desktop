@@ -18,11 +18,18 @@ export const i18nResources = {
   },
 };
 
-export const t = (text: string) => {
+export const useI18n = () => {
   const { t: translate } = useTranslation();
-  let content = translate(text);
-  return debugI18n ? `%%${content}%%` : content;
-};
+  return (text: string, options?: any) => {
+    let content = translate(text);
+    if (!isEmpty(options)) {
+      Object.keys(options).forEach((k) => {
+        content = content.replace(`{${k}}`, options[k] || '');
+      });
+    }
+    return debugI18n ? `%%${content}%%` : content;
+  }
+}
 
 let debugI18n = false;
 
@@ -49,7 +56,7 @@ export const setDebugI18n = (debug: boolean) => {
 window.changeLanguage = changeLanguage;
 
 export class MemoryStorage {
-  constructor(private readonly _storage = new Map<string, string>()) {}
+  constructor(private readonly _storage = new Map<string, string>()) { }
 
   getItem(name: string) {
     return this._storage.get(name);

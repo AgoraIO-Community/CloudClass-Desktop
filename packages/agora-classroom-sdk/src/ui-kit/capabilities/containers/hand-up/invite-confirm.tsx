@@ -1,4 +1,4 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { GlobalStorage } from '@/infra/utils';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';

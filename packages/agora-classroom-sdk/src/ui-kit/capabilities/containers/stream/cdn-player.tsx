@@ -1,4 +1,4 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { AgoraRteMediaSourceState, MediaPlayerEvents, StreamMediaPlayer } from 'agora-rte-sdk';
 import { observer } from 'mobx-react';
 import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';

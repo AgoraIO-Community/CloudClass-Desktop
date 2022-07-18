@@ -1,7 +1,7 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
-import { transI18n } from '@/infra/stores/common/i18n';
+import { useStore } from '@/infra/hooks/ui-store';
+import { transI18n } from '~ui-kit';
 import { observer } from 'mobx-react';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Card, Loading } from '~ui-kit';
 
 type Props = {
@@ -9,7 +9,11 @@ type Props = {
 };
 
 export const SceneSwitch: FC<Props> = observer(({ children }) => {
-  const { groupUIStore } = useStore();
+  const { groupUIStore, shareUIStore } = useStore();
+
+  useEffect(() => {
+    shareUIStore.setLayoutReady(!groupUIStore.joiningSubRoom);
+  }, [groupUIStore.joiningSubRoom])
 
   return (
     <div className="w-full h-full bg-white">
@@ -24,13 +28,17 @@ const PageLoading = () => {
 
   return (
     <div className="page-loading">
-      <Card width={160} height={120} className="card-loading-position flex flex-col">
-        <Loading></Loading>
-        <p className="m-0 text-center truncate" style={{ width: 110 }}>
+      <Card className="absolute inline-flex flex-col inset-auto p-4" style={{
+        width: 'unset!important',
+        height: 'unset!important',
+        borderRadius: 12
+      }}>
+        <Loading />
+        <p className="m-0">
           {layoutUIStore.isInSubRoom
             ? transI18n('fcr_group_joining', {
-                reason: layoutUIStore.currentSubRoomName,
-              })
+              reason: layoutUIStore.currentSubRoomName,
+            })
             : transI18n('fcr_group_back_main_room')}
         </p>
       </Card>

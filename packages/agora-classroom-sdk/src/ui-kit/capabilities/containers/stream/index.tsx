@@ -1,4 +1,4 @@
-import { EduClassroomConfig, EduRoleTypeEnum, EduStream } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, {
   CSSProperties,
@@ -11,7 +11,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import classnames from 'classnames';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import useMeasure from 'react-use-measure';
@@ -254,7 +254,7 @@ export const LocalStreamPlayerTools = observer(
                 hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
-                onClick={tool.interactable ? tool.onClick : () => {}}
+                onClick={tool.interactable ? tool.onClick : () => { }}
               />
             </span>
           </Tooltip>
@@ -286,7 +286,7 @@ export const RemoteStreamPlayerTools = observer(
                 hoverType={tool.hoverIconType}
                 type={tool.iconType}
                 size={22}
-                onClick={tool.interactable ? tool.onClick : () => {}}
+                onClick={tool.interactable ? tool.onClick : () => { }}
               />
             </span>
           </Tooltip>
@@ -454,7 +454,7 @@ export const StreamPlayer = observer(
     isFullScreen?: boolean;
     canSetupVideo?: boolean;
   }) => {
-    const { streamUIStore, widgetUIStore } = useStore();
+    const { streamUIStore } = useStore();
     const { cameraPlaceholder } = streamUIStore;
     const cls = classnames({
       [`video-player`]: 1,

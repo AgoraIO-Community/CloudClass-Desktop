@@ -1,7 +1,7 @@
 import { Button, CheckBox, Modal, Select, transI18n } from '~ui-kit';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
 
 export const CameraMirrorCheckBox = observer(() => {
@@ -110,7 +110,7 @@ const StageChoose = observer(() => {
 
 type SettingProps = {
   className?: string;
-  restProps?: object;
+  restProps?: unknown;
 };
 
 const Setting: React.FC<SettingProps> = observer(({ className, ...restProps }) => {

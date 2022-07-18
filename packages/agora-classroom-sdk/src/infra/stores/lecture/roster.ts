@@ -104,13 +104,13 @@ export class LectureRosterUIStore extends RosterUIStore {
     const list = this._usersList.map(({ userUuid, userName }) => {
       const { acceptedList, chatMuted } = this.classroomStore.roomStore;
       const { rewards } = this.classroomStore.userStore;
-      const { grantUsers, ready: boardReady } = this.classroomStore.boardStore;
+      const { grantedUsers, connected: boardReady } = this.boardApi;
       const uid = userUuid;
       const name = userName;
 
       const isOnPodium = acceptedList.some(({ userUuid: uid }) => userUuid === uid);
       const boardGrantState = boardReady
-        ? grantUsers.has(userUuid)
+        ? grantedUsers.has(userUuid)
           ? BoardGrantState.Granted
           : BoardGrantState.NotGranted
         : BoardGrantState.Disabled;

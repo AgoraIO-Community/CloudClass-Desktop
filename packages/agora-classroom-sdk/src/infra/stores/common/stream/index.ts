@@ -8,9 +8,7 @@ import {
 } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
-
 import { EduUIStoreBase } from '../base';
-import { transI18n } from '../i18n';
 import { CameraPlaceholderType } from '../type';
 import { EduStreamUI, StreamBounds } from './struct';
 import { EduStreamTool, EduStreamToolCategory } from './tool';
@@ -25,7 +23,7 @@ import {
   EduStream,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
-import { TooltipPlacement } from '~ui-kit';
+import { TooltipPlacement, transI18n } from '~ui-kit';
 
 export enum StreamIconColor {
   active = '#357bf6',
@@ -292,7 +290,7 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get whiteboardGrantUsers() {
-    return this.classroomStore.boardStore.grantUsers;
+    return this.boardApi.grantedUsers;
   }
 
   /**
@@ -524,7 +522,7 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   remoteWhiteboardTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     const whiteboardAuthorized = this.whiteboardGrantUsers.has(stream.fromUser.userUuid);
-    const whiteboardReady = this.classroomStore.boardStore.ready;
+    const whiteboardReady = this.boardApi.connected;
     return new EduStreamTool(
       EduStreamToolCategory.whiteboard,
       whiteboardReady
@@ -542,13 +540,7 @@ export class StreamUIStore extends EduUIStoreBase {
         style: {},
         hoverIconType: 'board-granted',
         onClick: () => {
-          try {
-            whiteboardAuthorized
-              ? this.classroomStore.boardStore.revokePermission(stream.fromUser.userUuid)
-              : this.classroomStore.boardStore.grantPermission(stream.fromUser.userUuid);
-          } catch (e) {
-            this.shareUIStore.addGenericErrorDialog(e as AGError);
-          }
+          this.boardApi.grantPrivilege(stream.fromUser.userUuid, !whiteboardAuthorized);
         },
       },
     );

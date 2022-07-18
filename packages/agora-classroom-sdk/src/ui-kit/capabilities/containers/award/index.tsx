@@ -1,4 +1,4 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { SvgaPlayer, SoundPlayer } from '~ui-kit';
 

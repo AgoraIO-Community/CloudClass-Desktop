@@ -1,20 +1,15 @@
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { computed } from 'mobx';
-import {
-  CabinetItemEnum,
-  ToolbarItem,
-  ToolbarItemCategory,
-  ToolbarUIStore,
-} from '../common/toolbar-ui';
+import { ToolbarUIStore } from '../common/toolbar-ui';
+import { CabinetItemEnum, ToolbarItem, ToolbarItemCategory } from '../common/type';
 
 export class LectrueToolbarUIStore extends ToolbarUIStore {
   readonly allowedCabinetItems: string[] = [
-    CabinetItemEnum.Laser,
-    CabinetItemEnum.ScreenShare,
-    CabinetItemEnum.CountdownTimer,
-    CabinetItemEnum.Poll,
     CabinetItemEnum.Whiteboard,
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.Laser,
   ];
+
   /**
    * 老师工具栏工具列表
    * @returns
@@ -23,7 +18,7 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
   get teacherTools(): ToolbarItem[] {
     let _tools: ToolbarItem[] = [];
 
-    if (this.classroomStore.boardStore.boardReady) {
+    if (this.boardApi.mounted) {
       _tools = [
         ToolbarItem.fromData({
           value: 'clicker',

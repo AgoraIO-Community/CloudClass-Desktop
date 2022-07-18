@@ -6,7 +6,6 @@ export class LectureH5BoardUIStore extends BoardUIStore {
     return {
       ...super.uiOverrides,
       heightRatio: 0.79,
-      aspectRatio: 0.5634,
     };
   }
 
@@ -52,14 +51,6 @@ export class LectureH5BoardUIStore extends BoardUIStore {
   }
 
   @computed
-  get boardContainerHeight() {
-    if (this.borderZoomStatus !== 'zoom-out') {
-      return this.shareUIStore.classroomViewportSize.h5Height;
-    }
-    return (this.boardContainerWidth as number) * this.uiOverrides.aspectRatio;
-  }
-
-  @computed
   get boardContainerWidth() {
     if (this.borderZoomStatus !== 'zoom-out') {
       return this.shareUIStore.classroomViewportSize.h5Width;
@@ -69,6 +60,16 @@ export class LectureH5BoardUIStore extends BoardUIStore {
       return (h5Width as number) * 0.697;
     }
     return h5Width as number;
+  }
+
+  @computed
+  get boardContainerHeight() {
+    if (this.borderZoomStatus !== 'zoom-out') {
+      return this.shareUIStore.classroomViewportSize.h5Height;
+    }
+    // 白板宽高比
+    // return (this.boardContainerWidth as number) * 0.5634;
+    return '100%';
   }
 
   @action.bound

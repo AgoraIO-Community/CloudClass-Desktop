@@ -43,7 +43,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
           <div
             className={cls}
             key={item.id}
-            onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
+            onClick={item.disabled ? () => { } : () => handleClick(item.id)}>
             {item.icon}
             <span>{item.name}</span>
           </div>
@@ -51,6 +51,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
       })}
     </div>
   );
+
   return (
     <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover

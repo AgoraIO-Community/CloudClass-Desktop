@@ -1,20 +1,19 @@
 import { observer } from 'mobx-react';
-import { useStore } from '~hooks/use-edu-stores';
-import { SvgImg, t, BoardCleaners } from '~ui-kit';
+import { useStore } from '@/infra/hooks/ui-store';
+import { SvgImg, useI18n, BoardCleaners } from '~ui-kit';
 
 export const BoardCleanersContainer = observer(() => {
   const { toolbarUIStore } = useStore();
-  const { boardCleanerItems, onBoradCleanerClick, activeTool } = toolbarUIStore;
+  const t = useI18n();
+  const { boardCleanerItems, handleBoradCleaner, activeTool } = toolbarUIStore;
 
   const mappedItems = boardCleanerItems.map((item) => {
-    const { id, icon, iconType, name } = item;
+    const { id, iconType, name } = item;
     return {
       id,
-      icon: icon ? (
-        icon
-      ) : (
+      icon: iconType ? (
         <SvgImg type={activeTool === id ? iconType + '-active' : iconType} size={26} />
-      ),
+      ) : <span />,
       name,
     };
   });
@@ -25,7 +24,7 @@ export const BoardCleanersContainer = observer(() => {
       label={t('scaffold.eraser')}
       icon="eraser"
       cleanersList={mappedItems}
-      onClick={onBoradCleanerClick}
+      onClick={handleBoradCleaner}
       activeItem={activeTool}
       isActive={activeTool === 'eraser'}
     />

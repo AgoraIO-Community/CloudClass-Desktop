@@ -22,7 +22,7 @@ export class ChatRoomAPI {
   }
 
   // 加入聊天室
-  joinRoom = async ({ chatroomId: roomId, userUuid, roleType }) => {
+  joinRoom = async ({ chatRoomId: roomId, userUuid, roleType }) => {
     let options = {
       roomId: roomId, // 聊天室id
       message: 'reason', // 原因（可选参数）
@@ -112,7 +112,7 @@ export class ChatRoomAPI {
 
   // 退出聊天室
   logoutChatroom = () => {
-    const roomId = this.store.getState().propsData.chatroomId;
+    const roomId = this.store.getState().propsData.chatRoomId;
     if (!WebIM.conn) {
       return;
     }

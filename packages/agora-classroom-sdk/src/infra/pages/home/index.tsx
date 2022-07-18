@@ -1,20 +1,21 @@
-import { useHomeStore } from '@/infra/hooks';
-import { changeLanguage, Home, transI18n, Toast } from '~ui-kit';
-import { getBrowserLanguage, storage } from '@/infra/utils';
-import { observer } from 'mobx-react';
-import React, { useState, useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router';
 import { LanguageEnum } from '@/infra/api';
-import { HomeLaunchOption } from '@/infra/stores/home';
-import { EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
-import { MessageDialog } from './message-dialog';
-import { HomeApi } from './home-api';
-import { v4 as uuidv4 } from 'uuid';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import MD5 from 'js-md5';
+import { useHomeStore } from '@/infra/hooks';
 import { ToastType } from '@/infra/stores/common/share-ui';
+import { HomeLaunchOption } from '@/infra/stores/home';
+import { getBrowserLanguage, storage } from '@/infra/utils';
+import { isProduction } from '@/infra/utils/env';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
+import { EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
+import MD5 from 'js-md5';
+import { observer } from 'mobx-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { v4 as uuidv4 } from 'uuid';
+import { changeLanguage, Home, Toast, transI18n } from '~ui-kit';
+import { HomeApi } from './home-api';
+import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
@@ -161,6 +162,7 @@ export const HomePage = observer(() => {
     tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
   }
 
+
   const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
   const commitID = BUILD_COMMIT_ID;
 
@@ -168,6 +170,7 @@ export const HomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
+        showServiceOptions={!isProduction}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
         buildTime={buildTime}

@@ -8,11 +8,12 @@ import { Button, Col, Row, Table, TableHeader, transI18n } from '~ui-kit';
 import './index.css';
 import awardSvg from './award.svg';
 
+
 const App = observer(() => (
-  <>
+  <div className='h-full w-full overflow-hidden' style={{ padding: '21px 14px' }}>
     <Content />
     <AnswerBtns />
-  </>
+  </div>
 ));
 
 const Content = observer(() => {
@@ -40,9 +41,8 @@ const Content = observer(() => {
           {answerList.map((value: string, index: number) => (
             <span
               key={index}
-              className={`answer-option ${optionPermissions} ${
-                isSelectedAnswer(value) ? 'answer-checked' : ''
-              }`}
+              className={`answer-option ${optionPermissions} ${isSelectedAnswer(value) ? 'answer-checked' : ''
+                }`}
               onClick={(_) => handleOptionClick(value)}>
               {value}
             </span>
@@ -96,13 +96,13 @@ const ResultDetail = observer(() => {
       <Table className="answer-table">
         <TableHeader>
           <Col key="student-name" style={{ justifyContent: 'center' }}>
-            {transI18n('answer.student-name')}
+            {transI18n('widget_selector.student-name')}
           </Col>
           <Col key="answer-time" style={{ justifyContent: 'center' }}>
-            {transI18n('answer.answer-time')}
+            {transI18n('widget_selector.answer-time')}
           </Col>
           <Col key="selected-answer" style={{ justifyContent: 'center' }}>
-            {transI18n('answer.selected-answer')}
+            {transI18n('widget_selector.selected-answer')}
           </Col>
         </TableHeader>
         <Table className="table-container">

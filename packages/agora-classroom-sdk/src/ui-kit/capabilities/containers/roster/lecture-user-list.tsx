@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { useLectureUIStores, useStore } from '~hooks/use-edu-stores';
+import { useLectureUIStores, useStore } from '@/infra/hooks/ui-store';
 import { Roster, InfiniteScrollRosterTable } from '~ui-kit';
 import { EduLectureUIStore } from '@/infra/stores/lecture';
 

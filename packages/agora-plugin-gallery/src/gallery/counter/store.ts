@@ -1,19 +1,9 @@
-import {
-  ExtensionController,
-  EduRoleTypeEnum,
-  ExtensionStoreEach as ExtensionStore,
-} from 'agora-edu-core';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { action, autorun, computed, observable } from 'mobx';
-import { COUNTDOWN } from '../../constants';
+import { AgoraCountdown } from '.';
 
 export class PluginStore {
-  controller!: ExtensionController;
-  context!: ExtensionStore;
-
-  constructor(controller: ExtensionController, context: ExtensionStore) {
-    this.context = context;
-    this.controller = controller;
-
+  constructor(private _widget: AgoraCountdown) {
     autorun(() => {
       if (!this.isController) {
         this.setShowSetting(false);
@@ -38,9 +28,8 @@ export class PluginStore {
   }
 
   @action.bound
-  handleSetting(enabled: boolean, data?: object) {
+  handleSetting(enabled: boolean) {
     this.setShowSetting(enabled);
-    data && this.context.context.methods.setActive(COUNTDOWN, data);
   }
 
   /**
@@ -63,13 +52,12 @@ export class PluginStore {
    */
   @computed
   get getTimestampGap() {
-    return this.context.context.methods.getTimestampGap();
+    return this._widget.classroomStore.roomStore.clientServerTimeShift;
   }
 
   @computed
   get isController() {
-    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-      this.context.context.localUserInfo.roleType,
-    );
+    const { role } = this._widget.classroomConfig.sessionInfo;
+    return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role);
   }
 }

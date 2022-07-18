@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { t } from '../i18n';
+import { useI18n } from '../i18n';
 import { Select } from '../select';
 import { SvgImg } from '../svg-img';
 import './index.css';
@@ -19,6 +19,9 @@ interface IPropsTypes {
 }
 export const RemoteControlActionBar: FC<IPropsTypes> = (props) => {
   const { studentList, onChange, onClose, value } = props;
+
+  const t = useI18n();
+
   return (
     <div className="remote-control-action-bar">
       <div className="student-list">

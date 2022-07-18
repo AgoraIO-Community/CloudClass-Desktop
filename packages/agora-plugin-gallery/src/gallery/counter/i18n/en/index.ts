@@ -1,10 +1,10 @@
-const answer_en = {
-  widget_answer: {
-    appName: 'counter',
-    start: 'start',
+const countdown_en = {
+  widget_countdown: {
+    appName: 'Countdown',
+    start: 'Start',
     seconds: 's',
-    restart: 'restart',
+    restart: 'Restart',
   },
 };
 
-export default answer_en;
+export default countdown_en;

@@ -1,5 +1,6 @@
 import { EduClassroomConfig, EduRoomServiceTypeEnum } from 'agora-edu-core';
 import { HostingClassScenario } from './hosting-scene';
+import './index.css';
 import { MixStreamCDNClassScenario } from './mix-stream-cdn-scene';
 import { StandardClassScenario } from './standard-scene';
 

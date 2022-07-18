@@ -8,7 +8,7 @@ import {
 import { AGError, AgoraRteVideoSourceType, Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { transI18n } from '../common/i18n';
+import { transI18n } from '~ui-kit';
 import { StreamUIStore } from '../common/stream';
 import { EduStreamUI } from '../common/stream/struct';
 import { EduStreamTool, EduStreamToolCategory } from '../common/stream/tool';

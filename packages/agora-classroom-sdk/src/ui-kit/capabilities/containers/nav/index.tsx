@@ -1,6 +1,6 @@
 import { EduNavAction, EduNavRecordActionPayload } from '@/infra/stores/common/nav-ui';
 import { observer } from 'mobx-react';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n, SvgaPlayer } from '~ui-kit';
 import { RecordStatus } from 'agora-edu-core';
 import RecordLoading from './assets/svga/record-loading.svga';

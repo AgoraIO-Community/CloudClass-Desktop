@@ -1,11 +1,8 @@
-import {
-  ExtensionController,
-  EduRoleTypeEnum,
-  ExtensionStoreEach as ExtensionStore,
-} from 'agora-edu-core';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { Lodash } from 'agora-rte-sdk';
 import { action, autorun, computed, observable, reaction, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
+import { AgoraSelector } from '.';
 
 const answerConfine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const maxOptionsLength = answerConfine.length; // 最大选项长度
@@ -14,29 +11,24 @@ const minOptionsLength = 2; // 最小选项长度
 type answerState = 0 | 1 | 2; // 0 答题结束 1 答题中 2 本地状态只为有控制权限提供
 
 export class PluginStore {
-  controller!: ExtensionController;
-  context!: ExtensionStore;
   clock: string = '';
 
-  constructor(controller: ExtensionController, context: ExtensionStore) {
-    this.context = context;
-    this.controller = controller;
-
+  constructor(private _widget: AgoraSelector) {
     autorun(() => {
-      typeof this.context.roomProperties.extra?.answerState !== 'undefined' &&
-        this.setAnswerState(this.context.roomProperties.extra.answerState);
-      typeof this.context.userProperties.selectedItems !== 'undefined' &&
-        this.setSelectedAnswers(this.context.userProperties.selectedItems);
+      const { extra } = _widget.roomProperties;
+      const { selectedItems } = _widget.userProperties;
+      typeof extra?.answerState !== 'undefined' && this.setAnswerState(extra.answerState);
+      typeof selectedItems !== 'undefined' && this.setSelectedAnswers(selectedItems);
       runInAction(() => {
-        typeof this.context.roomProperties.extra?.items !== 'undefined' &&
-          (this.answerList = this.context.roomProperties.extra.items);
+        typeof extra?.items !== 'undefined' && (this.answerList = extra.items);
       });
     });
 
     reaction(
-      () => this.context.roomProperties,
+      () => this._widget.roomProperties,
       () => {
-        if (this.isTeacherType && this.context.roomProperties.extra?.answerState) {
+        const { extra } = _widget.roomProperties;
+        if (this.isTeacherType && extra?.answerState) {
           this.fetchList();
         }
       },
@@ -74,9 +66,9 @@ export class PluginStore {
 
   @action.bound
   setSelectedAnswers(value: string[]) {
-    if (
-      this.context.roomProperties?.extra?.popupQuizId === this.context.userProperties.popupQuizId
-    ) {
+    const { extra } = this._widget.roomProperties;
+    const { popupQuizId } = this._widget.userProperties;
+    if (extra?.popupQuizId === popupQuizId) {
       this.selectedAnswers = value;
     } else {
       this.selectedAnswers = [];
@@ -100,16 +92,21 @@ export class PluginStore {
 
   @action.bound
   handleStart() {
-    let body = {
+    const { x, y } = this._widget.track.ratioVal.ratioPosition;
+    const body = {
       correctItems: this.selectedAnswers,
       items: this.answerList,
+      position: { xaxis: x, yaxis: y },
     };
-    this.controller.startAnswer(body);
+    const roomId = this._widget.classroomStore.connectionStore.sceneId;
+    this._widget.classroomStore.api.startAnswer(roomId, body);
   }
 
   @action.bound
   handleStop() {
-    this.controller.stopAnswer(this.context.roomProperties.extra.popupQuizId);
+    const { extra } = this._widget.roomProperties;
+    const roomId = this._widget.classroomStore.connectionStore.sceneId;
+    this._widget.classroomStore.api.stopAnswer(roomId, extra.popupQuizId);
   }
 
   @action.bound
@@ -117,16 +114,22 @@ export class PluginStore {
     if (this.isAnswered && !this.localOptionPermission) {
       this.localOptionPermission = true;
     } else {
-      const userUuid = this.context.context.localUserInfo.userUuid;
-      const popupQuizId = this.context.roomProperties.extra.popupQuizId;
+      const { userUuid } = this._widget.classroomConfig.sessionInfo;
+      const { extra } = this._widget.roomProperties;
+      const popupQuizId = extra.popupQuizId;
       const selectedItems = this.selectedAnswers.sort();
-      this.controller.submitAnswer(popupQuizId, userUuid, { selectedItems });
+      const roomId = this._widget.classroomStore.connectionStore.sceneId;
+      this._widget.classroomStore.api.submitAnswer(roomId, popupQuizId, userUuid, {
+        selectedItems,
+      });
       this.localOptionPermission = false;
     }
   }
 
   getAnswerList = (nextId: number, count: number) => {
-    return this.controller.getAnswerList(this.context.roomProperties.extra.popupQuizId, {
+    const { extra } = this._widget.roomProperties;
+    const roomId = this._widget.classroomStore.connectionStore.sceneId;
+    return this._widget.classroomStore.api.getAnswerList(roomId, extra.popupQuizId, {
       nextId,
       count,
     });
@@ -170,7 +173,7 @@ export class PluginStore {
     }
 
     if (args.length > 0) {
-      this.controller.sendRewards(args);
+      this._widget.classroomStore.roomStore.sendRewards(args);
     }
   }
 
@@ -179,12 +182,13 @@ export class PluginStore {
    */
   @computed
   get getTimestampGap() {
-    return this.context.context.methods.getTimestampGap();
+    return this._widget.classroomStore.roomStore.clientServerTimeShift;
   }
 
   @computed
   get receiveQuestionTime() {
-    return this.context.roomProperties.extra?.receiveQuestionTime;
+    const { extra } = this._widget.roomProperties;
+    return extra?.receiveQuestionTime;
   }
 
   @computed
@@ -194,16 +198,16 @@ export class PluginStore {
 
   @computed
   get isController() {
-    return (
-      this.context.context.localUserInfo.roleType === EduRoleTypeEnum.teacher ||
-      this.context.context.localUserInfo.roleType === EduRoleTypeEnum.assistant
-    );
+    const { role } = this._widget.classroomConfig.sessionInfo;
+    return role === EduRoleTypeEnum.teacher || role === EduRoleTypeEnum.assistant;
   }
 
   @computed
   get isTeacherType() {
+    const { role } = this._widget.classroomConfig.sessionInfo;
+
     return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
-      this.context.context.localUserInfo.roleType,
+      role,
     );
   }
 
@@ -228,9 +232,10 @@ export class PluginStore {
 
   @computed
   get isShowSelectionSection() {
+    const { extra } = this._widget.roomProperties;
     return (
       (this.answerState === 2 && this.isTeacherType) ||
-      (this.context.roomProperties.extra?.answerState === 1 && !this.isTeacherType)
+      (extra?.answerState === 1 && !this.isTeacherType)
     );
   }
 
@@ -251,10 +256,9 @@ export class PluginStore {
 
   @computed
   get isShowAwardButton() {
+    const { role } = this._widget.classroomConfig.sessionInfo;
     return (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-        this.context.context.localUserInfo.roleType,
-      ) &&
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) &&
       this.isShowResultSection &&
       this.answerState === 0
     );
@@ -270,36 +274,33 @@ export class PluginStore {
    */
   @computed
   get isShowAnswerBtn() {
-    return (
-      this.answerState === 1 &&
-      !this.isTeacherType &&
-      this.context.context.localUserInfo.roleType !== EduRoleTypeEnum.invisible
-    );
+    const { role } = this._widget.classroomConfig.sessionInfo;
+    return this.answerState === 1 && !this.isTeacherType && role !== EduRoleTypeEnum.invisible;
   }
 
   @computed
   get isAnswered() {
-    return (
-      this.context.roomProperties.extra?.popupQuizId === this.context.userProperties?.popupQuizId &&
-      this.context.roomProperties.extra?.popupQuizId
-    );
+    const { extra } = this._widget.roomProperties;
+    const { popupQuizId } = this._widget.userProperties;
+    return extra?.popupQuizId === popupQuizId && extra?.popupQuizId;
   }
 
   @computed
   get answeredNumber() {
-    return `${this.context.roomProperties.extra?.selectedCount || 0}/${
-      this.context.roomProperties.extra?.totalCount || 0
-    }`;
+    const { extra } = this._widget.roomProperties;
+    return `${extra?.selectedCount || 0}/${extra?.totalCount || 0}`;
   }
 
   @computed
   get currentAnalysis() {
-    return `${Math.floor((this.context.roomProperties.extra?.averageAccuracy || 0) * 100)}%`;
+    const { extra } = this._widget.roomProperties;
+    return `${Math.floor((extra?.averageAccuracy || 0) * 100)}%`;
   }
 
   @computed
   get currentAnswer() {
-    return this.context.roomProperties.extra?.correctItems || [];
+    const { extra } = this._widget.roomProperties;
+    return extra?.correctItems || [];
   }
 
   @computed
@@ -318,12 +319,14 @@ export class PluginStore {
 
   @computed
   get startTime() {
-    return this.context.roomProperties.extra?.receiveQuestionTime;
+    const { extra } = this._widget.roomProperties;
+    return extra?.receiveQuestionTime;
   }
 
   @computed
   get myAnswer() {
-    return this.context.userProperties?.selectedItems;
+    const { selectedItems } = this._widget.userProperties;
+    return selectedItems;
   }
 
   isSelectedAnswer = computedFn((value: string): boolean => {

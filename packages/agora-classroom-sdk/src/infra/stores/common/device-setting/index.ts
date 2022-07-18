@@ -3,7 +3,6 @@ import { action, computed, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { CameraPlaceholderType } from '../type';
 import { v4 as uuidv4 } from 'uuid';
-import { transI18n } from '../i18n';
 import {
   AgoraEduClassroomEvent,
   AGServiceErrorCode,
@@ -15,6 +14,7 @@ import {
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
+import { transI18n } from '~ui-kit';
 
 export type SettingToast = {
   id: string;

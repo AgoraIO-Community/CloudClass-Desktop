@@ -3,8 +3,8 @@
   border-radius: 8px;
   border: 1px solid #e1e1ea;
   padding-bottom: 20px;
+  min-width: 280px;
   @apply box-border bg-white;
-  width: 280px;
 }
 
 .top-level-modal {
@@ -55,9 +55,10 @@
 
 .modal-title {
   @apply box-border flex justify-between items-center relative;
-  height: 40px;
+  height: 28px;
+  line-height: 28px;
   background-color: #f9f9fc;
-  padding: 0 20px;
+  padding: 0 10px 0 15px;
   border-radius: 8px 8px 0 0;
   border-bottom: 1px solid #eeeef7;
   z-index: 1;
@@ -65,11 +66,15 @@
 
 .modal-title-text {
   color: #333333;
-  font-size: 14px;
+  font-size: 12px;
 }
 
-.modal-title-close {
+.modal-title-action {
   cursor: pointer;
+}
+
+.modal-title-action:not(:last-child) {
+  margin-right: 10px;
 }
 
 .modal-content {

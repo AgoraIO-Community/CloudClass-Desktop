@@ -12,8 +12,8 @@ import { AGError, AGRtcConnectionType, bound, Log, RtcState } from 'agora-rte-sd
 import { difference, range } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
-import { transI18n } from './i18n';
 import uuidv4 from 'uuid';
+import { transI18n } from '~ui-kit';
 
 export enum GroupMethod {
   AUTO,
@@ -454,7 +454,7 @@ export class GroupUIStore extends EduUIStoreBase {
       this.classroomStore.groupStore
         .startGroup(groupDetails, this.isCopyContent)
         .then(async () => {
-          await this.classroomStore.boardStore.exportWindowManagerAttributes(this.isCopyContent);
+          this.boardApi.saveAttributes();
           runInAction(() => {
             this.localGroups = new Map();
           });
@@ -620,8 +620,8 @@ export class GroupUIStore extends EduUIStoreBase {
     }
   }
 
-  private async _grantWhiteboard() {
-    this.classroomStore.boardStore.grantPermission(EduClassroomConfig.shared.sessionInfo.userUuid);
+  private _grantWhiteboard() {
+    this.boardApi.grantPrivilege(EduClassroomConfig.shared.sessionInfo.userUuid, true);
   }
 
   @bound
@@ -683,11 +683,7 @@ export class GroupUIStore extends EduUIStoreBase {
 
   @bound
   private async _copyRoomContent() {
-    const { localUser } = this.classroomStore.userStore;
-    const initial = localUser?.userProperties.get('widgets')?.netlessBoard?.initial;
-    if (initial) {
-      await this.classroomStore.boardStore.importWindowManagerAttributes();
-    }
+    this.boardApi.loadAttributes();
   }
 
   @bound
@@ -774,21 +770,10 @@ export class GroupUIStore extends EduUIStoreBase {
   onInstall() {
     this._disposers.push(
       reaction(
-        () => ({
-          managerReady: this.classroomStore.boardStore.managerReady,
-          isWritable: this.classroomStore.boardStore.isWritable,
-        }),
-        ({ managerReady, isWritable }) => {
-          // isWritable only for student
-          if (managerReady) {
-            if (
-              [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-                EduClassroomConfig.shared.sessionInfo.role,
-              ) ||
-              (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student && isWritable)
-            ) {
-              this._copyRoomContent();
-            }
+        () => this.boardApi.mounted,
+        (mounted) => {
+          if (mounted && this.boardApi.hasPrivilege()) {
+            this._copyRoomContent();
           }
         },
       ),

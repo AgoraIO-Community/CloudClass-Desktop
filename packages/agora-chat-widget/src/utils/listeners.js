@@ -46,7 +46,7 @@ export const createListener = (store) => {
       },
       onTextMessage: (message) => {
         console.log('onTextMessage>>>', message);
-        if (new_IM_Data.chatroomId === message.to) {
+        if (new_IM_Data.chatRoomId === message.to) {
           const newMessage = apis.messageAPI.convertCustomMessage(message);
           store.dispatch(messageAction(newMessage, { isHistory: false }));
           const showChat = store.getState().showChat;
@@ -59,7 +59,7 @@ export const createListener = (store) => {
       },
       onPictureMessage: (message) => {
         console.log('onPictureMessage>>>', message);
-        if (new_IM_Data.chatroomId === message.to) {
+        if (new_IM_Data.chatRoomId === message.to) {
           const showChat = store.getState().showChat;
           const isShowRed = store.getState().isTabKey !== CHAT_TABS_KEYS.chat;
           store.dispatch(showRedNotification(isShowRed));
@@ -71,7 +71,7 @@ export const createListener = (store) => {
       },
       onCmdMessage: (message) => {
         console.log('onCmdMessaeg>>>', message);
-        if (new_IM_Data.chatroomId === message.to) {
+        if (new_IM_Data.chatRoomId === message.to) {
           store.dispatch(
             messageAction(message, {
               showNotice: store.getState().isTabKey !== CHAT_TABS_KEYS.chat,
@@ -89,7 +89,7 @@ export const createListener = (store) => {
       onPresence: (message) => {
         console.log('onPresence>>>', message);
         const activeTabKey = store.getState().isTabKey !== CHAT_TABS_KEYS.notice;
-        if (new_IM_Data.chatroomId !== message.gid) {
+        if (new_IM_Data.chatRoomId !== message.gid) {
           return;
         }
         const roomUserList = _.get(store.getState(), 'room.roomUsers');

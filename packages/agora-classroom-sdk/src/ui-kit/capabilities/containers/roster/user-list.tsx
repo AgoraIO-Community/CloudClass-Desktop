@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { observer } from 'mobx-react';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { Roster, RosterTable } from '~ui-kit';
 
 export type RosterContainerProps = {

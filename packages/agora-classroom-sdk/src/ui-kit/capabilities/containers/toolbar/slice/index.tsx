@@ -1,16 +1,17 @@
 import { observer } from 'mobx-react';
-import { useStore } from '~hooks/use-edu-stores';
-import { SvgImg, t, Slice } from '~ui-kit';
+import { useStore } from '@/infra/hooks/ui-store';
+import { SvgImg, useI18n, Slice } from '~ui-kit';
 
 export const SliceContainer = observer(() => {
   const { toolbarUIStore } = useStore();
+  const t = useI18n();
   const { sliceItems, handleSliceItem } = toolbarUIStore;
 
   const mappedItems = sliceItems.map((item) => {
-    const { id, icon, iconType, name } = item;
+    const { id, iconType, name } = item;
     return {
       id,
-      icon: icon ? icon : <SvgImg type={iconType} size={24} />,
+      icon: iconType ? <SvgImg type={iconType} size={24} /> : <span />,
       name,
     };
   });

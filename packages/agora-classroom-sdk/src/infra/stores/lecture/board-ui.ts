@@ -7,7 +7,6 @@ export class LectureBoardUIStore extends BoardUIStore {
     return {
       ...super.uiOverrides,
       heightRatio: 1,
-      aspectRatio: 0.706,
     };
   }
   onInstall(): void {
@@ -18,10 +17,10 @@ export class LectureBoardUIStore extends BoardUIStore {
         (acceptedList) => {
           const { userUuid } = EduClassroomConfig.shared.sessionInfo;
           const isOnPodium = acceptedList.some((item) => item.userUuid === userUuid);
-          const isGranted = this.classroomStore.boardStore.grantUsers.has(userUuid);
+          const isGranted = this.boardApi.grantedUsers.has(userUuid);
 
           if (!isOnPodium && isGranted) {
-            this.classroomStore.boardStore.revokePermission(userUuid);
+            this.boardApi.grantPrivilege(userUuid, false);
           }
         },
       ),

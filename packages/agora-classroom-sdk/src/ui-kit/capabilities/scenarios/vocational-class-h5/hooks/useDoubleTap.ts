@@ -15,7 +15,7 @@ export type DoubleTapResult<Target, Callback> = Callback extends CallbackFunctio
       onClick: CallbackFunction<Target>;
     }
   : Callback extends null
-  ? {}
+  ? Record<string, unknown>
   : never;
 
 export function useDoubleTap<
@@ -23,7 +23,7 @@ export function useDoubleTap<
   Callback extends DoubleTapCallback<Target> = DoubleTapCallback<Target>,
 >(
   callback: Callback,
-  threshold: number = 300,
+  threshold = 300,
   options: DoubleTapOptions<Target> = {},
 ): DoubleTapResult<Target, Callback> {
   const timer = useRef<NodeJS.Timeout | null>(null);

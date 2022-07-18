@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { ReactNode } from 'react';
 import { CloudDriverContainer } from '~containers/cloud-driver';
 import { RoomDeviceSettingContainer } from '~containers/device-setting';
-import { useStore } from '~hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import { RosterContainer } from '../roster/user-list';
 import { LectureRosterContainer } from '../roster/lecture-user-list';
 import { Confirm } from './confirm';

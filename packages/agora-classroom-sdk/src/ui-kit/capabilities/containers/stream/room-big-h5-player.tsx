@@ -1,4 +1,4 @@
-import { useLectureH5UIStores } from '~hooks/use-edu-stores';
+import { useLectureH5UIStores } from '@/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
 import { StreamPlayer, StreamPlaceholder, CarouselGroup } from '.';
 import React, { FC, useCallback, useState } from 'react';

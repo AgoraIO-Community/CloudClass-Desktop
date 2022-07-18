@@ -16,7 +16,7 @@ export class MuteAPI {
 
   // 单人禁言
   setUserMute = (userId) => {
-    const roomId = this.store.getState().propsData.chatroomId;
+    const roomId = this.store.getState().propsData.chatRoomId;
     let options = {
       chatRoomId: roomId, // 聊天室id
       users: [userId], // 成员id列表
@@ -30,7 +30,7 @@ export class MuteAPI {
 
   // 移除个人禁言
   removeUserMute = (userId) => {
-    const roomId = this.store.getState().propsData.chatroomId;
+    const roomId = this.store.getState().propsData.chatRoomId;
     let options = {
       chatRoomId: roomId, // 群组id
       userName: userId, // 要移除的成员
@@ -60,7 +60,7 @@ export class MuteAPI {
   };
   // 判断当前登陆账号是否在白名单
   isChatRoomWhiteUser = (userId) => {
-    const roomId = this.store.getState().propsData.chatroomId;
+    const roomId = this.store.getState().propsData.chatRoomId;
     let options = {
       chatRoomId: roomId, // 聊天室id
       userName: userId, // 要查询的成员

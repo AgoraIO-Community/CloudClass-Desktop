@@ -13,7 +13,7 @@ import {
 } from '~ui-kit';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
-import { useStore } from '@/infra/hooks/use-edu-stores';
+import { useStore } from '@/infra/hooks/ui-store';
 import SearchSvg from './assets/search.svg';
 import './invite-table.css';
 import { EduRoleTypeEnum } from 'agora-edu-core';

@@ -1,28 +1,19 @@
 import { EduClassroomConfig } from 'agora-edu-core';
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { computed } from 'mobx';
-import {
-  CabinetItemEnum,
-  ToolbarItem,
-  ToolbarItemCategory,
-  ToolbarUIStore,
-} from '../common/toolbar-ui';
+import { ToolbarUIStore } from '../common/toolbar-ui';
+import { CabinetItemEnum, ToolbarItem, ToolbarItemCategory } from '../common/type';
 
 export class OneToOneToolbarUIStore extends ToolbarUIStore {
   readonly allowedCabinetItems: string[] = [
-    CabinetItemEnum.Laser,
-    CabinetItemEnum.ScreenShare,
-    CabinetItemEnum.CountdownTimer,
-    CabinetItemEnum.PopupQuiz,
     CabinetItemEnum.Whiteboard,
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.Laser,
   ];
   @computed
   get teacherTools(): ToolbarItem[] {
     let _tools: ToolbarItem[] = [];
-    if (
-      this.classroomStore.boardStore.boardReady &&
-      !this.classroomStore.remoteControlStore.isHost
-    ) {
+    if (this.boardApi.mounted && !this.classroomStore.remoteControlStore.isHost) {
       _tools = [
         ToolbarItem.fromData({
           value: 'clicker',
@@ -104,9 +95,7 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
   @computed
   get studentTools(): ToolbarItem[] {
     const { sessionInfo } = EduClassroomConfig.shared;
-    const whiteboardAuthorized = this.classroomStore.boardStore.grantUsers.has(
-      sessionInfo.userUuid,
-    );
+    const whiteboardAuthorized = this.boardApi.grantedUsers.has(sessionInfo.userUuid);
 
     if (!whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
       return [];

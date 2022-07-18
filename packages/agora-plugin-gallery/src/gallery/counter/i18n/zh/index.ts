@@ -1,5 +1,5 @@
-const answer_zh = {
-  widget_answer: {
+const countdown_zh = {
+  widget_countdown: {
     appName: '计时器',
     start: '开始',
     seconds: '秒',
@@ -7,4 +7,4 @@ const answer_zh = {
   },
 };
 
-export default answer_zh;
+export default countdown_zh;

@@ -1,7 +1,7 @@
-import { useStore } from '@/infra/hooks/use-edu-stores';
-import { ScreenShareRoleType } from '@/infra/stores/common/toolbar-ui';
+import { useStore } from '@/infra/hooks/ui-store';
+import { ScreenShareRoleType } from '@/infra/stores/common/type';
 import { FC } from 'react';
-import { Card, Modal, t } from '~ui-kit';
+import { Card, Modal, useI18n } from '~ui-kit';
 import './index.css';
 
 export const ScreenShareDialog = ({
@@ -14,6 +14,7 @@ export const ScreenShareDialog = ({
   onCancel?: () => void;
 }) => {
   const { shareUIStore } = useStore();
+  const t = useI18n();
   const { removeDialog } = shareUIStore;
   return (
     <Modal
@@ -40,6 +41,7 @@ interface IScreenShareDialogContentPropsType {
   onSelect: (role: ScreenShareRoleType) => void;
 }
 const ScreenShareDialogContent: FC<IScreenShareDialogContentPropsType> = (props) => {
+  const t = useI18n();
   return (
     <div className="screen-share-dialog-container">
       <div className="screen-share-dialog-card-container">
@@ -63,6 +65,7 @@ const ScreenShareCardContent = (props: {
   type: ScreenShareRoleType;
   onClick: (role: ScreenShareRoleType) => void;
 }) => {
+  const t = useI18n();
   const { type, onClick } = props;
   return type === ScreenShareRoleType.Teacher ? (
     <div

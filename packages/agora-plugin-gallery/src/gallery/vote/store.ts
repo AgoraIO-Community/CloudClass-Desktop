@@ -1,10 +1,7 @@
-import {
-  ExtensionController,
-  EduRoleTypeEnum,
-  ExtensionStoreEach as ExtensionStore,
-} from 'agora-edu-core';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { Toast } from '~ui-kit';
 import { action, autorun, computed, observable, runInAction } from 'mobx';
+import { AgoraPolling } from '.';
 
 // 2 为老师或者助教出题阶段 只可老师或者助教可见
 // 1 为中间答题阶段，不同为老师或者助教和学生的权限问题
@@ -17,22 +14,14 @@ type optionType = 'radio' | 'checkbox';
 const maxOptionCount = 5;
 
 export class PluginStore {
-  controller!: ExtensionController;
-  context!: ExtensionStore;
-
-  constructor(controller: ExtensionController, context: ExtensionStore) {
-    this.context = context;
-    this.controller = controller;
-
+  constructor(private _widget: AgoraPolling) {
     autorun(() => {
-      typeof this.context.roomProperties.extra?.pollState !== 'undefined' &&
-        this.setStagePanel(this.context.roomProperties.extra.pollState);
-      typeof this.context.roomProperties.extra?.pollTitle !== 'undefined' &&
-        this.setTitle(this.context.roomProperties.extra.pollTitle);
-      this.context.roomProperties.extra?.mode && this.setType(this.getTypeByMode);
+      const { extra } = _widget.roomProperties;
+      typeof extra?.pollState !== 'undefined' && this.setStagePanel(extra.pollState);
+      typeof extra?.pollTitle !== 'undefined' && this.setTitle(extra.pollTitle);
+      extra?.mode && this.setType(this.getTypeByMode);
       runInAction(() => {
-        typeof this.context.roomProperties.extra?.pollItems !== 'undefined' &&
-          (this.options = this.context.roomProperties.extra.pollItems);
+        typeof extra?.pollItems !== 'undefined' && (this.options = extra.pollItems);
       });
     });
   }
@@ -78,28 +67,39 @@ export class PluginStore {
 
   @action.bound
   handleStartVote() {
-    let body = {
+    const { x, y } = this._widget.track.ratioVal.ratioPosition;
+    const body = {
       mode: this.type === 'radio' ? 1 : 2,
       pollItems: this.options,
       pollTitle: this.title,
+      position: { xaxis: x, yaxis: y },
     };
-    this.controller.startPolling(body);
+
+    const roomId = this._widget.classroomStore.connectionStore.sceneId;
+    this._widget.classroomStore.api.startPolling(roomId, body);
   }
   /**
    * 投票
    */
   @action.bound
   handleSubmitVote() {
-    const userUuid = this.context.context.localUserInfo.userUuid;
+    const { userUuid } = this._widget.classroomConfig.sessionInfo;
+    const roomId = this._widget.classroomStore.connectionStore.sceneId;
+    const { extra } = this._widget.roomProperties;
+
     const selectedIndexs = this.selectedIndexs;
     return new Promise((resolve, reject) => {
-      this.controller
-        .submitResult(this.context.roomProperties.extra.pollId, userUuid, {
+      this._widget.classroomStore.api
+        .submitResult(roomId, extra.pollId, userUuid, {
           selectIndex: selectedIndexs,
         })
         .then((res) => {
           const data = res.data;
-          this.context.setUserProperties({ pollId: data?.pollId });
+
+          this._widget.updateWidgetUserProperties({
+            pollId: data?.pollId,
+          });
+
           resolve(data);
         })
         .catch((e) => {
@@ -119,7 +119,9 @@ export class PluginStore {
 
   @action.bound
   handleStopVote() {
-    this.controller.stopPolling(this.context.roomProperties.extra.pollId);
+    const { extra } = this._widget.roomProperties;
+    const roomId = this._widget.classroomStore.connectionStore.sceneId;
+    this._widget.classroomStore.api.stopPolling(roomId, extra.pollId);
   }
 
   @action.bound
@@ -153,30 +155,30 @@ export class PluginStore {
    */
   @computed
   get getTimestampGap() {
-    return this.context.context.methods.getTimestampGap();
+    return this._widget.classroomStore.roomStore.clientServerTimeShift;
   }
 
   @computed
   get getTypeByMode() {
     let mode = 'radio';
-    if (this.context.roomProperties.extra?.mode) {
-      mode = this.context.roomProperties.extra.mode === 1 ? 'radio' : 'checkbox';
+    const { extra } = this._widget.roomProperties;
+
+    if (extra?.mode) {
+      mode = extra.mode === 1 ? 'radio' : 'checkbox';
     }
     return mode as optionType;
   }
 
   @computed
   get isController() {
-    return (
-      this.context.context.localUserInfo.roleType === EduRoleTypeEnum.teacher ||
-      this.context.context.localUserInfo.roleType === EduRoleTypeEnum.assistant
-    );
+    const { role } = this._widget.classroomConfig.sessionInfo;
+    return role === EduRoleTypeEnum.teacher || role === EduRoleTypeEnum.assistant;
   }
 
   @computed
   get isTeacherType() {
     return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant, EduRoleTypeEnum.observer].includes(
-      this.context.context.localUserInfo.roleType,
+      this._widget.classroomConfig.sessionInfo.role,
     );
   }
 
@@ -201,7 +203,8 @@ export class PluginStore {
 
   @computed
   get pollingResult() {
-    return this.context.roomProperties.extra?.pollDetails;
+    const { extra } = this._widget.roomProperties;
+    return extra?.pollDetails;
   }
 
   @computed
@@ -215,9 +218,11 @@ export class PluginStore {
   get isShowResultSection() {
     // 1.当前有控制权限并处于答题阶段
     // 2.已经结束答题
+    const { pollId } = this._widget.userProperties;
+
     if (this.stagePanel === 1 && this.isController) {
       return true;
-    } else if (this.stagePanel === 1 && this.context.userProperties?.pollId) {
+    } else if (this.stagePanel === 1 && pollId) {
       return true;
     } else if (this.stagePanel === 0) {
       return true;
@@ -240,13 +245,14 @@ export class PluginStore {
 
   @computed
   get isShowVoteBtn() {
-    return (
-      this.isShowVote && this.context.context.localUserInfo.roleType !== EduRoleTypeEnum.invisible
-    );
+    const { sessionInfo } = this._widget.classroomConfig;
+
+    return this.isShowVote && sessionInfo.role !== EduRoleTypeEnum.invisible;
   }
 
   @computed
   get visibleVote() {
-    return this.isShowVote && this.context.userProperties?.pollId;
+    const { pollId } = this._widget.userProperties;
+    return this.isShowVote && pollId;
   }
 }
