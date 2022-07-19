@@ -1,21 +1,19 @@
+import { AgoraWidgetBase } from 'agora-classroom-sdk';
 import {
   ChatEvent,
   ChatListType,
   Conversation,
-  MessageItem,
   EduClassroomConfig,
   EduRoomSubtypeEnum,
+  MessageItem,
 } from 'agora-edu-core';
-import { AgoraWidgetBase } from 'agora-classroom-sdk';
-import classnames from 'classnames';
+import { default as classnames, default as classNames } from 'classnames';
 import { observer } from 'mobx-react';
 import { useContext } from 'react';
 import ReactDOM from 'react-dom';
-import React from 'react';
-import { ChatNew, I18nProvider, SimpleChatNew } from '~ui-kit';
+import { ChatNew, SimpleChatNew } from '~ui-kit';
 import { Context } from './chatContext';
 import { WidgetChatUIStore } from './chatStore';
-import classNames from 'classnames';
 
 const App = observer(() => {
   const chatContext = useContext(Context);
@@ -125,7 +123,6 @@ const App = observer(() => {
 });
 
 export class AgoraChatWidget extends AgoraWidgetBase {
-
   private _chatStore?: WidgetChatUIStore;
   private _dom?: HTMLElement;
 
@@ -134,6 +131,10 @@ export class AgoraChatWidget extends AgoraWidgetBase {
   }
   get hasPrivilege(): boolean {
     return false;
+  }
+
+  locate() {
+    return document.querySelector('.widget-slot-chat') as HTMLElement;
   }
 
   render(dom: HTMLElement): void {
