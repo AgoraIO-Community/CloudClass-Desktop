@@ -3045,10 +3045,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-slide@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.1.tgz#50b822fb6c366f47b8d8c9caab741c7bf17af2ce"
-  integrity sha512-HTwxmkesTLizr5lc0vouCxjSNmPcGOMGFC036y2AE13WdYJOfouUa/aZz08nawNijCi2W9Kh4wc2wzvf1s2Y/g==
+"@netless/app-slide@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.2.tgz#e58fcbbf4018b0c3ffb4e69bb17a9c59c63f5ba9"
+  integrity sha512-2+EFJUT5PHDbcgfIP1P2/BKE/c/I+Etr9YD0y4zSym2UoqS3GyZWgQLIES1d2nQVnaRomOjppighlbNZ/ccbZA==
 
 "@netless/app-talkative@0.1.0":
   version "0.1.0"
@@ -3134,10 +3134,10 @@
   resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha512-8Qvz1NcBhGb+2S9FYy9Xuln0/82q+Bn0EluXxM+BDw/aimhkN1QWxGl++ZysztZ60vzn18vl7p4cJuF2cfslIQ==
 
-"@netless/window-manager@0.4.30":
-  version "0.4.30"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.30.tgz#7ca5ede6d836ab45064bddaa17c734884023df06"
-  integrity sha512-fzMrF28pwHs3pOHF505/9JuEOJU3lWjAdCEJ0d68MfzmzL1H1t4XWaHl5SWnGRhrUYDD3frLsepdkLi5EJuChw==
+"@netless/window-manager@0.4.35":
+  version "0.4.35"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.35.tgz#d643418cd4f99cb41577eaa024792dd59631582a"
+  integrity sha512-boO+978awQ2Drbw4LmKVl5hRWXDeblPJuhIL+2kSizQjN0oay1EifWa9l7K9Be5lJBHysCzAwjV15T2M06jSjA==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/telebox-insider" "0.2.26"
@@ -7025,6 +7025,11 @@ bowser@1.9.4, bowser@^1.6.0:
   version "1.9.4"
   resolved "https://registry.yarnpkg.com/bowser/-/bowser-1.9.4.tgz#890c58a2813a9d3243704334fa81b96a5c150c9a"
   integrity sha512-9IdMmj2KjigRq6oWhmwv1W36pDuA4STQZ8q6YO9um+x07xgYNCD3Oou+WP/3L1HNz7iqythGet3/p4wvc8AAwQ==
+
+bowser@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
+  integrity sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==
 
 boxen@^4.2.0:
   version "4.2.0"
@@ -23049,16 +23054,17 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.16.24:
-  version "2.16.24"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.16.24.tgz#1ae862a8bc4551857e643eb9d084c060d243e865"
-  integrity sha512-onauWjDLcoOHN5lELmV8vjGU5Mrgi3KaWxI6obciMPQXDrzUPljyosRUPqC0i5BM+xn3oIn8s53yX+J/IOtAKA==
+white-web-sdk@2.16.27:
+  version "2.16.27"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.16.27.tgz#531182102613fa28b831cafb49c884c0a53e8455"
+  integrity sha512-TtlU8YzppqEYhQ768rrRhsIfiUmEg4qX8zwOK9pOZI2GRDtl8k2N6V4y7WrgBP1jgNghdnXg83JtxaQ/xOnR5g==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"
     "@netless/xml-js" "1.6.15"
     atob "^2.1.2"
     bezier-js "^2.4.4"
+    bowser "^2.11.0"
     color "^3.1.0"
     core-js "^3.15.2"
     detect-it "^3.0.5"

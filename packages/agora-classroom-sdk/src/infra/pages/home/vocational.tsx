@@ -224,7 +224,7 @@ export const VocationalHomePage = observer(() => {
       const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
       const webRTCCodec =
         roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-        roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+          roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
           ? 'h264'
           : 'vp8';
       const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
@@ -304,6 +304,7 @@ export const VocationalHomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
+        showServiceOptions
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "dayjs": "1.10.4",
-    "@netless/app-slide": "0.2.1",
+    "@netless/app-slide": "0.2.2",
     "@netless/combine-player": "1.1.4",
     "@netless/cursor-tool": "0.0.7",
     "@netless/iframe-bridge": "2.1.4",
@@ -34,10 +34,10 @@
     "@netless/white-audio-plugin2": "2.0.5",
     "@netless/white-video-plugin": "1.2.23",
     "@netless/white-video-plugin2": "2.0.5",
-    "@netless/window-manager": "0.4.30",
+    "@netless/window-manager": "0.4.35",
     "@netless/app-talkative": "0.1.0",
     "@netless/white-snapshot": "0.4.1",
-    "white-web-sdk": "2.16.24",
+    "white-web-sdk": "2.16.27",
     "plyr": "3.7.2"
   }
 }

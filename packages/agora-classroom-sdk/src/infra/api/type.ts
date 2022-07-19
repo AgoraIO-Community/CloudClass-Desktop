@@ -6,7 +6,6 @@ import {
   EduRoomTypeEnum,
   EduRtcConfig,
   Platform,
-  RecordOptions,
 } from 'agora-edu-core';
 import { EduVideoEncoderConfiguration, MediaOptions } from 'agora-rte-sdk';
 import { CloudDriveResourceConvertProgress } from '../stores/common/cloud-drive/type';
@@ -85,7 +84,7 @@ export type LaunchOption = {
   mediaOptions?: LaunchMediaOptions;
   latencyLevel?: 1 | 2;
   platform?: Platform;
-  recordOptions?: RecordOptions; // 白板录制参数
+  recordOptions?: BoardWindowAnimationOptions; // 白板录制参数
   recordRetryTimeout?: number; // 录制重试间隔
 };
 
