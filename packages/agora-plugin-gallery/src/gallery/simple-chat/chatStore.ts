@@ -8,8 +8,8 @@ import {
 } from 'agora-edu-core';
 import { get, isEmpty } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import { v4 as uuidv4 } from 'uuid';
 import { computedFn } from 'mobx-utils';
+import { v4 as uuidv4 } from 'uuid';
 import { AgoraChatWidget } from '.';
 
 type AGError = any;
@@ -68,8 +68,9 @@ export class WidgetChatUIStore {
   }
 
   constructor(private _widget: AgoraChatWidget) {
-    this.minimize = this.classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass;
-
+    this.setChatMinimize(
+      this.classroomConfig.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass,
+    );
     this._disposers.push(
       reaction(
         () => this.coreStore.roomStore.chatMuted,
@@ -295,6 +296,12 @@ export class WidgetChatUIStore {
       this.minimize = true;
     }
   };
+
+  @action
+  setChatMinimize = (minimize: boolean) => {
+    this.minimize = minimize;
+  };
+
   setUI = (ui: IChatConfigUI) => {
     runInAction(() => {
       this.configUI = { ...this.configUI, ...ui };
