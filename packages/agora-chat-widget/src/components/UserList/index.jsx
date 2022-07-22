@@ -22,27 +22,27 @@ export const UserList = ({ roomUserList }) => {
     }
   };
   return (
-    <div className="user">
+    <div className="fcr-hx-user">
       {roomUserList.length > 0 &&
         roomUserList.map((item, key) => {
           const showMuteIcon = muteList && muteList.includes(item.id);
           const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
           const isAssistant = item?.ext && JSON.parse(item?.ext).role === ROLE.assistant.id;
           return (
-            <div className="user-list" key={key}>
-              <div className="user-info">
-                <img src={item?.avatarurl || avatarUrl} className="user-avatar" />
-                <span className="user-text" title={item?.nickname || item?.id}>
+            <div className="fcr-hx-user-list" key={key}>
+              <div className="fcr-hx-user-info">
+                <img src={item?.avatarurl || avatarUrl} className="fcr-hx-user-avatar" />
+                <span className="fcr-hx-user-text" title={item?.nickname || item?.id}>
                   {item?.nickname || item?.id}
                 </span>
                 {isTeacher && (
-                  <Tag className="user-tag teacher-tag">
-                    <span className="teacher-text">{transI18n('chat.teacher')}</span>
+                  <Tag className="fcr-hx-user-tag fcr-hx-teacher-tag">
+                    <span className="fcr-hx-teacher-text">{transI18n('chat.teacher')}</span>
                   </Tag>
                 )}
                 {isAssistant && (
-                  <Tag className="user-tag teacher-tag">
-                    <span className="teacher-text">{transI18n('chat.assistant')}</span>
+                  <Tag className="fcr-hx-user-tag fcr-hx-teacher-tag">
+                    <span className="fcr-hx-teacher-text">{transI18n('chat.assistant')}</span>
                   </Tag>
                 )}
               </div>
@@ -54,7 +54,7 @@ export const UserList = ({ roomUserList }) => {
                       ? `${transI18n('chat.remove_mute')}`
                       : `${transI18n('chat.mute')}`
                   }>
-                  <div className="mute-icon">
+                  <div className="fcr-hx-mute-icon">
                     <img
                       src={showMuteIcon ? muteOff : muteNo}
                       onClick={(e) => {

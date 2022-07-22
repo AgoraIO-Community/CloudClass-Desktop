@@ -6,7 +6,7 @@ import './index.css';
 
 const AllMute = () => {
   return (
-    <div className="input-box all-mute">
+    <div className="fcr-hx-input-box fcr-hx-all-mute">
       <span>{transI18n('chat.all_muted')}</span>
     </div>
   );
@@ -14,7 +14,7 @@ const AllMute = () => {
 
 const UserMute = () => {
   return (
-    <div className="input-box all-mute">
+    <div className="fcr-hx-input-box fcr-hx-all-mute">
       <span>{transI18n('chat.single_muted')}</span>
     </div>
   );
@@ -31,7 +31,7 @@ export const InputBox = () => {
   const isObserver = roleType === ROLE.observer.id;
 
   return (
-    <div className="input-box">
+    <div className="fcr-hx-input-box">
       {showInputBox && (
         <>
           {!isObserver && !isAssistant && !isTeacher && isAllMute && <AllMute />}

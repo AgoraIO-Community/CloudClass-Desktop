@@ -1,4 +1,4 @@
-.input-box {
+.fcr-hx-input-box {
   margin: 5px 0 0 0;
   width: 100%;
   background: #f9f9fc;
@@ -8,13 +8,13 @@
   bottom: 0;
 }
 
-.all-mute {
+.fcr-hx-all-mute {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.all-mute-text {
+.fcr-hx-all-mute-text {
   width: 53px;
   height: 18px;
   font-size: 13px;
@@ -25,20 +25,20 @@
   margin-right: 5px;
 }
 
-.chat-icon {
+.fcr-hx-chat-icon {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6px 12px 0;
 }
 
-.emoji-icon {
+.fcr-hx-emoji-icon {
   width: 24px;
   height: 24px;
   cursor: pointer;
 }
 
-.emoji-mask {
+.fcr-hx-emoji-mask {
   width: 100%;
   bottom: 0;
   top: 0;
@@ -51,7 +51,7 @@
   z-index: 1000;
 }
 
-.emoji-content {
+.fcr-hx-emoji-content {
   width: 20px;
   height: 20px;
   font-size: 20px;
@@ -59,7 +59,7 @@
   cursor: pointer;
 }
 
-.emoji-all {
+.fcr-hx-emoji-all {
   position: absolute;
   left: 0;
   bottom: 115px;
@@ -80,7 +80,7 @@
   user-select: none;
 }
 
-.emoji-modal {
+.fcr-hx-emoji-modal {
   user-select: none;
 }
 
@@ -95,7 +95,7 @@ textarea.input-chat {
   box-shadow: none !important;
 }
 
-.input-chat {
+.fcr-hx-input-chat {
   background: #f9f9fc !important;
   outline: none !important;
   resize: none !important;
@@ -104,25 +104,25 @@ textarea.input-chat {
   height: 70px !important;
   margin-bottom: 70px !important;
 }
-.input-chat::-webkit-input-placeholder {
+.fcr-hx-input-chat::-webkit-input-placeholder {
   position: relative;
   top: unset;
 }
 
-.input-btn {
+.fcr-hx-input-btn {
   display: flex;
   padding: 13px 8px;
   align-items: flex-end;
   flex-direction: column;
 }
-.input-btn-placeholder {
+.fcr-hx-input-btn-placeholder {
   flex: 1;
   color: #7d8798;
   font-size: 13px;
   cursor: text;
 }
 
-.send-btn {
+.fcr-hx-send-btn {
   position: absolute;
   right: 8px;
   bottom: 13px;
@@ -131,23 +131,23 @@ textarea.input-chat {
   background: #357bf6;
   border-radius: 15px !important;
 }
-.emoji-container {
+.fcr-hx-emoji-container {
   width: 212px;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
-.chat-question-container {
+.fcr-hx-chat-question-container {
   display: flex;
   font-size: 12px;
   cursor: pointer;
 }
-.chat-question-container .question-text {
+.fcr-hx-chat-question-container .question-text {
   display: flex;
   align-items: center;
   margin-left: 4px;
   color: #7b88a0;
 }
-.chat-question-container .question-text.question-selected {
+.fcr-hx-chat-question-container .question-text.question-selected {
   color: #7b88a0;
 }
