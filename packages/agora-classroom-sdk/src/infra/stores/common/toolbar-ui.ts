@@ -158,7 +158,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
               this._pastToBoard(payload.dataURL as any);
             }
             if (type === IPCMessageType.ShortCutCaptureDenied) {
-              this.shareUIStore.addToast(transI18n('toast2.screen_shot_permission_denied'), 'error');
+              this.shareUIStore.addToast(
+                transI18n('toast2.screen_shot_permission_denied'),
+                'error',
+              );
             }
           },
         ),
@@ -429,54 +432,54 @@ export class ToolbarUIStore extends EduUIStoreBase {
     const { launchApp } = this.classroomStore.extensionAppStore;
     switch (id) {
       case CabinetItemEnum.ScreenShare:
-        if (
-          AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass &&
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-        ) {
-          if (this.isScreenSharing) {
-            if (this.classroomStore.remoteControlStore.isRemoteControlling) {
-              const isTeacher =
-                EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
-              const isTeacherControlStudent =
-                this.classroomStore.remoteControlStore.isHost && isTeacher;
-              if (isTeacherControlStudent) {
-                this.classroomStore.remoteControlStore.quitControlRequest();
-              } else {
-                this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
-                this.classroomStore.mediaStore.stopScreenShareCapture();
-              }
-            } else {
-              this.classroomStore.mediaStore.stopScreenShareCapture();
-            }
-            return;
-          }
-          this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
-            onOK: (screenShareType: ScreenShareRoleType) => {
-              if (screenShareType === ScreenShareRoleType.Teacher) {
-                this.startLocalScreenShare();
-              } else {
-                const studentList = this.classroomStore.userStore.studentList;
-                if (studentList.size <= 0)
-                  return this.shareUIStore.addToast(transI18n('fcr_share_no_student'), 'warning');
-                const canControlledStudentList =
-                  this.classroomStore.remoteControlStore.canControlledStudentList;
+        // if (
+        //   AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+        //   EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass &&
+        //   EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
+        // ) {
+        //   if (this.isScreenSharing) {
+        //     if (this.classroomStore.remoteControlStore.isRemoteControlling) {
+        //       const isTeacher =
+        //         EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
+        //       const isTeacherControlStudent =
+        //         this.classroomStore.remoteControlStore.isHost && isTeacher;
+        //       if (isTeacherControlStudent) {
+        //         this.classroomStore.remoteControlStore.quitControlRequest();
+        //       } else {
+        //         this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+        //         this.classroomStore.mediaStore.stopScreenShareCapture();
+        //       }
+        //     } else {
+        //       this.classroomStore.mediaStore.stopScreenShareCapture();
+        //     }
+        //     return;
+        //   }
+        //   this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
+        //     onOK: (screenShareType: ScreenShareRoleType) => {
+        //       if (screenShareType === ScreenShareRoleType.Teacher) {
+        //         this.startLocalScreenShare();
+        //       } else {
+        //         const studentList = this.classroomStore.userStore.studentList;
+        //         if (studentList.size <= 0)
+        //           return this.shareUIStore.addToast(transI18n('fcr_share_no_student'), 'warning');
+        //         const canControlledStudentList =
+        //           this.classroomStore.remoteControlStore.canControlledStudentList;
 
-                if (canControlledStudentList.size > 0) {
-                  const { list } = iterateMap(canControlledStudentList, {
-                    onMap: (_key, item) => item,
-                  });
-                  this.classroomStore.remoteControlStore.sendControlRequst(list[0]?.userUuid);
-                } else {
-                  this.shareUIStore.addToast(transI18n('fcr_share_device_no_support'), 'warning');
-                }
-              }
-            },
-          });
-        } else {
-          this.startLocalScreenShare();
-        }
-
+        //         if (canControlledStudentList.size > 0) {
+        //           const { list } = iterateMap(canControlledStudentList, {
+        //             onMap: (_key, item) => item,
+        //           });
+        //           this.classroomStore.remoteControlStore.sendControlRequst(list[0]?.userUuid);
+        //         } else {
+        //           this.shareUIStore.addToast(transI18n('fcr_share_device_no_support'), 'warning');
+        //         }
+        //       }
+        //     },
+        //   });
+        // } else {
+        //   this.startLocalScreenShare();
+        // }
+        this.startLocalScreenShare();
         break;
       case CabinetItemEnum.Laser:
         this.setTool(id);

@@ -86,152 +86,152 @@ export class RemoteControlUIStore extends EduUIStoreBase {
   closeRemoteControlToolbar() {
     this.shareUIStore.closeWindow(WindowID.RemoteControlBar);
   }
-  onDestroy(): void {
-    if (
-      AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-      EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
-    ) {
-      this._disposers.forEach((f) => f());
-      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher)
-        this.closeRemoteControlToolbar();
-    }
-  }
-  onInstall(): void {
-    if (
-      AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-      EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
-    ) {
-      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-        this.openRemoteControlToolbar();
-        this._disposers.push(
-          reaction(
-            () => this.classroomStore.mediaStore.currentScreenShareDevice,
-            this.moveWindowToTargetScreen,
-          ),
-        );
-        this._disposers.push(
-          reaction(
-            () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
-            (isScreenSharingOrRemoteControlling) => {
-              if (!isScreenSharingOrRemoteControlling)
-                sendToRendererProcess(WindowID.RemoteControlBar, ChannelType.Message, {
-                  type: IPCMessageType.ControlStateChanged,
-                  payload: {
-                    state: ControlState.NotAllowedControlled,
-                  },
-                });
-            },
-          ),
-        );
-        this._disposers.push(
-          reaction(
-            () => ({
-              localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
-              currentScreenShareDevice: this.classroomStore.mediaStore.currentScreenShareDevice,
-            }),
-            ({ localScreenShareTrackState, currentScreenShareDevice }) => {
-              if (
-                localScreenShareTrackState === AgoraRteMediaSourceState.started &&
-                currentScreenShareDevice?.type === AGScreenShareType.Screen
-              ) {
-                this.shareUIStore.showWindow(WindowID.RemoteControlBar);
-                this.sendStudentListToRemoteControlBar();
-              } else {
-                this.shareUIStore.hideWindow(WindowID.RemoteControlBar);
-              }
-            },
-          ),
-        );
-      }
-      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
-        this._disposers.push(
-          reaction(
-            () => this.classroomStore.remoteControlStore.isHost,
-            (isHost) => {
-              if (isHost) {
-                //被授权控制老师屏幕
-                this.shareUIStore.addToast(transI18n('fcr_share_authorized_control'));
-              } else {
-                //取消授权控制老师屏幕
-                this.shareUIStore.addToast(transI18n('fcr_share_forbidden_control'), 'warning');
-              }
-            },
-          ),
-        );
-        this._disposers.push(
-          reaction(
-            () => this.classroomStore.remoteControlStore.isControlled,
-            (isControlled) => {
-              if (!isControlled) {
-                //老师取消控制学生屏幕
-                this.shareUIStore.addToast(transI18n('fcr_share_stopped_student_share'));
-              }
-            },
-          ),
-        );
-      }
+  onDestroy(): void {}
+  //   if (
+  //     AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+  //     EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
+  //   ) {
+  //     this._disposers.forEach((f) => f());
+  //     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher)
+  //       this.closeRemoteControlToolbar();
+  //   }
+  // }
+  onInstall(): void {}
+  // if (
+  //   AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+  //   EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
+  // ) {
+  // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+  // this.openRemoteControlToolbar();
+  // this._disposers.push(
+  //   reaction(
+  //     () => this.classroomStore.mediaStore.currentScreenShareDevice,
+  //     this.moveWindowToTargetScreen,
+  //   ),
+  // );
+  // this._disposers.push(
+  //   reaction(
+  //     () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
+  //     (isScreenSharingOrRemoteControlling) => {
+  //       if (!isScreenSharingOrRemoteControlling)
+  //         sendToRendererProcess(WindowID.RemoteControlBar, ChannelType.Message, {
+  //           type: IPCMessageType.ControlStateChanged,
+  //           payload: {
+  //             state: ControlState.NotAllowedControlled,
+  //           },
+  //         });
+  //     },
+  //   ),
+  // );
+  // this._disposers.push(
+  //   reaction(
+  //     () => ({
+  //       localScreenShareTrackState: this.classroomStore.mediaStore.localScreenShareTrackState,
+  //       currentScreenShareDevice: this.classroomStore.mediaStore.currentScreenShareDevice,
+  //     }),
+  //     ({ localScreenShareTrackState, currentScreenShareDevice }) => {
+  //       if (
+  //         localScreenShareTrackState === AgoraRteMediaSourceState.started &&
+  //         currentScreenShareDevice?.type === AGScreenShareType.Screen
+  //       ) {
+  //         this.shareUIStore.showWindow(WindowID.RemoteControlBar);
+  //         this.sendStudentListToRemoteControlBar();
+  //       } else {
+  //         this.shareUIStore.hideWindow(WindowID.RemoteControlBar);
+  //       }
+  //     },
+  //   ),
+  // );
+  // }
+  // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+  // this._disposers.push(
+  //   reaction(
+  //     () => this.classroomStore.remoteControlStore.isHost,
+  //     (isHost) => {
+  //       if (isHost) {
+  //         //被授权控制老师屏幕
+  //         this.shareUIStore.addToast(transI18n('fcr_share_authorized_control'));
+  //       } else {
+  //         //取消授权控制老师屏幕
+  //         this.shareUIStore.addToast(transI18n('fcr_share_forbidden_control'), 'warning');
+  //       }
+  //     },
+  //   ),
+  // );
+  // this._disposers.push(
+  //   reaction(
+  //     () => this.classroomStore.remoteControlStore.isControlled,
+  //     (isControlled) => {
+  //       if (!isControlled) {
+  //         //老师取消控制学生屏幕
+  //         this.shareUIStore.addToast(transI18n('fcr_share_stopped_student_share'));
+  //       }
+  //     },
+  //   ),
+  // );
+  // }
 
-      this._disposers.push(
-        listenChannelMessage(ChannelType.Message, async (event, message) => {
-          switch (message.type) {
-            case IPCMessageType.ControlStateChanged:
-              const payload = message.payload as { state: string };
-              if (payload.state === ControlState.NotAllowedControlled) {
-                this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
-              } else {
-                const studentUuid = payload.state as string;
-                const studentList = this.classroomStore.userStore.studentList;
-                const student = studentList.get(studentUuid);
-                if (
-                  student &&
-                  this.classroomStore.remoteControlStore.isUserSupportedRemoteControl(student)
-                ) {
-                  this.classroomStore.remoteControlStore.authorizeStudentToControl(studentUuid);
-                } else {
-                  this.shareUIStore.addToast(
-                    transI18n('fcr_share_device_not_support', { reason: student?.userName }),
-                    'warning',
-                  );
-                }
-              }
+  // this._disposers.push(
+  // listenChannelMessage(ChannelType.Message, async (event, message) => {
+  //   switch (message.type) {
+  //     case IPCMessageType.ControlStateChanged:
+  //       const payload = message.payload as { state: string };
+  //       if (payload.state === ControlState.NotAllowedControlled) {
+  //         this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+  //       } else {
+  //         const studentUuid = payload.state as string;
+  //         const studentList = this.classroomStore.userStore.studentList;
+  //         const student = studentList.get(studentUuid);
+  //         if (
+  //           student &&
+  //           this.classroomStore.remoteControlStore.isUserSupportedRemoteControl(student)
+  //         ) {
+  //           this.classroomStore.remoteControlStore.authorizeStudentToControl(studentUuid);
+  //         } else {
+  //           this.shareUIStore.addToast(
+  //             transI18n('fcr_share_device_not_support', { reason: student?.userName }),
+  //             'warning',
+  //           );
+  //         }
+  //       }
 
-              break;
-            case IPCMessageType.FetchStudentList:
-              this.sendStudentListToRemoteControlBar();
-              break;
-            case IPCMessageType.StopScreenShareAndRemoteControl:
-              this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
-              this.classroomStore.mediaStore.stopScreenShareCapture();
-              break;
-          }
-        }),
-      );
-      this._disposers.push(
-        reaction(
-          () => this.classroomStore.remoteControlStore.remoteControlResponsing,
-          (remoteControlResponsing) => {
-            if (remoteControlResponsing) {
-              this.shareUIStore.addDialog(DialogCategory.RemoteControlConfirm, {
-                onOK: () => {
-                  this.classroomStore.remoteControlStore.studentAcceptInvite();
-                },
-              });
-            } else {
-              const remoteControlConfirmDialog = this.shareUIStore.dialogQueue.find(
-                (i) => i.category === DialogCategory.RemoteControlConfirm,
-              );
-              remoteControlConfirmDialog &&
-                this.shareUIStore.removeDialog(remoteControlConfirmDialog.id);
-            }
-          },
-        ),
-      );
-      this._disposers.push(
-        reaction(
-          () => this.classroomStore.userStore.studentList.size,
-          this.sendStudentListToRemoteControlBar,
-        ),
-      );
-    }
-  }
+  //       break;
+  //     case IPCMessageType.FetchStudentList:
+  //       this.sendStudentListToRemoteControlBar();
+  //       break;
+  //     case IPCMessageType.StopScreenShareAndRemoteControl:
+  //       this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
+  //       this.classroomStore.mediaStore.stopScreenShareCapture();
+  //       break;
+  //   }
+  // }),
+  // );
+  // this._disposers.push(
+  //   reaction(
+  //     () => this.classroomStore.remoteControlStore.remoteControlResponsing,
+  //     (remoteControlResponsing) => {
+  //       if (remoteControlResponsing) {
+  //         this.shareUIStore.addDialog(DialogCategory.RemoteControlConfirm, {
+  //           onOK: () => {
+  //             this.classroomStore.remoteControlStore.studentAcceptInvite();
+  //           },
+  //         });
+  //       } else {
+  //         const remoteControlConfirmDialog = this.shareUIStore.dialogQueue.find(
+  //           (i) => i.category === DialogCategory.RemoteControlConfirm,
+  //         );
+  //         remoteControlConfirmDialog &&
+  //           this.shareUIStore.removeDialog(remoteControlConfirmDialog.id);
+  //       }
+  //     },
+  //   ),
+  // );
+  // this._disposers.push(
+  //   reaction(
+  //     () => this.classroomStore.userStore.studentList.size,
+  //     this.sendStudentListToRemoteControlBar,
+  //   ),
+  // );
+  // }
+  // }
 }
