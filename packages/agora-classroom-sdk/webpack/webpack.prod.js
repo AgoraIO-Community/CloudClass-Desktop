@@ -15,7 +15,7 @@ const { prod } = require('./utils/loaders');
 const packageJson = require('../package.json');
 const { swSrcPath = '' } = packageJson;
 const template = path.resolve(ROOT_PATH, './public/index.html');
-const entry = path.resolve(ROOT_PATH, './src/index.tsx');
+const entry = path.resolve(ROOT_PATH, './src/app/index.tsx');
 const baseConfig = require('./webpack.base');
 
 const config = {

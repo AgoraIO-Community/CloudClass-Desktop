@@ -21,19 +21,11 @@
   fill: white;
 }
 
-.svg-img > path {
-  fill: currentColor;
-}
-
-[class*='can-hover'] {
-  border-radius: 50%;
+.can-hover {
   cursor: pointer;
+  border-radius: 50%;
 }
 
-[class*='can-hover']:hover {
-  background-color: #f0f0f7;
+.can-hover:hover {
+  @apply bg-icon-selected-color;
 }
-
-/* [class*='can-hover']:hover > path{
-    
-} */

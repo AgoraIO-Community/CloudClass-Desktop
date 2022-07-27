@@ -1,9 +1,9 @@
-import React, { useCallback, FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
-import { transI18n } from '~components/i18n';
-import { SvgImg, SvgIcon } from '~components/svg-img';
+import { SvgImg, SvgIcon, SvgIconEnum } from '~components/svg-img';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 
 export interface SliceItem {
   id: string;
@@ -28,7 +28,7 @@ export const Slice: FC<SliceProps> = ({ label, slicersList = [], onClick }) => {
         <div
           className={`slice-item`}
           key={item.id}
-          onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
+          onClick={item.disabled ? () => { } : () => handleClick(item.id)}>
           <div className="slice-item-icon">{item.icon}</div>
           {item.name}
         </div>
@@ -43,8 +43,12 @@ export const Slice: FC<SliceProps> = ({ label, slicersList = [], onClick }) => {
         content={content}
         placement="left">
         <div className="tool">
-          <SvgIcon type="slice" canHover hoverType={'slice'} />
-          <SvgImg size={6} type="triangle-down" className="triangle-icon" />
+          <SvgIcon
+            type={SvgIconEnum.SLICE}
+            hoverType={SvgIconEnum.SLICE}
+            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+          />
+          <SvgImg size={6} type={SvgIconEnum.TRIANGLE_DOWN} className="triangle-icon" />
         </div>
       </Popover>
     </Tooltip>

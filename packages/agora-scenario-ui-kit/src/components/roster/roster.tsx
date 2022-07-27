@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useMemo } from 'react';
 import { Rnd } from 'react-rnd';
 import { Search } from '../input';
-import { SvgImg } from '../svg-img';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 import { Col, Table, TableHeader } from '../table';
 import { CarouselSetting } from './carousel-setting';
 import { RosterProps } from './';
@@ -73,7 +73,7 @@ export const Roster: FC<RosterProps> = ({
           {/* close icon */}
           <div className="btn-pin">
             <SvgImg
-              type="close"
+              type={SvgIconEnum.CLOSE}
               className="cursor-pointer"
               onClick={() => {
                 setOpened(false);
@@ -105,7 +105,7 @@ export const Roster: FC<RosterProps> = ({
                   <Search
                     value={keyword}
                     onSearch={onKeywordChange}
-                    prefix={<SvgImg type="search" />}
+                    prefix={<SvgImg type={SvgIconEnum.SEARCH} />}
                     inputPrefixWidth={32}
                     placeholder={transI18n('scaffold.search')}
                   />
@@ -124,12 +124,12 @@ export const Roster: FC<RosterProps> = ({
                       style={
                         width
                           ? {
-                              paddingLeft: isFirstColumn ? 25 : 0,
-                              flex: isFirstColumn ? '0 1 auto' : 1,
-                            }
+                            paddingLeft: isFirstColumn ? 25 : 0,
+                            flex: isFirstColumn ? '0 1 auto' : 1,
+                          }
                           : {
-                              paddingLeft: isFirstColumn ? 25 : 0,
-                            }
+                            paddingLeft: isFirstColumn ? 25 : 0,
+                          }
                       }>
                       {transI18n(name)}
                     </Col>

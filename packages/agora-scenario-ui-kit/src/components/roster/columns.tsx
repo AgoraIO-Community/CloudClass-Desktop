@@ -1,20 +1,22 @@
 import classNames from 'classnames';
-import { DeviceState, SvgImg } from '..';
-import { Column, Profile, cameraIconType, microphoneIconType, BoardGrantIconType } from './index';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { DeviceState, SvgIconEnum, SvgImg } from '..';
+import { IconWithState } from '../util/type';
+import { Column, Profile, cameraIconType, microphoneIconType, BoardGrantIconType, BoardGrantState } from './index';
 
 const Icon = ({
   type,
   canClick = true,
   children,
 }: {
-  type: string;
+  type: IconWithState;
   canClick?: boolean;
   children?: React.ReactNode;
 }) => {
   const cls = classNames('w-full h-full flex justify-center items-center', canClick && 'clickable');
   return (
     <div className={cls}>
-      <SvgImg type={type} />
+      <SvgImg type={type.icon} colors={{ iconPrimary: type.color }} />
       {children}
     </div>
   );
@@ -76,7 +78,7 @@ export const podiumColumn: Column = {
   operation: 'podium',
   render: (profile: Profile, hovered) => {
     const isActive = profile.isOnPodium;
-    const iconType = isActive || hovered ? 'on-podium' : 'not-on-podium';
+    const iconType = isActive || hovered ? { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.allow } : { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.half };
 
     return <Icon type={iconType} />;
   },
@@ -89,6 +91,10 @@ export const grantBoardColumn: Column = {
   operation: 'grant-board',
   render: (profile: Profile, hovered) => {
     const iconType = BoardGrantIconType[profile.boardGrantState];
+    const isActive = profile.boardGrantState === BoardGrantState.Granted;
+
+    iconType.color = isActive || hovered ? InteractionStateColors.allow : InteractionStateColors.half;
+
     return <Icon type={iconType} />;
   },
 };
@@ -100,9 +106,9 @@ export const starsColumn: Column = {
   operation: 'star',
   render: (profile: Profile, hovered) => {
     return (
-      <Icon type={hovered ? 'reward-hover' : 'reward'}>
+      <Icon type={hovered ? { icon: SvgIconEnum.REWARD, color: InteractionStateColors.allow } : { icon: SvgIconEnum.REWARD, color: InteractionStateColors.half }} >
         <span className="star-nums">&nbsp;x{profile.stars}</span>
-      </Icon>
+      </Icon >
     );
   },
 };
@@ -113,7 +119,7 @@ export const kickOutColumn: Column = {
   name: 'roster.kick',
   operation: 'kick',
   render: (profile: Profile, hovered) => {
-    return <Icon type={hovered ? 'kick-out-hover' : 'kick-out'} />;
+    return <Icon type={hovered ? { icon: SvgIconEnum.KICK_OUT, color: InteractionStateColors.allow } : { icon: SvgIconEnum.KICK_OUT, color: InteractionStateColors.half }} />;
   },
 };
 
@@ -123,6 +129,6 @@ export const superviseColumn: Column = {
   name: 'roster.supervise_student',
   operation: 'supervise-student',
   render: (profile: Profile, hovered) => {
-    return <Icon type={'triangle'} />;
+    return <Icon type={{ icon: SvgIconEnum.TRIANGLE, }} />;
   },
 };

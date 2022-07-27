@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/util/type';
 import './index.css';
-import { SvgImg } from '../svg-img';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 import { OverlayWrap } from '../overlay-wrap';
 export interface ModalProps extends BaseProps {
   /** 标题 */
@@ -108,7 +108,7 @@ export const Modal: ModalType = ({
                   triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
-                <SvgImg type="close" size={20} style={{ color: '#7B88A0' }} />
+                <SvgImg type={SvgIconEnum.CLOSE} size={20} style={{ color: '#7B88A0' }} />
               </div>
             ) : (
               ''
@@ -125,7 +125,7 @@ export const Modal: ModalType = ({
                   triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
-                <SvgImg type="close-arrow" size={20} style={{ color: '#7B88A0' }} />
+                <SvgImg type={SvgIconEnum.TRIANGLE_SOLID1} size={20} style={{ color: '#7B88A0' }} />
               </div>
             ) : (
               ''
@@ -141,7 +141,7 @@ export const Modal: ModalType = ({
                 triggerModalAction({ action: 'cancel', event: e });
                 setOpened(false);
               }}>
-              <SvgImg type="backward" style={{ color: '#7B88A0' }} />
+              <SvgImg type={SvgIconEnum.BACKWARD} style={{ color: '#7B88A0' }} />
             </div>
             <div className="back-title">{title}</div>
             <div></div>

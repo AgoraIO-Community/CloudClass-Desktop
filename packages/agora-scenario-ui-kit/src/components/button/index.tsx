@@ -1,6 +1,6 @@
 import { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '../util/type';
 import './index.css';
 
 type ButtonType = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -61,8 +61,9 @@ export const Button: FC<ButtonProps> = ({
     };
   }, []);
   return (
-    <button ref={buttonRef} className={cls} disabled={disabled} {...restProps}>
+    <button ref={buttonRef} className={`${cls} group`} disabled={disabled} {...restProps}>
       {animate ? <div className="fcr-btn-ripple" ref={rippleRef}></div> : null}
+      <div className="absolute top-0 left-0 w-full h-full z-0 bg-black opacity-0 group-hover:opacity-10 focus:opacity-20"></div>
       <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
     </button>
   );

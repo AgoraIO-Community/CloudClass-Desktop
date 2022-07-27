@@ -14,7 +14,7 @@ const App = observer(({ widget }: { widget: AgoraCountdown }) => {
   const [caution, setCaution] = React.useState(false);
 
   const handleSetting = () => {
-    const { x, y } = widget.track.ratioVal.ratioPosition
+    const { x, y } = widget.track.ratioVal.ratioPosition;
     widget.setActive({
       extra: {
         state: 1,
@@ -95,26 +95,22 @@ const App = observer(({ widget }: { widget: AgoraCountdown }) => {
               }}
               suffix={
                 <span
-                  style={{
-                    color:
-                      pluginStore.number != null &&
-                        pluginStore.number <= 3600 &&
-                        pluginStore.number >= 1
-                        ? '#333'
-                        : '#F04C36',
-                  }}>
+                  className={`${
+                    pluginStore.number != null &&
+                    pluginStore.number <= 3600 &&
+                    pluginStore.number >= 1
+                      ? 'count-input-color-normal'
+                      : 'count-input-color-error'
+                  }`}>
                   ({transI18n('widget_countdown.seconds')})
                 </span>
               }
+              className={`${
+                pluginStore.number != null && pluginStore.number <= 3600 && pluginStore.number >= 1
+                  ? 'count-input-color-normal'
+                  : 'count-input-color-error'
+              }`}
               maxNumber={3600}
-              style={{
-                color:
-                  pluginStore.number != null &&
-                    pluginStore.number <= 3600 &&
-                    pluginStore.number >= 1
-                    ? '#333'
-                    : '#F04C36',
-              }}
             />
           </div>
           <Button

@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import classnames from 'classnames';
 import './index.css';
-import { SvgImg } from '..';
+import { SvgIconEnum, SvgImg } from '..';
 
 type InputNumberProps = {
   min: number;
@@ -55,14 +55,14 @@ export const InputNumber: FC<InputNumberProps> = ({ min, max, value = 0, onChang
           onClick={() => {
             handleChange(value + 1);
           }}>
-          <SvgImg type="triangle-solid1" size={14} color="#3f5c8f" />
+          <SvgImg type={SvgIconEnum.TRIANGLE_SOLID1} size={14} colors={{ iconPrimary: "#3f5c8f" }} />
         </div>
         <div
           className={subClsn}
           onClick={() => {
             handleChange(value - 1);
           }}>
-          <SvgImg type="triangle-solid2" size={14} color="#3f5c8f" />
+          <SvgImg type={SvgIconEnum.TRIANGLE_SOLID2} size={14} colors={{ iconPrimary: "#3f5c8f" }} />
         </div>
       </div>
     </div>

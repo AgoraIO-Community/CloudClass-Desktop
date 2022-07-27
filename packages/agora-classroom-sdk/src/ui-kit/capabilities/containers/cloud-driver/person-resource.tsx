@@ -21,6 +21,7 @@ import {
   Popover,
   UploadItem,
   Input,
+  SvgIconEnum,
 } from '~ui-kit';
 import CloudToolbar from './cloud-toolbar';
 import CloudMinimize from './cloud-minimize';
@@ -292,7 +293,7 @@ export const PersonalResourcesContainer = observer(() => {
                         color: FileTypeSvgColor[fileNameToType(resourceName)],
                       }}
                     />
-                    <Inline className="filename" color="#191919" title={resourceName}>
+                    <Inline className="filename" title={resourceName}>
                       <span
                         dangerouslySetInnerHTML={{
                           __html: searchPersonalResourcesKeyword
@@ -327,7 +328,7 @@ export const PersonalResourcesContainer = observer(() => {
                       }
                       placement={'bottom'}>
                       <span>
-                        <SvgImg type="cloud-more" style={{ cursor: 'pointer' }} canHover />
+                        <SvgImg type={SvgIconEnum.CLOUD_MORE} style={{ cursor: 'pointer' }} />
                       </span>
                     </Popover>
                   </Col>

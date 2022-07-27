@@ -1,11 +1,8 @@
 import classnames from 'classnames';
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import { SvgImg } from '~components/svg-img';
+import { FC, useEffect, useState } from 'react';
+import { SvgIconEnum, SvgImg } from '~components/svg-img';
 import { Affix, AffixProps } from '../affix';
 import { transI18n } from '../i18n';
-import chatMinBtn from '../icon/assets/svg/chat-min-btn.svg';
-import backBtn from '../icon/assets/svg/conversation-back.svg';
-//@ts-ignore
 import { TabPane, Tabs } from '../tabs';
 import { ChatList } from './chat-list';
 import { ChatMin } from './chat-min';
@@ -130,7 +127,7 @@ export const SimpleChatNew: FC<ChatProps> = ({
             ) : null}
             {showCloseIcon ? (
               <span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
-                <img src={chatMinBtn} />
+                <SvgImg type={SvgIconEnum.CHAT} />
               </span>
             ) : null}
           </span>
@@ -139,7 +136,7 @@ export const SimpleChatNew: FC<ChatProps> = ({
         {!canChatting ? (
           <div className="chat-notice-msg">
             <span>
-              <SvgImg type="red-caution" />
+              <SvgImg type={SvgIconEnum.RED_CAUTION} />
               <span>{transI18n('placeholder.enable_chat_muted')}</span>
             </span>
           </div>
@@ -226,7 +223,7 @@ export const ChatNew: FC<ChatProps> = ({
             ) : null}
             {showCloseIcon ? (
               <span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
-                <img src={chatMinBtn} />
+                <SvgImg type={SvgIconEnum.CHAT} />
               </span>
             ) : null}
           </span>
@@ -258,7 +255,7 @@ export const ChatNew: FC<ChatProps> = ({
             {!canChatting ? (
               <div className="chat-notice-msg with-tab">
                 <span>
-                  <SvgImg type="red-caution" />
+                  <SvgImg type={SvgIconEnum.RED_CAUTION} />
                   <span>{transI18n('placeholder.enable_chat_muted')}</span>
                 </span>
               </div>
@@ -318,7 +315,7 @@ export const ChatNew: FC<ChatProps> = ({
                         setActiveConversation(undefined);
                         onChangeActiveTab && onChangeActiveTab('conversation-list', undefined);
                       }}>
-                      <img src={backBtn} />
+                      <SvgImg type={SvgIconEnum.BACKWARD} />
                     </div>
                     <div className="avatar"></div>
                     <div className="name">{activeConversation.userName}</div>

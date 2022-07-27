@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, useMemo } from 'react';
 import { BaseWaveArmProps } from './types';
-import { Card, SvgImg } from '~components';
+import { Card, SvgIconEnum, SvgImg } from '~components';
 import { transI18n } from '~ui-kit';
 import { useInterval } from '@/infra/hooks/utilites';
 import { Scheduler } from 'agora-rte-sdk';
@@ -218,7 +218,7 @@ export const WaveArmSender: FC<BaseWaveArmProps> = observer(({ isH5, isOnPodium,
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}>
       {!countDownNum ? (
-        <SvgImg type="hands-up-before" size={24} />
+        <SvgImg type={SvgIconEnum.HANDS_UP_ACTIVE} size={24} />
       ) : (
         <div className="hands-up-ing">{countDownNum}</div>
       )}

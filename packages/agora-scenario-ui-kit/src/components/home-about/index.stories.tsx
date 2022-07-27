@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Modal } from '~components/modal';
-import { HomeAbout, Disclaimer } from '~components/home-about';
+import { Modal } from '../modal';
+import { HomeAbout, Disclaimer } from '.';
 
 const meta: Meta = {
   title: 'Components/HomeAbout',

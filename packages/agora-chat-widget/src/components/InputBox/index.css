@@ -1,9 +1,8 @@
 .input-box {
+  @apply bg-component border-divider border border-solid;
   margin: 5px 0 0 0;
   width: 100%;
-  background: #f9f9fc;
   border-radius: 6px 6px 4px 4px;
-  border: 1px solid #ececf1;
   position: absolute;
   bottom: 0;
 }
@@ -95,8 +94,8 @@ textarea.input-chat {
   box-shadow: none !important;
 }
 
-.input-chat {
-  background: #f9f9fc !important;
+.input-box .input-chat {
+  @apply bg-component;
   outline: none !important;
   resize: none !important;
   border: none !important;
@@ -130,6 +129,12 @@ textarea.input-chat {
   height: 30px !important;
   background: #357bf6;
   border-radius: 15px !important;
+}
+.chat-icon-popover .ant-popover-inner {
+  @apply bg-component;
+}
+.chat-icon-popover .ant-popover-arrow {
+  @apply border-component !important;
 }
 .emoji-container {
   width: 212px;

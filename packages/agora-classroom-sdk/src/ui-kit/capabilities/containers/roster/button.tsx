@@ -2,7 +2,7 @@ import { useStore } from '@/infra/hooks/ui-store';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
 import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { useState, FC } from 'react';
-import { Card, SvgImg } from '~ui-kit';
+import { Card, SvgIconEnum, SvgImg } from '~ui-kit';
 
 export const MidRosterBtn = () => <RosterBtn />;
 
@@ -15,7 +15,7 @@ export const BigRosterBtn = () => {
 };
 
 const RosterBtn: FC<{ isLectureRoster?: boolean }> = ({ isLectureRoster = false }) => {
-  const REGISTER_TYPE = 'register',
+  const
     SIZE = 40,
     ICON_SIZE = 28;
   const uiStore = useStore();
@@ -39,7 +39,7 @@ const RosterBtn: FC<{ isLectureRoster?: boolean }> = ({ isLectureRoster = false 
       borderRadius={SIZE}
       className={isActive ? 'roster-btn-active' : 'roster-btn'}>
       <SvgImg
-        type={REGISTER_TYPE}
+        type={SvgIconEnum.REGISTER}
         onClick={handleClick}
         size={ICON_SIZE}
         style={{ cursor: 'pointer' }}

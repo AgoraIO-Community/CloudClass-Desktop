@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Meta } from '@storybook/react';
-import { Volume, AudioVolume } from '~components/volume';
+import { Volume, AudioVolume } from '../volume';
 
 const meta: Meta = {
   title: 'Components/Volume',

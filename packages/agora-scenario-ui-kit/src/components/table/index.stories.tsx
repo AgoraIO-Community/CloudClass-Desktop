@@ -1,15 +1,14 @@
 import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
 import React, { useCallback, useMemo } from 'react';
-import { Button, Modal } from '~components';
-import { Icon, IconBox } from '~components/icon';
-import { Col, Inline, Row, Table, TableHeader } from '~components/table';
-import { Progress } from '~components/progress';
-import { formatFileSize } from '~utilities';
-import { Tabs, TabPane } from '~components/tabs';
-import { Placeholder } from '~components/placeholder';
-import { Loading } from '~components/loading';
-import { CheckBox } from '~components/checkbox';
+import { Button, Modal } from '..';
+import { Col, Inline, Row, Table, TableHeader } from '.';
+import { Progress } from '../progress';
+import { Tabs, TabPane } from '../tabs';
+import { Placeholder } from '../placeholder';
+import { Loading } from '../loading';
+import { CheckBox } from '../checkbox';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -97,8 +96,6 @@ export type CloudStorageProps = {
 
 export const CloudStorage = ({ size }: CloudStorageProps) => {
   const itemList = resizeList(list, size);
-  // itemList.length = 0;
-  // console.log(itemList)
 
   return (
     <Table>
@@ -112,11 +109,11 @@ export const CloudStorage = ({ size }: CloudStorageProps) => {
           itemList.map(({ name, progress, date, type }: any, idx: number) => (
             <Row height={10} border={1} key={idx}>
               <Col>
-                <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                <SvgImg type={type} style={{ marginRight: 6 }} />
                 <Inline color="#191919">{name}</Inline>
               </Col>
               <Col>
-                <Inline color="#586376">{formatFileSize(size)}</Inline>
+                <Inline color="#586376">{size}</Inline>
               </Col>
               <Col>
                 <Inline color="#586376">{date}</Inline>
@@ -164,7 +161,7 @@ export const UploadList = ({ size, progress }: UploadListProps) => {
           itemList.map(({ name, progress, type }: any, idx: number) => (
             <Row height={10} border={1} key={idx}>
               <Col>
-                <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                <SvgImg type={type} style={{ marginRight: 6 }} />
                 <Inline color="#191919">{name}</Inline>
               </Col>
               <Col>
@@ -273,14 +270,14 @@ const CheckList = ({ size, progress }: UploadListProps) => {
                   checked={checked}></CheckBox>
               </Col>
               <Col>
-                <IconBox iconType={type} style={{ marginRight: '6px' }} />
+                <SvgImg type={type} style={{ marginRight: 6 }} />
                 <Inline color="#191919">{name}</Inline>
               </Col>
               {/* <Col>
               <div style={{width: 30}}></div>
             </Col> */}
               <Col>
-                <Inline color="#586376">{formatFileSize(size)}</Inline>
+                <Inline color="#586376">{size}</Inline>
               </Col>
               <Col>
                 <Inline color="#586376">{date}</Inline>
@@ -316,7 +313,7 @@ export const CourseWareManager = ({
   return (
     <div className="agora-board-resources">
       <div className="btn-pin">
-        <Icon type="close" hover onClick={onCancel}></Icon>
+        <SvgImg type={SvgIconEnum.CLOSE} onClick={onCancel} />
       </div>
       <Tabs defaultActiveKey="2" onChange={handleChange}>
         <TabPane tab="公共资源" key="1">
@@ -339,20 +336,6 @@ export const CourseWareManager = ({
             <Loading
               hasLoadingGif={false}
               uploadItemList={[
-                {
-                  iconType: 'format-pdf',
-                  fileName: 'pdf文件33333333',
-                  fileSize: '1.3M',
-                  uploadComplete: false,
-                  currentProgress: 50,
-                },
-                {
-                  iconType: 'format-ppt',
-                  fileName: 'ppt文件',
-                  fileSize: '1.3M',
-                  uploadComplete: false,
-                  currentProgress: 50,
-                },
               ]}
             />
           </Modal>

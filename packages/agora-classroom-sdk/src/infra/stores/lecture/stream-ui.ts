@@ -111,6 +111,10 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
     return ['reward', 'grant'];
   }
 
+  get toolbarPlacement(): 'left' | 'bottom' {
+    return 'bottom';
+  }
+
   onInstall(): void {
     super.onInstall();
     this._disposers.push(

@@ -1,8 +1,8 @@
 import { FC, useCallback, useRef } from 'react';
 import classnames from 'classnames';
+import { SvgImg, SvgIconEnum } from '~ui-kit';
 import { AutoSizer } from 'react-virtualized';
 import './widget-modal.css';
-import { SvgImg } from '../svg-img';
 
 type WidgetModalProps = {
   title: string;
@@ -56,12 +56,12 @@ export const WidgetModal: FC<WidgetModalProps> = ({
         <div className="modal-action-group">
           {showRefresh ? (
             <div className="modal-title-action" onClick={onReload}>
-              <SvgImg type="cloud-refresh" size={20} style={{ color: '#586376' }} />
+              <SvgImg type={SvgIconEnum.CLOUD_REFRESH} size={20} style={{ color: '#586376' }} />
             </div>
           ) : null}
           {showFullscreen ? (
             <div className="modal-title-action" onClick={onFullScreen}>
-              <SvgImg type="fullscreen" size={20} style={{ color: '#586376' }} />
+              <SvgImg type={SvgIconEnum.FULLSCREEN} size={20} style={{ color: '#586376' }} />
             </div>
           ) : null}
           {closable ? (
@@ -72,7 +72,7 @@ export const WidgetModal: FC<WidgetModalProps> = ({
                 e.stopPropagation();
                 onCancel();
               }}>
-              <SvgImg type="close" size={20} style={{ color: '#586376' }} />
+              <SvgImg type={SvgIconEnum.CLOSE} size={20} style={{ color: '#586376' }} />
             </div>
           ) : null}
         </div>

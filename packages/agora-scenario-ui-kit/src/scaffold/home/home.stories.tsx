@@ -43,6 +43,10 @@ export const HomePage = () => {
 
   return (
     <Home
+      SDKVersion=""
+      buildTime={''}
+      commitID={''}
+      loading={false}
       version="1.1.0"
       roomId={roomId}
       userName={userName}

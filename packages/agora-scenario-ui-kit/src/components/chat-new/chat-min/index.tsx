@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '../../../components/interface/base-props';
-import { Icon, SvgImg } from '../../../components';
+import { BaseProps } from '../../../components/util/type';
+import { SvgImg, SvgIconEnum } from '../../../components';
 import './index.css';
 
 export interface ChatMinProps extends BaseProps {
@@ -22,7 +22,7 @@ export const ChatMin: FC<ChatMinProps> = ({
   return (
     <div className={cls} onClick={() => onClick && onClick()} {...restProps}>
       <SvgImg
-        type="chat"
+        type={SvgIconEnum.CHAT}
         style={{
           color: '#7B88A0',
         }}

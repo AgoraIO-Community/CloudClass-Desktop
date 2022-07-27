@@ -11,9 +11,9 @@
 .setting .device-title,
 .setting .device-text,
 .setting .beauty-text {
+  @apply text-level1;
   font-size: 12px;
   font-weight: 400;
-  color: #586376;
   margin-bottom: 10px;
 }
 
@@ -41,7 +41,7 @@
 }
 .beauty-desc,
 .device-desc {
-  color: #191919;
+  @apply text-level1;
 }
 
 input[name='device-selection'] {

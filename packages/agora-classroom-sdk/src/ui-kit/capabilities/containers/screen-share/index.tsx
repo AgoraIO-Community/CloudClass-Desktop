@@ -4,7 +4,7 @@ import { useStore } from '@/infra/hooks/ui-store';
 import { EduStream } from 'agora-edu-core';
 import classnames from 'classnames';
 import './index.css';
-import { SvgImg, transI18n } from '~ui-kit';
+import { SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
 import { AGRenderMode } from 'agora-rte-sdk';
 
 const ScreenShareLocalTrackPlayer = observer(() => {
@@ -12,15 +12,15 @@ const ScreenShareLocalTrackPlayer = observer(() => {
     streamUIStore: { stopScreenShareCapture, localScreenShareOff },
   } = useStore();
 
-  const [icon, setIcon] = useState<string>('share-default');
+  const [icon, setIcon] = useState(SvgIconEnum.SHARE_DEFAULT);
 
   return localScreenShareOff ? null : (
     <div style={{ width: 108, height: 30 }}>
       <button
         className="stop-button"
         onClick={stopScreenShareCapture}
-        onMouseEnter={() => setIcon('share-hover')}
-        onMouseLeave={() => setIcon('share-default')}>
+        onMouseEnter={() => setIcon(SvgIconEnum.SHARE_HOVER)}
+        onMouseLeave={() => setIcon(SvgIconEnum.SHARE_DEFAULT)}>
         <SvgImg type={icon} style={{ display: 'flex', marginRight: 2 }} />
         <span>{transI18n('scaffold.stop_screen_share')}</span>
       </button>

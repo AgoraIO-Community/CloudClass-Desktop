@@ -1,9 +1,8 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useI18n } from '../i18n';
 import { Select } from '../select';
-import { SvgImg } from '../svg-img';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
-
 
 type UserStruct = {
   userUuid: string;
@@ -40,7 +39,7 @@ export const RemoteControlActionBar: FC<IPropsTypes> = (props) => {
       </div>
       <div className="divide"></div>
       <div className="close-btn" onClick={onClose}>
-        <SvgImg type={'close'} size={26} color={'#586376'} />
+        <SvgImg type={SvgIconEnum.CLOSE} size={26} colors={{ iconPrimary: "#586376" }} />
       </div>
     </div>
   );

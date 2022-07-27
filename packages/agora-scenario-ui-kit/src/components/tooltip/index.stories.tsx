@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import { Meta } from '@storybook/react';
-import { Button } from '~components/button';
-import { Tooltip, TooltipProps } from '~components/tooltip';
-import { SvgImg } from '~components/svg-img';
-import { Icon } from '~components/icon';
+import { Button } from '../button';
+import { Tooltip, TooltipProps } from './';
+import { SvgIcon, SvgIconEnum, SvgImg } from '../svg-img';
 
 const meta: Meta = {
   title: 'Components/Tooltip',
@@ -22,7 +21,7 @@ export const Docs: FC<TooltipProps> = (props) => {
 
       <Tooltip {...props}>
         <span>
-          <SvgImg type="close" canHover />
+          <SvgImg type={SvgIconEnum.CLOSE} />
         </span>
       </Tooltip>
 
@@ -31,7 +30,7 @@ export const Docs: FC<TooltipProps> = (props) => {
       </Tooltip>
 
       <Tooltip {...props}>
-        <Icon type="close" />
+        <SvgImg type={SvgIconEnum.CLOSE} />
       </Tooltip>
     </>
   );

@@ -1,4 +1,5 @@
 import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { SvgIconEnum } from '~ui-kit';
 import { BoardUIStore } from '../common/board-ui';
 
 export class LectureH5BoardUIStore extends BoardUIStore {
@@ -30,9 +31,9 @@ export class LectureH5BoardUIStore extends BoardUIStore {
   @computed
   get iconBorderZoomType() {
     if (this.borderZoomStatus === 'zoom-out') {
-      return 'zoom-out-gray';
+      return SvgIconEnum.ZOOM_OUT;
     }
-    return 'zoom-in-gray';
+    return SvgIconEnum.ZOOM_IN;
   }
 
   @computed

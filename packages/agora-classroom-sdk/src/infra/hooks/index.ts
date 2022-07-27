@@ -1,4 +1,4 @@
-import { HomeStore } from '@/infra/stores/home';
+import { HomeStore } from '@/app/stores/home';
 import { MobXProviderContext } from 'mobx-react';
 import React from 'react';
 import { useContext, DependencyList, useMemo } from 'react';

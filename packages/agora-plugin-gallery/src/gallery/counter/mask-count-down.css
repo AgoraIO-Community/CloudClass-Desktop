@@ -23,3 +23,9 @@
   border-color: transparent !important;
   color: #fff !important;
 }
+.count-input-color-normal {
+  @apply text-level1;
+}
+.count-input-color-error {
+  @apply text-error;
+}

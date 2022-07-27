@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '../interface/base-props';
+import { BaseProps } from '../util/type';
 import './index.css';
 
-export interface RootBoxProps extends BaseProps {}
+export interface RootBoxProps extends BaseProps { }
 
 export const RootBox: FC<RootBoxProps> = ({ children, className, ...restProps }) => {
   const cls = classnames({

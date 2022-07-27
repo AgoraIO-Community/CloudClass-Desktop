@@ -33,7 +33,7 @@
 }
 
 .table-row-item.table-header .table-col-item {
-  color: #7b88a0;
+  @apply text-level2;
 }
 
 .invite-table-wrap .table-row-item {
@@ -48,7 +48,7 @@
 }
 
 .invite-table-wrap .table-row-item:hover {
-  background-color: #f9f9fc;
+  @apply bg-icon-selected-hover-color;
 }
 
 .invite-table-wrap .table-row-item .table-col-item:last-child {

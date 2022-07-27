@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { FC, useMemo, useState } from 'react';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { Button, Modal, SvgImg, useI18n } from '~ui-kit';
+import { BaseProps } from '~ui-kit/components/util/type';
+import { Button, Modal, SvgIconEnum, SvgImg, useI18n } from '~ui-kit';
 import './index.css';
 import { useStore } from '@/infra/hooks/ui-store';
 import { AGScreenShareDevice } from 'agora-rte-sdk';
@@ -115,7 +115,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   }></div>
                 <div className="program-item-title">
                   {item.id === currentActiveId ? (
-                    <SvgImg type="checked" size={16} style={{ color: '#357BF6' }} />
+                    <SvgImg type={SvgIconEnum.CHECKED} size={16} style={{ color: '#357BF6' }} />
                   ) : (
                     ''
                   )}
@@ -149,7 +149,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   }></div>
                 <div className="program-item-title">
                   {item.id === currentActiveId ? (
-                    <SvgImg type="checked" size={16} style={{ color: '#357BF6' }} />
+                    <SvgImg type={SvgIconEnum.CHECKED} size={16} style={{ color: '#357BF6' }} />
                   ) : (
                     ''
                   )}

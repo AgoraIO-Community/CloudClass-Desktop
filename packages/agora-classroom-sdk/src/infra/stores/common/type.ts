@@ -134,6 +134,13 @@ export enum ToolbarItemCategory {
   Cabinet,
   Eraser,
   Slice,
+  Roster,
+  Text,
+  Clicker,
+  Selector,
+  CloudStorage,
+  Save,
+  Hand,
 }
 
 export enum CabinetItemEnum {
@@ -154,7 +161,7 @@ export class ToolbarItem {
     value: string;
     label: string;
     icon: string;
-    category?: ToolbarItemCategory;
+    category: ToolbarItemCategory;
     className?: string;
   }) {
     return new ToolbarItem(data.icon, data.value, data.label, data.category, data.className);
@@ -163,14 +170,14 @@ export class ToolbarItem {
   value: string;
   label: string;
   icon: string;
-  category?: ToolbarItemCategory;
+  category: ToolbarItemCategory;
   className?: string;
 
   constructor(
     icon: string,
     value: string,
     label: string,
-    category?: ToolbarItemCategory,
+    category: ToolbarItemCategory,
     className?: string,
   ) {
     this.value = value;

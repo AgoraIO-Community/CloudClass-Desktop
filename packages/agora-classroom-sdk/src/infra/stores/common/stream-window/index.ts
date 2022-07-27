@@ -1,5 +1,5 @@
 import { EduUIStoreBase } from '../base';
-import { EduStreamUI, StreamBounds } from '../stream/struct';
+import { StreamBounds } from '../stream/struct';
 import { action, computed, IReactionDisposer, observable, reaction, Lambda } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { cloneDeep, forEach } from 'lodash';
@@ -8,6 +8,7 @@ import {
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
+  EduStream,
   RteRole2EduRole,
 } from 'agora-edu-core';
 import {
@@ -33,6 +34,7 @@ import {
   isNum,
 } from './helper';
 import { transI18n } from '~ui-kit';
+import { extractUserStreams } from '@/infra/utils/extract';
 
 const SCALE = 0.5; // 大窗口默认与显示区域的比例
 const ZINDEX = 2; // 大窗口默认的层级
@@ -147,24 +149,18 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 老师流信息列表
+   * 老师流信息
    * @returns
    */
   @computed
-  get teacherStream(): EduStreamUI {
-    const streamSet = new Set<EduStreamUI>();
-    const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
+  private get _teacherStream(): EduStream {
+    const { teacherList } = this.classroomStore.userStore;
 
-    const streamUuids = this.classroomStore.streamStore.streamByUserUuid.get(userUuid) || new Set();
-    for (const streamUuid of streamUuids) {
-      const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-      if (stream) {
-        const uiStream = new EduStreamUI(stream);
-        streamSet.add(uiStream);
-      }
-    }
+    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
 
-    return Array.from(streamSet)[0];
+    const streams = extractUserStreams(teacherList, streamByUserUuid, streamByStreamUuid);
+
+    return Array.from(streams)[0];
   }
 
   /**
@@ -172,21 +168,14 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed
-  get studentStreams(): EduStreamUI[] {
-    const streamSet = new Set<EduStreamUI>();
-    const studentList = this.classroomStore.userStore.studentList;
-    for (const student of studentList.values()) {
-      const streamUuids =
-        this.classroomStore.streamStore.streamByUserUuid.get(student.userUuid) || new Set();
-      for (const streamUuid of streamUuids) {
-        const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-        if (stream) {
-          const uiStream = new EduStreamUI(stream);
-          streamSet.add(uiStream);
-        }
-      }
-    }
-    return Array.from(streamSet);
+  private get _studentStreams(): EduStream[] {
+    const { studentList } = this.classroomStore.userStore;
+
+    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
+
+    const streams = extractUserStreams(studentList, streamByUserUuid, streamByStreamUuid);
+
+    return Array.from(streams);
   }
   /**
    * big streamwindows 大窗口
@@ -195,21 +184,10 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   get streamWindowUserUuids() {
     return [...this.streamWindowMap.values()].map((item) => item.userUuid);
   }
-  /**
-   * 获取当前选中的流
-   */
+
   @computed
-  get streamWindowStreams() {
-    const streams = new Map();
-    const streamUuids = [...this.streamWindowMap.keys()];
-    streamUuids.forEach((streamUuid: string) => {
-      const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-      if (stream) {
-        const uiStream = new EduStreamUI(stream);
-        streams.set(streamUuid, uiStream);
-      }
-    });
-    return streams;
+  get streamWindowStreamUuids() {
+    return [...this.streamWindowMap.keys()];
   }
 
   @computed
@@ -263,9 +241,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    */
   @computed
   get streamsShouldOffPodium() {
-    return this.studentStreams.filter(
-      (value: EduStreamUI) => !this.streamWindowMap.has(value.stream.streamUuid),
-    );
+    return this._studentStreams.filter((value) => !this.streamWindowMap.has(value.streamUuid));
   }
 
   /**
@@ -286,10 +262,10 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   /**
    * 拖拉权限控制
    */
-  streamWindowLocked = computedFn((stream: EduStreamUI): boolean => {
+  streamWindowLocked = computedFn((stream: EduStream): boolean => {
     const { role } = EduClassroomConfig.shared.sessionInfo;
     if (role === EduRoleTypeEnum.teacher) {
-      if (this.streamWindowMap.get(stream.stream.streamUuid)?.contain) {
+      if (this.streamWindowMap.get(stream.streamUuid)?.contain) {
         return true;
       }
       return false;
@@ -310,19 +286,6 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   });
 
   /**
-   * 返回当前是否有学生流
-   */
-  @bound
-  getStream(streamUuid: string) {
-    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-    if (stream) {
-      const uiStream = new EduStreamUI(stream);
-      return uiStream;
-    }
-    return undefined;
-  }
-
-  /**
    * 设置大窗显示区域
    * @param bounds
    */
@@ -340,16 +303,14 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     stream,
     active,
     pos,
-    dragging,
   }: {
-    stream: EduStreamUI;
+    stream: EduStream;
     active: boolean;
     pos: [number, number];
-    dragging?: boolean;
   }) => {
     if (this.containedStreamWindow) return; // 区域内有全屏的视频，不允许讲台区域内的视频拖拽
 
-    const streamUuid = stream.stream.streamUuid;
+    const streamUuid = stream.streamUuid;
     this.updateDraggingStreamUuid(streamUuid); // 设置正在拖拽的视频流 ID
     // 如果在可操作区域的话， 创建一个大窗组件，并设置宽高，位置
     if (active && this._isMatchWindowContainer(pos[0], pos[1])) {
@@ -360,7 +321,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     // 如果现在结束了视频拖拽，并且鼠标的位置不在区域内，那么要移除数据
     if (!active && !this._isMatchWindowContainer(pos[0], pos[1])) {
       this._dataStore.streamWindowGuard = false;
-      this._removeStreamWindowByUuid(stream.stream.streamUuid);
+      this._removeStreamWindowByUuid(stream.streamUuid);
     }
 
     // 如果结束了视频拖拽，并且鼠标在区域内，那么更新位置到远端
@@ -388,9 +349,9 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   };
 
   @action.bound
-  private _createStreamWindowByUuid = (stream: EduStreamUI, pos: [number, number]) => {
+  private _createStreamWindowByUuid = (stream: EduStream, pos: [number, number]) => {
     // 如果有那么只是更新位置信息
-    if (this.streamWindowMap.has(stream.stream.streamUuid)) {
+    if (this.streamWindowMap.has(stream.streamUuid)) {
       this._updateStreamWindow(stream, pos);
     } else {
       // 先保存第一次到区域的坐标
@@ -451,7 +412,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @param streamUuid
    */
   @action.bound
-  private _createStreamWindow = (stream: EduStreamUI) => {
+  private _createStreamWindow = (stream: EduStream) => {
     // width height 为区域的比例
     const {
       streamWindowWidth,
@@ -468,9 +429,9 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       y,
       contain: false,
       zIndex: ZINDEX,
-      userUuid: stream.stream.fromUser.userUuid,
+      userUuid: stream.fromUser.userUuid,
     };
-    this._addStreamWindowByUuid(stream.stream.streamUuid, new StreamWindowWidget(streamwindow));
+    this._addStreamWindowByUuid(stream.streamUuid, new StreamWindowWidget(streamwindow));
   };
 
   /**
@@ -479,8 +440,8 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @param pos
    */
   @action.bound
-  private _updateStreamWindow = (stream: EduStreamUI, pos: [number, number]) => {
-    const streamUuid = stream.stream.streamUuid;
+  private _updateStreamWindow = (stream: EduStream, pos: [number, number]) => {
+    const streamUuid = stream.streamUuid;
     const width = this._streamWindowContainerBounds.width * SCALE,
       height = this._streamWindowContainerBounds.height * SCALE;
 
@@ -518,7 +479,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     targetOffsetY = targetOffsetY / this._streamWindowContainerBounds.height;
 
     this._addStreamWindowByUuid(
-      stream.stream.streamUuid,
+      stream.streamUuid,
       new StreamWindowWidget({ ...information.information, x: targetOffsetX, y: targetOffsetY }),
     );
   };
@@ -566,7 +527,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    */
   @action.bound
   private _setStreamWindowMap = (
-    stream: EduStreamUI | string,
+    stream: EduStream | string,
     {
       x,
       y,
@@ -585,7 +546,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       userUuid?: string;
     },
   ) => {
-    const streamUuid = typeof stream === 'string' ? stream : stream.stream.streamUuid;
+    const streamUuid = typeof stream === 'string' ? stream : stream.streamUuid;
     if (!streamUuid) return;
     const information = this.streamWindowMap.get(streamUuid);
     information
@@ -642,8 +603,8 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @returns
    */
   @action.bound
-  handleDBClickStreamWindow(stream: EduStreamUI) {
-    const streamUuid = stream.stream.streamUuid;
+  handleDBClickStreamWindow(stream: EduStream) {
+    const streamUuid = stream.streamUuid;
     const currentStreamWindow = this.streamWindowMap.get(streamUuid);
 
     // 1、添加 streamwindow 窗口是否是全屏窗口并做数量判断
@@ -669,12 +630,12 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @returns
    */
   @action.bound
-  handleStreamWindowContain(stream: EduStreamUI) {
-    const streamUuid = stream.stream.streamUuid;
+  handleStreamWindowContain(stream: EduStream) {
+    const streamUuid = stream.streamUuid;
     let currentStreamWindow = this.streamWindowMap.get(streamUuid);
 
     if (!currentStreamWindow) {
-      currentStreamWindow = new StreamWindowWidget({ userUuid: stream.stream.fromUser.userUuid });
+      currentStreamWindow = new StreamWindowWidget({ userUuid: stream.fromUser.userUuid });
     }
     // 双击的时候判断是否处于全屏状态
     if (currentStreamWindow && !currentStreamWindow.contain) {
@@ -739,19 +700,19 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @param streamUuid
    */
   @action.bound
-  handleStreamWindowSingalClick = (stream: EduStreamUI) => {
+  handleStreamWindowSingalClick = (stream: EduStream) => {
     let maxZindex = 2;
 
-    this.streamWindowMap.forEach((value: StreamWindow, _: string) => {
+    this.streamWindowMap.forEach((value: StreamWindow) => {
       maxZindex = Math.max(maxZindex, value.zIndex);
     });
-    const information = this.streamWindowMap.get(stream.stream.streamUuid) as StreamWindowWidget;
+    const information = this.streamWindowMap.get(stream.streamUuid) as StreamWindowWidget;
     if (information.contain) {
       return;
     }
     if (information && (information?.zIndex < maxZindex || information.zIndex === 2)) {
       information.information = { zIndex: maxZindex + 1 };
-      this._addStreamWindowByUuid(stream.stream.streamUuid, information);
+      this._addStreamWindowByUuid(stream.streamUuid, information);
     }
   };
 
@@ -760,7 +721,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @param streamUuid
    * @returns
    */
-  handleStreamWindowClick = (stream: EduStreamUI) => {
+  handleStreamWindowClick = (stream: EduStream) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let timeoutID: any = null;
     const delay = 250;
@@ -814,9 +775,9 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    */
   @action.bound
   private _handleOnOrOffPodium() {
-    const newStreams = this.studentStreams.filter(
-      (value: EduStreamUI) =>
-        !this.streamWindowMap.has(value.stream.streamUuid) &&
+    const newStreams = this._studentStreams.filter(
+      (value) =>
+        !this.streamWindowMap.has(value.streamUuid) &&
         this.classroomStore.roomStore.acceptedList.find(
           (item) => item.userUuid === value.fromUser.userUuid,
         ),
@@ -836,18 +797,16 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       ) {
         return;
       }
-      const leavedStreams = this.studentStreams.find(
-        (value: EduStreamUI) => value.stream.streamUuid === streamUuid,
-      );
+      const leavedStreams = this._studentStreams.find((value) => value.streamUuid === streamUuid);
 
       !leavedStreams && deleteStreams.push(streamUuid);
     });
 
     // 当讲台隐藏的时候添加 streamwindow
     if (!this.stageVisible) {
-      newStreams.forEach((value: EduStreamUI) => {
-        const streamUuid = value.stream.streamUuid;
-        const streamWindow = new StreamWindowWidget({ userUuid: value.stream.fromUser.userUuid });
+      newStreams.forEach((value) => {
+        const streamUuid = value.streamUuid;
+        const streamWindow = new StreamWindowWidget({ userUuid: value.fromUser.userUuid });
         const bounds = this._getTempStreamWindowPosCache(streamUuid);
         streamWindow.information = bounds;
         this._addStreamWindowByUuid(streamUuid, streamWindow);
@@ -898,10 +857,10 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   private _handleToggleTeacherStreamWindow(visible: boolean) {
     if (visible) {
-      if (this.teacherStream) {
-        const streamUuid = this.teacherStream.stream.streamUuid;
+      if (this._teacherStream) {
+        const streamUuid = this._teacherStream.streamUuid;
         const currentStreamWindow = new StreamWindowWidget({
-          userUuid: this.teacherStream.stream.fromUser.userUuid,
+          userUuid: this._teacherStream.fromUser.userUuid,
         });
         const bounds = this._getTempStreamWindowPosCache(streamUuid);
         currentStreamWindow.information = bounds;
@@ -909,11 +868,11 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         this._addStreamWindowByUuid(streamUuid, currentStreamWindow);
       }
     } else {
-      if (this.teacherStream) {
-        const contain = this.streamWindowMap.get(this.teacherStream.stream.streamUuid)?.contain;
-        this._removeStreamWindowByUuid(this.teacherStream.stream.streamUuid);
-        this._deleteStreamWindowWidegtToServer(this.teacherStream.stream.streamUuid);
-        this.tempStreamWindowPosMap.delete(this.teacherStream.stream.streamUuid);
+      if (this._teacherStream) {
+        const contain = this.streamWindowMap.get(this._teacherStream.streamUuid)?.contain;
+        this._removeStreamWindowByUuid(this._teacherStream.streamUuid);
+        this._deleteStreamWindowWidegtToServer(this._teacherStream.streamUuid);
+        this.tempStreamWindowPosMap.delete(this._teacherStream.streamUuid);
         contain && this._handleCalculateContains(); // 如果之前为全屏那么重新计算
       }
     }
@@ -961,16 +920,16 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @bound
   handleDrag(e: any, data: DraggableData, streamUuid: string, offsetX: number) {
     this.updateDraggingStreamUuid(streamUuid); // 目前正在拖拉的 streamUuid
+    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
     // 如果为大班课并且不为老师的话，不做碰撞处理只更新位置
     if (EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass) {
-      const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
       if (
         stream &&
         RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, stream.fromUser.role) !==
           EduRoleTypeEnum.teacher
       ) {
         Math.abs(data.x - offsetX) > 0 &&
-          this.handleStreamWindowInfo(this.streamWindowStreams.get(streamUuid), {
+          this.handleStreamWindowInfo(stream as EduStream, {
             x: data.x,
             y: data.y,
           });
@@ -983,7 +942,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     } else {
       Math.abs(data.x - offsetX) > 0 &&
         this.handleStreamWindowInfo(
-          this.streamWindowStreams.get(streamUuid),
+          stream as EduStream,
           {
             x: data.x,
             y: data.y,
@@ -999,7 +958,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    */
   @action.bound
   handleStreamWindowInfo(
-    stream: EduStreamUI,
+    stream: EduStream,
     streamWindowInfo: {
       x?: number;
       y?: number;
@@ -1092,7 +1051,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   private _handleOffPodium() {
     const { offPodium } = this.classroomStore.handUpStore;
-    this.streamsShouldOffPodium.forEach((value: EduStreamUI) => {
+    this.streamsShouldOffPodium.forEach((value) => {
       offPodium(`${value.fromUser.userUuid}`).catch((e) => {
         if (
           !AGError.isOf(
@@ -1110,7 +1069,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @action.bound
   private _handleToggleWhiteboard(status: boolean) {
     // 白板关闭并且没有大窗的情况下，添加大窗
-    if (status && !this.streamWindowMap.size && this.teacherStream) {
+    if (status && !this.streamWindowMap.size && this._teacherStream) {
       const { userUuid } = EduClassroomConfig.shared.sessionInfo;
 
       const streamwindow = {
@@ -1123,7 +1082,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         userUuid: userUuid,
       };
       this._addStreamWindowByUuid(
-        this.teacherStream.stream.streamUuid,
+        this._teacherStream.streamUuid,
         new StreamWindowWidget(streamwindow),
       );
       this.sendWigetDataToServer();
@@ -1238,13 +1197,13 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       // 只控制上下台逻辑的变更
       // 需修改为监听下上台逻辑
       reaction(
-        () => this.studentStreams,
+        () => this._studentStreams,
         () => {
           // 1v1 只处理学生离开了课堂需要把大窗口移除掉
           if (
             EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class &&
             this._streamWindowUpdatedFromRoom &&
-            !this.studentStreams.length
+            !this._studentStreams.length
           ) {
             this._handleOnOrOffPodium();
             return;
@@ -1284,7 +1243,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       computed(() => ({
         rtcState: this.classroomStore.connectionStore.rtcState,
         lowStreamUuids: this.lowStreamUuids,
-        windowStreamUuids: new Set(this.streamWindowMap.keys()),
+        windowStreamUuids: new Set(this.streamWindowStreamUuids),
       })).observe(
         ({
           newValue,

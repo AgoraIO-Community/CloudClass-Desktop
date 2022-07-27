@@ -21,7 +21,7 @@
   text-align: center !important;
 }
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: #191919 !important;
+  @apply text-level1;
 }
 /* .chat-icon .ant-switch {
   background-color: #E2E2EE;

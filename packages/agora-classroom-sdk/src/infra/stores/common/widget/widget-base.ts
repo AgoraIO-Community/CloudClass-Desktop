@@ -1,3 +1,4 @@
+import { FcrUIConfig } from '@/infra/types/config';
 import {
   Track,
   Dimensions,
@@ -9,6 +10,7 @@ import {
   TrackOptions,
 } from 'agora-edu-core';
 import { Point } from 'electron';
+import { FcrTheme } from '~ui-kit';
 import { EduShareUIStore } from '../share-ui';
 import { AgoraWidgetTrackMode } from './type';
 import { AgoraWidgetTrackController } from './widget-track';
@@ -169,16 +171,15 @@ export interface AgoraTrackSyncedWidget {
  */
 export abstract class AgoraWidgetBase implements AgoraWidgetRenderable, AgoraMultiInstanceWidget {
   private _trackController?: AgoraWidgetTrackController;
-  private _classroomConfig: EduClassroomConfig;
   private _instanceId = '';
 
   constructor(
     private _widgetController: AgoraWidgetController,
     private _classroomStore: EduClassroomStore,
     private _shareUIStore: EduShareUIStore,
-  ) {
-    this._classroomConfig = EduClassroomConfig.shared;
-  }
+    private _uiConfig: FcrUIConfig,
+    private _theme: FcrTheme,
+  ) {}
 
   setInstanceId(instId: string): void {
     this._instanceId = instId;
@@ -241,7 +242,21 @@ export abstract class AgoraWidgetBase implements AgoraWidgetRenderable, AgoraMul
    * 教室配置
    */
   get classroomConfig() {
-    return this._classroomConfig;
+    return this._widgetController.classroomConfig;
+  }
+
+  /**
+   * UI配置
+   */
+  get uiConfig() {
+    return this._uiConfig;
+  }
+
+  /**
+   * 主题
+   */
+  get theme() {
+    return this._theme;
   }
 
   /**

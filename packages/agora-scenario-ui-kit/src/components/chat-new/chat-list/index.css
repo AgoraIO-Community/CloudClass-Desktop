@@ -14,7 +14,7 @@
 }
 
 .chat-list > .chat-list-item > .avatar {
-  background: url('../../icon/assets/svg/avatar.svg') no-repeat center / 36px 36px;
+  background: url('../assets/avatar.svg') no-repeat center / 36px 36px;
   /* background: gray; */
   border-radius: 50%;
   width: 36px;

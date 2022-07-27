@@ -717,12 +717,14 @@ export class ToolbarUIStore extends EduUIStoreBase {
           value: 'clicker',
           label: 'scaffold.clicker',
           icon: 'select',
+          category: ToolbarItemCategory.Clicker,
         }),
         ToolbarItem.fromData({
           // selector use clicker icon
           value: 'selection',
           label: 'scaffold.selector',
           icon: 'clicker',
+          category: ToolbarItemCategory.Selector,
         }),
         ToolbarItem.fromData({
           value: 'pen',
@@ -734,6 +736,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           value: 'text',
           label: 'scaffold.text',
           icon: 'text',
+          category: ToolbarItemCategory.Text,
         }),
         ToolbarItem.fromData({
           value: 'eraser',
@@ -746,28 +749,33 @@ export class ToolbarUIStore extends EduUIStoreBase {
           value: 'hand',
           label: 'scaffold.move',
           icon: 'hand',
+          category: ToolbarItemCategory.Hand,
         }),
         ToolbarItem.fromData({
           value: 'save',
           label: 'scaffold.save',
           icon: 'save-ghost',
+          category: ToolbarItemCategory.Save,
         }),
-        {
+
+        ToolbarItem.fromData({
           value: 'cloud',
           label: 'scaffold.cloud_storage',
           icon: 'cloud',
-        },
-        {
+          category: ToolbarItemCategory.CloudStorage,
+        }),
+        ToolbarItem.fromData({
           value: 'tools',
           label: 'scaffold.tools',
           icon: 'tools',
           category: ToolbarItemCategory.Cabinet,
-        },
-        {
+        }),
+        ToolbarItem.fromData({
           value: 'register',
           label: 'scaffold.register',
           icon: 'register',
-        },
+          category: ToolbarItemCategory.Roster,
+        }),
       ];
 
       if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
@@ -784,17 +792,18 @@ export class ToolbarUIStore extends EduUIStoreBase {
       }
     } else {
       _tools = [
-        {
+        ToolbarItem.fromData({
           value: 'tools',
           label: 'scaffold.tools',
           icon: 'tools',
           category: ToolbarItemCategory.Cabinet,
-        },
-        {
+        }),
+        ToolbarItem.fromData({
           value: 'register',
           label: 'scaffold.register',
           icon: 'register',
-        },
+          category: ToolbarItemCategory.Roster,
+        }),
       ];
     }
 
@@ -818,21 +827,23 @@ export class ToolbarUIStore extends EduUIStoreBase {
           value: 'register',
           label: 'scaffold.register',
           icon: 'register',
+          category: ToolbarItemCategory.Roster,
         }),
       ];
     }
-
     return [
       ToolbarItem.fromData({
         value: 'clicker',
         label: 'scaffold.clicker',
         icon: 'select',
+        category: ToolbarItemCategory.Clicker,
       }),
       ToolbarItem.fromData({
         // selector use clicker icon
         value: 'selection',
         label: 'scaffold.selector',
         icon: 'clicker',
+        category: ToolbarItemCategory.Selector,
       }),
       ToolbarItem.fromData({
         value: 'pen',
@@ -844,6 +855,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
         value: 'text',
         label: 'scaffold.text',
         icon: 'text',
+        category: ToolbarItemCategory.Text,
       }),
       ToolbarItem.fromData({
         value: 'eraser',
@@ -855,6 +867,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
         value: 'register',
         label: 'scaffold.register',
         icon: 'register',
+        category: ToolbarItemCategory.Roster,
       }),
     ];
   }

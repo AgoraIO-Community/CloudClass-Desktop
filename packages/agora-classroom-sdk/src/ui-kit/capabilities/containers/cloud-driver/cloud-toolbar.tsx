@@ -1,5 +1,4 @@
-import React from 'react';
-import { Search, SvgImg, transI18n } from '~ui-kit';
+import { Search, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
 
 export type CloudToolbarProps = {
   /**
@@ -26,13 +25,13 @@ export default function CloudToolbar({
   keyword,
   onKeywordChange,
   showRefresh = true,
-  onRefresh = () => {},
+  onRefresh = () => { },
 }: CloudToolbarProps) {
   return (
     <div className="cloud-panel">
       <div className="cloud-panel-left">
         {showRefresh ? (
-          <SvgImg type="cloud-refresh" style={{ cursor: 'pointer' }} onClick={onRefresh} />
+          <SvgImg type={SvgIconEnum.CLOUD_REFRESH} style={{ cursor: 'pointer' }} onClick={onRefresh} />
         ) : null}
       </div>
       <div className="cloud-panel-right">
@@ -40,7 +39,7 @@ export default function CloudToolbar({
           {fileCounts ? transI18n('cloud.fileCounts', { fileCounts }) : ''}
         </span>
         <Search
-          prefix={<SvgImg type="search" />}
+          prefix={<SvgImg type={SvgIconEnum.SEARCH} />}
           value={keyword}
           onSearch={onKeywordChange}
           inputPrefixWidth={32}

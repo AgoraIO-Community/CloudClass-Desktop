@@ -70,7 +70,7 @@ export const PublicResourcesContainer = observer(() => {
                         color: FileTypeSvgColor[fileNameToType(resourceName)],
                       }}
                     />
-                    <Inline className="filename" color="#191919" title={resourceName}>
+                    <Inline className="filename" title={resourceName}>
                       <span
                         dangerouslySetInnerHTML={{
                           __html: searchPublicResourcesKeyword
@@ -83,10 +83,10 @@ export const PublicResourcesContainer = observer(() => {
                     </Inline>
                   </Col>
                   <Col>
-                    <Inline color="#586376">{formatFileSize(size)}</Inline>
+                    <Inline>{formatFileSize(size)}</Inline>
                   </Col>
                   <Col>
-                    <Inline color="#586376">
+                    <Inline>
                       {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
                     </Inline>
                   </Col>

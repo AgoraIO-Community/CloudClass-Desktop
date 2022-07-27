@@ -1,5 +1,6 @@
 import { Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { SvgIconEnum } from '~ui-kit';
 import { StreamUIStore } from '../common/stream';
 
 @Log.attach({ proxyMethods: false })
@@ -108,9 +109,9 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   @computed
   get iconZoomType() {
     if (this.streamZoomStatus === 'zoom-out') {
-      return 'search-zoom-out';
+      return SvgIconEnum.ZOOM_OUT;
     }
-    return 'search-zoom-in';
+    return SvgIconEnum.ZOOM_IN;
   }
   @computed
   get streamLayoutContainerCls() {

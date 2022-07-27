@@ -11,4 +11,8 @@ export class Edu1v1ClassUIStore extends EduClassroomUIStore {
     this._streamUIStore = new OneToOneStreamUIStore(store, this.shareUIStore);
     this._toolbarUIStore = new OneToOneToolbarUIStore(store, this.shareUIStore);
   }
+
+  get streamUIStore() {
+    return this._streamUIStore as OneToOneStreamUIStore;
+  }
 }

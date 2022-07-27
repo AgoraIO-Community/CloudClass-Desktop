@@ -27,25 +27,24 @@
 
 .roster-wrap .main-title,
 .supervise-container .main-title {
+  @apply bg-icon-selected-color text-level1;
   position: relative;
   display: inline-flex;
   align-items: center;
   padding: 12px;
   font-size: 14px;
-  background: #f9f9fc;
   border: 0;
   outline: 0;
-  color: #191919;
   width: 100%;
   padding-left: 19px;
 }
 
 .roster-wrap,
 .supervise-container {
+  @apply border border-solid border-divider;
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47, 65%, 146%, 15%);
   border-radius: 6px;
-  border: 1px solid #e3e3ec;
   position: relative;
   overflow-y: hidden;
 }
@@ -86,31 +85,30 @@
 }
 
 .roster-header {
+  @apply text-level1;
   font-size: 13px;
-  color: #191919;
   padding: 11px 20px;
 }
 
 .roster-header > label {
-  color: #7b88a0;
+  @apply text-level2;
 }
 
 .roster-container {
+  @apply bg-component border border-solid border-divider;
   display: flex;
   flex-direction: column;
   height: calc(100% - 45px);
-  border-top: 1px solid #eeeef7;
 }
 
 .roster-container .roster-table {
+  @apply border-t border-solid border-divider;
   flex: 1;
   min-height: 0;
-  border-top: 1px solid #eeeef7;
 }
 
 .roster-table .table-container .table-row-item .table-col-item {
-  @apply box-content;
-  color: #191919;
+  @apply box-content text-level1;
   height: 40px;
 }
 
@@ -139,7 +137,7 @@
 }
 
 .search-teacher-name label {
-  color: #7b88a0;
+  @apply text-level2;
 }
 
 .search-teacher-name .roster-username {
@@ -167,6 +165,8 @@
 }
 
 .carousel-flag {
+  display: flex;
+  align-items: center;
   margin-left: 35px;
   margin-right: -2px;
 }
@@ -220,5 +220,5 @@
 }
 
 .carousel-desc {
-  color: #7b88a0;
+  @apply text-level2;
 }

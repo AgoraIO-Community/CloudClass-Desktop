@@ -27,12 +27,12 @@
 }
 
 .user-text {
+  @apply text-level2;
   /* width: 43px; */
   height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #191919;
   line-height: 18px;
   margin: 0 20px;
   width: 160px;

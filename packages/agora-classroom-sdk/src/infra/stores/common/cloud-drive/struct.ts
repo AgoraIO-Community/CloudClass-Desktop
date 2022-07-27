@@ -20,7 +20,7 @@ export class CloudDriveCourseResource extends CloudDriveResource {
     preview: boolean;
     scale: number;
     type: 'dynamic' | 'static';
-    canvasVersion?: string;
+    canvasVersion?: boolean;
   };
   scenes: { ppt: { previewURL: string } }[];
 
@@ -37,7 +37,7 @@ export class CloudDriveCourseResource extends CloudDriveResource {
       preview: boolean;
       scale: number;
       type: 'dynamic' | 'static';
-      canvas: boolean;
+      canvasVersion: boolean;
     };
     initOpen?: boolean;
   }) {

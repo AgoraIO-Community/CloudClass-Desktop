@@ -6,9 +6,8 @@ import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 import { Aside, Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
-
 import { LoadingContainer } from '~containers/loading';
-import { NavigationBarContainer } from '~containers/nav';
+import { NavigationBar } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { ToastContainer } from '~containers/toast';
 import { CDNPlayer } from '../../../containers/stream/cdn-player';
@@ -37,7 +36,7 @@ export const MixStreamCDNClassScenario = observer(() => {
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
         <Layout className={layoutCls} direction="col">
-          <NavigationBarContainer />
+          <NavigationBar />
           <Layout className="horizontal">
             <div className="flex-col flex-grow">
               <CDNPlayer

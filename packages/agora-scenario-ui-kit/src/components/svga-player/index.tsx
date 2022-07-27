@@ -1,7 +1,6 @@
 import classnames from 'classnames';
 import React, { useCallback, useEffect, useRef } from 'react';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-import './index.css';
+import { BaseProps } from '../util/type';
 export type { SvgaTypes } from './svga-types';
 import { Parser, Player } from 'svgaplayerweb';
 

@@ -1,5 +1,4 @@
-import React from 'react';
-import { CircleLoading, SvgImg, transI18n, UploadItem, UploadItemStatus } from '~ui-kit';
+import { CircleLoading, SvgIconEnum, SvgImg, transI18n, UploadItem, UploadItemStatus } from '~ui-kit';
 
 export type CloudMinimizeProps = {
   state?: 'uploading' | 'success' | 'error' | 'idle';
@@ -24,18 +23,18 @@ export default function CloudMinimize({
       ) : null}
       {state === 'success' ? (
         <span className="upload-minimize-content">
-          <SvgImg type="checked" size={16} style={{ color: '#52C41A' }} />
+          <SvgImg type={SvgIconEnum.CHECKED} size={16} style={{ color: '#52C41A' }} />
           <span className="upload-minimize-text">{transI18n('whiteboard.upload-success')}</span>
         </span>
       ) : null}
       {state === 'error' ? (
         <span className="upload-minimize-content">
-          <SvgImg type="red-caution" size={16} style={{ color: '#F04C36' }} />
+          <SvgImg type={SvgIconEnum.RED_CAUTION} size={16} style={{ color: '#F04C36' }} />
           <span className="upload-minimize-text">{transI18n('whiteboard.upload-error')}</span>
         </span>
       ) : null}
       <span>
-        <SvgImg type="open-arrow" size={16} style={{ marginLeft: 4 }} />
+        <SvgImg type={SvgIconEnum.TRIANGLE_SOLID1} size={16} style={{ marginLeft: 4 }} />
       </span>
     </div>
   );

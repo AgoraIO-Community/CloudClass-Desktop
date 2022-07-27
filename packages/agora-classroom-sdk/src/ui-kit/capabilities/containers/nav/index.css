@@ -24,11 +24,10 @@ td.biz-col.label.right {
 }
 
 .fcr-biz-header {
-  background: white;
+  @apply bg-foreground border-divider text-level2 border border-solid;
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
   border-top: 0px;
-  border: 1px solid #ececf1;
   position: relative;
 }
 
@@ -47,7 +46,7 @@ td.biz-col.label.right {
 }
 
 .fcr-biz-header-title {
-  color: #191919;
+  @apply text-level1;
   font-size: 13px;
   position: relative;
 }
@@ -75,13 +74,8 @@ td.biz-col.label.right {
   right: 15px;
 }
 
-.header-actions > svg {
+.header-actions .action-icon {
   margin-left: 27px;
-  font-size: 18px;
-  color: #3f5c8f;
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
   display: flex;
   justify-content: center;
   align-items: center;

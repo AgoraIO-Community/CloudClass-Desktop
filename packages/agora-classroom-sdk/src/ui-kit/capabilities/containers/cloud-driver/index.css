@@ -7,7 +7,7 @@
 }
 
 .agora-board-resources {
-  background: #ffffff;
+  @apply bg-component;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 6px;
   /* border: 1px solid #E3E3EC; */
@@ -30,11 +30,11 @@
 }
 
 .agora-board-resources .tabs-nav {
-  background-color: #f9f9fc;
+  @apply bg-component;
 }
 
 .agora-board-resources .rc-tabs-nav {
-  @apply bg-table-header;
+  @apply bg-component;
   height: 40px;
 }
 
@@ -52,6 +52,10 @@
   background: transparent;
 }
 
+.agora-board-resources .tabs-tab,
+.agora-board-resources .tabs-tab .tabs-tab-active {
+  @apply text-level1;
+}
 .agora-board-resources .form-checkbox {
   margin-right: 15px;
 }
@@ -61,10 +65,11 @@
 }
 
 .cloud-wrap {
-  border: 1px solid #e3e3ec;
+  @apply border-divider border border-solid;
 }
-.cloud-wrap .table-header .table-col-item {
-  color: #191919 !important;
+.cloud-wrap .table-header .table-col-item,
+.cloud-wrap .table-col-item {
+  @apply text-level1;
 }
 
 .cloud-wrap .table-container {
@@ -77,17 +82,26 @@
 .cloud-wrap .table-container-upload .placeholder {
   position: relative;
   top: -47px;
+  @apply bg-component;
 }
 
 .cloud-panel {
+  @apply bg-component;
   box-sizing: border-box;
   padding: 7px 15px;
+}
+.cloud-wrap .table-header,
+.cloud-panel .table-container {
+  @apply bg-component;
 }
 .cloud-panel,
 .cloud-panel-right {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.cloud-panel-right {
+  @apply text-level1;
 }
 
 .cloud-panel-right .input-prefix {
@@ -106,6 +120,7 @@
 }
 
 .cloud-btn-group {
+  @apply border-t border-solid border-divider;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -115,7 +130,6 @@
   justify-content: space-between;
   padding-top: 10px;
   padding-right: 20px;
-  border-top: 1px solid #eeeef7;
 }
 .cloud-btn-group-right {
   display: flex;
@@ -190,10 +204,10 @@
 }
 
 .cloud-help-title {
+  @apply text-level1;
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #586376;
 }
 .cloud-upload-form-modal-form {
   width: 100%;
@@ -223,5 +237,6 @@
   border-radius: 6px;
 }
 .upload-btn-group .upload-btn-popover {
+  @apply text-level1 border-divider;
   padding: 0 14px;
 }

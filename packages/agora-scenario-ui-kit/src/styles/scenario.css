@@ -87,7 +87,7 @@ body,
 }
 
 .filename {
-  @apply text-white;
+  @apply text-level1;
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -236,5 +236,5 @@ body,
 }
 
 .fcr-room-bg {
-  background: #f9f9fc;
+  @apply bg-background;
 }

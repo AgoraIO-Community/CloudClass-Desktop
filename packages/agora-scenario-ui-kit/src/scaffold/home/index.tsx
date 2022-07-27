@@ -151,13 +151,6 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
         <div className="header-right">
-          {/* <Link
-            className="header-right-item"
-            to={`/recordation-search/${Buffer.from(
-              `{"language":"${language}", "region":"${region}"}`,
-            ).toString('base64')}`}>
-            {transI18n('home.recordation-search')}
-          </Link> */}
           <div
             style={{
               marginRight: language === 'en' ? -12 : -58,
@@ -369,49 +362,6 @@ export const Home: React.FC<HomeProps> = ({
                 options={roleOptions}></Select>
             </Col>
           </Row>
-          {/* <Row className="home-row-item">
-            <Col>
-              <Select
-                prefix={
-                  <span className="home-label" title={transI18n('home.encryptionMode')}>
-                    {transI18n('home.encryptionMode')}
-                  </span>
-                }
-                id="encryptionMode"
-                value={encryptionMode}
-                onChange={(value) => {
-                  onChangeEncryptionMode(value);
-                }}
-                placeholder={transI18n('home.encryptionMode_placeholder')}
-                maxMenuHeight={120}
-                options={encryptionModeOptions}></Select>
-            </Col>
-          </Row>
-          <Row className="home-row-item can-error-item">
-            <Col>
-              <Input
-                inputPrefixWidth={55}
-                prefix={
-                  <span
-                    id="et_room_name"
-                    className="home-label"
-                    title={transI18n('home.encryptionKey')}>
-                    {transI18n('home.encryptionKey')}
-                  </span>
-                }
-                id="encryptionKey"
-                type="text"
-                className="block w-full"
-                value={encryptionKey}
-                onChange={(evt) => onChangeEncryptionKey(evt.currentTarget.value)}
-                placeholder={transI18n('home.encryptionKey_placeholder')}
-                // rule={/^[a-zA-Z0-9]{1,20}$/}
-                // errorMsg={transI18n('home.input-error-msg')}
-                errorMsgPositionLeft={75}
-                maxLength={20}
-              />
-            </Col>
-          </Row> */}
           <Row className="home-row-item">
             <Col>
               <Input
@@ -428,7 +378,6 @@ export const Home: React.FC<HomeProps> = ({
                 onChange={(evt) => onChangeDuration(+evt.currentTarget.value)}
                 placeholder=""
               />
-              {/* <DatePicker className="home-datepicker" onChangeDate={onChangeStartDate}/> */}
             </Col>
           </Row>
 

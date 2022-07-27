@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
-import './index.css';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { SvgImg } from '../svg-img';
+import { BaseProps, IconWithState } from '~ui-kit/components/util/type';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 import { Z_INDEX_RULES } from '~utilities/style-config';
+import './index.css';
+import { InteractionStateColors, PlaceholderStateColors } from '~ui-kit/utilities/state-color';
 
 type PlaceholderType =
   | 'emptyHistory'
@@ -14,14 +15,14 @@ type PlaceholderType =
   | 'cameraDisabled'
   | 'noQuestion';
 
-const svgTypeDict = {
-  emptyHistory: 'placeholder-no-message',
-  cameraBroken: 'placeholder-camera-broken',
-  cameraClose: 'placeholder-camera-off',
-  noBody: 'placeholder-no-body',
-  noFile: 'placeholder-no-file',
-  cameraDisabled: 'placeholder-camera-off',
-  noQuestion: 'placeholder-no-ask',
+const svgTypeDict: Record<string, IconWithState> = {
+  emptyHistory: { icon: SvgIconEnum.PLACEHOLDER_NO_MESSAGE },
+  cameraBroken: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_BROKEN },
+  cameraClose: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_OFF },
+  noBody: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_NO_BODY },
+  noFile: { icon: SvgIconEnum.PLACEHOLDER_NO_FILE },
+  cameraDisabled: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_OFF },
+  noQuestion: { icon: SvgIconEnum.PLACEHOLDER_NO_ASK },
 };
 
 const svgSizeDict = {
@@ -43,7 +44,6 @@ export interface PlaceholderProps extends BaseProps {
 export const Placeholder: FC<PlaceholderProps> = ({
   placeholderDesc = '',
   placeholderType = 'emptyHistory',
-  backgroundColor = '#fff',
   className,
   ...restProps
 }) => {
@@ -52,23 +52,23 @@ export const Placeholder: FC<PlaceholderProps> = ({
     [`${className}`]: !!className,
   });
   return (
-    <div className={cls} {...restProps} style={{ backgroundColor }}>
+    <div className={cls} {...restProps}>
       <div>
-        <SvgImg type={svgTypeDict[placeholderType]} size={svgSizeDict[placeholderType]} />
+        <SvgImg type={svgTypeDict[placeholderType].icon} size={svgSizeDict[placeholderType]} />
       </div>
       {placeholderDesc ? <div className="placeholder-desc">{placeholderDesc}</div> : ''}
     </div>
   );
 };
 
-const cameraSvgTypeDict = {
-  loading: 'placeholder-no-body',
-  broken: 'placeholder-camera-broken',
-  muted: 'placeholder-camera-off',
-  disabled: 'placeholder-camera-disabled',
-  none: 'placeholder-no-body',
-  notpresent: 'placeholder-not-present',
-  nosetup: 'placeholder-no-setup',
+const cameraSvgTypeDict: Record<string, IconWithState> = {
+  loading: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_NO_BODY, color: PlaceholderStateColors.disabled },
+  broken: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_BROKEN, color: PlaceholderStateColors.normal },
+  muted: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_OFF, color: PlaceholderStateColors.normal },
+  disabled: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_OFF, color: PlaceholderStateColors.disabled },
+  none: { icon: SvgIconEnum.PLACEHOLDER_CAMERA_NO_BODY, color: PlaceholderStateColors.disabled },
+  notpresent: { icon: SvgIconEnum.PLACEHOLDER_NOT_PRESENT, color: PlaceholderStateColors.normal },
+  nosetup: { icon: SvgIconEnum.PLACEHOLDER_NO_SETUP, color: PlaceholderStateColors.normal },
 };
 
 const cameraSvgSizeDict = {
@@ -117,8 +117,9 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
         ...style,
       }}>
       <SvgImg
-        type={cameraSvgTypeDict[state]}
+        type={cameraSvgTypeDict[state].icon}
         size={placeholderSize ? placeholderSize : cameraSvgSizeDict[state]}
+        colors={{ iconPrimary: cameraSvgTypeDict[state].color }}
       />
       <span>{text}</span>
     </div>

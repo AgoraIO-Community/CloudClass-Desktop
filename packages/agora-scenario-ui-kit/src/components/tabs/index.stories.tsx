@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Tabs, TabPane } from '~components/tabs';
-import { Icon } from '~components/icon';
+import { Tabs, TabPane } from '../tabs';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 
 const meta: Meta = {
   title: 'Components/Tabs',
@@ -37,7 +37,7 @@ export const Docs = () => {
         <TabPane
           tab={
             <>
-              <Icon type="whiteboard" />
+              <SvgImg type={SvgIconEnum.WHITEBOARD} />
               白板
             </>
           }
@@ -50,7 +50,7 @@ export const Docs = () => {
         <TabPane
           tab={
             <>
-              <Icon type="share-screen" />
+              <SvgImg type={SvgIconEnum.SHARE_SCREEN} />
               Storybook的屏幕共享
             </>
           }

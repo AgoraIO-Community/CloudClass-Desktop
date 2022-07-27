@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Toast } from '~components/toast';
-import { Button } from '~components/button';
+import { Toast } from '../toast';
+import { Button } from '../button';
 
 const meta: Meta = {
   title: 'Components/Toast',
@@ -69,11 +69,6 @@ export const Docs = ({ success, error, warning, toastText, toastType = 'success'
               type: toastType,
               text: '自己定义的内容，时间设置5s，居中',
               duration: 5,
-              style: {
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-              },
             });
           }}>
           show toast - user define

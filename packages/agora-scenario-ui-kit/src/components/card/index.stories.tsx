@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Card } from '~components/card';
+import { Card } from '../card';
 
 const meta: Meta = {
   title: 'Components/Card',

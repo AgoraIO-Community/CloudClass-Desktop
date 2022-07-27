@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { useState } from 'react';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/util/type';
 import './index.css';
 
 export interface TableBaseProps extends BaseProps {

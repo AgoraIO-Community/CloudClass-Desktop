@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/util/type';
 import './index.css';
 
 export interface InputProps extends BaseProps {
@@ -38,9 +38,9 @@ export const Input: FC<InputProps> = ({
   maxLength = 'infinite', // 调研后，数字字符串生效，非法字符串则无限制
   maxNumber = 0,
   width,
-  onFocus = () => {},
-  onBlur = () => {},
-  onChange = () => {},
+  onFocus = () => { },
+  onBlur = () => { },
+  onChange = () => { },
   className,
   ...restProps
 }) => {

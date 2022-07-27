@@ -1,4 +1,4 @@
-import { CSSProperties, useRef, useState } from 'react';
+import { CSSProperties, FC, useEffect, useState } from 'react';
 import { EduStreamUI, StreamBounds } from '@/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
 import { Rnd } from 'react-rnd';
@@ -6,25 +6,44 @@ import { animated, useTransition } from 'react-spring';
 import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
 import { StreamPlayer } from '../stream';
-
-import { DragableOverlay } from '../stream/room-mid-player';
-import './index.css';
 import { StreamWindow } from '@/infra/stores/common/stream-window/type';
+import { EduStream } from 'agora-edu-core';
+import useMeasure from 'react-use-measure';
+import { StreamPlayerToolbar } from '../stream/stream-tool';
 
-const StreamWindowsContainer = observer(() => {
+const WindowContainer: FC = observer(({ children }) => {
+  const { streamWindowUIStore, boardUIStore } = useStore();
+  const [measureRef, bounds] = useMeasure();
+
+  useEffect(() => {
+    streamWindowUIStore.setMiddleContainerBounds(bounds);
+  }, [bounds]);
+
+  return (
+    <div
+      id="stream-window-container"
+      className="w-full absolute flex-shrink-0"
+      style={{ height: boardUIStore.boardAreaHeight, bottom: 0, pointerEvents: 'none' }}
+      ref={measureRef}>
+      {children}
+    </div>
+  );
+});
+
+export const StreamWindowsContainer = observer(() => {
   const { streamWindowUIStore, streamUIStore } = useStore();
   const { streamsBounds } = streamUIStore;
   const { streamWindows, needDragable } = streamWindowUIStore;
 
   return (
-    <div className="stream-window-container" id="stream-window-container">
+    <WindowContainer>
       <TransitionStreamWindow streamWindows={streamWindows.slice()} streamsBounds={streamsBounds} />
       {needDragable
         ? streamWindows.map(([streamUuid, streamWindow]) => (
           <DragableStreamWindow key={streamUuid} info={streamWindow} streamUuid={streamUuid} />
         ))
         : null}
-    </div>
+    </WindowContainer>
   );
 });
 
@@ -38,13 +57,13 @@ export const TransitionStreamWindow = observer(
   }) => {
     const {
       streamWindowUIStore: {
-        getStream,
         minRect,
         setTransitionStreams,
         removeTransitionStreams,
         stageVisible,
         draggingStreamUuid,
       },
+      streamUIStore: { allUIStreams }
     } = useStore();
 
     const calcInitPosition = (streamUuid: string) => {
@@ -64,9 +83,7 @@ export const TransitionStreamWindow = observer(
 
     const transitions = useTransition(streamWindows, {
       key: (item: [string, StreamWindow]) => item[0],
-      from: (item: [string, StreamWindow]) => {
-        return { opacity: 0 };
-      },
+      from: () => ({ opacity: 0 }),
       enter: ([streamUuid, streamWindow]) => {
         setTransitionStreams(streamUuid);
         return {
@@ -96,26 +113,32 @@ export const TransitionStreamWindow = observer(
       },
     });
 
-    return transitions((props, item) => (
-      <animated.div
-        style={{
-          ...props,
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          minWidth: minRect.minWidth,
-          minHeight: minRect.minHeight,
-        }}
-        key={item[0]}>
-        {getStream(item[0]) ? (
-          <StreamPlayer
-            key={`stream-window-${item[0]}`}
-            isFullScreen={true}
-            stream={getStream(item[0]) as EduStreamUI}
-            style={{ width: '100%', height: '100%' }}></StreamPlayer>
-        ) : null}
-      </animated.div>
-    ));
+    return transitions((props, item) => {
+      const itemKey = item[0];
+      const stream = allUIStreams.get(itemKey);
+      return (
+        <animated.div
+          style={{
+            ...props,
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            minWidth: minRect.minWidth,
+            minHeight: minRect.minHeight,
+          }}
+          key={itemKey}>
+          {stream ? (
+            <StreamPlayer
+              key={`stream-window-${itemKey}`}
+              renderAt="Window"
+              stream={stream}
+              style={{ width: '100%', height: '100%' }}
+            />
+          ) : null}
+        </animated.div>
+      );
+    }
+    );
   },
 );
 
@@ -129,12 +152,12 @@ const DragableStreamWindow = observer(
     streamUuid: string;
     style?: CSSProperties;
   }) => {
-    const { streamWindowUIStore } = useStore();
-    const rndRef = useRef(null);
+    const { streamWindowUIStore, streamUIStore } = useStore();
+    const { allUIStreams, fullScreenToolbarOffset } = streamUIStore;
+
     const {
       handleStreamWindowInfo,
       handleDrag,
-      streamWindowStreams,
       handleStreamWindowClick,
       sendWigetDataToServer,
       updateDraggingStreamUuid,
@@ -142,10 +165,12 @@ const DragableStreamWindow = observer(
       streamWindowLocked,
       minRect,
     } = streamWindowUIStore;
-    const [visible, setVisible] = useState<boolean>(false);
-    return (
+    const [toolbarVisible, setToolbarVisible] = useState(false);
+
+    const uiStream = allUIStreams.get(streamUuid) as EduStreamUI;
+    const stream = uiStream?.stream;
+    return stream ? (
       <Rnd
-        ref={rndRef}
         key={streamUuid}
         className="stream-window"
         style={style}
@@ -155,13 +180,13 @@ const DragableStreamWindow = observer(
           width: info.width,
           height: info.height,
         }}
-        bounds=".stream-window-container"
+        bounds="#stream-window-container"
         position={{
           x: info.x,
           y: info.y,
         }}
         onDrag={(e, d) => {
-          visible && setVisible(false);
+          setToolbarVisible(false);
           handleDrag(e, d, streamUuid, info.x);
         }}
         // onDragStart={()=> { setVisible(false)}}
@@ -171,10 +196,10 @@ const DragableStreamWindow = observer(
           sendWigetDataToServer(streamUuid);
         }}
         onResize={(e, direction, ref, delta, position) => {
-          visible && setVisible(false);
+          setToolbarVisible(false);
           updateDraggingStreamUuid(streamUuid);
           handleStreamWindowInfo(
-            streamWindowStreams.get(streamUuid),
+            stream,
             {
               width: ref.offsetWidth,
               height: ref.offsetHeight,
@@ -188,41 +213,32 @@ const DragableStreamWindow = observer(
           sendWigetDataToServer(streamUuid);
         }}
         onMouseEnter={() => {
-          setVisible(true);
+          setToolbarVisible(true);
         }}
         onMouseLeave={() => {
-          setVisible(false);
+          setToolbarVisible(false);
         }}
-        onClick={handleStreamWindowClick(streamWindowStreams.get(streamUuid))}
+        onClick={handleStreamWindowClick(stream)}
         disableDragging={
-          streamWindowStreams.get(streamUuid)
-            ? streamWindowLocked(streamWindowStreams.get(streamUuid))
+          stream
+            ? streamWindowLocked(stream)
             : false
         }
         enableResizing={
-          streamWindowStreams.get(streamUuid)
-            ? !streamWindowLocked(streamWindowStreams.get(streamUuid))
+          stream
+            ? !streamWindowLocked(stream)
             : true
         }>
-        {streamWindowStreams.get(streamUuid) ? (
-          <DragableOverlay
-            stream={streamWindowStreams.get(streamUuid)}
-            style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
-            isFullScreen={true}
-            visibleTools={visible}>
-            <div
-              style={{
-                width: info.width,
-                height: info.height,
-                minWidth: minRect.minWidth,
-                minHeight: minRect.minHeight,
-                background: 'transparent',
-              }}></div>
-          </DragableOverlay>
-        ) : null}
+        <div
+          style={{
+            width: info.width,
+            height: info.height,
+            minWidth: minRect.minWidth,
+            minHeight: minRect.minHeight,
+            background: 'transparent',
+          }} />
+        <StreamPlayerToolbar visible={toolbarVisible} stream={uiStream} offset={fullScreenToolbarOffset} />
       </Rnd>
-    );
+    ) : null;
   },
 );
-
-export default StreamWindowsContainer;

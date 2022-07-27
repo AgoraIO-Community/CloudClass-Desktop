@@ -1,3 +1,5 @@
+import { InteractionStateColors } from '~utilities/state-color';
+import { SvgIconEnum } from '../svg-img';
 import './index.css';
 
 export { Roster } from './roster';
@@ -57,27 +59,36 @@ export enum DeviceState {
 }
 
 export const cameraIconType = {
-  [DeviceState.enabled]: 'camera-enabled',
-  [DeviceState.disabled]: 'camera-disabled',
-  [DeviceState.unavailable]: 'camera-inactive',
-  [DeviceState.unauthorized]: 'camera-forbidden',
+  [DeviceState.enabled]: { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
+  [DeviceState.disabled]: {
+    icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.half
+  },
+  [DeviceState.unavailable]: { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disabled },
+  [DeviceState.unauthorized]: { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disabled },
 };
 
 export const microphoneIconType = {
-  [DeviceState.enabled]: 'mic-enabled',
-  [DeviceState.disabled]: 'mic-disabled',
-  [DeviceState.unavailable]: 'mic-inactive',
-  [DeviceState.unauthorized]: 'mic-forbidden',
-};
+  [DeviceState.enabled]: { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
+  [DeviceState.disabled]: {
+    icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.half
+  },
+  [DeviceState.unavailable]: {
+    icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled
+  },
+  [DeviceState.unauthorized]: {
+    icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled
+  }
+}
+
 export enum BoardGrantState {
   Disabled = 'board-grant-disabled',
   Granted = 'board-granted',
   NotGranted = 'board-not-granted',
 }
 export const BoardGrantIconType = {
-  [BoardGrantState.Disabled]: 'board-grant-disabled',
-  [BoardGrantState.Granted]: 'board-granted',
-  [BoardGrantState.NotGranted]: 'board-not-granted',
+  [BoardGrantState.Disabled]: { icon: SvgIconEnum.BOARD_NOT_GRANTED, color: InteractionStateColors.disabled },
+  [BoardGrantState.Granted]: { icon: SvgIconEnum.BOARD_NOT_GRANTED, color: InteractionStateColors.allow },
+  [BoardGrantState.NotGranted]: { icon: SvgIconEnum.BOARD_NOT_GRANTED, color: InteractionStateColors.half },
 };
 export type Profile = {
   uid: string | number;

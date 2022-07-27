@@ -12,10 +12,11 @@ import { LoginAPI } from './api/login';
 import { MessageAPI } from './api/message';
 import { MuteAPI } from './api/mute';
 import { UserInfoAPI } from './api/userInfo';
+import { ThemeProvider } from '~ui-kit';
 
 let store = null;
 
-export const HXChatRoom = ({ pluginStore, agoraTokenData }) => {
+export const HXChatRoom = ({ pluginStore, agoraTokenData, theme }) => {
   const chatStore = React.useMemo(() => (store = createStore()), []);
 
   const chatAPIs = React.useMemo(() => {
@@ -48,7 +49,9 @@ export const HXChatRoom = ({ pluginStore, agoraTokenData }) => {
     // <React.StrictMode>
     <Provider store={chatStore} apis={chatAPIs}>
       <MemoryRouter>
-        <App pluginStore={pluginStore} agoraTokenData={agoraTokenData} />
+        <ThemeProvider value={theme}>
+          <App pluginStore={pluginStore} agoraTokenData={agoraTokenData} />
+        </ThemeProvider>
       </MemoryRouter>
     </Provider>
     // </React.StrictMode>

@@ -1,11 +1,15 @@
 import { EduClassroomConfig, EduRoleTypeEnum, EduStream, RteRole2EduRole } from 'agora-edu-core';
 import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
+import { action, computed, observable } from 'mobx';
 
 /**
  * 业务流 UI 对象
  */
 export class EduStreamUI {
+  @observable
+  private _renderAt: 'Window' | 'Bar' = 'Bar';
   readonly stream: EduStream;
+
   constructor(stream: EduStream) {
     this.stream = stream;
   }
@@ -24,6 +28,13 @@ export class EduStreamUI {
     return 'microphone-off';
   }
 
+  get isCameraMuted() {
+    return (
+      this.stream.videoSourceState !== AgoraRteMediaSourceState.started ||
+      this.stream.videoState === AgoraRteMediaPublishState.Unpublished
+    );
+  }
+
   get isMicMuted() {
     return this.micIconType.endsWith('off') || this.micIconType.endsWith('disabled');
   }
@@ -38,6 +49,16 @@ export class EduStreamUI {
 
   get role(): EduRoleTypeEnum {
     return RteRole2EduRole(EduClassroomConfig.shared.sessionInfo.roomType, this.fromUser.role);
+  }
+
+  @computed
+  get renderAt() {
+    return this._renderAt;
+  }
+
+  @action.bound
+  setRenderAt(at: 'Bar' | 'Window') {
+    this._renderAt = at;
   }
 }
 

@@ -6,11 +6,11 @@ import {
   EduRoomTypeEnum,
   EduRtcConfig,
   Platform,
-  RecordOptions,
 } from 'agora-edu-core';
 import { EduVideoEncoderConfiguration, MediaOptions } from 'agora-rte-sdk';
 import { CloudDriveResourceConvertProgress } from '../stores/common/cloud-drive/type';
 import { AgoraWidgetBase } from '../stores/common/widget/widget-base';
+import { FcrMultiThemeMode } from '../types/config';
 
 export type AgoraRegion = Uppercase<AgoraRegionString>;
 
@@ -85,8 +85,9 @@ export type LaunchOption = {
   mediaOptions?: LaunchMediaOptions;
   latencyLevel?: 1 | 2;
   platform?: Platform;
-  recordOptions?: RecordOptions; // 白板录制参数
+  recordOptions?: BoardWindowAnimationOptions; // 白板录制参数
   recordRetryTimeout?: number; // 录制重试间隔
+  uiMode?: FcrMultiThemeMode;
 };
 
 /**
@@ -96,6 +97,8 @@ export type LaunchWindowOption = {
   windowID: WindowID; //窗口ID
   language: LanguageEnum; // 语言
   args: any; // 传入属性
+  roomType: EduRoomTypeEnum;
+  uiMode: FcrMultiThemeMode;
 };
 
 export { AgoraWidgetBase } from '../stores/common/widget/widget-base';
@@ -123,7 +126,7 @@ export type CourseWareItem = {
     preview: boolean;
     scale: number;
     type: 'dynamic' | 'static';
-    canvas: boolean;
+    canvasVersion: boolean;
   };
   initOpen?: boolean;
 };

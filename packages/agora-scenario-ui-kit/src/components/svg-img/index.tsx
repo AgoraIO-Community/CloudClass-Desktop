@@ -1,86 +1,93 @@
-import { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { getPath, getViewBox } from './svg-dict';
+import { BaseProps } from '../util/type';
+import { getPath, getViewBox, PathOptions } from './svg-dict';
+import { SvgIconEnum } from './type';
+import { themeContext } from '../theme';
 import './index.css';
 
+
 export type SvgImgProps = BaseProps & {
-  type: string;
-  color?: string;
+  type: SvgIconEnum;
+  colors?: Partial<PathOptions>;
   size?: number;
-  canHover?: boolean;
   onClick?: any;
 };
 
 export const SvgImg: FC<SvgImgProps> = ({
   type,
-  size = 25,
-  canHover = false,
+  size = 24,
   onClick,
   className,
   style,
-  color,
+  colors,
 }) => {
-  const cls = classnames('svg-img', `icon-${type}`, {
-    'can-hover': canHover,
+  const cls = classnames({
     [`${className}`]: !!className,
   });
+  const { iconPrimary, iconSecondary } = useContext(themeContext);
+
+  const viewBox = getViewBox(type);
+  const path = getPath(type, { ...colors, iconPrimary: colors?.iconPrimary ?? iconPrimary, iconSecondary: colors?.iconSecondary ?? iconSecondary });
+
   return (
     <svg
       className={cls}
       width={size}
       height={size}
-      viewBox={getViewBox(type)}
+      viewBox={viewBox}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       onClick={onClick}
-      style={style}>
-      {getPath(type, { className: type, color })}
+      style={style}
+      data-label={type}
+    >
+      {path}
     </svg>
   );
 };
 
 export type SvgIconProps = BaseProps & {
-  type: string;
-  hoverType?: string;
-  color?: string;
+  type: SvgIconEnum;
+  colors?: Partial<PathOptions>;
+  hoverType: SvgIconEnum;
+  hoverColors?: Partial<PathOptions>;
   size?: number;
-  canHover?: boolean;
   onClick?: any;
 };
 
+// Icon that has hoverable surroundings
 export const SvgIcon: FC<SvgIconProps> = ({
   type,
   hoverType,
-  size = 25,
-  canHover = false,
+  size,
   onClick,
   className,
   style,
-  color,
+  colors,
+  hoverColors
 }) => {
   const [hovering, setHovering] = useState<boolean>(false);
-  const t = canHover && hovering && hoverType ? hoverType : type;
-  const cls = classnames('svg-img', `icon-${t}`, {
-    'can-hover': canHover,
-    [`${className}`]: !!className,
-  });
+
+  const t = hovering && hoverType ? hoverType : type;
+  const c = hovering && hoverColors ? hoverColors : colors;
+
   return (
     <div
+      className='can-hover'
       style={{ display: 'flex' }}
-      onMouseEnter={() => canHover && setHovering(true)}
-      onMouseLeave={() => canHover && setHovering(false)}>
-      <svg
-        className={cls}
-        width={size}
-        height={size}
-        viewBox={getViewBox(t)}
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}>
+      <SvgImg
+        type={t}
+        colors={c}
+        size={size}
         onClick={onClick}
-        style={style}>
-        {getPath(t, { className: t, color })}
-      </svg>
+        className={className}
+        style={style}
+      />
     </div>
   );
 };
+
+export { SvgIconEnum } from './type';

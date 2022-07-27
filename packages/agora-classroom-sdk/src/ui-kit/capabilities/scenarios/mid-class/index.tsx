@@ -3,14 +3,13 @@ import { Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
 import { HandsUpContainer } from '~containers/hand-up';
 import { LoadingContainer } from '~containers/loading';
-import { NavigationBarContainer } from '~containers/nav';
+import { NavigationBar } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box';
 import { SceneSwitch } from '~containers/scene-switch';
 import { RoomMidStreamsContainer } from '~containers/stream/room-mid-player';
 import { ToastContainer } from '~containers/toast';
 import { Award } from '../../containers/award';
 import Room from '../room';
-
 import { useStore } from '@/infra/hooks/ui-store';
 import { Float } from '~ui-kit';
 import { RemoteControlContainer } from '../../containers/remote-control';
@@ -19,7 +18,7 @@ import { ScreenShareContainer } from '../../containers/screen-share';
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
 import { Chat, Whiteboard } from '../../containers/widget/slots';
-import { BigWidgetWindowContainer } from '../../containers/big-widget-window';
+import { StreamWindowsContainer } from '../../containers/stream-windows-container';
 
 export const MidClassScenario = () => {
   // layout
@@ -31,13 +30,13 @@ export const MidClassScenario = () => {
       <FixedAspectRatioRootBox trackMargin={{ top: shareUIStore.navHeight }}>
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
-            <NavigationBarContainer />
+            <NavigationBar />
             <Layout className="flex-grow items-stretch relative justify-center fcr-room-bg" direction="col">
               <RoomMidStreamsContainer />
               <Whiteboard />
               <ScreenShareContainer />
               <RemoteControlContainer />
-              <BigWidgetWindowContainer />
+              <StreamWindowsContainer />
             </Layout>
             <WhiteboardToolbar />
             <ScenesController />

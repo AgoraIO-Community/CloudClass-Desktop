@@ -1,4 +1,3 @@
-//@ts-nocheck
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
@@ -6,7 +5,7 @@ import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowProps } from '
 import { Button } from '~components/button';
 import { transI18n } from '~ui-kit/components/i18n';
 import { Placeholder } from '../../../components/placeholder';
-import { BaseProps } from '../../interface/base-props';
+import { BaseProps } from '../../util/type';
 import { ChatMessage } from '../chat-message';
 import { Message } from '../interface';
 export interface MessageListProps extends BaseProps {
@@ -80,6 +79,7 @@ export const MessageList: FC<MessageListProps> = observer(
 
     const rowRenderer = ({ columnIndex, key, parent, index, style }: ListRowProps) => {
       return (
+        // @ts-ignore
         <CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
           {({ measure, registerChild }) => {
             return (
@@ -106,6 +106,7 @@ export const MessageList: FC<MessageListProps> = observer(
             <div style={{ width: '100%', height: '100%' }}>
               <AutoSizer>
                 {({ height, width }) => (
+                  // @ts-ignore
                   <List
                     ref={listRef}
                     height={height}

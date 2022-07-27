@@ -557,7 +557,7 @@
 .tabs-tab-remove:focus,
 .tabs-tab-btn:active,
 .tabs-tab-remove:active {
-  color: #191919;
+  @apply text-level1;
 }
 .tabs-tab-btn {
   outline: none;
@@ -589,7 +589,6 @@
   color: #191919;
 }
 .tabs-tab.tabs-tab-active .tabs-tab-btn {
-  color: #191919;
   font-weight: 400;
 }
 .tabs-tab.tabs-tab-disabled {

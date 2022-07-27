@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '../util/type';
 import './index.css';
 
 export interface LayoutProps extends BaseProps {

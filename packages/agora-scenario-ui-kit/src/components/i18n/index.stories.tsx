@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
-import { Button } from '~components';
-import { t, changeLanguage, transI18n } from '~components/i18n';
+import { Button } from '../';
+import { useI18n, changeLanguage, transI18n } from '.';
 
 const meta: Meta = {
   title: 'Components/I18n',
@@ -14,6 +14,8 @@ export type CloudStorageProps = {
 
 const Text = ({ text }: any) => {
   const [lang, setLanguage] = useState<string>('zh');
+
+  const t = useI18n();
 
   return (
     <div className="flex flex-1 items-center gap-10">

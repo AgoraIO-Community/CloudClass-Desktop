@@ -1,9 +1,5 @@
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/util/type';
 
-// export type HandsUpState = 'default' | 'actived';
-
-// export type TeacherHandsUpState = HandsUpState;
-// export type StudentHandsUpState = HandsUpState & 'forbidden';
 export interface BaseWaveArmProps extends BaseProps {
   width?: number;
   height?: number;

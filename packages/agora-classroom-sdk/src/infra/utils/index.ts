@@ -277,3 +277,6 @@ export const dataURIToFile = (dataURI: string, filename: string) => {
   const file = new File([ab], filename, { type: mimeString });
   return file;
 };
+export const humpToLine = (str: string) => {
+  return str.replace(/([A-Z])/g, '_$1').toLowerCase();
+};

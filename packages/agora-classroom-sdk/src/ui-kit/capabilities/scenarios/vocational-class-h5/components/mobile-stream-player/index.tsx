@@ -30,7 +30,7 @@ export const MobileStreamPlayer: FC<MobileStreamPlayerProps> = observer(
         className={cls({ 'host-stream': 1, minimize: minimized })}
         onClick={onClick}>
         {teacherCameraStream ? (
-          <StreamPlayer stream={teacherCameraStream}></StreamPlayer>
+          <StreamPlayer renderAt="Bar" stream={teacherCameraStream} />
         ) : (
           <StreamPlaceholder role={EduRoleTypeEnum.teacher} />
         )}

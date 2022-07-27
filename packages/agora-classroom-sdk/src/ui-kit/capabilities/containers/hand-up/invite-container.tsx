@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Rnd } from 'react-rnd';
-import { OverlayWrap, SvgImg, Toast, transI18n } from '~ui-kit';
+import { OverlayWrap, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
 import { useDraggableDefaultCenterPosition } from '~ui-kit/utilities/hooks';
 import { throttle } from 'lodash';
 import { InviteTable } from './invite-table';
@@ -54,7 +54,7 @@ export const InvitePodiumContainer: React.FC<InvitePodiumContainerProps> = ({ on
             {transI18n('invite.title')}
             <div className="btn-pin">
               <SvgImg
-                type="close"
+                type={SvgIconEnum.CLOSE}
                 className="cursor-pointer"
                 onClick={() => {
                   setOpened(false);

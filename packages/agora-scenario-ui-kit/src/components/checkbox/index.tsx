@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { FC, SyntheticEvent, useEffect, useRef } from 'react';
-import { BaseProps } from '../interface/base-props';
+import { BaseProps } from '../util/type';
 import './index.css';
 
 type CheckboxProps = BaseProps & {
@@ -9,7 +9,7 @@ type CheckboxProps = BaseProps & {
   checked?: boolean;
   disabled?: boolean;
   indeterminate?: boolean;
-  onChange?: (e: SyntheticEvent<HTMLElement>) => void;
+  onChange?: (e: SyntheticEvent<HTMLInputElement>) => void;
   gap?: number;
 };
 

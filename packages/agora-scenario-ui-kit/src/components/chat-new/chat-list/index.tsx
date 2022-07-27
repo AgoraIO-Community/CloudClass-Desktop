@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useRef } from 'react';
-import { Placeholder, t, transI18n } from '../../../components';
+import { FC, useEffect, useRef } from 'react';
+import { Placeholder, transI18n } from '../../../components';
 import { ChatEvent, Conversation } from '../interface';
 import './index.css';
 
@@ -12,8 +12,8 @@ export interface ChatListProps {
 
 export const ChatList: FC<ChatListProps> = ({
   conversations,
-  onPullRefresh = () => {},
-  onClickConversation = () => {},
+  onPullRefresh = () => { },
+  onClickConversation = () => { },
   unreadConversationCountFn,
 }) => {
   const chatHistoryRef = useRef<HTMLUListElement | null>(null);

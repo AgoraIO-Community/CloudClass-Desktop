@@ -1,6 +1,6 @@
 import React, { FC, EventHandler } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '../../components/interface/base-props';
+import { BaseProps } from '../../components/util/type';
 import './index.css';
 
 export interface CardProps extends BaseProps {

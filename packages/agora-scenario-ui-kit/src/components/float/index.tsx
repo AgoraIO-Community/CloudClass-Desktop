@@ -1,7 +1,7 @@
 
 import classNames from 'classnames';
 import { FC } from 'react';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~components/util/type';
 
 export interface FloatProps extends BaseProps {
     top?: number

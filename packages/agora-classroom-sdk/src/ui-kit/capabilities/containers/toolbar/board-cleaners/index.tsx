@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { SvgImg, useI18n, BoardCleaners } from '~ui-kit';
+import { SvgImg, useI18n, BoardCleaners, SvgIconEnum } from '~ui-kit';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 
 export const BoardCleanersContainer = observer(() => {
   const { toolbarUIStore } = useStore();
@@ -9,10 +10,12 @@ export const BoardCleanersContainer = observer(() => {
 
   const mappedItems = boardCleanerItems.map((item) => {
     const { id, iconType, name } = item;
+    const isActive = activeTool === id;
+
     return {
       id,
       icon: iconType ? (
-        <SvgImg type={activeTool === id ? iconType + '-active' : iconType} size={26} />
+        <SvgImg type={iconType as SvgIconEnum} size={26} colors={isActive ? { iconPrimary: InteractionStateColors.allow } : {}} />
       ) : <span />,
       name,
     };
@@ -22,7 +25,7 @@ export const BoardCleanersContainer = observer(() => {
     <BoardCleaners
       value="eraser"
       label={t('scaffold.eraser')}
-      icon="eraser"
+      icon={SvgIconEnum.ERASER}
       cleanersList={mappedItems}
       onClick={handleBoradCleaner}
       activeItem={activeTool}

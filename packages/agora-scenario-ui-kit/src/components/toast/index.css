@@ -1,14 +1,14 @@
 .toast {
   min-width: 260px;
-  height: 40px;
-  color: #191919;
+  height: 34px;
+
   font-size: 14px;
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   padding: 0 14px;
   animation: toastAnimation 0.2s;
   transition: top 0.3s, opacity 0.1s;
-  @apply cursor-pointer flex items-center justify-center box-border relative;
+  @apply text-level1 cursor-pointer flex items-center justify-center box-border relative;
 }
 
 @keyframes toastAnimation {
@@ -27,10 +27,12 @@
 }
 .toast svg {
   margin-right: 6px;
+  width: 21px;
+  height: 21px;
 }
 
 .toast-success {
-  @apply bg-success border-success border;
+  @apply bg-toast-normal  border-toast-normal border;
 }
 
 .toast-error {

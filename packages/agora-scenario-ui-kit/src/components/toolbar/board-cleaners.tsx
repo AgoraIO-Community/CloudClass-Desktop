@@ -1,9 +1,9 @@
-import React, { useCallback, FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
-import { transI18n } from '~components/i18n';
-import { SvgImg, SvgIcon } from '~components/svg-img';
+import { SvgImg, SvgIcon, SvgIconEnum } from '~components/svg-img';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 
 export interface CleanerItem {
   id: string;
@@ -35,12 +35,14 @@ export const BoardCleaners: FC<BoardCleanersProps> = ({
         <div
           className={`cleaner-item ${activeItem === item.id ? 'active' : ''}`}
           key={item.id}
-          onClick={item.disabled ? () => {} : () => handleClick(item.id)}>
+          onClick={item.disabled ? () => { } : () => handleClick(item.id)}>
           {item.icon}
         </div>
       ))}
     </div>
   );
+
+
   return (
     <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover
@@ -50,11 +52,16 @@ export const BoardCleaners: FC<BoardCleanersProps> = ({
         placement="left">
         <div className="tool" onClick={() => handleClick('eraser')}>
           <SvgIcon
-            type={`eraser${isActive ? '-active' : ''}`}
-            canHover
-            hoverType={'eraser-active'}
+            type={SvgIconEnum.ERASER}
+            colors={isActive ? {
+              iconPrimary: InteractionStateColors.allow
+            } : {}}
+            hoverType={SvgIconEnum.ERASER}
+            hoverColors={{
+              iconPrimary: InteractionStateColors.allow
+            }}
           />
-          <SvgImg size={6} type="triangle-down" className="triangle-icon" />
+          <SvgImg size={6} type={SvgIconEnum.TRIANGLE_DOWN} className="triangle-icon" />
         </div>
       </Popover>
     </Tooltip>

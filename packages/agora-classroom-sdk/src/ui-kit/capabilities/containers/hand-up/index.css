@@ -15,6 +15,7 @@
 }
 
 .hands-up .fcr-card {
+  @apply bg-component;
   position: relative;
 }
 

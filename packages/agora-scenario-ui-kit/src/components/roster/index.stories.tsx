@@ -1,12 +1,12 @@
+import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import React, { useState } from 'react';
-import { ActionTypes, Roster, RosterProps } from './';
+import { useState } from 'react';
+import { Roster, RosterProps } from './';
 
 const meta: Meta = {
   title: 'Components/Roster',
   component: Roster,
   args: {
-    onClick: (action: ActionTypes, uid: string | number) => console.log(action, uid),
     teacherName: 'Lily Chou',
     role: 'teacher', // teacher和student的icon不同
     localUserUuid: 'webzzz2',
@@ -46,35 +46,6 @@ export const Docs: Story<RosterProps> = ({ ...restProps }) => {
   return (
     <Roster
       {...restProps}
-      carouselProps={{
-        modeValue: carouselState.modeValue,
-        changeModeValue: (value: any) => {
-          setCarouselState({
-            ...carouselState,
-            modeValue: value,
-          });
-        },
-        randomValue: carouselState.randomValue,
-        changeRandomValue: (value: any) => {
-          setCarouselState({
-            ...carouselState,
-            randomValue: value,
-          });
-        },
-        times: carouselState.times,
-        changeTimes: (value: any) => {
-          setCarouselState({
-            ...carouselState,
-            times: value,
-          });
-        },
-        startCarousel() {
-          console.log('sendCarousel');
-        },
-        stopCarousel() {
-          console.log('stopCarousel');
-        },
-      }}
     />
   );
 };

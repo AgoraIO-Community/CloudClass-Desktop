@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
-import { Input, Search } from '~components/input';
-import { Icon } from '~components/icon';
-import { Button } from '~components/button';
-import SearchSvg from '~components/icon/assets/svg/search.svg';
-import { SvgImg } from '~components/svg-img';
+import { Input, Search } from '../input';
+import { Button } from '../button';
+import { SvgIcon, SvgIconEnum, SvgImg } from '../svg-img';
 
 const meta: Meta = {
   title: 'Components/Input',
@@ -26,7 +24,7 @@ export const Docs = () => {
           type="number"
           value={input5}
           onChange={(e) => {
-            let num = e.target.value;
+            let num = +e.target.value;
             if (num > 32) {
               num = 32;
             }
@@ -63,7 +61,7 @@ export const Docs = () => {
       <div className="mt-4">
         <Input
           placeholder="前置是icon的placeholder"
-          prefix={<SvgImg type="pen" />}
+          prefix={<SvgImg type={SvgIconEnum.PEN} />}
           value={input2}
           onChange={(e) => {
             setInput2(e.target.value);
@@ -80,22 +78,11 @@ export const Docs = () => {
           suffix={<Button>Button</Button>}
         />
       </div>
-      <div className="mt-4">
-        <Input
-          placeholder="这个是前后都有ReactNode的placeholder"
-          value={input4}
-          onChange={(e) => {
-            setInput4(e.target.value);
-          }}
-          prefix={<Icon type="hand" />}
-          suffix={<Icon type="eraser" />}
-        />
-      </div>
       <h1 className="mt-4">Search 组件</h1>
       <div className="mt-4">
         <Search
           onSearch={(value) => console.log(value)}
-          suffix={<img src={SearchSvg} />}
+          suffix={<SvgIcon type={SvgIconEnum.SEARCH} />}
           placeholder={'search的placeholder'}
         />
       </div>

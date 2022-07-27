@@ -1,9 +1,9 @@
 .netless-whiteboard-wrapper {
   height: 100%;
   width: 100%;
-  border: 1px solid #ececf1;
+  border: 1px solid;
   border-radius: 4px;
-  background: white;
+  @apply bg-foreground border-divider;
 }
 
 .whiteboard-zoom-status {

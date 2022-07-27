@@ -1,53 +1,40 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const colors = require('tailwindcss/colors');
-
 module.exports = {
   purge: ['./src/**/*.{ts,tsx}', '../agora-scenario-ui-kit/src/**/*.{ts,tsx}'],
-  darkMode: false, // or 'media' or 'class'
-  colors: {
-    gray: colors.gray,
-    blue: '#357BF6',
-    red: colors.rose,
-    pink: colors.fuchsia,
-  },
+  darkMode: 'class', // or 'media' or 'class'
+
   theme: {
     extend: {
       backgroundColor: {
-        primary: '#357BF6',
-        'primary-hover': '#639AFA',
-        'primary-active': '#2663D0',
-        'table-header': '#F9F9FC',
-        'table-body': '#FFFFFF',
-        success: '#FAFFFF',
-        error: '#FFF2F2',
-        warning: '#FFFBF4',
+        background: 'var(--fcr_system_background_color)',
+        foreground: 'var(--fcr_system_foreground_color)',
+        brand: 'var(--fcr_system_brand_color)',
+        error: 'var(--fcr_system_error_color)',
+        warning: 'var(--fcr_system_warning_color)',
+        safe: 'var(--fcr_system_safe_color)',
+        'icon-selected-color': 'var(--fcr_system_icon_selected_color)',
+        'icon-selected-hover-color': 'var(--fcr_system_icon_selected_color)',
+        component: 'var(--fcr_system_component_color)',
+        'toast-normal': 'var(--fcr_system_toast_normal_color)',
       },
       borderColor: {
-        danger: '#DE5753',
-        'danger-hover': '#F56F6B',
-        'danger-active': '#C02621',
-
-        secondary: '#D2D2E2',
-        'secondary-hover': '#639AFA',
-        'secondary-active': '#2663D0',
-
-        table: '#E3E3EC',
-        'table-bottom': '#E3E3EC',
-        success: '#357BF6',
-        error: '#F07766',
-        warning: '#F0C996',
+        divider: 'var(--fcr_system_divider_color)',
+        brand: 'var(--fcr_system_brand_color)',
+        component: 'var(--fcr_system_component_color)',
+        error: 'var(--fcr_system_error_color)',
+        warning: 'var(--fcr_system_warning_color)',
+        safe: 'var(--fcr_system_safe_color)',
+        'toast-normal': 'var(--fcr_system_toast_normal_color)',
       },
+
       textColor: {
-        primary: '#357BF6',
-        'primary-hover': '#639AFA',
-        'primary-active': '#2663D0',
-        danger: '#DE5753',
-        'danger-hover': '#F56F6B',
-        'danger-active': '#C02621',
-        secondary: '#357BF6',
-        'secondary-hover': '#639AFA',
-        'secondary-active': '#2663D0',
-        ghost: '#677386',
+        level1: 'var(--fcr_system_text_level1_color)',
+        level2: 'var(--fcr_system_text_level2_color)',
+        level3: 'var(--fcr_system_text_level3_color)',
+        brand: 'var(--fcr_system_brand_color)',
+
+        error: 'var(--fcr_system_error_color)',
+        warning: 'var(--fcr_system_warning_color)',
+        safe: 'var(--fcr_system_safe_color)',
       },
     },
     fontFamily: {

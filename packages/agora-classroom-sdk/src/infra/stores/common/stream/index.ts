@@ -6,7 +6,16 @@ import {
   AGRenderMode,
   bound,
 } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, Lambda, observable, runInAction } from 'mobx';
+import {
+  action,
+  computed,
+  IReactionDisposer,
+  Lambda,
+  observable,
+  reaction,
+  runInAction,
+} from 'mobx';
+import { InteractionStateColors } from '~utilities/state-color';
 import { computedFn } from 'mobx-utils';
 import { EduUIStoreBase } from '../base';
 import { CameraPlaceholderType } from '../type';
@@ -14,16 +23,17 @@ import { EduStreamUI, StreamBounds } from './struct';
 import { EduStreamTool, EduStreamToolCategory } from './tool';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  AGEduErrorCode,
   AGServiceErrorCode,
   EduClassroomConfig,
-  EduErrorCenter,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   EduStream,
+  iterateSet,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
-import { TooltipPlacement, transI18n } from '~ui-kit';
+import { SvgIconEnum, TooltipPlacement, transI18n } from '~ui-kit';
+import { extractStreamBySourceType, extractUserStreams } from '@/infra/utils/extract';
+import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 
 export enum StreamIconColor {
   active = '#357bf6',
@@ -42,6 +52,15 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @observable
   streamsBounds: Map<string, StreamBounds> = new Map();
+
+  /**
+   * 视频窗口ID列表
+   */
+  /** @en
+   * video stream ID list
+   */
+  @observable
+  streamWindowUserUuids: string[] = [];
 
   onInstall() {
     this._disposers.push(
@@ -71,6 +90,36 @@ export class StreamUIStore extends EduUIStoreBase {
         }
       }),
     );
+
+    this._disposers.push(
+      reaction(
+        () => this.streamWindowUserUuids,
+        () => {
+          this.allUIStreams.forEach((stream) => {
+            this._setRenderAt(stream);
+          });
+        },
+      ),
+    );
+
+    EduEventUICenter.shared.onClassroomUIEvents(this._handleStreamWindowListChange);
+  }
+
+  @bound
+  private _setRenderAt(stream: EduStreamUI) {
+    const userUuids = this.streamWindowUserUuids;
+    if (userUuids.includes(stream.fromUser.userUuid)) {
+      stream.setRenderAt('Window');
+    } else {
+      stream.setRenderAt('Bar');
+    }
+  }
+
+  @action.bound
+  private _handleStreamWindowListChange(evt: AgoraEduClassroomUIEvent, args: unknown) {
+    if (evt === AgoraEduClassroomUIEvent.streamWindowsChange) {
+      this.streamWindowUserUuids = args as string[];
+    }
   }
 
   /**
@@ -79,24 +128,41 @@ export class StreamUIStore extends EduUIStoreBase {
   @observable awardAnims: { id: string; userUuid: string }[] = [];
 
   /**
+   * 分离窗口视频流
+   * @returns
+   */
+  @computed get allUIStreams(): Map<string, EduStreamUI> {
+    const uiStreams = new Map<string, EduStreamUI>();
+
+    [this.teacherStreams, this.studentStreams].forEach((streams) => {
+      streams.forEach((stream) => {
+        uiStreams.set(stream.stream.streamUuid, stream);
+      });
+    });
+
+    return uiStreams;
+  }
+
+  /**
    * 老师流信息列表
    * @returns
    */
   @computed get teacherStreams(): Set<EduStreamUI> {
-    const streamSet = new Set<EduStreamUI>();
-    const teacherList = this.classroomStore.userStore.teacherList;
-    for (const teacher of teacherList.values()) {
-      const streamUuids =
-        this.classroomStore.streamStore.streamByUserUuid.get(teacher.userUuid) || new Set();
-      for (const streamUuid of streamUuids) {
-        const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-        if (stream) {
-          const uiStream = new EduStreamUI(stream);
-          streamSet.add(uiStream);
-        }
-      }
-    }
-    return streamSet;
+    const { teacherList } = this.classroomStore.userStore;
+
+    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
+
+    const streams = extractUserStreams(teacherList, streamByUserUuid, streamByStreamUuid);
+
+    const uiStreams = iterateSet(streams, {
+      onMap: (stream) => {
+        const uiStream = new EduStreamUI(stream);
+        this._setRenderAt(uiStream);
+        return uiStream;
+      },
+    }).list;
+
+    return new Set(uiStreams);
   }
 
   /**
@@ -104,20 +170,43 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get assistantStreams(): Set<EduStreamUI> {
-    const streamSet = new Set<EduStreamUI>();
-    const assistantList = this.classroomStore.userStore.assistantList;
-    for (const assistant of assistantList.values()) {
-      const streamUuids =
-        this.classroomStore.streamStore.streamByUserUuid.get(assistant.userUuid) || new Set();
-      for (const streamUuid of streamUuids) {
-        const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-        if (stream) {
-          const uiStream = new EduStreamUI(stream);
-          streamSet.add(uiStream);
-        }
-      }
-    }
-    return streamSet;
+    const { assistantList } = this.classroomStore.userStore;
+
+    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
+
+    const streams = extractUserStreams(assistantList, streamByUserUuid, streamByStreamUuid);
+
+    const uiStreams = iterateSet(streams, {
+      onMap: (stream) => {
+        const uiStream = new EduStreamUI(stream);
+        this._setRenderAt(uiStream);
+        return uiStream;
+      },
+    }).list;
+
+    return new Set(uiStreams);
+  }
+
+  /**
+   * 学生流信息列表
+   * @returns
+   */
+  @computed get studentStreams(): Set<EduStreamUI> {
+    const { studentList } = this.classroomStore.userStore;
+
+    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
+
+    const streams = extractUserStreams(studentList, streamByUserUuid, streamByStreamUuid);
+
+    const uiStreams = iterateSet(streams, {
+      onMap: (stream) => {
+        const uiStream = new EduStreamUI(stream);
+        this._setRenderAt(uiStream);
+        return uiStream;
+      },
+    }).list;
+
+    return new Set(uiStreams);
   }
 
   /**
@@ -125,24 +214,22 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get teacherCameraStream(): EduStreamUI | undefined {
-    const streamSet = new Set<EduStreamUI>();
-    const streams = this.teacherStreams;
-    for (const stream of streams) {
-      if (stream.stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
-        streamSet.add(stream);
-      }
-    }
+    const stream = extractStreamBySourceType(this.teacherStreams, AgoraRteVideoSourceType.Camera);
 
-    if (streamSet.size > 1) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_UNEXPECTED_TEACHER_STREAM_LENGTH,
-        new Error(`unexpected stream size ${streams.size}`),
-      );
-    }
-    return Array.from(streamSet)[0];
+    return stream;
   }
 
-  @computed get screenShareStream() {
+  /**
+   * 学生流信息（教室内只有一个学生时使用，如果有一个以上老师请使用 studentStreams）
+   * @returns
+   */
+  @computed get studentCameraStream(): EduStreamUI | undefined {
+    const stream = extractStreamBySourceType(this.studentStreams, AgoraRteVideoSourceType.Camera);
+
+    return stream;
+  }
+
+  @computed get screenShareStream(): EduStream | undefined {
     const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid as string;
     const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
     return stream;
@@ -152,66 +239,16 @@ export class StreamUIStore extends EduUIStoreBase {
    * 老师屏幕共享流信息
    * @returns
    */
-  @computed get teacherScreenShareStream() {
+  @computed get teacherScreenShareStream(): EduStreamUI | undefined {
     const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid;
-    const streamSet = new Set<EduStreamUI>();
+    const stream = extractStreamBySourceType(
+      this.teacherStreams,
+      AgoraRteVideoSourceType.ScreenShare,
+    );
 
-    if (streamUuid) {
-      const streams = this.teacherStreams;
-      for (const stream of streams) {
-        if (
-          stream.stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare &&
-          stream.stream.streamUuid === streamUuid
-        ) {
-          streamSet.add(stream);
-        }
-      }
+    if (streamUuid && stream && stream.stream.streamUuid === streamUuid) {
+      return stream;
     }
-
-    return Array.from(streamSet)[0];
-  }
-
-  /**
-   * 学生流信息（教室内只有一个学生时使用，如果有一个以上老师请使用 studentStreams）
-   * @returns
-   */
-  @computed get studentCameraStream(): EduStreamUI | undefined {
-    const streamSet = new Set<EduStreamUI>();
-    const streams = this.studentStreams;
-    for (const stream of streams) {
-      if (stream.stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
-        streamSet.add(stream);
-      }
-    }
-
-    if (streamSet.size > 1) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_UNEXPECTED_STUDENT_STREAM_LENGTH,
-        new Error(`unexpected stream size ${streamSet.size}`),
-      );
-    }
-    return Array.from(streamSet)[0];
-  }
-
-  /**
-   * 学生流信息列表
-   * @returns
-   */
-  @computed get studentStreams(): Set<EduStreamUI> {
-    const streamSet = new Set<EduStreamUI>();
-    const studentList = this.classroomStore.userStore.studentList;
-    for (const student of studentList.values()) {
-      const streamUuids =
-        this.classroomStore.streamStore.streamByUserUuid.get(student.userUuid) || new Set();
-      for (const streamUuid of streamUuids) {
-        const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-        if (stream) {
-          const uiStream = new EduStreamUI(stream);
-          streamSet.add(uiStream);
-        }
-      }
-    }
-    return streamSet;
   }
 
   /**
@@ -337,12 +374,17 @@ export class StreamUIStore extends EduUIStoreBase {
   localCameraTool = computedFn((): EduStreamTool => {
     return new EduStreamTool(
       EduStreamToolCategory.camera,
-      this.localCameraOff ? 'stream-camera-disabled' : 'stream-camera-enabled',
+      this.localCameraOff
+        ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disabled }
+        : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
       this.localCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
       {
         //i can always control myself
         interactable: true,
-        hoverIconType: 'stream-camera-disabled',
+        hoverIconType: {
+          icon: SvgIconEnum.CAMERA_DISABLED,
+          color: InteractionStateColors.disabled,
+        },
         onClick: async () => {
           try {
             this.toggleLocalVideo();
@@ -361,12 +403,14 @@ export class StreamUIStore extends EduUIStoreBase {
   localMicTool = computedFn((): EduStreamTool => {
     return new EduStreamTool(
       EduStreamToolCategory.microphone,
-      this.localMicOff ? 'stream-mic-disabled' : 'stream-mic-enabled',
+      this.localMicOff
+        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
+        : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
       this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
       {
         //host can control, or i can control myself
         interactable: true,
-        hoverIconType: 'stream-mic-disabled',
+        hoverIconType: { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled },
         onClick: async () => {
           try {
             this.toggleLocalAudio();
@@ -383,14 +427,13 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   localPodiumTool = computedFn((): EduStreamTool => {
-    const { acceptedList } = this.classroomStore.roomStore;
     return new EduStreamTool(
       EduStreamToolCategory.podium_all,
-      'not-on-podium',
+      { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.half },
       transI18n('Clear Podiums'),
       {
         interactable: !!this.studentStreams.size,
-        hoverIconType: 'on-podium',
+        hoverIconType: { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.allow },
         onClick: async () => {
           try {
             await this.classroomStore.handUpStore.offPodiumAll();
@@ -420,10 +463,10 @@ export class StreamUIStore extends EduUIStoreBase {
     return new EduStreamTool(
       EduStreamToolCategory.camera,
       videoSourceStopped
-        ? 'stream-camera-inactive'
+        ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disabled }
         : videoMuted
-        ? 'stream-camera-disabled'
-        : 'stream-camera-enabled',
+        ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disallow }
+        : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
       videoSourceStopped
         ? transI18n('Camera Not Available')
         : videoMuted
@@ -432,8 +475,10 @@ export class StreamUIStore extends EduUIStoreBase {
       {
         //can interact when source is not stopped
         interactable: !videoSourceStopped,
-        style: {},
-        hoverIconType: 'stream-camera-disabled',
+        hoverIconType: {
+          icon: SvgIconEnum.CAMERA_DISABLED,
+          color: InteractionStateColors.disallow,
+        },
         onClick: () => {
           this.classroomStore.streamStore
             .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
@@ -457,10 +502,10 @@ export class StreamUIStore extends EduUIStoreBase {
     return new EduStreamTool(
       EduStreamToolCategory.microphone,
       audioSourceStopped
-        ? 'stream-mic-inactive'
+        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
         : audioMuted
-        ? 'stream-mic-disabled'
-        : 'stream-mic-enabled',
+        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
+        : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
       audioSourceStopped
         ? transI18n('Microphone Not Available')
         : audioMuted
@@ -469,8 +514,7 @@ export class StreamUIStore extends EduUIStoreBase {
       {
         //can interact when source is not stopped
         interactable: !audioSourceStopped,
-        hoverIconType: 'stream-mic-disabled',
-        style: {},
+        hoverIconType: { icon: SvgIconEnum.MIC_DISABLED },
         onClick: async () => {
           this.classroomStore.streamStore
             .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {
@@ -491,12 +535,11 @@ export class StreamUIStore extends EduUIStoreBase {
   remotePodiumTool = computedFn((stream: EduStreamUI): EduStreamTool => {
     return new EduStreamTool(
       EduStreamToolCategory.podium,
-      'not-on-podium',
+      { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.half },
       transI18n('Clear Podium'),
       {
         interactable: true,
-        style: {},
-        hoverIconType: 'on-podium',
+        hoverIconType: { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.allow },
         onClick: async () => {
           try {
             await this.classroomStore.handUpStore.offPodium(stream.fromUser.userUuid);
@@ -527,9 +570,9 @@ export class StreamUIStore extends EduUIStoreBase {
       EduStreamToolCategory.whiteboard,
       whiteboardReady
         ? whiteboardAuthorized
-          ? 'board-granted'
-          : 'board-not-granted'
-        : 'board-grant-disabled',
+          ? { icon: SvgIconEnum.BOARD_NOT_GRANTED, color: InteractionStateColors.allow }
+          : { icon: SvgIconEnum.BOARD_NOT_GRANTED, color: InteractionStateColors.half }
+        : { icon: SvgIconEnum.BOARD_NOT_GRANTED, color: InteractionStateColors.disabled },
       whiteboardReady
         ? whiteboardAuthorized
           ? transI18n('Close Whiteboard')
@@ -537,8 +580,10 @@ export class StreamUIStore extends EduUIStoreBase {
         : transI18n('Whiteboard Not Available'),
       {
         interactable: whiteboardReady,
-        style: {},
-        hoverIconType: 'board-granted',
+        hoverIconType: {
+          icon: SvgIconEnum.BOARD_NOT_GRANTED,
+          color: InteractionStateColors.allow,
+        },
         onClick: () => {
           this.boardApi.grantPrivilege(stream.fromUser.userUuid, !whiteboardAuthorized);
         },
@@ -551,19 +596,23 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   remoteRewardTool = computedFn((stream: EduStreamUI): EduStreamTool => {
-    return new EduStreamTool(EduStreamToolCategory.star, 'reward', transI18n('Star'), {
-      interactable: true,
-      style: {},
-      hoverIconType: 'reward-hover',
-      onClick: interactionThrottleHandler(
-        () => {
-          this.classroomStore.roomStore
-            .sendRewards([{ userUuid: stream.fromUser.userUuid, changeReward: 1 }])
-            .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
-        },
-        (message) => this.shareUIStore.addToast(message, 'warning'),
-      ),
-    });
+    return new EduStreamTool(
+      EduStreamToolCategory.star,
+      { icon: SvgIconEnum.REWARD, color: InteractionStateColors.half },
+      transI18n('Star'),
+      {
+        interactable: true,
+        hoverIconType: { icon: SvgIconEnum.REWARD, color: InteractionStateColors.allow },
+        onClick: interactionThrottleHandler(
+          () => {
+            this.classroomStore.roomStore
+              .sendRewards([{ userUuid: stream.fromUser.userUuid, changeReward: 1 }])
+              .catch((e) => this.shareUIStore.addGenericErrorDialog(e as AGError));
+          },
+          (message) => this.shareUIStore.addToast(message, 'warning'),
+        ),
+      },
+    );
   });
 
   /**
@@ -607,41 +656,54 @@ export class StreamUIStore extends EduUIStoreBase {
    * 本地视频占位符
    * @returns
    */
-  cameraPlaceholder = computedFn(
-    (stream: EduStreamUI, canSetupVideo: boolean): CameraPlaceholderType => {
-      if (!canSetupVideo) return CameraPlaceholderType.nosetup;
-      const isLocal =
-        stream.stream.streamUuid === this.classroomStore.streamStore.localCameraStreamUuid;
+  cameraPlaceholder = computedFn((stream: EduStreamUI): CameraPlaceholderType => {
+    const isLocal =
+      stream.stream.streamUuid === this.classroomStore.streamStore.localCameraStreamUuid;
 
-      const videoSourceState = isLocal
-        ? this.classroomStore.mediaStore.localCameraTrackState
-        : stream.stream.videoSourceState;
+    const videoSourceState = isLocal
+      ? this.classroomStore.mediaStore.localCameraTrackState
+      : stream.stream.videoSourceState;
 
-      let placeholder = CameraPlaceholderType.none;
+    let placeholder = CameraPlaceholderType.none;
 
-      const deviceDisabled = videoSourceState === AgoraRteMediaSourceState.stopped;
+    const deviceDisabled = videoSourceState === AgoraRteMediaSourceState.stopped;
 
-      if (deviceDisabled) {
-        return CameraPlaceholderType.disabled;
-      }
+    if (deviceDisabled) {
+      return CameraPlaceholderType.disabled;
+    }
 
-      if (
-        stream.stream.videoState === AgoraRteMediaPublishState.Published &&
-        videoSourceState === AgoraRteMediaSourceState.started
-      ) {
-        placeholder = CameraPlaceholderType.none;
-      } else {
-        placeholder = CameraPlaceholderType.muted;
-      }
-      return placeholder;
-    },
-  );
+    if (
+      stream.stream.videoState === AgoraRteMediaPublishState.Published &&
+      videoSourceState === AgoraRteMediaSourceState.started
+    ) {
+      placeholder = CameraPlaceholderType.none;
+    } else {
+      placeholder = CameraPlaceholderType.muted;
+    }
+    return placeholder;
+  });
 
   /**
    * 视频窗工具栏定位
    * @returns
    */
-  @computed get toolbarPlacement(): 'left' | 'bottom' {
+  get toolbarPlacement(): 'left' | 'bottom' {
+    return 'bottom';
+  }
+
+  /**
+   * 视频窗工具栏定位
+   * @returns
+   */
+  get toolbarOffset(): number[] {
+    return [0, 0];
+  }
+
+  /**
+   * 大窗视频窗工具栏定位
+   * @returns
+   */
+  get fullScreenToolbarPlacement(): 'left' | 'bottom' {
     return 'bottom';
   }
 
@@ -649,21 +711,23 @@ export class StreamUIStore extends EduUIStoreBase {
    * 大窗视频窗工具栏定位
    * @returns
    */
-  @computed get fullScreenToolbarPlacement(): 'left' | 'bottom' {
-    return 'bottom';
+  get fullScreenToolbarOffset(): number[] {
+    return [0, -48];
   }
+
   /**
    * 大窗视频窗工具tooltip定位
    * @returns
    */
-  @computed get fullScreenToolTipPlacement(): TooltipPlacement {
+  get fullScreenToolTipPlacement(): TooltipPlacement {
     return 'top';
   }
   /**
    * 移除奖励动画
    * @param id
    */
-  @action.bound removeAward(id: string) {
+  @action.bound
+  removeAward(id: string) {
     this.awardAnims = this.awardAnims.filter((anim) => anim.id !== id);
   }
 
@@ -759,6 +823,7 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   onDestroy() {
+    EduEventUICenter.shared.offClassroomUIEvents(this._handleStreamWindowListChange);
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }

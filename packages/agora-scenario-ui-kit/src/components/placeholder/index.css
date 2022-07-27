@@ -10,6 +10,7 @@
 }
 
 .camera-placeholder {
+  @apply bg-component;
   overflow: hidden;
   position: relative;
   height: 100%;
@@ -17,8 +18,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ececf1;
-  background-color: #f9f9fc;
   flex-direction: column;
 }
 

@@ -4,6 +4,8 @@ import { observer } from 'mobx-react';
 import { WaveArmSender as WaveArmSenderContainer } from './sender';
 import { WaveArmManager, StudentsWaveArmList } from './manager';
 import './index.css';
+import { visibilityControl } from '../visibility';
+import { raiseHandEnabled } from '../visibility/controlled';
 
 export const WaveArmManagerContainer = observer(() => {
   const { handUpUIStore } = useStore();
@@ -22,7 +24,7 @@ export const WaveArmListContainer = observer(() => {
   return <StudentsWaveArmList userWaveArmList={userWaveArmList} onClick={onPodium} />;
 });
 
-export const HandsUpContainer = observer(() => {
+export const HandsUpContainer = visibilityControl(observer(() => {
   const userRole = EduClassroomConfig.shared.sessionInfo.role;
   if (userRole === EduRoleTypeEnum.teacher) {
     return <WaveArmManagerContainer />;
@@ -31,4 +33,4 @@ export const HandsUpContainer = observer(() => {
     return <WaveArmSenderContainer />;
   }
   return null;
-});
+}), raiseHandEnabled);

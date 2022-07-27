@@ -8,7 +8,8 @@ import {
 import { AGError, AgoraRteVideoSourceType, Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { transI18n } from '~ui-kit';
+import { SvgIconEnum, transI18n } from '~ui-kit';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 import { StreamUIStore } from '../common/stream';
 import { EduStreamUI } from '../common/stream/struct';
 import { EduStreamTool, EduStreamToolCategory } from '../common/stream/tool';
@@ -138,12 +139,12 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
   localOffAllStreamWindow = computedFn((): EduStreamTool => {
     return new EduStreamTool(
       EduStreamToolCategory.stream_window_off,
-      'stream-window-off',
+      { icon: SvgIconEnum.STREAM_WINDOW_ON, color: InteractionStateColors.half },
       transI18n('Camera Pos Reset'),
       {
         //host can control
         interactable: !!this._streamWindowUserUuids.size,
-        hoverIconType: 'stream-window-on',
+        hoverIconType: { icon: SvgIconEnum.STREAM_WINDOW_ON, color: InteractionStateColors.allow },
         onClick: async () => {
           try {
             EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.offStreamWindow); // stream window off event
@@ -254,12 +255,13 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
   private _handleClassroomUIEvents(type: AgoraEduClassroomUIEvent, ...args: any[]) {
     switch (type) {
       case AgoraEduClassroomUIEvent.streamWindowsChange:
-        console.log(args);
         this._streamWindowUserUuids = new Set(args[0]);
         break;
-      default:
-        break;
     }
+  }
+
+  get toolbarPlacement(): 'left' | 'bottom' {
+    return 'bottom';
   }
 
   onInstall(): void {

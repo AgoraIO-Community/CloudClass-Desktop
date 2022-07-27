@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { SvgImg, useI18n, Slice } from '~ui-kit';
+import { SvgImg, useI18n, Slice, SvgIconEnum } from '~ui-kit';
 
 export const SliceContainer = observer(() => {
   const { toolbarUIStore } = useStore();
@@ -11,7 +11,7 @@ export const SliceContainer = observer(() => {
     const { id, iconType, name } = item;
     return {
       id,
-      icon: iconType ? <SvgImg type={iconType} size={24} /> : <span />,
+      icon: iconType ? <SvgImg type={iconType as SvgIconEnum} size={24} /> : <span />,
       name,
     };
   });
@@ -20,7 +20,7 @@ export const SliceContainer = observer(() => {
     <Slice
       value="tools"
       label={t('scaffold.slice')}
-      icon="tools"
+      icon={SvgIconEnum.TOOLS}
       slicersList={mappedItems}
       onClick={handleSliceItem}
     />

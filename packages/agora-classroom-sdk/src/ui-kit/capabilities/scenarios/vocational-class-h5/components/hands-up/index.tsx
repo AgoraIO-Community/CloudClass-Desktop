@@ -3,7 +3,7 @@ import { EduVocationalH5UIStore } from '@/infra/stores/vocational-h5';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { CSSProperties, FC, useMemo, useState } from 'react';
-import { Icon, Popover, SvgImg } from '~ui-kit';
+import { Popover, SvgIconEnum, SvgImg } from '~ui-kit';
 import { WaveArmSender } from '../../../../containers/hand-up/sender';
 import './index.css';
 
@@ -19,7 +19,6 @@ export const HandsUp = observer<FC<HandsUpProps>>(({ style, className = '' }) =>
   const { waveArm, teacherUuid, offPodium } = handUpUIStore;
   const { acceptedList } = classroomStore.roomStore;
   const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
-
   const isOnPodium = useMemo(
     () => !!acceptedList.find((u) => u.userUuid === userUuid),
     [acceptedList, userUuid],
@@ -36,27 +35,28 @@ export const HandsUp = observer<FC<HandsUpProps>>(({ style, className = '' }) =>
   const content = (
     <div className="hands-up-content">
       {/* 开关摄像头 */}
-      <Icon
+
+      <SvgImg
         className="iconfont"
-        type={!streamUIStore.localCameraOff ? 'm-camera' : 'm-camera-off'}
+        type={!streamUIStore.localCameraOff ? SvgIconEnum.M_CAMERA : SvgIconEnum.M_CAMERA_OFF}
         onClick={() => streamUIStore.toggleLocalVideo()}
       />
       {/* 切换摄像头 */}
-      <Icon
+      <SvgImg
         className="iconfont"
         type={
           isOnPodium && !streamUIStore.localCameraOff
-            ? 'm-switch-camera'
-            : 'm-switch-camera-disabled'
+            ? SvgIconEnum.M_SWITCH_CAMERA
+            : SvgIconEnum.M_SWITCH_CAMERA
         }
         onClick={() => {
           deviceSettingUIStore.toggleCamera();
         }}
       />
       {/* 开关麦克风 */}
-      <Icon
+      <SvgImg
         className="iconfont"
-        type={!streamUIStore.localMicOff ? 'm-micphone' : 'm-micphone-off'}
+        type={!streamUIStore.localMicOff ? SvgIconEnum.M_MICPHONE : SvgIconEnum.M_MICPHONE_OFF}
         onClick={() => streamUIStore.toggleLocalAudio()}
       />
       {/* 举手上台 */}
@@ -70,7 +70,7 @@ export const HandsUp = observer<FC<HandsUpProps>>(({ style, className = '' }) =>
         overlayClassName="hands-up-popover"
         content={content}
         placement="topRight">
-        <SvgImg type="hands-up-before" size={18} onClick={() => setVisible(!visible)} />
+        <SvgImg type={SvgIconEnum.HANDS_UP_ACTIVE} size={18} onClick={() => setVisible(!visible)} />
       </Popover>
     </div>
   );

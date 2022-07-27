@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/util/type';
 import './index.css';
-import { SvgImg } from '../svg-img';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 import { useI18n } from '../i18n';
 
 export interface HomeAboutProps extends BaseProps {
@@ -55,7 +55,7 @@ export const HomeAbout: FC<HomeAboutProps> = ({
               onLookPrivate && onLookPrivate();
             }}>
             <span>{t('home-about.check')} </span>
-            <SvgImg type="forward" />
+            <SvgImg type={SvgIconEnum.FORWARD} />
           </div>
         </div>
         <div className="about-main-item">
@@ -66,7 +66,7 @@ export const HomeAbout: FC<HomeAboutProps> = ({
               onLookDeclare && onLookDeclare();
             }}>
             <span>{t('home-about.check')}</span>
-            <SvgImg type="forward" />
+            <SvgImg type={SvgIconEnum.FORWARD} />
           </div>
         </div>
         <div className="about-main-item">
@@ -77,7 +77,7 @@ export const HomeAbout: FC<HomeAboutProps> = ({
               onRegiste && onRegiste();
             }}>
             <span>{t('home-about.register')}</span>
-            <SvgImg type="forward" />
+            <SvgImg type={SvgIconEnum.FORWARD} />
           </div>
         </div>
         <div className="about-main-item">

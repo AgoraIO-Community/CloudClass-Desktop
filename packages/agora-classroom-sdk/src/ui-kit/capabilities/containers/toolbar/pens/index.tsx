@@ -1,6 +1,6 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { Pens, useI18n } from '~ui-kit';
+import { Pens, SvgIconEnum, useI18n } from '~ui-kit';
 
 export type PensContainerProps = {
   onClick: (pen: string) => void;
@@ -40,7 +40,7 @@ export const PensContainer = observer(() => {
       paletteMap={paletteMap}
       value="pen"
       label={selectedPenTool ? t(mapLineSelectorToLabel[selectedPenTool]) : ''}
-      icon="pen"
+      icon={SvgIconEnum.PEN_CURVE}
       activePen={selectedPenTool}
       onClick={setTool}
       isActive={isPenToolActive}

@@ -1,15 +1,15 @@
 import React, { FC, ReactEventHandler } from 'react';
-import { IconTypes } from '~components/icon';
 import { Tooltip } from '~components/tooltip';
 import { SvgIcon } from '~components/svg-img';
 import classnames from 'classnames';
-import { BaseProps } from '../interface/base-props';
+import { BaseProps } from '../util/type';
+import { SvgIconEnum } from '../svg-img/type';
 import { useI18n } from '../i18n';
-
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 export interface ToolItem extends BaseProps {
   value: string;
   label: any;
-  icon: IconTypes;
+  icon: SvgIconEnum;
   isActive?: boolean;
   hover?: boolean;
   component?: React.FC<{
@@ -58,14 +58,15 @@ export const Tool: FC<ToolProps> = (props) => {
             offset: [-5, 0],
           }}>
           <div className={cls}>
-            {icon ? (
-              <SvgIcon
-                type={isActive ? icon + '-active' : icon}
-                hoverType={icon + '-active'}
-                canHover
-                onClick={() => handleToolClick && handleToolClick(value)}
-              />
-            ) : null}
+            <SvgIcon
+              type={icon}
+              hoverType={icon}
+              colors={isActive ? {
+                iconPrimary: InteractionStateColors.allow
+              } : {}}
+              hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+              onClick={() => handleToolClick && handleToolClick(value)}
+            />
           </div>
         </Tooltip>
       )}

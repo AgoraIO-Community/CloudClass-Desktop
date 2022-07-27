@@ -7,7 +7,7 @@ import { RemoteControlBarUIParams } from '@/infra/stores/common/type';
 import { ChannelType, IPCMessageType } from '@/infra/utils/ipc-channels';
 import { ControlState } from '@/infra/stores/common/remote-control/type';
 import { EduUserStruct } from 'agora-edu-core';
-import { Select, SvgIcon, useI18n, Tooltip, transI18n } from '~ui-kit';
+import { Select, SvgIcon, useI18n, Tooltip, transI18n, SvgIconEnum } from '~ui-kit';
 
 type Props = {
   canReSelectScreen?: boolean;
@@ -82,24 +82,20 @@ const useActions = () => {
 
 type IconButtonProps = {
   title: string;
-  color: string;
-  type: string;
+  type: SvgIconEnum;
+  hoverType: SvgIconEnum;
   onClick: () => void;
 };
 
-const IconButton: FC<IconButtonProps> = ({ title, color, type, onClick }) => {
+const IconButton: FC<IconButtonProps> = ({ title, type, onClick, hoverType }) => {
   return (
     <Tooltip title={title} placement="bottom">
-      <span>
-        <SvgIcon
-          canHover
-          hoverType={type === 'switch-screen-share' ? type + '-active' : type}
-          color={color}
-          type={type}
-          size={24}
-          onClick={onClick}
-        />
-      </span>
+      <SvgIcon
+        hoverType={hoverType}
+        type={type}
+        size={24}
+        onClick={onClick}
+      />
     </Tooltip>
   );
 };
@@ -176,16 +172,16 @@ export const ControlBar: FC<Props> = ({ canReSelectScreen = false }) => {
       </div>
       <IconButton
         title={t('fcr_share_switch')}
-        color="#7B88A0"
-        type="switch-screen-share"
+        type={SvgIconEnum.SWITCH_SCREEN_SHARE}
+        hoverType={SvgIconEnum.SWITCH_SCREEN_SHARE_ACTIVE}
         onClick={selectScreen}
       />
       {/* padding */}
       <div style={{ marginRight: 10 }} />
       <IconButton
         title={t('fcr_close')}
-        color="#7B88A0"
-        type="close"
+        type={SvgIconEnum.CLOSE}
+        hoverType={SvgIconEnum.CLOSE}
         onClick={() => {
           setControlState(ControlState.NotAllowedControlled);
           close();

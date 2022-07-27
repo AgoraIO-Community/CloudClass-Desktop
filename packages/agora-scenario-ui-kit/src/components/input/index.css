@@ -1,16 +1,15 @@
 .fcr-input-wrapper {
+  @apply border-divider border border-solid text-level1;
+  background-color: transparent;
   position: relative;
   display: inline-block;
   width: 100%;
   height: 100%;
   min-width: 0;
   padding: 4px 15px;
-  color: rgba(0, 0, 0, 0.85);
   font-size: 14px;
   line-height: 1.5715;
-  background-color: #f9f9fc;
   background-image: none;
-  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 6px;
   transition: all 0.3s;
   display: inline-flex;
@@ -32,20 +31,18 @@
 }
 
 .fcr-input-wrapper:not(.fcr-input-wrapper-disabled):hover {
-  border-color: #357bf6;
+  @apply border-brand;
   border-right-width: 1px !important;
-  background-color: #fff;
   z-index: 1;
 }
 
 .fcr-input-wrapper-disabled {
-  color: #7b88a0;
+  @apply text-level2;
 }
 
 .fcr-input-wrapper-focused {
-  border-color: #357bf6;
+  @apply border-brand;
   border-right-width: 1px !important;
-  background-color: #fff;
   outline: 0;
 }
 
@@ -64,7 +61,7 @@
 
 .fcr-input-wrapper input::-webkit-input-placeholder {
   /* WebKit browsers */
-  color: #7b88a0;
+  @apply text-level1;
   font-size: 14px;
 }
 

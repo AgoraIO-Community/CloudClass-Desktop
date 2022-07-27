@@ -1,17 +1,16 @@
 .answer-options {
   display: flex;
   flex-direction: row;
-  border: 1px solid #eeeef7;
   border-radius: 4px;
   flex-wrap: wrap;
   padding: 9px 12px;
+  @apply border border-solid border-divider;
 }
 
 .answer-option {
-  border: 1px solid #eeeef7;
+  @apply border border-solid border-divider text-level2;
   border-radius: 18px;
   box-shadow: 0 -1px 3px 0 hsl(0deg 0% 100% / 50%);
-  color: #bdbdca;
   font-size: 24px;
   height: 50px;
   line-height: 50px;

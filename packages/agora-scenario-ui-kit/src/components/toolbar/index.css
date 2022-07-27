@@ -1,6 +1,6 @@
 .toolbar {
   height: 100%;
-  background-color: white;
+  @apply bg-component;
 }
 
 .toolbar.opened {
@@ -62,21 +62,21 @@
 }
 
 .toolbar-shadow {
+  @apply bg-background;
   bottom: -2px;
   position: absolute;
   height: 20px;
   width: 100%;
-  background: white;
   border-radius: 0 0 21px 21px;
   box-shadow: 0px -4px 6px 0px rgb(47 65 146 / 15%);
 }
 
 .toolbar-shadow-up {
+  @apply bg-background;
   top: -2px;
   position: absolute;
   height: 20px;
   width: 100%;
-  background: white;
   border-radius: 21px 21px 0 0;
   box-shadow: 0px 4px 6px 0px rgb(47 65 146 / 15%);
 }
@@ -141,8 +141,7 @@
 
 .tool.expand,
 .tool:hover {
-  @apply rounded-full;
-  background: #f0f0f7;
+  @apply rounded-full bg-component;
 }
 
 .tool > svg {
@@ -260,8 +259,7 @@
 .expand-tools .cabinet-item:hover,
 .expand-tools .cleaner-item:hover,
 .expand-tools .slice-item:hover {
-  color: #191919;
-  background-color: #f9f9fc;
+  @apply bg-icon-selected-color text-level1;
 }
 
 .customize-dialog-popover .popover-inner-content {
@@ -360,8 +358,7 @@
 }
 
 .tool-cabinet-popover .popover-arrow {
-  border-right: 1px solid #e1e1ea !important;
-  border-top: 1px solid #e1e1ea !important;
+  @apply border-r border-t border-solid border-divider;
 }
 
 .tool-cabinet-popover .popover-inner {
@@ -369,26 +366,18 @@
 }
 
 .tool-cabinet-popover .popover-inner-content {
+  @apply border border-solid border-divider;
   padding: 0;
-  border: 1px solid #e1e1ea;
 }
 .tool-cabinet-popover .cabinet-item {
   position: relative;
 }
 
-/* cabinet icons style */
-.cabinet-item:hover:not(.active) .svg-img path {
-  fill: #191919;
+.cabinet-item:not(.cabinet-item-last) {
+  @apply border-b border-solid border-divider;
 }
 
-.cabinet-item:hover:not(.active) .svg-img path[stroke] {
-  stroke: #191919;
-  fill: none;
-}
-.cabinet-item:not(.cabinet-item-last) {
-  border-bottom: 1px solid #eeeef7;
-}
 /* 3 6 9 */
 .cabinet-item:not(:nth-child(3n)) {
-  border-right: 1px solid #eeeef7;
+  @apply border-r border-solid border-divider;
 }

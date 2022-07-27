@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import { FC, useState } from 'react';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/util/type';
 import { SvgIcon } from '..';
+import { SvgIconEnum } from '../svg-img/type';
 import './style.css';
 
 export type TreeModel = {
@@ -80,14 +81,15 @@ export const Tree: FC<TreeProps> = ({
         onClick={
           !disableExpansion
             ? () => {
-                setExtpanded(!expanded);
-              }
+              setExtpanded(!expanded);
+            }
             : undefined
         }>
         {!disableExpansion &&
           (hasChildren ? (
             <SvgIcon
-              type="triangle-solid"
+              type={SvgIconEnum.TRIANGLE_SOLID}
+              hoverType={SvgIconEnum.TRIANGLE_SOLID}
               size={14}
               style={{
                 transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',

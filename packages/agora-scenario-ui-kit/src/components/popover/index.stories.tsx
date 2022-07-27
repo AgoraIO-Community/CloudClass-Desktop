@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
 import { Meta } from '@storybook/react';
-import { Button } from '~components/button';
-import { Popover, PopoverProps } from '~components/popover';
-import { Calendar } from '~components/calendar';
+import { Button } from '../button';
+import { Popover, PopoverProps } from '../popover';
 
 const meta: Meta = {
   title: 'Components/Popover',
@@ -22,7 +21,8 @@ export const Docs: FC<PopoverProps> = (props) => {
           trigger="click"
           overlayClassName="raw-popover"
           placement="right"
-          content={<Calendar />}>
+          content={<span>Hello world!</span>}
+        >
           <Button>calendar</Button>
         </Popover>
       </div>

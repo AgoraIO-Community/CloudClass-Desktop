@@ -6,6 +6,12 @@ import {
   AgoraWidgetBase,
   AgoraWidgetLifecycle,
 } from '@/infra/api';
+import {
+  counterEnabled,
+  pollEnabled,
+  popupQuizEnabled,
+  chatEnabled,
+} from '@/ui-kit/capabilities/containers/visibility/controlled';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
@@ -69,6 +75,8 @@ export class WidgetUIStore extends EduUIStoreBase {
         widgetController,
         this.classroomStore,
         this.shareUIStore,
+        AgoraEduSDK.uiConfig,
+        AgoraEduSDK.theme,
       ) as AgoraWidgetBase;
 
       if (instanceId) {
@@ -237,8 +245,34 @@ export class WidgetUIStore extends EduUIStoreBase {
     this.destroyWidget(widgetId);
   }
 
+  private _getEnabledWidgets() {
+    const widgets = Object.entries(AgoraEduSDK.widgets).reduce((prev, [key, value]) => {
+      if (!popupQuizEnabled(AgoraEduSDK.uiConfig) && key === 'popupQuiz') {
+        return prev;
+      }
+
+      if (!counterEnabled(AgoraEduSDK.uiConfig) && key === 'countdownTimer') {
+        return prev;
+      }
+
+      if (!pollEnabled(AgoraEduSDK.uiConfig) && key === 'poll') {
+        return prev;
+      }
+
+      if (!chatEnabled(AgoraEduSDK.uiConfig) && key === 'easemobIM') {
+        return prev;
+      }
+
+      prev[key] = value;
+
+      return prev;
+    }, {});
+
+    return widgets;
+  }
+
   onInstall() {
-    this._registeredWidgets = { ...AgoraEduSDK.widgets };
+    this._registeredWidgets = this._getEnabledWidgets();
 
     this.classroomStore.widgetStore.addWidgetStateListener(this._stateListener);
     // switch between widget controllers of scenes

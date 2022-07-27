@@ -20,7 +20,7 @@ import {
   CloudDriveMediaResource,
 } from './struct';
 import { MimeTypesKind } from '@/infra/utils/board-utils';
-import { transI18n } from '~ui-kit';
+import { SvgIconEnum, transI18n } from '~ui-kit';
 
 export enum FileTypeSvgColor {
   ppt = '#F6B081',
@@ -100,35 +100,35 @@ export class CloudUIStore extends EduUIStoreBase {
    * @param name
    * @returns
    */
-  fileNameToType(name: string): string {
+  fileNameToType(name: string) {
     if (name.match(/ppt|pptx|pptx/i)) {
-      return 'ppt';
+      return SvgIconEnum.PPT;
     }
     if (name.match(/doc|docx/i)) {
-      return 'word';
+      return SvgIconEnum.WORD;
     }
     if (name.match(/xls|xlsx/i)) {
-      return 'excel';
+      return SvgIconEnum.EXCEL;
     }
     if (name.match(/mp4/i)) {
-      return 'video';
+      return SvgIconEnum.VIDEO;
     }
     if (name.match(/mp3/i)) {
-      return 'audio';
+      return SvgIconEnum.AUDIO;
     }
     if (name.match(/gif|png|jpeg|jpg|bmp/i)) {
-      return 'image';
+      return SvgIconEnum.IMAGE;
     }
     if (name.match(/pdf/i)) {
-      return 'pdf';
+      return SvgIconEnum.PDF;
     }
     if (name.match(/h5/i)) {
-      return 'h5';
+      return SvgIconEnum.H5;
     }
     if (name.match(/alf/i)) {
-      return 'alf';
+      return SvgIconEnum.ALF;
     }
-    return 'unknown';
+    return SvgIconEnum.UNKNOWN;
   }
 
   /**

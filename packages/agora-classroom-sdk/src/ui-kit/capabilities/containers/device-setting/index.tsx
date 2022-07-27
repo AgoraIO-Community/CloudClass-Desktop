@@ -169,7 +169,7 @@ export const RoomDeviceSettingContainer = observer(({ id }: any) => {
 
   return (
     <Modal
-      title={<span style={{ color: '#191919' }}>{transI18n('pretest.settingTitle')}</span>}
+      title={<span>{transI18n('pretest.settingTitle')}</span>}
       style={{ width: 360 }}
       footer={[
         <Button key="ok" action="ok">

@@ -1,27 +1,26 @@
-import React, { CSSProperties, FC, useCallback, useEffect, useRef, useState } from 'react';
+import { CSSProperties, FC, useCallback, useEffect, useRef } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { Icon } from '~components/icon';
-import { IconTypes } from '~components/icon/icon-types';
+import { BaseProps } from '~ui-kit/components/util/type';
 import Notification from 'rc-notification';
 import './index.css';
 import { useTimeout } from '~utilities/hooks';
 import { SvgImg } from '../svg-img';
+import { SvgIconEnum } from '../svg-img/type';
 
 export type ToastCategory = 'success' | 'error' | 'warning';
 
-const toastDict: Record<string, { iconType: IconTypes; color: string }> = {
+const toastDict: Record<string, { iconType: SvgIconEnum; color: string }> = {
   success: {
-    iconType: 'checked',
-    color: '#357BF6',
+    iconType: SvgIconEnum.TOAST_SUCCESS,
+    color: '#fff',
   },
   error: {
-    iconType: 'red-caution',
-    color: '#F04C36',
+    iconType: SvgIconEnum.TOAST_INFO,
+    color: '#fff',
   },
   warning: {
-    iconType: 'red-caution',
-    color: '#FFA229',
+    iconType: SvgIconEnum.TOAST_INFO,
+    color: '#fff',
   },
 };
 
@@ -29,7 +28,7 @@ export interface ToastProps extends BaseProps {
   type?: 'success' | 'error' | 'warning';
   text?: string;
   duration?: number;
-  closeToast: CallableFunction;
+  closeToast?: CallableFunction;
   canStop?: boolean;
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AbstractTooltipProps, Tooltip } from '../tooltip';
-import { getRenderPropValue, RenderFunction } from '../_util/getRenderPropValue';
-import { getTransitionName } from '../_util/motion';
+import { getRenderPropValue, RenderFunction } from '../util/getRenderPropValue';
+import { getTransitionName } from '../util/motion';
 import './index.css';
 
 export interface PopoverProps extends AbstractTooltipProps {

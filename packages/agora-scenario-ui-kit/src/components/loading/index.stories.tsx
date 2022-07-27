@@ -1,10 +1,8 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Card } from '~components/card';
-import { Loading } from '~components/loading';
-import { Button } from '~components/button';
-import { Modal } from '~components/modal';
-import { action } from '@storybook/addon-actions';
+import { Card } from '../card';
+import { Loading } from '../loading';
+import { Button } from '../button';
 
 const meta: Meta = {
   title: 'Components/Loading',

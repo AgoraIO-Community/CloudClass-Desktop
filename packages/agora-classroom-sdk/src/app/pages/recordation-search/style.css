@@ -1,0 +1,56 @@
+.recordation-search-container {
+  width: 760px;
+  height: 500px;
+  padding: 40px 80px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  background-color: #fff;
+}
+.recordation-search-form {
+  height: 34px;
+}
+.recordation-label {
+  color: #586376;
+  font-size: 14px;
+  flex: 1 0 45px;
+  text-align: right;
+}
+.recordation-search-form .input-wrapper {
+  background-color: #fff;
+  border: 1px solid #cecece;
+}
+.recordation-search-form button {
+  margin-left: 8px;
+}
+.recordation-search-form .btn.btn-sm[disabled] {
+  border: unset;
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(53, 123, 246, 1);
+}
+.recordation-tips {
+  font-size: 13px;
+  color: rgba(240, 76, 54, 1);
+}
+.recordation-list {
+  overflow: auto;
+  gap: 20px;
+}
+.recordation-list-item {
+  border: 1px solid #eeeef7;
+  border-radius: 4px;
+  padding: 12px 16px;
+}
+.recordation-list-item p {
+  margin: 0;
+  color: rgba(125, 135, 152, 1);
+}
+.recordation-list-item p:first-child {
+  margin-bottom: 10px;
+  color: rgba(25, 25, 25, 1);
+}
+.primary-ghost {
+  @apply text-level2 bg-white border-divider border;
+}
+.primary-ghost:hover {
+  color: #fff;
+}

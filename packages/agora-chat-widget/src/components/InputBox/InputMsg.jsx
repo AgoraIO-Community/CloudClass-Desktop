@@ -4,11 +4,9 @@ import React, { useRef, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
 import classnames from 'classnames';
 import { transI18n } from '~components/i18n';
-import { Icon } from '~components/icon';
 import { MSG_TYPE } from '../../contants';
 import { messageAction } from '../../redux/actions/messageAction';
 import { setQuestioinStateAction } from '../../redux/actions/roomAction';
-// import emojiIcon from '../../themes/img/emoji.png';
 import emojiIcon from '../../themes/svg/emoji.svg';
 import imgIcon from '../../themes/img/img.png';
 import screenshotIcon from '../../themes/img/screenshot.png';
@@ -189,7 +187,10 @@ export const InputMsg = ({ allMutePermission }) => {
         <div className="chat-icon">
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {configUIVisible.emoji && (
-              <Popover content={<ShowEomji getEmoji={getEmoji} />} trigger="click">
+              <Popover
+                overlayClassName="chat-icon-popover"
+                content={<ShowEomji getEmoji={getEmoji} />}
+                trigger="click">
                 <img src={emojiIcon} className="emoji-icon" />
               </Popover>
             )}

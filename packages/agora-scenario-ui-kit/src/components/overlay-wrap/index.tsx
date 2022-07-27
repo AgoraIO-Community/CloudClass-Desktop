@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~components/util/type';
 import { CSSTransition } from 'react-transition-group';
 import './index.css';
 

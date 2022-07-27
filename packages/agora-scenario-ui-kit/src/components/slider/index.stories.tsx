@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { Slider } from '~components/slider';
+import { Slider } from '../slider';
 
 const meta: Meta = {
   title: 'Components/Slider',

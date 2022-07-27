@@ -25,10 +25,21 @@ import {
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
-import { I18nProvider } from '~ui-kit';
+import { FcrTheme } from '~ui-kit';
 import { EduContext } from '../contexts';
 import { createCloudResource } from '../stores/common/cloud-drive/helper';
+import { FcrMultiThemeMode, FcrUIConfig } from '../types/config';
+import {
+  applyTheme,
+  loadGeneratedFiles,
+  loadTheme,
+  loadUIConfig,
+  themes,
+  uiConfigs,
+} from '../utils/config-loader';
+
 import './polyfills';
+import { Providers } from './providers';
 import {
   AgoraWidgetBase,
   BoardWindowAnimationOptions,
@@ -50,11 +61,13 @@ export class AgoraEduSDK {
   private static _coursewareList: CourseWareList = [];
   private static _boardWindowAnimationOptions: BoardWindowAnimationOptions = {};
   private static _language: string;
-  private static appId = '';
+  private static _appId = '';
+  private static _uiConfig: FcrUIConfig;
+  private static _theme: FcrTheme;
   //default use GLOBAL region(including CN)
   private static region: EduRegion = EduRegion.CN;
 
-  private static convertRegion(region: string): EduRegion {
+  private static _convertRegion(region: string): EduRegion {
     switch (region) {
       case 'CN':
         return EduRegion.CN;
@@ -67,7 +80,7 @@ export class AgoraEduSDK {
     }
     return region as EduRegion;
   }
-  private static convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
+  private static _convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
     const config: ConvertMediaOptionsConfig = {};
     if (opts) {
       const {
@@ -110,19 +123,34 @@ export class AgoraEduSDK {
   }
 
   static setParameters(params: string) {
-    const { host } = JSON.parse(params) || {};
-    AgoraEduSDK._config.host = host;
+    const { host, uiConfigs, themes } = JSON.parse(params) || {};
+
+    if (host) {
+      this._config.host = host;
+    }
+
+    if (uiConfigs) {
+      Object.keys(uiConfigs).forEach((k) => {
+        loadUIConfig(parseInt(k), uiConfigs[k]);
+      });
+    }
+
+    if (themes) {
+      Object.keys(themes).forEach((k) => {
+        loadTheme(k, themes[k]);
+      });
+    }
   }
 
   static config(config: ConfigParams) {
-    AgoraEduSDK.appId = config.appId;
+    this._appId = config.appId;
     if (config.region) {
-      AgoraEduSDK.region = AgoraEduSDK.convertRegion(config.region);
+      this.region = this._convertRegion(config.region);
     }
   }
 
   static get widgets() {
-    return AgoraEduSDK._widgets || {};
+    return this._widgets || {};
   }
 
   static get courseWareList(): CloudDriveResource[] {
@@ -137,7 +165,15 @@ export class AgoraEduSDK {
     return this._language || 'en';
   }
 
-  static validateOptions(option: LaunchOption) {
+  static get uiConfig() {
+    return this._uiConfig;
+  }
+
+  static get theme() {
+    return this._theme;
+  }
+
+  private static _validateOptions(option: LaunchOption) {
     if (!option) {
       throw new Error('AgoraEduSDK: LaunchOption is required!');
     } else if (
@@ -162,14 +198,14 @@ export class AgoraEduSDK {
     }
   }
 
-  static getWidgetName(widgetClass: unknown) {
+  private static _getWidgetName(widgetClass: unknown) {
     const Clz = widgetClass as typeof AgoraWidgetBase;
     return Object.create(Clz.prototype).widgetName;
   }
 
   static launch(dom: HTMLElement, option: LaunchOption) {
     EduContext.reset();
-    AgoraEduSDK.validateOptions(option);
+    this._validateOptions(option);
     const {
       pretest,
       userUuid,
@@ -187,8 +223,8 @@ export class AgoraEduSDK {
       startTime,
       recordOptions,
       recordRetryTimeout,
+      uiMode,
     } = option;
-
     const sessionInfo = {
       userUuid,
       userName,
@@ -204,18 +240,18 @@ export class AgoraEduSDK {
       startTime,
     };
 
-    AgoraEduSDK._language = option.language;
+    this._language = option.language;
 
-    AgoraEduSDK._widgets = {
+    this._widgets = {
       ...option.widgets,
-      [this.getWidgetName(AgoraChatWidget)]: AgoraChatWidget,
-      [this.getWidgetName(AgoraHXChatWidget)]: AgoraHXChatWidget,
-      [this.getWidgetName(AgoraCountdown)]: AgoraCountdown,
-      [this.getWidgetName(AgoraSelector)]: AgoraSelector,
-      [this.getWidgetName(AgoraPolling)]: AgoraPolling,
-      [this.getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
-      [this.getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
-      [this.getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
+      [this._getWidgetName(AgoraChatWidget)]: AgoraChatWidget,
+      [this._getWidgetName(AgoraHXChatWidget)]: AgoraHXChatWidget,
+      [this._getWidgetName(AgoraCountdown)]: AgoraCountdown,
+      [this._getWidgetName(AgoraSelector)]: AgoraSelector,
+      [this._getWidgetName(AgoraPolling)]: AgoraPolling,
+      [this._getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
+      [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
+      [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
     };
 
     //TODO:待优化。 问题：合流转推(学生) 和 伪直播 场景不需要白板插件，因为它们使用的都是大班课的班型，所以不能通过后端禁用白板。
@@ -224,18 +260,18 @@ export class AgoraEduSDK {
       (EduRoomServiceTypeEnum.MixStreamCDN === option.roomServiceType &&
         option.roleType !== EduRoleTypeEnum.teacher)
     ) {
-      const widgetName = AgoraEduSDK.getWidgetName(FcrBoardWidget);
-      delete AgoraEduSDK._widgets[widgetName];
+      const widgetName = this._getWidgetName(FcrBoardWidget);
+      delete this._widgets[widgetName];
     }
 
     const config = new EduClassroomConfig(
-      AgoraEduSDK.appId,
+      this._appId,
       sessionInfo,
       option.recordUrl || '',
       {
-        region: AgoraEduSDK.region,
+        region: this.region,
         rtcConfigs: {
-          ...AgoraEduSDK.convertMediaOptions(option.mediaOptions),
+          ...this._convertMediaOptions(option.mediaOptions),
           ...{
             noDevicePermission: roleType === EduRoleTypeEnum.invisible,
           },
@@ -245,10 +281,11 @@ export class AgoraEduSDK {
       recordRetryTimeout ? { recordRetryTimeout } : undefined,
     );
 
-    if (AgoraEduSDK._config.host) {
-      config.host = AgoraEduSDK._config.host;
+    if (this._config.host) {
+      config.host = this._config.host;
     }
-    config.ignoreUrlRegionPrefix = config.host.includes('dev') || config.host.includes('pre');
+
+    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) => config.host.includes(v));
 
     if (courseWareList) {
       this._coursewareList = courseWareList.map((data: CourseWareItem) =>
@@ -257,47 +294,58 @@ export class AgoraEduSDK {
     }
 
     if (recordOptions) {
-      AgoraEduSDK._boardWindowAnimationOptions = recordOptions;
+      this._boardWindowAnimationOptions = recordOptions;
     }
 
     EduClassroomConfig.setConfig(config);
 
-    EduEventCenter.shared.onClassroomEvents((event: AgoraEduClassroomEvent, ...args) => {
+    EduEventCenter.shared.onClassroomEvents((event: AgoraEduClassroomEvent) => {
       if (event === AgoraEduClassroomEvent.Ready) {
-        AgoraEduSDK.setRecordReady();
+        this._setRecordReady();
       }
       if (event === AgoraEduClassroomEvent.Destroyed) {
         unmountComponentAtNode(dom);
       }
-
-      option.listener(event, ...args);
     });
 
+    EduEventCenter.shared.onClassroomEvents(option.listener);
+
+    const themeMode = uiMode ?? FcrMultiThemeMode.light;
+    this._selectUITheme(themeMode, option.roomType);
+    applyTheme(this._theme);
     render(
-      <I18nProvider language={option.language}>
+      <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
         <Scenarios
           pretest={pretest}
           roomType={sessionInfo.roomType}
           roomSubtype={sessionInfo.roomSubtype}
         />
-      </I18nProvider>,
+      </Providers>,
       dom,
     );
   }
 
-  static getWindowByID(id: WindowID, props: any) {
-    switch (id) {
-      case WindowID.RemoteControlBar:
-        return <ControlBar {...props} />;
-    }
-    return <div />;
-  }
-
+  /**
+   * 运行窗口UI
+   * @param dom
+   * @param option
+   * @returns
+   */
   static launchWindow(dom: HTMLElement, option: LaunchWindowOption) {
+    const mapping = {
+      [WindowID.RemoteControlBar]: ControlBar,
+    };
+
+    const Component = mapping[option.windowID];
+
+    const themeMode = option.uiMode ?? FcrMultiThemeMode.light;
+    this._selectUITheme(themeMode, option.roomType);
+    applyTheme(this._theme);
+
     render(
-      <I18nProvider language={option.language}>
-        {this.getWindowByID(option.windowID, option.args)}
-      </I18nProvider>,
+      <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
+        {Component && <Component {...option.args} />}
+      </Providers>,
       dom,
     );
 
@@ -306,14 +354,21 @@ export class AgoraEduSDK {
     };
   }
 
-  static setRecordReady() {
+  private static _selectUITheme(uiMode: FcrMultiThemeMode, roomType: EduRoomTypeEnum) {
+    const themeMode = uiMode ?? FcrMultiThemeMode.light;
+    this._uiConfig = uiConfigs[roomType];
+    this._theme = themes['default'][themeMode];
+  }
+
+  private static _setRecordReady() {
     const {
       rteEngineConfig: { ignoreUrlRegionPrefix, region },
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-      }/edu/apps/${appId}`;
+    const pathPrefix = `${
+      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+    }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',
@@ -321,3 +376,4 @@ export class AgoraEduSDK {
     });
   }
 }
+loadGeneratedFiles();

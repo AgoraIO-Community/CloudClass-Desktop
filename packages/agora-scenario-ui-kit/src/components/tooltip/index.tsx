@@ -5,9 +5,8 @@ import { TooltipProps as RcTooltipProps } from 'rc-tooltip/lib/Tooltip';
 import getPlacements, { AdjustOverflow, PlacementsConfig } from './placements';
 import classnames from 'classnames';
 import { placements as Placements } from 'rc-tooltip/lib/placements';
-import { getTransitionName } from '~components/_util/motion';
-import { LiteralUnion } from '~components/_util/type';
-import { PresetColorType, PresetColorTypes } from '~components/_util/colors';
+import { getTransitionName } from '~ui-kit/components/util/motion';
+import { PresetColorTypes } from '~ui-kit/components/util/colors';
 import { getOS } from '~utilities';
 import './index.css';
 
@@ -30,7 +29,7 @@ export type TooltipPlacement =
 export interface AbstractTooltipProps extends Partial<Omit<RcTooltipProps, 'children'>> {
   style?: React.CSSProperties;
   className?: string;
-  color?: LiteralUnion<PresetColorType, string>;
+  color?: string;
   placement?: TooltipPlacement;
   builtinPlacements?: typeof Placements;
   openClassName?: string;

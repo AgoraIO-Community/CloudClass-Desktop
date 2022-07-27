@@ -1,8 +1,6 @@
-// @ts-nocheck
-import React, { FC } from 'react';
+import { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-
+import { BaseProps } from '~ui-kit/components/util/type';
 import RCSlider, { SliderTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './index.css';
@@ -55,6 +53,7 @@ export const Slider: FC<SliderProps> = ({
   });
   return (
     <div className={cls} {...restProps}>
+      {/* @ts-ignore */}
       <RCSlider
         defaultValue={defaultValue}
         value={value}

@@ -11,7 +11,7 @@ import {
 import { showRedNotification } from './redux/actions/messageAction';
 import { setVisibleUI } from './redux/actions/roomAction';
 import { Chat } from './components/Chat';
-import { SvgImg } from './components/SvgImg';
+import { SvgIconEnum, SvgImg } from '~components/svg-img';
 import im_CN from './locales/zh_CN';
 import im_US from './locales/en_US';
 import { createListener } from './utils/listeners';
@@ -96,8 +96,7 @@ const App = function (props) {
               // 展开聊天
               onChangeModal();
             }}>
-            {/* <img src={showChat_icon} width="24" height="24" /> */}
-            <SvgImg type="mini-chat" />
+            <SvgImg type={SvgIconEnum.CHAT} />
             {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
           </div>
         </div>

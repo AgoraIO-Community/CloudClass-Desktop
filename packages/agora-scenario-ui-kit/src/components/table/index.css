@@ -25,18 +25,20 @@
   @apply flex;
   @apply flex-1;
   @apply flex-row;
+  @apply bg-icon-selected-color;
   font-size: 13px;
   line-height: 18px;
-  background-color: #f9f9fc;
   padding: 10px 0;
   padding-left: 19px;
-  @apply border-bottom-width-1;
+  @apply border-bottom-width-1 border-divider;
   line-height: 20px;
+}
+.agora-board-resources .border-bottom-width-1 {
+  @apply border-divider;
 }
 
 .border-bottom-width-1 {
   border-bottom-width: 1px;
-  @apply border-table-bottom;
   margin: 0px 0px -1px -1px;
 }
 

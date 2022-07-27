@@ -1,28 +1,20 @@
 .video-player {
-  /* @apply relative flex items-center justify-center; */
-  height: 168px;
-  width: 300px;
-  background: transparent;
-  border-radius: 4px;
-  color: #fff;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.video-player-fullscreen {
+  top: 0;
+  position: absolute;
   width: 100%;
   height: 100%;
+  background: transparent;
+  color: #fff;
+  flex-shrink: 0;
 }
 .video-player-overlay {
-  position: relative;
-  display: flex;
-  margin: 2px 0;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
 }
 .video-player-overlay .hidden {
   display: none;
-}
-
-.video-player-overlay-no-margin {
-  margin: 0;
 }
 .video-player-overlay .top-right-info {
   position: absolute;
@@ -60,6 +52,7 @@
 }
 
 .video-player-overlay .camera-placeholder {
+  @apply bg-component border-divider border border-solid;
   overflow: hidden;
   position: relative;
   height: 100%;
@@ -67,13 +60,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ececf1;
   /* border: 0; */
-  background-color: #f9f9fc;
   border-radius: 4px;
-}
-.video-player-tools-popover.popover-placement-bottom {
-  /* padding-top: 18px; */
 }
 
 .video-player-video-loading {
@@ -232,4 +220,141 @@
   width: 34px;
   height: 34px;
   cursor: pointer;
+}
+
+.top-right-info {
+  @apply absolute top-0 right-0 flex items-center;
+  padding: 8px;
+}
+
+.bottom-left-info {
+  @apply absolute bottom-0 left-0 flex items-end;
+  padding: 0 8px;
+}
+
+.bottom-right-info {
+  @apply absolute bottom-0 right-0;
+  padding: 0 8px;
+}
+
+.stars {
+  font-size: 18px;
+  color: #f58723;
+}
+
+.stars-label {
+  @apply text-white;
+  font-size: 12px;
+  text-shadow: 0px 1px 2px rgba(13, 29, 61, 0.8);
+}
+
+.username2 {
+  @apply text-white font-medium;
+  font-size: 12px;
+  /* letter-spacing: -0.41px; */
+  text-shadow: 0 1px 2px rgb(13 29 61 / 80%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
+}
+
+.video-player-tools {
+  @apply flex flex-col items-center gap-2 bg-component;
+  width: 36px;
+  box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
+  border-radius: 18px;
+  padding: 16px 10px;
+}
+
+.video-player-tools > svg {
+  @apply box-content;
+  font-size: 22px;
+  color: #357bf6;
+}
+
+.video-player-tools > svg.red {
+  color: #ff0000;
+}
+
+.video-player-tools > svg.yellow {
+  color: #ffe72e;
+}
+
+.video-player-tools-popover.popover-placement-bottom .video-player-tools svg,
+.video-player-tools-popover.popover-placement-top .video-player-tools svg {
+  margin: 0 3px;
+}
+
+.video-player-tools-popover.popover-placement-bottom .video-player-tools .video-granted,
+.video-player-tools-popover.popover-placement-bottom .video-player-tools .video-no_granted,
+.video-player-tools-popover.popover-placement-top
+  .video-player-tools
+  .video-granted
+  .video-player-tools-popover.popover-placement-top
+  .video-player-tools
+  .video-no_granted {
+  margin-right: 8px;
+}
+
+.video-player-tools-popover.popover-placement-left .video-player-tools .video-granted,
+.video-player-tools-popover.popover-placement-left .video-player-tools .video-no_granted {
+  height: 34px;
+}
+
+.video-player-tools-popover.popover-placement-bottom .video-player-tools,
+.video-player-tools-popover.popover-placement-top .video-player-tools {
+  margin-top: 2px;
+  @apply flex flex-row items-center justify-center;
+  height: 36px;
+  width: auto;
+}
+
+.video-player-tools-popover {
+  padding: 0;
+}
+.video-player-tools-popover > .popover-content > .popover-arrow {
+  display: none;
+}
+
+.video-player-tools-popover > .popover-content > .popover-inner {
+  background: transparent;
+  border-radius: none;
+  box-shadow: none;
+}
+
+.video-player-tools-popover > .popover-content > .popover-inner > .popover-inner-content {
+  padding: 0;
+}
+
+.video-player-tools svg::before {
+  border-radius: 50%;
+}
+
+.center-reward {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  pointer-events: none;
+}
+
+.fcr-stream-player-container {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.fcr-stream-player-container .camera-placeholder {
+  @apply border border-solid border-divider;
+  border-radius: 4px;
+  overflow: hidden;
 }

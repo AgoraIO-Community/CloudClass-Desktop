@@ -1,13 +1,12 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
+import { BaseProps } from '~ui-kit/components/util/type';
 import { Progress } from '~components/progress';
 import { transI18n } from '../i18n';
 import './index.css';
-
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
-import { SvgImg } from '~ui-kit';
+import { SvgImg, SvgIconEnum } from '~ui-kit';
 export enum UploadItemStatus {
   Pending = 'pending',
   Success = 'success',
@@ -110,54 +109,54 @@ export const Loading: FC<LoadingProps> = ({
                 )}
                 {(item.status === UploadItemStatus.Pending ||
                   item.status === UploadItemStatus.Failed) && (
-                  <div className="fcr-loading-progress">
-                    {item.status === UploadItemStatus.Pending && (
-                      <>
-                        <Progress
-                          width={60}
-                          type="download"
-                          progress={item.currentProgress as number}
-                        />
-                        <span className="fcr-upload-pending-text">{item.currentProgress}%</span>
-                      </>
-                    )}
-                    {item.status === UploadItemStatus.Failed && (
-                      <span className="fcr-upload-error-text">
-                        {transI18n('whiteboard.upload-error')}
-                      </span>
-                    )}
-
-                    <span style={{ display: 'flex' }}>
-                      {item.status === UploadItemStatus.Failed && (
-                        <SvgImg
-                          type="cloud-refresh"
-                          size={24}
-                          style={{ color: '#7B88A0', cursor: 'pointer' }}
-                          onClick={() => {
-                            onRetry && onRetry(item.resourceUuid);
-                          }}
-                        />
-                      )}
+                    <div className="fcr-loading-progress">
                       {item.status === UploadItemStatus.Pending && (
-                        <SvgImg
-                          type="close"
-                          size={24}
-                          style={{ color: '#7B88A0', cursor: 'pointer' }}
-                          onClick={() => {
-                            onCancel && onCancel(item.resourceUuid);
-                          }}
-                        />
+                        <>
+                          <Progress
+                            width={60}
+                            type="download"
+                            progress={item.currentProgress as number}
+                          />
+                          <span className="fcr-upload-pending-text">{item.currentProgress}%</span>
+                        </>
                       )}
-                    </span>
-                  </div>
-                )}
+                      {item.status === UploadItemStatus.Failed && (
+                        <span className="fcr-upload-error-text">
+                          {transI18n('whiteboard.upload-error')}
+                        </span>
+                      )}
+
+                      <span style={{ display: 'flex' }}>
+                        {item.status === UploadItemStatus.Failed && (
+                          <SvgImg
+                            type={SvgIconEnum.CLOUD_REFRESH}
+                            size={24}
+                            style={{ color: '#7B88A0', cursor: 'pointer' }}
+                            onClick={() => {
+                              onRetry && onRetry(item.resourceUuid);
+                            }}
+                          />
+                        )}
+                        {item.status === UploadItemStatus.Pending && (
+                          <SvgImg
+                            type={SvgIconEnum.CLOSE}
+                            size={24}
+                            style={{ color: '#7B88A0', cursor: 'pointer' }}
+                            onClick={() => {
+                              onCancel && onCancel(item.resourceUuid);
+                            }}
+                          />
+                        )}
+                      </span>
+                    </div>
+                  )}
               </div>
               <div>
                 {noCloseBtn ? (
                   ''
                 ) : (
                   <SvgImg
-                    type="delete"
+                    type={SvgIconEnum.DELETE}
                     style={{
                       marginLeft: 60,
                       cursor: 'pointer',

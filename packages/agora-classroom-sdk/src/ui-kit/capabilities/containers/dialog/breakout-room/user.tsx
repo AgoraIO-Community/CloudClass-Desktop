@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useState, MouseEvent } from 'react';
-import { CheckBox, Search, SvgImg, transI18n } from '~ui-kit';
+import { CheckBox, Search, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
 import { Panel } from './panel';
 
 type UserPanelProps = {
@@ -46,7 +46,7 @@ export const UserPanel: FC<UserPanelProps> = ({
         {users.length ? (
           <div className="group-search-wrap">
             <Search
-              prefix={<SvgImg type="search" size={18} />}
+              prefix={<SvgImg type={SvgIconEnum.SEARCH} size={18} />}
               value={keyword}
               onSearch={setKeyword}
               inputPrefixWidth={32}

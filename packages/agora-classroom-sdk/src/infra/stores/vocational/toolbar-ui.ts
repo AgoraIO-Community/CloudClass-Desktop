@@ -14,13 +14,8 @@ export class VocationalToolbarUIStore extends ToolbarUIStore {
         value: 'clicker',
         label: 'scaffold.clicker',
         icon: 'select-dark',
+        category: ToolbarItemCategory.Clicker,
       }),
-      // ToolbarItem.fromData({
-      //     // selector use clicker icon
-      //     value: 'selection',
-      //     label: 'scaffold.selector',
-      //     icon: 'clicker-dark',
-      // }),
       ToolbarItem.fromData({
         value: 'pen',
         label: 'scaffold.pencil',
@@ -31,35 +26,25 @@ export class VocationalToolbarUIStore extends ToolbarUIStore {
         value: 'text',
         label: 'scaffold.text',
         icon: 'text-dark',
+        category: ToolbarItemCategory.Text,
       }),
       ToolbarItem.fromData({
         value: 'eraser',
         label: 'scaffold.eraser',
         icon: 'eraser-dark',
+        category: ToolbarItemCategory.Eraser,
       }),
-      // ToolbarItem.fromData({
-      //   value: 'color',
-      //   label: 'scaffold.color',
-      //   icon: 'circle',
-      //   category: ToolbarItemCategory.ColorPicker,
-      //   // component: (props: any) => {
-      //   //   return <ColorsContainer {...props} />;
-      //   // },
-      // }),
-      // ToolbarItem.fromData({
-      //   value: 'blank-page',
-      //   label: 'scaffold.blank_page',
-      //   icon: 'blank-page',
-      // }),
       ToolbarItem.fromData({
         value: 'hand',
         label: 'scaffold.move',
         icon: 'hand-dark',
+        category: ToolbarItemCategory.Hand,
       }),
       {
         value: 'cloud',
         label: 'scaffold.cloud_storage',
         icon: 'cloud-dark',
+        category: ToolbarItemCategory.CloudStorage,
       },
       {
         value: 'tools',
@@ -71,7 +56,7 @@ export class VocationalToolbarUIStore extends ToolbarUIStore {
         value: 'register',
         label: 'scaffold.user_list',
         icon: 'register-dark',
-        // category: ToolbarItemCategory.Cabinet,
+        category: ToolbarItemCategory.Roster,
       },
     ];
   }

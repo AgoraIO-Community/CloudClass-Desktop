@@ -1,5 +1,5 @@
 .fcr-layout {
-  @apply flex;
+  @apply flex bg-background;
 }
 
 .fcr-layout-row {
@@ -20,12 +20,12 @@
 }
 
 .fcr-layout-header {
-  @apply flex flex-row justify-center items-center border-b border-gray-100 w-full;
+  @apply flex flex-row justify-center items-center border-divider w-full;
   flex: 0 0 27px;
 }
 
 .fcr-layout-aside {
-  @apply flex flex-col border-l border-gray-100 h-full;
+  @apply flex flex-col border-l  border-divider h-full bg-background;
   /* width: 19rem; */
   min-width: 18rem;
   border-left: none;

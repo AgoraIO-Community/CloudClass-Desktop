@@ -1,11 +1,12 @@
 import { FC, useCallback, useState, useEffect, useMemo } from 'react';
 import { BaseWaveArmProps, UserWaveArmInfo } from './types';
 import classnames from 'classnames';
-import { Card, Popover, SvgImg } from '~components';
+import { Card, Popover, SvgIcon, SvgIconEnum, SvgImg } from '~components';
 import { throttle } from 'lodash';
 import { useInterval } from '@/infra/hooks/utilites';
 import { useStore } from '@/infra/hooks/ui-store';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 
 export interface WaveArmManagerProps extends BaseWaveArmProps {
   hasWaveArmUser: boolean;
@@ -76,7 +77,8 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
             <div className="hands-box-line">
               <SvgImg
                 onClick={showInviteContainer}
-                type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
+                type={SvgIconEnum.TEACHER_HANDS_UP_ACTIVE}
+                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.on } : {}}
                 size={24}
               />
             </div>
@@ -89,7 +91,8 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
             className={twinkleFlag ? 'card-hands-up-active' : ''}>
             <div className="hands-box-line">
               <SvgImg
-                type={twinkleFlag ? 'teacher-hands-up-active' : 'teacher-hands-up-before'}
+                type={SvgIconEnum.TEACHER_HANDS_UP_ACTIVE}
+                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.on } : {}}
                 size={24}
               />
             </div>
@@ -173,13 +176,13 @@ export const StudentsWaveArmList: FC<StudentsWaveArmListProps> = ({
             <span className="student-name">{item?.userName}</span>
             <span className="operation-icon-wrap">
               {item.onPodium ? (
-                <SvgImg type="invite-on-podium" color="#357bf6" />
+                <SvgImg type={SvgIconEnum.INVITE_ON_PODIUM} />
               ) : (
-                <SvgImg
-                  type="invite-to-podium"
-                  color="#7b89a0"
+                <SvgIcon
+                  type={SvgIconEnum.INVITE_TO_PODIUM}
+                  hoverType={SvgIconEnum.INVITE_TO_PODIUM}
+                  hoverColors={{ iconPrimary: InteractionStateColors.on }}
                   onClick={() => onClick(item.userUuid)}
-                  canHover
                 />
               )}
             </span>

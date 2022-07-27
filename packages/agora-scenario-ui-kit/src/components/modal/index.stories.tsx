@@ -1,9 +1,8 @@
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
-import { Button } from '~components/button';
-import { transI18n } from '~components/i18n';
-import { Icon } from '~components/icon';
-import { Modal } from '~components/modal';
+import { Button } from '../button';
+import { transI18n } from '../i18n';
+import { Modal } from '../modal';
 
 const meta: Meta = {
   title: 'Components/Modal',
@@ -39,7 +38,6 @@ export const Docs = ({ title }: DocsProps) => (
         title={title}
         style={{ width: 320 }}
         footer={[<Button type="ghost">test</Button>, <Button>test</Button>]}>
-        <Icon type="red-caution" color="#F04C36" size={50} />
         <p>课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件</p>
       </Modal>
     </div>

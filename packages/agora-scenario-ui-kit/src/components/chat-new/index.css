@@ -121,7 +121,7 @@
   height: 64px;
 }
 .conversation-header > .avatar {
-  background: url('../icon/assets/svg/avatar.svg') no-repeat center / 36px 36px;
+  background: url('./assets/avatar.svg') no-repeat center / 36px 36px;
   /* background: gray; */
   border-radius: 50%;
   width: 36px;
@@ -187,12 +187,12 @@
   position: relative;
   width: 24px;
   height: 24px;
-  background: url('../icon/assets/svg/icon-nodiscussion-actived.svg') no-repeat center / 24px 24px;
+  background: url('./assets/icon-nodiscussion-actived.svg') no-repeat center / 24px 24px;
   cursor: pointer;
 }
 
 .can-discussion-svg {
-  background: url('../icon/assets/svg/icon-nodiscussion-default.svg');
+  background: url('./assets/icon-nodiscussion-default.svg');
 }
 
 .stu-can-discussion-svg {
@@ -200,7 +200,7 @@
   position: relative;
   width: 24px;
   height: 24px;
-  background: url('../icon/assets/svg/icon-stu-chat-default.svg') no-repeat center / 24px 24px;
+  background: url('./assets/icon-stu-chat-default.svg') no-repeat center / 24px 24px;
 }
 
 .stu-no-discussion-svg {
@@ -208,7 +208,7 @@
   position: relative;
   width: 24px;
   height: 24px;
-  background: url('../icon/assets/svg/icon-stu-chat-mute.svg') no-repeat center / 24px 24px;
+  background: url('./assets/icon-stu-chat-mute.svg') no-repeat center / 24px 24px;
 }
 
 .full-screen-chat {

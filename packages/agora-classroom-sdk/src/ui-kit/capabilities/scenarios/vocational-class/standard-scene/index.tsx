@@ -1,6 +1,6 @@
 import { useStore } from '@/infra/hooks/ui-store';
-import { BigWidgetWindowContainer } from '@/ui-kit/capabilities/containers/big-widget-window';
 import { ScreenShareContainer } from '@/ui-kit/capabilities/containers/screen-share';
+import { StreamWindowsContainer } from '@/ui-kit/capabilities/containers/stream-windows-container';
 import { WhiteboardToolbar } from '@/ui-kit/capabilities/containers/toolbar';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
 import { Chat, Whiteboard } from '@/ui-kit/capabilities/containers/widget/slots';
@@ -11,10 +11,9 @@ import { observer } from 'mobx-react';
 import React, { FC, useEffect, useMemo } from 'react';
 import { Aside, Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
-
 import { HandsUpContainer } from '~containers/hand-up';
 import { LoadingContainer } from '~containers/loading';
-import { NavigationBarContainer } from '~containers/nav';
+import { NavigationBar } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { RoomBigTeacherStreamContainer } from '~containers/stream/room-big-player';
 import { ToastContainer } from '~containers/toast';
@@ -95,14 +94,14 @@ export const StandardClassScenario = observer(() => {
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
         <Layout className={layoutCls} direction="col">
-          <NavigationBarContainer />
+          <NavigationBar />
           <Layout className="horizontal">
             <Content>
               <Whiteboard />
               <ScreenShareContainer />
               <WhiteboardToolbar />
               <ScenesController />
-              <BigWidgetWindowContainer />
+              <StreamWindowsContainer />
               <Aside className="aisde-fixed">
                 {showHandsUpContainer ? <HandsUpContainer /> : null}
               </Aside>

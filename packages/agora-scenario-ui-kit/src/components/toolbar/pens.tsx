@@ -1,9 +1,11 @@
-import { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
-import { SvgImg, SvgIcon } from '~components/svg-img';
+import { SvgImg, SvgIcon, SvgIconEnum } from '~components/svg-img';
 import { Slider } from '~components/slider';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { getPenIcon, getPenShapeIcon } from './util';
 export interface PensProps extends ToolItem {
   pens?: string[];
   activePen?: string;
@@ -53,19 +55,27 @@ export const Pens: FC<PensProps> = ({
     () => (
       <div className={`expand-tools pens colors`}>
         <div className="flex flex-wrap justify-between">
-          {pens.map((pen) => (
-            <div
-              key={pen}
-              onClick={() => handleClick(pen)}
-              className="expand-tool pen"
-              style={{ width: '21%' }}>
-              <SvgIcon
-                color={activePen === pen ? activePaletteColor : '#7B88A0'}
-                type={activePen === pen ? pen + '-active' : pen}
-                canHover
-              />
-            </div>
-          ))}
+          {
+            pens.map((pen) => {
+              const penIcon = getPenShapeIcon(pen);
+
+              return (
+                <div
+                  key={pen}
+                  onClick={() => handleClick(pen)}
+                  className="expand-tool pen"
+                  style={{ width: '21%' }}>
+                  <SvgIcon
+                    type={penIcon}
+                    hoverType={penIcon}
+                    colors={activePen === pen ? {
+                      iconPrimary: activePaletteColor,
+                    } : {}}
+                  />
+                </div>
+              )
+            })
+          }
         </div>
 
         <div className="pens-colors-line"></div>
@@ -111,6 +121,8 @@ export const Pens: FC<PensProps> = ({
     },
     [handleClick, isActive],
   );
+  const penIcon = getPenIcon(activePen);
+
   return (
     <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
       <Popover
@@ -128,13 +140,19 @@ export const Pens: FC<PensProps> = ({
             handleClickTool(activePen);
           }}>
           <SvgIcon
-            color={isActive ? activePaletteColor : ''}
-            type={(activePen + (isActive ? '-active' : '')) as any}
-            className={isActive ? 'active' : ''}
-            // hoverType={activePen + '-active'}
-            // canHover
+            type={penIcon}
+            hoverType={penIcon}
+            colors={
+              isActive ? {
+                penColor: activePaletteColor
+              } : {}
+            }
+            hoverColors={{
+              iconPrimary: InteractionStateColors.allow,
+              penColor: InteractionStateColors.allow
+            }}
           />
-          <SvgImg type="triangle-down" className="triangle-icon" size={6} />
+          <SvgImg type={SvgIconEnum.TRIANGLE_DOWN} className="triangle-icon" size={6} />
         </div>
       </Popover>
     </Tooltip>

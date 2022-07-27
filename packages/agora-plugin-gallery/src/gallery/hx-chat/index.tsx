@@ -10,7 +10,7 @@ import {
 import classNames from 'classnames';
 import { autorun, IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { WidgetChatUIStore } from './store';
 
@@ -21,7 +21,7 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
 
   const { appId, host, sessionInfo, platform } = widget.classroomConfig;
 
-  const { visibleEmoji, visibleBtnSend, inputBoxStatus } = widget.imUIConfig;
+  const { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture } = widget.imUIConfig;
 
   const { currentSubRoom } = widget.classroomStore.groupStore;
 
@@ -48,7 +48,7 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
         sessionInfo.role !== EduRoleTypeEnum.observer, // 输入UI
       memebers: sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
       announcement: !currentSubRoom && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
-      allMute: sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
+      allMute: visibleMuteAll && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
       showQuestionBox:
         sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational &&
         sessionInfo.role === EduRoleTypeEnum.student, //职教课的学生显示提问
@@ -57,6 +57,7 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
       btnSend: visibleBtnSend,
       inputBox: inputBoxStatus,
       platform,
+      screenshotIcon: visibleScreenCapture
     },
   };
 
@@ -107,6 +108,7 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
   return (
     <div id="hx-chatroom" style={{ display: 'flex', width: '100%', height: '100%' }}>
       <hx.HXChatRoom
+        theme={widget.theme}
         pluginStore={hxStore}
         agoraTokenData={{
           appId,
@@ -127,7 +129,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
   private _widgetStore = new WidgetChatUIStore(this);
   private _rendered = false;
 
-  onInstall(controller: AgoraWidgetController): void {}
+  onInstall(controller: AgoraWidgetController): void { }
   get widgetName(): string {
     return 'easemobIM';
   }
@@ -139,6 +141,21 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     let visibleBtnSend = true;
     let visibleEmoji = true;
     let inputBoxStatus = undefined;
+    let visibleMuteAll = true;
+    let visibleScreenCapture = true;
+
+    const { emoji, muteAll, picture } = this.uiConfig.engagement.agoraChat;
+
+    if (!emoji.enable) {
+      visibleEmoji = false;
+    }
+    if (!muteAll.enable) {
+      visibleMuteAll = false;
+    }
+    if (!picture.enable) {
+      visibleScreenCapture = false;
+    }
+
     if (this.classroomConfig.platform === Platform.H5) {
       visibleBtnSend = false;
       visibleEmoji = false;
@@ -150,7 +167,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
       visibleEmoji = true;
     }
 
-    return { visibleEmoji, visibleBtnSend, inputBoxStatus };
+    return { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture };
   }
 
   get imConfig() {
@@ -181,7 +198,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     this._renderApp();
   }
 
-  onDestroy(): void {}
+  onDestroy(): void { }
 
   private _renderApp() {
     if (!this._rendered && this.imConfig && this.easemobUserId && this._dom) {
@@ -227,5 +244,5 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     }
   }
 
-  onUninstall(controller: AgoraWidgetController): void {}
+  onUninstall(controller: AgoraWidgetController): void { }
 }

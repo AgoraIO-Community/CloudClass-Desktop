@@ -1,5 +1,4 @@
 import { FC, useCallback } from 'react';
-
 import { CheckBox } from '~components/checkbox';
 import { Input } from '~components/input';
 import { Select } from '../select';
@@ -35,22 +34,6 @@ export const CarouselSetting: FC<CarouselSettingProps> = ({
           {transI18n('roster.shift')}
         </span>
       </div>
-      {/* <div className="disable-flag">
-        <Select
-          value={mode}
-          options={[
-            {
-              label: transI18n('roster.everyone'),
-              value: '1',
-            },
-            {
-              label: transI18n('roster.available'),
-              value: '2',
-            },
-          ]}
-          onChange={onModeChange}
-        />
-      </div> */}
       <div className="student-order">
         <span className="carousel-desc">{transI18n('roster.students_in')}</span>
         <Select

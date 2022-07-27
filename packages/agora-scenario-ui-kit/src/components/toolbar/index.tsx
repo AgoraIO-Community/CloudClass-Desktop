@@ -1,29 +1,21 @@
 import { FC, useState, useRef, useEffect } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/interface/base-props';
-import { Tool, ToolItem } from './tool';
+import { BaseProps } from '~ui-kit/components/util/type';
 import unfoldAbsent from './assets/close-default.svg';
 import foldAbsent from './assets/open-default.svg';
 import unfoldHover from './assets/close-hover.svg';
 import foldHover from './assets/open-hover.svg';
 import './index.css';
-import { useDebounce, useMounted } from '~ui-kit/utilities/hooks';
-
+import { useMounted } from '~ui-kit/utilities/hooks';
 export { Pens } from './pens';
-
 export { ToolCabinet } from './tool-cabinet';
-
 export { BoardCleaners } from './board-cleaners';
 export { Slice } from './slice';
-
-export type { ToolItem } from './tool';
+export { Tool } from './tool';
+export type { ToolProps } from './tool';
 
 export interface ToolbarProps extends BaseProps {
-  tools: ToolItem[];
-  active?: string;
-  activeMap?: Record<string, boolean>;
   defaultOpened?: boolean;
-  onClick?: (value: string) => unknown;
   onOpenedChange?: (opened: boolean) => void;
 }
 
@@ -37,12 +29,9 @@ const menus: { [key: string]: string } = {
 export const Toolbar: FC<ToolbarProps> = ({
   className,
   style,
-  tools,
-  active,
-  activeMap = {},
   defaultOpened = true,
   onOpenedChange,
-  onClick,
+  children
 }) => {
   const animTimer = useRef<null | ReturnType<typeof window.setTimeout>>(null);
   const [opened, setOpened] = useState<boolean>(defaultOpened);
@@ -91,12 +80,15 @@ export const Toolbar: FC<ToolbarProps> = ({
     };
   }, []);
 
-  useEffect(updateShadowState, [tools]);
+  const len = Array.isArray(children) ? children.length : 0;
+
+
+  useEffect(updateShadowState, [len]);
 
   const maxHeight =
     // toolbar items height accumulation
     // margin bottom 10 * 10
-    (25 + 10) * tools.length +
+    (25 + 10) * len +
     // top button
     // 42 +
     // shadow extra
@@ -153,15 +145,7 @@ export const Toolbar: FC<ToolbarProps> = ({
           />
         </div>
         <div className="tools" ref={toolbarScrollEl}>
-          {tools.map(({ value, ...restProps }) => (
-            <Tool
-              key={value}
-              value={value}
-              {...restProps}
-              onClick={onClick}
-              isActive={active === value || activeMap[value]}
-            />
-          ))}
+          {children}
         </div>
       </div>
       <div
@@ -179,3 +163,4 @@ export const Toolbar: FC<ToolbarProps> = ({
     </div>
   );
 };
+

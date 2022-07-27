@@ -54,7 +54,7 @@
 }
 
 .popover-inner {
-  background-color: #fff;
+  @apply bg-component;
   background-clip: padding-box;
   border-radius: 2px;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
@@ -85,8 +85,8 @@
 }
 
 .popover-inner-content {
+  @apply text-level1;
   padding: 16px 20px;
-  color: rgba(0, 0, 0, 0.85);
 }
 
 .popover-message {
@@ -117,24 +117,23 @@
 }
 
 .popover-arrow {
+  @apply bg-component;
   position: absolute;
   display: block;
   width: 8.48528137px;
   height: 8.48528137px;
-  background: transparent;
   border-style: solid;
   border-width: 4.24264069px;
   transform: rotate(45deg);
-  background: #fff;
 }
 
 .popover-placement-top > .popover-content > .popover-arrow,
 .popover-placement-topLeft > .popover-content > .popover-arrow,
 .popover-placement-topRight > .popover-content > .popover-arrow {
+  @apply border-divider;
   bottom: 6.2px;
   border-top-color: transparent;
-  border-right-color: #fff;
-  border-bottom-color: #fff;
+
   border-left-color: transparent;
   box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.07);
 }
@@ -155,11 +154,11 @@
 .popover-placement-right > .popover-content > .popover-arrow,
 .popover-placement-rightTop > .popover-content > .popover-arrow,
 .popover-placement-rightBottom > .popover-content > .popover-arrow {
+  @apply border-divider;
   left: 6px;
   border-top-color: transparent;
   border-right-color: transparent;
-  border-bottom-color: #fff;
-  border-left-color: #fff;
+
   box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.07);
 }
 
@@ -179,11 +178,11 @@
 .popover-placement-bottom > .popover-content > .popover-arrow,
 .popover-placement-bottomLeft > .popover-content > .popover-arrow,
 .popover-placement-bottomRight > .popover-content > .popover-arrow {
+  @apply border-divider;
+
   top: 6px;
-  border-top-color: #fff;
   border-right-color: transparent;
   border-bottom-color: transparent;
-  border-left-color: #fff;
   box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.06);
 }
 
@@ -203,9 +202,10 @@
 .popover-placement-left > .popover-content > .popover-arrow,
 .popover-placement-leftTop > .popover-content > .popover-arrow,
 .popover-placement-leftBottom > .popover-content > .popover-arrow {
+  @apply border-divider;
+
   right: 7px;
-  border-top-color: #fff;
-  border-right-color: #fff;
+
   border-bottom-color: transparent;
   border-left-color: transparent;
   box-shadow: 3px -3px 7px rgba(0, 0, 0, 0.07);

@@ -22,14 +22,15 @@ import {
 import dayjs from 'dayjs';
 import { DialogCategory } from './share-ui';
 import { AgoraEduSDK } from '@/infra/api';
-import { transI18n } from '~ui-kit';
+import { SvgIconEnum, transI18n } from '~ui-kit';
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from './base';
+import { NetworkStateColors } from '~utilities/state-color';
 
 export interface EduNavAction<P = undefined> {
   id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic';
   title: string;
-  iconType: string;
+  iconType: SvgIconEnum;
   iconColor?: string;
   onClick?: () => void;
   payload?: P;
@@ -171,7 +172,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const exitAction: EduNavAction<EduNavRecordActionPayload | undefined> = {
       id: 'Exit',
       title: 'Exit',
-      iconType: 'exit',
+      iconType: SvgIconEnum.EXIT,
       onClick: async () => {
         const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
         this.shareUIStore.addDialog(DialogCategory.Quit, {
@@ -204,7 +205,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Record',
         title: recordingTitle,
-        iconType: isRecording || isRecordStarting ? 'recording' : 'record',
+        iconType: SvgIconEnum.RECORDING,
         payload: {
           text: isRecordStarting
             ? transI18n('biz-header.record_starting')
@@ -237,7 +238,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Camera',
         title: 'camera',
-        iconType: this.localNavCameraOff ? 'ghost-camera-off' : 'ghost-camera-on', // 根据讲台的隐藏和设备的开发控制 icon
+        iconType: this.localNavCameraOff
+          ? SvgIconEnum.GHOST_CAMERA_OFF
+          : SvgIconEnum.GHOST_CAMERA_ON, // 根据讲台的隐藏和设备的开发控制 icon
         onClick: () => {
           try {
             this._toggleNavCamera();
@@ -249,7 +252,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Mic',
         title: 'mic',
-        iconType: this.localMicOff ? 'ghost-mic-off' : 'ghost-mic-on',
+        iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
         onClick: async () => {
           try {
             this._toggleLocalAudio();
@@ -264,7 +267,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'AskForHelp',
         title: 'AskForHelp',
-        iconType: 'ask-for-help',
+        iconType: SvgIconEnum.ASK_FOR_HELP,
         iconColor: this.teacherInCurrentRoom ? '#D2D2E2' : undefined,
         onClick: () => {
           const { updateGroupUsers, currentSubRoom } = this.classroomStore.groupStore;
@@ -328,7 +331,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Camera',
         title: 'camera',
-        iconType: this.localCameraOff ? 'ghost-camera-off' : 'ghost-camera-on',
+        iconType: this.localCameraOff ? SvgIconEnum.GHOST_CAMERA_OFF : SvgIconEnum.GHOST_CAMERA_ON,
         onClick: () => {
           try {
             this._toggleLocalVideo();
@@ -340,7 +343,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Mic',
         title: 'mic',
-        iconType: this.localMicOff ? 'ghost-mic-off' : 'ghost-mic-on',
+        iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
         onClick: async () => {
           try {
             this._toggleLocalAudio();
@@ -355,7 +358,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Settings',
         title: 'Settings',
-        iconType: 'set',
+        iconType: SvgIconEnum.SET,
         onClick: () => {
           this.shareUIStore.addDialog(DialogCategory.DeviceSetting);
         },
@@ -382,7 +385,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         actions.unshift({
           id: 'Record',
           title: recordingTitle,
-          iconType: 'recording',
+          iconType: SvgIconEnum.RECORDING,
           payload: {
             text: transI18n('biz-header.recording'),
             recordStatus: recordStatus,
@@ -572,18 +575,18 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed
-  get networkQualityIcon(): 'normal-signal' | 'bad-signal' | 'unknown-signal' | 'down-signal' {
+  get networkQualityIcon(): { icon: SvgIconEnum; color: string } {
     switch (this.networkQuality) {
       case AGNetworkQuality.good:
       case AGNetworkQuality.great:
-        return 'normal-signal';
+        return { icon: SvgIconEnum.NORMAL_SIGNAL, color: NetworkStateColors.normal };
       case AGNetworkQuality.poor:
       case AGNetworkQuality.bad:
-        return 'bad-signal';
+        return { icon: SvgIconEnum.BAD_SIGNAL, color: NetworkStateColors.bad };
       case AGNetworkQuality.down:
-        return 'down-signal';
+        return { icon: SvgIconEnum.BAD_SIGNAL, color: NetworkStateColors.down };
     }
-    return `unknown-signal`;
+    return { icon: SvgIconEnum.UNKNOWN_SIGNAL, color: NetworkStateColors.unknown };
   }
 
   /**

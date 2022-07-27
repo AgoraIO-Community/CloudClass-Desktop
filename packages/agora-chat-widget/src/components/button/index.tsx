@@ -1,6 +1,6 @@
-import React, { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
+import { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
 import classnames from 'classnames';
-import type { BaseProps } from '~components/interface/base-props';
+import { BaseProps } from '~components/util/type'
 import './index.css';
 
 type ButtonType = 'primary' | 'secondary' | 'ghost' | 'danger';

@@ -1,15 +1,15 @@
 import { useLectureH5UIStores } from '@/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
 import { StreamPlayer, StreamPlaceholder, CarouselGroup } from '.';
-import React, { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { Layout } from '~components/layout';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
 import { NavGroup } from '.';
-import { Icon, IconTypes } from '~ui-kit';
 import classnames from 'classnames';
+import { SvgImg } from '~ui-kit';
 
-export const RoomBigTeacherStreamH5Container: FC<any> = observer(() => {
+export const RoomBigTeacherStreamH5Container: FC = observer(() => {
   const { streamUIStore } = useLectureH5UIStores() as EduLectureH5UIStore;
   const {
     teacherCameraStream,
@@ -25,12 +25,12 @@ export const RoomBigTeacherStreamH5Container: FC<any> = observer(() => {
       className={classnames('relative', streamLayoutContainerCls)}
       style={streamLayoutContainerDimensions}>
       {teacherCameraStream ? (
-        <StreamPlayer stream={teacherCameraStream} style={teacherVideoStreamSize}></StreamPlayer>
+        <StreamPlayer renderAt="Bar" stream={teacherCameraStream} style={teacherVideoStreamSize} />
       ) : (
         <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} />
       )}
-      <Icon
-        type={iconZoomType as IconTypes}
+      <SvgImg
+        type={iconZoomType}
         size={18}
         className={classnames('stream-zoom-status', iconZoomVisibleCls)}
         onClick={handleZoomStatus}
@@ -39,7 +39,7 @@ export const RoomBigTeacherStreamH5Container: FC<any> = observer(() => {
   );
 });
 
-export const RoomBigStudentStreamsH5Container: FC<any> = observer(() => {
+export const RoomBigStudentStreamsH5Container: FC = observer(() => {
   const {
     streamUIStore,
     boardUIStore: { containerH5VisibleCls: addtionalContainerH5VisibleCls },
