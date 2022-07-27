@@ -10,6 +10,7 @@ import { LoadingContainer } from '~containers/loading';
 import { NavigationBar } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { ToastContainer } from '~containers/toast';
+import { transI18n } from '~ui-kit';
 import { CDNPlayer } from '../../../containers/stream/cdn-player';
 import Room from '../../room';
 
@@ -42,7 +43,7 @@ export const MixStreamCDNClassScenario = observer(() => {
               <CDNPlayer
                 stream={stream}
                 state={recordStatus}
-                placeholderText="老师当前不在教室中"
+                placeholderText={transI18n('fcr_vocational_teacher_absent')}
               />
             </div>
             <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>

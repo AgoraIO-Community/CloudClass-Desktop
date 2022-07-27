@@ -147,6 +147,7 @@ textarea.input-chat {
   font-size: 12px;
   cursor: pointer;
 }
+
 .chat-question-container .question-text {
   display: flex;
   align-items: center;

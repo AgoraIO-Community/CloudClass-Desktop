@@ -1,8 +1,10 @@
+import { useStore } from '@/infra/hooks/ui-store';
 import { HostingSceneVideo } from '@/ui-kit/capabilities/containers/hosting-scene-video';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
 import { Chat } from '@/ui-kit/capabilities/containers/widget/slots';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
+import { useEffect } from 'react';
 import { Aside, Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
 
@@ -15,6 +17,17 @@ import Room from '../../room';
 const layoutCls = classnames('edu-room', 'big-class-room', 'bg-white');
 
 export const HostingClassScenario = observer(() => {
+  const { streamUIStore } = useStore();
+  useEffect(() => {
+    if (!streamUIStore.localCameraOff) {
+      streamUIStore.toggleLocalVideo();
+    }
+
+    if (!streamUIStore.localMicOff) {
+      streamUIStore.toggleLocalAudio();
+    }
+  }, []);
+
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>

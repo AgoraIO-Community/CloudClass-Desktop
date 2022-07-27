@@ -1,0 +1,49 @@
+.confirm-dialog-h5 .container {
+  width: 270px;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0px 0px 2000px 2000px rgb(0 0 0 / 24%);
+  z-index: 999;
+  padding-top: 25px;
+}
+
+.confirm-dialog-h5 .title {
+  line-height: 1;
+  text-align: center;
+  font-size: 17px;
+  padding-bottom: 15px;
+}
+
+.confirm-dialog-h5 .content {
+  text-align: center;
+  line-height: 1;
+  padding-bottom: 25px;
+}
+
+.confirm-dialog-h5 .footer {
+  display: flex;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.confirm-dialog-h5 .footer .button {
+  width: 50%;
+  width: 50%;
+  font-size: 17px;
+  text-align: center;
+  line-height: 2.7;
+}
+
+.confirm-dialog-h5 .footer .button:hover {
+  color: #357bf6;
+}
+
+.confirm-dialog-h5 .footer .button:first-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.confirm-dialog-h5 .footer .button.disable,
+.confirm-dialog-h5 .footer .button.disable :hover {
+  color: rgb(187, 187, 187);
+  pointer-events: none;
+  cursor: not-allowed;
+}

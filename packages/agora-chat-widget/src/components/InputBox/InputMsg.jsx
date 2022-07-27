@@ -1,20 +1,19 @@
-import { Input, message, Modal, Switch, Popover } from 'antd';
-import { Button } from '../Button';
+import { Input, message, Modal, Popover, Radio, Switch } from 'antd';
+import classnames from 'classnames';
 import React, { useRef, useState } from 'react';
 import { useSelector, useStore } from 'react-redux';
-import classnames from 'classnames';
 import { transI18n } from '~components/i18n';
 import { MSG_TYPE } from '../../contants';
 import { messageAction } from '../../redux/actions/messageAction';
 import { setQuestioinStateAction } from '../../redux/actions/roomAction';
-import emojiIcon from '../../themes/svg/emoji.svg';
 import imgIcon from '../../themes/img/img.png';
 import screenshotIcon from '../../themes/img/screenshot.png';
-import ScreenshotMenu from './Screenshot';
-import isElctronPlatform from '../../utils/platform';
-
+import emojiIcon from '../../themes/svg/emoji.svg';
 import { Emoji } from '../../utils/emoji';
+import isElctronPlatform from '../../utils/platform';
+import { Button } from '../Button';
 import './index.css';
+import ScreenshotMenu from './Screenshot';
 
 // 展示表情
 export const ShowEomji = ({ getEmoji }) => {
@@ -219,17 +218,11 @@ export const InputMsg = ({ allMutePermission }) => {
               <>
                 <div className="divider" />
                 <div className="chat-question-container" onClick={toggleQuestionState}>
-                  <Icon
-                    type={isQuestion ? 'radio-checked' : 'radio'}
-                    style={{
-                      height: '24px',
-                      width: '24px',
-                    }}
-                    size={24}
-                  />
-                  <div className={isQuestion ? 'question-text question-selected' : 'question-text'}>
+                  <Radio checked={isQuestion}>
+                    <div className={isQuestion ? 'question-text question-selected' : 'question-text'}>
                     {transI18n('question')}
-                  </div>
+                    </div>
+                  </Radio>
                 </div>
               </>
             )}

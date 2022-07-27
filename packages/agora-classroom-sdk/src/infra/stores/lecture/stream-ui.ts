@@ -1,6 +1,6 @@
-import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduRoomServiceTypeEnum } from 'agora-edu-core';
 import { Log } from 'agora-rte-sdk';
-import { observable, action, computed, reaction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { StreamUIStore } from '../common/stream';
 import { EduStreamUI } from '../common/stream/struct';
@@ -38,7 +38,10 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
     const tools: EduStreamTool[] = [];
     // tools = tools.concat([this.localCameraTool(), this.localMicTool()]);
 
-    if (sessionInfo.role === EduRoleTypeEnum.teacher) {
+    if (
+      sessionInfo.role === EduRoleTypeEnum.teacher &&
+      sessionInfo.roomServiceType !== EduRoomServiceTypeEnum.MixStreamCDN
+    ) {
       tools.push(this.localPodiumTool());
     }
 

@@ -1,9 +1,10 @@
+import { HomeSettingContainer } from '@/app/pages/home/home-setting';
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
 import { useHomeStore } from '@/infra/hooks';
 import { ToastType } from '@/infra/stores/common/share-ui';
 import { FcrMultiThemeMode } from '@/infra/types/config';
-import { getBrowserLanguage, storage } from '@/infra/utils';
+import { storage } from '@/infra/utils';
 import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
 import { isProduction } from '@/infra/utils/env';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
@@ -15,7 +16,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
-import { changeLanguage, Toast, transI18n } from '~ui-kit';
+import { Toast, transI18n } from '~ui-kit';
 import { Home } from '~ui-kit/scaffold';
 import { HomeApi } from './home-api';
 import { MessageDialog } from './message-dialog';
@@ -30,22 +31,18 @@ declare const CLASSROOM_SDK_VERSION: string;
 declare const BUILD_TIME: string;
 declare const BUILD_COMMIT_ID: string;
 
-const regionByLang = {
-  zh: EduRegion.CN,
-  en: EduRegion.NA,
-};
-const useTheme = () => {
+export const useTheme = () => {
   useEffect(() => {
     loadGeneratedFiles();
     const theme = themes['default'][FcrMultiThemeMode.light];
     applyTheme(theme);
   }, []);
 };
+
 export const HomePage = observer(() => {
   const homeStore = useHomeStore();
+  const { launchConfig, language, region } = homeStore;
   useTheme();
-  const launchConfig = homeStore.launchConfig;
-
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
@@ -53,31 +50,14 @@ export const HomePage = observer(() => {
   const [userRole, setRole] = useState<string>(launchConfig.userRole || '');
   const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
   const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
-  const [language, setLanguage] = useState<string>('');
-  const [region, setRegion] = useState<EduRegion>(EduRegion.CN);
   const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const lang = homeStore.launchOption.language || getBrowserLanguage();
-    changeLanguage(lang);
-    setLanguage(lang);
-    const region = homeStore.region || regionByLang[getBrowserLanguage()];
-    setRegion(region);
-  }, []);
+  const onChangeRegion = (r: string) => {};
 
-  const onChangeRegion = (r: string) => {
-    const region = r as EduRegion;
-    setRegion(region);
-    homeStore.setRegion(region);
-  };
-
-  const onChangeLanguage = (language: string) => {
-    changeLanguage(language);
-    setLanguage(language);
-  };
+  const onChangeLanguage = (language: string) => {};
 
   const role = useMemo(() => {
     const roles = {
@@ -174,7 +154,7 @@ export const HomePage = observer(() => {
   const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
   const commitID = BUILD_COMMIT_ID;
 
-  return language !== '' ? (
+  return !!language ? (
     <React.Fragment>
       <MessageDialog />
       <Home
@@ -190,16 +170,18 @@ export const HomePage = observer(() => {
         role={userRole}
         scenario={curScenario}
         duration={duration}
-        region={region}
+        region={region as string}
+        language={language as string}
+        onChangeRegion={onChangeRegion}
+        onChangeLanguage={onChangeLanguage}
         debug={debug}
         encryptionMode={encryptionMode}
         encryptionKey={encryptionKey}
         onChangeEncryptionMode={onChangeEncryptionMode}
         onChangeEncryptionKey={onChangeEncryptionKey}
         onChangeDebug={onChangeDebug}
-        onChangeRegion={onChangeRegion}
-        onChangeRole={onChangeRole}
         onChangeScenario={onChangeScenario}
+        onChangeRole={onChangeRole}
         onChangeRoomId={onChangeRoomId}
         onChangeUserId={onChangeUserId}
         onChangeRoomName={onChangeRoomName}
@@ -207,8 +189,6 @@ export const HomePage = observer(() => {
         onChangeDuration={(duration: number) => {
           setDuration(duration);
         }}
-        language={language}
-        onChangeLanguage={onChangeLanguage}
         loading={loading}
         onClick={async () => {
           try {
@@ -249,7 +229,7 @@ export const HomePage = observer(() => {
               roomName: `${roomName}`,
               userName: userName,
               roleType: role,
-              region,
+              region: region as EduRegion,
               duration: duration * 60,
               latencyLevel: 2,
               userRole,
@@ -293,7 +273,8 @@ export const HomePage = observer(() => {
           } finally {
             setLoading(false);
           }
-        }}>
+        }}
+        headerRight={<HomeSettingContainer />}>
         <HomeToastContainer />
       </Home>
     </React.Fragment>
