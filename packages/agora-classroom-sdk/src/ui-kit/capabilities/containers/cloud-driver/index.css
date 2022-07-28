@@ -190,17 +190,16 @@
 }
 
 .more-menu-item {
+  @apply text-level1;
   width: 100%;
   font-size: 13px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #586376;
   cursor: pointer;
 }
 
 .more-menu-item:hover {
-  background: #f8f8fb;
-  color: #191919;
+  @apply bg-icon-selected-color text-level1;
 }
 
 .cloud-help-title {

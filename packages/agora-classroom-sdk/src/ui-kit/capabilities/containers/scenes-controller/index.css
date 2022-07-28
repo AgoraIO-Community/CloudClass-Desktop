@@ -13,7 +13,7 @@
 .scenes-controller-line {
   width: 1px;
   height: 16px;
-  border: 1px solid #e5e5f0;
+  border-right: 1px solid #e5e5f0;
   margin-left: 6px;
   margin-right: 9px;
 }
@@ -28,7 +28,7 @@
 }
 
 .scenes-controller-info {
-  color: #586376;
+  @apply text-level2;
   font-size: 14px;
   user-select: none;
   margin: 0 6px;

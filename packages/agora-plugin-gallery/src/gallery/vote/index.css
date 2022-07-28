@@ -68,7 +68,7 @@
 }
 .vote-title::-webkit-input-placeholder,
 input.vote-item::placeholder {
-  color: #babaca;
+  @apply text-level3;
 }
 /* .vote-title:disabled + .vote-limit {
   display: none;
@@ -129,8 +129,8 @@ input.vote-item::placeholder {
   transition: none;
 }
 .vote-question {
+  @apply text-level1;
   font-size: 14px;
-  color: #191919;
   margin-bottom: 10px;
 }
 .result-item {
@@ -141,7 +141,7 @@ input.vote-item::placeholder {
   font-size: 14px;
 }
 .result-cursor {
-  color: rgb(103, 115, 134);
+  @apply text-level2;
   width: 30px;
   text-align: center;
 }
@@ -159,11 +159,11 @@ input.vote-item::placeholder {
   height: 40px;
 }
 .vote-text {
-  color: #191919;
+  @apply text-level1;
   width: 222px;
 }
 .vote-text-percentage {
-  color: rgb(103, 115, 134);
+  @apply text-level2;
 }
 .vote-percentage {
   height: 3px;

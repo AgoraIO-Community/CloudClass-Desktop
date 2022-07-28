@@ -48,7 +48,7 @@
 }
 
 .options-container .option-item {
-  @apply text-level1;
+  @apply text-level2;
   background: transparent;
   height: 34px;
   cursor: pointer;

@@ -8,7 +8,7 @@
   padding: 0 14px;
   animation: toastAnimation 0.2s;
   transition: top 0.3s, opacity 0.1s;
-  @apply text-level1 cursor-pointer flex items-center justify-center box-border relative;
+  @apply text-white cursor-pointer flex items-center justify-center box-border relative;
 }
 
 @keyframes toastAnimation {
@@ -32,7 +32,7 @@
 }
 
 .toast-success {
-  @apply bg-toast-normal  border-toast-normal border;
+  @apply bg-safe  border-safe border;
 }
 
 .toast-error {

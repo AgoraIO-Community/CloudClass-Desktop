@@ -78,7 +78,7 @@ export const Toast: ToastType = ({
 
   return (
     <div className={cls} {...restProps} ref={toastEl}>
-      <SvgImg type={toastDict[type].iconType} style={{ color: toastDict[type].color }} />
+      <SvgImg type={toastDict[type].iconType} colors={{ iconPrimary: '#fff' }} />
       <div>{children}</div>
     </div>
   );

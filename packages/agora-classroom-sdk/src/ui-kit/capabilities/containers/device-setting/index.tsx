@@ -4,13 +4,14 @@ import classnames from 'classnames';
 import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
 
-export const CameraMirrorCheckBox = observer(() => {
+export const CameraMirrorCheckBox = observer((props: { id?: string }) => {
   const {
     deviceSettingUIStore: { setMirror, isMirror },
   } = useStore();
 
   return (
     <CheckBox
+      id={props.id}
       checked={isMirror}
       onChange={(e: any) => {
         setMirror(e.target.checked);
@@ -87,6 +88,7 @@ const StageChoose = observer(() => {
           }}>
           {[true, false].map((value) => (
             <label
+              className="cursor-pointer"
               style={{ display: 'flex', alignItems: 'center' }}
               htmlFor={`${value}`}
               key={`${+value}`}>
@@ -138,8 +140,10 @@ const Setting: React.FC<SettingProps> = observer(({ className, ...restProps }) =
                 display: 'flex',
                 alignItems: 'center',
               }}>
-              <CameraMirrorCheckBox />
-              <span className="beauty-desc">{transI18n('media.mirror')}</span>
+              <CameraMirrorCheckBox id="CameraMirrorCheckBox" />
+              <label htmlFor="CameraMirrorCheckBox" className="beauty-desc cursor-pointer">
+                {transI18n('media.mirror')}
+              </label>
             </div>
           </div>
         </div>

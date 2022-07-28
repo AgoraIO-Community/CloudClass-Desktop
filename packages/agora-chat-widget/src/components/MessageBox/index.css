@@ -25,6 +25,7 @@
 }
 
 .msg-user-name {
+  @apply text-level1;
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;

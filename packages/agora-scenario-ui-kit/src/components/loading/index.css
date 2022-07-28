@@ -1,5 +1,5 @@
 .fcr-loading {
-  @apply flex flex-col justify-center items-center;
+  @apply flex bg-component flex-col justify-center items-center;
 }
 
 .fcr-loading-upload-list {

@@ -20,14 +20,13 @@
 }
 
 .fcr-layout-header {
-  @apply flex flex-row justify-center items-center border-divider w-full;
+  @apply flex flex-row justify-center items-center w-full;
   flex: 0 0 27px;
 }
 
 .fcr-layout-aside {
-  @apply flex flex-col border-l  border-divider h-full bg-background;
+  @apply flex flex-col border-l  border-divider h-full;
   /* width: 19rem; */
-  min-width: 18rem;
   border-left: none;
   @apply overflow-hidden;
   gap: 4px;

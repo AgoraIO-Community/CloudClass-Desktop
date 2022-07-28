@@ -201,11 +201,11 @@
 }
 
 .roster-row-hover {
-  background: #f9f9fc;
+  @apply bg-icon-selected-color;
 }
 
 .roster-col-hover .clickable {
-  background: #e8f0ff;
+  @apply bg-component;
   cursor: pointer;
 }
 

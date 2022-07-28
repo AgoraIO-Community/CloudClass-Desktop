@@ -36,13 +36,13 @@ export const ImgMsg = ({ item }) => {
           <div className="msg-user-me">
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
-            <span className="msg-from-name">{userNickName}</span>
+            <span className="msg-from-name text-level1">{userNickName}</span>
             {<img src={useAvatarUrl} className="msg-avatar" alt="" />}
           </div>
         ) : (
           <div className="msg-user-other">
             {<img src={useAvatarUrl} className="msg-avatar" alt="" />}
-            <span className="msg-from-name">{userNickName}</span>
+            <span className="msg-from-name text-level1">{userNickName}</span>
             {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
             {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
           </div>
