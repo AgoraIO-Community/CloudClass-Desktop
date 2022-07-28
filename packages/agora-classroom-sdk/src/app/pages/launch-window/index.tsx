@@ -9,7 +9,7 @@ declare global {
     __launchWindowID: string;
     __launchLanguage: string;
     __launchArgs: any;
-    __launchRoomType: number;
+    __launchRoomType: string;
     __launchUIMode: string;
   }
 }
@@ -22,7 +22,7 @@ export const LaunchWindow = observer(() => {
       windowID: window.__launchWindowID as unknown as WindowID,
       language: window.__launchLanguage as unknown as LanguageEnum,
       args: window.__launchArgs,
-      roomType: window.__launchRoomType as unknown as EduRoomTypeEnum,
+      roomType: parseInt(window.__launchRoomType) as EduRoomTypeEnum || EduRoomTypeEnum.Room1v1Class,
       uiMode: window.__launchUIMode as FcrMultiThemeMode
     });
 

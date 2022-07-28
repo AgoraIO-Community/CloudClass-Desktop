@@ -196,7 +196,29 @@ export class FcrUIConfigImpl implements FcrUIConfig {
     return {};
   }
   get extension(): FcrExtension {
-    return {};
+    return {
+      get agoraChat() {
+        return {
+          enable: true,
+          get muteAll(): FcrUIBaseProps {
+            return {
+              enable: true,
+            };
+          },
+          get emoji(): FcrUIBaseProps {
+            return {
+              enable: true,
+            };
+          },
+
+          get picture(): FcrUIBaseProps {
+            return {
+              enable: true,
+            };
+          },
+        };
+      },
+    };
   }
 }
 loadUIConfig(EduRoomTypeEnum.Room1v1Class, new FcrUIConfigImpl());

@@ -91,7 +91,9 @@ export interface FcrFooter {}
  * 扩展插件配置
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface FcrExtension {}
+export interface FcrExtension {
+  get agoraChat(): FcrAgoraChat & FcrUIBaseProps;
+}
 
 /**
  * 状态栏配置

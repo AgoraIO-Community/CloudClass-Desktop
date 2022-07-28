@@ -88,6 +88,7 @@ export type LaunchOption = {
   recordOptions?: BoardWindowAnimationOptions; // 白板录制参数
   recordRetryTimeout?: number; // 录制重试间隔
   uiMode?: FcrMultiThemeMode;
+  shareUrl?: string; // 分享URL
 };
 
 /**

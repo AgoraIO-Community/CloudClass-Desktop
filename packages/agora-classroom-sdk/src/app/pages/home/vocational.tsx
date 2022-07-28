@@ -1,10 +1,12 @@
-import { HomeSettingContainer } from '@/app/pages/home/home-setting';
-import { HomeLaunchOption } from '@/app/stores/home';
-import { LanguageEnum } from '@/infra/api';
 import { useHomeStore } from '@/infra/hooks';
-import { ToastType } from '@/infra/stores/common/share-ui';
-import { GlobalStorage, storage } from '@/infra/utils';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
+import { changeLanguage, transI18n, Toast } from '~ui-kit';
+import { Home } from '~ui-kit/scaffold';
+import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
+import { observer } from 'mobx-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useHistory } from 'react-router';
+import { LanguageEnum } from '@/infra/api';
+import { HomeLaunchOption } from '@/app/stores/home';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -15,16 +17,15 @@ import {
 } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import MD5 from 'js-md5';
-import { observer } from 'mobx-react';
-import React, { useMemo, useState } from 'react';
-import { useHistory } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
-import { Toast, transI18n } from '~ui-kit';
-import { Home } from '~ui-kit/scaffold';
-import { useTheme } from '.';
+
 import { HomeApi } from './home-api';
 import { MessageDialog } from './message-dialog';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
+import { ToastType } from '@/infra/stores/common/share-ui';
+import { HomeSettingContainer } from './home-setting';
+
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -66,7 +67,6 @@ export const vocationalNeedPreset = (
 export const VocationalHomePage = observer(() => {
   const homeStore = useHomeStore();
   const { launchConfig, language, region } = homeStore;
-  useTheme();
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
@@ -79,8 +79,8 @@ export const VocationalHomePage = observer(() => {
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const onChangeRegion = (r: string) => {};
-  const onChangeLanguage = (language: string) => {};
+  const onChangeRegion = (r: string) => { };
+  const onChangeLanguage = (language: string) => { };
   const role = useMemo(() => {
     const roles = {
       teacher: EduRoleTypeEnum.teacher,
@@ -214,7 +214,7 @@ export const VocationalHomePage = observer(() => {
       const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
       const webRTCCodec =
         roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-        roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+          roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
           ? 'h264'
           : 'vp8';
       const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
@@ -239,8 +239,10 @@ export const VocationalHomePage = observer(() => {
         region: region as EduRegion,
         duration: duration * 60,
         latencyLevel: 2,
-        curScenario,
         curService,
+        // @ts-ignore
+        curScenario,
+        // @ts-ignore
         userRole,
         mediaOptions: {
           channelProfile,
@@ -296,6 +298,7 @@ export const VocationalHomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
+        showServiceOptions
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
@@ -331,7 +334,6 @@ export const VocationalHomePage = observer(() => {
         }}
         loading={loading}
         onClick={onSubmit}
-        showServiceOptions={true}
         headerRight={<HomeSettingContainer />}>
         <HomeToastContainer />
       </Home>

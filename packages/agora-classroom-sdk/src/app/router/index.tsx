@@ -1,20 +1,17 @@
 import { useAuth } from '@/infra/hooks/auth';
-import { BigClassScenario } from '@/ui-kit/capabilities/scenarios/big-class';
-import * as React from 'react';
-import { FC, PropsWithChildren } from 'react';
-import { OneToOneScenario } from '~capabilities/scenarios/1v1';
-import { MidClassScenario } from '~capabilities/scenarios/mid-class';
-import { HomePage } from '../pages/home';
+import React, { FC } from 'react';
+import { LaunchPage } from '../pages/launch';
 import { HomeH5Page } from '../pages/home/h5';
 import { VocationalHomePage } from '../pages/home/vocational';
 import { VocationalHomeH5Page } from '../pages/home/vocational-h5';
-import { LaunchPage } from '../pages/launch';
-import { LaunchWindow } from '../pages/launch-window';
 import { RecordationSearchPage } from '../pages/recordation-search';
+import { LaunchWindow } from '../pages/launch-window';
+import { HomePage } from '../pages/home';
+
 
 export type AppRouteComponent = {
   path: string;
-  component: React.FC<any>;
+  component: React.FC;
 };
 
 export enum BizPageRouter {
@@ -37,12 +34,11 @@ export enum BizPageRouter {
   VocationalHomeH5Page = 'vocational_h5_home',
 }
 
-// TODO: need fix tsx
-const PageSFC = (Component: React.FC<any>) => {
+const PageSFC = (Component: React.FC) => {
   return <Component />;
 };
 
-const AuthLayout: FC<PropsWithChildren<unknown>> = ({ children }) => {
+const AuthLayout: FC = ({ children }) => {
   const { auth } = useAuth();
   React.useEffect(() => {
     auth();
@@ -51,29 +47,13 @@ const AuthLayout: FC<PropsWithChildren<unknown>> = ({ children }) => {
   return <>{children}</>;
 };
 export const routesMap: Record<string, AppRouteComponent> = {
-  [BizPageRouter.OneToOne]: {
-    path: '/classroom/1v1',
-    component: () => PageSFC(OneToOneScenario),
-  },
-  [BizPageRouter.MidClass]: {
-    path: '/classroom/mid',
-    component: () => PageSFC(MidClassScenario),
-  },
-  [BizPageRouter.BigClass]: {
-    path: '/classroom/big',
-    component: () => PageSFC(BigClassScenario),
+  [BizPageRouter.TestHomePage]: {
+    path: '/',
+    component: () => PageSFC(HomePage),
   },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
     component: () => PageSFC(LaunchPage),
-  },
-  [BizPageRouter.TestHomePage]: {
-    path: '/',
-    component: () => (
-      <AuthLayout>
-        <HomePage />
-      </AuthLayout>
-    ),
   },
   [BizPageRouter.TestH5HomePage]: {
     path: '/h5login',

@@ -18,14 +18,12 @@ import { changeLanguage } from '~ui-kit';
 import { H5Login } from '~ui-kit/scaffold';
 import { HomeApi } from './home-api';
 import { MessageDialog } from './message-dialog';
-import { useTheme } from '.';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
 export const HomeH5Page = observer(() => {
   const homeStore = useHomeStore();
-  useTheme()
   const launchConfig = homeStore.launchConfig;
 
   const [roomId, setRoomId] = useState<string>('');
@@ -191,8 +189,10 @@ export const HomeH5Page = observer(() => {
             duration: duration * 60,
             latencyLevel: 2,
             platform: Platform.H5,
-            userRole,
+            // @ts-ignore
             curScenario,
+            // @ts-ignore
+            userRole,
           };
           if (encryptionKey && encryptionMode) {
             config!.mediaOptions!.encryptionConfig = {

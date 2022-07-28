@@ -18,7 +18,6 @@ import { Helmet } from 'react-helmet';
 import { useHistory } from 'react-router';
 import { changeLanguage } from '~ui-kit';
 import { H5Login } from '~ui-kit/scaffold';
-import { useTheme } from '.';
 import { HomeApi } from './home-api';
 import { HomeSettingContainerH5 } from './home-setting/h5';
 import { MessageDialog } from './message-dialog';
@@ -45,7 +44,6 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
 
 export const VocationalHomeH5Page = observer(() => {
   const homeStore = useHomeStore();
-  useTheme();
   const { launchConfig } = homeStore;
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
@@ -226,14 +224,16 @@ export const VocationalHomeH5Page = observer(() => {
             roomName: `${roomName}`,
             userName: userName,
             roleType: role,
+            // @ts-ignore
+            curScenario,
+            // @ts-ignore
+            userRole,
             // startTime: Date.now(), // 开启后会导致学生进入新教室的时候直接开启上课计时
             region,
             duration: duration * 60,
             latencyLevel: 2,
             platform: Platform.H5,
-            curScenario,
             curService,
-            userRole,
             mediaOptions: {
               channelProfile: channelProfile,
               web: {
@@ -256,3 +256,4 @@ export const VocationalHomeH5Page = observer(() => {
     </React.Fragment>
   ) : null;
 });
+

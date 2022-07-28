@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useState, MouseEvent } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../util/type';
 import { getPath, getViewBox, PathOptions } from './svg-dict';
@@ -11,7 +11,9 @@ export type SvgImgProps = BaseProps & {
   type: SvgIconEnum;
   colors?: Partial<PathOptions>;
   size?: number;
-  onClick?: any;
+  onClick?: (e: MouseEvent) => void;
+  onMouseDown?: (e: MouseEvent) => void;
+  onMouseUp?: (e: MouseEvent) => void;
 };
 
 export const SvgImg: FC<SvgImgProps> = ({
@@ -21,6 +23,8 @@ export const SvgImg: FC<SvgImgProps> = ({
   className,
   style,
   colors,
+  onMouseDown,
+  onMouseUp
 }) => {
   const cls = classnames({
     [`${className}`]: !!className,
@@ -39,6 +43,8 @@ export const SvgImg: FC<SvgImgProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       onClick={onClick}
+      onMouseUp={onMouseUp}
+      onMouseDown={onMouseDown}
       style={style}
       data-label={type}
     >

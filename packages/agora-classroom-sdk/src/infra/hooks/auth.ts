@@ -13,8 +13,9 @@ export const useAuth = () => {
     if (result['accessToken'] && result['refreshToken']) {
       UserApi.saveAccessToken(result['refreshToken']);
       UserApi.saveRefreshToken(result['refreshToken']);
-      const route = location.hash.substring(1).split('?')[0];
-      history.replace(route);
+      console.log(location.href)
+      // const route = location.hash.substring(1).split('?')[0];
+      // history.replace(route);
       return;
     }
     UserApi.shared.getUserInfo().finally(() => {

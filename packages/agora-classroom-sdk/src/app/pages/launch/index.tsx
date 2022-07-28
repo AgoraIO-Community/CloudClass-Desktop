@@ -27,6 +27,8 @@ export const LaunchPage = observer(() => {
       AgoraEduSDK.setParameters(
         JSON.stringify({
           host: homeStore.launchOption.sdkDomain,
+          uiConfigs: homeStore.launchOption.scenes,
+          themes: homeStore.launchOption.themes
         }),
       );
 
@@ -49,9 +51,8 @@ export const LaunchPage = observer(() => {
             evt === AgoraEduClassroomEvent.Destroyed &&
             launchOption.roomSubtype === EduRoomSubtypeEnum.Vocational
           ) {
-            const url = `/vocational${
-              GlobalStorage.read('platform') == 'h5' ? '/h5login' : ''
-            }?reason=${type}`;
+            const url = `/vocational${GlobalStorage.read('platform') == 'h5' ? '/h5login' : ''
+              }?reason=${type}`;
             history.push(url);
             return;
           }

@@ -6,7 +6,6 @@ import { HomeStore } from '@/app/stores/home';
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { BizPageRouter } from './router/type';
 import { GlobalStorage } from '@/infra/utils';
-
 declare const EDU_CATEGORY: string;
 
 const routes: BizPageRouter[] = [

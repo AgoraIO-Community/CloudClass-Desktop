@@ -1,5 +1,5 @@
 .fcr-layout {
-  @apply flex bg-background;
+  @apply flex;
 }
 
 .fcr-layout-row {

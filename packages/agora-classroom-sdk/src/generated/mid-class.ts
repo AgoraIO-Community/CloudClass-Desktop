@@ -1,14 +1,9 @@
 import {
-  FcrAgoraChat,
   FcrEngagement,
   FcrExtension,
   FcrFooter,
   FcrHeader,
-  FcrNetlessBoard,
   FcrStage,
-  FcrStateBar,
-  FcrStudentVideo,
-  FcrTeacherVideo,
   FcrUIBaseProps,
   FcrUIConfig,
 } from '@/infra/types/config';
@@ -19,28 +14,121 @@ export class FcrUIConfigImpl implements FcrUIConfig {
   get version(): string {
     return '1.0.0';
   }
-  get header(): FcrHeader {
+
+  get engagement(): FcrEngagement {
     return {
-      get stateBar(): FcrStateBar & FcrUIBaseProps {
+      get roster() {
         return {
-          get networkState(): FcrUIBaseProps {
-            return { enable: true };
+          enable: true,
+        };
+      },
+      get screenShare() {
+        return {
+          enable: true,
+        };
+      },
+      get raiseHand() {
+        return {
+          enable: true,
+        };
+      },
+      get popupQuiz() {
+        return {
+          enable: true,
+        };
+      },
+      get breakoutRoom() {
+        return {
+          enable: true,
+        };
+      },
+      get agoraChat() {
+        return {
+          get muteAll(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get roomName(): FcrUIBaseProps {
-            return { enable: true };
+          get emoji(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get scheduleTime(): FcrUIBaseProps {
-            return { enable: true };
+          get picture(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get classState(): FcrUIBaseProps {
-            return { enable: true };
+          enable: true,
+        };
+      },
+      get counter() {
+        return {
+          enable: true,
+        };
+      },
+      get poll() {
+        return {
+          enable: true,
+        };
+      },
+      get netlessBoard() {
+        return {
+          get hand(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get microphone(): FcrUIBaseProps {
-            return { enable: true };
+          get switch(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get camera(): FcrUIBaseProps {
-            return { enable: true };
+          get mouse(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
+          get selector(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
+          },
+          get pencil(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
+          },
+          get text(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
+          },
+          get eraser(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
+          },
+          get clear(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
+          },
+          get save(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
+          },
+          get laserPointer(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
+          },
+          enable: true,
+        };
+      },
+      get cloudStorage() {
+        return {
           enable: true,
         };
       },
@@ -48,46 +136,46 @@ export class FcrUIConfigImpl implements FcrUIConfig {
   }
   get stage(): FcrStage {
     return {
-      get teacherVideo(): FcrTeacherVideo & FcrUIBaseProps {
+      get teacherVideo() {
         return {
           get resetPosition(): FcrUIBaseProps {
             return {
-              enable: true,
+              enable: false,
             };
           },
           get offStage(): FcrUIBaseProps {
             return {
-              enable: true,
+              enable: false,
             };
           },
           enable: true,
         };
       },
-      get studentVideo(): FcrStudentVideo & FcrUIBaseProps {
+      get studentVideo() {
         return {
           get camera(): FcrUIBaseProps {
             return {
-              enable: true,
+              enable: false,
             };
           },
           get microphone(): FcrUIBaseProps {
             return {
-              enable: true,
+              enable: false,
             };
           },
           get boardAuthorization(): FcrUIBaseProps {
             return {
-              enable: true,
+              enable: false,
             };
           },
           get reward(): FcrUIBaseProps {
             return {
-              enable: true,
+              enable: false,
             };
           },
           get offStage(): FcrUIBaseProps {
             return {
-              enable: true,
+              enable: false,
             };
           },
           enable: true,
@@ -95,81 +183,53 @@ export class FcrUIConfigImpl implements FcrUIConfig {
       },
     };
   }
-  get engagement(): FcrEngagement {
+  get header(): FcrHeader {
     return {
-      get netlessBoard(): FcrNetlessBoard & FcrUIBaseProps {
+      get stateBar() {
         return {
-          enable: true,
-          get switch(): FcrUIBaseProps {
-            return { enable: true };
+          get networkState(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get mouse(): FcrUIBaseProps {
-            return { enable: true };
+          get roomName(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get text(): FcrUIBaseProps {
-            return { enable: true };
+          get scheduleTime(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get selector(): FcrUIBaseProps {
-            return { enable: true };
+          get classState(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get pencil(): FcrUIBaseProps {
-            return { enable: true };
+          get microphone(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get eraser(): FcrUIBaseProps {
-            return { enable: true };
+          get camera(): FcrUIBaseProps {
+            return {
+              enable: false,
+            };
           },
-          get hand(): FcrUIBaseProps {
-            return { enable: true };
-          },
-          get save(): FcrUIBaseProps {
-            return { enable: true };
-          },
-          get laserPointer(): FcrUIBaseProps {
-            return { enable: true };
-          },
-        };
-      },
-      get popupQuiz(): FcrUIBaseProps {
-        return {
           enable: true,
         };
       },
-      get counter(): FcrUIBaseProps {
-        return {
-          enable: true,
-        };
-      },
-      get poll(): FcrUIBaseProps {
-        return {
-          enable: true,
-        };
-      },
-      get screenShare(): FcrUIBaseProps {
-        return {
-          enable: true,
-        };
-      },
-      get cloudStorage(): FcrUIBaseProps {
-        return {
-          enable: true,
-        };
-      },
-      get breakoutRoom(): FcrUIBaseProps {
-        return {
-          enable: true,
-        };
-      },
-      get roster(): FcrUIBaseProps {
-        return {
-          enable: true,
-        };
-      },
-      get raiseHand(): FcrUIBaseProps {
-        return {
-          enable: true,
-        };
-      },
-      get agoraChat(): FcrAgoraChat & FcrUIBaseProps {
+    };
+  }
+  get footer(): FcrFooter {
+    return {
+      enable: false,
+    };
+  }
+  get extension(): FcrExtension {
+    return {
+      get agoraChat() {
         return {
           enable: true,
           get muteAll(): FcrUIBaseProps {
@@ -192,12 +252,5 @@ export class FcrUIConfigImpl implements FcrUIConfig {
       },
     };
   }
-  get footer(): FcrFooter {
-    return {};
-  }
-  get extension(): FcrExtension {
-    return {};
-  }
 }
-
 loadUIConfig(EduRoomTypeEnum.RoomSmallClass, new FcrUIConfigImpl());
