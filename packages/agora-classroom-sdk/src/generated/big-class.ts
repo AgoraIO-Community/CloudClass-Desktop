@@ -52,12 +52,12 @@ export class FcrUIConfigImpl implements FcrUIConfig {
         return {
           get resetPosition(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get offStage(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           enable: true,

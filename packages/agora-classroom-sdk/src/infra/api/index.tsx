@@ -66,8 +66,10 @@ export class AgoraEduSDK {
   private static _appId = '';
   private static _uiConfig: FcrUIConfig;
   private static _theme: FcrTheme;
+  private static _shareUrl: string;
   //default use GLOBAL region(including CN)
   private static region: EduRegion = EduRegion.CN;
+
 
   private static _convertRegion(region: string): EduRegion {
     switch (region) {
@@ -175,6 +177,10 @@ export class AgoraEduSDK {
     return this._theme;
   }
 
+  static get shareUrl() {
+    return this._shareUrl;
+  }
+
   private static _validateOptions(option: LaunchOption) {
     if (!option) {
       throw new Error('AgoraEduSDK: LaunchOption is required!');
@@ -226,6 +232,7 @@ export class AgoraEduSDK {
       recordOptions,
       recordRetryTimeout,
       uiMode,
+      shareUrl
     } = option;
     const sessionInfo = {
       userUuid,
@@ -241,6 +248,8 @@ export class AgoraEduSDK {
       token: rtmToken,
       startTime,
     };
+
+    this._shareUrl = shareUrl || '';
 
     this._language = option.language;
 
@@ -373,9 +382,8 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${
-      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-    }/edu/apps/${appId}`;
+    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+      }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',

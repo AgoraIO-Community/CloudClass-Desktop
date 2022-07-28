@@ -23,12 +23,12 @@ import dayjs from 'dayjs';
 import { DialogCategory } from './share-ui';
 import { AgoraEduSDK } from '@/infra/api';
 import { SvgIconEnum, transI18n } from '~ui-kit';
-import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from './base';
 import { NetworkStateColors } from '~utilities/state-color';
 
 export interface EduNavAction<P = undefined> {
-  id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic';
+  id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic' | 'Share';
   title: string;
   iconType: SvgIconEnum;
   iconColor?: string;
@@ -71,6 +71,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
   // 老师流是否在大窗中展示
   @observable teacherStreamWindow = false;
+
+  // 是否显示share弹层
+  @observable shareVisible = false;
+
   //computed
   /**
    * 准备好挂载到 DOM
@@ -184,6 +188,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
             }
           },
           showOption: isInSubRoom,
+        });
+      },
+    };
+
+    const shareAction: EduNavAction<EduNavRecordActionPayload | undefined> = {
+      id: 'Share',
+      title: 'Share',
+      iconType: SvgIconEnum.LINK,
+      onClick: async () => {
+        runInAction(() => {
+          this.shareVisible = !this.shareVisible;
         });
       },
     };
@@ -365,6 +380,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       },
       exitAction,
     ];
+
+    if (AgoraEduSDK.shareUrl) {
+      commonActions.splice(1, 0, shareAction);
+    }
 
     const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
 
@@ -801,6 +820,11 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       }
     }
     return duration.format(formatItems.join(' '));
+  }
+
+  @action
+  closeShare() {
+    this.shareVisible = false;
   }
 
   /**

@@ -35,7 +35,7 @@ export const ScenesController: FC = observer(() => {
       style={{ opacity: containedStreamWindowCoverOpacity }}>
       <div className="scenes-controller-btn-list">
         <div className="scenes-controller-btn" onClick={addMainViewScene}>
-          <SvgIcon type={SvgIconEnum.ADD_SCENE} hoverType={SvgIconEnum.ADD_SCENE_ACTIVE} hoverColors={{ iconPrimary: InteractionStateColors.allow }} />
+          <SvgIcon type={SvgIconEnum.ADD_SCENE} hoverType={SvgIconEnum.ADD_SCENE} hoverColors={{ iconPrimary: InteractionStateColors.allow }} />
         </div>
         <div className="scenes-controller-line"></div>
         <div className="scenes-controller-btn" onClick={toPreMainViewScene}>

@@ -46,17 +46,17 @@ export class FcrUIConfigImpl implements FcrUIConfig {
         return {
           get muteAll(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get emoji(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get picture(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           enable: true,
@@ -76,52 +76,52 @@ export class FcrUIConfigImpl implements FcrUIConfig {
         return {
           get hand(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get switch(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get mouse(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get selector(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get pencil(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get text(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get eraser(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get clear(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get save(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get laserPointer(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           enable: true,
@@ -140,12 +140,12 @@ export class FcrUIConfigImpl implements FcrUIConfig {
         return {
           get resetPosition(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get offStage(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           enable: true,
@@ -155,27 +155,27 @@ export class FcrUIConfigImpl implements FcrUIConfig {
         return {
           get camera(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get microphone(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get boardAuthorization(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get reward(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get offStage(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           enable: true,
@@ -189,32 +189,32 @@ export class FcrUIConfigImpl implements FcrUIConfig {
         return {
           get networkState(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get roomName(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get scheduleTime(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get classState(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get microphone(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           get camera(): FcrUIBaseProps {
             return {
-              enable: false,
+              enable: true,
             };
           },
           enable: true,
@@ -224,7 +224,7 @@ export class FcrUIConfigImpl implements FcrUIConfig {
   }
   get footer(): FcrFooter {
     return {
-      enable: false,
+      enable: true,
     };
   }
   get extension(): FcrExtension {

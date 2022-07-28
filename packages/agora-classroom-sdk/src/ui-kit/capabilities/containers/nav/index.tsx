@@ -1,13 +1,17 @@
 import { EduNavAction, EduNavRecordActionPayload } from '@/infra/stores/common/nav-ui';
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n, SvgaPlayer, SvgIcon } from '~ui-kit';
-import { RecordStatus } from 'agora-edu-core';
+import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n, SvgaPlayer, SvgIcon, Card, Layout, SvgIconEnum } from '~ui-kit';
+import { EduClassroomConfig, EduRoleTypeEnum, RecordStatus } from 'agora-edu-core';
 import RecordLoading from './assets/svga/record-loading.svga';
 import './index.css';
 import { visibilityControl, visibilityListItemControl } from '../visibility';
 import { roomNameEnabled, networkStateEnabled, scheduleTimeEnabled, headerEnabled, cameraSwitchEnabled, microphoneSwitchEnabled } from '../visibility/controlled';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import classNames from 'classnames';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import ClipboardJS from 'clipboard';
+import { AgoraEduSDK } from '@/infra/api';
 
 const SignalContent = observer(() => {
   const { navigationBarUIStore } = useStore();
@@ -112,7 +116,48 @@ const Actions = observer(() => {
       ) : null
     }
   </React.Fragment>);
-})
+});
+
+const ShareCard = observer(() => {
+  const { navigationBarUIStore, shareUIStore } = useStore()
+  const cls = classNames('absolute z-10', {})
+  const { roomName } = EduClassroomConfig.shared.sessionInfo;
+  const copyRef = useRef<HTMLSpanElement>(null);
+
+
+  useEffect(() => {
+    if (copyRef.current) {
+      const clipboard = new ClipboardJS(copyRef.current)
+      clipboard.on('success', function (e) {
+        shareUIStore.addToast('Coppy success');
+        navigationBarUIStore.closeShare();
+      });
+      clipboard.on('error', function (e) {
+        shareUIStore.addToast('Failed to copy');
+      });
+      return () => {
+        clipboard.destroy();
+      }
+    }
+  }, []);
+
+
+  return (
+    <Card className={cls} style={{ display: navigationBarUIStore.shareVisible ? 'block' : 'none', right: 42, top: 30, padding: '17px 20px 25px', borderRadius: 10 }}>
+      <Layout direction='col'>
+        <span>Room</span>
+        <Layout>
+          <span className='text-14' style={{}}>{roomName}</span>
+          <Layout className='items-center'>
+            <SvgImg type={SvgIconEnum.LINK_SOLID} colors={{ iconPrimary: InteractionStateColors.allow }} style={{ marginLeft: 40 }} size={18} />
+            <span ref={copyRef} data-clipboard-text={`${AgoraEduSDK.shareUrl}`} className='text-14 cursor-pointer' style={{ color: InteractionStateColors.allow }} >Copy link</span>
+          </Layout>
+        </Layout>
+      </Layout>
+
+    </Card>
+  )
+});
 
 const NavigationBarRecordAction = observer(
   ({ action }: { action: EduNavAction<EduNavRecordActionPayload> }) => {
@@ -184,8 +229,9 @@ export const NavigationBar = visibilityControl(observer(() => {
       <div className="fcr-biz-header-title-wrap">
         <RoomState />
       </div>
-      <div className="header-actions">
+      <div className="header-actions relative">
         <Actions />
+        <ShareCard />
       </div>
     </Header>
   );

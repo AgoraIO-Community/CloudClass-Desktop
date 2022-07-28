@@ -28,29 +28,31 @@
 
       // window parameters
       const windowID = params.get('id');
-
-      const language = params.get('language');
-
       const args = params.get('args') ? JSON.parse(params.get('args')) : null;
 
-      window.__launchLanguage = language;
       window.__launchWindowID = windowID;
       window.__launchArgs = args;
 
       // builder parameters
+      const region = params.get('region');
+      const language = params.get('language');
       const roomName = params.get('roomName');
       const userName = params.get('userName');
       const roleType = params.get('roleType');
       const roomType = params.get('roomType');
       const companyId = params.get('companyId');
       const projectId = params.get('projectId');
+      const isShare = params.get('isShare');
 
+      window.__launchRegion = region;
+      window.__launchLanguage = language;
       window.__launchRoomName = roomName;
       window.__launchUserName = userName;
       window.__launchRoleType = roleType;
       window.__launchRoomType = roomType;
       window.__launchCompanyId = companyId;
       window.__launchProjectId = projectId;
+      window.__launchIsShare = isShare;
 
       if (windowID) {
         this.location.hash = 'window';

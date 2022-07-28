@@ -48,6 +48,8 @@ export enum SvgIconEnum {
   KICK_OUT = 'kick-out',
   LASER_POINTER = 'laser-pointer',
   LINE = 'line',
+  LINK = 'link',
+  LINK_SOLID = 'link-solid',
   LOG = 'log',
   M_CAMERA_OFF = 'm-camera-off',
   M_CAMERA = 'm-camera',

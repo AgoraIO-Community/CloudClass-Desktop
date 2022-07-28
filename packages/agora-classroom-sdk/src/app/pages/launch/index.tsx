@@ -8,6 +8,8 @@ import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import courseWareList from './courseware-list';
 
+
+
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
 
@@ -16,7 +18,7 @@ export const LaunchPage = observer(() => {
   const launchOption = homeStore.launchOption || {};
 
   useEffect(() => {
-    if (!launchOption || isEmpty(launchOption)) {
+    if (isEmpty(launchOption)) {
       history.push('/');
       return;
     }

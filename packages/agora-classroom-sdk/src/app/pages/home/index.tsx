@@ -1,9 +1,9 @@
-import { changeLanguage, Layout, Toast, transI18n, useI18n } from '~ui-kit';
+import { changeLanguage, Layout, Toast, transI18n } from '~ui-kit';
 import './style.css';
 import { addResource } from '../../components/i18n';
 import { FC, useEffect, useState, Fragment } from 'react';
 import { useHomeStore } from '@/infra/hooks';
-import { EduRegion, } from 'agora-edu-core';
+import { EduRegion, EduRoleTypeEnum, } from 'agora-edu-core';
 import { getBrowserLanguage, storage } from '@/infra/utils';
 import dayjs from 'dayjs';
 import md5 from 'js-md5';
@@ -34,6 +34,7 @@ declare const BUILD_COMMIT_ID: string;
 
 declare global {
     interface Window {
+        __launchRegion: string;
         __launchLanguage: string;
         __launchRoomName: string;
         __launchUserName: string;
@@ -41,6 +42,7 @@ declare global {
         __launchRoomType: string;
         __launchCompanyId: string;
         __launchProjectId: string;
+        __launchIsShare: string;
     }
 }
 
@@ -53,8 +55,6 @@ const regionByLang = {
 
 
 export const HomePage = () => {
-    const t = useI18n();
-
     const homeStore = useHomeStore();
 
     const launchConfig = homeStore.launchConfig;
@@ -66,11 +66,23 @@ export const HomePage = () => {
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        const lang = homeStore.launchOption.language || getBrowserLanguage();
-        const region = homeStore.region || regionByLang[getBrowserLanguage()];
+        const lang = window.__launchLanguage || homeStore.launchOption.language || getBrowserLanguage();
+        const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
         changeLanguage(lang);
         setLanguage(lang);
         setRegion(region);
+        if (window.__launchIsShare) {
+            setTimeout(() => {
+                handleSubmit(
+                    {
+                        roleType: window.__launchRoleType,
+                        roomType: window.__launchRoomType,
+                        roomName: window.__launchRoomName,
+                        userName: `user_${''.padEnd(6, `${Math.floor(Math.random() * 10000)}`)}`
+                    }
+                );
+            });
+        }
     }, []);
 
     // const handleChangeRegion = (r: string) => {
@@ -142,13 +154,16 @@ export const HomePage = () => {
             const companyId = window.__launchCompanyId;
             const projectId = window.__launchProjectId;
 
-            let scenes = {};
-            let themes = {};
+            let scenes = undefined;
+            let themes = undefined;
 
             if (companyId && projectId) {
                 ({ scenes, themes } = await HomeApi.shared.getBuilderResource(companyId, projectId));
             }
 
+            const shareUrl = `${location.origin}${location.pathname}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}&isShare=1`
+
+            console.log('shareUrl', shareUrl)
 
             console.log('## get rtm Token from demo server', token);
 
@@ -168,8 +183,9 @@ export const HomePage = () => {
                 region: region as EduRegion,
                 duration: +duration * 60,
                 latencyLevel: 2,
-                scenes,
-                themes: { default: themes }
+                scenes: scenes ?? {},
+                themes: themes ? { default: themes } : {},
+                shareUrl
             };
 
             config.appId = REACT_APP_AGORA_APP_ID || config.appId;
