@@ -29,7 +29,7 @@ request.interceptors.response.use(
       !(error.config?.url || '').includes('/refresh/refreshToken')
     ) {
       const { retryTimes = 0 } = error.config;
-      if (retryTimes < maxRetryTimes) {
+      if (retryTimes < maxRetryTimes && UserApi.refresh_token) {
         return UserApi.shared
           .refreshToken()
           .then(() => {
