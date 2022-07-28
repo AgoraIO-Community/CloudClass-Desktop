@@ -1,15 +1,16 @@
+import { useAuth } from '@/infra/hooks/auth';
+import { BigClassScenario } from '@/ui-kit/capabilities/scenarios/big-class';
 import * as React from 'react';
-
+import { FC, PropsWithChildren } from 'react';
 import { OneToOneScenario } from '~capabilities/scenarios/1v1';
 import { MidClassScenario } from '~capabilities/scenarios/mid-class';
-import { BigClassScenario } from '~capabilities/scenarios/big-class';
-import { LaunchPage } from '../pages/launch';
 import { HomePage } from '../pages/home';
 import { HomeH5Page } from '../pages/home/h5';
 import { VocationalHomePage } from '../pages/home/vocational';
 import { VocationalHomeH5Page } from '../pages/home/vocational-h5';
-import { RecordationSearchPage } from '../pages/recordation-search';
+import { LaunchPage } from '../pages/launch';
 import { LaunchWindow } from '../pages/launch-window';
+import { RecordationSearchPage } from '../pages/recordation-search';
 
 export type AppRouteComponent = {
   path: string;
@@ -40,6 +41,15 @@ export enum BizPageRouter {
 const PageSFC = (Component: React.FC<any>) => {
   return <Component />;
 };
+
+const AuthLayout: FC<PropsWithChildren<unknown>> = ({ children }) => {
+  const { auth } = useAuth();
+  React.useEffect(() => {
+    auth();
+  }, []);
+
+  return <>{children}</>;
+};
 export const routesMap: Record<string, AppRouteComponent> = {
   [BizPageRouter.OneToOne]: {
     path: '/classroom/1v1',
@@ -59,19 +69,35 @@ export const routesMap: Record<string, AppRouteComponent> = {
   },
   [BizPageRouter.TestHomePage]: {
     path: '/',
-    component: () => PageSFC(HomePage),
+    component: () => (
+      <AuthLayout>
+        <HomePage />
+      </AuthLayout>
+    ),
   },
   [BizPageRouter.TestH5HomePage]: {
     path: '/h5login',
-    component: () => PageSFC(HomeH5Page),
+    component: () => (
+      <AuthLayout>
+        <HomeH5Page />
+      </AuthLayout>
+    ),
   },
   [BizPageRouter.VocationalHomePage]: {
     path: '/vocational',
-    component: () => PageSFC(VocationalHomePage),
+    component: () => (
+      <AuthLayout>
+        <VocationalHomePage />
+      </AuthLayout>
+    ),
   },
   [BizPageRouter.VocationalHomeH5Page]: {
     path: '/vocational/h5login',
-    component: () => PageSFC(VocationalHomeH5Page),
+    component: () => (
+      <AuthLayout>
+        <VocationalHomeH5Page />
+      </AuthLayout>
+    ),
   },
   [BizPageRouter.RecordationSearchPage]: {
     path: '/recordation-search/:p',

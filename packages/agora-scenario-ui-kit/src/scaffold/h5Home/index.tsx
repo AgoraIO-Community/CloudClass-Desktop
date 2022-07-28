@@ -1,4 +1,3 @@
-import { isProduction } from '@/infra/utils/env';
 import React from 'react';
 import { Button } from '~components/button';
 import { transI18n } from '~components/i18n';
@@ -42,7 +41,7 @@ export const H5Login: React.FC<any> = ({
     { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
 
-  if (!isProduction) {
+  if (true) {
     serviceOptions.push(
       { label: transI18n('home.serviceType_mix_stream_cdn'), value: 'mix-stream-cdn-service' },
       { label: transI18n('home.serviceType_hosting_scene'), value: 'hosting-scene' },

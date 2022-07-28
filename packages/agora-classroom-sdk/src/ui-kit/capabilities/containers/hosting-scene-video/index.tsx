@@ -9,12 +9,13 @@ import {
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef } from 'react';
+import { transI18n } from '~ui-kit';
 import { VideoLivePlayer, VideoLivePlayerRef } from '../stream/video-live-player';
 
-// const testVideoURL =
-//   'https://cloud.video.taobao.com//play/u/611232217/p/1/e/6/t/1/304659236072.mp4';
+const testVideoURL =
+  'https://cloud.video.taobao.com//play/u/611232217/p/1/e/6/t/1/304659236072.mp4';
 
-const testVideoURL = 'https://view.2amok.com/20220708/26bad18fdf6816ecc37e0fcef27d9c8f.mp4';
+// const testVideoURL = 'https://view.2amok.com/20220708/26bad18fdf6816ecc37e0fcef27d9c8f.mp4';
 
 export const HostingSceneVideo = observer(() => {
   const { classroomStore, navigationBarUIStore } = useStore();
@@ -30,10 +31,21 @@ export const HostingSceneVideo = observer(() => {
 
   const videoRef = useRef<VideoLivePlayerRef>(null);
 
+  const currentTimeRef = useRef(0);
+  useEffect(() => {
+    const t =
+      navigationBarUIStore.classTimeDuration >= 0 ? navigationBarUIStore.classTimeDuration : 0;
+    currentTimeRef.current = Math.floor(t / 1000);
+  }, [navigationBarUIStore.classTimeDuration]);
+
+  const getLiveTime = useCallback(() => {
+    return currentTimeRef.current;
+  }, []);
+
   useEffect(() => {
     switch (classroomSchedule.state) {
       case ClassState.ongoing:
-        videoRef.current?.play(Math.floor(navigationBarUIStore.classTimeDuration / 1000));
+        videoRef.current?.play(currentTimeRef.current);
         break;
     }
   }, [classroomSchedule.state]);
@@ -59,13 +71,28 @@ export const HostingSceneVideo = observer(() => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    const visibilitychange = () => {
+      if (!document.hidden) {
+        if (classroomSchedule.state === ClassState.ongoing) {
+          videoRef.current?.play(currentTimeRef.current);
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', visibilitychange);
+    return () => {
+      document.removeEventListener('visibilitychange', visibilitychange);
+    };
+  }, [classroomSchedule.state]);
+
   return (
     <VideoLivePlayer
       ref={videoRef}
       url={hostingScene?.videoURL}
-      placeholderText="老师当前不在教室中"
+      placeholderText={transI18n('fcr_vocational_teacher_absent')}
       ended={closeClass}
-      currentTime={Math.floor(navigationBarUIStore.classTimeDuration / 1000)}
+      getLiveTime={getLiveTime}
     />
   );
 });

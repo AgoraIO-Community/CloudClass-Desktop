@@ -1,3 +1,4 @@
+import { vocationalNeedPreset } from '@/app/pages/home/vocational';
 import { ControlBar } from '@/ui-kit/capabilities/containers/fragments';
 import { Scenarios } from '@/ui-kit/capabilities/scenarios';
 import {
@@ -27,6 +28,7 @@ import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { FcrTheme } from '~ui-kit';
 import { EduContext } from '../contexts';
+
 import { createCloudResource } from '../stores/common/cloud-drive/helper';
 import { FcrMultiThemeMode, FcrUIConfig } from '../types/config';
 import {
@@ -273,12 +275,17 @@ export class AgoraEduSDK {
         rtcConfigs: {
           ...this._convertMediaOptions(option.mediaOptions),
           ...{
-            noDevicePermission: roleType === EduRoleTypeEnum.invisible,
+            noDevicePermission:
+              roleType === EduRoleTypeEnum.invisible ||
+              !vocationalNeedPreset(roleType, roomServiceType, roomSubtype),
           },
         },
       },
       platform,
-      recordRetryTimeout ? { recordRetryTimeout } : undefined,
+      Object.assign(
+        { openCameraDeviceAfterLaunch: pretest, openRecordingDeviceAfterLaunch: pretest },
+        recordRetryTimeout ? { recordRetryTimeout } : {},
+      ),
     );
 
     if (this._config.host) {

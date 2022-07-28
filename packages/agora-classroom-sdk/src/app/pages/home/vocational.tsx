@@ -1,12 +1,10 @@
-import { useHomeStore } from '@/infra/hooks';
-import { changeLanguage, transI18n, Toast } from '~ui-kit';
-import { Home } from '~ui-kit/scaffold';
-import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
-import { observer } from 'mobx-react';
-import React, { useState, useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router';
-import { LanguageEnum } from '@/infra/api';
+import { HomeSettingContainer } from '@/app/pages/home/home-setting';
 import { HomeLaunchOption } from '@/app/stores/home';
+import { LanguageEnum } from '@/infra/api';
+import { useHomeStore } from '@/infra/hooks';
+import { ToastType } from '@/infra/stores/common/share-ui';
+import { GlobalStorage, storage } from '@/infra/utils';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -17,13 +15,16 @@ import {
 } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import MD5 from 'js-md5';
+import { observer } from 'mobx-react';
+import React, { useMemo, useState } from 'react';
+import { useHistory } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
-
+import { Toast, transI18n } from '~ui-kit';
+import { Home } from '~ui-kit/scaffold';
+import { useTheme } from '.';
 import { HomeApi } from './home-api';
 import { MessageDialog } from './message-dialog';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import { ToastType } from '@/infra/stores/common/share-ui';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -47,18 +48,25 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
   'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
 
-declare const CLASSROOM_SDK_VERSION: string;
-declare const BUILD_TIME: string;
-declare const BUILD_COMMIT_ID: string;
-
-const regionByLang = {
-  zh: EduRegion.CN,
-  en: EduRegion.NA,
+// 1. 伪直播场景不需要pretest
+// 2. 合流转推场景下的学生角色不需要pretest
+export const vocationalNeedPreset = (
+  roleType: EduRoleTypeEnum,
+  roomServiceType: EduRoomServiceTypeEnum,
+  roomSubtype: EduRoomSubtypeEnum,
+) => {
+  return !(
+    EduRoomSubtypeEnum.Vocational === roomSubtype &&
+    (roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
+      (roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
+        roleType !== EduRoleTypeEnum.teacher))
+  );
 };
 
 export const VocationalHomePage = observer(() => {
   const homeStore = useHomeStore();
-  const { launchConfig } = homeStore;
+  const { launchConfig, language, region } = homeStore;
+  useTheme();
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
@@ -67,32 +75,12 @@ export const VocationalHomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
   const [curService, setService] = useState<string>(launchConfig.curService || '');
   const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
-  const [language, setLanguage] = useState<string>('');
-  const [region, setRegion] = useState<EduRegion>(EduRegion.CN);
   const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const lang = homeStore.launchOption.language || getBrowserLanguage();
-    changeLanguage(lang);
-    setLanguage(lang);
-    const region = homeStore.region || regionByLang[getBrowserLanguage()];
-    setRegion(region);
-  }, []);
-
-  const onChangeRegion = (r: string) => {
-    const region = r as EduRegion;
-    setRegion(region);
-    homeStore.setRegion(region);
-  };
-
-  const onChangeLanguage = (language: string) => {
-    changeLanguage(language);
-    setLanguage(language);
-  };
-
+  const onChangeRegion = (r: string) => {};
+  const onChangeLanguage = (language: string) => {};
   const role = useMemo(() => {
     const roles = {
       teacher: EduRoleTypeEnum.teacher,
@@ -226,15 +214,17 @@ export const VocationalHomePage = observer(() => {
       const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
       const webRTCCodec =
         roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-          roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+        roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
           ? 'h264'
           : 'vp8';
       const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
 
+      const needPretest = vocationalNeedPreset(role, roomServiceType, roomSubtype);
+
       const config: HomeLaunchOption = {
         appId,
         sdkDomain: domain,
-        pretest: true,
+        pretest: needPretest,
         courseWareList: courseWareList.slice(0, 1),
         language: language as LanguageEnum,
         userUuid: `${userUuid}`,
@@ -246,7 +236,7 @@ export const VocationalHomePage = observer(() => {
         roomName: `${roomName}`,
         userName: userName,
         roleType: role,
-        region,
+        region: region as EduRegion,
         duration: duration * 60,
         latencyLevel: 2,
         curScenario,
@@ -302,11 +292,10 @@ export const VocationalHomePage = observer(() => {
     }
   };
 
-  return language !== '' ? (
+  return !!language ? (
     <React.Fragment>
       <MessageDialog />
       <Home
-        showServiceOptions
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
@@ -320,14 +309,16 @@ export const VocationalHomePage = observer(() => {
         scenario={curScenario}
         service={curService}
         duration={duration}
-        region={region}
+        region={region as string}
+        language={language as string}
+        onChangeRegion={onChangeRegion}
+        onChangeLanguage={onChangeLanguage}
         debug={debug}
         encryptionMode={encryptionMode}
         encryptionKey={encryptionKey}
         onChangeEncryptionMode={onChangeEncryptionMode}
         onChangeEncryptionKey={onChangeEncryptionKey}
         onChangeDebug={onChangeDebug}
-        onChangeRegion={onChangeRegion}
         onChangeRole={onChangeRole}
         onChangeScenario={onChangeScenario}
         onChangeService={onChangeService}
@@ -338,10 +329,10 @@ export const VocationalHomePage = observer(() => {
         onChangeDuration={(duration: number) => {
           setDuration(duration);
         }}
-        language={language}
-        onChangeLanguage={onChangeLanguage}
         loading={loading}
-        onClick={onSubmit}>
+        onClick={onSubmit}
+        showServiceOptions={true}
+        headerRight={<HomeSettingContainer />}>
         <HomeToastContainer />
       </Home>
     </React.Fragment>

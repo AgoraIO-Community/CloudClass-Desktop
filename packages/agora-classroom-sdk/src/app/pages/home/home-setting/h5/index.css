@@ -1,0 +1,66 @@
+.setting-h5-btn {
+  width: 30px;
+  height: 30px;
+  margin-right: 3px;
+  background-repeat: round;
+  background-image: url(../assets/about.svg);
+  filter: brightness(150%);
+}
+
+.h5-page-container {
+  background: #fff;
+}
+
+.page-animation {
+  z-index: 999;
+}
+
+.page-animation.enter {
+  left: 100vw;
+}
+.page-animation.enter-active {
+  left: 0;
+  transition: left 250ms linear;
+}
+
+.page-animation.exit {
+  left: 0;
+}
+.page-animation.exit-active {
+  left: 100vw;
+  transition: left 250ms linear;
+}
+
+.h5-page-container .logout-btn {
+  color: #357bf6;
+  bottom: 7vh;
+  margin: 0 10vw;
+  height: 44px;
+}
+
+.h5-page-container .close-account-btn {
+  bottom: 7vh;
+  margin: 0 10vw;
+  height: 44px;
+}
+
+.close-account-checkbox .fcr-pure-material-checkbox > span {
+  align-items: center;
+  font-size: 20px;
+  display: flex;
+}
+
+.close-account-checkbox .fcr-pure-material-checkbox > span::before {
+  margin-right: 12px;
+}
+
+.close-account-submit-btn {
+  color: #357bf6;
+  bottom: 7vh;
+  margin: 0 10vw;
+  height: 44px;
+}
+
+.close-account-submit-btn.disabled {
+  color: #aaa;
+}

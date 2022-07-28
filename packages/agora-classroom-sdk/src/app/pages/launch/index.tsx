@@ -8,8 +8,6 @@ import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import courseWareList from './courseware-list';
 
-declare const CLASSROOM_SDK_VERSION: string;
-
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
 
@@ -44,6 +42,7 @@ export const LaunchPage = observer(() => {
         // TODO:  Here you need to pass in the address of the recording page posted by the developer himself
         recordUrl,
         courseWareList,
+        uiMode: homeStore.theme,
         listener: (evt: AgoraEduClassroomEvent, type) => {
           console.log('launch#listener ', evt);
           if (

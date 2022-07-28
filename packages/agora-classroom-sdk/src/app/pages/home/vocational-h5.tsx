@@ -18,13 +18,14 @@ import { Helmet } from 'react-helmet';
 import { useHistory } from 'react-router';
 import { changeLanguage } from '~ui-kit';
 import { H5Login } from '~ui-kit/scaffold';
+import { useTheme } from '.';
 import { HomeApi } from './home-api';
+import { HomeSettingContainerH5 } from './home-setting/h5';
 import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
-declare const CLASSROOM_SDK_VERSION: string;
 
 const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: EduRoomSubtypeEnum } = {
   'vocational-class': EduRoomSubtypeEnum.Vocational,
@@ -44,8 +45,8 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
 
 export const VocationalHomeH5Page = observer(() => {
   const homeStore = useHomeStore();
+  useTheme();
   const { launchConfig } = homeStore;
-
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
@@ -161,6 +162,7 @@ export const VocationalHomeH5Page = observer(() => {
         <meta content="telephone=no" name="format-detection" />
       </Helmet>
       <MessageDialog />
+      <HomeSettingContainerH5 />
       <H5Login
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}

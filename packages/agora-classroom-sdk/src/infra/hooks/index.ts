@@ -1,7 +1,6 @@
 import { HomeStore } from '@/app/stores/home';
 import { MobXProviderContext } from 'mobx-react';
-import React from 'react';
-import { useContext, DependencyList, useMemo } from 'react';
+import React, { DependencyList, useContext, useMemo } from 'react';
 import { interactionThrottleHandler } from '../utils/interaction';
 
 export type HomeContext = Record<string, HomeStore>;

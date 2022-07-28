@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
 import i18n from 'i18next';
 import { isEmpty } from 'lodash';
+import React, { useEffect } from 'react';
 import { I18nextProvider, initReactI18next, useTranslation } from 'react-i18next';
 import { en } from '../../utilities/translate/en';
 import { zh } from '../../utilities/translate/zh';
@@ -28,8 +28,8 @@ export const useI18n = () => {
       });
     }
     return debugI18n ? `%%${content}%%` : content;
-  }
-}
+  };
+};
 
 let debugI18n = false;
 
@@ -56,7 +56,7 @@ export const setDebugI18n = (debug: boolean) => {
 window.changeLanguage = changeLanguage;
 
 export class MemoryStorage {
-  constructor(private readonly _storage = new Map<string, string>()) { }
+  constructor(private readonly _storage = new Map<string, string>()) {}
 
   getItem(name: string) {
     return this._storage.get(name);

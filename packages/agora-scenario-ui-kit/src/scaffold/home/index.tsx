@@ -1,14 +1,12 @@
 import classnames from 'classnames';
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '~components/button';
-import { Disclaimer, HomeAbout } from '~components/home-about';
-import { transI18n } from '~components/i18n';
+import { Card } from '~components/card';
 import { Input } from '~components/input';
 import { Header, Layout } from '~components/layout';
-import { Modal } from '~components/modal';
 import { Select } from '~components/select';
 import { Col, Row, Table } from '~components/table';
-import { Card } from '~components/card';
+import { useI18n } from '~ui-kit/components';
 import { HomeModule } from '~utilities/types';
 import './index.css';
 
@@ -37,6 +35,7 @@ export interface HomeProps extends Omit<HomeModule<HomeAttributes>, 'onChangeSho
   buildTime: string;
   commitID: string;
   loading: boolean;
+  headerRight?: React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -74,10 +73,10 @@ export const Home: React.FC<HomeProps> = ({
   onChangeDebug,
   onClick,
   showServiceOptions,
+  headerRight,
   ...restProps
 }) => {
-  const [showAbout, setShowAbout] = useState<boolean>(false);
-  const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
+  const transI18n = useI18n();
 
   const scenarioOptions = [
     { label: transI18n('home.roomType_1v1'), value: '1v1' },
@@ -104,14 +103,12 @@ export const Home: React.FC<HomeProps> = ({
     { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
 
-
   if (showServiceOptions) {
     serviceOptions.push(
       { label: transI18n('home.serviceType_mix_stream_cdn'), value: 'mix-stream-cdn-service' },
       { label: transI18n('home.serviceType_hosting_scene'), value: 'hosting-scene' },
     );
   }
-
 
   const languageOptions = [
     { label: '中文', value: 'zh' },
@@ -150,96 +147,9 @@ export const Home: React.FC<HomeProps> = ({
           <div className="header-left-logo"></div>
           <div className="header-left-title">{transI18n('home.header-left-title')}</div>
         </div>
-        <div className="header-right">
-          <div
-            style={{
-              marginRight: language === 'en' ? -12 : -58,
-              width: 131,
-              position: 'relative',
-              zIndex: 9,
-            }}
-            className={[language === 'en' ? 'region-en-div' : 'region-zh-div'].join(' ')}>
-            <Select
-              prefix={
-                <span id="et_region" className="home-label">
-                  {transI18n('home.region')}
-                </span>
-              }
-              id="region"
-              value={region}
-              onChange={(value) => {
-                onChangeRegion(value);
-              }}
-              placeholder={transI18n('home.region_placeholder')}
-              options={regionOptions}
-            // defaultMenuIsOpen={true}
-            ></Select>
-          </div>
-          <div
-            style={{ marginRight: 17, width: 185 }}
-            className={[language === 'en' ? 'language-en-div' : 'language-zh-div'].join(' ')}>
-            <Select
-              prefix={<span className="home-label">{transI18n('home.language')}</span>}
-              id="language"
-              value={language}
-              onChange={(value) => {
-                onChangeLanguage(value);
-              }}
-              placeholder={transI18n('home.language_placeholder')}
-              options={languageOptions}
-            // defaultMenuIsOpen={true}
-            ></Select>
-          </div>
-          <div
-            className="header-right-about"
-            onClick={() => {
-              setShowAbout(true);
-            }}>
-            {transI18n('home.about')}
-          </div>
-        </div>
+        <div className="header-right">{headerRight}</div>
       </Header>
-      {showAbout ? (
-        <Modal
-          title={transI18n('home.about')}
-          style={{ width: 366 }}
-          onCancel={() => {
-            setShowAbout(false);
-          }}
-          closable={true}>
-          <HomeAbout
-            onLookDeclare={() => {
-              setShowAbout(false);
-              setShowDisclaimer(true);
-            }}
-            onLookPrivate={() => {
-              const url = language === 'en' ? privacyEnUrl : privacyCnUrl;
-              window.open(url);
-            }}
-            onRegiste={() => {
-              const url = language === 'en' ? signupEnUrl : signupCnUrl;
-              window.open(url);
-            }}
-            version={version}
-            SDKVersion={SDKVersion}
-            buildTime={buildTime}
-            classroomVersion={version}
-            commitID={commitID}
-          />
-        </Modal>
-      ) : null}
-      {showDisclaimer ? (
-        <Modal
-          style={{ height: language === 'en' ? 475 : 370, width: 560 }}
-          title={transI18n('disclaimer.title')}
-          modalType="back"
-          onCancel={() => {
-            setShowAbout(true);
-            setShowDisclaimer(false);
-          }}>
-          <Disclaimer />
-        </Modal>
-      ) : null}
+
       <div
         className={classnames({
           'entry-room-loading-wrapper': 1,

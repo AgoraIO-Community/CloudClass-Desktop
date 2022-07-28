@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 import { DialogContainer } from '~containers/dialog';
 import { ToastContainer } from '~containers/toast';
+import { transI18n } from '~ui-kit';
 import Room from '../../room';
 import { DocTitle } from '../components/doc-title';
 import { H5Chat } from '../components/h5-chat';
@@ -31,7 +32,11 @@ export const MixStreamCDNClassScenario = observer(() => {
       <DocTitle />
       <div className="m-vocational-class">
         <div className="main-section">
-          <CDNPlayer stream={stream} state={recordStatus} placeholderText="老师当前不在教室中" />
+          <CDNPlayer
+            stream={stream}
+            state={recordStatus}
+            placeholderText={transI18n('fcr_vocational_teacher_absent')}
+          />
         </div>
         <H5Chat />
       </div>

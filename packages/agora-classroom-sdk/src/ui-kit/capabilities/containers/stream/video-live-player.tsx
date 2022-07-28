@@ -19,7 +19,7 @@ type VideoLivePlayerProps = {
   ended?: () => void;
   placeholderIcon?: React.ReactElement;
   placeholderText?: string;
-  currentTime?: number;
+  getLiveTime: () => number;
 };
 
 export type VideoLivePlayerRef = {
@@ -33,7 +33,7 @@ const PlaceholderIcon = () => (
 
 enum VideoPlayerState {
   Initializing,
-  Ready,
+  Ready, // Received orders to play, but can't automatically play, waiting for a manual trigger
   Playing,
   Ended,
 }
@@ -46,13 +46,14 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
     ended,
     placeholderIcon = <PlaceholderIcon />,
     placeholderText,
-    currentTime = 0,
+    getLiveTime,
   },
   ref,
 ) => {
   const [interactiveNeeded, setInteractiveNeeded] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [state, setState] = useState(VideoPlayerState.Initializing);
+
   const setTimeHandle = useCallback((currentTime: number) => {
     if (videoRef.current && currentTime >= 0) {
       const time =
@@ -63,9 +64,18 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
 
   const playHandle = useCallback((currentTime: number) => {
     if (videoRef.current) {
-      setTimeHandle(currentTime);
-      setState(VideoPlayerState.Playing);
-      videoRef.current?.play();
+      videoRef.current
+        ?.play()
+        .then(() => {
+          setTimeHandle(currentTime);
+          setState(VideoPlayerState.Playing);
+        })
+        .catch(() => {
+          setState(VideoPlayerState.Ready);
+          setTimeout(() => {
+            setTimeHandle(currentTime);
+          }, 1000);
+        });
       return;
     }
   }, []);
@@ -78,13 +88,50 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
   }, []);
 
   const showPlaceholder = useMemo(() => {
-    return !(state === VideoPlayerState.Playing && !!url);
+    return !(state !== VideoPlayerState.Initializing && !!url);
   }, [state, url]);
 
   useImperativeHandle(ref, () => ({
     play: playHandle,
     pause: pauseHandle,
   }));
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const handle = () => {
+        setInteractiveNeeded(false);
+      };
+      videoRef.current.addEventListener('play', handle);
+      return () => {
+        videoRef.current?.removeEventListener('play', handle);
+      };
+    }
+  }, [url]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const handle = () => {
+        setInteractiveNeeded(true);
+      };
+      videoRef.current.addEventListener('pause', handle);
+      return () => {
+        videoRef.current?.removeEventListener('pause', handle);
+      };
+    }
+  }, [url]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const handle = () => {
+        //结束
+        ended && ended();
+      };
+      videoRef.current.addEventListener('ended', handle);
+      return () => {
+        videoRef.current?.removeEventListener('ended', handle);
+      };
+    }
+  }, [ended]);
 
   const placeholderElement = useMemo(() => {
     return (
@@ -103,43 +150,6 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
     );
   }, [placeholderIcon, placeholderText]);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      const endedHandle = () => {
-        //结束
-        ended && ended();
-      };
-      videoRef.current.addEventListener('ended', endedHandle);
-      return () => {
-        videoRef.current?.removeEventListener('ended', endedHandle);
-      };
-    }
-  }, [ended]);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      const playHandle = () => {
-        setInteractiveNeeded(false);
-      };
-      videoRef.current.addEventListener('play', playHandle);
-      return () => {
-        videoRef.current?.removeEventListener('play', playHandle);
-      };
-    }
-  }, [url]);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      const pauseHandle = () => {
-        setInteractiveNeeded(true);
-      };
-      videoRef.current.addEventListener('pause', pauseHandle);
-      return () => {
-        videoRef.current?.removeEventListener('pause', pauseHandle);
-      };
-    }
-  }, [url]);
-
   return (
     <div className="relative w-full h-full flex items-center justify-center">
       <video src={url} style={style} className={className} ref={videoRef}></video>
@@ -147,7 +157,7 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
         <div
           className="absolute w-full h-full cursor-pointer top-0 left-0 video-live-player-play-btn"
           onClick={() => {
-            playHandle(currentTime);
+            playHandle(getLiveTime());
           }}></div>
       ) : null}
       {showPlaceholder ? placeholderElement : null}

@@ -1,13 +1,13 @@
-import { AGError, bound, Lodash, AGRteErrorCode, Scheduler, Injectable, Log } from 'agora-rte-sdk';
-import { observable, action, runInAction } from 'mobx';
-import { v4 as uuidv4 } from 'uuid';
-import { getRootDimensions } from './layout/helper';
-import { getEduErrorMessage, getErrorServCode } from '@/infra/utils/error';
 import { AgoraEduSDK, WindowID } from '@/infra/api';
+import { getEduErrorMessage, getErrorServCode } from '@/infra/utils/error';
 import { sendToMainProcess } from '@/infra/utils/ipc';
-import { ConfirmDialogAction, OrientationEnum } from './type';
 import { ChannelType } from '@/infra/utils/ipc-channels';
+import { AGError, AGRteErrorCode, bound, Injectable, Lodash, Log, Scheduler } from 'agora-rte-sdk';
+import { action, observable, runInAction } from 'mobx';
+import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from '~ui-kit';
+import { getRootDimensions } from './layout/helper';
+import { ConfirmDialogAction, OrientationEnum } from './type';
 
 export enum DialogCategory {
   CloudDriver,

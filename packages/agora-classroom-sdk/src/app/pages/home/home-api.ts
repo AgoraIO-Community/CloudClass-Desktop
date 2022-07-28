@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { request } from '@/infra/utils/request';
 
 export class HomeApi {
   static shared = new HomeApi();
@@ -15,15 +15,14 @@ export class HomeApi {
     role: number;
     token: string;
   }> {
-    // TODO: axios 加入 sso Token 鉴权
-    const { data } = await axios.get(
-      `${this.domain}/edu/v3/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
+    const { data } = await request.get(
+      `${this.domain}/edu/v4/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
     );
     return data.data;
   }
 
   async getRecordations(roomUuid: string): Promise<any> {
-    const { data } = await axios.get(`${this.domain}/edu/v2/rooms/${roomUuid}/records`);
+    const { data } = await request.get(`${this.domain}/edu/v2/rooms/${roomUuid}/records`);
     return data.data;
   }
 }

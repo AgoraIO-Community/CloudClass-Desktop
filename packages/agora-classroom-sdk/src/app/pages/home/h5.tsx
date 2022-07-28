@@ -1,10 +1,8 @@
-import { useHomeStore } from '@/infra/hooks';
-import { changeLanguage } from '~ui-kit';
-import { getBrowserLanguage, storage } from '@/infra/utils';
-import { observer } from 'mobx-react';
-import React, { useState, useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
+import { useHomeStore } from '@/infra/hooks';
+import { getBrowserLanguage, storage } from '@/infra/utils';
+import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -12,20 +10,22 @@ import {
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
-import { MessageDialog } from './message-dialog';
-import { HomeApi } from './home-api';
+import { observer } from 'mobx-react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { H5Login } from '~ui-kit/scaffold'
-import { HomeLaunchOption } from '@/app/stores/home';
+import { useHistory } from 'react-router';
+import { changeLanguage } from '~ui-kit';
+import { H5Login } from '~ui-kit/scaffold';
+import { HomeApi } from './home-api';
+import { MessageDialog } from './message-dialog';
+import { useTheme } from '.';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
-declare const CLASSROOM_SDK_VERSION: string;
-
 export const HomeH5Page = observer(() => {
   const homeStore = useHomeStore();
-
+  useTheme()
   const launchConfig = homeStore.launchConfig;
 
   const [roomId, setRoomId] = useState<string>('');
@@ -204,6 +204,7 @@ export const HomeH5Page = observer(() => {
           history.replace('/launch');
         }}
       />
+      <HomeSettingContainerH5 />
     </React.Fragment>
   ) : null;
 });

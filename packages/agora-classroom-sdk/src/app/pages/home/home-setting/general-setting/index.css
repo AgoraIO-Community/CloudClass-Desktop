@@ -1,0 +1,35 @@
+.general-setting {
+  font-size: 13px;
+}
+
+.general-setting .item {
+  margin-bottom: 10px;
+}
+
+.general-setting .item .form > div > div.items-center {
+  margin-right: 25px;
+}
+
+.close-account-modal {
+  width: 500px;
+}
+
+.close-account-modal .modal-title {
+  height: 40px;
+}
+
+.close-account-modal .modal-title-text {
+  font-size: 14px;
+}
+
+.close-account-modal .modal-content {
+  padding: 20px 40px 10px;
+}
+
+.close-account-content {
+  line-height: 2.5;
+}
+
+.close-account-checkbox {
+  margin-top: 5px;
+}

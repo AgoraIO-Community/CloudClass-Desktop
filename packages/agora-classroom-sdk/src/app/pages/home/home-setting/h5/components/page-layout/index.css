@@ -1,0 +1,18 @@
+.h5-page-layout .header {
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 16px;
+  color: #191919;
+  border: 1px solid #eeeef7;
+}
+
+.h5-page-layout .header .back {
+  height: 100%;
+  width: 54px;
+  background-image: url(../../../assets/arrow-left.svg);
+  background-position: center center;
+  background-repeat: no-repeat;
+}
