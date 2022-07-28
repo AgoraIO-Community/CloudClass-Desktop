@@ -59,7 +59,7 @@ export class UserApi {
       redirectUrl: `${location.href.split('?')[0]}`,
       toRegion: getRegion() === AgoraRegion.CN ? 'cn' : 'en',
     }).then((data) => {
-      window.open(data, '_self');
+      location.href = data;
     });
   }
 
@@ -82,8 +82,10 @@ export class UserApi {
   async refreshToken() {
     const url = `${this.domain}/sso/v2/users/refresh/refreshToken/${UserApi.refresh_token}`;
     return request.post<Response<RefreshTokenResponse>>(url, {}).then((resp) => {
-      UserApi.saveAccessToken(resp.data.data.accessToken);
-      UserApi.saveRefreshToken(resp.data.data.refreshToken);
+      if (resp.data) {
+        UserApi.saveAccessToken(resp.data.data.accessToken);
+        UserApi.saveRefreshToken(resp.data.data.refreshToken);
+      }
       return resp.data;
     });
   }
