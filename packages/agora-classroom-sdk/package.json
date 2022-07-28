@@ -171,7 +171,7 @@
     "@types/workbox-routing": "4.3.0",
     "@types/workbox-sw": "4.3.1",
     "electron": "12.0.0",
-    "electron-builder": "22.11.7",
+    "electron-builder": "23.0.2",
     "electron-util": "0.16.0"
   },
   "dependencies": {
