@@ -21,6 +21,7 @@ import { H5Login } from '~ui-kit/scaffold';
 import { HomeApi } from './home-api';
 import { HomeSettingContainerH5 } from './home-setting/h5';
 import { MessageDialog } from './message-dialog';
+import { useTheme } from './vocational';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -44,6 +45,7 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
 
 export const VocationalHomeH5Page = observer(() => {
   const homeStore = useHomeStore();
+  useTheme();
   const { launchConfig } = homeStore;
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
@@ -200,12 +202,12 @@ export const VocationalHomeH5Page = observer(() => {
           }
 
           HomeApi.shared.domain = tokenDomain;
-          const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
+          const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
           const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
           const webRTCCodec =
             roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-              roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+            roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
               ? 'h264'
               : 'vp8';
           const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
@@ -256,4 +258,3 @@ export const VocationalHomeH5Page = observer(() => {
     </React.Fragment>
   ) : null;
 });
-
