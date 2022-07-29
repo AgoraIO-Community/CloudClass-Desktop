@@ -166,7 +166,7 @@ export const HomePage = () => {
                 ({ scenes, themes } = await HomeApi.shared.getBuilderResource(companyId, projectId));
             }
 
-            const shareUrl = `${location.origin}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}#/share`
+            const shareUrl = `${location.origin}${location.pathname}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}#/share`
 
             console.log('shareUrl', shareUrl)
 

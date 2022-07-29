@@ -97,7 +97,7 @@ const App = function (props) {
               onChangeModal();
             }}>
             {/* <img src={showChat_icon} width="24" height="24" /> */}
-            <SvgImg type={SvgIconEnum.Chat} />
+            <SvgImg type={SvgIconEnum.CHAT} />
               {(showRed || showAnnouncementNotice) && <div className="fcr-hx-chat-notice"></div>}
           </div>
         </div>
