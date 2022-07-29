@@ -79,8 +79,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
 
   onInstall() {
-    this.classroomStore.widgetStore.widgetController;
-
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       this._disposers.push(
         listenChannelMessage(ChannelType.Message, async (event, message) => {

@@ -778,69 +778,74 @@ export class GroupUIStore extends EduUIStoreBase {
         },
       ),
     );
-    EduEventCenter.shared.onClassroomEvents((type, args) => {
-      if (type === AgoraEduClassroomEvent.JoinSubRoom) {
-        this._joinSubRoom();
-      }
-      if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
-        this._leaveSubRoom();
-      }
-
-      if (type === AgoraEduClassroomEvent.InvitedToGroup) {
-        const { groupUuid, groupName, inviter = transI18n('breakout_room.student') } = args;
-
-        const isTeacher = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
-          EduClassroomConfig.shared.sessionInfo.role,
-        );
-
-        const title = isTeacher ? transI18n('fcr_group_help_title') : transI18n('fcr_group_join');
-        const content = isTeacher
-          ? transI18n('breakout_room.confirm_invite_teacher_content', {
-              reason1: groupName,
-              reason2: inviter,
-            })
-          : transI18n('fcr_group_invitation', { reason: groupName });
-
-        const ok = isTeacher
-          ? transI18n('fcr_group_button_join')
-          : transI18n('breakout_room.confirm_invite_student_btn_ok');
-
-        const cancel = isTeacher
-          ? transI18n('fcr_group_button_later')
-          : transI18n('breakout_room.confirm_invite_student_btn_cancel');
-
-        const dialogId = this.shareUIStore.addConfirmDialog(title, content, {
-          onOK: () => {
-            this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
-          },
-          onCancel: () => {
-            this.classroomStore.groupStore.rejectGroupInvited(groupUuid);
-          },
-          actions: ['ok', 'cancel'],
-          btnText: {
-            ok,
-            cancel,
-          },
-        });
-
-        this._dialogsMap.set(groupUuid, dialogId);
-      }
-
-      if (type === AgoraEduClassroomEvent.RejectedToGroup) {
-        const { groupUuid } = args;
-        const dialogId = this._dialogsMap.get(groupUuid);
-        if (dialogId) {
-          this.shareUIStore.removeDialog(dialogId);
-          this._dialogsMap.delete(groupUuid);
-        }
-      }
-
-      if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
-        this._changeSubRoom();
-      }
-    });
+    EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
   }
+
+  @bound
+  private _handleClassroomEvent(type: AgoraEduClassroomEvent, args: any) {
+    if (type === AgoraEduClassroomEvent.JoinSubRoom) {
+      this._joinSubRoom();
+    }
+    if (type === AgoraEduClassroomEvent.LeaveSubRoom) {
+      this._leaveSubRoom();
+    }
+
+    if (type === AgoraEduClassroomEvent.InvitedToGroup) {
+      const { groupUuid, groupName, inviter = transI18n('breakout_room.student') } = args;
+
+      const isTeacher = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
+        EduClassroomConfig.shared.sessionInfo.role,
+      );
+
+      const title = isTeacher ? transI18n('fcr_group_help_title') : transI18n('fcr_group_join');
+      const content = isTeacher
+        ? transI18n('breakout_room.confirm_invite_teacher_content', {
+            reason1: groupName,
+            reason2: inviter,
+          })
+        : transI18n('fcr_group_invitation', { reason: groupName });
+
+      const ok = isTeacher
+        ? transI18n('fcr_group_button_join')
+        : transI18n('breakout_room.confirm_invite_student_btn_ok');
+
+      const cancel = isTeacher
+        ? transI18n('fcr_group_button_later')
+        : transI18n('breakout_room.confirm_invite_student_btn_cancel');
+
+      const dialogId = this.shareUIStore.addConfirmDialog(title, content, {
+        onOK: () => {
+          this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
+        },
+        onCancel: () => {
+          this.classroomStore.groupStore.rejectGroupInvited(groupUuid);
+        },
+        actions: ['ok', 'cancel'],
+        btnText: {
+          ok,
+          cancel,
+        },
+      });
+
+      this._dialogsMap.set(groupUuid, dialogId);
+    }
+
+    if (type === AgoraEduClassroomEvent.RejectedToGroup) {
+      const { groupUuid } = args;
+      const dialogId = this._dialogsMap.get(groupUuid);
+      if (dialogId) {
+        this.shareUIStore.removeDialog(dialogId);
+        this._dialogsMap.delete(groupUuid);
+      }
+    }
+
+    if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
+      this._changeSubRoom();
+    }
+  }
+
   onDestroy() {
+    EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }

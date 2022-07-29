@@ -551,5 +551,8 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     }
   };
 
-  onDestroy() {}
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
 }
