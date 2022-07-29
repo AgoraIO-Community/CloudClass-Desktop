@@ -39,9 +39,7 @@
 .form-field input:focus:not(:read-only),
 .form-field .select.expand {
   border-color: #030303;
-  outline: rgb(143, 144, 152, 0.2);
-  outline-width: 3px;
-  outline-style: solid;
+  box-shadow: 0 0 0px 3px rgb(143, 144, 152, 0.2);
 }
 
 .form-field .options {
@@ -72,8 +70,7 @@
 .form-field .error input,
 .form-field .select.error {
   border-color: #f5655c !important;
-  outline-color: rgba(245, 101, 92, 0.2) !important;
-  /* outline: ; */
+  box-shadow: 0 0 0px 3px rgba(245, 101, 92, 0.2) !important;
 }
 
 .form-field .error-text {
