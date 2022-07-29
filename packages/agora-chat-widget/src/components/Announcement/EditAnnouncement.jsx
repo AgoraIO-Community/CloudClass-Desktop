@@ -28,41 +28,41 @@ export const EditAnnouncement = () => {
     store.dispatch(announcementStatus(true));
   };
   return (
-    <div className="edit-content">
+    <div className="fcr-hx-edit-content">
       <TextArea
         placeholder={transI18n('chat.enter_contents')}
-        className="input-content"
+        className="fcr-hx-input-content"
         onChange={changeContent}
         // maxLength={ANNOUNCEMENT_SIZE}
         defaultValue={announcement}
         value={content}
       />
-      <div className="tips-content">
+      <div className="fcr-hx-tips-content">
         <div>
           {count > ANNOUNCEMENT_SIZE && (
-            <div className="more-message">{transI18n('chat.announcement_content')}</div>
+            <div className="fcr-hx-more-message">{transI18n('chat.announcement_content')}</div>
           )}
         </div>
-        <div className="count-content">
+        <div className="fcr-hx-count-content">
           {count}/{ANNOUNCEMENT_SIZE}
         </div>
       </div>
-      <div className="btn-content">
+      <div className="fcr-hx-btn-content">
         <Button
           type="text"
-          className="cancel-btn"
+          className="fcr-hx-cancel-btn"
           onClick={() => {
             editStatus();
           }}>
-          <span className="btn-text cancel-btn-text">{transI18n('chat.cancel')}</span>
+          <span className="fcr-hx-btn-text fcr-hx-cancel-btn-text">{transI18n('chat.cancel')}</span>
         </Button>
         <Button
           type="primary"
-          className="ok-btn"
+          className="fcr-hx-ok-btn"
           onClick={() => {
             apis.chatRoomAPI.updateAnnouncement(roomId, content);
           }}>
-          <span className="btn-text ok-btn-text">{transI18n('chat.publish')}</span>
+          <span className="fcr-hx-btn-text fcr-hx-ok-btn-text">{transI18n('chat.publish')}</span>
         </Button>
       </div>
     </div>

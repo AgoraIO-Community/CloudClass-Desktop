@@ -1,4 +1,4 @@
-.message-box {
+.fcr-hx-message-box {
   margin-top: 3px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -7,24 +7,24 @@
   /* z-index: 8888; */
 }
 
-.no-box {
+.fcr-hx-no-box {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.msg {
+.fcr-hx-msg {
   margin: 10px 5px;
 }
 
-.msg-tag {
+.fcr-hx-msg-tag {
   margin-left: 8px !important;
   border-radius: 8px !important;
   border: 1px solid rgba(171, 177, 186, 0.3) !important;
   color: #586376 !important;
 }
 
-.msg-user-name {
+.fcr-hx-msg-user-name {
   @apply text-level1;
   max-width: 100px;
   overflow: hidden;
@@ -32,29 +32,29 @@
   white-space: nowrap;
 }
 
-.msg-user-other {
+.fcr-hx-msg-user-other {
   display: flex;
   align-items: center;
 }
 
-.msg-user-me {
+.fcr-hx-msg-user-me {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.msg-avatar {
+.fcr-hx-msg-avatar {
   width: 22px;
   height: 22px;
   margin: 0 5px;
 }
 
-.msg-border {
+.fcr-hx-msg-border {
   display: flex;
   justify-content: flex-end;
 }
 
-.msg-text {
+.fcr-hx-msg-text {
   margin: 8px 8px 0 0;
   max-width: 60%;
   min-height: 20px;
@@ -64,7 +64,7 @@
   white-space: pre-wrap;
 }
 
-.msg-data {
+.fcr-hx-msg-data {
   /* width: 200px; */
   min-height: 20px;
   font-size: 13px;
@@ -74,24 +74,24 @@
   line-height: 20px;
 }
 
-.msg-text-me {
+.fcr-hx-msg-text-me {
   background: #e1ebfc;
 }
 
-.msg-text-other {
+.fcr-hx-msg-text-other {
   background: #ffffff;
   border: 1px solid #ececf1;
   display: inline-block;
 }
 
-.no-msgs {
+.fcr-hx-no-msgs {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.no-msgs-text {
+.fcr-hx-no-msgs-text {
   width: 89px;
   height: 18px;
   font-size: 13px;
@@ -101,7 +101,7 @@
   line-height: 18px;
 }
 
-.mute-msg {
+.fcr-hx-mute-msg {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,20 +114,20 @@
   color: #191919;
 }
 
-.delete-btn {
+.fcr-hx-delete-btn {
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
 
-.reset-msg-text {
+.fcr-hx-reset-msg-text {
   margin-left: 5px;
   color: #357bf6;
   cursor: pointer;
 }
 
-.img-box {
+.fcr-hx-img-box {
   position: relative;
   max-width: 880px;
   display: flex;
@@ -136,7 +136,7 @@
   user-select: none;
 }
 
-.closeStyle {
+.fcr-hx-closeStyle {
   position: absolute;
   top: -25px;
   right: -35px;
@@ -150,17 +150,17 @@
   background: #7f7878;
   cursor: pointer;
 }
-.max-img {
+.fcr-hx-max-img {
   display: flex;
   justify-content: center;
 }
 
-.max-img .ant-modal-content {
+.fcr-hx-max-img .ant-modal-content {
   background: none;
   box-shadow: none;
 }
 
-.msg-question {
+.fcr-hx-msg-question {
   height: 16px;
   background: #357bf6;
   border-radius: 8px;
@@ -173,6 +173,6 @@
   padding: 0 4px;
 }
 
-.receive-msg-border {
+.fcr-hx-receive-msg-border {
   display: flex;
 }

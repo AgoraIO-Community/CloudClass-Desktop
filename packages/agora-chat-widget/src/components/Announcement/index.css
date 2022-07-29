@@ -1,8 +1,8 @@
-.announcement {
+.fcr-hx-announcement {
   height: 100%;
 }
 
-.no-show-icon {
+.fcr-hx-no-show-icon {
   margin-top: 3px;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -14,19 +14,19 @@
   align-items: center;
 }
 
-.no-announcement {
+.fcr-hx-no-announcement {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.announcement-icon {
+.fcr-hx-announcement-icon {
   width: 106px;
   height: 117px;
 }
 
-.no-notice {
+.fcr-hx-no-notice {
   width: 178px;
   height: 18px;
   font-size: 13px;
@@ -43,18 +43,18 @@
   white-space: 'break-spaces';
 }
 
-.announcement-box {
+.fcr-hx-announcement-box {
   position: absolute;
   width: 100%;
   height: calc(100% - 50px);
 }
 
-.edit {
+.fcr-hx-edit {
   color: #4591f8;
   cursor: pointer;
 }
 
-.edit-content {
+.fcr-hx-edit-content {
   /* margin-top: 8px; */
   padding: 15px;
 }
@@ -64,27 +64,28 @@
 .edit-content textarea::-webkit-input-placeholder {
   @apply text-level3;
 }
-.input-content {
+.fcr-hx-input-content {
+  margin: 0 3px !important;
   width: 308px !important;
   min-height: 84px !important;
   border-radius: 4px !important;
   border: 1px solid #ececf1 !important;
 }
 
-.menu {
+.fcr-hx-menu {
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
   padding: 0 20px;
 }
 
-.tips-content {
+.fcr-hx-tips-content {
   display: flex;
   justify-content: space-between;
   padding: 2px 8px;
 }
 
-.more-message {
+.fcr-hx-more-message {
   /* width: 121px; */
   height: 18px;
   font-size: 13px;
@@ -94,7 +95,7 @@
   line-height: 18px;
 }
 
-.count-content {
+.fcr-hx-count-content {
   /* width: 178px; */
   height: 18px;
   font-size: 13px;
@@ -104,7 +105,7 @@
   line-height: 18px;
 }
 
-.announcement-content {
+.fcr-hx-announcement-content {
   @apply text-level1;
   /* width: 307px; */
   /* height: 235px; */
@@ -120,7 +121,7 @@
   overflow-x: hidden;
 }
 
-.update-content {
+.fcr-hx-update-content {
   /* width: 26px; */
   height: 18px;
   font-size: 13px;
@@ -131,28 +132,27 @@
   margin: 8px;
 }
 
-.btn-content {
+.fcr-hx-btn-content {
   display: flex;
   justify-content: space-around;
   margin-top: 8px;
 }
 
-.ok-btn {
+.fcr-hx-ok-btn {
   @apply bg-brand;
   width: 94px;
   height: 30px;
-
   border-radius: 15px !important;
 }
 
-.cancel-btn {
+.fcr-hx-cancel-btn {
   @apply bg-white  border border-solid border-divider !important;
   width: 94px;
   height: 30px;
   border-radius: 15px !important;
 }
 
-.btn-text {
+.fcr-hx-btn-text {
   /* width: 38px; */
   height: 20px;
   font-size: 14px;
@@ -161,30 +161,30 @@
   line-height: 20px;
 }
 
-.ok-btn-text {
+.fcr-hx-ok-btn-text {
   color: #ffffff;
 }
 
-.cancel-btn-text {
+.fcr-hx-cancel-btn-text {
   @apply text-brand;
+  color: #677386;
 }
 
 /* 修改antd 默认样式 */
-
-.delete-modal .ant-modal-content {
+.fcr-hx-delete-modal .ant-modal-content {
   @apply bg-component;
   height: 175px;
   width: 280px;
 }
 
-.delete-modal .ant-modal-header {
+.fcr-hx-delete-modal .ant-modal-header {
   @apply border border-solid border-divider bg-icon-selected-color !important;
   height: 40px !important;
   padding: 8px 24px !important;
   border-radius: 4px 4px 0px 0px !important;
 }
 
-.delete-modal .ant-modal-title {
+.fcr-hx-delete-modal .ant-modal-title {
   @apply text-level1 !important;
   font-size: 14px !important;
   font-family: 'PingFangSC-Regular', 'PingFang SC' !important;
@@ -192,18 +192,18 @@
   line-height: 20px !important;
 }
 
-.delete-modal .ant-modal-close {
+.fcr-hx-delete-modal .ant-modal-close {
   top: 11px !important;
   right: 30px !important;
 }
 
-.delete-modal .ant-modal-close-x {
+.fcr-hx-delete-modal .ant-modal-close-x {
   width: 0 !important;
   height: 0 !important;
   line-height: 0 !important;
 }
 
-.delete-modal .ant-modal-body {
+.fcr-hx-delete-modal .ant-modal-body {
   @apply text-level1 bg-component !important;
   text-align: center;
   /* width: 104px; */
@@ -215,7 +215,7 @@
   padding: 32px !important;
 }
 
-.delete-modal .ant-modal-footer {
+.fcr-hx-delete-modal .ant-modal-footer {
   display: flex;
   justify-content: center;
   border: none !important;
@@ -223,7 +223,7 @@
   margin-top: 2px !important;
 }
 
-.delete-modal .ant-btn {
+.fcr-hx-delete-modal .ant-btn {
   @apply text-brand !important;
   border-radius: 15px !important;
   border: 1px solid #d2d2e2;

@@ -1,4 +1,4 @@
-.app {
+.fcr-hx-app {
   @apply bg-component border-divider border border-solid;
 
   /* 宽度自定义 */
@@ -16,8 +16,10 @@
     box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
 } */
 
-.show-chat-icon {
+.fcr-hx-show-chat-icon {
   @apply bg-component;
+  right: 2px;
+  bottom: 48px;
   width: 40px;
   height: 40px;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
@@ -28,7 +30,7 @@
   cursor: pointer;
 }
 
-.chat-notice {
+.fcr-hx-chat-notice {
   position: absolute;
   border-radius: 50%;
   background: #ff462d;
@@ -39,14 +41,14 @@
 }
 
 /* 表情 modal 样式， antd */
-.emoji-modal .ant-modal-content {
+.fcr-hx-emoji-modal .ant-modal-content {
   position: absolute;
   bottom: 20px;
   bottom: 12px;
   left: -45px;
 }
 
-.emoji-modal .ant-modal-body {
+.fcr-hx-emoji-modal .ant-modal-body {
   padding: 5px 5px 15px 5px;
   width: 269px !important;
   height: 151px !important;

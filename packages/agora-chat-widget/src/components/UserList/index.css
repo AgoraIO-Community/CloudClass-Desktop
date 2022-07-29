@@ -1,4 +1,4 @@
-.user {
+.fcr-hx-user {
   overflow-y: scroll;
   overflow-x: hidden;
   position: absolute;
@@ -6,7 +6,7 @@
   height: calc(100% - 50px);
 }
 
-.user-list {
+.fcr-hx-user-list {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,19 +14,19 @@
   height: 64px;
 }
 
-.user-info {
+.fcr-hx-user-info {
   display: flex;
   align-items: center;
   width: auto;
   height: 48px;
 }
 
-.user-avatar {
+.fcr-hx-user-avatar {
   width: 36px;
   height: 36px;
 }
 
-.user-text {
+.fcr-hx-user-text {
   @apply text-level2;
   /* width: 43px; */
   height: 18px;
@@ -40,7 +40,7 @@
   text-overflow: ellipsis;
 }
 
-.user-tag {
+.fcr-hx-user-tag {
   /* display: inline-block !important; */
   /* width: 36px !important;
     height: 16px !important; */
@@ -50,16 +50,16 @@
   /* padding: 0 !important; */
 }
 
-.teacher-tag {
+.fcr-hx-teacher-tag {
   border: 1px solid #3c86f7 !important;
   color: #3c86f7 !important;
 }
 
-.student-tag {
+.fcr-hx-student-tag {
   border: 1px solid #abb1ba !important;
 }
 
-.tag-text {
+.fcr-hx-tag-text {
   width: 28px;
   height: 10px;
   font-size: 12px;
@@ -68,10 +68,10 @@
   line-height: 10px;
 }
 
-.teacher-text {
+.fcr-hx-teacher-text {
   color: #357bf6;
 }
 
-.mute-icon {
+.fcr-hx-mute-icon {
   cursor: pointer;
 }

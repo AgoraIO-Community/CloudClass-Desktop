@@ -40,7 +40,7 @@
   border-radius: 1px !important;
 }
 
-.mini-icon {
+.fcr-hx-mini-icon {
   /* 宽度自定义 */
   position: absolute;
   right: 15px;
@@ -49,7 +49,7 @@
   width: 24px;
 }
 
-.notice {
+.fcr-hx-notice {
   @apply bg-background;
   display: flex;
   align-items: center;
@@ -62,12 +62,12 @@
   cursor: pointer;
 }
 
-.notice-icon {
+.fcr-hx-notice-icon {
   width: 20px;
   height: 20px;
 }
 
-.notice-text {
+.fcr-hx-notice-text {
   @apply text-level2;
   height: 12px;
   font-size: 12px;
@@ -84,7 +84,7 @@
   text-align: center;
 }
 
-.red-notice {
+.fcr-hx-red-notice {
   position: absolute;
   border-radius: 50%;
   background: #ff462d;
