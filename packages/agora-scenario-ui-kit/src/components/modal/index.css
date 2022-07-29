@@ -23,10 +23,9 @@
 
 .customize-radio {
   font-size: 13px;
-  color: #191919;
   display: flex;
   justify-content: center;
-  @apply items-center inline-flex justify-center;
+  @apply items-center inline-flex justify-center text-level1;
 }
 
 .customize-radio {
@@ -34,16 +33,16 @@
 }
 
 .customize-radio input[type='radio'] {
+  @apply text-level1 !important;
   height: 14px;
-  color: #586376 !important;
 }
 
 .customize-radio input[type='radio'] ~ span {
-  color: #586376 !important;
+  @apply text-level1 !important;
 }
 
 .customize-radio input[type='radio']:checked ~ span {
-  color: #191919 !important;
+  @apply text-level1 !important;
 }
 
 .rc-notification-mask {

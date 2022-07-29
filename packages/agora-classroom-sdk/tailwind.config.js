@@ -30,8 +30,8 @@ module.exports = {
         level1: 'var(--fcr_system_text_level1_color)',
         level2: 'var(--fcr_system_text_level2_color)',
         level3: 'var(--fcr_system_text_level3_color)',
+        disable: 'var(--fcr_system_text_disable_color)',
         brand: 'var(--fcr_system_brand_color)',
-
         error: 'var(--fcr_system_error_color)',
         warning: 'var(--fcr_system_warning_color)',
         safe: 'var(--fcr_system_safe_color)',

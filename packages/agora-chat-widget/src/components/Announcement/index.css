@@ -58,9 +58,13 @@
   /* margin-top: 8px; */
   padding: 15px;
 }
-
+.edit-content textarea {
+  @apply border border-solid border-divider text-level1 bg-component !important;
+}
+.edit-content textarea::-webkit-input-placeholder {
+  @apply text-level3;
+}
 .input-content {
-  margin: 0 3px !important;
   width: 308px !important;
   min-height: 84px !important;
   border-radius: 4px !important;
@@ -101,12 +105,12 @@
 }
 
 .announcement-content {
+  @apply text-level1;
   /* width: 307px; */
   /* height: 235px; */
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #191919;
   line-height: 25px;
   padding: 15px;
   word-break: break-all;
@@ -134,17 +138,18 @@
 }
 
 .ok-btn {
+  @apply bg-brand;
   width: 94px;
   height: 30px;
-  background: #357bf6;
+
   border-radius: 15px !important;
 }
 
 .cancel-btn {
+  @apply bg-white  border border-solid border-divider !important;
   width: 94px;
   height: 30px;
   border-radius: 15px !important;
-  border: 1px solid #4b4b58 !important;
 }
 
 .btn-text {
@@ -161,29 +166,29 @@
 }
 
 .cancel-btn-text {
-  color: #677386;
+  @apply text-brand;
 }
 
 /* 修改antd 默认样式 */
 
 .delete-modal .ant-modal-content {
+  @apply bg-component;
   height: 175px;
   width: 280px;
 }
 
 .delete-modal .ant-modal-header {
+  @apply border border-solid border-divider bg-icon-selected-color !important;
   height: 40px !important;
   padding: 8px 24px !important;
-  background: #f9f9fc !important;
   border-radius: 4px 4px 0px 0px !important;
-  border: 1px solid #e1e1ea !important;
 }
 
 .delete-modal .ant-modal-title {
+  @apply text-level1 !important;
   font-size: 14px !important;
   font-family: 'PingFangSC-Regular', 'PingFang SC' !important;
   font-weight: 400 !important;
-  color: #333333 !important;
   line-height: 20px !important;
 }
 
@@ -199,13 +204,13 @@
 }
 
 .delete-modal .ant-modal-body {
+  @apply text-level1 bg-component !important;
   text-align: center;
   /* width: 104px; */
   /* height: 18px; */
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #586376;
   line-height: 18px;
   padding: 32px !important;
 }
@@ -219,9 +224,13 @@
 }
 
 .delete-modal .ant-btn {
+  @apply text-brand !important;
   border-radius: 15px !important;
   border: 1px solid #d2d2e2;
   width: 90px;
   height: 30px;
   margin: 0 8px !important;
+}
+.delete-modal .ant-btn-primary {
+  @apply border border-solid border-brand text-white !important;
 }

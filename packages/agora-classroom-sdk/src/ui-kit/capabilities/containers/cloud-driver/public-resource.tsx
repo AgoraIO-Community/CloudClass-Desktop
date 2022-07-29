@@ -75,9 +75,9 @@ export const PublicResourcesContainer = observer(() => {
                         dangerouslySetInnerHTML={{
                           __html: searchPublicResourcesKeyword
                             ? resourceName.replaceAll(
-                              searchPublicResourcesKeyword,
-                              `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
-                            )
+                                searchPublicResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
+                              )
                             : resourceName,
                         }}></span>
                     </Inline>

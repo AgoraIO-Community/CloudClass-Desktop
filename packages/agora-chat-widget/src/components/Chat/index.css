@@ -50,6 +50,7 @@
 }
 
 .notice {
+  @apply bg-background;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,7 +59,6 @@
   height: 32px;
   /* background: rgba(240, 201, 150, 0.1); */
   cursor: pointer;
-  background: rgb(251 242 230);
   cursor: pointer;
 }
 
@@ -68,11 +68,11 @@
 }
 
 .notice-text {
+  @apply text-level2;
   height: 12px;
   font-size: 12px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #191919;
   line-height: 12px;
   margin-left: 3px;
   overflow: hidden;

@@ -1,5 +1,5 @@
 import { EduRegion } from 'agora-edu-core';
-import { AgoraRegion } from 'agora-rte-sdk';
+import { AgoraRegion, AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 
 declare const NODE_ENV: string;
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
@@ -35,3 +35,7 @@ export const getTokenDomain = (region?: EduRegion) => {
   }
   return domain;
 };
+
+export const isVocationalElectron =
+  AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
+  EDU_CATEGORY === 'vocational';

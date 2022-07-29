@@ -95,7 +95,7 @@ textarea.input-chat {
 }
 
 .input-box .input-chat {
-  @apply bg-component;
+  @apply bg-component text-level1;
   outline: none !important;
   resize: none !important;
   border: none !important;
@@ -104,6 +104,8 @@ textarea.input-chat {
   margin-bottom: 70px !important;
 }
 .input-chat::-webkit-input-placeholder {
+  @apply text-level3;
+
   position: relative;
   top: unset;
 }

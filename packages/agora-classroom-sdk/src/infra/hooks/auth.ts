@@ -1,11 +1,9 @@
 import { useCallback, useState } from 'react';
-import { useHistory } from 'react-router';
 import { UserApi } from '../api/user';
 import { parseUrl } from '../utils/url';
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
   const auth = useCallback(async () => {
     setLoading(true);
     const result = parseUrl(location.hash);
@@ -13,9 +11,8 @@ export const useAuth = () => {
     if (result['accessToken'] && result['refreshToken']) {
       UserApi.saveAccessToken(result['refreshToken']);
       UserApi.saveRefreshToken(result['refreshToken']);
-      console.log(location.href)
-      // const route = location.hash.substring(1).split('?')[0];
-      // history.replace(route);
+      // const route = location.href.split('?')[0];
+      // location.href = route;
       return;
     }
     UserApi.shared.getUserInfo().finally(() => {

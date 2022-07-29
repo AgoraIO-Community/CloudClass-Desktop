@@ -1,8 +1,8 @@
+import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
 import { useHomeStore } from '@/infra/hooks';
 import { getBrowserLanguage, storage } from '@/infra/utils';
-import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -169,7 +169,7 @@ export const HomeH5Page = observer(() => {
           }
 
           HomeApi.shared.domain = tokenDomain;
-          const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
+          const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
 
           const config: HomeLaunchOption = {
             appId,

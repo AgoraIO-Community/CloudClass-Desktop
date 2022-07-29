@@ -55,7 +55,7 @@ body,
   position: relative;
   flex: 1;
   border-radius: 4px;
-  min-width: 300px;
+  /* min-width: 300px; */
 }
 
 .edu-room {

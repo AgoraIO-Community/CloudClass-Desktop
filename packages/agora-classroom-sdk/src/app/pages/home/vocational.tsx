@@ -1,12 +1,7 @@
-import { useHomeStore } from '@/infra/hooks';
-import { changeLanguage, transI18n, Toast } from '~ui-kit';
-import { Home } from '~ui-kit/scaffold';
-import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
-import { observer } from 'mobx-react';
-import React, { useState, useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router';
-import { LanguageEnum } from '@/infra/api';
 import { HomeLaunchOption } from '@/app/stores/home';
+import { LanguageEnum } from '@/infra/api';
+import { useHomeStore } from '@/infra/hooks';
+import { GlobalStorage, storage } from '@/infra/utils';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -17,15 +12,21 @@ import {
 } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import MD5 from 'js-md5';
+import { observer } from 'mobx-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
+import { Toast, transI18n } from '~ui-kit';
+import { Home } from '~ui-kit/scaffold';
 
-import { HomeApi } from './home-api';
-import { MessageDialog } from './message-dialog';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { ToastType } from '@/infra/stores/common/share-ui';
+import { FcrMultiThemeMode } from '@/infra/types/config';
+import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
+import { HomeApi } from './home-api';
 import { HomeSettingContainer } from './home-setting';
-
+import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
@@ -63,9 +64,16 @@ export const vocationalNeedPreset = (
         roleType !== EduRoleTypeEnum.teacher))
   );
 };
-
+export const useTheme = () => {
+  useEffect(() => {
+    loadGeneratedFiles();
+    const theme = themes['default'][FcrMultiThemeMode.light];
+    applyTheme(theme);
+  }, []);
+};
 export const VocationalHomePage = observer(() => {
   const homeStore = useHomeStore();
+  useTheme();
   const { launchConfig, language, region } = homeStore;
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
@@ -79,8 +87,8 @@ export const VocationalHomePage = observer(() => {
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const onChangeRegion = (r: string) => { };
-  const onChangeLanguage = (language: string) => { };
+  const onChangeRegion = (r: string) => {};
+  const onChangeLanguage = (language: string) => {};
   const role = useMemo(() => {
     const roles = {
       teacher: EduRoleTypeEnum.teacher,
@@ -208,13 +216,13 @@ export const VocationalHomePage = observer(() => {
 
       HomeApi.shared.domain = tokenDomain;
 
-      const { token, appId } = await HomeApi.shared.login(userUuid, roomUuid, role);
+      const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
       const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
       const webRTCCodec =
         roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-          roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+        roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
           ? 'h264'
           : 'vp8';
       const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';

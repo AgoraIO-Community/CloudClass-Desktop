@@ -82,8 +82,8 @@ const Content = observer(() => {
               placeholder={transI18n('widget_polling.item-tip')}
               prefix={
                 <span
+                  className="text-level2"
                   style={{
-                    color: '#677386',
                     fontSize: '14px',
                   }}>
                   {idx + 1}.
@@ -224,6 +224,5 @@ const SelectionSection = observer(() => {
     </>
   );
 });
-
 
 export default App;
