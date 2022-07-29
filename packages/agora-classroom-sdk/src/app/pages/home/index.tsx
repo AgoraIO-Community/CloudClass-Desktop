@@ -1,4 +1,4 @@
-import { changeLanguage, Layout, Toast, transI18n } from '~ui-kit';
+import { Layout, Toast, transI18n } from '~ui-kit';
 import './style.css';
 import { addResource } from '../../components/i18n';
 import { FC, useEffect, useState, Fragment } from 'react';
@@ -19,7 +19,6 @@ import { ToastType } from '@/infra/stores/common/share-ui';
 import { MessageDialog } from './message-dialog';
 import { HomeSettingContainer } from './home-setting';
 import { LoginForm } from './login-form';
-
 addResource();
 
 
@@ -60,18 +59,19 @@ export const HomePage = () => {
 
     const launchConfig = homeStore.launchConfig;
 
-    const [language, setLanguage] = useState<string>('');
-    const [region, setRegion] = useState<string>(EduRegion.CN);
+    // const [language, setLanguage] = useState<string>('');
+    // const [region, setRegion] = useState<string>(EduRegion.CN);
     const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
 
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        const lang = window.__launchLanguage || homeStore.launchOption.language || getBrowserLanguage();
+        const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
         const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
-        changeLanguage(lang);
-        setLanguage(lang);
-        setRegion(region);
+        homeStore.setLanguage(language as LanguageEnum);
+        homeStore.setRegion(region as EduRegion);
+        // setLanguage(lang);
+        // setRegion(region);
 
         if (history.location.pathname === '/share') {
             setTimeout(() => {
@@ -121,6 +121,9 @@ export const HomePage = () => {
         if (loading) {
             return;
         }
+        const language = homeStore.language || getBrowserLanguage();
+        const region = homeStore.region || regionByLang[getBrowserLanguage()];
+
         const userRole = parseInt(roleType);
 
         const roomType = parseInt(rt);
