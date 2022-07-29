@@ -78,7 +78,7 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
               <SvgImg
                 onClick={showInviteContainer}
                 type={SvgIconEnum.TEACHER_HANDS_UP_ACTIVE}
-                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.on } : {}}
+                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.allow } : {}}
                 size={24}
               />
             </div>
@@ -92,7 +92,7 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
             <div className="hands-box-line">
               <SvgImg
                 type={SvgIconEnum.TEACHER_HANDS_UP_ACTIVE}
-                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.on } : {}}
+                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.allow } : {}}
                 size={24}
               />
             </div>
@@ -181,7 +181,7 @@ export const StudentsWaveArmList: FC<StudentsWaveArmListProps> = ({
                 <SvgIcon
                   type={SvgIconEnum.INVITE_TO_PODIUM}
                   hoverType={SvgIconEnum.INVITE_TO_PODIUM}
-                  hoverColors={{ iconPrimary: InteractionStateColors.on }}
+                  hoverColors={{ iconPrimary: InteractionStateColors.allow }}
                   onClick={() => onClick(item.userUuid)}
                 />
               )}
