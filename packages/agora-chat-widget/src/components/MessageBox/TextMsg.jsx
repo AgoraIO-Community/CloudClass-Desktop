@@ -67,33 +67,33 @@ export const TextMsg = ({ item }) => {
   };
 
   return (
-    <div className="msg">
+    <div className="fcr-hx-msg">
       {sender && (
         <div>
-          <div className="msg-user-me">
+          <div className="fcr-hx-msg-user-me">
             {isSendToAll && (
               <span style={{ color: '#357BF6', fontSize: 12 }}>
                 {transI18n('chat.send_to_all')}
               </span>
             )}
-            {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
-            {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
-            <span className="msg-user-name">{userNickName}</span>
-            <img src={useAvatarUrl} className="msg-avatar" />
+            {teacherTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.teacher')}</Tag>}
+            {assistantTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.assistant')}</Tag>}
+            <span className="fcr-hx-msg-user-name">{userNickName}</span>
+            <img src={useAvatarUrl} className="fcr-hx-msg-avatar" />
           </div>
           {isTeacher ? (
             <Dropdown overlay={menu} trigger={['contextMenu']}>
-              <div className="msg-border">
-                <div className="msg-text msg-text-me">
-                  <span className="msg-data">{msgData}</span>
+              <div className="fcr-hx-msg-border">
+                <div className="fcr-hx-msg-text fcr-hx-msg-text-me">
+                  <span className="fcr-hx-msg-data">{msgData}</span>
                 </div>
               </div>
             </Dropdown>
           ) : (
-            <div className="msg-border">
-              {isQuestion && <span className="msg-question">{transI18n('question')}</span>}
-              <div className="msg-text msg-text-me">
-                <span className="msg-data">{msgData}</span>
+              <div className="fcr-hx-msg-border">
+                {isQuestion && <span className="fcr-hx-msg-question">{transI18n('question')}</span>}
+                <div className="fcr-hx-msg-text fcr-hx-msg-text-me">
+                  <span className="fcr-hx-msg-data">{msgData}</span>
               </div>
             </div>
           )}
@@ -101,29 +101,29 @@ export const TextMsg = ({ item }) => {
       )}
       {!sender && (
         <div>
-          <div className="msg-user-other">
-            <img src={useAvatarUrl} className="msg-avatar" />
-            <span className="msg-user-name">{userNickName}</span>
-            {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
-            {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
+          <div className="fcr-hx-msg-user-other">
+            <img src={useAvatarUrl} className="fcr-hx-msg-avatar" />
+            <span className="fcr-hx-msg-user-name">{userNickName}</span>
+            {teacherTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.teacher')}</Tag>}
+            {assistantTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.assistant')}</Tag>}
             {isSendToAll && (
               <span style={{ color: '#357BF6', fontSize: 12 }}>
                 {transI18n('chat.send_to_all')}
               </span>
             )}
           </div>
-          <div className="receive-msg-border">
+          <div className="fcr-hx-receive-msg-border">
             {isTeacher && (
               <>
                 <Dropdown overlay={menu} trigger={['contextMenu']}>
-                  <div className="msg-text msg-text-other">
-                    <span className="msg-data">{msgData}</span>
+                  <div className="fcr-hx-msg-text fcr-hx-msg-text-other">
+                    <span className="fcr-hx-msg-data">{msgData}</span>
                   </div>
                 </Dropdown>
               </>
             )}
-            {!isTeacher && <div className="msg-text msg-text-other">{msgData}</div>}
-            {isQuestion && <span className="msg-question">{transI18n('question')}</span>}
+            {!isTeacher && <div className="fcr-hx-msg-text fcr-hx-msg-text-other">{msgData}</div>}
+            {isQuestion && <span className="fcr-hx-msg-question">{transI18n('question')}</span>}
           </div>
         </div>
       )}

@@ -110,19 +110,19 @@ export const Chat = () => {
         <TabPane
           tab={
             <div>
-              {showRed && <div className="red-notice"></div>}
+              {showRed && <div className="fcr-hx-red-notice"></div>}
               {transI18n('chat.chat')}
             </div>
           }
           key={CHAT_TABS_KEYS.chat}>
           {announcement && (
             <div
-              className="notice"
+              className="fcr-hx-notice"
               onClick={() => {
                 toTabKey();
               }}>
-              <img src={notice} className="notice-icon" />
-              <span className="notice-text">{announcement}</span>
+              <img src={notice} className="fcr-hx-notice-icon" />
+              <span className="fcr-hx-notice-text">{announcement}</span>
             </div>
           )}
           <MessageBox />
@@ -143,7 +143,7 @@ export const Chat = () => {
           <TabPane
             tab={
               <div>
-                {showAnnouncementNotice && <div className="red-notice"></div>}
+                {showAnnouncementNotice && <div className="fcr-hx-red-notice"></div>}
                 {transI18n('chat.announcement')}
               </div>
             }
@@ -153,7 +153,7 @@ export const Chat = () => {
         )}
       </Tabs>
       {showMIniIcon && (
-        <div className="mini-icon">
+        <div className="fcr-hx-mini-icon">
           <img
             src={minimize}
             onClick={() => {

@@ -10,7 +10,7 @@ import './index.css';
 const Edit = ({ onChangeStatus }) => {
   return (
     <span
-      className="edit"
+      className="fcr-hx-edit"
       onClick={() => {
         onChangeStatus();
       }}>
@@ -51,20 +51,20 @@ export const ShowAnnouncement = () => {
   return (
     <div>
       {Announcement.length > 0 ? (
-        <div className="announcement">
-          <div className="announcement-box" id="deleteModal">
+        <div className="fcr-hx-announcement">
+          <div className="fcr-hx-announcement-box" id="deleteModal">
             {(isTeacher || isAssistant) && (
-              <div className="menu">
+              <div className="fcr-hx-menu">
                 {/* updateAnnouncement(roomId, "" */}
                 <span
-                  className="update-content"
+                  className="fcr-hx-update-content"
                   onClick={() => {
                     onChangeStatus();
                   }}>
                   {transI18n('chat.update')}
                 </span>
                 <span
-                  className="update-content"
+                  className="fcr-hx-update-content"
                   onClick={() => {
                     showModal();
                   }}>
@@ -72,17 +72,17 @@ export const ShowAnnouncement = () => {
                 </span>
               </div>
             )}
-            <div className="announcement-content">{Announcement}</div>
+            <div className="fcr-hx-announcement-content">{Announcement}</div>
           </div>
         </div>
       ) : (
-        <div className="no-show-icon">
-          <div className="no-announcement">
-            <img src={announcement} className="announcement-icon" />
-            <div className="no-notice">
-              <span className="no-notice-text"> {transI18n('chat.default_announcement')}</span>
+          <div className="fcr-hx-no-show-icon">
+            <div className="fcr-hx-no-announcement">
+              <img src={announcement} className="fcr-hx-announcement-icon" />
+              <div className="fcr-hx-no-notice">
+                <span className="fcr-hx-no-notice-text"> {transI18n('chat.default_announcement')}</span>
               {(isTeacher || isAssistant) && (
-                <span className="no-notice-text"> {transI18n('chat.sentence_connector')}</span>
+                  <span className="fcr-hx-no-notice-text"> {transI18n('chat.sentence_connector')}</span>
               )}
               {(isTeacher || isAssistant) && <Edit onChangeStatus={onChangeStatus} />}
             </div>
@@ -100,11 +100,11 @@ export const ShowAnnouncement = () => {
         }}
         okText={transI18n('chat.ok')}
         cancelText={transI18n('chat.cancel')}
-        className="delete-modal"
+        className="fcr-hx-delete-modal"
         style={{ top: '40%' }}
         destroyOnClose
         getContainer={document.getElementById('hx-chatroom')}>
-        <span className="delete-text">{transI18n('chat.delete_content')}</span>
+        <span>{transI18n('chat.delete_content')}</span>
       </Modal>
     </div>
   );

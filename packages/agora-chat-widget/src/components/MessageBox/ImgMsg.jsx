@@ -33,21 +33,21 @@ export const ImgMsg = ({ item }) => {
     <div>
       <div>
         {sender ? (
-          <div className="msg-user-me">
-            {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
-            {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
-            <span className="msg-from-name">{userNickName}</span>
-            {<img src={useAvatarUrl} className="msg-avatar" alt="" />}
+          <div className="fcr-hx-msg-user-me">
+            {teacherTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.teacher')}</Tag>}
+            {assistantTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.assistant')}</Tag>}
+            <span className="fcr-hx-msg-from-name">{userNickName}</span>
+            {<img src={useAvatarUrl} className="fcr-hx-msg-avatar" alt="" />}
           </div>
         ) : (
-          <div className="msg-user-other">
-            {<img src={useAvatarUrl} className="msg-avatar" alt="" />}
-            <span className="msg-from-name">{userNickName}</span>
-            {teacherTag && <Tag className="msg-tag">{transI18n('chat.teacher')}</Tag>}
-            {assistantTag && <Tag className="msg-tag">{transI18n('chat.assistant')}</Tag>}
+          <div className="fcr-hx-msg-user-other">
+            {<img src={useAvatarUrl} className="fcr-hx-msg-avatar" alt="" />}
+            <span className="fcr-hx-msg-from-name">{userNickName}</span>
+            {teacherTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.teacher')}</Tag>}
+            {assistantTag && <Tag className="fcr-hx-msg-tag">{transI18n('chat.assistant')}</Tag>}
           </div>
         )}
-        <div className={sender ? 'msg-border' : ''}>
+        <div className={sender ? 'fcr-hx-msg-border' : ''}>
           <div style={{ margin: '8px' }} onClick={() => showMaximumPicture(imgUrl)}>
             <div
               style={{
@@ -74,10 +74,10 @@ export const ImgMsg = ({ item }) => {
           justifyContent: 'center',
           height: '80%',
         }}
-        className="max-img">
-        <div className="img-box">
+        className="fcr-hx-max-img">
+        <div className="fcr-hx-img-box">
           <img src={maxImgUrl} style={{ maxHeight: '720px', height: '100%' }} alt="" />
-          <div className="closeStyle" onClick={() => setMaxImg(false)}>
+          <div className="fcr-hx-closeStyle" onClick={() => setMaxImg(false)}>
             X
           </div>
         </div>
