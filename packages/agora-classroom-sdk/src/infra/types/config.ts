@@ -142,7 +142,7 @@ export interface FcrNetlessBoard {
 
   get eraser(): FcrUIBaseProps;
 
-  get hand(): FcrUIBaseProps;
+  get move(): FcrUIBaseProps;
 
   get save(): FcrUIBaseProps;
 

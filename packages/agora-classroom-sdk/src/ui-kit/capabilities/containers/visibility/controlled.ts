@@ -69,7 +69,7 @@ export const boardEraserEnabled = (uiConfig: FcrUIConfig) => {
   return uiConfig.engagement.netlessBoard.eraser.enable;
 };
 export const boardHandEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.hand.enable;
+  return uiConfig.engagement.netlessBoard.move.enable;
 };
 export const boardLaserPointerEnabled = (uiConfig: FcrUIConfig) => {
   return uiConfig.engagement.netlessBoard.laserPointer.enable;

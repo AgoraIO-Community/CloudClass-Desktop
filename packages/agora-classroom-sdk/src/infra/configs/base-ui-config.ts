@@ -12,10 +12,8 @@ import {
   FcrUIBaseProps,
   FcrUIConfig,
 } from '@/infra/types/config';
-import { loadUIConfig } from '@/infra/utils/config-loader';
-import { EduRoomTypeEnum } from 'agora-edu-core';
 
-export class FcrUIConfigImpl implements FcrUIConfig {
+class FcrUIConfigImpl implements FcrUIConfig {
   get version(): string {
     return '1.0.0';
   }
@@ -118,7 +116,7 @@ export class FcrUIConfigImpl implements FcrUIConfig {
           get eraser(): FcrUIBaseProps {
             return { enable: true };
           },
-          get hand(): FcrUIBaseProps {
+          get move(): FcrUIBaseProps {
             return { enable: true };
           },
           get save(): FcrUIBaseProps {
@@ -221,4 +219,7 @@ export class FcrUIConfigImpl implements FcrUIConfig {
     };
   }
 }
-loadUIConfig(EduRoomTypeEnum.RoomBigClass, new FcrUIConfigImpl());
+
+export const room1V1Class = new FcrUIConfigImpl();
+export const roomMidClass = new FcrUIConfigImpl();
+export const roomBigClass = new FcrUIConfigImpl();

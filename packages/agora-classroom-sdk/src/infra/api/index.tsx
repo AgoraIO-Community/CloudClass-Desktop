@@ -391,4 +391,5 @@ export class AgoraEduSDK {
     });
   }
 }
+
 loadGeneratedFiles();

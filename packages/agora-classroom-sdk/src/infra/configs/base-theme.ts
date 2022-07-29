@@ -1,7 +1,6 @@
 import { FcrMultiThemes } from '@/infra/types/config';
-import { loadTheme } from '@/infra/utils/config-loader';
 
-export class FcrMultiThemesImpl implements FcrMultiThemes {
+class FcrMultiThemesImpl implements FcrMultiThemes {
   get light() {
     return {
       /**
@@ -190,4 +189,4 @@ export class FcrMultiThemesImpl implements FcrMultiThemes {
   }
 }
 
-loadTheme('default', new FcrMultiThemesImpl());
+export const baseTheme = new FcrMultiThemesImpl();

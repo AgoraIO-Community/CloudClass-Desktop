@@ -149,8 +149,8 @@ const ShareCard = observer(() => {
         <Layout>
           <span className='text-14' style={{}}>{roomName}</span>
           <Layout className='items-center'>
-            <SvgImg type={SvgIconEnum.LINK_SOLID} colors={{ iconPrimary: InteractionStateColors.allow }} style={{ marginLeft: 40 }} size={18} />
-            <span ref={copyRef} data-clipboard-text={`${AgoraEduSDK.shareUrl}`} className='text-14 cursor-pointer' style={{ color: InteractionStateColors.allow }} >Copy link</span>
+            <SvgImg type={SvgIconEnum.LINK_SOLID} colors={{ iconPrimary: InteractionStateColors.allow }} style={{ marginLeft: 40 }} size={16} />
+            <span ref={copyRef} data-clipboard-text={`${AgoraEduSDK.shareUrl}`} className='text-12 cursor-pointer whitespace-nowrap' style={{ color: InteractionStateColors.allow, marginLeft: 4 }} >Copy link</span>
           </Layout>
         </Layout>
       </Layout>
