@@ -55,14 +55,14 @@ export const InputNumber: FC<InputNumberProps> = ({ min, max, value = 0, onChang
           onClick={() => {
             handleChange(value + 1);
           }}>
-          <SvgImg type={SvgIconEnum.TRIANGLE_SOLID1} size={14} colors={{ iconPrimary: "#3f5c8f" }} />
+          <SvgImg type={SvgIconEnum.TRIANGLE_SOLID_UP} size={14} colors={{ iconPrimary: "#3f5c8f" }} />
         </div>
         <div
           className={subClsn}
           onClick={() => {
             handleChange(value - 1);
           }}>
-          <SvgImg type={SvgIconEnum.TRIANGLE_SOLID2} size={14} colors={{ iconPrimary: "#3f5c8f" }} />
+          <SvgImg type={SvgIconEnum.TRIANGLE_SOLID_DOWN} size={14} colors={{ iconPrimary: "#3f5c8f" }} />
         </div>
       </div>
     </div>

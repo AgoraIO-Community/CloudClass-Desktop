@@ -88,8 +88,8 @@ export const Tree: FC<TreeProps> = ({
         {!disableExpansion &&
           (hasChildren ? (
             <SvgIcon
-              type={SvgIconEnum.TRIANGLE_SOLID}
-              hoverType={SvgIconEnum.TRIANGLE_SOLID}
+              type={SvgIconEnum.TRIANGLE_SOLID_RIGHT}
+              hoverType={SvgIconEnum.TRIANGLE_SOLID_RIGHT}
               size={14}
               style={{
                 transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',

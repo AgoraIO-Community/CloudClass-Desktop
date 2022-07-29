@@ -34,7 +34,7 @@ export default function CloudMinimize({
         </span>
       ) : null}
       <span>
-        <SvgImg type={SvgIconEnum.TRIANGLE_SOLID1} size={16} style={{ marginLeft: 4 }} />
+        <SvgImg type={SvgIconEnum.TRIANGLE_SOLID_UP} size={16} style={{ marginLeft: 4 }} />
       </span>
     </div>
   );

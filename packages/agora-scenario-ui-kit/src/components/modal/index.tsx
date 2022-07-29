@@ -125,7 +125,7 @@ export const Modal: ModalType = ({
                   triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
-                <SvgImg type={SvgIconEnum.TRIANGLE_SOLID1} size={20} style={{ color: '#7B88A0' }} />
+                <SvgImg type={SvgIconEnum.CLOSE} size={20} style={{ color: '#7B88A0' }} />
               </div>
             ) : (
               ''

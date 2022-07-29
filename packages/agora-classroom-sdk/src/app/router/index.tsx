@@ -31,6 +31,10 @@ export const routesMap: Record<string, AppRouteComponent> = {
     path: '/',
     component: () => PageSFC(HomePage),
   },
+  [BizPageRouter.ShareLinkPage]: {
+    path: '/share',
+    component: () => PageSFC(HomePage),
+  },
   [BizPageRouter.LaunchPage]: {
     path: '/launch',
     component: () => PageSFC(LaunchPage),

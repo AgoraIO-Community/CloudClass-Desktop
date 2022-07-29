@@ -42,7 +42,6 @@ declare global {
         __launchRoomType: string;
         __launchCompanyId: string;
         __launchProjectId: string;
-        __launchIsShare: string;
     }
 }
 
@@ -56,6 +55,8 @@ const regionByLang = {
 
 export const HomePage = () => {
     const homeStore = useHomeStore();
+    const history = useHistory();
+
 
     const launchConfig = homeStore.launchConfig;
 
@@ -71,7 +72,8 @@ export const HomePage = () => {
         changeLanguage(lang);
         setLanguage(lang);
         setRegion(region);
-        if (window.__launchIsShare) {
+
+        if (history.location.pathname === '/share') {
             setTimeout(() => {
                 handleSubmit(
                     {
@@ -83,6 +85,8 @@ export const HomePage = () => {
                 );
             });
         }
+
+
     }, []);
 
     // const handleChangeRegion = (r: string) => {
@@ -97,8 +101,6 @@ export const HomePage = () => {
     //     setLanguage(language);
     //     homeStore.setLanguage(language);
     // };
-
-    const history = useHistory();
 
     const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
 
@@ -161,7 +163,7 @@ export const HomePage = () => {
                 ({ scenes, themes } = await HomeApi.shared.getBuilderResource(companyId, projectId));
             }
 
-            const shareUrl = `${location.origin}${location.pathname}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}&isShare=1`
+            const shareUrl = `${location.origin}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}#/share`
 
             console.log('shareUrl', shareUrl)
 

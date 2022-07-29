@@ -42,7 +42,6 @@
       const roomType = params.get('roomType');
       const companyId = params.get('companyId');
       const projectId = params.get('projectId');
-      const isShare = params.get('isShare');
 
       window.__launchRegion = region;
       window.__launchLanguage = language;
@@ -52,7 +51,6 @@
       window.__launchRoomType = roomType;
       window.__launchCompanyId = companyId;
       window.__launchProjectId = projectId;
-      window.__launchIsShare = isShare;
 
       if (windowID) {
         this.location.hash = 'window';
