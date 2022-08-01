@@ -32,7 +32,7 @@ export class FcrStreamMediaPlayerWidget extends AgoraEduToolWidget {
   };
 
   get widgetName() {
-    return 'webView';
+    return 'mediaPlayer';
   }
   @computed
   get hasPrivilege() {
@@ -80,7 +80,7 @@ export class FcrStreamMediaPlayerWidget extends AgoraEduToolWidget {
       resourceUuid: string;
       title: string;
     }) => {
-      const widgetId = `webView-${resourceUuid}`;
+      const widgetId = `mediaPlayer-${resourceUuid}`;
       const extra = {
         webviewTitle: title,
         webViewUrl: url,

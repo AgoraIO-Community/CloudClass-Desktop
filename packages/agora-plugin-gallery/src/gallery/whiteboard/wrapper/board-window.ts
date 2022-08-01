@@ -375,7 +375,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
     this._whiteRoom.timeDelay = delay;
   }
 
-  async getSnapshotImage() {
+  async getSnapshotImage(background: string = '#fff') {
     this.preCheck({ wm: false });
     const whiteRoom = this._whiteRoom;
 
@@ -392,7 +392,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
             snapshot(_room, {
               scenePath: '/' + scene.name,
               crossorigin: true,
-              background: '#fff',
+              background,
               src2dataurl: src2DataURL,
             });
         });

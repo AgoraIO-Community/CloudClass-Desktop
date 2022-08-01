@@ -20,7 +20,7 @@ export class FcrWebviewWidget extends AgoraEduToolWidget {
   private _privilege = false;
 
   get widgetName() {
-    return 'Webview';
+    return 'webView';
   }
   get hasPrivilege() {
     const { role } = this.classroomConfig.sessionInfo
@@ -49,7 +49,7 @@ export class FcrWebviewWidget extends AgoraEduToolWidget {
   }
   onInstall(controller: AgoraWidgetController) {
     const handleOpen = ({ url, resourceUuid, title }: { url: string, resourceUuid: string, title: string }) => {
-      const widgetId = `Webview-${resourceUuid}`;
+      const widgetId = `webView-${resourceUuid}`;
       const extra = {
         webviewTitle: title,
         webViewUrl: url,

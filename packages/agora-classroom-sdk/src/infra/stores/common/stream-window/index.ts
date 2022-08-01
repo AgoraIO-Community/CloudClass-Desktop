@@ -790,10 +790,10 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         (item) => item.userUuid === value.userUuid,
       );
       if (
-        stream &&
-        acceptedUser &&
-        RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, stream.fromUser.role) ===
-          EduRoleTypeEnum.teacher
+        (stream && acceptedUser) ||
+        (stream &&
+          RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, stream.fromUser.role) ===
+            EduRoleTypeEnum.teacher)
       ) {
         return;
       }

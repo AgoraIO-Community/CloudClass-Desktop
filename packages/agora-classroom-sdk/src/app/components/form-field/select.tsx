@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { CommonProps } from '.';
 import { SvgIconEnum, SvgImg } from '~ui-kit';
@@ -14,6 +14,18 @@ export const Select: FC<SelectProps> = ({ placeholder, value, onChange = () => {
         const selectedOption = options.find(({ value: v }) => value === v);
         return !selectedOption ? placeholder ?? '' : selectedOption.text;
     }, [value, options]);
+
+    useEffect(() => {
+        if (expanded) {
+            const handler = () => {
+                setExpanded(false);
+            }
+            document.addEventListener('mousedown', handler);
+            return () => {
+                document.removeEventListener('mousedown', handler);
+            }
+        }
+    }, [expanded]);
 
     const handleBlur = () => {
         setExpanded(false);
@@ -37,12 +49,12 @@ export const Select: FC<SelectProps> = ({ placeholder, value, onChange = () => {
     const containerCls = classNames('absolute top-0 w-full select', {
         'expand': expanded,
         error: !!error
-    })
+    });
 
     return (
         <div className='relative w-full'>
             <div className={containerCls}>
-                <a className={textCls} style={{ padding: '17px 20px 12px 12px' }} href="#" onFocus={handleFocus} onBlur={handleBlur}>
+                <a className={textCls} style={{ padding: '17px 20px 12px 12px' }} href="#" onMouseDown={handleFocus} onFocus={handleFocus} onBlur={handleBlur}>
                     {selectedText}
                     <SvgImg type={SvgIconEnum.DOWN} colors={{ iconPrimary: '#030303' }} size={9} />
                 </a>

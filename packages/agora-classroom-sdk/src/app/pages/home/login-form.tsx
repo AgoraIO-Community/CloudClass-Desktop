@@ -91,8 +91,8 @@ export const LoginForm: FC<{ onSubmit: (values: any) => void }> = ({ onSubmit })
             return ({
                 roomName: window.__launchRoomName || launchConfig.roomName as string || '',
                 userName: window.__launchUserName || launchConfig.userName as string || '',
-                roleType: window.__launchRoleType || (roleType ? `${roleType}` : ''),
-                roomType: window.__launchRoomType || (roomType ? `${roomType}` : '')
+                roleType: window.__launchRoleType || `${(roleType ?? '')}`,
+                roomType: window.__launchRoomType || `${(roomType ?? '')}`
             })
         },
         validate: (values, fieldName, onError) => {
