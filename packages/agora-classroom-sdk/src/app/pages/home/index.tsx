@@ -3,7 +3,8 @@ import './style.css';
 import { addResource } from '../../components/i18n';
 import { FC, useEffect, useState, Fragment } from 'react';
 import { useHomeStore } from '@/infra/hooks';
-import { EduRegion, EduRoleTypeEnum, } from 'agora-edu-core';
+import { EduRegion, EduRoleTypeEnum } from 'agora-edu-core';
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { getBrowserLanguage, storage } from '@/infra/utils';
 import dayjs from 'dayjs';
 import md5 from 'js-md5';
@@ -166,9 +167,9 @@ export const HomePage = () => {
                 ({ scenes, themes } = await HomeApi.shared.getBuilderResource(companyId, projectId));
             }
 
-            const shareUrl = `${location.origin}${location.pathname}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}#/share`
-
-            console.log('shareUrl', shareUrl)
+            const shareUrl =
+                AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron ? '' :
+                    `${location.origin}${location.pathname}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}#/share`
 
             console.log('## get rtm Token from demo server', token);
 

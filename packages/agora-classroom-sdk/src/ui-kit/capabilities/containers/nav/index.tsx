@@ -1,7 +1,7 @@
 import { EduNavAction, EduNavRecordActionPayload } from '@/infra/stores/common/nav-ui';
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n, SvgaPlayer, SvgIcon, Card, Layout, SvgIconEnum } from '~ui-kit';
+import { Header, Inline, Popover, SvgImg, Tooltip, Button, transI18n, SvgaPlayer, SvgIcon, Card, Layout, SvgIconEnum, useI18n } from '~ui-kit';
 import { EduClassroomConfig, EduRoleTypeEnum, RecordStatus } from 'agora-edu-core';
 import RecordLoading from './assets/svga/record-loading.svga';
 import './index.css';
@@ -141,17 +141,24 @@ const ShareCard = observer(() => {
     }
   }, []);
 
+  const t = useI18n()
+
 
   return (
-    <Card className={cls} style={{ display: navigationBarUIStore.shareVisible ? 'block' : 'none', right: 42, top: 30, padding: '17px 20px 25px', borderRadius: 10 }}>
+    <Card className={cls} style={{ display: navigationBarUIStore.shareVisible ? 'block' : 'none', right: 42, top: 30, padding: 20, borderRadius: 10 }}>
       <Layout direction='col'>
-        <span>Room</span>
-        <Layout>
-          <span className='text-14' style={{}}>{roomName}</span>
-          <Layout className='items-center'>
-            <SvgImg type={SvgIconEnum.LINK_SOLID} colors={{ iconPrimary: InteractionStateColors.allow }} style={{ marginLeft: 40 }} size={16} />
-            <span ref={copyRef} data-clipboard-text={`${AgoraEduSDK.shareUrl}`} className='text-12 cursor-pointer whitespace-nowrap' style={{ color: InteractionStateColors.allow, marginLeft: 4 }} >Copy link</span>
-          </Layout>
+        <Layout className='justify-between'>
+          <span className='text-14 whitespace-nowrap'>{t('fcr_copy_room_name')}</span>
+          <span style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }} title={roomName}>{roomName}</span>
+        </Layout>
+        <Layout className='justify-between mt-3'>
+          <span className='text-14 whitespace-nowrap'>{t('fcr_copy_share_link')}</span>
+          <Button type="ghost" style={{ marginLeft: 40 }} size="xs">
+            <Layout className='mx-4 items-center'>
+              <SvgImg type={SvgIconEnum.LINK_SOLID} colors={{ iconPrimary: InteractionStateColors.allow }} size={16} />
+              <span ref={copyRef} data-clipboard-text={`${AgoraEduSDK.shareUrl}`} className='text-12 cursor-pointer whitespace-nowrap' style={{ color: InteractionStateColors.allow, marginLeft: 4 }} >{t('fcr_copy_share_link_copy')}</span>
+            </Layout>
+          </Button>
         </Layout>
       </Layout>
 
