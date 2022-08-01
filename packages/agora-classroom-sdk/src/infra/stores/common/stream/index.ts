@@ -714,14 +714,6 @@ export class StreamUIStore extends EduUIStoreBase {
   get fullScreenToolbarOffset(): number[] {
     return [0, -48];
   }
-
-  /**
-   * 大窗视频窗工具tooltip定位
-   * @returns
-   */
-  get fullScreenToolTipPlacement(): TooltipPlacement {
-    return 'top';
-  }
   /**
    * 移除奖励动画
    * @param id

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import classNames from 'classnames';
-import { Card, SvgIcon, SvgIconEnum, SvgImg } from '~ui-kit';
+import { Card, SvgIcon, SvgIconEnum } from '~ui-kit';
 import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
@@ -16,6 +16,7 @@ export const ScenesController: FC = observer(() => {
     toolbarUIStore: { setTool },
   } = useStore();
 
+
   const {
     currentSceneIndex,
     scenesCount,
@@ -26,10 +27,11 @@ export const ScenesController: FC = observer(() => {
     undoSteps,
     isGrantedBoard,
     isTeacherOrAssistant,
+    mounted
   } = boardUIStore;
   const isFirstScene = currentSceneIndex === 0;
   const isLastScene = currentSceneIndex + 1 === scenesCount;
-  return (isTeacherOrAssistant || isGrantedBoard) && !isHost ? (
+  return mounted && (isTeacherOrAssistant || isGrantedBoard) && !isHost ? (
     <Card
       className={classNames('scenes-controller-container')}
       style={{ opacity: containedStreamWindowCoverOpacity }}>

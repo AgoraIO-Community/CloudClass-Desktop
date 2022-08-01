@@ -264,6 +264,10 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     return 'bottom';
   }
 
+  get toolbarOffset(): number[] {
+    return [0, -14];
+  }
+
   onInstall(): void {
     super.onInstall();
     this._disposers.push(

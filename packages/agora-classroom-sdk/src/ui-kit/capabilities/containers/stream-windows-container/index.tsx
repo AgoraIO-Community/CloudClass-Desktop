@@ -7,7 +7,6 @@ import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
 import { StreamPlayer } from '../stream';
 import { StreamWindow } from '@/infra/stores/common/stream-window/type';
-import { EduStream } from 'agora-edu-core';
 import useMeasure from 'react-use-measure';
 import { StreamPlayerToolbar } from '../stream/stream-tool';
 
@@ -22,8 +21,8 @@ const WindowContainer: FC = observer(({ children }) => {
   return (
     <div
       id="stream-window-container"
-      className="w-full absolute flex-shrink-0"
-      style={{ height: boardUIStore.boardAreaHeight, bottom: 0, pointerEvents: 'none' }}
+      className="w-full absolute flex-shrink-0 bottom-0"
+      style={{ height: boardUIStore.boardAreaHeight, pointerEvents: 'none' }}
       ref={measureRef}>
       {children}
     </div>
@@ -153,7 +152,7 @@ const DragableStreamWindow = observer(
     style?: CSSProperties;
   }) => {
     const { streamWindowUIStore, streamUIStore } = useStore();
-    const { allUIStreams, fullScreenToolbarOffset } = streamUIStore;
+    const { allUIStreams, fullScreenToolbarOffset, fullScreenToolbarPlacement } = streamUIStore;
 
     const {
       handleStreamWindowInfo,
@@ -237,7 +236,7 @@ const DragableStreamWindow = observer(
             minHeight: minRect.minHeight,
             background: 'transparent',
           }} />
-        <StreamPlayerToolbar visible={toolbarVisible} stream={uiStream} offset={fullScreenToolbarOffset} />
+        <StreamPlayerToolbar visible={toolbarVisible} stream={uiStream} placement={fullScreenToolbarPlacement} offset={fullScreenToolbarOffset} />
       </Rnd>
     ) : null;
   },

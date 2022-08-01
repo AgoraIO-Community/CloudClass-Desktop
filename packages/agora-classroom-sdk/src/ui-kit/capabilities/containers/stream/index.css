@@ -324,7 +324,7 @@
 }
 
 .video-player-tools-popover > .popover-content > .popover-inner > .popover-inner-content {
-  padding: 0;
+  /* padding: 0; */
 }
 
 .video-player-tools svg::before {
