@@ -2,7 +2,7 @@ import { Field } from "@/app/components/form-field";
 import { useHomeStore } from "@/infra/hooks";
 import { EduRoleTypeEnum, EduRoomTypeEnum } from "agora-edu-core";
 import { FC, useState } from "react";
-import { Button, Layout, useI18n } from "~ui-kit";
+import { Button, Layout, transI18n, useI18n } from "~ui-kit";
 
 declare const CLASSROOM_SDK_VERSION: string;
 
@@ -89,8 +89,8 @@ export const LoginForm: FC<{ onSubmit: (values: any) => void }> = ({ onSubmit })
             const { roleType, roomType } = launchConfig;
 
             return ({
-                roomName: window.__launchRoomName || launchConfig.roomName || '',
-                userName: window.__launchUserName || launchConfig.userName || '',
+                roomName: window.__launchRoomName || launchConfig.roomName as string || '',
+                userName: window.__launchUserName || launchConfig.userName as string || '',
                 roleType: window.__launchRoleType || (roleType ? `${roleType}` : ''),
                 roomType: window.__launchRoomType || (roomType ? `${roomType}` : '')
             })
@@ -98,16 +98,26 @@ export const LoginForm: FC<{ onSubmit: (values: any) => void }> = ({ onSubmit })
         validate: (values, fieldName, onError) => {
             switch (fieldName) {
                 case 'roomName':
-                    !values.roomName && onError('roomName', '房间名不能为空');
+                    if (!values.roomName) {
+                        return onError('roomName', transI18n("home_form_placeholder_room_name"));
+                    }
+                    if (values.roomName.length < 6 || values.roomName.length > 50) {
+                        return onError('roomName', transI18n("home_form_error_room_name_limit", { min: 6, max: 50 }));
+                    }
                     break;
                 case 'userName':
-                    !values.userName && onError('userName', '用户名不能为空');
+                    if (!values.userName) {
+                        return onError('userName', transI18n("home_form_error_user_name_empty"));
+                    }
+                    if (values.userName.length < 3 || values.userName.length > 25) {
+                        return onError('userName', transI18n("home_form_error_user_name_limit", { min: 3, max: 25 }));
+                    }
                     break;
                 case 'roleType':
-                    !values.roleType && onError('roleType', '角色类型不能为空');
+                    !values.roleType && onError('roleType', transI18n("home_form_error_role_type_empty"));
                     break;
                 case 'roomType':
-                    !values.roomType && onError('roomType', '房间类型不能为空');
+                    !values.roomType && onError('roomType', transI18n("home_form_error_room_type_empty"));
                     break;
             }
         }

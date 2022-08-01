@@ -182,6 +182,8 @@ export class AgoraEduSDK {
   }
 
   private static _validateOptions(option: LaunchOption) {
+    const isInvalid = (value: string) => value === undefined || value === null || value === '';
+
     if (!option) {
       throw new Error('AgoraEduSDK: LaunchOption is required!');
     } else if (
@@ -203,6 +205,14 @@ export class AgoraEduSDK {
       ].includes(option.roomType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roomType!');
+    } else if (isInvalid(option.userName)) {
+      throw new Error('AgoraEduSDK: userName is required');
+    } else if (isInvalid(option.userUuid)) {
+      throw new Error('AgoraEduSDK: userUuid is required');
+    } else if (isInvalid(option.roomName)) {
+      throw new Error('AgoraEduSDK: roomName is required');
+    } else if (isInvalid(option.roomUuid)) {
+      throw new Error('AgoraEduSDK: roomUuid is required');
     }
   }
 

@@ -131,7 +131,7 @@ export const HomePage = () => {
 
         const userUuid = `${md5(userName)}${userRole}`;
 
-        const roomUuid = `${roomName}${roomType}`;
+        const roomUuid = `${md5(roomName)}${roomType}`;
 
         try {
             setLoading(true);
