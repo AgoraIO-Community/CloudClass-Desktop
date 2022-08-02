@@ -1,4 +1,5 @@
 import { useStore } from '@/infra/hooks/ui-store';
+import { SceneSwitch } from '@/ui-kit/capabilities/containers/scene-switch';
 import { ScreenShareContainer } from '@/ui-kit/capabilities/containers/screen-share';
 import { StreamWindowsContainer } from '@/ui-kit/capabilities/containers/stream-windows-container';
 import { WhiteboardToolbar } from '@/ui-kit/capabilities/containers/toolbar';
@@ -17,6 +18,7 @@ import { NavigationBar } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { RoomBigTeacherStreamContainer } from '~containers/stream/room-big-player';
 import { ToastContainer } from '~containers/toast';
+import { Float } from '~ui-kit';
 import { ScenesController } from '../../../containers/scenes-controller';
 import Room from '../../room';
 
@@ -93,29 +95,34 @@ export const StandardClassScenario = observer(() => {
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
-        <Layout className={layoutCls} direction="col">
-          <NavigationBar />
-          <Layout className="horizontal">
-            <Content>
-              <Whiteboard />
-              <ScreenShareContainer />
-              <WhiteboardToolbar />
-              <ScenesController />
-              <StreamWindowsContainer />
-              <Aside className="aisde-fixed">
-                {showHandsUpContainer ? <HandsUpContainer /> : null}
+        <SceneSwitch>
+          <Layout className={layoutCls} direction="col">
+            <NavigationBar />
+            <Layout className="flex-grow items-stretch fcr-room-bg">
+              <Layout
+                className="flex-grow items-stretch relative"
+                direction="col"
+                style={{ paddingTop: 2 }}>
+                <Whiteboard />
+                <ScreenShareContainer />
+                <WhiteboardToolbar />
+                <ScenesController />
+                <Float bottom={15} right={10} align="end" gap={2}>
+                  {showHandsUpContainer ? <HandsUpContainer /> : null}
+                </Float>
+                <StreamWindowsContainer />
+              </Layout>
+              <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>
+                <RoomBigTeacherStreamContainer />
+                <Chat />
               </Aside>
-            </Content>
-            <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>
-              <RoomBigTeacherStreamContainer />
-              <Chat />
-            </Aside>
+            </Layout>
+            <DialogContainer />
+            <LoadingContainer />
           </Layout>
-          <DialogContainer />
-          <LoadingContainer />
-        </Layout>
-        <WidgetContainer />
-        <ToastContainer />
+          <WidgetContainer />
+          <ToastContainer />
+        </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
   );

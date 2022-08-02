@@ -50,6 +50,13 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
   'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
 
+export const webRTCCodecH264 = [
+  EduRoomServiceTypeEnum.BlendCDN,
+  EduRoomServiceTypeEnum.MixRTCCDN,
+  EduRoomServiceTypeEnum.MixStreamCDN,
+  EduRoomServiceTypeEnum.HostingScene,
+];
+
 // 1. 伪直播场景不需要pretest
 // 2. 合流转推场景下的学生角色不需要pretest
 export const vocationalNeedPreset = (
@@ -220,11 +227,7 @@ export const VocationalHomePage = observer(() => {
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
       const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
-      const webRTCCodec =
-        roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-        roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
-          ? 'h264'
-          : 'vp8';
+      const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
       const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
 
       const needPretest = vocationalNeedPreset(role, roomServiceType, roomSubtype);

@@ -217,21 +217,13 @@ export const InputMsg = ({ allMutePermission }) => {
               </Popover>
             )}
             {configUIVisible.showQuestionBox && (
-              <>
-                <div className="divider" />
-                <div className="chat-question-container" onClick={toggleQuestionState}>
-                  <Radio checked={isQuestion}>
-                    <div
-                      className={
-                        isQuestion
-                          ? 'fcr-hx-question-text question-selected'
-                          : 'fcr-hx-question-text'
-                      }>
-                      {transI18n('question')}
-                    </div>
-                  </Radio>
-                </div>
-              </>
+              <div className="chat-question-container" onClick={toggleQuestionState}>
+                <Radio checked={isQuestion}>
+                  <div className={isQuestion ? 'fcr-hx-question-text question-selected' : 'fcr-hx-question-text'}>
+                  {transI18n('question')}
+                  </div>
+                </Radio>
+              </div>
             )}
           </div>
           {!configUIVisible.allMute

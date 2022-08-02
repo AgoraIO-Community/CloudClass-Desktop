@@ -1,63 +1,111 @@
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
+import { computed } from 'mobx';
 import { ToolbarUIStore } from '../common/toolbar-ui';
 import { ToolbarItem, ToolbarItemCategory } from '../common/type';
 
 export class VocationalToolbarUIStore extends ToolbarUIStore {
-  readonly defaultPens: string[] = ['pen', 'line', 'square', 'circle', 'arrow', 'shape'];
-  readonly penTools = ['pen', 'square', 'circle', 'line', 'arrow', 'shape'];
   /**
    * 老师工具栏工具列表
    * @returns
    */
+  @computed
   get teacherTools(): ToolbarItem[] {
-    return [
-      ToolbarItem.fromData({
-        value: 'clicker',
-        label: 'scaffold.clicker',
-        icon: 'select-dark',
-        category: ToolbarItemCategory.Clicker,
-      }),
-      ToolbarItem.fromData({
-        value: 'pen',
-        label: 'scaffold.pencil',
-        icon: 'pens-dark',
-        category: ToolbarItemCategory.PenPicker,
-      }),
-      ToolbarItem.fromData({
-        value: 'text',
-        label: 'scaffold.text',
-        icon: 'text-dark',
-        category: ToolbarItemCategory.Text,
-      }),
-      ToolbarItem.fromData({
-        value: 'eraser',
-        label: 'scaffold.eraser',
-        icon: 'eraser-dark',
-        category: ToolbarItemCategory.Eraser,
-      }),
-      ToolbarItem.fromData({
-        value: 'hand',
-        label: 'scaffold.move',
-        icon: 'hand-dark',
-        category: ToolbarItemCategory.Hand,
-      }),
-      {
-        value: 'cloud',
-        label: 'scaffold.cloud_storage',
-        icon: 'cloud-dark',
-        category: ToolbarItemCategory.CloudStorage,
-      },
-      {
-        value: 'tools',
-        label: 'scaffold.tools',
-        icon: 'tools-dark',
-        category: ToolbarItemCategory.Cabinet,
-      },
-      {
-        value: 'register',
-        label: 'scaffold.user_list',
-        icon: 'register-dark',
-        category: ToolbarItemCategory.Roster,
-      },
-    ];
+    let _tools: ToolbarItem[] = [];
+
+    if (this.boardApi.mounted) {
+      _tools = [
+        ToolbarItem.fromData({
+          value: 'clicker',
+          label: 'scaffold.clicker',
+          icon: 'select',
+          category: ToolbarItemCategory.Selector,
+        }),
+        ToolbarItem.fromData({
+          // selector use clicker icon
+          value: 'selection',
+          label: 'scaffold.selector',
+          icon: 'clicker',
+          category: ToolbarItemCategory.Clicker,
+        }),
+        ToolbarItem.fromData({
+          value: 'pen',
+          label: 'scaffold.pencil',
+          icon: 'pen',
+          category: ToolbarItemCategory.PenPicker,
+        }),
+        ToolbarItem.fromData({
+          value: 'text',
+          label: 'scaffold.text',
+          icon: 'text',
+          category: ToolbarItemCategory.Text,
+        }),
+        ToolbarItem.fromData({
+          value: 'eraser',
+          label: 'scaffold.eraser',
+          icon: 'eraser',
+          category: ToolbarItemCategory.Eraser,
+        }),
+
+        ToolbarItem.fromData({
+          value: 'hand',
+          label: 'scaffold.move',
+          icon: 'hand',
+          category: ToolbarItemCategory.Hand,
+        }),
+        ToolbarItem.fromData({
+          value: 'save',
+          label: 'scaffold.save',
+          icon: 'save-ghost',
+          category: ToolbarItemCategory.Save,
+        }),
+        {
+          value: 'cloud',
+          label: 'scaffold.cloud_storage',
+          icon: 'cloud',
+          category: ToolbarItemCategory.CloudStorage,
+        },
+        {
+          value: 'tools',
+          label: 'scaffold.tools',
+          icon: 'tools',
+          category: ToolbarItemCategory.Cabinet,
+        },
+        {
+          value: 'register',
+          label: 'scaffold.register',
+          icon: 'register',
+          category: ToolbarItemCategory.Roster,
+        },
+      ];
+
+      if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+        _tools.splice(
+          5,
+          0,
+          ToolbarItem.fromData({
+            value: 'slice',
+            label: 'scaffold.slice',
+            icon: 'slice',
+            category: ToolbarItemCategory.Slice,
+          }),
+        );
+      }
+    } else {
+      _tools = [
+        {
+          value: 'tools',
+          label: 'scaffold.tools',
+          icon: 'tools',
+          category: ToolbarItemCategory.Cabinet,
+        },
+        {
+          value: 'register',
+          label: 'scaffold.register',
+          icon: 'register',
+          category: ToolbarItemCategory.Roster,
+        },
+      ];
+    }
+    return _tools;
   }
 }

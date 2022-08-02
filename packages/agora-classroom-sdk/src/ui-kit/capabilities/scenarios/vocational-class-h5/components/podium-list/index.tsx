@@ -33,7 +33,7 @@ export const PodiumStream: FC<PodiumStreamProps> = ({ stream }) => {
   return (
     <div className="podium-stream">
       {stream ? (
-        <StreamPlayer renderAt="Bar" stream={stream} />
+        <StreamPlayer renderAt="Window" stream={stream} />
       ) : (
         <StreamPlaceholder role={EduRoleTypeEnum.student} />
       )}

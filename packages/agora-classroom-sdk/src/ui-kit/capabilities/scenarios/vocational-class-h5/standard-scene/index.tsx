@@ -9,12 +9,12 @@ import { DialogContainer } from '~containers/dialog';
 import { useInvitedModal } from '~containers/hand-up/invite-confirm';
 import { ToastContainer } from '~containers/toast';
 import Room from '../../room';
+import { ChatH5 } from '../components/chat';
 import { DocTitle } from '../components/doc-title';
-import { H5Chat } from '../components/h5-chat';
-import { MobileStreamPlayer } from '../components/mobile-stream-player';
-import { MobileWhiteBoard } from '../components/mobile-whiteboard';
 import { PageHeader } from '../components/page-header';
 import { PodiumList } from '../components/podium-list';
+import { MobileTeacherStreamPlayer } from '../components/teacher-stream-player';
+import { MobileWhiteBoardH5 } from '../components/whiteboard';
 import { useDoubleTap } from '../hooks/useDoubleTap';
 
 export const StandardClassScenario = observer(() => {
@@ -77,7 +77,7 @@ export const StandardClassScenario = observer(() => {
         })}>
         <VocationalBoardContainer />
         <PodiumList streams={podiumStreams} />
-        <H5Chat showHandsUp={showHandsUp} />
+        <ChatH5 showHandsUp={showHandsUp} />
       </div>
       <DialogContainer />
       <WidgetContainer />
@@ -91,8 +91,8 @@ const VocationalBoardContainer = observer(() => {
   const dbtEvent = useDoubleTap((e) => setMinimizeWhiteboard(!minimizeWhiteboard));
   return (
     <div className="main-section">
-      <MobileStreamPlayer {...dbtEvent} minimized={!minimizeWhiteboard} />
-      <MobileWhiteBoard {...dbtEvent} minimized={minimizeWhiteboard} />
+      <MobileTeacherStreamPlayer {...dbtEvent} minimized={!minimizeWhiteboard} />
+      <MobileWhiteBoardH5 {...dbtEvent} minimized={minimizeWhiteboard} />
     </div>
   );
 });

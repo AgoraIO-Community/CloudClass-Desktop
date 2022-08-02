@@ -7,8 +7,8 @@ import { DialogContainer } from '~containers/dialog';
 import { ToastContainer } from '~containers/toast';
 import { transI18n } from '~ui-kit';
 import Room from '../../room';
+import { ChatH5 } from '../components/chat';
 import { DocTitle } from '../components/doc-title';
-import { H5Chat } from '../components/h5-chat';
 import { PageHeader } from '../components/page-header';
 
 export const MixStreamCDNClassScenario = observer(() => {
@@ -38,7 +38,7 @@ export const MixStreamCDNClassScenario = observer(() => {
             placeholderText={transI18n('fcr_vocational_teacher_absent')}
           />
         </div>
-        <H5Chat />
+        <ChatH5 />
       </div>
       <DialogContainer />
       <WidgetContainer />
