@@ -159,7 +159,7 @@ const StreamPlaceholderWaveArmPlaceholder = observer(({ stream }: { stream: EduS
 
 const StreamPlayerOverlayName = observer(({ stream }: { stream: EduStreamUI }) => {
   return (
-    <span title={stream.stream.fromUser.userName} className="username2">
+    <span title={stream.stream.fromUser.userName} className="username2 pointer-events-auto">
       {stream.stream.fromUser.userName}
     </span>
   );
@@ -179,7 +179,7 @@ export const StreamPlayerOverlay = observer(
     const grantVisible = layerItems && layerItems.includes('grant');
 
     return (
-      <div className="video-player-overlay">
+      <div className="video-player-overlay z-10 pointer-events-none">
         <AwardAnimations stream={stream} />
         <div className="top-right-info">
           {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}
@@ -212,11 +212,13 @@ export const StreamPlayer: FC<{
   stream: EduStreamUI;
   renderAt: 'Window' | 'Bar'
   style?: CSSProperties;
+  toolbarDisabled?: boolean;
 }> = observer(
   ({
     stream,
     style,
-    renderAt
+    renderAt,
+    toolbarDisabled
   }) => {
     const { streamWindowUIStore } = useStore()
     const { visibleStream } = streamWindowUIStore;
@@ -253,7 +255,7 @@ export const StreamPlayer: FC<{
             <StreamPlayerCameraPlaceholder stream={stream} />
             {shouldRenderVideo && <TrackPlayer stream={stream} />}
             {shouldRenderVideo && <StreamPlayerOverlay stream={stream} />}
-            {shouldRenderVideo && <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />}
+            {shouldRenderVideo && !toolbarDisabled && <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />}
           </React.Fragment>
         }
         <DragableContainer stream={stream} />
