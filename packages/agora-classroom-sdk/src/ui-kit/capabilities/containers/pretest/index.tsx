@@ -111,16 +111,21 @@ const BeautyControllerBar = observer(() => {
     <CSSTransition in={isBeauty} timeout={300} unmountOnExit classNames="beauty-bar-animate">
       <div className="beauty-bar">
         <div className="beauty-bar-left">
-          {['whitening', 'buffing', 'ruddy'].map((item) => (
-            <Tooltip key={item} title={transI18n(`media.${item}`)} placement="top">
-              <SvgImg
-                className='beauty-type-icon'
-                type={activeBeautyTypeIcon(item)}
-                size={22}
-                onClick={() => setActiveBeautyType(item as BeautyType)}
-              />
-            </Tooltip>
-          ))}
+          {[{ id: 'whitening', icon: SvgIconEnum.WHITENING }, { id: 'buffing', icon: SvgIconEnum.BUFFING }, { id: 'ruddy', icon: SvgIconEnum.RUDDY }].map((item) => {
+            const icon = activeBeautyTypeIcon(item);
+            return (
+              <Tooltip key={item.id} title={transI18n(`media.${item}`)} placement="top">
+                <SvgImg
+                  className='beauty-type-icon'
+                  type={icon.icon}
+                  colors={{ iconPrimary: icon.color }}
+                  size={22}
+                  onClick={() => setActiveBeautyType(item.id as BeautyType)}
+                />
+              </Tooltip>
+            )
+          }
+          )}
         </div>
         <BeautySider value={activeBeautyValue} onChange={setActiveBeautyValue} />
       </div>

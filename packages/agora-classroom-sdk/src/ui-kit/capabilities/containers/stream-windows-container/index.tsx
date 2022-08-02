@@ -36,12 +36,12 @@ export const StreamWindowsContainer = observer(() => {
 
   return (
     <WindowContainer>
-      <TransitionStreamWindow streamWindows={streamWindows.slice()} streamsBounds={streamsBounds} />
       {needDragable
         ? streamWindows.map(([streamUuid, streamWindow]) => (
           <DragableStreamWindow key={streamUuid} info={streamWindow} streamUuid={streamUuid} />
         ))
         : null}
+      <TransitionStreamWindow streamWindows={streamWindows.slice()} streamsBounds={streamsBounds} />
     </WindowContainer>
   );
 });
@@ -132,6 +132,7 @@ export const TransitionStreamWindow = observer(
               renderAt="Window"
               stream={stream}
               style={{ width: '100%', height: '100%' }}
+              toolbarDisabled
             />
           ) : null}
         </animated.div>
