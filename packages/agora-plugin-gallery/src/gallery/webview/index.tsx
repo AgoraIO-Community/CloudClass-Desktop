@@ -1,6 +1,10 @@
 import ReactDOM from 'react-dom';
 import { App } from './app';
-import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent, AgoraWidgetTrackMode } from 'agora-classroom-sdk';
+import {
+  AgoraExtensionRoomEvent,
+  AgoraExtensionWidgetEvent,
+  AgoraWidgetTrackMode,
+} from 'agora-classroom-sdk';
 import { AgoraEduToolWidget } from '../../common/edu-tool-widget';
 import { AgoraWidgetController, EduRoleTypeEnum } from 'agora-edu-core';
 import { bound } from 'agora-rte-sdk';
@@ -9,8 +13,7 @@ const defaultPos = { xaxis: 0.5, yaxis: 0.5 };
 const defaultSize = {
   width: 0.54,
   height: 0.71,
-}
-
+};
 
 export class FcrWebviewWidget extends AgoraEduToolWidget {
   private static _installationDisposer?: CallableFunction;
@@ -23,7 +26,7 @@ export class FcrWebviewWidget extends AgoraEduToolWidget {
     return 'webView';
   }
   get hasPrivilege() {
-    const { role } = this.classroomConfig.sessionInfo
+    const { role } = this.classroomConfig.sessionInfo;
     return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) || this._privilege;
   }
 
@@ -47,41 +50,50 @@ export class FcrWebviewWidget extends AgoraEduToolWidget {
   get webviewTitle() {
     return this._webviewTitle;
   }
+
   onInstall(controller: AgoraWidgetController) {
-    const handleOpen = ({ url, resourceUuid, title }: { url: string, resourceUuid: string, title: string }) => {
+    const handleOpen = ({
+      url,
+      resourceUuid,
+      title,
+    }: {
+      url: string;
+      resourceUuid: string;
+      title: string;
+    }) => {
       const widgetId = `webView-${resourceUuid}`;
       const extra = {
         webviewTitle: title,
         webViewUrl: url,
         zIndex: 0,
-      }
+      };
       // 打开远端
       controller.setWidegtActive(widgetId, {
         extra,
         position: defaultPos,
-        size: defaultSize
+        size: defaultSize,
       });
       // 打开本地
       controller.broadcast(AgoraExtensionWidgetEvent.WidgetBecomeActive, {
         widgetId,
         defaults: {
           properties: { extra },
-          trackProperties: { position: defaultPos, size: defaultSize }
-        }
+          trackProperties: { position: defaultPos, size: defaultSize },
+        },
       });
-    }
+    };
 
     controller.addBroadcastListener({
       messageType: AgoraExtensionRoomEvent.OpenWebview,
-      onMessage: handleOpen
+      onMessage: handleOpen,
     });
 
     FcrWebviewWidget._installationDisposer = () => {
       controller.removeBroadcastListener({
         messageType: AgoraExtensionRoomEvent.OpenWebview,
-        onMessage: handleOpen
+        onMessage: handleOpen,
       });
-    }
+    };
   }
 
   onCreate(properties: any) {
@@ -97,17 +109,16 @@ export class FcrWebviewWidget extends AgoraEduToolWidget {
 
     this.addBroadcastListener({
       messageType: AgoraExtensionWidgetEvent.BoardGrantedUsersUpdated,
-      onMessage: this._handleGranted
+      onMessage: this._handleGranted,
     });
 
     this.addMessageListener({
       messageType: AgoraExtensionRoomEvent.ResponseGrantedList,
-      onMessage: this._handleGranted
+      onMessage: this._handleGranted,
     });
 
     this.broadcast(AgoraExtensionWidgetEvent.RequestGrantedList, this.widgetId);
   }
-
 
   @bound
   private _handleGranted(grantedUsers: Set<string>) {
@@ -142,9 +153,9 @@ export class FcrWebviewWidget extends AgoraEduToolWidget {
   }
   render(dom: HTMLElement) {
     this._dom = dom;
-    dom.classList.add('h-full')
+    dom.classList.add('h-full');
     ReactDOM.render(<App widget={this} />, dom);
-  };
+  }
 
   unload() {
     if (this._dom) {
@@ -156,12 +167,12 @@ export class FcrWebviewWidget extends AgoraEduToolWidget {
   onDestroy() {
     this.removeBroadcastListener({
       messageType: AgoraExtensionWidgetEvent.BoardGrantedUsersUpdated,
-      onMessage: this._handleGranted
+      onMessage: this._handleGranted,
     });
 
     this.removeMessageListener({
       messageType: AgoraExtensionRoomEvent.ResponseGrantedList,
-      onMessage: this._handleGranted
+      onMessage: this._handleGranted,
     });
   }
 

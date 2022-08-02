@@ -151,7 +151,9 @@ body,
   transition: 0.5s;
   margin-right: -300px;
 }
-
+.telebox-collector {
+  @apply bg-component !important;
+}
 .telebox-collector img {
   display: inline-block !important;
 }

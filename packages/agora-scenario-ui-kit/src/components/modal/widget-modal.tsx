@@ -1,8 +1,9 @@
-import { FC, useCallback, useRef } from 'react';
+import { FC, useCallback, useRef, useContext } from 'react';
 import classnames from 'classnames';
 import { SvgImg, SvgIconEnum } from '~ui-kit';
 import { AutoSizer } from 'react-virtualized';
 import './widget-modal.css';
+import { themeContext } from '../theme';
 
 type WidgetModalProps = {
   title: string;
@@ -37,13 +38,16 @@ export const WidgetModal: FC<WidgetModalProps> = ({
 }) => {
   const cls = classnames('widget-modal', 'relative', 'w-full', 'h-full', className);
   const resizeTimes = useRef(0);
-
-  const handleResize = useCallback((dimensions: { width: number, height: number }) => {
-    if (onResize) {
-      onResize(dimensions, resizeTimes.current === 0);
-    }
-    resizeTimes.current += 1;
-  }, [onResize]);
+  const { textLevel1 } = useContext(themeContext);
+  const handleResize = useCallback(
+    (dimensions: { width: number; height: number }) => {
+      if (onResize) {
+        onResize(dimensions, resizeTimes.current === 0);
+      }
+      resizeTimes.current += 1;
+    },
+    [onResize],
+  );
 
   return (
     <div className={cls} style={{ minHeight, minWidth }}>
@@ -56,12 +60,20 @@ export const WidgetModal: FC<WidgetModalProps> = ({
         <div className="modal-action-group">
           {showRefresh ? (
             <div className="modal-title-action" onClick={onReload}>
-              <SvgImg type={SvgIconEnum.CLOUD_REFRESH} size={20} style={{ color: '#586376' }} />
+              <SvgImg
+                type={SvgIconEnum.CLOUD_REFRESH}
+                size={20}
+                colors={{ iconPrimary: textLevel1 }}
+              />
             </div>
           ) : null}
           {showFullscreen ? (
             <div className="modal-title-action" onClick={onFullScreen}>
-              <SvgImg type={SvgIconEnum.FULLSCREEN} size={20} style={{ color: '#586376' }} />
+              <SvgImg
+                type={SvgIconEnum.FULLSCREEN}
+                size={20}
+                colors={{ iconPrimary: textLevel1 }}
+              />
             </div>
           ) : null}
           {closable ? (
@@ -72,7 +84,7 @@ export const WidgetModal: FC<WidgetModalProps> = ({
                 e.stopPropagation();
                 onCancel();
               }}>
-              <SvgImg type={SvgIconEnum.CLOSE} size={20} style={{ color: '#586376' }} />
+              <SvgImg type={SvgIconEnum.CLOSE} size={20} colors={{ iconPrimary: textLevel1 }} />
             </div>
           ) : null}
         </div>

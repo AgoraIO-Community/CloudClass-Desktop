@@ -885,7 +885,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   @Lodash.debounced(300)
   sendWigetDataToServer(streamUuid?: string) {
     const { role } = EduClassroomConfig.shared.sessionInfo;
-    if (role === EduRoleTypeEnum.teacher) {
+    if (role === EduRoleTypeEnum.teacher || role === EduRoleTypeEnum.assistant) {
       const widgetsData = this._encodeWidgetRect();
       if (streamUuid) {
         const value = widgetsData.get(streamUuid);
@@ -1070,8 +1070,6 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   private _handleToggleWhiteboard(status: boolean) {
     // 白板关闭并且没有大窗的情况下，添加大窗
     if (status && !this.streamWindowMap.size && this._teacherStream) {
-      const { userUuid } = EduClassroomConfig.shared.sessionInfo;
-
       const streamwindow = {
         width: 1,
         height: 1,
@@ -1079,13 +1077,13 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         y: 0,
         contain: true,
         zIndex: ZINDEX,
-        userUuid: userUuid,
+        userUuid: this._teacherStream.fromUser.userUuid,
       };
       this._addStreamWindowByUuid(
         this._teacherStream.streamUuid,
         new StreamWindowWidget(streamwindow),
       );
-      this.sendWigetDataToServer();
+      this.sendWigetDataToServer(this._teacherStream.streamUuid);
     }
   }
 
@@ -1364,8 +1362,10 @@ class SceneEventHandler {
 
         // 当操作者角色为老师的话, 不为当前用户的话
         if (
-          RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, operator.role) ===
-            EduRoleTypeEnum.teacher &&
+          (RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, operator.role) ===
+            EduRoleTypeEnum.teacher ||
+            RteRole2EduRole(EduRoomTypeEnum.RoomBigClass, operator.role) ===
+              EduRoleTypeEnum.assistant) &&
           operator.userUuid !== EduClassroomConfig.shared.sessionInfo.userUuid
         ) {
           if (actionType === 2) {

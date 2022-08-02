@@ -1,9 +1,10 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/util/type';
 import './index.css';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import { OverlayWrap } from '../overlay-wrap';
+import { themeContext } from '~ui-kit';
 export interface ModalProps extends BaseProps {
   /** 标题 */
   title?: string | React.ReactNode;
@@ -64,6 +65,8 @@ export const Modal: ModalType = ({
       onCancel,
     });
   }
+  const { textLevel1 } = useContext(themeContext);
+
   const cls = classnames({
     [`modal`]: 1,
     [`back-modal`]: modalType === 'back',
@@ -108,7 +111,7 @@ export const Modal: ModalType = ({
                   triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
-                <SvgImg type={SvgIconEnum.CLOSE} size={20} style={{ color: '#7B88A0' }} />
+                <SvgImg type={SvgIconEnum.CLOSE} size={20} colors={{ iconPrimary: textLevel1 }} />
               </div>
             ) : (
               ''
@@ -125,7 +128,11 @@ export const Modal: ModalType = ({
                   triggerModalAction({ action: 'cancel', event: e });
                   setOpened(false);
                 }}>
-                <SvgImg type={SvgIconEnum.CLOSE} size={20} style={{ color: '#7B88A0' }} />
+                <SvgImg
+                  type={SvgIconEnum.TRIANGLE_SOLID1}
+                  size={20}
+                  colors={{ iconPrimary: textLevel1 }}
+                />
               </div>
             ) : (
               ''
@@ -141,7 +148,7 @@ export const Modal: ModalType = ({
                 triggerModalAction({ action: 'cancel', event: e });
                 setOpened(false);
               }}>
-              <SvgImg type={SvgIconEnum.BACKWARD} style={{ color: '#7B88A0' }} />
+              <SvgImg type={SvgIconEnum.BACKWARD} colors={{ iconPrimary: textLevel1 }} />
             </div>
             <div className="back-title">{title}</div>
             <div></div>

@@ -36,12 +36,12 @@
 
 .scenes-controller-btn .backward-disabled path,
 .scenes-controller-btn .forward-disabled path {
-  fill: rgb(226, 226, 238);
+  fill: #c7c7c799;
 }
 
 .scenes-controller-btn .backward-enabled path,
 .scenes-controller-btn .forward-enabled path {
-  fill: rgb(123, 136, 160);
+  fill: rgb(226, 226, 238);
 }
 .scenes-controller-btn .icon-undo path,
 .scenes-controller-btn .icon-redo path {
@@ -53,7 +53,7 @@
 .scenes-controller-btn .redo-disabled path,
 .scenes-controller-btn .undo-disabled:hover path,
 .scenes-controller-btn .redo-disabled:hover path {
-  fill: rgb(226, 226, 238);
+  fill: #c7c7c799;
 }
 
 .scenes-controller-btn .icon-undo:hover path,

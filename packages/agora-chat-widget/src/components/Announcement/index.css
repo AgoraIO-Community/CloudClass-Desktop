@@ -65,7 +65,6 @@
   @apply text-level3;
 }
 .fcr-hx-input-content {
-  margin: 0 3px !important;
   width: 308px !important;
   min-height: 84px !important;
   border-radius: 4px !important;
@@ -167,7 +166,6 @@
 
 .fcr-hx-cancel-btn-text {
   @apply text-brand;
-  color: #677386;
 }
 
 /* 修改antd 默认样式 */

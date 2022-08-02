@@ -4,7 +4,7 @@ import App from './app';
 import { PluginStore } from './store';
 import './i18n/config';
 import { observable, action } from 'mobx';
-import { transI18n, WidgetModal } from '~ui-kit';
+import { ThemeProvider, transI18n, WidgetModal } from '~ui-kit';
 import { AgoraEduToolWidget } from '../../common/edu-tool-widget';
 import { AgoraWidgetController, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { AgoraExtensionWidgetEvent } from '@/infra/api';
@@ -21,7 +21,7 @@ export class AgoraPolling extends AgoraEduToolWidget {
     return 'poll';
   }
   get hasPrivilege() {
-    const { role } = this.classroomConfig.sessionInfo
+    const { role } = this.classroomConfig.sessionInfo;
     return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role);
   }
 
@@ -37,9 +37,8 @@ export class AgoraPolling extends AgoraEduToolWidget {
       controller.broadcast(AgoraExtensionWidgetEvent.RegisterCabinetTool, {
         id: this.widgetName,
         name: transI18n('widget_polling.appName'),
-        iconType: 'vote'
-      },
-      );
+        iconType: 'vote',
+      });
     }
   }
 
@@ -69,11 +68,15 @@ export class AgoraPolling extends AgoraEduToolWidget {
     this._dom = dom;
     ReactDOM.render(
       <Provider store={this._store}>
-        <WidgetModal title={transI18n('widget_polling.appName')} closable={this.controlled} onCancel={this.handleClose} onResize={
-          this.handleResize
-        }>
-          <App />
-        </WidgetModal>
+        <ThemeProvider value={this.theme}>
+          <WidgetModal
+            title={transI18n('widget_polling.appName')}
+            closable={this.controlled}
+            onCancel={this.handleClose}
+            onResize={this.handleResize}>
+            <App />
+          </WidgetModal>
+        </ThemeProvider>
       </Provider>,
       dom,
     );
@@ -87,6 +90,6 @@ export class AgoraPolling extends AgoraEduToolWidget {
   }
 
   onUninstall(controller: AgoraWidgetController) {
-    controller.broadcast(AgoraExtensionWidgetEvent.UnregisterCabinetTool, this.widgetName)
+    controller.broadcast(AgoraExtensionWidgetEvent.UnregisterCabinetTool, this.widgetName);
   }
 }

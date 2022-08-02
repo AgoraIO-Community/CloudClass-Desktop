@@ -6,7 +6,6 @@ import { SvgIconEnum } from './type';
 import { themeContext } from '../theme';
 import './index.css';
 
-
 export type SvgImgProps = BaseProps & {
   type: SvgIconEnum;
   colors?: Partial<PathOptions>;
@@ -24,7 +23,7 @@ export const SvgImg: FC<SvgImgProps> = ({
   style,
   colors,
   onMouseDown,
-  onMouseUp
+  onMouseUp,
 }) => {
   const cls = classnames({
     [`${className}`]: !!className,
@@ -32,7 +31,11 @@ export const SvgImg: FC<SvgImgProps> = ({
   const { iconPrimary, iconSecondary } = useContext(themeContext);
 
   const viewBox = getViewBox(type);
-  const path = getPath(type, { ...colors, iconPrimary: colors?.iconPrimary ?? iconPrimary, iconSecondary: colors?.iconSecondary ?? iconSecondary });
+  const path = getPath(type, {
+    ...colors,
+    iconPrimary: colors?.iconPrimary ?? iconPrimary,
+    iconSecondary: colors?.iconSecondary ?? iconSecondary,
+  });
 
   return (
     <svg
@@ -46,8 +49,7 @@ export const SvgImg: FC<SvgImgProps> = ({
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDown}
       style={style}
-      data-label={type}
-    >
+      data-label={type}>
       {path}
     </svg>
   );
@@ -60,6 +62,7 @@ export type SvgIconProps = BaseProps & {
   hoverColors?: Partial<PathOptions>;
   size?: number;
   onClick?: any;
+  canHover?: boolean;
 };
 
 // Icon that has hoverable surroundings
@@ -71,7 +74,8 @@ export const SvgIcon: FC<SvgIconProps> = ({
   className,
   style,
   colors,
-  hoverColors
+  hoverColors,
+  canHover = true,
 }) => {
   const [hovering, setHovering] = useState<boolean>(false);
 
@@ -80,7 +84,7 @@ export const SvgIcon: FC<SvgIconProps> = ({
 
   return (
     <div
-      className='can-hover'
+      className={canHover ? 'can-hover' : ''}
       style={{ display: 'flex' }}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}>

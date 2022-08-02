@@ -37,7 +37,11 @@ export const ScenesController: FC = observer(() => {
       style={{ opacity: containedStreamWindowCoverOpacity }}>
       <div className="scenes-controller-btn-list">
         <div className="scenes-controller-btn" onClick={addMainViewScene}>
-          <SvgIcon type={SvgIconEnum.ADD_SCENE} hoverType={SvgIconEnum.ADD_SCENE} hoverColors={{ iconPrimary: InteractionStateColors.allow }} />
+          <SvgIcon
+            type={SvgIconEnum.ADD_SCENE}
+            hoverType={SvgIconEnum.ADD_SCENE}
+            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+          />
         </div>
         <div className="scenes-controller-line"></div>
         <div className="scenes-controller-btn" onClick={toPreMainViewScene}>
@@ -45,6 +49,7 @@ export const ScenesController: FC = observer(() => {
             type={SvgIconEnum.BACKWARD}
             hoverType={SvgIconEnum.BACKWARD}
             hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+            canHover={!isFirstScene}
             className={isFirstScene ? 'backward-disabled' : 'backward-enabled'}
           />
         </div>
@@ -56,18 +61,27 @@ export const ScenesController: FC = observer(() => {
             type={SvgIconEnum.FORWARD}
             hoverType={SvgIconEnum.FORWARD}
             hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+            canHover={!isLastScene}
             className={isLastScene ? 'forward-disabled' : 'forward-enabled'}
           />
         </div>
         <div className="scenes-controller-btn" onClick={() => setTool('undo')}>
-          <SvgIcon type={SvgIconEnum.UNDO} className={undoSteps === 0 ? 'undo-disabled' : 'undo'}
+          <SvgIcon
+            type={SvgIconEnum.UNDO}
+            className={undoSteps === 0 ? 'undo-disabled' : 'undo'}
             hoverType={SvgIconEnum.UNDO}
-            hoverColors={{ iconPrimary: InteractionStateColors.allow }} />
+            canHover={undoSteps !== 0}
+            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+          />
         </div>
         <div className="scenes-controller-btn" onClick={() => setTool('redo')}>
-          <SvgIcon type={SvgIconEnum.REDO} className={redoSteps === 0 ? 'redo-disabled' : 'redo'}
+          <SvgIcon
+            type={SvgIconEnum.REDO}
+            className={redoSteps === 0 ? 'redo-disabled' : 'redo'}
             hoverType={SvgIconEnum.REDO}
-            hoverColors={{ iconPrimary: InteractionStateColors.allow }} />
+            canHover={redoSteps !== 0}
+            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+          />
         </div>
       </div>
     </Card>

@@ -34,6 +34,7 @@ export class FcrStreamMediaPlayerWidget extends AgoraEduToolWidget {
   get widgetName() {
     return 'mediaPlayer';
   }
+
   @computed
   get hasPrivilege() {
     const { role } = this.classroomConfig.sessionInfo;

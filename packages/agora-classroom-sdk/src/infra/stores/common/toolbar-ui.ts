@@ -126,7 +126,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
             );
           }
           if (!newValue && oldValue) {
-            // this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
+            this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
           }
         },
       ),

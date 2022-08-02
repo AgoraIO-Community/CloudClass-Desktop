@@ -96,7 +96,6 @@ textarea.input-chat {
 
 .fcr-hx-input-box .fcr-hx-input-chat {
   @apply bg-component text-level1;
-  background: #f9f9fc !important;
   outline: none !important;
   resize: none !important;
   border: none !important;
