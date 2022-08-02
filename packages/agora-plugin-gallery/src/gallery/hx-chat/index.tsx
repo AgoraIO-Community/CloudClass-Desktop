@@ -1,5 +1,6 @@
 import * as hx from 'agora-chat-widget';
 import { AgoraWidgetBase, AgoraWidgetLifecycle } from 'agora-classroom-sdk';
+import { chatEmojiEnabled, chatMuteAllEnabled, chatPictureEnabled } from '@/ui-kit/capabilities/containers/visibility/controlled';
 import {
   AgoraWidgetController,
   EduRoleTypeEnum,
@@ -21,7 +22,7 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
 
   const { appId, host, sessionInfo, platform } = widget.classroomConfig;
 
-  const { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture } = widget.imUIConfig;
+  const { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture, imgIcon } = widget.imUIConfig;
 
   const { currentSubRoom } = widget.classroomStore.groupStore;
 
@@ -57,7 +58,8 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
       btnSend: visibleBtnSend,
       inputBox: inputBoxStatus,
       platform,
-      screenshotIcon: visibleScreenCapture
+      screenshotIcon: visibleScreenCapture,
+      imgIcon
     },
   };
 
@@ -143,17 +145,17 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     let inputBoxStatus = undefined;
     let visibleMuteAll = true;
     let visibleScreenCapture = true;
+    let imgIcon = true;
 
-    const { emoji, muteAll, picture } = this.uiConfig.engagement.agoraChat;
-
-    if (!emoji.enable) {
+    if (!chatEmojiEnabled(this.uiConfig)) {
       visibleEmoji = false;
     }
-    if (!muteAll.enable) {
+    if (!chatMuteAllEnabled(this.uiConfig)) {
       visibleMuteAll = false;
     }
-    if (!picture.enable) {
+    if (!chatPictureEnabled(this.uiConfig)) {
       visibleScreenCapture = false;
+      imgIcon = false;
     }
 
     if (this.classroomConfig.platform === Platform.H5) {
@@ -167,7 +169,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
       visibleEmoji = true;
     }
 
-    return { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture };
+    return { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture, imgIcon };
   }
 
   get imConfig() {
