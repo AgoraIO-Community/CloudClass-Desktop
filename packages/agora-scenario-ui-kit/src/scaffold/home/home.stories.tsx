@@ -37,10 +37,6 @@ export const HomePage = () => {
     setStartDate(date);
   };
 
-  const onChangeDebug = (debug: boolean) => {
-    setDebug(debug);
-  };
-
   return (
     <Home
       SDKVersion=""
@@ -57,8 +53,6 @@ export const HomePage = () => {
       onChangeScenario={onChangeScenario}
       onChangeText={onChange}
       onChangeStartDate={onChangeStartDate}
-      debug={debug}
-      onChangeDebug={onChangeDebug}
       onClick={() => {
         console.log('click');
       }}

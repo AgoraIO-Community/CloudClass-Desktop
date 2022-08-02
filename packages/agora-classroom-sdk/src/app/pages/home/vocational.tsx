@@ -11,7 +11,6 @@ import {
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import dayjs from 'dayjs';
-import MD5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -19,7 +18,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
 import { Toast, transI18n } from '~ui-kit';
 import { Home } from '~ui-kit/scaffold';
-
+import md5 from 'js-md5';
 import { ToastType } from '@/infra/stores/common/share-ui';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
@@ -90,7 +89,6 @@ export const VocationalHomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
   const [curService, setService] = useState<string>(launchConfig.curService || '');
   const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
-  const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -119,18 +117,12 @@ export const VocationalHomePage = observer(() => {
   const roomSubtype = SCENARIOS_ROOM_SUBTYPE_MAP[curScenario];
 
   const userUuid = useMemo(() => {
-    if (!debug) {
-      return `${MD5(userName)}${role}`;
-    }
-    return `${userId}`;
-  }, [role, userName, debug, userId]);
+    return `${md5(userName)}${userRole}`;
+  }, [role, userName, userId]);
 
   const roomUuid = useMemo(() => {
-    if (!debug) {
-      return `${roomName}${scenario}`;
-    }
-    return `${roomId}`;
-  }, [scenario, roomName, debug, roomId]);
+    return `${md5(roomName)}${scenario}`;
+  }, [scenario, roomName, roomId]);
 
   const onChangeRole = (value: string) => {
     setRole(value);
@@ -169,10 +161,6 @@ export const VocationalHomePage = observer(() => {
 
   const onChangeUserName = (newValue: string) => {
     text['userName'](newValue);
-  };
-
-  const onChangeDebug = (newValue: boolean) => {
-    setDebug(newValue);
   };
 
   const onChangeEncryptionMode = (newValue: string) => {
@@ -327,12 +315,10 @@ export const VocationalHomePage = observer(() => {
         language={language as string}
         onChangeRegion={onChangeRegion}
         onChangeLanguage={onChangeLanguage}
-        debug={debug}
         encryptionMode={encryptionMode}
         encryptionKey={encryptionKey}
         onChangeEncryptionMode={onChangeEncryptionMode}
         onChangeEncryptionKey={onChangeEncryptionKey}
-        onChangeDebug={onChangeDebug}
         onChangeRole={onChangeRole}
         onChangeScenario={onChangeScenario}
         onChangeService={onChangeService}

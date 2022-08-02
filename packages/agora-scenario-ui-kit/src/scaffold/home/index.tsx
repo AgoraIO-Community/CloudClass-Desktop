@@ -21,7 +21,6 @@ export interface HomeAttributes {
   duration: number;
   language: string;
   region: string;
-  debug: boolean;
   encryptionMode: string;
   encryptionKey: string;
   showServiceOptions: boolean;
@@ -70,7 +69,6 @@ export const Home: React.FC<HomeProps> = ({
   onChangeUserId,
   onChangeUserName,
   onChangeRoomName,
-  onChangeDebug,
   onClick,
   showServiceOptions,
   headerRight,

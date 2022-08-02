@@ -11,7 +11,7 @@ import {
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
-import MD5 from 'js-md5';
+import md5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
@@ -57,7 +57,6 @@ export const VocationalHomeH5Page = observer(() => {
   const [duration] = useState<number>(30);
   const [language, setLanguage] = useState<string>('');
   const [region] = useState<EduRegion>(EduRegion.CN);
-  const [debug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
 
@@ -95,18 +94,13 @@ export const VocationalHomeH5Page = observer(() => {
   const roomSubtype = SCENARIOS_ROOM_SUBTYPE_MAP[curScenario];
 
   const userUuid = useMemo(() => {
-    if (!debug) {
-      return `${MD5(userName)}${role}`;
-    }
-    return `${userId}`;
-  }, [role, userName, debug, userId]);
+    return `${md5(userName)}${userRole}`;
+  }, [role, userName, userId]);
 
   const roomUuid = useMemo(() => {
-    if (!debug) {
-      return `${roomName}${scenario}`;
-    }
-    return `${roomId}`;
-  }, [scenario, roomName, debug, roomId]);
+    return `${md5(roomName)}${scenario}`;
+  }, [scenario, roomName, roomId]);
+
 
   const onChangeRole = (value: string) => {
     setRole(value);
