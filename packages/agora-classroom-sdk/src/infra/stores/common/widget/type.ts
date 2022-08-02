@@ -12,17 +12,6 @@ export interface AgoraWidgetMessageListener<T = unknown> {
   onMessage(message: T): void;
 }
 
-export interface AgoraWidgetTrack {
-  size: {
-    width: number;
-    height: number;
-  };
-  position: {
-    xaxis: number;
-    yaxis: number;
-  };
-}
-
 export enum AgoraWidgetTrackMode {
   TrackPositionOnly = 'track-position-only',
   TrackPositionAndDimensions = 'track-position-and-dimensions',

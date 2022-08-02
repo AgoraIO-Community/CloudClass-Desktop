@@ -194,6 +194,9 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _callWidgetUpdateTrack(widget: AgoraWidgetBase, trackProps: unknown) {
     if ((widget as unknown as AgoraTrackSyncedWidget).updateToLocal) {
       (widget as unknown as AgoraTrackSyncedWidget).updateToLocal(trackProps as AgoraWidgetTrack);
+      (widget as unknown as AgoraTrackSyncedWidget).updateZIndexToLocal(
+        (trackProps as AgoraWidgetTrack).zIndex ?? 0,
+      );
     }
   }
 

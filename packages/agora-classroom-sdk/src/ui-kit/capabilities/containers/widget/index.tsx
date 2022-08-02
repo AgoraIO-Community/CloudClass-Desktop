@@ -87,6 +87,7 @@ const WidgetTrackControl: FC<{ widget: AgoraWidgetBase }> = observer(({ widget, 
     dragHandleClassName,
     updateToRemote,
     boundaryClassName,
+    updateZIndexToRemote,
   } = tsw;
 
   const [controlled, setControlled] = useState(() => tsw.controlled);
@@ -102,6 +103,8 @@ const WidgetTrackControl: FC<{ widget: AgoraWidgetBase }> = observer(({ widget, 
     };
   }, []);
 
+  const handleZIndexUpdate = () => updateZIndexToRemote(widget.latestZIndex);
+
   return (
     <TrackCore
       key={widget.widgetId}
@@ -115,7 +118,9 @@ const WidgetTrackControl: FC<{ widget: AgoraWidgetBase }> = observer(({ widget, 
       boundaryName={boundaryClassName}
       track={track}
       zIndex={zIndex}
-      onChange={updateToRemote}>
+      onChange={updateToRemote}
+      onZIndexChange={handleZIndexUpdate}
+    >
       {children}
     </TrackCore>
   );
