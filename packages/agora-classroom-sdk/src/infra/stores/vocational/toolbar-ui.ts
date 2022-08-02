@@ -1,9 +1,14 @@
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { ToolbarUIStore } from '../common/toolbar-ui';
-import { ToolbarItem, ToolbarItemCategory } from '../common/type';
+import { CabinetItemEnum, ToolbarItem, ToolbarItemCategory } from '../common/type';
 
 export class VocationalToolbarUIStore extends ToolbarUIStore {
+  readonly allowedCabinetItems: string[] = [
+    CabinetItemEnum.Whiteboard,
+    CabinetItemEnum.ScreenShare,
+    CabinetItemEnum.Laser,
+  ];
   /**
    * 老师工具栏工具列表
    * @returns

@@ -1,6 +1,6 @@
-import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import { AGError, AGErrorWrapper, bound } from 'agora-rte-sdk';
-import { EduUIStoreBase } from '../base';
+import { AgoraEduSDK } from '@/infra/api';
+import { MimeTypesKind } from '@/infra/utils/board-utils';
+import { IUploadOnlineCoursewareData } from '@/ui-kit/capabilities/containers/cloud-driver/person-resource';
 import {
   AGEduErrorCode,
   CloudDrivePagingOption,
@@ -8,10 +8,17 @@ import {
   CloudDriveResourceUploadStatus,
   EduErrorCenter,
 } from 'agora-edu-core';
-import { IUploadOnlineCoursewareData } from '@/ui-kit/capabilities/containers/cloud-driver/person-resource';
-import { createCloudResource, supportedTypes } from './helper';
-import { AgoraEduSDK } from '@/infra/api';
-import { fileExt2ContentType, extractFileExt, conversionOption } from './helper';
+import { AGError, AGErrorWrapper, bound } from 'agora-rte-sdk';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
+import { SvgIconEnum, transI18n } from '~ui-kit';
+import { EduUIStoreBase } from '../base';
+import {
+  conversionOption,
+  createCloudResource,
+  extractFileExt,
+  fileExt2ContentType,
+  supportedTypes,
+} from './helper';
 import {
   CloudDriveCourseResource,
   CloudDriveH5Resource,
@@ -19,8 +26,6 @@ import {
   CloudDriveLinkResource,
   CloudDriveMediaResource,
 } from './struct';
-import { MimeTypesKind } from '@/infra/utils/board-utils';
-import { SvgIconEnum, transI18n } from '~ui-kit';
 
 export enum FileTypeSvgColor {
   ppt = '#F6B081',
@@ -552,7 +557,6 @@ export class CloudUIStore extends EduUIStoreBase {
   @action
   removePersonalResources = async (singleFileUuid?: string) => {
     const uuids: string[] = [];
-    const { removePersonalResources } = this.classroomStore.cloudDriveStore;
     if (singleFileUuid) {
       // 单个文件删除
       uuids.push(singleFileUuid);
@@ -568,7 +572,7 @@ export class CloudUIStore extends EduUIStoreBase {
       }
     }
     try {
-      await removePersonalResources(uuids);
+      await this.classroomStore.cloudDriveStore.removePersonalResources(uuids);
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
       return;

@@ -1,10 +1,12 @@
 import { useStore } from '@/infra/hooks/ui-store';
+import { SceneSwitch } from '@/ui-kit/capabilities/containers/scene-switch';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
 import { Chat } from '@/ui-kit/capabilities/containers/widget/slots';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';
-import { Aside, Layout } from '~components/layout';
+import { Layout } from '~components/layout';
+import { BigClassAside as Aside } from '~containers/aside';
 import { DialogContainer } from '~containers/dialog';
 import { LoadingContainer } from '~containers/loading';
 import { NavigationBar } from '~containers/nav';
@@ -17,8 +19,7 @@ import Room from '../../room';
 const layoutCls = classnames('edu-room', 'big-class-room', 'bg-white');
 
 export const MixStreamCDNClassScenario = observer(() => {
-  const { streamWindowUIStore, classroomStore } = useStore();
-  const { containedStreamWindowCoverOpacity } = streamWindowUIStore;
+  const { classroomStore } = useStore();
   const {
     roomStore: { recordStatus, recordStreamingUrl },
   } = classroomStore;
@@ -36,25 +37,30 @@ export const MixStreamCDNClassScenario = observer(() => {
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
-        <Layout className={layoutCls} direction="col">
-          <NavigationBar />
-          <Layout className="horizontal">
-            <div className="flex-col flex-grow">
-              <CDNPlayer
-                stream={stream}
-                state={recordStatus}
-                placeholderText={transI18n('fcr_vocational_teacher_absent')}
-              />
-            </div>
-            <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>
-              <Chat />
-            </Aside>
+        <SceneSwitch>
+          <Layout className={layoutCls} direction="col">
+            <NavigationBar />
+            <Layout className="flex-grow items-stretch fcr-room-bg">
+              <Layout
+                className="flex-grow items-stretch relative"
+                direction="col"
+                style={{ paddingTop: 2 }}>
+                <CDNPlayer
+                  stream={stream}
+                  state={recordStatus}
+                  placeholderText={transI18n('fcr_vocational_teacher_absent')}
+                />
+              </Layout>
+              <Aside>
+                <Chat />
+              </Aside>
+            </Layout>
+            <DialogContainer />
+            <LoadingContainer />
           </Layout>
-          <DialogContainer />
-          <LoadingContainer />
-        </Layout>
-        <WidgetContainer />
-        <ToastContainer />
+          <WidgetContainer />
+          <ToastContainer />
+        </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
   );

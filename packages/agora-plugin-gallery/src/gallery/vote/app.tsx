@@ -169,7 +169,7 @@ const ResultSection = observer(() => {
             <span className="result-cursor">{index + 1}.</span>
             <div className="result-info-container">
               <div className="result-info">
-                <span className="vote-text">{value}</span>{' '}
+                <span className="vote-text truncate" title={value}>{value}</span>{' '}
                 <span className="vote-text-percentage">
                   ({pluginStore.pollingResult[index].num}){' '}
                   {Math.floor(pluginStore.pollingResult[index].percentage * 100)}%

@@ -112,6 +112,7 @@
   padding: 4px;
   font-size: 13px;
   color: #191919;
+  word-break: break-all;
 }
 
 .fcr-hx-delete-btn {

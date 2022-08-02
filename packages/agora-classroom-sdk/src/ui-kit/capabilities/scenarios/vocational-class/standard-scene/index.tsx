@@ -1,5 +1,6 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { SceneSwitch } from '@/ui-kit/capabilities/containers/scene-switch';
+import { ScenesController } from '@/ui-kit/capabilities/containers/scenes-controller';
 import { ScreenShareContainer } from '@/ui-kit/capabilities/containers/screen-share';
 import { StreamWindowsContainer } from '@/ui-kit/capabilities/containers/stream-windows-container';
 import { WhiteboardToolbar } from '@/ui-kit/capabilities/containers/toolbar';
@@ -9,8 +10,9 @@ import { EduClassroomConfig, EduRoleTypeEnum, EduRoomServiceTypeEnum } from 'ago
 import { MediaPlayerEvents } from 'agora-rte-sdk';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect, useMemo } from 'react';
-import { Aside, Layout } from '~components/layout';
+import { useEffect, useMemo } from 'react';
+import { Layout } from '~components/layout';
+import { BigClassAside as Aside } from '~containers/aside';
 import { DialogContainer } from '~containers/dialog';
 import { HandsUpContainer } from '~containers/hand-up';
 import { LoadingContainer } from '~containers/loading';
@@ -19,26 +21,13 @@ import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio
 import { RoomBigTeacherStreamContainer } from '~containers/stream/room-big-player';
 import { ToastContainer } from '~containers/toast';
 import { Float } from '~ui-kit';
-import { ScenesController } from '../../../containers/scenes-controller';
 import Room from '../../room';
 
-type Props = {
-  children?: React.ReactNode;
-};
-
-const Content: FC<Props> = ({ children }) => {
-  return <div className="flex-col flex-grow relative">{children}</div>;
-};
 const layoutCls = classnames('edu-room', 'big-class-room', 'bg-white');
 
 export const StandardClassScenario = observer(() => {
   // layout
-  const {
-    classroomStore,
-    streamUIStore,
-    boardUIStore,
-    streamWindowUIStore: { containedStreamWindowCoverOpacity },
-  } = useStore();
+  const { classroomStore, streamUIStore, boardUIStore } = useStore();
   const { teacherCameraStream } = streamUIStore;
   const { streamStore, mediaStore, roomStore } = classroomStore;
   const teacherCameraStreamAudioState = useMemo(
@@ -112,7 +101,7 @@ export const StandardClassScenario = observer(() => {
                 </Float>
                 <StreamWindowsContainer />
               </Layout>
-              <Aside style={{ opacity: containedStreamWindowCoverOpacity }}>
+              <Aside>
                 <RoomBigTeacherStreamContainer />
                 <Chat />
               </Aside>

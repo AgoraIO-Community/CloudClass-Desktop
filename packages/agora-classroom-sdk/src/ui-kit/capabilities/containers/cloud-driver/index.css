@@ -12,7 +12,7 @@
   border-radius: 6px;
   /* border: 1px solid #E3E3EC; */
   position: relative;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 .roster-wrap {
@@ -23,6 +23,10 @@
 .agora-board-resources .icon-hover {
   height: 22px;
   width: 22px;
+}
+
+.agora-board-resources .tabs {
+  overflow: auto;
 }
 
 .agora-board-resources .tabs-nav-list {

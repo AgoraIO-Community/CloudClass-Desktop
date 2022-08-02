@@ -1,4 +1,4 @@
-import { HostingSceneVideo } from '@/ui-kit/capabilities/containers/hosting-scene-video';
+import { HostingSceneVideo } from '@/ui-kit/capabilities/scenarios/vocational-class/hosting-scene/hosting-scene-video';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
 import { observer } from 'mobx-react';
 import { DialogContainer } from '~containers/dialog';
