@@ -169,7 +169,7 @@ export const HomePage = () => {
 
             const shareUrl =
                 AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron ? '' :
-                    `${location.origin}${location.pathname}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}#/share`
+                    `${location.origin}${location.pathname}?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student}&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`
 
             console.log('## get rtm Token from demo server', token);
 
