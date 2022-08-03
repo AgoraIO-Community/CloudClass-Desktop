@@ -1,3 +1,4 @@
+import { AgoraEduSDK } from '@/infra/api';
 import { number2Percent } from '@/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 import {
@@ -9,7 +10,7 @@ import {
   EduRoomServiceTypeEnum,
   LeaveReason,
   RecordMode,
-  RecordStatus,
+  RecordStatus
 } from 'agora-edu-core';
 import {
   AGError,
@@ -17,15 +18,14 @@ import {
   AgoraRteAudioSourceType,
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
-  bound,
+  bound
 } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
-import { DialogCategory } from './share-ui';
-import { AgoraEduSDK } from '@/infra/api';
-import { SvgIconEnum, transI18n } from '~ui-kit';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import { EduUIStoreBase } from './base';
+import { SvgIconEnum, transI18n } from '~ui-kit';
 import { NetworkStateColors } from '~utilities/state-color';
+import { EduUIStoreBase } from './base';
+import { DialogCategory } from './share-ui';
 
 export interface EduNavAction<P = undefined> {
   id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic' | 'Share';
@@ -175,7 +175,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
     const exitAction: EduNavAction<EduNavRecordActionPayload | undefined> = {
       id: 'Exit',
-      title: 'Exit',
+      title: transI18n('biz-header.exit'),
       iconType: SvgIconEnum.EXIT,
       onClick: async () => {
         const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
@@ -252,7 +252,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const teacherMediaActions: EduNavAction[] = [
       {
         id: 'Camera',
-        title: 'camera',
+        title: this.localNavCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
         iconType: this.localNavCameraOff
           ? SvgIconEnum.GHOST_CAMERA_OFF
           : SvgIconEnum.GHOST_CAMERA_ON, // 根据讲台的隐藏和设备的开发控制 icon
@@ -266,7 +266,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       },
       {
         id: 'Mic',
-        title: 'mic',
+        title: this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
         iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
         onClick: async () => {
           try {
@@ -345,7 +345,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const studentMediaActions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [
       {
         id: 'Camera',
-        title: 'camera',
+        title: this.localCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
         iconType: this.localCameraOff ? SvgIconEnum.GHOST_CAMERA_OFF : SvgIconEnum.GHOST_CAMERA_ON,
         onClick: () => {
           try {
@@ -357,7 +357,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       },
       {
         id: 'Mic',
-        title: 'mic',
+        title: this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
         iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
         onClick: async () => {
           try {
@@ -372,7 +372,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const commonActions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [
       {
         id: 'Settings',
-        title: 'Settings',
+        title: transI18n('biz-header.setting'),
         iconType: SvgIconEnum.SET,
         onClick: () => {
           this.shareUIStore.addDialog(DialogCategory.DeviceSetting);

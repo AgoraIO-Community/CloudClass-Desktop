@@ -70,7 +70,7 @@ export const HandsUp = observer<FC<HandsUpProps>>(({ style, className = '' }) =>
         overlayClassName="hands-up-popover"
         content={content}
         placement="topRight">
-        <SvgImg type={SvgIconEnum.HANDS_UP_ACTIVE} size={18} onClick={() => setVisible(!visible)} />
+        <SvgImg type={SvgIconEnum.HANDS_UP_ACTIVE} size={24} onClick={() => setVisible(!visible)} />
       </Popover>
     </div>
   );

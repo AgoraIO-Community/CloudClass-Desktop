@@ -10,7 +10,7 @@
   height: 70px;
   width: 123px;
   border-radius: 2px;
-  z-index: 99;
+  z-index: 10;
 }
 .m-vocational-class .host-stream .video-player,
 .m-vocational-class .host-stream .video-player-overlay {

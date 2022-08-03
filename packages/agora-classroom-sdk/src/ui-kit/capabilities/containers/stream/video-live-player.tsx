@@ -152,7 +152,11 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
 
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      <video src={url} style={style} className={className} ref={videoRef}></video>
+      <video
+        src={url}
+        style={style}
+        className={`pointer-events-none ${className}`}
+        ref={videoRef}></video>
       {interactiveNeeded ? (
         <div
           className="absolute w-full h-full cursor-pointer top-0 left-0 video-live-player-play-btn"
