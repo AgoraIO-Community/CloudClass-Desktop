@@ -1,12 +1,11 @@
 import { Field } from '@/app/components/form-field';
 import { useHomeStore } from '@/infra/hooks';
-import { loadGeneratedFiles, uiConfigs } from '@/infra/utils/config-loader';
 import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { Button, Layout, transI18n, useI18n } from '~ui-kit';
 
 declare const CLASSROOM_SDK_VERSION: string;
-loadGeneratedFiles();
+
 const useForm = <T extends Record<string, string>>({
   initialValues,
   validate,
@@ -74,23 +73,19 @@ const useForm = <T extends Record<string, string>>({
   };
 };
 
-export const LoginForm: FC<{ onSubmit: (values: any) => void }> = ({ onSubmit }) => {
+export const LoginForm: FC<{ onSubmit: (values: any) => void, supportedRoomTypes: EduRoomTypeEnum[] }> = ({ onSubmit, supportedRoomTypes }) => {
   const t = useI18n();
 
   const homeStore = useHomeStore();
-  const scenarioOptionsMap = {
-    [EduRoomTypeEnum.Room1v1Class]: t('home.roomType_1v1'),
-    [EduRoomTypeEnum.RoomSmallClass]: t('home.roomType_interactiveSmallClass'),
-    [EduRoomTypeEnum.RoomBigClass]: t('home.roomType_interactiveBigClass'),
-  };
-  const generateScenarioOptions = (sceneType: string) => {
-    return { text: scenarioOptionsMap[sceneType], value: sceneType };
-  };
-  const scenarioOptions = window.__launchSceneTypes
-    ? window.__launchSceneTypes.split(',').map(generateScenarioOptions)
-    : Object.keys(uiConfigs).length > 0
-    ? Object.keys(uiConfigs).map(generateScenarioOptions)
-    : Object.keys(scenarioOptionsMap).map(generateScenarioOptions);
+
+  const scenarioOptions = useMemo(() => {
+
+    return [
+      { text: t('home.roomType_1v1'), value: `${EduRoomTypeEnum.Room1v1Class}` },
+      { text: t('home.roomType_interactiveSmallClass'), value: `${EduRoomTypeEnum.RoomSmallClass}` },
+      { text: t('home.roomType_interactiveBigClass'), value: `${EduRoomTypeEnum.RoomBigClass}` },
+    ].filter(({ value }) => supportedRoomTypes.includes(parseInt(value)));
+  }, [supportedRoomTypes]);
 
   const roleOptions = [
     { text: t('home.role_teacher'), value: `${EduRoleTypeEnum.teacher}` },

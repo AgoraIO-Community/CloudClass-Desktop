@@ -1,17 +1,16 @@
 import { Layout, Toast, transI18n } from '~ui-kit';
 import './style.css';
 import { addResource } from '../../components/i18n';
-import { FC, useEffect, useState, Fragment } from 'react';
+import { FC, useEffect, useState, Fragment, useRef } from 'react';
 import { useHomeStore } from '@/infra/hooks';
-import { EduRegion, EduRoleTypeEnum } from 'agora-edu-core';
+import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { getBrowserLanguage, storage } from '@/infra/utils';
-import dayjs from 'dayjs';
 import md5 from 'js-md5';
 import { useHistory } from 'react-router';
 import { HomeApi } from './home-api';
 import { HomeLaunchOption } from '@/app/stores/home';
-import { LanguageEnum } from '@/infra/api';
+import { AgoraEduSDK, LanguageEnum } from '@/infra/api';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { v4 as uuidv4 } from 'uuid';
 import { observer } from 'mobx-react';
@@ -22,9 +21,7 @@ import { HomeSettingContainer } from './home-setting';
 import { LoginForm } from './login-form';
 addResource();
 
-const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
-
 const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
 const REACT_APP_AGORA_APP_CERTIFICATE = process.env.REACT_APP_AGORA_APP_CERTIFICATE;
 
@@ -38,7 +35,6 @@ declare global {
     __launchRoomType: string;
     __launchCompanyId: string;
     __launchProjectId: string;
-    __launchSceneTypes: string;
   }
 }
 
@@ -56,12 +52,45 @@ export const HomePage = () => {
   const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [supportedRoomTypes, setSupportedRoomTypes] = useState<EduRoomTypeEnum[]>([EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomSmallClass, EduRoomTypeEnum.RoomBigClass]);
+
+  const builderResource = useRef({
+    scenes: {},
+    themes: {}
+  });
 
   useEffect(() => {
     const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
     const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
     homeStore.setLanguage(language as LanguageEnum);
     homeStore.setRegion(region as EduRegion);
+
+    const companyId = window.__launchCompanyId;
+    const projectId = window.__launchProjectId;
+
+    if (companyId && projectId) {
+      HomeApi.shared.setBuilderDomainRegion(EduRegion.CN);
+      HomeApi.shared.getBuilderResource(companyId, projectId).then(({ scenes, themes }) => {
+        builderResource.current = {
+          scenes: scenes ?? {},
+          themes: themes ? { default: themes } : {},
+        };
+
+        AgoraEduSDK.setParameters(
+          JSON.stringify({
+            uiConfigs: builderResource.current.scenes,
+            themes: builderResource.current.themes,
+          }),
+        );
+
+        setSupportedRoomTypes(
+          AgoraEduSDK.getSupportedRoomTypes()
+        );
+      });
+    }
+
+
+
 
     if (history.location.pathname === '/share') {
       setTimeout(() => {
@@ -77,14 +106,6 @@ export const HomePage = () => {
 
   const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
 
-  let tokenDomain = '';
-  let tokenDomainCollection: any = {};
-
-  try {
-    tokenDomainCollection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
-  } catch (e) {
-    tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
-  }
 
   const handleSubmit = async ({
     roleType,
@@ -113,46 +134,22 @@ export const HomePage = () => {
 
     try {
       setLoading(true);
-      const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-      if (!tokenDomain && tokenDomainCollection) {
-        switch (region) {
-          case 'CN':
-            tokenDomain = tokenDomainCollection['prod_cn'];
-            break;
-          case 'AP':
-            tokenDomain = tokenDomainCollection['prod_ap'];
-            break;
-          case 'NA':
-            tokenDomain = tokenDomainCollection['prod_na'];
-            break;
-          case 'EU':
-            tokenDomain = tokenDomainCollection['prod_eu'];
-            break;
-        }
-      }
 
-      HomeApi.shared.domain = tokenDomain;
+      const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
+
+      HomeApi.shared.setDomainRegion(region);
 
       const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, userRole);
 
       const companyId = window.__launchCompanyId;
       const projectId = window.__launchProjectId;
 
-      let scenes = undefined;
-      let themes = undefined;
-
-      if (companyId && projectId) {
-        ({ scenes, themes } = await HomeApi.shared.getBuilderResource(companyId, projectId));
-      }
-
       const shareUrl =
         AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron
           ? ''
-          : `${location.origin}${
-              location.pathname
-            }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${
-              EduRoleTypeEnum.student
-            }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
+          : `${location.origin}${location.pathname
+          }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student
+          }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
 
       console.log('## get rtm Token from demo server', token);
 
@@ -172,8 +169,8 @@ export const HomePage = () => {
         region: region as EduRegion,
         duration: +duration * 60,
         latencyLevel: 2,
-        scenes: scenes ?? {},
-        themes: themes ? { default: themes } : {},
+        scenes: builderResource.current.scenes,
+        themes: builderResource.current.themes,
         shareUrl,
       };
 
@@ -212,9 +209,7 @@ export const HomePage = () => {
       <MessageDialog />
       <HomeToastContainer />
       <div className="app-home h-full">
-        <nav
-          className="absolute left-0 top-0 w-full text-white"
-          style={{ padding: 32, zIndex: 10 }}>
+        <nav className="absolute left-0 top-0 w-full text-white z-10" style={{ padding: 32 }}>
           <Layout className="justify-between items-end">
             <Layout className="nav-header flex items-center">
               <span className="product-logo" />
@@ -240,7 +235,7 @@ export const HomePage = () => {
             right: 40,
             padding: '36px 54px 26px',
           }}>
-          <LoginForm onSubmit={handleSubmit} />
+          <LoginForm onSubmit={handleSubmit} supportedRoomTypes={supportedRoomTypes} />
         </div>
       </div>
     </Fragment>
