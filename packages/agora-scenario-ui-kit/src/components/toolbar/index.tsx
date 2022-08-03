@@ -80,15 +80,15 @@ export const Toolbar: FC<ToolbarProps> = ({
     };
   }, []);
 
-  const len = Array.isArray(children) ? children.length : 0;
+  // const len = Array.isArray(children) ? children.length : 0;
 
 
-  useEffect(updateShadowState, [len]);
+  useEffect(updateShadowState, []);
 
   const maxHeight =
     // toolbar items height accumulation
     // margin bottom 10 * 10
-    (25 + 10) * len +
+    (25 + 10) * 10 +
     // top button
     // 42 +
     // shadow extra

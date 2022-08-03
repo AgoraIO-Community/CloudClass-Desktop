@@ -66,31 +66,31 @@ export const boardEnabled = (uiConfig: FcrUIConfig) => {
   return uiConfig.engagement.netlessBoard.enable;
 };
 export const boardEraserEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.eraser.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.eraser.enable;
 };
 export const boardHandEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.move.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.move.enable;
 };
 export const boardLaserPointerEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.laserPointer.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.laserPointer.enable;
 };
 export const boardMouseEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.mouse.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.mouse.enable;
 };
 export const boardPencilEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.pencil.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.pencil.enable;
 };
 export const boardSaveEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.save.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.save.enable;
 };
 export const boardSelectorEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.selector.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.selector.enable;
 };
 export const boardSwitchEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.switch.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.switch.enable;
 };
 export const boardTextEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) || uiConfig.engagement.netlessBoard.text.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.text.enable;
 };
 export const chatEnabled = (uiConfig: FcrUIConfig) => {
   return uiConfig.engagement.agoraChat.enable || uiConfig.extension.agoraChat.enable;

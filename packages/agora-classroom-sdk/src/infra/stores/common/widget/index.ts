@@ -11,6 +11,7 @@ import {
   pollEnabled,
   popupQuizEnabled,
   chatEnabled,
+  boardEnabled,
 } from '@/ui-kit/capabilities/containers/visibility/controlled';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
@@ -266,6 +267,9 @@ export class WidgetUIStore extends EduUIStoreBase {
         return prev;
       }
 
+      if (!boardEnabled(AgoraEduSDK.uiConfig) && key === 'netlessBoard') {
+        return prev;
+      }
       prev[key] = value;
 
       return prev;
