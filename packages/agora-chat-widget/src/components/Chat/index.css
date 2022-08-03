@@ -11,17 +11,18 @@
   margin: 0 !important;
 }
 .ant-tabs-tab-btn {
+  @apply text-level3 !important;
+
   /* width: 35px !important; */
   height: 18px !important;
   font-size: 13px !important;
   font-family: 'PingFangSC-Regular', ' PingFang SC' !important;
   font-weight: 400 !important;
-  color: #7b88a0 !important;
   line-height: 18px !important;
   text-align: center !important;
 }
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  @apply text-level1;
+  @apply text-level1 !important;
 }
 /* .chat-icon .ant-switch {
   background-color: #E2E2EE;

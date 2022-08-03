@@ -52,7 +52,7 @@
 }
 
 .video-player-overlay .camera-placeholder {
-  @apply bg-component border-divider border border-solid;
+  @apply bg-background border-divider border border-solid;
   overflow: hidden;
   position: relative;
   height: 100%;

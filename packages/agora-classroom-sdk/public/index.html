@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="./favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Agora online classroom aPaaS project" />
-  <!--
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Agora online classroom aPaaS project" />
+    <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-  <link rel="manifest" href="./manifest.json" />
-  <!--
+    <link rel="manifest" href="./manifest.json" />
+    <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -21,48 +20,48 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-  <title>Agora Flexible Classroom</title>
-  <script>
-    if (location.search) {
-      const params = new URLSearchParams(location.search.split('?')[1]);
+    <title>Agora Flexible Classroom</title>
+    <script>
+      if (location.search) {
+        const params = new URLSearchParams(location.search.split('?')[1]);
 
-      // window parameters
-      const windowID = params.get('id');
-      const args = params.get('args') ? JSON.parse(params.get('args')) : null;
+        // window parameters
+        const windowID = params.get('id');
+        const args = params.get('args') ? JSON.parse(params.get('args')) : null;
 
-      window.__launchWindowID = windowID;
-      window.__launchArgs = args;
+        window.__launchWindowID = windowID;
+        window.__launchArgs = args;
 
-      // builder parameters
-      const region = params.get('region');
-      const language = params.get('language');
-      const roomName = params.get('roomName');
-      const userName = params.get('userName');
-      const roleType = params.get('roleType');
-      const roomType = params.get('roomType');
-      const companyId = params.get('companyId');
-      const projectId = params.get('projectId');
-
-      window.__launchRegion = region;
-      window.__launchLanguage = language;
-      window.__launchRoomName = roomName;
-      window.__launchUserName = userName;
-      window.__launchRoleType = roleType;
-      window.__launchRoomType = roomType;
-      window.__launchCompanyId = companyId;
-      window.__launchProjectId = projectId;
-
-      if (windowID) {
-        this.location.hash = 'window';
+        // builder parameters
+        const region = params.get('region');
+        const language = params.get('language');
+        const roomName = params.get('roomName');
+        const userName = params.get('userName');
+        const roleType = params.get('roleType');
+        const roomType = params.get('roomType');
+        const companyId = params.get('companyId');
+        const projectId = params.get('projectId');
+        const sceneTypes = params.get('sceneTypes');
+        window.__launchRegion = region;
+        window.__launchLanguage = language;
+        window.__launchRoomName = roomName;
+        window.__launchUserName = userName;
+        window.__launchRoleType = roleType;
+        window.__launchRoomType = roomType;
+        window.__launchCompanyId = companyId;
+        window.__launchProjectId = projectId;
+        window.__launchSceneTypes = sceneTypes;
+        if (windowID) {
+          this.location.hash = 'window';
+        }
       }
-    }
-  </script>
-</head>
+    </script>
+  </head>
 
-<body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
-  <!--
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -72,6 +71,5 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-</body>
-
+  </body>
 </html>

@@ -49,13 +49,13 @@ class FcrMultiThemesImpl implements FcrMultiThemes {
        * Icon 主色
        */
       get iconPrimary(): string {
-        return '#7B88A0';
+        return '#90949d';
       },
       /**
        * Icon 副色
        */
       get iconSecondary(): string {
-        return '#fff';
+        return '#90949d80';
       },
       /**
        * 图标被选背景色
@@ -142,13 +142,13 @@ class FcrMultiThemesImpl implements FcrMultiThemes {
        * Icon 主色
        */
       get iconPrimary(): string {
-        return '#D8D8D8';
+        return '#90949d';
       },
       /**
        * Icon 副色
        */
       get iconSecondary(): string {
-        return '#fff';
+        return '#90949d80';
       },
       /**
        * 图标被选背景色

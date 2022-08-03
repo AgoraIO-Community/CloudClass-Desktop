@@ -36,6 +36,7 @@ import {
   loadGeneratedFiles,
   loadTheme,
   loadUIConfig,
+  setDefaultUiConfigs,
   themes,
   uiConfigs,
 } from '../utils/config-loader';
@@ -69,7 +70,6 @@ export class AgoraEduSDK {
   private static _shareUrl: string;
   //default use GLOBAL region(including CN)
   private static region: EduRegion = EduRegion.CN;
-
 
   private static _convertRegion(region: string): EduRegion {
     switch (region) {
@@ -137,6 +137,7 @@ export class AgoraEduSDK {
       Object.keys(uiConfigs).forEach((k) => {
         loadUIConfig(parseInt(k), uiConfigs[k]);
       });
+      setDefaultUiConfigs();
     }
 
     if (themes) {
@@ -242,7 +243,7 @@ export class AgoraEduSDK {
       recordOptions,
       recordRetryTimeout,
       uiMode,
-      shareUrl
+      shareUrl,
     } = option;
     const sessionInfo = {
       userUuid,
@@ -392,8 +393,9 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-      }/edu/apps/${appId}`;
+    const pathPrefix = `${
+      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+    }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',

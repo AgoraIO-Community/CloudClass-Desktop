@@ -10,7 +10,7 @@
 }
 
 .camera-placeholder {
-  @apply bg-component;
+  @apply bg-background;
   overflow: hidden;
   position: relative;
   height: 100%;

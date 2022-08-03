@@ -140,4 +140,6 @@ export enum SvgIconEnum {
   WORD = 'word',
   ZOOM_IN = 'zoom-in',
   ZOOM_OUT = 'zoom-out',
+  MENU_FOLD = 'menu-fold',
+  MENU_UNFOLD = 'menu-unfold',
 }

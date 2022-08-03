@@ -5,16 +5,24 @@ import { FcrMultiThemes, FcrUIConfig } from '../types/config';
 import { baseTheme } from '../configs/base-theme';
 import { room1V1Class, roomMidClass, roomBigClass } from '../configs/base-ui-config';
 
+const defaultUiConfigs = {
+  [EduRoomTypeEnum.Room1v1Class]: room1V1Class,
+  [EduRoomTypeEnum.RoomSmallClass]: roomMidClass,
+  [EduRoomTypeEnum.RoomBigClass]: roomBigClass,
+};
+
 const fcrGlobalStyleSheetId = 'FcrStyleSheet';
 
 export const themes: Record<string, FcrMultiThemes> = {
   default: baseTheme,
 };
 
-export const uiConfigs: Record<string, FcrUIConfig> = {
-  [EduRoomTypeEnum.Room1v1Class]: room1V1Class,
-  [EduRoomTypeEnum.RoomSmallClass]: roomMidClass,
-  [EduRoomTypeEnum.RoomBigClass]: roomBigClass,
+export const uiConfigs: Record<string, FcrUIConfig> = {};
+
+export const setDefaultUiConfigs = () => {
+  Object.keys(defaultUiConfigs).forEach((key) => {
+    if (!uiConfigs[key]) uiConfigs[key] = defaultUiConfigs[key];
+  });
 };
 
 export const loadTheme = (key: string, theme: FcrMultiThemes) => {

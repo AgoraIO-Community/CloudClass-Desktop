@@ -3,10 +3,10 @@
 }
 
 .students-hands-up .student-item {
+  @apply border-b border-solid border-divider;
   width: 100%;
   padding: 4px 10px 4px 16px;
   @apply box-border flex justify-between items-center;
-  border-bottom: 1px solid #eeeef7;
   height: 41px;
 }
 
@@ -21,8 +21,8 @@
 
 .student-box .student-name,
 .student-item .student-name {
+  @apply text-level2;
   font-size: 14px;
-  color: #586376;
   width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -36,7 +36,7 @@
 }
 
 .card-hands-up-active {
-  background-color: #0273ff;
+  @apply bg-brand;
 }
 
 .hands-box-line {
@@ -81,17 +81,15 @@
 }
 
 .hands-up-tip {
+  @apply bg-component border border-solid border-divider text-level1;
   position: absolute;
   padding: 0 10px;
   height: 28px;
-  background: #ffffff;
   box-shadow: 0px 2px 6px 0px rgb(47 65 146 / 15%);
-  border: 1px solid #e1e1ea;
   text-align: center;
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #191919;
   line-height: 28px;
   border-radius: 4px;
   white-space: nowrap;

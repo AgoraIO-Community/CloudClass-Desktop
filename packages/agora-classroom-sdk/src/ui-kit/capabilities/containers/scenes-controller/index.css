@@ -33,30 +33,3 @@
   user-select: none;
   margin: 0 6px;
 }
-
-.scenes-controller-btn .backward-disabled path,
-.scenes-controller-btn .forward-disabled path {
-  fill: #c7c7c799;
-}
-
-.scenes-controller-btn .backward-enabled path,
-.scenes-controller-btn .forward-enabled path {
-  fill: rgb(226, 226, 238);
-}
-.scenes-controller-btn .icon-undo path,
-.scenes-controller-btn .icon-redo path {
-  fill: rgb(123, 136, 160);
-}
-.scenes-controller-btn .undo-disabled,
-.scenes-controller-btn .redo-disabled,
-.scenes-controller-btn .undo-disabled path,
-.scenes-controller-btn .redo-disabled path,
-.scenes-controller-btn .undo-disabled:hover path,
-.scenes-controller-btn .redo-disabled:hover path {
-  fill: #c7c7c799;
-}
-
-.scenes-controller-btn .icon-undo:hover path,
-.scenes-controller-btn .icon-redo:hover path {
-  fill: #0073ff;
-}

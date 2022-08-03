@@ -34,8 +34,8 @@
 }
 
 .chat-message-username {
+  @apply text-level2;
   font-size: 12px;
-  color: #586376;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

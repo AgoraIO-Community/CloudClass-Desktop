@@ -193,7 +193,7 @@ export const InputMsg = ({ allMutePermission }) => {
                 <img src={emojiIcon} className="fcr-hx-emoji-icon" />
               </Popover>
             )}
-            {configUIVisible.imgIcon && (
+            {configUIVisible.screenshotIcon && (
               <div onClick={updateImage} className="fcr-hx-chat-tool-item">
                 <img src={imgIcon} alt="" className="fcr-hx-emoji-icon" />
                 <input

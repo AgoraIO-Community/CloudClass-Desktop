@@ -18,6 +18,7 @@
 
 .fcr-hx-show-chat-icon {
   @apply bg-component;
+  @apply hover:bg-brand;
   right: 2px;
   bottom: 48px;
   width: 40px;

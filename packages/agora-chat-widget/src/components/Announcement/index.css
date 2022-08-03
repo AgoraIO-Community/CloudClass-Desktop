@@ -58,10 +58,11 @@
   /* margin-top: 8px; */
   padding: 15px;
 }
-.edit-content textarea {
+.fcr-hx-edit-content textarea,
+.fcr-hx-edit-content textarea:focus {
   @apply border border-solid border-divider text-level1 bg-component !important;
 }
-.edit-content textarea::-webkit-input-placeholder {
+.fcr-hx-edit-content textarea::-webkit-input-placeholder {
   @apply text-level3;
 }
 .fcr-hx-input-content {

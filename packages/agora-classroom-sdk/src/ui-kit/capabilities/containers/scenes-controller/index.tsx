@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import classNames from 'classnames';
-import { Card, SvgIcon, SvgIconEnum } from '~ui-kit';
+import { Card, SvgIcon, SvgIconEnum, themeContext } from '~ui-kit';
 import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
@@ -16,7 +16,6 @@ export const ScenesController: FC = observer(() => {
     toolbarUIStore: { setTool },
   } = useStore();
 
-
   const {
     currentSceneIndex,
     scenesCount,
@@ -27,10 +26,12 @@ export const ScenesController: FC = observer(() => {
     undoSteps,
     isGrantedBoard,
     isTeacherOrAssistant,
-    mounted
+    mounted,
   } = boardUIStore;
   const isFirstScene = currentSceneIndex === 0;
   const isLastScene = currentSceneIndex + 1 === scenesCount;
+  const { brand, iconPrimary } = useContext(themeContext);
+
   return mounted && (isTeacherOrAssistant || isGrantedBoard) && !isHost ? (
     <Card
       className={classNames('scenes-controller-container')}
@@ -48,9 +49,13 @@ export const ScenesController: FC = observer(() => {
           <SvgIcon
             type={SvgIconEnum.BACKWARD}
             hoverType={SvgIconEnum.BACKWARD}
-            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+            colors={{
+              iconPrimary: isFirstScene ? InteractionStateColors.disabled : iconPrimary,
+            }}
+            hoverColors={{
+              iconPrimary: isFirstScene ? InteractionStateColors.disabled : brand,
+            }}
             canHover={!isFirstScene}
-            className={isFirstScene ? 'backward-disabled' : 'backward-enabled'}
           />
         </div>
         <div className="scenes-controller-info">
@@ -60,27 +65,39 @@ export const ScenesController: FC = observer(() => {
           <SvgIcon
             type={SvgIconEnum.FORWARD}
             hoverType={SvgIconEnum.FORWARD}
-            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+            colors={{
+              iconPrimary: isLastScene ? InteractionStateColors.disabled : iconPrimary,
+            }}
+            hoverColors={{
+              iconPrimary: isLastScene ? InteractionStateColors.disabled : brand,
+            }}
             canHover={!isLastScene}
-            className={isLastScene ? 'forward-disabled' : 'forward-enabled'}
           />
         </div>
         <div className="scenes-controller-btn" onClick={() => setTool('undo')}>
           <SvgIcon
             type={SvgIconEnum.UNDO}
-            className={undoSteps === 0 ? 'undo-disabled' : 'undo'}
             hoverType={SvgIconEnum.UNDO}
             canHover={undoSteps !== 0}
-            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+            colors={{
+              iconPrimary: undoSteps === 0 ? InteractionStateColors.disabled : iconPrimary,
+            }}
+            hoverColors={{
+              iconPrimary: undoSteps === 0 ? InteractionStateColors.disabled : brand,
+            }}
           />
         </div>
         <div className="scenes-controller-btn" onClick={() => setTool('redo')}>
           <SvgIcon
             type={SvgIconEnum.REDO}
-            className={redoSteps === 0 ? 'redo-disabled' : 'redo'}
             hoverType={SvgIconEnum.REDO}
             canHover={redoSteps !== 0}
-            hoverColors={{ iconPrimary: InteractionStateColors.allow }}
+            colors={{
+              iconPrimary: redoSteps === 0 ? InteractionStateColors.disabled : iconPrimary,
+            }}
+            hoverColors={{
+              iconPrimary: redoSteps === 0 ? InteractionStateColors.disabled : brand,
+            }}
           />
         </div>
       </div>
