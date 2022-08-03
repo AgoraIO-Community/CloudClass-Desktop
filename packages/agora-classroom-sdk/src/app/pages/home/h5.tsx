@@ -10,6 +10,7 @@ import {
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
+import md5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
@@ -72,14 +73,14 @@ export const HomeH5Page = observer(() => {
 
   const userUuid = useMemo(() => {
     if (!debug) {
-      return `${userName}${role}`;
+      return `${md5(userName)}${role}`;
     }
     return `${userId}`;
   }, [role, userName, debug, userId]);
 
   const roomUuid = useMemo(() => {
     if (!debug) {
-      return `${roomName}${scenario}`;
+      return `${md5(roomName)}${scenario}`;
     }
     return `${roomId}`;
   }, [scenario, roomName, debug, roomId]);
