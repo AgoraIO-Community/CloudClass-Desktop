@@ -167,27 +167,6 @@ class FcrUIConfigImpl implements FcrUIConfig {
           enable: true,
         };
       },
-      get agoraChat(): FcrAgoraChat & FcrUIBaseProps {
-        return {
-          enable: true,
-          get muteAll(): FcrUIBaseProps {
-            return {
-              enable: true,
-            };
-          },
-          get emoji(): FcrUIBaseProps {
-            return {
-              enable: true,
-            };
-          },
-
-          get picture(): FcrUIBaseProps {
-            return {
-              enable: true,
-            };
-          },
-        };
-      },
     };
   }
   get footer(): FcrFooter {
@@ -195,7 +174,7 @@ class FcrUIConfigImpl implements FcrUIConfig {
   }
   get extension(): FcrExtension {
     return {
-      get agoraChat() {
+      get agoraChat(): FcrAgoraChat & FcrUIBaseProps {
         return {
           enable: true,
           get muteAll(): FcrUIBaseProps {

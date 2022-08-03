@@ -93,20 +93,16 @@ export const boardTextEnabled = (uiConfig: FcrUIConfig) => {
   return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.text.enable;
 };
 export const chatEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.agoraChat.enable || uiConfig.extension.agoraChat.enable;
+  return uiConfig.extension.agoraChat.enable;
 };
 export const chatEmojiEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.agoraChat.emoji.enable || uiConfig.extension.agoraChat.emoji.enable;
+  return uiConfig.extension.agoraChat.emoji.enable;
 };
 export const chatMuteAllEnabled = (uiConfig: FcrUIConfig) => {
-  return (
-    uiConfig.engagement.agoraChat.muteAll.enable || uiConfig.extension.agoraChat.muteAll.enable
-  );
+  return uiConfig.extension.agoraChat.muteAll.enable;
 };
 export const chatPictureEnabled = (uiConfig: FcrUIConfig) => {
-  return (
-    uiConfig.engagement.agoraChat.picture.enable || uiConfig.extension.agoraChat.picture.enable
-  );
+  return uiConfig.extension.agoraChat.picture.enable;
 };
 export const breakoutRoomEnabled = (uiConfig: FcrUIConfig) => {
   return uiConfig.engagement.breakoutRoom.enable;

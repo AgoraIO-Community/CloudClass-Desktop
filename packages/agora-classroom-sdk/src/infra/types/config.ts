@@ -78,7 +78,6 @@ export interface FcrEngagement {
   get roster(): FcrUIBaseProps;
   get raiseHand(): FcrUIBaseProps;
   get netlessBoard(): FcrNetlessBoard & FcrUIBaseProps;
-  get agoraChat(): FcrAgoraChat & FcrUIBaseProps;
 }
 
 /**
