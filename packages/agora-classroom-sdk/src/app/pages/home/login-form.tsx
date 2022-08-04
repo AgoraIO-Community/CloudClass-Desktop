@@ -73,19 +73,10 @@ const useForm = <T extends Record<string, string>>({
   };
 };
 
-export const LoginForm: FC<{ onSubmit: (values: any) => void, supportedRoomTypes: EduRoomTypeEnum[] }> = ({ onSubmit, supportedRoomTypes }) => {
+export const LoginForm: FC<{ onSubmit: (values: any) => void, sceneOptions: { text: string, value: string }[] }> = ({ onSubmit, sceneOptions }) => {
   const t = useI18n();
 
   const homeStore = useHomeStore();
-
-  const scenarioOptions = useMemo(() => {
-
-    return [
-      { text: t('home.roomType_1v1'), value: `${EduRoomTypeEnum.Room1v1Class}` },
-      { text: t('home.roomType_interactiveSmallClass'), value: `${EduRoomTypeEnum.RoomSmallClass}` },
-      { text: t('home.roomType_interactiveBigClass'), value: `${EduRoomTypeEnum.RoomBigClass}` },
-    ].filter(({ value }) => supportedRoomTypes.includes(parseInt(value)));
-  }, [supportedRoomTypes]);
 
   const roleOptions = [
     { text: t('home.role_teacher'), value: `${EduRoleTypeEnum.teacher}` },
@@ -194,7 +185,7 @@ export const LoginForm: FC<{ onSubmit: (values: any) => void, supportedRoomTypes
           width={203}
           value={roomType}
           {...eventHandlers('roomType')}
-          options={scenarioOptions}
+          options={sceneOptions}
           error={errors.roomType}
         />
         <Field

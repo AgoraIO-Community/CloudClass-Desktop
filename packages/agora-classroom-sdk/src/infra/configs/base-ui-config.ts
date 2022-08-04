@@ -17,6 +17,9 @@ class FcrUIConfigImpl implements FcrUIConfig {
   get version(): string {
     return '1.0.0';
   }
+  get name(): string {
+    return '';
+  }
   get header(): FcrHeader {
     return {
       get stateBar(): FcrStateBar & FcrUIBaseProps {

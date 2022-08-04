@@ -146,8 +146,15 @@ export class AgoraEduSDK {
     }
   }
 
-  static getSupportedRoomTypes() {
-    return supportedRoomTypes;
+  static getLoadedScenes() {
+    return supportedRoomTypes.map((roomType) => {
+      const name = uiConfigs[roomType].name ?? '';
+
+      return {
+        name,
+        roomType
+      }
+    });
   }
 
   static config(config: ConfigParams) {

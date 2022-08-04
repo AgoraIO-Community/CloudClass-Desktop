@@ -19,6 +19,8 @@ export enum FcrMultiThemeMode {
 export interface FcrUIConfig {
   /** 配置版本号 */
   get version(): string;
+  /** 场景名称 */
+  get name(): string;
   get header(): FcrHeader;
   get stage(): FcrStage;
   get engagement(): FcrEngagement;

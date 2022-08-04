@@ -1,4 +1,4 @@
-import { Layout, Toast, transI18n } from '~ui-kit';
+import { Layout, Toast, transI18n, useI18n } from '~ui-kit';
 import './style.css';
 import { addResource } from '../../components/i18n';
 import { FC, useEffect, useState, Fragment, useRef } from 'react';
@@ -43,28 +43,22 @@ const regionByLang = {
   en: EduRegion.NA,
 };
 
-export const HomePage = () => {
-  const homeStore = useHomeStore();
-  const history = useHistory();
 
-  const launchConfig = homeStore.launchConfig;
 
-  const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [supportedRoomTypes, setSupportedRoomTypes] = useState<EduRoomTypeEnum[]>([EduRoomTypeEnum.Room1v1Class, EduRoomTypeEnum.RoomSmallClass, EduRoomTypeEnum.RoomBigClass]);
-
+const useBuilderResource = () => {
   const builderResource = useRef({
     scenes: {},
     themes: {}
   });
+  const t = useI18n();
+
+  const defaultScenes = [{ text: t('home.roomType_1v1'), value: `${EduRoomTypeEnum.Room1v1Class}` },
+  { text: t('home.roomType_interactiveSmallClass'), value: `${EduRoomTypeEnum.RoomSmallClass}` },
+  { text: t('home.roomType_interactiveBigClass'), value: `${EduRoomTypeEnum.RoomBigClass}` }];
+
+  const [sceneOptions, setSceneOptions] = useState<{ text: string, value: string }[]>([]);
 
   useEffect(() => {
-    const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
-    const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
-    homeStore.setLanguage(language as LanguageEnum);
-    homeStore.setRegion(region as EduRegion);
-
     const companyId = window.__launchCompanyId;
     const projectId = window.__launchProjectId;
 
@@ -83,13 +77,55 @@ export const HomePage = () => {
           }),
         );
 
-        setSupportedRoomTypes(
-          AgoraEduSDK.getSupportedRoomTypes()
+
+        const options = AgoraEduSDK.getLoadedScenes().map(({ name, roomType }) => ({
+          text: name,
+          value: `${roomType}`
+        }));
+
+        setSceneOptions(
+          options
         );
       });
+    } else {
+      const options = AgoraEduSDK.getLoadedScenes().map(({ name, roomType }) => ({
+        text: name,
+        value: `${roomType}`
+      }));
+
+      setSceneOptions(
+        options
+      );
     }
 
 
+  }, []);
+
+  return {
+    builderResource,
+    sceneOptions: sceneOptions.length ? sceneOptions : defaultScenes
+  };
+}
+
+
+export const HomePage = () => {
+  const homeStore = useHomeStore();
+  const history = useHistory();
+
+  const launchConfig = homeStore.launchConfig;
+
+  const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+
+  const { builderResource, sceneOptions } = useBuilderResource();
+
+  useEffect(() => {
+    const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
+    const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
+    homeStore.setLanguage(language as LanguageEnum);
+    homeStore.setRegion(region as EduRegion);
 
 
     if (history.location.pathname === '/share') {
@@ -235,7 +271,7 @@ export const HomePage = () => {
             right: 40,
             padding: '36px 54px 26px',
           }}>
-          <LoginForm onSubmit={handleSubmit} supportedRoomTypes={supportedRoomTypes} />
+          <LoginForm onSubmit={handleSubmit} sceneOptions={sceneOptions} />
         </div>
       </div>
     </Fragment>
