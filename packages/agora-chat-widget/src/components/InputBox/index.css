@@ -123,12 +123,12 @@ textarea.input-chat {
 }
 
 .fcr-hx-send-btn {
+  @apply bg-brand;
   position: absolute;
   right: 8px;
   bottom: 13px;
   width: 80px;
   height: 30px !important;
-  background: #357bf6;
   border-radius: 15px !important;
 }
 .chat-icon-popover .ant-popover-inner {
