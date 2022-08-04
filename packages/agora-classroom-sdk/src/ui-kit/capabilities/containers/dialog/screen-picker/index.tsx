@@ -96,11 +96,10 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
           {desktopList.map((item) => {
             return (
               <div
-                className={'program-item'}
+                className={`program-item ${
+                  item.id === currentActiveId ? 'program-item-active' : ''
+                }`}
                 key={JSON.stringify(item.id)}
-                style={{
-                  borderColor: item.id === currentActiveId ? '#357BF6' : '#E8E8F2',
-                }}
                 onClick={() => {
                   onActiveItem(item.id! as string);
                 }}>
@@ -109,8 +108,8 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   style={
                     item.imagebase64
                       ? {
-                        backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
-                      }
+                          backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
+                        }
                       : {}
                   }></div>
                 <div className="program-item-title">
@@ -130,11 +129,10 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
           {windowList.map((item) => {
             return (
               <div
-                className={'program-item'}
+                className={`program-item ${
+                  item.id === currentActiveId ? 'program-item-active' : ''
+                }`}
                 key={JSON.stringify(item.id)}
-                style={{
-                  borderColor: item.id === currentActiveId ? '#357BF6' : '#E8E8F2',
-                }}
                 onClick={() => {
                   onActiveItem(item.id! as string);
                 }}>
@@ -143,8 +141,8 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
                   style={
                     item.imagebase64
                       ? {
-                        backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
-                      }
+                          backgroundImage: `url(data:image/png;base64,${item.imagebase64})`,
+                        }
                       : {}
                   }></div>
                 <div className="program-item-title">

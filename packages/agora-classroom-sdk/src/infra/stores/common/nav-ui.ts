@@ -10,7 +10,7 @@ import {
   EduRoomServiceTypeEnum,
   LeaveReason,
   RecordMode,
-  RecordStatus
+  RecordStatus,
 } from 'agora-edu-core';
 import {
   AGError,
@@ -18,7 +18,7 @@ import {
   AgoraRteAudioSourceType,
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
-  bound
+  bound,
 } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
@@ -253,9 +253,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Camera',
         title: this.localNavCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
-        iconType: this.localNavCameraOff
-          ? SvgIconEnum.GHOST_CAMERA_OFF
-          : SvgIconEnum.GHOST_CAMERA_ON, // 根据讲台的隐藏和设备的开发控制 icon
+        iconType: this.localNavCameraOff ? SvgIconEnum.CAMERA_DISABLED : SvgIconEnum.CAMERA_ENABLED, // 根据讲台的隐藏和设备的开发控制 icon
         onClick: () => {
           try {
             this._toggleNavCamera();
@@ -267,7 +265,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Mic',
         title: this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
-        iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
+        iconType: this.localMicOff ? SvgIconEnum.MICROPHONE_OFF : SvgIconEnum.MICROPHONE_ON,
         onClick: async () => {
           try {
             this._toggleLocalAudio();

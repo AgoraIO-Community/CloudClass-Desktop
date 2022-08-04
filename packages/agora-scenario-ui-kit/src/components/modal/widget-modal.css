@@ -16,5 +16,6 @@
 }
 
 .modal-header-slot {
+  @apply text-level1;
   flex-grow: 1;
 }

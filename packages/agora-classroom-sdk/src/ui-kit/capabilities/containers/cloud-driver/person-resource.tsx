@@ -347,21 +347,23 @@ export const PersonalResourcesContainer = observer(() => {
           ) : (
             <Placeholder placeholderType="noFile" />
           )}
-          <Col className="bottom-col">
-            <div className="pagination-wrapper">
-              <Pagination
-                onChange={(page) => {
-                  fetchPersonalResources({
-                    pageNo: page,
-                    pageSize,
-                    resourceName: searchPersonalResourcesKeyword,
-                  });
-                }}
-                current={currentPersonalResPage}
-                total={personalResourcesTotalNum}
-                pageSize={pageSize}></Pagination>
-            </div>
-          </Col>
+          {personalResourcesList.length > 0 && (
+            <Col className="bottom-col">
+              <div className="pagination-wrapper">
+                <Pagination
+                  onChange={(page) => {
+                    fetchPersonalResources({
+                      pageNo: page,
+                      pageSize,
+                      resourceName: searchPersonalResourcesKeyword,
+                    });
+                  }}
+                  current={currentPersonalResPage}
+                  total={personalResourcesTotalNum}
+                  pageSize={pageSize}></Pagination>
+              </div>
+            </Col>
+          )}
           <Row style={{ paddingLeft: 19 }} className="btn-group margin-gap cloud-btn-group">
             <div
               className="cloud-minimize-container"

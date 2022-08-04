@@ -21,13 +21,12 @@
 }
 
 .answer-checked {
-  background: rgb(53, 123, 246);
-  color: rgb(255, 255, 255);
+  @apply text-level1 bg-brand;
 }
 .answer-result-info {
+  @apply text-level1;
   margin-top: 30px;
   font-size: 13px;
-  color: #191919;
 }
 .answer-result-info div {
   margin: 10px auto;
@@ -35,7 +34,7 @@
   line-height: 1.1;
 }
 .answer-result-info span {
-  color: #7b88a0;
+  @apply text-level2;
 }
 .answer-btns-container {
   margin-top: 30px;
@@ -53,8 +52,8 @@
   height: 275px;
 }
 .border-bottom-width-1 {
+  @apply border-divider;
   border-bottom-width: 1px;
-  border-color: rgb(249, 249, 252);
   margin: 0px 0px -1px -1px;
 }
 .answer-btn-container .answer-btn {
@@ -75,9 +74,9 @@
 }
 
 .answer-table {
+  @apply border border-solid border-divider;
   height: 200px;
   border-radius: 4px;
-  border: 1px solid #eeeef7;
   overflow: hidden;
 }
 
@@ -106,10 +105,11 @@
 }
 
 .award-list {
+  @apply bg-component;
+  @apply border border-solid border-divider;
+
   position: absolute;
   bottom: calc(100% + 6px);
-  background: #fff;
-  border: #e2e2f0 1px solid;
   padding: 6px 0;
   box-shadow: 0px 2px 8px 0px rgb(0 0 0 / 15%);
   border-radius: 4px;
@@ -128,5 +128,5 @@
   cursor: pointer;
 }
 .award-list ul li:hover {
-  background: #f9f9fc;
+  @apply bg-icon-selected-color;
 }

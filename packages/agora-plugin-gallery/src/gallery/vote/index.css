@@ -201,19 +201,18 @@ input.vote-item::placeholder {
   cursor: pointer;
 }
 .selection-text {
-  color: #191919;
+  @apply text-level1 border-b border-solid border-divider;
   flex: 1;
   padding-left: 10px;
   height: 100%;
-  border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
 }
 .polling-title-tip {
+  @apply text-brand border border-solid border-brand;
+
   display: inline-block;
-  border: 1px solid #357bf6;
   border-radius: 9px;
-  color: #357bf6;
   font-size: 12px;
   height: 18px;
   line-height: 18px;

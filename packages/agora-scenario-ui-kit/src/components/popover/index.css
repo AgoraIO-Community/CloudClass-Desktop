@@ -178,11 +178,9 @@
 .popover-placement-bottom > .popover-content > .popover-arrow,
 .popover-placement-bottomLeft > .popover-content > .popover-arrow,
 .popover-placement-bottomRight > .popover-content > .popover-arrow {
-  @apply border-divider;
+  @apply border-background;
 
   top: 6px;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
   box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.06);
 }
 

@@ -24,7 +24,7 @@ export const RemoteControlActionBar: FC<IPropsTypes> = (props) => {
   return (
     <div className="remote-control-action-bar">
       <div className="student-list">
-        <span>{t('fcr_share_title_controling')}</span>
+        <span className="text-level1">{t('fcr_share_title_controling')}</span>
         <Select
           value={value}
           options={studentList.map((i) => {
@@ -39,7 +39,7 @@ export const RemoteControlActionBar: FC<IPropsTypes> = (props) => {
       </div>
       <div className="divide"></div>
       <div className="close-btn" onClick={onClose}>
-        <SvgImg type={SvgIconEnum.CLOSE} size={26} colors={{ iconPrimary: "#586376" }} />
+        <SvgImg type={SvgIconEnum.CLOSE} size={26} colors={{ iconPrimary: '#586376' }} />
       </div>
     </div>
   );

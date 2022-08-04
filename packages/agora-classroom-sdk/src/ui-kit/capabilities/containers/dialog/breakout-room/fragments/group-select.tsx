@@ -1,16 +1,24 @@
 import { observer } from 'mobx-react';
-import { CSSProperties, FC, Fragment, MouseEvent, useContext, useMemo, useState, useRef } from 'react';
+import {
+  CSSProperties,
+  FC,
+  Fragment,
+  MouseEvent,
+  useContext,
+  useMemo,
+  useState,
+  useRef,
+} from 'react';
 import { cloneDeep } from 'lodash';
 import { GroupState } from 'agora-edu-core';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox, useI18n } from '~ui-kit';
+import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox, useI18n, Modal } from '~ui-kit';
 import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
 import './index.css';
 import { ConfirmPanel } from '../confirm-panel';
-import { ConfirmDialog } from '../confirm-dialog';
 
 type LinkButtonProps = {
   text: string;
@@ -309,8 +317,8 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
           <span className="tree-node-tips">
             {childrenLength
               ? t('breakout_room.group_current_has_students', {
-                reason: `${childrenLength}`,
-              })
+                  reason: `${childrenLength}`,
+                })
               : t('breakout_room.group_current_empty')}
           </span>
         )}
@@ -358,8 +366,10 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
 
   return (
     <div className="h-full w-full flex flex-col">
-      {showConfirmDialog ? (
-        <ConfirmDialog
+      {showConfirmDialog && (
+        <Modal
+          style={{ width: 300 }}
+          title={t('breakout_room.confirm_stop_group_title')}
           onOk={() => {
             stopGroup(onNext).finally(() => {
               setConfirmDialog(false);
@@ -368,17 +378,20 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
           onCancel={() => {
             setConfirmDialog(false);
           }}
-          onCancelText={t('breakout_room.confirm_stop_group_sure')}>
-          <div className="stop-group-main-text">
-            <div className="stop-group-main-title">
-              {t('breakout_room.confirm_stop_group_title')}
-            </div>
-            <div className="stop-group-sub-title">
-              {t('breakout_room.confirm_stop_group_content')}
-            </div>
+          footer={[
+            <Button key="cancel" type={'secondary'} action="cancel">
+              {t('breakout_room.cancel_submit')}
+            </Button>,
+            <Button key="ok" type={'primary'} action="ok">
+              {t('breakout_room.confirm_stop_group_sure')}
+            </Button>,
+          ]}>
+          <div className="stop-group-sub-title">
+            {t('breakout_room.confirm_stop_group_content')}
           </div>
-        </ConfirmDialog>
-      ) : null}
+        </Modal>
+      )}
+
       <div
         className="overflow-auto py-2 group-scroll-overflow"
         style={{
@@ -473,9 +486,7 @@ const Footer: FC<{
       type={groupState === GroupState.OPEN ? 'danger' : 'primary'}
       className="rounded-btn start-btn"
       onClick={handleGroupState}>
-      {groupState === GroupState.OPEN
-        ? t('breakout_room.stop')
-        : t('breakout_room.start')}
+      {groupState === GroupState.OPEN ? t('breakout_room.stop') : t('breakout_room.start')}
     </Button>
   );
 

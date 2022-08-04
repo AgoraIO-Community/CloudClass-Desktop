@@ -20,6 +20,7 @@ module.exports = {
         divider: 'var(--fcr_system_divider_color)',
         brand: 'var(--fcr_system_brand_color)',
         component: 'var(--fcr_system_component_color)',
+        background: 'var(--fcr_system_background_color)',
         error: 'var(--fcr_system_error_color)',
         warning: 'var(--fcr_system_warning_color)',
         safe: 'var(--fcr_system_safe_color)',

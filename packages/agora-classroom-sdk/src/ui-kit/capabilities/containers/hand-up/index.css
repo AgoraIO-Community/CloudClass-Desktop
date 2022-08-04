@@ -12,6 +12,7 @@
 
 .hands-up {
   cursor: pointer;
+  align-self: flex-end;
 }
 
 .hands-up .fcr-card {
