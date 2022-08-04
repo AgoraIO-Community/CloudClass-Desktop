@@ -72,7 +72,7 @@ export const boardHandEnabled = (uiConfig: FcrUIConfig) => {
   return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.move.enable;
 };
 export const boardLaserPointerEnabled = (uiConfig: FcrUIConfig) => {
-  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.laserPointer.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.laserPointer.enable;
 };
 export const boardMouseEnabled = (uiConfig: FcrUIConfig) => {
   return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.mouse.enable;
@@ -133,7 +133,6 @@ export const toolbarEnabled = (uiConfig: FcrUIConfig) => {
   return (
     boardEraserEnabled(uiConfig) ||
     boardHandEnabled(uiConfig) ||
-    boardLaserPointerEnabled(uiConfig) ||
     boardMouseEnabled(uiConfig) ||
     boardPencilEnabled(uiConfig) ||
     boardSaveEnabled(uiConfig) ||

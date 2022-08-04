@@ -125,10 +125,10 @@ class FcrUIConfigImpl implements FcrUIConfig {
           get save(): FcrUIBaseProps {
             return { enable: true };
           },
-          get laserPointer(): FcrUIBaseProps {
-            return { enable: true };
-          },
         };
+      },
+      get laserPointer(): FcrUIBaseProps {
+        return { enable: true };
       },
       get popupQuiz(): FcrUIBaseProps {
         return {

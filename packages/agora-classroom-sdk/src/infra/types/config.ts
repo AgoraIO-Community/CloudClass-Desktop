@@ -79,6 +79,7 @@ export interface FcrEngagement {
   get breakoutRoom(): FcrUIBaseProps;
   get roster(): FcrUIBaseProps;
   get raiseHand(): FcrUIBaseProps;
+  get laserPointer(): FcrUIBaseProps;
   get netlessBoard(): FcrNetlessBoard & FcrUIBaseProps;
 }
 
@@ -146,8 +147,6 @@ export interface FcrNetlessBoard {
   get move(): FcrUIBaseProps;
 
   get save(): FcrUIBaseProps;
-
-  get laserPointer(): FcrUIBaseProps;
 }
 /**
  * 聊天工具配置

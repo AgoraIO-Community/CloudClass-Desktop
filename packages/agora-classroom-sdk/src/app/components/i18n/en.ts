@@ -1,4 +1,6 @@
 export default {
+  home_product_name: 'Flexible Classroom',
+  home_greeting: 'Welcome Back',
   home_form_field_room: 'Room',
   home_form_field_name: 'Name',
   home_form_field_role: 'Role',

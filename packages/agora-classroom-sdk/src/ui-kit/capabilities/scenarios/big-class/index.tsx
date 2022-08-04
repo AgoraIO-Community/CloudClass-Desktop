@@ -28,7 +28,7 @@ export const BigClassScenario = () => {
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
             <NavigationBar />
-            <Layout className="flex-grow items-stretch fcr-room-bg">
+            <Layout className="flex-grow items-stretch fcr-room-bg h-full">
               <Layout className="flex-grow items-stretch relative" direction="col" style={{ paddingTop: 2 }}>
                 <Whiteboard />
                 <ScreenShareContainer />

@@ -1,4 +1,6 @@
 export default {
+  home_product_name: '灵动课堂',
+  home_greeting: '欢迎使用灵动课堂',
   home_form_field_room: '房间名',
   home_form_field_name: '用户名',
   home_form_field_role: '角色',

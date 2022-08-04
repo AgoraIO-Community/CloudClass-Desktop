@@ -144,7 +144,7 @@ export const LoginForm: FC<{ onSubmit: (values: any) => void, sceneOptions: { te
         e.preventDefault();
         return false;
       }}>
-      <p className="form-header text-center">Welcome Back</p>
+      <p className="form-header text-center">{t('home_greeting')}</p>
       <Layout className="mt-8">
         <Field
           label={t('home_form_field_room')}

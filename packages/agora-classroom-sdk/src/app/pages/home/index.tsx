@@ -105,6 +105,8 @@ export const HomePage = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  const t = useI18n();
+
   const { builderResource, sceneOptions } = useBuilderConfig();
 
   useEffect(() => {
@@ -235,7 +237,7 @@ export const HomePage = () => {
           <Layout className="justify-between items-end">
             <Layout className="nav-header flex items-center">
               <span className="product-logo" />
-              <span className="product-name">Flexible Classroom</span>
+              <span className="product-name">{t('home_product_name')}</span>
             </Layout>
             <Layout>
               {/* <div className='mr-3'>
