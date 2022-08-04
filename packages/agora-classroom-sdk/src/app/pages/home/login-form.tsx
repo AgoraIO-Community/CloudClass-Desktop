@@ -1,7 +1,7 @@
 import { Field } from '@/app/components/form-field';
 import { useHomeStore } from '@/infra/hooks';
-import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
-import { FC, useMemo, useState } from 'react';
+import { EduRoleTypeEnum } from 'agora-edu-core';
+import { FC, useState } from 'react';
 import { Button, Layout, transI18n, useI18n } from '~ui-kit';
 
 declare const CLASSROOM_SDK_VERSION: string;

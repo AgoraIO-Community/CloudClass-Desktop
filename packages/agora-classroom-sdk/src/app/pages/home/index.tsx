@@ -45,7 +45,7 @@ const regionByLang = {
 
 
 
-const useBuilderResource = () => {
+const useBuilderConfig = () => {
   const builderResource = useRef({
     scenes: {},
     themes: {}
@@ -56,7 +56,11 @@ const useBuilderResource = () => {
   { text: t('home.roomType_interactiveSmallClass'), value: `${EduRoomTypeEnum.RoomSmallClass}` },
   { text: t('home.roomType_interactiveBigClass'), value: `${EduRoomTypeEnum.RoomBigClass}` }];
 
-  const [sceneOptions, setSceneOptions] = useState<{ text: string, value: string }[]>([]);
+  const [roomTypes, setRoomTypes] = useState<EduRoomTypeEnum[]>([]);
+
+  const sceneOptions = defaultScenes.filter(({ value }) => {
+    return roomTypes.some((t) => `${t}` === value);
+  });
 
   useEffect(() => {
     const companyId = window.__launchCompanyId;
@@ -77,28 +81,11 @@ const useBuilderResource = () => {
           }),
         );
 
-
-        const options = AgoraEduSDK.getLoadedScenes().map(({ name, roomType }) => ({
-          text: name,
-          value: `${roomType}`
-        }));
-
-        setSceneOptions(
-          options
-        );
+        setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
       });
     } else {
-      const options = AgoraEduSDK.getLoadedScenes().map(({ name, roomType }) => ({
-        text: name,
-        value: `${roomType}`
-      }));
-
-      setSceneOptions(
-        options
-      );
+      setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
     }
-
-
   }, []);
 
   return {
@@ -118,8 +105,7 @@ export const HomePage = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-
-  const { builderResource, sceneOptions } = useBuilderResource();
+  const { builderResource, sceneOptions } = useBuilderConfig();
 
   useEffect(() => {
     const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
