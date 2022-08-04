@@ -122,6 +122,7 @@ export class PluginStore {
       this._widget.classroomStore.api.submitAnswer(roomId, popupQuizId, userUuid, {
         selectedItems,
       });
+      this._widget.updateWidgetProperties({ extra: { ts: Date.now() } });
       this.localOptionPermission = false;
     }
   }
