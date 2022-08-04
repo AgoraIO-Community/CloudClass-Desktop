@@ -129,7 +129,7 @@ export const Modal: ModalType = ({
                   setOpened(false);
                 }}>
                 <SvgImg
-                  type={SvgIconEnum.TRIANGLE_SOLID1}
+                  type={SvgIconEnum.TRIANGLE_SOLID_DOWN}
                   size={20}
                   colors={{ iconPrimary: textLevel1 }}
                 />

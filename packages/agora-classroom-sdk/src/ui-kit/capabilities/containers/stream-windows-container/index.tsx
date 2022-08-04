@@ -41,7 +41,7 @@ export const StreamWindowsContainer = observer(() => {
           <DragableStreamWindow key={streamUuid} info={streamWindow} streamUuid={streamUuid} />
         ))
         : null}
-      <TransitionStreamWindow streamWindows={streamWindows.slice()} streamsBounds={streamsBounds} />
+      <TransitionStreamWindow streamWindows={streamWindows} streamsBounds={streamsBounds} />
     </WindowContainer>
   );
 });
