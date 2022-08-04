@@ -50,6 +50,15 @@ export class WidgetUIStore extends EduUIStoreBase {
     return Object.values(this._widgetInstances);
   }
 
+  @computed
+  get z0Widgets() {
+    return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0);
+  }
+
+  get z10Widgets() {
+    return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
+  }
+
   @action.bound
   createWidget(
     widgetId: string,

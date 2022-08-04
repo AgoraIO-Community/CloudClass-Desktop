@@ -20,6 +20,9 @@ export class AgoraPolling extends AgoraEduToolWidget {
   get widgetName(): string {
     return 'poll';
   }
+  get zContainer(): 0 | 10 {
+    return 10;
+  }
   get hasPrivilege() {
     const { role } = this.classroomConfig.sessionInfo;
     return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role);

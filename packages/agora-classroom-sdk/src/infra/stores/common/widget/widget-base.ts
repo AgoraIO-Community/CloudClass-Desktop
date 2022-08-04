@@ -215,6 +215,13 @@ export abstract class AgoraWidgetBase implements AgoraWidgetRenderable, AgoraMul
   }
 
   /**
+   * 容器层级
+   */
+  get zContainer(): 0 | 10 {
+    return 0;
+  }
+
+  /**
    * 轨迹同步控制器
    */
   get trackController() {

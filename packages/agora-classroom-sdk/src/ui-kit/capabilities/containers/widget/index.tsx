@@ -1,22 +1,29 @@
 import { AgoraTrackSyncedWidget, AgoraWidgetBase } from '@/infra/api/type';
 import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './index.css';
 import { TrackCore } from './track';
 
 export const WidgetContainer = observer(() => {
   const {
-    widgetUIStore: { widgetInstanceList },
+    widgetUIStore: { z0Widgets, z10Widgets },
   } = useStore();
 
   return (
-    <div className="widget-container">
-      {widgetInstanceList.map((w: AgoraWidgetBase) => (
-        <Widget key={w.widgetId} widget={w} />
-      ))}
-    </div>
+    <React.Fragment>
+      <div className="widget-container z-0">
+        {z0Widgets.map((w: AgoraWidgetBase) => (
+          <Widget key={w.widgetId} widget={w} />
+        ))}
+      </div>
+      <div className="widget-container z-10">
+        {z10Widgets.map((w: AgoraWidgetBase) => (
+          <Widget key={w.widgetId} widget={w} />
+        ))}
+      </div>
+    </React.Fragment>
   );
 });
 

@@ -5,7 +5,6 @@
   height: 100%;
   position: absolute;
   pointer-events: none;
-  @apply z-50;
 }
 .widget-container * {
   pointer-events: all;
