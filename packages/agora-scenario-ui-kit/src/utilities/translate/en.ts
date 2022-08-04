@@ -330,7 +330,7 @@ export const en = {
     downloading: 'Download',
     pause: 'Pause',
     upload_success: 'Upload Success',
-    supprotTypeTitle: 'Format of file are support',
+    supprotTypeTitle: 'Supported file formats',
     fileType: 'Type',
     ppt: 'PPT',
     word: 'Word',
