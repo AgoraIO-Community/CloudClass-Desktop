@@ -41,7 +41,7 @@ export const StandardClassScenario = observer(() => {
   const { isOnPodium } = roomStore;
 
   const showHandsUpContainer =
-    EduClassroomConfig.shared.sessionInfo.roomServiceType !== EduRoomServiceTypeEnum.BlendCDN &&
+    EduClassroomConfig.shared.sessionInfo.roomServiceType !== EduRoomServiceTypeEnum.CDN &&
     EduClassroomConfig.shared.sessionInfo.roomServiceType !== EduRoomServiceTypeEnum.MixStreamCDN;
 
   useEffect(() => {

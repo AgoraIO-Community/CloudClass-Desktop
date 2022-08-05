@@ -33,8 +33,8 @@
 }
 
 .vocational-whiteboard .whiteboard-wrapper {
+  @apply bg-background;
   position: relative;
-  background: #fff;
 }
 
 .vocational-whiteboard .whiteboard-wrapper .whiteboard-overlay,

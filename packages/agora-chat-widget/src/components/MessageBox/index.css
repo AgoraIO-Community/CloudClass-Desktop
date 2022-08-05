@@ -102,17 +102,21 @@
 }
 
 .fcr-hx-mute-msg {
+  @apply bg-background text-level2;
   display: flex;
   justify-content: center;
   align-items: center;
   width: auto;
-  background: #f9f9fc;
   border-radius: 4px;
   margin: 25px 40px;
-  padding: 4px;
+  padding: 6px 4px 4px 4px;
   font-size: 13px;
-  color: #191919;
   word-break: break-all;
+}
+
+.fcr-hx-mute-msg img {
+  width: 20px;
+  margin-right: 5px;
 }
 
 .fcr-hx-delete-btn {

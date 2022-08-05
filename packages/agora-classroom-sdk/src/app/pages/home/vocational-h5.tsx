@@ -35,10 +35,10 @@ const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: EduRoomSubtypeEnum } = {
 };
 
 const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } = {
-  'premium-service': EduRoomServiceTypeEnum.RTC,
-  'standard-service': EduRoomServiceTypeEnum.Live,
-  'latency-service': EduRoomServiceTypeEnum.BlendCDN,
-  'mix-service': EduRoomServiceTypeEnum.MixRTCCDN,
+  'premium-service': EduRoomServiceTypeEnum.LivePremium,
+  'standard-service': EduRoomServiceTypeEnum.LiveStandard,
+  'latency-service': EduRoomServiceTypeEnum.CDN,
+  'mix-service': EduRoomServiceTypeEnum.Fusion,
   'mix-stream-cdn-service': EduRoomServiceTypeEnum.MixStreamCDN,
   'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
@@ -100,7 +100,6 @@ export const VocationalHomeH5Page = observer(() => {
   const roomUuid = useMemo(() => {
     return `${md5(roomName)}${scenario}`;
   }, [scenario, roomName, roomId]);
-
 
   const onChangeRole = (value: string) => {
     setRole(value);
@@ -198,13 +197,14 @@ export const VocationalHomeH5Page = observer(() => {
           HomeApi.shared.domain = tokenDomain;
           const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
-          const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
+          const channelProfile = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? 0 : 1;
           const webRTCCodec =
-            roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-            roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+            roomServiceType === EduRoomServiceTypeEnum.CDN ||
+            roomServiceType === EduRoomServiceTypeEnum.Fusion
               ? 'h264'
               : 'vp8';
-          const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
+          const webRTCMode =
+            roomServiceType === EduRoomServiceTypeEnum.LiveStandard ? 'live' : 'rtc';
           const config: HomeLaunchOption = {
             appId,
             sdkDomain: domain,

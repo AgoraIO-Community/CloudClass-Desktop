@@ -57,9 +57,9 @@ export const StandardClassScenario = observer(() => {
 
   const showHandsUp = useMemo(() => {
     return (
-      roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN ||
-      roomServiceType === EduRoomServiceTypeEnum.RTC ||
-      roomServiceType === EduRoomServiceTypeEnum.Live
+      roomServiceType === EduRoomServiceTypeEnum.Fusion ||
+      roomServiceType === EduRoomServiceTypeEnum.LivePremium ||
+      roomServiceType === EduRoomServiceTypeEnum.LiveStandard
     );
   }, [roomServiceType]);
 
@@ -75,7 +75,7 @@ export const StandardClassScenario = observer(() => {
         <div
           className={cls({
             'm-vocational-class': 1,
-            'cdn-class': roomServiceType === EduRoomServiceTypeEnum.BlendCDN,
+            'cdn-class': roomServiceType === EduRoomServiceTypeEnum.CDN,
           })}>
           <VocationalBoardContainer />
           <PodiumList streams={podiumStreams} />

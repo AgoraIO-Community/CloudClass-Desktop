@@ -55,15 +55,15 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
   const [state, setState] = useState(VideoPlayerState.Initializing);
 
   const setTimeHandle = useCallback((currentTime: number) => {
-    if (videoRef.current && currentTime >= 0) {
-      const time =
-        currentTime >= videoRef.current.duration ? videoRef.current.duration : currentTime;
+    if (videoRef.current && currentTime >= 0 && videoRef.current.currentTime < currentTime) {
+      const time = Math.min(videoRef.current.duration, currentTime);
       videoRef.current.currentTime = time;
     }
   }, []);
 
   const playHandle = useCallback((currentTime: number) => {
     if (videoRef.current) {
+      setTimeHandle(currentTime);
       videoRef.current
         ?.play()
         .then(() => {

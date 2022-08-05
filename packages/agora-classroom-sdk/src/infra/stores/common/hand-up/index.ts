@@ -1,20 +1,13 @@
-import { computed, observable, action, runInAction } from 'mobx';
-import { EduUIStoreBase } from '../base';
-import { bound, AGError, Lodash } from 'agora-rte-sdk';
 import {
-  AGServiceErrorCode,
-  EduClassroomConfig,
-  PodiumSrouce,
-  EduRoleTypeEnum,
-  EduRoomSubtypeEnum,
-  EduRoomServiceTypeEnum,
-  HandUpProgress,
-  RteRole2EduRole,
-  EduRoomTypeEnum,
+    AGServiceErrorCode,
+    EduClassroomConfig, EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomSubtypeEnum, EduRoomTypeEnum, HandUpProgress, PodiumSrouce, RteRole2EduRole
 } from 'agora-edu-core';
+import { AGError, bound, Lodash } from 'agora-rte-sdk';
+import { action, computed, observable, runInAction } from 'mobx';
+import { EduUIStoreBase } from '../base';
 
-import { OnPodiumStateEnum, FetchUserType, FetchUserParam } from '../type';
 import { transI18n } from '~ui-kit';
+import { FetchUserParam, FetchUserType, OnPodiumStateEnum } from '../type';
 
 export type UserWaveArmInfo = {
   userUuid: string;
@@ -48,7 +41,7 @@ export class HandUpUIStore extends EduUIStoreBase {
   get isMixCDNRTC() {
     return (
       this.isVocational &&
-      EduClassroomConfig.shared.sessionInfo.roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+      EduClassroomConfig.shared.sessionInfo.roomServiceType === EduRoomServiceTypeEnum.Fusion
     );
   }
 
