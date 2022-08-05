@@ -1,3 +1,7 @@
+.invite-table-wrap {
+  @apply bg-component border border-solid border-divider;
+}
+
 .invite-table-wrap .search {
   padding: 0 15px;
   height: 30px;
@@ -17,8 +21,8 @@
 }
 
 .invite-table-wrap .search .input-search::-webkit-input-placeholder {
+  @apply text-level1;
   font-size: 13px;
-  color: rgba(0, 0, 0, 0.6);
 }
 .invite-table-wrap .loading {
   position: absolute;
@@ -28,10 +32,6 @@
   color: #e2e2e2;
 }
 
-.invite-table-wrap .table {
-  border-top: 1px solid #eeeef7;
-}
-
 .table-row-item.table-header .table-col-item {
   @apply text-level2;
 }
@@ -39,12 +39,6 @@
 .invite-table-wrap .table-row-item {
   font-size: 13px;
   padding: 8px 20px 8px 20px;
-  background-color: #fff;
-  border-bottom: 1px solid #eeeef7;
-}
-.invite-table-wrap .table-header.table-row-item {
-  border-bottom: 2px solid #eeeef7;
-  background-color: #f9f9fc;
 }
 
 .invite-table-wrap .table-row-item:hover {
@@ -54,10 +48,6 @@
 .invite-table-wrap .table-row-item .table-col-item:last-child {
   width: 70px;
   flex: none;
-}
-
-.invite-table-wrap .table-col-item {
-  color: #191919;
 }
 
 .invite-table-wrap .table-col-item .pure-material-checkbox > span::before {

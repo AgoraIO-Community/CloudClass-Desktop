@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { transI18n } from '~components/i18n';
 import { ROLE } from '../../contants';
-import icon_cautions from '../../themes/img/icon-cautions.png';
+import icon_cautions from '../../themes/svg/warning.svg';
 
 import './index.css';
 export const CmdMsg = ({ item }) => {

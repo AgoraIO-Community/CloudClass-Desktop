@@ -1,7 +1,11 @@
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
 import { useHomeStore } from '@/infra/hooks';
+import { ToastType } from '@/infra/stores/common/share-ui';
+import { FcrMultiThemeMode } from '@/infra/types/config';
 import { GlobalStorage, storage } from '@/infra/utils';
+import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -11,6 +15,7 @@ import {
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import dayjs from 'dayjs';
+import md5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -18,11 +23,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
 import { Toast, transI18n } from '~ui-kit';
 import { Home } from '~ui-kit/scaffold';
-import md5 from 'js-md5';
-import { ToastType } from '@/infra/stores/common/share-ui';
-import { FcrMultiThemeMode } from '@/infra/types/config';
-import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { HomeApi } from './home-api';
 import { HomeSettingContainer } from './home-setting';
 import { MessageDialog } from './message-dialog';
@@ -41,17 +41,17 @@ const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: EduRoomSubtypeEnum } = {
   'mid-class': EduRoomSubtypeEnum.Standard,
 };
 const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } = {
-  'premium-service': EduRoomServiceTypeEnum.RTC,
-  'standard-service': EduRoomServiceTypeEnum.Live,
-  'latency-service': EduRoomServiceTypeEnum.BlendCDN,
-  'mix-service': EduRoomServiceTypeEnum.MixRTCCDN,
+  'premium-service': EduRoomServiceTypeEnum.LivePremium,
+  'standard-service': EduRoomServiceTypeEnum.LiveStandard,
+  'latency-service': EduRoomServiceTypeEnum.CDN,
+  'mix-service': EduRoomServiceTypeEnum.Fusion,
   'mix-stream-cdn-service': EduRoomServiceTypeEnum.MixStreamCDN,
   'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
 
 export const webRTCCodecH264 = [
-  EduRoomServiceTypeEnum.BlendCDN,
-  EduRoomServiceTypeEnum.MixRTCCDN,
+  EduRoomServiceTypeEnum.CDN,
+  EduRoomServiceTypeEnum.Fusion,
   EduRoomServiceTypeEnum.MixStreamCDN,
   EduRoomServiceTypeEnum.HostingScene,
 ];
@@ -214,9 +214,9 @@ export const VocationalHomePage = observer(() => {
       const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
-      const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
+      const channelProfile = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? 0 : 1;
       const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
-      const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
+      const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.LiveStandard ? 'live' : 'rtc';
 
       const needPretest = vocationalNeedPreset(role, roomServiceType, roomSubtype);
 

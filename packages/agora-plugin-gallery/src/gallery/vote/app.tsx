@@ -1,16 +1,16 @@
-import React from 'react';
-import { observer } from 'mobx-react';
-import { Button, CheckBox, Input, transI18n } from '~ui-kit';
-import { usePluginStore } from './hooks';
-import reduceSvg from './reduce.svg';
-import addSvg from './add.svg';
-import './index.css';
 import { isEmpty } from 'lodash';
+import { observer } from 'mobx-react';
+import React from 'react';
+import { Button, CheckBox, Input, transI18n } from '~ui-kit';
+import addSvg from './add.svg';
+import { usePluginStore } from './hooks';
+import './index.css';
+import reduceSvg from './reduce.svg';
 
 const MAX_LENGTH = 50;
 
 const App = () => (
-  <div style={{ padding: '21px 14px' }}>
+  <div className="w-full" style={{ padding: '21px 14px' }}>
     <Title />
     <Content />
     <VoteBtns />
@@ -169,7 +169,9 @@ const ResultSection = observer(() => {
             <span className="result-cursor">{index + 1}.</span>
             <div className="result-info-container">
               <div className="result-info">
-                <span className="vote-text truncate" title={value}>{value}</span>{' '}
+                <span className="vote-text break-all" title={value}>
+                  {value}
+                </span>{' '}
                 <span className="vote-text-percentage">
                   ({pluginStore.pollingResult[index].num}){' '}
                   {Math.floor(pluginStore.pollingResult[index].percentage * 100)}%
@@ -216,8 +218,8 @@ const SelectionSection = observer(() => {
               />
             )}
           </div>
-          <div className="selection-text">
-            <span>{option}</span>
+          <div className="selection-text break-all" title={option}>
+            {option}
           </div>
         </label>
       ))}
