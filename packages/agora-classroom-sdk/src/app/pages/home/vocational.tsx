@@ -297,7 +297,7 @@ export const VocationalHomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
-        showServiceOptions
+        showServiceOptions={false}
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}

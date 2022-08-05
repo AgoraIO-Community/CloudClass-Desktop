@@ -41,7 +41,7 @@ export const H5Login: React.FC<any> = ({
     { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
 
-  if (true) {
+  if (false) {
     serviceOptions.push(
       { label: transI18n('home.serviceType_mix_stream_cdn'), value: 'mix-stream-cdn-service' },
       { label: transI18n('home.serviceType_hosting_scene'), value: 'hosting-scene' },
