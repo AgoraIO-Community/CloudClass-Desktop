@@ -1,5 +1,5 @@
 .fcr-hx-user {
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: absolute;
   width: 100%;
@@ -45,18 +45,16 @@
   /* width: 36px !important;
     height: 16px !important; */
   border-radius: 8px !important;
-  opacity: 0.3 !important;
   text-align: center !important;
   /* padding: 0 !important; */
 }
 
 .fcr-hx-teacher-tag {
-  border: 1px solid #3c86f7 !important;
-  color: #3c86f7 !important;
+  @apply text-brand border border-solid border-brand !important;
 }
 
 .fcr-hx-student-tag {
-  border: 1px solid #abb1ba !important;
+  @apply border border-solid border-divider !important;
 }
 
 .fcr-hx-tag-text {
@@ -69,7 +67,7 @@
 }
 
 .fcr-hx-teacher-text {
-  color: #357bf6;
+  @apply text-brand;
 }
 
 .fcr-hx-mute-icon {

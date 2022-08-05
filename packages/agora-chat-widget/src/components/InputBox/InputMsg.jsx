@@ -8,7 +8,7 @@ import { messageAction } from '../../redux/actions/messageAction';
 import { setQuestioinStateAction } from '../../redux/actions/roomAction';
 import imgIcon from '../../themes/img/img.png';
 import screenshotIcon from '../../themes/img/screenshot.png';
-import emojiIcon from '../../themes/svg/emoji.svg';
+import emojiIcon from '../../themes/img/emoji.png';
 import { Emoji } from '../../utils/emoji';
 import isElctronPlatform from '../../utils/platform';
 import { Button } from '../Button';
@@ -219,8 +219,11 @@ export const InputMsg = ({ allMutePermission }) => {
             {configUIVisible.showQuestionBox && (
               <div className="chat-question-container" onClick={toggleQuestionState}>
                 <Radio checked={isQuestion}>
-                  <div className={isQuestion ? 'fcr-hx-question-text question-selected' : 'fcr-hx-question-text'}>
-                  {transI18n('question')}
+                  <div
+                    className={
+                      isQuestion ? 'fcr-hx-question-text question-selected' : 'fcr-hx-question-text'
+                    }>
+                    {transI18n('question')}
                   </div>
                 </Radio>
               </div>

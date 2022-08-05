@@ -117,7 +117,7 @@
 }
 
 .popover-arrow {
-  @apply bg-component;
+  @apply bg-background;
   position: absolute;
   display: block;
   width: 8.48528137px;
@@ -130,12 +130,8 @@
 .popover-placement-top > .popover-content > .popover-arrow,
 .popover-placement-topLeft > .popover-content > .popover-arrow,
 .popover-placement-topRight > .popover-content > .popover-arrow {
-  @apply border-divider;
+  @apply border-background;
   bottom: 6.2px;
-  border-top-color: transparent;
-
-  border-left-color: transparent;
-  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.07);
 }
 
 .popover-placement-top > .popover-content > .popover-arrow {
@@ -178,7 +174,8 @@
 .popover-placement-bottom > .popover-content > .popover-arrow,
 .popover-placement-bottomLeft > .popover-content > .popover-arrow,
 .popover-placement-bottomRight > .popover-content > .popover-arrow {
-  /* @apply border-background; */
+  @apply border-background;
+
   top: 6px;
   box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.06);
 }

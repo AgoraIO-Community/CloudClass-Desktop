@@ -70,6 +70,7 @@
   min-height: 84px !important;
   border-radius: 4px !important;
   border: 1px solid #ececf1 !important;
+  max-height: 300px;
 }
 
 .fcr-hx-menu {
@@ -117,7 +118,7 @@
   word-break: break-all;
   white-space: pre-wrap;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -230,6 +231,6 @@
   height: 30px;
   margin: 0 8px !important;
 }
-.delete-modal .ant-btn-primary {
+.fcr-hx-delete-modal .ant-btn-primary {
   @apply border border-solid border-brand text-white !important;
 }
