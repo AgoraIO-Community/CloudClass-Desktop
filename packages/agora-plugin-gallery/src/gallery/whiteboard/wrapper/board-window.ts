@@ -531,6 +531,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
   destroy() {
     if (this._windowManager) {
       this._windowManager.destroy();
+      this._windowManager = undefined;
       this._eventBus.emit(FcrBoardMainWindowEvent.Unmount);
     }
     this._destroyed = true;

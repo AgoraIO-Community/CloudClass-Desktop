@@ -31,7 +31,7 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
   private _room?: Room;
   private _boardView?: FcrBoardMainWindow;
   private _eventBus: AGEventEmitter = new AGEventEmitter();
-  private _joined = false;
+  private _connState: BoardConnectionState = BoardConnectionState.Disconnected;
 
   constructor(
     private _appId: string,
@@ -71,10 +71,9 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
   }
 
   async join(config: FcrBoardRoomJoinConfig) {
-    if (this._joined) {
+    if (this._connState !== BoardConnectionState.Disconnected) {
       return;
     }
-    this._joined = true;
     const joinParams = {
       region: this._region,
       uuid: config.roomId,
@@ -124,9 +123,9 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
   }
 
   async leave() {
-    this._joined = false;
     if (this._room) {
       this._room.disconnect();
+      this._room = undefined;
     }
   }
 
@@ -160,23 +159,28 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
   @Log.silence
   private _handleConnectionStateUpdated(phase: RoomPhase) {
     if (phase === RoomPhase.Connecting) {
+      this._connState = BoardConnectionState.Connecting;
       this._eventBus.emit(
         FcrBoardRoomEvent.ConnectionStateChanged,
         BoardConnectionState.Connecting,
       );
     } else if (phase === RoomPhase.Connected) {
+      this._connState = BoardConnectionState.Connected;
       this._eventBus.emit(FcrBoardRoomEvent.ConnectionStateChanged, BoardConnectionState.Connected);
     } else if (phase === RoomPhase.Reconnecting) {
+      this._connState = BoardConnectionState.Reconnecting;
       this._eventBus.emit(
         FcrBoardRoomEvent.ConnectionStateChanged,
         BoardConnectionState.Reconnecting,
       );
     } else if (phase === RoomPhase.Disconnected) {
+      this._connState = BoardConnectionState.Disconnected;
       this._eventBus.emit(
         FcrBoardRoomEvent.ConnectionStateChanged,
         BoardConnectionState.Disconnected,
       );
     } else if (phase === RoomPhase.Disconnecting) {
+      this._connState = BoardConnectionState.Disconnecting;
       this._eventBus.emit(
         FcrBoardRoomEvent.ConnectionStateChanged,
         BoardConnectionState.Disconnecting,
