@@ -1,5 +1,5 @@
 import { AGError, AgoraRteMediaSourceState, bound, Log, Logger } from 'agora-rte-sdk';
-import { action, computed, Lambda, observable, reaction, reaction } from 'mobx';
+import { action, computed, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { CameraPlaceholderType } from '../type';
 import { v4 as uuidv4 } from 'uuid';

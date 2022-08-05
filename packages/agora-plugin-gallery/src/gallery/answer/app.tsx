@@ -32,6 +32,8 @@ const Content = observer(() => {
     myAnswer,
   } = pluginStore;
 
+  const btnDisabled = optionPermissions.includes('not-allowed');
+
   return (
     <>
       {isShowResultDetail && <ResultDetail />}
@@ -40,10 +42,9 @@ const Content = observer(() => {
           {answerList.map((value: string, index: number) => (
             <span
               key={index}
-              className={`answer-option ${optionPermissions} ${
-                isSelectedAnswer(value) ? 'answer-checked' : ''
-              }`}
-              onClick={(_) => handleOptionClick(value)}>
+              className={`answer-option ${optionPermissions} ${isSelectedAnswer(value) ? 'answer-checked' : ''
+                }`}
+              onClick={!btnDisabled ? (_) => handleOptionClick(value) : () => { }}>
               {value}
             </span>
           ))}
