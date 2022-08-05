@@ -332,6 +332,11 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
         this.logger.info('Fcr board start reconnecting');
         boardRoom.join(joinConfig);
       }
+      if (state === BoardConnectionState.Connected) {
+        if (this._boardMainWindow) {
+          this._boardMainWindow.emitPageInfo();
+        }
+      }
       this.broadcast(AgoraExtensionWidgetEvent.BoardConnStateChanged, state);
     });
 
@@ -353,6 +358,9 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
 
   private _deliverWindowEvents(mainWindow: FcrBoardMainWindow) {
     mainWindow.on(FcrBoardMainWindowEvent.MountSuccess, () => {
+      if (this._boardMainWindow) {
+        this._boardMainWindow.emitPageInfo();
+      }
       this.broadcast(AgoraExtensionWidgetEvent.BoardMountStateChanged, BoardMountState.Mounted);
     });
     mainWindow.on(FcrBoardMainWindowEvent.Unmount, () => {
