@@ -4,7 +4,7 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useRef } from 'react';
-import { SteamPlayerH5, StreamPlaceholder } from '../../../../containers/stream';
+import { StreamPlayerH5, StreamPlaceholder } from '../../../../containers/stream';
 import { useDrag } from '../../hooks/useDrag';
 import './index.css';
 
@@ -18,7 +18,7 @@ const TeacherStreamPlayer: FC<MobileStreamPlayerProps> = observer(() => {
   const { teacherCameraStream } = streamUIStore;
 
   return teacherCameraStream ? (
-    <SteamPlayerH5 stream={teacherCameraStream} />
+    <StreamPlayerH5 stream={teacherCameraStream} />
   ) : (
     <StreamPlaceholder role={EduRoleTypeEnum.teacher} />
   );

@@ -236,14 +236,15 @@ export const StreamPlayer: FC<{
   );
 });
 
-type StreamPlayerStandardProps = {
+type StreamPlayerH5Props = {
   stream: EduStreamUI;
   toolbarDisabled?: boolean;
   className?: string;
+  style?: CSSProperties;
 };
 
-export const SteamPlayerH5 = observer<FC<StreamPlayerStandardProps>>(
-  ({ stream, toolbarDisabled = true, className = '' }) => {
+export const StreamPlayerH5 = observer<FC<StreamPlayerH5Props>>(
+  ({ stream, toolbarDisabled = true, className = '', style }) => {
     const [toolbarVisible, setToolbarVisible] = useState(false);
 
     const handleMouseEnter = () => {
@@ -256,7 +257,8 @@ export const SteamPlayerH5 = observer<FC<StreamPlayerStandardProps>>(
 
     return (
       <div
-        className={`fcr-stream-player-standard ${className}`}
+        className={`fcr-stream-player-h5 ${className}`}
+        style={style}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}>
         <StreamPlayerCameraPlaceholder stream={stream} />
