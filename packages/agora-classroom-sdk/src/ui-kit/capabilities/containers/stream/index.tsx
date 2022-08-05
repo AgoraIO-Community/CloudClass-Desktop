@@ -242,7 +242,7 @@ type StreamPlayerStandardProps = {
   className?: string;
 };
 
-export const SteamPlayerStandard = observer<FC<StreamPlayerStandardProps>>(
+export const SteamPlayerH5 = observer<FC<StreamPlayerStandardProps>>(
   ({ stream, toolbarDisabled = true, className = '' }) => {
     const [toolbarVisible, setToolbarVisible] = useState(false);
 
