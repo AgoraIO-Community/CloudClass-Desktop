@@ -9,7 +9,7 @@
 }
 
 .chat-message-name-row span {
-  color: rgb(53, 123, 246);
+  @apply text-brand;
   font-size: 12px;
 }
 
@@ -43,6 +43,8 @@
 }
 
 .chat-message-content {
+  @apply text-level1;
+
   min-height: 38px;
   border-radius: 4px;
   padding: 9px 10px;
@@ -53,9 +55,9 @@
 }
 
 .chat-message-content.ghost {
-  border: 1px solid #ececf1;
+  @apply border border-solid border-divider;
 }
 
 .chat-message-content.blue {
-  background-color: #e1ebfc;
+  @apply bg-background text-level1;
 }

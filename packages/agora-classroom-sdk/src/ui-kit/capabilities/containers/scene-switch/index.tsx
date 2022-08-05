@@ -13,7 +13,7 @@ export const SceneSwitch: FC<Props> = observer(({ children }) => {
 
   useEffect(() => {
     shareUIStore.setLayoutReady(!groupUIStore.joiningSubRoom);
-  }, [groupUIStore.joiningSubRoom])
+  }, [groupUIStore.joiningSubRoom]);
 
   return (
     <div className="w-full h-full bg-white">
@@ -28,17 +28,19 @@ const PageLoading = () => {
 
   return (
     <div className="page-loading">
-      <Card className="absolute inline-flex flex-col inset-auto p-4" style={{
-        width: 'unset!important',
-        height: 'unset!important',
-        borderRadius: 12
-      }}>
+      <Card
+        className="absolute inline-flex flex-col inset-auto p-4"
+        style={{
+          width: 'unset!important',
+          height: 'unset!important',
+          borderRadius: 12,
+        }}>
         <Loading />
-        <p className="m-0">
+        <p className="m-0 text-level1">
           {layoutUIStore.isInSubRoom
             ? transI18n('fcr_group_joining', {
-              reason: layoutUIStore.currentSubRoomName,
-            })
+                reason: layoutUIStore.currentSubRoomName,
+              })
             : transI18n('fcr_group_back_main_room')}
         </p>
       </Card>

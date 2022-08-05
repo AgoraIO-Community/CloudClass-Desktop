@@ -200,7 +200,7 @@ body,
 .hands-up-manager > .fcr-card:hover path,
 .hands-up-sender:hover path,
 .roster-btn:hover path,
-.chat-panel:hover path {
+.chat-min:hover path {
   fill: #fff;
 }
 

@@ -22,7 +22,7 @@ export const ChatMin: FC<ChatMinProps> = ({
   });
   return (
     <div className={cls} onClick={() => onClick && onClick()} {...restProps}>
-      <SvgImg type={SvgIconEnum.CHAT} colors={{ iconPrimary: InteractionStateColors.normal }} />
+      <SvgImg type={SvgIconEnum.CHAT} />
       {unreadCount ? (
         <div className="unread-count">
           {/* <span>{unreadCount < 100 ? unreadCount : '99+'}</span> */}

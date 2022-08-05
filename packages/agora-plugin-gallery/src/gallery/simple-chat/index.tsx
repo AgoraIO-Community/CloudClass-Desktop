@@ -11,7 +11,7 @@ import { default as classnames, default as classNames } from 'classnames';
 import { observer } from 'mobx-react';
 import { useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { ChatNew, SimpleChatNew } from '~ui-kit';
+import { ChatNew, SimpleChatNew, ThemeProvider } from '~ui-kit';
 import { Context } from './chatContext';
 import { WidgetChatUIStore } from './chatStore';
 
@@ -154,7 +154,9 @@ export class AgoraChatWidget extends AgoraWidgetBase {
 
     ReactDOM.render(
       <Context.Provider value={{ widgetStore }}>
-        <App />
+        <ThemeProvider value={this.theme}>
+          <App />
+        </ThemeProvider>
       </Context.Provider>,
       dom,
     );

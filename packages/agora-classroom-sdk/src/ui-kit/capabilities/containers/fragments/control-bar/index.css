@@ -14,7 +14,6 @@
 }
 
 .fcr-remote-control-bar-select {
-  @apply border border-solid border-divider;
   width: 180px;
   padding-right: 10px;
   margin-right: 10px;
