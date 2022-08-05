@@ -1,5 +1,5 @@
 import { AGError, AgoraRteMediaSourceState, bound, Log, Logger } from 'agora-rte-sdk';
-import { action, computed, Lambda, observable, reaction } from 'mobx';
+import { action, computed, Lambda, observable, reaction, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { CameraPlaceholderType } from '../type';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,6 +28,7 @@ type AddToastArgs = Omit<SettingToast, 'id'>;
 export class DeviceSettingUIStore extends EduUIStoreBase {
   private _disposers: Array<Lambda> = [];
   onInstall() {
+    // 摄像头设备变更
     this._disposers.push(
       reaction(
         () => this.cameraAccessors,
@@ -66,7 +67,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         },
       ),
     );
-
+    // 麦克风设备变更
     this._disposers.push(
       reaction(
         () => this.micAccessors,
@@ -105,7 +106,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         },
       ),
     );
-
     // 处理视频设备变动
     this._disposers.push(
       computed(() => this.classroomStore.mediaStore.videoCameraDevices).observe(
@@ -135,7 +135,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         },
       ),
     );
-
     // 处理录音设备变动
     this._disposers.push(
       computed(() => this.classroomStore.mediaStore.audioRecordingDevices).observe(
@@ -165,7 +164,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         },
       ),
     );
-
     // 处理扬声器设备变动
     this._disposers.push(
       computed(() => this.classroomStore.mediaStore.audioPlaybackDevices).observe(
@@ -232,7 +230,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     return {
       classroomState: this.classroomStore.connectionStore.classroomState,
       recordingDeviceId: this.classroomStore.mediaStore.recordingDeviceId,
-      localCameraStreamUuid: this.classroomStore.streamStore.localMicStreamUuid,
+      localMicStreamUuid: this.classroomStore.streamStore.localMicStreamUuid,
     };
   }
 
