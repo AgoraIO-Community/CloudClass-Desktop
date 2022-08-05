@@ -77,10 +77,8 @@
 }
 
 .chat-notice-msg {
-  @apply flex justify-center items-center w-full text-level1;
+  @apply flex justify-center items-center w-full text-level2 bg-background border border-solid border-divider;
   height: 32px;
-  background: #f9f9fc;
-  border: 1px solid #ececf1;
   font-size: 12px;
   font-weight: 400;
   top: 44px;
@@ -94,10 +92,10 @@
   align-items: center;
 }
 
-.chat-notice-msg svg {
+.chat-notice-msg svg path {
+  fill: var(--fcr_system_error_color);
   margin-right: 5px;
   font-size: 17px;
-  color: #f04c36;
 }
 
 .chat-history {

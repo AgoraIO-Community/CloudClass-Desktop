@@ -55,6 +55,8 @@
 }
 
 .fcr-hx-msg-text {
+  @apply text-level1;
+
   margin: 8px 8px 0 0;
   max-width: 60%;
   min-height: 20px;
@@ -65,22 +67,22 @@
 }
 
 .fcr-hx-msg-data {
+  @apply text-level1;
   /* width: 200px; */
   min-height: 20px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #1c1c1c;
   line-height: 20px;
 }
 
 .fcr-hx-msg-text-me {
-  background: #e1ebfc;
+  @apply bg-background;
 }
 
 .fcr-hx-msg-text-other {
-  background: #ffffff;
-  border: 1px solid #ececf1;
+  @apply bg-background border border-solid border-divider;
+
   display: inline-block;
 }
 
@@ -92,12 +94,13 @@
 }
 
 .fcr-hx-no-msgs-text {
+  @apply text-level3;
+
   width: 89px;
   height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #7d8798;
   line-height: 18px;
 }
 

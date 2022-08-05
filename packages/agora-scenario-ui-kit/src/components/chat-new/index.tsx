@@ -127,7 +127,7 @@ export const SimpleChatNew: FC<ChatProps> = ({
             ) : null}
             {showCloseIcon ? (
               <span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
-                <SvgImg type={SvgIconEnum.CHAT} />
+                <SvgImg type={SvgIconEnum.MINIMIZE} />
               </span>
             ) : null}
           </span>
@@ -223,7 +223,7 @@ export const ChatNew: FC<ChatProps> = ({
             ) : null}
             {showCloseIcon ? (
               <span style={{ cursor: 'pointer' }} onClick={() => onCollapse && onCollapse()}>
-                <SvgImg type={SvgIconEnum.CHAT} />
+                <SvgImg type={SvgIconEnum.MINIMIZE} />
               </span>
             ) : null}
           </span>

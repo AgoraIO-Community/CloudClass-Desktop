@@ -2,7 +2,9 @@ import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
 import { useHomeStore } from '@/infra/hooks';
+import { FcrMultiThemeMode } from '@/infra/types/config';
 import { getBrowserLanguage, storage } from '@/infra/utils';
+import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -22,7 +24,13 @@ import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
-
+const useTheme = () => {
+  useEffect(() => {
+    loadGeneratedFiles();
+    const theme = themes['default'][FcrMultiThemeMode.light];
+    applyTheme(theme);
+  }, []);
+};
 export const HomeH5Page = observer(() => {
   const homeStore = useHomeStore();
   const launchConfig = homeStore.launchConfig;
@@ -39,7 +47,7 @@ export const HomeH5Page = observer(() => {
   const [debug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
-
+  useTheme();
   useEffect(() => {
     const lang = homeStore.launchOption.language || getBrowserLanguage();
     changeLanguage(lang);

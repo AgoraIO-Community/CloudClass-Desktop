@@ -8,18 +8,20 @@
 }
 
 .fcr-hx-all-mute {
+  @apply text-level2;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .fcr-hx-all-mute-text {
+  @apply text-level2;
+
   width: 53px;
   height: 18px;
   font-size: 13px;
   font-family: 'PingFangSC-Regular', 'PingFang SC';
   font-weight: 400;
-  color: #7d8798;
   line-height: 18px;
   margin-right: 5px;
 }
