@@ -5,7 +5,10 @@ export const useExtensionCabinets = () => {
   const { widgetUIStore, classroomStore } = useStore();
 
   const openExtensionCabinet = useCallback((id: string, remote = true) => {
-    const trackProps = { position: { xaxis: 0.5, yaxis: 0.5 } };
+    const nextZIndex =
+      classroomStore.widgetStore.widgetController?.zIndexController.incrementZIndex();
+
+    const trackProps = { position: { xaxis: 0.5, yaxis: 0.5 }, zIndex: nextZIndex };
     widgetUIStore.createWidget(id, {
       trackProperties: trackProps,
       userProperties: {},

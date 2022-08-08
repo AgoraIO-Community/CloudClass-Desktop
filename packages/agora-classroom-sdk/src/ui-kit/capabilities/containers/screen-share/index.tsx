@@ -1,11 +1,11 @@
-import { observer } from 'mobx-react';
-import React, { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/infra/hooks/ui-store';
 import { EduStream } from 'agora-edu-core';
-import classnames from 'classnames';
-import './index.css';
-import { SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
 import { AGRenderMode } from 'agora-rte-sdk';
+import classnames from 'classnames';
+import { observer } from 'mobx-react';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
+import './index.css';
 
 const ScreenShareLocalTrackPlayer = observer(() => {
   const {
@@ -50,7 +50,11 @@ const ScreenShareRemoteTrackPlayer = observer(
   },
 );
 
-export const ScreenShareContainer = observer(() => {
+export type ScreenShareContainerProps = {
+  className?: string;
+}
+
+export const ScreenShareContainer = observer<FC<ScreenShareContainerProps>>(({className = ""}) => {
   const {
     boardUIStore: {
       boardAreaHeight
@@ -61,9 +65,9 @@ export const ScreenShareContainer = observer(() => {
     },
   } = useStore();
 
-  const remotecls = classnames('remote-screen-share-container', 'absolute', 'bottom-0');
+  const remotecls = classnames('remote-screen-share-container', 'absolute', 'bottom-0',className);
 
-  const localcls = classnames('local-screen-share-container');
+  const localcls = classnames('local-screen-share-container',className);
 
   return screenShareStream || isControlled ? (
     <React.Fragment>

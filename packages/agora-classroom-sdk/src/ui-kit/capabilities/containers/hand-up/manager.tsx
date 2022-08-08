@@ -1,12 +1,12 @@
-import { FC, useCallback, useState, useEffect, useMemo } from 'react';
-import { BaseWaveArmProps, UserWaveArmInfo } from './types';
-import classnames from 'classnames';
-import { Card, Popover, SvgIcon, SvgIconEnum, SvgImg } from '~components';
-import { throttle } from 'lodash';
-import { useInterval } from '@/infra/hooks/utilites';
 import { useStore } from '@/infra/hooks/ui-store';
+import { useInterval } from '@/infra/hooks/utilites';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
+import classnames from 'classnames';
+import { throttle } from 'lodash';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { Card, Popover, SvgIcon, SvgIconEnum, SvgImg } from '~components';
 import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { BaseWaveArmProps, UserWaveArmInfo } from './types';
 
 export interface WaveArmManagerProps extends BaseWaveArmProps {
   hasWaveArmUser: boolean;
@@ -68,39 +68,22 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
         trigger="hover"
         content={content}
         placement="leftBottom">
-        {isVocational ? (
-          <Card
-            width={width}
-            height={height}
-            borderRadius={borderRadius}
-            className={twinkleFlag ? 'card-hands-up-active' : ''}>
-            <div className="hands-box-line">
-              <SvgImg
-                onClick={showInviteContainer}
-                type={SvgIconEnum.TEACHER_HANDS_UP_ACTIVE}
-                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.on } : {}}
-                size={24}
-              />
-            </div>
-          </Card>
-        ) : (
-          <Card
-            width={width}
-            height={height}
-            borderRadius={borderRadius}
-            className={twinkleFlag ? 'card-hands-up-active' : ''}>
-            <div className="hands-box-line">
-              <SvgImg
-                type={SvgIconEnum.TEACHER_HANDS_UP_ACTIVE}
-                colors={twinkleFlag ? { iconPrimary: InteractionStateColors.on } : {}}
-                size={24}
-              />
-            </div>
-            {waveArmCount ? (
-              <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
-            ) : null}
-          </Card>
-        )}
+        <Card
+          width={width}
+          height={height}
+          borderRadius={borderRadius}
+          className={twinkleFlag ? 'card-hands-up-active' : ''}>
+          <div className="hands-box-line">
+            <SvgImg
+              type={SvgIconEnum.HANDS_UP}
+              colors={twinkleFlag ? { iconPrimary: InteractionStateColors.allow } : {}}
+              size={24}
+            />
+          </div>
+          {waveArmCount ? (
+            <span className="hands-up-count">{waveArmCount > 99 ? '99+' : waveArmCount}</span>
+          ) : null}
+        </Card>
       </Popover>
     </div>
   );
@@ -181,7 +164,7 @@ export const StudentsWaveArmList: FC<StudentsWaveArmListProps> = ({
                 <SvgIcon
                   type={SvgIconEnum.INVITE_TO_PODIUM}
                   hoverType={SvgIconEnum.INVITE_TO_PODIUM}
-                  hoverColors={{ iconPrimary: InteractionStateColors.on }}
+                  hoverColors={{ iconPrimary: InteractionStateColors.allow }}
                   onClick={() => onClick(item.userUuid)}
                 />
               )}

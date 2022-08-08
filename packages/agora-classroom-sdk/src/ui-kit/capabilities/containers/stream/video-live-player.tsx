@@ -55,15 +55,15 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
   const [state, setState] = useState(VideoPlayerState.Initializing);
 
   const setTimeHandle = useCallback((currentTime: number) => {
-    if (videoRef.current && currentTime >= 0) {
-      const time =
-        currentTime >= videoRef.current.duration ? videoRef.current.duration : currentTime;
+    if (videoRef.current && currentTime >= 0 && videoRef.current.currentTime < currentTime) {
+      const time = Math.min(videoRef.current.duration, currentTime);
       videoRef.current.currentTime = time;
     }
   }, []);
 
   const playHandle = useCallback((currentTime: number) => {
     if (videoRef.current) {
+      setTimeHandle(currentTime);
       videoRef.current
         ?.play()
         .then(() => {
@@ -152,7 +152,11 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
 
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      <video src={url} style={style} className={className} ref={videoRef}></video>
+      <video
+        src={url}
+        style={style}
+        className={`pointer-events-none ${className}`}
+        ref={videoRef}></video>
       {interactiveNeeded ? (
         <div
           className="absolute w-full h-full cursor-pointer top-0 left-0 video-live-player-play-btn"

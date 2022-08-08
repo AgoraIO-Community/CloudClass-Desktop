@@ -8,6 +8,7 @@ export enum BizPageRouter {
   LaunchPage = 'launch',
   PretestPage = 'pretest',
   TestHomePage = 'test_home',
+  ShareLinkPage = 'share_home',
   Incognito = 'Incognito',
   TestRecordPage = 'test_record',
   TestH5HomePage = 'test_h5_home',

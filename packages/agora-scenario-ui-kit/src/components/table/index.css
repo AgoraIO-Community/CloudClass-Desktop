@@ -11,13 +11,13 @@
 }
 
 .table-col-item {
+  @apply text-level1;
   @apply flex;
   @apply flex-1;
   @apply items-center;
   font-size: 13px;
   /* font-family: PingFangSC-Regular, PingFang SC; */
   font-weight: 400;
-  color: #7b88a0;
   /* justify-content: center; */
 }
 
@@ -80,7 +80,7 @@
 }
 
 .btn-group {
-  margin-left: 1px;
+  margin: 0 0 10px 0;
   display: flex;
   gap: 10px;
 }

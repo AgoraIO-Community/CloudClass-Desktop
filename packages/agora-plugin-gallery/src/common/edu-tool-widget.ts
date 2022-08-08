@@ -35,8 +35,15 @@ export abstract class AgoraEduToolWidget
   get zIndex(): number {
     return this.trackController?.zIndex || 0;
   }
-  updateZIndex(): void {
-    this.trackController?.updateZIndex(this.latestZIndex);
+  @bound
+  updateZIndexToRemote(zIndex: number) {
+    this.trackController?.updateRemoteZIndex(zIndex);
+    this.widgetController.zIndexController.setZIndex(zIndex);
+  }
+  @bound
+  updateZIndexToLocal(zIndex: number) {
+    this.trackController?.updateLocalZIndex(zIndex);
+    this.widgetController.zIndexController.setZIndex(zIndex);
   }
   get draggable(): boolean {
     return true;

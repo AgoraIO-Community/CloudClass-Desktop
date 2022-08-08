@@ -78,6 +78,11 @@ export class BoardUIStore extends EduUIStoreBase {
     return this.boardApi.pageCount;
   }
 
+  @computed
+  get mounted() {
+    return this.boardApi.mounted;
+  }
+
   onInstall() {
     const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
     if (role === EduRoleTypeEnum.student) {

@@ -3,6 +3,7 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import uuidv4 from 'uuid';
 import { transI18n } from '~ui-kit';
+import { bound } from 'agora-rte-sdk';
 
 export class LayoutUIStore extends EduUIStoreBase {
   @observable
@@ -41,15 +42,18 @@ export class LayoutUIStore extends EduUIStoreBase {
   }
 
   onInstall(): void {
-    EduEventCenter.shared.onClassroomEvents((event) => {
-      if (event === AgoraEduClassroomEvent.BatchRewardReceived) {
-        runInAction(() => {
-          this.awardAnims.push({
-            id: uuidv4(),
-          });
+    EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvents);
+  }
+
+  @bound
+  private _handleClassroomEvents(event: AgoraEduClassroomEvent) {
+    if (event === AgoraEduClassroomEvent.BatchRewardReceived) {
+      runInAction(() => {
+        this.awardAnims.push({
+          id: uuidv4(),
         });
-      }
-    });
+      });
+    }
   }
 
   @action.bound
@@ -69,5 +73,7 @@ export class LayoutUIStore extends EduUIStoreBase {
     );
   }
 
-  onDestroy(): void {}
+  onDestroy(): void {
+    EduEventCenter.shared.offClassroomEvents(this._handleClassroomEvents);
+  }
 }

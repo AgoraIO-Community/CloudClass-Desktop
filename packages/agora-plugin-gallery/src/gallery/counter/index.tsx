@@ -1,4 +1,4 @@
-import { transI18n, WidgetModal } from '~ui-kit';
+import { ThemeProvider, transI18n, WidgetModal } from '~ui-kit';
 import { Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
 import { observable, action } from 'mobx';
@@ -9,7 +9,7 @@ import { AgoraEduToolWidget } from '../../common/edu-tool-widget';
 import { AgoraWidgetController, EduRoleTypeEnum } from 'agora-edu-core';
 import { AgoraExtensionWidgetEvent } from '@/infra/api';
 export class AgoraCountdown extends AgoraEduToolWidget {
-  private _store?: PluginStore
+  private _store?: PluginStore;
   @observable
   roomProperties: any = {};
   @observable
@@ -20,8 +20,12 @@ export class AgoraCountdown extends AgoraEduToolWidget {
     return 'countdownTimer';
   }
 
+  get zContainer(): 0 | 10 {
+    return 10;
+  }
+
   get hasPrivilege() {
-    const { role } = this.classroomConfig.sessionInfo
+    const { role } = this.classroomConfig.sessionInfo;
     return [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role);
   }
 
@@ -32,18 +36,16 @@ export class AgoraCountdown extends AgoraEduToolWidget {
     return 144;
   }
 
-
   onInstall(controller: AgoraWidgetController) {
     controller.broadcast(AgoraExtensionWidgetEvent.RegisterCabinetTool, {
       id: this.widgetName,
       name: transI18n('widget_countdown.appName'),
       iconType: 'countdown',
-    },
-    );
+    });
   }
 
   onUninstall(controller: AgoraWidgetController) {
-    controller.broadcast(AgoraExtensionWidgetEvent.UnregisterCabinetTool, this.widgetName)
+    controller.broadcast(AgoraExtensionWidgetEvent.UnregisterCabinetTool, this.widgetName);
   }
 
   @action
@@ -77,11 +79,15 @@ export class AgoraCountdown extends AgoraEduToolWidget {
     this._dom = dom;
     ReactDOM.render(
       <Provider store={this._store}>
-        <WidgetModal title={transI18n('widget_countdown.appName')} closable={this.controlled} onCancel={this.handleClose} onResize={
-          this.handleResize
-        }>
-          <App widget={this} />
-        </WidgetModal>
+        <ThemeProvider value={this.theme}>
+          <WidgetModal
+            title={transI18n('widget_countdown.appName')}
+            closable={this.controlled}
+            onCancel={this.handleClose}
+            onResize={this.handleResize}>
+            <App widget={this} />
+          </WidgetModal>
+        </ThemeProvider>
       </Provider>,
       dom,
     );

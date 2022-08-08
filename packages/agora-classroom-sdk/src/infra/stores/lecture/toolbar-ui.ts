@@ -1,3 +1,4 @@
+import { EduClassroomConfig } from 'agora-edu-core';
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { ToolbarUIStore } from '../common/toolbar-ui';
@@ -113,5 +114,49 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
       ];
     }
     return _tools;
+  }
+
+  @computed
+  get studentTools(): ToolbarItem[] {
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    const mounted = this.boardApi.mounted;
+    const whiteboardAuthorized = this.boardApi.grantedUsers.has(userUuid);
+
+    if (!mounted || !whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
+      return [];
+    }
+    return [
+      ToolbarItem.fromData({
+        value: 'clicker',
+        label: 'scaffold.clicker',
+        icon: 'select',
+        category: ToolbarItemCategory.Clicker,
+      }),
+      ToolbarItem.fromData({
+        // selector use clicker icon
+        value: 'selection',
+        label: 'scaffold.selector',
+        icon: 'clicker',
+        category: ToolbarItemCategory.Selector,
+      }),
+      ToolbarItem.fromData({
+        value: 'pen',
+        label: 'scaffold.pencil',
+        icon: 'pen',
+        category: ToolbarItemCategory.PenPicker,
+      }),
+      ToolbarItem.fromData({
+        value: 'text',
+        label: 'scaffold.text',
+        icon: 'text',
+        category: ToolbarItemCategory.Text,
+      }),
+      ToolbarItem.fromData({
+        value: 'eraser',
+        label: 'scaffold.eraser',
+        icon: 'eraser',
+        category: ToolbarItemCategory.Eraser,
+      }),
+    ];
   }
 }

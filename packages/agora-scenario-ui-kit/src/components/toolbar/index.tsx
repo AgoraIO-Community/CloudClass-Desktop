@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect } from 'react';
+import { FC, useState, useRef, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '~ui-kit/components/util/type';
 import unfoldAbsent from './assets/close-default.svg';
@@ -7,6 +7,7 @@ import unfoldHover from './assets/close-hover.svg';
 import foldHover from './assets/open-hover.svg';
 import './index.css';
 import { useMounted } from '~ui-kit/utilities/hooks';
+import { SvgIconEnum, SvgImg, themeContext } from '~ui-kit';
 export { Pens } from './pens';
 export { ToolCabinet } from './tool-cabinet';
 export { BoardCleaners } from './board-cleaners';
@@ -19,19 +20,12 @@ export interface ToolbarProps extends BaseProps {
   onOpenedChange?: (opened: boolean) => void;
 }
 
-const menus: { [key: string]: string } = {
-  [`fold-absent`]: foldAbsent,
-  [`unfold-absent`]: unfoldAbsent,
-  [`fold-hover`]: foldHover,
-  [`unfold-hover`]: unfoldHover,
-};
-
 export const Toolbar: FC<ToolbarProps> = ({
   className,
   style,
   defaultOpened = true,
   onOpenedChange,
-  children
+  children,
 }) => {
   const animTimer = useRef<null | ReturnType<typeof window.setTimeout>>(null);
   const [opened, setOpened] = useState<boolean>(defaultOpened);
@@ -41,7 +35,7 @@ export const Toolbar: FC<ToolbarProps> = ({
   const animContainer = useRef<HTMLDivElement | null>(null);
   const [reachEnd, setReachEnd] = useState<boolean>(false);
   const [reachTop, setReachTop] = useState<boolean>(false);
-
+  const { component, brand, iconPrimary } = useContext(themeContext);
   const cls = classnames({
     [`toolbar`]: 1,
     [`opened`]: opened,
@@ -80,15 +74,14 @@ export const Toolbar: FC<ToolbarProps> = ({
     };
   }, []);
 
-  const len = Array.isArray(children) ? children.length : 0;
+  // const len = Array.isArray(children) ? children.length : 0;
 
-
-  useEffect(updateShadowState, [len]);
+  useEffect(updateShadowState, []);
 
   const maxHeight =
     // toolbar items height accumulation
     // margin bottom 10 * 10
-    (25 + 10) * len +
+    (25 + 10) * 10 +
     // top button
     // 42 +
     // shadow extra
@@ -107,7 +100,7 @@ export const Toolbar: FC<ToolbarProps> = ({
         <div
           className={`menu ${opened ? 'unfold' : 'fold'}`}
           style={{
-            right: opened ? 30 : 0,
+            right: opened ? 30 : -8,
             // zIndex: opened ? -1 : 0,
           }}
           onMouseEnter={() => setMenuHover(true)}
@@ -139,9 +132,10 @@ export const Toolbar: FC<ToolbarProps> = ({
               //0.5s * 0.5
             }, 250);
           }}>
-          <img
-            src={menus[`${opened ? 'unfold' : 'fold'}-${menuHover ? 'hover' : 'absent'}`]}
-            alt="menu"
+          <SvgImg
+            style={{ width: 32, height: 66 }}
+            type={opened ? SvgIconEnum.MENU_FOLD : SvgIconEnum.MENU_UNFOLD}
+            colors={{ iconPrimary: component, iconSecondary: menuHover ? brand : iconPrimary }}
           />
         </div>
         <div className="tools" ref={toolbarScrollEl}>
@@ -163,4 +157,3 @@ export const Toolbar: FC<ToolbarProps> = ({
     </div>
   );
 };
-

@@ -19,6 +19,7 @@ type TrackSyncingProps = {
   zIndex?: number;
   track: Track;
   onChange: (end: boolean, pos: Point, dimensions?: Dimensions, options?: TrackOptions) => void;
+  onZIndexChange: () => void;
 };
 
 const forceUpdateRndBounds = (rnd: Rnd, boundary: HTMLDivElement) => {
@@ -61,6 +62,8 @@ export const TrackCore: React.FC<TrackSyncingProps> = observer(
     boundaryName,
     track,
     onChange,
+    zIndex,
+    onZIndexChange
   }) => {
     const rootRef = useRef<Rnd | null>(null);
 
@@ -71,6 +74,7 @@ export const TrackCore: React.FC<TrackSyncingProps> = observer(
       () =>
       ({
         drag: {
+          onMouseDown: onZIndexChange,
           onDrag: (_: unknown, pos: DraggableData) => {
             onChange(true, { x: pos.x, y: pos.y, real: true });
           },
@@ -93,6 +97,7 @@ export const TrackCore: React.FC<TrackSyncingProps> = observer(
           },
         },
         drop: {
+          onMouseDown: onZIndexChange,
           onDrag: (_: unknown, pos: DraggableData) => {
             onChange(false, { x: pos.x, y: pos.y, real: true });
           },
@@ -144,8 +149,9 @@ export const TrackCore: React.FC<TrackSyncingProps> = observer(
           },
         },
       }[syncOn]),
-      [syncOn, onChange],
+      [syncOn, onChange, onZIndexChange],
     );
+
 
     useLayoutEffect(() => {
       const rnd = rootRef.current;
@@ -157,8 +163,8 @@ export const TrackCore: React.FC<TrackSyncingProps> = observer(
     }, [boundsSel]);
 
     const postStyle = useMemo(
-      () => Object.assign({}, track.needTransition ? { transition: 'all .3s' } : null),
-      [track.needTransition],
+      () => Object.assign({ zIndex }, track.needTransition ? { transition: 'all .3s' } : null),
+      [track.needTransition, zIndex],
     );
 
     return track.visible ? <Rnd

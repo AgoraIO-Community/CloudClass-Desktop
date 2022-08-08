@@ -16,12 +16,15 @@ export class PluginStore {
   constructor(private _widget: AgoraSelector) {
     autorun(() => {
       const { extra } = _widget.roomProperties;
-      const { selectedItems } = _widget.userProperties;
       typeof extra?.answerState !== 'undefined' && this.setAnswerState(extra.answerState);
-      typeof selectedItems !== 'undefined' && this.setSelectedAnswers(selectedItems);
       runInAction(() => {
         typeof extra?.items !== 'undefined' && (this.answerList = extra.items);
       });
+    });
+
+    autorun(() => {
+      const { selectedItems } = _widget.userProperties;
+      typeof selectedItems !== 'undefined' && this.setSelectedAnswers(selectedItems);
     });
 
     reaction(
@@ -122,6 +125,7 @@ export class PluginStore {
       this._widget.classroomStore.api.submitAnswer(roomId, popupQuizId, userUuid, {
         selectedItems,
       });
+      this._widget.updateWidgetProperties({ extra: { ts: Date.now() } });
       this.localOptionPermission = false;
     }
   }

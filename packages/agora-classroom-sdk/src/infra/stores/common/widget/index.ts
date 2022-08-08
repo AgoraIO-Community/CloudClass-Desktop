@@ -11,6 +11,7 @@ import {
   pollEnabled,
   popupQuizEnabled,
   chatEnabled,
+  boardEnabled,
 } from '@/ui-kit/capabilities/containers/visibility/controlled';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
@@ -47,6 +48,15 @@ export class WidgetUIStore extends EduUIStoreBase {
   @computed
   get widgetInstanceList() {
     return Object.values(this._widgetInstances);
+  }
+
+  @computed
+  get z0Widgets() {
+    return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0);
+  }
+
+  get z10Widgets() {
+    return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
   }
 
   @action.bound
@@ -194,6 +204,9 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _callWidgetUpdateTrack(widget: AgoraWidgetBase, trackProps: unknown) {
     if ((widget as unknown as AgoraTrackSyncedWidget).updateToLocal) {
       (widget as unknown as AgoraTrackSyncedWidget).updateToLocal(trackProps as AgoraWidgetTrack);
+      (widget as unknown as AgoraTrackSyncedWidget).updateZIndexToLocal(
+        (trackProps as AgoraWidgetTrack).zIndex ?? 0,
+      );
     }
   }
 
@@ -263,6 +276,9 @@ export class WidgetUIStore extends EduUIStoreBase {
         return prev;
       }
 
+      if (!boardEnabled(AgoraEduSDK.uiConfig) && key === 'netlessBoard') {
+        return prev;
+      }
       prev[key] = value;
 
       return prev;

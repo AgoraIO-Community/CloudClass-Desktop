@@ -17,11 +17,6 @@ const cloudHelpTips: {
                   supportType: ['docx', 'doc'],
             },
             {
-                  svgType: SvgIconEnum.EXCEL,
-                  desc: transI18n('cloud.excel'),
-                  supportType: ['xlsx', 'xls', 'csv'],
-            },
-            {
                   svgType: SvgIconEnum.PDF,
                   desc: transI18n('cloud.pdf'),
                   supportType: ['pdf'],
@@ -37,11 +32,6 @@ const cloudHelpTips: {
                   supportType: ['mp3'],
             },
             {
-                  svgType: SvgIconEnum.TXT,
-                  desc: transI18n('cloud.txt'),
-                  supportType: ['txt'],
-            },
-            {
                   svgType: SvgIconEnum.ALF,
                   desc: transI18n('fcr_online_courseware_label_file_type'),
                   supportType: ['alf'],
@@ -49,7 +39,7 @@ const cloudHelpTips: {
             {
                   svgType: SvgIconEnum.IMAGE,
                   desc: transI18n('cloud.photo'),
-                  supportType: ['png', 'jpg', 'gif'],
+                  supportType: ['png', 'jpg'],
             },
       ];
 

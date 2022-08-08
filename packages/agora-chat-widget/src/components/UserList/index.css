@@ -1,12 +1,12 @@
-.user {
-  overflow-y: scroll;
+.fcr-hx-user {
+  overflow-y: auto;
   overflow-x: hidden;
   position: absolute;
   width: 100%;
   height: calc(100% - 50px);
 }
 
-.user-list {
+.fcr-hx-user-list {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,19 +14,19 @@
   height: 64px;
 }
 
-.user-info {
+.fcr-hx-user-info {
   display: flex;
   align-items: center;
   width: auto;
   height: 48px;
 }
 
-.user-avatar {
+.fcr-hx-user-avatar {
   width: 36px;
   height: 36px;
 }
 
-.user-text {
+.fcr-hx-user-text {
   @apply text-level2;
   /* width: 43px; */
   height: 18px;
@@ -40,26 +40,24 @@
   text-overflow: ellipsis;
 }
 
-.user-tag {
+.fcr-hx-user-tag {
   /* display: inline-block !important; */
   /* width: 36px !important;
     height: 16px !important; */
   border-radius: 8px !important;
-  opacity: 0.3 !important;
   text-align: center !important;
   /* padding: 0 !important; */
 }
 
-.teacher-tag {
-  border: 1px solid #3c86f7 !important;
-  color: #3c86f7 !important;
+.fcr-hx-teacher-tag {
+  @apply text-brand border border-solid border-brand !important;
 }
 
-.student-tag {
-  border: 1px solid #abb1ba !important;
+.fcr-hx-student-tag {
+  @apply border border-solid border-divider !important;
 }
 
-.tag-text {
+.fcr-hx-tag-text {
   width: 28px;
   height: 10px;
   font-size: 12px;
@@ -68,10 +66,10 @@
   line-height: 10px;
 }
 
-.teacher-text {
-  color: #357bf6;
+.fcr-hx-teacher-text {
+  @apply text-brand;
 }
 
-.mute-icon {
+.fcr-hx-mute-icon {
   cursor: pointer;
 }

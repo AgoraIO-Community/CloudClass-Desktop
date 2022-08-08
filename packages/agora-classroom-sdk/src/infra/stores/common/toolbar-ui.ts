@@ -79,8 +79,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
 
   onInstall() {
-    this.classroomStore.widgetStore.widgetController;
-
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       this._disposers.push(
         listenChannelMessage(ChannelType.Message, async (event, message) => {
@@ -128,7 +126,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
             );
           }
           if (!newValue && oldValue) {
-            // this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
+            this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
           }
         },
       ),
@@ -605,49 +603,39 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * @returns
    */
   get cabinetItems(): CabinetItem[] {
-    const apps = this.extensionApi.cabinetItems.concat(
-      this.boardApi.mounted
-        ? [
-            {
-              id: CabinetItemEnum.ScreenShare,
-              iconType: 'share-screen',
-              name: transI18n('scaffold.screen_share'),
-            },
-            {
-              id: CabinetItemEnum.BreakoutRoom,
-              iconType: 'group-discuss',
-              name: transI18n('scaffold.breakout_room'),
-            },
-            {
-              id: CabinetItemEnum.Laser,
-              iconType: 'laser-pointer',
-              name: transI18n('scaffold.laser_pointer'),
-            },
-            {
-              id: CabinetItemEnum.Whiteboard,
-              iconType: 'whiteboard',
-              name: transI18n('scaffold.whiteboard'),
-            },
-          ].filter((item) => this.allowedCabinetItems.includes(item.id))
-        : [
-            {
-              id: CabinetItemEnum.ScreenShare,
-              iconType: 'share-screen',
-              name: transI18n('scaffold.screen_share'),
-            },
-            {
-              id: CabinetItemEnum.BreakoutRoom,
-              iconType: 'group-discuss',
-              name: transI18n('scaffold.breakout_room'),
-            },
+    const extapps = [
+      {
+        id: CabinetItemEnum.ScreenShare,
+        iconType: 'share-screen',
+        name: transI18n('scaffold.screen_share'),
+      },
+      {
+        id: CabinetItemEnum.BreakoutRoom,
+        iconType: 'group-discuss',
+        name: transI18n('scaffold.breakout_room'),
+      },
+      {
+        id: CabinetItemEnum.Whiteboard,
+        iconType: 'whiteboard',
+        name: transI18n('scaffold.whiteboard'),
+      },
+    ];
 
-            {
-              id: CabinetItemEnum.Whiteboard,
-              iconType: 'whiteboard',
-              name: transI18n('scaffold.whiteboard'),
-            },
-          ],
+    if (this.boardApi.mounted) {
+      extapps.push({
+        id: CabinetItemEnum.Laser,
+        iconType: 'laser-pointer',
+        name: transI18n('scaffold.laser_pointer'),
+      });
+    }
+
+    let apps = this.extensionApi.cabinetItems.concat(
+      extapps.filter((item) => this.allowedCabinetItems.includes(item.id)),
     );
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant) {
+      apps = apps.filter((it) => it.id !== CabinetItemEnum.BreakoutRoom);
+    }
 
     return apps;
   }

@@ -32,7 +32,7 @@ export const MessageBox = () => {
     <>
       {isHaveMsg ? (
         <div
-          className="message-box"
+          className="fcr-hx-message-box"
           id="chat-messages"
           style={{
             height: isHaveNotice
@@ -61,7 +61,7 @@ export const MessageBox = () => {
         </div>
       ) : (
         <div
-          className="message-box no-box"
+            className="fcr-hx-message-box fcr-hx-no-box"
           style={{
             height: isHaveNotice
               ? `calc(100% - 70px - ${
@@ -71,9 +71,9 @@ export const MessageBox = () => {
                   state?.configUIVisible.inputBox === 'inline' ? '102px' : '158px'
                 })`,
           }}>
-          <div className="no-msgs">
+            <div className="fcr-hx-no-msgs">
             <img src={noMessage_icon} />
-            <span className="no-msgs-text">{transI18n('chat.no_message')}</span>
+            <span className="fcr-hx-no-msgs-text">{transI18n('chat.no_message')}</span>
           </div>
         </div>
       )}

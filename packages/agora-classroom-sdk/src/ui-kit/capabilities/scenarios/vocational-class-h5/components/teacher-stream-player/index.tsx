@@ -4,7 +4,7 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useRef } from 'react';
-import { StreamPlaceholder, StreamPlayer } from '../../../../containers/stream';
+import { StreamPlayerH5, StreamPlaceholder } from '../../../../containers/stream';
 import { useDrag } from '../../hooks/useDrag';
 import './index.css';
 
@@ -13,13 +13,21 @@ export interface MobileStreamPlayerProps {
   minimized?: boolean;
 }
 
-export const MobileStreamPlayer: FC<MobileStreamPlayerProps> = observer(
+const TeacherStreamPlayer: FC<MobileStreamPlayerProps> = observer(() => {
+  const { streamUIStore } = useVocationalH5UIStores() as EduVocationalH5UIStore;
+  const { teacherCameraStream } = streamUIStore;
+
+  return teacherCameraStream ? (
+    <StreamPlayerH5 stream={teacherCameraStream} />
+  ) : (
+    <StreamPlaceholder role={EduRoleTypeEnum.teacher} />
+  );
+});
+
+export const MobileTeacherStreamPlayer: FC<MobileStreamPlayerProps> = observer(
   ({ minimized, onClick }) => {
-    const { streamUIStore } = useVocationalH5UIStores() as EduVocationalH5UIStore;
-    const { teacherCameraStream } = streamUIStore;
     const teacherStreamContainer = useRef<HTMLDivElement | null>(null);
     const { x, y, isDragged, ...dragEvents } = useDrag();
-
     return (
       <div
         {...dragEvents}
@@ -29,11 +37,7 @@ export const MobileStreamPlayer: FC<MobileStreamPlayerProps> = observer(
         ref={teacherStreamContainer}
         className={cls({ 'host-stream': 1, minimize: minimized })}
         onClick={onClick}>
-        {teacherCameraStream ? (
-          <StreamPlayer renderAt="Bar" stream={teacherCameraStream} />
-        ) : (
-          <StreamPlaceholder role={EduRoleTypeEnum.teacher} />
-        )}
+        <TeacherStreamPlayer />
       </div>
     );
   },

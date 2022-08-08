@@ -20,11 +20,11 @@
   padding-top: 5px;
 }
 .screen-share-dialog-content h4 {
+  @apply text-level1;
   width: 100%;
   padding-top: 20px;
   font-size: 14px;
   font-weight: bold;
-  color: #191919;
   margin-bottom: 6px;
   line-height: 20px;
 }
@@ -32,14 +32,14 @@
   width: 170px;
 }
 .screen-share-dialog-content li {
+  @apply text-level2;
   list-style: disc inside;
-  color: #586376;
   font-size: 12px;
   line-height: 22px;
   font-weight: 400;
 }
 .screen-share-dialog-content li::marker {
-  color: #7b88a0;
+  @apply text-level2;
 }
 .screen-share-teacher-logo {
   width: 90px;
@@ -56,20 +56,22 @@
   font-size: 0;
 }
 .screen-share-dialog-container-tips {
+  @apply text-level2;
+
   position: relative;
   top: 20px;
   font-size: 12px;
-  color: #586376;
   text-align: center;
 }
 .screen-share-dialog-container-tips > span:first-child {
-  color: #f21d00;
+  @apply text-error;
+
   padding-right: 4px;
 }
 .screen-share-dialog-container .fcr-card {
+  @apply border border-solid border-divider;
   cursor: pointer;
   box-shadow: none;
-  border: 1px solid #eeeef7;
   border-radius: 4px !important;
 }
 .screen-share-dialog-container .fcr-card:hover {

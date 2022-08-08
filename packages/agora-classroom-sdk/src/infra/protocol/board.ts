@@ -1,6 +1,7 @@
 import { AgoraWidgetController, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { bound, Injectable, Log } from 'agora-rte-sdk';
 import { action, computed, observable, runInAction, toJS } from 'mobx';
+import { AgoraEduSDK } from '../api';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '../utils/event-center';
 import { withTimeout } from '../utils/ipc';
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from './events';
@@ -123,7 +124,9 @@ export class Board {
   }
   @bound
   getSnapshotImageList() {
-    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.BoardGetSnapshotImageList, []);
+    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.BoardGetSnapshotImageList, [
+      AgoraEduSDK.theme.foreground,
+    ]);
   }
 
   @bound

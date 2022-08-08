@@ -3,7 +3,6 @@ import {
   Track,
   Dimensions,
   AgoraWidgetTrack,
-  EduClassroomConfig,
   AgoraWidgetController,
   EduClassroomStore,
   AgoraWidgetMessageListener,
@@ -84,19 +83,24 @@ export interface AgoraMultiInstanceWidget {
 
 export interface AgoraTrackSyncedWidget {
   /**
-   *
+   * 轨迹信息
    */
   get track(): Track;
 
   /**
-   *
+   * 层级
    */
   get zIndex(): number;
 
   /**
-   * 更新层级
+   * 更新层级到远端
    */
-  updateZIndex(): void;
+  updateZIndexToRemote(zIndex: number): void;
+
+  /**
+   * 更新层级到本地
+   */
+  updateZIndexToLocal(zIndex: number): void;
 
   /**
    * 是否可拖拽
@@ -208,6 +212,13 @@ export abstract class AgoraWidgetBase implements AgoraWidgetRenderable, AgoraMul
       return this.widgetName + '-' + this._instanceId;
     }
     return this.widgetName;
+  }
+
+  /**
+   * 容器层级
+   */
+  get zContainer(): 0 | 10 {
+    return 0;
   }
 
   /**

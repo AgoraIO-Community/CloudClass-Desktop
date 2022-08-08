@@ -136,14 +136,16 @@ input.vote-item::placeholder {
 .result-item {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   font-size: 14px;
+  margin-bottom: 15px;
 }
 .result-cursor {
   @apply text-level2;
   width: 30px;
   text-align: center;
+  padding-top: 12px;
 }
 .result-info-container {
   display: flex;
@@ -155,15 +157,17 @@ input.vote-item::placeholder {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  height: 40px;
+  align-items: flex-start;
 }
 .vote-text {
   @apply text-level1;
-  width: 222px;
+  width: 240px;
+  line-height: 1.8;
+  padding: 10px 0;
 }
 .vote-text-percentage {
   @apply text-level2;
+  padding-top: 10px;
 }
 .vote-percentage {
   height: 3px;
@@ -192,28 +196,29 @@ input.vote-item::placeholder {
   color: #fff !important;
 }
 .selection-item-container {
+  @apply text-level2;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  height: 40px;
   cursor: pointer;
 }
-.selection-text {
-  color: #191919;
-  flex: 1;
-  padding-left: 10px;
-  height: 100%;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  align-items: center;
+
+.selection-check {
+  padding-top: 14px;
 }
+
+.selection-text {
+  @apply text-level1 border-b border-solid border-divider;
+  flex: 1;
+  margin-left: 10px;
+  line-height: 1.8;
+  padding: 10px 0;
+}
+
 .polling-title-tip {
+  @apply text-brand border border-solid border-brand;
   display: inline-block;
-  border: 1px solid #357bf6;
   border-radius: 9px;
-  color: #357bf6;
   font-size: 12px;
   height: 18px;
   line-height: 18px;

@@ -7,6 +7,14 @@ export class OneToOneStreamUIStore extends StreamUIStore {
     return 'left';
   }
 
+  get toolbarOffset(): number[] {
+    return [10, 0];
+  }
+
+  get fullScreenToolbarOffset(): number[] {
+    return [0, -58];
+  }
+
   get videoStreamSize() {
     const width = this.shareUIStore.classroomViewportSize.width * this._teacherWidthRatio;
 

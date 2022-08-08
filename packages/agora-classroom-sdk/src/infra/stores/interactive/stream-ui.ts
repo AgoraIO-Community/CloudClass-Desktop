@@ -260,8 +260,12 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
     }
   }
 
-  get toolbarPlacement(): 'left' | 'bottom' {
-    return 'bottom';
+  get toolbarOffset(): number[] {
+    return [0, -14];
+  }
+
+  get fullScreenToolbarOffset(): number[] {
+    return [0, -58];
   }
 
   onInstall(): void {

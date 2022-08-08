@@ -66,47 +66,43 @@ export const boardEnabled = (uiConfig: FcrUIConfig) => {
   return uiConfig.engagement.netlessBoard.enable;
 };
 export const boardEraserEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.eraser.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.eraser.enable;
 };
 export const boardHandEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.hand.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.move.enable;
 };
 export const boardLaserPointerEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.laserPointer.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.laserPointer.enable;
 };
 export const boardMouseEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.mouse.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.mouse.enable;
 };
 export const boardPencilEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.pencil.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.pencil.enable;
 };
 export const boardSaveEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.save.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.save.enable;
 };
 export const boardSelectorEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.selector.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.selector.enable;
 };
 export const boardSwitchEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.switch.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.switch.enable;
 };
 export const boardTextEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.netlessBoard.text.enable;
+  return boardEnabled(uiConfig) && uiConfig.engagement.netlessBoard.text.enable;
 };
 export const chatEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.agoraChat.enable || uiConfig.extension.agoraChat.enable;
+  return uiConfig.extension.agoraChat.enable;
 };
 export const chatEmojiEnabled = (uiConfig: FcrUIConfig) => {
-  return uiConfig.engagement.agoraChat.emoji.enable || uiConfig.extension.agoraChat.emoji.enable;
+  return uiConfig.extension.agoraChat.emoji.enable;
 };
 export const chatMuteAllEnabled = (uiConfig: FcrUIConfig) => {
-  return (
-    uiConfig.engagement.agoraChat.muteAll.enable || uiConfig.extension.agoraChat.muteAll.enable
-  );
+  return uiConfig.extension.agoraChat.muteAll.enable;
 };
 export const chatPictureEnabled = (uiConfig: FcrUIConfig) => {
-  return (
-    uiConfig.engagement.agoraChat.picture.enable || uiConfig.extension.agoraChat.picture.enable
-  );
+  return uiConfig.extension.agoraChat.picture.enable;
 };
 export const breakoutRoomEnabled = (uiConfig: FcrUIConfig) => {
   return uiConfig.engagement.breakoutRoom.enable;
@@ -137,13 +133,15 @@ export const toolbarEnabled = (uiConfig: FcrUIConfig) => {
   return (
     boardEraserEnabled(uiConfig) ||
     boardHandEnabled(uiConfig) ||
-    boardLaserPointerEnabled(uiConfig) ||
     boardMouseEnabled(uiConfig) ||
     boardPencilEnabled(uiConfig) ||
     boardSaveEnabled(uiConfig) ||
     boardSelectorEnabled(uiConfig) ||
     boardSwitchEnabled(uiConfig) ||
-    boardTextEnabled(uiConfig)
+    boardTextEnabled(uiConfig) ||
+    cloudStorageEnabled(uiConfig) ||
+    rosterEnabled(uiConfig) ||
+    cabinetEnabled(uiConfig)
   );
 };
 

@@ -10,7 +10,7 @@
   height: 70px;
   width: 123px;
   border-radius: 2px;
-  z-index: 99;
+  z-index: 10;
 }
 
 /* reset unnecessary property  */
@@ -33,8 +33,8 @@
 }
 
 .vocational-whiteboard .whiteboard-wrapper {
+  @apply bg-background;
   position: relative;
-  background: #fff;
 }
 
 .vocational-whiteboard .whiteboard-wrapper .whiteboard-overlay,

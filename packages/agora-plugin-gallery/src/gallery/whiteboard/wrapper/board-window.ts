@@ -375,7 +375,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
     this._whiteRoom.timeDelay = delay;
   }
 
-  async getSnapshotImage() {
+  async getSnapshotImage(background: string = '#fff') {
     this.preCheck({ wm: false });
     const whiteRoom = this._whiteRoom;
 
@@ -392,7 +392,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
             snapshot(_room, {
               scenePath: '/' + scene.name,
               crossorigin: true,
-              background: '#fff',
+              background,
               src2dataurl: src2DataURL,
             });
         });
@@ -416,7 +416,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
     }
   }
 
-  private _addWindowManagerEventListeners() {
+  emitPageInfo() {
     const windowManager = this._windowManager;
 
     const state = {
@@ -424,20 +424,17 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
       count: windowManager?.mainViewScenesLength || 0,
     };
 
-    const emitPageInfoChange = () => {
-      this._eventBus.emit(FcrBoardMainWindowEvent.PageInfoUpdated, {
-        showIndex: state.showIndex,
-        count: state.count,
-      });
-    };
+    this._eventBus.emit(FcrBoardMainWindowEvent.PageInfoUpdated, state);
+  }
+
+  private _addWindowManagerEventListeners() {
+    const windowManager = this._windowManager;
 
     windowManager?.emitter.on('mainViewSceneIndexChange', (showIndex) => {
-      state.showIndex = showIndex;
-      emitPageInfoChange();
+      this.emitPageInfo();
     });
     windowManager?.emitter.on('mainViewScenesLengthChange', (count) => {
-      state.count = count;
-      emitPageInfoChange();
+      this.emitPageInfo();
     });
     windowManager?.emitter.on('canUndoStepsChange', (steps) => {
       this._eventBus.emit(FcrBoardMainWindowEvent.UndoStepsUpdated, steps);
@@ -445,8 +442,6 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
     windowManager?.emitter.on('canRedoStepsChange', (steps) => {
       this._eventBus.emit(FcrBoardMainWindowEvent.RedoStepsUpdated, steps);
     });
-
-    emitPageInfoChange();
   }
 
   private _convertToScenes(pageList: FcrBoardPage[]) {
@@ -531,6 +526,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
   destroy() {
     if (this._windowManager) {
       this._windowManager.destroy();
+      this._windowManager = undefined;
       this._eventBus.emit(FcrBoardMainWindowEvent.Unmount);
     }
     this._destroyed = true;

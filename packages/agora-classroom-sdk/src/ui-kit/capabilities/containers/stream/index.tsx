@@ -1,35 +1,28 @@
-import { EduRoleTypeEnum } from 'agora-edu-core';
-import { observer } from 'mobx-react';
-import React, {
-  CSSProperties,
-  FC,
-  Fragment,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
 import { useStore } from '@/infra/hooks/ui-store';
-import classnames from 'classnames';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import useMeasure from 'react-use-measure';
-import { useDebounce } from '~ui-kit/utilities/hooks';
-import './index.css';
-import {
-  CameraPlaceHolder,
-  SvgaPlayer,
-  SvgImg,
-  SoundPlayer,
-  AudioVolume,
-  SvgIconEnum,
-} from '~ui-kit';
-import RewardSVGA from './assets/svga/reward.svga';
-import RewardSound from './assets/audio/reward.mp3';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
 import { CameraPlaceholderType } from '@/infra/stores/common/type';
+import { EduRoleTypeEnum } from 'agora-edu-core';
+import classnames from 'classnames';
 import { debounce } from 'lodash';
+import { observer } from 'mobx-react';
+import React, { CSSProperties, FC, Fragment, useCallback, useEffect, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import useMeasure from 'react-use-measure';
+import {
+  AudioVolume,
+  CameraPlaceHolder,
+  SoundPlayer,
+  SvgaPlayer,
+  SvgIconEnum,
+  SvgImg,
+} from '~ui-kit';
+import { useDebounce } from '~ui-kit/utilities/hooks';
+import RewardSound from './assets/audio/reward.mp3';
+import RewardSVGA from './assets/svga/reward.svga';
 import { DragableContainer, DragableStream } from './draggable-stream';
-import { TrackPlayer } from './track-player';
+import './index.css';
 import { StreamPlayerToolbar } from './stream-tool';
+import { TrackPlayer } from './track-player';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -101,9 +94,6 @@ const RemoteStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) 
   );
 });
 
-
-
-
 const StreamPlayerWhiteboardGranted = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
     streamUIStore: { whiteboardGrantUsers },
@@ -116,7 +106,7 @@ const StreamPlayerWhiteboardGranted = observer(({ stream }: { stream: EduStreamU
   return (
     <>
       {!isTeacherOrAssistant && whiteboardGrantUsers.has(stream.fromUser.userUuid) ? (
-        <SvgImg size={22} type={SvgIconEnum.AUTHORIZED_SOLID} colors={{ iconPrimary: "#FFF500" }} />
+        <SvgImg size={22} type={SvgIconEnum.AUTHORIZED_SOLID} colors={{ iconPrimary: '#FFF500' }} />
       ) : null}
     </>
   );
@@ -138,18 +128,13 @@ const StreamPlayerOverlayAwardNo = observer(({ stream }: { stream: EduStreamUI }
   );
 });
 
-const StreamPlayerCameraPlaceholder = observer(
-  ({ stream }: { stream: EduStreamUI; }) => {
-    const { streamUIStore } = useStore();
-    const { cameraPlaceholder } = streamUIStore;
-    return (
-      <CameraPlaceHolder
-        style={{ position: 'absolute', top: 0 }}
-        state={cameraPlaceholder(stream)}
-      />
-    );
-  },
-);
+const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
+  const { streamUIStore } = useStore();
+  const { cameraPlaceholder } = streamUIStore;
+  return (
+    <CameraPlaceHolder style={{ position: 'absolute', top: 0 }} state={cameraPlaceholder(stream)} />
+  );
+});
 
 const StreamPlaceholderWaveArmPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
@@ -159,105 +144,127 @@ const StreamPlaceholderWaveArmPlaceholder = observer(({ stream }: { stream: EduS
 
 const StreamPlayerOverlayName = observer(({ stream }: { stream: EduStreamUI }) => {
   return (
-    <span title={stream.stream.fromUser.userName} className="username2">
+    <span title={stream.stream.fromUser.userName} className="username2 pointer-events-auto">
       {stream.stream.fromUser.userName}
     </span>
   );
 });
 
-export const StreamPlayerOverlay = observer(
-  ({
-    stream,
-  }: {
-    stream: EduStreamUI;
-  }) => {
-    const { streamUIStore } = useStore();
-    const { layerItems } = streamUIStore;
+export const StreamPlayerOverlay = observer(({ stream }: { stream: EduStreamUI }) => {
+  const { streamUIStore } = useStore();
+  const { layerItems } = streamUIStore;
 
-    const rewardVisible = layerItems && layerItems.includes('reward');
+  const rewardVisible = layerItems && layerItems.includes('reward');
 
-    const grantVisible = layerItems && layerItems.includes('grant');
+  const grantVisible = layerItems && layerItems.includes('grant');
 
-    return (
-      <div className="video-player-overlay">
-        <AwardAnimations stream={stream} />
-        <div className="top-right-info">
-          {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}
-        </div>
-        <div className="bottom-left-info">
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}>
-            {stream.stream.isLocal ? (
-              <LocalStreamPlayerVolume stream={stream} />
-            ) : (
-              <RemoteStreamPlayerVolume stream={stream} />
-            )}
-          </div>
-          <StreamPlayerOverlayName stream={stream} />
-        </div>
-        <div className="bottom-right-info">
-          {grantVisible && <StreamPlayerWhiteboardGranted stream={stream} />}
-        </div>
-        <StreamPlaceholderWaveArmPlaceholder stream={stream} />
+  return (
+    <div className="video-player-overlay z-10 pointer-events-none">
+      <AwardAnimations stream={stream} />
+      <div className="top-right-info">
+        {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}
       </div>
-    );
-  },
-)
+      <div className="bottom-left-info">
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
+          {stream.stream.isLocal ? (
+            <LocalStreamPlayerVolume stream={stream} />
+          ) : (
+            <RemoteStreamPlayerVolume stream={stream} />
+          )}
+        </div>
+        <StreamPlayerOverlayName stream={stream} />
+      </div>
+      <div className="bottom-right-info">
+        {grantVisible && <StreamPlayerWhiteboardGranted stream={stream} />}
+      </div>
+      <StreamPlaceholderWaveArmPlaceholder stream={stream} />
+    </div>
+  );
+});
 
 export const StreamPlayer: FC<{
   stream: EduStreamUI;
-  renderAt: 'Window' | 'Bar'
+  renderAt: 'Window' | 'Bar';
   style?: CSSProperties;
-}> = observer(
-  ({
-    stream,
-    style,
-    renderAt
-  }) => {
-    const { streamWindowUIStore } = useStore()
-    const { visibleStream } = streamWindowUIStore;
-    const hasDetached = visibleStream(stream.stream.streamUuid);
+  toolbarDisabled?: boolean;
+}> = observer(({ stream, style, renderAt, toolbarDisabled }) => {
+  const { streamWindowUIStore } = useStore();
+  const { visibleStream } = streamWindowUIStore;
+  const hasDetached = visibleStream(stream.stream.streamUuid);
+  const isBarPlayer = renderAt === 'Bar';
+  const shouldRenderVideo = renderAt === stream.renderAt;
+  // during dragging
+  const invisible = hasDetached && isBarPlayer;
 
-    const isBarPlayer = renderAt === 'Bar';
+  // should render an empty DOM instead of the stream video, which has the same dimensions to the stream video
+  // when:
+  // the stream video is detached from bar
+  // and
+  // the current player is render at bar
+  const [toolbarVisible, setToolbarVisible] = useState(false);
 
-    const shouldRenderVideo = renderAt === stream.renderAt;
-    // during dragging
-    const invisible = hasDetached && isBarPlayer;
+  const handleMouseEnter = () => {
+    setToolbarVisible(true);
+  };
+  const handleMouseLeave = () => {
+    setToolbarVisible(false);
+  };
 
-    // should render an empty DOM instead of the stream video, which has the same dimensions to the stream video
-    // when:
-    // the stream video is detached from bar
-    // and
-    // the current player is render at bar
+  return (
+    <div
+      className="fcr-stream-player-container"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
+      {!invisible && (
+        <React.Fragment>
+          <StreamPlayerCameraPlaceholder stream={stream} />
+          {shouldRenderVideo && <TrackPlayer stream={stream} />}
+          {shouldRenderVideo && <StreamPlayerOverlay stream={stream} />}
+          {shouldRenderVideo && !toolbarDisabled && (
+            <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />
+          )}
+        </React.Fragment>
+      )}
+      <DragableContainer stream={stream} />
+      <MeasuerContainer streamUuid={stream.stream.streamUuid} style={style} />
+    </div>
+  );
+});
 
+type StreamPlayerH5Props = {
+  stream: EduStreamUI;
+  toolbarDisabled?: boolean;
+  className?: string;
+  style?: CSSProperties;
+};
+
+export const StreamPlayerH5 = observer<FC<StreamPlayerH5Props>>(
+  ({ stream, toolbarDisabled = true, className = '', style }) => {
     const [toolbarVisible, setToolbarVisible] = useState(false);
 
     const handleMouseEnter = () => {
       setToolbarVisible(true);
     };
+
     const handleMouseLeave = () => {
       setToolbarVisible(false);
     };
 
     return (
-      <div className='fcr-stream-player-container'
+      <div
+        className={`fcr-stream-player-h5 ${className}`}
+        style={style}
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {!invisible &&
-          <React.Fragment>
-            <StreamPlayerCameraPlaceholder stream={stream} />
-            {shouldRenderVideo && <TrackPlayer stream={stream} />}
-            {shouldRenderVideo && <StreamPlayerOverlay stream={stream} />}
-            {shouldRenderVideo && <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />}
-          </React.Fragment>
-        }
-        <DragableContainer stream={stream} />
-        <MeasuerContainer streamUuid={stream.stream.streamUuid} style={style} />
+        onMouseLeave={handleMouseLeave}>
+        <StreamPlayerCameraPlaceholder stream={stream} />
+        <TrackPlayer stream={stream} />
+        <StreamPlayerOverlay stream={stream} />
+        {!toolbarDisabled && <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />}
       </div>
     );
   },
@@ -300,9 +307,8 @@ export const CarouselGroup = observer(
               classNames="stream-player">
               <DragableStream stream={stream} style={style} playerStyle={playerStyle} />
             </CSSTransition>
-          )
-        }
-        )}
+          );
+        })}
       </TransitionGroup>
     );
   },
@@ -331,28 +337,26 @@ export const NavGroup: FC<{ onNext: () => void; onPrev: () => void; visible: boo
 };
 
 export const MeasuerContainer: FC<{
-  streamUuid: string,
-  style?: CSSProperties
-}> = observer(
-  ({ streamUuid, style }) => {
-    const [ref, bounds] = useMeasure();
-    const {
-      streamUIStore: { setStreamBoundsByStreamUuid },
-    } = useStore();
+  streamUuid: string;
+  style?: CSSProperties;
+}> = observer(({ streamUuid, style }) => {
+  const [ref, bounds] = useMeasure();
+  const {
+    streamUIStore: { setStreamBoundsByStreamUuid },
+  } = useStore();
 
-    const handleStreamBoundsUpdate = useCallback(
-      debounce((id, bounds) => {
-        setStreamBoundsByStreamUuid(id, bounds);
-      }, 330),
-      [],
-    );
+  const handleStreamBoundsUpdate = useCallback(
+    debounce((id, bounds) => {
+      setStreamBoundsByStreamUuid(id, bounds);
+    }, 330),
+    [],
+  );
 
-    useEffect(
-      debounce(() => {
-        streamUuid && handleStreamBoundsUpdate(streamUuid, bounds);
-      }, 330),
-      [bounds],
-    );
-    return <div className='stream-player-placement' style={style} ref={ref} />
-  },
-);
+  useEffect(
+    debounce(() => {
+      streamUuid && handleStreamBoundsUpdate(streamUuid, bounds);
+    }, 330),
+    [bounds],
+  );
+  return <div className="stream-player-placement" style={style} ref={ref} />;
+});

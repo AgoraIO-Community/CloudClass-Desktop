@@ -330,7 +330,7 @@ export const en = {
     downloading: 'Download',
     pause: 'Pause',
     upload_success: 'Upload Success',
-    supprotTypeTitle: 'Format of file are support',
+    supprotTypeTitle: 'Supported file formats',
     fileType: 'Type',
     ppt: 'PPT',
     word: 'Word',
@@ -868,4 +868,7 @@ export const en = {
     offPodium: 'Off podium',
   },
   question: 'Question',
+  fcr_copy_room_name: 'Room Name:',
+  fcr_copy_share_link: 'Invite Link:',
+  fcr_copy_share_link_copy: 'Copy link',
 };

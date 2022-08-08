@@ -17,6 +17,7 @@ const routes: BizPageRouter[] = [
   BizPageRouter.RecordationSearchPage,
   BizPageRouter.Window,
   BizPageRouter.TestHomePage,
+  BizPageRouter.ShareLinkPage,
   BizPageRouter.TestH5HomePage,
   BizPageRouter.VocationalHomePage,
   BizPageRouter.VocationalHomeH5Page,

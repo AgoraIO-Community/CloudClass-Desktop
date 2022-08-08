@@ -1,11 +1,12 @@
 import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { SvgIconEnum } from '~ui-kit';
 import { BoardUIStore } from '../common/board-ui';
 
 export class EduVocationalH5BoardUIStor extends BoardUIStore {
   protected get uiOverrides() {
     return {
       ...super.uiOverrides,
-      heightRatio: 1,
+      heightRatio: 0.79,
     };
   }
 
@@ -30,9 +31,9 @@ export class EduVocationalH5BoardUIStor extends BoardUIStore {
   @computed
   get iconBorderZoomType() {
     if (this.borderZoomStatus === 'zoom-out') {
-      return 'zoom-out-gray';
+      return SvgIconEnum.ZOOM_OUT;
     }
-    return 'zoom-in-gray';
+    return SvgIconEnum.ZOOM_IN;
   }
 
   @computed
@@ -52,14 +53,25 @@ export class EduVocationalH5BoardUIStor extends BoardUIStore {
 
   @computed
   get boardContainerWidth() {
-    if (this.borderZoomStatus !== 'zoom-out') {
-      return this.shareUIStore.classroomViewportSize.h5Width;
-    }
-    const { h5Width } = this.shareUIStore.classroomViewportSize;
-    if (this.shareUIStore.orientation !== 'portrait') {
-      return (h5Width as number) * 0.697;
-    }
-    return h5Width as number;
+    // if (this.borderZoomStatus !== 'zoom-out') {
+    //   return this.shareUIStore.classroomViewportSize.h5Width;
+    // }
+    // const { h5Width } = this.shareUIStore.classroomViewportSize;
+    // if (this.shareUIStore.orientation !== 'portrait') {
+    //   return (h5Width as number) * 0.697;
+    // }
+    // return h5Width as number;
+    return '100%';
+  }
+
+  @computed
+  get boardContainerHeight() {
+    // if (this.borderZoomStatus !== 'zoom-out') {
+    //   return this.shareUIStore.classroomViewportSize.h5Height;
+    // }
+    // 白板宽高比
+    // return (this.boardContainerWidth as number) * 0.5634;
+    return '100%';
   }
 
   @action.bound

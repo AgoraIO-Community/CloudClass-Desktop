@@ -2,27 +2,27 @@ import { vocationalNeedPreset } from '@/app/pages/home/vocational';
 import { ControlBar } from '@/ui-kit/capabilities/containers/fragments';
 import { Scenarios } from '@/ui-kit/capabilities/scenarios';
 import {
-  AgoraEduClassroomEvent,
-  CloudDriveResource,
-  EduClassroomConfig,
-  EduEventCenter,
-  EduMediaEncryptionMode,
-  EduRegion,
-  EduRoleTypeEnum,
-  EduRoomServiceTypeEnum,
-  EduRoomSubtypeEnum,
-  EduRoomTypeEnum,
-  Platform,
+    AgoraEduClassroomEvent,
+    CloudDriveResource,
+    EduClassroomConfig,
+    EduEventCenter,
+    EduMediaEncryptionMode,
+    EduRegion,
+    EduRoleTypeEnum,
+    EduRoomServiceTypeEnum,
+    EduRoomSubtypeEnum,
+    EduRoomTypeEnum,
+    Platform
 } from 'agora-edu-core';
 import {
-  AgoraChatWidget,
-  AgoraCountdown,
-  AgoraHXChatWidget,
-  AgoraPolling,
-  AgoraSelector,
-  FcrBoardWidget,
-  FcrStreamMediaPlayerWidget,
-  FcrWebviewWidget,
+    AgoraChatWidget,
+    AgoraCountdown,
+    AgoraHXChatWidget,
+    AgoraPolling,
+    AgoraSelector,
+    FcrBoardWidget,
+    FcrStreamMediaPlayerWidget,
+    FcrWebviewWidget
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -32,27 +32,28 @@ import { EduContext } from '../contexts';
 import { createCloudResource } from '../stores/common/cloud-drive/helper';
 import { FcrMultiThemeMode, FcrUIConfig } from '../types/config';
 import {
-  applyTheme,
-  loadGeneratedFiles,
-  loadTheme,
-  loadUIConfig,
-  themes,
-  uiConfigs,
+    applyTheme,
+    loadGeneratedFiles,
+    loadTheme,
+    loadUIConfig,
+    supportedRoomTypes,
+    themes,
+    uiConfigs
 } from '../utils/config-loader';
 
 import './polyfills';
 import { Providers } from './providers';
 import {
-  AgoraWidgetBase,
-  BoardWindowAnimationOptions,
-  ConfigParams,
-  ConvertMediaOptionsConfig,
-  CourseWareItem,
-  CourseWareList,
-  LaunchMediaOptions,
-  LaunchOption,
-  LaunchWindowOption,
-  WindowID,
+    AgoraWidgetBase,
+    BoardWindowAnimationOptions,
+    ConfigParams,
+    ConvertMediaOptionsConfig,
+    CourseWareItem,
+    CourseWareList,
+    LaunchMediaOptions,
+    LaunchOption,
+    LaunchWindowOption,
+    WindowID
 } from './type';
 
 export * from './type';
@@ -66,6 +67,7 @@ export class AgoraEduSDK {
   private static _appId = '';
   private static _uiConfig: FcrUIConfig;
   private static _theme: FcrTheme;
+  private static _shareUrl: string;
   //default use GLOBAL region(including CN)
   private static region: EduRegion = EduRegion.CN;
 
@@ -144,6 +146,17 @@ export class AgoraEduSDK {
     }
   }
 
+  static getLoadedScenes() {
+    return supportedRoomTypes.map((roomType) => {
+      const name = uiConfigs[roomType].name ?? '';
+
+      return {
+        name,
+        roomType
+      }
+    });
+  }
+
   static config(config: ConfigParams) {
     this._appId = config.appId;
     if (config.region) {
@@ -175,7 +188,13 @@ export class AgoraEduSDK {
     return this._theme;
   }
 
+  static get shareUrl() {
+    return this._shareUrl;
+  }
+
   private static _validateOptions(option: LaunchOption) {
+    const isInvalid = (value: string) => value === undefined || value === null || value === '';
+
     if (!option) {
       throw new Error('AgoraEduSDK: LaunchOption is required!');
     } else if (
@@ -197,6 +216,14 @@ export class AgoraEduSDK {
       ].includes(option.roomType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roomType!');
+    } else if (isInvalid(option.userName)) {
+      throw new Error('AgoraEduSDK: userName is required');
+    } else if (isInvalid(option.userUuid)) {
+      throw new Error('AgoraEduSDK: userUuid is required');
+    } else if (isInvalid(option.roomName)) {
+      throw new Error('AgoraEduSDK: roomName is required');
+    } else if (isInvalid(option.roomUuid)) {
+      throw new Error('AgoraEduSDK: roomUuid is required');
     }
   }
 
@@ -214,7 +241,7 @@ export class AgoraEduSDK {
       userName,
       roleType,
       roomSubtype = EduRoomSubtypeEnum.Standard,
-      roomServiceType = EduRoomServiceTypeEnum.Live,
+      roomServiceType = EduRoomServiceTypeEnum.LiveStandard,
       rtmToken,
       roomUuid,
       roomName,
@@ -226,6 +253,7 @@ export class AgoraEduSDK {
       recordOptions,
       recordRetryTimeout,
       uiMode,
+      shareUrl,
     } = option;
     const sessionInfo = {
       userUuid,
@@ -241,6 +269,8 @@ export class AgoraEduSDK {
       token: rtmToken,
       startTime,
     };
+
+    this._shareUrl = shareUrl || '';
 
     this._language = option.language;
 
@@ -373,9 +403,8 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${
-      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-    }/edu/apps/${appId}`;
+    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+      }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',
@@ -383,4 +412,5 @@ export class AgoraEduSDK {
     });
   }
 }
+
 loadGeneratedFiles();

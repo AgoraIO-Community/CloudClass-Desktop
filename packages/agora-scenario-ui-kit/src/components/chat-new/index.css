@@ -60,16 +60,15 @@
 }
 
 .chat-header {
-  @apply flex items-center justify-between;
+  @apply flex items-center justify-between border-b border-solid border-divider;
   height: 44px;
   padding: 0 15px;
-  border-bottom: 1px solid #ececf1;
 }
 
 .chat-header-title {
+  @apply text-level1;
   font-size: 13px;
   font-weight: 400;
-  color: #191919;
 }
 
 .chat-header-message-state {
@@ -78,13 +77,10 @@
 }
 
 .chat-notice-msg {
-  @apply flex justify-center items-center w-full;
+  @apply flex justify-center items-center w-full text-level2 bg-background border border-solid border-divider;
   height: 32px;
-  background: #f9f9fc;
-  border: 1px solid #ececf1;
   font-size: 12px;
   font-weight: 400;
-  color: #191919;
   top: 44px;
   position: absolute;
   z-index: 1;
@@ -96,10 +92,10 @@
   align-items: center;
 }
 
-.chat-notice-msg svg {
+.chat-notice-msg svg path {
+  fill: var(--fcr_system_error_color);
   margin-right: 5px;
   font-size: 17px;
-  color: #f04c36;
 }
 
 .chat-history {
@@ -129,7 +125,7 @@
   position: relative;
 }
 .conversation-header > .name {
-  color: #191919;
+  @apply text-level1;
   font-size: 13px;
   margin-left: 15px;
 }
@@ -143,13 +139,11 @@
 }
 
 .chat-texting {
-  @apply flex justify-between items-center;
+  @apply flex justify-between items-center bg-component border border-solid border-divider text-level1;
   padding: 15px;
   min-height: 60px;
   width: 100%;
-  background-color: #f9f9fc;
   border-radius: 18px 18px 4px 4px;
-  border: 1px solid #ececf1;
   position: absolute;
   bottom: 0;
   z-index: 999;
@@ -216,7 +210,7 @@
 }
 
 .full-screen-chat .chat-header {
-  border-top: 1px solid #ececf1;
+  @apply border-b border-solid border-divider;
 }
 
 .full-screen-chat .svg-icon-wrap {
@@ -226,9 +220,9 @@
 
 .small-class-chat.chat-panel,
 .simple-chat.chat-panel {
+  @apply bg-component;
   margin-left: 0;
   border-left: 0;
-  background: #fff;
 }
 
 .simple-chat .chat-header {

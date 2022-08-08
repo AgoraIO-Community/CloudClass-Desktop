@@ -1,4 +1,4 @@
-import { BoardMountState } from '@/infra/protocol/type';
+import { BoardConnectionState, BoardMountState } from '@/infra/protocol/type';
 import {
   AgoraExtensionRoomEvent,
   AgoraExtensionWidgetEvent,
@@ -235,10 +235,8 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
   }
 
   mount() {
-    const { _boardMainWindow, _boardDom, _mounted } = this;
-    if (_mounted) {
-      return;
-    }
+    const { _boardMainWindow, _boardDom } = this;
+
     if (_boardDom && _boardMainWindow) {
       this._mounted = true;
       const aspectRatio = _boardDom.clientHeight / _boardDom.clientWidth
@@ -254,6 +252,7 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
       this._boardMainWindow.destroy();
       this._boardMainWindow = undefined;
     }
+    this._mounted = false;
   }
 
   @bound
@@ -303,13 +302,22 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
       region: this._initArgs?.region!,
     });
 
+    const joinConfig = {
+      roomId,
+      roomToken,
+      userId,
+      userName,
+      hasOperationPrivilege,
+    }
+
     const boardRoom = this._boardRoom;
 
     boardRoom.on(FcrBoardRoomEvent.JoinSuccess, (mainWindow) => {
       this.logger.info('Fcr board join success');
-      this._boardMainWindow = mainWindow;
       mainWindow.updateOperationPrivilege(this.hasPrivilege);
       this._deliverWindowEvents(mainWindow);
+      this.unmount();
+      this._boardMainWindow = mainWindow;
       this.mount();
     });
 
@@ -320,6 +328,15 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     boardRoom.on(FcrBoardRoomEvent.ConnectionStateChanged, (state) => {
       this.logger.info('Fcr board connection state changed to', state);
       // this.broadcast(FcrBoardRoomEvent.ConnectionStateChanged, state);
+      if (state === BoardConnectionState.Disconnected) {
+        this.logger.info('Fcr board start reconnecting');
+        boardRoom.join(joinConfig);
+      }
+      if (state === BoardConnectionState.Connected) {
+        if (this._boardMainWindow) {
+          this._boardMainWindow.emitPageInfo();
+        }
+      }
       this.broadcast(AgoraExtensionWidgetEvent.BoardConnStateChanged, state);
     });
 
@@ -329,13 +346,7 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
       this.broadcast(AgoraExtensionWidgetEvent.BoardMemberStateChanged, state);
     });
 
-    boardRoom.join({
-      roomId,
-      roomToken,
-      userId,
-      userName,
-      hasOperationPrivilege,
-    });
+    boardRoom.join(joinConfig);
   }
 
   private _leave() {
@@ -347,6 +358,9 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
 
   private _deliverWindowEvents(mainWindow: FcrBoardMainWindow) {
     mainWindow.on(FcrBoardMainWindowEvent.MountSuccess, () => {
+      if (this._boardMainWindow) {
+        this._boardMainWindow.emitPageInfo();
+      }
       this.broadcast(AgoraExtensionWidgetEvent.BoardMountStateChanged, BoardMountState.Mounted);
     });
     mainWindow.on(FcrBoardMainWindowEvent.Unmount, () => {

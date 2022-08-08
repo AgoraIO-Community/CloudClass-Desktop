@@ -114,8 +114,16 @@ export class LectureRoomStreamUIStore extends StreamUIStore {
     return ['reward', 'grant'];
   }
 
-  get toolbarPlacement(): 'left' | 'bottom' {
-    return 'bottom';
+  get toolbarPlacement(): 'bottom' | 'left' {
+    return 'left';
+  }
+
+  get toolbarOffset(): number[] {
+    return [10, 0];
+  }
+
+  get fullScreenToolbarOffset(): number[] {
+    return [0, -58];
   }
 
   onInstall(): void {

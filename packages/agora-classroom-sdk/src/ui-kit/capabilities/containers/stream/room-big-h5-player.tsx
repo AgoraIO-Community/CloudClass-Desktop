@@ -1,6 +1,6 @@
 import { useLectureH5UIStores } from '@/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
-import { StreamPlayer, StreamPlaceholder, CarouselGroup } from '.';
+import { StreamPlayerH5, StreamPlaceholder, CarouselGroup } from '.';
 import { FC, useCallback, useState } from 'react';
 import { Layout } from '~components/layout';
 import { EduRoleTypeEnum } from 'agora-edu-core';
@@ -25,7 +25,7 @@ export const RoomBigTeacherStreamH5Container: FC = observer(() => {
       className={classnames('relative', streamLayoutContainerCls)}
       style={streamLayoutContainerDimensions}>
       {teacherCameraStream ? (
-        <StreamPlayer renderAt="Bar" stream={teacherCameraStream} style={teacherVideoStreamSize} />
+        <StreamPlayerH5 stream={teacherCameraStream} style={teacherVideoStreamSize} />
       ) : (
         <StreamPlaceholder role={EduRoleTypeEnum.teacher} style={teacherVideoStreamSize} />
       )}

@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useCallback, FC } from 'react';
+import React, { useState, useEffect, useCallback, FC, useContext } from 'react';
 import { observer } from 'mobx-react';
 import dayjs from 'dayjs';
 import { usePluginStore } from './hooks';
 import addSvg from './add.svg';
 import reduceSvg from './reduce.svg';
-import { Button, Col, Row, Table, TableHeader, transI18n } from '~ui-kit';
+import { Button, Col, Row, Table, TableHeader, themeContext, transI18n } from '~ui-kit';
 import './index.css';
 import awardSvg from './award.svg';
 
-
 const App = observer(() => (
-  <div className='h-full w-full overflow-hidden' style={{ padding: '21px 14px' }}>
+  <div className="h-full w-full overflow-hidden" style={{ padding: '21px 14px' }}>
     <Content />
     <AnswerBtns />
   </div>
@@ -33,6 +32,8 @@ const Content = observer(() => {
     myAnswer,
   } = pluginStore;
 
+  const btnDisabled = optionPermissions.includes('not-allowed');
+
   return (
     <>
       {isShowResultDetail && <ResultDetail />}
@@ -43,7 +44,7 @@ const Content = observer(() => {
               key={index}
               className={`answer-option ${optionPermissions} ${isSelectedAnswer(value) ? 'answer-checked' : ''
                 }`}
-              onClick={(_) => handleOptionClick(value)}>
+              onClick={!btnDisabled ? (_) => handleOptionClick(value) : () => { }}>
               {value}
             </span>
           ))}
@@ -77,7 +78,7 @@ const Content = observer(() => {
 
 const ResultDetail = observer(() => {
   const pluginStore = usePluginStore();
-
+  const { safe, error, textLevel1 } = useContext(themeContext);
   useEffect(() => {
     pluginStore.setList([]);
     if (pluginStore.isTeacherType) {
@@ -115,11 +116,7 @@ const ResultDetail = observer(() => {
                     style={{
                       justifyContent: 'center',
                       color:
-                        col === 'selectedItems'
-                          ? student.isCorrect
-                            ? '#3AB449'
-                            : '#F04C36'
-                          : '#191919',
+                        col === 'selectedItems' ? (student.isCorrect ? safe : error) : textLevel1,
                     }}>
                     {
                       <span

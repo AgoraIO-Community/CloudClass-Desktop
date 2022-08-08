@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { message } from 'antd';
 import { CHAT_TABS_KEYS } from '../contants';
 import WebIM from './WebIM';
+import { ROLE } from '../contants'
 
 export const createListener = (store) => {
   let arr = [];
@@ -89,13 +90,14 @@ export const createListener = (store) => {
       onPresence: (message) => {
         console.log('onPresence>>>', message);
         const activeTabKey = store.getState().isTabKey !== CHAT_TABS_KEYS.notice;
-        if (new_IM_Data.chatRoomId !== message.gid) {
-          return;
-        }
+        const roleType = store.getState().propsData?.roleType
+        const isAdmins = roleType === ROLE.teacher.id || roleType === ROLE.assistant.id
+        if (new_IM_Data.chatRoomId !== message.gid) return;
         const roomUserList = _.get(store.getState(), 'room.roomUsers');
         const showChat = store.getState().showChat;
         switch (message.type) {
           case 'memberJoinChatRoomSuccess':
+            if (!isAdmins) return
             if (message.from === '系统管理员') return;
             arr.push(message.from);
             intervalId && clearInterval(intervalId);

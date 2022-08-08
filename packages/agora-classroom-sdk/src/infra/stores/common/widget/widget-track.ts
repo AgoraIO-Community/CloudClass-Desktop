@@ -1,5 +1,6 @@
 import {
   AgoraWidgetController,
+  AgoraWidgetTrack,
   Dimensions,
   Point,
   Track,
@@ -8,7 +9,6 @@ import {
 } from 'agora-edu-core';
 import { bound } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
-import { AgoraWidgetTrack } from './type';
 import { AgoraTrackSyncedWidget, AgoraWidgetBase } from './widget-base';
 
 export class AgoraWidgetTrackController {
@@ -57,6 +57,7 @@ export class AgoraWidgetTrackController {
     this._handleViewportResize();
 
     this._track = this._initializeTrack(trackProps);
+    this._zIndex = trackProps.zIndex ?? 0;
   }
 
   @computed
@@ -185,7 +186,7 @@ export class AgoraWidgetTrackController {
    * @param zIndex
    */
   @action.bound
-  async updateZIndex(zIndex: number) {
+  async updateRemoteZIndex(zIndex: number) {
     this._zIndex = zIndex;
     const widgetId = this._widget.widgetId;
     await this._controller.updateWidgetProperties(widgetId, {
@@ -193,6 +194,15 @@ export class AgoraWidgetTrackController {
         zIndex,
       },
     });
+  }
+
+  /**
+   * Update zIndex to local
+   * @param zIndex
+   */
+  @action.bound
+  async updateLocalZIndex(zIndex: number) {
+    this._zIndex = zIndex;
   }
 
   @bound

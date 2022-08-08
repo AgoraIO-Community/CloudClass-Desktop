@@ -33,6 +33,11 @@
 }
 .im-section .chat-question-container {
   padding-right: 40px;
+  padding-left: 5px;
+}
+
+.im-section .chat-question-container .ant-radio-wrapper > span.ant-radio + * {
+  padding: 0;
 }
 
 .im-section .emoji-icon {

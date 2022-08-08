@@ -88,11 +88,12 @@ export class RemoteControlUIStore extends EduUIStoreBase {
     this.shareUIStore.closeWindow(WindowID.RemoteControlBar);
   }
   onDestroy(): void {
+    this._disposers.forEach((f) => f());
+    this._disposers = [];
     if (
       AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
       EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass
     ) {
-      this._disposers.forEach((f) => f());
       if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher)
         this.closeRemoteControlToolbar();
     }

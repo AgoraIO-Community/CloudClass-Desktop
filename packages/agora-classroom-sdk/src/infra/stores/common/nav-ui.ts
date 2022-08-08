@@ -1,3 +1,4 @@
+import { AgoraEduSDK } from '@/infra/api';
 import { number2Percent } from '@/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 import {
@@ -20,15 +21,14 @@ import {
   bound,
 } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
-import { DialogCategory } from './share-ui';
-import { AgoraEduSDK } from '@/infra/api';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { SvgIconEnum, transI18n } from '~ui-kit';
-import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
-import { EduUIStoreBase } from './base';
 import { NetworkStateColors } from '~utilities/state-color';
+import { EduUIStoreBase } from './base';
+import { DialogCategory } from './share-ui';
 
 export interface EduNavAction<P = undefined> {
-  id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic';
+  id: 'Record' | 'AskForHelp' | 'Settings' | 'Exit' | 'Camera' | 'Mic' | 'Share';
   title: string;
   iconType: SvgIconEnum;
   iconColor?: string;
@@ -71,6 +71,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
   // 老师流是否在大窗中展示
   @observable teacherStreamWindow = false;
+
+  // 是否显示share弹层
+  @observable shareVisible = false;
+
   //computed
   /**
    * 准备好挂载到 DOM
@@ -171,7 +175,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
     const exitAction: EduNavAction<EduNavRecordActionPayload | undefined> = {
       id: 'Exit',
-      title: 'Exit',
+      title: transI18n('biz-header.exit'),
       iconType: SvgIconEnum.EXIT,
       onClick: async () => {
         const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
@@ -184,6 +188,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
             }
           },
           showOption: isInSubRoom,
+        });
+      },
+    };
+
+    const shareAction: EduNavAction<EduNavRecordActionPayload | undefined> = {
+      id: 'Share',
+      title: 'Share',
+      iconType: SvgIconEnum.LINK,
+      onClick: async () => {
+        runInAction(() => {
+          this.shareVisible = !this.shareVisible;
         });
       },
     };
@@ -237,10 +252,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const teacherMediaActions: EduNavAction[] = [
       {
         id: 'Camera',
-        title: 'camera',
-        iconType: this.localNavCameraOff
-          ? SvgIconEnum.GHOST_CAMERA_OFF
-          : SvgIconEnum.GHOST_CAMERA_ON, // 根据讲台的隐藏和设备的开发控制 icon
+        title: this.localNavCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
+        iconType: this.localNavCameraOff ? SvgIconEnum.CAMERA_DISABLED : SvgIconEnum.CAMERA_ENABLED, // 根据讲台的隐藏和设备的开发控制 icon
         onClick: () => {
           try {
             this._toggleNavCamera();
@@ -251,8 +264,8 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       },
       {
         id: 'Mic',
-        title: 'mic',
-        iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
+        title: this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
+        iconType: this.localMicOff ? SvgIconEnum.MICROPHONE_OFF : SvgIconEnum.MICROPHONE_ON,
         onClick: async () => {
           try {
             this._toggleLocalAudio();
@@ -330,7 +343,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const studentMediaActions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [
       {
         id: 'Camera',
-        title: 'camera',
+        title: this.localCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
         iconType: this.localCameraOff ? SvgIconEnum.GHOST_CAMERA_OFF : SvgIconEnum.GHOST_CAMERA_ON,
         onClick: () => {
           try {
@@ -342,7 +355,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       },
       {
         id: 'Mic',
-        title: 'mic',
+        title: this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
         iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
         onClick: async () => {
           try {
@@ -357,7 +370,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const commonActions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [
       {
         id: 'Settings',
-        title: 'Settings',
+        title: transI18n('biz-header.setting'),
         iconType: SvgIconEnum.SET,
         onClick: () => {
           this.shareUIStore.addDialog(DialogCategory.DeviceSetting);
@@ -365,6 +378,10 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       },
       exitAction,
     ];
+
+    if (AgoraEduSDK.shareUrl) {
+      commonActions.splice(1, 0, shareAction);
+    }
 
     const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
 
@@ -801,6 +818,11 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       }
     }
     return duration.format(formatItems.join(' '));
+  }
+
+  @action
+  closeShare() {
+    this.shareVisible = false;
   }
 
   /**

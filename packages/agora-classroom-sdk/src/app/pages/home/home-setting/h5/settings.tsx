@@ -42,13 +42,13 @@ export const SettingsMenu: FC<SettingsMenuProps> = ({ addMenuPopup, removeMenuPo
         removeMenuPopup(SettingsMenuEnum.Settings);
       }}>
       <Menu data={menus} />
-      <div
+      {/* <div
         className="logout-btn px-6 rounded-md border border-slate-200 text-slate-900 absolute inset-x-0 flex justify-center items-center"
         onClick={() => {
           setConfirmDialog(true);
         }}>
         {transI18n('settings_logout')}
-      </div>
+      </div> */}
       {confirmDialog ? (
         <ConfirmDialogH5
           title={transI18n('fcr_alert_title')}

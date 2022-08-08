@@ -151,7 +151,9 @@ body,
   transition: 0.5s;
   margin-right: -300px;
 }
-
+.telebox-collector {
+  @apply bg-component !important;
+}
 .telebox-collector img {
   display: inline-block !important;
 }
@@ -198,7 +200,7 @@ body,
 .hands-up-manager > .fcr-card:hover path,
 .hands-up-sender:hover path,
 .roster-btn:hover path,
-.chat-panel:hover path {
+.chat-min:hover path {
   fill: #fff;
 }
 
@@ -214,9 +216,9 @@ body,
   background: transparent;
 }
 .rtm-chat-4 .small-class-chat-fixed {
+  @apply border border-solid border-divider !important;
   width: 300px;
   height: 500px;
-  border: 1px solid #ececf1 !important;
 }
 .rtm-chat-2 .small-class-chat-fixed {
   height: 100% !important;
@@ -236,5 +238,5 @@ body,
 }
 
 .fcr-room-bg {
-  @apply bg-background;
+  @apply bg-foreground;
 }

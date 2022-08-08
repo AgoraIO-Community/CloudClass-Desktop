@@ -4,13 +4,13 @@ import { CSSProperties, FC, useEffect, useMemo, useState } from 'react';
 import { HandsUp } from '../hands-up';
 import './index.css';
 
-interface H5ChatProps {
+interface ChatH5Props {
   showHandsUp?: boolean;
 }
 
-export const H5Chat = observer<FC<H5ChatProps>>(({ showHandsUp = false }) => {
+export const ChatH5 = observer<FC<ChatH5Props>>(({ showHandsUp = false }) => {
   // 下面的逻辑是为了能够让 举手按钮提留在正确的位置，兼容每个设备浏览器底部的区域
-  const [bottom, setBottom] = useState(0);
+  const [bottom, setBottom] = useState(65);
   const styles = useMemo<CSSProperties>(() => {
     return {
       position: 'absolute',
@@ -23,7 +23,7 @@ export const H5Chat = observer<FC<H5ChatProps>>(({ showHandsUp = false }) => {
     let loopTime = 10000;
     const interval = 500;
     const timer = setInterval(() => {
-      const inputBox = document.getElementsByClassName('input-box');
+      const inputBox = document.getElementsByClassName('fcr-hx-input-box');
       if (inputBox.length > 0) {
         const offsetHeight = (inputBox[0] as HTMLDivElement)?.offsetHeight;
         if (offsetHeight) {

@@ -11,7 +11,7 @@ import {
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
-import MD5 from 'js-md5';
+import md5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
@@ -35,10 +35,10 @@ const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: EduRoomSubtypeEnum } = {
 };
 
 const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } = {
-  'premium-service': EduRoomServiceTypeEnum.RTC,
-  'standard-service': EduRoomServiceTypeEnum.Live,
-  'latency-service': EduRoomServiceTypeEnum.BlendCDN,
-  'mix-service': EduRoomServiceTypeEnum.MixRTCCDN,
+  'premium-service': EduRoomServiceTypeEnum.LivePremium,
+  'standard-service': EduRoomServiceTypeEnum.LiveStandard,
+  'latency-service': EduRoomServiceTypeEnum.CDN,
+  'mix-service': EduRoomServiceTypeEnum.Fusion,
   'mix-stream-cdn-service': EduRoomServiceTypeEnum.MixStreamCDN,
   'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
@@ -57,7 +57,6 @@ export const VocationalHomeH5Page = observer(() => {
   const [duration] = useState<number>(30);
   const [language, setLanguage] = useState<string>('');
   const [region] = useState<EduRegion>(EduRegion.CN);
-  const [debug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
 
@@ -95,18 +94,12 @@ export const VocationalHomeH5Page = observer(() => {
   const roomSubtype = SCENARIOS_ROOM_SUBTYPE_MAP[curScenario];
 
   const userUuid = useMemo(() => {
-    if (!debug) {
-      return `${MD5(userName)}${role}`;
-    }
-    return `${userId}`;
-  }, [role, userName, debug, userId]);
+    return `${md5(userName)}${userRole}`;
+  }, [role, userName, userId]);
 
   const roomUuid = useMemo(() => {
-    if (!debug) {
-      return `${roomName}${scenario}`;
-    }
-    return `${roomId}`;
-  }, [scenario, roomName, debug, roomId]);
+    return `${md5(roomName)}${scenario}`;
+  }, [scenario, roomName, roomId]);
 
   const onChangeRole = (value: string) => {
     setRole(value);
@@ -204,13 +197,14 @@ export const VocationalHomeH5Page = observer(() => {
           HomeApi.shared.domain = tokenDomain;
           const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
-          const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
+          const channelProfile = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? 0 : 1;
           const webRTCCodec =
-            roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-            roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
+            roomServiceType === EduRoomServiceTypeEnum.CDN ||
+            roomServiceType === EduRoomServiceTypeEnum.Fusion
               ? 'h264'
               : 'vp8';
-          const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
+          const webRTCMode =
+            roomServiceType === EduRoomServiceTypeEnum.LiveStandard ? 'live' : 'rtc';
           const config: HomeLaunchOption = {
             appId,
             sdkDomain: domain,

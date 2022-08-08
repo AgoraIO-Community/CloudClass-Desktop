@@ -1,7 +1,11 @@
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
 import { useHomeStore } from '@/infra/hooks';
+import { ToastType } from '@/infra/stores/common/share-ui';
+import { FcrMultiThemeMode } from '@/infra/types/config';
 import { GlobalStorage, storage } from '@/infra/utils';
+import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -11,7 +15,7 @@ import {
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import dayjs from 'dayjs';
-import MD5 from 'js-md5';
+import md5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -19,11 +23,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
 import { Toast, transI18n } from '~ui-kit';
 import { Home } from '~ui-kit/scaffold';
-
-import { ToastType } from '@/infra/stores/common/share-ui';
-import { FcrMultiThemeMode } from '@/infra/types/config';
-import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { HomeApi } from './home-api';
 import { HomeSettingContainer } from './home-setting';
 import { MessageDialog } from './message-dialog';
@@ -42,13 +41,20 @@ const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: EduRoomSubtypeEnum } = {
   'mid-class': EduRoomSubtypeEnum.Standard,
 };
 const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } = {
-  'premium-service': EduRoomServiceTypeEnum.RTC,
-  'standard-service': EduRoomServiceTypeEnum.Live,
-  'latency-service': EduRoomServiceTypeEnum.BlendCDN,
-  'mix-service': EduRoomServiceTypeEnum.MixRTCCDN,
+  'premium-service': EduRoomServiceTypeEnum.LivePremium,
+  'standard-service': EduRoomServiceTypeEnum.LiveStandard,
+  'latency-service': EduRoomServiceTypeEnum.CDN,
+  'mix-service': EduRoomServiceTypeEnum.Fusion,
   'mix-stream-cdn-service': EduRoomServiceTypeEnum.MixStreamCDN,
   'hosting-scene': EduRoomServiceTypeEnum.HostingScene,
 };
+
+export const webRTCCodecH264 = [
+  EduRoomServiceTypeEnum.CDN,
+  EduRoomServiceTypeEnum.Fusion,
+  EduRoomServiceTypeEnum.MixStreamCDN,
+  EduRoomServiceTypeEnum.HostingScene,
+];
 
 // 1. 伪直播场景不需要pretest
 // 2. 合流转推场景下的学生角色不需要pretest
@@ -83,7 +89,6 @@ export const VocationalHomePage = observer(() => {
   const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
   const [curService, setService] = useState<string>(launchConfig.curService || '');
   const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
-  const [debug, setDebug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -112,18 +117,12 @@ export const VocationalHomePage = observer(() => {
   const roomSubtype = SCENARIOS_ROOM_SUBTYPE_MAP[curScenario];
 
   const userUuid = useMemo(() => {
-    if (!debug) {
-      return `${MD5(userName)}${role}`;
-    }
-    return `${userId}`;
-  }, [role, userName, debug, userId]);
+    return `${md5(userName)}${userRole}`;
+  }, [role, userName, userId]);
 
   const roomUuid = useMemo(() => {
-    if (!debug) {
-      return `${roomName}${scenario}`;
-    }
-    return `${roomId}`;
-  }, [scenario, roomName, debug, roomId]);
+    return `${md5(roomName)}${scenario}`;
+  }, [scenario, roomName, roomId]);
 
   const onChangeRole = (value: string) => {
     setRole(value);
@@ -162,10 +161,6 @@ export const VocationalHomePage = observer(() => {
 
   const onChangeUserName = (newValue: string) => {
     text['userName'](newValue);
-  };
-
-  const onChangeDebug = (newValue: boolean) => {
-    setDebug(newValue);
   };
 
   const onChangeEncryptionMode = (newValue: string) => {
@@ -219,13 +214,9 @@ export const VocationalHomePage = observer(() => {
       const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
-      const channelProfile = roomServiceType === EduRoomServiceTypeEnum.RTC ? 0 : 1;
-      const webRTCCodec =
-        roomServiceType === EduRoomServiceTypeEnum.BlendCDN ||
-        roomServiceType === EduRoomServiceTypeEnum.MixRTCCDN
-          ? 'h264'
-          : 'vp8';
-      const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.Live ? 'live' : 'rtc';
+      const channelProfile = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? 0 : 1;
+      const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
+      const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.LiveStandard ? 'live' : 'rtc';
 
       const needPretest = vocationalNeedPreset(role, roomServiceType, roomSubtype);
 
@@ -306,7 +297,7 @@ export const VocationalHomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
-        showServiceOptions
+        showServiceOptions={false}
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
@@ -324,12 +315,10 @@ export const VocationalHomePage = observer(() => {
         language={language as string}
         onChangeRegion={onChangeRegion}
         onChangeLanguage={onChangeLanguage}
-        debug={debug}
         encryptionMode={encryptionMode}
         encryptionKey={encryptionKey}
         onChangeEncryptionMode={onChangeEncryptionMode}
         onChangeEncryptionKey={onChangeEncryptionKey}
-        onChangeDebug={onChangeDebug}
         onChangeRole={onChangeRole}
         onChangeScenario={onChangeScenario}
         onChangeService={onChangeService}

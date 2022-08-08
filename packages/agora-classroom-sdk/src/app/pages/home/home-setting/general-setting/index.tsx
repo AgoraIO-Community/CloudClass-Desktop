@@ -54,7 +54,7 @@ export const GeneralSetting = observer(() => {
           <RadioGroup name="theme" radios={themeOptions} onChange={setTheme} value={theme} />
         </div>
       </div>
-      <p>
+      {/* <p>
         <button
           className="px-4 rounded-md border border-slate-600 text-slate-600"
           type="button"
@@ -63,7 +63,7 @@ export const GeneralSetting = observer(() => {
           }}>
           {transI18n('settings_close_account')}
         </button>
-      </p>
+      </p> */}
       {closeAccountModal && (
         <Modal
           title={transI18n('settings_close_account')}

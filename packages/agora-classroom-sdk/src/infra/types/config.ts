@@ -19,6 +19,8 @@ export enum FcrMultiThemeMode {
 export interface FcrUIConfig {
   /** 配置版本号 */
   get version(): string;
+  /** 场景名称 */
+  get name(): string;
   get header(): FcrHeader;
   get stage(): FcrStage;
   get engagement(): FcrEngagement;
@@ -77,8 +79,8 @@ export interface FcrEngagement {
   get breakoutRoom(): FcrUIBaseProps;
   get roster(): FcrUIBaseProps;
   get raiseHand(): FcrUIBaseProps;
+  get laserPointer(): FcrUIBaseProps;
   get netlessBoard(): FcrNetlessBoard & FcrUIBaseProps;
-  get agoraChat(): FcrAgoraChat & FcrUIBaseProps;
 }
 
 /**
@@ -142,11 +144,9 @@ export interface FcrNetlessBoard {
 
   get eraser(): FcrUIBaseProps;
 
-  get hand(): FcrUIBaseProps;
+  get move(): FcrUIBaseProps;
 
   get save(): FcrUIBaseProps;
-
-  get laserPointer(): FcrUIBaseProps;
 }
 /**
  * 聊天工具配置

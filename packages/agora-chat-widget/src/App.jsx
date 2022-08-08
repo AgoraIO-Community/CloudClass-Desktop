@@ -81,7 +81,7 @@ const App = function (props) {
     <>
       {showChat ? (
         <div
-          className="app w-full"
+          className="fcr-hx-app w-full"
           style={{
             width: configUIVisible.isFullSize ? '100%' : '300px',
             height: configUIVisible.isFullSize ? '100%' : '530px',
@@ -89,15 +89,16 @@ const App = function (props) {
           <Chat />
         </div>
       ) : (
-        <div className="chat">
+          <div className="fcr-hx-chat">
           <div
-            className="show-chat-icon"
+              className="fcr-hx-show-chat-icon"
             onClick={() => {
               // 展开聊天
               onChangeModal();
             }}>
+            {/* <img src={showChat_icon} width="24" height="24" /> */}
             <SvgImg type={SvgIconEnum.CHAT} />
-            {(showRed || showAnnouncementNotice) && <div className="chat-notice"></div>}
+              {(showRed || showAnnouncementNotice) && <div className="fcr-hx-chat-notice"></div>}
           </div>
         </div>
       )}

@@ -1,16 +1,16 @@
-import { changeLanguage, Layout, Toast, transI18n, useI18n } from '~ui-kit';
+import { Layout, Toast, transI18n, useI18n } from '~ui-kit';
 import './style.css';
 import { addResource } from '../../components/i18n';
-import { FC, useEffect, useState, Fragment } from 'react';
+import { FC, useEffect, useState, Fragment, useRef } from 'react';
 import { useHomeStore } from '@/infra/hooks';
-import { EduRegion, } from 'agora-edu-core';
+import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import { getBrowserLanguage, storage } from '@/infra/utils';
-import dayjs from 'dayjs';
 import md5 from 'js-md5';
 import { useHistory } from 'react-router';
 import { HomeApi } from './home-api';
 import { HomeLaunchOption } from '@/app/stores/home';
-import { LanguageEnum } from '@/infra/api';
+import { AgoraEduSDK, LanguageEnum } from '@/infra/api';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { v4 as uuidv4 } from 'uuid';
 import { observer } from 'mobx-react';
@@ -19,251 +19,269 @@ import { ToastType } from '@/infra/stores/common/share-ui';
 import { MessageDialog } from './message-dialog';
 import { HomeSettingContainer } from './home-setting';
 import { LoginForm } from './login-form';
-
 addResource();
 
-
-const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
-
 const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
 const REACT_APP_AGORA_APP_CERTIFICATE = process.env.REACT_APP_AGORA_APP_CERTIFICATE;
 
-declare const BUILD_TIME: string;
-declare const BUILD_COMMIT_ID: string;
-
 declare global {
-    interface Window {
-        __launchLanguage: string;
-        __launchRoomName: string;
-        __launchUserName: string;
-        __launchRoleType: string;
-        __launchRoomType: string;
-        __launchCompanyId: string;
-        __launchProjectId: string;
-    }
+  interface Window {
+    __launchRegion: string;
+    __launchLanguage: string;
+    __launchRoomName: string;
+    __launchUserName: string;
+    __launchRoleType: string;
+    __launchRoomType: string;
+    __launchCompanyId: string;
+    __launchProjectId: string;
+  }
 }
 
-
-
 const regionByLang = {
-    zh: EduRegion.CN,
-    en: EduRegion.NA,
+  zh: EduRegion.CN,
+  en: EduRegion.NA,
 };
 
 
+
+const useBuilderConfig = () => {
+  const builderResource = useRef({
+    scenes: {},
+    themes: {}
+  });
+  const t = useI18n();
+
+  const defaultScenes = [{ text: t('home.roomType_1v1'), value: `${EduRoomTypeEnum.Room1v1Class}` },
+  { text: t('home.roomType_interactiveSmallClass'), value: `${EduRoomTypeEnum.RoomSmallClass}` },
+  { text: t('home.roomType_interactiveBigClass'), value: `${EduRoomTypeEnum.RoomBigClass}` }];
+
+  const [roomTypes, setRoomTypes] = useState<EduRoomTypeEnum[]>([]);
+
+  const sceneOptions = defaultScenes.filter(({ value }) => {
+    return roomTypes.some((t) => `${t}` === value);
+  });
+
+  useEffect(() => {
+    const companyId = window.__launchCompanyId;
+    const projectId = window.__launchProjectId;
+
+    if (companyId && projectId) {
+      HomeApi.shared.setBuilderDomainRegion(EduRegion.CN);
+      HomeApi.shared.getBuilderResource(companyId, projectId).then(({ scenes, themes }) => {
+        builderResource.current = {
+          scenes: scenes ?? {},
+          themes: themes ? { default: themes } : {},
+        };
+
+        AgoraEduSDK.setParameters(
+          JSON.stringify({
+            uiConfigs: builderResource.current.scenes,
+            themes: builderResource.current.themes,
+          }),
+        );
+
+        setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
+      });
+    } else {
+      setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
+    }
+  }, []);
+
+  return {
+    builderResource,
+    sceneOptions: sceneOptions.length ? sceneOptions : defaultScenes
+  };
+}
+
+
 export const HomePage = () => {
-    const t = useI18n();
+  const homeStore = useHomeStore();
+  const history = useHistory();
 
-    const homeStore = useHomeStore();
+  const launchConfig = homeStore.launchConfig;
 
-    const launchConfig = homeStore.launchConfig;
+  const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
 
-    const [language, setLanguage] = useState<string>('');
-    const [region, setRegion] = useState<string>(EduRegion.CN);
-    const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
+  const [loading, setLoading] = useState<boolean>(false);
 
-    const [loading, setLoading] = useState<boolean>(false);
+  const t = useI18n();
 
-    useEffect(() => {
-        const lang = homeStore.launchOption.language || getBrowserLanguage();
-        const region = homeStore.region || regionByLang[getBrowserLanguage()];
-        changeLanguage(lang);
-        setLanguage(lang);
-        setRegion(region);
-    }, []);
+  const { builderResource, sceneOptions } = useBuilderConfig();
 
-    // const handleChangeRegion = (r: string) => {
-    //     const region = r as EduRegion;
-    //     setRegion(region);
-    //     homeStore.setRegion(region);
-    // };
+  useEffect(() => {
+    const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
+    const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
+    homeStore.setLanguage(language as LanguageEnum);
+    homeStore.setRegion(region as EduRegion);
 
-    // const handleChangeLanguage = (l: string) => {
-    //     const language = l as LanguageEnum
-    //     changeLanguage(language);
-    //     setLanguage(language);
-    //     homeStore.setLanguage(language);
-    // };
 
-    const history = useHistory();
+    if (history.location.pathname === '/share') {
+      setTimeout(() => {
+        handleSubmit({
+          roleType: window.__launchRoleType,
+          roomType: window.__launchRoomType,
+          roomName: window.__launchRoomName,
+          userName: `user_${''.padEnd(6, `${Math.floor(Math.random() * 10000)}`)}`,
+        });
+      });
+    }
+  }, []);
 
-    const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
+  const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
 
-    let tokenDomain = '';
-    let tokenDomainCollection: any = {};
+
+  const handleSubmit = async ({
+    roleType,
+    roomType: rt,
+    roomName,
+    userName,
+  }: {
+    roleType: string;
+    roomType: string;
+    roomName: string;
+    userName: string;
+  }) => {
+    if (loading) {
+      return;
+    }
+    const language = homeStore.language || getBrowserLanguage();
+    const region = homeStore.region || regionByLang[getBrowserLanguage()];
+
+    const userRole = parseInt(roleType);
+
+    const roomType = parseInt(rt);
+
+    const userUuid = `${md5(userName)}${userRole}`;
+
+    const roomUuid = `${md5(roomName)}${roomType}`;
 
     try {
-        tokenDomainCollection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
+      setLoading(true);
+
+      const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
+
+      HomeApi.shared.setDomainRegion(region);
+
+      const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, userRole);
+
+      const companyId = window.__launchCompanyId;
+      const projectId = window.__launchProjectId;
+
+      const shareUrl =
+        AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron
+          ? ''
+          : `${location.origin}${location.pathname
+          }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student
+          }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
+
+      console.log('## get rtm Token from demo server', token);
+
+      const config: HomeLaunchOption = {
+        appId,
+        sdkDomain: domain,
+        pretest: true,
+        courseWareList: courseWareList.slice(0, 1),
+        language: language as LanguageEnum,
+        userUuid: `${userUuid}`,
+        rtmToken: token,
+        roomUuid: `${roomUuid}`,
+        roomType: roomType,
+        roomName: `${roomName}`,
+        userName: userName,
+        roleType: userRole,
+        region: region as EduRegion,
+        duration: +duration * 60,
+        latencyLevel: 2,
+        scenes: builderResource.current.scenes,
+        themes: builderResource.current.themes,
+        shareUrl,
+      };
+
+      config.appId = REACT_APP_AGORA_APP_ID || config.appId;
+      // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
+      // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
+      if (REACT_APP_AGORA_APP_CERTIFICATE) {
+        config.rtmToken = RtmTokenBuilder.buildToken(
+          config.appId,
+          REACT_APP_AGORA_APP_CERTIFICATE,
+          config.userUuid,
+          RtmRole.Rtm_User,
+          0,
+        );
+
+        console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
+      }
+      homeStore.setLaunchConfig(config);
+      history.push('/launch');
     } catch (e) {
-        tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
+      homeStore.addToast({
+        id: uuidv4(),
+        desc:
+          (e as Error).message === 'Network Error'
+            ? transI18n('home.network_error')
+            : (e as Error).message,
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
-    const commitID = BUILD_COMMIT_ID;
-
-
-    const handleSubmit = async ({ roleType, roomType: rt, roomName, userName }: { roleType: string, roomType: string, roomName: string, userName: string }) => {
-        if (loading) {
-            return;
-        }
-        const userRole = parseInt(roleType);
-
-        const roomType = parseInt(rt);
-
-        const userUuid = `${md5(userName)}${userRole}`;
-
-        const roomUuid = `${roomName}${roomType}`;
-
-        try {
-            setLoading(true);
-            const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-            if (!tokenDomain && tokenDomainCollection) {
-                switch (region) {
-                    case 'CN':
-                        tokenDomain = tokenDomainCollection['prod_cn'];
-                        break;
-                    case 'AP':
-                        tokenDomain = tokenDomainCollection['prod_ap'];
-                        break;
-                    case 'NA':
-                        tokenDomain = tokenDomainCollection['prod_na'];
-                        break;
-                    case 'EU':
-                        tokenDomain = tokenDomainCollection['prod_eu'];
-                        break;
-                }
-            }
-
-            HomeApi.shared.domain = tokenDomain;
-
-            const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, userRole);
-
-            const companyId = window.__launchCompanyId;
-            const projectId = window.__launchProjectId;
-
-            let scenes = {};
-            let themes = {};
-
-            if (companyId && projectId) {
-                ({ scenes, themes } = await HomeApi.shared.getBuilderResource(companyId, projectId));
-            }
-
-
-            console.log('## get rtm Token from demo server', token);
-
-            const config: HomeLaunchOption = {
-                appId,
-                sdkDomain: domain,
-                pretest: true,
-                courseWareList: courseWareList.slice(0, 1),
-                language: language as LanguageEnum,
-                userUuid: `${userUuid}`,
-                rtmToken: token,
-                roomUuid: `${roomUuid}`,
-                roomType: roomType,
-                roomName: `${roomName}`,
-                userName: userName,
-                roleType: userRole,
-                region: region as EduRegion,
-                duration: +duration * 60,
-                latencyLevel: 2,
-                scenes,
-                themes: { default: themes }
-            };
-
-            config.appId = REACT_APP_AGORA_APP_ID || config.appId;
-            // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
-            // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
-            if (REACT_APP_AGORA_APP_CERTIFICATE) {
-                config.rtmToken = RtmTokenBuilder.buildToken(
-                    config.appId,
-                    REACT_APP_AGORA_APP_CERTIFICATE,
-                    config.userUuid,
-                    RtmRole.Rtm_User,
-                    0,
-                );
-
-                console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
-            }
-            homeStore.setLaunchConfig(config);
-            history.push('/launch');
-        } catch (e) {
-            homeStore.addToast({
-                id: uuidv4(),
-                desc:
-                    (e as Error).message === 'Network Error'
-                        ? transI18n('home.network_error')
-                        : (e as Error).message,
-                type: 'error',
-            });
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    // const languageOptions = [
-    //     { text: '中文', value: 'zh' },
-    //     { text: 'English', value: 'en' },
-    // ];
-
-    // const regionOptions = [
-    //     { text: 'NA', value: 'NA' },
-    //     { text: 'AP', value: 'AP' },
-    //     { text: 'CN', value: 'CN' },
-    //     { text: 'EU', value: 'EU' },
-    // ];
-
-    return (
-        <Fragment>
-            <MessageDialog />
-            <HomeToastContainer />
-            <div className="app-home h-full">
-                <nav className='absolute left-0 top-0 w-full text-white' style={{ padding: 32, zIndex: 10 }}>
-                    <Layout className='justify-between items-end'>
-                        <Layout className='nav-header flex items-center' >
-                            <span className='product-logo' />
-                            <span className='product-name'>Flexible Classroom</span>
-                        </Layout>
-                        <Layout>
-                            {/* <div className='mr-3'>
+  return (
+    <Fragment>
+      <MessageDialog />
+      <HomeToastContainer />
+      <div className="app-home h-full">
+        <nav className="absolute left-0 top-0 w-full text-white z-10" style={{ padding: 32 }}>
+          <Layout className="justify-between items-end">
+            <Layout className="nav-header flex items-center">
+              <span className="product-logo" />
+              <span className="product-name">{t('home_product_name')}</span>
+            </Layout>
+            <Layout>
+              {/* <div className='mr-3'>
                                 <Dropdown options={regionOptions} value={region} onChange={handleChangeRegion} />
                             </div>
                             <div className='mr-3'>
                                 <Dropdown options={languageOptions} value={language} onChange={handleChangeLanguage} width={68} />
                             </div> */}
-                            <span className='about-btn cursor-pointer'>
-                                <HomeSettingContainer />
-                            </span>
-                        </Layout>
-                    </Layout>
-                </nav>
-                <div className='form-section fixed animated-form' style={{ top: 'min(max(calc( 50% - 270px ), 100px), 200px)', right: 40, padding: '36px 54px 26px' }}>
-                    <LoginForm onSubmit={handleSubmit} />
-                </div>
-            </div>
-        </Fragment>
-    )
-}
-
-
+              <span className="about-btn cursor-pointer">
+                <HomeSettingContainer />
+              </span>
+            </Layout>
+          </Layout>
+        </nav>
+        <div
+          className="form-section fixed animated-form"
+          style={{
+            top: 'min(max(calc( 50% - 270px ), 100px), 200px)',
+            right: 40,
+            padding: '36px 54px 26px',
+          }}>
+          <LoginForm onSubmit={handleSubmit} sceneOptions={sceneOptions} />
+        </div>
+      </div>
+    </Fragment>
+  );
+};
 
 const HomeToastContainer: FC = observer(() => {
-    const { toastList, removeToast } = useHomeStore();
-    return (
-        <TransitionGroup style={{ justifyContent: 'center', display: 'flex' }}>
-            {toastList.map((value: ToastType, idx: number) => (
-                <CSSTransition classNames="toast-animation" timeout={1000} key={`${value.id}`}>
-                    <Toast
-                        style={{ position: 'absolute', top: 50 * (idx + 1), zIndex: 9999 }}
-                        type={value.type}
-                        closeToast={() => {
-                            removeToast(value.id);
-                        }}>
-                        {value.desc}
-                    </Toast>
-                </CSSTransition>
-            ))}
-        </TransitionGroup>
-    );
+  const { toastList, removeToast } = useHomeStore();
+  return (
+    <TransitionGroup style={{ justifyContent: 'center', display: 'flex' }}>
+      {toastList.map((value: ToastType, idx: number) => (
+        <CSSTransition classNames="toast-animation" timeout={1000} key={`${value.id}`}>
+          <Toast
+            style={{ position: 'absolute', top: 50 * (idx + 1), zIndex: 9999 }}
+            type={value.type}
+            closeToast={() => {
+              removeToast(value.id);
+            }}>
+            {value.desc}
+          </Toast>
+        </CSSTransition>
+      ))}
+    </TransitionGroup>
+  );
 });

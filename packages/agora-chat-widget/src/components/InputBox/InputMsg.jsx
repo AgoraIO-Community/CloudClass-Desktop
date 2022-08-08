@@ -8,7 +8,7 @@ import { messageAction } from '../../redux/actions/messageAction';
 import { setQuestioinStateAction } from '../../redux/actions/roomAction';
 import imgIcon from '../../themes/img/img.png';
 import screenshotIcon from '../../themes/img/screenshot.png';
-import emojiIcon from '../../themes/svg/emoji.svg';
+import emojiIcon from '../../themes/img/emoji.png';
 import { Emoji } from '../../utils/emoji';
 import isElctronPlatform from '../../utils/platform';
 import { Button } from '../Button';
@@ -18,11 +18,11 @@ import ScreenshotMenu from './Screenshot';
 // 展示表情
 export const ShowEomji = ({ getEmoji }) => {
   return (
-    <div className="emoji-container">
+    <div className="fcr-hx-emoji-container">
       {Emoji.map((emoji, key) => {
         return (
           <span
-            className="emoji-content"
+            className="fcr-hx-emoji-content"
             key={key}
             onClick={(e) => {
               getEmoji(e);
@@ -169,7 +169,7 @@ export const InputMsg = ({ allMutePermission }) => {
       return (
         <Input.TextArea
           placeholder={transI18n('chat.enter_contents')}
-          className={classnames('input-chat', { 'input-chating-status': inputStatus })}
+          className={classnames('fcr-hx-input-chat', { 'input-chating-status': inputStatus })}
           onChange={(e) => changeMsg(e)}
           onFocus={handleTextareFoucs}
           value={content}
@@ -183,19 +183,19 @@ export const InputMsg = ({ allMutePermission }) => {
   return (
     <>
       <div>
-        <div className="chat-icon">
+        <div className="fcr-hx-chat-icon">
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {configUIVisible.emoji && (
               <Popover
                 overlayClassName="chat-icon-popover"
                 content={<ShowEomji getEmoji={getEmoji} />}
                 trigger="click">
-                <img src={emojiIcon} className="emoji-icon" />
+                <img src={emojiIcon} className="fcr-hx-emoji-icon" />
               </Popover>
             )}
-            {configUIVisible.imgIcon && (
-              <div onClick={updateImage} className="chat-tool-item">
-                <img src={imgIcon} alt="" className="emoji-icon" />
+            {configUIVisible.screenshotIcon && (
+              <div onClick={updateImage} className="fcr-hx-chat-tool-item">
+                <img src={imgIcon} alt="" className="fcr-hx-emoji-icon" />
                 <input
                   id="uploadImage"
                   onChange={() => {
@@ -210,28 +210,30 @@ export const InputMsg = ({ allMutePermission }) => {
               </div>
             )}
             {configUIVisible.screenshotIcon && isElectron && (
-              <Popover content={<ScreenshotMenu couterRef={couterRef} />} className="emoji-modal">
-                <img src={screenshotIcon} className="emoji-icon" alt="" />
+              <Popover
+                content={<ScreenshotMenu couterRef={couterRef} />}
+                className="fcr-hx-emoji-modal">
+                <img src={screenshotIcon} className="fcr-hx-emoji-icon" alt="" />
               </Popover>
             )}
             {configUIVisible.showQuestionBox && (
-              <>
-                <div className="divider" />
-                <div className="chat-question-container" onClick={toggleQuestionState}>
-                  <Radio checked={isQuestion}>
-                    <div className={isQuestion ? 'question-text question-selected' : 'question-text'}>
+              <div className="chat-question-container" onClick={toggleQuestionState}>
+                <Radio checked={isQuestion}>
+                  <div
+                    className={
+                      isQuestion ? 'fcr-hx-question-text question-selected' : 'fcr-hx-question-text'
+                    }>
                     {transI18n('question')}
-                    </div>
-                  </Radio>
-                </div>
-              </>
+                  </div>
+                </Radio>
+              </div>
             )}
           </div>
           {!configUIVisible.allMute
             ? null
             : allMutePermission && (
                 <div>
-                  <span className="all-mute-text">{transI18n('chat.all_mute')}</span>
+                  <span className="fcr-hx-all-mute-text">{transI18n('chat.all_mute')}</span>
                   <Switch
                     className="chat-switch"
                     checked={isAllMute}
@@ -244,7 +246,7 @@ export const InputMsg = ({ allMutePermission }) => {
         </div>
         {renderInputBox}
         {configUIVisible.btnSend && (
-          <Button type="primary" className="send-btn" onClick={sendTextMessage()}>
+          <Button type="primary" className="fcr-hx-send-btn" onClick={sendTextMessage()}>
             {transI18n('chat.send')}
           </Button>
         )}

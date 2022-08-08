@@ -1,23 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Button,
-  CheckBox,
-  Col,
-  Input,
-  Placeholder,
-  Row,
-  Search,
-  Table,
-  TableHeader,
-  transI18n,
-} from '~ui-kit';
+import { useStore } from '@/infra/hooks/ui-store';
+import { OnPodiumStateEnum } from '@/infra/stores/common/type';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
-import { useStore } from '@/infra/hooks/ui-store';
-import SearchSvg from './assets/search.svg';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Col, Row, Search, SvgIconEnum, SvgImg, Table, TableHeader, transI18n } from '~ui-kit';
 import './invite-table.css';
-import { EduRoleTypeEnum } from 'agora-edu-core';
-import { OnPodiumStateEnum } from '@/infra/stores/common/type';
 
 interface InviteTableProps {
   onSearchChange?: (keyword: string) => void;
@@ -85,7 +73,7 @@ export const InviteTable: React.FC<InviteTableProps> = observer(() => {
         <Search
           value={searchKeyword}
           onSearch={onKeywordChange}
-          prefix={<img src={SearchSvg} />}
+          prefix={<SvgImg type={SvgIconEnum.SEARCH} />}
           inputPrefixWidth={20}
           placeholder={transI18n('marketing.search')}
         />

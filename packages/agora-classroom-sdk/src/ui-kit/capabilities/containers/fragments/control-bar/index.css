@@ -1,11 +1,11 @@
 .fcr-remote-control-bar {
+  @apply bg-component;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-radius: 30px;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   padding: 8px 12px;
-  background: #fff;
   margin: 0 6px;
 }
 .fcr-remote-control-bar * {
@@ -15,7 +15,6 @@
 
 .fcr-remote-control-bar-select {
   width: 180px;
-  border-right: 1px solid #e5e5f0;
   padding-right: 10px;
   margin-right: 10px;
 }

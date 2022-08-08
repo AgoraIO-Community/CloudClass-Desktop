@@ -72,10 +72,10 @@
 .tabs-bottom > .tabs-nav::before,
 .tabs-top > div > .tabs-nav::before,
 .tabs-bottom > div > .tabs-nav::before {
+  @apply border-b border-solid border-divider;
   position: absolute;
   right: 0;
   left: 0;
-  border-bottom: 1px solid #f0f0f0;
   content: '';
 }
 .tabs-top > .tabs-nav .tabs-ink-bar,
@@ -431,10 +431,10 @@
 }
 
 .tabs {
+  @apply text-level1;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: rgba(0, 0, 0, 0.85);
   font-size: 14px;
   font-variant: tabular-nums;
   line-height: 1.5715;
@@ -542,6 +542,7 @@
   pointer-events: none;
 }
 .tabs-tab {
+  @apply text-level1;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -551,7 +552,6 @@
   border: 0;
   outline: none;
   cursor: pointer;
-  color: #586376;
 }
 .tabs-tab-btn:focus,
 .tabs-tab-remove:focus,
@@ -564,10 +564,11 @@
   transition: all 0.3s;
 }
 .tabs-tab-remove {
+  @apply text-level1;
+
   flex: none;
   margin-right: -4px;
   margin-left: 8px;
-  color: rgba(0, 0, 0, 0.45);
   font-size: 12px;
   background: transparent;
   border: none;
@@ -586,7 +587,7 @@
   color: rgba(0, 0, 0, 0.85);
 }
 .tabs-tab:hover {
-  color: #191919;
+  @apply text-level3;
 }
 .tabs-tab.tabs-tab-active .tabs-tab-btn {
   font-weight: 400;

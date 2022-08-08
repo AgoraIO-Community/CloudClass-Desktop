@@ -3,6 +3,7 @@
   width: 100vw;
   display: flex;
   flex-direction: column;
+  @apply bg-background;
 }
 
 .m-vocational-class .main-section {

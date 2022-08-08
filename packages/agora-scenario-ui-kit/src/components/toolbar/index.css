@@ -28,16 +28,6 @@
   opacity: 1;
 }
 
-.toolbar .menu img {
-  user-select: none;
-  transform: rotate(180deg);
-}
-
-/* fold icon */
-.toolbar .menu.fold img {
-  transform: translateX(10px) rotate(180deg);
-}
-
 .toolbar .menu.unfold {
   opacity: 0;
 }
@@ -277,10 +267,11 @@
 .toolbar-position {
   position: absolute;
   right: 10px;
-  top: 0;
-  bottom: 0;
+  top: 50%;
+  /* bottom: 0; */
+  transform: translate(0, -50%);
   margin: auto;
-  height: calc(100% - 92px - 5rem);
+  /* height: calc(100% - 92px - 5rem); */
   z-index: 3;
 }
 

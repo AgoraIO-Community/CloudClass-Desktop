@@ -12,12 +12,13 @@ import {
   FcrUIBaseProps,
   FcrUIConfig,
 } from '@/infra/types/config';
-import { loadUIConfig } from '@/infra/utils/config-loader';
-import { EduRoomTypeEnum } from 'agora-edu-core';
 
-export class FcrUIConfigImpl implements FcrUIConfig {
+class FcrUIConfigImpl implements FcrUIConfig {
   get version(): string {
     return '1.0.0';
+  }
+  get name(): string {
+    return '';
   }
   get header(): FcrHeader {
     return {
@@ -118,16 +119,16 @@ export class FcrUIConfigImpl implements FcrUIConfig {
           get eraser(): FcrUIBaseProps {
             return { enable: true };
           },
-          get hand(): FcrUIBaseProps {
+          get move(): FcrUIBaseProps {
             return { enable: true };
           },
           get save(): FcrUIBaseProps {
             return { enable: true };
           },
-          get laserPointer(): FcrUIBaseProps {
-            return { enable: true };
-          },
         };
+      },
+      get laserPointer(): FcrUIBaseProps {
+        return { enable: true };
       },
       get popupQuiz(): FcrUIBaseProps {
         return {
@@ -169,6 +170,13 @@ export class FcrUIConfigImpl implements FcrUIConfig {
           enable: true,
         };
       },
+    };
+  }
+  get footer(): FcrFooter {
+    return {};
+  }
+  get extension(): FcrExtension {
+    return {
       get agoraChat(): FcrAgoraChat & FcrUIBaseProps {
         return {
           enable: true,
@@ -192,33 +200,8 @@ export class FcrUIConfigImpl implements FcrUIConfig {
       },
     };
   }
-  get footer(): FcrFooter {
-    return {};
-  }
-  get extension(): FcrExtension {
-    return {
-      get agoraChat() {
-        return {
-          enable: true,
-          get muteAll(): FcrUIBaseProps {
-            return {
-              enable: true,
-            };
-          },
-          get emoji(): FcrUIBaseProps {
-            return {
-              enable: true,
-            };
-          },
-
-          get picture(): FcrUIBaseProps {
-            return {
-              enable: true,
-            };
-          },
-        };
-      },
-    };
-  }
 }
-loadUIConfig(EduRoomTypeEnum.Room1v1Class, new FcrUIConfigImpl());
+
+export const room1V1Class = new FcrUIConfigImpl();
+export const roomMidClass = new FcrUIConfigImpl();
+export const roomBigClass = new FcrUIConfigImpl();

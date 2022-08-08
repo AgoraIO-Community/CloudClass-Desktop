@@ -372,17 +372,12 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 美颜类型选中 className
-   */
-  activeBeautyTypeClassName = computedFn((item) =>
-    item === this.activeBeautyType ? 'type-active' : '',
-  );
-
-  /**
    * 美颜类型 Icon
    */
   activeBeautyTypeIcon = computedFn((item) =>
-    this.activeBeautyType === item ? `${item}-active` : item,
+    this.activeBeautyType === item.id
+      ? { icon: item.icon, color: '#fff' }
+      : { icon: item.icon, color: 'rgba(255,255,255,.5)' },
   );
 
   /**

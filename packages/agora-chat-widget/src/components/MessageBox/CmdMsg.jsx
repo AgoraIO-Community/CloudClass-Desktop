@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { transI18n } from '~components/i18n';
 import { ROLE } from '../../contants';
-import icon_cautions from '../../themes/img/icon-cautions.png';
+import icon_cautions from '../../themes/svg/warning.svg';
 
 import './index.css';
 export const CmdMsg = ({ item }) => {
@@ -34,7 +34,7 @@ export const CmdMsg = ({ item }) => {
     // 常规
     if (isSetMuteMsg) {
       return (
-        <div className="mute-msg">
+        <div className="fcr-hx-mute-msg">
           <img src={icon_cautions} />
           <span>{transI18n('chat.muted_all')}</span>
         </div>
@@ -42,7 +42,7 @@ export const CmdMsg = ({ item }) => {
     }
     if (isRemoveMuteMsg) {
       return (
-        <div className="mute-msg">
+        <div className="fcr-hx-mute-msg">
           <img src={icon_cautions} />
           <span>{transI18n('chat.unmuted_all')}</span>
         </div>
@@ -50,7 +50,7 @@ export const CmdMsg = ({ item }) => {
     }
     if (isDeleteMsg) {
       return (
-        <div className="mute-msg">
+        <div className="fcr-hx-mute-msg">
           <img src={icon_cautions} />
           <span>
             {item.ext.nickName + ' '}
@@ -65,7 +65,7 @@ export const CmdMsg = ({ item }) => {
     if (isTeahcer && isMuteUser) {
       if (currentUserId === item.from) {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -75,7 +75,7 @@ export const CmdMsg = ({ item }) => {
         );
       } else {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -90,7 +90,7 @@ export const CmdMsg = ({ item }) => {
     if (isTeahcer && isUnmuteUser) {
       if (currentUserId === item.from) {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -100,7 +100,7 @@ export const CmdMsg = ({ item }) => {
         );
       } else {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -116,7 +116,7 @@ export const CmdMsg = ({ item }) => {
     if (assistantTeacher && isMuteUser) {
       if (currentUserId === item.from) {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -126,7 +126,7 @@ export const CmdMsg = ({ item }) => {
         );
       } else {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -140,7 +140,7 @@ export const CmdMsg = ({ item }) => {
     if (assistantTeacher && isUnmuteUser) {
       if (currentUserId === item.from) {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -150,7 +150,7 @@ export const CmdMsg = ({ item }) => {
         );
       } else {
         return (
-          <div className="mute-msg">
+          <div className="fcr-hx-mute-msg">
             <img src={icon_cautions} />
             <span>
               {item.ext.muteNickName + ' '}
@@ -164,7 +164,7 @@ export const CmdMsg = ({ item }) => {
     //学生视角
     if (isMuter && isMuteUser) {
       return (
-        <div className="mute-msg">
+        <div className="fcr-hx-mute-msg">
           <img src={icon_cautions} />
           <span>{transI18n('chat.mute_user_msg').format(item.ext.nickName)}</span>
         </div>
@@ -172,7 +172,7 @@ export const CmdMsg = ({ item }) => {
     }
     if (isMuter && isUnmuteUser) {
       return (
-        <div className="mute-msg">
+        <div className="fcr-hx-mute-msg">
           <img src={icon_cautions} />
           <span>{transI18n('chat.unmute_user_msg').format(item.ext.nickName)}</span>
         </div>

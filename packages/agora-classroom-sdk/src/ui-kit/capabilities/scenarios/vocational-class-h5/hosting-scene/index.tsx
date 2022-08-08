@@ -1,11 +1,11 @@
-import { HostingSceneVideo } from '@/ui-kit/capabilities/containers/hosting-scene-video';
+import { HostingSceneVideo } from '@/ui-kit/capabilities/scenarios/vocational-class/hosting-scene/hosting-scene-video';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
 import { observer } from 'mobx-react';
 import { DialogContainer } from '~containers/dialog';
 import { ToastContainer } from '~containers/toast';
 import Room from '../../room';
+import { ChatH5 } from '../components/chat';
 import { DocTitle } from '../components/doc-title';
-import { H5Chat } from '../components/h5-chat';
 import { PageHeader } from '../components/page-header';
 
 export const HostingClassScenario = observer(() => {
@@ -17,7 +17,7 @@ export const HostingClassScenario = observer(() => {
         <div className="main-section">
           <HostingSceneVideo />
         </div>
-        <H5Chat />
+        <ChatH5 />
       </div>
       <DialogContainer />
       <WidgetContainer />
