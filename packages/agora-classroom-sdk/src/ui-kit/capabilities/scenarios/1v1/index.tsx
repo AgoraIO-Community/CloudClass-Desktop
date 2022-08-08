@@ -1,6 +1,6 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import classnames from 'classnames';
-import { Aside, Layout } from '~components/layout';
+import { Layout } from '~components/layout';
 import { DialogContainer } from '~containers/dialog';
 import { LoadingContainer } from '~containers/loading';
 import { NavigationBar } from '~containers/nav';
@@ -15,6 +15,7 @@ import { StreamWindowsContainer } from '../../containers/stream-windows-containe
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
 import { Chat, Whiteboard } from '../../containers/widget/slots';
+import { OneToOneClassAside as Aside } from '~containers/aside';
 import Room from '../room';
 
 export const OneToOneScenario = () => {
