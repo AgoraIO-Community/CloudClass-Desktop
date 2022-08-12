@@ -43,18 +43,19 @@ const regionByLang = {
   en: EduRegion.NA,
 };
 
-
-
-const useBuilderConfig = () => {
+export const useBuilderConfig = () => {
+  const [configReady, setConfigReady] = useState(false);
   const builderResource = useRef({
     scenes: {},
-    themes: {}
+    themes: {},
   });
   const t = useI18n();
 
-  const defaultScenes = [{ text: t('home.roomType_1v1'), value: `${EduRoomTypeEnum.Room1v1Class}` },
-  { text: t('home.roomType_interactiveSmallClass'), value: `${EduRoomTypeEnum.RoomSmallClass}` },
-  { text: t('home.roomType_interactiveBigClass'), value: `${EduRoomTypeEnum.RoomBigClass}` }];
+  const defaultScenes = [
+    { text: t('home.roomType_1v1'), value: `${EduRoomTypeEnum.Room1v1Class}` },
+    { text: t('home.roomType_interactiveSmallClass'), value: `${EduRoomTypeEnum.RoomSmallClass}` },
+    { text: t('home.roomType_interactiveBigClass'), value: `${EduRoomTypeEnum.RoomBigClass}` },
+  ];
 
   const [roomTypes, setRoomTypes] = useState<EduRoomTypeEnum[]>([]);
 
@@ -82,18 +83,20 @@ const useBuilderConfig = () => {
         );
 
         setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
+        setConfigReady(true);
       });
     } else {
+      setConfigReady(true);
       setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
     }
   }, []);
 
   return {
     builderResource,
-    sceneOptions: sceneOptions.length ? sceneOptions : defaultScenes
+    sceneOptions: sceneOptions.length ? sceneOptions : defaultScenes,
+    configReady,
   };
-}
-
+};
 
 export const HomePage = () => {
   const homeStore = useHomeStore();
@@ -107,16 +110,17 @@ export const HomePage = () => {
 
   const t = useI18n();
 
-  const { builderResource, sceneOptions } = useBuilderConfig();
+  const { builderResource, sceneOptions, configReady } = useBuilderConfig();
 
   useEffect(() => {
     const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
     const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
     homeStore.setLanguage(language as LanguageEnum);
     homeStore.setRegion(region as EduRegion);
+  }, []);
 
-
-    if (history.location.pathname === '/share') {
+  useEffect(() => {
+    if (history.location.pathname === '/share' && configReady) {
       setTimeout(() => {
         handleSubmit({
           roleType: window.__launchRoleType,
@@ -126,10 +130,9 @@ export const HomePage = () => {
         });
       });
     }
-  }, []);
+  }, [configReady]);
 
   const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
-
 
   const handleSubmit = async ({
     roleType,
@@ -171,9 +174,11 @@ export const HomePage = () => {
       const shareUrl =
         AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron
           ? ''
-          : `${location.origin}${location.pathname
-          }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student
-          }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
+          : `${location.origin}${
+              location.pathname
+            }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${
+              EduRoleTypeEnum.student
+            }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
 
       console.log('## get rtm Token from demo server', token);
 

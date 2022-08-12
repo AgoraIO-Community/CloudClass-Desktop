@@ -8,8 +8,6 @@ import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import courseWareList from './courseware-list';
 
-
-
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
 
@@ -30,7 +28,7 @@ export const LaunchPage = observer(() => {
         JSON.stringify({
           host: homeStore.launchOption.sdkDomain,
           uiConfigs: homeStore.launchOption.scenes,
-          themes: homeStore.launchOption.themes
+          themes: homeStore.launchOption.themes,
         }),
       );
 
@@ -53,8 +51,9 @@ export const LaunchPage = observer(() => {
             evt === AgoraEduClassroomEvent.Destroyed &&
             launchOption.roomSubtype === EduRoomSubtypeEnum.Vocational
           ) {
-            const url = `/vocational${GlobalStorage.read('platform') == 'h5' ? '/h5login' : ''
-              }?reason=${type}`;
+            const url = `/vocational${
+              GlobalStorage.read('platform') == 'h5' ? '/h5login' : ''
+            }?reason=${type}`;
             history.push(url);
             return;
           }
