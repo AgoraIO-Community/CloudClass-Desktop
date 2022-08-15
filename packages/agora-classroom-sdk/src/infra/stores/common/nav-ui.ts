@@ -344,7 +344,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Camera',
         title: this.localCameraOff ? transI18n('Open Camera') : transI18n('Close Camera'),
-        iconType: this.localCameraOff ? SvgIconEnum.GHOST_CAMERA_OFF : SvgIconEnum.GHOST_CAMERA_ON,
+        iconType: this.localCameraOff ? SvgIconEnum.CAMERA_DISABLED : SvgIconEnum.CAMERA_ENABLED,
         onClick: () => {
           try {
             this._toggleLocalVideo();
@@ -356,7 +356,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       {
         id: 'Mic',
         title: this.localMicOff ? transI18n('Open Microphone') : transI18n('Close Microphone'),
-        iconType: this.localMicOff ? SvgIconEnum.GHOST_MIC_OFF : SvgIconEnum.GHOST_MIC_ON,
+        iconType: this.localMicOff ? SvgIconEnum.MICROPHONE_OFF : SvgIconEnum.MICROPHONE_ON,
         onClick: async () => {
           try {
             this._toggleLocalAudio();
