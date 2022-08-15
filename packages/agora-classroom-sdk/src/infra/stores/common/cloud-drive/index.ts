@@ -264,11 +264,21 @@ export class CloudUIStore extends EduUIStoreBase {
       return;
     }
 
+    const pageList = (resource.scenes || []).map(({ name, ppt }) => {
+      return {
+        name,
+        contentUrl: ppt.src,
+        previewUrl: ppt.previewURL,
+        contentWidth: ppt.width,
+        contentHeight: ppt.height,
+      };
+    });
+
     this.extensionApi.openMaterialResourceWindow({
       resourceUuid: resource.resourceUuid,
-      resourceUrl: resource.url || '',
+      urlPrefix: resource.taskProgress.prefix || '',
       title: resource.resourceName,
-      pageList: [],
+      pageList: pageList,
       taskUuid: resource.taskUuid,
       resourceHasAnimation: !!resource.conversion.canvasVersion,
     });

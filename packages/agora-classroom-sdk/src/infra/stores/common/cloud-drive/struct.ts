@@ -22,7 +22,15 @@ export class CloudDriveCourseResource extends CloudDriveResource {
     type: 'dynamic' | 'static';
     canvasVersion?: boolean;
   };
-  scenes: { ppt: { previewURL: string } }[];
+  scenes: {
+    name?: string;
+    ppt: {
+      previewURL: string;
+      src: string;
+      height: number;
+      width: number;
+    };
+  }[];
 
   constructor(data: {
     ext: string;

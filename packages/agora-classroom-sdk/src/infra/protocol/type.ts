@@ -53,7 +53,7 @@ export type Color = {
 
 export type FcrBoardMaterialWindowConfig<T = unknown> = {
   resourceUuid: string;
-  resourceUrl: string;
+  urlPrefix: string;
   title: string;
   pageList: T[];
   taskUuid: string;
