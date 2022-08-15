@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { SvgIconEnum, SvgImg, transI18n, useI18n } from '~ui-kit';
 import { About } from './about';
 import { GeneralSetting } from './general-setting';
@@ -48,18 +48,30 @@ export const HomeSetting = () => {
   );
 };
 
-export const HomeSettingContainer = () => {
+
+
+export const HomeSettingContainer: FC = ({ children }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const t = useI18n();
   return (
     <>
-      <div
-        className="setting-btn inline-block p-0.5 z-50"
-        onClick={() => {
-          setVisible(true);
-        }}>
-        {t('settings_setting')}
-      </div>
+      {
+        children ?
+          <div
+            onClick={() => {
+              setVisible(true);
+            }}
+          >
+            {children}
+          </div> :
+          <div
+            className="setting-btn inline-block p-0.5 z-50"
+            onClick={() => {
+              setVisible(true);
+            }}>
+            {t('settings_setting')}
+          </div>
+      }
       {visible ? (
         <div className={`absolute top-0 left-0 flex justify-center items-center w-screen h-screen`}>
           <div className="home-setting-container">

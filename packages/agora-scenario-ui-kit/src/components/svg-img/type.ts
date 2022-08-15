@@ -106,6 +106,7 @@ export enum SvgIconEnum {
   SAVE_GHOST = 'save-ghost',
   SEARCH = 'search',
   SELECT = 'select',
+  SET_OUTLINE = 'set-outline',
   SET = 'set',
   SHARE_DEFAULT = 'share-default',
   SHARE_HOVER = 'share-hover',

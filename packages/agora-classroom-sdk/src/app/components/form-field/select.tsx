@@ -54,9 +54,9 @@ export const Select: FC<SelectProps> = ({ placeholder, value, onChange = () => {
     return (
         <div className='relative w-full'>
             <div className={containerCls}>
-                <a className={textCls} style={{ padding: '17px 20px 12px 12px' }} href="#" onMouseDown={handleFocus} onFocus={handleFocus} onBlur={handleBlur}>
+                <a className={textCls} style={{ padding: '14px 20px 14px 12px' }} href="#" onMouseDown={handleFocus} onFocus={handleFocus} onBlur={handleBlur}>
                     {selectedText}
-                    <SvgImg type={SvgIconEnum.DOWN} colors={{ iconPrimary: '#030303' }} size={9} />
+                    <SvgImg type={SvgIconEnum.DOWN} colors={{ iconPrimary: '#030303' }} size={9} style={expanded ? { transform: 'rotate(180deg)', transition: 'all .2s' } : { transition: 'all .2s', transform: 'rotate(0deg)' }} />
                 </a>
                 <span className="error-text absolute block right-0">{error}</span>
                 <div className={optionsCls}>

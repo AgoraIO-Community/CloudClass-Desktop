@@ -79,9 +79,9 @@ export const TextInput: FC<CommonProps> = ({ placeholder, value, onChange = () =
 
     return (
         <div className={cls}>
-            <input ref={inputRef} readOnly={readOnly} className="w-full" placeholder={placeholder} style={{ padding: '17px 32px 12px 12px' }} onFocus={handleFocus} onBlur={handleBlur} value={value} onChange={handleChange} onKeyDown={onKeyDown} onKeyUp={onKeyUp} />
+            <input ref={inputRef} readOnly={readOnly} className="w-full" placeholder={placeholder} style={{ padding: '14px 32px 14px 12px' }} onFocus={handleFocus} onBlur={handleBlur} value={value} onChange={handleChange} onKeyDown={onKeyDown} onKeyUp={onKeyUp} />
             <span className="error-text absolute block right-0">{error}</span>
-            <SvgImg className={iconCls} type={SvgIconEnum.CLOSE} size={20} style={{ top: 16, right: 10 }} colors={{ iconPrimary: '#030303' }} onMouseDown={handleClear} />
+            <SvgImg className={iconCls} type={SvgIconEnum.CLOSE} size={20} style={{ top: 14, right: 10 }} colors={{ iconPrimary: '#030303' }} onMouseDown={handleClear} />
         </div>
     );
 }

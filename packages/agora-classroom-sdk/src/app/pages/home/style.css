@@ -55,6 +55,15 @@
   color: #fff;
 }
 
+.about-btn .fcr-btn {
+  background-color: #fff;
+  border: 1px solid #fff;
+  min-width: unset;
+  height: unset;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
 .animated-form {
   animation: form-slide-top 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }

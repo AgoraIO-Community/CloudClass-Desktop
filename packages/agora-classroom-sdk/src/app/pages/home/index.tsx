@@ -1,4 +1,4 @@
-import { Layout, Toast, transI18n, useI18n } from '~ui-kit';
+import { Button, Layout, SvgIconEnum, SvgImg, Toast, transI18n, useI18n } from '~ui-kit';
 import './style.css';
 import { addResource } from '../../components/i18n';
 import { FC, useEffect, useState, Fragment, useRef } from 'react';
@@ -174,11 +174,9 @@ export const HomePage = () => {
       const shareUrl =
         AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron
           ? ''
-          : `${location.origin}${
-              location.pathname
-            }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${
-              EduRoleTypeEnum.student
-            }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
+          : `${location.origin}${location.pathname
+          }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student
+          }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
 
       console.log('## get rtm Token from demo server', token);
 
@@ -239,7 +237,7 @@ export const HomePage = () => {
       <HomeToastContainer />
       <div className="app-home h-full">
         <nav className="absolute left-0 top-0 w-full text-white z-10" style={{ padding: 32 }}>
-          <Layout className="justify-between items-end">
+          <Layout className="justify-between items-center">
             <Layout className="nav-header flex items-center">
               <span className="product-logo" />
               <span className="product-name">{t('home_product_name')}</span>
@@ -252,7 +250,7 @@ export const HomePage = () => {
                                 <Dropdown options={languageOptions} value={language} onChange={handleChangeLanguage} width={68} />
                             </div> */}
               <span className="about-btn cursor-pointer">
-                <HomeSettingContainer />
+                <SettingsButton />
               </span>
             </Layout>
           </Layout>
@@ -260,8 +258,8 @@ export const HomePage = () => {
         <div
           className="form-section fixed animated-form"
           style={{
-            top: 'min(max(calc( 50% - 270px ), 100px), 200px)',
-            right: 40,
+            top: 'calc((100% - 540px) * 0.5)',
+            left: 'calc((100% - 477px) * 0.81)',
             padding: '36px 54px 26px',
           }}>
           <LoginForm onSubmit={handleSubmit} sceneOptions={sceneOptions} />
@@ -290,3 +288,30 @@ const HomeToastContainer: FC = observer(() => {
     </TransitionGroup>
   );
 });
+
+export const SettingsButton = () => {
+  const t = useI18n();
+  const [hover, setHover] = useState(false);
+  const handleOver = () => {
+    setHover(true);
+  }
+
+  const handleLeave = () => {
+    setHover(false);
+  }
+
+  const textColor = hover ? '#fff' : '#030303';
+  const backgroundColor = hover ? '#030303' : '#fff';
+
+  return (
+    <HomeSettingContainer>
+      <Button animate={false} onMouseOver={handleOver} onMouseLeave={handleLeave} style={{ background: backgroundColor, transition: 'all .2s' }}>
+        <div className='flex items-center'>
+          <SvgImg type={SvgIconEnum.SET_OUTLINE} size={16} colors={{ iconPrimary: textColor }} />
+          <span className='ml-1' style={{ color: textColor }}>
+            {t('settings_setting')}
+          </span>
+        </div>
+      </Button>
+    </HomeSettingContainer>);
+}
