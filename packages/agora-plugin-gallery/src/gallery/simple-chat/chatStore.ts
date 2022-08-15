@@ -11,12 +11,14 @@ import { action, computed, IReactionDisposer, observable, reaction, runInAction 
 import { computedFn } from 'mobx-utils';
 import { v4 as uuidv4 } from 'uuid';
 import { AgoraChatWidget } from '.';
+import { chatMuteAllEnabled } from '@/ui-kit/capabilities/containers/visibility/controlled';
 
 type AGError = any;
 
 interface IChatConfigUI {
   visibleQuestion?: false;
   showInputBox?: boolean;
+  showMute?: boolean;
 }
 export class WidgetChatUIStore {
   @observable
@@ -177,7 +179,10 @@ export class WidgetChatUIStore {
       ),
     );
 
+    const showMute = chatMuteAllEnabled(this._widget.uiConfig);
+
     this.setUI({
+      showMute,
       showInputBox:
         this.classroomConfig.sessionInfo.role !== EduRoleTypeEnum.invisible &&
         this.classroomConfig.sessionInfo.role !== EduRoleTypeEnum.observer,

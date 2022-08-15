@@ -120,7 +120,7 @@ export const SimpleChatNew: FC<ChatProps> = ({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            {isHost ? (
+            {isHost && configUI?.showMute ? (
               <span onClick={() => onCanChattingChange(!!canChatting)}>
                 <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
               </span>
@@ -216,7 +216,7 @@ export const ChatNew: FC<ChatProps> = ({
               display: 'flex',
               justifyContent: 'center',
             }}>
-            {isHost ? (
+            {isHost && configUI?.showMute ? (
               <span onClick={() => onCanChattingChange(!!canChatting)}>
                 <i className={canChatting ? 'can-discussion-svg' : 'no-discussion-svg'}></i>
               </span>

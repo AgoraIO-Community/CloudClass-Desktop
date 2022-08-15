@@ -190,7 +190,6 @@ class FcrUIConfigImpl implements FcrUIConfig {
               enable: true,
             };
           },
-
           get picture(): FcrUIBaseProps {
             return {
               enable: true,
