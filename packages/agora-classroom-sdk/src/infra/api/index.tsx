@@ -2,27 +2,31 @@ import { vocationalNeedPreset } from '@/app/pages/home/vocational';
 import { ControlBar } from '@/ui-kit/capabilities/containers/fragments';
 import { Scenarios } from '@/ui-kit/capabilities/scenarios';
 import {
-    AgoraEduClassroomEvent,
-    CloudDriveResource,
-    EduClassroomConfig,
-    EduEventCenter,
-    EduMediaEncryptionMode,
-    EduRegion,
-    EduRoleTypeEnum,
-    EduRoomServiceTypeEnum,
-    EduRoomSubtypeEnum,
-    EduRoomTypeEnum,
-    Platform
+  AgoraEduClassroomEvent,
+  CloudDriveResource,
+  EduClassroomConfig,
+  EduEventCenter,
+  EduMediaEncryptionMode,
+  EduRegion,
+  EduRoleTypeEnum,
+  EduRoomServiceTypeEnum,
+  EduRoomSubtypeEnum,
+  EduRoomTypeEnum,
+  Platform
 } from 'agora-edu-core';
 import {
-    AgoraChatWidget,
-    AgoraCountdown,
-    AgoraHXChatWidget,
-    AgoraPolling,
-    AgoraSelector,
-    FcrBoardWidget,
-    FcrStreamMediaPlayerWidget,
-    FcrWebviewWidget
+  AgoraChatWidget,
+  AgoraCountdown,
+  AgoraHXChatWidget,
+  AgoraPolling,
+  AgoraSelector,
+  FcrBoardWidget,
+  FcrStreamMediaPlayerWidget,
+  FcrWebviewWidget
+} from 'agora-plugin-gallery';
+import {
+  ExampleWidget,
+  RollbookWidget
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -32,28 +36,28 @@ import { EduContext } from '../contexts';
 import { createCloudResource } from '../stores/common/cloud-drive/helper';
 import { FcrMultiThemeMode, FcrUIConfig } from '../types/config';
 import {
-    applyTheme,
-    loadGeneratedFiles,
-    loadTheme,
-    loadUIConfig,
-    supportedRoomTypes,
-    themes,
-    uiConfigs
+  applyTheme,
+  loadGeneratedFiles,
+  loadTheme,
+  loadUIConfig,
+  supportedRoomTypes,
+  themes,
+  uiConfigs
 } from '../utils/config-loader';
 
 import './polyfills';
 import { Providers } from './providers';
 import {
-    AgoraWidgetBase,
-    BoardWindowAnimationOptions,
-    ConfigParams,
-    ConvertMediaOptionsConfig,
-    CourseWareItem,
-    CourseWareList,
-    LaunchMediaOptions,
-    LaunchOption,
-    LaunchWindowOption,
-    WindowID
+  AgoraWidgetBase,
+  BoardWindowAnimationOptions,
+  ConfigParams,
+  ConvertMediaOptionsConfig,
+  CourseWareItem,
+  CourseWareList,
+  LaunchMediaOptions,
+  LaunchOption,
+  LaunchWindowOption,
+  WindowID
 } from './type';
 
 export * from './type';
@@ -281,6 +285,8 @@ export class AgoraEduSDK {
       [this._getWidgetName(AgoraCountdown)]: AgoraCountdown,
       [this._getWidgetName(AgoraSelector)]: AgoraSelector,
       [this._getWidgetName(AgoraPolling)]: AgoraPolling,
+      // [this._getWidgetName(ExampleWidget)]: ExampleWidget,
+      [this._getWidgetName(RollbookWidget)]: RollbookWidget,
       [this._getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
       [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
       [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,

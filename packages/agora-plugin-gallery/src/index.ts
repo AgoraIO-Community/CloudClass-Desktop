@@ -10,3 +10,5 @@ export { AgoraChatWidget } from './gallery/simple-chat';
 export { FcrWebviewWidget } from './gallery/webview';
 export { FcrBoardWidget } from './gallery/whiteboard';
 export { FcrStreamMediaPlayerWidget } from './gallery/stream-media';
+export { ExampleWidget } from './gallery/example';
+export { RollbookWidget } from './gallery/rollbook';

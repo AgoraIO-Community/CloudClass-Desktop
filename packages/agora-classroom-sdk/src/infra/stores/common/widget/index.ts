@@ -352,6 +352,15 @@ export class WidgetUIStore extends EduUIStoreBase {
         },
       ),
     );
+
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.widgetStore.widgetController,
+        () => {
+          this.createWidget('example');
+        },
+      ),
+    );
   }
 
   onDestroy() {

@@ -7,9 +7,10 @@ export const ControlledModal: FC<{
   title: string;
   onReload?: () => void;
   onCancel: () => void;
-  onFullScreen: () => void;
-  canRefresh: boolean;
-}> = ({ widget, title, onReload, onCancel, onFullScreen, canRefresh, children }) => {
+  onFullScreen?: () => void;
+  canRefresh?: boolean;
+  canFullScreen?: boolean;
+}> = ({ widget, title, onReload, onCancel, onFullScreen, canRefresh, canFullScreen, children }) => {
   const [controlled, setControlled] = useState(() => widget.controlled);
   useEffect(() => {
     const handleChange = () => {
@@ -28,7 +29,7 @@ export const ControlledModal: FC<{
       <WidgetModal
         title={title}
         showRefresh={canRefresh}
-        showFullscreen={controlled}
+        showFullscreen={canFullScreen}
         closable={controlled}
         onReload={onReload}
         onCancel={onCancel}
