@@ -74,7 +74,12 @@ export const StandardClassScenario = observer(() => {
     if (!player) {
       return;
     }
-    const handleCDNDelayUpdate = boardUIStore.setDelay;
+    const handleCDNDelayUpdate = (t: number) => {
+      boardUIStore.setDelay(t);
+      if (boardUIStore.boardApi.connected) {
+        player.clearDelayTask();
+      }
+    };
     player.on(MediaPlayerEvents.CdnDelayUpdated, handleCDNDelayUpdate);
     return () => {
       player.off(MediaPlayerEvents.CdnDelayUpdated, handleCDNDelayUpdate);
