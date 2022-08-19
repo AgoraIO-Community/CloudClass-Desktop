@@ -19,6 +19,7 @@ import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
 import { Chat, Whiteboard } from '../../containers/widget/slots';
 import { StreamWindowsContainer } from '../../containers/stream-windows-container';
+import { RemoteControlToolbar } from '../../containers/remote-control/toolbar';
 
 export const MidClassScenario = () => {
   // layout
@@ -31,13 +32,17 @@ export const MidClassScenario = () => {
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
             <NavigationBar />
-            <Layout className="flex-grow items-stretch relative justify-center fcr-room-bg" direction="col">
+            <Layout
+              className="flex-grow items-stretch relative justify-center fcr-room-bg"
+              direction="col">
               <RoomMidStreamsContainer />
               <Whiteboard />
               <ScreenShareContainer />
               <RemoteControlContainer />
               <StreamWindowsContainer />
             </Layout>
+            <RemoteControlToolbar />
+
             <WhiteboardToolbar />
             <ScenesController />
             <Float bottom={15} right={10} align="end" gap={2}>
