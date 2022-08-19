@@ -22,6 +22,7 @@ import {
   FcrBoardRoomJoinConfig,
 } from './wrapper/type';
 import { downloadCanvasImage } from './wrapper/utils';
+import { reaction, IReactionDisposer } from 'mobx';
 
 @Log.attach({ proxyMethods: false })
 export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecycle {
@@ -41,6 +42,7 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     region: FcrBoardRegion;
   };
   private _grantedUsers = new Set<string>();
+  private _disposers: IReactionDisposer[] = [];
 
   get widgetName() {
     return 'netlessBoard';
@@ -138,6 +140,17 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     this._checkBoard(props);
     // 处理授权列表变更
     this._checkPrivilege(props);
+    // 处理讲台隐藏/显示，重新计算白板宽高比
+    this._disposers.push(reaction(() => !!(this.classroomStore.roomStore.flexProps?.stage ?? true), () => {
+      const { _boardDom } = this;
+      if (_boardDom) {
+        setTimeout(() => {
+          const aspectRatio = _boardDom.clientHeight / _boardDom.clientWidth
+
+          this._boardMainWindow?.setAspectRatio(aspectRatio);
+        });
+      }
+    }));
   }
 
   /**
@@ -149,6 +162,8 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     if (this._listenerDisposer) {
       this._listenerDisposer();
     }
+    this._disposers.forEach(d => d());
+    this._disposers = [];
   }
 
   private _checkBoard(props: any) {
@@ -394,8 +409,6 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     });
 
   }
-
-  tryReconnect() { }
 
   @bound
   handleDragOver(e: unknown) {

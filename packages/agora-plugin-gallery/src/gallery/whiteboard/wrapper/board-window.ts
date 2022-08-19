@@ -366,8 +366,9 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
   }
 
   setAttributes(attributes: WindowMangerAttributes) {
+    this.preCheck();
     const windowManager = this._windowManager;
-    windowManager?.setAttributes(attributes);
+    windowManager?.safeSetAttributes(attributes);
     windowManager?.refresh();
   }
 
@@ -442,6 +443,12 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
     windowManager?.emitter.on('canRedoStepsChange', (steps) => {
       this._eventBus.emit(FcrBoardMainWindowEvent.RedoStepsUpdated, steps);
     });
+  }
+
+  setAspectRatio(ratio: number) {
+    this.preCheck({ privilege: false });
+
+    this._windowManager?.setContainerSizeRatio(ratio);
   }
 
   private _convertToScenes(pageList: FcrBoardPage[]) {

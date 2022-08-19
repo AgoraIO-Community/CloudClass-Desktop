@@ -3,6 +3,7 @@ import { EduClassroomStore } from 'agora-edu-core';
 import { EduShareUIStore } from './share-ui';
 import { Board } from '@/infra/protocol/board';
 import { Extension } from '@/infra/protocol';
+import { Getters } from './getters';
 
 export abstract class EduUIStoreBase {
   private static _boardApi = new Board();
@@ -14,6 +15,8 @@ export abstract class EduUIStoreBase {
   protected get uiOverrides() {
     return {};
   }
+
+  protected readonly getters: Getters;
   /**
    * 当前 EduClassroomStore 实例
    */
@@ -31,6 +34,7 @@ export abstract class EduUIStoreBase {
   constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
     this.classroomStore = store;
     this.shareUIStore = shareUIStore;
+    this.getters = new Getters(this.classroomStore);
   }
 
   /**

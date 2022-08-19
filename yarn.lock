@@ -3263,10 +3263,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-slide@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.2.tgz#e58fcbbf4018b0c3ffb4e69bb17a9c59c63f5ba9"
-  integrity sha512-2+EFJUT5PHDbcgfIP1P2/BKE/c/I+Etr9YD0y4zSym2UoqS3GyZWgQLIES1d2nQVnaRomOjppighlbNZ/ccbZA==
+"@netless/app-slide@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.7.tgz#e19e9356281b5ca959ebdcbf7434fb8bca23e2bc"
+  integrity sha512-LH2Q4do1RlmOl7uqrRcj3LEZcpyWZ8u8pgi5lk5bolwuigG1xZ/EvFgjHIFyryOXvk2X28qa98s9gHLdodK+mQ==
 
 "@netless/app-talkative@0.1.0":
   version "0.1.0"
@@ -3352,10 +3352,10 @@
   resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha512-8Qvz1NcBhGb+2S9FYy9Xuln0/82q+Bn0EluXxM+BDw/aimhkN1QWxGl++ZysztZ60vzn18vl7p4cJuF2cfslIQ==
 
-"@netless/window-manager@0.4.35":
-  version "0.4.35"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.35.tgz#d643418cd4f99cb41577eaa024792dd59631582a"
-  integrity sha512-boO+978awQ2Drbw4LmKVl5hRWXDeblPJuhIL+2kSizQjN0oay1EifWa9l7K9Be5lJBHysCzAwjV15T2M06jSjA==
+"@netless/window-manager@0.4.38":
+  version "0.4.38"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.38.tgz#37786551ab3f0253b16def1c9d9dabe5e87aec71"
+  integrity sha512-q5ZVyJwx1c5jikSpymW/CSZoF9ya+0EIIANJqsGxlzpcIK32HGKbM3vmVkjX9c+g6yufjxyii6e/xIlCz4MZIg==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/telebox-insider" "0.2.26"
@@ -23367,10 +23367,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.16.27:
-  version "2.16.27"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.16.27.tgz#531182102613fa28b831cafb49c884c0a53e8455"
-  integrity sha512-TtlU8YzppqEYhQ768rrRhsIfiUmEg4qX8zwOK9pOZI2GRDtl8k2N6V4y7WrgBP1jgNghdnXg83JtxaQ/xOnR5g==
+white-web-sdk@2.16.33:
+  version "2.16.33"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.16.33.tgz#f433828e57709a5565f9b9793d8f0560ddf1ee5f"
+  integrity sha512-vv33tvdKXRgaKh5oOJV8FEMd5eb64Jywfe61OcwExX78zt9szH951NHnuwhqdsk8BAH1XwyJ6DcpAhCwXp8F4Q==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"

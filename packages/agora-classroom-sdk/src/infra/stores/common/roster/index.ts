@@ -21,7 +21,6 @@ import {
   EduClassroomConfig,
   EduErrorCenter,
   EduRoleTypeEnum,
-  EduRoomTypeEnum,
   GroupState,
   iterateMap,
 } from 'agora-edu-core';
@@ -576,11 +575,7 @@ export class RosterUIStore extends EduUIStoreBase {
 
   @computed
   get stageVisible() {
-    if (EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass)
-      return typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined'
-        ? this.classroomStore.roomStore.flexProps.stage
-        : true;
-    return false;
+    return this.getters.stageVisible;
   }
 
   /** Getters */

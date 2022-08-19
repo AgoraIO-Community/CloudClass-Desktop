@@ -370,11 +370,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    */
   @computed
   get stageVisible() {
-    if (EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass)
-      return typeof this.classroomStore.roomStore.flexProps.stage === 'undefined'
-        ? true
-        : this.classroomStore.roomStore.flexProps?.stage;
-    return false;
+    return this.getters.stageVisible;
   }
 
   /**

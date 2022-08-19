@@ -181,9 +181,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
    */
   @computed
   get stageVisible() {
-    return typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined'
-      ? this.classroomStore.roomStore.flexProps.stage
-      : true;
+    return this.getters.stageVisible;
   }
 
   remoteStreamTools = computedFn((stream: EduStreamUI): EduStreamTool[] => {
