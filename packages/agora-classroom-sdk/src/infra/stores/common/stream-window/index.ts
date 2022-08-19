@@ -13,6 +13,7 @@ import {
   AgoraRteEventType,
   AgoraRteRemoteStreamType,
   AgoraRteScene,
+  AgoraRteVideoSourceType,
   bound,
   Lodash,
   RtcState,
@@ -1084,22 +1085,24 @@ export class StreamWindowUIStore extends EduUIStoreBase {
     if (highStreamUuids.size || lowStreamUuids.size) {
       this.classroomStore.streamStore.streamByStreamUuid.forEach(
         async (stream, streamUuid: string) => {
-          const isLow = this._lowUuids.has(streamUuid);
-          const isHigh = this._highUuids.has(streamUuid);
-          if (highStreamUuids.has(streamUuid) && !isHigh) {
-            await this.classroomStore.streamStore.setRemoteVideoStreamType(
-              streamUuid,
-              AgoraRteRemoteStreamType.HIGH_STREAM,
-            );
-            this._highUuids.add(streamUuid);
-            this._lowUuids.delete(streamUuid);
-          } else if (lowStreamUuids.has(streamUuid) && !isLow) {
-            await this.classroomStore.streamStore.setRemoteVideoStreamType(
-              streamUuid,
-              AgoraRteRemoteStreamType.LOW_STREAM,
-            );
-            this._lowUuids.add(streamUuid);
-            this._highUuids.delete(streamUuid);
+          if (stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare) {
+            const isLow = this._lowUuids.has(streamUuid);
+            const isHigh = this._highUuids.has(streamUuid);
+            if (highStreamUuids.has(streamUuid) && !isHigh) {
+              await this.classroomStore.streamStore.setRemoteVideoStreamType(
+                streamUuid,
+                AgoraRteRemoteStreamType.HIGH_STREAM,
+              );
+              this._highUuids.add(streamUuid);
+              this._lowUuids.delete(streamUuid);
+            } else if (lowStreamUuids.has(streamUuid) && !isLow) {
+              await this.classroomStore.streamStore.setRemoteVideoStreamType(
+                streamUuid,
+                AgoraRteRemoteStreamType.LOW_STREAM,
+              );
+              this._lowUuids.add(streamUuid);
+              this._highUuids.delete(streamUuid);
+            }
           }
         },
       );
