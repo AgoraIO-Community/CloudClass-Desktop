@@ -83,6 +83,7 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
       disableDeviceInputs: !config.hasOperationPrivilege,
       disableCameraTransform: true,
       disableNewPencil: true,
+      disableEraseImage: false,
       wrappedComponents: [],
       invisiblePlugins: [WindowManager],
       useMultiViews: true,
