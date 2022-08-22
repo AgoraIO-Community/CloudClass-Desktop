@@ -110,7 +110,6 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
 
       if (config.hasOperationPrivilege) {
         room.setViewMode(ViewMode.Broadcaster);
-        room.disableSerialization = true;
       } else {
         room.setViewMode(ViewMode.Follower);
       }
