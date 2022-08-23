@@ -3263,10 +3263,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-slide@0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.7.tgz#e19e9356281b5ca959ebdcbf7434fb8bca23e2bc"
-  integrity sha512-LH2Q4do1RlmOl7uqrRcj3LEZcpyWZ8u8pgi5lk5bolwuigG1xZ/EvFgjHIFyryOXvk2X28qa98s9gHLdodK+mQ==
+"@netless/app-slide@0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.8.tgz#a2e553f3606697227430c96a5b1d6161a2abeaad"
+  integrity sha512-rY+yDgUhDPyswwwr4XU55o6NvT8R5Q5O4PutNI4kiCC2pBh2dhHV5vqjPT+T1NQ+IINmivV9eADEI8MWHbphuQ==
 
 "@netless/app-talkative@0.1.0":
   version "0.1.0"
@@ -3308,10 +3308,10 @@
   resolved "https://registry.yarnpkg.com/@netless/react-seek-slider/-/react-seek-slider-1.0.4.tgz#d21523f6476f35118df782acf97a8e2255d2744a"
   integrity sha512-smL1iufVg8XxsvO1GzLD4NZf3wFTev7FRIiHlIYDCjIgTS7/Yq6N2n8JMh2ZDjYi1nMBxDstkQPxZOEOpc/N8g==
 
-"@netless/telebox-insider@0.2.26":
-  version "0.2.26"
-  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.2.26.tgz#cc6dd229a5131225855b5780f3c180ed27534fbb"
-  integrity sha512-HOBi9HWK0Zf0nvzfjM0V/0QmZ69ec7L/lCKMwRcfiQHxAAJ/zo9fEm468WocYFsliixWW5L7HwMN0eHb0mw7hA==
+"@netless/telebox-insider@0.2.27":
+  version "0.2.27"
+  resolved "https://registry.yarnpkg.com/@netless/telebox-insider/-/telebox-insider-0.2.27.tgz#cfe62d979088c8052cea5a7f7adfb6b0fb54603f"
+  integrity sha512-6329Zf9Z8M7DI6EI4OyBM25HuVm1moKZfjuBguSEc6YkM0TvNFckq8UEszVYxPn4Wh5p1TJnho3i69gxzgXKLA==
   dependencies:
     "@types/shallowequal" "^1.1.1"
     eventemitter3 "^4.0.7"
@@ -3352,13 +3352,13 @@
   resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha512-8Qvz1NcBhGb+2S9FYy9Xuln0/82q+Bn0EluXxM+BDw/aimhkN1QWxGl++ZysztZ60vzn18vl7p4cJuF2cfslIQ==
 
-"@netless/window-manager@0.4.40":
-  version "0.4.40"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.40.tgz#9c8b951880ffede2f36bc46264c42fa2d65d1753"
-  integrity sha512-C3S/r8HMfXrNi5EISmZAq8QPvnexzGYSLg5s9FUtgwfgvuqciaBhacJI0Lx6vT3+mW3wWPmOQqE5SbbgjVI7ig==
+"@netless/window-manager@0.4.42":
+  version "0.4.42"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.42.tgz#5fa245c8839c4e73f7c37f177fd7b83957e22a6a"
+  integrity sha512-by0xaIS94qtbOqeoTS9/AEB9VNajIHhZ4yiBESD20SdKtcErO7svVmBLiA6mtIFl8/WyWlVqT0HRsApgSy4tCw==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
-    "@netless/telebox-insider" "0.2.26"
+    "@netless/telebox-insider" "0.2.27"
     emittery "^0.9.2"
     lodash "^4.17.21"
     p-retry "^4.6.1"
@@ -23367,10 +23367,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.16.33:
-  version "2.16.33"
-  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.16.33.tgz#f433828e57709a5565f9b9793d8f0560ddf1ee5f"
-  integrity sha512-vv33tvdKXRgaKh5oOJV8FEMd5eb64Jywfe61OcwExX78zt9szH951NHnuwhqdsk8BAH1XwyJ6DcpAhCwXp8F4Q==
+white-web-sdk@2.16.34:
+  version "2.16.34"
+  resolved "https://registry.yarnpkg.com/white-web-sdk/-/white-web-sdk-2.16.34.tgz#bc7c9e5a6673c318a37f6de2f19cd85fffb04c14"
+  integrity sha512-/TWoXlxDc29o05M6qNedhN6t3SuyK3JlKniKAJ9Jmb3WZwAdTxaPi2D2zZyqSBu3x/yg0ulpi5BOJJPw4/mj0A==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"
