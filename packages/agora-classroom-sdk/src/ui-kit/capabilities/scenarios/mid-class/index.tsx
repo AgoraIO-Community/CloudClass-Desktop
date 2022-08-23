@@ -45,7 +45,7 @@ export const MidClassScenario = () => {
 
             <WhiteboardToolbar />
             <ScenesController />
-            <Float bottom={15} right={10} align="end" gap={2}>
+            <Float bottom={15} right={10} align="flex-end" gap={2}>
               <HandsUpContainer />
               <Chat />
             </Float>

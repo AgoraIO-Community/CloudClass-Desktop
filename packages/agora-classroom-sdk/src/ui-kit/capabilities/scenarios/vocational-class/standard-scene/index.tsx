@@ -101,7 +101,7 @@ export const StandardClassScenario = observer(() => {
                 <ScreenShareContainer />
                 <WhiteboardToolbar />
                 <ScenesController />
-                <Float bottom={15} right={10} align="end" gap={2}>
+                <Float bottom={15} right={10} align="flex-end" gap={2}>
                   {showHandsUpContainer ? <HandsUpContainer /> : null}
                 </Float>
                 <StreamWindowsContainer />

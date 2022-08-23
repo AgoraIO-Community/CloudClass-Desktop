@@ -29,12 +29,15 @@ export const BigClassScenario = () => {
           <Layout className={layoutCls} direction="col">
             <NavigationBar />
             <Layout className="flex-grow items-stretch fcr-room-bg h-full">
-              <Layout className="flex-grow items-stretch relative" direction="col" style={{ paddingTop: 2 }}>
+              <Layout
+                className="flex-grow items-stretch relative"
+                direction="col"
+                style={{ paddingTop: 2 }}>
                 <Whiteboard />
                 <ScreenShareContainer />
                 <WhiteboardToolbar />
                 <ScenesController />
-                <Float bottom={15} right={10} align="end" gap={2}>
+                <Float bottom={15} right={10} align="flex-end" gap={2}>
                   <HandsUpContainer />
                 </Float>
                 <StreamWindowsContainer />
