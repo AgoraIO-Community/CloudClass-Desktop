@@ -25,6 +25,7 @@ export const UserList = ({ roomUserList }) => {
     <div className="fcr-hx-user">
       {roomUserList.length > 0 &&
         roomUserList.map((item, key) => {
+          console.log('render>>>>',item);
           const showMuteIcon = muteList && muteList.includes(item.id);
           const isTeacher = item?.ext && JSON.parse(item?.ext).role === ROLE.teacher.id;
           const isAssistant = item?.ext && JSON.parse(item?.ext).role === ROLE.assistant.id;

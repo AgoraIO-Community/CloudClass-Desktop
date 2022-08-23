@@ -153,6 +153,14 @@ export const createListener = (store) => {
             break;
         }
       },
+      onPresenceStatusChange: (message) => {
+        // 移除成员  
+        message.forEach(item => {
+          if (!item.statusDetails.length) {
+            store.dispatch(roomUsers(item.userId, 'removeMember'));
+          }
+        });
+      }
     });
   };
 
