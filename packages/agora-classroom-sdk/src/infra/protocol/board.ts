@@ -272,7 +272,7 @@ export class Board {
   @action.bound
   private _handleConnStateChanged(state: BoardConnectionState) {
     this.connState = state;
-    if (state === BoardConnectionState.Disconnected) {
+    if (state === BoardConnectionState.Connected) {
       this._resetTool();
     }
   }
