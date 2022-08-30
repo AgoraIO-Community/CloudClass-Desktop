@@ -274,6 +274,7 @@ export class Board {
     this.connState = state;
     if (state === BoardConnectionState.Connected) {
       this._resetTool();
+      this.selectTool(FcrBoardTool.Clicker)
     }
   }
 
