@@ -32,7 +32,7 @@ const WindowContainer: FC = observer(({ children }) => {
 export const StreamWindowsContainer = observer(() => {
   const { streamWindowUIStore, streamUIStore } = useStore();
   const { streamsBounds } = streamUIStore;
-  const { streamWindows, needDragable } = streamWindowUIStore;
+  const { streamWindows, needDraggable: needDragable } = streamWindowUIStore;
 
   return (
     <WindowContainer>
@@ -159,7 +159,7 @@ const DragableStreamWindow = observer(
       handleStreamWindowInfo,
       handleDrag,
       handleStreamWindowClick,
-      sendWigetDataToServer,
+      sendWidgetDataToServer: sendWigetDataToServer,
       updateDraggingStreamUuid,
       resetDraggingStreamUuid,
       streamWindowLocked,

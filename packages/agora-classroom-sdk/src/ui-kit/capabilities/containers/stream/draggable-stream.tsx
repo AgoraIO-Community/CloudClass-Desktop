@@ -17,7 +17,7 @@ export const DragableContainer: FC<
             const [ref, bounds] = useMeasure();
             const [translate, setTranslate] = useState([0, 0]);
             const { streamWindowUIStore } = useStore();
-            const { setStreamDragInformation, streamDragable } = streamWindowUIStore;
+            const { setStreamDragInformation, streamDraggable: streamDragable } = streamWindowUIStore;
 
             const handleDragStream = ({
                 stream,
@@ -76,7 +76,7 @@ export const DragableStream = observer(
         playerStyle?: CSSProperties
     }) => {
         const { streamWindowUIStore } = useStore();
-        const { streamDragable, handleDBClickStreamWindow } = streamWindowUIStore;
+        const { streamDraggable: streamDragable, handleDBClickStreamWindow } = streamWindowUIStore;
 
         const handleStreamDoubleClick = () => {
             streamDragable && stream && handleDBClickStreamWindow(stream.stream);

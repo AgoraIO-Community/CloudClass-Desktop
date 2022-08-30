@@ -2,11 +2,11 @@ import { AGServiceErrorCode } from 'agora-edu-core';
 import { AGError } from 'agora-rte-sdk';
 
 const errorsShouldBlockToast = new Set([
-  AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
-  AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-  AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT,
-  AGServiceErrorCode.SERV_HAND_UP_CONFLICT,
-  AGServiceErrorCode.SERV_USER_BEING_INVITED,
+  AGServiceErrorCode.SERVE_ACCEPT_NOT_FOUND,
+  AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
+  AGServiceErrorCode.SERVE_ACCEPT_MAX_COUNT,
+  AGServiceErrorCode.SERVE_HAND_UP_CONFLICT,
+  AGServiceErrorCode.SERVE_USER_BEING_INVITED,
 ]);
 
 export abstract class ToastFilter {

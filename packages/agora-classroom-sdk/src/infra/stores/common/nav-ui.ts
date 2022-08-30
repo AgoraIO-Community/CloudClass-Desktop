@@ -316,7 +316,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
                   ],
                   true,
                 ).catch((e) => {
-                  if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
+                  if (AGError.isOf(e, AGServiceErrorCode.SERVE_USER_BEING_INVITED)) {
                     this.shareUIStore.addConfirmDialog(
                       transI18n('fcr_group_help_title'),
                       transI18n('fcr_group_teacher_is_helping_others_msg'),
