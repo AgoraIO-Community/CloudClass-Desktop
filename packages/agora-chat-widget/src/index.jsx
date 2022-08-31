@@ -13,6 +13,7 @@ import { MessageAPI } from './api/message';
 import { MuteAPI } from './api/mute';
 import { UserInfoAPI } from './api/userInfo';
 import { ThemeProvider } from '~ui-kit';
+import { PresenceAPI } from './api/presence'
 
 let store = null;
 
@@ -25,7 +26,8 @@ export const HXChatRoom = ({ pluginStore, agoraTokenData, theme }) => {
     const chatHistoryAPI = new ChatHistoryAPI(chatStore, messageAPI);
     const muteAPI = new MuteAPI(chatStore, messageAPI);
     const userInfoAPI = new UserInfoAPI(chatStore);
-    const chatRoomAPI = new ChatRoomAPI(chatStore, chatHistoryAPI, muteAPI, userInfoAPI);
+    const presenceAPI = new PresenceAPI(chatStore);
+    const chatRoomAPI = new ChatRoomAPI(chatStore, chatHistoryAPI, muteAPI, userInfoAPI, presenceAPI);
 
     return {
       chatRoomAPI,
@@ -34,6 +36,7 @@ export const HXChatRoom = ({ pluginStore, agoraTokenData, theme }) => {
       messageAPI,
       muteAPI,
       userInfoAPI,
+      presenceAPI
     };
   }, [chatStore]);
 

@@ -14,11 +14,13 @@ export class ChatRoomAPI {
   chatHistoryAPI = null;
   muteAPI = null;
   userInfoAPI = null;
-  constructor(store, chatHistoryAPI, muteAPI, userInfoAPI) {
+  presenceAPI = null;
+  constructor(store, chatHistoryAPI, muteAPI, userInfoAPI, presenceAPI) {
     this.store = store;
     this.chatHistoryAPI = chatHistoryAPI;
     this.muteAPI = muteAPI;
     this.userInfoAPI = userInfoAPI;
+    this.presenceAPI = presenceAPI;
   }
 
   // 加入聊天室
@@ -34,6 +36,9 @@ export class ChatRoomAPI {
       this.getRoomInfo(options.roomId);
       if (roleType === ROLE.student.id) {
         this.muteAPI.isChatRoomWhiteUser(userUuid);
+      }
+      if (roleType === ROLE.teacher.id || roleType === ROLE.assistant.id) {
+        this.getRoomsAdmin(roomId);
       }
       this.chatHistoryAPI.getHistoryMessages(roomId);
     });
@@ -71,6 +76,19 @@ export class ChatRoomAPI {
         console.log('getRoomInfo>>>', err);
       });
   };
+
+  // 获取群管理员
+  getRoomsAdmin = roomId => {
+    let option = {
+      chatRoomId: roomId
+    };
+    WebIM.conn.getChatRoomAdmin(option).then((res) => {
+      const { data } = res;
+      const currentLoginUser = WebIM.conn.context.userId;
+      const admins = data.filter(item => item !== currentLoginUser)
+      this.presenceAPI.subscribePresence(admins)
+    })
+  }
 
   // 获取群组公告
   getAnnouncement = (roomId) => {

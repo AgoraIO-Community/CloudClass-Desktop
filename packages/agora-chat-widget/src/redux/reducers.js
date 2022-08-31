@@ -35,6 +35,7 @@ let defaultState = {
     screenshotIcon: true, // 是否展示截图图标
   },
   agoraTokenConfig: {}, // token config
+  presenceList: [], //订阅列表
 };
 const reducer = (state = defaultState, action) => {
   const { type, data } = action;
@@ -222,6 +223,11 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         agoraTokenConfig: data,
+      };
+    case 'USER_STATUS_ACTION':
+      return {
+        ...state,
+        presenceList: data,
       };
     default:
       break;
