@@ -272,23 +272,21 @@ export class Board {
   @action.bound
   private _handleConnStateChanged(state: BoardConnectionState) {
     this.connState = state;
-    if (state === BoardConnectionState.Connected) {
-      this._resetTool();
-      this.selectTool(FcrBoardTool.Clicker)
-    }
   }
 
   @action.bound
   private _handleMountStateChanged(state: BoardMountState) {
     this.mountState = state;
+    if (state === BoardMountState.Mounted) {
+      this._resetTool();
+    }
   }
 
   @action
   private _resetTool() {
-    this.selectedTool = FcrBoardTool.Clicker;
-    this.selectedShape = undefined;
     this.strokeColor = { r: 0, g: 115, b: 255 };
     this.strokeWidth = 2;
+    this.selectTool(FcrBoardTool.Clicker);
   }
 
   private _waitReply<T>(messageType: string, messageId: string, timeout: number) {
