@@ -162,7 +162,7 @@ const ShareCard = observer(() => {
     if (copyRef.current) {
       const clipboard = new ClipboardJS(copyRef.current);
       clipboard.on('success', function (e) {
-        shareUIStore.addToast('Coppy success');
+        shareUIStore.addToast(transI18n('fcr_copy_success'));
         navigationBarUIStore.closeShare();
       });
       clipboard.on('error', function (e) {
