@@ -1048,8 +1048,8 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         if (
           !AGError.isOf(
             e,
-            AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERVE_ACCEPT_NOT_FOUND,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
           )
         ) {
           this.shareUIStore.addGenericErrorDialog(e);

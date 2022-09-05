@@ -230,8 +230,8 @@ export class RosterUIStore extends EduUIStoreBase {
         if (
           !AGError.isOf(
             e,
-            AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
           )
         ) {
           addGenericErrorDialog(e);
@@ -239,13 +239,13 @@ export class RosterUIStore extends EduUIStoreBase {
       });
     } else {
       onPodium(`${profile.uid}`).catch((e) => {
-        if (AGError.isOf(e, AGServiceErrorCode.SERVE_ACCEPT_MAX_COUNT)) {
+        if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
           this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
         } else if (
           !AGError.isOf(
             e,
-            AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
           )
         ) {
           addGenericErrorDialog(e);

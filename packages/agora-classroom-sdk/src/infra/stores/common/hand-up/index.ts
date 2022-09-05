@@ -237,13 +237,13 @@ export class HandUpUIStore extends EduUIStoreBase {
     this.classroomStore.handUpStore
       .onPodium(userUuid, PodiumSrouce.AcceptedByTeacher)
       .catch((e) => {
-        if (AGError.isOf(e, AGServiceErrorCode.SERVE_ACCEPT_MAX_COUNT)) {
+        if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
           this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
         } else if (
           !AGError.isOf(
             e,
-            AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERVE_ACCEPT_NOT_FOUND,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
           )
         ) {
           this.shareUIStore.addGenericErrorDialog(e);
@@ -327,8 +327,8 @@ export class HandUpUIStore extends EduUIStoreBase {
         if (
           !AGError.isOf(
             e,
-            AGServiceErrorCode.SERVE_HAND_UP_CONFLICT,
-            AGServiceErrorCode.SERVE_PROCESS_CONFLICT,
+            AGServiceErrorCode.SERV_HAND_UP_CONFLICT,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
           )
         ) {
           this.shareUIStore.addGenericErrorDialog(e);
