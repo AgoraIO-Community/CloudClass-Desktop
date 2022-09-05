@@ -194,7 +194,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
     const shareAction: EduNavAction<EduNavRecordActionPayload | undefined> = {
       id: 'Share',
-      title: 'Share',
+      title: transI18n('fcr_copy_title'),
       iconType: SvgIconEnum.LINK,
       onClick: async () => {
         runInAction(() => {
