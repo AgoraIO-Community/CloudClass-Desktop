@@ -26,7 +26,7 @@ export const ToolCabinet: FC<ToolCabinetProps> = ({
 
 
   return (
-    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip" mouseLeaveDelay={0}>
       <Popover
         visible={visible}
         onVisibleChange={onVisibilityChange}
