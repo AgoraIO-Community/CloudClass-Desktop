@@ -1,5 +1,4 @@
 .page-loading {
-  @apply bg-background;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +10,11 @@
   left: 0;
   top: 0;
 }
+.card-loading-position {
+  position: relative;
+}
 .page-loading-text {
+  @apply text-level1;
   position: absolute;
   bottom: -50px;
   white-space: nowrap;

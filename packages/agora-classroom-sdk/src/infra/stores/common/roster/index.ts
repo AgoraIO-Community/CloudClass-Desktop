@@ -231,7 +231,7 @@ export class RosterUIStore extends EduUIStoreBase {
           !AGError.isOf(
             e,
             AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
           )
         ) {
           addGenericErrorDialog(e);
@@ -245,7 +245,7 @@ export class RosterUIStore extends EduUIStoreBase {
           !AGError.isOf(
             e,
             AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
           )
         ) {
           addGenericErrorDialog(e);

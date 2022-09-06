@@ -3,6 +3,7 @@ import { transI18n } from '~ui-kit';
 import { observer } from 'mobx-react';
 import { FC, useEffect } from 'react';
 import { Card, Loading } from '~ui-kit';
+import './index.css';
 
 type Props = {
   children?: React.ReactNode;
@@ -27,7 +28,7 @@ const PageLoading = () => {
   const { layoutUIStore } = useStore();
 
   return (
-    <div className="page-loading">
+    <div className="scene-switch-loading">
       <Card
         className="absolute inline-flex flex-col inset-auto p-4"
         style={{

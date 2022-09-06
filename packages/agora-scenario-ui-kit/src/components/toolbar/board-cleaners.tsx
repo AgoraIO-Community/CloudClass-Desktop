@@ -44,7 +44,7 @@ export const BoardCleaners: FC<BoardCleanersProps> = ({
 
 
   return (
-    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip" mouseLeaveDelay={0}>
       <Popover
         overlayClassName="expand-tools-popover expand-tools-popover-board-cleaner"
         trigger="hover"

@@ -74,7 +74,12 @@ export const StandardClassScenario = observer(() => {
     if (!player) {
       return;
     }
-    const handleCDNDelayUpdate = boardUIStore.setDelay;
+    const handleCDNDelayUpdate = (t: number) => {
+      boardUIStore.setDelay(t);
+      if (boardUIStore.boardApi.connected) {
+        player.clearDelayTask();
+      }
+    };
     player.on(MediaPlayerEvents.CdnDelayUpdated, handleCDNDelayUpdate);
     return () => {
       player.off(MediaPlayerEvents.CdnDelayUpdated, handleCDNDelayUpdate);
@@ -96,7 +101,7 @@ export const StandardClassScenario = observer(() => {
                 <ScreenShareContainer />
                 <WhiteboardToolbar />
                 <ScenesController />
-                <Float bottom={15} right={10} align="end" gap={2}>
+                <Float bottom={15} right={10} align="flex-end" gap={2}>
                   {showHandsUpContainer ? <HandsUpContainer /> : null}
                 </Float>
                 <StreamWindowsContainer />

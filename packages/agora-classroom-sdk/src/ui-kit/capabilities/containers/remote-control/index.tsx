@@ -2,7 +2,6 @@ import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { useEffect, useRef } from 'react';
 import { ComponentLevelRules } from '../../config';
-import { RemoteControlToolbar } from './toolbar';
 
 export const RemoteControlContainer = observer(() => {
   const {
@@ -26,8 +25,6 @@ export const RemoteControlContainer = observer(() => {
         pointerEvents: isRemoteControlling && isHost ? 'auto' : 'none',
         zIndex: ComponentLevelRules.StreamWindow,
         height: boardAreaHeight,
-      }}>
-      <RemoteControlToolbar />
-    </div>
+      }}></div>
   );
 });

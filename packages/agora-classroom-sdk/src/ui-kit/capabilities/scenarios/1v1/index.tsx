@@ -17,6 +17,7 @@ import { WidgetContainer } from '../../containers/widget';
 import { Chat, Whiteboard } from '../../containers/widget/slots';
 import { OneToOneClassAside as Aside } from '~containers/aside';
 import Room from '../room';
+import { RemoteControlToolbar } from '../../containers/remote-control/toolbar';
 
 export const OneToOneScenario = () => {
   const layoutCls = classnames('edu-room', 'one-on-one-class-room');
@@ -28,13 +29,17 @@ export const OneToOneScenario = () => {
           <Layout className={layoutCls} direction="col">
             <NavigationBar />
             <Layout className="flex-grow items-stretch fcr-room-bg h-full">
-              <Layout className="flex-grow items-stretch relative" direction="col" style={{ paddingTop: 2 }}>
+              <Layout
+                className="flex-grow items-stretch relative"
+                direction="col"
+                style={{ paddingTop: 2 }}>
                 <Whiteboard />
                 <ScreenShareContainer />
                 <WhiteboardToolbar />
                 <ScenesController />
                 <RemoteControlContainer />
                 <StreamWindowsContainer />
+                <RemoteControlToolbar />
               </Layout>
               <Aside>
                 <Room1v1StreamsContainer />

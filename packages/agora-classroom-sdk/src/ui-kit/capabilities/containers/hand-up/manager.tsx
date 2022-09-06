@@ -75,6 +75,7 @@ export const WaveArmManager: FC<WaveArmManagerProps> = ({
           className={twinkleFlag ? 'card-hands-up-active' : ''}>
           <div className="hands-box-line">
             <SvgImg
+              onClick={showInviteContainer}
               type={SvgIconEnum.HANDS_UP}
               colors={twinkleFlag ? { iconPrimary: InteractionStateColors.allow } : {}}
               size={24}

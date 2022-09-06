@@ -82,7 +82,8 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
       isWritable: config.hasOperationPrivilege,
       disableDeviceInputs: !config.hasOperationPrivilege,
       disableCameraTransform: true,
-      disableNewPencil: true,
+      disableNewPencil: false,
+      disableEraseImage: false,
       wrappedComponents: [],
       invisiblePlugins: [WindowManager],
       useMultiViews: true,
@@ -109,7 +110,6 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
 
       if (config.hasOperationPrivilege) {
         room.setViewMode(ViewMode.Broadcaster);
-        room.disableSerialization = true;
       } else {
         room.setViewMode(ViewMode.Follower);
       }

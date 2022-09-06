@@ -124,7 +124,7 @@ export const Pens: FC<PensProps> = ({
   const penIcon = getPenIcon(activePen);
 
   return (
-    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip">
+    <Tooltip title={label} placement="bottom" overlayClassName="translated-tooltip" mouseLeaveDelay={0}>
       <Popover
         visible={popoverVisible}
         onVisibleChange={(visible) => {

@@ -54,6 +54,7 @@ export const Tool: FC<ToolProps> = (props) => {
           title={t(label)}
           placement="bottomLeft"
           overlayClassName="translated-tooltip"
+          mouseLeaveDelay={0}
           align={{
             offset: [-5, 0],
           }}>

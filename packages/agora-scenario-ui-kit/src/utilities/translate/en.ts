@@ -868,7 +868,10 @@ export const en = {
     offPodium: 'Off podium',
   },
   question: 'Question',
+  fcr_copy_title: 'Share',
+
   fcr_copy_room_name: 'Room Name:',
   fcr_copy_share_link: 'Invite Link:',
   fcr_copy_share_link_copy: 'Copy link',
+  fcr_copy_success: 'Copy success',
 };

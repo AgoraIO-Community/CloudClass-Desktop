@@ -504,7 +504,7 @@ export class StreamUIStore extends EduUIStoreBase {
       audioSourceStopped
         ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
         : audioMuted
-        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
+        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow }
         : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
       audioSourceStopped
         ? transI18n('Microphone Not Available')
@@ -514,7 +514,7 @@ export class StreamUIStore extends EduUIStoreBase {
       {
         //can interact when source is not stopped
         interactable: !audioSourceStopped,
-        hoverIconType: { icon: SvgIconEnum.MIC_DISABLED },
+        hoverIconType: { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow },
         onClick: async () => {
           this.classroomStore.streamStore
             .updateRemotePublishState(stream.fromUser.userUuid, stream.stream.streamUuid, {

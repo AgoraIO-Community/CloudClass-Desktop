@@ -30,7 +30,9 @@
   align-items: center;
   cursor: pointer;
 }
-
+.fcr-hx-show-chat-icon:hover path {
+  fill: #fff;
+}
 .fcr-hx-chat-notice {
   position: absolute;
   border-radius: 50%;

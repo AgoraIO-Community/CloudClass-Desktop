@@ -337,9 +337,6 @@ export class AgoraEduSDK {
     EduClassroomConfig.setConfig(config);
 
     EduEventCenter.shared.onClassroomEvents((event: AgoraEduClassroomEvent) => {
-      if (event === AgoraEduClassroomEvent.Ready) {
-        this._setRecordReady();
-      }
       if (event === AgoraEduClassroomEvent.Destroyed) {
         unmountComponentAtNode(dom);
       }
@@ -397,7 +394,7 @@ export class AgoraEduSDK {
     this._theme = themes['default'][themeMode];
   }
 
-  private static _setRecordReady() {
+  static setRecordReady() {
     const {
       rteEngineConfig: { ignoreUrlRegionPrefix, region },
       sessionInfo: { roomUuid },
