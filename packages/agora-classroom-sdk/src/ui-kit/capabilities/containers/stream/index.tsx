@@ -5,7 +5,15 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import classnames from 'classnames';
 import { debounce } from 'lodash';
 import { observer } from 'mobx-react';
-import React, { CSSProperties, FC, Fragment, useCallback, useEffect, useState } from 'react';
+import React, {
+  useRef,
+  CSSProperties,
+  FC,
+  Fragment,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import useMeasure from 'react-use-measure';
 import {
@@ -69,7 +77,6 @@ const LocalStreamPlayerVolume = observer(({ stream }: { stream: EduStreamUI }) =
   const { localVolume, localMicOff } = streamUIStore;
 
   const isMicMuted = localMicOff ? true : stream.isMicMuted;
-
   return (
     <AudioVolume
       isMicMuted={isMicMuted}
@@ -160,6 +167,7 @@ export const StreamPlayerOverlay = observer(({ stream }: { stream: EduStreamUI }
 
   return (
     <div className="video-player-overlay z-10 pointer-events-none">
+      <AudioVolumeEffect stream={stream} />
       <AwardAnimations stream={stream} />
       <div className="top-right-info">
         {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}
@@ -360,3 +368,42 @@ export const MeasuerContainer: FC<{
   );
   return <div className="stream-player-placement" style={style} ref={ref} />;
 });
+const AudioVolumeEffect = observer(
+  ({
+    stream,
+    duration = 3000,
+    minTriggerVolume = 15,
+  }: {
+    stream: EduStreamUI;
+    duration?: number;
+    minTriggerVolume?: number;
+  }) => {
+    const { streamUIStore } = useStore();
+    const { localVolume, remoteStreamVolume, localMicOff } = streamUIStore;
+    const [showAudioVolumeEffect, setShowAudioVolumeEffect] = useState(false);
+    const timer = useRef<number | null>(null);
+    const showAudioEffect = () => {
+      setShowAudioVolumeEffect(true);
+      if (timer.current) {
+        window.clearTimeout(timer.current);
+      }
+      timer.current = window.setTimeout(() => {
+        setShowAudioVolumeEffect(false);
+        timer.current = null;
+      }, duration);
+    };
+    useEffect(() => {
+      if (stream.stream.isLocal) {
+        if (localVolume > minTriggerVolume && !localMicOff) {
+          showAudioEffect();
+        }
+      } else {
+        const remoteVolume = remoteStreamVolume(stream);
+        if (remoteVolume > minTriggerVolume && !stream.isMicMuted) {
+          showAudioEffect();
+        }
+      }
+    }, [localVolume, remoteStreamVolume(stream), localMicOff, stream.isMicMuted]);
+    return showAudioVolumeEffect ? <div className={'fcr-audio-volume-effect'}></div> : null;
+  },
+);
