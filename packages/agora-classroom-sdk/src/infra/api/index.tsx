@@ -2,27 +2,27 @@ import { vocationalNeedPreset } from '@/app/pages/home/vocational';
 import { ControlBar } from '@/ui-kit/capabilities/containers/fragments';
 import { Scenarios } from '@/ui-kit/capabilities/scenarios';
 import {
-    AgoraEduClassroomEvent,
-    CloudDriveResource,
-    EduClassroomConfig,
-    EduEventCenter,
-    EduMediaEncryptionMode,
-    EduRegion,
-    EduRoleTypeEnum,
-    EduRoomServiceTypeEnum,
-    EduRoomSubtypeEnum,
-    EduRoomTypeEnum,
-    Platform
+  AgoraEduClassroomEvent,
+  CloudDriveResource,
+  EduClassroomConfig,
+  EduEventCenter,
+  EduMediaEncryptionMode,
+  EduRegion,
+  EduRoleTypeEnum,
+  EduRoomServiceTypeEnum,
+  EduRoomSubtypeEnum,
+  EduRoomTypeEnum,
+  Platform
 } from 'agora-edu-core';
 import {
-    AgoraChatWidget,
-    AgoraCountdown,
-    AgoraHXChatWidget,
-    AgoraPolling,
-    AgoraSelector,
-    FcrBoardWidget,
-    FcrStreamMediaPlayerWidget,
-    FcrWebviewWidget
+  AgoraChatWidget,
+  AgoraCountdown,
+  AgoraHXChatWidget,
+  AgoraPolling,
+  AgoraSelector,
+  FcrBoardWidget,
+  FcrStreamMediaPlayerWidget,
+  FcrWebviewWidget
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -32,28 +32,28 @@ import { EduContext } from '../contexts';
 import { createCloudResource } from '../stores/common/cloud-drive/helper';
 import { FcrMultiThemeMode, FcrUIConfig } from '../types/config';
 import {
-    applyTheme,
-    loadGeneratedFiles,
-    loadTheme,
-    loadUIConfig,
-    supportedRoomTypes,
-    themes,
-    uiConfigs
+  applyTheme,
+  loadGeneratedFiles,
+  loadTheme,
+  loadUIConfig,
+  supportedRoomTypes,
+  themes,
+  uiConfigs
 } from '../utils/config-loader';
 
 import './polyfills';
 import { Providers } from './providers';
 import {
-    AgoraWidgetBase,
-    BoardWindowAnimationOptions,
-    ConfigParams,
-    ConvertMediaOptionsConfig,
-    CourseWareItem,
-    CourseWareList,
-    LaunchMediaOptions,
-    LaunchOption,
-    LaunchWindowOption,
-    WindowID
+  AgoraWidgetBase,
+  BoardWindowAnimationOptions,
+  ConfigParams,
+  ConvertMediaOptionsConfig,
+  CourseWareItem,
+  CourseWareList,
+  LaunchMediaOptions,
+  LaunchOption,
+  LaunchWindowOption,
+  WindowID
 } from './type';
 
 export * from './type';
@@ -254,6 +254,8 @@ export class AgoraEduSDK {
       recordRetryTimeout,
       uiMode,
       shareUrl,
+      latencyLevel,
+      userFlexProperties
     } = option;
     const sessionInfo = {
       userUuid,
@@ -265,7 +267,7 @@ export class AgoraEduSDK {
       roomSubtype,
       roomServiceType,
       duration,
-      flexProperties: {},
+      flexProperties: userFlexProperties,
       token: rtmToken,
       startTime,
     };
@@ -301,6 +303,7 @@ export class AgoraEduSDK {
       sessionInfo,
       option.recordUrl || '',
       {
+        latencyLevel,
         region: this.region,
         rtcConfigs: {
           ...this._convertMediaOptions(option.mediaOptions),

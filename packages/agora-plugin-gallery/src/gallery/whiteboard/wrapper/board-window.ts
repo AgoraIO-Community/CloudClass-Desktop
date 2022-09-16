@@ -340,10 +340,6 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
   async updateOperationPrivilege(hasOperationPrivilege: boolean) {
     this._hasOperationPrivilege = hasOperationPrivilege;
     await this._setBoardWritable(hasOperationPrivilege);
-    if (hasOperationPrivilege) {
-      this._localState.tool = defaultTool;
-      this._syncLocalStateToMemberState();
-    }
   }
 
   async changeStrokeWidth(strokeWidth: number) {
@@ -493,14 +489,16 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
 
   private async _setBoardWritable(granted: boolean) {
     const room = this._whiteRoom;
-    if (granted) {
+    if (granted && !room.isWritable) {
       await room.setWritable(true);
       room.disableDeviceInputs = false;
       room.disableSerialization = false;
-    } else {
-      await room.setWritable(false);
+    }
+
+    if (!granted && room.isWritable) {
       room.disableDeviceInputs = true;
       room.disableSerialization = true;
+      await room.setWritable(false);
     }
   }
 

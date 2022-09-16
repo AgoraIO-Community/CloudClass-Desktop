@@ -7,7 +7,7 @@ import {
   EduRtcConfig,
   Platform,
 } from 'agora-edu-core';
-import { EduVideoEncoderConfiguration, MediaOptions } from 'agora-rte-sdk';
+import { AGVideoEncoderConfiguration, AGMediaOptions } from 'agora-rte-sdk';
 import { CloudDriveResourceConvertProgress } from '../stores/common/cloud-drive/type';
 import { AgoraWidgetBase } from '../stores/common/widget/widget-base';
 import { FcrMultiThemeMode } from '../types/config';
@@ -52,12 +52,12 @@ export type ConfigParams = {
   region?: string;
 };
 
-export type LaunchMediaOptions = MediaOptions & {
-  lowStreamCameraEncoderConfiguration?: EduVideoEncoderConfiguration;
+export type LaunchMediaOptions = AGMediaOptions & {
+  lowStreamCameraEncoderConfiguration?: AGVideoEncoderConfiguration;
 };
 
 export type ConvertMediaOptionsConfig = EduRtcConfig & {
-  defaultLowStreamCameraEncoderConfigurations?: EduVideoEncoderConfiguration;
+  defaultLowStreamCameraEncoderConfigurations?: AGVideoEncoderConfiguration;
 };
 
 /**

@@ -3,6 +3,7 @@ import {
   AgoraRteAudioSourceType,
   AgoraRteEventType,
   AgoraRteMediaPublishState,
+  AgoraRteMediaSourceState,
   AgoraRteOperator,
   AgoraRteScene,
   AgoraRteVideoSourceType,
@@ -288,28 +289,20 @@ export class MainRoomSubscription extends SceneSubscription {
 
     // remote stream added, try subscribing
     streams.forEach((s) => {
-      switch (s.videoState) {
-        case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteVideoStream(
-            s.streamUuid,
-            s.playUrl && this.isCDNMode ? true : false,
-          );
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
-          break;
+      const [canVideoSubscribe, canAudioSubscribe] = this._canStreamBeSubscribed(s);
+
+      const dontSubStream = s.playUrl && this.isCDNMode;
+
+      if (canVideoSubscribe && !dontSubStream) {
+        scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, false);
+      } else {
+        scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
       }
 
-      switch (s.audioState) {
-        case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteAudioStream(
-            s.streamUuid,
-            s.playUrl && this.isCDNMode ? true : false,
-          );
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
-          break;
+      if (canAudioSubscribe && !dontSubStream) {
+        scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, false);
+      } else {
+        scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
       }
     });
   }
@@ -324,28 +317,20 @@ export class MainRoomSubscription extends SceneSubscription {
 
     // remote stream added, try subscribing
     streams.forEach((s) => {
-      switch (s.videoState) {
-        case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteVideoStream(
-            s.streamUuid,
-            s.playUrl && this.isCDNMode ? true : false,
-          );
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
-          break;
+      const [canVideoSubscribe, canAudioSubscribe] = this._canStreamBeSubscribed(s);
+
+      const dontSubStream = s.playUrl && this.isCDNMode;
+
+      if (canVideoSubscribe && !dontSubStream) {
+        scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, false);
+      } else {
+        scene.rtcChannel.muteRemoteVideoStream(s.streamUuid, true);
       }
 
-      switch (s.audioState) {
-        case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteRemoteAudioStream(
-            s.streamUuid,
-            s.playUrl && this.isCDNMode ? true : false,
-          );
-          break;
-        case AgoraRteMediaPublishState.Unpublished:
-          scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
-          break;
+      if (canAudioSubscribe && !dontSubStream) {
+        scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, false);
+      } else {
+        scene.rtcChannel.muteRemoteAudioStream(s.streamUuid, true);
       }
     });
   }
@@ -405,6 +390,17 @@ export class MainRoomSubscription extends SceneSubscription {
         scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, false);
       }
     });
+  }
+
+  private _canStreamBeSubscribed(stream: AgoraStream) {
+    const canVideoSubscribed =
+      stream.videoSourceState === AgoraRteMediaSourceState.started &&
+      stream.videoState === AgoraRteMediaPublishState.Published;
+    const canAudioSubscribed =
+      stream.audioSourceState === AgoraRteMediaSourceState.started &&
+      stream.audioState === AgoraRteMediaPublishState.Published;
+
+    return [canVideoSubscribed, canAudioSubscribed];
   }
 }
 

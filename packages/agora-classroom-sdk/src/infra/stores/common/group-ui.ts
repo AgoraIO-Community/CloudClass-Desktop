@@ -8,7 +8,7 @@ import {
   PatchGroup,
   SceneType,
 } from 'agora-edu-core';
-import { AGError, AGRtcConnectionType, bound, Log, RtcState } from 'agora-rte-sdk';
+import { AGError, AGRtcConnectionType, bound, Log, AGRtcState } from 'agora-rte-sdk';
 import { difference, range } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from './base';
@@ -601,16 +601,16 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   private async _waitUntilLeft() {
-    await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Idle);
+    await when(() => this.classroomStore.connectionStore.rtcState === AGRtcState.Idle);
   }
 
   private async _waitUntilConnected() {
     if (
-      [RtcState.Connecting, RtcState.Reconnecting].includes(
+      [AGRtcState.Connecting, AGRtcState.Reconnecting].includes(
         this.classroomStore.connectionStore.rtcState,
       )
     ) {
-      await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Connected);
+      await when(() => this.classroomStore.connectionStore.rtcState === AGRtcState.Connected);
     }
   }
 
@@ -648,7 +648,7 @@ export class GroupUIStore extends EduUIStoreBase {
 
       await this._waitUntilConnected();
 
-      if (this.classroomStore.connectionStore.rtcSubState !== RtcState.Idle) {
+      if (this.classroomStore.connectionStore.rtcSubState !== AGRtcState.Idle) {
         this.classroomStore.mediaStore.stopScreenShareCapture();
         this.classroomStore.connectionStore.leaveRTC(AGRtcConnectionType.sub);
       }
@@ -693,7 +693,7 @@ export class GroupUIStore extends EduUIStoreBase {
     try {
       await this.classroomStore.connectionStore.leaveSubRoom();
 
-      await when(() => this.classroomStore.connectionStore.rtcState === RtcState.Idle);
+      await when(() => this.classroomStore.connectionStore.rtcState === AGRtcState.Idle);
 
       await this.classroomStore.connectionStore.joinRTC();
 

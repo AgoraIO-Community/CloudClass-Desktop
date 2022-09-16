@@ -770,6 +770,7 @@ export const en = {
     '600079': 'Failed to enable dual stream',
     '600080': 'Failed to set low stream parameter',
     '600090': 'Failed to join rdc room',
+    '600096': 'Failed to set latency level',
   },
   edu_serv_error: {
     '20400200': 'UserUuid is required!',

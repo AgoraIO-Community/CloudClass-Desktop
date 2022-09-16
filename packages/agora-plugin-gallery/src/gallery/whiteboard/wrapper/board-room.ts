@@ -131,29 +131,31 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
 
   @Log.silence
   private _handleRoomStateUpdated(state: Partial<RoomState>) {
-    const { strokeColor, strokeWidth, currentApplianceName, textSize, shapeType } =
-      state.memberState || {};
+    const { memberState } = state;
+    if (memberState) {
+      const { strokeColor, strokeWidth, currentApplianceName, textSize, shapeType } = memberState;
 
-    const localState: Partial<BoardState> = {};
+      const localState: Partial<BoardState> = {};
 
-    const [tool, shape] = convertToFcrBoardToolShape(currentApplianceName, shapeType);
-    localState.tool = tool as FcrBoardTool;
-    localState.shape = shape as FcrBoardShape;
+      const [tool, shape] = convertToFcrBoardToolShape(currentApplianceName, shapeType);
+      localState.tool = tool as FcrBoardTool;
+      localState.shape = shape as FcrBoardShape;
 
-    if (typeof strokeColor !== 'undefined') {
-      const [r, g, b] = strokeColor;
-      localState.strokeColor = { r, g, b };
+      if (typeof strokeColor !== 'undefined') {
+        const [r, g, b] = strokeColor;
+        localState.strokeColor = { r, g, b };
+      }
+
+      if (typeof strokeWidth !== 'undefined') {
+        localState.strokeWidth = strokeWidth;
+      }
+
+      if (typeof textSize !== 'undefined') {
+        localState.textSize = textSize;
+      }
+
+      this._eventBus.emit(FcrBoardRoomEvent.MemberStateChanged, { ...localState });
     }
-
-    if (typeof strokeWidth !== 'undefined') {
-      localState.strokeWidth = strokeWidth;
-    }
-
-    if (typeof textSize !== 'undefined') {
-      localState.textSize = textSize;
-    }
-
-    this._eventBus.emit(FcrBoardRoomEvent.MemberStateChanged, { ...localState });
   }
 
   @Log.silence

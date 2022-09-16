@@ -37,6 +37,7 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
   private _initialized = false;
   private _mounted = false;
   private _isInitialUser = false;
+  private _joined = false;
   private _initArgs?: {
     appId: string;
     region: FcrBoardRegion;
@@ -308,6 +309,8 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
   }
 
   private _join(config: FcrBoardRoomJoinConfig) {
+    this._joined = true;
+
     const { roomId, roomToken, userId, userName, hasOperationPrivilege } = config;
 
     this.logger.info('create board client with config', config);
@@ -327,9 +330,9 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
 
     const boardRoom = this._boardRoom;
 
-    boardRoom.on(FcrBoardRoomEvent.JoinSuccess, (mainWindow) => {
+    boardRoom.on(FcrBoardRoomEvent.JoinSuccess, async (mainWindow) => {
       this.logger.info('Fcr board join success');
-      mainWindow.updateOperationPrivilege(this.hasPrivilege);
+      await mainWindow.updateOperationPrivilege(this.hasPrivilege);
       this._deliverWindowEvents(mainWindow);
       this.unmount();
       this._boardMainWindow = mainWindow;
@@ -343,7 +346,7 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     boardRoom.on(FcrBoardRoomEvent.ConnectionStateChanged, (state) => {
       this.logger.info('Fcr board connection state changed to', state);
       // this.broadcast(FcrBoardRoomEvent.ConnectionStateChanged, state);
-      if (state === BoardConnectionState.Disconnected) {
+      if (state === BoardConnectionState.Disconnected && this._joined) {
         this.logger.info('Fcr board start reconnecting');
         boardRoom.join(joinConfig);
       }
@@ -360,11 +363,11 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
       // this.broadcast(FcrBoardRoomEvent.ConnectionStateChanged, state);
       this.broadcast(AgoraExtensionWidgetEvent.BoardMemberStateChanged, state);
     });
-
     boardRoom.join(joinConfig);
   }
 
   private _leave() {
+    this._joined = false;
     if (this._boardRoom) {
       this._boardRoom.leave();
       this._boardRoom = undefined;
@@ -420,7 +423,7 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     this.broadcast(AgoraExtensionWidgetEvent.BoardDrop, e);
   }
 
-  private _checkPrivilege(props: any) {
+  private async _checkPrivilege(props: any) {
     const { userUuid } = this.classroomConfig.sessionInfo;
     const prev = this._grantedUsers.has(userUuid);
     const keys = Object.keys(props.extra?.grantedUsers || {});
@@ -428,7 +431,7 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     const grantedUsers = this._grantedUsers;
     const hasPrivilege = this.hasPrivilege;
     if (prev !== hasPrivilege && this._boardMainWindow) {
-      this._boardMainWindow.updateOperationPrivilege(hasPrivilege);
+      await this._boardMainWindow.updateOperationPrivilege(hasPrivilege);
     }
 
     this.broadcast(AgoraExtensionWidgetEvent.BoardGrantedUsersUpdated, grantedUsers);

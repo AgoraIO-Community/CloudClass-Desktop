@@ -16,7 +16,7 @@ import {
   AgoraRteVideoSourceType,
   bound,
   Lodash,
-  RtcState,
+  AGRtcState,
 } from 'agora-rte-sdk';
 import { cloneDeep, forEach, isEmpty } from 'lodash';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
@@ -770,29 +770,38 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * 只处理学生流
    */
   @action.bound
-  private _handleOnOrOffPodium(newValue: EduStream[], oldValue:  EduStream[] | undefined) {
-
-    const _newLen = newValue.length, _oldLen = oldValue?.length || 0;
-    if (_newLen === _oldLen){
-      return
+  private _handleOnOrOffPodium(newValue: EduStream[], oldValue: EduStream[] | undefined) {
+    const _newLen = newValue.length,
+      _oldLen = oldValue?.length || 0;
+    if (_newLen === _oldLen) {
+      return;
     }
 
-    let newStreams: EduStream[] = [], deleteStreams: EduStream[] = []
+    let newStreams: EduStream[] = [],
+      deleteStreams: EduStream[] = [];
 
     if (_newLen > _oldLen) {
-      newStreams = newValue.filter((newStream: EduStream) => _oldLen ? !~oldValue!.findIndex((oldStream: EduStream) => oldStream.streamUuid === newStream.streamUuid): true)
+      newStreams = newValue.filter((newStream: EduStream) =>
+        _oldLen
+          ? !~oldValue!.findIndex(
+              (oldStream: EduStream) => oldStream.streamUuid === newStream.streamUuid,
+            )
+          : true,
+      );
     } else {
-      deleteStreams = oldValue?.filter((oldStream: EduStream) => _newLen ? !~newValue.findIndex((newStream: EduStream) => newStream.streamUuid === oldStream.streamUuid): true) || []
+      deleteStreams =
+        oldValue?.filter((oldStream: EduStream) =>
+          _newLen
+            ? !~newValue.findIndex(
+                (newStream: EduStream) => newStream.streamUuid === oldStream.streamUuid,
+              )
+            : true,
+        ) || [];
     }
 
-    newStreams = newStreams.filter(
-      (value) =>
-        !this.streamWindowMap.has(value.streamUuid)
-    );
+    newStreams = newStreams.filter((value) => !this.streamWindowMap.has(value.streamUuid));
 
-    deleteStreams = deleteStreams.filter(
-      (value) => this.streamWindowMap.has(value.streamUuid)
-    )
+    deleteStreams = deleteStreams.filter((value) => this.streamWindowMap.has(value.streamUuid));
 
     // 当讲台隐藏的时候添加 streamwindow
     if (!this.stageVisible) {
@@ -1176,26 +1185,23 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
   onInstall() {
     this._disposers.push(
-      computed(() => this.classroomStore.connectionStore.scene).observe(
-        ({ newValue }) => {
-          if (newValue) {
-            this._setEventHandler(newValue);
-          }
-        },
-      ),
+      computed(() => this.classroomStore.connectionStore.scene).observe(({ newValue }) => {
+        if (newValue) {
+          this._setEventHandler(newValue);
+        }
+      }),
     );
 
     this._disposers.push(
-      computed(() => this._studentStreams).observe(({newValue, oldValue}) => {
-       
+      computed(() => this._studentStreams).observe(({ newValue, oldValue }) => {
         if (
-            EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class &&
-            this._streamWindowUpdatedFromRoom &&
-            !this._studentStreams.length
-          ) {
-            this._handleOnOrOffPodium(newValue, oldValue);
-            return;
-          }
+          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class &&
+          this._streamWindowUpdatedFromRoom &&
+          !this._studentStreams.length
+        ) {
+          this._handleOnOrOffPodium(newValue, oldValue);
+          return;
+        }
 
         if (
           EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class &&
@@ -1203,9 +1209,8 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         ) {
           this._handleOnOrOffPodium(newValue, oldValue);
         }
-        
-      })
-    )
+      }),
+    );
 
     this._disposers.push(
       // 处理老师离开教室的逻辑
@@ -1239,7 +1244,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         ({
           newValue,
           oldValue = {
-            rtcState: RtcState.Idle,
+            rtcState: AGRtcState.Idle,
             windowStreamUuids: new Set(),
             lowStreamUuids: new Set(),
           },
@@ -1250,7 +1255,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
           const lowUuids = this.lowStreamUuids;
           const highUuids = new Set<string>();
 
-          if (rtcState === RtcState.Connected) {
+          if (rtcState === AGRtcState.Connected) {
             for (const i of oldSet) {
               if (!newSet.has(i)) {
                 lowUuids.add(i);

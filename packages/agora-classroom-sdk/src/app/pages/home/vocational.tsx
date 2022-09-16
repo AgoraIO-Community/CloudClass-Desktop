@@ -14,6 +14,7 @@ import {
   EduRoomSubtypeEnum,
   EduRoomTypeEnum,
 } from 'agora-edu-core';
+import { AgoraLatencyLevel } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
 import md5 from 'js-md5';
 import { observer } from 'mobx-react';
@@ -92,8 +93,8 @@ export const VocationalHomePage = observer(() => {
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const onChangeRegion = (r: string) => {};
-  const onChangeLanguage = (language: string) => {};
+  const onChangeRegion = (r: string) => { };
+  const onChangeLanguage = (language: string) => { };
   const role = useMemo(() => {
     const roles = {
       teacher: EduRoleTypeEnum.teacher,
@@ -214,10 +215,8 @@ export const VocationalHomePage = observer(() => {
       const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
-      const channelProfile = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? 0 : 1;
       const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
-      const webRTCMode = roomServiceType === EduRoomServiceTypeEnum.LiveStandard ? 'live' : 'rtc';
-
+      const latencyLevel = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
       const needPretest = vocationalNeedPreset(role, roomServiceType, roomSubtype);
 
       const config: HomeLaunchOption = {
@@ -237,17 +236,15 @@ export const VocationalHomePage = observer(() => {
         roleType: role,
         region: region as EduRegion,
         duration: duration * 60,
-        latencyLevel: 2,
+        latencyLevel,
         curService,
         // @ts-ignore
         curScenario,
         // @ts-ignore
         userRole,
         mediaOptions: {
-          channelProfile,
           web: {
             codec: webRTCCodec,
-            mode: webRTCMode,
           },
         },
       };

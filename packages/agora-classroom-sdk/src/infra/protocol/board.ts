@@ -1,6 +1,6 @@
 import { AgoraWidgetController, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { bound, Injectable, Log } from 'agora-rte-sdk';
-import { action, computed, observable, runInAction, toJS } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
 import { AgoraEduSDK } from '../api';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '../utils/event-center';
 import { withTimeout } from '../utils/ipc';
@@ -11,6 +11,7 @@ import { BoardConnectionState, BoardMountState, FcrBoardShape, FcrBoardTool } fr
 export class Board {
   private logger!: Injectable.Logger;
   private _controller?: AgoraWidgetController;
+  private _disposers: IReactionDisposer[] = [];
   @observable
   grantedUsers = new Set<string>();
   @observable
@@ -42,6 +43,11 @@ export class Board {
   @computed
   get mounted() {
     return this.mountState === BoardMountState.Mounted;
+  }
+
+  @computed
+  get granted() {
+    return this.hasPrivilege();
   }
 
   enable() {
@@ -185,6 +191,17 @@ export class Board {
       messageType: AgoraExtensionWidgetEvent.RequestGrantedList,
       onMessage: this._handleRequestGrantedList,
     });
+
+    this._disposers.push(
+      reaction(
+        () => this.granted && this.mounted,
+        (grantedAndMounted) => {
+          if (grantedAndMounted) {
+            this._resetTool();
+          }
+        },
+      ),
+    );
   }
 
   uninstall() {
@@ -224,6 +241,9 @@ export class Board {
       this.connState = BoardConnectionState.Disconnected;
       this.mountState = BoardMountState.NotMounted;
     });
+
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
 
   @bound
@@ -277,15 +297,17 @@ export class Board {
   @action.bound
   private _handleMountStateChanged(state: BoardMountState) {
     this.mountState = state;
-    if (state === BoardMountState.Mounted) {
-      this._resetTool();
-    }
+    // if (state === BoardMountState.Mounted && this.hasPrivilege()) {
+    //   this._resetTool();
+    // }
   }
 
   @action
   private _resetTool() {
-    this.strokeColor = { r: 0, g: 115, b: 255 };
-    this.strokeWidth = 2;
+    // this.strokeColor = { r: 0, g: 115, b: 255 };
+    // this.strokeWidth = 2;
+    this.changeStrokeColor({ r: 0, g: 115, b: 255 });
+    this.changeStrokeWidth(2);
     this.selectTool(FcrBoardTool.Clicker);
   }
 

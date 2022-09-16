@@ -11,6 +11,7 @@ import {
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
+import { AgoraLatencyLevel } from 'agora-rte-sdk';
 import md5 from 'js-md5';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -197,14 +198,12 @@ export const VocationalHomeH5Page = observer(() => {
           HomeApi.shared.domain = tokenDomain;
           const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
-          const channelProfile = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? 0 : 1;
           const webRTCCodec =
             roomServiceType === EduRoomServiceTypeEnum.CDN ||
-            roomServiceType === EduRoomServiceTypeEnum.Fusion
+              roomServiceType === EduRoomServiceTypeEnum.Fusion
               ? 'h264'
               : 'vp8';
-          const webRTCMode =
-            roomServiceType === EduRoomServiceTypeEnum.LiveStandard ? 'live' : 'rtc';
+          const latencyLevel = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
           const config: HomeLaunchOption = {
             appId,
             sdkDomain: domain,
@@ -231,10 +230,8 @@ export const VocationalHomeH5Page = observer(() => {
             platform: Platform.H5,
             curService,
             mediaOptions: {
-              channelProfile: channelProfile,
               web: {
                 codec: webRTCCodec,
-                mode: webRTCMode,
               },
             },
           };
