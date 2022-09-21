@@ -5912,10 +5912,17 @@ agora-rdc-electron@1.1.0:
   dependencies:
     agora-rdc-core "^1.0.1"
 
-agora-rtc-sdk-ng@4.7.3:
-  version "4.7.3"
-  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.7.3.tgz#21108c51d1469b90804794c314275e73a3f52e06"
-  integrity sha512-6SX3S4KJmiJVqITYAoicM2aBhthzvfrM+Fwccdd3vFsBeIetbI2Ajsz3Uhm6+7gotbcorHgm47eKNZWaqpUULg==
+agora-rtc-sdk-ng@4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.12.0.tgz#98dd31771c875709c5bb63770edf2f5bf82378c2"
+  integrity sha512-lKL6PTw6PPzIX52Eq7Awq+oQdZR5y2DnA9RIpD+Gv+Srr5JsrCbh7eA+9KrOnncEPGOlraz/Phx3GZuGyFAMPA==
+  dependencies:
+    agora-rte-extension "^1.0.22"
+
+agora-rte-extension@^1.0.22:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/agora-rte-extension/-/agora-rte-extension-1.1.0.tgz#197db76d6231068a2929594c7eea1a96419ca2d6"
+  integrity sha512-HGsr7dJ5FHeCVHTLHCUfQ6cvKVLJz9b11F/FZbSQ/IqYlGZwRdu5E6hVdWenjWyYiqmpZm+nCP9IIqXSA+BPwA==
 
 agora-rtm-sdk@1.4.3:
   version "1.4.3"
