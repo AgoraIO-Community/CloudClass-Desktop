@@ -43,3 +43,7 @@ export const getTokenDomain = (region?: EduRegion) => {
 
 export const isElectronPlatform =
   AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron;
+
+export const getHrefWithoutHash = () => {
+  return window.location.href.split('#')[0];
+};

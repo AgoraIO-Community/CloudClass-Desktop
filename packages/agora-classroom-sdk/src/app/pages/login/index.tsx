@@ -1,5 +1,6 @@
 import { UserApi } from '@/app/api/user';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Loading, useI18n } from '~ui-kit';
 import { LoginState } from '../auth-token';
 
@@ -7,6 +8,7 @@ export const LoginPage = () => {
   const [loading, setLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const t = useI18n();
+  const history = useHistory();
 
   useEffect(() => {
     const handle = (event: MessageEvent) => {
@@ -19,8 +21,7 @@ export const LoginPage = () => {
           UserApi.shared
             .getUserInfo()
             .then(() => {
-              // todo: h5和web的切换最好放到index.html里面或者在开始初始化的时候判断一下
-              location.href = `${location.origin}#/${window.screen.width < 900 ? 'h5login' : ''}`;
+              history.push('/');
             })
             .finally(() => {
               setLoading(false);

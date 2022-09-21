@@ -3,7 +3,7 @@ import { request, Response } from '@/app/utils/request';
 import { GlobalStorage } from '@/infra/utils';
 import { AgoraRegion } from 'agora-rte-sdk';
 import axios from 'axios';
-import { getTokenDomain } from '../utils/env';
+import { getHrefWithoutHash, getTokenDomain } from '../utils/env';
 
 type RefreshTokenResponse = {
   accessToken: string;
@@ -117,8 +117,9 @@ export class UserApi {
    * @returns
    */
   async getRedirectLoginURL() {
+    const url = getHrefWithoutHash();
     return this.getAuthorizedURL({
-      redirectUrl: `${location.origin}#/auth-token`,
+      redirectUrl: `${url}#/auth-token`,
       toRegion: getRegion() === AgoraRegion.CN ? 'cn' : 'en',
     }).then((redirectUrl) => {
       this.redirectUrl = redirectUrl;
@@ -138,14 +139,9 @@ export class UserApi {
   async logout() {
     this.clearUserInfo();
     return this.getRedirectLoginURL().then((redirectUrl) => {
-      // location.href = redirectUrl;
-      const loginPath = decodeURI(`${location.origin}#/login`);
+      const url = getHrefWithoutHash();
+      const loginPath = decodeURI(`${url}#/login`);
       location.href = `${LOGOUT_SSO_URL}?redirect_uri=${loginPath}`;
-      // if (isElectronPlatform) {
-      //   location.href = loginPath;
-      // } else {
-      //   location.href = `${LogoutSSOUrl}?redirect_uri=${loginPath}`;
-      // }
     });
   }
 
