@@ -1,0 +1,49 @@
+.radio-card {
+  @apply relative flex flex-col justify-center items-center;
+  /* fcr-white */
+  background: #ffffff;
+  /* fcr-light-web-line 0 */
+  border: 1px solid #dbdfec;
+  border-radius: 16px;
+  top: 0;
+  transition: top 0.15s linear;
+  padding: 22px 5px 5px;
+}
+
+.radio-card:hover {
+  top: -2px;
+}
+
+.radio-card.checked {
+  border-color: #000000;
+}
+
+.radio-card .radio {
+  @apply absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.radio-card .icon {
+  margin-bottom: 8px;
+}
+
+.radio-card .text {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  /* fcr-black */
+  color: #000000;
+}
+
+.radio-card .description {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+
+  /* fcr_light_text2 */
+  color: #757575;
+
+  margin: 10px 0;
+}

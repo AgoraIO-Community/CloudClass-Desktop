@@ -1,0 +1,47 @@
+.join-room .join-form {
+  display: grid;
+  grid-template-columns: 60% 1fr;
+  row-gap: 40px;
+  column-gap: 16px;
+  position: relative;
+}
+
+.join-form .ant-input {
+  height: 48px;
+}
+
+.join-form .form-item .label {
+  font-weight: 700;
+  font-size: 16px;
+  padding-left: 12px;
+  line-height: 2.5;
+  /* Gray 1 */
+  color: #030303;
+}
+
+.join-room .role-choose {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.role-choose .role-item {
+  @apply flex items-center justify-between;
+  border-radius: 16px;
+  /* fcr-white */
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 0 13px 0 24px;
+  height: 70px;
+  line-height: 1;
+}
+
+.role-choose .role-item.checked {
+  border: 2px solid #000000;
+}
+
+.header-blank::before,
+.footer-blank::after {
+  @apply col-start-1 col-end-3;
+}

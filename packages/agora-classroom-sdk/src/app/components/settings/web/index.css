@@ -1,0 +1,86 @@
+.setting-btn {
+  color: #0073ff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.settings-container {
+  width: 100%;
+  height: 400px;
+}
+
+.settings-container .left {
+  width: 180px;
+  height: 100%;
+  color: #7b88a0;
+  border-right: 1px solid #e3e3ec;
+}
+
+.settings-container .left .tab-item {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding-left: 35px;
+  font-size: 13px;
+  position: relative;
+}
+
+.settings-container .left .tab-item.active {
+  color: #0073ff;
+  background: #e3eeff;
+}
+
+.settings-container .left .tab-item .icon {
+  width: 22px;
+  height: 22px;
+  background-position: top;
+  margin-right: 3px;
+}
+
+.settings-container .left .tab-item .icon.about {
+  background-image: url(@/app/assets/about.svg);
+}
+
+.settings-container .left .tab-item.active .icon.about {
+  background-image: url(@/app/assets/about-active.svg);
+}
+
+.settings-container .left .tab-item .icon.setting {
+  background-image: url(@/app/assets/setting.svg);
+}
+
+.settings-container .left .tab-item.active .icon.setting {
+  background-image: url(@/app/assets/setting-active.svg);
+}
+
+.settings-container .left .tab-item.active::before {
+  content: ' ';
+  position: absolute;
+  width: 3px;
+  height: 100%;
+  background: #0073ff;
+  top: 0;
+  left: 0;
+}
+
+.settings-container .right {
+  height: 100%;
+  font-size: 13px;
+  color: #191919;
+  flex: 1;
+  position: relative;
+}
+
+.settings-container .right .tab-container {
+  width: 100%;
+  height: 100%;
+  padding: 15px 25px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.home-setting-modal .modal-content {
+  padding: 0;
+}

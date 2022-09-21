@@ -1,5 +1,5 @@
-import { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
 import classnames from 'classnames';
+import { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
 import { BaseProps } from '../util/type';
 import './index.css';
 
@@ -68,3 +68,5 @@ export const Button: FC<ButtonProps> = ({
     </button>
   );
 };
+
+export { AButton } from './abutton';

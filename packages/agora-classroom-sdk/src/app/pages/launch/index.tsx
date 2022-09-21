@@ -1,7 +1,6 @@
+import { useHomeStore } from '@/app/hooks';
 import { AgoraEduSDK } from '@/infra/api';
-import { useHomeStore } from '@/infra/hooks';
-import { GlobalStorage } from '@/infra/utils';
-import { AgoraEduClassroomEvent, EduRoomSubtypeEnum } from 'agora-edu-core';
+import { AgoraEduClassroomEvent } from 'agora-edu-core';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect } from 'react';
@@ -39,6 +38,7 @@ export const LaunchPage = observer(() => {
 
       // const recordUrl = `https://solutions-apaas.agora.io/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
       const recordUrl = `https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/apaas/record/dev/${CLASSROOM_SDK_VERSION}/record_page.html`;
+
       AgoraEduSDK.launch(dom, {
         ...launchOption,
         // TODO:  Here you need to pass in the address of the recording page posted by the developer himself
@@ -47,15 +47,6 @@ export const LaunchPage = observer(() => {
         uiMode: homeStore.theme,
         listener: (evt: AgoraEduClassroomEvent, type) => {
           console.log('launch#listener ', evt);
-          if (
-            evt === AgoraEduClassroomEvent.Destroyed &&
-            launchOption.roomSubtype === EduRoomSubtypeEnum.Vocational
-          ) {
-            const url = `/vocational${GlobalStorage.read('platform') == 'h5' ? '/h5login' : ''
-              }?reason=${type}`;
-            history.push(url);
-            return;
-          }
           if (evt === AgoraEduClassroomEvent.Destroyed) {
             history.push(`/?reason=${type}`);
           }

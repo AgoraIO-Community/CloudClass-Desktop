@@ -1,4 +1,4 @@
-import { EduClassroomConfig, EduRoomTypeEnum, EduRoomSubtypeEnum } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
 import React from 'react';
 import { EduContext } from '../contexts';
 import { EduClassroomUIStore } from '../stores/common';
@@ -29,14 +29,14 @@ export function useStore(): EduClassroomUIStore {
   const vocationalUIStores = React.useContext(EduContext.shared).vocationalUI;
 
   const type = EduClassroomConfig.shared.sessionInfo.roomType;
-  const subType = EduClassroomConfig.shared.sessionInfo.roomSubtype;
+  const isVocational = EduClassroomConfig.shared.sessionInfo.roomServiceType !== 0;
   switch (type) {
     case EduRoomTypeEnum.Room1v1Class:
       return oneToOneUIStores;
     case EduRoomTypeEnum.RoomSmallClass:
       return interactiveUIStores;
     case EduRoomTypeEnum.RoomBigClass:
-      if (subType === EduRoomSubtypeEnum.Vocational) {
+      if (isVocational) {
         return vocationalUIStores;
       } else {
         return lectureUIStores;

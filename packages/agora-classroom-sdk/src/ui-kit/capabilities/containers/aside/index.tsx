@@ -15,12 +15,11 @@ export const BigClassAside: FC = observer(({ children }) => {
   );
 });
 
-
 export const OneToOneClassAside: FC = observer(({ children }) => {
   const { streamUIStore } = useStore();
   return (
-    <Aside
-      style={{ width: (streamUIStore as OneToOneStreamUIStore).videoStreamSize.width }}>
+    <Aside style={{ width: (streamUIStore as OneToOneStreamUIStore).videoStreamSize.width }}>
       {children}
-    </Aside>);
-})
+    </Aside>
+  );
+});

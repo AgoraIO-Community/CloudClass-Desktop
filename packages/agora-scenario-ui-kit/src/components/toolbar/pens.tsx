@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { Popover } from '~components/popover';
+import { ASlider } from '~components/slider';
+import { SvgIcon, SvgIconEnum, SvgImg } from '~components/svg-img';
 import { Tooltip } from '~components/tooltip';
-import { ToolItem } from './tool';
-import { SvgImg, SvgIcon, SvgIconEnum } from '~components/svg-img';
-import { Slider } from '~components/slider';
 import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { ToolItem } from './tool';
 import { getPenIcon, getPenShapeIcon } from './util';
 export interface PensProps extends ToolItem {
   pens?: string[];
@@ -55,32 +55,34 @@ export const Pens: FC<PensProps> = ({
     () => (
       <div className={`expand-tools pens colors`}>
         <div className="flex flex-wrap justify-between">
-          {
-            pens.map((pen) => {
-              const penIcon = getPenShapeIcon(pen);
+          {pens.map((pen) => {
+            const penIcon = getPenShapeIcon(pen);
 
-              return (
-                <div
-                  key={pen}
-                  onClick={() => handleClick(pen)}
-                  className="expand-tool pen"
-                  style={{ width: '21%' }}>
-                  <SvgIcon
-                    type={penIcon}
-                    hoverType={penIcon}
-                    colors={activePen === pen ? {
-                      iconPrimary: activePaletteColor,
-                    } : {}}
-                  />
-                </div>
-              )
-            })
-          }
+            return (
+              <div
+                key={pen}
+                onClick={() => handleClick(pen)}
+                className="expand-tool pen"
+                style={{ width: '21%' }}>
+                <SvgIcon
+                  type={penIcon}
+                  hoverType={penIcon}
+                  colors={
+                    activePen === pen
+                      ? {
+                          iconPrimary: activePaletteColor,
+                        }
+                      : {}
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
 
         <div className="pens-colors-line"></div>
 
-        <Slider
+        <ASlider
           style={{ width: '100%' }}
           defaultValue={strokeWidthValue}
           value={strokeWidthValue}
@@ -143,13 +145,15 @@ export const Pens: FC<PensProps> = ({
             type={penIcon}
             hoverType={penIcon}
             colors={
-              isActive ? {
-                penColor: activePaletteColor
-              } : {}
+              isActive
+                ? {
+                    penColor: activePaletteColor,
+                  }
+                : {}
             }
             hoverColors={{
               iconPrimary: InteractionStateColors.allow,
-              penColor: InteractionStateColors.allow
+              penColor: InteractionStateColors.allow,
             }}
           />
           <SvgImg type={SvgIconEnum.TRIANGLE_DOWN} className="triangle-icon" size={6} />

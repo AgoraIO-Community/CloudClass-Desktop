@@ -1,15 +1,13 @@
-import React, { FC } from 'react';
-import './index.css';
+import classNames from 'classnames';
 import RcTabs, { TabsProps as RcTabsProps } from 'rc-tabs';
 import { EditableConfig } from 'rc-tabs/lib/interface';
-import classNames from 'classnames';
+import React, { FC } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
-
+import './index.css';
 export type TabsType = 'line' | 'card' | 'editable-card';
 
-export type { TabPaneProps } from 'rc-tabs';
-
-export { TabPane } from 'rc-tabs';
+export { default as TabPane } from 'rc-tabs/lib/TabPanelList/TabPane';
+export type { TabPaneProps } from 'rc-tabs/lib/TabPanelList/TabPane';
 
 export interface TabsProps extends Omit<RcTabsProps, 'editable'> {
   type?: TabsType;

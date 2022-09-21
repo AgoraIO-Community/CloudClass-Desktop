@@ -1,0 +1,35 @@
+.room-type-card {
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  transition: top 0.15s linear;
+  border: 2px solid rgba(0, 0, 0, 0);
+  top: 0;
+}
+
+.room-type-card:hover {
+  box-shadow: 10px 10px 60px -8px rgba(0, 0, 0, 0.14);
+  top: -4px;
+}
+
+.room-type-card.checked {
+  /* fcr-black */
+  border-color: #000000;
+}
+
+.room-type-card .name {
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.room-type-card .description {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.room-type-card .radio {
+  @apply absolute;
+  top: 12.5px;
+  right: 12.5px;
+}

@@ -1,12 +1,14 @@
-.slider .rc-slider-track {
-  background-color: #0073ff;
-}
-.slider .rc-slider-handle {
-  border-color: #0073ff;
+.fcr-theme.slider .ant-slider {
+  margin: 0;
 }
 
-.agora-slider-tooltip .rc-slider-tooltip-inner {
-  position: relative;
-  min-width: 50px;
-  z-index: 99999;
+.fcr-theme.slider .ant-slider-track,
+.fcr-theme.slider .ant-slider-track:hover,
+.fcr-theme.slider .ant-slider:hover .ant-slider-track {
+  background-color: #0073ff;
+}
+.fcr-theme.slider .ant-slider-handle,
+.fcr-theme.slider .ant-slider-handle:hover,
+.fcr-theme.slider .ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open) {
+  border-color: #0073ff;
 }

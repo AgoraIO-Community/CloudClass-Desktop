@@ -1,10 +1,10 @@
-import React from 'react';
 import { Meta } from '@storybook/react';
-import { Slider } from '../slider';
+import React from 'react';
+import { ASlider } from '../slider';
 
 const meta: Meta = {
   title: 'Components/Slider',
-  component: Slider,
+  component: ASlider,
 };
 
 type DocsType = {
@@ -19,7 +19,7 @@ type DocsType = {
 export const Docs = ({ defaultValue, disabled, max, min, step, onChange }: DocsType) => (
   <>
     <div>
-      <Slider
+      <ASlider
         key={defaultValue}
         defaultValue={defaultValue}
         disabled={disabled}

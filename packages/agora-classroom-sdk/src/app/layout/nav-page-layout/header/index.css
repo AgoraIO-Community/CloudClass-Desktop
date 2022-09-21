@@ -1,0 +1,19 @@
+.nav-header .back {
+  height: 40px;
+  width: 70px;
+  margin: 0 22px;
+  border-radius: 14px;
+  background-color: rgba(138, 138, 138, 0.1);
+  background-image: url(../../../assets/fcr_nav_back.svg);
+  background-size: 48px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.nav-header .content {
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 40px;
+  /* Gray 1 */
+  color: #030303;
+}

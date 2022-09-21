@@ -1,24 +1,24 @@
-import { Button, Layout, SvgIconEnum, SvgImg, Toast, transI18n, useI18n } from '~ui-kit';
-import './style.css';
-import { addResource } from '../../components/i18n';
-import { FC, useEffect, useState, Fragment, useRef } from 'react';
-import { useHomeStore } from '@/infra/hooks';
-import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
-import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
-import { getBrowserLanguage, storage } from '@/infra/utils';
-import md5 from 'js-md5';
-import { useHistory } from 'react-router';
-import { HomeApi } from './home-api';
+import { useHomeStore } from '@/app/hooks';
 import { HomeLaunchOption } from '@/app/stores/home';
 import { AgoraEduSDK, LanguageEnum } from '@/infra/api';
-import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
-import { v4 as uuidv4 } from 'uuid';
-import { observer } from 'mobx-react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { ToastType } from '@/infra/stores/common/share-ui';
-import { MessageDialog } from './message-dialog';
+import { getBrowserLanguage, storage } from '@/infra/utils';
+import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
+import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
+import md5 from 'js-md5';
+import { observer } from 'mobx-react';
+import { FC, Fragment, useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { v4 as uuidv4 } from 'uuid';
+import { Button, Layout, SvgIconEnum, SvgImg, Toast, transI18n, useI18n } from '~ui-kit';
+import { HomeApi } from '../../api/home';
+import { addResource } from '../../components/i18n';
 import { HomeSettingContainer } from './home-setting';
 import { LoginForm } from './login-form';
+import { MessageDialog } from './message-dialog';
+import './style.css';
 addResource();
 
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
@@ -68,7 +68,6 @@ export const useBuilderConfig = () => {
     const projectId = window.__launchProjectId;
 
     if (companyId && projectId) {
-      HomeApi.shared.setBuilderDomainRegion(EduRegion.CN);
       HomeApi.shared.getBuilderResource(companyId, projectId).then(({ scenes, themes }) => {
         builderResource.current = {
           scenes: scenes ?? {},
@@ -164,8 +163,6 @@ export const HomePage = () => {
 
       const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
 
-      HomeApi.shared.setDomainRegion(region);
-
       const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, userRole);
 
       const companyId = window.__launchCompanyId;
@@ -174,9 +171,11 @@ export const HomePage = () => {
       const shareUrl =
         AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron
           ? ''
-          : `${location.origin}${location.pathname
-          }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student
-          }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
+          : `${location.origin}${
+              location.pathname
+            }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${
+              EduRoleTypeEnum.student
+            }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
 
       console.log('## get rtm Token from demo server', token);
 
@@ -294,24 +293,29 @@ export const SettingsButton = () => {
   const [hover, setHover] = useState(false);
   const handleOver = () => {
     setHover(true);
-  }
+  };
 
   const handleLeave = () => {
     setHover(false);
-  }
+  };
 
   const textColor = hover ? '#fff' : '#030303';
   const backgroundColor = hover ? '#030303' : '#fff';
 
   return (
     <HomeSettingContainer>
-      <Button animate={false} onMouseOver={handleOver} onMouseLeave={handleLeave} style={{ background: backgroundColor, transition: 'all .2s' }}>
-        <div className='flex items-center'>
+      <Button
+        animate={false}
+        onMouseOver={handleOver}
+        onMouseLeave={handleLeave}
+        style={{ background: backgroundColor, transition: 'all .2s' }}>
+        <div className="flex items-center">
           <SvgImg type={SvgIconEnum.SET_OUTLINE} size={16} colors={{ iconPrimary: textColor }} />
-          <span className='ml-1' style={{ color: textColor }}>
-            {t('settings_setting')}
+          <span className="ml-1" style={{ color: textColor }}>
+            {t('fcr_settings_setting')}
           </span>
         </div>
       </Button>
-    </HomeSettingContainer>);
-}
+    </HomeSettingContainer>
+  );
+};

@@ -2,12 +2,11 @@ import {
   AgoraEduClassroomEvent,
   EduRoleTypeEnum,
   EduRoomServiceTypeEnum,
-  EduRoomSubtypeEnum,
   EduRoomTypeEnum,
   EduRtcConfig,
   Platform,
 } from 'agora-edu-core';
-import { AGVideoEncoderConfiguration, AGMediaOptions } from 'agora-rte-sdk';
+import { AGMediaOptions, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { CloudDriveResourceConvertProgress } from '../stores/common/cloud-drive/type';
 import { AgoraWidgetBase } from '../stores/common/widget/widget-base';
 import { FcrMultiThemeMode } from '../types/config';
@@ -69,7 +68,6 @@ export type LaunchOption = {
   roomUuid: string; // 房间uuid
   roleType: EduRoleTypeEnum; // 角色
   roomType: EduRoomTypeEnum; // 房间类型
-  roomSubtype?: EduRoomSubtypeEnum; // 房间子类型
   roomServiceType?: EduRoomServiceTypeEnum; // 房间服务类型
   roomName: string; // 房间名称
   listener: ListenerCallback; // launch状态
@@ -102,6 +100,8 @@ export type LaunchWindowOption = {
   uiMode: FcrMultiThemeMode;
 };
 
+export { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '../protocol/events';
+export { AgoraWidgetTrackMode } from '../stores/common/widget/type';
 export { AgoraWidgetBase } from '../stores/common/widget/widget-base';
 export type {
   AgoraMultiInstanceWidget,
@@ -109,9 +109,6 @@ export type {
   AgoraWidgetLifecycle,
   AgoraWidgetRenderable,
 } from '../stores/common/widget/widget-base';
-export { AgoraWidgetTrackMode } from '../stores/common/widget/type';
-
-export { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '../protocol/events';
 
 export type CourseWareItem = {
   resourceName: string;

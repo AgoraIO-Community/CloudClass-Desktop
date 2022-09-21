@@ -1,5 +1,5 @@
+import { useHomeStore } from '@/app/hooks';
 import { AgoraEduSDK, LanguageEnum, WindowID } from '@/infra/api';
-import { useHomeStore } from '@/infra/hooks';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';

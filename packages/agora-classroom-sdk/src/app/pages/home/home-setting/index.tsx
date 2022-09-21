@@ -48,35 +48,32 @@ export const HomeSetting = () => {
   );
 };
 
-
-
 export const HomeSettingContainer: FC = ({ children }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const t = useI18n();
   return (
     <>
-      {
-        children ?
-          <div
-            onClick={() => {
-              setVisible(true);
-            }}
-          >
-            {children}
-          </div> :
-          <div
-            className="setting-btn inline-block p-0.5 z-50"
-            onClick={() => {
-              setVisible(true);
-            }}>
-            {t('settings_setting')}
-          </div>
-      }
+      {children ? (
+        <div
+          onClick={() => {
+            setVisible(true);
+          }}>
+          {children}
+        </div>
+      ) : (
+        <div
+          className="setting-btn inline-block p-0.5 z-50"
+          onClick={() => {
+            setVisible(true);
+          }}>
+          {t('fcr_settings_setting')}
+        </div>
+      )}
       {visible ? (
         <div className={`absolute top-0 left-0 flex justify-center items-center w-screen h-screen`}>
-          <div className="home-setting-container">
+          <div className="home-setting-modal-container">
             <div className="home-setting-title">
-              {t('settings_setting')}
+              {t('fcr_settings_setting')}
               <div className="btn-pin">
                 <SvgImg
                   type={SvgIconEnum.CLOSE}

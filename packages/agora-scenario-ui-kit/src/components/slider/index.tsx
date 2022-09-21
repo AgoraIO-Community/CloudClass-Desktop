@@ -1,14 +1,10 @@
-import { FC } from 'react';
+import { Slider } from 'antd';
 import classnames from 'classnames';
+import { FC } from 'react';
 import { BaseProps } from '~ui-kit/components/util/type';
-import RCSlider, { SliderTooltip } from 'rc-slider';
-import 'rc-slider/assets/index.css';
 import './index.css';
-
-const { Handle } = RCSlider;
-
 type tooltipPositionProps = 'top' | 'bottom' | '';
-export interface SliderProps extends BaseProps {
+export interface ASliderProps extends BaseProps {
   defaultValue?: number;
   value?: number;
   disabled?: boolean;
@@ -19,7 +15,7 @@ export interface SliderProps extends BaseProps {
   onChange?: (value: number) => void;
 }
 
-export const Slider: FC<SliderProps> = ({
+export const ASlider: FC<ASliderProps> = ({
   defaultValue = 0,
   value = 0,
   disabled = false,
@@ -33,28 +29,14 @@ export const Slider: FC<SliderProps> = ({
   className,
   ...restProps
 }) => {
-  const handle = (props: any) => {
-    const { value, dragging, index, ...restProps } = props;
-    return (
-      <SliderTooltip
-        prefixCls="rc-slider-tooltip"
-        overlay={`${value}`}
-        visible={dragging}
-        placement={tooltipPosition}
-        key={index}
-        overlayClassName={'agora-slider-tooltip'}>
-        <Handle value={value} {...restProps} />
-      </SliderTooltip>
-    );
-  };
   const cls = classnames({
+    [`fcr-theme`]: 1,
     [`slider`]: 1,
     [`${className}`]: !!className,
   });
   return (
     <div className={cls} {...restProps}>
-      {/* @ts-ignore */}
-      <RCSlider
+      <Slider
         defaultValue={defaultValue}
         value={value}
         disabled={disabled}
@@ -62,7 +44,6 @@ export const Slider: FC<SliderProps> = ({
         min={min}
         step={step}
         onChange={onChange}
-        handle={handle}
       />
     </div>
   );

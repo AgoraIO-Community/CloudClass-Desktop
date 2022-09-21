@@ -1,0 +1,254 @@
+.create-room .create-form {
+  position: relative;
+}
+
+.create-form .form-item:first-child {
+  margin-top: 15px;
+}
+
+.create-form .item-mb {
+  margin-bottom: 24px;
+}
+
+.create-form .form-item .label {
+  font-weight: 700;
+  font-size: 16px;
+  padding-left: 12px;
+  line-height: 2.5;
+  /* Gray 1 */
+  color: #030303;
+}
+
+.create-form .ant-form-item-with-help {
+  margin-bottom: 20px;
+}
+
+.create-form .ant-input,
+.create-form .start-date-picker,
+.create-form .start-time-picker,
+.create-form .end-time-picker {
+  height: 48px;
+}
+
+.create-form .end-time-picker {
+  font-family: 'Inter';
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 48px;
+  padding-left: 12px;
+  /* fcr-light-text2 */
+  color: #757575;
+}
+.create-form .create-input .ant-input-show-count-suffix {
+  font-size: 12px;
+  line-height: 1.5;
+  /* fcr_light_text3 */
+  color: #bdbec6;
+}
+
+.create-form .create-input.ant-input-affix-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.create-form .create-input .ant-input {
+  height: 46px;
+}
+
+.start-time {
+  @apply relative;
+}
+.start-time .ant-form-item {
+  display: inline-block;
+}
+
+.start-time .tip {
+  color: #f5655c;
+  padding-left: 12px;
+  line-height: 24px;
+  position: absolute;
+  height: 24px;
+  top: 88px;
+}
+
+.gap-symbol {
+  width: 7px;
+  height: 3px;
+  background: #808080;
+  border-radius: 30px;
+  margin: 64px 0px 0 8px;
+}
+
+.create-form .end-time-picker > span {
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.create-form .start-date-picker {
+  margin-right: 16px;
+}
+
+.create-form .current-time {
+  @apply absolute w-full top-0 left-0 flex justify-center items-center pointer-events-none;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  height: 48px;
+}
+
+.create-form .current-time:hover {
+  border-color: #40a9ff;
+}
+
+.create-form .current-time.hidden {
+  display: none;
+}
+
+.room-type {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, 189px);
+  gap: 16px;
+  line-height: 1.5;
+  /* fcr-white */
+  color: #ffffff;
+}
+
+.service-type {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, 186px);
+  gap: 16px;
+  /* fcr-white */
+}
+
+.card-purple {
+  /* fcr-card-purple */
+  background: #5765ff;
+}
+
+.card-red {
+  /* fcr-red */
+  background: #f5655c;
+}
+
+.card-green {
+  /* fcr-card-green */
+  background: #83bc53;
+}
+
+.card-green {
+  /* fcr-card-green */
+  background: #83bc53;
+}
+
+.more-settings .label {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 14px;
+  margin-bottom: 4px;
+}
+
+.more-settings .expand {
+  font-family: 'PingFang HK';
+  font-style: normal;
+  font-weight: 400;
+  margin-left: 15px;
+
+  /* fcr-brand blue */
+  color: #357bf6;
+}
+
+.settings {
+  border-top: 3px solid #efefef;
+  padding: 0 5px;
+}
+
+.setting-item {
+  margin-top: 40px;
+}
+
+.setting-item .title {
+  @apply flex items-center;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 14px;
+
+  /* Gray 1 */
+  color: #030303;
+  margin-bottom: 18px;
+}
+
+.watermark-card {
+  height: 120px;
+  width: 120px;
+}
+.security-prefix-icon,
+.live-playback-prefix-icon {
+  @apply bg-no-repeat bg-center;
+  display: inline-block;
+  background-size: 18px;
+  /* fcr-black */
+  background-color: #000000;
+  border-radius: 8px;
+  width: 22px;
+  height: 22px;
+  margin-right: 7px;
+}
+
+.security-prefix-icon {
+  background-image: url(../../assets/fcr_security_white.svg);
+}
+
+.live-playback-prefix-icon {
+  background-image: url(../../assets/fcr_livereplay_white.svg);
+}
+
+.live-playback {
+  /* fcr-white */
+  background: #ffffff;
+  /* fcr-light-web-line 0 */
+  border: 1px solid #dbdfec;
+  border-radius: 12px;
+  padding: 11px 15px;
+}
+
+.live-playback .header {
+  @apply flex items-center;
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 14px;
+  /* fcr-black */
+  color: #000000;
+}
+
+.live-playback .header::before {
+  @apply bg-cover bg-no-repeat bg-center;
+  content: '';
+  width: 48px;
+  height: 48px;
+  display: block;
+  background-image: url(../../assets/fcr_livereplay3_white.svg);
+  margin-right: 20px;
+}
+
+.live-playback .link {
+  /* fcr-light-web background1 */
+  background: #f8f8f8;
+  border-radius: 12px;
+  padding: 16px 20px 6px;
+  margin-top: 10px;
+}
+
+.live-playback .link > div.link-label {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  /* fcr-black */
+  color: #000000;
+  margin-bottom: 10px;
+}

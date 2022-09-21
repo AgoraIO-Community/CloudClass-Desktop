@@ -1,0 +1,90 @@
+.h5-join-room {
+  @apply h-full w-full relative flex flex-col;
+  /* fcr_light_background1 */
+  background: #f8faff;
+}
+
+.h5-join-room .header-bg {
+  @apply bg-cover w-full;
+  height: 35vh;
+  background-image: url(@/app/assets/h5-bg.png);
+}
+
+.h5-join-room .content {
+  @apply relative flex-1;
+  /* fcr_light_background1 */
+  background: #f8faff;
+  border-radius: 20px;
+  padding: 20px;
+  top: -20px;
+}
+
+.h5-join-room .content .hello {
+  @apply flex justify-between items-center;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #000000;
+}
+
+.h5-join-room .content .welcome {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.5;
+  color: #000000;
+  padding: 13px 0 15px;
+}
+
+.h5-join-room .form {
+  /* fcr_white */
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.h5-join-room .form .form-item {
+  @apply flex;
+  padding: 13px 20px;
+}
+
+.h5-join-room .form .form-item:not(.form-item:last-child) {
+  /* fcr_light_textline */
+  border-bottom: 1px solid #efefef;
+}
+
+.h5-join-room .form .form-item .label {
+  width: 25%;
+  height: 32px;
+  line-height: 32px;
+}
+
+.h5-join-room .form .form-item .ant-form-item {
+  margin-bottom: 0px;
+  flex: 1;
+}
+
+.h5-join-room .form .form-item .ant-input,
+.h5-join-room .form .form-item .ant-input:focus {
+  border-color: #ffffff00 !important;
+}
+
+.h5-join-room .join-btn {
+  @apply absolute;
+  bottom: 10vh;
+  width: calc(100% - 40px);
+  height: 46px;
+  /* fcr_brand_blue */
+  background: #357bf6;
+  border-radius: 32px;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.5;
+  /* Day/Fill/Text */
+  color: #ffffff;
+}

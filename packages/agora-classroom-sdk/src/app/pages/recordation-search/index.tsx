@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
@@ -11,8 +12,7 @@ import {
   SvgImg,
   transI18n,
 } from '~ui-kit';
-import dayjs from 'dayjs';
-import { HomeApi } from '../home/home-api';
+import { HomeApi } from '../../api/home';
 import './style.css';
 
 export const RecordationSearchPage = () => {
@@ -50,9 +50,6 @@ export const RecordationSearchPage = () => {
           break;
       }
     }
-
-    HomeApi.shared.domain = tokenDomain;
-
     forceUpdate({});
   }, []);
 
@@ -92,7 +89,11 @@ export const RecordationSearchPage = () => {
         </div>
         <div className="header-right">
           <Link className="header-right-item" to={'/'}>
-            <SvgImg style={{ color: '#3f5c8f', display: 'inline-block' }} type={SvgIconEnum.EXIT} size={24} />
+            <SvgImg
+              style={{ color: '#3f5c8f', display: 'inline-block' }}
+              type={SvgIconEnum.EXIT}
+              size={24}
+            />
             {transI18n('nav.back')}
           </Link>
         </div>

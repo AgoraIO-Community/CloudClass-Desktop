@@ -1,25 +1,24 @@
-import { observer } from 'mobx-react';
-import './index.css';
-import { CameraPlaceHolder, Modal, SvgIconEnum, SvgImg, Tooltip } from '~ui-kit';
+import { useStore } from '@/infra/hooks/ui-store';
+import { PretestToast } from '@/infra/stores/common/pretest';
+import { isProduction } from '@/app/utils/env';
+import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 import classnames from 'classnames';
+import { observer } from 'mobx-react';
 import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import { CameraPlaceHolder, Modal, SvgIconEnum, SvgImg, Tooltip } from '~ui-kit';
 import { Button } from '~ui-kit/components/button';
-import { transI18n, useI18n } from '~ui-kit/components/i18n';
-import { BaseProps } from '~ui-kit/components/util/type';
-import { Select } from '~ui-kit/components/select';
 import { CheckBox } from '~ui-kit/components/checkbox';
+import { transI18n, useI18n } from '~ui-kit/components/i18n';
+import { Select } from '~ui-kit/components/select';
+import { ASlider } from '~ui-kit/components/slider';
 import { Toast } from '~ui-kit/components/toast';
-import { useMounted, useTimeout } from '~ui-kit/utilities/hooks';
+import { BaseProps } from '~ui-kit/components/util/type';
 import { Volume } from '~ui-kit/components/volume';
+import { useMounted, useTimeout } from '~ui-kit/utilities/hooks';
+import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 import PretestAudio from './assets/pretest-audio.mp3';
 import './index.css';
-import { useStore } from '@/infra/hooks/ui-store';
-import { Slider } from '~ui-kit/components/slider';
-import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
-import { isProduction } from '@/infra/utils/env';
-import { PretestToast } from '@/infra/stores/common/pretest';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
 declare global {
   interface Window {
     process: {
@@ -27,7 +26,6 @@ declare global {
     };
   }
 }
-
 
 interface IBeautySiderProps {
   value: number;
@@ -111,21 +109,24 @@ const BeautyControllerBar = observer(() => {
     <CSSTransition in={isBeauty} timeout={300} unmountOnExit classNames="beauty-bar-animate">
       <div className="beauty-bar">
         <div className="beauty-bar-left">
-          {[{ id: 'whitening', icon: SvgIconEnum.WHITENING }, { id: 'buffing', icon: SvgIconEnum.BUFFING }, { id: 'ruddy', icon: SvgIconEnum.RUDDY }].map((item) => {
+          {[
+            { id: 'whitening', icon: SvgIconEnum.WHITENING },
+            { id: 'buffing', icon: SvgIconEnum.BUFFING },
+            { id: 'ruddy', icon: SvgIconEnum.RUDDY },
+          ].map((item) => {
             const icon = activeBeautyTypeIcon(item);
             return (
               <Tooltip key={item.id} title={transI18n(`media.${item}`)} placement="top">
                 <SvgImg
-                  className='beauty-type-icon'
+                  className="beauty-type-icon"
                   type={icon.icon}
                   colors={{ iconPrimary: icon.color }}
                   size={22}
                   onClick={() => setActiveBeautyType(item.id as BeautyType)}
                 />
               </Tooltip>
-            )
-          }
-          )}
+            );
+          })}
         </div>
         <BeautySider value={activeBeautyValue} onChange={setActiveBeautyValue} />
       </div>
@@ -136,13 +137,14 @@ const BeautyControllerBar = observer(() => {
 const BeautySider: React.FC<IBeautySiderProps> = ({ value, className, onChange }) => {
   return (
     <div className={classnames('beauty-bar-right', className)}>
-      <Slider
+      <ASlider
         className="beauty-bar-silder"
         min={0}
         max={100}
         value={value}
         step={1}
-        onChange={onChange}></Slider>
+        onChange={onChange}
+      />
       <span className="beauty-show-number">{value}</span>
     </div>
   );
@@ -166,25 +168,22 @@ const AudioPlaybackDeviceNotification = observer(() => {
   return <NoticeContainer list={audioPlaybackToastQueue} removeToast={removeToast} />;
 });
 
-const NoticeContainer: FC<
-  {
-    list: PretestToast[];
-    removeToast: (id: string) => void;
-  }
-> = observer(({ list, removeToast }) => {
+const NoticeContainer: FC<{
+  list: PretestToast[];
+  removeToast: (id: string) => void;
+}> = observer(({ list, removeToast }) => {
   const t = useI18n();
   return (
     <React.Fragment>
-      {
-        list.map((it) => (
-          <DeviceNotice
-            key={it.id}
-            title={t('pretest.detect_new_device')}
-            close={() => {
-              removeToast(it.id);
-            }} />
-        ))
-      }
+      {list.map((it) => (
+        <DeviceNotice
+          key={it.id}
+          title={t('pretest.detect_new_device')}
+          close={() => {
+            removeToast(it.id);
+          }}
+        />
+      ))}
     </React.Fragment>
   );
 });
@@ -192,7 +191,7 @@ const NoticeContainer: FC<
 const DeviceNotice: FC<{
   title: string;
   close: () => void;
-}> = ({ title, close = () => { } }) => {
+}> = ({ title, close = () => {} }) => {
   const mounted = useMounted();
 
   useTimeout(() => {
@@ -229,11 +228,7 @@ const DeviceNotice: FC<{
 
 const PlaybackTestPlayer = observer(() => {
   const {
-    pretestUIStore: {
-      startPlaybackDeviceTest,
-      stopPlaybackDeviceTest,
-      playbackTesting,
-    },
+    pretestUIStore: { startPlaybackDeviceTest, stopPlaybackDeviceTest, playbackTesting },
   } = useStore();
   const urlRef = useRef<string>(PretestAudio);
 
@@ -257,7 +252,11 @@ const PlaybackTestPlayer = observer(() => {
         {playbackTesting ? (
           <div className="test-speakering-icon"></div>
         ) : (
-          <SvgImg type={SvgIconEnum.TEST_SPEAKER} size={22} colors={{ iconPrimary: InteractionStateColors.allow }} />
+          <SvgImg
+            type={SvgIconEnum.TEST_SPEAKER}
+            size={22}
+            colors={{ iconPrimary: InteractionStateColors.allow }}
+          />
         )}
         <div className="test-btn">{transI18n('media.test_speaker')}</div>
       </div>
@@ -406,7 +405,10 @@ const RecordingDeviceManager = () => {
         <MicrophoneSelect />
       </div>
       <div className="device-volume-test">
-        <SvgImg type={SvgIconEnum.MICROPHONE_ON_OUTLINE} colors={{ iconPrimary: InteractionStateColors.allow }} />
+        <SvgImg
+          type={SvgIconEnum.MICROPHONE_ON_OUTLINE}
+          colors={{ iconPrimary: InteractionStateColors.allow }}
+        />
         <LocalAudioVolumeIndicator />
       </div>
     </div>
@@ -450,7 +452,7 @@ export const RoomPretest: React.FC<PretestProps> = ({ className, onOK, ...restPr
           </Button>,
         ]}
         onOk={onOK}
-        onCancel={() => { }}
+        onCancel={() => {}}
         btnId="device_assert">
         <div className={cls} {...restProps}>
           <PretestNotificationCenter />

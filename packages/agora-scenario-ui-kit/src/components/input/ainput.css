@@ -1,0 +1,19 @@
+.fcr-theme.ant-input {
+  border-radius: 12px;
+}
+
+.fcr-theme.ant-input:focus {
+  border: 1px solid #030303 !important;
+}
+
+.fcr-theme.ant-input-affix-wrapper {
+  border-radius: 12px;
+}
+
+.fcr-theme.ant-input-affix-wrapper:focus {
+  border: 1px solid #030303 !important;
+}
+
+.fcr-theme.ant-input-affix-wrapper > input.ant-input:focus {
+  border: none !important;
+}

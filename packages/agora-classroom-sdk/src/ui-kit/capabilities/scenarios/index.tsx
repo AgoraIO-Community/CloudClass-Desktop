@@ -1,5 +1,10 @@
 import { useStore } from '@/infra/hooks/ui-store';
-import { EduClassroomConfig, EduRoomSubtypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import {
+  EduClassroomConfig,
+  EduRoomServiceTypeEnum,
+  EduRoomTypeEnum,
+  Platform,
+} from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useLayoutEffect, useState } from 'react';
 import { RoomPretestContainer } from '~containers/pretest';
@@ -13,11 +18,11 @@ import { VocationalClassScenarioH5 } from './vocational-class-h5';
 export type ScenariosProps = {
   pretest: boolean;
   roomType: EduRoomTypeEnum;
-  roomSubtype: EduRoomSubtypeEnum;
+  roomServiceType: EduRoomServiceTypeEnum;
 };
 
 const VocationalClass = () => {
-  if (EduClassroomConfig.shared.platform === 'H5') {
+  if (EduClassroomConfig.shared.platform === Platform.H5) {
     // 这里返回职业教育 移动端的组件
     return <VocationalClassScenarioH5 />;
   }
@@ -25,8 +30,11 @@ const VocationalClass = () => {
   return <VocationalClassScenario />;
 };
 
-export const renderRoomSceneWith = (roomType: EduRoomTypeEnum, roomSubtype: EduRoomSubtypeEnum) => {
-  if (roomSubtype === EduRoomSubtypeEnum.Vocational) {
+export const renderRoomSceneWith = (
+  roomType: EduRoomTypeEnum,
+  roomServiceType: EduRoomServiceTypeEnum,
+) => {
+  if (roomType === EduRoomTypeEnum.RoomBigClass && roomServiceType !== 0) {
     return <VocationalClass />;
   }
   switch (roomType) {
@@ -34,7 +42,7 @@ export const renderRoomSceneWith = (roomType: EduRoomTypeEnum, roomSubtype: EduR
       return <OneToOneScenario />;
     }
     case EduRoomTypeEnum.RoomBigClass: {
-      return EduClassroomConfig.shared.platform === 'H5' ? (
+      return EduClassroomConfig.shared.platform === Platform.H5 ? (
         <BigClassScenarioH5 />
       ) : (
         <BigClassScenario />
@@ -49,7 +57,7 @@ export const renderRoomSceneWith = (roomType: EduRoomTypeEnum, roomSubtype: EduR
 };
 
 export const Scenarios: React.FC<ScenariosProps> = observer(
-  ({ pretest, roomType, roomSubtype }) => {
+  ({ pretest, roomType, roomServiceType }) => {
     const { initialize } = useStore();
     const [initialized, setInitialized] = useState(false);
 
@@ -64,7 +72,7 @@ export const Scenarios: React.FC<ScenariosProps> = observer(
       showPretest ? (
         <RoomPretestContainer onOK={() => setPretest(false)} />
       ) : (
-        renderRoomSceneWith(roomType, roomSubtype)
+        renderRoomSceneWith(roomType, roomServiceType)
       )
     ) : null;
   },

@@ -1,17 +1,4 @@
-import { getLanguage } from "@/app/stores/home";
-
-
-export function parseUrl(locationSearch: string) {
-  const result = new Object();
-  if (locationSearch.indexOf('?') != -1) {
-    const str = locationSearch.split('?')[1];
-    const strs = str.split('&');
-    for (let i = 0; i < strs.length; i++) {
-      result[strs[i].split('=')[0]] = strs[i].split('=')[1];
-    }
-  }
-  return result;
-}
+import { getLanguage } from '@/app/stores/home';
 
 export const privacyPolicyURL = () => {
   if (getLanguage() === 'en') {

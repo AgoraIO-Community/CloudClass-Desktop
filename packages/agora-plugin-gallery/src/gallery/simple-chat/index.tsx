@@ -4,7 +4,6 @@ import {
   ChatListType,
   Conversation,
   EduClassroomConfig,
-  EduRoomSubtypeEnum,
   MessageItem,
 } from 'agora-edu-core';
 import { default as classnames, default as classNames } from 'classnames';
@@ -139,8 +138,7 @@ export class AgoraChatWidget extends AgoraWidgetBase {
 
   render(dom: HTMLElement): void {
     this._dom = dom;
-    const isVocational =
-      EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational;
+    const isVocational = EduClassroomConfig.shared.sessionInfo.roomServiceType !== 0;
 
     const cls = classNames({
       'chat-panel': 1,

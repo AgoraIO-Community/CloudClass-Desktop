@@ -44,11 +44,11 @@ request.interceptors.response.use(
             });
           })
           .catch((err) => {
-            UserApi.shared.redirectLogin();
+            UserApi.shared.logout();
             return err;
           });
       } else {
-        UserApi.shared.redirectLogin();
+        UserApi.shared.logout();
       }
     }
     return Promise.reject(error);

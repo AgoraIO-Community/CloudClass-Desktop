@@ -46,6 +46,9 @@ const config = {
     }),
     new ESLintPlugin(),
   ],
+  ignoreWarnings: [
+    /createRoot/,
+  ]
 };
 
 const mergedConfig = webpackMerge.merge(baseConfig, config);

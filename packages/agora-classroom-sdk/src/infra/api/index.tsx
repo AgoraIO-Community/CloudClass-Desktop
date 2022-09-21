@@ -10,9 +10,8 @@ import {
   EduRegion,
   EduRoleTypeEnum,
   EduRoomServiceTypeEnum,
-  EduRoomSubtypeEnum,
   EduRoomTypeEnum,
-  Platform
+  Platform,
 } from 'agora-edu-core';
 import {
   AgoraChatWidget,
@@ -22,7 +21,8 @@ import {
   AgoraSelector,
   FcrBoardWidget,
   FcrStreamMediaPlayerWidget,
-  FcrWebviewWidget
+  FcrWatermarkWidget,
+  FcrWebviewWidget,
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -38,7 +38,7 @@ import {
   loadUIConfig,
   supportedRoomTypes,
   themes,
-  uiConfigs
+  uiConfigs,
 } from '../utils/config-loader';
 
 import './polyfills';
@@ -53,7 +53,7 @@ import {
   LaunchMediaOptions,
   LaunchOption,
   LaunchWindowOption,
-  WindowID
+  WindowID,
 } from './type';
 
 export * from './type';
@@ -152,8 +152,8 @@ export class AgoraEduSDK {
 
       return {
         name,
-        roomType
-      }
+        roomType,
+      };
     });
   }
 
@@ -240,7 +240,6 @@ export class AgoraEduSDK {
       userUuid,
       userName,
       roleType,
-      roomSubtype = EduRoomSubtypeEnum.Standard,
       roomServiceType = EduRoomServiceTypeEnum.LiveStandard,
       rtmToken,
       roomUuid,
@@ -253,9 +252,10 @@ export class AgoraEduSDK {
       recordOptions,
       recordRetryTimeout,
       uiMode,
-      shareUrl,
+      shareUrl = '',
       latencyLevel,
-      userFlexProperties
+      userFlexProperties,
+      language,
     } = option;
     const sessionInfo = {
       userUuid,
@@ -264,7 +264,6 @@ export class AgoraEduSDK {
       roomUuid,
       roomName,
       roomType,
-      roomSubtype,
       roomServiceType,
       duration,
       flexProperties: userFlexProperties,
@@ -272,9 +271,8 @@ export class AgoraEduSDK {
       startTime,
     };
 
-    this._shareUrl = shareUrl || '';
-
-    this._language = option.language;
+    this._shareUrl = shareUrl;
+    this._language = language;
 
     this._widgets = {
       ...option.widgets,
@@ -286,14 +284,16 @@ export class AgoraEduSDK {
       [this._getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
       [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
       [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
+      [this._getWidgetName(FcrWatermarkWidget)]: FcrWatermarkWidget,
     };
 
     //TODO:待优化。 问题：合流转推(学生) 和 伪直播 场景不需要白板插件，因为它们使用的都是大班课的班型，所以不能通过后端禁用白板。
-    if (
+    const withoutBoardWidget =
       option.roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
       (EduRoomServiceTypeEnum.MixStreamCDN === option.roomServiceType &&
-        option.roleType !== EduRoleTypeEnum.teacher)
-    ) {
+        option.roleType === EduRoleTypeEnum.student);
+
+    if (withoutBoardWidget) {
       const widgetName = this._getWidgetName(FcrBoardWidget);
       delete this._widgets[widgetName];
     }
@@ -310,7 +310,7 @@ export class AgoraEduSDK {
           ...{
             noDevicePermission:
               roleType === EduRoleTypeEnum.invisible ||
-              !vocationalNeedPreset(roleType, roomServiceType, roomSubtype),
+              !vocationalNeedPreset(roleType, roomServiceType),
           },
         },
       },
@@ -353,9 +353,9 @@ export class AgoraEduSDK {
     render(
       <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
         <Scenarios
-          pretest={pretest}
-          roomType={sessionInfo.roomType}
-          roomSubtype={sessionInfo.roomSubtype}
+          pretest={platform !== Platform.H5 && pretest}
+          roomType={roomType}
+          roomServiceType={roomServiceType}
         />
       </Providers>,
       dom,
@@ -403,8 +403,9 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-      }/edu/apps/${appId}`;
+    const pathPrefix = `${
+      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+    }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',

@@ -1,5 +1,5 @@
 import { Field } from '@/app/components/form-field';
-import { useHomeStore } from '@/infra/hooks';
+import { useHomeStore } from '@/app/hooks';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { FC, useState } from 'react';
 import { Button, Layout, transI18n, useI18n } from '~ui-kit';
@@ -73,7 +73,10 @@ const useForm = <T extends Record<string, string>>({
   };
 };
 
-export const LoginForm: FC<{ onSubmit: (values: any) => void, sceneOptions: { text: string, value: string }[] }> = ({ onSubmit, sceneOptions }) => {
+export const LoginForm: FC<{
+  onSubmit: (values: any) => void;
+  sceneOptions: { text: string; value: string }[];
+}> = ({ onSubmit, sceneOptions }) => {
   const t = useI18n();
 
   const homeStore = useHomeStore();

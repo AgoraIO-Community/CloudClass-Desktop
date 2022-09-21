@@ -1,0 +1,10 @@
+.radio-icon {
+  width: 25px;
+  height: 25px;
+  background-image: url(../../assets/fcr_radio_check.svg);
+  background-size: cover;
+}
+
+.radio-icon.checked {
+  background-image: url(../../assets/fcr_radio_checked.svg);
+}

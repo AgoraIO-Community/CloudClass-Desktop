@@ -1,13 +1,11 @@
+import {
+  chatEmojiEnabled,
+  chatMuteAllEnabled,
+  chatPictureEnabled,
+} from '@/ui-kit/capabilities/containers/visibility/controlled';
 import * as hx from 'agora-chat-widget';
 import { AgoraWidgetBase, AgoraWidgetLifecycle } from 'agora-classroom-sdk';
-import { chatEmojiEnabled, chatMuteAllEnabled, chatPictureEnabled } from '@/ui-kit/capabilities/containers/visibility/controlled';
-import {
-  AgoraWidgetController,
-  EduRoleTypeEnum,
-  EduRoomSubtypeEnum,
-  EduRoomTypeEnum,
-  Platform,
-} from 'agora-edu-core';
+import { AgoraWidgetController, EduRoleTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import classNames from 'classnames';
 import { autorun, IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
@@ -22,7 +20,14 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
 
   const { appId, host, sessionInfo, platform } = widget.classroomConfig;
 
-  const { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture, imgIcon } = widget.imUIConfig;
+  const {
+    visibleEmoji,
+    visibleBtnSend,
+    inputBoxStatus,
+    visibleMuteAll,
+    visibleScreenCapture,
+    imgIcon,
+  } = widget.imUIConfig;
 
   const { currentSubRoom } = widget.classroomStore.groupStore;
 
@@ -51,15 +56,14 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
       announcement: !currentSubRoom && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: visibleMuteAll && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
       showQuestionBox:
-        sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational &&
-        sessionInfo.role === EduRoleTypeEnum.student, //职教课的学生显示提问
+        sessionInfo.roomServiceType !== 0 && sessionInfo.role === EduRoleTypeEnum.student, //职教课的学生显示提问
       isFullSize: widgetStore.isFullSize,
       emoji: visibleEmoji,
       btnSend: visibleBtnSend,
       inputBox: inputBoxStatus,
       platform,
       screenshotIcon: visibleScreenCapture,
-      imgIcon
+      imgIcon,
     },
   };
 
@@ -131,7 +135,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
   private _widgetStore = new WidgetChatUIStore(this);
   private _rendered = false;
 
-  onInstall(controller: AgoraWidgetController): void { }
+  onInstall(controller: AgoraWidgetController): void {}
   get widgetName(): string {
     return 'easemobIM';
   }
@@ -163,13 +167,19 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
       visibleEmoji = false;
       inputBoxStatus = 'inline';
     }
-    const isVocational =
-      this.classroomConfig.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational;
+    const isVocational = this.classroomConfig.sessionInfo.roomServiceType !== 0;
     if (isVocational) {
       visibleEmoji = true;
     }
 
-    return { visibleEmoji, visibleBtnSend, inputBoxStatus, visibleMuteAll, visibleScreenCapture, imgIcon };
+    return {
+      visibleEmoji,
+      visibleBtnSend,
+      inputBoxStatus,
+      visibleMuteAll,
+      visibleScreenCapture,
+      imgIcon,
+    };
   }
 
   get imConfig() {
@@ -200,7 +210,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     this._renderApp();
   }
 
-  onDestroy(): void { }
+  onDestroy(): void {}
 
   private _renderApp() {
     if (!this._rendered && this.imConfig && this.easemobUserId && this._dom) {
@@ -216,8 +226,8 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
   render(dom: HTMLElement): void {
     this._dom = dom;
 
-    const isVocational =
-      this.classroomConfig.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational;
+    const isVocational = true;
+    this.classroomConfig.sessionInfo.roomServiceType !== 0;
 
     const cls = classNames({
       'chat-panel': 1,
@@ -246,5 +256,5 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     }
   }
 
-  onUninstall(controller: AgoraWidgetController): void { }
+  onUninstall(controller: AgoraWidgetController): void {}
 }

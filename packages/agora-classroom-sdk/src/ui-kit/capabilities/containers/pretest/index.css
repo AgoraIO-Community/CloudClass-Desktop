@@ -269,23 +269,23 @@
 .beauty-bar-silder {
   flex: 1;
 }
-.beauty-bar-silder .rc-slider-rail {
+.beauty-bar-silder .ant-slider-rail {
   background-color: rgba(255, 255, 255, 0.3);
 }
-.beauty-bar-silder .rc-slider-track {
+.beauty-bar-silder .ant-slider-track {
   background-color: rgba(255, 255, 255);
 }
-.beauty-bar-silder .rc-slider-step,
-.beauty-bar-silder .rc-slider-rail,
-.beauty-bar-silder .rc-slider-track {
+.beauty-bar-silder .ant-slider-step,
+.beauty-bar-silder .ant-slider-rail,
+.beauty-bar-silder .ant-slider-track {
   height: 2px;
 }
-.beauty-bar-silder .rc-slider-handle {
+.beauty-bar-silder .ant-slider-handle {
   width: 11px;
   height: 11px;
   border-color: transparent;
 }
-.beauty-bar-silder .rc-slider-handle:active {
+.beauty-bar-silder .ant-slider-handle:active {
   border-color: transparent;
   box-shadow: none;
 }

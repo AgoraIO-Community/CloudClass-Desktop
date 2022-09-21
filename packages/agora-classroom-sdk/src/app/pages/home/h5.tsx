@@ -1,7 +1,7 @@
+import { useHomeStore } from '@/app/hooks';
 import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
-import { useHomeStore } from '@/infra/hooks';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { getBrowserLanguage, storage } from '@/infra/utils';
 import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
@@ -19,7 +19,7 @@ import { Helmet } from 'react-helmet';
 import { useHistory } from 'react-router';
 import { changeLanguage } from '~ui-kit';
 import { H5Login } from '~ui-kit/scaffold';
-import { HomeApi } from './home-api';
+import { HomeApi } from '../../api/home';
 import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
@@ -177,7 +177,6 @@ export const HomeH5Page = observer(() => {
             }
           }
 
-          HomeApi.shared.domain = tokenDomain;
           const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
 
           const config: HomeLaunchOption = {

@@ -2,7 +2,12 @@ import { EduRegion } from 'agora-edu-core';
 import { AgoraRegion, AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 
 declare const NODE_ENV: string;
-const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
+export const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
+export const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
+export const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
+
+export const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
+export const REACT_APP_AGORA_APP_CERTIFICATE = process.env.REACT_APP_AGORA_APP_CERTIFICATE;
 
 export const isProduction = NODE_ENV === 'production';
 
@@ -36,6 +41,5 @@ export const getTokenDomain = (region?: EduRegion) => {
   return domain;
 };
 
-export const isVocationalElectron =
-  AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-  EDU_CATEGORY === 'vocational';
+export const isElectronPlatform =
+  AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron;

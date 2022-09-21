@@ -1,13 +1,12 @@
+import { useHomeStore } from '@/app/hooks';
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
-import { useHomeStore } from '@/infra/hooks';
 import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
 import {
   EduClassroomConfig,
   EduRegion,
   EduRoleTypeEnum,
   EduRoomServiceTypeEnum,
-  EduRoomSubtypeEnum,
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
@@ -19,7 +18,7 @@ import { Helmet } from 'react-helmet';
 import { useHistory } from 'react-router';
 import { changeLanguage } from '~ui-kit';
 import { H5Login } from '~ui-kit/scaffold';
-import { HomeApi } from './home-api';
+import { HomeApi } from '../../api/home';
 import { HomeSettingContainerH5 } from './home-setting/h5';
 import { MessageDialog } from './message-dialog';
 import { useTheme } from './vocational';
@@ -28,11 +27,11 @@ const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_D
 const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 
-const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: EduRoomSubtypeEnum } = {
-  'vocational-class': EduRoomSubtypeEnum.Vocational,
-  'big-class': EduRoomSubtypeEnum.Standard,
-  '1v1': EduRoomSubtypeEnum.Standard,
-  'mid-class': EduRoomSubtypeEnum.Standard,
+const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: number } = {
+  'vocational-class': 1,
+  'big-class': 0,
+  '1v1': 0,
+  'mid-class': 0,
 };
 
 const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } = {
@@ -195,15 +194,17 @@ export const VocationalHomeH5Page = observer(() => {
             }
           }
 
-          HomeApi.shared.domain = tokenDomain;
           const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
           const webRTCCodec =
             roomServiceType === EduRoomServiceTypeEnum.CDN ||
-              roomServiceType === EduRoomServiceTypeEnum.Fusion
+            roomServiceType === EduRoomServiceTypeEnum.Fusion
               ? 'h264'
               : 'vp8';
-          const latencyLevel = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
+          const latencyLevel =
+            roomServiceType === EduRoomServiceTypeEnum.LivePremium
+              ? AgoraLatencyLevel.UltraLow
+              : AgoraLatencyLevel.Low;
           const config: HomeLaunchOption = {
             appId,
             sdkDomain: domain,
@@ -214,21 +215,15 @@ export const VocationalHomeH5Page = observer(() => {
             rtmToken: token,
             roomUuid: `${roomUuid}`,
             roomType: scenario,
-            roomSubtype,
             roomServiceType,
             roomName: `${roomName}`,
             userName: userName,
             roleType: role,
-            // @ts-ignore
-            curScenario,
-            // @ts-ignore
-            userRole,
             // startTime: Date.now(), // 开启后会导致学生进入新教室的时候直接开启上课计时
             region,
             duration: duration * 60,
-            latencyLevel: 2,
+            latencyLevel,
             platform: Platform.H5,
-            curService,
             mediaOptions: {
               web: {
                 codec: webRTCCodec,

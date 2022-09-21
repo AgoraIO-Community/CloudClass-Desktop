@@ -1,0 +1,20 @@
+.toast-list .toast-item {
+  margin-bottom: 10px;
+  height: 40px;
+}
+.toast-list .toast-item span {
+  @apply table;
+  margin: 0 auto;
+  /* fcr_brand_blue */
+  background: #357bf6;
+  backdrop-filter: blur(50px);
+  /* Note: backdrop-filter has minimal browser support */
+  border-radius: 50px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 40px;
+  padding: 0 24px;
+  color: #ffffff;
+}

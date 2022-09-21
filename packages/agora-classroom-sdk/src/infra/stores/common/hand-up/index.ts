@@ -1,6 +1,12 @@
 import {
-    AGServiceErrorCode,
-    EduClassroomConfig, EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomSubtypeEnum, EduRoomTypeEnum, HandUpProgress, PodiumSrouce, RteRole2EduRole
+  AGServiceErrorCode,
+  EduClassroomConfig,
+  EduRoleTypeEnum,
+  EduRoomServiceTypeEnum,
+  EduRoomTypeEnum,
+  HandUpProgress,
+  PodiumSrouce,
+  RteRole2EduRole,
 } from 'agora-edu-core';
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
 import { action, computed, observable, runInAction } from 'mobx';
@@ -32,7 +38,7 @@ export class HandUpUIStore extends EduUIStoreBase {
    * 当前是否为职教
    */
   get isVocational() {
-    return EduClassroomConfig.shared.sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational;
+    return EduClassroomConfig.shared.sessionInfo.roomServiceType !== 0;
   }
 
   /**

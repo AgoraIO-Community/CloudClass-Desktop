@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>已选中</title>
+    <g id="职教大班课v2.7" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="v2.7-常规设置-语言设置" transform="translate(-331.000000, -80.000000)">
+            <g id="已选中" transform="translate(331.000000, 80.000000)">
+                <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+                <g id="编组-2" transform="translate(6.000000, 6.000000)">
+                    <rect id="矩形" fill="#357BF6" x="0" y="0" width="12" height="12" rx="6"></rect>
+                    <circle id="椭圆形" fill="#FFFFFF" cx="6" cy="6" r="3"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

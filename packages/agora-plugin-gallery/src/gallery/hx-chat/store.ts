@@ -1,5 +1,5 @@
+import { EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import { action, autorun, observable, runInAction } from 'mobx';
-import { EduRoomTypeEnum, EduRoomSubtypeEnum, Platform } from 'agora-edu-core';
 import { AgoraHXChatWidget } from '.';
 
 enum orientationEnum {
@@ -28,7 +28,7 @@ export class WidgetChatUIStore {
       if (
         sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
         isH5 &&
-        sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational
+        sessionInfo.roomServiceType !== 0
       ) {
         isFullSize = true;
       } else if (sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass && isH5) {
@@ -47,7 +47,7 @@ export class WidgetChatUIStore {
       if (
         sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
         isH5 &&
-        sessionInfo.roomSubtype === EduRoomSubtypeEnum.Vocational
+        sessionInfo.roomServiceType !== 0
       ) {
         isShowChat = true;
       } else if (sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass && isH5) {

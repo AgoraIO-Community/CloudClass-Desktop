@@ -1,5 +1,5 @@
 import { AgoraEduSDK } from '@/infra/api';
-import { isProduction } from '@/infra/utils/env';
+import { isProduction } from '@/app/utils/env';
 import { FcrBoardRoom } from './wrapper/board-room';
 import { FcrBoardRegion } from './wrapper/type';
 

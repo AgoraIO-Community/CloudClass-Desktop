@@ -1,0 +1,63 @@
+.share-container {
+  @apply w-full bg-cover;
+  background-image: url(@/app/assets/home-share-bg.png);
+  background-color: white;
+}
+
+.share-container header {
+  @apply flex justify-between;
+  padding: 45px 245px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1;
+
+  /* Gray 1 */
+  color: #030303;
+}
+
+.share-container .body {
+  padding: 0 92px;
+  margin-bottom: 32px;
+}
+.share-container .text {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  padding: 30px 30px 49px 30px;
+
+  font-family: 'PingFang HK';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.7;
+
+  /* fcr_black */
+  color: #000000;
+  white-space: break-spaces;
+}
+
+.share-container footer {
+  @apply flex justify-between items-center;
+  padding: 0 156px;
+  height: 100px;
+  border-top: 1px solid #eeeeeeb3;
+}
+
+.share-container footer .btn {
+  width: 200px;
+  height: 36px;
+  color: white;
+  border-radius: 100px;
+}
+
+.share-container footer .btn-copy-all {
+  /* fcr_black */
+  background: #000000;
+}
+
+.share-container footer .btn-copy-link {
+  /* fcr_brand_blue */
+  background: #357bf6;
+}

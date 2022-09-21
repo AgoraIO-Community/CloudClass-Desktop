@@ -1,0 +1,44 @@
+.nav-page-layout {
+  font-family: 'Inter';
+  position: relative;
+  height: 100%;
+  background-color: #fff;
+}
+
+.nav-page-layout > header {
+  @apply absolute top-0 left-0 z-10 w-full;
+  padding-top: 53px;
+  padding-bottom: 17px;
+  /* fcr- light-white trans90% */
+  background: rgba(255, 255, 255, 0.9);
+  /* fcr- card trans */
+  backdrop-filter: blur(50px);
+}
+
+.nav-page-layout > .content {
+  @apply h-full w-full;
+  padding: 0 114px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.nav-page-layout > footer {
+  @apply absolute bottom-0 left-0 w-full pointer-events-none;
+  padding: 0 114px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 58.33%);
+  filter: drop-shadow(0px 4px 4px rgba(255, 255, 255, 0.25));
+}
+
+.header-blank::before {
+  content: '';
+  height: calc(40px + 53px + 17px);
+  width: 100%;
+  display: block;
+}
+
+.footer-blank::after {
+  content: '';
+  height: 128px;
+  width: 100%;
+  display: block;
+}

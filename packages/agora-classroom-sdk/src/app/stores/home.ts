@@ -3,6 +3,7 @@ import { ToastType } from '@/infra/stores/common/share-ui';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { getBrowserLanguage, GlobalStorage } from '@/infra/utils';
 import { EduRegion } from 'agora-edu-core';
+import { AgoraRegion } from 'agora-rte-sdk';
 import { action, autorun, observable, toJS } from 'mobx';
 import { changeLanguage } from '~ui-kit';
 
@@ -10,7 +11,6 @@ export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   appId: string;
   sdkDomain: string;
   region: EduRegion;
-  curService?: string;
   scenes?: any;
   themes?: any;
 };
@@ -18,6 +18,13 @@ const regionKey = `home_store_demo_launch_region`;
 const launchKey = `home_store_demo_launch_options`;
 const languageKey = `home_store_demo_launch_language`;
 const themeKey = `home_store_demo_launch_theme`;
+
+export const regionByLang = {
+  zh: EduRegion.CN,
+  en: EduRegion.NA,
+};
+
+const regionList = [AgoraRegion.AP, AgoraRegion.CN, AgoraRegion.EU, AgoraRegion.NA];
 
 export const getRegion = (): EduRegion => {
   return GlobalStorage.read(regionKey) || regionByLang[getBrowserLanguage()] || EduRegion.NA;
@@ -29,11 +36,6 @@ export const getLanguage = (): LanguageEnum => {
 
 export const getTheme = (): FcrMultiThemeMode => {
   return GlobalStorage.read(themeKey) || FcrMultiThemeMode.light;
-};
-
-const regionByLang = {
-  zh: EduRegion.CN,
-  en: EduRegion.NA,
 };
 
 export const clearHomeOption = () => {
@@ -57,6 +59,9 @@ export class HomeStore {
 
   @observable
   toastList: ToastType[] = [];
+
+  @observable
+  roomListToast: ToastType[] = [];
 
   constructor() {
     this.launchOption = GlobalStorage.read(launchKey) || {};
@@ -91,9 +96,20 @@ export class HomeStore {
     this.toastList = this.toastList.filter((it) => it.id != id);
   }
 
+  @action.bound
+  addRoomListToast(toast: ToastType) {
+    this.roomListToast.push(toast);
+  }
+
+  @action.bound
+  removeRoomListToast(id: string) {
+    this.roomListToast = this.roomListToast.filter((it) => it.id != id);
+  }
   @action
   setRegion = (region: EduRegion) => {
-    this.region = region;
+    if (regionList.includes(region)) {
+      this.region = region;
+    }
   };
 
   @action
@@ -131,4 +147,12 @@ export class HomeStore {
     this.language = getLanguage();
     this.launchOption = GlobalStorage.read(launchKey) || {};
   }
+
+  @observable
+  loading = false;
+
+  @action
+  setLoading = (loading: boolean) => {
+    this.loading = loading;
+  };
 }

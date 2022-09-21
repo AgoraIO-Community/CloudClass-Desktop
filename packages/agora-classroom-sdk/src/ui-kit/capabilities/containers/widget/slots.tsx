@@ -1,11 +1,11 @@
 import { useLectureH5UIStores, useStore } from '@/infra/hooks/ui-store';
+import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
 import { EduClassroomConfig, EduRegion } from 'agora-edu-core';
-import React, { useEffect } from 'react';
+import classnames from 'classnames';
 import { observer } from 'mobx-react';
+import React, { useEffect } from 'react';
 import { Layout, SvgImg, transI18n } from '~ui-kit';
 import { ComponentLevelRules } from '../../config';
-import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
-import classnames from 'classnames';
 
 export const Chat = observer(function Chat() {
   const { widgetUIStore } = useStore();
@@ -31,8 +31,6 @@ export const Chat = observer(function Chat() {
   return <div className="widget-slot-chat h-full" />;
 });
 
-
-
 export const Whiteboard = observer(function Board() {
   const { boardUIStore } = useStore();
 
@@ -49,8 +47,6 @@ export const Whiteboard = observer(function Board() {
   );
 });
 
-
-
 const Spinner = () => {
   return (
     <div className="spinner-container">
@@ -60,9 +56,6 @@ const Spinner = () => {
     </div>
   );
 };
-
-
-
 
 export const WhiteboardH5 = observer(function Board() {
   const {
@@ -83,7 +76,11 @@ export const WhiteboardH5 = observer(function Board() {
       className={classnames('whiteboard-h5-container w-full relative', containerH5VisibleCls)}
       style={{ height: boardContainerHeight, width: boardContainerWidth }}>
       <div
-        style={{ height: boardUIStore.boardContainerHeight, width: boardUIStore.boardContainerWidth, zIndex: ComponentLevelRules.WhiteBoard }}
+        style={{
+          height: boardUIStore.boardContainerHeight,
+          width: boardUIStore.boardContainerWidth,
+          zIndex: ComponentLevelRules.WhiteBoard,
+        }}
         className="widget-slot-board"
       />
       <SvgImg
@@ -117,13 +114,32 @@ export const ChatH5 = observer(function Chat() {
     }
   }, [ready]);
 
-  return <Layout
-    className={classnames(
-      layoutUIStore.chatWidgetH5Cls,
-      streamUIStore.containerH5VisibleCls,
-      'h5-chat-pannel',
-    )}>
-    <div className="widget-slot-chat w-full h-full" />
-  </Layout>
+  return (
+    <Layout
+      className={classnames(
+        layoutUIStore.chatWidgetH5Cls,
+        streamUIStore.containerH5VisibleCls,
+        'h5-chat-pannel',
+      )}>
+      <div className="widget-slot-chat w-full h-full" />
+    </Layout>
+  );
+});
 
+export const Watermark = observer(function Chat() {
+  const { widgetUIStore } = useStore();
+  const { ready } = widgetUIStore;
+
+  useEffect(() => {
+    if (ready) {
+      widgetUIStore.createWidget('watermark');
+      return () => {
+        widgetUIStore.destroyWidget('watermark');
+      };
+    }
+  }, [ready]);
+
+  return (
+    <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none z-10" />
+  );
 });

@@ -1,6 +1,6 @@
+import { useHomeStore } from '@/app/hooks';
 import { HomeLaunchOption } from '@/app/stores/home';
 import { LanguageEnum } from '@/infra/api';
-import { useHomeStore } from '@/infra/hooks';
 import { ToastType } from '@/infra/stores/common/share-ui';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { GlobalStorage, storage } from '@/infra/utils';
@@ -11,7 +11,6 @@ import {
   EduRegion,
   EduRoleTypeEnum,
   EduRoomServiceTypeEnum,
-  EduRoomSubtypeEnum,
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import { AgoraLatencyLevel } from 'agora-rte-sdk';
@@ -24,7 +23,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
 import { Toast, transI18n } from '~ui-kit';
 import { Home } from '~ui-kit/scaffold';
-import { HomeApi } from './home-api';
+import { HomeApi } from '../../api/home';
 import { HomeSettingContainer } from './home-setting';
 import { MessageDialog } from './message-dialog';
 
@@ -35,11 +34,11 @@ const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAI
 const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
 const REACT_APP_AGORA_APP_CERTIFICATE = process.env.REACT_APP_AGORA_APP_CERTIFICATE;
 
-const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: EduRoomSubtypeEnum } = {
-  'vocational-class': EduRoomSubtypeEnum.Vocational,
-  'big-class': EduRoomSubtypeEnum.Standard,
-  '1v1': EduRoomSubtypeEnum.Standard,
-  'mid-class': EduRoomSubtypeEnum.Standard,
+const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: number } = {
+  'vocational-class': 1,
+  'big-class': 0,
+  '1v1': 0,
+  'mid-class': 0,
 };
 const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } = {
   'premium-service': EduRoomServiceTypeEnum.LivePremium,
@@ -62,13 +61,11 @@ export const webRTCCodecH264 = [
 export const vocationalNeedPreset = (
   roleType: EduRoleTypeEnum,
   roomServiceType: EduRoomServiceTypeEnum,
-  roomSubtype: EduRoomSubtypeEnum,
 ) => {
   return !(
-    EduRoomSubtypeEnum.Vocational === roomSubtype &&
-    (roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
-      (roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
-        roleType !== EduRoleTypeEnum.teacher))
+    roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
+    (roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
+      roleType !== EduRoleTypeEnum.teacher)
   );
 };
 export const useTheme = () => {
@@ -93,8 +90,8 @@ export const VocationalHomePage = observer(() => {
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const onChangeRegion = (r: string) => { };
-  const onChangeLanguage = (language: string) => { };
+  const onChangeRegion = (r: string) => {};
+  const onChangeLanguage = (language: string) => {};
   const role = useMemo(() => {
     const roles = {
       teacher: EduRoleTypeEnum.teacher,
@@ -176,15 +173,6 @@ export const VocationalHomePage = observer(() => {
 
   const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
 
-  let tokenDomain = '';
-  let tokenDomainCollection: any = {};
-
-  try {
-    tokenDomainCollection = JSON.parse(`${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`);
-  } catch (e) {
-    tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
-  }
-
   const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
 
   const commitID = BUILD_COMMIT_ID;
@@ -193,31 +181,16 @@ export const VocationalHomePage = observer(() => {
     try {
       setLoading(true);
       const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
-      if (!tokenDomain && tokenDomainCollection) {
-        switch (region) {
-          case 'CN':
-            tokenDomain = tokenDomainCollection['prod_cn'];
-            break;
-          case 'AP':
-            tokenDomain = tokenDomainCollection['prod_ap'];
-            break;
-          case 'NA':
-            tokenDomain = tokenDomainCollection['prod_na'];
-            break;
-          case 'EU':
-            tokenDomain = tokenDomainCollection['prod_eu'];
-            break;
-        }
-      }
-
-      HomeApi.shared.domain = tokenDomain;
 
       const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
       const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
-      const latencyLevel = roomServiceType === EduRoomServiceTypeEnum.LivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
-      const needPretest = vocationalNeedPreset(role, roomServiceType, roomSubtype);
+      const latencyLevel =
+        roomServiceType === EduRoomServiceTypeEnum.LivePremium
+          ? AgoraLatencyLevel.UltraLow
+          : AgoraLatencyLevel.Low;
+      const needPretest = vocationalNeedPreset(role, roomServiceType);
 
       const config: HomeLaunchOption = {
         appId,
@@ -229,7 +202,6 @@ export const VocationalHomePage = observer(() => {
         rtmToken: token,
         roomUuid: `${roomUuid}`,
         roomType: scenario,
-        roomSubtype,
         roomServiceType,
         roomName: `${roomName}`,
         userName: userName,
@@ -237,11 +209,6 @@ export const VocationalHomePage = observer(() => {
         region: region as EduRegion,
         duration: duration * 60,
         latencyLevel,
-        curService,
-        // @ts-ignore
-        curScenario,
-        // @ts-ignore
-        userRole,
         mediaOptions: {
           web: {
             codec: webRTCCodec,
