@@ -3,7 +3,8 @@ import { request, Response } from '@/app/utils/request';
 import { GlobalStorage } from '@/infra/utils';
 import { AgoraRegion } from 'agora-rte-sdk';
 import axios from 'axios';
-import { getHrefWithoutHash, getTokenDomain } from '../utils/env';
+import { indexURL } from '../utils';
+import { getTokenDomain } from '../utils/env';
 
 type RefreshTokenResponse = {
   accessToken: string;
@@ -33,20 +34,20 @@ const NICK_NAME_KEY = 'nick_name';
 export class UserApi {
   static shared = new UserApi();
 
-  static get access_token() {
-    return GlobalStorage.read(ACCESS_TOKEN_KEY);
+  static get accessToken() {
+    return localStorage.getItem(ACCESS_TOKEN_KEY) as string;
   }
 
   static set accessToken(value: string) {
-    GlobalStorage.save(ACCESS_TOKEN_KEY, value);
+    localStorage.setItem(ACCESS_TOKEN_KEY, value);
   }
 
-  static get refresh_token() {
-    return GlobalStorage.read(REFRESH_TOKEN_KEY);
+  static get refreshToken() {
+    return localStorage.getItem(REFRESH_TOKEN_KEY) as string;
   }
 
   static set refreshToken(value: string) {
-    GlobalStorage.save(REFRESH_TOKEN_KEY, value);
+    localStorage.setItem(REFRESH_TOKEN_KEY, value);
   }
 
   get userInfo(): GetUserInfoResponse {
@@ -82,21 +83,6 @@ export class UserApi {
     GlobalStorage.save('redirectUrl', val);
   }
 
-  /**
-   * 清除用户信息，一般登出的时候使用
-   * @returns
-   *
-   **/
-  /** @en
-   * Clear user's info
-   * @returns
-   */
-  clearUserInfo() {
-    GlobalStorage.clear(ACCESS_TOKEN_KEY);
-    GlobalStorage.clear(REFRESH_TOKEN_KEY);
-    GlobalStorage.clear(USER_INFO_KEY);
-  }
-
   private get domain() {
     return getTokenDomain(getRegion());
   }
@@ -107,8 +93,10 @@ export class UserApi {
     return data.data;
   }
 
+  private redirect_url = indexURL;
+
   /**
-   * 获取鉴权登录地址
+   * 获取sso鉴权登录地址
    * @returns
    *
    **/
@@ -116,32 +104,12 @@ export class UserApi {
    * Get authentication login address
    * @returns
    */
-  async getRedirectLoginURL() {
-    const url = getHrefWithoutHash();
+  async login() {
     return this.getAuthorizedURL({
-      redirectUrl: `${url}#/auth-token`,
+      redirectUrl: this.redirect_url,
       toRegion: getRegion() === AgoraRegion.CN ? 'cn' : 'en',
-    }).then((redirectUrl) => {
-      this.redirectUrl = redirectUrl;
-      return redirectUrl;
-    });
-  }
-
-  /**
-   * 登出
-   * @returns
-   *
-   **/
-  /** @en
-   * Logout
-   * @returns
-   */
-  async logout() {
-    this.clearUserInfo();
-    return this.getRedirectLoginURL().then((redirectUrl) => {
-      const url = getHrefWithoutHash();
-      const loginPath = decodeURI(`${url}#/login`);
-      location.href = `${LOGOUT_SSO_URL}?redirect_uri=${loginPath}`;
+    }).then((redirect_url) => {
+      window.location.href = redirect_url;
     });
   }
 
@@ -171,7 +139,7 @@ export class UserApi {
    * @returns
    */
   async refreshToken() {
-    const url = `${this.domain}/sso/v2/users/refresh/refreshToken/${UserApi.refresh_token}`;
+    const url = `${this.domain}/sso/v2/users/refresh/refreshToken/${UserApi.refreshToken}`;
     return request.post<Response<RefreshTokenResponse>>(url).then((resp) => {
       if (resp.data) {
         UserApi.accessToken = resp.data.data.accessToken;
@@ -179,6 +147,37 @@ export class UserApi {
       }
       return resp.data;
     });
+  }
+
+  /**
+   * 清除用户信息，一般登出的时候使用
+   * @returns
+   *
+   **/
+  /** @en
+   * Clear user's info
+   * @returns
+   */
+  clearUserInfo() {
+    GlobalStorage.clear(ACCESS_TOKEN_KEY);
+    GlobalStorage.clear(REFRESH_TOKEN_KEY);
+    GlobalStorage.clear(USER_INFO_KEY);
+  }
+
+  /**
+   * 登出
+   * @returns
+   *
+   **/
+  /** @en
+   * Logout
+   * @returns
+   */
+  async logout() {
+    this.clearUserInfo();
+    const redirect_url = decodeURI(this.redirect_url);
+    location.href = `${LOGOUT_SSO_URL}?redirect_uri=${redirect_url}`;
+    return;
   }
 
   /**

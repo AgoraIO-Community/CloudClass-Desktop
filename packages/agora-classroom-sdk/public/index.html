@@ -52,6 +52,11 @@
         if (windowID) {
           this.location.hash = 'window';
         }
+
+        // authentication
+        window.__refreshToken= params.get('refreshToken');
+        window.__accessToken = params.get('accessToken');
+         window.__redirect_url = params.get('redirect_url');
       }
     </script>
   </head>

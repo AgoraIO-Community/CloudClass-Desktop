@@ -1,13 +1,17 @@
-import { parseHashUrlQuery } from '@/app/utils';
 import { useCallback, useState } from 'react';
 import { UserApi } from '../api/user';
+import { useHomeStore } from './useHomeStore';
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
-  const auth = useCallback(async () => {
+  const { setLogin } = useHomeStore();
+  const authWithLogout = useCallback(async () => {
     setLoading(true);
-    UserApi.shared
+    return UserApi.shared
       .getUserInfo()
+      .then(() => {
+        setLogin(true);
+      })
       .catch(() => {
         UserApi.shared.logout();
       })
@@ -16,24 +20,15 @@ export const useAuth = () => {
       });
   }, []);
 
-  return { loading, auth };
-};
+  const auth = useCallback(async () => {
+    if (UserApi.accessToken) {
+      return UserApi.shared.getUserInfo().then(() => {
+        setLogin(true);
+        return true;
+      });
+    }
+    return false;
+  }, []);
 
-/**
- * 解析url参数中的token,并存储到storage中
- * @returns null|{accessToken, refreshToken}
- */
-export const getTokenByURL = (): null | { accessToken: string; refreshToken: string } => {
-  const result = parseHashUrlQuery(location.hash);
-  // const redirectUrl = result['from'] ? result['from'] : '/';
-  const token = {
-    accessToken: result['accessToken'],
-    refreshToken: result['refreshToken'],
-  };
-  if (token.accessToken && token.refreshToken) {
-    UserApi.accessToken = result['accessToken'];
-    UserApi.refreshToken = result['refreshToken'];
-    return token;
-  }
-  return null;
+  return { loading, authWithLogout, auth };
 };

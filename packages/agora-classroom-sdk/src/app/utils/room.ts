@@ -1,6 +1,5 @@
 import { EduRegion } from 'agora-edu-core';
-import { isProduction } from './env';
-import { parseHashUrlQuery } from './url';
+import { indexURL, parseHashUrlQuery } from './url';
 
 /**
  * Format the room ID for a specific format.
@@ -32,6 +31,17 @@ export type ShareContent = {
 export class ShareLink {
   static instance = new ShareLink();
 
+  constructor() {
+    const match = window.location.href.match('https://solutions-apaas.agora.io/apaas/app/([^/]*)/');
+    if (match) {
+      this._url = `${match[0]}release_2.8.x/index.html`;
+      return;
+    }
+    this._url = indexURL;
+  }
+
+  private _url = '';
+
   private encode(params: ShareContent) {
     params.owner = encodeURI(params.owner);
     const str = JSON.stringify(params);
@@ -55,16 +65,12 @@ export class ShareLink {
     }
   }
 
-  readonly url = `https://solutions-apaas.agora.io/apaas/app/${
-    isProduction ? 'prod' : 'test'
-  }/2.8.x/index.html`;
-
   query(params: ShareContent) {
     return `sc=${this.encode(params)}`;
   }
 
   generateUrl(params: ShareContent, url = '') {
-    return `${url ? url : this.url}/#/invite?${this.query(params)}`;
+    return `${url ? url : this._url}/#/invite?${this.query(params)}`;
   }
 
   parseHashURLQuery(hash: string): ShareContent | null {

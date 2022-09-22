@@ -1,13 +1,11 @@
 export enum PageRouter {
-  LoginPage = 'login',
-  Home = 'home',
+  Index = 'index',
   Welcome = 'welcome',
   CreateRoom = 'create_room',
   JoinRoom = 'join_room',
   Invite = 'invite_room',
   Launch = 'launch',
-
-  H5Welcome = 'welcome_h5',
+  H5Index = 'index_h5',
   H5JoinRoom = 'join_room_h5',
   H5Invite = 'invite_room_h5',
   FlexHome = 'flex_home',
@@ -20,9 +18,6 @@ export enum PageRouter {
   BigClass = 'big',
   PretestPage = 'pretest',
   ShareLinkPage = 'share_home',
-  AuthTokenPage = 'auth_token',
-  TestRecordPage = 'test_record',
-  TestH5HomePage = 'test_h5_home',
   RecordationSearchPage = 'recordation-search',
   Window = 'window',
 }

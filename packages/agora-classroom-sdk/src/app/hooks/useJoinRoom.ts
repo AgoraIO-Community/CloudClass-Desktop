@@ -57,15 +57,26 @@ export const webRTCCodecH264 = [
 
 // 1. 伪直播场景不需要pretest
 // 2. 合流转推场景下的学生角色不需要pretest
-export const vocationalNeedPreset = (
-  roleType: EduRoleTypeEnum,
+export const needPreset = (
+  roomType: EduRoomTypeEnum,
   roomServiceType: EduRoomServiceTypeEnum,
+  roleType: EduRoleTypeEnum,
 ) => {
-  return !(
-    roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
-    (roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
-      roleType !== EduRoleTypeEnum.teacher)
-  );
+  if (roomType !== EduRoomTypeEnum.RoomBigClass) {
+    return true;
+  }
+
+  if (roomServiceType === EduRoomServiceTypeEnum.HostingScene) {
+    return false;
+  }
+
+  if (
+    roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
+    roleType !== EduRoleTypeEnum.teacher
+  ) {
+    return false;
+  }
+  return true;
 };
 
 type ShareURLParams = {
@@ -128,12 +139,13 @@ export const useJoinRoom = () => {
 
         console.log('## get rtm Token from demo server', token);
 
-        const latencyLevel =
-          roomServiceType === EduRoomServiceTypeEnum.LivePremium
-            ? AgoraLatencyLevel.UltraLow
-            : AgoraLatencyLevel.Low;
+        const isLivePremium =
+          roomType === EduRoomTypeEnum.RoomBigClass &&
+          roomServiceType === EduRoomServiceTypeEnum.LivePremium;
 
-        const needPretest = vocationalNeedPreset(role, roomServiceType);
+        const latencyLevel = isLivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
+
+        const needPretest = needPreset(roomType, roomServiceType, role);
         const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
         const config: HomeLaunchOption = {
           appId: REACT_APP_AGORA_APP_ID || appId,
@@ -191,7 +203,7 @@ export const useJoinRoom = () => {
 
   const quickJoinRoom = useCallback(
     async (params: QuickJoinRoomParams) => {
-      const { roomId, role, nickName, platform = Platform.PC } = params;
+      const { roomId, role, nickName, platform = defaultPlatform } = params;
       return RoomAPI.shared
         .join({ roomId, role })
         .then((response) => {

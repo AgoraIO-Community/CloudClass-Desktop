@@ -77,7 +77,7 @@ export const RoomListItem: FC<RoomListItemProps> = ({
         <div className="name">{data.roomName}</div>
         <div className="footer">
           <span className="state icon">{transI18n(roomStateMap[roomState])}</span>
-          <span className="type">{transI18n(roomTypeMap[roomState])}</span>
+          <span className="type">{transI18n(roomTypeMap[data.roomType])}</span>
         </div>
       </div>
       <div className="operation">

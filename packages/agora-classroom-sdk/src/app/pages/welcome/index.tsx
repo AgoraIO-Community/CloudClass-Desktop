@@ -4,12 +4,13 @@ import CreateClassIcon from '@/app/assets/fcr_create_class.svg';
 import JoinClassIcon from '@/app/assets/fcr_join_class.svg';
 import roomListEmptyImg from '@/app/assets/welcome-empty-list.png';
 import { Settings } from '@/app/components/settings';
+import { useAuth, useHomeStore } from '@/app/hooks';
 import { RoomListItem } from '@/app/pages/welcome/room-list';
 import { ShareLink } from '@/app/utils';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   AButton,
   ADivider,
@@ -32,6 +33,8 @@ export const Welcome = observer(() => {
   const [fetching, setFetching] = useState(false);
   const [roomList, setRoomList] = useState<RoomInfo[]>([]);
   const nextRoomID = useRef<RoomInfo['roomId']>();
+  const { isLogin } = useHomeStore();
+  const { auth } = useAuth();
   const [shareRoomInfo, setShareRoomInfo] = useState<ShareRoomInfo>({
     owner: '',
     startTime: 0,
@@ -96,8 +99,12 @@ export const Welcome = observer(() => {
   const onDetail = useCallback((data: RoomInfo) => {}, []);
 
   useEffect(() => {
-    refreshRoomList();
-  }, []);
+    if (isLogin) {
+      refreshRoomList();
+    } else {
+      auth();
+    }
+  }, [isLogin]);
 
   return (
     <div className="welcome-container">
@@ -117,18 +124,33 @@ export const Welcome = observer(() => {
           <img src={roomListEmptyImg} alt="" />
         </div>
         <div className={`room-entry`}>
-          <Link to="join-room" className="btn">
+          <div
+            className="btn"
+            onClick={() => {
+              if (!isLogin) {
+                UserApi.shared.login();
+                return;
+              }
+              history.push('/join-room');
+            }}>
             <span className="icon">
               <img src={JoinClassIcon} alt="join class" />
             </span>
             <span className="text">{transI18n('fcr_home_button_join')}</span>
-          </Link>
-          <Link to="create-room" className="btn">
+          </div>
+          <div
+            className="btn"
+            onClick={() => {
+              if (!isLogin) {
+                UserApi.shared.login();
+              }
+              history.push('/create-room');
+            }}>
             <span className="icon">
               <img src={CreateClassIcon} alt="create class" />
             </span>
             <span className="text">{transI18n('fcr_home_button_create')}</span>
-          </Link>
+          </div>
         </div>
         <div className={`room-list flex-1`}>
           <div className="title">
