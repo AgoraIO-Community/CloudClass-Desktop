@@ -15,7 +15,7 @@ import {
   Layout,
   SvgIconEnum,
   useI18n,
-} from '~ui-kit';
+} from '~components';
 import { EduClassroomConfig, EduRoleTypeEnum, RecordStatus } from 'agora-edu-core';
 import RecordLoading from './assets/svga/record-loading.svga';
 import './index.css';
@@ -30,7 +30,7 @@ import {
 } from '../visibility/controlled';
 import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 import ClipboardJS from 'clipboard';
 import { AgoraEduSDK } from '@/infra/api';
 

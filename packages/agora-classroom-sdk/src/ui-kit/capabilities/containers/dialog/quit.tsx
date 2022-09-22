@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Button, Modal, transI18n } from '~ui-kit';
+import { Button, Modal, transI18n } from '~components';
 import { BaseDialogProps } from '.';
 
 export const Quit: React.FC<

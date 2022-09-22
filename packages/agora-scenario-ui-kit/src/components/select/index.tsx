@@ -1,6 +1,6 @@
 import React, { FC, useState, useRef } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/util/type';
+import { BaseProps } from '~components/util/type';
 import ReactSelect from 'react-select';
 import { CSSTransition } from 'react-transition-group';
 import './index.css';

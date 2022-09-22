@@ -7,7 +7,7 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
 import { NavGroup } from '.';
 import classnames from 'classnames';
-import { SvgImg } from '~ui-kit';
+import { SvgImg } from '~components';
 
 export const RoomBigTeacherStreamH5Container: FC = observer(() => {
   const { streamUIStore } = useLectureH5UIStores() as EduLectureH5UIStore;

@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { throttle } from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, Popover, SvgIcon, SvgIconEnum, SvgImg } from '~components';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 import { BaseWaveArmProps, UserWaveArmInfo } from './types';
 
 export interface WaveArmManagerProps extends BaseWaveArmProps {

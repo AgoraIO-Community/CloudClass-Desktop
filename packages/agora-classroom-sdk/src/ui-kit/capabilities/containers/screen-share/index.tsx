@@ -4,7 +4,7 @@ import { AGRenderMode } from 'agora-rte-sdk';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
+import { SvgIconEnum, SvgImg, transI18n } from '~components';
 import './index.css';
 
 const ScreenShareLocalTrackPlayer = observer(() => {

@@ -1,6 +1,6 @@
 import { privacyPolicyURL, useAgreementURL } from '@/infra/utils/url';
 import { EduClassroomConfig } from 'agora-edu-core';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import logo from '../assets/logo.svg';
 import './index.css';
 export const About = () => {

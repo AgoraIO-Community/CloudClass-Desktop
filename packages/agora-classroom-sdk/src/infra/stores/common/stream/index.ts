@@ -31,7 +31,7 @@ import {
   iterateSet,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
-import { SvgIconEnum, TooltipPlacement, transI18n } from '~ui-kit';
+import { SvgIconEnum, TooltipPlacement, transI18n } from '~components';
 import { extractStreamBySourceType, extractUserStreams } from '@/infra/utils/extract';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
 

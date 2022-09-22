@@ -20,7 +20,7 @@ import {
   SvgIconEnum,
   SvgImg,
   useI18n,
-} from '~ui-kit';
+} from '~components';
 import './index.css';
 import { RoomToast } from './room-toast';
 import { ShareRoom, ShareRoomInfo } from './share-room';

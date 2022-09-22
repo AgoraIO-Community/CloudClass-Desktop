@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useState, MouseEvent } from 'react';
-import { CheckBox, Search, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
+import { CheckBox, Search, SvgIconEnum, SvgImg, transI18n } from '~components';
 import { Panel } from './panel';
 
 type UserPanelProps = {

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useI18n } from '~ui-kit';
+import { useI18n } from '~components';
 
 export const useNickNameRule = () => {
   const transI18n = useI18n();

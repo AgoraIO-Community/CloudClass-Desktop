@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { FC, useMemo } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getI18n } from 'react-i18next';
-import { AButton, aMessage, useI18n } from '~ui-kit';
+import { AButton, aMessage, useI18n } from '~components';
 import './index.css';
 
 export type ShareRoomInfo = {

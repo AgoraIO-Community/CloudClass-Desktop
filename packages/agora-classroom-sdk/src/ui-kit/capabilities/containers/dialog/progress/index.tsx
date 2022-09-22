@@ -7,8 +7,8 @@ import React, {
   useRef,
 } from 'react';
 import ReactDOM from 'react-dom';
-import { transI18n } from '~ui-kit';
-import { Progress, ProgressProps } from '~ui-kit/components/progress';
+import { transI18n } from '~components';
+import { Progress, ProgressProps } from '~components/progress';
 import './style.css';
 
 type ProgressListItem = Pick<ProgressProps, 'width' | 'progress'> & { key: string; auto?: boolean };

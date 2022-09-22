@@ -32,8 +32,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "~ui-kit": ["../agora-scenario-ui-kit/src"],
-      "~ui-kit/*": ["../agora-scenario-ui-kit/src/*"],
       "~scaffold": ["../agora-scenario-ui-kit/src/scaffold"],
       "~styles": ["../agora-scenario-ui-kit/src/styles"],
       "~utilities": ["../agora-scenario-ui-kit/src/utilities"],

@@ -1,6 +1,6 @@
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import { useCallback } from 'react';
-import { aMessage, useI18n } from '~ui-kit';
+import { aMessage, useI18n } from '~components';
 import { RoomInfo } from '../api/room';
 
 export const useCheckRoomInfo = () => {

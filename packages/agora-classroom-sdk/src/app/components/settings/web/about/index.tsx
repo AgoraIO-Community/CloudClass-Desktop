@@ -1,7 +1,7 @@
 import logo from '@/app/assets/logo.svg';
 import { privacyPolicyURL, useAgreementURL } from '@/infra/utils/url';
 import { EduClassroomConfig } from 'agora-edu-core';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import './index.css';
 export const About = () => {
   return (

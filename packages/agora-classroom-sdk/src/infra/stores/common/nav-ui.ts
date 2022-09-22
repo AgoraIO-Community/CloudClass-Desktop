@@ -22,7 +22,7 @@ import {
 } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import { SvgIconEnum, transI18n } from '~ui-kit';
+import { SvgIconEnum, transI18n } from '~components';
 import { NetworkStateColors } from '~utilities/state-color';
 import { EduUIStoreBase } from './base';
 import { DialogCategory } from './share-ui';

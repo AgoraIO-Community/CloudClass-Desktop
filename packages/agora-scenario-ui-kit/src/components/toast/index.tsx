@@ -1,6 +1,6 @@
 import { CSSProperties, FC, useCallback, useEffect, useRef } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/util/type';
+import { BaseProps } from '~components/util/type';
 import Notification from 'rc-notification';
 import './index.css';
 import { useTimeout } from '~utilities/hooks';

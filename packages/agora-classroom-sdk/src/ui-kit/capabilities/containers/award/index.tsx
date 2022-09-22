@@ -1,6 +1,6 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { SvgaPlayer, SoundPlayer } from '~ui-kit';
+import { SvgaPlayer, SoundPlayer } from '~components';
 
 import RewardSVGA from '../stream/assets/svga/reward.svga';
 import RewardSound from '../stream/assets/audio/reward.mp3';

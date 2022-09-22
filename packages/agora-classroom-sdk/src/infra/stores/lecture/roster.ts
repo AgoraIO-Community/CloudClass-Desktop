@@ -9,7 +9,7 @@ import {
 import { RosterUIStore } from '../common/roster';
 import { DeviceState, Operations, Profile } from '../common/roster/type';
 import { DialogCategory } from '../common/share-ui';
-import { BoardGrantState } from '~ui-kit';
+import { BoardGrantState } from '~components';
 
 export class LectureRosterUIStore extends RosterUIStore {
   get uiOverrides() {

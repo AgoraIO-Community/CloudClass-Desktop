@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Roster, RosterTable } from '~ui-kit';
+import { Roster, RosterTable } from '~components';
 
 export type RosterContainerProps = {
   onClose: () => void;

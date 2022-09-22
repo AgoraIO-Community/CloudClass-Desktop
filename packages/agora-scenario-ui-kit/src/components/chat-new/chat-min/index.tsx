@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { BaseProps } from '../../../components/util/type';
 import { SvgImg, SvgIconEnum } from '../../../components';
 import './index.css';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 
 export interface ChatMinProps extends BaseProps {
   unreadCount?: number;

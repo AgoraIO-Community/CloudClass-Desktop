@@ -22,7 +22,7 @@ import {
   UploadItem,
   Input,
   SvgIconEnum,
-} from '~ui-kit';
+} from '~components';
 import CloudToolbar from './cloud-toolbar';
 import CloudMinimize from './cloud-minimize';
 import CloudMoreMenu from './cloud-more-menu';

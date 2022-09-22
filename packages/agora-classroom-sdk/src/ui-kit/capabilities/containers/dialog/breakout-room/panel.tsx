@@ -1,5 +1,5 @@
 import { FC, useContext, useMemo, cloneElement, useState, createContext, useEffect } from 'react';
-import { Popover } from '~ui-kit';
+import { Popover } from '~components';
 
 export const PanelStateContext = createContext<{
   visiblePanelId: number | string;

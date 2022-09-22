@@ -5,7 +5,7 @@ import { ChannelType } from '@/infra/utils/ipc-channels';
 import { AGError, AGRteErrorCode, bound, Injectable, Lodash, Log, Scheduler } from 'agora-rte-sdk';
 import { action, observable, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { getRootDimensions } from './layout/helper';
 import { ConfirmDialogAction, OrientationEnum } from './type';
 

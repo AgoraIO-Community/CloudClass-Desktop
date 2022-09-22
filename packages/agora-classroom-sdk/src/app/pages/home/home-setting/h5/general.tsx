@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useI18n } from '~ui-kit';
+import { useI18n } from '~components';
 import { SettingsMenuEnum } from '.';
 import { Menu } from './components/menu';
 import { MenuItemProps } from './components/menu-item';

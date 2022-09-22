@@ -1,6 +1,6 @@
 import classNames from "classnames"
 import { ChangeEvent, FC, useRef, useState } from "react"
-import { SvgIconEnum, SvgImg } from "~ui-kit";
+import { SvgIconEnum, SvgImg } from "~components";
 import { Select } from './select';
 import './style.css';
 

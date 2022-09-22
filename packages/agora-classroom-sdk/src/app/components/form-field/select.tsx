@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { CommonProps } from '.';
-import { SvgIconEnum, SvgImg } from '~ui-kit';
+import { SvgIconEnum, SvgImg } from '~components';
 
 type SelectProps = {
 

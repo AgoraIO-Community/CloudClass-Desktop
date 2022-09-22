@@ -1,7 +1,7 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { iterateMap } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { RemoteControlActionBar } from '~ui-kit';
+import { RemoteControlActionBar } from '~components';
 import './index.css';
 export const RemoteControlToolbar = observer(() => {
   const {

@@ -1,6 +1,6 @@
 import { UserApi } from '@/app/api/user';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Loading, useI18n } from '~ui-kit';
+import { Loading, useI18n } from '~components';
 import { LoginState } from '../auth-token';
 
 export const LoginPage = () => {

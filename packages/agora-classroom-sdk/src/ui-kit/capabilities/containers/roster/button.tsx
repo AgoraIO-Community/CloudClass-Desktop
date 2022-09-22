@@ -2,7 +2,7 @@ import { useStore } from '@/infra/hooks/ui-store';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
 import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { useState, FC } from 'react';
-import { Card, SvgIconEnum, SvgImg } from '~ui-kit';
+import { Card, SvgIconEnum, SvgImg } from '~components';
 
 export const MidRosterBtn = () => <RosterBtn />;
 

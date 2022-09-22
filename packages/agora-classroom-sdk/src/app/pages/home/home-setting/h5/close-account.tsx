@@ -1,6 +1,6 @@
 import { UserApi } from '@/app/api/user';
 import { FC, useCallback, useState } from 'react';
-import { CheckBox, useI18n } from '~ui-kit';
+import { CheckBox, useI18n } from '~components';
 import { SettingsMenuEnum } from '.';
 import { ConfirmDialogH5 } from './components/confirm-dialog';
 import { PageLayout } from './components/page-layout';

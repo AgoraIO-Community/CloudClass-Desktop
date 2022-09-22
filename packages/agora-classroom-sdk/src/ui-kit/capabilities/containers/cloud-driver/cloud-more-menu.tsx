@@ -1,5 +1,5 @@
 import React from 'react';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 export type CloudMoreMenuProps = {
   resourceUuid: string;

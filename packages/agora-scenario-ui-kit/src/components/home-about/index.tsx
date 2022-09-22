@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/util/type';
+import { BaseProps } from '~components/components/util/type';
 import './index.css';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import { useI18n } from '../i18n';

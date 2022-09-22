@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { Card, Loading } from '~ui-kit';
+import { Card, Loading } from '~components';
 import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
 

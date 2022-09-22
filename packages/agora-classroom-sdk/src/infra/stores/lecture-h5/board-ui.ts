@@ -1,5 +1,5 @@
 import { action, computed, observable, reaction, runInAction } from 'mobx';
-import { SvgIconEnum } from '~ui-kit';
+import { SvgIconEnum } from '~components';
 import { BoardUIStore } from '../common/board-ui';
 
 export class LectureH5BoardUIStore extends BoardUIStore {

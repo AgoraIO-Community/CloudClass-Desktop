@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { CloudDriveResource } from 'agora-edu-core';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Col, Inline, Placeholder, Row, Table, TableHeader, transI18n, SvgImg } from '~ui-kit';
+import { Col, Inline, Placeholder, Row, Table, TableHeader, transI18n, SvgImg } from '~components';
 import CloudToolbar from './cloud-toolbar';
 import { useCallback, useEffect } from 'react';
 import { FileTypeSvgColor } from '@/infra/stores/common/cloud-drive';

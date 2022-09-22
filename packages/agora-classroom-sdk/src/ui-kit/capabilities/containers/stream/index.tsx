@@ -23,8 +23,8 @@ import {
   SvgaPlayer,
   SvgIconEnum,
   SvgImg,
-} from '~ui-kit';
-import { useDebounce } from '~ui-kit/utilities/hooks';
+} from '~components';
+import { useDebounce } from '~utilities/hooks';
 import RewardSound from './assets/audio/reward.mp3';
 import RewardSVGA from './assets/svga/reward.svga';
 import { DragableContainer, DragableStream } from './draggable-stream';

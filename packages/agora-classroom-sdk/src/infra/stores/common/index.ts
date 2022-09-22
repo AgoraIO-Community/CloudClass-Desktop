@@ -24,7 +24,7 @@ import { GroupUIStore } from './group-ui';
 import { ConvertMediaOptionsConfig } from '@/infra/api';
 import { RemoteControlUIStore } from './remote-control';
 import { SubscriptionUIStore } from './subscription';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;

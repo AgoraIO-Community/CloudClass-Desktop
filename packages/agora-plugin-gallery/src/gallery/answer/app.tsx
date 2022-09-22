@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { usePluginStore } from './hooks';
 import addSvg from './add.svg';
 import reduceSvg from './reduce.svg';
-import { Button, Col, Row, Table, TableHeader, themeContext, transI18n } from '~ui-kit';
+import { Button, Col, Row, Table, TableHeader, themeContext, transI18n } from '~components';
 import './index.css';
 import awardSvg from './award.svg';
 

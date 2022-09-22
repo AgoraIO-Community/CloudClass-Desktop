@@ -5,7 +5,7 @@ import { FcrUIConfig } from "@/infra/types/config";
 import { EduRoleTypeEnum } from "agora-edu-core";
 import { observer } from "mobx-react";
 import { FC } from "react";
-import { Popover, SvgIcon, SvgImg, Tooltip } from "~ui-kit";
+import { Popover, SvgIcon, SvgImg, Tooltip } from "~components";
 import { visibilityListItemControl } from "../visibility";
 import { studentBoardAuthEnabled, studentCameraToolEnabled, studentMicrophoneToolEnabled, studentOffStageEnabled, studentRewardEnabled, studentStreamToolsPanelEnabled, teacherOffStageEnabled, teacherResetPosEnabled, teacherStreamToolsPanelEnabled } from "../visibility/controlled";
 

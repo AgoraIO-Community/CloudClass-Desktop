@@ -1,4 +1,4 @@
-import { SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
+import { SvgIconEnum, SvgImg, transI18n } from '~components';
 import { FileTypeSvgColor } from '@/infra/stores/common/cloud-drive';
 
 const cloudHelpTips: {

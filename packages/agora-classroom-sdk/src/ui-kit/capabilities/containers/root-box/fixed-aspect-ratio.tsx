@@ -1,6 +1,6 @@
 import { FC, useRef } from 'react';
 import { observer } from 'mobx-react';
-import { RootBox } from '~ui-kit';
+import { RootBox } from '~components';
 import { useClassroomStyle } from './hooks';
 import { useStore } from '@/infra/hooks/ui-store';
 

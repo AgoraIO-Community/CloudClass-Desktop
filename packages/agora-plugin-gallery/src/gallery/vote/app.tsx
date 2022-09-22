@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { Button, CheckBox, Input, transI18n } from '~ui-kit';
+import { Button, CheckBox, Input, transI18n } from '~components';
 import addSvg from './add.svg';
 import { usePluginStore } from './hooks';
 import './index.css';

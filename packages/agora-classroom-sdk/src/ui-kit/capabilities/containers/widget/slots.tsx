@@ -4,7 +4,7 @@ import { EduClassroomConfig, EduRegion } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { Layout, SvgImg, transI18n } from '~ui-kit';
+import { Layout, SvgImg, transI18n } from '~components';
 import { ComponentLevelRules } from '../../config';
 
 export const Chat = observer(function Chat() {

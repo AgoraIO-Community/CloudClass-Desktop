@@ -1,6 +1,6 @@
 import { Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
-import { SvgIconEnum } from '~ui-kit';
+import { SvgIconEnum } from '~components';
 import { StreamUIStore } from '../common/stream';
 
 @Log.attach({ proxyMethods: false })

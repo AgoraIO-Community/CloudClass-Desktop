@@ -1,7 +1,7 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { ScreenShareRoleType } from '@/infra/stores/common/type';
 import { FC } from 'react';
-import { Card, Modal, useI18n } from '~ui-kit';
+import { Card, Modal, useI18n } from '~components';
 import './index.css';
 
 export const ScreenShareDialog = ({

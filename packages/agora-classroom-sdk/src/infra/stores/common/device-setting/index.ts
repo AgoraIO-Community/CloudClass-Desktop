@@ -14,7 +14,7 @@ import {
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 export type SettingToast = {
   id: string;

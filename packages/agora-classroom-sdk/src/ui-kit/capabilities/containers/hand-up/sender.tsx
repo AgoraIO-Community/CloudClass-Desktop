@@ -1,7 +1,7 @@
 import { FC, useEffect, useState, useMemo } from 'react';
 import { BaseWaveArmProps } from './types';
 import { Card, SvgIconEnum, SvgImg } from '~components';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { useInterval } from '@/infra/hooks/utilites';
 import { Scheduler } from 'agora-rte-sdk';
 import { useStore } from '@/infra/hooks/ui-store';

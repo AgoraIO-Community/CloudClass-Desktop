@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/util/type';
+import { BaseProps } from '~components/util/type';
 import { Progress } from '~components/progress';
 import { transI18n } from '../i18n';
 import './index.css';
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
-import { SvgImg, SvgIconEnum } from '~ui-kit';
+import { SvgImg, SvgIconEnum } from '~components';
 export enum UploadItemStatus {
   Pending = 'pending',
   Success = 'success',

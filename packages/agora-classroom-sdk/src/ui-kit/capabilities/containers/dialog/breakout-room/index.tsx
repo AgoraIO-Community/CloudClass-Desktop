@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Modal, useI18n } from '~ui-kit';
+import { Modal, useI18n } from '~components';
 import './index.css';
 import { Start } from './fragments/start';
 import { GroupSelect } from './fragments/group-select';

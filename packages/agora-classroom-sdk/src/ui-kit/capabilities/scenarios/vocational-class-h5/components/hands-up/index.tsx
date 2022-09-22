@@ -3,7 +3,7 @@ import { EduVocationalH5UIStore } from '@/infra/stores/vocational-h5';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { CSSProperties, FC, useMemo, useState } from 'react';
-import { Popover, SvgIconEnum, SvgImg } from '~ui-kit';
+import { Popover, SvgIconEnum, SvgImg } from '~components';
 import { WaveArmSender } from '../../../../containers/hand-up/sender';
 import './index.css';
 

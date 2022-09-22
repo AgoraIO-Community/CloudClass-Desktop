@@ -3,7 +3,7 @@ import { formatRoomID } from '@/app/utils';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { FC, useCallback, useMemo } from 'react';
-import { useI18n } from '~ui-kit';
+import { useI18n } from '~components';
 import './item.css';
 
 type RoomListItemProps = {

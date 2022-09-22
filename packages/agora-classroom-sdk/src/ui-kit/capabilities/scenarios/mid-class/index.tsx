@@ -11,7 +11,7 @@ import { ToastContainer } from '~containers/toast';
 import { Award } from '../../containers/award';
 import Room from '../room';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Float } from '~ui-kit';
+import { Float } from '~components';
 import { RemoteControlContainer } from '../../containers/remote-control';
 import { ScenesController } from '../../containers/scenes-controller';
 import { ScreenShareContainer } from '../../containers/screen-share';

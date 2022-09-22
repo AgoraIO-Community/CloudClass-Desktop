@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Toolbar, ToolProps, Tool } from '~ui-kit';
+import { Toolbar, ToolProps, Tool } from '~components';
 import { PensContainer } from './pens';
 import { ToolCabinetContainer } from './tool-cabinet';
 import { BoardCleanersContainer } from './board-cleaners';

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { Toast } from '~ui-kit';
+import { Toast } from '~components';
 import { useStore } from '@/infra/hooks/ui-store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './index.css';

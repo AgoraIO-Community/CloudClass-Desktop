@@ -5,7 +5,7 @@ import { CameraPlaceholderType, DeviceStateChangedReason } from '../type';
 import { v4 as uuidv4 } from 'uuid';
 import { computedFn } from 'mobx-utils';
 import { AgoraEduClassroomEvent, BeautyType, DEVICE_DISABLE, EduEventCenter } from 'agora-edu-core';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 export type PretestToast = {
   id: string;

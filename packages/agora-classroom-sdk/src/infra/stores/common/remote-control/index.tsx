@@ -16,7 +16,7 @@ import { mapToObject } from '@/infra/utils';
 import { RemoteControlBarUIParams } from '../type';
 import { ChannelType, IPCMessageType } from '@/infra/utils/ipc-channels';
 import { ControlState } from './type';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 export class RemoteControlUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];

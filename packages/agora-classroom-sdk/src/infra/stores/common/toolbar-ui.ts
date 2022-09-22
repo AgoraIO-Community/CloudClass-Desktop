@@ -36,7 +36,7 @@ import {
 } from './type';
 import { rgbToHexColor } from '../../utils/board-utils';
 import { conversionOption, fileExt2ContentType } from './cloud-drive/helper';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 export class ToolbarUIStore extends EduUIStoreBase {
   readonly defaultColors = [

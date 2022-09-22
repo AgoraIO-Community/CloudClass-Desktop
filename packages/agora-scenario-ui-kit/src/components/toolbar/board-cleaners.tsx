@@ -3,7 +3,7 @@ import { Popover } from '~components/popover';
 import { Tooltip } from '~components/tooltip';
 import { ToolItem } from './tool';
 import { SvgImg, SvgIcon, SvgIconEnum } from '~components/svg-img';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 
 export interface CleanerItem {
   id: string;

@@ -3,7 +3,7 @@ import { Popover } from '~components/popover';
 import { ASlider } from '~components/slider';
 import { SvgIcon, SvgIconEnum, SvgImg } from '~components/svg-img';
 import { Tooltip } from '~components/tooltip';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 import { ToolItem } from './tool';
 import { getPenIcon, getPenShapeIcon } from './util';
 export interface PensProps extends ToolItem {

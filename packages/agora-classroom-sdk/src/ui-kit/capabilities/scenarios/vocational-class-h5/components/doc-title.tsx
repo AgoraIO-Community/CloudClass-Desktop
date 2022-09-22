@@ -1,6 +1,6 @@
 import React from 'react';
 import { useVocationalH5UIStores } from '@/infra/hooks/ui-store';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { observer } from 'mobx-react';
 import { Helmet } from 'react-helmet';
 

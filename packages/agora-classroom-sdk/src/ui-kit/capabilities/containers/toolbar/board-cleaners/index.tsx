@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { SvgImg, useI18n, BoardCleaners, SvgIconEnum } from '~ui-kit';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { SvgImg, useI18n, BoardCleaners, SvgIconEnum } from '~components';
+import { InteractionStateColors } from '~utilities/state-color';
 
 export const BoardCleanersContainer = observer(() => {
   const { toolbarUIStore } = useStore();

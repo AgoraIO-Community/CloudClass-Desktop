@@ -18,6 +18,11 @@
   border-color: #000000;
 }
 
+.radio-card.disabled {
+  border-color: #dbdfec;
+  cursor: not-allowed;
+}
+
 .radio-card .radio {
   @apply absolute;
   top: 10px;

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 import { DeviceState, SvgIconEnum, SvgImg } from '..';
 import { IconWithState } from '../util/type';
 import { Column, Profile, cameraIconType, microphoneIconType, BoardGrantIconType, BoardGrantState } from './index';

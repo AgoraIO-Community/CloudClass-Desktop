@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { SvgImg, useI18n, Slice, SvgIconEnum } from '~ui-kit';
+import { SvgImg, useI18n, Slice, SvgIconEnum } from '~components';
 
 export const SliceContainer = observer(() => {
   const { toolbarUIStore } = useStore();

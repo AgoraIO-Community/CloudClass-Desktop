@@ -15,7 +15,7 @@ import {
 import { ToastFilter } from '@/infra/utils/toast-filter';
 import { getEduErrorMessage } from '@/infra/utils/error';
 import { Duration } from 'dayjs/plugin/duration';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 export class NotificationUIStore extends EduUIStoreBase {
   private _notificationTask?: Scheduler.Task;

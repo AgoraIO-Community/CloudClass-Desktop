@@ -1,4 +1,4 @@
-import { FcrTheme } from '~ui-kit';
+import { FcrTheme } from '~components';
 
 /**
  * 多主题配置（明亮/暗黑）

@@ -1,7 +1,7 @@
 import { AgoraEduSDK } from '@/infra/api';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import { useEffect, useRef, useState } from 'react';
-import { useI18n } from '~ui-kit';
+import { useI18n } from '~components';
 import { HomeApi } from '../api/home';
 
 export const useBuilderConfig = () => {

@@ -8,3 +8,11 @@
 .radio-icon.checked {
   background-image: url(../../assets/fcr_radio_checked.svg);
 }
+
+.radio-icon.disabled {
+  background-image: url(../../assets/fcr_radio_disabled2.svg);
+}
+
+.radio-icon.disabled.checked {
+  background-image: url(../../assets/fcr_radio_disabled.svg);
+}

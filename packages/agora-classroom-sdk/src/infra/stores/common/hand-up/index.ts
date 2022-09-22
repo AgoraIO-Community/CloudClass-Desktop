@@ -12,7 +12,7 @@ import { AGError, bound, Lodash } from 'agora-rte-sdk';
 import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { FetchUserParam, FetchUserType, OnPodiumStateEnum } from '../type';
 
 export type UserWaveArmInfo = {

@@ -3,7 +3,7 @@ import { useHomeStore } from '@/app/hooks';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { observer } from 'mobx-react';
 import { useState } from 'react';
-import { Button, CheckBox, Modal, RadioGroup, transI18n } from '~ui-kit';
+import { Button, CheckBox, Modal, RadioGroup, transI18n } from '~components';
 import './index.css';
 
 const languageOptions = [

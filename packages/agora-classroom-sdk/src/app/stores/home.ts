@@ -5,7 +5,7 @@ import { getBrowserLanguage, GlobalStorage } from '@/infra/utils';
 import { EduRegion } from 'agora-edu-core';
 import { AgoraRegion } from 'agora-rte-sdk';
 import { action, autorun, observable, toJS } from 'mobx';
-import { changeLanguage } from '~ui-kit';
+import { changeLanguage } from '~components';
 
 export type HomeLaunchOption = Omit<LaunchOption, 'listener'> & {
   appId: string;

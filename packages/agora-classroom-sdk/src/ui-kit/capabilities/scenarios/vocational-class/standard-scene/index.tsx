@@ -20,7 +20,7 @@ import { NavigationBar } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { RoomBigTeacherStreamContainer } from '~containers/stream/room-big-player';
 import { ToastContainer } from '~containers/toast';
-import { Float } from '~ui-kit';
+import { Float } from '~components';
 import Room from '../../room';
 
 const layoutCls = classnames('edu-room', 'big-class-room', 'bg-white');

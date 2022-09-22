@@ -1,4 +1,4 @@
-import { IconWithState } from '~ui-kit/components/util/type';
+import { IconWithState } from '~components/util/type';
 
 /**
  * 视频窗工具类型

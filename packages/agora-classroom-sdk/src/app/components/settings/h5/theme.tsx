@@ -2,7 +2,7 @@ import { useHomeStore } from '@/app/hooks';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
-import { useI18n } from '~ui-kit';
+import { useI18n } from '~components';
 import { SettingsMenuEnum } from '.';
 import { Menu } from './components/menu';
 import { CheckIcon, MenuItemProps } from './components/menu-item';

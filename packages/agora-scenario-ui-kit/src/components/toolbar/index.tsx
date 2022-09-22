@@ -1,13 +1,10 @@
 import { FC, useState, useRef, useEffect, useContext } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '~ui-kit/components/util/type';
-import unfoldAbsent from './assets/close-default.svg';
-import foldAbsent from './assets/open-default.svg';
-import unfoldHover from './assets/close-hover.svg';
-import foldHover from './assets/open-hover.svg';
+import { BaseProps } from '~components/util/type';
 import './index.css';
-import { useMounted } from '~ui-kit/utilities/hooks';
-import { SvgIconEnum, SvgImg, themeContext } from '~ui-kit';
+import { useMounted } from '~utilities/hooks';
+import { SvgIconEnum, SvgImg, themeContext } from '~components';
+import { } from '~utilities';
 export { Pens } from './pens';
 export { ToolCabinet } from './tool-cabinet';
 export { BoardCleaners } from './board-cleaners';

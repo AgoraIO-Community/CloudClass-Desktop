@@ -21,8 +21,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
-import { Toast, transI18n } from '~ui-kit';
-import { Home } from '~ui-kit/scaffold';
+import { Toast, transI18n } from '~components';
+import { Home } from '~scaffold';
 import { HomeApi } from '../../api/home';
 import { HomeSettingContainer } from './home-setting';
 import { MessageDialog } from './message-dialog';
@@ -90,8 +90,8 @@ export const VocationalHomePage = observer(() => {
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const onChangeRegion = (r: string) => {};
-  const onChangeLanguage = (language: string) => {};
+  const onChangeRegion = (r: string) => { };
+  const onChangeLanguage = (language: string) => { };
   const role = useMemo(() => {
     const roles = {
       teacher: EduRoleTypeEnum.teacher,

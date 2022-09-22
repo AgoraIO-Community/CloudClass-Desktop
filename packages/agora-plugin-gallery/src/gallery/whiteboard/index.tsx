@@ -9,7 +9,7 @@ import { AgoraWidgetController, EduRoleTypeEnum } from 'agora-edu-core';
 import { bound, Injectable, Log } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
 import ReactDOM from 'react-dom';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { App } from './app';
 import { FcrBoardFactory } from './factory';
 import { FcrBoardRoom } from './wrapper/board-room';

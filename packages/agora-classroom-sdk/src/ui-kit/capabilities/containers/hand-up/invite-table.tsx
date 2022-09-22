@@ -4,7 +4,7 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Col, Row, Search, SvgIconEnum, SvgImg, Table, TableHeader, transI18n } from '~ui-kit';
+import { Col, Row, Search, SvgIconEnum, SvgImg, Table, TableHeader, transI18n } from '~components';
 import './invite-table.css';
 
 interface InviteTableProps {

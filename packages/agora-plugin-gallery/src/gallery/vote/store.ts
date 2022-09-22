@@ -1,5 +1,5 @@
 import { EduRoleTypeEnum } from 'agora-edu-core';
-import { Toast } from '~ui-kit';
+import { Toast } from '~components';
 import { action, autorun, computed, observable, runInAction } from 'mobx';
 import { AgoraPolling } from '.';
 

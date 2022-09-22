@@ -1,5 +1,5 @@
 import { AGError } from 'agora-rte-sdk';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 /**
  * 返回错误提示信息

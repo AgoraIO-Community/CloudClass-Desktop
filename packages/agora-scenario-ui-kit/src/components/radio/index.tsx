@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import { BaseProps } from '~ui-kit/components/util/type';
+import { BaseProps } from '~components/util/type';
 
 type RadioElement = {
   label: string;

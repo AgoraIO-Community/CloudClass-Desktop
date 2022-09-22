@@ -1,5 +1,8 @@
 import { RoomAPI } from '@/app/api/room';
 import watermarkIcon from '@/app/assets/fcr_watermark.svg';
+import chatIcon from '@/app/assets/fcr_chat3.svg';
+import cameraIcon from '@/app/assets/fcr_invigilate_camera.svg';
+import microphoneIcon from '@/app/assets/fcr_invigilate_microphone.svg';
 import cdnIcon from '@/app/assets/service-type/fcr_cdn.svg';
 import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
@@ -23,7 +26,7 @@ import {
   ATimePicker,
   useAForm,
   useI18n,
-} from '~ui-kit';
+} from '~components';
 import './index.css';
 import { RadioCard } from './radio-card';
 
@@ -77,6 +80,12 @@ export const CreateRoom = observer(() => {
       value: EduRoomTypeEnum.RoomBigClass,
       className: 'card-green',
     },
+    {
+      label: transI18n('fcr_h5create_label_study_room'),
+      description: transI18n('fcr_create_label_lecturehall_description'),
+      value: EduRoomTypeEnum.RoomSelfStudy,
+      className: 'card-green',
+    },
   ];
 
   const serviceTypeOptions = [
@@ -103,7 +112,10 @@ export const CreateRoom = observer(() => {
   const [roomType, setRoomType] = useState(roomTypeOptions[0].value);
   const [serviceType, setServiceType] = useState(serviceTypeOptions[0].value);
   const [watermark, setWatermark] = useState(false);
-  const [livePlayback, setLivePlayback] = useState(false);
+  const [cameraEnabled, setCameraEnabled] = useState(true);
+  const [micorphoneEnabled, setMicrophoneEnabled] = useState(true);
+  const [chatEnabled, setChatEnabled] = useState(true);
+  const [livePlayback, setLivePlayback] = useState(true);
   const [useCurrentTime, setUseCurrentTime] = useState(true);
   const [dateTimeValidate, setDateTimeValidate] = useState({
     validateStatus: 'success',
@@ -186,10 +198,10 @@ export const CreateRoom = observer(() => {
       }
       const hostingScene = livePlayback
         ? {
-            videoURL: link,
-            reserveVideoURL: link,
-            finishType: 0,
-          }
+          videoURL: link,
+          reserveVideoURL: link,
+          finishType: 0,
+        }
         : undefined;
       const sType = livePlayback ? EduRoomServiceTypeEnum.HostingScene : serviceType;
       RoomAPI.shared
@@ -202,6 +214,9 @@ export const CreateRoom = observer(() => {
             watermark,
             hostingScene,
             serviceType: sType,
+            cameraEnabled,
+            micorphoneEnabled,
+            chatEnabled
           },
         })
         .then(() => {
@@ -366,6 +381,69 @@ export const CreateRoom = observer(() => {
             </span>
           </div>
           <div className={`settings ${!showMore ? 'hidden' : ''}`}>
+            <div className="setting-item">
+              <div className="title">
+                <div className="security-prefix-icon" />
+                {transI18n('fcr_create_label_person_count_limitation')}
+              </div>
+              <div className="content">
+                <AFormItem
+                  name="numberOfParticipants"
+                  rules={[
+                    {
+                      required: true,
+                      message: transI18n('fcr_create_tips_number_of_participants'),
+                    },
+                    {
+                      pattern: /^([0-9]{0,10})$/,
+                      message: transI18n('fcr_create_tips_number_of_participants_invalid'),
+                    },
+                  ]}>
+                  <AInput
+                    maxLength={10}
+                    placeholder={transI18n('fcr_create_tips_number_of_participants')} />
+                </AFormItem>
+              </div>
+            </div>
+            <div className="setting-item">
+              <div className="title">
+                <div className="security-prefix-icon" />
+                {transI18n('fcr_create_label_function_setting')}
+              </div>
+              <div className="content flex" style={{ gap: 16 }}>
+                <RadioCard
+                  className={'watermark-card'}
+                  onClick={() => {
+                    setCameraEnabled((pre) => !pre);
+                  }}
+                  disabled
+                  checked={cameraEnabled}
+                  label={transI18n('fcr_create_label_camera')}
+                  icon={<img src={cameraIcon}></img>}
+                />
+                <RadioCard
+                  className={'watermark-card'}
+                  onClick={() => {
+                    setMicrophoneEnabled((pre) => !pre);
+                  }}
+                  disabled
+                  checked={micorphoneEnabled}
+                  label={transI18n('fcr_create_label_microphone')}
+                  icon={<img src={microphoneIcon}></img>}
+                />
+                <RadioCard
+                  className={'watermark-card'}
+                  onClick={() => {
+                    setChatEnabled((pre) => !pre);
+                  }}
+                  disabled
+                  checked={chatEnabled}
+                  label={transI18n('fcr_create_label_chat')}
+                  icon={<img src={chatIcon}></img>}
+                />
+              </div>
+            </div>
+
             <div className="setting-item">
               <div className="title">
                 <div className="security-prefix-icon" />

@@ -2,7 +2,7 @@ import { useHomeStore } from '@/app/hooks';
 import { observer } from 'mobx-react';
 import { FC, PropsWithChildren, useMemo } from 'react';
 import { getI18n } from 'react-i18next';
-import { ASpin, useI18n } from '~ui-kit';
+import { ASpin, useI18n } from '~components';
 import './index.css';
 
 export const HomeLayout: FC<PropsWithChildren<unknown>> = observer(({ children }) => {

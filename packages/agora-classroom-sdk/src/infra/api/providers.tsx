@@ -1,6 +1,6 @@
 
 import { FC, createContext, } from 'react';
-import { FcrTheme, I18nProvider, ThemeProvider } from '~ui-kit';
+import { FcrTheme, I18nProvider, ThemeProvider } from '~components';
 import { FcrUIConfig } from '../types/config';
 
 export const uiConfigContext = createContext({} as FcrUIConfig);

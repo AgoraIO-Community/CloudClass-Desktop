@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button, transI18n } from '~ui-kit';
+import { Button, transI18n } from '~components';
 
 type ConfirmDialogProps = {
   children: React.ReactNode;

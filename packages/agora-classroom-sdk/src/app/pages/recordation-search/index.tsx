@@ -11,7 +11,7 @@ import {
   SvgIconEnum,
   SvgImg,
   transI18n,
-} from '~ui-kit';
+} from '~components';
 import { HomeApi } from '../../api/home';
 import './style.css';
 

@@ -1,11 +1,11 @@
 import classnames from 'classnames';
 import { FC, useMemo, useState } from 'react';
-import { BaseProps } from '~ui-kit/components/util/type';
-import { Button, Modal, SvgIconEnum, SvgImg, useI18n } from '~ui-kit';
+import { BaseProps } from '~components/util/type';
+import { Button, Modal, SvgIconEnum, SvgImg, useI18n } from '~components';
 import './index.css';
 import { useStore } from '@/infra/hooks/ui-store';
 import { AGScreenShareDevice } from 'agora-rte-sdk';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 export const ScreenPickerDialog = ({
   id,

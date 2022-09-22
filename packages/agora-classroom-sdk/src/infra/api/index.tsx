@@ -26,7 +26,7 @@ import {
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
-import { FcrTheme } from '~ui-kit';
+import { FcrTheme } from '~components';
 import { EduContext } from '../contexts';
 
 import { createCloudResource } from '../stores/common/cloud-drive/helper';
@@ -213,6 +213,7 @@ export class AgoraEduSDK {
         EduRoomTypeEnum.Room1v1Class,
         EduRoomTypeEnum.RoomBigClass,
         EduRoomTypeEnum.RoomSmallClass,
+        EduRoomTypeEnum.RoomSelfStudy,
       ].includes(option.roomType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roomType!');
@@ -403,9 +404,8 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${
-      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-    }/edu/apps/${appId}`;
+    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+      }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',

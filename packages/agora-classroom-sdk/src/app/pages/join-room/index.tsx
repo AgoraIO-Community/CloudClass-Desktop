@@ -11,7 +11,7 @@ import { formatRoomID, ShareLink } from '@/app/utils';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
-import { AForm, AFormItem, AInput, useAForm, useI18n } from '~ui-kit';
+import { AForm, AFormItem, AInput, useAForm, useI18n } from '~components';
 import './index.css';
 type JoinFormValue = {
   roomId: string;

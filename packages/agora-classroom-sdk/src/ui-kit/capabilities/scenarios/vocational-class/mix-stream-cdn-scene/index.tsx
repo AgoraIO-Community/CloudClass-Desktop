@@ -12,7 +12,7 @@ import { LoadingContainer } from '~containers/loading';
 import { NavigationBar } from '~containers/nav';
 import { FixedAspectRatioRootBox } from '~containers/root-box/fixed-aspect-ratio';
 import { ToastContainer } from '~containers/toast';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { CDNPlayer } from '../../../containers/stream/cdn-player';
 import Room from '../../room';
 

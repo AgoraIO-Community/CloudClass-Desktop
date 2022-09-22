@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 import { DialogContainer } from '~containers/dialog';
 import { ToastContainer } from '~containers/toast';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import Room from '../../room';
 import { ChatH5 } from '../components/chat';
 import { DocTitle } from '../components/doc-title';

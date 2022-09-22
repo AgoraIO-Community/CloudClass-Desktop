@@ -1,11 +1,11 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Rnd } from 'react-rnd';
-import { TabPane, Tabs, transI18n, SvgImg, OverlayWrap, Popover, SvgIconEnum } from '~ui-kit';
+import { TabPane, Tabs, transI18n, SvgImg, OverlayWrap, Popover, SvgIconEnum } from '~components';
 import { PublicResourcesContainer } from './public-resource';
 import { PersonalResourcesContainer } from './person-resource';
 import './index.css';
 import { CloudDriverContainerProps } from '.';
-import { useDraggableDefaultCenterPosition } from '~ui-kit/utilities/hooks';
+import { useDraggableDefaultCenterPosition } from '~utilities/hooks';
 import { throttle } from 'lodash';
 import CloudHelp from './cloud-help';
 

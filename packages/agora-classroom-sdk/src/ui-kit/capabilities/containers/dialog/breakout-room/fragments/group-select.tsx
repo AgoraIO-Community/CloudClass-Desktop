@@ -12,7 +12,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { GroupState } from 'agora-edu-core';
 import { useStore } from '@/infra/hooks/ui-store';
-import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox, useI18n, Modal } from '~ui-kit';
+import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox, useI18n, Modal } from '~components';
 import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';

@@ -1,6 +1,6 @@
 import { UserApi } from '@/app/api/user';
 import { FC, useCallback, useState } from 'react';
-import { useI18n } from '~ui-kit';
+import { useI18n } from '~components';
 import { SettingsMenuEnum } from '.';
 import { ConfirmDialogH5 } from './components/confirm-dialog';
 import { Menu } from './components/menu';

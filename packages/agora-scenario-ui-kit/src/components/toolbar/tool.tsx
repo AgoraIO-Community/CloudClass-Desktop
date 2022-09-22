@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { BaseProps } from '../util/type';
 import { SvgIconEnum } from '../svg-img/type';
 import { useI18n } from '../i18n';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 export interface ToolItem extends BaseProps {
   value: string;
   label: any;

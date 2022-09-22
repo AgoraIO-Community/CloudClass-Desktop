@@ -1,5 +1,5 @@
 import { EduRoomTypeEnum } from 'agora-edu-core';
-import { FcrTheme } from '~ui-kit';
+import { FcrTheme } from '~components';
 import { humpToLine } from '.';
 import { FcrMultiThemes, FcrUIConfig } from '../types/config';
 import { baseTheme } from '../configs/base-theme';

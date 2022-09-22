@@ -6,7 +6,7 @@ import Clock from './Clock';
 import { PluginStore } from './store';
 import './i18n/config';
 import { AgoraEduToolWidget } from '../../common/edu-tool-widget';
-import { ThemeProvider, transI18n, WidgetModal } from '~ui-kit';
+import { ThemeProvider, transI18n, WidgetModal } from '~components';
 import { AgoraWidgetController, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { AgoraExtensionWidgetEvent } from '@/infra/api';
 

@@ -4,7 +4,7 @@ import App from './app';
 import { PluginStore } from './store';
 import './i18n/config';
 import { observable, action } from 'mobx';
-import { ThemeProvider, transI18n, WidgetModal } from '~ui-kit';
+import { ThemeProvider, transI18n, WidgetModal } from '~components';
 import { AgoraEduToolWidget } from '../../common/edu-tool-widget';
 import { AgoraWidgetController, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { AgoraExtensionWidgetEvent } from '@/infra/api';

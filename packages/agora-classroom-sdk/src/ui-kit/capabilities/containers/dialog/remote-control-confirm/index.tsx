@@ -1,4 +1,4 @@
-import { Button, useI18n } from '~ui-kit';
+import { Button, useI18n } from '~components';
 import './index.css';
 interface IPropsTypes {
   onOK: () => void;

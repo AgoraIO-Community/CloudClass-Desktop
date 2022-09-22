@@ -6,7 +6,7 @@ import { useNickNameRule } from '@/app/hooks/useNickNameRule';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import { useMemo } from 'react';
 import { getI18n } from 'react-i18next';
-import { AButton, AForm, AFormItem, AInput, SvgIconEnum, SvgImg, useAForm, useI18n } from '~ui-kit';
+import { AButton, AForm, AFormItem, AInput, SvgIconEnum, SvgImg, useAForm, useI18n } from '~components';
 import './index.css';
 
 type JoinFormValue = {

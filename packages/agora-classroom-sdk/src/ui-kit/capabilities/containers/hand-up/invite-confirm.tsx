@@ -2,7 +2,7 @@ import { useStore } from '@/infra/hooks/ui-store';
 import { GlobalStorage } from '@/infra/utils';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { Button, Modal, transI18n } from '~ui-kit';
+import { Button, Modal, transI18n } from '~components';
 import { DialogCategory, EduShareUIStore } from '@/infra/stores/common/share-ui';
 import { HandUpUIStore } from '@/infra/stores/common/hand-up';
 import './invite-confirm.css';

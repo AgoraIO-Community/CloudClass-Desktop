@@ -13,7 +13,7 @@ import {
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef } from 'react';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 
 const testVideoURL =
   'https://cloud.video.taobao.com//play/u/611232217/p/1/e/6/t/1/304659236072.mp4';

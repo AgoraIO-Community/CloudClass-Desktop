@@ -2,8 +2,8 @@ import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
-import { OverlayWrap, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
-import { useDraggableDefaultCenterPosition } from '~ui-kit/utilities/hooks';
+import { OverlayWrap, SvgIconEnum, SvgImg, transI18n } from '~components';
+import { useDraggableDefaultCenterPosition } from '~utilities/hooks';
 import { StreamPlayer } from '../stream';
 
 interface IstudentViewProps {

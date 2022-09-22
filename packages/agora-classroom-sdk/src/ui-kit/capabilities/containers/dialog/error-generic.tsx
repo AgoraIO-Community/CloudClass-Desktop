@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Button, Modal } from '~ui-kit';
+import { Button, Modal } from '~components';
 import { BaseDialogProps } from '.';
 
 export const GenericErrorDialog: FC<

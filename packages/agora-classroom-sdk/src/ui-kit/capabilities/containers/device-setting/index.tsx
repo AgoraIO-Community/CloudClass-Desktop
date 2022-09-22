@@ -1,4 +1,4 @@
-import { Button, CheckBox, Modal, Select, transI18n } from '~ui-kit';
+import { Button, CheckBox, Modal, Select, transI18n } from '~components';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
 import { useStore } from '@/infra/hooks/ui-store';

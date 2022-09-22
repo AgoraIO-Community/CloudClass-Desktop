@@ -1,4 +1,4 @@
-import { Search, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
+import { Search, SvgIconEnum, SvgImg, transI18n } from '~components';
 
 export type CloudToolbarProps = {
   /**

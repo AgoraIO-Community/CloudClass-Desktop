@@ -5,7 +5,7 @@ import { ScreenShareContainer } from '@/ui-kit/capabilities/containers/screen-sh
 import { default as classnames, default as cls } from 'classnames';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
-import { SvgImg } from '~ui-kit';
+import { SvgImg } from '~components';
 import { useDrag } from '../../hooks/useDrag';
 import './index.css';
 

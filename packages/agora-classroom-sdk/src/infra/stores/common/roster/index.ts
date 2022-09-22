@@ -24,7 +24,7 @@ import {
   GroupState,
   iterateMap,
 } from 'agora-edu-core';
-import { BoardGrantState, transI18n } from '~ui-kit';
+import { BoardGrantState, transI18n } from '~components';
 import { EduStreamUI } from '../stream/struct';
 
 export class RosterUIStore extends EduUIStoreBase {

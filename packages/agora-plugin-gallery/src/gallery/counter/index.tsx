@@ -1,4 +1,4 @@
-import { ThemeProvider, transI18n, WidgetModal } from '~ui-kit';
+import { ThemeProvider, transI18n, WidgetModal } from '~components';
 import { Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
 import { observable, action } from 'mobx';

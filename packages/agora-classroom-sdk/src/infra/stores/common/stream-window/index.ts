@@ -22,7 +22,7 @@ import { cloneDeep, forEach, isEmpty } from 'lodash';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { DraggableData } from 'react-draggable';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { EduUIStoreBase } from '../base';
 import { StreamBounds } from '../stream/struct';
 import { WidgetTrackStruct } from '../type';

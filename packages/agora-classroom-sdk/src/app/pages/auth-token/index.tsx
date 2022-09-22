@@ -1,7 +1,7 @@
 import { UserApi } from '@/app/api/user';
 import { getTokenByURL } from '@/app/hooks/useAuth';
 import { useEffect } from 'react';
-import { Loading, useI18n } from '~ui-kit';
+import { Loading, useI18n } from '~components';
 
 export enum LoginState {
   Failed = 'failed',

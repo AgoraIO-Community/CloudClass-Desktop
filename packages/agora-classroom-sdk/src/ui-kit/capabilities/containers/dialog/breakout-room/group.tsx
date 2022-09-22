@@ -1,5 +1,5 @@
 import { FC, ReactElement, MouseEvent } from 'react';
-import { MultiRootTree, transI18n, TreeModel, TreeNode } from '~ui-kit';
+import { MultiRootTree, transI18n, TreeModel, TreeNode } from '~components';
 import { Panel } from './panel';
 
 type GroupPanelProps = {

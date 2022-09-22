@@ -1,4 +1,4 @@
-import { CircleLoading, SvgIconEnum, SvgImg, transI18n, UploadItem, UploadItemStatus } from '~ui-kit';
+import { CircleLoading, SvgIconEnum, SvgImg, transI18n, UploadItem, UploadItemStatus } from '~components';
 
 export type CloudMinimizeProps = {
   state?: 'uploading' | 'success' | 'error' | 'idle';

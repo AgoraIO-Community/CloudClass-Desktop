@@ -1,4 +1,4 @@
-import { BaseProps } from '~ui-kit/components/util/type';
+import { BaseProps } from '~components/util/type';
 
 export interface BaseWaveArmProps extends BaseProps {
   width?: number;

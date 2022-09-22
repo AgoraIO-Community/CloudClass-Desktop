@@ -22,8 +22,8 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       '@': path.resolve(ROOT_PATH, 'src'),
-      '~ui-kit': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src'),
       '~components': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/components'),
+      '~scaffold': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/scaffold'),
       '~styles': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/styles'),
       '~utilities': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/utilities'),
       '~capabilities': path.resolve(ROOT_PATH, 'src/ui-kit/capabilities'),

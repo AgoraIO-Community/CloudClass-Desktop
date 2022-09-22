@@ -1,8 +1,8 @@
 import { useStore } from '@/infra/hooks/ui-store';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { observer } from 'mobx-react';
 import { FC, useEffect } from 'react';
-import { Card, Loading } from '~ui-kit';
+import { Card, Loading } from '~components';
 import './index.css';
 
 type Props = {

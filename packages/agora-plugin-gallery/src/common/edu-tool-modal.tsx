@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { AgoraEduToolWidget } from './edu-tool-widget';
-import { ThemeProvider, WidgetModal } from '~ui-kit';
+import { ThemeProvider, WidgetModal } from '~components';
 
 export const ControlledModal: FC<{
   widget: AgoraEduToolWidget;

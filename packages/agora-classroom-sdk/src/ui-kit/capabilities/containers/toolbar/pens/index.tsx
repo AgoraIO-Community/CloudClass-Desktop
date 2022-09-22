@@ -1,6 +1,6 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { Pens, SvgIconEnum, useI18n } from '~ui-kit';
+import { Pens, SvgIconEnum, useI18n } from '~components';
 
 export type PensContainerProps = {
   onClick: (pen: string) => void;

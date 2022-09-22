@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { Button, transI18n } from '~ui-kit';
+import { Button, transI18n } from '~components';
 import { Panel } from './panel';
 
 type ConfirmPanelProps = {

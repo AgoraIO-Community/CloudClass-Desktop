@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { SvgImg, useI18n, ToolCabinet, SvgIconEnum } from '~ui-kit';
+import { SvgImg, useI18n, ToolCabinet, SvgIconEnum } from '~components';
 import { useExtensionCabinets } from '@/infra/hooks/cabinet';
 import React, { FC, useCallback, useState } from 'react';
 import clsn from 'classnames';

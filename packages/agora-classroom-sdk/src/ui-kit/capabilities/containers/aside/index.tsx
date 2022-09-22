@@ -3,7 +3,7 @@ import { LectureRoomStreamUIStore } from '@/infra/stores/lecture/stream-ui';
 import { OneToOneStreamUIStore } from '@/infra/stores/one-on-one/stream-ui';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
-import { Aside } from '~ui-kit';
+import { Aside } from '~components';
 
 export const BigClassAside: FC = observer(({ children }) => {
   const { streamUIStore } = useStore();

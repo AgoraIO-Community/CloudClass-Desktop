@@ -6,7 +6,7 @@ import { Input } from '~components/input';
 import { Header, Layout } from '~components/layout';
 import { Select } from '~components/select';
 import { Col, Row, Table } from '~components/table';
-import { useI18n } from '~ui-kit/components';
+import { useI18n } from '~components';
 import { HomeModule } from '~utilities/types';
 import './index.css';
 

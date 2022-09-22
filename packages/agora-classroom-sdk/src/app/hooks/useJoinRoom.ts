@@ -9,7 +9,7 @@ import {
 } from 'agora-rte-sdk';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router';
-import { aMessage, useI18n } from '~ui-kit';
+import { aMessage, useI18n } from '~components';
 import { RoomAPI } from '../api/room';
 import { UserApi } from '../api/user';
 import { HomeLaunchOption } from '../stores/home';

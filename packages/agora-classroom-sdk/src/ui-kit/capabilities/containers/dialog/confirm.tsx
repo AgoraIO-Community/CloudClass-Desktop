@@ -1,6 +1,6 @@
 import { ConfirmDialogAction } from '@/infra/stores/common/type';
 import { observer } from 'mobx-react';
-import { Button, Modal, useI18n } from '~ui-kit';
+import { Button, Modal, useI18n } from '~components';
 import { BaseDialogProps } from '.';
 
 export const Confirm: React.FC<

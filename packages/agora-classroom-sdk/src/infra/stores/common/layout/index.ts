@@ -2,7 +2,7 @@ import { AgoraEduClassroomEvent, ClassroomState, EduEventCenter } from 'agora-ed
 import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import uuidv4 from 'uuid';
-import { transI18n } from '~ui-kit';
+import { transI18n } from '~components';
 import { bound } from 'agora-rte-sdk';
 
 export class LayoutUIStore extends EduUIStoreBase {

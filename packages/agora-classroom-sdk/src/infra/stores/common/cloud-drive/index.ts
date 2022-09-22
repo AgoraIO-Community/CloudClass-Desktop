@@ -10,7 +10,7 @@ import {
 } from 'agora-edu-core';
 import { AGError, AGErrorWrapper, bound } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
-import { SvgIconEnum, transI18n } from '~ui-kit';
+import { SvgIconEnum, transI18n } from '~components';
 import { EduUIStoreBase } from '../base';
 import {
   conversionOption,

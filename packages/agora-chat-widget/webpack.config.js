@@ -19,7 +19,6 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
-      '~ui-kit': path.resolve(__dirname, '../agora-scenario-ui-kit/src'),
       '~components': path.resolve(__dirname, '../agora-scenario-ui-kit/src/components'),
       '~styles': path.resolve(__dirname, '../agora-scenario-ui-kit/src/styles'),
       '~utilities': path.resolve(__dirname, '../agora-scenario-ui-kit/src/utilities'),

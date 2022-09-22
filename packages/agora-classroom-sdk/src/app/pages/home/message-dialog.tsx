@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FC } from 'react';
-import { Button, Modal, transI18n } from '~ui-kit';
+import { Button, Modal, transI18n } from '~components';
 import { useHistory } from 'react-router';
 import { useCallback } from 'react';
 

@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
-import { BaseProps } from '~ui-kit/components/util/type';
+import { BaseProps } from '~components/util/type';
 import './index.css';
 
 export type ProgressType = 'download';

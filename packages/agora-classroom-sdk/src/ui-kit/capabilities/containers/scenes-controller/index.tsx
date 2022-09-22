@@ -1,10 +1,10 @@
 import React, { FC, useContext } from 'react';
 import classNames from 'classnames';
-import { Card, SvgIcon, SvgIconEnum, themeContext } from '~ui-kit';
+import { Card, SvgIcon, SvgIconEnum, themeContext } from '~components';
 import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { InteractionStateColors } from '~ui-kit/utilities/state-color';
+import { InteractionStateColors } from '~utilities/state-color';
 
 export const ScenesController: FC = observer(() => {
   const {
