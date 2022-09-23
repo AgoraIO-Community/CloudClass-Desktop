@@ -42,19 +42,20 @@
 
 .home-left .logo {
   @apply flex items-center;
+  width: 250px;
   height: 30px;
-  margin-right: 4vw;
-  width: 230px;
+  margin-right: 20px;
+  background-size: auto 30px;
+  background-repeat: no-repeat;
+  background-position: left;
 }
 
-.home-left .logo::before {
-  content: '';
-  display: inline-block;
-  background-image: url('../../assets/favicon.png');
-  background-size: cover;
-  width: 27px;
-  height: 27px;
-  margin-right: 11px;
+.home-left .logo.en {
+  background-image: url('@/app/assets/logo-en.png');
+}
+
+.home-left .logo.zh {
+  background-image: url('@/app/assets/logo-zh.png');
 }
 
 .home-left .text {
