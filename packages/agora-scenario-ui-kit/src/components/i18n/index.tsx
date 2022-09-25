@@ -55,65 +55,6 @@ export const setDebugI18n = (debug: boolean) => {
 //@ts-ignore
 window.changeLanguage = changeLanguage;
 
-export class MemoryStorage {
-  constructor(private readonly _storage = new Map<string, string>()) {}
-
-  getItem(name: string) {
-    return this._storage.get(name);
-  }
-
-  setItem(name: string, value: string) {
-    this._storage.set(name, value);
-  }
-
-  removeItem(name: string) {
-    this._storage.delete(name);
-  }
-}
-export class CustomStorage {
-  private storage: any;
-
-  languageKey: string = 'demo_language';
-
-  constructor() {
-    this.storage = new MemoryStorage();
-  }
-
-  useSessionStorage() {
-    this.storage = window.sessionStorage;
-  }
-
-  read(key: string): any {
-    try {
-      let json = JSON.parse(this.storage.getItem(key) as string);
-      return json;
-    } catch (_) {
-      return this.storage.getItem(key);
-    }
-  }
-
-  save(key: string, val: any) {
-    this.storage.setItem(key, JSON.stringify(val));
-  }
-
-  clear(key: string) {
-    this.storage.removeItem(key);
-  }
-
-  setLanguage(lang: string) {
-    this.save(this.languageKey, lang);
-  }
-
-  getLanguage() {
-    const language = this.read(this.languageKey) ? this.read(this.languageKey) : navigator.language;
-    return language;
-  }
-}
-
-export const storage = new CustomStorage();
-
-export const getLanguage = () => (storage.getLanguage().match(/zh/) ? 'zh' : 'en');
-
 export const transI18n = (text: string, options?: any) => {
   let content = i18n.t(text);
   if (!isEmpty(options)) {

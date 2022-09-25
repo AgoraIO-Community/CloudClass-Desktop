@@ -1,0 +1,41 @@
+.fcr-dropdown-list {
+  font-size: 12px;
+  line-height: 18px;
+  outline: none;
+  border: 1px solid #e3e7ef;
+  border-radius: 12px;
+  background: rgba(74, 76, 95, 0.5);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  padding: 2px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+}
+
+.fcr-dropdown-item,
+.fcr-dropdown-btn {
+  padding: 0 14px;
+  border-radius: 8px;
+}
+
+.fcr-dropdown-item {
+  padding: 8px 14px;
+}
+
+.fcr-dropdown-item:hover {
+  font-weight: 800;
+  color: #1e1e1e;
+  background: #f8f8f8;
+}
+
+.fcr-dropdown-item.fcr-dropdown-item--selected {
+  font-weight: 800;
+}
+
+.fcr-dropdown-btn__text {
+  color: #fff;
+}
+
+.fcr-dropdown-btn {
+  background: rgba(74, 76, 95, 0.5);
+}

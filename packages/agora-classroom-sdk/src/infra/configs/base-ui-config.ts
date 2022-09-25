@@ -204,3 +204,4 @@ class FcrUIConfigImpl implements FcrUIConfig {
 export const room1V1Class = new FcrUIConfigImpl();
 export const roomMidClass = new FcrUIConfigImpl();
 export const roomBigClass = new FcrUIConfigImpl();
+export const roomStudyClass = new FcrUIConfigImpl();

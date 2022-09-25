@@ -60,12 +60,21 @@ export const webRTCCodecH264 = [
 export const vocationalNeedPreset = (
   roleType: EduRoleTypeEnum,
   roomServiceType: EduRoomServiceTypeEnum,
+  roomType: EduRoomTypeEnum,
 ) => {
-  return !(
-    roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
-    (roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
-      roleType !== EduRoleTypeEnum.teacher)
-  );
+  if (roomType !== EduRoomTypeEnum.RoomBigClass) {
+    return true;
+  }
+  if (roomServiceType === EduRoomServiceTypeEnum.HostingScene) {
+    return false;
+  }
+  if (
+    roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
+    roleType !== EduRoleTypeEnum.teacher
+  ) {
+    return false;
+  }
+  return true;
 };
 
 type ShareURLParams = {
@@ -133,7 +142,7 @@ export const useJoinRoom = () => {
             ? AgoraLatencyLevel.UltraLow
             : AgoraLatencyLevel.Low;
 
-        const needPretest = vocationalNeedPreset(role, roomServiceType);
+        const needPretest = vocationalNeedPreset(role, roomServiceType, roomType);
         const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
         const config: HomeLaunchOption = {
           appId: REACT_APP_AGORA_APP_ID || appId,

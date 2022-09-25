@@ -57,6 +57,7 @@ export default {
   fcr_home_label_roomlist: 'My Room List',
   fcr_home_label_small_classroom: 'Small Classroom ',
   fcr_home_label_lecture_hall: 'Lecture Hall ',
+  fcr_home_label_study_room: 'Study Room',
   fcr_home_label_1on1: '1-on-1 ',
   fcr_home_button_create: 'Create',
   fcr_home_button_join: 'Join',

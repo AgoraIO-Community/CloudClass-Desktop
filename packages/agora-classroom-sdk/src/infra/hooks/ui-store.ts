@@ -27,6 +27,7 @@ export function useStore(): EduClassroomUIStore {
   const interactiveUIStores = React.useContext(EduContext.shared).interactiveUI;
   const lectureUIStores = React.useContext(EduContext.shared).lectureUI;
   const vocationalUIStores = React.useContext(EduContext.shared).vocationalUI;
+  const studyUIStores = React.useContext(EduContext.shared).studyUI;
 
   const type = EduClassroomConfig.shared.sessionInfo.roomType;
   const isVocational = EduClassroomConfig.shared.sessionInfo.roomServiceType !== 0;
@@ -41,6 +42,8 @@ export function useStore(): EduClassroomUIStore {
       } else {
         return lectureUIStores;
       }
+    case EduRoomTypeEnum.RoomStudy:
+      return studyUIStores;
     default:
       throw new Error(`Unsupported room type ${type}`);
   }

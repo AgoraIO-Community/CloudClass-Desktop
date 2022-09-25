@@ -4,6 +4,7 @@ import { EduInteractiveUIClassStore } from '../stores/interactive';
 import { EduLectureUIStore } from '../stores/lecture';
 import { EduLectureH5UIStore } from '../stores/lecture-h5';
 import { Edu1v1ClassUIStore } from '../stores/one-on-one';
+import { EduStudyRoomUIStore } from '../stores/study-room';
 import { EduVocationalUIStore } from '../stores/vocational';
 import { EduVocationalH5UIStore } from '../stores/vocational-h5';
 
@@ -24,6 +25,8 @@ export class EduUIStoreFactory {
         } else {
           return new EduLectureUIStore(store);
         }
+      case EduRoomTypeEnum.RoomStudy:
+        return new EduStudyRoomUIStore(store);
       default:
         return new EduClassroomUIStore(store); // return default
     }

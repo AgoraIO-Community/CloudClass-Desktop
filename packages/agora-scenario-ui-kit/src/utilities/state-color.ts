@@ -17,3 +17,11 @@ export const PlaceholderStateColors = {
   normal: '#97BAF9',
   disabled: '#C7D3ED',
 };
+
+//
+
+export const DeviceButtonStateColors = {
+  muted: '#F5655C',
+  unmuted: '#18191B',
+  disabled: 'rgba(52, 52, 52, 0.9)',
+};

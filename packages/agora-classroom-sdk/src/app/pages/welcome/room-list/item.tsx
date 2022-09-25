@@ -32,6 +32,7 @@ const roomTypeMap = {
   [EduRoomTypeEnum.Room1v1Class]: 'fcr_home_label_1on1',
   [EduRoomTypeEnum.RoomSmallClass]: 'fcr_home_label_small_classroom',
   [EduRoomTypeEnum.RoomBigClass]: 'fcr_home_label_lecture_hall',
+  [EduRoomTypeEnum.RoomStudy]: 'fcr_home_label_study_room',
 };
 
 export const RoomListItem: FC<RoomListItemProps> = ({
@@ -45,6 +46,9 @@ export const RoomListItem: FC<RoomListItemProps> = ({
   const dateStr = useMemo(() => {
     return `${dayjs(data.startTime).format(Format)}-${dayjs(data.endTime).format('HH:mm')}`;
   }, [data]);
+
+  const roomType = data.roomType;
+  const numberOfParticipants = data.roomProperties?.numberOfParticipants || 0;
 
   const roomState = useMemo(() => {
     return data.roomState;
@@ -77,7 +81,8 @@ export const RoomListItem: FC<RoomListItemProps> = ({
         <div className="name">{data.roomName}</div>
         <div className="footer">
           <span className="state icon">{transI18n(roomStateMap[roomState])}</span>
-          <span className="type">{transI18n(roomTypeMap[roomState])}</span>
+          <span className="type">{transI18n(roomTypeMap[roomType])}</span>
+          <span className="total">{numberOfParticipants}</span>
         </div>
       </div>
       <div className="operation">

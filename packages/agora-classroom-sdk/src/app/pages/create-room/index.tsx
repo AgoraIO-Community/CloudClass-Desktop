@@ -15,7 +15,7 @@ import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { EduRoomServiceTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
-import { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   ADatePicker,
   ADatePickerProps,
@@ -51,6 +51,7 @@ type CreateFormValue = {
   date: Dayjs;
   time: Dayjs;
   link: string;
+  numberOfParticipants: string;
 };
 
 export const CreateRoom = observer(() => {
@@ -83,7 +84,7 @@ export const CreateRoom = observer(() => {
     {
       label: transI18n('fcr_h5create_label_study_room'),
       description: transI18n('fcr_create_label_lecturehall_description'),
-      value: EduRoomTypeEnum.RoomSelfStudy,
+      value: EduRoomTypeEnum.RoomStudy,
       className: 'card-green',
     },
   ];
@@ -132,6 +133,7 @@ export const CreateRoom = observer(() => {
       date: date,
       time: date,
       link: '',
+      numberOfParticipants: ''
     };
   }, []);
 
@@ -188,7 +190,7 @@ export const CreateRoom = observer(() => {
     }
     form.validateFields().then((data) => {
       setLoading(true);
-      const { date, time, name, link } = data;
+      const { date, time, name, link, numberOfParticipants } = data;
       let dateTime = dayjs();
       if (!useCurrentTime) {
         time.set('year', date.year());
@@ -216,7 +218,8 @@ export const CreateRoom = observer(() => {
             serviceType: sType,
             cameraEnabled,
             micorphoneEnabled,
-            chatEnabled
+            chatEnabled,
+            numberOfParticipants: parseInt(numberOfParticipants) || 0
           },
         })
         .then(() => {
@@ -381,69 +384,72 @@ export const CreateRoom = observer(() => {
             </span>
           </div>
           <div className={`settings ${!showMore ? 'hidden' : ''}`}>
-            <div className="setting-item">
-              <div className="title">
-                <div className="security-prefix-icon" />
-                {transI18n('fcr_create_label_person_count_limitation')}
-              </div>
-              <div className="content">
-                <AFormItem
-                  name="numberOfParticipants"
-                  rules={[
-                    {
-                      required: true,
-                      message: transI18n('fcr_create_tips_number_of_participants'),
-                    },
-                    {
-                      pattern: /^([0-9]{0,10})$/,
-                      message: transI18n('fcr_create_tips_number_of_participants_invalid'),
-                    },
-                  ]}>
-                  <AInput
-                    maxLength={10}
-                    placeholder={transI18n('fcr_create_tips_number_of_participants')} />
-                </AFormItem>
-              </div>
-            </div>
-            <div className="setting-item">
-              <div className="title">
-                <div className="security-prefix-icon" />
-                {transI18n('fcr_create_label_function_setting')}
-              </div>
-              <div className="content flex" style={{ gap: 16 }}>
-                <RadioCard
-                  className={'watermark-card'}
-                  onClick={() => {
-                    setCameraEnabled((pre) => !pre);
-                  }}
-                  disabled
-                  checked={cameraEnabled}
-                  label={transI18n('fcr_create_label_camera')}
-                  icon={<img src={cameraIcon}></img>}
-                />
-                <RadioCard
-                  className={'watermark-card'}
-                  onClick={() => {
-                    setMicrophoneEnabled((pre) => !pre);
-                  }}
-                  disabled
-                  checked={micorphoneEnabled}
-                  label={transI18n('fcr_create_label_microphone')}
-                  icon={<img src={microphoneIcon}></img>}
-                />
-                <RadioCard
-                  className={'watermark-card'}
-                  onClick={() => {
-                    setChatEnabled((pre) => !pre);
-                  }}
-                  disabled
-                  checked={chatEnabled}
-                  label={transI18n('fcr_create_label_chat')}
-                  icon={<img src={chatIcon}></img>}
-                />
-              </div>
-            </div>
-
+            {roomType === EduRoomTypeEnum.RoomStudy ? (
+              <React.Fragment>
+                <div className="setting-item">
+                  <div className="title">
+                    <div className="security-prefix-icon" />
+                    {transI18n('fcr_create_label_person_count_limitation')}
+                  </div>
+                  <div className="content">
+                    <AFormItem
+                      name="numberOfParticipants"
+                      rules={[
+                        {
+                          required: true,
+                          message: transI18n('fcr_create_tips_number_of_participants'),
+                        },
+                        {
+                          pattern: /^([0-9]{0,10})$/,
+                          message: transI18n('fcr_create_tips_number_of_participants_invalid'),
+                        },
+                      ]}>
+                      <AInput
+                        maxLength={10}
+                        placeholder={transI18n('fcr_create_tips_number_of_participants')} />
+                    </AFormItem>
+                  </div>
+                </div>
+                <div className="setting-item">
+                  <div className="title">
+                    <div className="security-prefix-icon" />
+                    {transI18n('fcr_create_label_function_setting')}
+                  </div>
+                  <div className="content flex" style={{ gap: 16 }}>
+                    <RadioCard
+                      className={'watermark-card'}
+                      onClick={() => {
+                        setCameraEnabled((pre) => !pre);
+                      }}
+                      disabled
+                      checked={cameraEnabled}
+                      label={transI18n('fcr_create_label_camera')}
+                      icon={<img src={cameraIcon}></img>}
+                    />
+                    <RadioCard
+                      className={'watermark-card'}
+                      onClick={() => {
+                        setMicrophoneEnabled((pre) => !pre);
+                      }}
+                      disabled
+                      checked={micorphoneEnabled}
+                      label={transI18n('fcr_create_label_microphone')}
+                      icon={<img src={microphoneIcon}></img>}
+                    />
+                    <RadioCard
+                      className={'watermark-card'}
+                      onClick={() => {
+                        setChatEnabled((pre) => !pre);
+                      }}
+                      disabled
+                      checked={chatEnabled}
+                      label={transI18n('fcr_create_label_chat')}
+                      icon={<img src={chatIcon}></img>}
+                    />
+                  </div>
+                </div>
+              </React.Fragment>) : null
+            }
             <div className="setting-item">
               <div className="title">
                 <div className="security-prefix-icon" />

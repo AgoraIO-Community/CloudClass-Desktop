@@ -3,7 +3,12 @@ import { FcrTheme } from '~components';
 import { humpToLine } from '.';
 import { FcrMultiThemes, FcrUIConfig } from '../types/config';
 import { baseTheme } from '../configs/base-theme';
-import { room1V1Class, roomMidClass, roomBigClass } from '../configs/base-ui-config';
+import {
+  room1V1Class,
+  roomMidClass,
+  roomBigClass,
+  roomStudyClass,
+} from '../configs/base-ui-config';
 
 const fcrGlobalStyleSheetId = 'FcrStyleSheet';
 
@@ -15,6 +20,7 @@ export const uiConfigs: Record<string, FcrUIConfig> = {
   [EduRoomTypeEnum.Room1v1Class]: room1V1Class,
   [EduRoomTypeEnum.RoomSmallClass]: roomMidClass,
   [EduRoomTypeEnum.RoomBigClass]: roomBigClass,
+  [EduRoomTypeEnum.RoomStudy]: roomStudyClass,
 };
 
 export const supportedRoomTypes: EduRoomTypeEnum[] = [];

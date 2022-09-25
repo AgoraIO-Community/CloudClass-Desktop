@@ -1,0 +1,14 @@
+.fcr-button,
+.fcr-icon-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 24px;
+  background: #357bf6;
+  border-radius: 24px;
+}
+
+.fcr-icon-button {
+  padding: 4px;
+  border-radius: 12px;
+}

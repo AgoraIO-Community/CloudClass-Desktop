@@ -8,10 +8,12 @@ import {
 import { observer } from 'mobx-react';
 import { useLayoutEffect, useState } from 'react';
 import { RoomPretestContainer } from '~containers/pretest';
+import { RoomPretestContainer as RoomPretestContainerV2 } from '~containers-v2/pretest';
 import { OneToOneScenario } from './1v1';
 import { BigClassScenario } from './big-class';
 import { BigClassScenarioH5 } from './big-class-h5';
 import { MidClassScenario } from './mid-class';
+import { StudyRoomScenario } from './study-room';
 import { VocationalClassScenario } from './vocational-class';
 import { VocationalClassScenarioH5 } from './vocational-class-h5';
 
@@ -51,6 +53,9 @@ export const renderRoomSceneWith = (
     case EduRoomTypeEnum.RoomSmallClass: {
       return <MidClassScenario />;
     }
+    case EduRoomTypeEnum.RoomStudy: {
+      return <StudyRoomScenario />;
+    }
     default:
       return null;
   }
@@ -67,13 +72,15 @@ export const Scenarios: React.FC<ScenariosProps> = observer(
     }, [initialize]);
 
     const [showPretest, setPretest] = useState(pretest);
+    const showPretestV2 = showPretest && roomType === EduRoomTypeEnum.RoomStudy;
 
     return initialized ? (
-      showPretest ? (
-        <RoomPretestContainer onOK={() => setPretest(false)} />
-      ) : (
-        renderRoomSceneWith(roomType, roomServiceType)
-      )
+      showPretestV2 ? <RoomPretestContainerV2 onOK={() => setPretest(false)} /> :
+        showPretest ? (
+          <RoomPretestContainer onOK={() => setPretest(false)} />
+        ) : (
+          renderRoomSceneWith(roomType, roomServiceType)
+        )
     ) : null;
   },
 );

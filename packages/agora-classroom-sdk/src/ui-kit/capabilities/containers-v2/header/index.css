@@ -1,0 +1,18 @@
+.fcr-view-switch {
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+.fcr-view-switch__indicator {
+  background: #000000;
+  border-radius: 12px;
+  width: 50%;
+  height: 100%;
+  left: 0%;
+  top: 0%;
+  transition: left 0.2s;
+}
+
+.fcr-view-switch__indicator--on {
+  left: 50%;
+}

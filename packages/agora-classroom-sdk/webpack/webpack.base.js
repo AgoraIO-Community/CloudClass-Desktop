@@ -23,11 +23,13 @@ module.exports = {
     alias: {
       '@': path.resolve(ROOT_PATH, 'src'),
       '~components': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/components'),
+      '~components-v2': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/components-v2'),
       '~scaffold': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/scaffold'),
       '~styles': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/styles'),
       '~utilities': path.resolve(ROOT_PATH, '../agora-scenario-ui-kit/src/utilities'),
       '~capabilities': path.resolve(ROOT_PATH, 'src/ui-kit/capabilities'),
       '~containers': path.resolve(ROOT_PATH, 'src/ui-kit/capabilities/containers'),
+      '~containers-v2': path.resolve(ROOT_PATH, 'src/ui-kit/capabilities/containers-v2'),
       '~hooks': path.resolve(ROOT_PATH, 'src/infra/hooks'),
       'agora-classroom-sdk': path.resolve(ROOT_PATH, 'src/infra/api'),
       'agora-plugin-gallery': path.resolve(ROOT_PATH, '../agora-plugin-gallery/src'),

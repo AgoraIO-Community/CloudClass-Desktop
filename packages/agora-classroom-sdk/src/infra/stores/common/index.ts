@@ -1,4 +1,4 @@
-import { AGError, AgoraRteLogLevel, Log } from 'agora-rte-sdk';
+import { AGError, AgoraRteLogLevel, bound, Log } from 'agora-rte-sdk';
 import { BoardUIStore } from './board-ui';
 import { CloudUIStore } from './cloud-drive';
 import { DeviceSettingUIStore } from './device-setting/index';

@@ -12,7 +12,7 @@ import { LoginAPI } from './api/login';
 import { MessageAPI } from './api/message';
 import { MuteAPI } from './api/mute';
 import { UserInfoAPI } from './api/userInfo';
-import { ThemeProvider } from '~utilities';
+import { ThemeProvider } from '~components';
 import { PresenceAPI } from './api/presence'
 
 let store = null;

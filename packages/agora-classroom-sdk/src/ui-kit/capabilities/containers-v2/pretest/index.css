@@ -1,0 +1,38 @@
+.fcr-pretest {
+  background: #2a2a39;
+  color: #fff;
+}
+
+.fcr-pretest-content-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.fcr-pretest-join-tip {
+  background: rgba(25, 25, 33, 0.5);
+  border-radius: 16px;
+  padding: 8px 20px;
+}
+
+.fcr-pretest-preview-track-player {
+  margin-top: 20px;
+  width: 400px;
+  height: 225px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+}
+
+.fcr-pretest-preview-dropdown {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.fcr-pretest-logo {
+  font-size: 22px;
+  font-weight: bold;
+}

@@ -253,6 +253,19 @@ export class EduShareUIStore {
   updateClassroomViewportSize() {
     const { width, height } = getRootDimensions(this._containerNode);
 
+    // aspect ratio equals zero means rendering origin view size
+    if (this._viewportAspectRatio === 0) {
+      runInAction(() => {
+        this.classroomViewportSize = {
+          width,
+          height,
+          h5Height: height,
+          h5Width: width,
+        };
+      });
+      return;
+    }
+
     const aspectRatio = this._viewportAspectRatio;
 
     const curAspectRatio = height / width;
@@ -386,5 +399,14 @@ export class EduShareUIStore {
   @action.bound
   setLayoutReady(ready: boolean) {
     this.layoutReady = ready;
+  }
+
+  /**
+   *
+   * @param ratio
+   */
+  @action.bound
+  setViewportAspectRatio(ratio: number) {
+    this._viewportAspectRatio = Math.max(ratio, 0);
   }
 }

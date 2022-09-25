@@ -213,7 +213,7 @@ export class AgoraEduSDK {
         EduRoomTypeEnum.Room1v1Class,
         EduRoomTypeEnum.RoomBigClass,
         EduRoomTypeEnum.RoomSmallClass,
-        EduRoomTypeEnum.RoomSelfStudy,
+        EduRoomTypeEnum.RoomStudy,
       ].includes(option.roomType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roomType!');
@@ -290,6 +290,7 @@ export class AgoraEduSDK {
 
     //TODO:待优化。 问题：合流转推(学生) 和 伪直播 场景不需要白板插件，因为它们使用的都是大班课的班型，所以不能通过后端禁用白板。
     const withoutBoardWidget =
+      roomType === EduRoomTypeEnum.RoomBigClass &&
       option.roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
       (EduRoomServiceTypeEnum.MixStreamCDN === option.roomServiceType &&
         option.roleType === EduRoleTypeEnum.student);
