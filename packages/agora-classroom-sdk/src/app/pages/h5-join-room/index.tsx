@@ -1,10 +1,10 @@
 import { UserApi } from '@/app/api/user';
 import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
+import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameRule } from '@/app/hooks/useNickNameRule';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
-import { useMemo } from 'react';
 import { getI18n } from 'react-i18next';
 import { AButton, AForm, AFormItem, AInput, SvgIconEnum, SvgImg, useAForm, useI18n } from '~components';
 import './index.css';
@@ -20,6 +20,7 @@ export const H5JoinRoom = () => {
   const { quickJoinRoom } = useJoinRoom();
   const { rule: nickNameRule } = useNickNameRule();
   const transI18n = useI18n();
+  const i18n = getI18n();
 
   const onSubmit = () => {
     form.validateFields().then((data) => {
@@ -34,30 +35,30 @@ export const H5JoinRoom = () => {
       });
     });
   };
-  const i18n = getI18n();
-  const welcome = useMemo(() => {
-    if (i18n.language === 'en') {
-      return (
-        <div className="welcome">
-          Welcome to
-          <br />
-          FlexibleClassroom
-        </div>
-      );
-    }
-    return (
+
+  const welcome = useElementWithI18n({
+    en: (
+      <div className="welcome">
+        Welcome to
+        <br />
+        FlexibleClassroom
+      </div>
+    ),
+    zh: (
       <div className="welcome">
         欢迎
         <br /> 使用灵动课堂
       </div>
-    );
-  }, [i18n.language]);
+    ),
+  });
 
   return (
     <>
       <CommonHelmet></CommonHelmet>
       <div className="h5-join-room">
-        <div className="header-bg"></div>
+        <div className="header-bg">
+          <div className={`logo ${i18n.language}`}></div>
+        </div>
         <div className="content">
           <div className="hello">
             {transI18n('fcr_h5_invite_hello')}

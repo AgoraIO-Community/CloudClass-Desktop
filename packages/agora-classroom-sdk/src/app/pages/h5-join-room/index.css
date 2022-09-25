@@ -5,9 +5,26 @@
 }
 
 .h5-join-room .header-bg {
-  @apply bg-cover w-full;
+  @apply bg-cover w-full flex items-center;
   height: 35vh;
   background-image: url(@/app/assets/h5-bg.png);
+}
+
+.h5-join-room .header-bg .logo {
+  height: 106px;
+  background-size: auto 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  margin-bottom: 2vh;
+}
+
+.h5-join-room .header-bg .logo.en {
+  background-image: url(@/app/assets/h5-logo-en.png);
+}
+
+.h5-join-room .header-bg .logo.zh {
+  background-image: url(@/app/assets/h5-logo-zh.png);
 }
 
 .h5-join-room .content {

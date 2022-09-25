@@ -155,4 +155,12 @@ export class HomeStore {
   setLoading = (loading: boolean) => {
     this.loading = loading;
   };
+
+  @observable
+  isLogin = false;
+
+  @action
+  setLogin = (isLogin: boolean) => {
+    this.isLogin = isLogin;
+  };
 }

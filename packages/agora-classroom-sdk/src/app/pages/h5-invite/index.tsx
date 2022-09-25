@@ -4,15 +4,14 @@ import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
 import { useHomeStore } from '@/app/hooks';
 import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
+import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useLoading } from '@/app/hooks/useLoading';
 import { useNickNameRule } from '@/app/hooks/useNickNameRule';
 import { formatRoomID, ShareLink } from '@/app/utils';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
-import { useEffect, useMemo, useState } from 'react';
-import { getI18n } from 'react-i18next';
-import { useHistory } from 'react-router';
+import { useEffect, useState } from 'react';
 import {
   AButton,
   AForm,
@@ -40,8 +39,6 @@ export const H5Invite = () => {
   const [form] = useAForm<InviteFormValue>();
   const { checkRoomInfoBeforeJoin, h5ClassModeIsSupport } = useCheckRoomInfo();
   const homeStore = useHomeStore();
-  const i18n = getI18n();
-  const history = useHistory();
 
   // 根据分享信息初始化
   useEffect(() => {
@@ -107,20 +104,18 @@ export const H5Invite = () => {
 
   const roomDetail = shareRoomInfo ? shareRoomInfo.roomDetail : undefined;
 
-  const footerTip = useMemo(() => {
-    if (i18n.language === 'en') {
-      return (
-        <div className="tip">
-          You can <span className="link"> copy Invitation </span> and send to attendees.
-        </div>
-      );
-    }
-    return (
+  const footerTip = useElementWithI18n({
+    en: (
+      <div className="tip">
+        You can <span className="link"> copy Invitation </span> and send to attendees.
+      </div>
+    ),
+    zh: (
       <div className="tip">
         你可以<span className="link"> 复制课堂邀请 </span>并发送给参加者。
       </div>
-    );
-  }, [i18n.language]);
+    ),
+  });
 
   return (
     <>

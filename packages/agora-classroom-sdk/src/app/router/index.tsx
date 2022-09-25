@@ -1,10 +1,12 @@
+import { useMemo } from 'react';
 import { Route, Switch } from 'react-router';
+import { HashRouter } from 'react-router-dom';
+import { AuthLayout } from '../layout/auth-layout';
+import { BrowserCheckLayout } from '../layout/browser-check-layout';
 import { routesMap } from './maps';
 import { PageRouter } from './type';
 
 const routes: PageRouter[] = [
-  PageRouter.LoginPage,
-  PageRouter.AuthTokenPage,
   PageRouter.PretestPage,
   PageRouter.Setting,
   PageRouter.OneToOne,
@@ -18,27 +20,51 @@ const routes: PageRouter[] = [
   PageRouter.FlexHome,
   PageRouter.VocationalHome,
   PageRouter.VocationalHomeH5Home,
-  PageRouter.H5Welcome,
+  PageRouter.H5Index,
   PageRouter.H5JoinRoom,
   PageRouter.H5Invite,
-  PageRouter.Home,
+  PageRouter.Index,
 ];
 
 export const RouteContainer = () => {
+  const browserCheckIncludes = useMemo(() => {
+    const list = [
+      PageRouter.Index,
+      PageRouter.Welcome,
+      PageRouter.JoinRoom,
+      PageRouter.Invite,
+      PageRouter.H5Index,
+      PageRouter.H5JoinRoom,
+      PageRouter.H5Invite,
+    ];
+    return list.map((v) => routesMap[v].path);
+  }, []);
+
+  const authIncludes = useMemo(() => {
+    const list = [PageRouter.JoinRoom, PageRouter.Invite, PageRouter.H5Invite];
+    return list.map((v) => routesMap[v].path);
+  }, []);
+
   return (
-    <Switch>
-      {routes.map((item, index) => {
-        const route = routesMap[item];
-        if (!route) return null;
-        return (
-          <Route
-            key={item + index}
-            exact={!!route.exact}
-            path={route.path}
-            component={route.component}
-          />
-        );
-      })}
-    </Switch>
+    <HashRouter>
+      <AuthLayout includes={authIncludes}>
+        <BrowserCheckLayout includes={browserCheckIncludes}>
+          <Switch>
+            {routes.map((item, index) => {
+              const route = routesMap[item];
+              if (!route) return null;
+              return (
+                <Route
+                  key={item + index}
+                  exact={!!route.exact}
+                  path={route.path}
+                  component={route.component}
+                />
+              );
+            })}
+          </Switch>
+        </BrowserCheckLayout>
+      </AuthLayout>
+    </HashRouter>
   );
 };

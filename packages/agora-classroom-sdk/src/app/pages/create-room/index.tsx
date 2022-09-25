@@ -198,14 +198,15 @@ export const CreateRoom = observer(() => {
         time.set('date', date.date());
         dateTime = time;
       }
-      const hostingScene = livePlayback
+      const isHostingScene = livePlayback && roomType === EduRoomTypeEnum.RoomBigClass;
+      const hostingScene = isHostingScene
         ? {
           videoURL: link,
           reserveVideoURL: link,
           finishType: 0,
         }
         : undefined;
-      const sType = livePlayback ? EduRoomServiceTypeEnum.HostingScene : serviceType;
+      const sType = isHostingScene ? EduRoomServiceTypeEnum.HostingScene : serviceType;
       RoomAPI.shared
         .create({
           roomName: name,

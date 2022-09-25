@@ -43,3 +43,4 @@ export const getTokenDomain = (region?: EduRegion) => {
 
 export const isElectronPlatform =
   AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron;
+
