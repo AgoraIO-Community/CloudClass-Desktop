@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Rnd } from 'react-rnd';
-import { TabPane, Tabs, transI18n, SvgImg, OverlayWrap, Popover, SvgIconEnum } from '~ui-kit';
+import { ATabPane, ATabs, transI18n, SvgImg, OverlayWrap, Popover, SvgIconEnum } from '~ui-kit';
 import { PublicResourcesContainer } from './public-resource';
 import { PersonalResourcesContainer } from './person-resource';
 import './index.css';
@@ -75,14 +75,14 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
               onClick={() => setOpened(false)}
             />
           </div>
-          <Tabs activeKey={activeKey} onChange={handleChange}>
-            <TabPane tab={transI18n('cloud.publicResources')} key={ActiveKeyEnum.public}>
+          <ATabs activeKey={activeKey} onChange={handleChange} className="cloud-driver-tab">
+            <ATabPane tab={transI18n('cloud.publicResources')} key={ActiveKeyEnum.public}>
               <PublicResourcesContainer />
-            </TabPane>
-            <TabPane tab={transI18n('cloud.personalResources')} key={ActiveKeyEnum.person}>
+            </ATabPane>
+            <ATabPane tab={transI18n('cloud.personalResources')} key={ActiveKeyEnum.person}>
               <PersonalResourcesContainer />
-            </TabPane>
-          </Tabs>
+            </ATabPane>
+          </ATabs>
         </div>
       </Rnd>
     </OverlayWrap>

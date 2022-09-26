@@ -106,7 +106,7 @@ export const Chat = () => {
   };
   return (
     <div>
-      <Tabs onChange={onTabChange} activeKey={tabKey}>
+      <Tabs onChange={onTabChange} activeKey={tabKey} className={"chat-widget"}>
         <TabPane
           tab={
             <div>

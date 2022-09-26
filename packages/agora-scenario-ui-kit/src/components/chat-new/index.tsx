@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '~components/svg-img';
 import { Affix, AffixProps } from '../affix';
 import { transI18n } from '../i18n';
-import { TabPane, Tabs } from '../tabs';
+import { ATabPane, ATabs } from '../tabs';
 import { ChatList } from './chat-list';
 import { ChatMin } from './chat-min';
 import './index.css';
@@ -229,7 +229,7 @@ export const ChatNew: FC<ChatProps> = ({
           </span>
         </div>
 
-        <Tabs
+        <ATabs
           className={collapse ? 'hidden' : ''}
           onChange={(activeKey: string) => {
             if (activeKey === '0') {
@@ -244,7 +244,7 @@ export const ChatNew: FC<ChatProps> = ({
               onChangeActiveTab && onChangeActiveTab('conversation-list');
             }
           }}>
-          <TabPane
+          <ATabPane
             tab={
               <span className="message-tab tab-title">
                 {transI18n('message')}
@@ -272,9 +272,9 @@ export const ChatNew: FC<ChatProps> = ({
                 onSend({ type: 'room', text });
               }}
             />
-          </TabPane>
+          </ATabPane>
           {configUI?.visibleQuestion && (
-            <TabPane
+            <ATabPane
               tab={
                 <span className="question tab-title">
                   {transI18n('quiz')}
@@ -350,9 +350,9 @@ export const ChatNew: FC<ChatProps> = ({
                     onChangeActiveTab && onChangeActiveTab('conversation', conversation);
                   }}></ChatList>
               )}
-            </TabPane>
+            </ATabPane>
           )}
-        </Tabs>
+        </ATabs>
       </div>
     </Affix>
   );
