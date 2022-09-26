@@ -43,6 +43,18 @@ const computeEndTime = (date: Dayjs) => {
   return date.add(30, 'minute');
 };
 
+const combDateTime = (date: Dayjs, time: Dayjs) => {
+  const result = new Date(
+    date.year(),
+    date.month(),
+    date.date(),
+    time.hour(),
+    time.minute(),
+    time.second(),
+  );
+  return dayjs(result);
+};
+
 type CreateFormValue = {
   name: string;
   date: Dayjs;
@@ -130,29 +142,29 @@ export const CreateRoom = observer(() => {
   const getFormDateTime = useCallback(() => {
     const time: Dayjs = form.getFieldValue('time');
     const date: Dayjs = form.getFieldValue('date');
-    time.set('year', date.year());
-    time.set('month', date.month());
-    time.set('date', date.date());
-    return time;
+    return combDateTime(date, time);
   }, [form]);
 
-  const checkFormDateTimeIsAfterNow = useCallback(() => {
-    // 如果使用当前时间就跳过日期时间校验
-    if (useCurrentTime) {
-      return true;
-    }
-    const dateTime = getFormDateTime();
-    if (dateTime.isAfter(dayjs())) {
-      setDateTimeValidate({ validateStatus: 'success', help: '', tip: '' });
-      return true;
-    }
-    setDateTimeValidate({
-      validateStatus: 'error',
-      help: '',
-      tip: transI18n('fcr_create_tips_starttime'),
-    });
-    return false;
-  }, [useCurrentTime, getFormDateTime]);
+  const checkFormDateTimeIsAfterNow = useCallback(
+    (skip: boolean) => {
+      // 如果使用当前时间就跳过日期时间校验
+      if (skip) {
+        return true;
+      }
+      const dateTime = getFormDateTime();
+      if (!dateTime.isBefore(dayjs())) {
+        setDateTimeValidate({ validateStatus: 'success', help: '', tip: '' });
+        return true;
+      }
+      setDateTimeValidate({
+        validateStatus: 'error',
+        help: '',
+        tip: transI18n('fcr_create_tips_starttime'),
+      });
+      return false;
+    },
+    [getFormDateTime],
+  );
 
   const recomputeEndTime = useCallback(() => {
     const dateTime = getFormDateTime();
@@ -163,27 +175,21 @@ export const CreateRoom = observer(() => {
     (value: Dayjs | null) => {
       if (value) {
         setUseCurrentTime(false);
-        checkFormDateTimeIsAfterNow();
+        checkFormDateTimeIsAfterNow(false);
         recomputeEndTime();
       }
     },
-    [checkFormDateTimeIsAfterNow],
+    [checkFormDateTimeIsAfterNow, recomputeEndTime],
   );
 
   const onSubmit = () => {
-    if (!checkFormDateTimeIsAfterNow()) {
+    if (!checkFormDateTimeIsAfterNow(useCurrentTime)) {
       return;
     }
     form.validateFields().then((data) => {
       setLoading(true);
       const { date, time, name, link } = data;
-      let dateTime = dayjs();
-      if (!useCurrentTime) {
-        time.set('year', date.year());
-        time.set('month', date.month());
-        time.set('date', date.date());
-        dateTime = time;
-      }
+      const dateTime = useCurrentTime ? dayjs() : combDateTime(date, time);
       const isHostingScene = livePlayback && roomType === EduRoomTypeEnum.RoomBigClass;
       const hostingScene = isHostingScene
         ? {
@@ -291,7 +297,7 @@ export const CreateRoom = observer(() => {
                   className="start-time-picker"
                   format={TimeFormat}
                   inputReadOnly
-                  minuteStep={10}
+                  minuteStep={5}
                   allowClear={false}
                   showNow={false}
                   onChange={dateTimeOnChange}

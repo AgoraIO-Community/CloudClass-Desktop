@@ -33,7 +33,7 @@ export const Welcome = observer(() => {
   const [fetching, setFetching] = useState(false);
   const [roomList, setRoomList] = useState<RoomInfo[]>([]);
   const nextRoomID = useRef<RoomInfo['roomId']>();
-  const { isLogin } = useHomeStore();
+  const { isLogin, setLoading } = useHomeStore();
   const { auth } = useAuth();
   const [shareRoomInfo, setShareRoomInfo] = useState<ShareRoomInfo>({
     owner: '',
@@ -128,7 +128,10 @@ export const Welcome = observer(() => {
             className="btn"
             onClick={() => {
               if (!isLogin) {
-                UserApi.shared.login();
+                setLoading(true);
+                UserApi.shared.login().catch(() => {
+                  setLoading(false);
+                });
                 return;
               }
               history.push('/join-room');
@@ -142,7 +145,11 @@ export const Welcome = observer(() => {
             className="btn"
             onClick={() => {
               if (!isLogin) {
-                UserApi.shared.login();
+                setLoading(true);
+                UserApi.shared.login().catch(() => {
+                  setLoading(false);
+                });
+                return;
               }
               history.push('/create-room');
             }}>

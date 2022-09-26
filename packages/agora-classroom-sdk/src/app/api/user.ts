@@ -11,11 +11,12 @@ type RefreshTokenResponse = {
   refreshToken: string;
 };
 
-type GetUserInfoResponse = {
+type UserInfo = {
   companyId: string; // 客户信息
   companyName: string; // 客户名称
   userId: string; // 账户类型
   language: string; //偏好语言
+  displayName: string;
 };
 
 type GetAuthorizedURLRequest = {
@@ -50,16 +51,16 @@ export class UserApi {
     localStorage.setItem(REFRESH_TOKEN_KEY, value);
   }
 
-  get userInfo(): GetUserInfoResponse {
+  get userInfo(): UserInfo {
     return GlobalStorage.read(USER_INFO_KEY);
   }
 
-  private set userInfo(value: GetUserInfoResponse) {
+  private set userInfo(value: UserInfo) {
     GlobalStorage.save(USER_INFO_KEY, value);
   }
 
   get nickName() {
-    return GlobalStorage.read(NICK_NAME_KEY) || this.userInfo.companyName;
+    return GlobalStorage.read(NICK_NAME_KEY) || this.userInfo?.displayName || '';
   }
 
   set nickName(name: string) {
@@ -124,7 +125,7 @@ export class UserApi {
    */
   async getUserInfo() {
     const url = `${this.domain}/sso/v2/users/info`;
-    const { data } = await request.get<Response<GetUserInfoResponse>>(url);
+    const { data } = await request.get<Response<UserInfo>>(url);
     this.userInfo = data.data;
     return data.data;
   }
@@ -175,8 +176,7 @@ export class UserApi {
    */
   async logout() {
     this.clearUserInfo();
-    const redirect_url = decodeURI(this.redirect_url);
-    location.href = `${LOGOUT_SSO_URL}?redirect_uri=${redirect_url}`;
+    history.replaceState({}, '', this.redirect_url);
     return;
   }
 
@@ -191,6 +191,8 @@ export class UserApi {
    */
   async closeAccount() {
     const url = `${this.domain}/sso/v2/users/auth`;
-    return request.delete<Response<RefreshTokenResponse>>(url);
+    return request.delete<Response<null>>(url).then(() => {
+      this.logout();
+    });
   }
 }
