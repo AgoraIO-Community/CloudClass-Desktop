@@ -841,7 +841,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * 切换本地摄像头设备开关状态
    */
   @bound
-  private _toggleLocalVideo() {
+  toggleLocalVideo() {
     if (this.localCameraOff) {
       this.classroomStore.mediaStore.enableLocalVideo(true);
     } else {
@@ -853,7 +853,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * 切换本地麦克风设备开关状态
    */
   @bound
-  private _toggleLocalAudio() {
+  toggleLocalAudio() {
     if (this.localMicOff) {
       this.classroomStore.mediaStore.enableLocalAudio(true);
     } else {

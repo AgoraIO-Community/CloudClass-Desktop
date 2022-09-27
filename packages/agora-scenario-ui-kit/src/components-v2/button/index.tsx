@@ -20,15 +20,18 @@ type IconButtonProps = {
     backgroundColor?: string;
     opacity?: number;
     disabled?: boolean;
+    tailSlot?: React.ReactNode;
+    transition?: string;
     onClick?: () => void;
 };
 
-export const IconButton = ({ onClick, icon, backgroundColor, iconColor, opacity, disabled }: IconButtonProps) => {
+export const IconButton = ({ onClick, icon, backgroundColor, iconColor, opacity, disabled, tailSlot, transition }: IconButtonProps) => {
     const cls = classNames('fcr-icon-button', `cursor-${disabled ? 'not-allowed' : 'pointer'}`);
 
     return (
-        <div className={cls} onClick={onClick} style={{ backgroundColor, opacity }}>
+        <div className={cls} onClick={onClick} style={{ backgroundColor, opacity, transition }}>
             <SvgImg type={icon} colors={{ iconPrimary: iconColor }} />
+            {tailSlot}
         </div>
     );
 }

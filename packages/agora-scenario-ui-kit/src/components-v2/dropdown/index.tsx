@@ -10,10 +10,11 @@ type Props = {
     value: string;
     onChange: (value: string) => void;
     headSlot?: React.ReactNode;
-    minWidth?: number
+    minWidth?: number;
+    textWidth?: number;
 };
 
-export const Dropdown: FC<Props> = ({ value, onChange, options, headSlot, minWidth }) => {
+export const Dropdown: FC<Props> = ({ value, onChange, options, headSlot, minWidth, textWidth }) => {
     const [expanded, setExpanded] = useState(false);
 
     const selectedText = useMemo(() => {
@@ -35,7 +36,7 @@ export const Dropdown: FC<Props> = ({ value, onChange, options, headSlot, minWid
         'text-black': expanded
     });
 
-    const textCls = classNames('fcr-dropdown-btn__text cursor-pointer inline-block text-center', {
+    const textCls = classNames('fcr-dropdown-btn__text cursor-pointer inline-block text-center mx-2 whitespace-nowrap overflow-hidden', {
         "fcr-dropdown-btn__text--expand": expanded,
     });
 
@@ -46,12 +47,12 @@ export const Dropdown: FC<Props> = ({ value, onChange, options, headSlot, minWid
         <div className='fcr-dropdown relative' style={{ minWidth }}>
             <div className='fcr-dropdown-btn flex items-center justify-between'>
                 {headSlot}
-                <a onClick={preventClick} href="#" onFocus={handleFocus} onBlur={handleBlur}>
-                    <span className={textCls}>{selectedText}</span>
+                <a className={textCls} onClick={preventClick} href="#" onFocus={handleFocus} onBlur={handleBlur} style={{ width: textWidth }}>
+                    {selectedText}
                 </a>
-                <SvgImg type={SvgIconEnum.DOWN} colors={{ iconPrimary: '#030303' }} size={9} style={expanded ? { transform: 'rotate(180deg)', transition: 'all .2s' } : { transition: 'all .2s', transform: 'rotate(0deg)' }} />
+                <SvgImg type={SvgIconEnum.DOWN} colors={{ iconPrimary: '#fff' }} size={9} style={expanded ? { transform: 'rotate(180deg)', transition: 'all .2s' } : { transition: 'all .2s', transform: 'rotate(0deg)' }} />
             </div>
-            <div className={containerCls} style={{ top: 30 }}>
+            <div className={containerCls} style={{ top: 52 }}>
                 {
                     options.map(({ label, value: v }, index) => {
                         const cls = classNames("fcr-dropdown-item text-center cursor-pointer", {

@@ -1,4 +1,4 @@
-import { FC, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { RootBox } from '~components';
 import { useClassroomStyle } from './hooks';
@@ -14,6 +14,7 @@ type FixedAspectRatioProps = {
     maxHeight: number;
     maxWidth: number;
   }>;
+  unset?: boolean;
   children?: React.ReactNode;
 };
 
@@ -52,8 +53,17 @@ export const FixedAspectRatioRootBox: FC<FixedAspectRatioProps> = ({
   minimumWidth,
   minimumHeight,
   trackMargin,
+  unset,
   ...props
 }) => {
+  const { shareUIStore } = useStore();
+
+  useEffect(() => {
+    if (unset) {
+      shareUIStore.setViewportAspectRatio(0);
+    }
+  }, []);
+
   return (
     <FixedAspectRatioContainer
       minimumWidth={minimumWidth || 1024}

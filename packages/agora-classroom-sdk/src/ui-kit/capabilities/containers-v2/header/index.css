@@ -16,3 +16,14 @@
 .fcr-view-switch__indicator--on {
   left: 50%;
 }
+
+.fcr-header-divider {
+  border-left: 1px solid #4a4c5f;
+  height: 20px;
+  margin: 0 18px;
+}
+
+.fcr-header-logo {
+  font-size: 22px;
+  font-weight: bold;
+}

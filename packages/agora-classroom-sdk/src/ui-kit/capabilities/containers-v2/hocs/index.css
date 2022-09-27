@@ -1,0 +1,8 @@
+.fcr-device-dropdown__panel-item:hover {
+  background: #2a2a39;
+  border-radius: 8px;
+}
+
+.fcr-device-dropdown__panel {
+  padding: 20px 6px 6px;
+}

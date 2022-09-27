@@ -442,6 +442,7 @@ export const en = {
     roomType_1v1: 'One to One Classroom',
     roomType_interactiveSmallClass: 'Interactive Small Classroom',
     roomType_interactiveBigClass: 'Lecture Hall',
+    roomType_interactiveStudyRoom: 'Study Room',
     roomType_vocationalClass: 'Vocational Lecture Hall',
     role: 'Role',
     role_placeholder: 'Please select your role',

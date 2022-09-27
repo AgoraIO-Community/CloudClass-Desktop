@@ -16,7 +16,7 @@ import {
   SvgIconEnum,
   useI18n,
 } from '~components';
-import { EduClassroomConfig, EduRoleTypeEnum, RecordStatus } from 'agora-edu-core';
+import { EduClassroomConfig, RecordStatus } from 'agora-edu-core';
 import RecordLoading from './assets/svga/record-loading.svga';
 import './index.css';
 import { visibilityControl, visibilityListItemControl } from '../visibility';
@@ -138,15 +138,15 @@ const Actions = observer(() => {
     <React.Fragment>
       {actions.length
         ? actions.map((a) =>
-            a.id === 'Record' ? (
-              <NavigationBarRecordAction
-                key={a.iconType}
-                action={a as EduNavAction<EduNavRecordActionPayload>}
-              />
-            ) : (
-              <NavigationBarAction key={a.iconType} action={a as EduNavAction} />
-            ),
-          )
+          a.id === 'Record' ? (
+            <NavigationBarRecordAction
+              key={a.iconType}
+              action={a as EduNavAction<EduNavRecordActionPayload>}
+            />
+          ) : (
+            <NavigationBarAction key={a.iconType} action={a as EduNavAction} />
+          ),
+        )
         : null}
     </React.Fragment>
   );

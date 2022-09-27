@@ -33,9 +33,17 @@
 }
 
 .fcr-dropdown-btn__text {
+  text-overflow: ellipsis;
+}
+
+a.fcr-dropdown-btn__text:link,
+a.fcr-dropdown-btn__text:visited,
+a.fcr-dropdown-btn__text:hover,
+a.fcr-dropdown-btn__text:active {
   color: #fff;
 }
 
 .fcr-dropdown-btn {
+  padding: 0 14px 0 0;
   background: rgba(74, 76, 95, 0.5);
 }

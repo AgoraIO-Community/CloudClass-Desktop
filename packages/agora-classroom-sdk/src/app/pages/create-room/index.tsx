@@ -43,7 +43,7 @@ const weekday = {
 const TimeFormat = 'HH:mm';
 
 const computeEndTime = (date: Dayjs) => {
-  return date.add(30, 'minute');
+  return date.add(300, 'minute');
 };
 
 type CreateFormValue = {
@@ -114,7 +114,7 @@ export const CreateRoom = observer(() => {
   const [serviceType, setServiceType] = useState(serviceTypeOptions[0].value);
   const [watermark, setWatermark] = useState(false);
   const [cameraEnabled, setCameraEnabled] = useState(true);
-  const [micorphoneEnabled, setMicrophoneEnabled] = useState(true);
+  const [micorphoneEnabled, setMicrophoneEnabled] = useState(false);
   const [chatEnabled, setChatEnabled] = useState(true);
   const [livePlayback, setLivePlayback] = useState(true);
   const [useCurrentTime, setUseCurrentTime] = useState(true);

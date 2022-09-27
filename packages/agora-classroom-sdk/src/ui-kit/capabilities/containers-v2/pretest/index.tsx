@@ -1,12 +1,7 @@
-import React, { FC, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, } from 'react';
 import { useStore } from '@/infra/hooks/ui-store';
-import { PretestToast } from '@/infra/stores/common/pretest';
-import { isProduction } from '@/app/utils/env';
-import { BeautyType, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
-import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import { CSSTransition } from 'react-transition-group';
-import { CameraPlaceHolder, Modal, SvgIconEnum, SvgImg, Tooltip, CheckBox, useI18n } from '~components';
+import { SvgIconEnum, SvgImg, useI18n } from '~components';
 import { Button } from '~components-v2/button';
 import ShapeSvg from './assets/shape.svg';
 
@@ -14,11 +9,20 @@ import ShapeSvg from './assets/shape.svg';
 import './index.css';
 import { Dropdown } from '~components-v2';
 import { Header } from '../header';
+import { DEVICE_DISABLE } from 'agora-edu-core';
 
 
 export type RoomPretestContainerProps = {
   onOK: () => void;
 };
+
+export const CameraIcon = () => {
+  return (
+    <div className='flex items-center justify-center' style={{ background: '#7C79FF', width: 40, height: 40, borderRadius: 6, margin: 4 }}>
+      <SvgImg type={SvgIconEnum.CAMERA_ON} colors={{ iconPrimary: '#fff' }} size={32} />
+    </div>
+  );
+}
 
 export const RoomPretestContainer: React.FC<RoomPretestContainerProps> = observer((
   { onOK },
@@ -26,7 +30,7 @@ export const RoomPretestContainer: React.FC<RoomPretestContainerProps> = observe
   const transI18n = useI18n();
   const { pretestUIStore } = useStore();
 
-  const trackPlayer = useRef(null);
+  const trackPlayer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (trackPlayer.current) {
@@ -35,11 +39,18 @@ export const RoomPretestContainer: React.FC<RoomPretestContainerProps> = observe
   }, []);
 
   const { cameraDevicesList, currentCameraDeviceId, setCameraDevice } = pretestUIStore;
+  const deviceList = cameraDevicesList.filter(({ value }) => {
+    return value !== DEVICE_DISABLE
+  });
 
   return (
     <div className='fcr-pretest w-full h-full'>
       {/* title */}
-      <Header />
+      <div className='fcr-grid-view-switch-content flex justify-between items-center'
+        style={{ padding: '10px 30px' }}
+      >
+        <Header />
+      </div>
       <img src={ShapeSvg} className="fixed top-0 right-0" />
       {/* content area */}
       <div className='fcr-pretest-content-area'>
@@ -55,15 +66,12 @@ export const RoomPretestContainer: React.FC<RoomPretestContainerProps> = observe
           {/* device list dropdown */}
           <div className='fcr-pretest-preview-dropdown'>
             <Dropdown
-              headSlot={
-                <div style={{ background: '#7C79FF', width: 24, height: 24, borderRadius: 6, margin: '4px 10px 4px 0' }}>
-                  <SvgImg type={SvgIconEnum.CAMERA_ON} colors={{ iconPrimary: '#fff' }} />
-                </div>
-              }
-              options={cameraDevicesList} onChange={(value) => {
+              headSlot={<CameraIcon />}
+              options={deviceList} onChange={(value) => {
                 setCameraDevice(value);
               }} value={currentCameraDeviceId}
               minWidth={200}
+              textWidth={120}
             />
           </div>
         </div>

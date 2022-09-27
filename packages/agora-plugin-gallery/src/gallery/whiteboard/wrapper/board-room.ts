@@ -107,6 +107,8 @@ export class FcrBoardRoom implements FcrBoardRoomEventEmitter {
       });
 
       this._room = room;
+      //@ts-ignore
+      window._room = room;
 
       if (config.hasOperationPrivilege) {
         room.setViewMode(ViewMode.Broadcaster);

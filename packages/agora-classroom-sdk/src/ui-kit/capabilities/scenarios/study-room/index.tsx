@@ -7,25 +7,19 @@ import { FixedAspectRatioRootBox } from '~containers/root-box';
 import { SceneSwitch } from '~containers/scene-switch';
 import { ToastContainer } from '~containers/toast';
 import Room from '../room';
-import { useStore } from '@/infra/hooks/ui-store';
 import ShapeSvg from '~containers-v2/pretest/assets/shape.svg';
 import './index.css';
-import { useEffect } from 'react';
 import { GridView } from '~containers-v2/grid-view';
+
 import { CameraDropdown, ChatTool, MicDropdown, Quit, RosterTool, ScreenShareTool } from '../../containers-v2/hocs';
 
 
 export const StudyRoomScenario = () => {
     // layout
     const layoutCls = classnames('edu-room', 'fcr-study-room');
-    const { shareUIStore } = useStore();
-    useEffect(() => {
-        shareUIStore.setViewportAspectRatio(0);
-    }, [])
-
     return (
         <Room>
-            <FixedAspectRatioRootBox>
+            <FixedAspectRatioRootBox unset>
                 <SceneSwitch>
                     <Layout className={layoutCls} direction="col">
                         <div className='fcr-grid-view-switch-content flex justify-between items-center'
@@ -35,8 +29,8 @@ export const StudyRoomScenario = () => {
                             <ViewSwitch />
                         </div>
                         <img src={ShapeSvg} className="fixed top-0 right-0" style={{ zIndex: -1 }} />
-                        {/*  */}
-                        <div className='fcr-grid-view-content w-full h-full' style={{ padding: '10px 30px' }}>
+                        {/* streams */}
+                        <div className='fcr-grid-view-content w-full flex-grow flex items-center' style={{ padding: '10px 30px' }}>
                             <GridView />
                         </div>
                         {/* control bar */}

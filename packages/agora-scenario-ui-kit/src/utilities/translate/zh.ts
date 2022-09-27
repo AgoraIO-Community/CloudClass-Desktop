@@ -433,6 +433,7 @@ export const zh = {
     roomType_1v1: '1对1',
     roomType_interactiveSmallClass: '互动小班课',
     roomType_interactiveBigClass: '大班课',
+    roomType_interactiveStudyRoom: '自习室',
     roomType_vocationalClass: '职教大班课',
     role: '角色',
     role_placeholder: '请选择你的角色',

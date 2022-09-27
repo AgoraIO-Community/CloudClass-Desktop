@@ -1,4 +1,4 @@
-import { AGServiceErrorCode } from 'agora-edu-core';
+import { AGServiceErrorCode, AGEduErrorCode } from 'agora-edu-core';
 import { AGError } from 'agora-rte-sdk';
 
 const errorsShouldBlockToast = new Set([
@@ -12,6 +12,12 @@ const errorsShouldBlockToast = new Set([
 export abstract class ToastFilter {
   static shouldBlockToast(error: Error) {
     if (errorsShouldBlockToast.has((error as AGError).servCode)) {
+      return true;
+    }
+
+    if (
+      (error as AGError).codeList[0] === AGEduErrorCode.EDU_ERR_SET_REMOTE_VIDEO_STREAM_TYPE_FAIL
+    ) {
       return true;
     }
 

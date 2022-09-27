@@ -1,4 +1,26 @@
-.fcr-grid-view__cell {
+.fcr-divided-grid-view__cell {
   background: #373a49;
+  border-radius: 8px;
+  /* transition: all 0.2s; */
+}
+
+.fcr-grid-tools__item,
+.fcr-pager-item {
+  background: rgba(52, 52, 52, 0.9);
+  opacity: 0.8;
+  backdrop-filter: blur(25px);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.fcr-grid-tools__item:hover,
+.fcr-pager-item:hover {
+  background: #27272a;
+}
+
+.fcr-pager {
+  background: rgba(138, 138, 138, 0.1);
+  opacity: 0.8;
+  backdrop-filter: blur(25px);
   border-radius: 8px;
 }
