@@ -35,7 +35,7 @@ import { supportedTypes } from '@/infra/stores/common/cloud-drive/helper';
 const UploadSuccessToast = () => {
   return (
     <Toast
-      closeToast={() => {}}
+      closeToast={() => { }}
       style={{
         position: 'absolute',
         left: '50%',
@@ -149,9 +149,9 @@ export const PersonalResourcesContainer = observer(() => {
       uploadingRef.current &&
       uploadingProgresses.length > 0 &&
       uploadingProgresses.length ===
-        uploadingProgresses.filter(
-          (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
-        ).length
+      uploadingProgresses.filter(
+        (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
+      ).length
     ) {
       uploadingRef.current = false;
       setUploadState('success');
@@ -298,22 +298,22 @@ export const PersonalResourcesContainer = observer(() => {
                         dangerouslySetInnerHTML={{
                           __html: searchPersonalResourcesKeyword
                             ? resourceName.replaceAll(
-                                searchPersonalResourcesKeyword,
-                                `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
-                              )
+                              searchPersonalResourcesKeyword,
+                              `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
+                            )
                             : resourceName,
                         }}></span>
                     </Inline>
                   </Col>
                   <Col>
                     {item.resource instanceof CloudDriveCourseResource &&
-                    item.resource?.taskProgress?.status === 'Converting' ? (
+                      item.resource.status === 'Converting' ? (
                       <>
                         <Inline className="text-level1">
                           <CircleLoading width="18" height="18" />
                         </Inline>
                         <Inline className="text-level1" style={{ marginLeft: '6px' }}>
-                          {item.resource?.taskProgress?.convertedPercentage}%
+                          {item.resource?.convertedPercentage}%
                         </Inline>
                       </>
                     ) : null}

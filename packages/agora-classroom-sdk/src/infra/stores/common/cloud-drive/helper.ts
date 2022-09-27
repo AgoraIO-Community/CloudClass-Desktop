@@ -2,6 +2,7 @@ import { CourseWareItem } from '@/infra/api';
 import {
   AGEduErrorCode,
   CloudDriveResource,
+  ConversionOption,
   EduClassroomConfig,
   EduErrorCenter,
 } from 'agora-edu-core';
@@ -13,14 +14,6 @@ import {
   CloudDriveLinkResource,
   CloudDriveMediaResource,
 } from './struct';
-
-export type ConversionOption = {
-  type: string;
-  preview: boolean;
-  scale: number;
-  outputFormat: string;
-  canvasVersion: boolean;
-};
 
 export const h5Type = 'ah5';
 export const linkType = 'alf';
@@ -156,7 +149,6 @@ export const conversionOption = (ext: string, scale?: number): ConversionOption 
         preview: true,
         scale: scale || EduClassroomConfig.shared.boardDefaults.scale,
         outputFormat: 'png',
-        canvasVersion: needDynamicConvert,
       }
     : undefined;
 };

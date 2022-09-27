@@ -4,6 +4,16 @@ export interface CloudDriveResourceConvertProgress {
   totalPageSize: number;
   convertedPageSize: number;
   convertedPercentage: number;
-  convertedFileList: [];
+  convertedFileList: {
+    name?: string;
+    ppt: {
+      preview?: string;
+      src: string;
+      width: number;
+      height: number;
+    };
+  }[];
   currentStep: string;
+  previews: Record<number, string>;
+  images: Record<number, string>;
 }
