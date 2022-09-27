@@ -157,6 +157,7 @@ export const VocationalHomeH5Page = observer(() => {
       <MessageDialog />
       <HomeSettingContainerH5 />
       <H5Login
+        showServiceOptions={true}
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}

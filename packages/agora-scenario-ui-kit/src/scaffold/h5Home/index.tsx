@@ -22,6 +22,7 @@ export const H5Login: React.FC<any> = ({
   service,
   onChangeService,
   isVocational,
+  showServiceOptions = false,
 }) => {
   const scenarioOptions = [
     { label: transI18n('home.roomType_interactiveBigClass'), value: 'big-class' },
@@ -41,7 +42,7 @@ export const H5Login: React.FC<any> = ({
     { label: transI18n('home.serviceType_mix'), value: 'mix-service' },
   ];
 
-  if (false) {
+  if (showServiceOptions) {
     serviceOptions.push(
       { label: transI18n('home.serviceType_mix_stream_cdn'), value: 'mix-stream-cdn-service' },
       { label: transI18n('home.serviceType_hosting_scene'), value: 'hosting-scene' },
