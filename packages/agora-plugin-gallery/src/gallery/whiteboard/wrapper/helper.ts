@@ -48,7 +48,7 @@ export const convertToNetlessBoardTool = (tool: FcrBoardTool) => {
     case FcrBoardTool.Selector:
       return ApplianceNames.selector;
     case FcrBoardTool.Eraser:
-      return ApplianceNames.eraser;
+      return ApplianceNames.pencilEraser;
     case FcrBoardTool.LaserPointer:
       return ApplianceNames.laserPointer;
     case FcrBoardTool.Clicker:

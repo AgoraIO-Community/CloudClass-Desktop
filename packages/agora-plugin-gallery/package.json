@@ -37,7 +37,7 @@
     "@netless/window-manager": "0.4.42",
     "@netless/app-talkative": "0.1.0",
     "@netless/white-snapshot": "0.4.1",
-    "white-web-sdk": "2.16.34",
+    "white-web-sdk": "2.16.35",
     "plyr": "3.7.2"
   }
 }
