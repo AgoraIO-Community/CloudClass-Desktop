@@ -66,7 +66,10 @@ export class CloudDriveCourseResource extends CloudDriveResource {
   }
 
   get hasAnimation() {
-    return !!this.conversion.canvasVersion;
+    if (this.conversion.type === 'static') {
+      return false;
+    }
+    return !!this.conversion.canvasVersion || !!this.taskUuid;
   }
 
   get convertedPercentage() {
