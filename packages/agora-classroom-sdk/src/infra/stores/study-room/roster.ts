@@ -13,7 +13,11 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
 
   @computed
   get rosterFunctions() {
-    return ['search', 'pin', 'eye'] as ('search' | 'pin' | 'eye')[];
+    const funcs = ['search', 'pin', 'eye'];
+    if (this.canKickOut) {
+      funcs.push('kick');
+    }
+    return funcs as ('search' | 'pin' | 'eye' | 'kick')[];
   }
 
   /**
@@ -22,22 +26,17 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
    */
   @computed
   get userList() {
-    const isMainRoom =
-      this.classroomStore.connectionStore.sceneId ===
-      this.classroomStore.connectionStore.mainRoomScene?.sceneId;
     let studentList = this.classroomStore.userStore.studentList;
 
-    if (isMainRoom) {
-      studentList = new Map();
+    studentList = new Map();
 
-      const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+    const { groupUuidByUserUuid } = this.classroomStore.groupStore;
 
-      this.classroomStore.userStore.studentList.forEach((user) => {
-        if (!groupUuidByUserUuid.has(user.userUuid)) {
-          studentList.set(user.userUuid, user);
-        }
-      });
-    }
+    this.classroomStore.userStore.studentList.forEach((user) => {
+      if (!groupUuidByUserUuid.has(user.userUuid)) {
+        studentList.set(user.userUuid, user);
+      }
+    });
 
     const { list } = iterateMap(studentList, {
       onMap: (userUuid: string, { userName }) => {
@@ -87,6 +86,7 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
         const operations: Operations = {
           pin: { interactable: true },
           eye: { interactable: true },
+          kick: { interactable: true },
         };
 
         return {
@@ -135,6 +135,10 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
 
         case 'eye': {
           this.shareUIStore.toggleUserBlackList({ userUuid: profile.uid } as any);
+          break;
+        }
+        case 'kick': {
+          this.clickKick(profile);
           break;
         }
       }

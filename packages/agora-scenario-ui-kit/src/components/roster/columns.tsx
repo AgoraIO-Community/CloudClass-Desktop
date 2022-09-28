@@ -136,7 +136,7 @@ export const superviseColumn: Column = {
 
 export const pinColumn: Column = {
   key: 'pin',
-  order: 8,
+  order: 6,
   name: 'roster.pin',
   operation: 'pin',
   render: (profile: Profile, hovered) => {
@@ -147,7 +147,7 @@ export const pinColumn: Column = {
 
 export const eyeColumn: Column = {
   key: 'eye',
-  order: 8,
+  order: 6,
   name: 'roster.eye',
   operation: 'eye',
   render: (profile: Profile, hovered) => {
