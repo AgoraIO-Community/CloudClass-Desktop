@@ -1,4 +1,4 @@
-import { AGError, AgoraRteLogLevel, bound, Log } from 'agora-rte-sdk';
+import { AGError, AgoraRteLogLevel, Log } from 'agora-rte-sdk';
 import { BoardUIStore } from './board-ui';
 import { CloudUIStore } from './cloud-drive';
 import { DeviceSettingUIStore } from './device-setting/index';
@@ -178,8 +178,7 @@ export class EduClassroomUIStore {
         );
       }
     }
-    // 默认开启大小流
-    // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+
     try {
       const launchLowStreamCameraEncoderConfigurations = (
         EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
@@ -194,7 +193,6 @@ export class EduClassroomUIStore {
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
-    // }
 
     try {
       await joinRTC();

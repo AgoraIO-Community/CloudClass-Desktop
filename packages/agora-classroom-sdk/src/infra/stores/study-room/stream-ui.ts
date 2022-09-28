@@ -35,7 +35,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
   @computed
   get showPager() {
-    return this.pageIndex + 1 < this.totalPage;
+    return this.totalPage > 1;
   }
 
   @computed
@@ -126,7 +126,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
       ? () => true
       : (userUuid: string) => userUuid !== this.pinnedStream?.stream.fromUser.userUuid;
 
-    const slice = this.orderedUserList.filter(filterFn).slice(startIndex, size);
+    const slice = this.orderedUserList.filter(filterFn).slice(startIndex, startIndex + size + 1);
 
     topMostList.push(...slice);
 

@@ -33,7 +33,7 @@ const GridCell = observer(({ stream, canPlay }: CellProps) => {
     }
 
     return (
-        <div ref={ref} className="fcr-divided-grid-view__cell mb-2 overflow-hidden" style={{ height, maxHeight: 'calc(100vh - 130px)' }}>
+        <div ref={ref} className="fcr-divided-grid-view__cell overflow-hidden" style={{ height, maxHeight: 'calc(100vh - 130px)' }}>
             {
                 canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> :
                     <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} />) :
@@ -53,7 +53,7 @@ export const DividedGridView = observer(() => {
     const { matrix, sequence, numOfCols } = calculateGridMatrix(participant20Streams.length);
 
     return (
-        <div ref={ref} className='fcr-divided-grid-view relative w-full flex flex-wrap items-center justify-between'>
+        <div ref={ref} className='fcr-divided-grid-view relative w-full flex flex-wrap items-center' style={{ gap: 8 }}>
             {
                 matrix.map((rows, rowIdx) => {
                     return rows.map((_, colIdx) => {

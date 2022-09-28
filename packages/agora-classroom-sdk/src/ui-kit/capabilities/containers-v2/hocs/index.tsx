@@ -198,10 +198,10 @@ export const ScreenShareTool = observer(() => {
 export const ChatTool = observer(() => {
 
     return (
-        <React.Fragment>
-            <Chat />
+        <div className="">
+            {/* <Chat /> */}
             <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.COLORED_CHAT} />
-        </React.Fragment>
+        </div>
     );
 });
 
