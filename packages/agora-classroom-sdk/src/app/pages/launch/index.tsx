@@ -1,5 +1,6 @@
 import { useHomeStore } from '@/app/hooks';
 import { AgoraEduSDK } from '@/infra/api';
+import { FcrMultiThemeMode } from '@/infra/types/config';
 import { AgoraEduClassroomEvent } from 'agora-edu-core';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
@@ -44,7 +45,8 @@ export const LaunchPage = observer(() => {
         // TODO:  Here you need to pass in the address of the recording page posted by the developer himself
         recordUrl,
         courseWareList,
-        uiMode: homeStore.theme,
+        uiMode: FcrMultiThemeMode.dark,
+        latencyLevel: 1,
         listener: (evt: AgoraEduClassroomEvent, type) => {
           console.log('launch#listener ', evt);
           if (evt === AgoraEduClassroomEvent.Destroyed) {

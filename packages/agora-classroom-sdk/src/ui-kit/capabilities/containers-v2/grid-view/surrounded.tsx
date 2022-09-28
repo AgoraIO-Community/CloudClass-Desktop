@@ -20,7 +20,7 @@ type CellProps = {
 const GridCell = observer(({ stream, canPlay, streamType }: CellProps) => {
     const { streamUIStore } = useStore() as EduStudyRoomUIStore;
 
-    const { localCameraStream, localScreenStream } = streamUIStore;
+    const { localCameraStream, localScreenStream, connected } = streamUIStore;
 
     const [ref, bounds] = useMeasure();
 
@@ -35,7 +35,7 @@ const GridCell = observer(({ stream, canPlay, streamType }: CellProps) => {
     return (
         <div ref={ref} className="fcr-divided-grid-view__cell mb-2 overflow-hidden relative flex items-center justify-center flex-shrink-0" style={{ width, height }}>
             {
-                canPlay ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> : <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} streamType={streamType} />) :
+                canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> : <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} streamType={streamType} />) :
                     <div className="h-full flex items-center justify-center">{stream.fromUser.userName}</div>
             }
         </div>

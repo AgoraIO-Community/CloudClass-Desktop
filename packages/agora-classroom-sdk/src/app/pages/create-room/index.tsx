@@ -133,7 +133,7 @@ export const CreateRoom = observer(() => {
       date: date,
       time: date,
       link: '',
-      numberOfParticipants: ''
+      numberOfParticipants: '1000'
     };
   }, []);
 
@@ -406,6 +406,7 @@ export const CreateRoom = observer(() => {
                         },
                       ]}>
                       <AInput
+                        disabled
                         maxLength={10}
                         placeholder={transI18n('fcr_create_tips_number_of_participants')} />
                     </AFormItem>

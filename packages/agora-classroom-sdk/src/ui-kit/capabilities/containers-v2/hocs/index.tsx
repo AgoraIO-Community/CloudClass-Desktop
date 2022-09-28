@@ -8,6 +8,7 @@ import React, { useMemo, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '~components';
 import { IconButton } from '~components-v2';
 import { getColorByLevel } from '~utilities/palette-helper';
+import { Chat } from '../../containers/widget/slots';
 import './index.css';
 
 
@@ -77,7 +78,7 @@ const DeviceDropdown = observer(({ disabled, muted, icon, onDeviceClick, dropdow
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     className="fcr-device-dropdown__arrow-btn absolute flex items-center cursor-pointer"
-                    style={{ right: 4, top: '50%', height: '70%', transform: 'translateY(-50%)', borderRadius: 6, padding: '0 3px', background: arrowButtonBackground, transition: 'background-color .2s' }}
+                    style={{ right: 4, top: '50%', height: '70%', transform: 'translateY(-50%)', borderRadius: 6, padding: '0 5px', background: arrowButtonBackground, transition: 'background-color .2s' }}
                     onClick={preventClick}
                 >
                     <SvgImg
@@ -195,7 +196,13 @@ export const ScreenShareTool = observer(() => {
 
 
 export const ChatTool = observer(() => {
-    return <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.COLORED_CHAT} />;
+
+    return (
+        <React.Fragment>
+            <Chat />
+            <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.COLORED_CHAT} />
+        </React.Fragment>
+    );
 });
 
 

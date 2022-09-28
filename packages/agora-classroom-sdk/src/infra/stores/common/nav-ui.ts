@@ -268,7 +268,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         iconType: this.localMicOff ? SvgIconEnum.MICROPHONE_OFF : SvgIconEnum.MICROPHONE_ON,
         onClick: async () => {
           try {
-            this._toggleLocalAudio();
+            this.toggleLocalAudio();
           } catch (e) {
             this.shareUIStore.addGenericErrorDialog(e as AGError);
           }
@@ -347,7 +347,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         iconType: this.localCameraOff ? SvgIconEnum.CAMERA_DISABLED : SvgIconEnum.CAMERA_ENABLED,
         onClick: () => {
           try {
-            this._toggleLocalVideo();
+            this.toggleLocalVideo();
           } catch (e) {
             this.shareUIStore.addGenericErrorDialog(e as AGError);
           }
@@ -359,7 +359,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         iconType: this.localMicOff ? SvgIconEnum.MICROPHONE_OFF : SvgIconEnum.MICROPHONE_ON,
         onClick: async () => {
           try {
-            this._toggleLocalAudio();
+            this.toggleLocalAudio();
           } catch (e) {
             this.shareUIStore.addGenericErrorDialog(e as AGError);
           }

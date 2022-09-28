@@ -20,6 +20,7 @@
     "@types/react-dom": "16.9.2",
     "@types/react-router-dom": "5.1.0",
     "@types/react-virtualized": "^9.21.14",
+    "@types/tinycolor2": "1.4.3",
     "babel-loader": "8.2.2",
     "classnames": "2.2.6",
     "dayjs": "1.10.4",

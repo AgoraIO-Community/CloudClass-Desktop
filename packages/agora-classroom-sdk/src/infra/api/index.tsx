@@ -316,7 +316,11 @@ export class AgoraEduSDK {
       },
       platform,
       Object.assign(
-        { openCameraDeviceAfterLaunch: pretest, openRecordingDeviceAfterLaunch: pretest },
+        {
+          openCameraDeviceAfterLaunch: pretest,
+          // openRecordingDeviceAfterLaunch: pretest
+          openRecordingDeviceAfterLaunch: false
+        },
         recordRetryTimeout ? { recordRetryTimeout } : {},
       ),
     );

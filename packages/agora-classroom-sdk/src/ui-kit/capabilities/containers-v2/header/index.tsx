@@ -3,13 +3,22 @@ import { EduStudyRoomUIStore } from '@/infra/stores/study-room';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';
-import { SvgIconEnum, SvgImg, useI18n } from '~components';
+import { SvgIconEnum, SvgImg } from '~components';
+
+import { useTranslation } from 'react-i18next';
 import './index.css';
+import logoCN from './assets/st-logo-cn.svg';
+import logoEN from './assets/st-logo-en.svg';
+
 export const Header = () => {
-    const transI18n = useI18n();
+    const { i18n } = useTranslation();
+
+    const logo = i18n.language === 'en' ? logoEN : logoCN;
+
     return (
         <div className='fcr-header-logo flex items-center'>
-            {transI18n('StudyRoom')}<div className='fcr-header-divider' />{EduClassroomConfig.shared.sessionInfo.roomName}
+            <img src={logo} />
+            <div className='fcr-header-divider' />{EduClassroomConfig.shared.sessionInfo.roomName}
         </div>
     );
 }

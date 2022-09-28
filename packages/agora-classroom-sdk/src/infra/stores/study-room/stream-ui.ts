@@ -4,6 +4,7 @@ import {
   AgoraRteMediaSourceState,
   AgoraRteVideoSourceType,
   AgoraUser,
+  AGRtcState,
   Log,
 } from 'agora-rte-sdk';
 import { action, computed, observable, reaction } from 'mobx';
@@ -55,6 +56,11 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
       const [stream] = this._getUserStreams([userUuid]);
       return stream;
     }
+  }
+
+  @computed
+  get connected() {
+    return this.classroomStore.connectionStore.rtcState === AGRtcState.Connected;
   }
 
   @computed

@@ -30,7 +30,7 @@ export const IconButton = ({ onClick, icon, backgroundColor, iconColor, opacity,
 
     return (
         <div className={cls} onClick={onClick} style={{ backgroundColor, opacity, transition }}>
-            <SvgImg type={icon} colors={{ iconPrimary: iconColor }} />
+            <SvgImg type={icon} colors={{ iconPrimary: iconColor }} size={40} />
             {tailSlot}
         </div>
     );
