@@ -45,13 +45,18 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
   @computed
   get totalPage() {
-    let totalUser = this.orderedUserList.length;
+    let totalUser = this.userList.length;
     if (this.viewMode === 'surrounded') {
       totalUser -= 1;
     }
 
     const p = Math.floor(totalUser / this.pageSize);
     return totalUser % this.pageSize > 0 ? p + 1 : p;
+  }
+
+  @computed
+  get userList() {
+    return this.orderedUserList.filter((userUuid) => !this.blackList.has(userUuid));
   }
 
   @computed
@@ -131,7 +136,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
       ? () => true
       : (userUuid: string) => userUuid !== this.pinnedStream?.stream.fromUser.userUuid;
 
-    const userList = this.orderedUserList.filter(filterFn);
+    const userList = this.userList.filter(filterFn);
 
     const needFill = userList.length > size && startIndex + size > userList.length;
 
@@ -144,6 +149,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
     }
 
     topMostList.push(...slice);
+    console.log('---users', slice);
 
     return topMostList;
   }
@@ -176,6 +182,8 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
         }
       });
     });
+
+    console.log('---streams', list);
 
     return list;
   }
@@ -255,6 +263,17 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
         if (scene) {
           scene.addListener(AgoraRteEventType.UserAdded, this._handleUserAdded);
           scene.addListener(AgoraRteEventType.UserRemoved, this._handleUserRemoved);
+        }
+      },
+    );
+
+    reaction(
+      () => {
+        return this.classroomStore.connectionStore.rtcState === AGRtcState.Connected;
+      },
+      (connected) => {
+        if (connected) {
+          this.classroomStore.mediaStore.enableLocalVideo(true);
         }
       },
     );
