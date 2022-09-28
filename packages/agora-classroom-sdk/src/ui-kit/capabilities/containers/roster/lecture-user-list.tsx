@@ -63,11 +63,11 @@ const RosterTableContainer: FC<unknown> = observer(() => {
   }, []);
   return (
     <InfiniteScrollRosterTable
-      list={userList}
+      list={userList as any}
       hasMore={hasMoreUsers}
       onFetch={fetchNextUsersList}
       functions={functions}
-      onActionClick={clickRowAction}
+      onActionClick={clickRowAction as any}
     />
   );
 });

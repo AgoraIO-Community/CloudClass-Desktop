@@ -38,5 +38,5 @@ const RosterTableContainer: FC<unknown> = observer(() => {
   const { rosterUIStore } = useStore();
   const { rosterFunctions: functions, userList, clickRowAction } = rosterUIStore;
 
-  return <RosterTable list={userList} functions={functions} onActionClick={clickRowAction} />;
+  return <RosterTable list={userList as any} functions={functions} onActionClick={clickRowAction as any} />;
 });
