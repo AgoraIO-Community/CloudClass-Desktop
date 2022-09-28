@@ -33,7 +33,7 @@ const GridCell = observer(({ stream, canPlay }: CellProps) => {
     }
 
     return (
-        <div ref={ref} className="fcr-divided-grid-view__cell overflow-hidden" style={{ height, maxHeight: 'calc(100vh - 130px)' }}>
+        <div ref={ref} className="fcr-divided-grid-view__cell overflow-hidden" style={{ height, maxHeight: 'calc(100vh - 155px)' }}>
             {
                 canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> :
                     <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} />) :

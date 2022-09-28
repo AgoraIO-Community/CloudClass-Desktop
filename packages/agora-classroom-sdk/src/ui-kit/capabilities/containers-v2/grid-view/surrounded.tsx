@@ -60,7 +60,7 @@ export const SurroundedGridView = observer(() => {
                 }
             </div>
             {/* Aside */}
-            <div className="fcr-surrounded-grid-view__aside flex flex-col items-end overflow-auto" style={{ width: 210, height: 'calc(100vh - 130px)' }}>
+            <div className="fcr-surrounded-grid-view__aside flex flex-col items-end overflow-auto" style={{ width: 210, height: 'calc(100vh - 155px)' }}>
                 {
                     participant8Streams.map((stream) => {
                         return (

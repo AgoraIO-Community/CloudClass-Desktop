@@ -882,7 +882,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         this.classroomStore.roomStore.flexProps.stage) ||
       typeof this.classroomStore.roomStore.flexProps.stage === 'undefined'
     ) {
-      this._toggleLocalVideo();
+      this.toggleLocalVideo();
       return;
     }
     if (
