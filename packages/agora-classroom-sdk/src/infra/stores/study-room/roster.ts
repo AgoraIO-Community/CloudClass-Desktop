@@ -125,7 +125,7 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
    * @param profile
    */
   //@ts-ignore
-  clickRowAction = interactionThrottleHandler(
+  clickRowAction: any = interactionThrottleHandler(
     (operation: Operation, profile: Profile) => {
       switch (operation) {
         case 'pin': {
