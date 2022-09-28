@@ -1,14 +1,13 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { DialogCategory } from '@/infra/stores/common/share-ui';
-import { CabinetItemEnum } from '@/infra/stores/common/type';
 import { LeaveReason } from 'agora-edu-core';
+import { AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useMemo, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '~components';
 import { IconButton } from '~components-v2';
 import { getColorByLevel } from '~utilities/palette-helper';
-import { Chat } from '../../containers/widget/slots';
 import './index.css';
 
 
@@ -185,10 +184,14 @@ export const MicDropdown = observer(() => {
 });
 
 export const ScreenShareTool = observer(() => {
-    const { toolbarUIStore } = useStore();
+    const { classroomStore } = useStore();
 
     const handleClick = () => {
-        toolbarUIStore.openBuiltinCabinet(CabinetItemEnum.ScreenShare);
+        if (classroomStore.mediaStore.localScreenShareTrackState !== AgoraRteMediaSourceState.started) {
+            classroomStore.mediaStore.startScreenShareCapture();
+        } else {
+            classroomStore.mediaStore.stopScreenShareCapture();
+        }
     }
 
     return <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.SCREENSHARING} onClick={handleClick} />;

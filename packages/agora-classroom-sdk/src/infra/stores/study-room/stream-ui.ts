@@ -45,8 +45,13 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
   @computed
   get totalPage() {
-    const p = Math.floor(this.orderedUserList.length / this.pageSize);
-    return this.orderedUserList.length % this.pageSize > 0 ? p + 1 : p;
+    let totalUser = this.orderedUserList.length;
+    if (this.viewMode === 'surrounded') {
+      totalUser -= 1;
+    }
+
+    const p = Math.floor(totalUser / this.pageSize);
+    return totalUser % this.pageSize > 0 ? p + 1 : p;
   }
 
   @computed
@@ -126,7 +131,17 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
       ? () => true
       : (userUuid: string) => userUuid !== this.pinnedStream?.stream.fromUser.userUuid;
 
-    const slice = this.orderedUserList.filter(filterFn).slice(startIndex, startIndex + size + 1);
+    const userList = this.orderedUserList.filter(filterFn);
+
+    const needFill = userList.length > size && startIndex + size > userList.length;
+
+    let slice = [];
+
+    if (needFill) {
+      slice = userList.slice(userList.length - size, userList.length);
+    } else {
+      slice = userList.slice(startIndex, startIndex + size);
+    }
 
     topMostList.push(...slice);
 
@@ -171,6 +186,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
       this.pinnedUser = undefined;
     }
     this.viewMode = this.viewMode === 'divided' ? 'surrounded' : 'divided';
+    this.pageIndex = 0;
   };
 
   @action.bound

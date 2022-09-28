@@ -14,6 +14,8 @@ export type Operation =
   | 'kick'
   | 'chat'
   | 'star'
+  | 'pin'
+  | 'eye'
   | 'supervise-student';
 
 export type Operations = Partial<Record<Operation, { interactable: boolean }>>;
@@ -25,6 +27,8 @@ export type SupportedFunction =
   | 'grant-board'
   | 'podium'
   | 'stars'
+  | 'pin'
+  | 'eye'
   | 'supervise-student';
 
 export type ColumnKey =
@@ -36,6 +40,8 @@ export type ColumnKey =
   | 'microphoneState'
   | 'stars'
   | 'kick'
+  | 'pin'
+  | 'eye'
   | 'superviseStudent';
 
 export type Column = {
@@ -100,6 +106,8 @@ export type Profile = {
   microphoneState: DeviceState;
   stars: number;
   operations: Operations;
+  pinned: boolean;
+  eyeClosed: boolean;
 };
 
 export type CarouselProps = {

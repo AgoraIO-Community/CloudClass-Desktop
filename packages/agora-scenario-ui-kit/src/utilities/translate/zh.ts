@@ -78,6 +78,8 @@ export const zh = {
     seconds: '秒',
     no_more_data: '没有更多数据了',
     supervise_student: '监听',
+    pin: '固定',
+    eye: '不看',
   },
   hands_up: '举手',
   on_podium_max_count: '上台人数已达上限，无法继续邀请学生上台',

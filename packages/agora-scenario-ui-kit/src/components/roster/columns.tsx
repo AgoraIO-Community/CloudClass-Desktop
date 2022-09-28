@@ -132,3 +132,26 @@ export const superviseColumn: Column = {
     return <Icon type={{ icon: SvgIconEnum.TRIANGLE, }} />;
   },
 };
+
+
+export const pinColumn: Column = {
+  key: 'pin',
+  order: 8,
+  name: 'roster.pin',
+  operation: 'pin',
+  render: (profile: Profile, hovered) => {
+    const iconType = profile.pinned ? SvgIconEnum.UNPIN : SvgIconEnum.PIN;
+    return <Icon type={{ icon: iconType }} />;
+  },
+};
+
+export const eyeColumn: Column = {
+  key: 'eye',
+  order: 8,
+  name: 'roster.eye',
+  operation: 'eye',
+  render: (profile: Profile, hovered) => {
+    const iconType = profile.eyeClosed ? SvgIconEnum.EYE_OPEN : SvgIconEnum.EYE_CLOSE;
+    return <Icon type={{ icon: iconType }} />;
+  },
+};

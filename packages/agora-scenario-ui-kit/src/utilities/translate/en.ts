@@ -78,6 +78,8 @@ export const en = {
     seconds: 'seconds',
     no_more_data: 'No more data',
     supervise_student: 'Supervise',
+    pin: 'Pin',
+    eye: 'Eye',
   },
   hands_up: 'Hands Up',
   on_podium_max_count:
