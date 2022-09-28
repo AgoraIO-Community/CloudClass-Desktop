@@ -193,10 +193,11 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
   togglePinUser(user: AgoraFromUser) {
     if (this.pinnedUser === user.userUuid) {
       this.pinnedUser = undefined;
+      this.viewMode = 'divided';
     } else {
       this.pinnedUser = user.userUuid;
+      this.viewMode = 'surrounded';
     }
-    this.viewMode = 'surrounded';
   }
 
   @action.bound
