@@ -63,7 +63,7 @@ export const Welcome = observer(() => {
   }, []);
 
   const refreshRoomList = useCallback(() => {
-    setFetching(true);
+    setLoading(true);
     RoomAPI.shared
       .list()
       .then((response) => {
@@ -73,7 +73,7 @@ export const Welcome = observer(() => {
         setRoomList(list);
       })
       .finally(() => {
-        setFetching(false);
+        setLoading(false);
       });
   }, []);
 

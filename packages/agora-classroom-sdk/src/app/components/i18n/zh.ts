@@ -63,6 +63,7 @@ export default {
   fcr_home_form_time: '2022-08-12,12:00-16:00',
   fcr_create_label_create_classroom: '创建房间',
   fcr_create_label_room_name: '房间名称',
+  fcr_create_label_room_name_default: '{name}的房间',
   fcr_create_label_starttime: '开始时间',
   fcr_create_label_endtime: '结束时间',
   fcr_create_label_classmode: '教学模式',

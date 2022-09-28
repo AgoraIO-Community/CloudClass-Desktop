@@ -127,17 +127,24 @@ export const ChatH5 = observer(function Chat() {
 });
 
 export const Watermark = observer(function Chat() {
-  const { widgetUIStore } = useStore();
+  const { widgetUIStore, classroomStore } = useStore();
   const { ready } = widgetUIStore;
 
   useEffect(() => {
-    if (ready) {
-      widgetUIStore.createWidget('watermark');
+    if (ready && classroomStore.roomStore?.flexProps?.watermark) {
+      widgetUIStore.createWidget('watermark', {
+        userProperties: {},
+        properties: {
+          content: classroomStore.userStore.localUser?.userUuid || '',
+          visible: true,
+        },
+        trackProperties: {},
+      });
       return () => {
         widgetUIStore.destroyWidget('watermark');
       };
     }
-  }, [ready]);
+  }, [ready, classroomStore.roomStore?.flexProps?.watermark, classroomStore.userStore.localUser?.userUuid]);
 
   return (
     <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none z-10" />

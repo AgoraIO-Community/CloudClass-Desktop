@@ -32,3 +32,6 @@ const getIndexURL = () => {
 };
 
 export const indexURL = getIndexURL();
+
+export const defaultHostingURL =
+  'https://upload.wikimedia.org/wikipedia/commons/8/88/Big_Buck_Bunny_alt.webm';

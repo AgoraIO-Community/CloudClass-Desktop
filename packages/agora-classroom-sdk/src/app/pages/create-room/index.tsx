@@ -1,4 +1,5 @@
 import { RoomAPI } from '@/app/api/room';
+import { UserApi } from '@/app/api/user';
 import watermarkIcon from '@/app/assets/fcr_watermark.svg';
 import cdnIcon from '@/app/assets/service-type/fcr_cdn.svg';
 import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
@@ -9,6 +10,7 @@ import { useHomeStore } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
 import { useLoading } from '@/app/hooks/useLoading';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
+import { defaultHostingURL } from '@/app/utils';
 import { EduRoomServiceTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
@@ -62,6 +64,48 @@ type CreateFormValue = {
   link: string;
 };
 
+const roomTypeOptions = [
+  {
+    label: 'fcr_h5create_label_1on1',
+    description: 'fcr_create_label_1on1_description',
+    value: EduRoomTypeEnum.Room1v1Class,
+    className: 'card-purple',
+  },
+  {
+    label: 'fcr_h5create_label_small_classroom',
+    description: 'fcr_create_label_smallclassroom_description',
+    value: EduRoomTypeEnum.RoomSmallClass,
+    className: 'card-red',
+  },
+  {
+    label: 'fcr_h5create_label_lecture_hall',
+    description: 'fcr_create_label_lecturehall_description',
+    value: EduRoomTypeEnum.RoomBigClass,
+    className: 'card-green',
+  },
+];
+
+const serviceTypeOptions = [
+  {
+    label: 'fcr_create_label_servicetype_RTC',
+    description: 'fcr_create_label_latency_RTC',
+    value: EduRoomServiceTypeEnum.LivePremium,
+    icon: <img src={premiumIcon} />,
+  },
+  {
+    label: 'fcr_create_label_servicetype_Standard',
+    description: 'fcr_create_label_latency_Standard',
+    value: EduRoomServiceTypeEnum.LiveStandard,
+    icon: <img src={standardIcon} />,
+  },
+  {
+    label: 'fcr_create_label_servicetype_CDN',
+    description: 'fcr_create_label_latency_CDN',
+    value: EduRoomServiceTypeEnum.Fusion,
+    icon: <img src={cdnIcon} />,
+  },
+];
+
 export const CreateRoom = observer(() => {
   const homeStore = useHomeStore();
   const historyBackHandle = useHistoryBack();
@@ -70,47 +114,6 @@ export const CreateRoom = observer(() => {
   const customFormat: ADatePickerProps['format'] = (value) =>
     `${value.format('YYYY-MM-DD')}  |  ${transI18n(weekday[value.day()])}`;
 
-  const roomTypeOptions = [
-    {
-      label: transI18n('fcr_h5create_label_1on1'),
-      description: transI18n('fcr_create_label_1on1_description'),
-      value: EduRoomTypeEnum.Room1v1Class,
-      className: 'card-purple',
-    },
-    {
-      label: transI18n('fcr_h5create_label_small_classroom'),
-      description: transI18n('fcr_create_label_smallclassroom_description'),
-      value: EduRoomTypeEnum.RoomSmallClass,
-      className: 'card-red',
-    },
-    {
-      label: transI18n('fcr_h5create_label_lecture_hall'),
-      description: transI18n('fcr_create_label_lecturehall_description'),
-      value: EduRoomTypeEnum.RoomBigClass,
-      className: 'card-green',
-    },
-  ];
-
-  const serviceTypeOptions = [
-    {
-      label: transI18n('fcr_create_label_servicetype_RTC'),
-      description: transI18n('fcr_create_label_latency_RTC'),
-      value: EduRoomServiceTypeEnum.LivePremium,
-      icon: <img src={premiumIcon} />,
-    },
-    {
-      label: transI18n('fcr_create_label_servicetype_Standard'),
-      description: transI18n('fcr_create_label_latency_Standard'),
-      value: EduRoomServiceTypeEnum.LiveStandard,
-      icon: <img src={standardIcon} />,
-    },
-    {
-      label: transI18n('fcr_create_label_servicetype_CDN'),
-      description: transI18n('fcr_create_label_latency_CDN'),
-      value: EduRoomServiceTypeEnum.Fusion,
-      icon: <img src={cdnIcon} />,
-    },
-  ];
   const [showMore, setShowMore] = useState(false);
   const [roomType, setRoomType] = useState(roomTypeOptions[0].value);
   const [serviceType, setServiceType] = useState(serviceTypeOptions[0].value);
@@ -128,10 +131,10 @@ export const CreateRoom = observer(() => {
   const initialValues: CreateFormValue = useMemo(() => {
     const date = dayjs();
     return {
-      name: '',
+      name: transI18n('fcr_create_label_room_name_default', { name: UserApi.shared.nickName }),
       date: date,
       time: date,
-      link: '',
+      link: defaultHostingURL,
     };
   }, []);
 
@@ -325,14 +328,14 @@ export const CreateRoom = observer(() => {
             {roomTypeOptions.map((v) => {
               return (
                 <RoomTypeCard
-                  title={v.label}
+                  title={transI18n(v.label)}
+                  description={transI18n(v.description)}
                   checked={roomType === v.value}
                   className={v.className}
                   key={v.value + v.label}
                   onClick={() => {
                     setRoomType(v.value);
                   }}
-                  description={v.description}
                 />
               );
             })}
@@ -351,8 +354,8 @@ export const CreateRoom = observer(() => {
                       setServiceType(v.value);
                     }}
                     checked={v.value === serviceType}
-                    label={v.label}
-                    description={v.description}
+                    label={transI18n(v.label)}
+                    description={transI18n(v.description)}
                     icon={v.icon}
                   />
                 );

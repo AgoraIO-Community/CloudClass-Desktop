@@ -8,6 +8,7 @@ import {
 import { observer } from 'mobx-react';
 import { useLayoutEffect, useState } from 'react';
 import { RoomPretestContainer } from '~containers/pretest';
+import { Watermark } from '../containers/widget/slots';
 import { OneToOneScenario } from './1v1';
 import { BigClassScenario } from './big-class';
 import { BigClassScenarioH5 } from './big-class-h5';
@@ -68,12 +69,19 @@ export const Scenarios: React.FC<ScenariosProps> = observer(
 
     const [showPretest, setPretest] = useState(pretest);
 
-    return initialized ? (
-      showPretest ? (
-        <RoomPretestContainer onOK={() => setPretest(false)} />
-      ) : (
-        renderRoomSceneWith(roomType, roomServiceType)
-      )
-    ) : null;
+    if (!initialized) {
+      return null;
+    }
+
+    if (showPretest) {
+      return <RoomPretestContainer onOK={() => setPretest(false)} />;
+    }
+
+    return (
+      <>
+        {renderRoomSceneWith(roomType, roomServiceType)}
+        <Watermark />
+      </>
+    );
   },
 );

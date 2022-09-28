@@ -66,6 +66,7 @@ export default {
   fcr_home_form_time: '2022-08-12,12:00-16:00',
   fcr_create_label_create_classroom: 'Create Classroom',
   fcr_create_label_room_name: 'Room Name ',
+  fcr_create_label_room_name_default: "{name}'s room",
   fcr_create_label_starttime: 'Starttime',
   fcr_create_label_endtime: 'EndTime',
   fcr_create_label_classmode: 'Class Mode',
