@@ -24,8 +24,9 @@ export const Header = () => {
 }
 
 export const ViewSwitch = observer(() => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
-    const { viewMode, toggleViewMode } = streamUIStore;
+    const { streamUIStore, shareUIStore } = useStore() as EduStudyRoomUIStore;
+    const { toggleViewMode } = streamUIStore;
+    const { viewMode } = shareUIStore;
 
     const indicatorCls = classNames('fcr-view-switch__indicator absolute', {
         'fcr-view-switch__indicator--on': viewMode === 'surrounded'

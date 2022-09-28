@@ -6,6 +6,8 @@ import {
   grantBoardColumn,
   starsColumn,
   superviseColumn,
+  pinColumn,
+  eyeColumn
 } from './columns';
 import { Column } from './';
 import { SupportedFunction } from '~components';
@@ -34,6 +36,14 @@ export const useColumns = (functions: SupportedFunction[]) => {
     // if (functions.includes('supervise-student')) {
     //   cols.push(superviseColumn);
     // }
+
+    if (functions.includes('pin')) {
+      cols.push(pinColumn);
+    }
+
+    if (functions.includes('eye')) {
+      cols.push(eyeColumn);
+    }
 
     return sortBy(cols, ['order']);
   }, [showKickOut]);

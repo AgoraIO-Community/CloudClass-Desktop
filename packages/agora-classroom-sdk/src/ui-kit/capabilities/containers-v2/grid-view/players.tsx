@@ -53,12 +53,16 @@ export const AutoSubscriptionRemoteTrackPlayer = ({ stream, streamType = AgoraRt
     const needMirror = stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare;
 
     useEffect(() => {
-        classroomStore.streamStore.muteRemoteVideoStream(stream, false);
-        classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
+        const handle = setTimeout(() => {
+            classroomStore.streamStore.muteRemoteVideoStream(stream, false);
+            classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
+        }, 200);
+
         return () => {
+            clearTimeout(handle);
             classroomStore.streamStore.muteRemoteVideoStream(stream, true);
         }
-    }, [stream]);
+    }, [stream.streamUuid]);
 
     return (
         <div className="w-full h-full relative">

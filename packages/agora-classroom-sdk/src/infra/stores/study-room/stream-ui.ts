@@ -19,15 +19,6 @@ export type StreamCellUI = {
 @Log.attach({ proxyMethods: false })
 export class StudyRoomStreamUIStore extends StreamUIStore {
   @observable
-  viewMode: 'divided' | 'surrounded' = 'divided';
-
-  @observable
-  pinnedUser?: string;
-
-  @observable
-  blackList: Set<string> = new Set();
-
-  @observable
   orderedUserList: string[] = [];
 
   @observable
@@ -40,13 +31,13 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
   @computed
   get pageSize() {
-    return this.viewMode === 'divided' ? 20 : 8;
+    return this.shareUIStore.viewMode === 'divided' ? 20 : 8;
   }
 
   @computed
   get totalPage() {
     let totalUser = this.userList.length;
-    if (this.viewMode === 'surrounded') {
+    if (this.shareUIStore.viewMode === 'surrounded') {
       totalUser -= 1;
     }
 
@@ -56,12 +47,12 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
   @computed
   get userList() {
-    return this.orderedUserList.filter((userUuid) => !this.blackList.has(userUuid));
+    return this.orderedUserList.filter((userUuid) => !this.shareUIStore.blackList.has(userUuid));
   }
 
   @computed
   get pinnedStream() {
-    const userUuid = this.pinnedUser || this.localUserUuid;
+    const userUuid = this.shareUIStore.pinnedUser || this.localUserUuid;
     if (userUuid) {
       const [stream] = this._getUserStreams([userUuid]);
       return stream;
@@ -149,7 +140,6 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
     }
 
     topMostList.push(...slice);
-    console.log('---users', slice);
 
     return topMostList;
   }
@@ -168,7 +158,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
           );
           list.push({
             stream: new EduStreamUI(stream),
-            canPlay: !this.blackList.has(stream.fromUser.userUuid) && deviceStarted,
+            canPlay: !this.shareUIStore.blackList.has(stream.fromUser.userUuid) && deviceStarted,
           });
         } else if (stream?.videoSourceType === AgoraRteVideoSourceType.ScreenShare) {
           const deviceStarted = stream.videoSourceState === AgoraRteMediaSourceState.started;
@@ -177,40 +167,21 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
           );
           list.push({
             stream: new EduStreamUI(stream),
-            canPlay: !this.blackList.has(stream.fromUser.userUuid) && deviceStarted,
+            canPlay: !this.shareUIStore.blackList.has(stream.fromUser.userUuid) && deviceStarted,
           });
         }
       });
     });
 
-    console.log('---streams', list);
-
     return list;
-  }
-
-  @action.bound
-  toggleViewMode = () => {
-    if (this.viewMode === 'divided') {
-      this.pinnedUser = undefined;
-    }
-    this.viewMode = this.viewMode === 'divided' ? 'surrounded' : 'divided';
-    this.pageIndex = 0;
-  };
-
-  @action.bound
-  togglePinUser(user: AgoraFromUser) {
-    if (this.pinnedUser === user.userUuid) {
-      this.pinnedUser = undefined;
-      this.viewMode = 'divided';
-    } else {
-      this.pinnedUser = user.userUuid;
-      this.viewMode = 'surrounded';
-    }
   }
 
   @action.bound
   private _handleUserAdded(users: AgoraUser[]) {
     users.forEach(({ userUuid }) => {
+      if (this.orderedUserList.includes(userUuid)) {
+        return;
+      }
       if (userUuid === this.localUserUuid) {
         this.orderedUserList.unshift(userUuid);
       } else {
@@ -229,15 +200,6 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
   }
 
   @action.bound
-  toggleUserBlackList(user: AgoraFromUser) {
-    if (!this.blackList.has(user.userUuid)) {
-      this.blackList.add(user.userUuid);
-    } else {
-      this.blackList.delete(user.userUuid);
-    }
-  }
-
-  @action.bound
   prevPage() {
     if (this.pageIndex === 0) {
       return;
@@ -253,6 +215,22 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
     }
     this.pageIndex += 1;
     this.logger.info('set page index to', this.pageIndex);
+  }
+
+  @action.bound
+  toggleUserBlackList(user: AgoraFromUser) {
+    this.shareUIStore.toggleUserBlackList(user);
+  }
+
+  @action.bound
+  togglePinUser(user: AgoraFromUser) {
+    this.shareUIStore.togglePinUser(user);
+  }
+
+  @action.bound
+  toggleViewMode() {
+    this.shareUIStore.toggleViewMode();
+    this.pageIndex = 0;
   }
 
   onInstall(): void {

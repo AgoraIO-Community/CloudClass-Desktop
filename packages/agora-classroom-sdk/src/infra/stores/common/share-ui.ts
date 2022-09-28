@@ -2,7 +2,16 @@ import { AgoraEduSDK, WindowID } from '@/infra/api';
 import { getEduErrorMessage, getErrorServCode } from '@/infra/utils/error';
 import { sendToMainProcess } from '@/infra/utils/ipc';
 import { ChannelType } from '@/infra/utils/ipc-channels';
-import { AGError, AGRteErrorCode, bound, Injectable, Lodash, Log, Scheduler } from 'agora-rte-sdk';
+import {
+  AGError,
+  AgoraFromUser,
+  AGRteErrorCode,
+  bound,
+  Injectable,
+  Lodash,
+  Log,
+  Scheduler,
+} from 'agora-rte-sdk';
 import { action, observable, runInAction } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from '~components';
@@ -52,6 +61,15 @@ export class EduShareUIStore {
   private _containerNode = window;
   private _matchMedia = window.matchMedia('(orientation: portrait)');
   private _resizeEventListenerAdded = false;
+
+  @observable
+  viewMode: 'divided' | 'surrounded' = 'divided';
+
+  @observable
+  pinnedUser?: string;
+
+  @observable
+  blackList: Set<string> = new Set();
 
   /**
    * 教室UI布局完毕
@@ -409,4 +427,32 @@ export class EduShareUIStore {
   setViewportAspectRatio(ratio: number) {
     this._viewportAspectRatio = Math.max(ratio, 0);
   }
+
+  @action.bound
+  toggleUserBlackList(user: AgoraFromUser) {
+    if (!this.blackList.has(user.userUuid)) {
+      this.blackList.add(user.userUuid);
+    } else {
+      this.blackList.delete(user.userUuid);
+    }
+  }
+
+  @action.bound
+  togglePinUser(user: AgoraFromUser) {
+    if (this.pinnedUser === user.userUuid) {
+      this.pinnedUser = undefined;
+      this.viewMode = 'divided';
+    } else {
+      this.pinnedUser = user.userUuid;
+      this.viewMode = 'surrounded';
+    }
+  }
+
+  @action.bound
+  toggleViewMode = () => {
+    if (this.viewMode === 'divided') {
+      this.pinnedUser = undefined;
+    }
+    this.viewMode = this.viewMode === 'divided' ? 'surrounded' : 'divided';
+  };
 }

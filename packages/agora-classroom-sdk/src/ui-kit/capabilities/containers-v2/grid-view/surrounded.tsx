@@ -3,7 +3,7 @@ import { EduStreamUI } from "@/infra/stores/common/stream/struct";
 import { EduStudyRoomUIStore } from "@/infra/stores/study-room";
 import { AgoraRteRemoteStreamType } from "agora-rte-sdk";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useMemo } from "react";
 import useMeasure from "react-use-measure";
 import { SvgIconEnum, SvgImg } from "~components";
 import { AutoSubscriptionRemoteTrackPlayer, LocalTrackPlayer } from "./players";
@@ -14,26 +14,22 @@ import { GridTools } from "./tools";
 type CellProps = {
     stream: EduStreamUI,
     canPlay: boolean,
-    streamType?: AgoraRteRemoteStreamType
+    streamType?: AgoraRteRemoteStreamType,
+    outerSize: { width: number, height: number },
+    mb: number;
 }
 
-const GridCell = observer(({ stream, canPlay, streamType }: CellProps) => {
+const GridCell = observer(({ stream, canPlay, streamType, outerSize, mb }: CellProps) => {
     const { streamUIStore } = useStore() as EduStudyRoomUIStore;
 
     const { localCameraStream, localScreenStream, connected } = streamUIStore;
-
-    const [ref, bounds] = useMeasure();
-
-    const width = 'calc(100% - 4px)';
-
-    const height = bounds.width * 0.5625;
 
     const isLocal = () => {
         return stream.stream === localCameraStream || stream.stream === localScreenStream;
     }
 
     return (
-        <div ref={ref} className="fcr-divided-grid-view__cell mb-2 overflow-hidden relative flex items-center justify-center flex-shrink-0" style={{ width, height }}>
+        <div className={`fcr-divided-grid-view__cell mb-${mb} overflow-hidden relative flex items-center justify-center flex-shrink-0`} style={{ width: outerSize.width, height: outerSize.height }}>
             {
                 canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> : <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} streamType={streamType} />) :
                     <div className="h-full flex items-center justify-center">{stream.fromUser.userName}</div>
@@ -49,23 +45,40 @@ export const SurroundedGridView = observer(() => {
 
     const { pinnedStream, participant8Streams, showPager } = streamUIStore;
 
+    const [ref, bounds] = useMeasure();
+
+    const outerSize = useMemo(() => {
+        let width = bounds.width;
+        let height = Math.floor(bounds.width * 0.5625);
+        if (height > bounds.height) {
+            height = bounds.height;
+            width = Math.floor(bounds.height / 0.5625);
+        }
+
+        return ({ width, height });
+    }, [bounds.width, bounds.height]);
+
+
+    const sideStreamSize = useMemo(() => ({ width: 210, height: 210 * 0.5625 }), []);
+
+
     return (
         <div className='fcr-surrounded-grid-view w-full h-full flex relative'>
             {/* Main */}
-            <div className="fcr-surrounded-grid-view__main flex-grow flex items-center" style={{ paddingRight: 12 }}>
+            <div ref={ref} className="fcr-surrounded-grid-view__main flex-grow flex items-center justify-center overflow-hidden" style={{ marginRight: 12, height: 'calc(100vh - 155px)' }}>
                 {pinnedStream &&
-                    <GridTools className="w-full" stream={pinnedStream}>
-                        <GridCell stream={pinnedStream.stream} canPlay={pinnedStream.canPlay} streamType={AgoraRteRemoteStreamType.HIGH_STREAM} />
+                    <GridTools stream={pinnedStream}>
+                        <GridCell mb={0} outerSize={outerSize} stream={pinnedStream.stream} canPlay={pinnedStream.canPlay} streamType={AgoraRteRemoteStreamType.HIGH_STREAM} />
                     </GridTools>
                 }
             </div>
             {/* Aside */}
-            <div className="fcr-surrounded-grid-view__aside flex flex-col items-end overflow-auto" style={{ width: 210, height: 'calc(100vh - 155px)' }}>
+            <div className="fcr-surrounded-grid-view__aside flex  flex-shrink-0 flex-col items-end overflow-auto" style={{ width: 210, height: 'calc(100vh - 155px)' }}>
                 {
                     participant8Streams.map((stream) => {
                         return (
                             <GridTools key={stream.stream.stream.streamUuid} className="w-full" stream={stream}>
-                                <GridCell stream={stream.stream} canPlay={stream.canPlay} />
+                                <GridCell mb={2} outerSize={sideStreamSize} stream={stream.stream} canPlay={stream.canPlay} />
                             </GridTools>
                         );
                     })

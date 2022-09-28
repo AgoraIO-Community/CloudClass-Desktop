@@ -3,7 +3,7 @@ import { formatRoomID } from '@/app/utils';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { FC, useCallback, useMemo } from 'react';
-import { useI18n } from '~components';
+import { SvgIconEnum, SvgImg, useI18n } from '~components';
 import './item.css';
 
 type RoomListItemProps = {
@@ -82,7 +82,7 @@ export const RoomListItem: FC<RoomListItemProps> = ({
         <div className="footer">
           <span className="state icon">{transI18n(roomStateMap[roomState])}</span>
           <span className="type">{transI18n(roomTypeMap[data.roomType])}</span>
-          <span className="total">{numberOfParticipants}</span>
+          <span className="total inline-flex" style={{ verticalAlign: -10 }}><SvgImg type={SvgIconEnum.PEOPLE} style={{ opacity: .3, }} colors={{ iconPrimary: '#fff' }} /> 1000</span>
         </div>
       </div>
       <div className="operation">

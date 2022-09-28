@@ -1,5 +1,6 @@
 import { useStore } from '@/infra/hooks/ui-store';
-import { DialogCategory } from '@/infra/stores/common/share-ui';
+import { DialogCategory, EduShareUIStore } from '@/infra/stores/common/share-ui';
+import { EduStudyRoomUIStore } from '@/infra/stores/study-room';
 import { LeaveReason } from 'agora-edu-core';
 import { AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import classNames from 'classnames';
@@ -210,13 +211,22 @@ export const ChatTool = observer(() => {
 
 
 export const RosterTool = observer(() => {
-    const { toolbarUIStore } = useStore();
+    const { toolbarUIStore, streamUIStore } = useStore() as EduStudyRoomUIStore;
+
 
     const handleClick = () => {
         toolbarUIStore.setTool('register');
     }
 
-    return <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.PEOPLE} onClick={handleClick} />;
+
+    return (
+        <div className='relative overflow-hidden'>
+            <div className='text-center w-full bottom-0 absolute' style={{ background: 'rgba(52, 52, 52, 0.9)', borderRadius: 12, fontSize: 16, lineHeight: '20px', pointerEvents: 'none' }}>
+                {streamUIStore.orderedUserList.length > 999 ? 999 : streamUIStore.orderedUserList.length}
+            </div>
+            <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.PEOPLE} onClick={handleClick} />
+        </div>
+    );
 });
 
 export const Quit = observer(() => {

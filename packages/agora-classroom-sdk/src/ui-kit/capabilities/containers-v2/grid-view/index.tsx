@@ -5,7 +5,9 @@ import { DividedGridView } from './divided';
 import { SurroundedGridView } from './surrounded';
 
 export const GridView = observer(() => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
+    const { shareUIStore } = useStore() as EduStudyRoomUIStore;
 
-    return streamUIStore.viewMode === 'divided' ? <DividedGridView /> : <SurroundedGridView />;
+    const { viewMode } = shareUIStore;
+
+    return viewMode === 'divided' ? <DividedGridView /> : <SurroundedGridView />;
 });

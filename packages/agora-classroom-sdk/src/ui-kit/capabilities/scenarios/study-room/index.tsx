@@ -30,11 +30,11 @@ export const StudyRoomScenario = () => {
                         </div>
                         <img src={ShapeSvg} className="fixed top-0 right-0" style={{ zIndex: -1 }} />
                         {/* streams */}
-                        <div className='fcr-grid-view-content w-full flex-grow flex items-center' style={{ padding: '10px 30px' }}>
+                        <div className='fcr-grid-view-content w-full flex-grow' style={{ padding: '10px 30px' }}>
                             <GridView />
                         </div>
                         {/* control bar */}
-                        <div className='fcr-control-bar flex justify-between' style={{ padding: '10px 30px' }}>
+                        <div className='fcr-control-bar flex justify-between z-20' style={{ padding: '10px 30px' }}>
                             {/* device control */}
                             <div className='fcr-control-bar-device-control flex' style={{ width: 200, gap: 12 }}>
                                 <CameraDropdown />
