@@ -54,7 +54,6 @@ export const AutoSubscriptionRemoteTrackPlayer = ({ stream, streamType = AgoraRt
 
     useEffect(() => {
         classroomStore.streamStore.muteRemoteVideoStream(stream, false);
-
         const handle = setTimeout(() => {
             classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
         }, 100);
@@ -63,7 +62,7 @@ export const AutoSubscriptionRemoteTrackPlayer = ({ stream, streamType = AgoraRt
             classroomStore.streamStore.muteRemoteVideoStream(stream, true);
             clearTimeout(handle);
         }
-    }, []);
+    }, [stream]);
 
     return (
         <div className="w-full h-full relative">

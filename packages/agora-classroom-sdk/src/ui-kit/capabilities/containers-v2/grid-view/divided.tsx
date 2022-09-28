@@ -61,7 +61,7 @@ export const DividedGridView = observer(() => {
 
                         const stream = participant20Streams[idx];
 
-                        const cellWidth = `calc(${100 / numOfCols}% - ${colIdx === rows.length - 1 ? 0 : 8}px)`;
+                        const cellWidth = `calc(${100 / numOfCols}% - ${colIdx === matrix[0].length - 1 ? 0 : 8}px)`;
 
                         return (
                             <GridTools key={stream.stream.stream.streamUuid} style={{ width: cellWidth }} stream={stream}>
