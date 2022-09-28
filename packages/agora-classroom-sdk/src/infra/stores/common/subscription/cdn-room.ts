@@ -166,7 +166,10 @@ export class CDNRoomSubscription extends SceneSubscription {
 
     this.muteRemoteStreams(this._scene, streams, (_, stream, status) => {
       const dontSubStream = stream.playUrl && this.isCDNMode;
-      return { video: status.video && !dontSubStream, audio: status.audio && !dontSubStream };
+      if (dontSubStream) {
+        return { video: true, audio: true };
+      }
+      return status;
     });
   }
 
@@ -188,7 +191,10 @@ export class CDNRoomSubscription extends SceneSubscription {
 
     this.muteRemoteStreams(this._scene, streams, (_, stream, status) => {
       const dontSubStream = stream.playUrl && this.isCDNMode;
-      return { video: status.video && !dontSubStream, audio: status.audio && !dontSubStream };
+      if (dontSubStream) {
+        return { video: true, audio: true };
+      }
+      return status;
     });
   }
 

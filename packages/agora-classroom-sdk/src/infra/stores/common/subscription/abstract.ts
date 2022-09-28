@@ -148,14 +148,14 @@ export abstract class SceneSubscription {
     return { video, audio };
   }
 
-  protected muteRemoteStream: MuteRemoteStreamHandle = (scene, stream, status) => {
-    if (status.audio !== undefined) {
-      scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, status.audio);
+  protected muteRemoteStream: MuteRemoteStreamHandle = (scene, stream, muteStatus) => {
+    if (muteStatus.audio !== undefined) {
+      scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteStatus.audio);
     }
-    if (status.video !== undefined) {
-      scene.rtcChannel.muteRemoteVideoStream(stream.streamUuid, status.video);
+    if (muteStatus.video !== undefined) {
+      scene.rtcChannel.muteRemoteVideoStream(stream.streamUuid, muteStatus.video);
     }
-    return status;
+    return muteStatus;
   };
 
   protected muteRemoteStreams(
@@ -165,6 +165,8 @@ export abstract class SceneSubscription {
   ) {
     streams.forEach((stream) => {
       let states = this._canStreamBeSubscribed(stream);
+      states.video = !states.video;
+      states.audio = !states.audio;
       if (interceptorHandle) {
         states = interceptorHandle(scene, stream, states);
       }
@@ -194,7 +196,7 @@ type RemoteStreamSubscribeStatus = {
 type MuteRemoteStreamHandle = (
   scene: AgoraRteScene,
   stream: AgoraStream,
-  status: RemoteStreamSubscribeStatus,
+  muteStatus: RemoteStreamSubscribeStatus,
 ) => RemoteStreamSubscribeStatus;
 
 type LocalVideoStreamSubscribeOption = {
