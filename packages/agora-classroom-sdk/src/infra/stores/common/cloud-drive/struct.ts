@@ -63,6 +63,17 @@ export class CloudDriveCourseResource extends CloudDriveResource {
         };
       });
     }
+    if (data.taskProgress.images) {
+      this.scenes = Object.keys(data.taskProgress.images).map((key) => {
+        const { width, height, src } = data.taskProgress.images[key];
+        return {
+          name: `${key}`,
+          contentUrl: src,
+          height,
+          width,
+        };
+      });
+    }
   }
 
   get hasAnimation() {

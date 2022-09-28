@@ -15,5 +15,12 @@ export interface CloudDriveResourceConvertProgress {
   }[];
   currentStep: string;
   previews: Record<number, string>;
-  images: Record<number, string>;
+  images: Record<
+    number,
+    {
+      width: number;
+      height: number;
+      src: string;
+    }
+  >;
 }
