@@ -310,9 +310,7 @@ export class AgoraEduSDK {
         rtcConfigs: {
           ...this._convertMediaOptions(option.mediaOptions),
           ...{
-            noDevicePermission:
-              roleType === EduRoleTypeEnum.invisible ||
-              !vocationalNeedPreset(roleType, roomServiceType),
+            noDevicePermission: roleType === EduRoleTypeEnum.invisible
           },
         },
       },
