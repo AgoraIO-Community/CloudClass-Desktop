@@ -52,7 +52,7 @@ export const Dropdown: FC<Props> = ({ value, onChange, options, headSlot, minWid
                 </a>
                 <SvgImg type={SvgIconEnum.DOWN} colors={{ iconPrimary: '#fff' }} size={9} style={expanded ? { transform: 'rotate(180deg)', transition: 'all .2s' } : { transition: 'all .2s', transform: 'rotate(0deg)' }} />
             </div>
-            <div className={containerCls} style={{ top: 52 }}>
+            <div className={containerCls} style={{ top: 52, color: '#fff' }}>
                 {
                     options.map(({ label, value: v }, index) => {
                         const cls = classNames("fcr-dropdown-item text-center cursor-pointer", {
