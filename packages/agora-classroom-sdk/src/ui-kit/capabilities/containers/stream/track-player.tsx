@@ -110,7 +110,7 @@ export const RemoteTrackPlayer: FC<RemoteTrackPlayerProps> = observer(
                 setupRemoteVideo(stream, rtcRef.current, mirrorMode);
             }
         }, [
-            stream,
+            stream.streamUuid,
             setupRemoteVideo,
             muteRemoteAudioStream,
             muteRemoteVideoStream,
@@ -133,7 +133,7 @@ export const RemoteTrackPlayer: FC<RemoteTrackPlayerProps> = observer(
                 player.off(MediaPlayerEvents.ReadyToPlay, handleReadyPlay);
                 player.off(MediaPlayerEvents.InteractiveNeeded, handleInteractiveNeeded);
             };
-        }, [stream, mediaStore, handleReadyPlay, handleInteractiveNeeded]);
+        }, [stream.streamUuid, mediaStore, handleReadyPlay, handleInteractiveNeeded]);
         return (
             <>
                 <div

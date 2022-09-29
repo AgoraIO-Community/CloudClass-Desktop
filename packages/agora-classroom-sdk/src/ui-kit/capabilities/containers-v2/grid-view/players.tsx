@@ -48,21 +48,21 @@ export const LocalTrackPlayer = ({ stream }: { stream: EduStream }) => {
 }
 
 export const AutoSubscriptionRemoteTrackPlayer = ({ stream, streamType = AgoraRteRemoteStreamType.LOW_STREAM }: { stream: EduStream, streamType?: AgoraRteRemoteStreamType }) => {
-    const { classroomStore } = useStore();
+    // const { classroomStore } = useStore();
 
     const needMirror = stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare;
 
-    useEffect(() => {
-        const handle = setTimeout(() => {
-            classroomStore.streamStore.muteRemoteVideoStream(stream, false);
-            classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
-        }, 200);
+    // useEffect(() => {
+    //     const handle = setTimeout(() => {
+    //         classroomStore.streamStore.muteRemoteVideoStream(stream, false);
+    //         classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
+    //     }, 1500);
 
-        return () => {
-            clearTimeout(handle);
-            classroomStore.streamStore.muteRemoteVideoStream(stream, true);
-        }
-    }, [stream.streamUuid]);
+    //     return () => {
+    //         clearTimeout(handle);
+    //         classroomStore.streamStore.muteRemoteVideoStream(stream, true);
+    //     }
+    // }, [stream.streamUuid]);
 
     return (
         <div className="w-full h-full relative">

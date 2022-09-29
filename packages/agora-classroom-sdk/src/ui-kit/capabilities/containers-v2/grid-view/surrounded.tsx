@@ -34,7 +34,7 @@ const GridCell = observer(({ stream, canPlay, streamType, outerSize, mb, isMain 
     const show = isMain || !isMain && !pinned;
 
     return (
-        <div className={`fcr-divided-grid-view__cell mb-${mb} overflow-hidden relative flex items-center justify-center flex-shrink-0`} style={{ width: outerSize.width, height: outerSize.height }}>
+        <div className={`fcr-divided-grid-view__cell ${ mb ? 'mb-2' : '' } overflow-hidden relative flex items-center justify-center flex-shrink-0`} style={{ width: outerSize.width, height: outerSize.height }}>
             {
                 show && canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> : <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} streamType={streamType} />) :
                     <div className="h-full flex items-center justify-center">{stream.fromUser.userName}</div>

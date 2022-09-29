@@ -1,3 +1,4 @@
+import { EduStream } from 'agora-edu-core';
 import {
   AgoraFromUser,
   AgoraRteEventType,
@@ -250,12 +251,34 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
     this._disposers.push(
       reaction(
-        () => {
-          return this.classroomStore.connectionStore.rtcState === AGRtcState.Connected;
+        () => this.totalPage,
+        (totalPage) => {
+          if (this.pageIndex + 1 > totalPage) {
+            this.pageIndex = totalPage === 0 ? 0 : totalPage - 1;
+          }
         },
-        (connected) => {
-          if (connected) {
-            this.classroomStore.mediaStore.enableLocalVideo(true);
+      ),
+    );
+    let subStreams: EduStream[] = [];
+    this._disposers.push(
+      reaction(
+        () => ({
+          viewMode: this.shareUIStore.viewMode,
+          streams: this.participant8Streams,
+        }),
+        async ({ streams }) => {
+          if (this.classroomStore.connectionStore.rtcState !== AGRtcState.Connected) {
+            return;
+          }
+          if (this.shareUIStore.viewMode === 'surrounded') {
+            this.logger.info('mass unsub', subStreams);
+            await this.classroomStore.streamStore.muteRemoteVideoStreamMass(subStreams, true);
+            const sub = streams
+              .filter((s) => s.stream.fromUser.userUuid !== this.localUserUuid)
+              .map((s) => s.stream.stream);
+            subStreams = sub;
+            this.logger.info('mass sub', sub);
+            await this.classroomStore.streamStore.muteRemoteVideoStreamMass(sub, false);
           }
         },
       ),
@@ -263,10 +286,23 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
     this._disposers.push(
       reaction(
-        () => this.totalPage,
-        (totalPage) => {
-          if (this.pageIndex + 1 > totalPage) {
-            this.pageIndex = totalPage === 0 ? 0 : totalPage - 1;
+        () => ({
+          viewMode: this.shareUIStore.viewMode,
+          streams: this.participant20Streams,
+        }),
+        async ({ streams }) => {
+          if (this.classroomStore.connectionStore.rtcState !== AGRtcState.Connected) {
+            return;
+          }
+          if (this.shareUIStore.viewMode === 'divided') {
+            this.logger.info('mass unsub', subStreams);
+            await this.classroomStore.streamStore.muteRemoteVideoStreamMass(subStreams, true);
+            const sub = streams
+              .filter((s) => s.stream.fromUser.userUuid !== this.localUserUuid)
+              .map((s) => s.stream.stream);
+            subStreams = sub;
+            this.logger.info('mass sub', sub);
+            await this.classroomStore.streamStore.muteRemoteVideoStreamMass(sub, false);
           }
         },
       ),
