@@ -17,21 +17,26 @@ type CellProps = {
     streamType?: AgoraRteRemoteStreamType,
     outerSize: { width: number, height: number },
     mb: number;
+    isMain: boolean;
 }
 
-const GridCell = observer(({ stream, canPlay, streamType, outerSize, mb }: CellProps) => {
+const GridCell = observer(({ stream, canPlay, streamType, outerSize, mb, isMain }: CellProps) => {
     const { streamUIStore } = useStore() as EduStudyRoomUIStore;
 
-    const { localCameraStream, localScreenStream, connected } = streamUIStore;
+    const { localCameraStream, localScreenStream, connected, pinnedStream } = streamUIStore;
 
     const isLocal = () => {
         return stream.stream === localCameraStream || stream.stream === localScreenStream;
     }
 
+    const pinned = pinnedStream?.stream.stream.streamUuid === stream.stream.streamUuid;
+
+    const show = isMain || !isMain && !pinned;
+
     return (
         <div className={`fcr-divided-grid-view__cell mb-${mb} overflow-hidden relative flex items-center justify-center flex-shrink-0`} style={{ width: outerSize.width, height: outerSize.height }}>
             {
-                canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> : <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} streamType={streamType} />) :
+                show && canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> : <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} streamType={streamType} />) :
                     <div className="h-full flex items-center justify-center">{stream.fromUser.userName}</div>
             }
         </div>
@@ -68,7 +73,7 @@ export const SurroundedGridView = observer(() => {
             <div ref={ref} className="fcr-surrounded-grid-view__main flex-grow flex items-center justify-center overflow-hidden" style={{ marginRight: 12, height: 'calc(100vh - 155px)' }}>
                 {pinnedStream &&
                     <GridTools stream={pinnedStream}>
-                        <GridCell mb={0} outerSize={outerSize} stream={pinnedStream.stream} canPlay={pinnedStream.canPlay} streamType={AgoraRteRemoteStreamType.HIGH_STREAM} />
+                        <GridCell isMain mb={0} outerSize={outerSize} stream={pinnedStream.stream} canPlay={pinnedStream.canPlay} streamType={AgoraRteRemoteStreamType.HIGH_STREAM} />
                     </GridTools>
                 }
             </div>
@@ -78,7 +83,7 @@ export const SurroundedGridView = observer(() => {
                     participant8Streams.map((stream) => {
                         return (
                             <GridTools key={stream.stream.stream.streamUuid} className="w-full" stream={stream}>
-                                <GridCell mb={2} outerSize={sideStreamSize} stream={stream.stream} canPlay={stream.canPlay} />
+                                <GridCell isMain={false} mb={2} outerSize={sideStreamSize} stream={stream.stream} canPlay={stream.canPlay} />
                             </GridTools>
                         );
                     })

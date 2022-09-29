@@ -113,7 +113,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
   @computed
   get participant8Streams() {
-    const users = this._getCurrentPageUsers(8);
+    const users = this._getCurrentPageUsers(8, true);
 
     return this._getUserStreams(users);
   }
