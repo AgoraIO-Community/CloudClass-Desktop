@@ -18,7 +18,10 @@ export const Header = () => {
     return (
         <div className='fcr-header-logo flex items-center'>
             <img src={logo} />
-            <div className='fcr-header-divider' />{EduClassroomConfig.shared.sessionInfo.roomName}
+            <div className='fcr-header-divider' />
+            <span className='ml-4'>
+                {EduClassroomConfig.shared.sessionInfo.roomName}
+            </span>
         </div>
     );
 }

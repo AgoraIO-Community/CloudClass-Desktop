@@ -1192,25 +1192,25 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       }),
     );
 
-    this._disposers.push(
-      computed(() => this._studentStreams).observe(({ newValue, oldValue }) => {
-        if (
-          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class &&
-          this._streamWindowUpdatedFromRoom &&
-          !this._studentStreams.length
-        ) {
-          this._handleOnOrOffPodium(newValue, oldValue);
-          return;
-        }
+    // this._disposers.push(
+    //   computed(() => this._studentStreams).observe(({ newValue, oldValue }) => {
+    //     if (
+    //       EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class &&
+    //       this._streamWindowUpdatedFromRoom &&
+    //       !this._studentStreams.length
+    //     ) {
+    //       this._handleOnOrOffPodium(newValue, oldValue);
+    //       return;
+    //     }
 
-        if (
-          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class &&
-          this._streamWindowUpdatedFromRoom
-        ) {
-          this._handleOnOrOffPodium(newValue, oldValue);
-        }
-      }),
-    );
+    //     if (
+    //       EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class &&
+    //       this._streamWindowUpdatedFromRoom
+    //     ) {
+    //       this._handleOnOrOffPodium(newValue, oldValue);
+    //     }
+    //   }),
+    // );
 
     this._disposers.push(
       // 处理老师离开教室的逻辑
