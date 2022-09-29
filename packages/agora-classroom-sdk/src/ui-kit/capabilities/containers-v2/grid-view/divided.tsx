@@ -63,9 +63,11 @@ export const DividedGridView = observer(() => {
         return ({ width: perCellWidth, height: perCellHeight });
     }, [bounds.width, bounds.height, numOfCols, numOfRows]);
 
+
+
     return (
         <div ref={ref} className='fcr-divided-grid-view relative flex justify-center' style={{ height: 'calc(100vh - 155px)' }}>
-            <div className='fcr-divided_grid-view__inner flex flex-wrap items-center' style={{ gap: 4 }}>
+            <div className='fcr-divided_grid-view__inner flex flex-wrap items-center' style={{ gap: 4, alignSelf: 'center' }}>
                 {
                     matrix.map((rows) => {
                         return rows.map(() => {
