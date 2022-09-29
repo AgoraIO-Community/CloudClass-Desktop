@@ -51,12 +51,12 @@ export const DividedGridView = observer(() => {
     const [ref, bounds] = useMeasure();
 
     const outerSize = useMemo(() => {
-        let perCellWidth = bounds.width / numOfCols - 4;
+        let perCellWidth = bounds.width / numOfCols - 8;
 
         let perCellHeight = perCellWidth * 0.5625;
 
         if (perCellHeight > bounds.height) {
-            perCellHeight = bounds.height / numOfRows - 4;
+            perCellHeight = bounds.height / numOfRows - 8;
             perCellWidth = perCellHeight / 0.5625;
         }
 
@@ -66,8 +66,8 @@ export const DividedGridView = observer(() => {
 
 
     return (
-        <div ref={ref} className='fcr-divided-grid-view relative flex justify-center' style={{ height: 'calc(100vh - 155px)' }}>
-            <div className='fcr-divided_grid-view__inner flex flex-wrap items-center' style={{ gap: 4, alignSelf: 'center' }}>
+        <div ref={ref} className='fcr-divided-grid-view relative flex justify-center w-full' style={{ height: 'calc(100vh - 155px)' }}>
+            <div className='fcr-divided_grid-view__inner flex flex-wrap items-center' style={{ gap: 8, alignSelf: 'center' }}>
                 {
                     matrix.map((rows) => {
                         return rows.map(() => {

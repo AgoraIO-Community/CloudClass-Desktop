@@ -43,7 +43,7 @@ export const StudyRoomScenario = () => {
                             {/* tools */}
                             <div className='fcr-control-bar-tools flex' style={{ gap: 12 }}>
                                 <ScreenShareTool />
-                                <ChatTool />
+                                {/* <ChatTool /> */}
                                 <RosterTool />
                             </div>
                             {/* exit */}

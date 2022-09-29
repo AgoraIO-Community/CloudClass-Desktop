@@ -235,25 +235,30 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
 
   onInstall(): void {
     super.onInstall();
-    reaction(
-      () => this.classroomStore.connectionStore.scene,
-      (scene) => {
-        if (scene) {
-          scene.addListener(AgoraRteEventType.UserAdded, this._handleUserAdded);
-          scene.addListener(AgoraRteEventType.UserRemoved, this._handleUserRemoved);
-        }
-      },
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.connectionStore.scene,
+        (scene) => {
+          if (scene) {
+            scene.addListener(AgoraRteEventType.UserAdded, this._handleUserAdded);
+            scene.addListener(AgoraRteEventType.UserRemoved, this._handleUserRemoved);
+            this.classroomStore.streamStore.unpublishScreenShare();
+          }
+        },
+      ),
     );
 
-    reaction(
-      () => {
-        return this.classroomStore.connectionStore.rtcState === AGRtcState.Connected;
-      },
-      (connected) => {
-        if (connected) {
-          this.classroomStore.mediaStore.enableLocalVideo(true);
-        }
-      },
+    this._disposers.push(
+      reaction(
+        () => {
+          return this.classroomStore.connectionStore.rtcState === AGRtcState.Connected;
+        },
+        (connected) => {
+          if (connected) {
+            this.classroomStore.mediaStore.enableLocalVideo(true);
+          }
+        },
+      ),
     );
   }
 }

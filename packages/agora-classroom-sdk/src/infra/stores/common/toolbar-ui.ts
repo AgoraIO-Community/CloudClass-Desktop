@@ -109,28 +109,28 @@ export class ToolbarUIStore extends EduUIStoreBase {
         ),
       );
     }
-    this._disposers.push(
-      computed(() => this.classroomStore.streamStore.localShareStreamUuid).observe(
-        ({ newValue, oldValue }) => {
-          const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    // this._disposers.push(
+    //   computed(() => this.classroomStore.streamStore.localShareStreamUuid).observe(
+    //     ({ newValue, oldValue }) => {
+    //       const { userUuid } = EduClassroomConfig.shared.sessionInfo;
 
-          if (newValue && !oldValue) {
-            this.classroomStore.widgetStore.setActive(
-              `streamWindow-${newValue}`,
-              {
-                extra: {
-                  userUuid,
-                },
-              },
-              userUuid,
-            );
-          }
-          if (!newValue && oldValue) {
-            this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
-          }
-        },
-      ),
-    );
+    //       if (newValue && !oldValue) {
+    //         this.classroomStore.widgetStore.setActive(
+    //           `streamWindow-${newValue}`,
+    //           {
+    //             extra: {
+    //               userUuid,
+    //             },
+    //           },
+    //           userUuid,
+    //         );
+    //       }
+    //       if (!newValue && oldValue) {
+    //         this.classroomStore.widgetStore.deleteWidget(`streamWindow-${oldValue}`);
+    //       }
+    //     },
+    //   ),
+    // );
 
     this._disposers.push(
       reaction(
