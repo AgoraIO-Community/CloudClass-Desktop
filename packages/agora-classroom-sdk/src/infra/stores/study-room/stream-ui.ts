@@ -260,5 +260,16 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
         },
       ),
     );
+
+    this._disposers.push(
+      reaction(
+        () => this.totalPage,
+        (totalPage) => {
+          if (this.pageIndex + 1 > totalPage) {
+            this.pageIndex = totalPage === 0 ? 0 : totalPage - 1;
+          }
+        },
+      ),
+    );
   }
 }
