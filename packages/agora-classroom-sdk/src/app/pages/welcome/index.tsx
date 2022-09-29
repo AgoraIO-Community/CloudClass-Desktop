@@ -25,6 +25,7 @@ import {
 import './index.css';
 import { RoomToast } from './room-toast';
 import { ShareRoom, ShareRoomInfo } from './share-room';
+import { message } from 'antd';
 
 export const Welcome = observer(() => {
   const transI18n = useI18n();
@@ -96,7 +97,7 @@ export const Welcome = observer(() => {
     history.push(`/join-room?${query}`);
   }, []);
 
-  const onDetail = useCallback((data: RoomInfo) => {}, []);
+  const onDetail = useCallback((data: RoomInfo) => { }, []);
 
   useEffect(() => {
     if (isLogin) {
@@ -105,6 +106,14 @@ export const Welcome = observer(() => {
       auth();
     }
   }, [isLogin]);
+
+  useEffect(() => {
+    console.log(history.location);
+    if (history.location.search === '?reason=1') {
+      message.warning(transI18n('toast.kick_by_teacher'));
+      history.replace('/');
+    }
+  }, []);
 
   return (
     <div className="welcome-container">
