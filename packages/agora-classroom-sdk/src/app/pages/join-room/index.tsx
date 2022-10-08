@@ -70,7 +70,7 @@ export const JoinRoom = observer(() => {
         return;
       }
       setLoading(true);
-      userStore.nickName = data.nickName;
+      userStore.setNickName(data.nickName);
       quickJoinRoom({
         role,
         roomId: data.roomId,

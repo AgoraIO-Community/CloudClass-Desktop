@@ -7,6 +7,7 @@
   @apply flex items-center justify-end;
   padding: 0 50px 25px 32px;
   z-index: 2;
+  height: 65px;
 }
 
 .welcome-container .settings {

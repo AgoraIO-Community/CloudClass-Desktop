@@ -67,7 +67,7 @@ export const H5Invite = () => {
 
   const onSubmit = () => {
     form.validateFields().then((data) => {
-      userStore.nickName = data.nickName;
+      userStore.setNickName(data.nickName);
       if (!shareRoomInfo) {
         aMessage.error(transI18n('fcr_api_tips_fetch_room_info_fault'));
         return false;

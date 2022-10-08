@@ -1,4 +1,3 @@
-import defaultAvatar from '@/app/assets/default-avatar.svg';
 import settingIcon from '@/app/assets/fcr-setting.svg';
 import signOutIcon from '@/app/assets/fcr-sign-out.svg';
 import { Settings } from '@/app/components/settings';

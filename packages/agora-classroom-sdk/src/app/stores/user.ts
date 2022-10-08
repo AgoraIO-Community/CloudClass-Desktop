@@ -23,7 +23,7 @@ export class UserStore {
       setLSStore(LS_USER_INFO, this.userInfo);
       setLSStore(LS_COMPANY_ID, this.userInfo?.companyId);
       if (this.nickName !== '' && this.userInfo?.displayName) {
-        this.nickName = this.userInfo.displayName;
+        this.setNickName(this.userInfo.displayName)
       }
     });
   }

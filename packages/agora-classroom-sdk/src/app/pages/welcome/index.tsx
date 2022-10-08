@@ -2,7 +2,6 @@ import { RoomInfo } from '@/app/api/room';
 import CreateClassIcon from '@/app/assets/fcr_create_class.svg';
 import JoinClassIcon from '@/app/assets/fcr_join_class.svg';
 import roomListEmptyImg from '@/app/assets/welcome-empty-list.png';
-import { Settings } from '@/app/components/settings';
 import { useAuthCallback } from '@/app/hooks';
 import { RoomListItem } from '@/app/pages/welcome/room-list';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
@@ -11,17 +10,7 @@ import { observer } from 'mobx-react';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useHistory } from 'react-router-dom';
-import {
-  AButton,
-  ADivider,
-  AList,
-  AListItem,
-  AModal,
-  ASkeleton,
-  SvgIconEnum,
-  SvgImg,
-  useI18n,
-} from '~ui-kit';
+import { ADivider, AList, AListItem, AModal, ASkeleton, useI18n } from '~ui-kit';
 import './index.css';
 import { Menu } from './menu';
 import { RoomToast } from './room-toast';
