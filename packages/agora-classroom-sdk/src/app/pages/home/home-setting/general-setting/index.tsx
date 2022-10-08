@@ -1,8 +1,8 @@
-import { UserApi } from '@/app/api/user';
-import { useHomeStore } from '@/app/hooks';
+import { useLogout } from '@/app/hooks';
+import { GlobalStoreContext } from '@/app/stores';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { observer } from 'mobx-react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, CheckBox, Modal, RadioGroup, transI18n } from '~ui-kit';
 import './index.css';
 
@@ -19,11 +19,11 @@ const regionOptions = [
 ];
 
 export const GeneralSetting = observer(() => {
-  const homeStore = useHomeStore();
-  const { language, setLanguage, region, setRegion, theme, setTheme } = homeStore;
+  const { language, setLanguage, region, setRegion, theme, setTheme } =
+    useContext(GlobalStoreContext);
   const [closeAccountModal, setCloseAccountModal] = useState(false);
   const [checked, setChecked] = useState(false);
-
+  const { logout } = useLogout();
   const themeOptions = [
     { value: FcrMultiThemeMode.light, label: transI18n('fcr_settings_theme_light') },
     { value: FcrMultiThemeMode.dark, label: transI18n('fcr_settings_theme_dark') },
@@ -72,7 +72,7 @@ export const GeneralSetting = observer(() => {
           className="close-account-modal"
           maskClosable
           onOk={() => {
-            UserApi.shared.logout().finally(() => {
+            logout().finally(() => {
               setCloseAccountModal(false);
             });
           }}

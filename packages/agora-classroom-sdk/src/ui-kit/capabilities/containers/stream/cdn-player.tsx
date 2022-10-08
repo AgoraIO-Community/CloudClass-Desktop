@@ -98,19 +98,22 @@ export const CDNPlayer: React.FC<CDNPlayerProps> = observer(
       );
     }, [mediaStore, stream]);
 
+    const text = useMemo(() => {
+      if (!!placeholderText) {
+        <p className="text-base" style={{ color: '#7B88A0' }}>
+          {placeholderText}
+        </p>;
+      }
+      return '';
+    }, [placeholderText]);
+
     const placeholderElement = useMemo(() => {
       return (
         <div
           className="absolute w-full h-full top-0 left-0 flex items-center justify-center flex-col"
           style={{ backgroundColor: 'rgb(249 249 252)' }}>
           {placeholderIcon}
-          {placeholderText !== '' ? (
-            <p className="text-base" style={{ color: '#7B88A0' }}>
-              {placeholderText}
-            </p>
-          ) : (
-            ''
-          )}
+          {text}
         </div>
       );
     }, [placeholderIcon, placeholderText]);

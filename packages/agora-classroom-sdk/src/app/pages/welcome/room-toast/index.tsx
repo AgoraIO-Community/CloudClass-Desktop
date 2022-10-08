@@ -1,19 +1,18 @@
-import { useHomeStore } from '@/app/hooks';
+import { RoomStoreContext } from '@/app/stores';
 import { observer } from 'mobx-react';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import './index.css';
 
 export const RoomToast = observer(() => {
-  const homeStore = useHomeStore();
+  const { roomToastList } = useContext(RoomStoreContext);
   const Toast = useMemo(() => {
-    const { roomListToast } = homeStore;
-    if (roomListToast && roomListToast.length) {
+    if (roomToastList && roomToastList.length) {
       return (
         <div className="toast-list">
-          {roomListToast.map((v, i) => {
+          {roomToastList.map((toast, i) => {
             return (
-              <div key={v.id + i} className="toast-item">
-                <span>{v.desc}</span>
+              <div key={toast.id + i} className="toast-item">
+                <span>{toast.desc}</span>
               </div>
             );
           })}
@@ -21,7 +20,7 @@ export const RoomToast = observer(() => {
       );
     }
     return null;
-  }, [homeStore.roomListToast]);
+  }, [roomToastList]);
 
   return Toast;
 });

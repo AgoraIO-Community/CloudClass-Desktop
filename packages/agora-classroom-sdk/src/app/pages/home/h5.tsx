@@ -1,9 +1,9 @@
-import { useHomeStore } from '@/app/hooks';
 import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
-import { HomeLaunchOption } from '@/app/stores/home';
+import { GlobalStoreContext } from '@/app/stores';
+import { GlobalLaunchOption } from '@/app/stores/global';
 import { LanguageEnum } from '@/infra/api';
 import { FcrMultiThemeMode } from '@/infra/types/config';
-import { getBrowserLanguage, storage } from '@/infra/utils';
+import { storage } from '@/infra/utils';
 import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
 import {
   EduClassroomConfig,
@@ -14,10 +14,9 @@ import {
 } from 'agora-edu-core';
 import md5 from 'js-md5';
 import { observer } from 'mobx-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useHistory } from 'react-router';
-import { changeLanguage } from '~ui-kit';
 import { H5Login } from '~ui-kit/scaffold';
 import { HomeApi } from '../../api/home';
 import { MessageDialog } from './message-dialog';
@@ -32,8 +31,8 @@ const useTheme = () => {
   }, []);
 };
 export const HomeH5Page = observer(() => {
-  const homeStore = useHomeStore();
-  const launchConfig = homeStore.launchConfig;
+  const globalStore = useContext(GlobalStoreContext);
+  const { launchConfig, setLanguage, language } = globalStore;
 
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
@@ -42,21 +41,14 @@ export const HomeH5Page = observer(() => {
   const [userRole, setRole] = useState<string>('student');
   const [curScenario, setScenario] = useState<string>('big-class');
   const [duration] = useState<number>(30);
-  const [language, setLanguage] = useState<string>('');
   const [region] = useState<EduRegion>(EduRegion.CN);
   const [debug] = useState<boolean>(false);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   useTheme();
-  useEffect(() => {
-    const lang = homeStore.launchOption.language || getBrowserLanguage();
-    changeLanguage(lang);
-    setLanguage(lang);
-  }, []);
 
-  const onChangeLanguage = (language: string) => {
-    changeLanguage(language);
-    setLanguage(language);
+  const onChangeLanguage = (lang: string) => {
+    setLanguage(lang as any);
   };
 
   const role = useMemo(() => {
@@ -131,7 +123,7 @@ export const HomeH5Page = observer(() => {
     tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
   }
 
-  return language !== '' ? (
+  return (
     <React.Fragment>
       <Helmet>
         <meta
@@ -179,7 +171,7 @@ export const HomeH5Page = observer(() => {
 
           const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
 
-          const config: HomeLaunchOption = {
+          const config: GlobalLaunchOption = {
             appId,
             sdkDomain: domain,
             pretest: false,
@@ -208,11 +200,11 @@ export const HomeH5Page = observer(() => {
               mode: parseInt(encryptionMode),
             };
           }
-          homeStore.setLaunchConfig(config);
+          globalStore.setLaunchConfig(config);
           history.replace('/launch');
         }}
       />
       <HomeSettingContainerH5 />
     </React.Fragment>
-  ) : null;
+  );
 });

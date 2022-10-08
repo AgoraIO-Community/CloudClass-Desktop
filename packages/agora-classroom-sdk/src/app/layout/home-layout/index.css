@@ -1,7 +1,3 @@
-.page-container {
-  @apply w-full h-full;
-  overflow: auto;
-}
 .home {
   @apply bg-cover flex  w-screen h-screen;
   background-image: url('../../assets/home-background.jpg');

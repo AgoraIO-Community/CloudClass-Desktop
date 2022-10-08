@@ -1,0 +1,3 @@
+.ant-spin-nested-loading > div > .ant-spin.global-loading-container {
+  max-height: 100%;
+}

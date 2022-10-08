@@ -8,6 +8,7 @@ export enum PageRouter {
   H5Index = 'index_h5',
   H5JoinRoom = 'join_room_h5',
   H5Invite = 'invite_room_h5',
+  Logout = 'logout',
   FlexHome = 'flex_home',
   FlexH5Home = 'flex_h5_home',
   VocationalHome = 'vocational_home',

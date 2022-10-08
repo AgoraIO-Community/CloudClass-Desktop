@@ -18,6 +18,7 @@ export type AModalProps = Pick<
   | 'closable'
   | 'closeIcon'
   | 'cancelText'
+  | 'centered'
 >;
 export const AModal: React.FC<AModalProps> = (props) => {
   return <Modal {...props} />;

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { UserApi } from '../api/user';
+import { token } from './token';
+import { historyPushLogout } from './';
 
 export interface Response<T = unknown> {
   code: string;
@@ -13,8 +15,8 @@ const retryDelay = 300;
 export const request = axios.create();
 
 request.interceptors.request.use(function (config) {
-  if (UserApi.accessToken) {
-    config.headers['Authorization'] = `Bearer ${UserApi.accessToken}`;
+  if (token.accessToken) {
+    config.headers['Authorization'] = `Bearer ${token.accessToken}`;
   }
   return config;
 });
@@ -24,16 +26,24 @@ request.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (
-      error?.response?.status === 401 &&
-      !(error.config?.url || '').includes('/refresh/refreshToken')
-    ) {
+    // refreshToken接口不会重试
+    if (error.config.url.includes('/refresh/refreshToken')) {
+      return Promise.reject(error);
+    }
+    if (error.response.status === 401) {
       const { retryTimes = 0 } = error.config;
-      if (retryTimes < maxRetryTimes && UserApi.refreshToken) {
+      if (retryTimes < maxRetryTimes && token.refreshToken) {
         return UserApi.shared
-          .refreshToken()
-          .then(() => {
+          .refreshToken(token.refreshToken)
+          .then((response) => {
+            const {
+              data: { data },
+            } = response;
+
+            token.refreshToken = data.refreshToken;
+            token.accessToken = data.accessToken;
             error.config.retryTimes = retryTimes + 1;
+
             const delay = new Promise((resolve) => {
               setTimeout(() => {
                 resolve({});
@@ -43,12 +53,14 @@ request.interceptors.response.use(
               return request(error.config);
             });
           })
-          .catch((err) => {
-            UserApi.shared.logout();
-            return err;
+          .catch((refreshTokenError) => {
+            // refreshToken 接口报错，直接登出。
+            historyPushLogout();
+            return refreshTokenError;
           });
       } else {
-        UserApi.shared.logout();
+        historyPushLogout();
+        return error;
       }
     }
     return Promise.reject(error);

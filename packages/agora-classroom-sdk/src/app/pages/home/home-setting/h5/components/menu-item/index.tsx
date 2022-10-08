@@ -10,11 +10,11 @@ export interface MenuItemProps {
 }
 
 export const ArrowRightIcon = () => {
-  return <img className="menu-icon" src={arrowRightIcon} alt="" />;
+  return <img className="h5-menu-icon" src={arrowRightIcon} alt="" />;
 };
 
 export const CheckIcon: FC<{ checked: boolean }> = ({ checked = false }) => {
-  return <img className="menu-icon" src={checked ? checkOnIcon : checkOffIcon} alt="" />;
+  return <img className="h5-menu-icon" src={checked ? checkOnIcon : checkOffIcon} alt="" />;
 };
 
 export const MenuItem: FC<MenuItemProps> = ({
@@ -23,7 +23,7 @@ export const MenuItem: FC<MenuItemProps> = ({
   rightContent = <ArrowRightIcon />,
 }) => {
   return (
-    <div className="menu-item" onClick={onClick}>
+    <div className="h5-menu-item" onClick={onClick}>
       {text}
       {rightContent}
     </div>

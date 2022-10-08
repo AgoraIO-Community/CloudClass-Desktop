@@ -1,5 +1,5 @@
-import { UserApi } from '@/app/api/user';
-import { FC, useCallback, useState } from 'react';
+import { useLogout } from '@/app/hooks';
+import { FC, useState } from 'react';
 import { CheckBox, useI18n } from '~ui-kit';
 import { SettingsMenuEnum } from '.';
 import { ConfirmDialogH5 } from './components/confirm-dialog';
@@ -13,10 +13,7 @@ export const CloseAccount: FC<CloseAccountProps> = ({ removeMenuPopup }) => {
   const transI18n = useI18n();
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [checked, setChecked] = useState(false);
-  const logout = useCallback(() => {
-    UserApi.shared.logout();
-  }, []);
-
+  const { logout } = useLogout();
   return (
     <PageLayout
       title={transI18n('settings_close_account')}

@@ -1,3 +1,5 @@
+import { ErrorCodeMessage, ErrorCode } from '@/app/utils/error';
+
 export default {
   home_product_name: 'Flexible Classroom',
   home_greeting: 'Welcome Back',
@@ -18,8 +20,12 @@ export default {
   home_form_error_room_name_limit: 'Between {min} and {max} characters',
   home_form_error_user_name_limit: 'Between {min} and {max} characters',
   //补充
+  [ErrorCodeMessage[ErrorCode.COURSE_HAS_ENDED]]: 'The course has ended',
   fcr_home_label_room_list_no_more: 'It is all, nothing more 🤐',
+  fcr_logout_tips: 'The user account has expired, please login again later',
   fcr_join_room_tips_ui_config_note_ready: 'UI config be not ready',
+  fcr_join_room_tips_user_id_empty: "User'ID can't be empty",
+  fcr_menu_sign_out: 'Sign Out',
   fcr_h5_invite_hello: 'HELLO!',
   fcr_create_tips_time_validate: 'Choose time must be greater than the current time',
   fcr_create_tips_room_name: 'Please Input Room Name',

@@ -1,7 +1,7 @@
-import { useHomeStore } from '@/app/hooks';
+import { GlobalStoreContext } from '@/app/stores';
 import { AgoraRegion } from 'agora-rte-sdk';
 import { observer } from 'mobx-react';
-import { FC, useMemo } from 'react';
+import { FC, useContext, useMemo } from 'react';
 import { useI18n } from '~ui-kit';
 import { SettingsMenuEnum } from '.';
 import { Menu } from './components/menu';
@@ -13,7 +13,7 @@ interface RegionMenuProps {
 }
 
 export const RegionMenu: FC<RegionMenuProps> = observer(({ removeMenuPopup }) => {
-  const { region, setRegion } = useHomeStore();
+  const { region, setRegion } = useContext(GlobalStoreContext);
   const transI18n = useI18n();
 
   const menus = useMemo(() => {

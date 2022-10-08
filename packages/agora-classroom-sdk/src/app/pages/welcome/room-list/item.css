@@ -83,13 +83,28 @@
 }
 
 .room-item-card .footer {
+  @apply flex items-center;
   font-style: italic;
   font-weight: 800;
   font-size: 9px;
 }
 
 .room-item-card .footer .state {
+  @apply inline-flex items-center;
   margin-right: 20px;
+}
+
+.room-item-card .footer .type {
+  @apply inline-flex items-center;
+}
+
+.room-item-card .footer .state .live-icon {
+  margin-right: 3px;
+  width: 16px;
+}
+
+.room-item-card .footer .type .label {
+  margin-right: 1px;
 }
 
 .room-item-card .operation {
@@ -108,7 +123,7 @@
 
 .room-item-card .operation .btn.enter {
   transition: width 0.2s linear;
-  width: 70px;
+  width: 88px;
 }
 
 .room-item-card .operation .btn.replay {
@@ -117,7 +132,7 @@
 }
 
 .room-item-card:hover .operation .btn.enter {
-  width: 104px;
+  width: 122px;
 }
 
 .room-item-card .operation .enter .text,
@@ -132,7 +147,7 @@
 }
 
 .room-item-card .operation .enter .text {
-  width: 70px;
+  width: 88px;
 }
 
 .room-item-card .operation .enter .share {

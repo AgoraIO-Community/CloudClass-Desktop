@@ -3,8 +3,10 @@
   padding: 25px 0 0;
 }
 
-.welcome-container > header {
-  padding: 0 32px 25px;
+.welcome-container > .header {
+  @apply flex items-center justify-end;
+  padding: 0 50px 25px 32px;
+  z-index: 2;
 }
 
 .welcome-container .settings {
@@ -144,16 +146,6 @@
   @apply bottom-0 left-0 w-full absolute pointer-events-none;
   height: 128px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 58.33%);
-}
-
-.setting-modal-container .ant-modal-close-x {
-  width: 54px;
-  height: 54px;
-  line-height: 46px;
-}
-
-.setting-modal-container .ant-modal-close {
-  outline: none;
 }
 
 .welcome-container .no-more {

@@ -1,7 +1,7 @@
 import { Field } from '@/app/components/form-field';
-import { useHomeStore } from '@/app/hooks';
+import { GlobalStoreContext } from '@/app/stores';
 import { EduRoleTypeEnum } from 'agora-edu-core';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { Button, Layout, transI18n, useI18n } from '~ui-kit';
 
 declare const CLASSROOM_SDK_VERSION: string;
@@ -79,7 +79,7 @@ export const LoginForm: FC<{
 }> = ({ onSubmit, sceneOptions }) => {
   const t = useI18n();
 
-  const homeStore = useHomeStore();
+  const globalStore = useContext(GlobalStoreContext);
 
   const roleOptions = [
     { text: t('home.role_teacher'), value: `${EduRoleTypeEnum.teacher}` },
@@ -90,7 +90,7 @@ export const LoginForm: FC<{
 
   const { values, errors, eventHandlers, validate } = useForm({
     initialValues: () => {
-      const launchConfig = homeStore.launchConfig;
+      const launchConfig = globalStore.launchConfig;
       const { roleType, roomType } = launchConfig;
 
       return {

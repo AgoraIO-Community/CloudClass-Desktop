@@ -1,4 +1,4 @@
-import { Form, FormItemProps, FormProps } from 'antd';
+import { Form, FormInstance, FormItemProps, FormProps } from 'antd';
 import { FC, PropsWithChildren, ReactElement } from 'react';
 import './index.css';
 export type { FormInstance as AFormInstance } from 'antd/es/form';
@@ -34,3 +34,5 @@ export function AForm<T = any>({
 }
 
 export const useAForm = Form.useForm;
+
+export type AFormInstance = FormInstance;

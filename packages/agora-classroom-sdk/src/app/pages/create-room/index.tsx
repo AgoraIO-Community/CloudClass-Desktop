@@ -1,20 +1,18 @@
 import { RoomAPI } from '@/app/api/room';
-import { UserApi } from '@/app/api/user';
 import watermarkIcon from '@/app/assets/fcr_watermark.svg';
 import cdnIcon from '@/app/assets/service-type/fcr_cdn.svg';
 import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
 import { RadioIcon } from '@/app/components/radio-icon';
 import { RoomTypeCard } from '@/app/components/room-type-card';
-import { useHomeStore } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
-import { useLoading } from '@/app/hooks/useLoading';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
-import { defaultHostingURL } from '@/app/utils';
+import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
+import { Default_Hosting_URL } from '@/app/utils';
 import { EduRoomServiceTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import {
   ADatePicker,
   ADatePickerProps,
@@ -66,21 +64,22 @@ type CreateFormValue = {
 
 const roomTypeOptions = [
   {
-    label: 'fcr_h5create_label_1on1',
-    description: 'fcr_create_label_1on1_description',
-    value: EduRoomTypeEnum.Room1v1Class,
-    className: 'card-purple',
-  },
-  {
     label: 'fcr_h5create_label_small_classroom',
     description: 'fcr_create_label_smallclassroom_description',
     value: EduRoomTypeEnum.RoomSmallClass,
-    className: 'card-red',
+    className: 'card-purple',
   },
   {
     label: 'fcr_h5create_label_lecture_hall',
     description: 'fcr_create_label_lecturehall_description',
     value: EduRoomTypeEnum.RoomBigClass,
+
+    className: 'card-red',
+  },
+  {
+    label: 'fcr_h5create_label_1on1',
+    description: 'fcr_create_label_1on1_description',
+    value: EduRoomTypeEnum.Room1v1Class,
     className: 'card-green',
   },
 ];
@@ -107,7 +106,9 @@ const serviceTypeOptions = [
 ];
 
 export const CreateRoom = observer(() => {
-  const homeStore = useHomeStore();
+  const roomStore = useContext(RoomStoreContext);
+  const { setLoading } = useContext(GlobalStoreContext);
+  const userStore = useContext(UserStoreContext);
   const historyBackHandle = useHistoryBack();
   const transI18n = useI18n();
 
@@ -126,15 +127,14 @@ export const CreateRoom = observer(() => {
     tip: '',
   });
   const [form] = useAForm<CreateFormValue>();
-  const { setLoading } = useLoading();
 
   const initialValues: CreateFormValue = useMemo(() => {
     const date = dayjs();
     return {
-      name: transI18n('fcr_create_label_room_name_default', { name: UserApi.shared.nickName }),
+      name: transI18n('fcr_create_label_room_name_default', { name: userStore.nickName }),
       date: date,
       time: date,
-      link: defaultHostingURL,
+      link: Default_Hosting_URL,
     };
   }, []);
 
@@ -202,8 +202,8 @@ export const CreateRoom = observer(() => {
           }
         : undefined;
       const sType = isHostingScene ? EduRoomServiceTypeEnum.HostingScene : serviceType;
-      RoomAPI.shared
-        .create({
+      roomStore
+        .createRoom({
           roomName: name,
           startTime: dateTime.valueOf(),
           endTime: computeEndTime(dateTime).valueOf(),
@@ -215,14 +215,6 @@ export const CreateRoom = observer(() => {
           },
         })
         .then(() => {
-          homeStore.addRoomListToast({
-            id: 'create_room_success',
-            type: 'success',
-            desc: transI18n('fcr_create_tips_create_success'),
-          });
-          setTimeout(() => {
-            homeStore.removeRoomListToast('create_room_success');
-          }, 2500);
           historyBackHandle();
         })
         .catch(() => {
@@ -258,7 +250,7 @@ export const CreateRoom = observer(() => {
             rules={[
               { required: true, message: transI18n('fcr_create_label_room_name_empty') },
               {
-                pattern: /^([a-zA-Z0-9_\u4e00-\u9fa5]{0,50})$/,
+                pattern: /^([ 'a-zA-Z0-9_\u4e00-\u9fa5]{0,50})$/,
                 message: transI18n('fcr_create_room_tips_name_rule'),
               },
             ]}>

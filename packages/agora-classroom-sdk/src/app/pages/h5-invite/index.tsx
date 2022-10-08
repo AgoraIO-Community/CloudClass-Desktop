@@ -1,17 +1,15 @@
-import { JoinRoomResponse, RoomAPI } from '@/app/api/room';
-import { UserApi } from '@/app/api/user';
+import { RoomJoinResponse, RoomAPI } from '@/app/api/room';
 import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
-import { useHomeStore } from '@/app/hooks';
 import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
 import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
-import { useLoading } from '@/app/hooks/useLoading';
-import { useNickNameRule } from '@/app/hooks/useNickNameRule';
+import { useNickNameForm } from '@/app/hooks/useNickNameForm';
+import { GlobalStoreContext, UserStoreContext } from '@/app/stores';
 import { formatRoomID, ShareLink } from '@/app/utils';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   AButton,
   AForm,
@@ -30,15 +28,15 @@ type InviteFormValue = {
 };
 
 export const H5Invite = () => {
+  const { setLoading, setRegion } = useContext(GlobalStoreContext);
+  const userStore = useContext(UserStoreContext);
   const { openSettings, SettingsContainer } = useSettingsH5();
-  const [shareRoomInfo, setShareRoomInfo] = useState<JoinRoomResponse & { owner: string }>();
-  const { setLoading } = useLoading();
+  const [shareRoomInfo, setShareRoomInfo] = useState<RoomJoinResponse & { owner: string }>();
   const { joinRoomHandle } = useJoinRoom();
-  const { rule: nickNameRule } = useNickNameRule();
+  const { rule: nickNameRule } = useNickNameForm();
   const transI18n = useI18n();
   const [form] = useAForm<InviteFormValue>();
   const { checkRoomInfoBeforeJoin, h5ClassModeIsSupport } = useCheckRoomInfo();
-  const homeStore = useHomeStore();
 
   // 根据分享信息初始化
   useEffect(() => {
@@ -60,7 +58,7 @@ export const H5Invite = () => {
         });
       // 将本地的区域和分享的区域对齐
       if (data.region) {
-        homeStore.setRegion(data.region);
+        setRegion(data.region);
       }
     } else {
       // history.push('/h5');
@@ -69,7 +67,7 @@ export const H5Invite = () => {
 
   const onSubmit = () => {
     form.validateFields().then((data) => {
-      UserApi.shared.nickName = data.nickName;
+      userStore.nickName = data.nickName;
       if (!shareRoomInfo) {
         aMessage.error(transI18n('fcr_api_tips_fetch_room_info_fault'));
         return false;
@@ -89,7 +87,7 @@ export const H5Invite = () => {
           roomName: roomDetail.roomName,
           roomType: roomDetail.roomType,
           roomServiceType: serviceType,
-          userId: UserApi.shared.userInfo.companyId,
+          userId: userStore.userInfo?.companyId || '',
           userName: data.nickName,
           role: EduRoleTypeEnum.student,
           token,
@@ -161,7 +159,7 @@ export const H5Invite = () => {
           <AForm<InviteFormValue>
             className="form"
             initialValues={{
-              nickName: UserApi.shared.nickName,
+              nickName: userStore.nickName,
             }}>
             <div className="form-item">
               <div className="label">{transI18n('fcr_joinroom_label_name')}</div>

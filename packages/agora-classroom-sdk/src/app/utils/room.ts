@@ -1,5 +1,5 @@
 import { EduRegion } from 'agora-edu-core';
-import { indexURL, parseHashUrlQuery } from './url';
+import { Index_URL, parseHashUrlQuery } from './url';
 
 /**
  * Format the room ID for a specific format.
@@ -37,7 +37,7 @@ export class ShareLink {
       this._url = `${match[0]}release_2.8.x/index.html`;
       return;
     }
-    this._url = indexURL;
+    this._url = Index_URL;
   }
 
   private _url = '';

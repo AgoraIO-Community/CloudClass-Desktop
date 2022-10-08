@@ -1,4 +1,4 @@
-.menu-item {
+.h5-menu-item {
   height: 50px;
   display: flex;
   justify-content: space-between;
@@ -9,5 +9,5 @@
   border: 1px solid #eeeef7;
 }
 
-.menu-icon {
+.h5-menu-icon {
 }

@@ -3,8 +3,9 @@ import { formatRoomID } from '@/app/utils';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { FC, useCallback, useMemo } from 'react';
-import { useI18n } from '~ui-kit';
+import { SvgIconEnum, SvgImg, useI18n } from '~ui-kit';
 import './item.css';
+import roomStateLive from '@/app/assets/fcr-room-state-live.svg';
 
 type RoomListItemProps = {
   className?: string;
@@ -76,8 +77,23 @@ export const RoomListItem: FC<RoomListItemProps> = ({
         </div>
         <div className="name">{data.roomName}</div>
         <div className="footer">
-          <span className="state icon">{transI18n(roomStateMap[roomState])}</span>
-          <span className="type">{transI18n(roomTypeMap[data.roomType])}</span>
+          <span className="state">
+            <img
+              src={roomStateLive}
+              alt="room-state-live"
+              className={`live-icon ${roomState !== RoomState.GOING ? 'hidden' : ''}`}
+            />
+            {transI18n(roomStateMap[roomState])}
+          </span>
+          <span className="type">
+            <SvgImg
+              className="label"
+              type={SvgIconEnum.ROOM_LABEL}
+              colors={{ color: roomState !== RoomState.GOING ? '#78787c' : '#abb2ff' }}
+              size={19}
+            />
+            {transI18n(roomTypeMap[data.roomType])}
+          </span>
         </div>
       </div>
       <div className="operation">

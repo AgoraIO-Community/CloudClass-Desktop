@@ -2,11 +2,13 @@ import { useMemo } from 'react';
 import { Route, Switch } from 'react-router';
 import { HashRouter } from 'react-router-dom';
 import { AuthLayout } from '../layout/auth-layout';
+import { BasicLayout } from '../layout/basic-layout';
 import { BrowserCheckLayout } from '../layout/browser-check-layout';
 import { routesMap } from './maps';
 import { PageRouter } from './type';
 
 const routes: PageRouter[] = [
+  PageRouter.Logout,
   PageRouter.PretestPage,
   PageRouter.Setting,
   PageRouter.OneToOne,
@@ -47,24 +49,26 @@ export const RouteContainer = () => {
 
   return (
     <HashRouter>
-      <AuthLayout includes={authIncludes}>
-        <BrowserCheckLayout includes={browserCheckIncludes}>
-          <Switch>
-            {routes.map((item, index) => {
-              const route = routesMap[item];
-              if (!route) return null;
-              return (
-                <Route
-                  key={item + index}
-                  exact={!!route.exact}
-                  path={route.path}
-                  component={route.component}
-                />
-              );
-            })}
-          </Switch>
-        </BrowserCheckLayout>
-      </AuthLayout>
+      <BasicLayout>
+        <AuthLayout includes={authIncludes}>
+          <BrowserCheckLayout includes={browserCheckIncludes}>
+            <Switch>
+              {routes.map((item, index) => {
+                const route = routesMap[item];
+                if (!route) return null;
+                return (
+                  <Route
+                    key={item + index}
+                    exact={!!route.exact}
+                    path={route.path}
+                    component={route.component}
+                  />
+                );
+              })}
+            </Switch>
+          </BrowserCheckLayout>
+        </AuthLayout>
+      </BasicLayout>
     </HashRouter>
   );
 };

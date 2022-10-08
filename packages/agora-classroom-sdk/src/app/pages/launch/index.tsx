@@ -1,14 +1,14 @@
-import { useHomeStore } from '@/app/hooks';
+import { GlobalStoreContext } from '@/app/stores';
 import { AgoraEduSDK } from '@/infra/api';
 import { AgoraEduClassroomEvent } from 'agora-edu-core';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import courseWareList from './courseware-list';
 
 export const LaunchPage = observer(() => {
-  const homeStore = useHomeStore();
+  const homeStore = useContext(GlobalStoreContext);
 
   const history = useHistory();
 

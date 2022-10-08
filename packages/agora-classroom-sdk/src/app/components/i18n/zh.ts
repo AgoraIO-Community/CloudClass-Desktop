@@ -1,3 +1,5 @@
+import { ErrorCodeMessage, ErrorCode } from '@/app/utils/error';
+
 export default {
   home_product_name: '灵动课堂',
   home_greeting: '欢迎使用灵动课堂',
@@ -18,8 +20,12 @@ export default {
   home_form_error_room_name_limit: '房间名为{min}-{max}位字符',
   home_form_error_user_name_limit: '用户名为{min}-{max}位字符',
   // 补充
+  [ErrorCodeMessage[ErrorCode.COURSE_HAS_ENDED]]: '当前课堂直播已经结束',
   fcr_home_label_room_list_no_more: '已经到底了 🤐',
+  fcr_logout_tips: '用户账号过期,稍后请重新登录',
+  fcr_menu_sign_out: '登出',
   fcr_join_room_tips_ui_config_note_ready: 'UI 配置没准备好',
+  fcr_join_room_tips_user_id_empty: '用户ID不能为空',
   fcr_create_tips_time_validate: '选择时间必须大于当前时间',
   fcr_create_tips_room_name: '请输入房间名称',
   fcr_create_more_settings_expand: '展开',

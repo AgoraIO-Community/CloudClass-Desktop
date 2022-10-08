@@ -1,6 +1,6 @@
-import { useHomeStore } from '@/app/hooks';
+import { GlobalStoreContext } from '@/app/stores';
 import { observer } from 'mobx-react';
-import { FC, useMemo } from 'react';
+import { FC, useContext, useMemo } from 'react';
 import { useI18n } from '~ui-kit';
 import { SettingsMenuEnum } from '.';
 import { Menu } from './components/menu';
@@ -12,7 +12,7 @@ interface LanguageMenuProps {
 }
 
 export const LanguageMenu: FC<LanguageMenuProps> = observer(({ removeMenuPopup }) => {
-  const { language, setLanguage } = useHomeStore();
+  const { language, setLanguage } = useContext(GlobalStoreContext);
   const transI18n = useI18n();
 
   const menus: MenuItemProps[] = useMemo(() => {

@@ -107,6 +107,7 @@ export enum SvgIconEnum {
   REWARD = 'reward',
   RHOMBUS = 'rhombus',
   RUDDY = 'ruddy',
+  ROOM_LABEL = 'room-label',
   SAVE_GHOST = 'save-ghost',
   SEARCH = 'search',
   SELECT = 'select',
