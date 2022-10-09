@@ -9,6 +9,7 @@ import { GlobalStoreContext, UserStoreContext } from '@/app/stores';
 import { formatRoomID, ShareLink } from '@/app/utils';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
+import { observer } from 'mobx-react';
 import { useContext, useEffect, useState } from 'react';
 import {
   AButton,
@@ -27,7 +28,7 @@ type InviteFormValue = {
   nickName: string;
 };
 
-export const H5Invite = () => {
+export const H5Invite = observer(() => {
   const { setLoading, setRegion } = useContext(GlobalStoreContext);
   const userStore = useContext(UserStoreContext);
   const { openSettings, SettingsContainer } = useSettingsH5();
@@ -183,4 +184,4 @@ export const H5Invite = () => {
       <SettingsContainer></SettingsContainer>
     </>
   );
-};
+});

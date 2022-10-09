@@ -19,7 +19,7 @@ export const BrowserCheckLayout: FC<PropsWithChildren<BrowserCheckLayoutProps>> 
     }
     // redirect to h5
     if (isH5Browser() && !location.pathname.match('/h5')) {
-      const url = window.location.hash.replace('#/', '/h5/');
+      const url = window.location.hash.replace('#/', '/h5');
       history.push(url);
       return;
     }

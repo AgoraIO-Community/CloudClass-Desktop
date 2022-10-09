@@ -10,18 +10,20 @@ export const useRoomIdForm = () => {
   );
 
   const formFormatRoomID = useCallback(
-    (form: AFormInstance, roomIdValue: string, fieldName: string) => {
-      if (roomIdValue) {
-        const roomId: string = roomIdValue.replace(/[^0-9]/gi, '');
+    (form: AFormInstance, value: string, fieldName: string): string => {
+      if (value) {
+        const roomId = value.replace(/[^0-9]/gi, '');
         if (roomId === '') {
           form.setFieldValue(fieldName, '');
-          return;
+          return roomId;
         }
         const formatId = formatRoomID(roomId);
         if (roomId !== formatId) {
           form.setFieldValue(fieldName, formatId);
         }
+        return roomId;
       }
+      return value;
     },
     [],
   );

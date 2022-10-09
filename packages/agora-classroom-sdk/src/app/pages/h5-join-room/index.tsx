@@ -1,4 +1,3 @@
-import { UserApi } from '@/app/api/user';
 import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
 import { useRoomIdForm } from '@/app/hooks';
@@ -8,9 +7,20 @@ import { useNickNameForm } from '@/app/hooks/useNickNameForm';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
 import { formatRoomID } from '@/app/utils';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
+import { observer } from 'mobx-react';
 import { useContext } from 'react';
 import { getI18n } from 'react-i18next';
-import { AButton, AForm, AFormItem, AInput, SvgIconEnum, SvgImg, useAForm, useI18n } from '~ui-kit';
+import {
+  AButton,
+  AForm,
+  AFormItem,
+  AFormProps,
+  AInput,
+  SvgIconEnum,
+  SvgImg,
+  useAForm,
+  useI18n,
+} from '~ui-kit';
 import './index.css';
 
 type JoinFormValue = {
@@ -18,7 +28,7 @@ type JoinFormValue = {
   nickName: string;
 };
 
-export const H5JoinRoom = () => {
+export const H5JoinRoom = observer(() => {
   const transI18n = useI18n();
   const i18n = getI18n();
   const userStore = useContext(UserStoreContext);
@@ -31,29 +41,36 @@ export const H5JoinRoom = () => {
   const { rule: roomIdRule, formFormatRoomID, getFormattedRoomIdValue } = useRoomIdForm();
 
   const onSubmit = () => {
-    form.validateFields().then((data) => {
-      setLoading(true);
-      userStore.setNickName(data.nickName);
-      data.roomId = getFormattedRoomIdValue(data.roomId);
-      data.roomId && roomStore.setLastJoinedRoomId(data.roomId);
-      quickJoinRoom({
-        role: EduRoleTypeEnum.student,
-        roomId: data.roomId,
-        nickName: data.nickName,
-        platform: Platform.H5,
-      }).finally(() => {
+    if (!userStore.isLogin) {
+      userStore.login();
+      return;
+    }
+    setLoading(true);
+    form
+      .validateFields()
+      .then((data) => {
+        userStore.setNickName(data.nickName);
+        data.roomId = getFormattedRoomIdValue(data.roomId);
+        return quickJoinRoom({
+          role: EduRoleTypeEnum.student,
+          roomId: data.roomId,
+          nickName: data.nickName,
+          platform: Platform.H5,
+        });
+      })
+      .finally(() => {
         setLoading(false);
       });
-    });
   };
 
-  const formOnValuesChange = (changeValues: any) => {
+  const formOnValuesChange: AFormProps<JoinFormValue>['onValuesChange'] = (changeValues: any) => {
     if (changeValues.roomId) {
       formFormatRoomID(form, changeValues.roomId, 'roomId');
+      roomStore.setLastJoinedRoomId(changeValues.roomId);
     }
   };
 
-  const welcome = useElementWithI18n({
+  const welcomeElement = useElementWithI18n({
     en: (
       <div className="welcome">
         Welcome to
@@ -79,9 +96,11 @@ export const H5JoinRoom = () => {
         <div className="content">
           <div className="hello">
             {transI18n('fcr_h5_invite_hello')}
-            <SvgImg type={SvgIconEnum.SETTINGS} size={20} onClick={openSettings} />
+            {userStore.isLogin ? (
+              <SvgImg type={SvgIconEnum.SETTINGS} size={20} onClick={openSettings} />
+            ) : null}
           </div>
-          {welcome}
+          {welcomeElement}
           <AForm<JoinFormValue>
             className="form"
             form={form}
@@ -111,4 +130,4 @@ export const H5JoinRoom = () => {
       <SettingsContainer />
     </>
   );
-};
+});

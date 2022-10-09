@@ -34,6 +34,7 @@ export const RouteContainer = () => {
       PageRouter.Index,
       PageRouter.Welcome,
       PageRouter.JoinRoom,
+      PageRouter.CreateRoom,
       PageRouter.Invite,
       PageRouter.H5Index,
       PageRouter.H5JoinRoom,
@@ -43,7 +44,14 @@ export const RouteContainer = () => {
   }, []);
 
   const authIncludes = useMemo(() => {
-    const list = [PageRouter.JoinRoom, PageRouter.Invite, PageRouter.H5Invite];
+    const list = [
+      PageRouter.JoinRoom,
+      PageRouter.Invite,
+      PageRouter.CreateRoom,
+      PageRouter.H5Index,
+      PageRouter.H5JoinRoom,
+      PageRouter.H5Invite,
+    ];
     return list.map((v) => routesMap[v].path);
   }, []);
 
