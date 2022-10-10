@@ -71,7 +71,7 @@ export class LectureRosterUIStore extends RosterUIStore {
   @action.bound
   resetUsersList() {
     this._usersList = [];
-    this.setKeyword('');
+    this.setSearchKeyword('');
     this._usersNextPageId = 0;
   }
 

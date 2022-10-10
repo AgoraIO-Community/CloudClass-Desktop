@@ -169,7 +169,7 @@ export const HomeH5Page = observer(() => {
             }
           }
 
-          const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
+          const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, role);
 
           const config: GlobalLaunchOption = {
             appId,

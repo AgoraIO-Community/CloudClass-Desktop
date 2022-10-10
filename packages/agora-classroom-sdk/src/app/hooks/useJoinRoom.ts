@@ -38,8 +38,9 @@ type JoinRoomParams = {
 type QuickJoinRoomParams = {
   role: EduRoleTypeEnum;
   roomId: string;
-  nickName?: string;
-  platform?: Platform;
+  nickName: string;
+  platform: Platform;
+  userId: string;
 };
 
 type JoinRoomOptions = Pick<GlobalLaunchOption, 'shareUrl' | 'uiMode'> & {
@@ -209,25 +210,27 @@ export const useJoinRoom = () => {
 
   const quickJoinRoom = useCallback(
     async (params: QuickJoinRoomParams) => {
-      const { roomId, role, nickName, platform = defaultPlatform } = params;
+      const { roomId, role, nickName, userId, platform = defaultPlatform } = params;
       return roomStore.joinRoom(roomId, role).then((response) => {
         const { roomDetail, token, appId } = response.data.data;
         const { serviceType, ...rProps } = roomDetail.roomProperties;
+
         if (!checkRoomInfoBeforeJoin(roomDetail)) {
           return;
         }
+
         return joinRoomHandle(
           {
+            appId,
+            token,
+            role,
+            platform,
+            userId,
+            userName: nickName,
             roomId: roomDetail.roomId,
             roomName: roomDetail.roomName,
             roomType: roomDetail.roomType,
             roomServiceType: serviceType,
-            userId: userStore.userInfo?.companyId || '',
-            userName: nickName || userStore.nickName,
-            role,
-            token,
-            appId,
-            platform,
           },
           { roomProperties: rProps },
         );
@@ -235,9 +238,42 @@ export const useJoinRoom = () => {
     },
     [joinRoomHandle, checkRoomInfoBeforeJoin],
   );
+
+  const quickJoinRoomNoAuth = useCallback(
+    async (params: QuickJoinRoomParams) => {
+      const { roomId, role, nickName, userId, platform = defaultPlatform } = params;
+      return roomStore.joinRoomNoAuth(roomId, role).then((response) => {
+        const { roomDetail, token, appId } = response.data.data;
+        const { serviceType, ...rProps } = roomDetail.roomProperties;
+
+        if (!checkRoomInfoBeforeJoin(roomDetail)) {
+          return;
+        }
+
+        return joinRoomHandle(
+          {
+            appId,
+            token,
+            role,
+            platform,
+            userId,
+            userName: nickName,
+            roomId: roomDetail.roomId,
+            roomName: roomDetail.roomName,
+            roomType: roomDetail.roomType,
+            roomServiceType: serviceType,
+          },
+          { roomProperties: rProps },
+        );
+      });
+    },
+    [joinRoomHandle, checkRoomInfoBeforeJoin],
+  );
+
   return {
     joinRoomHandle,
     quickJoinRoom,
+    quickJoinRoomNoAuth,
     configReady,
   };
 };

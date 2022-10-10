@@ -164,7 +164,7 @@ export const HomePage = () => {
 
       const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
 
-      const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, userRole);
+      const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, userRole);
 
       const companyId = window.__launchCompanyId;
       const projectId = window.__launchProjectId;

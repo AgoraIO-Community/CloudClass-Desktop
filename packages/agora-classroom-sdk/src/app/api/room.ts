@@ -57,9 +57,9 @@ export type RoomJoinResponse = {
   roomDetail: RoomInfo;
 };
 
-export class RoomAPI {
-  static shared = new RoomAPI();
+const noAuthCompanyID = 0;
 
+export class RoomAPI {
   private get domain() {
     return getTokenDomain(getRegion());
   }
@@ -139,6 +139,22 @@ export class RoomAPI {
   }
 
   /**
+   * 加入教室(免鉴权)
+   * @param params
+   * @returns
+   *
+   **/
+  /** @en
+   * Join room without auth
+   * @param params
+   * @returns
+   */
+  public async joinNoAuth(params: RoomJoinRequest) {
+    const url = `${this.domain}/edu/companys/${noAuthCompanyID}/v1/rooms`;
+    return request.put<Response<RoomJoinResponse>>(url, params);
+  }
+
+  /**
    * 教室历史查询
    * @param roomID
    * @returns
@@ -154,3 +170,5 @@ export class RoomAPI {
     return request.get<Response<any>>(url);
   }
 }
+
+export const roomApi = new RoomAPI();

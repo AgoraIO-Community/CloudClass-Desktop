@@ -32,12 +32,12 @@ export const GeneralMenu: FC<GeneralMenuProps> = ({ addMenuPopup, removeMenuPopu
         addMenuPopup(SettingsMenuEnum.Theme);
       },
     },
-    {
-      text: transI18n('settings_close_account'),
-      onClick: () => {
-        addMenuPopup(SettingsMenuEnum.CloseAccount);
-      },
-    },
+    // {
+    //   text: transI18n('settings_close_account'),
+    //   onClick: () => {
+    //     addMenuPopup(SettingsMenuEnum.CloseAccount);
+    //   },
+    // },
   ];
 
   return (

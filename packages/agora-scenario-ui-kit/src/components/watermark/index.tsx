@@ -85,7 +85,7 @@ export const WaterMark: React.FC<WaterMarkProps> = (props) => {
     offsetTop,
     fontStyle = 'normal',
     fontWeight = 'normal',
-    fontColor = 'rgba(0,0,0,.15)',
+    fontColor = 'rgb(133 133 133 / 15%)',
     fontSize = 16,
     fontFamily = 'sans-serif',
     prefixCls: customizePrefixCls,

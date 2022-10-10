@@ -56,7 +56,8 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
       announcement: !currentSubRoom && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: visibleMuteAll && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
       showQuestionBox:
-        sessionInfo.roomServiceType !== 0 && sessionInfo.role === EduRoleTypeEnum.student, //职教课的学生显示提问
+        sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass &&
+        sessionInfo.role === EduRoleTypeEnum.student, //大班课课的学生显示提问
       isFullSize: widgetStore.isFullSize,
       emoji: visibleEmoji,
       btnSend: visibleBtnSend,

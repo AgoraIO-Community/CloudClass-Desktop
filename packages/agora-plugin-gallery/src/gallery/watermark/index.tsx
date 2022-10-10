@@ -8,7 +8,11 @@ import { WidgetWatermarkUIStore } from './store';
 const App = observer(({ widget }: { widget: FcrWatermarkWidget }) => {
   const widgetStore = widget.widgetStore as WidgetWatermarkUIStore;
   return widgetStore.visible ? (
-    <WaterMark className="h-full" markClassName="h-full" content={widgetStore.content}></WaterMark>
+    <WaterMark
+      className="h-full"
+      markClassName="h-full"
+      zIndex={999}
+      content={widgetStore.content}></WaterMark>
   ) : null;
 });
 

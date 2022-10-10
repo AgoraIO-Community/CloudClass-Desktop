@@ -23,3 +23,8 @@ export type AModalProps = Pick<
 export const AModal: React.FC<AModalProps> = (props) => {
   return <Modal {...props} />;
 };
+
+export const ModalMethod = {
+  confirm: Modal.confirm,
+  destroyAll: Modal.destroyAll,
+};

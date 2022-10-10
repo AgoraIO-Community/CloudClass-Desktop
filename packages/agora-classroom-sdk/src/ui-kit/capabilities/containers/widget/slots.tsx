@@ -147,6 +147,6 @@ export const Watermark = observer(function Chat() {
   }, [ready, classroomStore.roomStore?.flexProps?.watermark, classroomStore.userStore.localUser?.userUuid]);
 
   return (
-    <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none z-10" />
+    <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none" />
   );
 });

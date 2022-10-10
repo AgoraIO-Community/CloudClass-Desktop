@@ -184,7 +184,7 @@ export const InputMsg = ({ allMutePermission }) => {
     <>
       <div>
         <div className="fcr-hx-chat-icon">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="left">
             {configUIVisible.emoji && (
               <Popover
                 overlayClassName="chat-icon-popover"

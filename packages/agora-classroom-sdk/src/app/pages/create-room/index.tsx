@@ -1,4 +1,3 @@
-import { RoomAPI } from '@/app/api/room';
 import watermarkIcon from '@/app/assets/fcr_watermark.svg';
 import cdnIcon from '@/app/assets/service-type/fcr_cdn.svg';
 import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';

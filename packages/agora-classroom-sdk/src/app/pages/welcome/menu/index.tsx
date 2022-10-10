@@ -3,10 +3,11 @@ import signOutIcon from '@/app/assets/fcr-sign-out.svg';
 import { Settings } from '@/app/components/settings';
 import { useLogout } from '@/app/hooks';
 import { GlobalStoreContext, UserStoreContext } from '@/app/stores';
+import { observer } from 'mobx-react';
 import { FC, useContext, useMemo, useState } from 'react';
 import { AAvatar, AModal, useI18n } from '~ui-kit';
 import './index.css';
-export const Menu: FC = () => {
+export const Menu: FC = observer(() => {
   const transI18n = useI18n();
   const [settingModal, setSettingModal] = useState(false);
   const { setLoading } = useContext(GlobalStoreContext);
@@ -62,4 +63,4 @@ export const Menu: FC = () => {
       </AModal>
     </div>
   );
-};
+});

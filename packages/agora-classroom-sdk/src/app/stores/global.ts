@@ -47,7 +47,8 @@ export const clearHomeOption = () => {
 };
 
 export class GlobalStore {
-  launchOption!: GlobalLaunchOption;
+  @observable
+  launchOption: Partial<GlobalLaunchOption> = getLSStore<GlobalLaunchOption>(LS_LAUNCH) || {};
 
   @observable
   region: EduRegion = getRegion();
@@ -62,8 +63,6 @@ export class GlobalStore {
   toastList: ToastType[] = [];
 
   constructor() {
-    //@ts-ignore
-    this.launchOption = getLSStore<GlobalLaunchOption>(LS_LAUNCH) || {};
     autorun(() => {
       setLSStore(LS_REGION, this.region);
     });
@@ -78,7 +77,7 @@ export class GlobalStore {
     });
 
     autorun(() => {
-      setLSStore(LS_LAUNCH, this.launchOption);
+      setLSStore(LS_LAUNCH, toJS(this.launchOption));
     });
   }
 

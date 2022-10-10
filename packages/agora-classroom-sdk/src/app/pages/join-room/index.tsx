@@ -7,7 +7,7 @@ import { useRoomIdForm } from '@/app/hooks/useRoomIdForm';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
 import { formatRoomID, ShareLink } from '@/app/utils';
-import { EduRoleTypeEnum } from 'agora-edu-core';
+import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useContext, useEffect, useState } from 'react';
 import { AForm, AFormItem, AInput, useAForm, useI18n } from '~ui-kit';
@@ -75,6 +75,8 @@ export const JoinRoom = observer(() => {
         role,
         roomId: data.roomId,
         nickName: data.nickName,
+        platform: Platform.PC,
+        userId: userStore.userInfo!.companyId,
       }).finally(() => {
         setLoading(false);
       });

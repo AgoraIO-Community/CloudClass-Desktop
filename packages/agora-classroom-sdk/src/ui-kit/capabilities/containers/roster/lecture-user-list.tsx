@@ -12,7 +12,7 @@ export const LectureRosterContainer: FC<LectureRosterContainerProps> = observer(
   const { rosterUIStore } = useStore() as EduLectureUIStore;
   const {
     teacherName,
-    setKeyword,
+    setSearchKeyword,
     searchKeyword,
     rosterFunctions: functions,
     carouselProps,
@@ -24,7 +24,7 @@ export const LectureRosterContainer: FC<LectureRosterContainerProps> = observer(
 
   const keyWordChangeHandle = useCallback(
     (keyword: string) => {
-      setKeyword(keyword);
+      setSearchKeyword(keyword);
       fetchNextUsersList({ nextId: null }, true);
     },
     [fetchNextUsersList],

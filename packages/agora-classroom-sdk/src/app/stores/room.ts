@@ -2,7 +2,7 @@ import { ToastType } from '@/infra/stores/common/share-ui';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { action, autorun, observable } from 'mobx';
 import { aMessage, transI18n } from '~ui-kit';
-import { RoomAPI, RoomCreateRequest, RoomInfo } from '../api/room';
+import { roomApi, RoomCreateRequest, RoomInfo } from '../api/room';
 import { ErrorCode, getErrorMessage } from '../utils/error';
 import { getLSStore, LS_LAST_JOINED_ROOM_ID, setLSStore } from '../utils/local-storage';
 
@@ -68,7 +68,7 @@ export class RoomStore {
   public async createRoom(params: RoomCreateRequest) {
     const {
       data: { data },
-    } = await RoomAPI.shared.create(params);
+    } = await roomApi.create(params);
     const toast: RoomToastType = {
       id: data.roomId,
       type: 'success',
@@ -87,7 +87,7 @@ export class RoomStore {
     try {
       const {
         data: { data },
-      } = await RoomAPI.shared.list();
+      } = await roomApi.list();
       const { list, nextId, total } = data;
       this.setNextId(nextId);
       this.setTotal(total);
@@ -109,7 +109,7 @@ export class RoomStore {
     try {
       const {
         data: { data },
-      } = await RoomAPI.shared.list({ nextId: this.nextId });
+      } = await roomApi.list({ nextId: this.nextId });
       const { list, nextId, total } = data;
       this.setTotal(total);
       this.setNextId(nextId);
@@ -140,13 +140,26 @@ export class RoomStore {
   }
 
   @action.bound
-  public joinRoom(roomId: string, role: EduRoleTypeEnum) {
-    return RoomAPI.shared.join({ roomId, role }).catch((error) => {
+  public async joinRoom(roomId: string, role: EduRoleTypeEnum) {
+    return roomApi.join({ roomId, role }).catch((error) => {
       console.warn('join room api failed. error:%o', error);
       if (error?.response?.data?.code === ErrorCode.COURSE_HAS_ENDED) {
         aMessage.error(getErrorMessage(error?.response?.data?.code));
       } else {
-        aMessage.error(transI18n('fcr_joinroom_tips_emptyid'));
+        aMessage.error(transI18n('fcr_join_room_tips_empty_id'));
+      }
+      return error;
+    });
+  }
+
+  @action.bound
+  public async joinRoomNoAuth(roomId: string, role: EduRoleTypeEnum) {
+    return roomApi.joinNoAuth({ roomId, role }).catch((error) => {
+      console.warn('join room no auth api failed. error:%o', error);
+      if (error?.response?.data?.code === ErrorCode.COURSE_HAS_ENDED) {
+        aMessage.error(getErrorMessage(error?.response?.data?.code));
+      } else {
+        aMessage.error(transI18n('fcr_join_room_tips_empty_id'));
       }
       return error;
     });

@@ -11,8 +11,8 @@ export const RosterContainer: FC<RosterContainerProps> = observer(({ onClose }) 
   const { rosterUIStore } = useStore();
   const {
     teacherName,
-    setKeyword,
     searchKeyword,
+    setSearchKeyword,
     rosterFunctions: functions,
     carouselProps,
     uiOverrides,
@@ -28,7 +28,7 @@ export const RosterContainer: FC<RosterContainerProps> = observer(({ onClose }) 
       carouselProps={carouselProps}
       functions={functions}
       onClose={onClose}
-      onKeywordChange={setKeyword}>
+      onKeywordChange={setSearchKeyword}>
       <RosterTableContainer />
     </Roster>
   );

@@ -83,10 +83,10 @@ export const VocationalHomePage = observer(() => {
   const [userId, setUserId] = useState<string>('');
   const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
   const [userName, setUserName] = useState<string>(launchConfig.userName || '');
-  const [userRole, setRole] = useState<string>(launchConfig.userRole || '');
-  const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
-  const [curService, setService] = useState<string>(launchConfig.curService || '');
-  const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
+  const [userRole, setRole] = useState<string>('student');
+  const [curScenario, setScenario] = useState<string>('vocational-class');
+  const [curService, setService] = useState<string>('latency-service');
+  const [duration, setDuration] = useState<number>(30);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -182,7 +182,7 @@ export const VocationalHomePage = observer(() => {
       setLoading(true);
       const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
 
-      const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
+      const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, role);
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
       const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';

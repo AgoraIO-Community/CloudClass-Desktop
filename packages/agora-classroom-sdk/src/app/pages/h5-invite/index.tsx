@@ -1,22 +1,25 @@
-import { RoomJoinResponse, RoomAPI } from '@/app/api/room';
+import { RoomJoinResponse } from '@/app/api/room';
 import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
 import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
 import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
-import { GlobalStoreContext, UserStoreContext } from '@/app/stores';
+import { useNoAuthUser } from '@/app/hooks/useNoAuthUser';
+import { GlobalStoreContext, RoomStoreContext } from '@/app/stores';
 import { formatRoomID, ShareLink } from '@/app/utils';
-import { EduRoleTypeEnum } from 'agora-edu-core';
+import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import {
   AButton,
   AForm,
   AFormItem,
   AInput,
   aMessage,
+  ModalMethod,
   SvgIconEnum,
   SvgImg,
   useAForm,
@@ -30,22 +33,24 @@ type InviteFormValue = {
 
 export const H5Invite = observer(() => {
   const { setLoading, setRegion } = useContext(GlobalStoreContext);
-  const userStore = useContext(UserStoreContext);
+  const roomStore = useContext(RoomStoreContext);
+  const history = useHistory();
+  const transI18n = useI18n();
   const { openSettings, SettingsContainer } = useSettingsH5();
   const [shareRoomInfo, setShareRoomInfo] = useState<RoomJoinResponse & { owner: string }>();
   const { joinRoomHandle } = useJoinRoom();
   const { rule: nickNameRule } = useNickNameForm();
-  const transI18n = useI18n();
   const [form] = useAForm<InviteFormValue>();
   const { checkRoomInfoBeforeJoin, h5ClassModeIsSupport } = useCheckRoomInfo();
+  const { userId, nickName, setNickName } = useNoAuthUser();
 
   // 根据分享信息初始化
   useEffect(() => {
     const data = ShareLink.instance.parseHashURLQuery(location.hash);
     if (data) {
       setLoading(true);
-      RoomAPI.shared
-        .join({ roomId: data.roomId, role: EduRoleTypeEnum.student })
+      roomStore
+        .joinRoomNoAuth(data.roomId, EduRoleTypeEnum.student)
         .then((response) => {
           setShareRoomInfo({
             ...response.data.data,
@@ -62,13 +67,22 @@ export const H5Invite = observer(() => {
         setRegion(data.region);
       }
     } else {
-      // history.push('/h5');
+      ModalMethod.confirm({
+        content: transI18n('fcr_h5_invite_room_share_link_error'),
+        onOk: () => {
+          history.push('/h5');
+        },
+      });
     }
+
+    return () => {
+      ModalMethod.destroyAll();
+    };
   }, []);
 
   const onSubmit = () => {
     form.validateFields().then((data) => {
-      userStore.setNickName(data.nickName);
+      setNickName(data.nickName);
       if (!shareRoomInfo) {
         aMessage.error(transI18n('fcr_api_tips_fetch_room_info_fault'));
         return false;
@@ -84,15 +98,16 @@ export const H5Invite = observer(() => {
       setLoading(true);
       joinRoomHandle(
         {
+          token,
+          appId,
+          userId: userId,
+          userName: data.nickName,
           roomId: roomDetail.roomId,
           roomName: roomDetail.roomName,
           roomType: roomDetail.roomType,
           roomServiceType: serviceType,
-          userId: userStore.userInfo?.companyId || '',
-          userName: data.nickName,
           role: EduRoleTypeEnum.student,
-          token,
-          appId,
+          platform: Platform.H5,
         },
         { roomProperties: rProps },
       ).finally(() => {
@@ -160,7 +175,7 @@ export const H5Invite = observer(() => {
           <AForm<InviteFormValue>
             className="form"
             initialValues={{
-              nickName: userStore.nickName,
+              nickName: nickName,
             }}>
             <div className="form-item">
               <div className="label">{transI18n('fcr_joinroom_label_name')}</div>

@@ -4,7 +4,8 @@ import { useRoomIdForm } from '@/app/hooks';
 import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
-import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
+import { useNoAuthUser } from '@/app/hooks/useNoAuthUser';
+import { GlobalStoreContext, RoomStoreContext } from '@/app/stores';
 import { formatRoomID } from '@/app/utils';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
@@ -31,31 +32,27 @@ type JoinFormValue = {
 export const H5JoinRoom = observer(() => {
   const transI18n = useI18n();
   const i18n = getI18n();
-  const userStore = useContext(UserStoreContext);
   const roomStore = useContext(RoomStoreContext);
   const { setLoading } = useContext(GlobalStoreContext);
   const [form] = useAForm<JoinFormValue>();
   const { openSettings, SettingsContainer } = useSettingsH5();
-  const { quickJoinRoom } = useJoinRoom();
+  const { quickJoinRoomNoAuth } = useJoinRoom();
   const { rule: nickNameRule } = useNickNameForm();
   const { rule: roomIdRule, formFormatRoomID, getFormattedRoomIdValue } = useRoomIdForm();
-
+  const { userId, nickName, setNickName } = useNoAuthUser();
   const onSubmit = () => {
-    if (!userStore.isLogin) {
-      userStore.login();
-      return;
-    }
     setLoading(true);
     form
       .validateFields()
       .then((data) => {
-        userStore.setNickName(data.nickName);
+        setNickName(data.nickName);
         data.roomId = getFormattedRoomIdValue(data.roomId);
-        return quickJoinRoom({
+        return quickJoinRoomNoAuth({
           role: EduRoleTypeEnum.student,
           roomId: data.roomId,
           nickName: data.nickName,
           platform: Platform.H5,
+          userId: userId,
         });
       })
       .finally(() => {
@@ -96,9 +93,7 @@ export const H5JoinRoom = observer(() => {
         <div className="content">
           <div className="hello">
             {transI18n('fcr_h5_invite_hello')}
-            {userStore.isLogin ? (
-              <SvgImg type={SvgIconEnum.SETTINGS} size={20} onClick={openSettings} />
-            ) : null}
+            <SvgImg type={SvgIconEnum.SETTINGS} size={20} onClick={openSettings} />
           </div>
           {welcomeElement}
           <AForm<JoinFormValue>
@@ -106,7 +101,7 @@ export const H5JoinRoom = observer(() => {
             form={form}
             onValuesChange={formOnValuesChange}
             initialValues={{
-              nickName: userStore.nickName,
+              nickName: nickName,
               roomId: formatRoomID(roomStore.lastJoinedRoomId),
             }}>
             <div className="form-item">

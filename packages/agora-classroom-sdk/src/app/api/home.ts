@@ -13,7 +13,7 @@ export class HomeApi {
     return getTokenDomain(EduRegion.CN);
   }
 
-  public async loginV3(
+  public async loginNoAuth(
     userUuid: string,
     roomUuid: string,
     role: number,

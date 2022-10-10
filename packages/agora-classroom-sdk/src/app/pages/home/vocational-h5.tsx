@@ -185,7 +185,7 @@ export const VocationalHomeH5Page = observer(() => {
             }
           }
 
-          const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
+          const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
           const webRTCCodec =
             roomServiceType === EduRoomServiceTypeEnum.CDN ||
