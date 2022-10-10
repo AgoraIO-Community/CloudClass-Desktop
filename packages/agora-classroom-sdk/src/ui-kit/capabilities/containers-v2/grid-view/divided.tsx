@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { EduStudyRoomUIStore } from '@/infra/stores/study-room';
 import './index.css';
 import useMeasure from 'react-use-measure';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { calculateGridMatrix } from './helper';
 import { AutoSubscriptionRemoteTrackPlayer, LocalTrackPlayer } from './players';
 import { EduStreamUI } from '@/infra/stores/common/stream/struct';
@@ -19,9 +19,10 @@ type CellProps = {
 }
 
 const GridCell = observer(({ stream, canPlay, outerSize }: CellProps) => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
+    const { streamUIStore, layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
-    const { localCameraStream, localScreenStream, connected } = streamUIStore;
+    const { localCameraStream, localScreenStream } = streamUIStore;
+    const { connected } = layoutUIStore;
 
     const isLocal = () => {
         return stream.stream === localCameraStream || stream.stream === localScreenStream;
@@ -40,11 +41,23 @@ const GridCell = observer(({ stream, canPlay, outerSize }: CellProps) => {
 
 
 export const DividedGridView = observer(() => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
+    const { streamUIStore, layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
-    const { participant20Streams, showPager } = streamUIStore;
+    const { getParticipantStreams } = streamUIStore;
+    const { showPager, getCurrentPageUsers, pageSize, subscribeMass } = layoutUIStore;
 
-    const { matrix, numOfCols, numOfRows } = calculateGridMatrix(participant20Streams.length);
+    const currentPageUserList = getCurrentPageUsers(pageSize);
+
+    const streams = getParticipantStreams(currentPageUserList);
+
+
+    useEffect(() => {
+        const eduStreams = streams.map(s => s.stream.stream);
+
+        subscribeMass(eduStreams);
+    }, [streams]);
+
+    const { matrix, numOfCols, numOfRows } = calculateGridMatrix(streams.length);
 
     let count = 0;
 
@@ -75,7 +88,7 @@ export const DividedGridView = observer(() => {
                         return (<div className='flex' key={idx} style={{ gap: 8 }}>
                             {
                                 rows.map(() => {
-                                    const stream = participant20Streams[count++];
+                                    const stream = streams[count++];
 
                                     return (
                                         <GridTools key={stream.stream.stream.streamUuid} stream={stream}>
@@ -96,8 +109,9 @@ export const DividedGridView = observer(() => {
 
 
 export const Pager = observer(() => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
-    const { nextPage, prevPage, totalPage, pageIndex } = streamUIStore;
+    const { layoutUIStore } = useStore() as EduStudyRoomUIStore;
+    const { nextPage, prevPage, totalPage, pageIndex } = layoutUIStore;
+
     return (
         <React.Fragment>
             <div className='fcr-pager flex flex-col items-center absolute' style={{ left: 18, fontSize: 12, top: '40%', zIndex: 10 }}>

@@ -1,9 +1,10 @@
 import { useStore } from "@/infra/hooks/ui-store";
 import { EduStreamUI } from "@/infra/stores/common/stream/struct";
 import { EduStudyRoomUIStore } from "@/infra/stores/study-room";
+import { StreamCellUI } from "@/infra/stores/study-room/stream-ui";
 import { AgoraRteRemoteStreamType } from "agora-rte-sdk";
 import { observer } from "mobx-react";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import useMeasure from "react-use-measure";
 import { SvgIconEnum, SvgImg } from "~components";
 import { AutoSubscriptionRemoteTrackPlayer, LocalTrackPlayer } from "./players";
@@ -21,9 +22,16 @@ type CellProps = {
 }
 
 const GridCell = observer(({ stream, canPlay, streamType, outerSize, mb, isMain }: CellProps) => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
+    const { streamUIStore, layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
-    const { localCameraStream, localScreenStream, connected, pinnedStream } = streamUIStore;
+    const { localCameraStream, localScreenStream, getPinnedStream } = streamUIStore;
+    const { connected, pinnedUser } = layoutUIStore;
+
+    let pinnedStream: StreamCellUI | undefined = undefined;
+
+    if (pinnedUser) {
+        pinnedStream = getPinnedStream(pinnedUser);
+    }
 
     const isLocal = () => {
         return stream.stream === localCameraStream || stream.stream === localScreenStream;
@@ -34,7 +42,7 @@ const GridCell = observer(({ stream, canPlay, streamType, outerSize, mb, isMain 
     const show = isMain || !isMain && !pinned;
 
     return (
-        <div className={`fcr-divided-grid-view__cell ${ mb ? 'mb-2' : '' } overflow-hidden relative flex items-center justify-center flex-shrink-0`} style={{ width: outerSize.width, height: outerSize.height }}>
+        <div className={`fcr-divided-grid-view__cell ${mb ? 'mb-2' : ''} overflow-hidden relative flex items-center justify-center flex-shrink-0`} style={{ width: outerSize.width, height: outerSize.height }}>
             {
                 show && canPlay && connected ? (isLocal() ? <LocalTrackPlayer stream={stream.stream} /> : <AutoSubscriptionRemoteTrackPlayer stream={stream.stream} streamType={streamType} />) :
                     <div className="h-full flex items-center justify-center">{stream.fromUser.userName}</div>
@@ -46,9 +54,31 @@ const GridCell = observer(({ stream, canPlay, streamType, outerSize, mb, isMain 
 
 
 export const SurroundedGridView = observer(() => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
+    const { streamUIStore, layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
-    const { pinnedStream, participant8Streams, showPager } = streamUIStore;
+    const { getParticipantStreams, getPinnedStream } = streamUIStore;
+
+    const { showPager, pinnedUser, getCurrentPageUsers, pageSize, subscribeMass } = layoutUIStore;
+
+    let pinnedStream: StreamCellUI | undefined = undefined;
+
+    if (pinnedUser) {
+        pinnedStream = getPinnedStream(pinnedUser);
+    }
+
+    const userList = getCurrentPageUsers(pageSize);
+
+    const streams = getParticipantStreams(userList);
+
+    useEffect(() => {
+        const eduStreams = streams.map(s => s.stream.stream);
+
+        if (pinnedStream) {
+            eduStreams.unshift(pinnedStream.stream.stream);
+        }
+
+        subscribeMass(eduStreams);
+    }, [streams, pinnedStream]);
 
     const [ref, bounds] = useMeasure();
 
@@ -80,7 +110,7 @@ export const SurroundedGridView = observer(() => {
             {/* Aside */}
             <div className="fcr-surrounded-grid-view__aside flex  flex-shrink-0 flex-col items-end overflow-auto" style={{ width: 210, height: 'calc(100vh - 155px)' }}>
                 {
-                    participant8Streams.map((stream) => {
+                    streams.map((stream) => {
                         return (
                             <GridTools key={stream.stream.stream.streamUuid} className="w-full" stream={stream}>
                                 <GridCell isMain={false} mb={2} outerSize={sideStreamSize} stream={stream.stream} canPlay={stream.canPlay} />
@@ -97,8 +127,8 @@ export const SurroundedGridView = observer(() => {
 
 
 export const Pager = observer(() => {
-    const { streamUIStore } = useStore() as EduStudyRoomUIStore;
-    const { nextPage, prevPage, totalPage, pageIndex } = streamUIStore;
+    const { layoutUIStore } = useStore() as EduStudyRoomUIStore;
+    const { nextPage, prevPage, totalPage, pageIndex } = layoutUIStore;
     return (
         <React.Fragment>
             <div className='fcr-pager flex flex-col items-center absolute' style={{ right: 168, top: 1, fontSize: 12 }}>

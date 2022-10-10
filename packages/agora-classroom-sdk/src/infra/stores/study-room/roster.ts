@@ -1,12 +1,24 @@
+import { EduEventUICenter } from '@/infra/utils/event-center';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
-import { iterateMap } from 'agora-edu-core';
+import { EduClassroomStore, iterateMap } from 'agora-edu-core';
 import { AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { toLower } from 'lodash';
 import { computed } from 'mobx';
-import { BoardGrantState, DeviceState, Operation, Operations, Profile } from '~components';
+import { BoardGrantState, DeviceState, Operation } from '~components';
 import { RosterUIStore } from '../common/roster';
+import { Operations, Profile } from '../common/roster/type';
+import { EduShareUIStore } from '../common/share-ui';
+import { StudyRoomGetters } from './getters';
 
 export class StudyRoomRosterUIStore extends RosterUIStore {
+  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
+    super(store, shareUIStore, new StudyRoomGetters(store));
+  }
+
+  get getters(): StudyRoomGetters {
+    return super.getters as StudyRoomGetters;
+  }
+
   get uiOverrides() {
     return { ...super.uiOverrides, width: 400 };
   }
@@ -19,7 +31,6 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
     }
     return funcs as ('search' | 'pin' | 'eye' | 'kick')[];
   }
-
   /**
    * 学生列表
    * @returns
@@ -99,8 +110,8 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
           microphoneState,
           stars,
           operations,
-          pinned: this.shareUIStore.pinnedUser === userUuid,
-          eyeClosed: this.shareUIStore.blackList.has(userUuid),
+          pinned: this.getters.pinnedUser === userUuid,
+          eyeClosed: this.getters.blackList.has(userUuid),
         };
       },
     });
@@ -124,17 +135,17 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
    * @param operation
    * @param profile
    */
-  //@ts-ignore
-  clickRowAction: any = interactionThrottleHandler(
+  clickRowAction = interactionThrottleHandler(
     (operation: Operation, profile: Profile) => {
       switch (operation) {
         case 'pin': {
-          this.shareUIStore.togglePinUser({ userUuid: profile.uid } as any);
+          EduEventUICenter.shared.emit('toggle-pin-user', profile.uid);
+          // this.shareUIStore.togglePinUser({ userUuid: profile.uid } as any);
           break;
         }
-
         case 'eye': {
-          this.shareUIStore.toggleUserBlackList({ userUuid: profile.uid } as any);
+          EduEventUICenter.shared.emit('toggle-user-black-list', profile.uid);
+          // this.shareUIStore.toggleUserBlackList({ userUuid: profile.uid } as any);
           break;
         }
         case 'kick': {

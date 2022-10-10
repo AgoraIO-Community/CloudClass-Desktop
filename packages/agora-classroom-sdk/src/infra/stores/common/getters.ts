@@ -1,7 +1,7 @@
 import { EduClassroomConfig, EduClassroomStore, EduRoomTypeEnum } from 'agora-edu-core';
 
 export class Getters {
-  constructor(private _classroomStore: EduClassroomStore) {}
+  constructor(protected _classroomStore: EduClassroomStore) {}
 
   /**
    * 讲台显示/隐藏

@@ -15,11 +15,17 @@ type Props = {
 }
 
 export const GridTools: FC<Props> = observer(({ children, className, style, stream }) => {
-    const { streamUIStore, shareUIStore } = useStore() as EduStudyRoomUIStore;
+    const { streamUIStore, layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
-    const { blackList } = shareUIStore;
+    const { blackList, togglePinUser, toggleUserBlackList, pinnedUser, localUserUuid } = layoutUIStore;
 
-    const { pinnedStream, togglePinUser, toggleUserBlackList, localUserUuid } = streamUIStore;
+    const { getPinnedStream } = streamUIStore;
+
+    let pinnedStream: StreamCellUI | undefined = undefined;
+
+    if (pinnedUser) {
+        pinnedStream = getPinnedStream(pinnedUser);
+    }
 
     let pinIcon = SvgIconEnum.PIN;
     let eyeIcon = SvgIconEnum.EYE_CLOSE;

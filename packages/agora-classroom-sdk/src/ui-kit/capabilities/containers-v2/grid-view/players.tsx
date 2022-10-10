@@ -1,10 +1,11 @@
 import { useStore } from "@/infra/hooks/ui-store";
+import { EduStudyRoomUIStore } from "@/infra/stores/study-room";
 import { EduStream } from "agora-edu-core";
 import { AgoraRteRemoteStreamType, AgoraRteVideoSourceType } from "agora-rte-sdk";
 import { observer } from "mobx-react";
 import { useRef, useEffect } from "react";
 import { SvgIconEnum, SvgImg } from "~components";
-import { LocalTrackPlayer as LocalCameraTrackPlayer, RemoteTrackPlayer } from "../../containers/stream/track-player";
+import { LocalTrackPlayer as LocalCameraTrackPlayer } from "../../containers/stream/track-player";
 
 export const LocalScreenTrackPlayer = observer(
     ({ className }: { className?: string }) => {
@@ -48,25 +49,25 @@ export const LocalTrackPlayer = ({ stream }: { stream: EduStream }) => {
 }
 
 export const AutoSubscriptionRemoteTrackPlayer = ({ stream, streamType = AgoraRteRemoteStreamType.LOW_STREAM }: { stream: EduStream, streamType?: AgoraRteRemoteStreamType }) => {
-    // const { classroomStore } = useStore();
+    const { layoutUIStore, classroomStore } = useStore() as EduStudyRoomUIStore;
 
-    const needMirror = stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare;
+    useEffect(() => {
+        if (videoRef.current) {
+            layoutUIStore.updateVideoDom(stream.streamUuid, videoRef.current);
+            classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
+        }
+        return () => {
+            layoutUIStore.removeVideoDom(stream.streamUuid);
+        }
+    }, [stream.streamUuid]);
 
-    // useEffect(() => {
-    //     const handle = setTimeout(() => {
-    //         classroomStore.streamStore.muteRemoteVideoStream(stream, false);
-    //         classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
-    //     }, 1500);
-
-    //     return () => {
-    //         clearTimeout(handle);
-    //         classroomStore.streamStore.muteRemoteVideoStream(stream, true);
-    //     }
-    // }, [stream.streamUuid]);
+    const videoRef = useRef<HTMLDivElement>(null);
 
     return (
         <div className="w-full h-full relative">
-            <RemoteTrackPlayer stream={stream} className='w-full h-full' mirrorMode={needMirror} />;
+            <div
+                className='w-full h-full'
+                ref={videoRef} />
             <div className="absolute flex" style={{ bottom: 3, left: 5, color: '#fff' }}>
                 <SvgImg type={SvgIconEnum.MIC_OFF} colors={{ iconPrimary: '#fff' }} />
                 {stream.fromUser.userName}

@@ -17,6 +17,8 @@ export type Operation =
   | 'kick'
   | 'chat'
   | 'star'
+  | 'pin'
+  | 'eye'
   | 'supervise-student';
 
 export type Operations = Partial<Record<Operation, { interactable: boolean }>>;

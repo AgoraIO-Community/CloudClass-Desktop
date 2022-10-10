@@ -8,6 +8,7 @@ import { Getters } from './getters';
 export abstract class EduUIStoreBase {
   private static _boardApi = new Board();
   private static _extensionApi = new Extension();
+  private _getters: Getters;
   protected logger!: Injectable.Logger;
   /**
    * 参数覆盖
@@ -16,7 +17,6 @@ export abstract class EduUIStoreBase {
     return {};
   }
 
-  protected readonly getters: Getters;
   /**
    * 当前 EduClassroomStore 实例
    */
@@ -31,10 +31,10 @@ export abstract class EduUIStoreBase {
    * @param store
    * @param shareUIStore
    */
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
+  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore, getters?: Getters) {
     this.classroomStore = store;
     this.shareUIStore = shareUIStore;
-    this.getters = new Getters(this.classroomStore);
+    this._getters = getters || new Getters(this.classroomStore);
   }
 
   /**
@@ -59,5 +59,12 @@ export abstract class EduUIStoreBase {
    */
   get extensionApi() {
     return EduUIStoreBase._extensionApi;
+  }
+
+  /**
+   * 重复逻辑封装
+   */
+  get getters() {
+    return this._getters;
   }
 }
