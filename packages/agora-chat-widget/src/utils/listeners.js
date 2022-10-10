@@ -139,14 +139,14 @@ export const createListener = (store) => {
           case 'rmChatRoomMute':
             store.dispatch(roomAllMute(false));
             break;
-          // 删除聊天室白名单成员
-          case 'rmUserFromChatRoomWhiteList':
-            apis.muteAPI.getRoomWhileList(message.gid);
+          // 移除个人禁言
+          case 'removeMute':
+            apis.muteAPI.removeUserProperties();
             store.dispatch(isUserMute(false));
             break;
-          // 增加聊天室白名单成员
-          case 'addUserToChatRoomWhiteList':
-            apis.muteAPI.getRoomWhileList(message.gid);
+          // 添加个人禁言
+          case 'addMute':
+            apis.muteAPI.setUserProperties();
             store.dispatch(isUserMute(true));
             break;
           default:
