@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CHAT_TABS_KEYS } from '../contants';
+import { CHAT_TABS_KEYS, MUTE_CONFIG } from '../contants';
 let defaultState = {
   propsData: {}, // props 值
   showChat: false, // 控制Chat
@@ -156,11 +156,20 @@ const reducer = (state = defaultState, action) => {
         },
       };
     case 'ROOM_USER_MUTE':
+      let muteAry = [];
+      let muteList = state.room.muteList;
+      if (action.option === MUTE_CONFIG.mute) {
+        muteAry = muteAry.concat(data);
+      } else if (action.option === MUTE_CONFIG.unMute) {
+        muteAry = muteList.filter(item => item !== data)
+      } else {
+        muteAry = data;
+      }
       return {
         ...state,
         room: {
           ...state.room,
-          muteList: data,
+          muteList: muteAry,
         },
       };
     case 'IS_USER_MUTE':

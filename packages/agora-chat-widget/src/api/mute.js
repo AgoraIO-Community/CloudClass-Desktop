@@ -3,11 +3,6 @@ import { roomAllMute, roomUserMute, isUserMute } from '../redux/actions/roomActi
 import { SET_ALL_MUTE, REMOVE_ALL_MUTE, MUTE_USER, UNMUTE_USER, MUTE_CONFIG } from '../contants';
 import axios from 'axios';
 
-/*
-    为保证单人禁言后，重新进入也是禁言状态，使用白名单代替禁言
-    一键禁言，使用正确的api
-*/
-
 export class MuteAPI {
   store = null;
   messageAPI = null;
@@ -81,23 +76,6 @@ export class MuteAPI {
     })
   }
 
-  // 学生登陆成功后，检查自己是否被禁言，`true`， 调用此接口禁言
-  muteCurrentUser = () => {
-    const { host, appId, roomUuid, userUuid } = this.store.getState().agoraTokenConfig;
-    const url = `${host}/edu/apps/${appId}/v2/rooms/${roomUuid}/widgets/easemobIM/users/${userUuid}/mute`;
-    const requestData = {
-      duration: -1
-    };
-    axios({
-      method: 'put',
-      url: url,
-      headers: {
-        "Content-Type": "application/json"
-      },
-      data: requestData
-    })
-  }
-
   // 单人禁言
   setUserMute = (userId) => {
     const roomId = this.store.getState().propsData.chatRoomId;
@@ -109,7 +87,7 @@ export class MuteAPI {
     WebIM.conn.muteChatRoomMember(options).then((res) => {
       console.log('setUserMute success>>>', res);
       this.messageAPI.sendCmdMsg(MUTE_USER, res.data[0]?.user);
-      this.getChatRoomMuteList(roomId);
+      this.store.dispatch(roomUserMute(userId, MUTE_CONFIG.mute))
     });
   };
 
@@ -123,7 +101,7 @@ export class MuteAPI {
     WebIM.conn.unmuteChatRoomMember(options).then((res) => {
       console.log('removeUserMute success>>>', res);
       this.messageAPI.sendCmdMsg(UNMUTE_USER, res.data[0]?.user);
-      this.getChatRoomMuteList(roomId);
+      this.store.dispatch(roomUserMute(userId, MUTE_CONFIG.unMute))
     });
   };
 
@@ -143,18 +121,7 @@ export class MuteAPI {
       this.store.dispatch(roomUserMute(newMuteList));
     });
   };
-  // 判断当前登陆账号是否在白名单
-  isChatRoomWhiteUser = (userId) => {
-    const roomId = this.store.getState().propsData.chatRoomId;
-    let options = {
-      chatRoomId: roomId, // 聊天室id
-      userName: userId, // 要查询的成员
-    };
-    WebIM.conn.isChatRoomWhiteUser(options).then((res) => {
-      this.store.dispatch(isUserMute(res.data.white));
-      return res.data.white;
-    });
-  };
+
   // 一键禁言
   setAllmute = (roomId) => {
     let options = {
