@@ -25,6 +25,7 @@ import { ConvertMediaOptionsConfig } from '@/infra/api';
 import { RemoteControlUIStore } from './remote-control';
 import { SubscriptionUIStore } from './subscription';
 import { transI18n } from '~components';
+import { Getters } from './getters';
 @Log.attach({ level: AgoraRteLogLevel.INFO })
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;
@@ -49,23 +50,24 @@ export class EduClassroomUIStore {
 
   constructor(store: EduClassroomStore) {
     this._classroomStore = store;
+    const getters = new Getters(this);
     this._shareUIStore = new EduShareUIStore();
-    this._boardUIStore = new BoardUIStore(store, this.shareUIStore);
-    this._cloudUIStore = new CloudUIStore(store, this.shareUIStore);
-    this._streamUIStore = new StreamUIStore(store, this.shareUIStore);
-    this._rosterUIStore = new RosterUIStore(store, this.shareUIStore);
-    this._handUpUIStore = new HandUpUIStore(store, this.shareUIStore);
-    this._pretestUIStore = new PretestUIStore(store, this.shareUIStore);
-    this._deviceSettingUIStore = new DeviceSettingUIStore(store, this.shareUIStore);
-    this._navigationBarUIStore = new NavigationBarUIStore(store, this.shareUIStore);
-    this._toolbarUIStore = new ToolbarUIStore(store, this.shareUIStore);
-    this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore);
-    this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore);
-    this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
-    this._groupUIStore = new GroupUIStore(store, this.shareUIStore);
-    this._remoteControlUIStore = new RemoteControlUIStore(store, this.shareUIStore);
-    this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore);
-    this._subscriptionUIStore = new SubscriptionUIStore(store, this.shareUIStore);
+    this._boardUIStore = new BoardUIStore(store, this.shareUIStore, getters);
+    this._cloudUIStore = new CloudUIStore(store, this.shareUIStore, getters);
+    this._streamUIStore = new StreamUIStore(store, this.shareUIStore, getters);
+    this._rosterUIStore = new RosterUIStore(store, this.shareUIStore, getters);
+    this._handUpUIStore = new HandUpUIStore(store, this.shareUIStore, getters);
+    this._pretestUIStore = new PretestUIStore(store, this.shareUIStore, getters);
+    this._deviceSettingUIStore = new DeviceSettingUIStore(store, this.shareUIStore, getters);
+    this._navigationBarUIStore = new NavigationBarUIStore(store, this.shareUIStore, getters);
+    this._toolbarUIStore = new ToolbarUIStore(store, this.shareUIStore, getters);
+    this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore, getters);
+    this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore, getters);
+    this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore, getters);
+    this._groupUIStore = new GroupUIStore(store, this.shareUIStore, getters);
+    this._remoteControlUIStore = new RemoteControlUIStore(store, this.shareUIStore, getters);
+    this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore, getters);
+    this._subscriptionUIStore = new SubscriptionUIStore(store, this.shareUIStore, getters);
   }
 
   /**

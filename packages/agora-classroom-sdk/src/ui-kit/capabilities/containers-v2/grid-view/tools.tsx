@@ -46,10 +46,10 @@ export const GridTools: FC<Props> = observer(({ children, className, style, stre
 
 
     const handleAdd = () => {
-        toggleUserBlackList(stream.stream.fromUser);
+        toggleUserBlackList(stream.stream.fromUser.userUuid);
     }
     const handlePin = () => {
-        togglePinUser(stream.stream.fromUser);
+        togglePinUser(stream.stream.fromUser.userUuid);
     }
 
     return (

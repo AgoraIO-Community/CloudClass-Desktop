@@ -1,6 +1,6 @@
-import { EduClassroomStore, EduStream } from 'agora-edu-core';
+import { EduEventUICenter } from '@/infra/utils/event-center';
+import { EduStream } from 'agora-edu-core';
 import {
-  AgoraFromUser,
   AgoraRteEventType,
   AgoraRteVideoSourceType,
   AgoraUser,
@@ -20,7 +20,6 @@ import {
 } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { LayoutUIStore } from '../common/layout';
-import { EduShareUIStore } from '../common/share-ui';
 import { StudyRoomGetters } from './getters';
 
 export enum ViewMode {
@@ -61,13 +60,16 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
 
   @observable
   orderedUserList: string[] = [];
-
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
-    super(store, shareUIStore, new StudyRoomGetters(store));
-  }
+  @observable
+  chatVisibility = false;
 
   get getters(): StudyRoomGetters {
     return super.getters as StudyRoomGetters;
+  }
+
+  @computed
+  get userCount() {
+    return this.orderedUserList.length;
   }
 
   @computed
@@ -76,7 +78,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
   }
 
   @computed
-  get allUsers() {
+  get visibleUsers() {
     return this.orderedUserList.filter((userUuid) => !this.blackList.has(userUuid));
   }
 
@@ -92,7 +94,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
 
   @computed
   get totalPage() {
-    let totalUser = this.allUsers.length;
+    let totalUser = this.visibleUsers.length;
     if (this.viewMode === ViewMode.Surrounded) {
       totalUser -= 1;
     }
@@ -135,21 +137,21 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
   }
 
   @action.bound
-  toggleUserBlackList(user: AgoraFromUser) {
-    if (!this.blackList.has(user.userUuid)) {
-      this.blackList.add(user.userUuid);
+  toggleUserBlackList(userUuid: string) {
+    if (!this.blackList.has(userUuid)) {
+      this.blackList.add(userUuid);
     } else {
-      this.blackList.delete(user.userUuid);
+      this.blackList.delete(userUuid);
     }
   }
 
   @action.bound
-  togglePinUser(user: AgoraFromUser) {
-    if (this.pinnedUser === user.userUuid) {
+  togglePinUser(userUuid: string) {
+    if (this.pinnedUser === userUuid) {
       this.pinnedUser = undefined;
       this.viewMode = ViewMode.Divided;
     } else {
-      this.pinnedUser = user.userUuid;
+      this.pinnedUser = userUuid;
       this.viewMode = ViewMode.Surrounded;
     }
   }
@@ -176,10 +178,10 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     const pinnedUser = this.pinnedUser;
 
     const userList = pinnedUser
-      ? this.allUsers.filter((userUuid) => {
+      ? this.visibleUsers.filter((userUuid) => {
           return userUuid !== pinnedUser;
         })
-      : this.allUsers;
+      : this.visibleUsers;
 
     const needFill = userList.length > size && startIndex + size > userList.length;
 
@@ -200,6 +202,11 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
       return !s.isLocal;
     });
     this.waitingSub = subst;
+  }
+
+  @action.bound
+  toggleChat() {
+    this.chatVisibility = !this.chatVisibility;
   }
 
   @action.bound
@@ -320,9 +327,14 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
       this._handleSubscribe,
       Scheduler.Duration.second(1),
     );
+
+    EduEventUICenter.shared.on('toggle-pin-user', this.togglePinUser);
+    EduEventUICenter.shared.on('toggle-user-black-list', this.toggleUserBlackList);
   }
 
   onDestroy() {
+    EduEventUICenter.shared.off('toggle-pin-user', this.togglePinUser);
+    EduEventUICenter.shared.off('toggle-user-black-list', this.toggleUserBlackList);
     this._subscribeTask?.stop();
     this._disposers.forEach((d) => d());
     this._disposers = [];

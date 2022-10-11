@@ -12,6 +12,7 @@ import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { WidgetChatUIStore } from './store';
+import './style.css';
 
 const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
   const widgetStore = widget.widgetStore as WidgetChatUIStore;
@@ -55,8 +56,8 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
       memebers: sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 成员 tab
       announcement: !currentSubRoom && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, //公告 tab
       allMute: visibleMuteAll && sessionInfo.roomType !== EduRoomTypeEnum.Room1v1Class, // 全体禁言按钮
-      showQuestionBox:
-        sessionInfo.roomServiceType !== 0 && sessionInfo.role === EduRoleTypeEnum.student, //职教课的学生显示提问
+      // showQuestionBox:
+      //   sessionInfo.roomServiceType !== 0 && sessionInfo.role === EduRoleTypeEnum.student, //职教课的学生显示提问
       isFullSize: widgetStore.isFullSize,
       emoji: visibleEmoji,
       btnSend: visibleBtnSend,
@@ -135,7 +136,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
   private _widgetStore = new WidgetChatUIStore(this);
   private _rendered = false;
 
-  onInstall(controller: AgoraWidgetController): void {}
+  onInstall(controller: AgoraWidgetController): void { }
   get widgetName(): string {
     return 'easemobIM';
   }
@@ -210,7 +211,7 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     this._renderApp();
   }
 
-  onDestroy(): void {}
+  onDestroy(): void { }
 
   private _renderApp() {
     if (!this._rendered && this.imConfig && this.easemobUserId && this._dom) {
@@ -256,5 +257,5 @@ export class AgoraHXChatWidget extends AgoraWidgetBase implements AgoraWidgetLif
     }
   }
 
-  onUninstall(controller: AgoraWidgetController): void {}
+  onUninstall(controller: AgoraWidgetController): void { }
 }

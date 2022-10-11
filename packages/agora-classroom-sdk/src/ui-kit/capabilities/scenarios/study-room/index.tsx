@@ -12,6 +12,8 @@ import './index.css';
 import { GridView } from '~containers-v2/grid-view';
 
 import { CameraDropdown, ChatTool, MicDropdown, Quit, RosterTool, ScreenShareTool } from '../../containers-v2/hocs';
+import { WidgetContainer } from '../../containers/widget';
+import { StudyChatWindow } from '../../containers/widget/slots';
 
 
 export const StudyRoomScenario = () => {
@@ -28,7 +30,7 @@ export const StudyRoomScenario = () => {
                             <Header />
                             <ViewSwitch />
                         </div>
-                        <img src={ShapeSvg} className="fixed top-0 right-0" style={{ zIndex: -1 }} />
+                        <img src={ShapeSvg} className="fixed top-0 right-0" />
                         {/* streams */}
                         <div className='fcr-grid-view-content w-full flex-grow flex items-center justify-center' style={{ padding: '10px 30px' }}>
                             <GridView />
@@ -43,7 +45,7 @@ export const StudyRoomScenario = () => {
                             {/* tools */}
                             <div className='fcr-control-bar-tools flex' style={{ gap: 12 }}>
                                 <ScreenShareTool />
-                                {/* <ChatTool /> */}
+                                <ChatTool />
                                 <RosterTool />
                             </div>
                             {/* exit */}
@@ -52,7 +54,8 @@ export const StudyRoomScenario = () => {
                             </div>
                         </div>
                     </Layout>
-                    {/* <WidgetContainer /> */}
+                    <StudyChatWindow />
+                    <WidgetContainer />
                     <ToastContainer />
                     <DialogContainer />
                     <LoadingContainer />

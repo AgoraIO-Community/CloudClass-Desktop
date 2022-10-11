@@ -277,15 +277,15 @@ export class AgoraEduSDK {
 
     this._widgets = {
       ...option.widgets,
-      [this._getWidgetName(AgoraChatWidget)]: AgoraChatWidget,
+      // [this._getWidgetName(AgoraChatWidget)]: AgoraChatWidget,
       [this._getWidgetName(AgoraHXChatWidget)]: AgoraHXChatWidget,
-      [this._getWidgetName(AgoraCountdown)]: AgoraCountdown,
-      [this._getWidgetName(AgoraSelector)]: AgoraSelector,
-      [this._getWidgetName(AgoraPolling)]: AgoraPolling,
-      [this._getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
-      [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
-      [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
-      [this._getWidgetName(FcrWatermarkWidget)]: FcrWatermarkWidget,
+      // [this._getWidgetName(AgoraCountdown)]: AgoraCountdown,
+      // [this._getWidgetName(AgoraSelector)]: AgoraSelector,
+      // [this._getWidgetName(AgoraPolling)]: AgoraPolling,
+      // [this._getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
+      // [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
+      // [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
+      // [this._getWidgetName(FcrWatermarkWidget)]: FcrWatermarkWidget,
     };
 
     //TODO:待优化。 问题：合流转推(学生) 和 伪直播 场景不需要白板插件，因为它们使用的都是大班课的班型，所以不能通过后端禁用白板。

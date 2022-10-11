@@ -1,0 +1,10 @@
+.chat-panel {
+  pointer-events: none;
+}
+.chat-panel .ant-tabs-nav-list {
+  pointer-events: all;
+}
+
+.chat-panel .ant-tabs-content-holder {
+  pointer-events: all;
+}

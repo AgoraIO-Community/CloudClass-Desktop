@@ -57,7 +57,8 @@ export class WidgetChatUIStore {
       ) {
         isShowChat = true;
       }
-      runInAction(() => (this.showChat = isShowChat));
+      // runInAction(() => (this.showChat = isShowChat));
+      runInAction(() => (this.showChat = true));
     });
   }
 

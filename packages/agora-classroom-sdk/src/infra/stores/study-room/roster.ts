@@ -1,20 +1,15 @@
 import { EduEventUICenter } from '@/infra/utils/event-center';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
-import { EduClassroomStore, iterateMap } from 'agora-edu-core';
+import { iterateMap } from 'agora-edu-core';
 import { AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { toLower } from 'lodash';
 import { computed } from 'mobx';
 import { BoardGrantState, DeviceState, Operation } from '~components';
 import { RosterUIStore } from '../common/roster';
 import { Operations, Profile } from '../common/roster/type';
-import { EduShareUIStore } from '../common/share-ui';
 import { StudyRoomGetters } from './getters';
 
 export class StudyRoomRosterUIStore extends RosterUIStore {
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
-    super(store, shareUIStore, new StudyRoomGetters(store));
-  }
-
   get getters(): StudyRoomGetters {
     return super.getters as StudyRoomGetters;
   }
@@ -140,12 +135,10 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
       switch (operation) {
         case 'pin': {
           EduEventUICenter.shared.emit('toggle-pin-user', profile.uid);
-          // this.shareUIStore.togglePinUser({ userUuid: profile.uid } as any);
           break;
         }
         case 'eye': {
           EduEventUICenter.shared.emit('toggle-user-black-list', profile.uid);
-          // this.shareUIStore.toggleUserBlackList({ userUuid: profile.uid } as any);
           break;
         }
         case 'kick': {

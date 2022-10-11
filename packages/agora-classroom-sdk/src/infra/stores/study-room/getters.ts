@@ -1,19 +1,17 @@
-import { computed } from 'mobx';
 import { Getters } from '../common/getters';
+import { StudyRoomLayoutUIStore } from './layout';
 
 export class StudyRoomGetters extends Getters {
-  @computed
   get localUserUuid() {
-    const { localUser } = this._classroomStore.userStore;
+    const { localUser } = this.classroomStore.userStore;
     return localUser?.userUuid;
   }
 
-  @computed
   get pinnedUser() {
-    return '';
+    return (this._classroomUIStore.layoutUIStore as StudyRoomLayoutUIStore).pinnedUser;
   }
 
   get blackList() {
-    return new Set();
+    return (this._classroomUIStore.layoutUIStore as StudyRoomLayoutUIStore).blackList;
   }
 }

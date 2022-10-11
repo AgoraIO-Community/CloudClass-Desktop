@@ -1,13 +1,15 @@
 import { useLectureH5UIStores, useStore } from '@/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@/infra/stores/lecture-h5';
+import { EduStudyRoomUIStore } from '@/infra/stores/study-room';
 import { EduClassroomConfig, EduRegion } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { Rnd } from 'react-rnd';
 import { Layout, SvgImg, transI18n } from '~components';
 import { ComponentLevelRules } from '../../config';
 
-export const Chat = observer(function Chat() {
+export const Chat = observer(function () {
   const { widgetUIStore } = useStore();
   const { ready } = widgetUIStore;
 
@@ -29,6 +31,25 @@ export const Chat = observer(function Chat() {
   }, [ready]);
 
   return <div className="widget-slot-chat h-full" />;
+});
+
+export const StudyChatWindow = observer(function () {
+  const { layoutUIStore } = useStore() as EduStudyRoomUIStore;
+  const y = (window.innerHeight - 80 - 530) / 2;
+  const x = (window.innerWidth - 300) / 2 / 2;
+
+  const style = useMemo(() => {
+    return layoutUIStore.chatVisibility ? {
+      cursor: 'auto',
+
+    } : { cursor: 'auto', display: 'none' };
+  }, [layoutUIStore.chatVisibility]);
+
+  return (
+    <Rnd default={{ x, y, width: 'auto', height: 'auto' }} enableResizing={false} style={style} className="z-50">
+      <Chat />
+    </Rnd>
+  )
 });
 
 export const Whiteboard = observer(function Board() {

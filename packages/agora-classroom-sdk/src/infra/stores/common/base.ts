@@ -31,10 +31,10 @@ export abstract class EduUIStoreBase {
    * @param store
    * @param shareUIStore
    */
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore, getters?: Getters) {
+  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore, getters: Getters) {
     this.classroomStore = store;
     this.shareUIStore = shareUIStore;
-    this._getters = getters || new Getters(this.classroomStore);
+    this._getters = getters;
   }
 
   /**
