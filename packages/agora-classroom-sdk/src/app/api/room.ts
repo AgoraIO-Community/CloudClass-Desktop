@@ -21,6 +21,7 @@ export type RoomInfo = {
   industry?: string;
   roleConfig?: Record<number, number>;
   roomProperties: RoomProperties;
+  role: EduRoleTypeEnum; // 上次加入房间的角色
 };
 
 export type RoomListRequest = {
@@ -46,9 +47,13 @@ type RoomCreateResponse = {
   roomId: string;
 };
 
-type RoomJoinRequest = {
+export type RoomJoinRequest = {
   roomId: string;
   role: EduRoleTypeEnum;
+};
+
+export type RoomJoinNoAuthRequest = RoomJoinRequest & {
+  userUuid: string;
 };
 
 export type RoomJoinResponse = {
@@ -149,7 +154,7 @@ export class RoomAPI {
    * @param params
    * @returns
    */
-  public async joinNoAuth(params: RoomJoinRequest) {
+  public async joinNoAuth(params: RoomJoinNoAuthRequest) {
     const url = `${this.domain}/edu/companys/${noAuthCompanyID}/v1/rooms`;
     return request.put<Response<RoomJoinResponse>>(url, params);
   }

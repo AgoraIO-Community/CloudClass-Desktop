@@ -93,7 +93,7 @@
 
 .room-entry .btn .text {
   @apply flex-1 text-center;
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   font-style: normal;
   font-weight: 800;
   font-size: 21px;

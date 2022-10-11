@@ -20,7 +20,7 @@ export interface CloudDriveResourceConvertProgress {
     {
       width: number;
       height: number;
-      src: string;
+      url: string;
     }
   >;
 }

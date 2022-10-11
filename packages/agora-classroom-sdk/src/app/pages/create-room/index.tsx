@@ -4,11 +4,12 @@ import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
 import { RadioIcon } from '@/app/components/radio-icon';
 import { RoomTypeCard } from '@/app/components/room-type-card';
+import { useJoinRoom } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
 import { Default_Hosting_URL } from '@/app/utils';
-import { EduRoomServiceTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -120,6 +121,7 @@ export const CreateRoom = observer(() => {
   const [watermark, setWatermark] = useState(false);
   const [livePlayback, setLivePlayback] = useState(false);
   const [useCurrentTime, setUseCurrentTime] = useState(true);
+  const { quickJoinRoom } = useJoinRoom();
   const [dateTimeValidate, setDateTimeValidate] = useState({
     validateStatus: 'success',
     help: '',
@@ -213,8 +215,18 @@ export const CreateRoom = observer(() => {
             serviceType: sType,
           },
         })
-        .then(() => {
-          historyBackHandle();
+        .then((data) => {
+          if (useCurrentTime) {
+            return quickJoinRoom({
+              roomId: data.roomId,
+              role: EduRoleTypeEnum.teacher,
+              nickName: userStore.nickName,
+              userId: userStore.userInfo!.companyId,
+              platform: Platform.PC,
+            });
+          } else {
+            historyBackHandle();
+          }
         })
         .catch(() => {
           aMessage.error(transI18n('fcr_create_tips_create_failed'));

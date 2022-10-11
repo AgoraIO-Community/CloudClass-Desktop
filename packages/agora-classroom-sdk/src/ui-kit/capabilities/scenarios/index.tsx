@@ -77,11 +77,6 @@ export const Scenarios: React.FC<ScenariosProps> = observer(
       return <RoomPretestContainer onOK={() => setPretest(false)} />;
     }
 
-    return (
-      <>
-        {renderRoomSceneWith(roomType, roomServiceType)}
-        <Watermark />
-      </>
-    );
+    return renderRoomSceneWith(roomType, roomServiceType);
   },
 );

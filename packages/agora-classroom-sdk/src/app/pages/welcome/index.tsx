@@ -2,10 +2,11 @@ import { RoomInfo } from '@/app/api/room';
 import CreateClassIcon from '@/app/assets/fcr_create_class.svg';
 import JoinClassIcon from '@/app/assets/fcr_join_class.svg';
 import roomListEmptyImg from '@/app/assets/welcome-empty-list.png';
-import { useAuthCallback } from '@/app/hooks';
+import { useAuthCallback, useJoinRoom } from '@/app/hooks';
 import { RoomListItem } from '@/app/pages/welcome/room-list';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
-import { ShareLink, token } from '@/app/utils';
+import { token } from '@/app/utils';
+import { Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -24,6 +25,7 @@ export const Welcome = observer(() => {
   const userStore = useContext(UserStoreContext);
   const [shareModal, setShareModal] = useState(false);
   const { setLoading } = useContext(GlobalStoreContext);
+  const { quickJoinRoom } = useJoinRoom();
   const toJoinRoomPage = useAuthCallback(() => {
     history.push('/join-room');
   });
@@ -54,13 +56,18 @@ export const Welcome = observer(() => {
 
   const onJoin = useCallback(
     (data: RoomInfo) => {
-      const query = ShareLink.instance.query({
+      setLoading(true);
+      quickJoinRoom({
         roomId: data.roomId,
-        owner: userStore.nickName,
+        role: data.role,
+        nickName: userStore.nickName,
+        userId: userStore.userInfo!.companyId,
+        platform: Platform.PC,
+      }).finally(() => {
+        setLoading(false);
       });
-      history.push(`/join-room?${query}`);
     },
-    [userStore.nickName],
+    [userStore.nickName, userStore.userInfo, quickJoinRoom],
   );
 
   const onDetail = useCallback((data: RoomInfo) => {}, []);

@@ -3,10 +3,10 @@ import { useHistoryBack } from '@/app/hooks';
 import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
-import { useRoomIdForm } from '@/app/hooks/useRoomIdForm';
+import { formatRoomID, useRoomIdForm } from '@/app/hooks/useRoomIdForm';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
-import { formatRoomID, ShareLink } from '@/app/utils';
+import { shareLink } from '@/app/utils/share';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useContext, useEffect, useState } from 'react';
@@ -39,7 +39,7 @@ export const JoinRoom = observer(() => {
   ];
 
   const [role, setRole] = useState(roles[1].value);
-  const { rule: roomIdRule, formFormatRoomID, getFormattedRoomIdValue } = useRoomIdForm();
+  const { rule: roomIdRule, formatFormField, getUnformattedValue } = useRoomIdForm();
   const { rule: nickNameRule } = useNickNameForm();
   const [form] = useAForm<JoinFormValue>();
   const { quickJoinRoom } = useJoinRoom();
@@ -47,7 +47,7 @@ export const JoinRoom = observer(() => {
   const userStore = useContext(UserStoreContext);
   const roomStore = useContext(RoomStoreContext);
   const historyBackHandle = useHistoryBack();
-  const query = ShareLink.instance.parseHashURLQuery(location.hash);
+  const query = shareLink.parseHashURLQuery(location.hash);
   const { checkRoomID } = useCheckRoomInfo();
   useEffect(() => {
     if (query && query.roomId) {
@@ -64,7 +64,7 @@ export const JoinRoom = observer(() => {
 
   const onSubmit = () => {
     form.validateFields().then((data) => {
-      data.roomId = getFormattedRoomIdValue(data.roomId);
+      data.roomId = getUnformattedValue(data.roomId);
       data.roomId && roomStore.setLastJoinedRoomId(data.roomId);
       if (!checkRoomID(data.roomId)) {
         return;
@@ -85,7 +85,7 @@ export const JoinRoom = observer(() => {
 
   const formOnValuesChange = (changeValues: any) => {
     if (changeValues.roomId) {
-      formFormatRoomID(form, changeValues.roomId, 'roomId');
+      formatFormField(form, changeValues.roomId, 'roomId');
     }
   };
 

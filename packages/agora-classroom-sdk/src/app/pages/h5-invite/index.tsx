@@ -1,13 +1,14 @@
 import { RoomJoinResponse } from '@/app/api/room';
 import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
+import { formatRoomID } from '@/app/hooks';
 import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
 import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
 import { useNoAuthUser } from '@/app/hooks/useNoAuthUser';
 import { GlobalStoreContext, RoomStoreContext } from '@/app/stores';
-import { formatRoomID, ShareLink } from '@/app/utils';
+import { shareLink } from '@/app/utils/share';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
@@ -46,11 +47,11 @@ export const H5Invite = observer(() => {
 
   // 根据分享信息初始化
   useEffect(() => {
-    const data = ShareLink.instance.parseHashURLQuery(location.hash);
+    const data = shareLink.parseHashURLQuery(location.hash);
     if (data) {
       setLoading(true);
       roomStore
-        .joinRoomNoAuth(data.roomId, EduRoleTypeEnum.student)
+        .joinRoomNoAuth({ roomId: data.roomId, role: EduRoleTypeEnum.student, userUuid: userId })
         .then((response) => {
           setShareRoomInfo({
             ...response.data.data,

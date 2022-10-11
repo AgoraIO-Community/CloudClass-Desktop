@@ -2,7 +2,13 @@ import { ToastType } from '@/infra/stores/common/share-ui';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import { action, autorun, observable } from 'mobx';
 import { aMessage, transI18n } from '~ui-kit';
-import { roomApi, RoomCreateRequest, RoomInfo } from '../api/room';
+import {
+  roomApi,
+  RoomCreateRequest,
+  RoomInfo,
+  RoomJoinNoAuthRequest,
+  RoomJoinRequest,
+} from '../api/room';
 import { ErrorCode, getErrorMessage } from '../utils/error';
 import { getLSStore, LS_LAST_JOINED_ROOM_ID, setLSStore } from '../utils/local-storage';
 
@@ -140,8 +146,8 @@ export class RoomStore {
   }
 
   @action.bound
-  public async joinRoom(roomId: string, role: EduRoleTypeEnum) {
-    return roomApi.join({ roomId, role }).catch((error) => {
+  public async joinRoom(params: RoomJoinRequest) {
+    return roomApi.join(params).catch((error) => {
       console.warn('join room api failed. error:%o', error);
       if (error?.response?.data?.code === ErrorCode.COURSE_HAS_ENDED) {
         aMessage.error(getErrorMessage(error?.response?.data?.code));
@@ -153,8 +159,8 @@ export class RoomStore {
   }
 
   @action.bound
-  public async joinRoomNoAuth(roomId: string, role: EduRoleTypeEnum) {
-    return roomApi.joinNoAuth({ roomId, role }).catch((error) => {
+  public async joinRoomNoAuth(params: RoomJoinNoAuthRequest) {
+    return roomApi.joinNoAuth(params).catch((error) => {
       console.warn('join room no auth api failed. error:%o', error);
       if (error?.response?.data?.code === ErrorCode.COURSE_HAS_ENDED) {
         aMessage.error(getErrorMessage(error?.response?.data?.code));

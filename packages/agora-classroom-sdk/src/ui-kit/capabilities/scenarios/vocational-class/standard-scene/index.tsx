@@ -5,7 +5,7 @@ import { ScreenShareContainer } from '@/ui-kit/capabilities/containers/screen-sh
 import { StreamWindowsContainer } from '@/ui-kit/capabilities/containers/stream-windows-container';
 import { WhiteboardToolbar } from '@/ui-kit/capabilities/containers/toolbar';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
-import { Chat, Whiteboard } from '@/ui-kit/capabilities/containers/widget/slots';
+import { Chat, Watermark, Whiteboard } from '@/ui-kit/capabilities/containers/widget/slots';
 import { EduClassroomConfig, EduRoleTypeEnum, EduRoomServiceTypeEnum } from 'agora-edu-core';
 import { MediaPlayerEvents } from 'agora-rte-sdk';
 import classnames from 'classnames';
@@ -116,6 +116,7 @@ export const StandardClassScenario = observer(() => {
           </Layout>
           <WidgetContainer />
           <ToastContainer />
+          <Watermark />
         </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>

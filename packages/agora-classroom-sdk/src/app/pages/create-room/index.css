@@ -31,7 +31,7 @@
 }
 
 .create-form .end-time-picker {
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   font-weight: 600;
   font-size: 18px;
   line-height: 48px;
@@ -80,7 +80,7 @@
 }
 
 .create-form .end-time-picker > span {
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   font-weight: 500;
   font-size: 10px;
   margin-left: 5px;
@@ -143,7 +143,7 @@
 }
 
 .more-settings .label {
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   font-style: italic;
   font-weight: 800;
   font-size: 16px;
@@ -218,7 +218,7 @@
 
 .live-playback .header {
   @apply flex items-center;
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   font-weight: 400;
   font-size: 16px;
   line-height: 14px;

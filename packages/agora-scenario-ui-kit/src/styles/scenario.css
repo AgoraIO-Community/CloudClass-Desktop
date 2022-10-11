@@ -51,7 +51,7 @@ body,
 }
 
 .chat-panel {
-  @apply bg-white;
+  @apply bg-component;
   position: relative;
   flex: 1;
   border-radius: 4px;

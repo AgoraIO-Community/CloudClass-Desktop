@@ -13,7 +13,7 @@ import { ScenesController } from '../../containers/scenes-controller';
 import { ScreenShareContainer } from '../../containers/screen-share';
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
-import { Chat, Whiteboard } from '../../containers/widget/slots';
+import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';
 import { BigClassAside as Aside } from '~containers/aside';
 import Room from '../room';
 import { StreamWindowsContainer } from '../../containers/stream-windows-container';
@@ -52,6 +52,7 @@ export const BigClassScenario = () => {
           </Layout>
           <WidgetContainer />
           <ToastContainer />
+          <Watermark />
         </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>

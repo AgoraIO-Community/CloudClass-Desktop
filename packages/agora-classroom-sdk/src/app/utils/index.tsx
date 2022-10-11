@@ -1,6 +1,6 @@
 export * from './env';
 export * from './request';
-export * from './room';
+export * from './share';
 export * from './url';
 export * from './token';
 export * from './browser';

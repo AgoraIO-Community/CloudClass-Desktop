@@ -1,6 +1,7 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { CDNPlayer } from '@/ui-kit/capabilities/containers/stream/cdn-player';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
+import { Watermark } from '@/ui-kit/capabilities/containers/widget/slots';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 import { DialogContainer } from '~containers/dialog';
@@ -42,6 +43,7 @@ export const MixStreamCDNClassScenario = observer(() => {
       </div>
       <DialogContainer />
       <WidgetContainer />
+      <Watermark />
       <ToastContainer />
     </Room>
   );

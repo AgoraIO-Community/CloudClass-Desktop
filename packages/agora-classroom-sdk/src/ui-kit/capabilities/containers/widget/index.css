@@ -9,3 +9,7 @@
 .widget-container * {
   pointer-events: all;
 }
+
+.widget-slot-chat {
+  @apply bg-background;
+}

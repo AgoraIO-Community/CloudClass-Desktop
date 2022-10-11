@@ -12,13 +12,13 @@ import { useHistory } from 'react-router';
 import { aMessage, useI18n } from '~ui-kit';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '../stores';
 import { GlobalLaunchOption } from '../stores/global';
-import { ShareLink } from '../utils';
 import { checkBrowserDevice } from '../utils/browser';
 import {
   REACT_APP_AGORA_APP_CERTIFICATE,
   REACT_APP_AGORA_APP_ID,
   REACT_APP_AGORA_APP_SDK_DOMAIN,
 } from '../utils/env';
+import { shareLink } from '../utils/share';
 import { useBuilderConfig } from './useBuildConfig';
 import { useCheckRoomInfo } from './useCheckRoomInfo';
 
@@ -90,7 +90,7 @@ const shareLinkInClass = ({ region, roomId, owner }: ShareURLParams) => {
   }
   const companyId = window.__launchCompanyId;
   const projectId = window.__launchProjectId;
-  let url = ShareLink.instance.generateUrl({
+  let url = shareLink.generateUrl({
     owner,
     roomId: roomId,
     region: region,
@@ -101,6 +101,18 @@ const shareLinkInClass = ({ region, roomId, owner }: ShareURLParams) => {
   return url;
 };
 
+const getLatencyLevel = (
+  roomType: EduRoomTypeEnum,
+  roomServiceType: EduRoomServiceTypeEnum,
+): AgoraLatencyLevel => {
+  // 极速直播场景
+  const isLivePremium =
+    roomType === EduRoomTypeEnum.RoomBigClass &&
+    roomServiceType === EduRoomServiceTypeEnum.LivePremium;
+
+  return isLivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
+};
+
 const defaultPlatform = checkBrowserDevice();
 export const useJoinRoom = () => {
   const history = useHistory();
@@ -109,6 +121,7 @@ export const useJoinRoom = () => {
   const roomStore = useContext(RoomStoreContext);
   const { language, region, setLaunchConfig } = useContext(GlobalStoreContext);
   const { builderResource, configReady } = useBuilderConfig();
+
   const { checkRoomInfoBeforeJoin, h5ClassModeIsSupport } = useCheckRoomInfo();
 
   const joinRoomHandle = useCallback(
@@ -130,8 +143,9 @@ export const useJoinRoom = () => {
         if (platform === Platform.H5 && !h5ClassModeIsSupport(roomType)) {
           return;
         }
+
         if (!configReady) {
-          aMessage.error('fcr_join_room_tips_ui_config_note_ready');
+          aMessage.error(transI18n('fcr_join_room_tips_ui_config_note_ready'));
           return;
         }
 
@@ -146,11 +160,7 @@ export const useJoinRoom = () => {
 
         console.log('## get rtm Token from demo server', token);
 
-        const isLivePremium =
-          roomType === EduRoomTypeEnum.RoomBigClass &&
-          roomServiceType === EduRoomServiceTypeEnum.LivePremium;
-
-        const latencyLevel = isLivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
+        const latencyLevel = getLatencyLevel(roomType, roomServiceType);
 
         const needPretest = needPreset(roomType, roomServiceType, role);
         const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
@@ -205,13 +215,13 @@ export const useJoinRoom = () => {
         );
       }
     },
-    [language, region, setLaunchConfig, history, configReady],
+    [language, region, history, configReady, setLaunchConfig],
   );
 
   const quickJoinRoom = useCallback(
     async (params: QuickJoinRoomParams) => {
       const { roomId, role, nickName, userId, platform = defaultPlatform } = params;
-      return roomStore.joinRoom(roomId, role).then((response) => {
+      return roomStore.joinRoom({ roomId, role }).then((response) => {
         const { roomDetail, token, appId } = response.data.data;
         const { serviceType, ...rProps } = roomDetail.roomProperties;
 
@@ -242,7 +252,7 @@ export const useJoinRoom = () => {
   const quickJoinRoomNoAuth = useCallback(
     async (params: QuickJoinRoomParams) => {
       const { roomId, role, nickName, userId, platform = defaultPlatform } = params;
-      return roomStore.joinRoomNoAuth(roomId, role).then((response) => {
+      return roomStore.joinRoomNoAuth({ roomId, role, userUuid: userId }).then((response) => {
         const { roomDetail, token, appId } = response.data.data;
         const { serviceType, ...rProps } = roomDetail.roomProperties;
 

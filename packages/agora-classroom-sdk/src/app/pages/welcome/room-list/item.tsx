@@ -1,11 +1,11 @@
 import { RoomInfo, RoomState } from '@/app/api/room';
-import { formatRoomID } from '@/app/utils';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { FC, useCallback, useMemo } from 'react';
 import { SvgIconEnum, SvgImg, useI18n } from '~ui-kit';
 import './item.css';
 import roomStateLive from '@/app/assets/fcr-room-state-live.svg';
+import { formatRoomID } from '@/app/hooks';
 
 type RoomListItemProps = {
   className?: string;

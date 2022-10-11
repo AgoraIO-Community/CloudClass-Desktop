@@ -248,7 +248,7 @@ export class CloudUIStore extends EduUIStoreBase {
   /**
    * 打开课件
    */
-  async _tryOpenCourseware(resource: CloudDriveCourseResource) {
+  private async _tryOpenCourseware(resource: CloudDriveCourseResource) {
     if (resource.status == 'Converting' && _lastFetchPersonalResourcesOptions) {
       this.fetchPersonalResources(_lastFetchPersonalResourcesOptions);
       return;

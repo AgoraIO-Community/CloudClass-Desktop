@@ -101,9 +101,7 @@ export const HomePage = () => {
   const globalStore = useContext(GlobalStoreContext);
   const history = useHistory();
 
-  const launchConfig = globalStore.launchConfig;
-
-  const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
+  const [duration] = useState<string>(`${30}`);
 
   const [loading, setLoading] = useState<boolean>(false);
 

@@ -17,7 +17,7 @@ import { ScenesController } from '../../containers/scenes-controller';
 import { ScreenShareContainer } from '../../containers/screen-share';
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
-import { Chat, Whiteboard } from '../../containers/widget/slots';
+import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';
 import { StreamWindowsContainer } from '../../containers/stream-windows-container';
 import { RemoteControlToolbar } from '../../containers/remote-control/toolbar';
 
@@ -55,6 +55,7 @@ export const MidClassScenario = () => {
           <WidgetContainer />
           <ToastContainer />
           <Award />
+          <Watermark />
         </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>

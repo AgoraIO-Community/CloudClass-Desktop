@@ -1,6 +1,7 @@
 import { useStore, useVocationalH5UIStores } from '@/infra/hooks/ui-store';
 import { EduVocationalH5UIStore } from '@/infra/stores/vocational-h5';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
+import { Watermark } from '@/ui-kit/capabilities/containers/widget/slots';
 import { EduClassroomConfig, EduRoleTypeEnum, EduRoomServiceTypeEnum } from 'agora-edu-core';
 import { MediaPlayerEvents } from 'agora-rte-sdk';
 import cls from 'classnames';
@@ -84,6 +85,7 @@ export const StandardClassScenario = observer(() => {
         <DialogContainer />
         <WidgetContainer />
         <ToastContainer />
+        <Watermark />
       </H5LayoutContainer>
     </Room>
   );

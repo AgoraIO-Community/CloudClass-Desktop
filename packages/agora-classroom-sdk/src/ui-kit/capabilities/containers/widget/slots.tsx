@@ -130,12 +130,16 @@ export const Watermark = observer(function Chat() {
   const { widgetUIStore, classroomStore } = useStore();
   const { ready } = widgetUIStore;
 
+  const watermark =
+    classroomStore.connectionStore.mainRoomScene &&
+    classroomStore.roomStore?.mainRoomDataStore.flexProps?.watermark;
+
   useEffect(() => {
-    if (ready && classroomStore.roomStore?.flexProps?.watermark) {
+    if (ready && watermark) {
       widgetUIStore.createWidget('watermark', {
         userProperties: {},
         properties: {
-          content: classroomStore.userStore.localUser?.userUuid || '',
+          content: EduClassroomConfig.shared.sessionInfo.userUuid,
           visible: true,
         },
         trackProperties: {},
@@ -144,7 +148,7 @@ export const Watermark = observer(function Chat() {
         widgetUIStore.destroyWidget('watermark');
       };
     }
-  }, [ready, classroomStore.roomStore?.flexProps?.watermark, classroomStore.userStore.localUser?.userUuid]);
+  }, [ready, watermark]);
 
   return (
     <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none" />

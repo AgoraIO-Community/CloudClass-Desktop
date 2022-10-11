@@ -6,7 +6,7 @@ import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
 import { useNoAuthUser } from '@/app/hooks/useNoAuthUser';
 import { GlobalStoreContext, RoomStoreContext } from '@/app/stores';
-import { formatRoomID } from '@/app/utils';
+import { formatRoomID } from '@/app/hooks';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useContext } from 'react';
@@ -38,7 +38,7 @@ export const H5JoinRoom = observer(() => {
   const { openSettings, SettingsContainer } = useSettingsH5();
   const { quickJoinRoomNoAuth } = useJoinRoom();
   const { rule: nickNameRule } = useNickNameForm();
-  const { rule: roomIdRule, formFormatRoomID, getFormattedRoomIdValue } = useRoomIdForm();
+  const { rule: roomIdRule, formatFormField, getUnformattedValue } = useRoomIdForm();
   const { userId, nickName, setNickName } = useNoAuthUser();
   const onSubmit = () => {
     setLoading(true);
@@ -46,7 +46,7 @@ export const H5JoinRoom = observer(() => {
       .validateFields()
       .then((data) => {
         setNickName(data.nickName);
-        data.roomId = getFormattedRoomIdValue(data.roomId);
+        data.roomId = getUnformattedValue(data.roomId);
         return quickJoinRoomNoAuth({
           role: EduRoleTypeEnum.student,
           roomId: data.roomId,
@@ -62,7 +62,7 @@ export const H5JoinRoom = observer(() => {
 
   const formOnValuesChange: AFormProps<JoinFormValue>['onValuesChange'] = (changeValues: any) => {
     if (changeValues.roomId) {
-      formFormatRoomID(form, changeValues.roomId, 'roomId');
+      formatFormField(form, changeValues.roomId, 'roomId');
       roomStore.setLastJoinedRoomId(changeValues.roomId);
     }
   };

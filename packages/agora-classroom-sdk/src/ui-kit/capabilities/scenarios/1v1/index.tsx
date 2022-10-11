@@ -14,7 +14,7 @@ import { ScreenShareContainer } from '../../containers/screen-share';
 import { StreamWindowsContainer } from '../../containers/stream-windows-container';
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
-import { Chat, Whiteboard } from '../../containers/widget/slots';
+import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';
 import { OneToOneClassAside as Aside } from '~containers/aside';
 import Room from '../room';
 import { RemoteControlToolbar } from '../../containers/remote-control/toolbar';
@@ -51,6 +51,7 @@ export const OneToOneScenario = () => {
           </Layout>
           <WidgetContainer />
           <ToastContainer />
+          <Watermark />
         </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>

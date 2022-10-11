@@ -1,7 +1,7 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { SceneSwitch } from '@/ui-kit/capabilities/containers/scene-switch';
 import { WidgetContainer } from '@/ui-kit/capabilities/containers/widget';
-import { Chat } from '@/ui-kit/capabilities/containers/widget/slots';
+import { Chat, Watermark } from '@/ui-kit/capabilities/containers/widget/slots';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import { useMemo } from 'react';
@@ -60,6 +60,7 @@ export const MixStreamCDNClassScenario = observer(() => {
           </Layout>
           <WidgetContainer />
           <ToastContainer />
+          <Watermark />
         </SceneSwitch>
       </FixedAspectRatioRootBox>
     </Room>
