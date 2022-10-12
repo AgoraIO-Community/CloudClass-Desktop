@@ -14,7 +14,7 @@ export type ShareContent = {
 export class ShareLink {
   constructor() {
     const version = FLEX_CLASSROOM_SDK_VERSION.replace(/\d+$/, 'x');
-    this._url = `${REACT_APP_SHARE_LINK_PREFIX}/${version}/index.html`;
+    this._url = `${REACT_APP_SHARE_LINK_PREFIX}/release_${version}/index.html`;
   }
 
   private _url = '';
