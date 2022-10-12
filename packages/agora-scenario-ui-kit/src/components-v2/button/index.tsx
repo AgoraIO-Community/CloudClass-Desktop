@@ -17,6 +17,7 @@ export const Button = ({ text, onClick, disabled }: ButtonProps) => {
 type IconButtonProps = {
     icon: SvgIconEnum;
     iconColor?: string;
+    iconSize?: number;
     backgroundColor?: string;
     opacity?: number;
     disabled?: boolean;
@@ -25,12 +26,12 @@ type IconButtonProps = {
     onClick?: () => void;
 };
 
-export const IconButton = ({ onClick, icon, backgroundColor, iconColor, opacity, disabled, tailSlot, transition }: IconButtonProps) => {
+export const IconButton = ({ onClick, icon, backgroundColor, iconColor, opacity, disabled, tailSlot, transition, iconSize = 40 }: IconButtonProps) => {
     const cls = classNames('fcr-icon-button', `cursor-${disabled ? 'not-allowed' : 'pointer'}`);
 
     return (
         <div className={cls} onClick={onClick} style={{ backgroundColor, opacity, transition }}>
-            <SvgImg type={icon} colors={{ iconPrimary: iconColor }} size={40} />
+            <SvgImg type={icon} colors={{ iconPrimary: iconColor }} size={iconSize} />
             {tailSlot}
         </div>
     );

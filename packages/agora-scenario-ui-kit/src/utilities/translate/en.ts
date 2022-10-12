@@ -879,4 +879,10 @@ export const en = {
   fcr_copy_share_link_copy: 'Copy link',
   fcr_loading: 'Loading...',
   fcr_copy_success: 'Copy success',
+  fcr_studyroom_roster_search_placeholder: 'Search...',
+  fcr_studyroom_roster_more: 'More',
+  fcr_studyroom_roster_actions_pin: 'Pin',
+  fcr_studyroom_roster_actions_unpin: 'Unpin',
+  fcr_studyroom_roster_actions_hide: 'Hide',
+  fcr_studyroom_roster_actions_unhide: 'Unhide',
 };

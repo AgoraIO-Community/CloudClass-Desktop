@@ -14,6 +14,7 @@ import { GridView } from '~containers-v2/grid-view';
 import { CameraDropdown, ChatTool, MicDropdown, Quit, RosterTool, ScreenShareTool } from '../../containers-v2/hocs';
 import { WidgetContainer } from '../../containers/widget';
 import { StudyChatWindow } from '../../containers/widget/slots';
+import { StudyRosterWindow } from '../../containers-v2/roster';
 
 
 export const StudyRoomScenario = () => {
@@ -55,6 +56,7 @@ export const StudyRoomScenario = () => {
                         </div>
                     </Layout>
                     <StudyChatWindow />
+                    <StudyRosterWindow />
                     <WidgetContainer />
                     <ToastContainer />
                     <DialogContainer />

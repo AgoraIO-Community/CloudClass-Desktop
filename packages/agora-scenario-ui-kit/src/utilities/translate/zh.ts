@@ -862,4 +862,10 @@ export const zh = {
   fcr_copy_share_link_copy: '复制链接',
   fcr_copy_success: '复制成功',
   fcr_loading: '加载中...',
+  fcr_studyroom_roster_search_placeholder: '输入用户名...',
+  fcr_studyroom_roster_more: '更多',
+  fcr_studyroom_roster_actions_pin: '关注',
+  fcr_studyroom_roster_actions_unpin: '取消关注',
+  fcr_studyroom_roster_actions_hide: '隐藏',
+  fcr_studyroom_roster_actions_unhide: '取消隐藏',
 };

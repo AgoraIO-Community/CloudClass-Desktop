@@ -6,11 +6,9 @@ import { AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useMemo, useState } from 'react';
-import { Rnd } from 'react-rnd';
 import { SvgIconEnum, SvgImg } from '~components';
 import { IconButton } from '~components-v2';
 import { getColorByLevel } from '~utilities/palette-helper';
-import { Chat } from '../../containers/widget/slots';
 import './index.css';
 
 type DeviceDropdownProps = {
@@ -238,21 +236,16 @@ export const ChatTool = observer(() => {
 });
 
 export const RosterTool = observer(() => {
-  const { toolbarUIStore, layoutUIStore } = useStore() as EduStudyRoomUIStore;
+  const { layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
   const { userCount } = layoutUIStore;
-
-  const handleClick = () => {
-    toolbarUIStore.setTool('register');
-  }
-
 
   return (
     <div className='relative overflow-hidden'>
       <div className='text-center w-full bottom-0 absolute' style={{ background: 'rgba(52, 52, 52, 0.9)', borderRadius: 12, fontSize: 16, lineHeight: '20px', pointerEvents: 'none' }}>
         {userCount > 999 ? '999+' : userCount}
       </div>
-      <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.PEOPLE} onClick={handleClick} />
+      <IconButton iconColor='#fff' backgroundColor={'#343434E5'} icon={SvgIconEnum.PEOPLE} onClick={layoutUIStore.toggleRoster} />
     </div>
   );
 });

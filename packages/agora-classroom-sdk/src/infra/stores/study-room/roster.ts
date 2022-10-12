@@ -32,19 +32,7 @@ export class StudyRoomRosterUIStore extends RosterUIStore {
    */
   @computed
   get userList() {
-    let studentList = this.classroomStore.userStore.studentList;
-
-    studentList = new Map();
-
-    const { groupUuidByUserUuid } = this.classroomStore.groupStore;
-
-    this.classroomStore.userStore.studentList.forEach((user) => {
-      if (!groupUuidByUserUuid.has(user.userUuid)) {
-        studentList.set(user.userUuid, user);
-      }
-    });
-
-    const { list } = iterateMap(studentList, {
+    const { list } = iterateMap(this.classroomStore.userStore.users, {
       onMap: (userUuid: string, { userName }) => {
         const { acceptedList, chatMuted } = this.classroomStore.roomStore;
         const { rewards } = this.classroomStore.userStore;

@@ -1,0 +1,78 @@
+.fcr-roster-v2 {
+  background: #21212b;
+  padding: 20px;
+  width: 387px;
+  height: 500px;
+}
+
+.fcr-roster-v2__shortname {
+  width: 32px;
+  height: 32px;
+  border-radius: 21px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 32px;
+  text-align: center;
+  color: #000;
+  margin-right: 10px;
+}
+
+.fcr-roster-v2__list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 26px 0;
+}
+.fcr-roster-v2__nameplate {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.fcr-roster-v2__list-item-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #111b24f2;
+  padding: 6px;
+  color: #fff;
+  font-size: 16px;
+  box-shadow: 10px 10px 60px -8px rgba(0, 0, 0, 0.14);
+  border-radius: 16px;
+}
+.fcr-roster-v2__list-item-dropdown > div {
+  height: 66px;
+  width: 193px;
+  padding: 21px 14px;
+  transition: background-color 0.3s;
+  border-radius: 14px;
+}
+.fcr-roster-v2__list-item-dropdown > div:hover {
+  background: #27272a;
+}
+
+.fcr-roster-v2__list-item-state-icon {
+  display: flex;
+}
+.fcr-roster-v2__hover-more .fcr-roster-v2__list-item-state-icon {
+  display: none;
+}
+
+.fcr-roster-v2__list-item-more {
+  display: none;
+  cursor: pointer;
+  background: #555b69;
+  border-radius: 50px;
+  padding: 0 20px;
+  font-size: 16px;
+  color: #fff;
+}
+
+.fcr-roster-v2__hover-more .fcr-roster-v2__list-item-more {
+  display: block;
+}
+
+.fcr-roster-v2__list-item-wrapper {
+  position: relative;
+}

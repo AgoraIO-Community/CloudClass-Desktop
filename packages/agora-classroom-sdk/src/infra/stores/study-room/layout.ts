@@ -1,5 +1,5 @@
 import { EduEventUICenter } from '@/infra/utils/event-center';
-import { EduStream } from 'agora-edu-core';
+import { EduClassroomConfig, EduStream } from 'agora-edu-core';
 import {
   AgoraRteEventType,
   AgoraRteRemoteStreamType,
@@ -70,14 +70,13 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     return super.getters as StudyRoomGetters;
   }
 
-  @computed
-  get userCount() {
-    return this.orderedUserList.length;
+  get localUserUuid() {
+    return EduClassroomConfig.shared.sessionInfo.userUuid;
   }
 
   @computed
-  get localUserUuid() {
-    return this.getters.localUserUuid;
+  get userCount() {
+    return this.orderedUserList.length;
   }
 
   @computed
@@ -165,7 +164,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     if (viewMode === ViewMode.Divided) {
       this.pinnedUser = undefined;
     } else {
-      this.pinnedUser = this.getters.localUserUuid;
+      this.pinnedUser = this.localUserUuid;
     }
     this.viewMode = viewMode;
     this.pageIndex = 0;
@@ -223,7 +222,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
       if (this.orderedUserList.includes(userUuid)) {
         return;
       }
-      if (userUuid === this.getters.localUserUuid) {
+      if (userUuid === this.localUserUuid) {
         this.orderedUserList.unshift(userUuid);
       } else {
         this.orderedUserList.push(userUuid);
@@ -338,6 +337,29 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
         (totalPage) => {
           if (this.pageIndex + 1 > totalPage) {
             this.pageIndex = totalPage === 0 ? 0 : totalPage - 1;
+          }
+        },
+      ),
+    );
+
+    this._disposers.push(
+      computed(() => this.pinnedUser).observe(
+        ({ oldValue: lastPinned, newValue: currentPinned }) => {
+          const setUserStreamType = (userUuid: string, streamType: AgoraRteRemoteStreamType) => {
+            const streams = this.classroomStore.streamStore.streamByUserUuid.get(userUuid);
+            if (streams) {
+              streams.forEach((streamUuid) => {
+                this.classroomStore.streamStore.setRemoteVideoStreamType(streamUuid, streamType);
+              });
+            }
+          };
+
+          if (lastPinned && lastPinned !== this.localUserUuid) {
+            setUserStreamType(lastPinned, AgoraRteRemoteStreamType.LOW_STREAM);
+          }
+
+          if (currentPinned && currentPinned !== this.localUserUuid) {
+            setUserStreamType(currentPinned, AgoraRteRemoteStreamType.HIGH_STREAM);
           }
         },
       ),

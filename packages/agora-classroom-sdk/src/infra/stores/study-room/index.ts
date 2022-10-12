@@ -23,4 +23,8 @@ export class EduStudyRoomUIStore extends EduClassroomUIStore {
   get layoutUIStore(): StudyRoomLayoutUIStore {
     return this._layoutUIStore as StudyRoomLayoutUIStore;
   }
+
+  get rosterUIStore(): StudyRoomRosterUIStore {
+    return this._rosterUIStore as StudyRoomRosterUIStore;
+  }
 }

@@ -1,0 +1,26 @@
+.fcr-search-input {
+  display: flex;
+  justify-content: space-between;
+  background: #3d404b;
+  border-color: #4a4c5f;
+  border: 1px solid #4a4c5f;
+  border-radius: 50px;
+  padding: 5px 5px 5px 16px;
+}
+
+.fcr-search-input input {
+  background: transparent;
+  outline: none;
+  color: #fff;
+  flex-grow: 1;
+  margin-right: 16px;
+}
+.fcr-search-input input::placeholder {
+  color: #bdbec6;
+}
+
+.fcr-search-input .fcr-icon-button {
+  padding: 0 5px;
+  border-radius: 50px;
+  background: #f9ff01;
+}
