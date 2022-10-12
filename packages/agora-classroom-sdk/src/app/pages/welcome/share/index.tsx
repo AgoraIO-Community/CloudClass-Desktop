@@ -9,7 +9,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { AButton, aMessage, useI18n } from '~ui-kit';
 import './index.css';
 
-export type ShareRoomInfo = {
+export type ShareInfo = {
   owner: string;
   startTime: number;
   endTime: number;
@@ -17,11 +17,11 @@ export type ShareRoomInfo = {
   roomName: string;
 };
 
-export type ShareRoomProps = {
-  data: ShareRoomInfo;
+export type ShareProps = {
+  data: ShareInfo;
 };
 
-export const ShareRoom: FC<ShareRoomProps> = observer(({ data }) => {
+export const Share: FC<ShareProps> = observer(({ data }) => {
   const { owner, startTime, endTime, roomId, roomName } = data;
   const transI18n = useI18n();
   const globalStore = useContext(GlobalStoreContext);

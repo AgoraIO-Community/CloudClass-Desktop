@@ -6,6 +6,7 @@ import { SvgIconEnum, SvgImg, useI18n } from '~ui-kit';
 import './item.css';
 import roomStateLive from '@/app/assets/fcr-room-state-live.svg';
 import { formatRoomID } from '@/app/hooks';
+import classNames from 'classnames';
 
 type RoomListItemProps = {
   className?: string;
@@ -75,13 +76,23 @@ export const RoomListItem: FC<RoomListItemProps> = ({
           <span className="date">{dateStr}</span>
           <span className="id">{roomId}</span>
         </div>
-        <div className="name">{data.roomName}</div>
+        <div
+          className={classNames({
+            name: 1,
+            'w-full': roomState === RoomState.ENDED,
+            'w-2/3': roomState !== RoomState.ENDED,
+          })}>
+          {data.roomName}
+        </div>
         <div className="footer">
           <span className="state">
             <img
               src={roomStateLive}
               alt="room-state-live"
-              className={`live-icon ${roomState !== RoomState.GOING ? 'hidden' : ''}`}
+              className={classNames({
+                'live-icon': 1,
+                hidden: roomState !== RoomState.GOING,
+              })}
             />
             {transI18n(roomStateMap[roomState])}
           </span>

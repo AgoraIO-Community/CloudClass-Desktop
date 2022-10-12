@@ -8,6 +8,7 @@ import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
 import { shareLink } from '@/app/utils/share';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
+import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import { useContext, useEffect, useState } from 'react';
 import { AForm, AFormItem, AInput, useAForm, useI18n } from '~ui-kit';
@@ -22,17 +23,17 @@ export const JoinRoom = observer(() => {
 
   const roles = [
     {
-      label: transI18n('fcr_joinroom_option_teacher'),
+      label: transI18n('fcr_join_room_option_teacher'),
       value: EduRoleTypeEnum.teacher,
       backgroundColor: '#5765FF',
     },
     {
-      label: transI18n('fcr_joinroom_option_student'),
+      label: transI18n('fcr_join_room_option_student'),
       value: EduRoleTypeEnum.student,
       backgroundColor: '#F5655C',
     },
     {
-      label: transI18n('fcr_joinroom_option_audience'),
+      label: transI18n('fcr_join_room_option_audience'),
       value: EduRoleTypeEnum.assistant,
       backgroundColor: '#83BC53',
     },
@@ -91,12 +92,12 @@ export const JoinRoom = observer(() => {
 
   return (
     <NavPageLayout
-      title={transI18n('fcr_joinroom_label_join')}
+      title={transI18n('fcr_join_room_label_join')}
       className="join-room"
       footer={
         <NavFooter
-          okText={transI18n('fcr_joinroom_button_confirm')}
-          cancelText={transI18n('fcr_joinroom_button_cancel')}
+          okText={transI18n('fcr_join_room_button_confirm')}
+          cancelText={transI18n('fcr_join_room_button_cancel')}
           onOk={onSubmit}
           onCancel={historyBackHandle}
         />
@@ -106,19 +107,19 @@ export const JoinRoom = observer(() => {
         form={form}
         onValuesChange={formOnValuesChange}>
         <div className="form-item">
-          <div className="label">{transI18n('fcr_joinroom_label_RoomID')}</div>
+          <div className="label">{transI18n('fcr_join_room_label_RoomID')}</div>
           <AFormItem name="roomId" rules={roomIdRule}>
             <AInput disabled={!!(query && query.roomId)} />
           </AFormItem>
         </div>
         <div className="form-item">
-          <div className="label">{transI18n('fcr_joinroom_label_name')}</div>
+          <div className="label">{transI18n('fcr_join_room_label_name')}</div>
           <AFormItem name="nickName" rules={nickNameRule}>
             <AInput maxLength={50} />
           </AFormItem>
         </div>
         <div className="form-item col-start-1 col-end-3">
-          <div className="label">{transI18n('fcr_joinroom_label_role')}</div>
+          <div className="label">{transI18n('fcr_join_room_label_role')}</div>
           <div className="role-choose">
             {roles.map((v) => {
               return (
@@ -127,7 +128,10 @@ export const JoinRoom = observer(() => {
                   onClick={() => {
                     setRole(v.value);
                   }}
-                  className="role-item"
+                  className={classNames({
+                    'role-item': 1,
+                    checked: v.value === role,
+                  })}
                   style={{ backgroundColor: v.backgroundColor }}>
                   {v.label} <RadioIcon checked={v.value === role} />
                 </div>

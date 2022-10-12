@@ -5,9 +5,8 @@
 }
 
 .share-container header {
-  @apply flex justify-between;
-  padding: 45px 245px;
-
+  @apply flex justify-center;
+  padding: 45px 0px;
   font-family: 'Montserrat Roboto';
   font-style: normal;
   font-weight: 800;
@@ -16,6 +15,9 @@
 
   /* Gray 1 */
   color: #030303;
+}
+.share-container header > span {
+  margin: 0 4px;
 }
 
 .share-container .body {
@@ -26,7 +28,6 @@
   background: rgba(255, 255, 255, 0.7);
   border-radius: 16px;
   padding: 30px 30px 49px 30px;
-
   font-family: 'PingFang HK';
   font-style: normal;
   font-weight: 400;
@@ -50,6 +51,7 @@
   height: 36px;
   color: white;
   border-radius: 100px;
+  border: 0;
 }
 
 .share-container footer .btn-copy-all {

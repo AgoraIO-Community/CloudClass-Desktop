@@ -13,19 +13,20 @@
 }
 
 .room-item-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 10px 10px 60px -8px rgba(0, 0, 0, 0.14);
+  transform: translateY(-1px);
+  box-shadow: 6px 6px 20px -8px rgb(0 0 0 / 56%);
 }
 
 .room-item-card.upcoming {
-  /* fcr-blue2 */
-  background: #e9f6fa;
+  /* fcr_blue2 */
+  background: #e4e6ff;
 }
 
 .room-item-card.over {
   /* fcr-gray4 */
   background: #f0f0f7;
 }
+
 .room-item-card.live {
   /* fcr-card-purple */
   background: #5765ff;
@@ -76,7 +77,8 @@
 }
 
 .room-item-card .info .name {
-  font-weight: 800;
+  @apply truncate;
+  font-weight: 500;
   font-size: 14px;
   line-height: 130%;
   margin: 8px 0 6px;

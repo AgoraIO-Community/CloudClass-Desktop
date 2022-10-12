@@ -5,7 +5,7 @@ import { parseHashUrlQuery } from './url';
 export type ShareContent = {
   roomId: string;
   owner: string;
-  region?: EduRegion;
+  region: EduRegion;
 };
 
 /**

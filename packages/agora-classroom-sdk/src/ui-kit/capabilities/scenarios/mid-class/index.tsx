@@ -42,7 +42,6 @@ export const MidClassScenario = () => {
               <StreamWindowsContainer />
             </Layout>
             <RemoteControlToolbar />
-
             <WhiteboardToolbar />
             <ScenesController />
             <Float bottom={15} right={10} align="flex-end" gap={2}>

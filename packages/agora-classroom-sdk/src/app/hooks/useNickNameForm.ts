@@ -7,7 +7,7 @@ export const useNickNameForm = () => {
     () => [
       {
         required: true,
-        message: transI18n('fcr_joinroom_tips_name'),
+        message: transI18n('fcr_join_room_tips_name'),
       },
       {
         pattern: /^([a-zA-Z0-9_\u4e00-\u9fa5]{0,50})$/,

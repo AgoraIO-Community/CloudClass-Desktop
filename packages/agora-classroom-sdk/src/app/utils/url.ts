@@ -35,6 +35,6 @@ function getIndexURL(): string {
 export const Index_URL = getIndexURL();
 
 export const Default_Hosting_URL =
-  'https://upload.wikimedia.org/wikipedia/commons/8/88/Big_Buck_Bunny_alt.webm';
+  'https://solutions-apaas.agora.io/cowatch/video/avatar-fte1_h1080p.mov';
 
 export const SSO_LOGOUT_URL = 'https://sso2.agora.io/api/v0/logout';

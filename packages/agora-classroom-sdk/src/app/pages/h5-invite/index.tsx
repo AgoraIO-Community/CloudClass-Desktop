@@ -146,7 +146,7 @@ export const H5Invite = observer(() => {
             <header>{transI18n('fcr_home_label_logo')}m</header>
             <div className="inviter">
               <div className="name">{shareRoomInfo?.owner}</div>
-              <div>{transI18n('fcr_sharelink_label_invitation')}</div>
+              <div>{transI18n('fcr_share_link_label_invitation')}</div>
             </div>
             <div className="room-name">{roomDetail?.roomName}</div>
             <div className="room-id">
@@ -179,11 +179,11 @@ export const H5Invite = observer(() => {
               nickName: nickName,
             }}>
             <div className="form-item">
-              <div className="label">{transI18n('fcr_joinroom_label_name')}</div>
+              <div className="label">{transI18n('fcr_join_room_label_name')}</div>
               <AFormItem name="nickName" rules={nickNameRule}>
                 <AInput
                   maxLength={50}
-                  placeholder={transI18n('fcr_joinroom_tips_name')}
+                  placeholder={transI18n('fcr_join_room_tips_name')}
                   suffix={<SvgImg type={SvgIconEnum.EDIT} size={16} />}
                 />
               </AFormItem>

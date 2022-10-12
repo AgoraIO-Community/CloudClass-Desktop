@@ -11,11 +11,20 @@ import { observer } from 'mobx-react';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useHistory } from 'react-router-dom';
-import { ADivider, AList, AListItem, AModal, ASkeleton, useI18n } from '~ui-kit';
+import {
+  ADivider,
+  AList,
+  AListItem,
+  AModal,
+  ASkeleton,
+  SvgIconEnum,
+  SvgImg,
+  useI18n,
+} from '~ui-kit';
 import './index.css';
 import { Menu } from './menu';
 import { RoomToast } from './room-toast';
-import { ShareRoom, ShareRoomInfo } from './share-room';
+import { Share, ShareInfo } from './share';
 
 export const Welcome = observer(() => {
   const history = useHistory();
@@ -32,7 +41,7 @@ export const Welcome = observer(() => {
   const toCreateRoomPage = useAuthCallback(() => {
     history.push('/create-room');
   });
-  const [shareRoomInfo, setShareRoomInfo] = useState<ShareRoomInfo>({
+  const [shareRoomInfo, setShareRoomInfo] = useState<ShareInfo>({
     owner: '',
     startTime: 0,
     endTime: 0,
@@ -151,13 +160,15 @@ export const Welcome = observer(() => {
       <AModal
         className="share-modal-container"
         open={shareModal}
+        centered
         bodyStyle={{ padding: 0 }}
         width={730}
+        closeIcon={<SvgImg type={SvgIconEnum.SHARE_CLOSE} size={40} className="share-close-icon" />}
         onCancel={() => {
           setShareModal(false);
         }}
         footer={false}>
-        <ShareRoom data={shareRoomInfo} />
+        <Share data={shareRoomInfo} />
       </AModal>
     </div>
   );

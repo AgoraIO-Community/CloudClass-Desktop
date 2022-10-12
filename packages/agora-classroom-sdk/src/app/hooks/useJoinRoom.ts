@@ -154,6 +154,11 @@ export const useJoinRoom = () => {
           return;
         }
 
+        if (!userName) {
+          aMessage.error(transI18n('fcr_join_room_tips_user_name_empty'));
+          return;
+        }
+
         const courseWareList = storage.getCourseWareSaveList();
 
         const shareUrl = shareLinkInClass({ region, roomId, owner: userStore.nickName });

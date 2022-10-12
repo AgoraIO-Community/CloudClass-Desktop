@@ -83,7 +83,7 @@ export class RoomStore {
     this.addRoomToast(toast);
     setTimeout(() => {
       this.removeRoomToast(data.roomId);
-    }, 2500);
+    }, 4000);
     return data;
   }
 

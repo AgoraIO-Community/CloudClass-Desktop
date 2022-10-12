@@ -4,12 +4,13 @@ import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
 import { RadioIcon } from '@/app/components/radio-icon';
 import { RoomTypeCard } from '@/app/components/room-type-card';
-import { useJoinRoom } from '@/app/hooks';
+import { useElementWithI18n, useJoinRoom } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
 import { Default_Hosting_URL } from '@/app/utils';
 import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
+import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -21,6 +22,9 @@ import {
   AInput,
   aMessage,
   ATimePicker,
+  locale,
+  SvgIconEnum,
+  SvgImg,
   useAForm,
   useI18n,
 } from '~ui-kit';
@@ -28,13 +32,13 @@ import './index.css';
 import { RadioCard } from './radio-card';
 
 const weekday = {
-  0: 'fcr_create_option_timeselector_Sun',
-  1: 'fcr_create_option_timeselector_Mon',
-  2: 'fcr_create_option_timeselector_Tue',
-  3: 'fcr_create_option_timeselector_Wed',
-  4: 'fcr_create_option_timeselector_Thu',
-  5: 'fcr_create_option_timeselector_Fri',
-  6: 'fcr_create_option_timeselector_Sat',
+  0: 'fcr_create_option_time_selector_Sun',
+  1: 'fcr_create_option_time_selector_Mon',
+  2: 'fcr_create_option_time_selector_Tue',
+  3: 'fcr_create_option_time_selector_Wed',
+  4: 'fcr_create_option_time_selector_Thu',
+  5: 'fcr_create_option_time_selector_Fri',
+  6: 'fcr_create_option_time_selector_Sat',
 };
 
 const TimeFormat = 'HH:mm';
@@ -65,13 +69,13 @@ type CreateFormValue = {
 const roomTypeOptions = [
   {
     label: 'fcr_h5create_label_small_classroom',
-    description: 'fcr_create_label_smallclassroom_description',
+    description: 'fcr_create_label_small_classroom_description',
     value: EduRoomTypeEnum.RoomSmallClass,
     className: 'card-purple',
   },
   {
     label: 'fcr_h5create_label_lecture_hall',
-    description: 'fcr_create_label_lecturehall_description',
+    description: 'fcr_create_label_lecture_hall_description',
     value: EduRoomTypeEnum.RoomBigClass,
 
     className: 'card-red',
@@ -86,19 +90,19 @@ const roomTypeOptions = [
 
 const serviceTypeOptions = [
   {
-    label: 'fcr_create_label_servicetype_RTC',
+    label: 'fcr_create_label_service_type_RTC',
     description: 'fcr_create_label_latency_RTC',
     value: EduRoomServiceTypeEnum.LivePremium,
     icon: <img src={premiumIcon} />,
   },
   {
-    label: 'fcr_create_label_servicetype_Standard',
+    label: 'fcr_create_label_service_type_Standard',
     description: 'fcr_create_label_latency_Standard',
     value: EduRoomServiceTypeEnum.LiveStandard,
     icon: <img src={standardIcon} />,
   },
   {
-    label: 'fcr_create_label_servicetype_CDN',
+    label: 'fcr_create_label_service_type_CDN',
     description: 'fcr_create_label_latency_CDN',
     value: EduRoomServiceTypeEnum.Fusion,
     icon: <img src={cdnIcon} />,
@@ -142,6 +146,8 @@ export const CreateRoom = observer(() => {
   const [endTime, setEndTime] = useState(() => {
     return computeEndTime(initialValues.date).format(TimeFormat);
   });
+
+  const dateLocale = useElementWithI18n({ zh: locale.zh_CN, en: locale.en_US });
 
   const getFormDateTime = useCallback(() => {
     const time: Dayjs = form.getFieldValue('time');
@@ -292,6 +298,11 @@ export const CreateRoom = observer(() => {
                   return !dayjs(current).isBetween(now, now.add(7, 'day'));
                 }}
                 onChange={dateTimeOnChange}
+                superNextIcon={null}
+                superPrevIcon={null}
+                suffixIcon={<SvgImg type={SvgIconEnum.CALENDAR} />}
+                popupStyle={{ marginTop: '8px' }}
+                locale={dateLocale}
               />
             </AFormItem>
             <div className="relative inline-block">
@@ -307,6 +318,7 @@ export const CreateRoom = observer(() => {
                   allowClear={false}
                   showNow={false}
                   onChange={dateTimeOnChange}
+                  popupStyle={{ marginTop: '8px' }}
                 />
               </AFormItem>
               <div className={`current-time ${useCurrentTime ? '' : 'hidden'}`}>
@@ -317,16 +329,16 @@ export const CreateRoom = observer(() => {
           </div>
           <div className="gap-symbol" />
           <div className="end-time">
-            <div className="label">{transI18n('fcr_create_label_endtime')}</div>
+            <div className="label">{transI18n('fcr_create_label_end_time')}</div>
             <div className="end-time-picker">
               {endTime}
-              <span>{transI18n('fcr_create_label_defaulttime')}</span>
+              <span>{transI18n('fcr_create_label_default_time')}</span>
             </div>
           </div>
         </div>
         {/* 班型 */}
         <div className="form-item item-mb">
-          <div className="label">{transI18n('fcr_create_label_classmode')}</div>
+          <div className="label">{transI18n('fcr_create_label_class_mode')}</div>
           <div className="room-type">
             {roomTypeOptions.map((v) => {
               return (
@@ -367,18 +379,29 @@ export const CreateRoom = observer(() => {
           </div>
         ) : null}
         {/* 更多设置 */}
-        <div className="form-item item-mb more-settings">
+        <div
+          className={classNames({
+            'form-item item-mb more-settings': 1,
+            expanded: showMore,
+          })}>
           <div className="label">
-            {transI18n('fcr_create_label_moresettings')}
+            {transI18n('fcr_create_label_more_settings')}
             <span
-              className={`expand ${showMore ? 'hidden' : ''}`}
+              className={classNames({
+                'expand-btn': 1,
+                hidden: showMore,
+              })}
               onClick={() => {
                 setShowMore((pre) => !pre);
               }}>
               {transI18n('fcr_create_more_settings_expand')}
             </span>
           </div>
-          <div className={`settings ${!showMore ? 'hidden' : ''}`}>
+          <div
+            className={classNames({
+              'more-setting-list': 1,
+              hidden: !showMore,
+            })}>
             <div className="setting-item">
               <div className="title">
                 <div className="security-prefix-icon" />

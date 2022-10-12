@@ -105,15 +105,15 @@ export const H5JoinRoom = observer(() => {
               roomId: formatRoomID(roomStore.lastJoinedRoomId),
             }}>
             <div className="form-item">
-              <div className="label">{transI18n('fcr_joinroom_label_RoomID')}</div>
+              <div className="label">{transI18n('fcr_join_room_label_RoomID')}</div>
               <AFormItem name="roomId" rules={roomIdRule}>
                 <AInput placeholder={transI18n('fcr_join_room_tips_room_id')} />
               </AFormItem>
             </div>
             <div className="form-item">
-              <div className="label">{transI18n('fcr_joinroom_label_name')}</div>
+              <div className="label">{transI18n('fcr_join_room_label_name')}</div>
               <AFormItem name="nickName" rules={nickNameRule}>
-                <AInput placeholder={transI18n('fcr_joinroom_tips_name')} />
+                <AInput placeholder={transI18n('fcr_join_room_tips_name')} />
               </AFormItem>
             </div>
           </AForm>

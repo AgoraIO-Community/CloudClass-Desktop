@@ -38,14 +38,14 @@ export class UserStore {
   @observable
   public nickName =
     getLSStore<string>(LS_NICK_NAME, Number(this.userInfo?.companyId)) ||
-    this.userInfo?.displayName ||
+    this.userInfo?.companyName ||
     '';
 
   @action.bound
   private setUserInfo(data: UserInfo | null) {
     this.userInfo = data;
-    if (this.nickName === '' && this.userInfo?.displayName) {
-      this.setNickName(this.userInfo.displayName);
+    if (this.nickName === '' && this.userInfo?.companyName) {
+      this.setNickName(this.userInfo.companyName);
     }
   }
 
