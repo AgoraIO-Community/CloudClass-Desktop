@@ -77,7 +77,6 @@ const roomTypeOptions = [
     label: 'fcr_h5create_label_lecture_hall',
     description: 'fcr_create_label_lecture_hall_description',
     value: EduRoomTypeEnum.RoomBigClass,
-
     className: 'card-red',
   },
   {
@@ -113,25 +112,30 @@ export const CreateRoom = observer(() => {
   const roomStore = useContext(RoomStoreContext);
   const { setLoading } = useContext(GlobalStoreContext);
   const userStore = useContext(UserStoreContext);
+  const { quickJoinRoom } = useJoinRoom();
   const historyBackHandle = useHistoryBack();
   const transI18n = useI18n();
 
-  const customFormat: ADatePickerProps['format'] = (value) =>
-    `${value.format('YYYY-MM-DD')}  |  ${transI18n(weekday[value.day()])}`;
-
+  const [form] = useAForm<CreateFormValue>();
   const [showMore, setShowMore] = useState(false);
   const [roomType, setRoomType] = useState(roomTypeOptions[0].value);
   const [serviceType, setServiceType] = useState(serviceTypeOptions[0].value);
   const [watermark, setWatermark] = useState(false);
   const [livePlayback, setLivePlayback] = useState(false);
   const [useCurrentTime, setUseCurrentTime] = useState(true);
-  const { quickJoinRoom } = useJoinRoom();
   const [dateTimeValidate, setDateTimeValidate] = useState({
     validateStatus: 'success',
     help: '',
     tip: '',
   });
-  const [form] = useAForm<CreateFormValue>();
+
+  const showLivePlaybackOption =
+    roomType === EduRoomTypeEnum.RoomBigClass && serviceType === EduRoomServiceTypeEnum.Fusion;
+
+  const customFormat: ADatePickerProps['format'] = useCallback(
+    (value) => `${value.format('YYYY-MM-DD')}  |  ${transI18n(weekday[value.day()])}`,
+    [],
+  );
 
   const initialValues: CreateFormValue = useMemo(() => {
     const date = dayjs();
@@ -420,7 +424,7 @@ export const CreateRoom = observer(() => {
                 />
               </div>
             </div>
-            {roomType === EduRoomTypeEnum.RoomBigClass ? (
+            {showLivePlaybackOption ? (
               <div className="setting-item">
                 <div className="title">
                   <div className="live-playback-prefix-icon" />
