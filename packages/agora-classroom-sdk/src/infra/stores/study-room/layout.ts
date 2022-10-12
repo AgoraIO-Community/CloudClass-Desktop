@@ -2,6 +2,7 @@ import { EduEventUICenter } from '@/infra/utils/event-center';
 import { EduStream } from 'agora-edu-core';
 import {
   AgoraRteEventType,
+  AgoraRteRemoteStreamType,
   AgoraRteVideoSourceType,
   AgoraUser,
   AGRtcState,
@@ -62,6 +63,8 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
   orderedUserList: string[] = [];
   @observable
   chatVisibility = false;
+  @observable
+  rosterVisibility = false;
 
   get getters(): StudyRoomGetters {
     return super.getters as StudyRoomGetters;
@@ -210,6 +213,11 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
   }
 
   @action.bound
+  toggleRoster() {
+    this.rosterVisibility = !this.rosterVisibility;
+  }
+
+  @action.bound
   private _handleUserAdded(users: AgoraUser[]) {
     users.forEach(({ userUuid }) => {
       if (this.orderedUserList.includes(userUuid)) {
@@ -263,7 +271,8 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
       return !waitingSub.includes(stream);
     });
 
-    const { muteRemoteVideoStreamMass, setupRemoteVideo } = this.classroomStore.streamStore;
+    const { muteRemoteVideoStreamMass, setupRemoteVideo, setRemoteVideoStreamType } =
+      this.classroomStore.streamStore;
 
     if (tobeUnsub.length) {
       await muteRemoteVideoStreamMass(tobeUnsub, true);
@@ -280,6 +289,17 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
       const newSub = tobeSub.filter(({ streamUuid }) => {
         return subList.includes(streamUuid);
       });
+
+      await Promise.all(
+        newSub.map(async (stream) => {
+          const streamType =
+            stream.fromUser.userUuid === this.pinnedUser
+              ? AgoraRteRemoteStreamType.HIGH_STREAM
+              : AgoraRteRemoteStreamType.LOW_STREAM;
+
+          await setRemoteVideoStreamType(stream.streamUuid, streamType);
+        }),
+      );
 
       doneSub = doneSub.concat(newSub);
     }

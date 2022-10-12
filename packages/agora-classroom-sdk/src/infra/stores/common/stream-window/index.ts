@@ -1266,7 +1266,9 @@ export class StreamWindowUIStore extends EduUIStoreBase {
                 highUuids.add(i);
               }
             }
-            this._setRemoteStreamType(highUuids, lowUuids);
+            if (EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomStudy) {
+              this._setRemoteStreamType(highUuids, lowUuids);
+            }
           }
         },
       ),

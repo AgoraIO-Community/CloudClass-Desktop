@@ -48,13 +48,12 @@ export const LocalTrackPlayer = ({ stream }: { stream: EduStream }) => {
     );
 }
 
-export const AutoSubscriptionRemoteTrackPlayer = ({ stream, streamType = AgoraRteRemoteStreamType.LOW_STREAM }: { stream: EduStream, streamType?: AgoraRteRemoteStreamType }) => {
-    const { layoutUIStore, classroomStore } = useStore() as EduStudyRoomUIStore;
+export const AutoSubscriptionRemoteTrackPlayer = ({ stream }: { stream: EduStream, streamType?: AgoraRteRemoteStreamType }) => {
+    const { layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
     useEffect(() => {
         if (videoRef.current) {
             layoutUIStore.updateVideoDom(stream.streamUuid, videoRef.current);
-            classroomStore.streamStore.setRemoteVideoStreamType(stream.streamUuid, streamType);
         }
         return () => {
             layoutUIStore.removeVideoDom(stream.streamUuid);
