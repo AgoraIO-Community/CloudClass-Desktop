@@ -2,7 +2,7 @@ import { EduEventUICenter } from '@/infra/utils/event-center';
 import { EduClassroomConfig, EduStream } from 'agora-edu-core';
 import {
   AgoraRteEventType,
-  AgoraRteRemoteStreamType,
+  AGRemoteVideoStreamType,
   AgoraRteVideoSourceType,
   AgoraUser,
   AGRtcState,
@@ -141,6 +141,9 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
   @action.bound
   toggleUserBlackList(userUuid: string) {
     if (!this.blackList.has(userUuid)) {
+      if (this.pinnedUser === userUuid) {
+        this.pinnedUser = this.localUserUuid;
+      }
       this.blackList.add(userUuid);
     } else {
       this.blackList.delete(userUuid);
@@ -294,16 +297,16 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
         return subList.includes(streamUuid);
       });
 
-      await Promise.all(
-        newSub.map(async (stream) => {
-          const streamType =
-            stream.fromUser.userUuid === this.pinnedUser
-              ? AgoraRteRemoteStreamType.HIGH_STREAM
-              : AgoraRteRemoteStreamType.LOW_STREAM;
-          // 根据是否被pin设置大小流
-          await setRemoteVideoStreamType(stream.streamUuid, streamType);
-        }),
-      );
+      // await Promise.all(
+      //   newSub.map(async (stream) => {
+      //     const streamType =
+      //       stream.fromUser.userUuid === this.pinnedUser
+      //         ? AGRemoteVideoStreamType.HIGH_STREAM
+      //         : AGRemoteVideoStreamType.LOW_STREAM;
+      //     // 根据是否被pin设置大小流
+      //     await setRemoteVideoStreamType(stream.streamUuid, streamType);
+      //   }),
+      // );
       // 加入已订阅
       doneSub = doneSub.concat(newSub);
     }
@@ -352,7 +355,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
       computed(() => this.pinnedUser).observe(
         ({ oldValue: lastPinned, newValue: currentPinned }) => {
           const { streamByUserUuid, setRemoteVideoStreamType } = this.classroomStore.streamStore;
-          const setUserStreamType = (userUuid: string, streamType: AgoraRteRemoteStreamType) => {
+          const setUserStreamType = (userUuid: string, streamType: AGRemoteVideoStreamType) => {
             const streams = streamByUserUuid.get(userUuid);
             if (streams) {
               streams.forEach((streamUuid) => {
@@ -362,11 +365,11 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
           };
 
           if (lastPinned && lastPinned !== this.localUserUuid) {
-            setUserStreamType(lastPinned, AgoraRteRemoteStreamType.LOW_STREAM);
+            setUserStreamType(lastPinned, AGRemoteVideoStreamType.LOW_STREAM);
           }
 
           if (currentPinned && currentPinned !== this.localUserUuid) {
-            setUserStreamType(currentPinned, AgoraRteRemoteStreamType.HIGH_STREAM);
+            setUserStreamType(currentPinned, AGRemoteVideoStreamType.HIGH_STREAM);
           }
         },
       ),

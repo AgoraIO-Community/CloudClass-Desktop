@@ -2,7 +2,7 @@ import { useStore } from "@/infra/hooks/ui-store";
 import { EduStreamUI } from "@/infra/stores/common/stream/struct";
 import { EduStudyRoomUIStore } from "@/infra/stores/study-room";
 import { StreamCellUI } from "@/infra/stores/study-room/stream-ui";
-import { AgoraRteRemoteStreamType } from "agora-rte-sdk";
+import { AGRemoteVideoStreamType } from "agora-rte-sdk";
 import { observer } from "mobx-react";
 import React, { useEffect, useMemo } from "react";
 import useMeasure from "react-use-measure";
@@ -15,7 +15,7 @@ import { GridTools } from "./tools";
 type CellProps = {
     stream: EduStreamUI,
     canPlay: boolean,
-    streamType?: AgoraRteRemoteStreamType,
+    streamType?: AGRemoteVideoStreamType,
     outerSize: { width: number, height: number },
     mb: number;
     isMain: boolean;
@@ -103,7 +103,7 @@ export const SurroundedGridView = observer(() => {
             <div ref={ref} className="fcr-surrounded-grid-view__main flex-grow flex items-center justify-center overflow-hidden" style={{ marginRight: 12, height: 'calc(100vh - 155px)' }}>
                 {pinnedStream &&
                     <GridTools stream={pinnedStream}>
-                        <GridCell isMain mb={0} outerSize={outerSize} stream={pinnedStream.stream} canPlay={pinnedStream.canPlay} streamType={AgoraRteRemoteStreamType.HIGH_STREAM} />
+                        <GridCell isMain mb={0} outerSize={outerSize} stream={pinnedStream.stream} canPlay={pinnedStream.canPlay} streamType={AGRemoteVideoStreamType.HIGH_STREAM} />
                     </GridTools>
                 }
             </div>

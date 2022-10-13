@@ -24,7 +24,7 @@ import {
   FcrWatermarkWidget,
   FcrWebviewWidget,
 } from 'agora-plugin-gallery';
-import { ApiBase } from 'agora-rte-sdk';
+import { AGRemoteVideoStreamType, ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { FcrTheme } from '~components';
 import { EduContext } from '../contexts';
@@ -312,6 +312,7 @@ export class AgoraEduSDK {
           ...{
             noDevicePermission: roleType === EduRoleTypeEnum.invisible
           },
+          defaultRemoteVideoStreamType: AGRemoteVideoStreamType.LOW_STREAM
         },
       },
       platform,

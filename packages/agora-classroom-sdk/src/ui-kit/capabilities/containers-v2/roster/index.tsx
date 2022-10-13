@@ -146,7 +146,7 @@ export const UserList = observer(() => {
         <ul className="fcr-roster-v2__list">
             {
                 userList.map((item) => {
-                    
+
                     const pinText = item.pinned ? transI18n('fcr_studyroom_roster_actions_unpin') : transI18n('fcr_studyroom_roster_actions_pin');
                     const eyeText = item.eyeClosed ? transI18n('fcr_studyroom_roster_actions_unhide') : transI18n('fcr_studyroom_roster_actions_hide');
                     const pinIcon = item.pinned ? SvgIconEnum.UNPIN : SvgIconEnum.PIN;
@@ -182,7 +182,7 @@ export const UserList = observer(() => {
 export const Roster = observer(() => {
     const { rosterUIStore } = useStore() as EduStudyRoomUIStore;
     const handleChange = useCallback((val: string) => {
-        rosterUIStore.setKeyword(val);
+        rosterUIStore.setSearchKeyword(val);
     }, []);
 
     const transI18n = useI18n();

@@ -11,7 +11,7 @@ import {
 import {
   AGError,
   AgoraRteEventType,
-  AgoraRteRemoteStreamType,
+  AGRemoteVideoStreamType,
   AgoraRteScene,
   AgoraRteVideoSourceType,
   bound,
@@ -1098,14 +1098,14 @@ export class StreamWindowUIStore extends EduUIStoreBase {
             if (highStreamUuids.has(streamUuid) && !isHigh) {
               await this.classroomStore.streamStore.setRemoteVideoStreamType(
                 streamUuid,
-                AgoraRteRemoteStreamType.HIGH_STREAM,
+                AGRemoteVideoStreamType.HIGH_STREAM,
               );
               this._highUuids.add(streamUuid);
               this._lowUuids.delete(streamUuid);
             } else if (lowStreamUuids.has(streamUuid) && !isLow) {
               await this.classroomStore.streamStore.setRemoteVideoStreamType(
                 streamUuid,
-                AgoraRteRemoteStreamType.LOW_STREAM,
+                AGRemoteVideoStreamType.LOW_STREAM,
               );
               this._lowUuids.add(streamUuid);
               this._highUuids.delete(streamUuid);

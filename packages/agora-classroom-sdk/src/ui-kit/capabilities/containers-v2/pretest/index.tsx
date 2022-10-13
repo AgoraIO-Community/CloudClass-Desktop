@@ -4,12 +4,9 @@ import { observer } from 'mobx-react';
 import { SvgIconEnum, SvgImg, useI18n } from '~components';
 import { Button } from '~components-v2/button';
 import ShapeSvg from './assets/shape.svg';
-
-
 import './index.css';
 import { Dropdown } from '~components-v2';
 import { Header } from '../header';
-import { DEVICE_DISABLE } from 'agora-edu-core';
 
 
 export type RoomPretestContainerProps = {
@@ -39,9 +36,6 @@ export const RoomPretestContainer: React.FC<RoomPretestContainerProps> = observe
   }, []);
 
   const { cameraDevicesList, currentCameraDeviceId, setCameraDevice } = pretestUIStore;
-  const deviceList = cameraDevicesList.filter(({ value }) => {
-    return value !== DEVICE_DISABLE
-  });
 
   return (
     <div className='fcr-pretest w-full h-full'>
@@ -67,7 +61,7 @@ export const RoomPretestContainer: React.FC<RoomPretestContainerProps> = observe
           <div className='fcr-pretest-preview-dropdown'>
             <Dropdown
               headSlot={<CameraIcon />}
-              options={deviceList} onChange={(value) => {
+              options={cameraDevicesList} onChange={(value) => {
                 setCameraDevice(value);
               }} value={currentCameraDeviceId}
               minWidth={200}

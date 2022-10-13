@@ -1,7 +1,7 @@
 import { useStore } from "@/infra/hooks/ui-store";
 import { EduStudyRoomUIStore } from "@/infra/stores/study-room";
 import { EduStream } from "agora-edu-core";
-import { AgoraRteRemoteStreamType, AgoraRteVideoSourceType } from "agora-rte-sdk";
+import { AGRemoteVideoStreamType, AgoraRteVideoSourceType } from "agora-rte-sdk";
 import { observer } from "mobx-react";
 import { useRef, useEffect } from "react";
 import { SvgIconEnum, SvgImg } from "~components";
@@ -48,7 +48,7 @@ export const LocalTrackPlayer = ({ stream }: { stream: EduStream }) => {
     );
 }
 
-export const AutoSubscriptionRemoteTrackPlayer = ({ stream }: { stream: EduStream, streamType?: AgoraRteRemoteStreamType }) => {
+export const AutoSubscriptionRemoteTrackPlayer = ({ stream }: { stream: EduStream, streamType?: AGRemoteVideoStreamType }) => {
     const { layoutUIStore } = useStore() as EduStudyRoomUIStore;
 
     useEffect(() => {
