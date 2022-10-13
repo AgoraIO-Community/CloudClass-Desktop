@@ -11,7 +11,7 @@ import {
   RoomBigTeacherStreamH5Container,
 } from '~containers/stream/room-big-h5-player';
 import { WidgetContainer } from '../../containers/widget';
-import { ChatH5, WhiteboardH5 } from '../../containers/widget/slots';
+import { ChatH5, Watermark, WhiteboardH5 } from '../../containers/widget/slots';
 import Room from '../room';
 
 export const BigClassScenarioH5 = observer(() => {
@@ -33,6 +33,7 @@ export const BigClassScenarioH5 = observer(() => {
           <H5TeacherStreamChatContainer />
         </LayoutOrientation>
         <WidgetContainer />
+        <Watermark />
       </H5LayoutContainer>
     </Room>
   );

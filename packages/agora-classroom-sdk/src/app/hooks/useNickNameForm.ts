@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { useI18n } from '~components';
 
-export const useNickNameRule = () => {
+export const useNickNameForm = () => {
   const transI18n = useI18n();
   const rule = useMemo(
     () => [
       {
         required: true,
-        message: transI18n('fcr_joinroom_tips_name'),
+        message: transI18n('fcr_join_room_tips_name'),
       },
       {
         pattern: /^([a-zA-Z0-9_\u4e00-\u9fa5]{0,50})$/,

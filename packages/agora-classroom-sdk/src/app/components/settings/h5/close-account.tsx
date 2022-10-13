@@ -1,5 +1,6 @@
-import { UserApi } from '@/app/api/user';
-import { FC, useCallback, useState } from 'react';
+import { useLogout } from '@/app/hooks';
+import { observer } from 'mobx-react';
+import { FC, useState } from 'react';
 import { CheckBox, useI18n } from '~components';
 import { SettingsMenuEnum } from '.';
 import { ConfirmDialogH5 } from './components/confirm-dialog';
@@ -9,13 +10,11 @@ interface CloseAccountProps {
   removeMenuPopup: (menu: SettingsMenuEnum) => void;
 }
 
-export const CloseAccount: FC<CloseAccountProps> = ({ removeMenuPopup }) => {
+export const CloseAccount: FC<CloseAccountProps> = observer(({ removeMenuPopup }) => {
   const transI18n = useI18n();
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [checked, setChecked] = useState(false);
-  const logout = useCallback(() => {
-    UserApi.shared.logout();
-  }, []);
+  const { logout } = useLogout();
 
   return (
     <PageLayout
@@ -39,9 +38,8 @@ export const CloseAccount: FC<CloseAccountProps> = ({ removeMenuPopup }) => {
         </p>
       </div>
       <div
-        className={`close-account-submit-btn px-6 rounded-md border border-slate-200 text-slate-900 absolute inset-x-0 flex justify-center items-center ${
-          checked ? '' : 'disabled'
-        }`}
+        className={`close-account-submit-btn px-6 rounded-md border border-slate-200 text-slate-900 absolute inset-x-0 flex justify-center items-center ${checked ? '' : 'disabled'
+          }`}
         onClick={() => {
           checked && setConfirmDialog(true);
         }}>
@@ -60,4 +58,4 @@ export const CloseAccount: FC<CloseAccountProps> = ({ removeMenuPopup }) => {
       ) : null}
     </PageLayout>
   );
-};
+});

@@ -176,7 +176,7 @@ export class RosterUIStore extends EduUIStoreBase {
    * @param keyword
    */
   @action.bound
-  setKeyword(keyword: string) {
+  setSearchKeyword(keyword: string) {
     this.searchKeyword = keyword;
   }
 

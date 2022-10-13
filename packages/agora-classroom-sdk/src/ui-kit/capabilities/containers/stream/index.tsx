@@ -167,7 +167,7 @@ export const StreamPlayerOverlay = observer(({ stream }: { stream: EduStreamUI }
 
   return (
     <div className="video-player-overlay z-10 pointer-events-none">
-      <AudioVolumeEffect stream={stream} />
+      <AudioVolumeEffect stream={stream} minTriggerVolume={50} />
       <AwardAnimations stream={stream} />
       <div className="top-right-info">
         {rewardVisible && <StreamPlayerOverlayAwardNo stream={stream} />}

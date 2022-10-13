@@ -1,9 +1,9 @@
-import { useHomeStore } from '@/app/hooks';
+import { GlobalStoreContext } from '@/app/stores';
 import { AgoraEduSDK, LanguageEnum, WindowID } from '@/infra/api';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -17,7 +17,7 @@ declare global {
 
 export const LaunchWindow = observer(() => {
   const domRef = useRef<HTMLDivElement>(null);
-  const { theme } = useHomeStore();
+  const { theme } = useContext(GlobalStoreContext);
 
   useEffect(() => {
     const destroy = AgoraEduSDK.launchWindow(domRef.current!, {

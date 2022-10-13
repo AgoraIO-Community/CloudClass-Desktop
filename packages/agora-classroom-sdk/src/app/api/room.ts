@@ -1,8 +1,8 @@
 import { getTokenDomain } from '@/app/utils/env';
 import { request, Response } from '@/app/utils/request';
 import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
-import { getRegion } from '../stores/home';
-import { UserApi } from './user';
+import { getRegion } from '../stores/global';
+import { getLSStore, LS_COMPANY_ID } from '../utils/local-storage';
 
 export enum RoomState {
   NO_STARTED,
@@ -12,52 +12,65 @@ export enum RoomState {
 
 export type RoomInfo = {
   roomName: string;
+  creatorId: string;
   roomId: string;
   roomType: EduRoomTypeEnum;
   roomState: RoomState;
   startTime: number;
   endTime: number;
+  industry?: string;
+  roleConfig?: Record<number, number>;
   roomProperties: RoomProperties;
+  role: EduRoleTypeEnum; // 上次加入房间的角色
 };
 
-type ListRequest = {
+export type RoomListRequest = {
   nextId?: string;
   count?: number;
 };
-type ListResponse = {
+
+export type RoomListResponse = {
   total: number;
   nextId: string;
   count: number;
   list: RoomInfo[];
 };
 type RoomProperties = Record<string, any>;
-type CreateRoomRequest = {
+export type RoomCreateRequest = {
   roomName: string;
   roomType: EduRoomTypeEnum;
   startTime: number;
   endTime: number;
   roomProperties?: RoomProperties;
 };
-type CreateRoomResponse = {
+type RoomCreateResponse = {
   roomId: string;
 };
 
-type JoinRoomRequest = {
+export type RoomJoinRequest = {
   roomId: string;
   role: EduRoleTypeEnum;
 };
 
-export type JoinRoomResponse = {
+export type RoomJoinNoAuthRequest = RoomJoinRequest & {
+  userUuid: string;
+};
+
+export type RoomJoinResponse = {
   token: string;
   appId: string;
   roomDetail: RoomInfo;
 };
 
-export class RoomAPI {
-  static shared = new RoomAPI();
+const noAuthCompanyID = 0;
 
-  get domain() {
+export class RoomAPI {
+  private get domain() {
     return getTokenDomain(getRegion());
+  }
+
+  private get companyId() {
+    return getLSStore(LS_COMPANY_ID);
   }
 
   /**
@@ -71,29 +84,15 @@ export class RoomAPI {
    * @param params
    * @returns
    */
-  async list(params?: ListRequest) {
+  public async list(params?: RoomListRequest) {
     const data = {
       count: 15,
       ...params,
     };
-    const url = `${this.domain}/edu/companys/${UserApi.shared.userInfo?.companyId}/v1/rooms?count=${
-      data.count
-    }${data.nextId ? `&nextId=${data.nextId}` : ''}`;
-    return request.get<Response<ListResponse>>(url);
-  }
-
-  async allList() {
-    const count = 100;
-    const response = await this.list({ count });
-    const result = response.data.data;
-    while (result.total > result.count) {
-      const response = await this.list({ count, nextId: result.nextId });
-      const { data } = response.data;
-      result.list.push(...data.list);
-      result.nextId = data.nextId;
-      result.count = result.count + data.count;
-    }
-    return result;
+    const url = `${this.domain}/edu/companys/${this.companyId}/v1/rooms?count=${data.count}${
+      data.nextId ? `&nextId=${data.nextId}` : ''
+    }`;
+    return request.get<Response<RoomListResponse>>(url);
   }
 
   /**
@@ -107,9 +106,9 @@ export class RoomAPI {
    * @param params
    * @returns
    */
-  async create(params: CreateRoomRequest) {
-    const url = `${this.domain}/edu/companys/${UserApi.shared.userInfo?.companyId}/v1/rooms`;
-    return request.post<Response<CreateRoomResponse>>(url, params);
+  public async create(params: RoomCreateRequest) {
+    const url = `${this.domain}/edu/companys/${this.companyId}/v1/rooms`;
+    return request.post<Response<RoomCreateResponse>>(url, params);
   }
 
   /**
@@ -123,8 +122,8 @@ export class RoomAPI {
    * @param roomID
    * @returns
    */
-  async getRoomInfoByID(roomID: string) {
-    const url = `${this.domain}/edu/companys/${UserApi.shared.userInfo?.companyId}/v1/rooms/${roomID}`;
+  public async getRoomInfoByID(roomID: string) {
+    const url = `${this.domain}/edu/companys/${this.companyId}/v1/rooms/${roomID}`;
     return request.get<Response<RoomInfo>>(url);
   }
 
@@ -139,9 +138,25 @@ export class RoomAPI {
    * @param params
    * @returns
    */
-  async join(params: JoinRoomRequest) {
-    const url = `${this.domain}/edu/companys/${UserApi.shared.userInfo?.companyId}/v1/rooms`;
-    return request.put<Response<JoinRoomResponse>>(url, params);
+  public async join(params: RoomJoinRequest) {
+    const url = `${this.domain}/edu/companys/${this.companyId}/v1/rooms`;
+    return request.put<Response<RoomJoinResponse>>(url, params);
+  }
+
+  /**
+   * 加入教室(免鉴权)
+   * @param params
+   * @returns
+   *
+   **/
+  /** @en
+   * Join room without auth
+   * @param params
+   * @returns
+   */
+  public async joinNoAuth(params: RoomJoinNoAuthRequest) {
+    const url = `${this.domain}/edu/companys/${noAuthCompanyID}/v1/rooms`;
+    return request.put<Response<RoomJoinResponse>>(url, params);
   }
 
   /**
@@ -155,8 +170,10 @@ export class RoomAPI {
    * @param roomID
    * @returns
    */
-  async history(roomID: string) {
+  public async history(roomID: string) {
     const url = `${this.domain}/edu/v2/rooms/${roomID}/history`;
     return request.get<Response<any>>(url);
   }
 }
+
+export const roomApi = new RoomAPI();

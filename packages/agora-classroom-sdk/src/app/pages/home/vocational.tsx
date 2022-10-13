@@ -1,5 +1,5 @@
-import { useHomeStore } from '@/app/hooks';
-import { HomeLaunchOption } from '@/app/stores/home';
+import { GlobalStoreContext } from '@/app/stores';
+import { GlobalLaunchOption } from '@/app/stores/global';
 import { LanguageEnum } from '@/infra/api';
 import { ToastType } from '@/infra/stores/common/share-ui';
 import { FcrMultiThemeMode } from '@/infra/types/config';
@@ -17,7 +17,7 @@ import { AgoraLatencyLevel } from 'agora-rte-sdk';
 import dayjs from 'dayjs';
 import md5 from 'js-md5';
 import { observer } from 'mobx-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
@@ -76,17 +76,17 @@ export const useTheme = () => {
   }, []);
 };
 export const VocationalHomePage = observer(() => {
-  const homeStore = useHomeStore();
+  const globalStore = useContext(GlobalStoreContext);
   useTheme();
-  const { launchConfig, language, region } = homeStore;
+  const { launchConfig, language, region } = globalStore;
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
   const [userName, setUserName] = useState<string>(launchConfig.userName || '');
-  const [userRole, setRole] = useState<string>(launchConfig.userRole || '');
-  const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
-  const [curService, setService] = useState<string>(launchConfig.curService || '');
-  const [duration, setDuration] = useState<number>(launchConfig.duration / 60 || 30);
+  const [userRole, setRole] = useState<string>('student');
+  const [curScenario, setScenario] = useState<string>('vocational-class');
+  const [curService, setService] = useState<string>('latency-service');
+  const [duration, setDuration] = useState<number>(30);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -182,7 +182,7 @@ export const VocationalHomePage = observer(() => {
       setLoading(true);
       const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
 
-      const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
+      const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, role);
       console.log('## get rtm Token from demo server', token);
       const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
       const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
@@ -192,7 +192,7 @@ export const VocationalHomePage = observer(() => {
           : AgoraLatencyLevel.Low;
       const needPretest = vocationalNeedPreset(role, roomServiceType);
 
-      const config: HomeLaunchOption = {
+      const config: GlobalLaunchOption = {
         appId,
         sdkDomain: domain,
         pretest: needPretest,
@@ -241,10 +241,10 @@ export const VocationalHomePage = observer(() => {
         };
       }
       GlobalStorage.save('platform', 'web');
-      homeStore.setLaunchConfig(config);
+      globalStore.setLaunchConfig(config);
       history.push('/launch');
     } catch (e) {
-      homeStore.addToast({
+      globalStore.addToast({
         id: uuidv4(),
         desc:
           (e as Error).message === 'Network Error'
@@ -261,7 +261,7 @@ export const VocationalHomePage = observer(() => {
     <React.Fragment>
       <MessageDialog />
       <Home
-        showServiceOptions={false}
+        showServiceOptions={true}
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
@@ -303,7 +303,7 @@ export const VocationalHomePage = observer(() => {
 });
 
 const HomeToastContainer: React.FC = observer(() => {
-  const { toastList, removeToast } = useHomeStore();
+  const { toastList, removeToast } = useContext(GlobalStoreContext);
   return (
     <TransitionGroup style={{ justifyContent: 'center', display: 'flex' }}>
       {toastList.map((value: ToastType, idx: number) => (

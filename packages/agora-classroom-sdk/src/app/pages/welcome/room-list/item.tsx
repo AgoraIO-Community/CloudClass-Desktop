@@ -1,10 +1,11 @@
 import { RoomInfo, RoomState } from '@/app/api/room';
-import { formatRoomID } from '@/app/utils';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { FC, useCallback, useMemo } from 'react';
 import { SvgIconEnum, SvgImg, useI18n } from '~components';
 import './item.css';
+import { formatRoomID } from '@/app/hooks';
+import classNames from 'classnames';
 
 type RoomListItemProps = {
   className?: string;
@@ -78,7 +79,14 @@ export const RoomListItem: FC<RoomListItemProps> = ({
           <span className="date">{dateStr}</span>
           <span className="id">{roomId}</span>
         </div>
-        <div className="name">{data.roomName}</div>
+        <div
+          className={classNames({
+            name: 1,
+            'w-full': roomState === RoomState.ENDED,
+            'w-2/3': roomState !== RoomState.ENDED,
+          })}>
+          {data.roomName}
+        </div>
         <div className="footer">
           <span className="state icon">{transI18n(roomStateMap[roomState])}</span>
           <span className="type">{transI18n(roomTypeMap[data.roomType])}</span>

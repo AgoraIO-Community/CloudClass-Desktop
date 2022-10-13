@@ -1,14 +1,15 @@
-import { useHomeStore } from '@/app/hooks';
+import { formatRoomID } from '@/app/hooks';
 import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
-import { formatRoomID, ShareLink } from '@/app/utils';
+import { GlobalStoreContext } from '@/app/stores';
+import { shareLink } from '@/app/utils/share';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
-import { FC, useMemo } from 'react';
+import { FC, useContext, useMemo } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { AButton, aMessage, useI18n } from '~components';
 import './index.css';
 
-export type ShareRoomInfo = {
+export type ShareInfo = {
   owner: string;
   startTime: number;
   endTime: number;
@@ -16,18 +17,18 @@ export type ShareRoomInfo = {
   roomName: string;
 };
 
-export type ShareRoomProps = {
-  data: ShareRoomInfo;
+export type ShareProps = {
+  data: ShareInfo;
 };
 
-export const ShareRoom: FC<ShareRoomProps> = observer(({ data }) => {
+export const Share: FC<ShareProps> = observer(({ data }) => {
   const { owner, startTime, endTime, roomId, roomName } = data;
   const transI18n = useI18n();
-  const homeStore = useHomeStore();
+  const globalStore = useContext(GlobalStoreContext);
   const link = useMemo(() => {
-    const url = ShareLink.instance.generateUrl({ roomId, owner, region: homeStore.region });
+    const url = shareLink.generateUrl({ roomId, owner, region: globalStore.region });
     return url;
-  }, [owner, roomId, homeStore.region]);
+  }, [owner, roomId, globalStore.region]);
 
   const roomInfoCopy = useElementWithI18n({
     en: `${owner} invites you to a classroomRoom

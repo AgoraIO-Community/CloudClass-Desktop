@@ -41,3 +41,4 @@ export * from './tree';
 export * from './video-player/volume-indicator';
 export * from './volume';
 export * from './watermark';
+export * from './avatar';

@@ -155,7 +155,7 @@ const Actions = observer(() => {
 const ShareCard = observer(() => {
   const { navigationBarUIStore, shareUIStore } = useStore();
   const cls = classNames('absolute z-20', {});
-  const { roomName } = EduClassroomConfig.shared.sessionInfo;
+  const { roomName, roomUuid } = EduClassroomConfig.shared.sessionInfo;
   const copyRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -193,6 +193,14 @@ const ShareCard = observer(() => {
             style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }}
             title={roomName}>
             {roomName}
+          </span>
+        </Layout>
+        <Layout className="justify-between mt-3">
+          <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_id')}</span>
+          <span
+            style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }}
+            title={roomUuid}>
+            {roomUuid}
           </span>
         </Layout>
         <Layout className="justify-between mt-3">

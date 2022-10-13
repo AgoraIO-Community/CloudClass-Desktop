@@ -13,7 +13,7 @@ import { CloudDriveResourceConvertProgress } from './type';
  * - `'static'`: Static resources.
  */
 export class CloudDriveCourseResource extends CloudDriveResource {
-  taskProgress: CloudDriveResourceConvertProgress;
+  private _taskProgress: CloudDriveResourceConvertProgress;
   taskUuid: string;
   conversion: {
     outputFormat: string;
@@ -24,12 +24,10 @@ export class CloudDriveCourseResource extends CloudDriveResource {
   };
   scenes: {
     name?: string;
-    ppt: {
-      previewURL: string;
-      src: string;
-      height: number;
-      width: number;
-    };
+    previewUrl?: string;
+    contentUrl: string;
+    height: number;
+    width: number;
   }[];
 
   constructor(data: {
@@ -50,16 +48,51 @@ export class CloudDriveCourseResource extends CloudDriveResource {
     initOpen?: boolean;
   }) {
     super(data);
-    this.taskProgress = data.taskProgress;
+    this._taskProgress = data.taskProgress;
     this.taskUuid = data.taskUuid;
     this.conversion = data.conversion;
-    this.scenes = data.taskProgress.convertedFileList;
-    this.scenes.forEach((scene) => {
-      if (scene.ppt) {
-        //@ts-ignore
-        scene.ppt.previewURL = scene.ppt.preview;
-      }
-    });
+    this.scenes = [];
+    if (data.taskProgress.convertedFileList) {
+      this.scenes = data.taskProgress.convertedFileList.map((scene) => {
+        return {
+          name: scene.name,
+          previewUrl: scene.ppt.preview,
+          contentUrl: scene.ppt.src,
+          height: scene.ppt.height,
+          width: scene.ppt.width,
+        };
+      });
+    }
+    if (data.taskProgress.images) {
+      this.scenes = Object.keys(data.taskProgress.images).map((key) => {
+        const { width, height, url } = data.taskProgress.images[key];
+        return {
+          name: `${key}`,
+          contentUrl: url,
+          height,
+          width,
+        };
+      });
+    }
+  }
+
+  get hasAnimation() {
+    if (this.conversion.type === 'static') {
+      return false;
+    }
+    return !!this.conversion.canvasVersion || !!this.taskUuid;
+  }
+
+  get convertedPercentage() {
+    return this._taskProgress.convertedPercentage;
+  }
+
+  get status() {
+    return this._taskProgress.status;
+  }
+
+  get prefix() {
+    return this._taskProgress.prefix;
   }
 }
 

@@ -1,28 +1,46 @@
 import { PickerDateProps, PickerTimeProps } from 'antd/es/date-picker/generatePicker';
 import { Dayjs } from 'dayjs';
 import * as React from 'react';
-import { ADatePicker } from '../data-picker';
-
+import { ADatePicker, ADatePickerProps } from '../data-picker';
+import './index.css';
 interface TimePickerProps extends Omit<PickerTimeProps<Dayjs>, 'picker'> {}
 
-export type ATimePickerProps = Pick<
-  TimePickerProps,
-  | 'className'
-  | 'onChange'
-  | 'value'
-  | 'defaultValue'
-  | 'format'
-  | 'minuteStep'
-  | 'hourStep'
-  | 'secondStep'
-  | 'showNow'
-  | 'allowClear'
-  | 'inputReadOnly'
-> &
-  Pick<PickerDateProps<Dayjs>, 'disabledTime'>;
+type DisabledTime = Pick<PickerDateProps<Dayjs>, 'disabledTime'>;
+export type ATimePickerProps = ADatePickerProps &
+  DisabledTime &
+  Pick<
+    TimePickerProps,
+    | 'className'
+    | 'onChange'
+    | 'value'
+    | 'defaultValue'
+    | 'format'
+    | 'minuteStep'
+    | 'hourStep'
+    | 'secondStep'
+    | 'showNow'
+    | 'allowClear'
+    | 'inputReadOnly'
+    | 'popupStyle'
+  > & {
+    status?: '' | 'warning' | 'error' | undefined;
+    dropdownClassName?: string | undefined;
+    popupClassName?: string | undefined;
+  };
 
-export const ATimePicker = React.forwardRef<any, ATimePickerProps>((props, ref) => {
-  return <ADatePicker picker="time" mode={undefined} ref={ref} {...props} />;
-});
+export const ATimePicker = React.forwardRef<any, ATimePickerProps>(
+  ({ className = '', popupClassName = '', ...props }, ref) => {
+    return (
+      <ADatePicker
+        picker="time"
+        className={`fcr-theme ${className}`}
+        popupClassName={`fcr-theme ${popupClassName}`}
+        mode={undefined}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
 
 ATimePicker.displayName = 'TimePicker';

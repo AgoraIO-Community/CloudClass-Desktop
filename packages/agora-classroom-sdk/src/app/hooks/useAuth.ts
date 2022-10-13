@@ -1,34 +1,18 @@
-import { useCallback, useState } from 'react';
-import { UserApi } from '../api/user';
-import { useHomeStore } from './useHomeStore';
+import { useCallback, useContext } from 'react';
+import { UserStoreContext } from '../stores';
+import { useLogout } from './useLogout';
 
 export const useAuth = () => {
-  const [loading, setLoading] = useState(false);
-  const { setLogin } = useHomeStore();
-  const authWithLogout = useCallback(async () => {
-    setLoading(true);
-    return UserApi.shared
-      .getUserInfo()
-      .then(() => {
-        setLogin(true);
-      })
-      .catch(() => {
-        UserApi.shared.logout();
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
+  const userStore = useContext(UserStoreContext);
+  const { logout } = useLogout();
   const auth = useCallback(async () => {
-    if (UserApi.accessToken) {
-      return UserApi.shared.getUserInfo().then(() => {
-        setLogin(true);
-        return true;
-      });
+    if (userStore.isLogin) {
+      return;
     }
-    return false;
-  }, []);
+    return userStore.getUserInfo().catch(() => {
+      logout();
+    });
+  }, [userStore.isLogin]);
 
-  return { loading, authWithLogout, auth };
+  return { auth };
 };

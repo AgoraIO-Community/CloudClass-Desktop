@@ -53,32 +53,41 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
   const [interactiveNeeded, setInteractiveNeeded] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [state, setState] = useState(VideoPlayerState.Initializing);
+  const [canplay, setCanplay] = useState(false);
+  const setTimeHandle = useCallback(
+    (currentTime: number) => {
+      if (!url || !canplay) {
+        return;
+      }
+      if (videoRef.current && currentTime >= 0 && videoRef.current.currentTime < currentTime) {
+        const time = Math.min(videoRef.current.duration, currentTime);
+        videoRef.current.currentTime = time;
+      }
+    },
+    [url, canplay],
+  );
 
-  const setTimeHandle = useCallback((currentTime: number) => {
-    if (videoRef.current && currentTime >= 0 && videoRef.current.currentTime < currentTime) {
-      const time = Math.min(videoRef.current.duration, currentTime);
-      videoRef.current.currentTime = time;
-    }
-  }, []);
-
-  const playHandle = useCallback((currentTime: number) => {
-    if (videoRef.current) {
-      setTimeHandle(currentTime);
-      videoRef.current
-        ?.play()
-        .then(() => {
-          setTimeHandle(currentTime);
-          setState(VideoPlayerState.Playing);
-        })
-        .catch(() => {
-          setState(VideoPlayerState.Ready);
-          setTimeout(() => {
+  const playHandle = useCallback(
+    (currentTime: number) => {
+      if (videoRef.current) {
+        setTimeHandle(currentTime);
+        videoRef.current
+          ?.play()
+          .then(() => {
             setTimeHandle(currentTime);
-          }, 1000);
-        });
-      return;
-    }
-  }, []);
+            setState(VideoPlayerState.Playing);
+          })
+          .catch(() => {
+            setState(VideoPlayerState.Ready);
+            setTimeout(() => {
+              setTimeHandle(currentTime);
+            }, 1000);
+          });
+        return;
+      }
+    },
+    [setTimeHandle],
+  );
 
   const pauseHandle = useCallback(async () => {
     if (videoRef.current) {
@@ -122,6 +131,19 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
 
   useEffect(() => {
     if (videoRef.current) {
+      setCanplay(false);
+      const handle = () => {
+        setCanplay(true);
+      };
+      videoRef.current.addEventListener('canplay', handle);
+      return () => {
+        videoRef.current?.removeEventListener('canplay', handle);
+      };
+    }
+  }, [url]);
+
+  useEffect(() => {
+    if (videoRef.current) {
       const handle = () => {
         //结束
         ended && ended();
@@ -155,8 +177,9 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
       <video
         src={url}
         style={style}
-        className={`pointer-events-none ${className}`}
-        ref={videoRef}></video>
+        className={`pointer-events-none w-full h-full ${className}`}
+        ref={videoRef}
+      />
       {interactiveNeeded ? (
         <div
           className="absolute w-full h-full cursor-pointer top-0 left-0 video-live-player-play-btn"

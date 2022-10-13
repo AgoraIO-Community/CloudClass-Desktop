@@ -41,11 +41,6 @@ export interface EduNavRecordActionPayload {
   recordStatus: RecordStatus;
 }
 
-export enum TimeFormatType {
-  Timeboard,
-  Message,
-}
-
 export class NavigationBarUIStore extends EduUIStoreBase {
   private _disposers: IReactionDisposer[] = [];
   onInstall() {
@@ -512,27 +507,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const duration = this.classTimeDuration || 0;
 
     if (duration < 0) {
-      // return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
       return `-- : --`;
     }
+
     switch (this.classState) {
       case ClassState.beforeClass:
-        return `${transI18n('nav.to_start_in')}${this.formatCountDown(
-          duration,
-          TimeFormatType.Timeboard,
-        )}`;
+        return `${transI18n('nav.to_start_in')}${this.formatCountDown(duration)}`;
       case ClassState.ongoing:
-        return `${transI18n('nav.started_elapse')}${this.formatCountDown(
-          duration,
-          TimeFormatType.Timeboard,
-        )}`;
+        return `${transI18n('nav.started_elapse')}${this.formatCountDown(duration)}`;
       case ClassState.afterClass:
-        return `${transI18n('nav.ended_elapse')}${this.formatCountDown(
-          duration,
-          TimeFormatType.Timeboard,
-        )}`;
+        return `${transI18n('nav.ended_elapse')}${this.formatCountDown(duration)}`;
       default:
-        // return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
         return `-- : --`;
     }
   }
@@ -783,41 +768,25 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
   /**
    * 倒计时格式化
-   * @param time
+   * @param ms
    * @param mode
    * @returns
    */
-  formatCountDown(time: number, mode: TimeFormatType): string {
-    const seconds = Math.floor(time / 1000);
-    const duration = dayjs.duration(time);
-    let formatItems: string[] = [];
+  private formatCountDown(ms: number): string {
+    const duration = dayjs.duration(ms);
 
-    const hours_text = duration.hours() === 0 ? '' : `H :`;
-    const mins_text = duration.minutes() === 0 ? '' : duration.seconds() === 0 ? `m :` : `m :`;
-    const seconds_text = duration.seconds() === 0 ? '' : `s`;
-    const short_hours_text = `HH :`;
-    const short_mins_text = `mm :`;
-    const short_seconds_text = `ss`;
-    if (mode === TimeFormatType.Timeboard) {
-      // always display all time segment
-      if (seconds < 60 * 60) {
-        // less than a min
-        formatItems = [short_mins_text, short_seconds_text];
-      } else {
-        formatItems = [short_hours_text, short_mins_text, short_seconds_text];
-      }
-    } else {
-      // do not display time segment if it's 0
-      if (seconds < 60) {
-        // less than a min
-        formatItems = [seconds_text];
-      } else if (seconds < 60 * 60) {
-        [mins_text, seconds_text].forEach((item) => item && formatItems.push(item));
-      } else {
-        [hours_text, mins_text, seconds_text].forEach((item) => item && formatItems.push(item));
-      }
+    if (duration.days() > 0) {
+      const mmss = duration.format('mm : ss');
+      const h = Math.floor(duration.asHours());
+      return `${h} : ${mmss}`;
     }
-    return duration.format(formatItems.join(' '));
+
+    const seconds = Math.floor(ms / 1000);
+    if (seconds < 60 * 60) {
+      return duration.format('mm : ss');
+    }
+
+    return duration.format('HH : mm : ss');
   }
 
   @action

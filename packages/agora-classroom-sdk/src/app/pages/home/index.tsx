@@ -1,5 +1,5 @@
-import { useHomeStore } from '@/app/hooks';
-import { HomeLaunchOption } from '@/app/stores/home';
+import { GlobalStoreContext } from '@/app/stores';
+import { GlobalLaunchOption } from '@/app/stores/global';
 import { AgoraEduSDK, LanguageEnum } from '@/infra/api';
 import { ToastType } from '@/infra/stores/common/share-ui';
 import { getBrowserLanguage, storage } from '@/infra/utils';
@@ -8,7 +8,7 @@ import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
 import md5 from 'js-md5';
 import { observer } from 'mobx-react';
-import { FC, Fragment, useEffect, useRef, useState } from 'react';
+import { FC, Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
@@ -99,12 +99,10 @@ export const useBuilderConfig = () => {
 };
 
 export const HomePage = () => {
-  const homeStore = useHomeStore();
+  const globalStore = useContext(GlobalStoreContext);
   const history = useHistory();
 
-  const launchConfig = homeStore.launchConfig;
-
-  const [duration] = useState<string>(`${+launchConfig.duration / 60 || 30}`);
+  const [duration] = useState<string>(`${30}`);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -113,10 +111,11 @@ export const HomePage = () => {
   const { builderResource, sceneOptions, configReady } = useBuilderConfig();
 
   useEffect(() => {
-    const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
-    const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
-    homeStore.setLanguage(language as LanguageEnum);
-    homeStore.setRegion(region as EduRegion);
+    const language = window.__launchLanguage || globalStore.language || getBrowserLanguage();
+    const region =
+      window.__launchRegion || globalStore.region || regionByLang[getBrowserLanguage()];
+    globalStore.setLanguage(language as LanguageEnum);
+    globalStore.setRegion(region as EduRegion);
   }, []);
 
   useEffect(() => {
@@ -148,8 +147,8 @@ export const HomePage = () => {
     if (loading) {
       return;
     }
-    const language = homeStore.language || getBrowserLanguage();
-    const region = homeStore.region || regionByLang[getBrowserLanguage()];
+    const language = globalStore.language || getBrowserLanguage();
+    const region = globalStore.region || regionByLang[getBrowserLanguage()];
 
     const userRole = parseInt(roleType);
 
@@ -165,7 +164,7 @@ export const HomePage = () => {
 
       const domain = `${REACT_APP_AGORA_APP_SDK_DOMAIN}`;
 
-      const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, userRole);
+      const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, userRole);
 
       const companyId = window.__launchCompanyId;
       const projectId = window.__launchProjectId;
@@ -179,7 +178,7 @@ export const HomePage = () => {
 
       console.log('## get rtm Token from demo server', token);
 
-      const config: HomeLaunchOption = {
+      const config: GlobalLaunchOption = {
         appId,
         sdkDomain: domain,
         pretest: true,
@@ -214,10 +213,10 @@ export const HomePage = () => {
 
         console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
       }
-      homeStore.setLaunchConfig(config);
+      globalStore.setLaunchConfig(config);
       history.push('/launch');
     } catch (e) {
-      homeStore.addToast({
+      globalStore.addToast({
         id: uuidv4(),
         desc:
           (e as Error).message === 'Network Error'
@@ -269,7 +268,7 @@ export const HomePage = () => {
 };
 
 const HomeToastContainer: FC = observer(() => {
-  const { toastList, removeToast } = useHomeStore();
+  const { toastList, removeToast } = useContext(GlobalStoreContext);
   return (
     <TransitionGroup style={{ justifyContent: 'center', display: 'flex' }}>
       {toastList.map((value: ToastType, idx: number) => (

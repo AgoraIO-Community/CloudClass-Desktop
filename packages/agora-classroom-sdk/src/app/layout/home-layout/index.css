@@ -1,7 +1,3 @@
-.page-container {
-  @apply w-full h-full;
-  overflow: auto;
-}
 .home {
   @apply bg-cover flex  w-screen h-screen;
   background-image: url('../../assets/home-background.jpg');
@@ -16,23 +12,20 @@
   height: 100%;
   overflow: hidden;
   padding: 25px 47px;
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   font-style: normal;
-  background: linear-gradient(242.79deg, rgba(0, 0, 0, 0.45) 0%, #000000 66.04%);
+  background-image: url('../../assets/home-left-bg-icon.png');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% auto;
   position: relative;
 }
 
-.home-left::after {
+.home-left::before {
+  @apply block left-0 top-0 w-full h-full absolute;
   content: '';
-  display: block;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  height: 80%;
-  width: 80%;
-  background-image: url('../../assets/home-bg-line.png');
-  background-repeat: no-repeat;
-  background-position: 30% 30%;
+  background: linear-gradient(190.08deg, rgba(95, 72, 238, 0) 0%, rgb(0 0 0 / 75%) 99.44%);
+  opacity: 0.5;
 }
 
 .home-left header {
@@ -71,7 +64,7 @@
 
 /* --- right --- */
 .home-right {
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   position: relative;
   overflow: hidden;
 }

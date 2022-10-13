@@ -243,3 +243,16 @@
   @apply text-level1 border-divider;
   padding: 0 14px;
 }
+
+.cloud-driver-tab .ant-tabs-tab:first-child {
+  margin-left: 32px;
+}
+
+.cloud-driver-tab .ant-tabs-tab,
+.cloud-driver-tab .ant-tabs-tab:hover {
+  @apply text-level3;
+}
+
+.cloud-driver-tab .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  @apply text-level1;
+}

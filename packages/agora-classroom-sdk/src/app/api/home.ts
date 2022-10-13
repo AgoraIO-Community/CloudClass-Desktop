@@ -1,19 +1,19 @@
-import { getRegion } from '@/app/stores/home';
+import { getRegion } from '@/app/stores/global';
 import { getTokenDomain } from '@/app/utils/env';
 import { request } from '@/app/utils/request';
 import { EduRegion } from 'agora-edu-core';
 
 export class HomeApi {
   static shared = new HomeApi();
-  get domain() {
+  private get domain() {
     return getTokenDomain(getRegion());
   }
 
-  get builderDomain() {
+  private get builderDomain() {
     return getTokenDomain(EduRegion.CN);
   }
 
-  async loginV3(
+  public async loginNoAuth(
     userUuid: string,
     roomUuid: string,
     role: number,
@@ -30,7 +30,7 @@ export class HomeApi {
     return data.data;
   }
 
-  async login(
+  public async login(
     userUuid: string,
     roomUuid: string,
     role: number,
@@ -52,7 +52,7 @@ export class HomeApi {
     return data.data;
   }
 
-  async getBuilderResource(companyId: string, projectId: string): Promise<any> {
+  public async getBuilderResource(companyId: string, projectId: string): Promise<any> {
     const { data } = await request.get(
       `${this.builderDomain}/builder/companys/${companyId}/v1/projects/${projectId}/preview`,
     );

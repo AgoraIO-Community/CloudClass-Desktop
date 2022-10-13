@@ -3,14 +3,14 @@
   margin-bottom: 2px !important;
 }
 
-.ant-tabs-tab {
+.chat-widget .ant-tabs-tab {
   /* 宽度自定义 */
   /* width: 70px !important; */
   justify-content: center;
   padding: 12px !important;
   margin: 0 !important;
 }
-.ant-tabs-tab-btn {
+.chat-widget .ant-tabs-tab-btn {
   @apply text-level3 !important;
 
   /* width: 35px !important; */
@@ -21,7 +21,8 @@
   line-height: 18px !important;
   text-align: center !important;
 }
-.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+
+.chat-widget.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   @apply text-level1 !important;
 }
 /* .chat-icon .ant-switch {
@@ -33,7 +34,7 @@
 .chat-switch.ant-switch-checked {
   background-color: #1890ff;
 }
-.ant-tabs-ink-bar-animated {
+.chat-widget .ant-tabs-ink-bar-animated {
   /* 宽度自定义 */
   /* width: 70px !important; */
   height: 2px !important;

@@ -351,11 +351,12 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
       // set stream type of the pinned video when pinnedUser changed
       computed(() => this.pinnedUser).observe(
         ({ oldValue: lastPinned, newValue: currentPinned }) => {
+          const { streamByUserUuid, setRemoteVideoStreamType } = this.classroomStore.streamStore;
           const setUserStreamType = (userUuid: string, streamType: AgoraRteRemoteStreamType) => {
-            const streams = this.classroomStore.streamStore.streamByUserUuid.get(userUuid);
+            const streams = streamByUserUuid.get(userUuid);
             if (streams) {
               streams.forEach((streamUuid) => {
-                this.classroomStore.streamStore.setRemoteVideoStreamType(streamUuid, streamType);
+                setRemoteVideoStreamType(streamUuid, streamType);
               });
             }
           };

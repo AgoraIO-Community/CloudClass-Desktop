@@ -1,7 +1,13 @@
 import { AgoraRteScene, Log } from 'agora-rte-sdk';
 import { computed, IReactionDisposer, Lambda, reaction } from 'mobx';
-import { SceneSubscription, SubscriptionFactory } from './room';
+import { SceneSubscription } from './abstract';
 import { EduUIStoreBase } from '../base';
+import { EduClassroomConfig } from 'agora-edu-core';
+import { CDNRoomSubscription } from './cdn-room';
+import { MainRoomSubscription } from './main-room';
+import { EduRoomServiceTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import { EduSessionInfo } from 'agora-edu-core/lib/type';
+import { StudyRoomSubscription } from './study-room';
 
 @Log.attach({ proxyMethods: false })
 export class SubscriptionUIStore extends EduUIStoreBase {
@@ -73,4 +79,33 @@ export class SubscriptionUIStore extends EduUIStoreBase {
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
+}
+
+class SubscriptionFactory {
+  static createSubscription(scene: AgoraRteScene) {
+    if (isCDNSubscriptionRoom(EduClassroomConfig.shared.sessionInfo)) {
+      return new CDNRoomSubscription(scene);
+    }
+    if (EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomStudy) {
+      return new StudyRoomSubscription(scene);
+    }
+    return new MainRoomSubscription(scene);
+  }
+}
+
+function isCDNSubscriptionRoom(sessionInfo: EduSessionInfo) {
+  const { roomServiceType, roomType } = sessionInfo;
+  if (
+    roomType === EduRoomTypeEnum.RoomBigClass &&
+    roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN
+  ) {
+    return true;
+  }
+  if (
+    roomType === EduRoomTypeEnum.RoomBigClass &&
+    roomServiceType === EduRoomServiceTypeEnum.HostingScene
+  ) {
+    return true;
+  }
+  return false;
 }

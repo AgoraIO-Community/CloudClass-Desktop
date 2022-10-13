@@ -8,7 +8,11 @@ import { WidgetWatermarkUIStore } from './store';
 const App = observer(({ widget }: { widget: FcrWatermarkWidget }) => {
   const widgetStore = widget.widgetStore as WidgetWatermarkUIStore;
   return widgetStore.visible ? (
-    <WaterMark className="h-full" markClassName="h-full" content={widgetStore.content}></WaterMark>
+    <WaterMark
+      className="h-full"
+      markClassName="h-full"
+      zIndex={999}
+      content={widgetStore.content}></WaterMark>
   ) : null;
 });
 
@@ -31,6 +35,13 @@ export class FcrWatermarkWidget extends AgoraWidgetBase implements AgoraWidgetLi
 
   onCreate(properties: any, userProperties: any) {
     // 更新文字和visible状态
+    const { visible, content } = properties;
+    if (content !== undefined) {
+      this._widgetStore.setContent(String(content));
+    }
+    if (properties.visible !== undefined) {
+      this._widgetStore.setVisible(Boolean(visible));
+    }
     this._renderApp();
   }
 

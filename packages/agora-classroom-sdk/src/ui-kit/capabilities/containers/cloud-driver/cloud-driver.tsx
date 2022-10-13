@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Rnd } from 'react-rnd';
-import { TabPane, Tabs, transI18n, SvgImg, OverlayWrap, Popover, SvgIconEnum } from '~components';
 import { PublicResourcesContainer } from './public-resource';
 import { PersonalResourcesContainer } from './person-resource';
 import './index.css';
@@ -8,6 +7,7 @@ import { CloudDriverContainerProps } from '.';
 import { useDraggableDefaultCenterPosition } from '~utilities/hooks';
 import { throttle } from 'lodash';
 import CloudHelp from './cloud-help';
+import { ATabPane, ATabs, OverlayWrap, Popover, SvgIconEnum, SvgImg, transI18n } from '~components';
 
 export enum ActiveKeyEnum {
   public = '1',
@@ -75,14 +75,14 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
               onClick={() => setOpened(false)}
             />
           </div>
-          <Tabs activeKey={activeKey} onChange={handleChange}>
-            <TabPane tab={transI18n('cloud.publicResources')} key={ActiveKeyEnum.public}>
+          <ATabs activeKey={activeKey} onChange={handleChange} className="cloud-driver-tab">
+            <ATabPane tab={transI18n('cloud.publicResources')} key={ActiveKeyEnum.public}>
               <PublicResourcesContainer />
-            </TabPane>
-            <TabPane tab={transI18n('cloud.personalResources')} key={ActiveKeyEnum.person}>
+            </ATabPane>
+            <ATabPane tab={transI18n('cloud.personalResources')} key={ActiveKeyEnum.person}>
               <PersonalResourcesContainer />
-            </TabPane>
-          </Tabs>
+            </ATabPane>
+          </ATabs>
         </div>
       </Rnd>
     </OverlayWrap>

@@ -6,26 +6,27 @@
   transition: transform 0.2s linear;
   cursor: pointer;
   background: #e9f6fa;
-  font-family: 'Inter';
+  font-family: 'Montserrat Roboto';
   line-height: 150%;
   /* fcr-white */
   color: #000;
 }
 
 .room-item-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 10px 10px 60px -8px rgba(0, 0, 0, 0.14);
+  transform: translateY(-1px);
+  box-shadow: 6px 6px 20px -8px rgb(0 0 0 / 56%);
 }
 
 .room-item-card.upcoming {
-  /* fcr-blue2 */
-  background: #e9f6fa;
+  /* fcr_blue2 */
+  background: #e4e6ff;
 }
 
 .room-item-card.over {
   /* fcr-gray4 */
   background: #f0f0f7;
 }
+
 .room-item-card.live {
   /* fcr-card-purple */
   background: #5765ff;
@@ -76,13 +77,15 @@
 }
 
 .room-item-card .info .name {
-  font-weight: 800;
+  @apply truncate;
+  font-weight: 500;
   font-size: 14px;
   line-height: 130%;
   margin: 8px 0 6px;
 }
 
 .room-item-card .footer {
+  @apply flex items-center;
   font-style: italic;
   font-weight: 800;
   font-size: 9px;
@@ -90,7 +93,21 @@
 
 .room-item-card .footer .state,
 .room-item-card .footer .type {
+  @apply inline-flex items-center;
   margin-right: 20px;
+}
+
+.room-item-card .footer .type {
+  @apply inline-flex items-center;
+}
+
+.room-item-card .footer .state .live-icon {
+  margin-right: 3px;
+  width: 16px;
+}
+
+.room-item-card .footer .type .label {
+  margin-right: 1px;
 }
 
 .room-item-card .operation {
@@ -109,7 +126,7 @@
 
 .room-item-card .operation .btn.enter {
   transition: width 0.2s linear;
-  width: 70px;
+  width: 88px;
 }
 
 .room-item-card .operation .btn.replay {
@@ -118,7 +135,7 @@
 }
 
 .room-item-card:hover .operation .btn.enter {
-  width: 104px;
+  width: 122px;
 }
 
 .room-item-card .operation .enter .text,
@@ -133,7 +150,7 @@
 }
 
 .room-item-card .operation .enter .text {
-  width: 70px;
+  width: 88px;
 }
 
 .room-item-card .operation .enter .share {

@@ -7,22 +7,20 @@ import {
   AgoraRteEngineConfig,
   AgoraRteRuntimePlatform,
 } from 'agora-rte-sdk';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { aMessage, useI18n } from '~components';
-import { RoomAPI } from '../api/room';
-import { UserApi } from '../api/user';
-import { HomeLaunchOption } from '../stores/home';
-import { ShareLink } from '../utils';
+import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '../stores';
+import { GlobalLaunchOption } from '../stores/global';
 import { checkBrowserDevice } from '../utils/browser';
 import {
   REACT_APP_AGORA_APP_CERTIFICATE,
   REACT_APP_AGORA_APP_ID,
   REACT_APP_AGORA_APP_SDK_DOMAIN,
 } from '../utils/env';
+import { shareLink } from '../utils/share';
 import { useBuilderConfig } from './useBuildConfig';
 import { useCheckRoomInfo } from './useCheckRoomInfo';
-import { useHomeStore } from './useHomeStore';
 
 type JoinRoomParams = {
   role: EduRoleTypeEnum;
@@ -40,11 +38,12 @@ type JoinRoomParams = {
 type QuickJoinRoomParams = {
   role: EduRoleTypeEnum;
   roomId: string;
-  nickName?: string;
-  platform?: Platform;
+  nickName: string;
+  platform: Platform;
+  userId: string;
 };
 
-type JoinRoomOptions = Pick<HomeLaunchOption, 'shareUrl' | 'uiMode'> & {
+type JoinRoomOptions = Pick<GlobalLaunchOption, 'shareUrl' | 'uiMode'> & {
   roomProperties?: Record<string, any>;
 };
 
@@ -82,16 +81,17 @@ export const needPreset = (
 type ShareURLParams = {
   region: AgoraRegion;
   roomId: string;
+  owner: string;
 };
 
-const shareLinkInClass = ({ region, roomId }: ShareURLParams) => {
+const shareLinkInClass = ({ region, roomId, owner }: ShareURLParams) => {
   if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
     return '';
   }
   const companyId = window.__launchCompanyId;
   const projectId = window.__launchProjectId;
-  let url = ShareLink.instance.generateUrl({
-    owner: UserApi.shared.nickName,
+  let url = shareLink.generateUrl({
+    owner,
     roomId: roomId,
     region: region,
   });
@@ -101,13 +101,27 @@ const shareLinkInClass = ({ region, roomId }: ShareURLParams) => {
   return url;
 };
 
+const getLatencyLevel = (
+  roomType: EduRoomTypeEnum,
+  roomServiceType: EduRoomServiceTypeEnum,
+): AgoraLatencyLevel => {
+  // 极速直播场景
+  const isLivePremium =
+    roomType === EduRoomTypeEnum.RoomBigClass &&
+    roomServiceType === EduRoomServiceTypeEnum.LivePremium;
+
+  return isLivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
+};
+
 const defaultPlatform = checkBrowserDevice();
 export const useJoinRoom = () => {
   const history = useHistory();
   const transI18n = useI18n();
-  const homeStore = useHomeStore();
-  const { language, region } = homeStore;
+  const userStore = useContext(UserStoreContext);
+  const roomStore = useContext(RoomStoreContext);
+  const { language, region, setLaunchConfig } = useContext(GlobalStoreContext);
   const { builderResource, configReady } = useBuilderConfig();
+
   const { checkRoomInfoBeforeJoin, h5ClassModeIsSupport } = useCheckRoomInfo();
 
   const joinRoomHandle = useCallback(
@@ -129,25 +143,33 @@ export const useJoinRoom = () => {
         if (platform === Platform.H5 && !h5ClassModeIsSupport(roomType)) {
           return;
         }
+
         if (!configReady) {
-          aMessage.error('fcr_join_room_tips_ui_config_note_ready');
+          aMessage.error(transI18n('fcr_join_room_tips_ui_config_note_ready'));
           return;
         }
+
+        if (!userId) {
+          aMessage.error('fcr_join_room_tips_user_id_empty');
+          return;
+        }
+
+        if (!userName) {
+          aMessage.error(transI18n('fcr_join_room_tips_user_name_empty'));
+          return;
+        }
+
         const courseWareList = storage.getCourseWareSaveList();
 
-        const shareUrl = shareLinkInClass({ region, roomId });
+        const shareUrl = shareLinkInClass({ region, roomId, owner: userStore.nickName });
 
         console.log('## get rtm Token from demo server', token);
 
-        const isLivePremium =
-          roomType === EduRoomTypeEnum.RoomBigClass &&
-          roomServiceType === EduRoomServiceTypeEnum.LivePremium;
-
-        const latencyLevel = isLivePremium ? AgoraLatencyLevel.UltraLow : AgoraLatencyLevel.Low;
+        const latencyLevel = getLatencyLevel(roomType, roomServiceType);
 
         const needPretest = needPreset(roomType, roomServiceType, role);
         const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
-        const config: HomeLaunchOption = {
+        const config: GlobalLaunchOption = {
           appId: REACT_APP_AGORA_APP_ID || appId,
           sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
           pretest: needPretest,
@@ -187,7 +209,7 @@ export const useJoinRoom = () => {
           );
           console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
         }
-        homeStore.setLaunchConfig(config);
+        setLaunchConfig(config);
         history.push('/launch');
       } catch (e) {
         aMessage.error(
@@ -198,46 +220,75 @@ export const useJoinRoom = () => {
         );
       }
     },
-    [language, region, homeStore.setLaunchConfig, history, configReady],
+    [language, region, history, configReady, setLaunchConfig],
   );
 
   const quickJoinRoom = useCallback(
     async (params: QuickJoinRoomParams) => {
-      const { roomId, role, nickName, platform = defaultPlatform } = params;
-      return RoomAPI.shared
-        .join({ roomId, role })
-        .then((response) => {
-          const { roomDetail, token, appId } = response.data.data;
-          const { serviceType, ...rProps } = roomDetail.roomProperties;
-          if (!checkRoomInfoBeforeJoin(roomDetail)) {
-            return;
-          }
-          return joinRoomHandle(
-            {
-              roomId: roomDetail.roomId,
-              roomName: roomDetail.roomName,
-              roomType: roomDetail.roomType,
-              roomServiceType: serviceType,
-              userId: UserApi.shared.userInfo.companyId,
-              userName: nickName || UserApi.shared.nickName,
-              role,
-              token,
-              appId,
-              platform,
-            },
-            { roomProperties: rProps },
-          );
-        })
-        .catch((error) => {
-          console.warn('join room failed. error:%o', error);
-          aMessage.error(transI18n('fcr_joinroom_tips_emptyid'));
-        });
+      const { roomId, role, nickName, userId, platform = defaultPlatform } = params;
+      return roomStore.joinRoom({ roomId, role }).then((response) => {
+        const { roomDetail, token, appId } = response.data.data;
+        const { serviceType, ...rProps } = roomDetail.roomProperties;
+
+        if (!checkRoomInfoBeforeJoin(roomDetail)) {
+          return;
+        }
+
+        return joinRoomHandle(
+          {
+            appId,
+            token,
+            role,
+            platform,
+            userId,
+            userName: nickName,
+            roomId: roomDetail.roomId,
+            roomName: roomDetail.roomName,
+            roomType: roomDetail.roomType,
+            roomServiceType: serviceType,
+          },
+          { roomProperties: rProps },
+        );
+      });
     },
     [joinRoomHandle, checkRoomInfoBeforeJoin],
   );
+
+  const quickJoinRoomNoAuth = useCallback(
+    async (params: QuickJoinRoomParams) => {
+      const { roomId, role, nickName, userId, platform = defaultPlatform } = params;
+      return roomStore.joinRoomNoAuth({ roomId, role, userUuid: userId }).then((response) => {
+        const { roomDetail, token, appId } = response.data.data;
+        const { serviceType, ...rProps } = roomDetail.roomProperties;
+
+        if (!checkRoomInfoBeforeJoin(roomDetail)) {
+          return;
+        }
+
+        return joinRoomHandle(
+          {
+            appId,
+            token,
+            role,
+            platform,
+            userId,
+            userName: nickName,
+            roomId: roomDetail.roomId,
+            roomName: roomDetail.roomName,
+            roomType: roomDetail.roomType,
+            roomServiceType: serviceType,
+          },
+          { roomProperties: rProps },
+        );
+      });
+    },
+    [joinRoomHandle, checkRoomInfoBeforeJoin],
+  );
+
   return {
     joinRoomHandle,
     quickJoinRoom,
+    quickJoinRoomNoAuth,
     configReady,
   };
 };

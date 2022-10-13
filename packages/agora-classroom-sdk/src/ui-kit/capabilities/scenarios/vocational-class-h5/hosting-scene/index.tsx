@@ -7,6 +7,7 @@ import Room from '../../room';
 import { ChatH5 } from '../components/chat';
 import { DocTitle } from '../components/doc-title';
 import { PageHeader } from '../components/page-header';
+import { Watermark } from '@/ui-kit/capabilities/containers/widget/slots';
 
 export const HostingClassScenario = observer(() => {
   return (
@@ -21,6 +22,7 @@ export const HostingClassScenario = observer(() => {
       </div>
       <DialogContainer />
       <WidgetContainer />
+      <Watermark />
       <ToastContainer />
     </Room>
   );

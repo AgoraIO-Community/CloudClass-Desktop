@@ -1,7 +1,7 @@
-import { useHomeStore } from '@/app/hooks';
-import { HomeLaunchOption } from '@/app/stores/home';
+import { GlobalStoreContext } from '@/app/stores';
+import { GlobalLaunchOption } from '@/app/stores/global';
 import { LanguageEnum } from '@/infra/api';
-import { getBrowserLanguage, GlobalStorage, storage } from '@/infra/utils';
+import { GlobalStorage, storage } from '@/infra/utils';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -13,10 +13,9 @@ import {
 import { AgoraLatencyLevel } from 'agora-rte-sdk';
 import md5 from 'js-md5';
 import { observer } from 'mobx-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useHistory } from 'react-router';
-import { changeLanguage } from '~components';
 import { H5Login } from '~scaffold';
 import { HomeApi } from '../../api/home';
 import { HomeSettingContainerH5 } from './home-setting/h5';
@@ -44,31 +43,22 @@ const SCENARIOS_ROOM_SERVICETYPE_MAP: { [key: string]: EduRoomServiceTypeEnum } 
 };
 
 export const VocationalHomeH5Page = observer(() => {
-  const homeStore = useHomeStore();
   useTheme();
-  const { launchConfig } = homeStore;
+  const { launchConfig, setLaunchConfig, language, setLanguage } = useContext(GlobalStoreContext);
   const [roomId, setRoomId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [roomName, setRoomName] = useState<string>(launchConfig.roomName || '');
   const [userName, setUserName] = useState<string>(launchConfig.userName || '');
   const [userRole, setRole] = useState<string>('student');
-  const [curScenario, setScenario] = useState<string>(launchConfig.curScenario || '');
-  const [curService, setService] = useState<string>(launchConfig.curService || '');
+  const [curScenario, setScenario] = useState<string>('');
+  const [curService, setService] = useState<string>('');
   const [duration] = useState<number>(30);
-  const [language, setLanguage] = useState<string>('');
   const [region] = useState<EduRegion>(EduRegion.CN);
   const [encryptionMode, setEncryptionMode] = useState<string>('');
   const [encryptionKey, setEncryptionKey] = useState<string>('');
 
-  useEffect(() => {
-    const lang = homeStore.launchOption.language || getBrowserLanguage();
-    changeLanguage(lang);
-    setLanguage(lang);
-  }, []);
-
-  const onChangeLanguage = (language: string) => {
-    changeLanguage(language);
-    setLanguage(language);
+  const onChangeLanguage = (lang: string) => {
+    setLanguage(lang as any);
   };
 
   const role = useMemo(() => {
@@ -143,7 +133,7 @@ export const VocationalHomeH5Page = observer(() => {
     tokenDomain = `${REACT_APP_AGORA_APP_TOKEN_DOMAIN}`;
   }
 
-  return language !== '' ? (
+  return (
     <React.Fragment>
       <Helmet>
         <meta
@@ -157,6 +147,7 @@ export const VocationalHomeH5Page = observer(() => {
       <MessageDialog />
       <HomeSettingContainerH5 />
       <H5Login
+        showServiceOptions={true}
         isVocational={true}
         version={CLASSROOM_SDK_VERSION}
         SDKVersion={EduClassroomConfig.getRtcVersion()}
@@ -194,18 +185,18 @@ export const VocationalHomeH5Page = observer(() => {
             }
           }
 
-          const { token, appId } = await HomeApi.shared.loginV3(userUuid, roomUuid, role);
+          const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, role);
           const roomServiceType = SCENARIOS_ROOM_SERVICETYPE_MAP[curService];
           const webRTCCodec =
             roomServiceType === EduRoomServiceTypeEnum.CDN ||
-            roomServiceType === EduRoomServiceTypeEnum.Fusion
+              roomServiceType === EduRoomServiceTypeEnum.Fusion
               ? 'h264'
               : 'vp8';
           const latencyLevel =
             roomServiceType === EduRoomServiceTypeEnum.LivePremium
               ? AgoraLatencyLevel.UltraLow
               : AgoraLatencyLevel.Low;
-          const config: HomeLaunchOption = {
+          const config: GlobalLaunchOption = {
             appId,
             sdkDomain: domain,
             pretest: false,
@@ -237,10 +228,10 @@ export const VocationalHomeH5Page = observer(() => {
             };
           }
           GlobalStorage.save('platform', 'h5');
-          homeStore.setLaunchConfig(config);
+          setLaunchConfig(config);
           history.replace('/launch');
         }}
       />
     </React.Fragment>
-  ) : null;
+  );
 });

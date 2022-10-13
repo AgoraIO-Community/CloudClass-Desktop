@@ -25,10 +25,16 @@ export function parseHashUrlQuery(locationHash: string): Record<string, any> {
   return result;
 }
 
-const getIndexURL = () => {
+// 获取入口地址(web,electron)
+function getIndexURL(): string {
   const split = window.location.href.split('/#')[0];
   const str = split.split('#/')[0];
   return str.split('?')[0];
-};
+}
 
-export const indexURL = getIndexURL();
+export const Index_URL = getIndexURL();
+
+export const Default_Hosting_URL =
+  'https://solutions-apaas.agora.io/cowatch/video/avatar-fte1_h1080p.mov';
+
+export const SSO_LOGOUT_URL = 'https://sso2.agora.io/api/v0/logout';

@@ -1,4 +1,3 @@
-import { RoomAPI } from '@/app/api/room';
 import watermarkIcon from '@/app/assets/fcr_watermark.svg';
 import chatIcon from '@/app/assets/fcr_chat3.svg';
 import cameraIcon from '@/app/assets/fcr_invigilate_camera.svg';
@@ -8,14 +7,15 @@ import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
 import { RadioIcon } from '@/app/components/radio-icon';
 import { RoomTypeCard } from '@/app/components/room-type-card';
-import { useHomeStore } from '@/app/hooks';
+import { useElementWithI18n, useJoinRoom } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
-import { useLoading } from '@/app/hooks/useLoading';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
-import { EduRoomServiceTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
+import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
+import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import {
   ADatePicker,
   ADatePickerProps,
@@ -24,6 +24,9 @@ import {
   AInput,
   aMessage,
   ATimePicker,
+  locale,
+  SvgIconEnum,
+  SvgImg,
   useAForm,
   useI18n,
 } from '~components';
@@ -31,19 +34,31 @@ import './index.css';
 import { RadioCard } from './radio-card';
 
 const weekday = {
-  0: 'fcr_create_option_timeselector_Sun',
-  1: 'fcr_create_option_timeselector_Mon',
-  2: 'fcr_create_option_timeselector_Tue',
-  3: 'fcr_create_option_timeselector_Wed',
-  4: 'fcr_create_option_timeselector_Thu',
-  5: 'fcr_create_option_timeselector_Fri',
-  6: 'fcr_create_option_timeselector_Sat',
+  0: 'fcr_create_option_time_selector_Sun',
+  1: 'fcr_create_option_time_selector_Mon',
+  2: 'fcr_create_option_time_selector_Tue',
+  3: 'fcr_create_option_time_selector_Wed',
+  4: 'fcr_create_option_time_selector_Thu',
+  5: 'fcr_create_option_time_selector_Fri',
+  6: 'fcr_create_option_time_selector_Sat',
 };
 
 const TimeFormat = 'HH:mm';
 
 const computeEndTime = (date: Dayjs) => {
   return date.add(300, 'minute');
+};
+
+const combDateTime = (date: Dayjs, time: Dayjs) => {
+  const result = new Date(
+    date.year(),
+    date.month(),
+    date.date(),
+    time.hour(),
+    time.minute(),
+    time.second(),
+  );
+  return dayjs(result);
 };
 
 type CreateFormValue = {
@@ -54,13 +69,55 @@ type CreateFormValue = {
   numberOfParticipants: string;
 };
 
+const roomTypeOptions = [
+  {
+    label: 'fcr_h5create_label_small_classroom',
+    description: 'fcr_create_label_small_classroom_description',
+    value: EduRoomTypeEnum.RoomSmallClass,
+    className: 'card-purple',
+  },
+  {
+    label: 'fcr_h5create_label_lecture_hall',
+    description: 'fcr_create_label_lecture_hall_description',
+    value: EduRoomTypeEnum.RoomBigClass,
+    className: 'card-red',
+  },
+  {
+    label: 'fcr_h5create_label_1on1',
+    description: 'fcr_create_label_1on1_description',
+    value: EduRoomTypeEnum.Room1v1Class,
+    className: 'card-green',
+  },
+];
+
+const serviceTypeOptions = [
+  {
+    label: 'fcr_create_label_service_type_RTC',
+    description: 'fcr_create_label_latency_RTC',
+    value: EduRoomServiceTypeEnum.LivePremium,
+    icon: <img src={premiumIcon} />,
+  },
+  {
+    label: 'fcr_create_label_service_type_Standard',
+    description: 'fcr_create_label_latency_Standard',
+    value: EduRoomServiceTypeEnum.LiveStandard,
+    icon: <img src={standardIcon} />,
+  },
+  {
+    label: 'fcr_create_label_service_type_CDN',
+    description: 'fcr_create_label_latency_CDN',
+    value: EduRoomServiceTypeEnum.Fusion,
+    icon: <img src={cdnIcon} />,
+  },
+];
+
 export const CreateRoom = observer(() => {
-  const homeStore = useHomeStore();
+  const roomStore = useContext(RoomStoreContext);
+  const { setLoading } = useContext(GlobalStoreContext);
+  const userStore = useContext(UserStoreContext);
+  const { quickJoinRoom } = useJoinRoom();
   const historyBackHandle = useHistoryBack();
   const transI18n = useI18n();
-
-  const customFormat: ADatePickerProps['format'] = (value) =>
-    `${value.format('YYYY-MM-DD')}  |  ${transI18n(weekday[value.day()])}`;
 
   const roomTypeOptions = [
     {
@@ -123,13 +180,21 @@ export const CreateRoom = observer(() => {
     help: '',
     tip: '',
   });
+
   const [form] = useAForm<CreateFormValue>();
-  const { setLoading } = useLoading();
+
+  const showLivePlaybackOption =
+    roomType === EduRoomTypeEnum.RoomBigClass && serviceType === EduRoomServiceTypeEnum.Fusion;
+
+  const customFormat: ADatePickerProps['format'] = useCallback(
+    (value) => `${value.format('YYYY-MM-DD')}  |  ${transI18n(weekday[value.day()])}`,
+    [],
+  );
 
   const initialValues: CreateFormValue = useMemo(() => {
     const date = dayjs();
     return {
-      name: '',
+      name: transI18n('fcr_create_label_room_name_default', { name: userStore.nickName }),
       date: date,
       time: date,
       link: '',
@@ -141,32 +206,34 @@ export const CreateRoom = observer(() => {
     return computeEndTime(initialValues.date).format(TimeFormat);
   });
 
+  const dateLocale = useElementWithI18n({ zh: locale.zh_CN, en: locale.en_US });
+
   const getFormDateTime = useCallback(() => {
     const time: Dayjs = form.getFieldValue('time');
     const date: Dayjs = form.getFieldValue('date');
-    time.set('year', date.year());
-    time.set('month', date.month());
-    time.set('date', date.date());
-    return time;
+    return combDateTime(date, time);
   }, [form]);
 
-  const checkFormDateTimeIsAfterNow = useCallback(() => {
-    // 如果使用当前时间就跳过日期时间校验
-    if (useCurrentTime) {
-      return true;
-    }
-    const dateTime = getFormDateTime();
-    if (dateTime.isAfter(dayjs())) {
-      setDateTimeValidate({ validateStatus: 'success', help: '', tip: '' });
-      return true;
-    }
-    setDateTimeValidate({
-      validateStatus: 'error',
-      help: '',
-      tip: transI18n('fcr_create_tips_starttime'),
-    });
-    return false;
-  }, [useCurrentTime, getFormDateTime]);
+  const checkFormDateTimeIsAfterNow = useCallback(
+    (skip: boolean) => {
+      // 如果使用当前时间就跳过日期时间校验
+      if (skip) {
+        return true;
+      }
+      const dateTime = getFormDateTime();
+      if (!dateTime.isBefore(dayjs())) {
+        setDateTimeValidate({ validateStatus: 'success', help: '', tip: '' });
+        return true;
+      }
+      setDateTimeValidate({
+        validateStatus: 'error',
+        help: '',
+        tip: transI18n('fcr_create_tips_starttime'),
+      });
+      return false;
+    },
+    [getFormDateTime],
+  );
 
   const recomputeEndTime = useCallback(() => {
     const dateTime = getFormDateTime();
@@ -177,15 +244,15 @@ export const CreateRoom = observer(() => {
     (value: Dayjs | null) => {
       if (value) {
         setUseCurrentTime(false);
-        checkFormDateTimeIsAfterNow();
+        checkFormDateTimeIsAfterNow(false);
         recomputeEndTime();
       }
     },
-    [checkFormDateTimeIsAfterNow],
+    [checkFormDateTimeIsAfterNow, recomputeEndTime],
   );
 
   const onSubmit = () => {
-    if (!checkFormDateTimeIsAfterNow()) {
+    if (!checkFormDateTimeIsAfterNow(useCurrentTime)) {
       return;
     }
     form.validateFields().then((data) => {
@@ -206,9 +273,11 @@ export const CreateRoom = observer(() => {
           finishType: 0,
         }
         : undefined;
+
       const sType = isHostingScene ? EduRoomServiceTypeEnum.HostingScene : serviceType;
-      RoomAPI.shared
-        .create({
+
+      roomStore
+        .createRoom({
           roomName: name,
           startTime: dateTime.valueOf(),
           endTime: computeEndTime(dateTime).valueOf(),
@@ -223,16 +292,18 @@ export const CreateRoom = observer(() => {
             numberOfParticipants: parseInt(numberOfParticipants) || 0
           },
         })
-        .then(() => {
-          homeStore.addRoomListToast({
-            id: 'create_room_success',
-            type: 'success',
-            desc: transI18n('fcr_create_tips_create_success'),
-          });
-          setTimeout(() => {
-            homeStore.removeRoomListToast('create_room_success');
-          }, 2500);
-          historyBackHandle();
+        .then((data) => {
+          if (useCurrentTime) {
+            return quickJoinRoom({
+              roomId: data.roomId,
+              role: EduRoleTypeEnum.teacher,
+              nickName: userStore.nickName,
+              userId: userStore.userInfo!.companyId,
+              platform: Platform.PC,
+            });
+          } else {
+            historyBackHandle();
+          }
         })
         .catch(() => {
           aMessage.error(transI18n('fcr_create_tips_create_failed'));
@@ -267,7 +338,7 @@ export const CreateRoom = observer(() => {
             rules={[
               { required: true, message: transI18n('fcr_create_label_room_name_empty') },
               {
-                pattern: /^([a-zA-Z0-9_\u4e00-\u9fa5]{0,50})$/,
+                pattern: /^([ 'a-zA-Z0-9_\u4e00-\u9fa5]{0,50})$/,
                 message: transI18n('fcr_create_room_tips_name_rule'),
               },
             ]}>
@@ -298,6 +369,11 @@ export const CreateRoom = observer(() => {
                   return !dayjs(current).isBetween(now, now.add(7, 'day'));
                 }}
                 onChange={dateTimeOnChange}
+                superNextIcon={null}
+                superPrevIcon={null}
+                suffixIcon={<SvgImg type={SvgIconEnum.CALENDAR} />}
+                popupStyle={{ marginTop: '8px' }}
+                locale={dateLocale}
               />
             </AFormItem>
             <div className="relative inline-block">
@@ -309,10 +385,11 @@ export const CreateRoom = observer(() => {
                   className="start-time-picker"
                   format={TimeFormat}
                   inputReadOnly
-                  minuteStep={10}
+                  minuteStep={5}
                   allowClear={false}
                   showNow={false}
                   onChange={dateTimeOnChange}
+                  popupStyle={{ marginTop: '8px' }}
                 />
               </AFormItem>
               <div className={`current-time ${useCurrentTime ? '' : 'hidden'}`}>
@@ -323,28 +400,28 @@ export const CreateRoom = observer(() => {
           </div>
           <div className="gap-symbol" />
           <div className="end-time">
-            <div className="label">{transI18n('fcr_create_label_endtime')}</div>
+            <div className="label">{transI18n('fcr_create_label_end_time')}</div>
             <div className="end-time-picker">
               {endTime}
-              <span>{transI18n('fcr_create_label_defaulttime')}</span>
+              <span>{transI18n('fcr_create_label_default_time')}</span>
             </div>
           </div>
         </div>
         {/* 班型 */}
         <div className="form-item item-mb">
-          <div className="label">{transI18n('fcr_create_label_classmode')}</div>
+          <div className="label">{transI18n('fcr_create_label_class_mode')}</div>
           <div className="room-type">
             {roomTypeOptions.map((v) => {
               return (
                 <RoomTypeCard
-                  title={v.label}
+                  title={transI18n(v.label)}
+                  description={transI18n(v.description)}
                   checked={roomType === v.value}
                   className={v.className}
                   key={v.value + v.label}
                   onClick={() => {
                     setRoomType(v.value);
                   }}
-                  description={v.description}
                 />
               );
             })}
@@ -363,8 +440,8 @@ export const CreateRoom = observer(() => {
                       setServiceType(v.value);
                     }}
                     checked={v.value === serviceType}
-                    label={v.label}
-                    description={v.description}
+                    label={transI18n(v.label)}
+                    description={transI18n(v.description)}
                     icon={v.icon}
                   />
                 );
@@ -373,11 +450,18 @@ export const CreateRoom = observer(() => {
           </div>
         ) : null}
         {/* 更多设置 */}
-        <div className="form-item item-mb more-settings">
+        <div
+          className={classNames({
+            'form-item item-mb more-settings': 1,
+            expanded: showMore,
+          })}>
           <div className="label">
-            {transI18n('fcr_create_label_moresettings')}
+            {transI18n('fcr_create_label_more_settings')}
             <span
-              className={`expand ${showMore ? 'hidden' : ''}`}
+              className={classNames({
+                'expand-btn': 1,
+                hidden: showMore,
+              })}
               onClick={() => {
                 setShowMore((pre) => !pre);
               }}>
@@ -470,7 +554,7 @@ export const CreateRoom = observer(() => {
                 />
               </div>
             </div>
-            {roomType === EduRoomTypeEnum.RoomBigClass ? (
+            {showLivePlaybackOption ? (
               <div className="setting-item">
                 <div className="title">
                   <div className="live-playback-prefix-icon" />

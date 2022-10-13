@@ -507,9 +507,16 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         this.classroomStore.connectionStore.mainRoomScene?.sceneId;
       if (isMainRoom) {
         this.classroomStore.roomStore.updateFlexProperties({ stage: +stage }, { cmd: 1 });
-        !stage &&
-          EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
-        !stage && this.classroomStore.roomStore.stopCarousel();
+        if (!stage) {
+          this.classroomStore.roomStore
+            .stopCarousel()
+            .then(() => {
+              EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
+            })
+            .catch(() => {
+              EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
+            });
+        }
       } else {
         this.logger.info('cannot hide stage area in a sub room');
       }

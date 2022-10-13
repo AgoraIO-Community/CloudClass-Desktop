@@ -858,6 +858,7 @@ export const zh = {
   fcr_copy_title: '分享',
 
   fcr_copy_room_name: '房间:',
+  fcr_copy_room_id: '房间ID:',
   fcr_copy_share_link: '邀请链接:',
   fcr_copy_share_link_copy: '复制链接',
   fcr_copy_success: '复制成功',

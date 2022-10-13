@@ -67,7 +67,7 @@ export class CloudUIStore extends EduUIStoreBase {
             const hasConverting = personalResourcesList.some(
               (item) =>
                 item?.resource instanceof CloudDriveCourseResource &&
-                item?.resource?.taskProgress?.status === 'Converting',
+                item?.resource?.status === 'Converting',
             );
             if (hasConverting) {
               this.fetchPersonalResources({
@@ -248,13 +248,13 @@ export class CloudUIStore extends EduUIStoreBase {
   /**
    * 打开课件
    */
-  async _tryOpenCourseware(resource: CloudDriveCourseResource) {
-    if (resource.taskProgress.status == 'Converting' && _lastFetchPersonalResourcesOptions) {
+  private async _tryOpenCourseware(resource: CloudDriveCourseResource) {
+    if (resource.status == 'Converting' && _lastFetchPersonalResourcesOptions) {
       this.fetchPersonalResources(_lastFetchPersonalResourcesOptions);
       return;
     }
 
-    if (resource.taskProgress.status == 'Fail') {
+    if (resource.status == 'Fail') {
       this.shareUIStore.addGenericErrorDialog(
         AGErrorWrapper(
           AGEduErrorCode.EDU_ERR_CLOUD_RESOURCE_CONVERSION_FAIL,
@@ -264,23 +264,25 @@ export class CloudUIStore extends EduUIStoreBase {
       return;
     }
 
-    const pageList = (resource.scenes || []).map(({ name, ppt }) => {
-      return {
-        name,
-        contentUrl: ppt.src,
-        previewUrl: ppt.previewURL,
-        contentWidth: ppt.width,
-        contentHeight: ppt.height,
-      };
-    });
+    const pageList = (resource.scenes || []).map(
+      ({ name, contentUrl, previewUrl, width, height }) => {
+        return {
+          name,
+          contentUrl,
+          previewUrl,
+          contentWidth: width,
+          contentHeight: height,
+        };
+      },
+    );
 
     this.extensionApi.openMaterialResourceWindow({
       resourceUuid: resource.resourceUuid,
-      urlPrefix: resource.taskProgress.prefix || '',
+      urlPrefix: resource.prefix || '',
       title: resource.resourceName,
       pageList: pageList,
       taskUuid: resource.taskUuid,
-      resourceHasAnimation: !!resource.conversion.canvasVersion,
+      resourceHasAnimation: resource.hasAnimation,
     });
   }
 

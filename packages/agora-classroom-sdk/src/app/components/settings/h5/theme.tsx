@@ -1,7 +1,7 @@
-import { useHomeStore } from '@/app/hooks';
+import { GlobalStoreContext } from '@/app/stores';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { observer } from 'mobx-react';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { useI18n } from '~components';
 import { SettingsMenuEnum } from '.';
 import { Menu } from './components/menu';
@@ -14,7 +14,7 @@ interface ThemeMenuProps {
 
 export const ThemeMenu: FC<ThemeMenuProps> = observer(({ removeMenuPopup }) => {
   const transI18n = useI18n();
-  const { theme, setTheme } = useHomeStore();
+  const { theme, setTheme } = useContext(GlobalStoreContext);
 
   const menus: MenuItemProps[] = [
     {

@@ -1,9 +1,9 @@
-import { HomeStore } from '@/app/stores/home';
 import { GlobalStorage } from '@/infra/utils';
-import { Provider } from 'mobx-react';
 import ReactDOM from 'react-dom';
 import { RouteContainer } from './router';
-import { init } from './utils';
+import { StoreProvider } from './stores';
+import { token } from './utils/token';
+import './index.css';
 declare global {
   interface Window {
     __launchRegion: string;
@@ -19,15 +19,13 @@ declare global {
   }
 }
 
-init();
-
 export const App: React.FC = () => {
   GlobalStorage.useLocalStorage();
-
+  token.init();
   return (
-    <Provider store={new HomeStore()}>
+    <StoreProvider>
       <RouteContainer />
-    </Provider>
+    </StoreProvider>
   );
 };
 

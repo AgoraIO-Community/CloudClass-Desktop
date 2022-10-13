@@ -1,7 +1,7 @@
-import { useHomeStore } from '@/app/hooks';
 import { useAuth } from '@/app/hooks/useAuth';
+import { UserStoreContext } from '@/app/stores';
 import { observer } from 'mobx-react';
-import { FC, PropsWithChildren, useEffect } from 'react';
+import { FC, PropsWithChildren, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 type AuthLayoutProps = {
@@ -10,14 +10,14 @@ type AuthLayoutProps = {
 };
 export const AuthLayout: FC<PropsWithChildren<AuthLayoutProps>> = observer(
   ({ children, includes = [], exclude = [] }) => {
-    const { authWithLogout } = useAuth();
+    const { isLogin } = useContext(UserStoreContext);
+    const { auth } = useAuth();
     const location = useLocation();
-    const { isLogin } = useHomeStore();
     useEffect(() => {
       if (exclude.includes(location.pathname) || !includes.includes(location.pathname) || isLogin) {
         return;
       }
-      authWithLogout();
+      auth();
     }, [exclude, includes, location.pathname, isLogin]);
 
     return <>{children}</>;

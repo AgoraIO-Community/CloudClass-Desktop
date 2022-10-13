@@ -79,7 +79,7 @@ export const InviteTable: React.FC<InviteTableProps> = observer(() => {
         />
       </div>
       {/* table list */}
-      <Table className="table">
+      <Table className="table w-full">
         <TableHeader>
           <Col>{transI18n('marketing.table.name')}</Col>
           <Col>{transI18n('marketing.table.role')}</Col>

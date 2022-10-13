@@ -1,0 +1,106 @@
+.welcome-menu {
+  height: 40px;
+  width: 40px;
+}
+
+.welcome-menu .menu-avatar {
+  @apply cursor-pointer relative;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.1s linear;
+  z-index: 2;
+  background-color: #1d1b7b;
+  vertical-align: 'middle';
+}
+
+.welcome-menu:hover .menu-avatar {
+  /* translate: 200% 200%; */
+  transform: scale(2, 2) translateY(10px) translateX(-10px);
+}
+
+.welcome-menu .menu-content {
+  display: none;
+  width: 250px;
+  /* white */
+  background: #ffffff;
+  box-shadow: 10px 10px 60px -8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+
+  font-family: 'Montserrat Roboto';
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+  /* Gray 1 */
+  color: #030303;
+
+  position: relative;
+  left: -180px;
+}
+
+.welcome-menu:hover .menu-content {
+  display: block;
+}
+
+.welcome-menu .menu-content .group {
+  @apply truncate;
+  /* fcr_light_background1 */
+  background: #f8faff;
+  height: 103px;
+  padding: 55px 30px 0;
+}
+
+.welcome-menu .menu-content .menu-list {
+  padding: 16px 6px 6px 6px;
+}
+
+.welcome-menu .menu-list .menu-item {
+  @apply cursor-pointer relative flex items-center;
+  height: 66px;
+  border-radius: 14px;
+  padding: 0 24px;
+}
+
+.welcome-menu .menu-list .menu-item:hover {
+  /* Gray 12-background */
+  background: #f8f8f8;
+}
+
+.welcome-menu .menu-list .menu-item.more-icon::after {
+  @apply bg-no-repeat bg-center absolute;
+  content: '';
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-image: url('@/app/assets/fcr-menu-arrow.svg');
+  right: 20px;
+}
+
+.welcome-menu .menu-list .menu-item + .menu-item {
+  margin-top: 12px;
+}
+
+.welcome-menu .menu-list .menu-item + .menu-item::before {
+  content: '';
+  height: 1px;
+  background: #efefef;
+  margin: 0 auto;
+  width: 80%;
+  position: absolute;
+  top: -6px;
+}
+
+.welcome-menu .menu-list .menu-item .icon {
+  margin-right: 10px;
+  width: 36px;
+}
+
+/** setting */
+.setting-modal-container .ant-modal-close-x {
+  width: 54px;
+  height: 54px;
+  line-height: 46px;
+}
+
+.setting-modal-container .ant-modal-close {
+  outline: none;
+}

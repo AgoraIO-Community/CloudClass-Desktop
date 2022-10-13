@@ -1,4 +1,5 @@
 .room-type-card {
+  @apply cursor-pointer;
   border-radius: 16px;
   padding: 20px;
   position: relative;

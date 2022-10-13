@@ -148,19 +148,30 @@ export const ChatH5 = observer(function Chat() {
 });
 
 export const Watermark = observer(function Chat() {
-  const { widgetUIStore } = useStore();
+  const { widgetUIStore, classroomStore } = useStore();
   const { ready } = widgetUIStore;
 
+  const watermark =
+    classroomStore.connectionStore.mainRoomScene &&
+    classroomStore.roomStore?.mainRoomDataStore.flexProps?.watermark;
+
   useEffect(() => {
-    if (ready) {
-      widgetUIStore.createWidget('watermark');
+    if (ready && watermark) {
+      widgetUIStore.createWidget('watermark', {
+        userProperties: {},
+        properties: {
+          content: EduClassroomConfig.shared.sessionInfo.userUuid,
+          visible: true,
+        },
+        trackProperties: {},
+      });
       return () => {
         widgetUIStore.destroyWidget('watermark');
       };
     }
-  }, [ready]);
+  }, [ready, watermark]);
 
   return (
-    <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none z-10" />
+    <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none" />
   );
 });

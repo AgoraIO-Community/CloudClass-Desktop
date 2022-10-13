@@ -1,5 +1,5 @@
-import { UserApi } from '@/app/api/user';
-import { FC, useCallback, useState } from 'react';
+import { useLogout } from '@/app/hooks';
+import { FC, useState } from 'react';
 import { useI18n } from '~components';
 import { SettingsMenuEnum } from '.';
 import { ConfirmDialogH5 } from './components/confirm-dialog';
@@ -15,7 +15,7 @@ interface SettingsMenuProps {
 export const SettingsMenu: FC<SettingsMenuProps> = ({ addMenuPopup, removeMenuPopup }) => {
   const transI18n = useI18n();
   const [confirmDialog, setConfirmDialog] = useState<boolean>(false);
-
+  const { logout } = useLogout();
   const menus: MenuItemProps[] = [
     {
       text: transI18n('fcr_settings_option_general'),
@@ -30,10 +30,6 @@ export const SettingsMenu: FC<SettingsMenuProps> = ({ addMenuPopup, removeMenuPo
       },
     },
   ];
-
-  const logout = useCallback(() => {
-    UserApi.shared.logout();
-  }, []);
 
   return (
     <PageLayout
@@ -53,9 +49,7 @@ export const SettingsMenu: FC<SettingsMenuProps> = ({ addMenuPopup, removeMenuPo
         <ConfirmDialogH5
           title={transI18n('fcr_alert_title')}
           context={transI18n('settings_logout_alert')}
-          onOk={() => {
-            logout();
-          }}
+          onOk={logout}
           onCancel={() => {
             setConfirmDialog(false);
           }}

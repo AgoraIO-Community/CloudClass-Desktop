@@ -1,4 +1,4 @@
-import { getLanguage } from '@/app/stores/home';
+import { getLanguage } from '@/app/stores/global';
 
 export const privacyPolicyURL = () => {
   if (getLanguage() === 'en') {

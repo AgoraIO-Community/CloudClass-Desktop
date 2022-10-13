@@ -7,7 +7,7 @@ interface MenuProps {
 
 export const Menu: FC<MenuProps> = ({ data = [] }) => {
   return (
-    <div className="menu-container w-full h-full">
+    <div className="h5-menu">
       {data?.map((item, index) => {
         return <MenuItem key={`${index}-${item.text}`} {...item} />;
       })}
