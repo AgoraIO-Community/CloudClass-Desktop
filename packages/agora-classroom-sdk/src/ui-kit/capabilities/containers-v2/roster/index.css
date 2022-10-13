@@ -3,6 +3,17 @@
   padding: 20px;
   width: 387px;
   height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+.fcr-roster-v2 .fcr-search-input{
+  margin-bottom: 26px;
+}
+
+.fcr-roster-v2__list {
+  flex-grow: 1;
+  overflow: auto;
+  margin: 0;
 }
 
 .fcr-roster-v2__shortname {
@@ -40,6 +51,7 @@
   font-size: 16px;
   box-shadow: 10px 10px 60px -8px rgba(0, 0, 0, 0.14);
   border-radius: 16px;
+  z-index: 50;
 }
 .fcr-roster-v2__list-item-dropdown > div {
   height: 66px;
