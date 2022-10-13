@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckBox, useI18n } from '~ui-kit';
+import { CheckBox, useI18n } from '~components';
 import './index.css';
 export const CloseAccount = () => {
   const [checked, setChecked] = useState(false);

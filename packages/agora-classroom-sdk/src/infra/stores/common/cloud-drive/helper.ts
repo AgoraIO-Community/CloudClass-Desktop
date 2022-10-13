@@ -2,9 +2,9 @@ import { CourseWareItem } from '@/infra/api';
 import {
   AGEduErrorCode,
   CloudDriveResource,
-  ConversionOption,
   EduClassroomConfig,
   EduErrorCenter,
+  ConversionOption,
 } from 'agora-edu-core';
 import { toLower } from 'lodash';
 import {
