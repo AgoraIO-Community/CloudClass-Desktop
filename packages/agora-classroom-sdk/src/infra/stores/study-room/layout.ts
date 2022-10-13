@@ -301,7 +301,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
               ? AgoraRteRemoteStreamType.HIGH_STREAM
               : AgoraRteRemoteStreamType.LOW_STREAM;
           // 根据是否被pin设置大小流
-          // await setRemoteVideoStreamType(stream.streamUuid, streamType);
+          await setRemoteVideoStreamType(stream.streamUuid, streamType);
         }),
       );
       // 加入已订阅
@@ -355,7 +355,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
             const streams = this.classroomStore.streamStore.streamByUserUuid.get(userUuid);
             if (streams) {
               streams.forEach((streamUuid) => {
-                // this.classroomStore.streamStore.setRemoteVideoStreamType(streamUuid, streamType);
+                this.classroomStore.streamStore.setRemoteVideoStreamType(streamUuid, streamType);
               });
             }
           };
