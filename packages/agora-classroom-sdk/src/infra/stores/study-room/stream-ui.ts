@@ -1,3 +1,4 @@
+import { EduClassroomConfig } from 'agora-edu-core';
 import { AgoraRteMediaSourceState, AgoraRteVideoSourceType, Log } from 'agora-rte-sdk';
 import { computed, IReactionDisposer, Lambda } from 'mobx';
 import { computedFn } from 'mobx-utils';
@@ -53,7 +54,7 @@ export class StudyRoomStreamUIStore extends StreamUIStore {
   }
 
   getPinnedStream = computedFn((pinnedUser: string) => {
-    const userUuid = pinnedUser || this.getters.localUserUuid;
+    const userUuid = pinnedUser || EduClassroomConfig.shared.sessionInfo.userUuid;
     if (userUuid) {
       const [stream] = this._getUserStreams([userUuid]);
       return stream;
