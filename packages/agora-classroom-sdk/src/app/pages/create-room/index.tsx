@@ -204,7 +204,12 @@ export const CreateRoom = observer(() => {
       setLoading(true);
       const { date, time, name, link } = data;
       const dateTime = useCurrentTime ? dayjs() : combDateTime(date, time);
-      const isHostingScene = livePlayback && roomType === EduRoomTypeEnum.RoomBigClass;
+
+      const isHostingScene =
+        livePlayback &&
+        roomType === EduRoomTypeEnum.RoomBigClass &&
+        serviceType === EduRoomServiceTypeEnum.Fusion;
+
       const hostingScene = isHostingScene
         ? {
             videoURL: link,
@@ -212,7 +217,9 @@ export const CreateRoom = observer(() => {
             finishType: 0,
           }
         : undefined;
+
       const sType = isHostingScene ? EduRoomServiceTypeEnum.HostingScene : serviceType;
+
       roomStore
         .createRoom({
           roomName: name,
