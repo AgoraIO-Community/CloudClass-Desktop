@@ -252,40 +252,45 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     if (this.classroomStore.connectionStore.rtcState !== AGRtcState.Connected) {
       return;
     }
+    // 页面上显示的视频创列表
     const waitingSub = this.waitingSub.slice();
+    // timer休眠时退出的用户
     const quitSub = this.quitSub.slice();
+    // 过滤掉timer休眠时退出的用户
     let doneSub = this.doneSub.filter((s) => {
       return !quitSub.includes(s);
     });
+    // 先清空列表
     runInAction(() => {
       this.quitSub = [];
     });
-
-    // 需要订阅
-    const tobeSub = waitingSub.filter((stream) => {
-      return !doneSub.includes(stream);
-    });
-    // 需要取消订阅
-    const tobeUnsub = doneSub.filter((stream) => {
+    // 已订阅 diff 当前页面视频列表 = 需要取消订阅的流列表
+    const toUnsub = doneSub.filter((stream) => {
       return !waitingSub.includes(stream);
+    });
+    // 当前页面视频列表 diff 已订阅 = 需要订阅的流列表
+    const toSub = waitingSub.filter((stream) => {
+      return !doneSub.includes(stream);
     });
 
     const { muteRemoteVideoStreamMass, setupRemoteVideo, setRemoteVideoStreamType } =
       this.classroomStore.streamStore;
 
-    if (tobeUnsub.length) {
-      await muteRemoteVideoStreamMass(tobeUnsub, true);
+    if (toUnsub.length) {
+      await muteRemoteVideoStreamMass(toUnsub, true);
+      // 从已订阅列表移除
       doneSub = doneSub.filter((stream) => {
-        return !tobeUnsub.includes(stream);
+        return !toUnsub.includes(stream);
       });
     }
 
     let subList: string[] = [];
 
-    if (tobeSub.length) {
-      subList = (await muteRemoteVideoStreamMass(tobeSub, false)) || [];
-
-      const newSub = tobeSub.filter(({ streamUuid }) => {
+    if (toSub.length) {
+      // 订阅成功的列表
+      subList = (await muteRemoteVideoStreamMass(toSub, false)) || [];
+      // 取到流对象
+      const newSub = toSub.filter(({ streamUuid }) => {
         return subList.includes(streamUuid);
       });
 
@@ -295,14 +300,14 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
             stream.fromUser.userUuid === this.pinnedUser
               ? AgoraRteRemoteStreamType.HIGH_STREAM
               : AgoraRteRemoteStreamType.LOW_STREAM;
-
-          await setRemoteVideoStreamType(stream.streamUuid, streamType);
+          // 根据是否被pin设置大小流
+          // await setRemoteVideoStreamType(stream.streamUuid, streamType);
         }),
       );
-
+      // 加入已订阅
       doneSub = doneSub.concat(newSub);
     }
-
+    // 重新渲染视频流
     doneSub.forEach((stream) => {
       const dom = this._videoDoms.get(stream.streamUuid);
       if (dom) {
@@ -310,7 +315,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
         setupRemoteVideo(stream, dom, needMirror);
       }
     });
-
+    // 更新已订阅列表
     runInAction(() => {
       this.doneSub = doneSub;
     });
@@ -343,13 +348,14 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     );
 
     this._disposers.push(
+      // set stream type of the pinned video when pinnedUser changed
       computed(() => this.pinnedUser).observe(
         ({ oldValue: lastPinned, newValue: currentPinned }) => {
           const setUserStreamType = (userUuid: string, streamType: AgoraRteRemoteStreamType) => {
             const streams = this.classroomStore.streamStore.streamByUserUuid.get(userUuid);
             if (streams) {
               streams.forEach((streamUuid) => {
-                this.classroomStore.streamStore.setRemoteVideoStreamType(streamUuid, streamType);
+                // this.classroomStore.streamStore.setRemoteVideoStreamType(streamUuid, streamType);
               });
             }
           };
