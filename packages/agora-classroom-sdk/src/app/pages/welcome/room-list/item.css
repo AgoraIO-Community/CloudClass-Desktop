@@ -14,7 +14,7 @@
 
 .room-item-card:hover {
   transform: translateY(-1px);
-  box-shadow: 6px 6px 20px -8px rgb(0 0 0 / 56%);
+  box-shadow: 6px 6px 20px -5px rgb(0 0 0 / 13%);
 }
 
 .room-item-card.upcoming {

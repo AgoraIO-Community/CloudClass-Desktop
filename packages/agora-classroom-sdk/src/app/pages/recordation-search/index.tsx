@@ -1,3 +1,4 @@
+import { homeApi } from '@/app/api';
 import dayjs from 'dayjs';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -12,7 +13,6 @@ import {
   SvgImg,
   transI18n,
 } from '~ui-kit';
-import { HomeApi } from '../../api/home';
 import './style.css';
 
 export const RecordationSearchPage = () => {
@@ -55,7 +55,7 @@ export const RecordationSearchPage = () => {
 
   const handleRecordationSearch = React.useCallback(async () => {
     //fetch api
-    const recordations = await HomeApi.shared.getRecordations(roomId);
+    const recordations = await homeApi.getRecordations(roomId);
     setRecordations(recordations.list);
   }, [roomId]);
 

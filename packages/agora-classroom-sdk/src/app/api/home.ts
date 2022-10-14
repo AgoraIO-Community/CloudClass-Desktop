@@ -1,50 +1,15 @@
 import { getRegion } from '@/app/stores/global';
-import { getTokenDomain } from '@/app/utils/env';
 import { request } from '@/app/utils/request';
 import { EduRegion } from 'agora-edu-core';
+import { getApiDomain, getSceneBuilderDomain } from '../utils';
 
 export class HomeApi {
-  static shared = new HomeApi();
   private get domain() {
-    return getTokenDomain(getRegion());
+    return getApiDomain(getRegion());
   }
 
   private get builderDomain() {
-    return getTokenDomain(EduRegion.CN);
-  }
-
-  public async loginNoAuth(
-    userUuid: string,
-    roomUuid: string,
-    role: number,
-  ): Promise<{
-    appId: string;
-    roomUuid: string;
-    userUuid: string;
-    role: number;
-    token: string;
-  }> {
-    const { data } = await request.get(
-      `${this.domain}/edu/v3/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
-    );
-    return data.data;
-  }
-
-  public async login(
-    userUuid: string,
-    roomUuid: string,
-    role: number,
-  ): Promise<{
-    appId: string;
-    roomUuid: string;
-    userUuid: string;
-    role: number;
-    token: string;
-  }> {
-    const { data } = await request.get(
-      `${this.domain}/edu/v4/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
-    );
-    return data.data;
+    return getSceneBuilderDomain(EduRegion.CN);
   }
 
   async getRecordations(roomUuid: string): Promise<any> {
@@ -60,3 +25,5 @@ export class HomeApi {
     return data;
   }
 }
+
+export const homeApi = new HomeApi();

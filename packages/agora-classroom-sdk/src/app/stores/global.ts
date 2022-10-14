@@ -48,7 +48,7 @@ export const clearHomeOption = () => {
 
 export class GlobalStore {
   @observable
-  launchOption: Partial<GlobalLaunchOption> = getLSStore<GlobalLaunchOption>(LS_LAUNCH) || {};
+  launchOption: GlobalLaunchOption = getLSStore<GlobalLaunchOption>(LS_LAUNCH)!;
 
   @observable
   region: EduRegion = getRegion();

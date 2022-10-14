@@ -81,20 +81,26 @@ export const Welcome = observer(() => {
 
   const onDetail = useCallback((data: RoomInfo) => {}, []);
 
+  const roomRefresh = useCallback(() => {
+    setLoading(true);
+    return refreshRoomList().finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
   useEffect(() => {
-    if (userStore.isLogin) {
+    if (userStore.isLogin && total === 0) {
+      roomRefresh();
+    }
+  }, [userStore.isLogin, total]);
+
+  useEffect(() => {
+    if (!userStore.isLogin && token.accessToken) {
       setLoading(true);
-      refreshRoomList().finally(() => {
+      clearRooms();
+      userStore.getUserInfo().finally(() => {
         setLoading(false);
       });
-    } else {
-      if (token.accessToken) {
-        setLoading(true);
-        clearRooms();
-        userStore.getUserInfo().finally(() => {
-          setLoading(false);
-        });
-      }
     }
   }, [userStore.isLogin]);
 
@@ -129,6 +135,9 @@ export const Welcome = observer(() => {
             dataLength={rooms.size}
             next={fetchMoreRoomList}
             hasMore={rooms.size < total}
+            //TODO 下拉刷新可以做，需要调整下dom的结构
+            pullDownToRefresh
+            refreshFunction={roomRefresh}
             loader={
               <ASkeleton
                 paragraph={{

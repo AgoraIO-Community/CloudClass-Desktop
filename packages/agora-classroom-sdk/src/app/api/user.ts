@@ -1,7 +1,7 @@
 import { getRegion } from '@/app/stores/global';
 import { request, Response } from '@/app/utils/request';
 import axios from 'axios';
-import { getTokenDomain } from '../utils/env';
+import { getApiDomain } from '../utils/domain';
 
 type RefreshTokenResponse = {
   accessToken: string;
@@ -33,7 +33,7 @@ export class UserApi {
   static shared = new UserApi();
 
   private get domain() {
-    return getTokenDomain(getRegion());
+    return getApiDomain(getRegion());
   }
 
   public async getAuthorizedURL(params: GetAuthorizedURLRequest) {

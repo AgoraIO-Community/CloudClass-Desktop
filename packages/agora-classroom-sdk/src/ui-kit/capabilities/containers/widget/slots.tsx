@@ -139,7 +139,7 @@ export const Watermark = observer(function Chat() {
       widgetUIStore.createWidget('watermark', {
         userProperties: {},
         properties: {
-          content: EduClassroomConfig.shared.sessionInfo.userUuid,
+          content: EduClassroomConfig.shared.sessionInfo.userName,
           visible: true,
         },
         trackProperties: {},

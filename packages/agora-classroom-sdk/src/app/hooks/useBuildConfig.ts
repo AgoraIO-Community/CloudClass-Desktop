@@ -2,7 +2,7 @@ import { AgoraEduSDK } from '@/infra/api';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '~ui-kit';
-import { HomeApi } from '../api/home';
+import { homeApi } from '../api/home';
 
 export const useBuilderConfig = () => {
   const t = useI18n();
@@ -29,7 +29,7 @@ export const useBuilderConfig = () => {
     const projectId = window.__launchProjectId;
 
     if (companyId && projectId) {
-      HomeApi.shared.getBuilderResource(companyId, projectId).then(({ scenes, themes }) => {
+      homeApi.getBuilderResource(companyId, projectId).then(({ scenes, themes }) => {
         builderResource.current = {
           scenes: scenes ?? {},
           themes: themes ? { default: themes } : {},

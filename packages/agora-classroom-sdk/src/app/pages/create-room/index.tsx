@@ -4,7 +4,7 @@ import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
 import { RadioIcon } from '@/app/components/radio-icon';
 import { RoomTypeCard } from '@/app/components/room-type-card';
-import { useElementWithI18n, useJoinRoom } from '@/app/hooks';
+import { useLangSwitchValue, useJoinRoom } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
@@ -151,7 +151,7 @@ export const CreateRoom = observer(() => {
     return computeEndTime(initialValues.date).format(TimeFormat);
   });
 
-  const dateLocale = useElementWithI18n({ zh: locale.zh_CN, en: locale.en_US });
+  const dateLocale = useLangSwitchValue({ zh: locale.zh_CN, en: locale.en_US });
 
   const getFormDateTime = useCallback(() => {
     const time: Dayjs = form.getFieldValue('time');
@@ -313,7 +313,7 @@ export const CreateRoom = observer(() => {
                 superPrevIcon={null}
                 suffixIcon={<SvgImg type={SvgIconEnum.CALENDAR} />}
                 popupStyle={{ marginTop: '8px' }}
-                locale={dateLocale}
+                locale={dateLocale!}
               />
             </AFormItem>
             <div className="relative inline-block">

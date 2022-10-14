@@ -1,4 +1,4 @@
-import { EduRoomTypeEnum, EduStoreFactory } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoomTypeEnum, EduStoreFactory } from 'agora-edu-core';
 import React from 'react';
 import { EduUIStoreFactory } from './ui-store-factory';
 
@@ -19,7 +19,10 @@ export class EduContext {
     const oneToOne = EduStoreFactory.createWithType(EduRoomTypeEnum.Room1v1Class);
     const interactive = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
     const lecture = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomBigClass);
-    const vocational = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomBigClass, 1);
+    const vocational = EduStoreFactory.createWithType(
+      EduRoomTypeEnum.RoomBigClass,
+      EduClassroomConfig.shared.sessionInfo.roomServiceType,
+    );
 
     const oneToOneUI = EduUIStoreFactory.createWithType(EduRoomTypeEnum.Room1v1Class, oneToOne);
     const interactiveUI = EduUIStoreFactory.createWithType(
@@ -28,15 +31,16 @@ export class EduContext {
     );
     const lectureUI = EduUIStoreFactory.createWithType(EduRoomTypeEnum.RoomBigClass, lecture);
     const lectureH5UI = EduUIStoreFactory.createWithTypeH5(EduRoomTypeEnum.RoomBigClass, lecture);
+
     const vocationalUI = EduUIStoreFactory.createWithType(
       EduRoomTypeEnum.RoomBigClass,
       vocational,
-      1,
+      EduClassroomConfig.shared.sessionInfo.roomServiceType,
     );
     const vocationalH5UI = EduUIStoreFactory.createWithTypeH5(
       EduRoomTypeEnum.RoomBigClass,
       vocational,
-      1,
+      EduClassroomConfig.shared.sessionInfo.roomServiceType,
     );
 
     return React.createContext({

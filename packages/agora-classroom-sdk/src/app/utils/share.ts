@@ -46,8 +46,8 @@ export class ShareLink {
     return `sc=${this.encode(params)}`;
   }
 
-  generateUrl(params: ShareContent, url = '') {
-    return `${url ? url : this._url}#/invite?${this.query(params)}`;
+  generateUrl(params: ShareContent, url = this._url) {
+    return `${url}#/invite?${this.query(params)}`;
   }
 
   parseHashURLQuery(hash: string): ShareContent | null {

@@ -18,6 +18,7 @@ import {
   EduClassroomConfig,
   EduClassroomStore,
   LeaveReason,
+  Platform,
 } from 'agora-edu-core';
 import { WidgetUIStore } from './widget';
 import { GroupUIStore } from './group-ui';
@@ -185,7 +186,8 @@ export class EduClassroomUIStore {
         EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
       )?.defaultLowStreamCameraEncoderConfigurations;
 
-      await this.classroomStore.mediaStore.enableDualStream(true);
+      const enableDualStream = EduClassroomConfig.shared.platform !== Platform.H5;
+      await this.classroomStore.mediaStore.enableDualStream(enableDualStream);
 
       await this.classroomStore.mediaStore.setLowStreamParameter(
         launchLowStreamCameraEncoderConfigurations ||
@@ -207,6 +209,7 @@ export class EduClassroomUIStore {
    * 销毁所有 UIStore
    */
   destroy() {
+    this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
         const uiStore = this[propertyName as keyof EduClassroomUIStore];

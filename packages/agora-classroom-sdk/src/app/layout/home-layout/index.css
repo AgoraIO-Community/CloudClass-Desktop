@@ -62,6 +62,19 @@
   color: #ffffff;
 }
 
+.home-left .text-img {
+  margin-left: 6vw;
+}
+
+.home-left .text-img.zh {
+  margin-top: 21vh;
+  height: 17.3vh;
+}
+
+.home-left .text-img.en {
+  margin-top: 19vh;
+  height: 25.4vh;
+}
 /* --- right --- */
 .home-right {
   font-family: 'Montserrat Roboto';

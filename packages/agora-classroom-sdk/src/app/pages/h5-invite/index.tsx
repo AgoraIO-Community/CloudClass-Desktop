@@ -3,7 +3,7 @@ import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
 import { formatRoomID } from '@/app/hooks';
 import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
-import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
+import { useLangSwitchValue } from '@/app/hooks/useLangSwitchValue';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
 import { useNoAuthUser } from '@/app/hooks/useNoAuthUser';
@@ -119,7 +119,7 @@ export const H5Invite = observer(() => {
 
   const roomDetail = shareRoomInfo ? shareRoomInfo.roomDetail : undefined;
 
-  const footerTip = useElementWithI18n({
+  const footerTip = useLangSwitchValue({
     en: (
       <div className="tip">
         You can <span className="link"> copy Invitation </span> and send to attendees.

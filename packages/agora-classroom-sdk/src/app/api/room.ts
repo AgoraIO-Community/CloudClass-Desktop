@@ -1,72 +1,30 @@
-import { getTokenDomain } from '@/app/utils/env';
 import { request, Response } from '@/app/utils/request';
-import { EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
+import axios from 'axios';
 import { getRegion } from '../stores/global';
+import { getApiDomain } from '../utils';
 import { getLSStore, LS_COMPANY_ID } from '../utils/local-storage';
+import {
+  RoomListRequest,
+  RoomListResponse,
+  RoomCreateRequest,
+  RoomInfo,
+  RoomJoinRequest,
+  RoomJoinResponse,
+  RoomJoinNoAuthRequest,
+  RoomCreateResponse,
+  RoomCredentialNoAuthRequest,
+  RoomCredentialNoAuthResponse,
+  RoomCredentialRequest,
+  RoomCredentialResponse,
+} from './room.type';
 
-export enum RoomState {
-  NO_STARTED,
-  GOING,
-  ENDED,
-}
-
-export type RoomInfo = {
-  roomName: string;
-  creatorId: string;
-  roomId: string;
-  roomType: EduRoomTypeEnum;
-  roomState: RoomState;
-  startTime: number;
-  endTime: number;
-  industry?: string;
-  roleConfig?: Record<number, number>;
-  roomProperties: RoomProperties;
-  role: EduRoleTypeEnum; // 上次加入房间的角色
-};
-
-export type RoomListRequest = {
-  nextId?: string;
-  count?: number;
-};
-
-export type RoomListResponse = {
-  total: number;
-  nextId: string;
-  count: number;
-  list: RoomInfo[];
-};
-type RoomProperties = Record<string, any>;
-export type RoomCreateRequest = {
-  roomName: string;
-  roomType: EduRoomTypeEnum;
-  startTime: number;
-  endTime: number;
-  roomProperties?: RoomProperties;
-};
-type RoomCreateResponse = {
-  roomId: string;
-};
-
-export type RoomJoinRequest = {
-  roomId: string;
-  role: EduRoleTypeEnum;
-};
-
-export type RoomJoinNoAuthRequest = RoomJoinRequest & {
-  userUuid: string;
-};
-
-export type RoomJoinResponse = {
-  token: string;
-  appId: string;
-  roomDetail: RoomInfo;
-};
+export * from './room.type';
 
 const noAuthCompanyID = 0;
 
 export class RoomAPI {
   private get domain() {
-    return getTokenDomain(getRegion());
+    return getApiDomain(getRegion());
   }
 
   private get companyId() {
@@ -173,6 +131,44 @@ export class RoomAPI {
   public async history(roomID: string) {
     const url = `${this.domain}/edu/v2/rooms/${roomID}/history`;
     return request.get<Response<any>>(url);
+  }
+
+  /**
+   * 获取加入教室的凭证
+   * @param RoomCredentialRequest
+   * @returns
+   *
+   **/
+  /** @en
+   * get credentials of the classroom.
+   * @param RoomCredentialResponse
+   * @returns
+   */
+  public async getCredential(params: RoomCredentialRequest): Promise<RoomCredentialResponse> {
+    const { userUuid, roomUuid, role } = params;
+    const { data } = await request.get(
+      `${this.domain}/edu/v4/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
+    );
+    return data.data;
+  }
+
+  /**
+   * 获取加入教室的凭证(免鉴权)
+   * @param RoomCredentialsNoAuthRequest
+   * @returns
+   *
+   **/
+  /** @en
+   * get credentials of the classroom. (No authentication)
+   * @param RoomCredentialsNoAuthRequest
+   * @returns
+   */
+  public async getCredentialNoAuth(params: RoomCredentialNoAuthRequest) {
+    const { userUuid, roomUuid, role } = params;
+    const { data } = await axios.get<Response<RoomCredentialNoAuthResponse>>(
+      `${this.domain}/edu/v3/rooms/${roomUuid}/roles/${role}/users/${userUuid}/token`,
+    );
+    return data.data;
   }
 }
 

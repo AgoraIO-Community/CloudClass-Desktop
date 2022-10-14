@@ -80,6 +80,7 @@ export const CDNPlayer: React.FC<CDNPlayerProps> = observer(
       return () => {
         playerRef.current?.off(MediaPlayerEvents.ReadyToPlay, handleReadyPlay);
         playerRef.current?.off(MediaPlayerEvents.InteractiveNeeded, handleInteractiveNeeded);
+        playerRef.current?.dispose();
       };
     }, [stream, mediaStore]);
 

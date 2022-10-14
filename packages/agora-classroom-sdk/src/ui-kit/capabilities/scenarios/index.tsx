@@ -8,7 +8,6 @@ import {
 import { observer } from 'mobx-react';
 import { useLayoutEffect, useState } from 'react';
 import { RoomPretestContainer } from '~containers/pretest';
-import { Watermark } from '../containers/widget/slots';
 import { OneToOneScenario } from './1v1';
 import { BigClassScenario } from './big-class';
 import { BigClassScenarioH5 } from './big-class-h5';

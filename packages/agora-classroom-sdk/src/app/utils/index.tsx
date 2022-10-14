@@ -7,3 +7,4 @@ export * from './browser';
 export * from './history';
 export * from './error';
 export * from './local-storage';
+export * from './domain';

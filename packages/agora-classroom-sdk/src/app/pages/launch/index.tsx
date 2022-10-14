@@ -3,21 +3,30 @@ import { AgoraEduSDK } from '@/infra/api';
 import { AgoraEduClassroomEvent } from 'agora-edu-core';
 import { isEmpty } from 'lodash';
 import { observer } from 'mobx-react';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import courseWareList from './courseware-list';
-
+import ReactDOM from 'react-dom';
 export const LaunchPage = observer(() => {
   const homeStore = useContext(GlobalStoreContext);
-
+  const appRef = useRef<HTMLDivElement | null>(null);
   const history = useHistory();
-
-  const launchOption = homeStore.launchOption || {};
+  const launchOption = homeStore.launchOption;
 
   useEffect(() => {
     if (isEmpty(launchOption)) {
       history.push('/');
       return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (appRef.current) {
+      const dom = appRef.current;
+      mountLaunch(dom);
+      return () => {
+        ReactDOM.unmountComponentAtNode(dom);
+      };
     }
   }, []);
 
@@ -55,11 +64,5 @@ export const LaunchPage = observer(() => {
     }
   }, []);
 
-  return (
-    <div
-      ref={mountLaunch}
-      id="app"
-      className="bg-background"
-      style={{ width: '100%', height: '100%' }}></div>
-  );
+  return <div ref={appRef} id="app" className="bg-background w-full h-full"></div>;
 });

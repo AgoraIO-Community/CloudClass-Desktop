@@ -4,25 +4,20 @@
 }
 
 .welcome-container > .header {
-  @apply flex items-center justify-end;
+  @apply flex items-center justify-end absolute w-full;
   padding: 0 50px 25px 32px;
   z-index: 2;
   height: 65px;
 }
 
-.welcome-container .settings {
-  @apply flex items-center;
-  /* fcr-black */
-  border: 1px solid #000000;
-  color: #000000;
+.welcome-container .content {
+  @apply flex flex-col items-center relative;
+  height: calc(100vh - 57px - 25px);
+  overflow-y: auto;
 }
 
-.welcome-container .settings:hover {
-  color: #000000;
-}
-
-.welcome-container .settings > span {
-  margin-left: 7px;
+.welcome-container .content > div {
+  width: 52%;
 }
 
 .welcome-container .welcome-title {
@@ -34,16 +29,7 @@
   color: #000000;
   margin-bottom: 50px;
   text-align: center;
-}
-
-.welcome-container .content {
-  @apply flex flex-col items-center relative;
-  height: calc(100vh - 57px - 25px);
-  overflow-y: auto;
-}
-
-.welcome-container .content > div {
-  width: 52%;
+  margin-top: 65px;
 }
 
 .welcome-container .content.room-list-empty {
