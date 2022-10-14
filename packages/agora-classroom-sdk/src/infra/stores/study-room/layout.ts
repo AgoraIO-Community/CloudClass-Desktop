@@ -245,7 +245,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
 
     const quitSub = Array.from(this.classroomStore.streamStore.streamByStreamUuid.values()).filter(
       (s) => {
-        return !uuids.includes(s.fromUser.userUuid);
+        return uuids.includes(s.fromUser.userUuid);
       },
     );
 
@@ -261,6 +261,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     const waitingSub = this.waitingSub.slice();
     // timer休眠时退出的用户
     const quitSub = this.quitSub.slice();
+    
     // 过滤掉timer休眠时退出的用户
     let doneSub = this.doneSub.filter((s) => {
       return !quitSub.includes(s);
@@ -272,7 +273,7 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     // 已订阅 diff 当前页面视频列表 = 需要取消订阅的流列表
     const toUnsub = doneSub.filter((stream) => {
       return !waitingSub.includes(stream);
-    });
+    }).concat(quitSub);
     // 当前页面视频列表 diff 已订阅 = 需要订阅的流列表
     const toSub = waitingSub.filter((stream) => {
       return !doneSub.includes(stream);
