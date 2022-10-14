@@ -5,7 +5,7 @@ import {
 } from '@/ui-kit/capabilities/containers/visibility/controlled';
 import * as hx from 'agora-chat-widget';
 import { AgoraWidgetBase, AgoraWidgetLifecycle } from 'agora-classroom-sdk';
-import { AgoraWidgetController, EduRoleTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
+import { AgoraWidgetController, EduClassroomConfig, EduRegion, EduRoleTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import classNames from 'classnames';
 import { autorun, IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
@@ -19,7 +19,7 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
   const [minimize, toggleChatMinimize] = useState<boolean>(false);
   const isFullScreen = false; // todo from uistore
 
-  const { appId, host, sessionInfo, platform } = widget.classroomConfig;
+  const { appId, host, sessionInfo, platform, rteEngineConfig } = widget.classroomConfig;
 
   const {
     visibleEmoji,
@@ -113,6 +113,8 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
     context: { ...widget.imUIConfig, ...widget.imConfig, ...roomInfo, ...localUserInfo },
   };
 
+  const regionPath = rteEngineConfig.region === EduRegion.CN ? '' : `/${rteEngineConfig.region.toLowerCase()}`;
+
   return (
     <div id="hx-chatroom" style={{ display: 'flex', width: '100%', height: '100%' }}>
       <hx.HXChatRoom
@@ -124,6 +126,7 @@ const App = observer(({ widget }: { widget: AgoraHXChatWidget }) => {
           roomUuid: sessionInfo.roomUuid,
           userUuid: sessionInfo.userUuid,
           token: sessionInfo.token,
+          regionPath
         }}
       />
     </div>

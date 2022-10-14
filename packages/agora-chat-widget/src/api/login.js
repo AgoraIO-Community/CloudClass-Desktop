@@ -9,8 +9,10 @@ export class LoginAPI {
 
   // get token
   getToken = () => {
-    const { host, appId, roomUuid, userUuid, token } = this.store.getState().agoraTokenConfig;
-    const url = `${host}/edu/apps/${appId}/v2/rooms/${roomUuid}/widgets/easemobIM/users/${userUuid}/token`;
+    const { host, appId, roomUuid, userUuid, token, regionPath } =
+      this.store.getState().agoraTokenConfig;
+
+    const url = `${host}${regionPath}/edu/apps/${appId}/v2/rooms/${roomUuid}/widgets/easemobIM/users/${userUuid}/token`;
     return axios
       .get(url, {
         headers: {
