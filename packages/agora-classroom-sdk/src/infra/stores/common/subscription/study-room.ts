@@ -47,18 +47,18 @@ export class StudyRoomSubscription extends SceneSubscription {
     this.handleRemoteStreamUpdated(streams);
   }
   handleRemoteStreamUpdated(streams: AgoraStream[]): void {
-    streams.forEach((stream) => {
-      // the stream not in _streamUuids means it's a new stream
-      if (!this._streamUuids.includes(stream.streamUuid)) {
-        // mute the stream by default when a new stream comming
-        this._scene.rtcChannel.muteRemoteVideoStream(stream.streamUuid, true);
-      }
-    });
-    streams.forEach((stream) => {
-      if (!this._streamUuids.includes(stream.streamUuid)) {
-        this._streamUuids.push(stream.streamUuid);
-      }
-    });
+    // streams.forEach((stream) => {
+    //   // the stream not in _streamUuids means it's a new stream
+    //   if (!this._streamUuids.includes(stream.streamUuid)) {
+    //     // mute the stream by default when a new stream comming
+    //     this._scene.rtcChannel.muteRemoteVideoStream(stream.streamUuid, true);
+    //   }
+    // });
+    // streams.forEach((stream) => {
+    //   if (!this._streamUuids.includes(stream.streamUuid)) {
+    //     this._streamUuids.push(stream.streamUuid);
+    //   }
+    // });
   }
   handleRemoteStreamRemoved(streams: AgoraStream[]): void {
     this._streamUuids = this._streamUuids.filter(

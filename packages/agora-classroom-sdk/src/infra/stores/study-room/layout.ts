@@ -66,6 +66,8 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
   @observable
   rosterVisibility = false;
 
+  subSet = new Set<string>();
+
   get getters(): StudyRoomGetters {
     return super.getters as StudyRoomGetters;
   }
@@ -281,6 +283,10 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
 
     if (toUnsub.length) {
       await muteRemoteVideoStreamMass(toUnsub, true);
+      toUnsub.forEach(({ streamUuid }) => {
+        this.subSet.delete(streamUuid);
+      });
+
       // 从已订阅列表移除
       doneSub = doneSub.filter((stream) => {
         return !toUnsub.includes(stream);
@@ -292,6 +298,9 @@ export class StudyRoomLayoutUIStore extends LayoutUIStore {
     if (toSub.length) {
       // 订阅成功的列表
       subList = (await muteRemoteVideoStreamMass(toSub, false)) || [];
+      subList.forEach((streamUuid) => {
+        this.subSet.add(streamUuid);
+      });
       // 取到流对象
       const newSub = toSub.filter(({ streamUuid }) => {
         return subList.includes(streamUuid);
