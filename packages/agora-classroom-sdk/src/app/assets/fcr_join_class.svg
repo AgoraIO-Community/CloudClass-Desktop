@@ -8,7 +8,7 @@
     r="12.5"
     fill="url(#paint0_linear_257_2644)" />
   <g filter="url(#filter0_b_257_2644)">
-    <path fill-rule="evenodd"
+    <path fillRule="evenodd"
       clip-rule="evenodd"
       d="M20.5 36C27.4036 36 33 30.4036 33 23.5C33 16.5964 27.4036 11 20.5 11C13.5964 11 8 16.5964 8 23.5C8 30.4036 13.5964 36 20.5 36ZM20.5 18C21.3284 18 22 18.6716 22 19.5V22H24.5C25.3284 22 26 22.6716 26 23.5C26 24.3284 25.3284 25 24.5 25H22V27.5C22 28.3284 21.3284 29 20.5 29C19.6716 29 19 28.3284 19 27.5V25H16.5C15.6716 25 15 24.3284 15 23.5C15 22.6716 15.6716 22 16.5 22H19V19.5C19 18.6716 19.6716 18 20.5 18Z"
       fill="white"
@@ -21,8 +21,8 @@
       width="33"
       height="33"
       filterUnits="userSpaceOnUse"
-      color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0"
+      colorInterpolationFilters="sRGB">
+      <feFlood floodOpacity="0"
         result="BackgroundImageFix" />
       <feGaussianBlur in="BackgroundImage"
         stdDeviation="2" />

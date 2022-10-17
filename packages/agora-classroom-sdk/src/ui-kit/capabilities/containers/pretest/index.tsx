@@ -94,7 +94,7 @@ export const PlaybackSelect = observer(() => {
 });
 
 const BeautyControllerBar = observer(() => {
-  if (EduRteEngineConfig.platform !== EduRteRuntimePlatform.Electron) return null;
+  // if (EduRteEngineConfig.platform !== EduRteRuntimePlatform.Electron) return null;
   const {
     pretestUIStore: {
       isBeauty,
@@ -309,8 +309,8 @@ export const CameraPreviewPlayer = observer(() => {
 
   return (
     <>
-      <PretestVideoPlayerLocalCameraPlaceholder />
       {!localCameraOff ? <TrackPlayer /> : null}
+      <PretestVideoPlayerLocalCameraPlaceholder />
     </>
   );
 });
@@ -354,14 +354,14 @@ const CameraMirrorCheckBoxContainer = () => {
 };
 
 const BeautyCheckBoxContainer = () => {
-  return EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron ? (
+  return (
     <span className="media-choice-box">
       <BeautyCheckBox />
       <span className="beauty-mode" style={{ marginLeft: 5 }}>
         {transI18n('media.beauty')}
       </span>
     </span>
-  ) : null;
+  );
 };
 
 const CameraDeviceManager = () => {

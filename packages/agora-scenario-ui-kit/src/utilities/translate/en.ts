@@ -361,6 +361,7 @@ export const en = {
     buffing: 'Buffing',
     ruddy: 'Ruddy',
     default: 'Default',
+    none: 'None',
   },
   stage: {
     visible: 'Show',
@@ -379,6 +380,7 @@ export const en = {
     detect_new_device_in_room:
       'The device has installed, Please click setting and select the new device.',
     teacher_device_may_not_work: "There is something wrong with the teacher's device",
+    test: 'Test',
   },
   'biz-header': {
     perf: 'Perf',

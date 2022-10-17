@@ -149,4 +149,6 @@ export enum SvgIconEnum {
   WORD = 'word',
   ZOOM_IN = 'zoom-in',
   ZOOM_OUT = 'zoom-out',
+  NONE = 'none',
+  UNDERLINE = 'underline',
 }

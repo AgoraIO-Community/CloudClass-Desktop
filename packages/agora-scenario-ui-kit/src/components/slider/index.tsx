@@ -1,4 +1,4 @@
-import { Slider } from 'antd';
+import { Slider, SliderSingleProps } from 'antd';
 import classnames from 'classnames';
 import { FC } from 'react';
 import { BaseProps } from '~ui-kit/components/util/type';
@@ -15,7 +15,7 @@ export interface ASliderProps extends BaseProps {
   onChange?: (value: number) => void;
 }
 
-export const ASlider: FC<ASliderProps> = ({
+export const ASlider: FC<ASliderProps & Pick<SliderSingleProps, 'vertical'>> = ({
   defaultValue = 0,
   value = 0,
   disabled = false,
@@ -27,6 +27,7 @@ export const ASlider: FC<ASliderProps> = ({
     console.log(value);
   },
   className,
+  vertical,
   ...restProps
 }) => {
   const cls = classnames({
@@ -43,6 +44,7 @@ export const ASlider: FC<ASliderProps> = ({
         max={max}
         min={min}
         step={step}
+        vertical={vertical}
         onChange={onChange}
       />
     </div>

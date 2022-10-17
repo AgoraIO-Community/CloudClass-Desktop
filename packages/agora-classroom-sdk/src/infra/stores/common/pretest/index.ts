@@ -14,9 +14,11 @@ export type PretestToast = {
 };
 
 type AddToastArgs = Omit<PretestToast, 'id'>;
-
+type effectType = 'beauty' | 'virtualBackground';
 export class PretestUIStore extends EduUIStoreBase {
   private readonly _disposers = new Set<Lambda>();
+
+  @observable currentEffectType: effectType = 'virtualBackground';
 
   onInstall() {
     // 处理视频设备变动
@@ -112,7 +114,7 @@ export class PretestUIStore extends EduUIStoreBase {
   /**
    * 美颜类型
    */
-  @observable activeBeautyType: BeautyType = BeautyType.buffing;
+  @observable activeBeautyType: BeautyType | 'none' = 'none';
 
   /**
    * 是否正在测试扬声器
@@ -368,6 +370,8 @@ export class PretestUIStore extends EduUIStoreBase {
         return this.ruddyValue;
       case BeautyType.whitening:
         return this.whiteningValue;
+      case 'none':
+        return 0;
     }
   }
 
@@ -507,7 +511,7 @@ export class PretestUIStore extends EduUIStoreBase {
    * @param value
    */
   @action.bound
-  setActiveBeautyType(value: BeautyType) {
+  setActiveBeautyType(value: BeautyType | 'none') {
     this.activeBeautyType = value;
   }
 
@@ -541,6 +545,15 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 重置美颜
+   */
+  @bound
+  resetBeautyValue() {
+    this.setActiveBeautyType('none');
+    this.classroomStore.mediaStore.resetBeautyEffect();
+  }
+
+  /**
    * 设置当前使用扬声器设备
    * @param id
    */
@@ -557,6 +570,13 @@ export class PretestUIStore extends EduUIStoreBase {
   @bound
   setupLocalVideo(dom: HTMLElement, mirror: boolean) {
     this.classroomStore.mediaStore.setupLocalVideo(dom, mirror);
+  }
+  /**
+   * 设置单当前效果tab
+   */
+  @action.bound
+  setCurrentEffectOption(type: effectType) {
+    this.currentEffectType = type;
   }
 
   @bound

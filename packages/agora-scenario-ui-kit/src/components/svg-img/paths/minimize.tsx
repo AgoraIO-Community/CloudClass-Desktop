@@ -3,7 +3,7 @@ import React from 'react';
 import { PathOptions } from '../svg-dict';
 
 export const path = (props: PathOptions) => (
-  <g id="V2.0.0_PC端优化" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+  <g id="V2.0.0_PC端优化" stroke="none" stroke-width="1" fill="none" fillRule="evenodd">
     <g id="（老师端）小班课-聊天展开-electron" transform="translate(-1226.000000, -235.000000)">
       <g id="编组-37" transform="translate(925.000000, 225.000000)">
         <g id="最小化" transform="translate(301.000000, 10.000000)">
