@@ -48,3 +48,8 @@ export const REMOVE_ALL_MUTE = 'removeAllMute';
 // 单人禁言
 export const MUTE_USER = 'mute';
 export const UNMUTE_USER = 'unmute';
+// 设置禁言 properties
+export const MUTE_CONFIG = {
+  mute: 1,
+  unMute: 0
+}

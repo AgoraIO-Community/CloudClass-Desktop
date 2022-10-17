@@ -25,8 +25,8 @@ export const roomAllMute = (data) => {
   return { type: 'ROOM_ALL_MUTE', data };
 };
 // 聊天室单人禁言
-export const roomUserMute = (data) => {
-  return { type: 'ROOM_USER_MUTE', data };
+export const roomUserMute = (data, option) => {
+  return { type: 'ROOM_USER_MUTE', data, option };
 };
 // 判断当前是否被禁言
 export const isUserMute = (data) => {
