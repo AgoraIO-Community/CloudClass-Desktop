@@ -75,7 +75,7 @@ export class ChatRoomAPI {
         }
       })
       .catch((err) => {
-        message.error(transI18n('get_room_info'));
+        message.error(transI18n('chat.get_room_info'));
         console.log('getRoomInfo>>>', err);
       });
   };
