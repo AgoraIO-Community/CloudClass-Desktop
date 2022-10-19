@@ -1,10 +1,23 @@
-import { AgoraRteMediaSourceState, bound, Logger } from 'agora-rte-sdk';
-import { action, computed, Lambda, observable } from 'mobx';
+import {
+  AGBaseProcessor,
+  AGBeautyEffect,
+  AGLighteningLevel,
+  AgoraRteMediaSourceState,
+  bound,
+  Logger,
+} from 'agora-rte-sdk';
+import { action, computed, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { CameraPlaceholderType, DeviceStateChangedReason } from '../type';
 import { v4 as uuidv4 } from 'uuid';
 import { computedFn } from 'mobx-utils';
-import { AgoraEduClassroomEvent, BeautyType, DEVICE_DISABLE, EduEventCenter } from 'agora-edu-core';
+import {
+  AgoraEduClassroomEvent,
+  BeautyType,
+  DEVICE_DISABLE,
+  EduClassroomConfig,
+  EduEventCenter,
+} from 'agora-edu-core';
 import { transI18n } from '~ui-kit';
 
 export type PretestToast = {
@@ -15,10 +28,33 @@ export type PretestToast = {
 
 type AddToastArgs = Omit<PretestToast, 'id'>;
 type effectType = 'beauty' | 'virtualBackground';
+type deviceType = 'audio' | 'video';
+
+const DEFAULT_BEAUTY_OPTION = {
+  lighteningContrastLevel: AGLighteningLevel.normal,
+  lighteningLevel: 0,
+  rednessLevel: 0,
+  smoothnessLevel: 0,
+  sharpnessLevel: 0,
+};
+
 export class PretestUIStore extends EduUIStoreBase {
   private readonly _disposers = new Set<Lambda>();
+  private _cameraVirtualBackgroundProcessor = null;
+  private _cameraBeautyProcessor = null;
 
   @observable currentEffectType: effectType = 'virtualBackground';
+  @observable currentPretestTab: deviceType = 'video';
+  @observable backgroundImage = []; // 虚拟背景
+  @observable currentVirtualBackground = ''; // 当前选择虚拟背景选项
+
+  /**
+   * 美颜配置
+   **/
+  /** @en
+   * The image enhancement options
+   */
+  @observable beautyEffectOptions: AGBeautyEffect = DEFAULT_BEAUTY_OPTION;
 
   onInstall() {
     // 处理视频设备变动
@@ -72,6 +108,17 @@ export class PretestUIStore extends EduUIStoreBase {
 
     this._disposers.add(playbackDisposer);
 
+    this._disposers.add(
+      reaction(
+        () => this.beautyEffectOptions,
+        () => {
+          if (this._cameraBeautyProcessor) {
+            (this._cameraBeautyProcessor as any).enable();
+            (this._cameraBeautyProcessor as any).setOptions(this.beautyEffectOptions);
+          }
+        },
+      ),
+    );
     EduEventCenter.shared.onClassroomEvents(this._handleInteractionEvents);
   }
 
@@ -336,7 +383,7 @@ export class PretestUIStore extends EduUIStoreBase {
    */
   @computed
   get whiteningValue() {
-    return Math.ceil(this.classroomStore.mediaStore.beautyEffectOptions.lighteningLevel * 100);
+    return Math.ceil(this.beautyEffectOptions.lighteningLevel * 100);
   }
 
   /**
@@ -345,7 +392,7 @@ export class PretestUIStore extends EduUIStoreBase {
    */
   @computed
   get ruddyValue() {
-    return Math.ceil(this.classroomStore.mediaStore.beautyEffectOptions.rednessLevel * 100);
+    return Math.ceil(this.beautyEffectOptions.rednessLevel * 100);
   }
 
   /**
@@ -354,7 +401,7 @@ export class PretestUIStore extends EduUIStoreBase {
    */
   @computed
   get buffingValue() {
-    return Math.ceil(this.classroomStore.mediaStore.beautyEffectOptions.smoothnessLevel * 100);
+    return Math.ceil(this.beautyEffectOptions.smoothnessLevel * 100);
   }
 
   /**
@@ -373,6 +420,16 @@ export class PretestUIStore extends EduUIStoreBase {
       case 'none':
         return 0;
     }
+  }
+
+  @computed
+  get cameraVirtualBackgroundProcessor() {
+    return this._cameraVirtualBackgroundProcessor;
+  }
+
+  @computed
+  get cameraBeautyProcessor() {
+    return this._cameraBeautyProcessor;
   }
 
   /**
@@ -519,27 +576,29 @@ export class PretestUIStore extends EduUIStoreBase {
    * 设置美颜参数
    * @param value (0 ~ 100)
    */
-  @bound
+  @action.bound
   setActiveBeautyValue(value: number) {
+    if (!this._cameraBeautyProcessor) return;
     const transformValue = Number((value / 100).toFixed(2));
     switch (this.activeBeautyType) {
       case BeautyType.buffing:
-        this.classroomStore.mediaStore.setBeautyEffect({
-          ...this.classroomStore.mediaStore.beautyEffectOptions,
+        this.beautyEffectOptions = {
+          ...this.beautyEffectOptions,
           smoothnessLevel: transformValue,
-        });
+        };
+
         break;
       case BeautyType.ruddy:
-        this.classroomStore.mediaStore.setBeautyEffect({
-          ...this.classroomStore.mediaStore.beautyEffectOptions,
+        this.beautyEffectOptions = {
+          ...this.beautyEffectOptions,
           rednessLevel: transformValue,
-        });
+        };
         break;
       case BeautyType.whitening:
-        this.classroomStore.mediaStore.setBeautyEffect({
-          ...this.classroomStore.mediaStore.beautyEffectOptions,
+        this.beautyEffectOptions = {
+          ...this.beautyEffectOptions,
           lighteningLevel: transformValue,
-        });
+        };
         break;
     }
   }
@@ -547,10 +606,13 @@ export class PretestUIStore extends EduUIStoreBase {
   /**
    * 重置美颜
    */
-  @bound
+  @action.bound
   resetBeautyValue() {
     this.setActiveBeautyType('none');
-    this.classroomStore.mediaStore.resetBeautyEffect();
+    if (this._cameraBeautyProcessor) {
+      (this._cameraBeautyProcessor as any).disable();
+      this.beautyEffectOptions = DEFAULT_BEAUTY_OPTION;
+    }
   }
 
   /**
@@ -577,6 +639,132 @@ export class PretestUIStore extends EduUIStoreBase {
   @action.bound
   setCurrentEffectOption(type: effectType) {
     this.currentEffectType = type;
+  }
+
+  @action.bound
+  setCurrentTab(type: deviceType) {
+    this.currentPretestTab = type;
+  }
+
+  @action.bound
+  handleBackgroundChange(
+    key: string,
+    value?: { type: 'img'; url: string } | { type: 'video'; url: string },
+  ) {
+    console.log('handleBackgroundChange');
+    this.currentVirtualBackground = key;
+    if (key === 'none') {
+      this.disableVirtualBackground();
+    }
+    if (value) {
+      const { type, url } = value;
+      if (type === 'img') {
+        const image = new Image();
+        image.src = url;
+        image.addEventListener('load', () => {
+          console.log('handleBackgroundChange img load');
+          this.setVirtualBackground({ type: 'img', source: image });
+        });
+      } else {
+        const video = document.createElement('video');
+        video.src = url;
+        video.addEventListener('loadeddata', () => {
+          console.log('handleBackgroundChange loadeddata load');
+          this.setVirtualBackground({ type: 'video', source: video });
+        });
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+      }
+    }
+  }
+
+  @bound
+  setVirtualBackground({
+    type,
+    source,
+  }: { type: 'img'; source: HTMLImageElement } | { type: 'video'; source: HTMLVideoElement }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    console.log('setVirtualBackground');
+    console.log(source);
+    this._cameraVirtualBackgroundProcessor &&
+      (this._cameraVirtualBackgroundProcessor as any).setOptions({ type, source });
+    this._cameraVirtualBackgroundProcessor &&
+      (this._cameraVirtualBackgroundProcessor as any).enable();
+  }
+
+  /**
+   * 初始化 virtual background processor
+   * @returns
+   */
+  @action.bound
+  initVirtualBackground() {
+    return new Promise((resolve, reject) => {
+      if (this._cameraVirtualBackgroundProcessor) reject();
+      const target = EduClassroomConfig.shared.rteEngineConfig.rtcSDKExtensions.find(
+        (item) => item.name === 'VirtualBackgroundExtension',
+      );
+      if (target) {
+        const processor = target.instance.createProcessor();
+        processor
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          .init('.')
+          .then(() => {
+            // this.classroomStore.mediaStore.addCameraProcessors([processor]);
+            this._cameraVirtualBackgroundProcessor = processor;
+            resolve(processor);
+          })
+          .catch((e: any) => {
+            this.shareUIStore.addGenericErrorDialog(e);
+          });
+      }
+    });
+  }
+
+  /**
+   * 初始化美颜插件
+   * @returns
+   */
+  @action.bound
+  initBeauty() {
+    return new Promise((resolve, reject) => {
+      if (this._cameraBeautyProcessor) reject();
+      const target = EduClassroomConfig.shared.rteEngineConfig.rtcSDKExtensions.find(
+        (item) => item.name === 'BeautyEffectExtension',
+      );
+      if (target) {
+        const processor = target.instance.createProcessor();
+        // this.classroomStore.mediaStore.addCameraProcessors([processor]);
+        this._cameraBeautyProcessor = processor;
+        resolve(processor);
+      }
+    });
+  }
+
+  @action.bound
+  async initVideoEffect() {
+    const virtualProcessor = await this.initVirtualBackground();
+    const beautyProcessor = await this.initBeauty();
+    this.classroomStore.mediaStore.addCameraProcessors([
+      virtualProcessor as AGBaseProcessor,
+      beautyProcessor as AGBaseProcessor,
+    ]);
+  }
+
+  /**
+   * 关闭美颜
+   */
+  disableBeauty() {
+    this._cameraBeautyProcessor && (this._cameraBeautyProcessor as any).disable();
+  }
+
+  /**
+   * 关闭虚拟背景
+   */
+  @bound
+  disableVirtualBackground() {
+    this._cameraVirtualBackgroundProcessor &&
+      (this._cameraVirtualBackgroundProcessor as any).disable();
   }
 
   @bound

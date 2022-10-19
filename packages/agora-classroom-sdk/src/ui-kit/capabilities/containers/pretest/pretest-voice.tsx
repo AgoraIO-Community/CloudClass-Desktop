@@ -7,7 +7,7 @@ import { AButton as Button, SvgImg, transI18n, SvgIconEnum } from '~ui-kit';
 import { Volume } from './volume';
 import PretestAudio from './assets/pretest-audio.mp3';
 import { isProduction } from '@/app/utils/env';
-import { Select } from '@/app/components/form-field/select';
+import { Field } from '@/app/components/form-field';
 
 export const PretestVoice = observer(() => {
   return (
@@ -26,15 +26,15 @@ const MicrophoneTest = observer(() => {
     <ItemCard>
       <ItemCardTitle>{transI18n('media.microphone')}</ItemCardTitle>
       <ItemForm>
-        <Select
+        <Field
+          label=""
+          type="select"
           value={currentRecordingDeviceId}
-          onChange={(value) => {
-            setRecordingDevice(value);
-          }}
           options={recordingDevicesList.map((value) => ({
             text: value.label,
             value: value.value,
           }))}
+          onChange={(value) => setRecordingDevice(value)}
         />
       </ItemForm>
       <VolumeDance />
@@ -72,10 +72,15 @@ const SpeakerTest = observer(() => {
     <ItemCard>
       <ItemCardTitle>{transI18n('media.speaker')}</ItemCardTitle>
       <ItemForm>
-        <Select
+        <Field
+          label=""
+          type="select"
           value={currentPlaybackDeviceId}
+          options={playbackDevicesList.map((value) => ({
+            text: value.label,
+            value: value.value,
+          }))}
           onChange={handlePlaybackChange}
-          options={playbackDevicesList.map((value) => ({ text: value.label, value: value.value }))}
         />
         <AButton
           type="primary"
@@ -104,6 +109,7 @@ const VolumeDance: FC = observer(() => {
 const PreTestContainer = styled.div`
   padding: 40px 30px;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 20px;
 `;
@@ -130,6 +136,12 @@ const ItemForm = styled.div`
   justify-content: center;
   gap: 8px;
   height: 42px;
+  & .form-field-wrap {
+    width: 100%;
+  }
+  & .form-field-label {
+    display: none;
+  }
 `;
 
 const AButton = styled(Button)`
@@ -143,10 +155,12 @@ const AButton = styled(Button)`
   flex-basis: 100px;
   flex-shrink: 0;
   border-color: #000;
-  &:hover {
+  &:hover,
+  &:focus {
     background: #000;
     border-color: #000;
   }
+  /* .ant-btn-primary:hover, .ant-btn-primary:focus */
 `;
 
 const VolumeDanceContainer = styled.div`

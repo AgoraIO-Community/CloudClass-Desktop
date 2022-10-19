@@ -1,13 +1,16 @@
-import { Select } from '@/app/components/form-field/select';
+import { Field } from '@/app/components/form-field';
 import { useStore } from '@/infra/hooks/ui-store';
 import { BeautyType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useRef, useEffect, useCallback, useState } from 'react';
+import { css } from 'styled-components';
 import { styled } from 'twin.macro';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
 import { ASlider } from '~ui-kit/components/slider';
 import underline from './assets/underline.png';
 
+const DEFAULT_IMAGE_EFFECTS = require.context('./assets/effect/', false, /^.*\.jpg/);
+const DEFAULT_VIDEO_EFFECTS = require.context('./assets/effect/', false, /^.*\.mp4/);
 export const PretestVideo = () => {
   return (
     <VideoContainer>
@@ -101,27 +104,43 @@ const VideoDeviceList = observer(() => {
 
   return (
     <VideoDeviceListPanel>
-      <Select
+      <Field
+        label=""
+        type="select"
         value={currentCameraDeviceId}
-        onChange={(value) => {
-          setCameraDevice(value);
-        }}
         options={cameraDevicesList.map((value) => ({
           text: value.label,
           value: value.value,
-        }))}></Select>
+        }))}
+        onChange={(value) => {
+          setCameraDevice(value);
+        }}
+      />
     </VideoDeviceListPanel>
   );
 });
 
 const VideoOperatorTab = observer(() => {
   const {
-    pretestUIStore: { currentEffectType, setCurrentEffectOption },
+    pretestUIStore: {
+      currentEffectType,
+      setCurrentEffectOption,
+      cameraVirtualBackgroundProcessor,
+      cameraBeautyProcessor,
+      initVideoEffect,
+    },
   } = useStore();
   const [underlineLeft, setLeft] = useState<number>(0);
+
   const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
     setCurrentEffectOption(type);
     setLeft(event.currentTarget.offsetLeft);
+  }, []);
+
+  useEffect(() => {
+    if (!cameraVirtualBackgroundProcessor && !cameraBeautyProcessor) {
+      initVideoEffect();
+    }
   }, []);
 
   return (
@@ -130,12 +149,12 @@ const VideoOperatorTab = observer(() => {
         <TabTitle
           activity={currentEffectType === 'virtualBackground'}
           onClick={(e) => handleTabClick(e, 'virtualBackground')}>
-          Background
+          {transI18n('media.virtualBackground')}
         </TabTitle>
         <TabTitle
           activity={currentEffectType === 'beauty'}
           onClick={(e) => handleTabClick(e, 'beauty')}>
-          Beauty Filter
+          {transI18n('media.beauty')}
         </TabTitle>
         <ForceBar translateLeft={underlineLeft}></ForceBar>
       </TabHeader>
@@ -148,7 +167,64 @@ const VideoOperatorTab = observer(() => {
 });
 
 const Background = observer(() => {
-  return <div>background</div>;
+  const {
+    pretestUIStore: { currentVirtualBackground, handleBackgroundChange },
+  } = useStore();
+
+  return (
+    <BackgroundContainer>
+      <BackgroundItem
+        activity={currentVirtualBackground === 'none'}
+        onClick={() => handleBackgroundChange('none')}>
+        <SvgImg
+          type={SvgIconEnum.NONE}
+          colors={{ iconPrimary: currentVirtualBackground === 'none' ? '#0056FD' : '#000' }}
+          size={40}
+        />
+      </BackgroundItem>
+      <BackgroundItem>
+        <SvgImg type={SvgIconEnum.ADD_SCENE} colors={{ iconPrimary: '#000' }} size={40} />
+      </BackgroundItem>
+      {DEFAULT_IMAGE_EFFECTS.keys().map((item) => (
+        <BackgroundItem
+          activity={currentVirtualBackground === item}
+          key={item}
+          image={DEFAULT_IMAGE_EFFECTS(item)}
+          onClick={() =>
+            handleBackgroundChange(item, { type: 'img', url: DEFAULT_IMAGE_EFFECTS(item) })
+          }>
+          {currentVirtualBackground === item && (
+            <SvgImg
+              className="svg-mark"
+              type={SvgIconEnum.MARK}
+              colors={{ iconPrimary: '#0056FD' }}
+            />
+          )}
+        </BackgroundItem>
+      ))}
+      {DEFAULT_VIDEO_EFFECTS.keys().map((item) => {
+        return (
+          <BackgroundItem
+            key={item}
+            activity={currentVirtualBackground === item}
+            onClick={() =>
+              handleBackgroundChange(item, { type: 'video', url: DEFAULT_VIDEO_EFFECTS(item) })
+            }>
+            <video autoPlay loop muted>
+              <source src={DEFAULT_VIDEO_EFFECTS(item)} type="video/mp4" />
+            </video>
+            {currentVirtualBackground === item && (
+              <SvgImg
+                className="svg-mark"
+                type={SvgIconEnum.MARK}
+                colors={{ iconPrimary: '#0056FD' }}
+              />
+            )}
+          </BackgroundItem>
+        );
+      })}
+    </BackgroundContainer>
+  );
 });
 
 const Beauty = observer(() => {
@@ -162,6 +238,7 @@ const Beauty = observer(() => {
       buffingValue,
     },
   } = useStore();
+
   return (
     <BeautyContainer>
       {[
@@ -178,7 +255,11 @@ const Beauty = observer(() => {
               item.id !== 'none' ? setActiveBeautyType(item.id as BeautyType) : resetBeautyValue();
             }}>
             <BeautyIcon icon={item.id} activity={!!item.value}>
-              <SvgImg type={item.icon} colors={{ iconPrimary: '#fff' }} size={22} />
+              <SvgImg
+                type={item.icon}
+                colors={{ iconPrimary: activeBeautyType === item.id ? '#0056FD' : '#000' }}
+                size={30}
+              />
             </BeautyIcon>
             <BeautyName activity={!!item.value}>{transI18n(`media.${item.id}`)}</BeautyName>
           </BeautyItem>
@@ -189,8 +270,11 @@ const Beauty = observer(() => {
 });
 const VideoContainer = styled.div`
   padding-top: 40px;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: 21px;
+  padding-right: 21px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 `;
 
 const VideoPanel = styled.div`
@@ -232,9 +316,25 @@ const VideoDeviceListPanel = styled.div`
   bottom: 10px;
   width: 240px;
   height: 48px;
-  background: rgba(61, 64, 75, 0.8);
   border-radius: 12px;
   z-index: 9;
+  & .form-field .select {
+    background: rgba(61, 64, 75, 0.8);
+    color: #fff;
+    border-color: transparent;
+  }
+  & .form-field .select a:link,
+  .form-field .select a:hover,
+  .form-field .select a:active,
+  .form-field .select a:visited,
+  & .form-field .option {
+    color: #fff;
+  }
+  & .form-field .option:hover {
+    background: transparent;
+    color: #fff;
+    font-weight: 800;
+  }
 `;
 
 const TabHeader = styled.div`
@@ -244,11 +344,14 @@ const TabHeader = styled.div`
   border-bottom: 1px solid rgba(220, 234, 254, 1);
 `;
 const TabTitle = styled.div<{ activity: boolean }>`
+  width: 92px;
+  text-align: center;
   margin-right: 36px;
   font-weight: ${(props) => (props.activity ? 800 : 400)};
   font-size: 14px;
   padding: 2px;
   color: #757575;
+  cursor: pointer;
 `;
 
 const ForceBar = styled.span<{ translateLeft: number }>`
@@ -265,6 +368,11 @@ const ForceBar = styled.span<{ translateLeft: number }>`
 `;
 const TabContent = styled.div`
   padding-top: 15px;
+  padding-left: 2px;
+  padding-right: 2px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 const BeautyContainer = styled.div`
@@ -281,6 +389,7 @@ const BeautyItem = styled.div<{ activity: boolean }>`
   border-radius: 8px;
   padding: 6px 6px 0 6px;
   box-sizing: border-box;
+  cursor: pointer;
   &::before {
     content: '';
     position: absolute;
@@ -317,4 +426,50 @@ const BeautyName = styled.span<{ activity: boolean }>`
   display: block;
   margin-top: 1px;
   text-align: center;
+`;
+
+const BackgroundContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 10px;
+`;
+
+const BackgroundItem = styled.div<{ image?: string; activity?: boolean }>`
+  width: 82px;
+  height: 60px;
+  border-radius: 8px;
+  background: #f8f8f8;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  ${(props) =>
+    props.image &&
+    css`
+      background-image: url(${props.image});
+      background-size: cover;
+    `}
+
+  &:before {
+    content: '';
+    display: block;
+    left: -3px;
+    top: -3px;
+    position: absolute;
+    width: 88px;
+    height: 66px;
+    border-radius: 12px;
+    ${(props) =>
+      props.activity &&
+      css`
+        border: 2px solid #0056fd;
+      `}
+  }
+  & .svg-mark {
+    position: absolute;
+    left: 33%;
+    top: 33%;
+  }
 `;

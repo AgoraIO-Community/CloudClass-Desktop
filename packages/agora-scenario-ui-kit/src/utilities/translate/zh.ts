@@ -351,6 +351,7 @@ export const zh = {
     ruddy: '红润',
     default: '默认',
     none: '无',
+    virtualBackground: '虚拟背景',
   },
   stage: {
     visible: '显示',
@@ -369,6 +370,8 @@ export const zh = {
     detect_new_device_in_room: '检测到新设备，请点击“设置”后，选择新设备。',
     teacher_device_may_not_work: '老师视频可能出现问题！',
     test: '测试',
+    video: '视频',
+    audio: '音频',
   },
   'biz-header': {
     perf: 'Perf',

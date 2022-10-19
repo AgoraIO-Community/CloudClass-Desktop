@@ -261,6 +261,8 @@
     "workbox-range-requests": "6.1.2",
     "workbox-strategies": "6.1.1",
     "workbox-webpack-plugin": "6.3.0",
-    "zlib": "1.0.5"
+    "zlib": "1.0.5",
+    "agora-extension-virtual-background": "1.1.1",
+    "agora-extension-beauty-effect": "1.0.1-beta"
   }
 }

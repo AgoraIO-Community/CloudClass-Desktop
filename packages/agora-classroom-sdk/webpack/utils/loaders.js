@@ -116,6 +116,9 @@ module.exports.base = [
     test: /\.svga$/,
     use: { loader: 'url-loader' },
   },
+  {
+    test: /\.wasm$/,
+  },
 ];
 
 module.exports.dev = [

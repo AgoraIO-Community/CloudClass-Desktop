@@ -151,4 +151,5 @@ export enum SvgIconEnum {
   ZOOM_OUT = 'zoom-out',
   NONE = 'none',
   UNDERLINE = 'underline',
+  MARK = 'mark',
 }

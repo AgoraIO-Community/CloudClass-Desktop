@@ -5910,6 +5910,16 @@ agora-electron-sdk@3.6.1-rc.4-build.406:
     yuv-buffer "^1.0.0"
     yuv-canvas "^1.2.1"
 
+agora-extension-beauty-effect@1.0.1-beta:
+  version "1.0.1-beta"
+  resolved "https://registry.yarnpkg.com/agora-extension-beauty-effect/-/agora-extension-beauty-effect-1.0.1-beta.tgz#3e896d8e3a0e0122557ca59b7fa79e24797a83ac"
+  integrity sha512-99xFMHhsBOgq5GeM62RLLKJ3VW5NqTRtUNN7TRo16FYrFZ7SADnFMM3nMz5qrtawJBm0p8qfmh9TGnpqN5PwZQ==
+
+agora-extension-virtual-background@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/agora-extension-virtual-background/-/agora-extension-virtual-background-1.1.1.tgz#dbeec2fb4ad06d2d9bf0fa9665d81b6590ff4a64"
+  integrity sha512-kOtKb4PLabm2CKPrkSy7ubj1X6t/I6xy+wDjsLm+3AzS7Oux1xd4qRYYlhh1eQYTjSUtsSL2E/Ora53LERwPdw==
+
 agora-rdc-core@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/agora-rdc-core/-/agora-rdc-core-1.0.3.tgz#459fcd4630f9c21b7f5ea0cbc8acc99e1e2ef133"

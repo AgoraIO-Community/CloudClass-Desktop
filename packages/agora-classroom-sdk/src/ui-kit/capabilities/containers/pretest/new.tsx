@@ -1,8 +1,11 @@
+import { useStore } from '@/infra/hooks/ui-store';
 import { primaryRadius, brandColor } from '@/infra/utils/colors';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { observer } from 'mobx-react';
+import { FC, useCallback } from 'react';
 import tw, { styled, css } from 'twin.macro';
-import { Button, AModal, transI18n, SvgImg, SvgIconEnum } from '~ui-kit';
+import { transI18n, SvgImg, SvgIconEnum } from '~ui-kit';
 import { BaseProps } from '~ui-kit/components/util/type';
+import { Footer } from './pretest-footer';
 import { PretestVideo } from './pretest-video';
 import { PretestVoice } from './pretest-voice';
 
@@ -11,62 +14,75 @@ export interface PretestProps extends BaseProps {
   onOK?: () => void;
 }
 
-type deviceType = 'voice' | 'video';
+type deviceType = 'audio' | 'video';
 
-const SETTINGS: deviceType[] = ['voice', 'video'];
-const SvgImgType = { voice: SvgIconEnum.MICROPHONE_ON, video: SvgIconEnum.RECORDING };
+const SETTINGS: deviceType[] = ['audio', 'video'];
+const SvgImgType = { audio: SvgIconEnum.MICROPHONE_ON, video: SvgIconEnum.RECORDING };
 
-export const RoomPretest: FC<PretestProps> = ({ onOK }) => {
-  const [currentTab, setCurrentTab] = useState<deviceType>('video');
-  const [visible, setVisible] = useState<boolean>(false);
+export const RoomPretest: FC<PretestProps> = observer(({ onOK }) => {
+  const {
+    pretestUIStore: { currentPretestTab, setCurrentTab },
+  } = useStore();
+
   const handleTabChange = useCallback((tab: deviceType) => {
-    setCurrentTab((_) => tab);
+    setCurrentTab(tab);
   }, []);
 
-  useEffect(() => {
-    setVisible(true);
-    return () => {
-      setVisible(false);
-    };
+  const handleOK = useCallback(() => {
+    onOK && onOK();
   }, []);
 
   return (
-    <PretestModal
-      open={visible}
-      footer={null}
-      width={671}
-      bodyStyle={{ height: 630 }}
-      onOk={onOK}
-      centered={true}
-      destroyOnClose={true}
-      onCancel={() => {}}>
-      <PreTestContent>
-        <PreTestTabLeftContent>
-          <PreTestTitle>Setting</PreTestTitle>
-          {SETTINGS.map((item) => (
-            <PreTestTabHeader
-              key={item}
-              activity={currentTab === item}
-              onClick={() => handleTabChange(item)}>
-              <Icon type={item} activity={currentTab === item}>
-                <SvgImg type={SvgImgType[item]} colors={{ iconPrimary: '#fff' }} size={18} />
-              </Icon>
-              {item}
-            </PreTestTabHeader>
-          ))}
-        </PreTestTabLeftContent>
-        <PreTestTabContent>
-          {currentTab === 'voice' && <PretestVoice />}
-          {currentTab === 'video' && <PretestVideo />}
-        </PreTestTabContent>
-      </PreTestContent>
-    </PretestModal>
+    <OverlayModal>
+      <Modal>
+        <PreTestContent>
+          <PreTestTabLeftContent>
+            <PreTestTitle>{transI18n('pretest.settingTitle')}</PreTestTitle>
+            {SETTINGS.map((item) => (
+              <PreTestTabHeader
+                key={item}
+                activity={currentPretestTab === item}
+                onClick={() => handleTabChange(item)}>
+                <Icon type={item} activity={currentPretestTab === item}>
+                  <SvgImg type={SvgImgType[item]} colors={{ iconPrimary: '#fff' }} size={18} />
+                </Icon>
+                {transI18n(`pretest.${item}`)}
+              </PreTestTabHeader>
+            ))}
+          </PreTestTabLeftContent>
+          <PreTestTabContent>
+            {currentPretestTab === 'audio' && <PretestVoice />}
+            {currentPretestTab === 'video' && <PretestVideo />}
+            <Footer onOK={handleOK} visibleMirror={currentPretestTab === 'video'} />
+          </PreTestTabContent>
+        </PreTestContent>
+      </Modal>
+    </OverlayModal>
   );
-};
+});
 
 export type RoomPretestContainerProps = {
   onOK?: () => void;
 };
+
+const OverlayModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const Modal = styled.div`
+  background: ${tw`bg-background`};
+  width: 671px;
+  height: 630px;
+  border-radius: ${primaryRadius};
+  box-shadow: -1px 10px 60px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+`;
 
 const PreTestContent = styled.div`
   display: flex;
@@ -90,6 +106,8 @@ const PreTestTitle = styled.div`
 `;
 
 const PreTestTabContent = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
 `;
 
@@ -122,23 +140,8 @@ const Icon = styled.div<{ type: deviceType; activity: boolean }>`
     switch (props.type) {
       case 'video':
         return props.activity ? 'transparent' : '#7C79FF';
-      case 'voice':
+      case 'audio':
         return props.activity ? 'transparent' : '#83BC53';
     }
   }};
 `;
-
-const PretestModal = styled(AModal)`
-  & .ant-modal-content {
-    border-radius: ${primaryRadius};
-    box-shadow: -1px 10px 60px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
-  }
-  & .ant-modal-body {
-    padding: 0;
-    /* ${tw`bg-background`}; */
-    background: #fff;
-  }
-`;
-
-const AButton = styled(Button)``;

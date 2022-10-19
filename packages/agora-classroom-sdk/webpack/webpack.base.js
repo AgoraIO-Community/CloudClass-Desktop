@@ -57,4 +57,8 @@ module.exports = {
   stats: {
     children: true,
   },
+  experiments: {
+    asyncWebAssembly: true,
+    syncWebAssembly: true,
+  },
 };

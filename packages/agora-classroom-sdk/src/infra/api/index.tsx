@@ -26,6 +26,7 @@ import {
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
+
 import { FcrTheme } from '~ui-kit';
 import { EduContext } from '../contexts';
 
@@ -43,6 +44,10 @@ import {
 
 import './polyfills';
 import { Providers } from './providers';
+import {
+  BeautyEffectExtensionIInstance,
+  VirtualBackgroundExtensionInstance,
+} from './rtc-extensions';
 import {
   AgoraWidgetBase,
   BoardWindowAnimationOptions,
@@ -313,6 +318,7 @@ export class AgoraEduSDK {
               !vocationalNeedPreset(roleType, roomServiceType),
           },
         },
+        rtcSDKExtensions: [VirtualBackgroundExtensionInstance, BeautyEffectExtensionIInstance],
       },
       platform,
       Object.assign(
