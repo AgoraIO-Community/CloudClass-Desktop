@@ -168,7 +168,7 @@ export class EduClassroomUIStore {
       if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
         return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
       } else {
-        return this.classroomStore.connectionStore.leaveClassroomUntil(
+        return this.classroomStore.connectionStore.leaveClassroom(
           LeaveReason.leave,
           new Promise((resolve) => {
             this.shareUIStore.addGenericErrorDialog(e as AGError, {

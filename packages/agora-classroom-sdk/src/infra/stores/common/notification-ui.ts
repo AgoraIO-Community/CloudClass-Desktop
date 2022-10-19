@@ -76,7 +76,7 @@ export class NotificationUIStore extends EduUIStoreBase {
               Scheduler.Duration.second(1),
             );
           } else if (ClassState.close === state) {
-            this.classroomStore.connectionStore.leaveClassroomUntil(
+            this.classroomStore.connectionStore.leaveClassroom(
               LeaveReason.leave,
               new Promise((resolve) => {
                 this.shareUIStore.addConfirmDialog(
@@ -99,7 +99,7 @@ export class NotificationUIStore extends EduUIStoreBase {
         () => this.classroomStore.connectionStore.classroomState,
         (state) => {
           if (ClassroomState.Error === state) {
-            this.classroomStore.connectionStore.leaveClassroomUntil(
+            this.classroomStore.connectionStore.leaveClassroom(
               LeaveReason.leave,
               new Promise((resolve) => {
                 this.shareUIStore.addConfirmDialog(

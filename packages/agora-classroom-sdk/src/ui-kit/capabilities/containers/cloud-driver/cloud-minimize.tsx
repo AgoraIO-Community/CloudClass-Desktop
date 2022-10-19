@@ -1,33 +1,35 @@
-import { CircleLoading, SvgIconEnum, SvgImg, transI18n, UploadItem, UploadItemStatus } from '~ui-kit';
+import { useStore } from '@/infra/hooks/ui-store';
+import { observer } from 'mobx-react';
+import { CircleLoading, SvgIconEnum, SvgImg, useI18n } from '~ui-kit';
+import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
 
-export type CloudMinimizeProps = {
-  state?: 'uploading' | 'success' | 'error' | 'idle';
-  uploadingProgresses: UploadItem[];
-};
 
-export default function CloudMinimize({
-  state = 'uploading',
-  uploadingProgresses,
-}: CloudMinimizeProps) {
+export default observer(function CloudMinimize() {
+  const { cloudUIStore } = useStore();
+  const { uploadingProgresses, uploadState } = cloudUIStore;
+  const transI18n = useI18n();
+
   return (
     <div className="cloud-upload-minimize">
-      {state === 'uploading' ? (
+      {uploadState === 'uploading' ? (
         <span className="upload-minimize-content">
           <CircleLoading width="18" height="18" />
           <span className="upload-minimize-text">
-            上传列表
-            {uploadingProgresses.filter((item) => item.status === UploadItemStatus.Success).length}/
+            <span className='mr-1'>
+              {transI18n('cloud.upload_list')}
+            </span>
+            {uploadingProgresses.filter((item) => item.status === CloudDriveResourceUploadStatus.Success).length}/
             {uploadingProgresses.length}
           </span>
         </span>
       ) : null}
-      {state === 'success' ? (
+      {uploadState === 'success' ? (
         <span className="upload-minimize-content">
           <SvgImg type={SvgIconEnum.CHECKED} size={16} style={{ color: '#52C41A' }} />
           <span className="upload-minimize-text">{transI18n('whiteboard.upload-success')}</span>
         </span>
       ) : null}
-      {state === 'error' ? (
+      {uploadState === 'error' ? (
         <span className="upload-minimize-content">
           <SvgImg type={SvgIconEnum.RED_CAUTION} size={16} style={{ color: '#F04C36' }} />
           <span className="upload-minimize-text">{transI18n('whiteboard.upload-error')}</span>
@@ -38,4 +40,4 @@ export default function CloudMinimize({
       </span>
     </div>
   );
-}
+});

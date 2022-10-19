@@ -8,7 +8,7 @@ import {
   CloudDriveResourceUploadStatus,
   EduErrorCenter,
 } from 'agora-edu-core';
-import { AGError, AGErrorWrapper, bound } from 'agora-rte-sdk';
+import { AGError, AGErrorWrapper, bound, Lodash, Scheduler } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { SvgIconEnum, transI18n } from '~ui-kit';
 import { EduUIStoreBase } from '../base';
@@ -57,6 +57,7 @@ export class CloudUIStore extends EduUIStoreBase {
   personalResourcesTotalNum = 0;
 
   private _disposers: IReactionDisposer[] = [];
+  private _isUploading = false;
 
   onInstall() {
     this._disposers.push(
@@ -95,6 +96,33 @@ export class CloudUIStore extends EduUIStoreBase {
         },
         {
           delay: 500,
+        },
+      ),
+    );
+
+    this._disposers.push(
+      reaction(
+        () => this.uploadingProgresses,
+        (uploadingProgresses) => {
+          if (!uploadingProgresses.length) {
+            this.setShowUploadModal(false);
+          }
+          if (
+            this._isUploading &&
+            uploadingProgresses.length > 0 &&
+            uploadingProgresses.length ===
+              uploadingProgresses.filter(
+                (item: UploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
+              ).length
+          ) {
+            this._isUploading = false;
+            this.setUploadState('success');
+            this.setShowUploadToast(true);
+            this.showUploadModal && this.setShowUploadModal(false);
+            Scheduler.shared.addDelayTask(() => {
+              this.setShowUploadToast(false);
+            }, Scheduler.Duration.second(1));
+          }
         },
       ),
     );
@@ -153,6 +181,18 @@ export class CloudUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 刷新资源列表
+   */
+  @Lodash.debounced(500)
+  async reloadPersonalResources() {
+    this.fetchPersonalResources({
+      pageNo: this.currentPersonalResPage,
+      pageSize: this.pageSize,
+      resourceName: this.searchPersonalResourcesKeyword,
+    });
+  }
+
+  /**
    * 查询个人资源列表
    * @param options
    * @returns
@@ -183,52 +223,76 @@ export class CloudUIStore extends EduUIStoreBase {
   }
 
   /**
+   *
+   * @param files
+   */
+  validateFiles(files: File[]) {
+    if (!files?.length) {
+      return false;
+    }
+
+    try {
+      for (const file of files) {
+        const ext = extractFileExt(file.name)?.toLowerCase();
+        if (!ext) {
+          EduErrorCenter.shared.handleThrowableError(
+            AGEduErrorCode.EDU_ERR_UPLOAD_FAILED_NO_FILE_EXT,
+            new Error(`no file ext`),
+          );
+        }
+
+        if (!supportedTypes.includes(ext)) {
+          EduErrorCenter.shared.handleThrowableError(
+            AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
+            new Error(`unsupported file type ${ext}`),
+          );
+        }
+      }
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * 上传文件至个人资源
    * @param file
    * @returns
    */
   @bound
-  async uploadPersonalResource(file: File) {
-    try {
-      let ext = extractFileExt(file.name);
-      if (!ext) {
-        return this.shareUIStore.addGenericErrorDialog(
-          AGErrorWrapper(
-            AGEduErrorCode.EDU_ERR_UPLOAD_FAILED_NO_FILE_EXT,
-            new Error(`no file ext`),
-          ),
-        );
-      }
+  async uploadPersonalResource(files: File[]) {
+    if (!this.validateFiles(files)) {
+      return;
+    }
+    this._isUploading = true;
+    this.setShowUploadModal(true);
+    this.setUploadState('uploading');
 
-      ext = ext.toLowerCase();
+    for (let idx = 0; idx < files.length; files.length++) {
+      const file = files[idx];
 
-      const resourceUuid = await this.classroomStore.cloudDriveStore.calcResourceUuid(file);
+      try {
+        const ext = extractFileExt(file.name)?.toLowerCase() || '';
 
-      if (!supportedTypes.includes(ext)) {
-        this.classroomStore.cloudDriveStore.updateProgress(
+        const resourceUuid = await this.classroomStore.cloudDriveStore.calcResourceUuid(file);
+        const contentType = fileExt2ContentType(ext);
+        const conversion = conversionOption(ext);
+
+        await this.classroomStore.cloudDriveStore.uploadPersonalResource(
+          file,
           resourceUuid,
-          undefined,
-          CloudDriveResourceUploadStatus.Failed,
+          ext,
+          contentType,
+          conversion,
         );
-        return EduErrorCenter.shared.handleNonThrowableError(
-          AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-          new Error(`unsupported file type ${ext}`),
-        );
+      } catch (e) {
+        this.setUploadState('error');
+        this.shareUIStore.addGenericErrorDialog(e as AGError);
+      } finally {
+        this.reloadPersonalResources();
       }
-      const contentType = fileExt2ContentType(ext);
-      const conversion = conversionOption(ext);
-
-      const data = await this.classroomStore.cloudDriveStore.uploadPersonalResource(
-        file,
-        resourceUuid,
-        ext,
-        contentType,
-        conversion,
-      );
-
-      return data;
-    } catch (e) {
-      this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
   }
 
@@ -237,7 +301,7 @@ export class CloudUIStore extends EduUIStoreBase {
     const resourceUuid = await this.classroomStore.cloudDriveStore.calcResourceUuid(
       `${resourceName}${url}`,
     );
-    await this.classroomStore.cloudDriveStore.addCloudDriveResource(resourceUuid, {
+    await this.classroomStore.cloudDriveStore.addPersonalResource(resourceUuid, {
       url,
       resourceName,
       ext: 'alf',

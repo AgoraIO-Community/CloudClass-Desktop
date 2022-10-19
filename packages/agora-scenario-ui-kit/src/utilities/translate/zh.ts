@@ -330,6 +330,7 @@ export const zh = {
     txt: '文本文档',
     photo: '图片',
     fileCounts: '共{fileCounts}项',
+    upload_list: '上传列表',
   },
   media: {
     camera: '摄像头',

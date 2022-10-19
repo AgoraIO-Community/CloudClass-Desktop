@@ -102,7 +102,8 @@ export class LectureRosterUIStore extends RosterUIStore {
   @computed
   get userList() {
     const list = this._usersList.map(({ userUuid, userName }) => {
-      const { acceptedList, chatMuted } = this.classroomStore.roomStore;
+      const { acceptedList } = this.classroomStore.roomStore;
+      const { chatMuted } = this.classroomStore.messageStore;
       const { rewards } = this.classroomStore.userStore;
       const { grantedUsers, connected: boardReady } = this.boardApi;
       const uid = userUuid;

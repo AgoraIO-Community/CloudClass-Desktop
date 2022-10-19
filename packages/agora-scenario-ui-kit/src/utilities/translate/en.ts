@@ -341,6 +341,7 @@ export const en = {
     txt: 'Txt',
     photo: 'Photo',
     fileCounts: '{fileCounts} items',
+    upload_list: 'Upload List',
   },
   media: {
     camera: 'Camera',

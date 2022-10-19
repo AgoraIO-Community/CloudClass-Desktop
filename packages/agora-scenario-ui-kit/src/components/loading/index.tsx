@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
+import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
 import { BaseProps } from '~ui-kit/components/util/type';
 import { Progress } from '~components/progress';
 import { transI18n } from '../i18n';
@@ -7,19 +8,15 @@ import './index.css';
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
 import { SvgImg, SvgIconEnum } from '~ui-kit';
-export enum UploadItemStatus {
-  Pending = 'pending',
-  Success = 'success',
-  Failed = 'failed',
-  Canceled = 'canceled',
-}
+
+
 export interface UploadItem {
   resourceUuid: string;
   iconType?: string;
   fileName?: string;
   fileSize?: string;
   currentProgress?: number; // 当uploadComplete为true时生效
-  status: UploadItemStatus;
+  status: CloudDriveResourceUploadStatus;
 }
 
 export interface LoadingProps extends BaseProps {
@@ -94,7 +91,7 @@ export const Loading: FC<LoadingProps> = ({
               </div>
               <div className="fcr-loading-file-size">{item.fileSize}</div>
               <div>
-                {item.status === UploadItemStatus.Success && (
+                {item.status === CloudDriveResourceUploadStatus.Success && (
                   <div className="fcr-loading-progress">
                     <Progress
                       width={60}
@@ -107,10 +104,10 @@ export const Loading: FC<LoadingProps> = ({
                     </span>
                   </div>
                 )}
-                {(item.status === UploadItemStatus.Pending ||
-                  item.status === UploadItemStatus.Failed) && (
+                {(item.status === CloudDriveResourceUploadStatus.Pending ||
+                  item.status === CloudDriveResourceUploadStatus.Failed) && (
                     <div className="fcr-loading-progress">
-                      {item.status === UploadItemStatus.Pending && (
+                      {item.status === CloudDriveResourceUploadStatus.Pending && (
                         <>
                           <Progress
                             width={60}
@@ -120,14 +117,14 @@ export const Loading: FC<LoadingProps> = ({
                           <span className="fcr-upload-pending-text">{item.currentProgress}%</span>
                         </>
                       )}
-                      {item.status === UploadItemStatus.Failed && (
+                      {item.status === CloudDriveResourceUploadStatus.Failed && (
                         <span className="fcr-upload-error-text">
                           {transI18n('whiteboard.upload-error')}
                         </span>
                       )}
 
                       <span style={{ display: 'flex' }}>
-                        {item.status === UploadItemStatus.Failed && (
+                        {item.status === CloudDriveResourceUploadStatus.Failed && (
                           <SvgImg
                             type={SvgIconEnum.CLOUD_REFRESH}
                             size={24}
@@ -137,7 +134,7 @@ export const Loading: FC<LoadingProps> = ({
                             }}
                           />
                         )}
-                        {item.status === UploadItemStatus.Pending && (
+                        {item.status === CloudDriveResourceUploadStatus.Pending && (
                           <SvgImg
                             type={SvgIconEnum.CLOSE}
                             size={24}

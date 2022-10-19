@@ -75,7 +75,7 @@ export class WidgetChatUIStore {
     );
     this._disposers.push(
       reaction(
-        () => this.coreStore.roomStore.chatMuted,
+        () => this.coreStore.messageStore.chatMuted,
         (chatmuted) => {
           this.unmuted = !chatmuted;
         },
