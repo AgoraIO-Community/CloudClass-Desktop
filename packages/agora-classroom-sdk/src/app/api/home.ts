@@ -8,8 +8,8 @@ export class HomeApi {
     return getApiDomain(getRegion());
   }
 
-  private get builderDomain() {
-    return getSceneBuilderDomain(EduRegion.CN);
+  private builderDomain(region: EduRegion) {
+    return getSceneBuilderDomain(region);
   }
 
   async getRecordations(roomUuid: string): Promise<any> {
@@ -17,9 +17,15 @@ export class HomeApi {
     return data.data;
   }
 
-  public async getBuilderResource(companyId: string, projectId: string): Promise<any> {
+  public async getBuilderResource(
+    companyId: string,
+    projectId: string,
+    region: EduRegion = EduRegion.CN,
+  ): Promise<any> {
     const { data } = await request.get(
-      `${this.builderDomain}/builder/companys/${companyId}/v1/projects/${projectId}/preview`,
+      `${this.builderDomain(
+        region,
+      )}/builder/companys/${companyId}/v1/projects/${projectId}/preview`,
     );
 
     return data;

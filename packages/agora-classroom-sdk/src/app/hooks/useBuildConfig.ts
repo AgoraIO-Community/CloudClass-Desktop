@@ -3,10 +3,10 @@ import { EduRoomTypeEnum } from 'agora-edu-core';
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '~ui-kit';
 import { homeApi } from '../api/home';
-
 export const useBuilderConfig = () => {
   const t = useI18n();
   const [configReady, setConfigReady] = useState(false);
+
   const builderResource = useRef({
     scenes: {},
     themes: {},
@@ -45,10 +45,11 @@ export const useBuilderConfig = () => {
         setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
         setConfigReady(true);
       });
-    } else {
-      setConfigReady(true);
-      setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
+      return;
     }
+
+    setConfigReady(true);
+    setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
   }, []);
 
   return {

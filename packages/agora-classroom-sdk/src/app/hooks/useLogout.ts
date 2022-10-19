@@ -1,23 +1,22 @@
-import { useContext, useCallback } from 'react';
-import { UserStoreContext, RoomStoreContext, GlobalStoreContext } from '../stores';
+import { useCallback, useContext } from 'react';
+import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '../stores';
 
 export const useLogout = () => {
-  const userStore = useContext(UserStoreContext);
-  const roomStore = useContext(RoomStoreContext);
+  const { logout: userLogout } = useContext(UserStoreContext);
+  const { clearRooms } = useContext(RoomStoreContext);
   const { setLoading } = useContext(GlobalStoreContext);
-  const logout = useCallback(
-    async (param: { redirect: boolean } = { redirect: true }) => {
-      setLoading(true);
-      return userStore
-        .logout(param)
-        .then(() => {
-          return roomStore.clearRooms();
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    },
-    [roomStore.clearRooms, userStore.logout],
-  );
+
+  const logout = useCallback(async () => {
+    setLoading(true);
+    return userLogout()
+      .then(() => {
+        clearRooms();
+        return;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [clearRooms, userLogout]);
+
   return { logout };
 };

@@ -2,14 +2,15 @@ import { roomApi } from '@/app/api';
 import { GlobalStoreContext } from '@/app/stores';
 import { GlobalLaunchOption } from '@/app/stores/global';
 import {
-  REACT_APP_AGORA_APP_SDK_DOMAIN,
-  REACT_APP_AGORA_APP_ID,
   REACT_APP_AGORA_APP_CERTIFICATE,
+  REACT_APP_AGORA_APP_ID,
+  REACT_APP_AGORA_APP_SDK_DOMAIN,
 } from '@/app/utils';
+import { courseware } from '@/app/utils/courseware';
 import { LanguageEnum } from '@/infra/api';
 import { ToastType } from '@/infra/stores/common/share-ui';
 import { FcrMultiThemeMode } from '@/infra/types/config';
-import { GlobalStorage, storage } from '@/infra/utils';
+import { storage } from '@/infra/utils';
 import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import {
@@ -170,7 +171,7 @@ export const VocationalHomePage = observer(() => {
 
   const history = useHistory();
 
-  const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
+  const [courseWareList] = useState(courseware.getList());
 
   const buildTime = dayjs(+BUILD_TIME || 0).format('YYYY-MM-DD HH:mm:ss');
 
@@ -244,7 +245,6 @@ export const VocationalHomePage = observer(() => {
           },
         };
       }
-      GlobalStorage.save('platform', 'web');
       globalStore.setLaunchConfig(config);
       history.push('/launch');
     } catch (e) {

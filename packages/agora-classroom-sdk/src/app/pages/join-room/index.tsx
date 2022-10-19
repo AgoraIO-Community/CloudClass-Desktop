@@ -1,12 +1,11 @@
 import { RadioIcon } from '@/app/components/radio-icon';
 import { useHistoryBack } from '@/app/hooks';
-import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
 import { formatRoomID, useRoomIdForm } from '@/app/hooks/useRoomIdForm';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
-import { shareLink } from '@/app/utils/share';
+import { ErrorCode, messageError } from '@/app/utils';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import classNames from 'classnames';
 import { observer } from 'mobx-react';
@@ -38,49 +37,50 @@ export const JoinRoom = observer(() => {
       backgroundColor: '#83BC53',
     },
   ];
-
   const [role, setRole] = useState(roles[1].value);
   const { rule: roomIdRule, formatFormField, getUnformattedValue } = useRoomIdForm();
   const { rule: nickNameRule } = useNickNameForm();
   const [form] = useAForm<JoinFormValue>();
   const { quickJoinRoom } = useJoinRoom();
-  const { setLoading, setRegion } = useContext(GlobalStoreContext);
+  const { setLoading } = useContext(GlobalStoreContext);
   const userStore = useContext(UserStoreContext);
   const roomStore = useContext(RoomStoreContext);
   const historyBackHandle = useHistoryBack();
-  const query = shareLink.parseHashURLQuery(location.hash);
-  const { checkRoomID } = useCheckRoomInfo();
+
   useEffect(() => {
-    if (query && query.roomId) {
-      form.setFieldValue('roomId', formatRoomID(query.roomId));
-    } else {
-      form.setFieldValue('roomId', formatRoomID(roomStore.lastJoinedRoomId));
-    }
-    // 将本地的区域和分享的区域对齐
-    if (query && query.region) {
-      setRegion(query.region);
-    }
+    form.setFieldValue('roomId', formatRoomID(roomStore.lastJoinedRoomId));
     form.setFieldValue('nickName', userStore.nickName);
   }, []);
 
   const onSubmit = () => {
     form.validateFields().then((data) => {
-      data.roomId = getUnformattedValue(data.roomId);
-      data.roomId && roomStore.setLastJoinedRoomId(data.roomId);
-      if (!checkRoomID(data.roomId)) {
+      const roomId = getUnformattedValue(data.roomId);
+      roomId && roomStore.setLastJoinedRoomId(roomId);
+      userStore.setNickName(data.nickName);
+
+      if (!userStore.userInfo) {
         return;
       }
+
       setLoading(true);
-      userStore.setNickName(data.nickName);
       quickJoinRoom({
         role,
-        roomId: data.roomId,
+        roomId,
         nickName: data.nickName,
         platform: Platform.PC,
-        userId: userStore.userInfo!.companyId,
-      }).finally(() => {
-        setLoading(false);
-      });
+        userId: userStore.userInfo.companyId,
+      })
+        .catch((error) => {
+          console.warn('join page quickJoinRoom failed. error:%o', error);
+          if (error.code) {
+            messageError(error.code);
+          } else {
+            messageError(ErrorCode.FETCH_ROOM_INFO_FAILED);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     });
   };
 
@@ -109,7 +109,7 @@ export const JoinRoom = observer(() => {
         <div className="form-item">
           <div className="label">{transI18n('fcr_join_room_label_RoomID')}</div>
           <AFormItem name="roomId" rules={roomIdRule}>
-            <AInput disabled={!!(query && query.roomId)} />
+            <AInput />
           </AFormItem>
         </div>
         <div className="form-item">

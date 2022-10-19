@@ -5,7 +5,7 @@ import roomListEmptyImg from '@/app/assets/welcome-empty-list.png';
 import { useAuthCallback, useJoinRoom } from '@/app/hooks';
 import { RoomListItem } from '@/app/pages/welcome/room-list';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
-import { token } from '@/app/utils';
+import { ErrorCode, messageError } from '@/app/utils';
 import { Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -32,6 +32,7 @@ export const Welcome = observer(() => {
   const { fetching, fetchMoreRoomList, refreshRoomList, clearRooms, rooms, total } =
     useContext(RoomStoreContext);
   const userStore = useContext(UserStoreContext);
+  const { isLogin, nickName } = userStore;
   const [shareModal, setShareModal] = useState(false);
   const { setLoading } = useContext(GlobalStoreContext);
   const { quickJoinRoom } = useJoinRoom();
@@ -41,6 +42,7 @@ export const Welcome = observer(() => {
   const toCreateRoomPage = useAuthCallback(() => {
     history.push('/create-room');
   });
+
   const [shareRoomInfo, setShareRoomInfo] = useState<ShareInfo>({
     owner: '',
     startTime: 0,
@@ -52,7 +54,7 @@ export const Welcome = observer(() => {
   const onShare = useCallback(
     (data: RoomInfo) => {
       setShareRoomInfo({
-        owner: userStore.nickName,
+        owner: nickName,
         startTime: data.startTime,
         endTime: data.endTime,
         roomId: data.roomId,
@@ -60,7 +62,7 @@ export const Welcome = observer(() => {
       });
       setShareModal(true);
     },
-    [userStore.nickName],
+    [nickName],
   );
 
   const onJoin = useCallback(
@@ -69,14 +71,23 @@ export const Welcome = observer(() => {
       quickJoinRoom({
         roomId: data.roomId,
         role: data.role,
-        nickName: userStore.nickName,
+        nickName: nickName,
         userId: userStore.userInfo!.companyId,
         platform: Platform.PC,
-      }).finally(() => {
-        setLoading(false);
-      });
+      })
+        .catch((error) => {
+          console.warn('welcome page quickJoinRoom failed. error:%o', error);
+          if (error.code) {
+            messageError(error.code);
+          } else {
+            messageError(ErrorCode.FETCH_ROOM_INFO_FAILED);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     },
-    [userStore.nickName, userStore.userInfo, quickJoinRoom],
+    [nickName, userStore.userInfo, quickJoinRoom],
   );
 
   const onDetail = useCallback((data: RoomInfo) => {}, []);
@@ -89,24 +100,14 @@ export const Welcome = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (userStore.isLogin && total === 0) {
+    if (isLogin && total === 0) {
       roomRefresh();
     }
-  }, [userStore.isLogin, total]);
-
-  useEffect(() => {
-    if (!userStore.isLogin && token.accessToken) {
-      setLoading(true);
-      clearRooms();
-      userStore.getUserInfo().finally(() => {
-        setLoading(false);
-      });
-    }
-  }, [userStore.isLogin]);
+  }, [isLogin, total]);
 
   return (
     <div className="welcome-container">
-      <div className="header">{userStore.isLogin ? <Menu></Menu> : null}</div>
+      <div className="header">{isLogin ? <Menu></Menu> : null}</div>
       <div className={`content ${rooms.size ? '' : 'room-list-empty'}`} id="scrollableDiv">
         <div className="welcome-title">{transI18n('fcr_home_label_welcome_message')}</div>
         <div className="room-list-empty-img">

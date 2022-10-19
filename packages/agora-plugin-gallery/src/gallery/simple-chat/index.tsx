@@ -45,7 +45,7 @@ const App = observer(() => {
     <div
       id="netless-white"
       style={{ display: 'flex', width: '100%', height: '100%' }}
-      className={`rtm-chat rtm-chat-${widgetStore.classroomConfig.sessionInfo.roomType}`}>
+      className={`rtm-chat rtm-chat-${widgetStore.classroomConfig.sessionInfo.roomType} ${widgetStore.classroomConfig.platform}`}>
       {widgetStore.classroomConfig.sessionInfo.roomType === 0 ? (
         // display simple chat for 1v1
         <SimpleChatNew

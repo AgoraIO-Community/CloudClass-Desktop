@@ -52,11 +52,6 @@
         if (windowID) {
           this.location.hash = 'window';
         }
-
-        // authentication for console sso
-        window.__refreshToken = params.get('refreshToken') || params.get('rt')
-        window.__accessToken = params.get('accessToken') || params.get('at')
-        window.__redirect_url = params.get('redirect_url');
       }
     </script>
   </head>

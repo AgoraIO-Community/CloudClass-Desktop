@@ -23,7 +23,7 @@ export default {
   [ErrorCodeMessage[ErrorCode.COURSE_HAS_ENDED]]: 'The course has ended',
   fcr_home_label_room_list_no_more: 'It is all, nothing more 🤐',
   fcr_logout_tips: 'The user account has expired, please login again later',
-  fcr_join_room_tips_ui_config_note_ready: 'UI config be not ready',
+  fcr_join_room_tips_ui_config_not_ready: 'UI config be not ready',
   fcr_join_room_tips_user_id_empty: "User'id can't be empty",
   fcr_join_room_tips_user_name_empty: "User'name can't be empty",
   fcr_h5_invite_room_share_link_error: 'Invalid share link',
@@ -48,8 +48,9 @@ export default {
   fcr_share_tips_copy_id_fault: 'Copy room id failure',
   fcr_share_tips_copy_all_success: 'Room information has been copied to the clip',
   fcr_share_tips_copy_id_success: 'Room id has been copied to the clip',
-  fcr_api_tips_fetch_room_info_fault:
+  fcr_api_tips_fetch_room_info_failed:
     'Failed to get the room information.Please refresh the page or try again later.',
+  fcr_api_tips_invalid_room_info: 'Invalid room info',
 
   // 2.8.0分割线
   fcr_create_label_room_name_empty: 'The Room Name cannot  be empty',

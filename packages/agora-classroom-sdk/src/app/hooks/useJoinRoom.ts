@@ -1,4 +1,3 @@
-import { storage } from '@/infra/utils';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import {
@@ -9,18 +8,20 @@ import {
 } from 'agora-rte-sdk';
 import { useCallback, useContext } from 'react';
 import { useHistory } from 'react-router';
-import { aMessage, useI18n } from '~ui-kit';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '../stores';
 import { GlobalLaunchOption } from '../stores/global';
+import { checkRoomInfoBeforeJoin, ErrorCode, h5ClassModeIsSupport, Status } from '../utils';
 import { checkBrowserDevice } from '../utils/browser';
+import { courseware } from '../utils/courseware';
 import {
   REACT_APP_AGORA_APP_CERTIFICATE,
   REACT_APP_AGORA_APP_ID,
   REACT_APP_AGORA_APP_SDK_DOMAIN,
 } from '../utils/env';
 import { shareLink } from '../utils/share';
+import { LanguageEnum } from './../../infra/api/type';
+import { failResult } from './../utils/result';
 import { useBuilderConfig } from './useBuildConfig';
-import { useCheckRoomInfo } from './useCheckRoomInfo';
 
 type JoinRoomParams = {
   role: EduRoleTypeEnum;
@@ -33,6 +34,8 @@ type JoinRoomParams = {
   duration?: number;
   token: string;
   appId: string;
+  language: LanguageEnum;
+  region: AgoraRegion;
   platform?: Platform;
 };
 type QuickJoinRoomParams = {
@@ -84,19 +87,20 @@ type ShareURLParams = {
   owner: string;
 };
 
-const shareLinkInClass = ({ region, roomId, owner }: ShareURLParams) => {
+const shareLinkInClass = ({ roomId, owner }: ShareURLParams) => {
   if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
     return '';
   }
   const companyId = window.__launchCompanyId;
   const projectId = window.__launchProjectId;
+  const region = window.__launchRegion;
   let url = shareLink.generateUrl({
     owner,
     roomId: roomId,
-    region: region,
+    role: EduRoleTypeEnum.student,
   });
   if (companyId && projectId) {
-    url = url + `&companyId=${companyId}&projectId=${projectId}`;
+    url = url + `&companyId=${companyId}&projectId=${projectId}&region=${region}`;
   }
   return url;
 };
@@ -116,13 +120,10 @@ const getLatencyLevel = (
 const defaultPlatform = checkBrowserDevice();
 export const useJoinRoom = () => {
   const history = useHistory();
-  const transI18n = useI18n();
   const userStore = useContext(UserStoreContext);
   const roomStore = useContext(RoomStoreContext);
   const { language, region, setLaunchConfig } = useContext(GlobalStoreContext);
   const { builderResource, configReady } = useBuilderConfig();
-
-  const { checkRoomInfoBeforeJoin, h5ClassModeIsSupport } = useCheckRoomInfo();
 
   const joinRoomHandle = useCallback(
     async (params: JoinRoomParams, options: JoinRoomOptions = {}) => {
@@ -136,102 +137,98 @@ export const useJoinRoom = () => {
         roomServiceType,
         token,
         appId,
+        language,
+        region,
         duration = 30,
         platform = defaultPlatform,
       } = params;
-      try {
-        if (platform === Platform.H5 && !h5ClassModeIsSupport(roomType)) {
-          return;
+
+      if (platform === Platform.H5) {
+        const checkResult = h5ClassModeIsSupport(roomType);
+        if (checkResult.status === Status.Failed) {
+          return Promise.reject(checkResult);
         }
-
-        if (!configReady) {
-          aMessage.error(transI18n('fcr_join_room_tips_ui_config_note_ready'));
-          return;
-        }
-
-        if (!userId) {
-          aMessage.error('fcr_join_room_tips_user_id_empty');
-          return;
-        }
-
-        if (!userName) {
-          aMessage.error(transI18n('fcr_join_room_tips_user_name_empty'));
-          return;
-        }
-
-        const courseWareList = storage.getCourseWareSaveList();
-
-        const shareUrl = shareLinkInClass({ region, roomId, owner: userStore.nickName });
-
-        console.log('## get rtm Token from demo server', token);
-
-        const latencyLevel = getLatencyLevel(roomType, roomServiceType);
-
-        const needPretest = needPreset(roomType, roomServiceType, role);
-        const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
-        const config: GlobalLaunchOption = {
-          appId: REACT_APP_AGORA_APP_ID || appId,
-          sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
-          pretest: needPretest,
-          courseWareList: courseWareList.slice(0, 1),
-          language: language,
-          userUuid: userId,
-          rtmToken: token,
-          roomUuid: roomId,
-          roomType: roomType,
-          roomName: `${roomName}`,
-          roomServiceType,
-          userName: userName,
-          roleType: role,
-          region: region,
-          duration: +duration * 60,
-          latencyLevel,
-          userFlexProperties: options.roomProperties || {},
-          scenes: builderResource.current.scenes,
-          themes: builderResource.current.themes,
-          shareUrl,
-          platform,
-          mediaOptions: {
-            web: {
-              codec: webRTCCodec,
-            },
-          },
-        };
-        // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
-        // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
-        if (REACT_APP_AGORA_APP_CERTIFICATE) {
-          config.rtmToken = RtmTokenBuilder.buildToken(
-            config.appId,
-            REACT_APP_AGORA_APP_CERTIFICATE,
-            config.userUuid,
-            RtmRole.Rtm_User,
-            0,
-          );
-          console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
-        }
-        setLaunchConfig(config);
-        history.push('/launch');
-      } catch (e) {
-        aMessage.error(
-          (e as Error).message === 'Network Error'
-            ? transI18n('home.network_error')
-            : (e as Error).message,
-          2.5,
-        );
       }
+
+      if (!userId) {
+        return Promise.reject(failResult(ErrorCode.USER_ID_EMPTY));
+      }
+
+      if (!userName) {
+        return Promise.reject(failResult(ErrorCode.USER_NAME_EMPTY));
+      }
+
+      const courseWareList = courseware.getList();
+
+      const shareUrl = shareLinkInClass({ region, roomId, owner: userStore.nickName });
+
+      console.log('## get rtm Token from demo server', token);
+
+      const latencyLevel = getLatencyLevel(roomType, roomServiceType);
+
+      const needPretest = needPreset(roomType, roomServiceType, role);
+      const webRTCCodec = webRTCCodecH264.includes(roomServiceType) ? 'h264' : 'vp8';
+      const config: GlobalLaunchOption = {
+        appId: REACT_APP_AGORA_APP_ID || appId,
+        sdkDomain: `${REACT_APP_AGORA_APP_SDK_DOMAIN}`,
+        pretest: needPretest,
+        courseWareList: courseWareList.slice(0, 1),
+        userUuid: userId,
+        rtmToken: token,
+        roomUuid: roomId,
+        roomType: roomType,
+        roomName: `${roomName}`,
+        roomServiceType,
+        userName: userName,
+        roleType: role,
+        region: region,
+        language: language,
+        duration: +duration * 60,
+        latencyLevel,
+        userFlexProperties: options.roomProperties || {},
+        scenes: builderResource.current.scenes,
+        themes: builderResource.current.themes,
+        shareUrl,
+        platform,
+        mediaOptions: {
+          web: {
+            codec: webRTCCodec,
+          },
+        },
+      };
+
+      // this is for DEBUG PURPOSE only. please do not store certificate in client, it's not safe.
+      // 此处仅为开发调试使用, token应该通过服务端生成, 请确保不要把证书保存在客户端
+      if (REACT_APP_AGORA_APP_CERTIFICATE) {
+        config.rtmToken = RtmTokenBuilder.buildToken(
+          config.appId,
+          REACT_APP_AGORA_APP_CERTIFICATE,
+          config.userUuid,
+          RtmRole.Rtm_User,
+          0,
+        );
+        console.log(`## build rtm Token ${config.rtmToken} by using RtmTokenBuilder`);
+      }
+      setLaunchConfig(config);
+      history.push('/launch');
     },
-    [language, region, history, configReady, setLaunchConfig],
+    [],
   );
 
   const quickJoinRoom = useCallback(
     async (params: QuickJoinRoomParams) => {
+      if (!configReady) {
+        return Promise.reject(failResult(ErrorCode.UI_CONFIG_NOT_READY));
+      }
+
       const { roomId, role, nickName, userId, platform = defaultPlatform } = params;
       return roomStore.joinRoom({ roomId, role }).then((response) => {
         const { roomDetail, token, appId } = response.data.data;
         const { serviceType, ...rProps } = roomDetail.roomProperties;
 
-        if (!checkRoomInfoBeforeJoin(roomDetail)) {
-          return;
+        const checkResult = checkRoomInfoBeforeJoin(roomDetail);
+        if (checkResult.status === Status.Failed) {
+          return Promise.reject(checkResult);
         }
 
         return joinRoomHandle(
@@ -246,12 +243,14 @@ export const useJoinRoom = () => {
             roomName: roomDetail.roomName,
             roomType: roomDetail.roomType,
             roomServiceType: serviceType,
+            language,
+            region,
           },
           { roomProperties: rProps },
         );
       });
     },
-    [joinRoomHandle, checkRoomInfoBeforeJoin],
+    [language, region, configReady, joinRoomHandle],
   );
 
   const quickJoinRoomNoAuth = useCallback(
@@ -261,8 +260,13 @@ export const useJoinRoom = () => {
         const { roomDetail, token, appId } = response.data.data;
         const { serviceType, ...rProps } = roomDetail.roomProperties;
 
-        if (!checkRoomInfoBeforeJoin(roomDetail)) {
-          return;
+        if (!configReady) {
+          return Promise.reject(failResult(ErrorCode.UI_CONFIG_NOT_READY));
+        }
+
+        const checkResult = checkRoomInfoBeforeJoin(roomDetail);
+        if (checkResult.status === Status.Failed) {
+          return Promise.reject(checkResult);
         }
 
         return joinRoomHandle(
@@ -277,12 +281,14 @@ export const useJoinRoom = () => {
             roomName: roomDetail.roomName,
             roomType: roomDetail.roomType,
             roomServiceType: serviceType,
+            language,
+            region,
           },
           { roomProperties: rProps },
         );
       });
     },
-    [joinRoomHandle, checkRoomInfoBeforeJoin],
+    [language, region, configReady, joinRoomHandle],
   );
 
   return {

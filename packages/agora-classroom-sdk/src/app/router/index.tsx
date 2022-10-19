@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router';
 import { HashRouter } from 'react-router-dom';
 import { AuthLayout } from '../layout/auth-layout';
 import { BasicLayout } from '../layout/basic-layout';
-import { BrowserCheckLayout } from '../layout/browser-check-layout';
 import { routesMap } from './maps';
 import { PageRouter } from './type';
 
@@ -29,7 +28,7 @@ const routes: PageRouter[] = [
 ];
 
 export const RouteContainer = () => {
-  const browserCheckIncludes = useMemo(() => {
+  const browserPlatformRedirectPaths = useMemo(() => {
     const list = [
       PageRouter.Index,
       PageRouter.Welcome,
@@ -44,30 +43,28 @@ export const RouteContainer = () => {
   }, []);
 
   const authIncludes = useMemo(() => {
-    const list = [PageRouter.JoinRoom, PageRouter.Invite, PageRouter.CreateRoom];
+    const list = [PageRouter.JoinRoom, PageRouter.CreateRoom, PageRouter.Invite];
     return list.map((v) => routesMap[v].path);
   }, []);
 
   return (
     <HashRouter>
       <BasicLayout>
-        <AuthLayout includes={authIncludes}>
-          <BrowserCheckLayout includes={browserCheckIncludes}>
-            <Switch>
-              {routes.map((item, index) => {
-                const route = routesMap[item];
-                if (!route) return null;
-                return (
-                  <Route
-                    key={item + index}
-                    exact={!!route.exact}
-                    path={route.path}
-                    component={route.component}
-                  />
-                );
-              })}
-            </Switch>
-          </BrowserCheckLayout>
+        <AuthLayout includes={authIncludes} platformRedirectPaths={browserPlatformRedirectPaths}>
+          <Switch>
+            {routes.map((item, index) => {
+              const route = routesMap[item];
+              if (!route) return null;
+              return (
+                <Route
+                  key={item + index}
+                  exact={!!route.exact}
+                  path={route.path}
+                  component={route.component}
+                />
+              );
+            })}
+          </Switch>
         </AuthLayout>
       </BasicLayout>
     </HashRouter>

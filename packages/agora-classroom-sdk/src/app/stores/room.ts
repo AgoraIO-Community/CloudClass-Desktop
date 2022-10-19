@@ -9,7 +9,7 @@ import {
   RoomJoinNoAuthRequest,
   RoomJoinRequest,
 } from '../api/room';
-import { ErrorCode, getErrorMessage } from '../utils/error';
+import { ErrorCode, i18nError, messageError } from '../utils/error';
 import { getLSStore, LS_LAST_JOINED_ROOM_ID, setLSStore } from '../utils/local-storage';
 
 type RoomToastType = ToastType;
@@ -80,6 +80,7 @@ export class RoomStore {
       type: 'success',
       desc: transI18n('fcr_create_tips_create_success'),
     };
+    this.refreshRoomList();
     this.addRoomToast(toast);
     setTimeout(() => {
       this.removeRoomToast(data.roomId);
@@ -150,9 +151,9 @@ export class RoomStore {
     return roomApi.join(params).catch((error) => {
       console.warn('join room api failed. error:%o', error);
       if (error?.response?.data?.code === ErrorCode.COURSE_HAS_ENDED) {
-        aMessage.error(getErrorMessage(error?.response?.data?.code));
+        messageError(ErrorCode.COURSE_HAS_ENDED);
       } else {
-        aMessage.error(transI18n('fcr_join_room_tips_empty_id'));
+        messageError(ErrorCode.ROOM_NOT_FOUND);
       }
       return error;
     });
@@ -163,9 +164,9 @@ export class RoomStore {
     return roomApi.joinNoAuth(params).catch((error) => {
       console.warn('join room no auth api failed. error:%o', error);
       if (error?.response?.data?.code === ErrorCode.COURSE_HAS_ENDED) {
-        aMessage.error(getErrorMessage(error?.response?.data?.code));
+        messageError(ErrorCode.COURSE_HAS_ENDED);
       } else {
-        aMessage.error(transI18n('fcr_join_room_tips_empty_id'));
+        messageError(ErrorCode.ROOM_NOT_FOUND);
       }
       return error;
     });

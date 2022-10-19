@@ -2,6 +2,7 @@ import { roomApi } from '@/app/api';
 import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import { GlobalStoreContext } from '@/app/stores';
 import { GlobalLaunchOption } from '@/app/stores/global';
+import { courseware } from '@/app/utils/courseware';
 import { LanguageEnum } from '@/infra/api';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { storage } from '@/infra/utils';
@@ -112,7 +113,7 @@ export const HomeH5Page = observer(() => {
 
   const history = useHistory();
 
-  const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
+  const [courseWareList] = useState(courseware.getList());
 
   let tokenDomain = '';
   let tokenDomainCollection: any = {};

@@ -1,19 +1,20 @@
 import { useCallback, useContext } from 'react';
 import { GlobalStoreContext, UserStoreContext } from '../stores';
+import { useLogin } from './useLogin';
 
 export const useAuthCallback = (cb: () => void) => {
-  const userStore = useContext(UserStoreContext);
+  const { isLogin } = useContext(UserStoreContext);
   const { setLoading } = useContext(GlobalStoreContext);
+  const login = useLogin();
   const func = useCallback(async () => {
-    if (!userStore.isLogin) {
+    if (!isLogin) {
       setLoading(true);
-      userStore.login().catch(() => {
+      return login().finally(() => {
         setLoading(false);
       });
-      return;
     }
-    cb && cb();
-  }, [userStore.isLogin]);
+    return cb && cb();
+  }, [isLogin]);
 
   return func;
 };

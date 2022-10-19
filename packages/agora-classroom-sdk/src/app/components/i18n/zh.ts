@@ -24,7 +24,7 @@ export default {
   fcr_home_label_room_list_no_more: '已经到底了 🤐',
   fcr_logout_tips: '用户账号过期,稍后请重新登录',
   fcr_menu_sign_out: '登出',
-  fcr_join_room_tips_ui_config_note_ready: 'UI 配置没准备好',
+  fcr_join_room_tips_ui_config_not_ready: 'UI 配置没准备好',
   fcr_join_room_tips_user_id_empty: '用户ID不能为空',
   fcr_join_room_tips_user_name_empty: '用户名不能为空',
   fcr_h5_invite_room_share_link_error: '无效的分享链接',
@@ -46,7 +46,8 @@ export default {
   fcr_share_tips_copy_id_fault: '房间ID复制失败',
   fcr_share_tips_copy_all_success: '房间信息已经复制到剪贴',
   fcr_share_tips_copy_id_success: '房间ID已经复制到剪贴',
-  fcr_api_tips_fetch_room_info_fault: '获取房间信息失败,请刷新页面或稍后重新尝试',
+  fcr_api_tips_fetch_room_info_failed: '获取房间信息失败,请刷新页面或稍后重新尝试',
+  fcr_api_tips_invalid_room_info: '无效的房间信息',
   fcr_h5_invite_hello: '您好!',
   // 2.8.0分割线
   fcr_create_label_room_name_empty: '房间名不能为空',

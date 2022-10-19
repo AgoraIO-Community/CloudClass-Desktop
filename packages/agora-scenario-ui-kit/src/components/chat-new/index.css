@@ -18,6 +18,10 @@
   position: relative;
 }
 
+.chat-panel .ant-tabs-tab {
+  padding: 12px !important;
+}
+
 .chat-panel .tab-title .new-message-notice {
   display: inline-block;
   border: 1px solid #f04c36;

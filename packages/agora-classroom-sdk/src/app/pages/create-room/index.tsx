@@ -8,7 +8,7 @@ import { useLangSwitchValue, useJoinRoom } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
-import { Default_Hosting_URL } from '@/app/utils';
+import { Default_Hosting_URL, ErrorCode, messageError } from '@/app/utils';
 import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
@@ -245,8 +245,12 @@ export const CreateRoom = observer(() => {
             historyBackHandle();
           }
         })
-        .catch(() => {
-          aMessage.error(transI18n('fcr_create_tips_create_failed'));
+        .catch((error) => {
+          if (error.code) {
+            messageError(error.code);
+          } else {
+            messageError(ErrorCode.CREATE_ROOM_FAILED);
+          }
         })
         .finally(() => {
           setLoading(false);

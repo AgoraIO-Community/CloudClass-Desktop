@@ -6,6 +6,7 @@ import { HomePage } from '../pages/home';
 import { HomeH5Page } from '../pages/home/h5';
 import { VocationalHomePage } from '../pages/home/vocational';
 import { VocationalHomeH5Page } from '../pages/home/vocational-h5';
+import { InviteRoom } from '../pages/invite';
 import { JoinRoom } from '../pages/join-room';
 import { LaunchPage } from '../pages/launch';
 import { LaunchWindow } from '../pages/launch-window';
@@ -44,7 +45,7 @@ export const routesMap: Record<string, AppRouteComponent> = {
   },
   [PageRouter.Invite]: {
     path: '/invite',
-    component: () => <JoinRoom />,
+    component: () => <InviteRoom />,
     exact: true,
   },
   [PageRouter.Launch]: {

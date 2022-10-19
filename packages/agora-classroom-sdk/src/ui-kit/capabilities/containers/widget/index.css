@@ -11,5 +11,5 @@
 }
 
 .widget-slot-chat {
-  @apply bg-background;
+  /* @apply bg-background; */
 }

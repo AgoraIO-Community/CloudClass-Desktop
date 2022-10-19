@@ -2,6 +2,7 @@ import { formatRoomID } from '@/app/hooks';
 import { useLangSwitchValue } from '@/app/hooks/useLangSwitchValue';
 import { GlobalStoreContext } from '@/app/stores';
 import { shareLink } from '@/app/utils/share';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { FC, useContext, useMemo } from 'react';
@@ -26,7 +27,12 @@ export const Share: FC<ShareProps> = observer(({ data }) => {
   const transI18n = useI18n();
   const globalStore = useContext(GlobalStoreContext);
   const link = useMemo(() => {
-    const url = shareLink.generateUrl({ roomId, owner, region: globalStore.region });
+    const url = shareLink.generateUrl({
+      roomId,
+      owner,
+      region: globalStore.region,
+      role: EduRoleTypeEnum.student,
+    });
     return url;
   }, [owner, roomId, globalStore.region]);
 
