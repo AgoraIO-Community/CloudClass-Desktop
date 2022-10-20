@@ -1,7 +1,6 @@
 import { Form, FormInstance, FormItemProps, FormProps } from 'antd';
 import { FC, PropsWithChildren, ReactElement } from 'react';
 import './index.css';
-export type { FormInstance as AFormInstance } from 'antd/es/form';
 export type AFormItemProps = Pick<
   FormItemProps,
   'className' | 'label' | 'name' | 'required' | 'rules'

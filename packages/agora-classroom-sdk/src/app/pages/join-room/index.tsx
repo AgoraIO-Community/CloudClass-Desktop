@@ -70,6 +70,9 @@ export const JoinRoom = observer(() => {
         platform: Platform.PC,
         userId: userStore.userInfo.companyId,
       })
+        .then(() => {
+          roomStore.refreshRoomList();
+        })
         .catch((error) => {
           console.warn('join page quickJoinRoom failed. error:%o', error);
           if (error.code) {

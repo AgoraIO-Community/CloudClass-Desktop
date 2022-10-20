@@ -1,0 +1,59 @@
+.slider-router-wrapper {
+  @apply relative;
+}
+
+/* fcr-route-slider-forward page animation */
+.fcr-route-slider-forward-enter,
+.fcr-route-slider-forward-exit {
+  transition: left 300ms linear, opacity 300ms linear;
+}
+
+.fcr-route-slider-forward-enter {
+  left: 100%;
+  z-index: 2;
+  opacity: 0;
+}
+
+.fcr-route-slider-forward-enter-active {
+  left: 0;
+  opacity: 1;
+}
+
+.fcr-route-slider-forward-exit {
+  left: 0;
+  z-index: 1;
+  opacity: 1;
+}
+
+.fcr-route-slider-forward-exit-active {
+  left: -100%;
+  opacity: 0;
+}
+
+/* fcr-route-slider-back page animation */
+.fcr-route-slider-back-enter,
+.fcr-route-slider-back-exit {
+  transition: left 300ms linear, opacity 300ms linear;
+}
+
+.fcr-route-slider-back-enter {
+  left: -100%;
+  z-index: 1;
+  opacity: 0;
+}
+
+.fcr-route-slider-back-enter-active {
+  left: 0%;
+  opacity: 1;
+}
+
+.fcr-route-slider-back-exit {
+  left: 0;
+  z-index: 2;
+  opacity: 1;
+}
+
+.fcr-route-slider-back-exit-active {
+  left: 100%;
+  opacity: 0;
+}

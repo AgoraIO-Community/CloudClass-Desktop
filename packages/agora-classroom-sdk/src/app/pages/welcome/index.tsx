@@ -29,7 +29,7 @@ import { Share, ShareInfo } from './share';
 export const Welcome = observer(() => {
   const history = useHistory();
   const transI18n = useI18n();
-  const { fetching, fetchMoreRoomList, refreshRoomList, clearRooms, rooms, total } =
+  const { fetching, fetchMoreRoomList, refreshRoomList, rooms, total } =
     useContext(RoomStoreContext);
   const userStore = useContext(UserStoreContext);
   const { isLogin, nickName } = userStore;
@@ -75,6 +75,9 @@ export const Welcome = observer(() => {
         userId: userStore.userInfo!.companyId,
         platform: Platform.PC,
       })
+        .then(() => {
+          refreshRoomList();
+        })
         .catch((error) => {
           console.warn('welcome page quickJoinRoom failed. error:%o', error);
           if (error.code) {
