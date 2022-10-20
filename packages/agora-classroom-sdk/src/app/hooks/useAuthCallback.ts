@@ -1,5 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { GlobalStoreContext, UserStoreContext } from '../stores';
+import { ErrorCode, messageError } from '../utils';
 import { useLogin } from './useLogin';
 
 export const useAuthCallback = (cb: () => void) => {
@@ -9,9 +10,13 @@ export const useAuthCallback = (cb: () => void) => {
   const func = useCallback(async () => {
     if (!isLogin) {
       setLoading(true);
-      return login().finally(() => {
-        setLoading(false);
-      });
+      return login()
+        .catch(() => {
+          messageError(ErrorCode.NETWORK_DISABLE);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
     return cb && cb();
   }, [isLogin]);

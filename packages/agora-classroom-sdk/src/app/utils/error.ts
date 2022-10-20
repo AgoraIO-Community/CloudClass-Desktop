@@ -13,6 +13,7 @@ export enum ErrorCode {
   USER_ID_EMPTY = 2000008,
   USER_NAME_EMPTY = 2000009,
   CREATE_ROOM_FAILED = 2000010,
+  NETWORK_DISABLE = 2000011,
 }
 
 export const ErrorCodeMessage = {
@@ -28,6 +29,7 @@ export const ErrorCodeMessage = {
   [ErrorCode.USER_ID_EMPTY]: 'fcr_join_room_tips_user_id_empty',
   [ErrorCode.USER_NAME_EMPTY]: 'fcr_join_room_tips_user_name_empty',
   [ErrorCode.CREATE_ROOM_FAILED]: 'fcr_create_tips_create_failed',
+  [ErrorCode.NETWORK_DISABLE]: 'fcr_network_disable',
 };
 
 export const i18nError = (code: ErrorCode) => {

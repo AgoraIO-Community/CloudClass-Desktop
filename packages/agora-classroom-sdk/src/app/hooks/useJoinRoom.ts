@@ -12,6 +12,7 @@ import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '../store
 import { GlobalLaunchOption } from '../stores/global';
 import { checkRoomInfoBeforeJoin, ErrorCode, h5ClassModeIsSupport, Status } from '../utils';
 import { checkBrowserDevice } from '../utils/browser';
+import { builderConfig } from '../utils/build-config';
 import { courseware } from '../utils/courseware';
 import {
   REACT_APP_AGORA_APP_CERTIFICATE,
@@ -21,7 +22,6 @@ import {
 import { shareLink } from '../utils/share';
 import { LanguageEnum } from './../../infra/api/type';
 import { failResult } from './../utils/result';
-import { useBuilderConfig } from './useBuildConfig';
 
 type JoinRoomParams = {
   role: EduRoleTypeEnum;
@@ -123,7 +123,6 @@ export const useJoinRoom = () => {
   const userStore = useContext(UserStoreContext);
   const roomStore = useContext(RoomStoreContext);
   const { language, region, setLaunchConfig } = useContext(GlobalStoreContext);
-  const { builderResource, configReady } = useBuilderConfig();
 
   const joinRoomHandle = useCallback(
     async (params: JoinRoomParams, options: JoinRoomOptions = {}) => {
@@ -186,8 +185,8 @@ export const useJoinRoom = () => {
         duration: +duration * 60,
         latencyLevel,
         userFlexProperties: options.roomProperties || {},
-        scenes: builderResource.current.scenes,
-        themes: builderResource.current.themes,
+        scenes: builderConfig.resource.scenes,
+        themes: builderConfig.resource.themes,
         shareUrl,
         platform,
         mediaOptions: {
@@ -217,7 +216,7 @@ export const useJoinRoom = () => {
 
   const quickJoinRoom = useCallback(
     async (params: QuickJoinRoomParams) => {
-      if (!configReady) {
+      if (!builderConfig.ready) {
         return Promise.reject(failResult(ErrorCode.UI_CONFIG_NOT_READY));
       }
 
@@ -250,7 +249,7 @@ export const useJoinRoom = () => {
         );
       });
     },
-    [language, region, configReady, joinRoomHandle],
+    [language, region, joinRoomHandle],
   );
 
   const quickJoinRoomNoAuth = useCallback(
@@ -260,7 +259,7 @@ export const useJoinRoom = () => {
         const { roomDetail, token, appId } = response.data.data;
         const { serviceType, ...rProps } = roomDetail.roomProperties;
 
-        if (!configReady) {
+        if (!builderConfig.ready) {
           return Promise.reject(failResult(ErrorCode.UI_CONFIG_NOT_READY));
         }
 
@@ -288,13 +287,12 @@ export const useJoinRoom = () => {
         );
       });
     },
-    [language, region, configReady, joinRoomHandle],
+    [language, region, joinRoomHandle],
   );
 
   return {
     joinRoomHandle,
     quickJoinRoom,
     quickJoinRoomNoAuth,
-    configReady,
   };
 };
