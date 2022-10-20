@@ -1,6 +1,6 @@
 import { WindowID } from '@/infra/api';
 import { listenChannelMessage, sendToRendererProcess } from '@/infra/utils/ipc';
-import { EduClassroomConfig, EduRoleTypeEnum, EduRoomTypeEnum, iterateMap } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduRoomTypeEnum, iterateMap, isUserSupportedRemoteControl } from 'agora-edu-core';
 import {
   AgoraRteEngineConfig,
   AgoraRteMediaSourceState,
@@ -75,7 +75,7 @@ export class RemoteControlUIStore extends EduUIStoreBase {
   sendControlRequst(studentUuid: string) {
     const studentList = this.classroomStore.userStore.studentList;
     const student = studentList.get(studentUuid);
-    if (student && this.classroomStore.remoteControlStore.isUserSupportedRemoteControl(student)) {
+    if (student && isUserSupportedRemoteControl(student)) {
       this.classroomStore.remoteControlStore.sendControlRequst(studentUuid);
     } else {
       this.shareUIStore.addToast(
@@ -185,8 +185,7 @@ export class RemoteControlUIStore extends EduUIStoreBase {
                 const studentList = this.classroomStore.userStore.studentList;
                 const student = studentList.get(studentUuid);
                 if (
-                  student &&
-                  this.classroomStore.remoteControlStore.isUserSupportedRemoteControl(student)
+                  student && isUserSupportedRemoteControl(student)
                 ) {
                   this.classroomStore.remoteControlStore.authorizeStudentToControl(studentUuid);
                 } else {
