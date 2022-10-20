@@ -372,6 +372,8 @@ export const zh = {
     test: '测试',
     video: '视频',
     audio: '音频',
+    add: '新增',
+    none: '无背景',
   },
   'biz-header': {
     perf: 'Perf',

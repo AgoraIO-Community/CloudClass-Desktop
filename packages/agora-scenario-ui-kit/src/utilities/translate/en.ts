@@ -384,6 +384,8 @@ export const en = {
     test: 'Test',
     video: 'video',
     audio: 'audio',
+    add: 'Add',
+    none: 'No Background',
   },
   'biz-header': {
     perf: 'Perf',

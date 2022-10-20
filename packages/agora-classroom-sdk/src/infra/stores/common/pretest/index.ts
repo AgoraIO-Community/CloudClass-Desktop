@@ -31,7 +31,7 @@ type effectType = 'beauty' | 'virtualBackground';
 type deviceType = 'audio' | 'video';
 
 const DEFAULT_BEAUTY_OPTION = {
-  lighteningContrastLevel: AGLighteningLevel.normal,
+  lighteningContrastLevel: AGLighteningLevel.low,
   lighteningLevel: 0,
   rednessLevel: 0,
   smoothnessLevel: 0,
@@ -47,6 +47,7 @@ export class PretestUIStore extends EduUIStoreBase {
   @observable currentPretestTab: deviceType = 'video';
   @observable backgroundImage = []; // 虚拟背景
   @observable currentVirtualBackground = ''; // 当前选择虚拟背景选项
+  @observable underlineLeft = 0;
 
   /**
    * 美颜配置
@@ -115,6 +116,17 @@ export class PretestUIStore extends EduUIStoreBase {
           if (this._cameraBeautyProcessor) {
             (this._cameraBeautyProcessor as any).enable();
             (this._cameraBeautyProcessor as any).setOptions(this.beautyEffectOptions);
+          }
+        },
+      ),
+    );
+
+    this._disposers.add(
+      reaction(
+        () => this.activeBeautyType,
+        (type) => {
+          if (type === 'none') {
+            this.resetBeautyValue();
           }
         },
       ),
@@ -608,7 +620,6 @@ export class PretestUIStore extends EduUIStoreBase {
    */
   @action.bound
   resetBeautyValue() {
-    this.setActiveBeautyType('none');
     if (this._cameraBeautyProcessor) {
       (this._cameraBeautyProcessor as any).disable();
       this.beautyEffectOptions = DEFAULT_BEAUTY_OPTION;
@@ -691,6 +702,11 @@ export class PretestUIStore extends EduUIStoreBase {
       (this._cameraVirtualBackgroundProcessor as any).setOptions({ type, source });
     this._cameraVirtualBackgroundProcessor &&
       (this._cameraVirtualBackgroundProcessor as any).enable();
+  }
+
+  @action.bound
+  setUnderlineLeft(value: number) {
+    this.underlineLeft = value;
   }
 
   /**

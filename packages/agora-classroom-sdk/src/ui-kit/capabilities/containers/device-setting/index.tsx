@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import classnames from 'classnames';
 import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
+import { RoomPretest } from '../pretest/new';
 
 export const CameraMirrorCheckBox = observer((props: { id?: string }) => {
   const {
@@ -171,23 +172,24 @@ export const RoomDeviceSettingContainer = observer(({ id }: any) => {
     shareUIStore: { removeDialog },
   } = useStore();
 
-  return (
-    <Modal
-      title={<span>{transI18n('pretest.settingTitle')}</span>}
-      style={{ width: 360 }}
-      footer={[
-        <Button key="ok" action="ok">
-          {transI18n('toast.confirm')}
-        </Button>,
-      ]}
-      onCancel={() => {
-        removeDialog(id);
-      }}
-      onOk={() => {
-        removeDialog(id);
-      }}
-      closable={true}>
-      <Setting />
-    </Modal>
-  );
+  return <RoomPretest onOK={() => removeDialog(id)} />;
+  // return (
+  //   <Modal
+  //     title={<span>{transI18n('pretest.settingTitle')}</span>}
+  //     style={{ width: 360 }}
+  //     footer={[
+  //       <Button key="ok" action="ok">
+  //         {transI18n('toast.confirm')}
+  //       </Button>,
+  //     ]}
+  //     onCancel={() => {
+  //       removeDialog(id);
+  //     }}
+  //     onOk={() => {
+  //       removeDialog(id);
+  //     }}
+  //     closable={true}>
+  //     <Setting />
+  //   </Modal>
+  // );
 });

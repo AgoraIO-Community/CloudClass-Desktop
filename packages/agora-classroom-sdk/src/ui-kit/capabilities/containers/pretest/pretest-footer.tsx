@@ -1,7 +1,7 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { FC, useCallback } from 'react';
-import { styled } from 'twin.macro';
+import tw, { styled } from 'twin.macro';
 import { AButton as Button, CheckBox, transI18n } from '~ui-kit';
 
 export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer(
@@ -38,6 +38,7 @@ const FooterContainer = styled.div`
   display: flex;
   padding: 0 28px;
   border-top: 1px solid #dceafe;
+  ${tw`border-divider`};
   align-items: center;
   position: relative;
 `;
@@ -47,6 +48,7 @@ const MediaMirror = styled.span`
   align-items: center;
   position: absolute;
   left: 28px;
+  ${tw`text-level1`};
 `;
 
 const AButton = styled(Button)`
@@ -54,6 +56,8 @@ const AButton = styled(Button)`
   height: 50px;
   border-radius: 24px !important;
   background: #0056fd;
+  border-color: transparent;
   position: absolute;
   right: 33px;
+  color: #fff;
 `;

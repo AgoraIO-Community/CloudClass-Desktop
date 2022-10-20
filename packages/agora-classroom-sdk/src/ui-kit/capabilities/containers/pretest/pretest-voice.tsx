@@ -122,7 +122,7 @@ const ItemCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: rgba(51, 50, 68, 0.05);
+  background: rgba(51, 50, 68, 0.1);
 `;
 const ItemCardTitle = styled.span`
   font-weight: 700;

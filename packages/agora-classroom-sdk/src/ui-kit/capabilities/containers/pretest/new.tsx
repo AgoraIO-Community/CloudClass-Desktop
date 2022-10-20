@@ -1,17 +1,19 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { primaryRadius, brandColor } from '@/infra/utils/colors';
 import { observer } from 'mobx-react';
-import { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import tw, { styled, css } from 'twin.macro';
-import { transI18n, SvgImg, SvgIconEnum } from '~ui-kit';
+import { transI18n, SvgImg, SvgIconEnum, OverlayWrap } from '~ui-kit';
 import { BaseProps } from '~ui-kit/components/util/type';
 import { Footer } from './pretest-footer';
 import { PretestVideo } from './pretest-video';
 import { PretestVoice } from './pretest-voice';
-
+import pretestBg from './assets/pretest-bg.png';
 export interface PretestProps extends BaseProps {
   className?: string;
   onOK?: () => void;
+  closeable?: boolean;
+  onCancel?: () => void;
 }
 
 type deviceType = 'audio' | 'video';
@@ -19,64 +21,75 @@ type deviceType = 'audio' | 'video';
 const SETTINGS: deviceType[] = ['audio', 'video'];
 const SvgImgType = { audio: SvgIconEnum.MICROPHONE_ON, video: SvgIconEnum.RECORDING };
 
-export const RoomPretest: FC<PretestProps> = observer(({ onOK }) => {
+export const RoomPretest: FC<PretestProps> = observer(({ onOK, closeable }) => {
+  return (
+    <PretestModal closeable={closeable}>
+      <DeviceTest onOK={onOK} />
+    </PretestModal>
+  );
+});
+
+const DeviceTest: FC<PretestProps> = observer(({ onOK }) => {
   const {
     pretestUIStore: { currentPretestTab, setCurrentTab },
   } = useStore();
-
-  const handleTabChange = useCallback((tab: deviceType) => {
-    setCurrentTab(tab);
-  }, []);
 
   const handleOK = useCallback(() => {
     onOK && onOK();
   }, []);
 
+  const handleTabChange = useCallback((tab: deviceType) => {
+    setCurrentTab(tab);
+  }, []);
+
   return (
-    <OverlayModal>
-      <Modal>
-        <PreTestContent>
-          <PreTestTabLeftContent>
-            <PreTestTitle>{transI18n('pretest.settingTitle')}</PreTestTitle>
-            {SETTINGS.map((item) => (
-              <PreTestTabHeader
-                key={item}
-                activity={currentPretestTab === item}
-                onClick={() => handleTabChange(item)}>
-                <Icon type={item} activity={currentPretestTab === item}>
-                  <SvgImg type={SvgImgType[item]} colors={{ iconPrimary: '#fff' }} size={18} />
-                </Icon>
-                {transI18n(`pretest.${item}`)}
-              </PreTestTabHeader>
-            ))}
-          </PreTestTabLeftContent>
-          <PreTestTabContent>
-            {currentPretestTab === 'audio' && <PretestVoice />}
-            {currentPretestTab === 'video' && <PretestVideo />}
-            <Footer onOK={handleOK} visibleMirror={currentPretestTab === 'video'} />
-          </PreTestTabContent>
-        </PreTestContent>
-      </Modal>
-    </OverlayModal>
+    <PreTestContent>
+      <PreTestTabLeftContent>
+        <PreTestTitle>{transI18n('pretest.settingTitle')}</PreTestTitle>
+        {SETTINGS.map((item) => (
+          <PreTestTabHeader
+            key={item}
+            activity={currentPretestTab === item}
+            onClick={() => handleTabChange(item)}>
+            <Icon type={item} activity={currentPretestTab === item}>
+              <SvgImg type={SvgImgType[item]} colors={{ iconPrimary: '#fff' }} size={18} />
+            </Icon>
+            {transI18n(`pretest.${item}`)}
+          </PreTestTabHeader>
+        ))}
+      </PreTestTabLeftContent>
+      <PreTestTabContent>
+        {currentPretestTab === 'audio' && <PretestVoice />}
+        {currentPretestTab === 'video' && <PretestVideo />}
+        <Footer onOK={handleOK} visibleMirror={currentPretestTab === 'video'} />
+      </PreTestTabContent>
+    </PreTestContent>
   );
 });
 
-export type RoomPretestContainerProps = {
-  onOK?: () => void;
+const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean }> = ({
+  children,
+  closeable,
+}) => {
+  const [opened, setOpened] = useState(false);
+
+  useEffect(() => {
+    setOpened(true);
+  }, []);
+
+  return (
+    <OverlayWrap opened={opened}>
+      <Modal>
+        {closeable && <></>}
+        {children}
+      </Modal>
+    </OverlayWrap>
+  );
 };
 
-const OverlayModal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 const Modal = styled.div`
-  background: ${tw`bg-background`};
+  background: url(${pretestBg}) center top no-repeat;
+  ${tw`bg-component`};
   width: 671px;
   height: 630px;
   border-radius: ${primaryRadius};
@@ -95,6 +108,7 @@ const PreTestTabLeftContent = styled.div`
   flex-basis: 160px;
   padding-top: 40px;
   border-right: 1px solid #dceafe;
+  ${tw`border-divider`};
 `;
 
 const PreTestTitle = styled.div`

@@ -2,12 +2,13 @@ import { Field } from '@/app/components/form-field';
 import { useStore } from '@/infra/hooks/ui-store';
 import { BeautyType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useRef, useEffect, useCallback, useState } from 'react';
-import { css } from 'styled-components';
-import { styled } from 'twin.macro';
-import { CameraPlaceHolder, SvgIconEnum, SvgImg, transI18n } from '~ui-kit';
+import { useRef, useEffect, useCallback } from 'react';
+
+import tw, { styled, css } from 'twin.macro';
+import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip, transI18n } from '~ui-kit';
 import { ASlider } from '~ui-kit/components/slider';
 import underline from './assets/underline.png';
+import './pretest-video.css';
 
 const DEFAULT_IMAGE_EFFECTS = require.context('./assets/effect/', false, /^.*\.jpg/);
 const DEFAULT_VIDEO_EFFECTS = require.context('./assets/effect/', false, /^.*\.mp4/);
@@ -78,9 +79,15 @@ const VideoPlayerOperator = observer(() => {
 
 const VideoSidler = observer(() => {
   const {
-    pretestUIStore: { activeBeautyValue, activeBeautyType, setActiveBeautyValue },
+    pretestUIStore: {
+      activeBeautyValue,
+      activeBeautyType,
+      currentEffectType,
+      setActiveBeautyValue,
+      resetBeautyValue,
+    },
   } = useStore();
-  return activeBeautyType !== 'none' ? (
+  return activeBeautyType !== 'none' && currentEffectType === 'beauty' ? (
     <VideoSliderPanel>
       <Slider
         min={0}
@@ -90,7 +97,7 @@ const VideoSidler = observer(() => {
         onChange={setActiveBeautyValue}
         vertical={true}
       />
-      <RefreshButton>
+      <RefreshButton onClick={resetBeautyValue}>
         <SvgImg type={SvgIconEnum.CLOUD_REFRESH} colors={{ iconPrimary: '#fff' }} size={14} />
       </RefreshButton>
     </VideoSliderPanel>
@@ -128,13 +135,14 @@ const VideoOperatorTab = observer(() => {
       cameraVirtualBackgroundProcessor,
       cameraBeautyProcessor,
       initVideoEffect,
+      underlineLeft,
+      setUnderlineLeft,
     },
   } = useStore();
-  const [underlineLeft, setLeft] = useState<number>(0);
 
   const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
     setCurrentEffectOption(type);
-    setLeft(event.currentTarget.offsetLeft);
+    setUnderlineLeft(event.currentTarget.offsetLeft);
   }, []);
 
   useEffect(() => {
@@ -171,20 +179,66 @@ const Background = observer(() => {
     pretestUIStore: { currentVirtualBackground, handleBackgroundChange },
   } = useStore();
 
+  // const fileRef = useRef<HTMLInputElement | null>(null);
+
+  // const handleUpload = async (evt: ChangeEvent<HTMLInputElement>) => {
+  //   try {
+  //     const files = evt.target.files || [];
+  //     if (files?.length) {
+  //       setShowUploadModal(true);
+  //       setUploadState('uploading');
+  //       const taskArr = [];
+  //       uploadingRef.current = true;
+  //       for (const file of files) {
+  //         taskArr.push(
+  //           uploadPersonalResource(file).finally(() => {
+  //             debouncedFetchPersonalResources();
+  //           }),
+  //         );
+  //       }
+  //     }
+  //   } catch (e) {
+  //     setShowUploadModal(false);
+  //     setUploadState('error');
+  //     throw e;
+  //   } finally {
+  //     fileRef.current!.value = '';
+  //   }
+  // };
+
   return (
     <BackgroundContainer>
-      <BackgroundItem
-        activity={currentVirtualBackground === 'none'}
-        onClick={() => handleBackgroundChange('none')}>
-        <SvgImg
-          type={SvgIconEnum.NONE}
-          colors={{ iconPrimary: currentVirtualBackground === 'none' ? '#0056FD' : '#000' }}
-          size={40}
-        />
-      </BackgroundItem>
-      <BackgroundItem>
-        <SvgImg type={SvgIconEnum.ADD_SCENE} colors={{ iconPrimary: '#000' }} size={40} />
-      </BackgroundItem>
+      <Tooltip
+        title={transI18n('pretest.none')}
+        placement="top"
+        mouseEnterDelay={3}
+        overlayClassName="pretestTooltip">
+        <BackgroundItem
+          activity={currentVirtualBackground === 'none'}
+          onClick={() => handleBackgroundChange('none')}>
+          <SvgImg
+            type={SvgIconEnum.NONE}
+            colors={{ iconPrimary: currentVirtualBackground === 'none' ? '#0056FD' : '#000' }}
+            size={40}
+          />
+        </BackgroundItem>
+      </Tooltip>
+      <Tooltip
+        title={transI18n('pretest.add')}
+        placement="top"
+        mouseEnterDelay={3}
+        overlayClassName="pretestTooltip">
+        <BackgroundItem>
+          {/* <input
+                ref={fileRef}
+                id="upload-image"
+                accept={imageTypes.map((item) => '.' + item).join(',')}
+                onChange={handleUpload}
+                multiple
+                type="file"></input> */}
+          <SvgImg type={SvgIconEnum.ADD} colors={{ iconPrimary: '#000' }} size={40} />
+        </BackgroundItem>
+      </Tooltip>
       {DEFAULT_IMAGE_EFFECTS.keys().map((item) => (
         <BackgroundItem
           activity={currentVirtualBackground === item}
@@ -232,7 +286,6 @@ const Beauty = observer(() => {
     pretestUIStore: {
       activeBeautyType,
       setActiveBeautyType,
-      resetBeautyValue,
       whiteningValue,
       ruddyValue,
       buffingValue,
@@ -252,13 +305,20 @@ const Beauty = observer(() => {
             key={item.id}
             activity={activeBeautyType === item.id}
             onClick={() => {
-              item.id !== 'none' ? setActiveBeautyType(item.id as BeautyType) : resetBeautyValue();
+              setActiveBeautyType(item.id as BeautyType | 'none');
             }}>
             <BeautyIcon icon={item.id} activity={!!item.value}>
               <SvgImg
                 type={item.icon}
-                colors={{ iconPrimary: activeBeautyType === item.id ? '#0056FD' : '#000' }}
-                size={30}
+                colors={{
+                  iconPrimary:
+                    item.id === 'none'
+                      ? activeBeautyType === item.id
+                        ? '#0056FD'
+                        : '#000'
+                      : '#fff',
+                }}
+                size={40}
               />
             </BeautyIcon>
             <BeautyName activity={!!item.value}>{transI18n(`media.${item.id}`)}</BeautyName>
@@ -268,6 +328,7 @@ const Beauty = observer(() => {
     </BeautyContainer>
   );
 });
+
 const VideoContainer = styled.div`
   padding-top: 40px;
   padding-left: 21px;
@@ -296,6 +357,24 @@ const VideoSliderPanel = styled.div`
 `;
 const Slider = styled(ASlider)`
   flex: 1;
+  & .ant-slider-vertical {
+    width: 16px;
+  }
+  &.slider .ant-slider-track,
+  &.slider .ant-slider-step,
+  &.slider .ant-slider-rail {
+    width: 10px;
+    border-radius: 8px;
+  }
+  &.slider .ant-slider-handle {
+    width: 16px;
+    height: 16px;
+    border: none;
+    box-shadow: 0 0 0px 5px rgb(255 255 255 / 79%);
+  }
+  & .ant-slider-vertical .ant-slider-handle {
+    margin-left: -3px;
+  }
 `;
 const RefreshButton = styled.span`
   display: flex;
@@ -342,6 +421,7 @@ const TabHeader = styled.div`
   width: 100%;
   position: relative;
   border-bottom: 1px solid rgba(220, 234, 254, 1);
+  ${tw`border-divider`};
 `;
 const TabTitle = styled.div<{ activity: boolean }>`
   width: 92px;
@@ -350,7 +430,7 @@ const TabTitle = styled.div<{ activity: boolean }>`
   font-weight: ${(props) => (props.activity ? 800 : 400)};
   font-size: 14px;
   padding: 2px;
-  color: #757575;
+  ${tw`text-level2`}
   cursor: pointer;
 `;
 
@@ -385,7 +465,7 @@ const BeautyItem = styled.div<{ activity: boolean }>`
   width: 82px;
   height: 82px;
   position: relative;
-  background: #f8f8f8;
+  ${tw`bg-background`}
   border-radius: 8px;
   padding: 6px 6px 0 6px;
   box-sizing: border-box;
@@ -393,8 +473,8 @@ const BeautyItem = styled.div<{ activity: boolean }>`
   &::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
+    top: -3px;
+    left: -3px;
     display: block;
     width: 88px;
     height: 88px;
@@ -439,7 +519,7 @@ const BackgroundItem = styled.div<{ image?: string; activity?: boolean }>`
   width: 82px;
   height: 60px;
   border-radius: 8px;
-  background: #f8f8f8;
+  ${tw`bg-background`}
   position: relative;
   display: flex;
   justify-content: center;

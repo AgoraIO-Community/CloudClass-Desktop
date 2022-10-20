@@ -152,4 +152,5 @@ export enum SvgIconEnum {
   NONE = 'none',
   UNDERLINE = 'underline',
   MARK = 'mark',
+  ADD = 'add',
 }
