@@ -5,9 +5,10 @@ type PageAnimationCSSProps = {
 };
 
 export enum AnimationName {
-  FORWARD = 'forward',
-  BACK = 'back',
+  FORWARD = 'fcr-route-forward',
+  BACK = 'fcr-route-back',
 }
+
 export class PageAnimationCSS {
   constructor({ time, deep, wrapperClassName }: PageAnimationCSSProps) {
     this.wrapperClassName = wrapperClassName;

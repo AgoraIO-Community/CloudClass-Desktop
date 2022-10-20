@@ -23,6 +23,7 @@ import {
   useI18n,
 } from '~ui-kit';
 import './index.css';
+import { messageError } from '@/app/utils';
 
 type JoinFormValue = {
   roomId: string;
@@ -53,6 +54,10 @@ export const H5JoinRoom = observer(() => {
           nickName: data.nickName,
           platform: Platform.H5,
           userId: userId,
+        }).catch((error) => {
+          if (error.code) {
+            messageError(error.code);
+          }
         });
       })
       .finally(() => {

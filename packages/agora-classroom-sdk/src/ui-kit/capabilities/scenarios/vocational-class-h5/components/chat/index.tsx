@@ -41,7 +41,7 @@ export const ChatH5 = observer<FC<ChatH5Props>>(({ showHandsUp = false }) => {
   }, []);
 
   return (
-    <div className="im-section">
+    <div className="v-im-section">
       <Chat />
       {showHandsUp && bottom ? <HandsUp style={styles} /> : null}
     </div>

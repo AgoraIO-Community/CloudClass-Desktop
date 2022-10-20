@@ -10,7 +10,7 @@ export const Logout = observer(() => {
   const { logout } = useLogout();
   const history = useHistory();
   useEffect(() => {
-    logout({ redirect: false }).then(() => {
+    logout().then(() => {
       history.push('/');
     });
   }, []);

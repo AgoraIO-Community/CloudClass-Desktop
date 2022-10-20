@@ -2,24 +2,30 @@ import { RoomJoinResponse } from '@/app/api/room';
 import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
 import { formatRoomID } from '@/app/hooks';
-import { useCheckRoomInfo } from '@/app/hooks/useCheckRoomInfo';
-import { useLangSwitchValue } from '@/app/hooks/useLangSwitchValue';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
+import { useLangSwitchValue } from '@/app/hooks/useLangSwitchValue';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
 import { useNoAuthUser } from '@/app/hooks/useNoAuthUser';
 import { GlobalStoreContext, RoomStoreContext } from '@/app/stores';
+import {
+  checkRoomInfoBeforeJoin,
+  ErrorCode,
+  h5ClassModeIsSupport,
+  i18nError,
+  messageError,
+  Status,
+} from '@/app/utils';
 import { shareLink } from '@/app/utils/share';
 import { EduRoleTypeEnum, Platform } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import {
   AButton,
   AForm,
   AFormItem,
   AInput,
-  aMessage,
   ModalMethod,
   SvgIconEnum,
   SvgImg,
@@ -33,49 +39,48 @@ type InviteFormValue = {
 };
 
 export const H5Invite = observer(() => {
-  const { setLoading, setRegion } = useContext(GlobalStoreContext);
-  const roomStore = useContext(RoomStoreContext);
+  const { setLoading, setRegion, region, language } = useContext(GlobalStoreContext);
+  const { joinRoomNoAuth } = useContext(RoomStoreContext);
   const history = useHistory();
+  const location = useLocation();
   const transI18n = useI18n();
   const { openSettings, SettingsContainer } = useSettingsH5();
   const [shareRoomInfo, setShareRoomInfo] = useState<RoomJoinResponse & { owner: string }>();
   const { joinRoomHandle } = useJoinRoom();
   const { rule: nickNameRule } = useNickNameForm();
   const [form] = useAForm<InviteFormValue>();
-  const { checkRoomInfoBeforeJoin, h5ClassModeIsSupport } = useCheckRoomInfo();
   const { userId, nickName, setNickName } = useNoAuthUser();
 
-  // 根据分享信息初始化
   useEffect(() => {
-    const data = shareLink.parseHashURLQuery(location.hash);
-    if (data) {
-      setLoading(true);
-      roomStore
-        .joinRoomNoAuth({ roomId: data.roomId, role: EduRoleTypeEnum.student, userUuid: userId })
-        .then((response) => {
-          setShareRoomInfo({
-            ...response.data.data,
-            owner: data.owner,
-          });
-        })
-        .catch((error) => {
-          console.warn('fetch room info failed. error:%o', error);
-          aMessage.error(transI18n('fcr_api_tips_fetch_room_info_fault'));
-          setLoading(false);
-        });
-      // 将本地的区域和分享的区域对齐
-      if (data.region) {
-        setRegion(data.region);
-      }
-    } else {
+    const data = shareLink.parseSearch(location.search);
+    if (!data) {
       ModalMethod.confirm({
-        content: transI18n('fcr_h5_invite_room_share_link_error'),
+        content: i18nError(ErrorCode.INVALID_SHARE_LINK),
         onOk: () => {
           history.push('/h5');
         },
       });
+      return;
     }
-
+    setLoading(true);
+    joinRoomNoAuth({ roomId: data.roomId, role: EduRoleTypeEnum.student, userUuid: userId })
+      .then((response) => {
+        setShareRoomInfo({
+          ...response.data.data,
+          owner: data.owner,
+        });
+      })
+      .catch((error) => {
+        console.warn('fetch room info failed. error:%o', error);
+        messageError(ErrorCode.FETCH_ROOM_INFO_FAILED);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    // 将本地的区域和分享的区域对齐
+    // if (data.region) {
+    //   setRegion(data.region);
+    // }
     return () => {
       ModalMethod.destroyAll();
     };
@@ -85,17 +90,27 @@ export const H5Invite = observer(() => {
     form.validateFields().then((data) => {
       setNickName(data.nickName);
       if (!shareRoomInfo) {
-        aMessage.error(transI18n('fcr_api_tips_fetch_room_info_fault'));
         return false;
       }
       const { roomDetail, token, appId } = shareRoomInfo;
       const { serviceType, ...rProps } = roomDetail.roomProperties;
-      if (!checkRoomInfoBeforeJoin(roomDetail)) {
-        return;
+
+      {
+        const checkResult = checkRoomInfoBeforeJoin(roomDetail);
+        if (checkResult.status === Status.Failed) {
+          messageError(checkResult.code);
+          return;
+        }
       }
-      if (!h5ClassModeIsSupport(roomDetail.roomType)) {
-        return;
+
+      {
+        const checkResult = h5ClassModeIsSupport(roomDetail.roomType);
+        if (checkResult.status === Status.Failed) {
+          messageError(checkResult.code);
+          return;
+        }
       }
+
       setLoading(true);
       joinRoomHandle(
         {
@@ -108,12 +123,21 @@ export const H5Invite = observer(() => {
           roomType: roomDetail.roomType,
           roomServiceType: serviceType,
           role: EduRoleTypeEnum.student,
+          region,
+          language,
           platform: Platform.H5,
         },
         { roomProperties: rProps },
-      ).finally(() => {
-        setLoading(false);
-      });
+      )
+        .catch((error) => {
+          console.warn('h5 join page joinRoomHandle failed. error:%o', error);
+          if (error.code) {
+            messageError(error.code);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     });
   };
 
@@ -174,6 +198,7 @@ export const H5Invite = observer(() => {
             </div>
           </div>
           <AForm<InviteFormValue>
+            form={form}
             className="form"
             initialValues={{
               nickName: nickName,

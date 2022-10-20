@@ -4,10 +4,10 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AnimationName, PageAnimationCSS } from './animation-css';
 
 const ANIMATION_MAP = {
-  // 动画类名
+  // Animation CSS Name
   PUSH: AnimationName.FORWARD,
   POP: AnimationName.BACK,
-  REPLACE: AnimationName.BACK,
+  REPLACE: AnimationName.FORWARD,
 };
 
 type PageAnimationProps = {
@@ -15,6 +15,7 @@ type PageAnimationProps = {
   timeout?: number;
   defaultRouteDeep?: number;
 };
+
 export const PageAnimation: FC<PropsWithChildren<PageAnimationProps>> = ({
   children,
   wrapperClassName = 'router-wrapper',

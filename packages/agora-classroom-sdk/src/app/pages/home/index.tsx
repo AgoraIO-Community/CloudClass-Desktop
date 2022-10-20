@@ -1,9 +1,10 @@
 import { homeApi, roomApi } from '@/app/api';
 import { GlobalStoreContext } from '@/app/stores';
 import { GlobalLaunchOption } from '@/app/stores/global';
+import { courseware } from '@/app/utils/courseware';
 import { AgoraEduSDK, LanguageEnum } from '@/infra/api';
 import { ToastType } from '@/infra/stores/common/share-ui';
-import { getBrowserLanguage, storage } from '@/infra/utils';
+import { getBrowserLanguage } from '@/infra/utils';
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { EduRegion, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 import { AgoraRteEngineConfig, AgoraRteRuntimePlatform } from 'agora-rte-sdk';
@@ -130,7 +131,7 @@ export const HomePage = () => {
     }
   }, [configReady]);
 
-  const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
+  const [courseWareList] = useState(courseware.getList());
 
   const handleSubmit = async ({
     roleType,

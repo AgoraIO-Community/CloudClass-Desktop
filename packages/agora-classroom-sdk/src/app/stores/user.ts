@@ -1,7 +1,7 @@
 import { AgoraRegion } from 'agora-rte-sdk';
 import { action, autorun, observable } from 'mobx';
 import { UserApi, UserInfo } from '../api/user';
-import { historyPushHome, Index_URL, token } from '../utils';
+import { token } from '../utils';
 import {
   getLSStore,
   LS_COMPANY_ID,
@@ -33,7 +33,7 @@ export class UserStore {
   }
 
   @observable
-  public userInfo: UserInfo | null = getLSStore<UserInfo>(LS_USER_INFO);
+  public userInfo: UserInfo | null = getLSStore<UserInfo>(LS_USER_INFO)! || {};
 
   @observable
   public nickName =
@@ -71,23 +71,20 @@ export class UserStore {
   }
 
   @action.bound
-  async login() {
+  async login(params: { callbackURL: string; region?: 'cn' | 'en' }) {
+    const { callbackURL, region = '' } = params;
     const redirect_url = await UserApi.shared.getAuthorizedURL({
-      redirectUrl: Index_URL,
-      toRegion: getRegion() === AgoraRegion.CN ? 'cn' : 'en',
+      redirectUrl: callbackURL,
+      toRegion: region || getRegion() === AgoraRegion.CN ? 'cn' : 'en',
     });
     window.location.href = redirect_url;
   }
 
   @action.bound
-  async logout(param: { redirect: boolean } = { redirect: true }) {
+  async logout() {
     token.clear();
-    this.clearUserInfo();
     this.setLogin(false);
-    token.clear();
-    if (param.redirect) {
-      historyPushHome();
-    }
+    this.clearUserInfo();
     console.warn('Accounts have been logout');
     return;
   }

@@ -7,7 +7,7 @@ export const path = (props: PathOptions) => (
     <g opacity="0.8" filter="url(#filter0_b_473_6866)">
       <rect width="40" height="40" rx="14" fill="#8A8A8A" fillOpacity="0.1" />
     </g>
-    <g clip-path="url(#clip0_473_6866)">
+    <g clipPath="url(#clip0_473_6866)">
       <rect
         x="13.5833"
         y="25.3359"

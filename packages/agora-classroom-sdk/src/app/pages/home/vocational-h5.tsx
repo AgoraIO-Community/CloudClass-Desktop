@@ -1,8 +1,8 @@
 import { roomApi } from '@/app/api';
 import { GlobalStoreContext } from '@/app/stores';
 import { GlobalLaunchOption } from '@/app/stores/global';
+import { courseware } from '@/app/utils/courseware';
 import { LanguageEnum } from '@/infra/api';
-import { GlobalStorage, storage } from '@/infra/utils';
 import {
   EduClassroomConfig,
   EduRegion,
@@ -122,7 +122,7 @@ export const VocationalHomeH5Page = observer(() => {
 
   const history = useHistory();
 
-  const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
+  const [courseWareList] = useState(courseware.getList());
 
   let tokenDomain = '';
   let tokenDomainCollection: any = {};
@@ -232,7 +232,6 @@ export const VocationalHomeH5Page = observer(() => {
               mode: parseInt(encryptionMode),
             };
           }
-          GlobalStorage.save('platform', 'h5');
           setLaunchConfig(config);
           history.replace('/launch');
         }}

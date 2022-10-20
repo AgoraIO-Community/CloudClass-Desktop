@@ -11,7 +11,3 @@
   height: calc(100vw * (9 / 16));
   position: relative;
 }
-
-.cdn-class .im-section .chat-question-container {
-  padding-right: 0px;
-}

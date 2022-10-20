@@ -1,11 +1,12 @@
 import { EduRegion } from 'agora-edu-core';
+import { EduRoleTypeEnum } from './../../../../agora-edu-core/src/type';
 import { FLEX_CLASSROOM_SDK_VERSION, REACT_APP_SHARE_LINK_PREFIX } from './env';
-import { parseHashUrlQuery } from './url';
 
 export type ShareContent = {
   roomId: string;
   owner: string;
-  region: EduRegion;
+  region?: EduRegion;
+  role: EduRoleTypeEnum;
 };
 
 /**
@@ -50,10 +51,15 @@ export class ShareLink {
     return `${url}#/invite?${this.query(params)}`;
   }
 
-  parseHashURLQuery(hash: string): ShareContent | null {
-    const query = parseHashUrlQuery(hash);
-    if (query.sc) {
-      return this.decode(query.sc);
+  parseSearch(search: string): ShareContent | null {
+    const arr = search.split('?');
+    if (arr.length < 2 || !arr[1]) {
+      return null;
+    }
+    const params = new URLSearchParams(arr[1]);
+    const sc = params.get('sc');
+    if (sc) {
+      return this.decode(sc);
     }
     return null;
   }

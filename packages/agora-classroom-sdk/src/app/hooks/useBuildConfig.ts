@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '~ui-kit';
 import { homeApi } from '../api/home';
 
+const config = { init: false };
 export const useBuilderConfig = () => {
   const t = useI18n();
-  const [configReady, setConfigReady] = useState(false);
+  const [configReady, setConfigReady] = useState(config.init);
+
   const builderResource = useRef({
     scenes: {},
     themes: {},
@@ -25,6 +27,9 @@ export const useBuilderConfig = () => {
   });
 
   useEffect(() => {
+    if (config.init) {
+      return;
+    }
     const companyId = window.__launchCompanyId;
     const projectId = window.__launchProjectId;
 
@@ -41,14 +46,15 @@ export const useBuilderConfig = () => {
             themes: builderResource.current.themes,
           }),
         );
-
+        config.init = true;
         setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
         setConfigReady(true);
       });
-    } else {
-      setConfigReady(true);
-      setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
+      return;
     }
+    config.init = true;
+    setConfigReady(true);
+    setRoomTypes(AgoraEduSDK.getLoadedScenes().map(({ roomType }) => roomType));
   }, []);
 
   return {
