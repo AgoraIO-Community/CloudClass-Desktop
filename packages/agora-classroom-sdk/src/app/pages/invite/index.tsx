@@ -12,12 +12,12 @@ export const InviteRoom = observer(() => {
   const { setLoading } = useContext(GlobalStoreContext);
   const history = useHistory();
   const location = useLocation();
-  const { quickJoinRoom, configReady } = useJoinRoom();
+  const { quickJoinRoom } = useJoinRoom();
   const userStore = useContext(UserStoreContext);
 
   // 根据分享信息初始化`
   useEffect(() => {
-    if (!configReady || !userStore.userInfo) {
+    if (!userStore.userInfo) {
       return;
     }
 
@@ -54,7 +54,7 @@ export const InviteRoom = observer(() => {
     return () => {
       ModalMethod.destroyAll();
     };
-  }, [quickJoinRoom, configReady]);
+  }, [quickJoinRoom]);
 
   return <div></div>;
 });
