@@ -88,9 +88,6 @@ type ShareURLParams = {
 };
 
 const shareLinkInClass = ({ roomId, owner }: ShareURLParams) => {
-  if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
-    return '';
-  }
   const companyId = window.__launchCompanyId;
   const projectId = window.__launchProjectId;
   const region = window.__launchRegion;

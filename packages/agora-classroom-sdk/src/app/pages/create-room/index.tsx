@@ -4,7 +4,7 @@ import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
 import { RadioIcon } from '@/app/components/radio-icon';
 import { RoomTypeCard } from '@/app/components/room-type-card';
-import { useLangSwitchValue, useJoinRoom } from '@/app/hooks';
+import { useJoinRoom, useLangSwitchValue } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
@@ -20,7 +20,6 @@ import {
   AForm,
   AFormItem,
   AInput,
-  aMessage,
   ATimePicker,
   locale,
   SvgIconEnum,
@@ -139,6 +138,7 @@ export const CreateRoom = observer(() => {
 
   const initialValues: CreateFormValue = useMemo(() => {
     const date = dayjs();
+    date.set('seconds', 0);
     return {
       name: transI18n('fcr_create_label_room_name_default', { name: userStore.nickName }),
       date: date,
