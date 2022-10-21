@@ -167,17 +167,17 @@ export class EduClassroomUIStore {
     } catch (e) {
       if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
         return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
-      } else {
-        return this.classroomStore.connectionStore.leaveClassroom(
-          LeaveReason.leave,
-          new Promise((resolve) => {
-            this.shareUIStore.addGenericErrorDialog(e as AGError, {
-              onOK: resolve,
-              okBtnText: transI18n('toast.leave_room'),
-            });
-          }),
-        );
       }
+
+      return this.classroomStore.connectionStore.leaveClassroom(
+        LeaveReason.leave,
+        new Promise((resolve) => {
+          this.shareUIStore.addGenericErrorDialog(e as AGError, {
+            onOK: resolve,
+            okBtnText: transI18n('toast.leave_room'),
+          });
+        }),
+      );
     }
     // 默认开启大小流
     // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
