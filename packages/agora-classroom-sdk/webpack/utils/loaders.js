@@ -109,10 +109,6 @@ module.exports.base = [
     ],
   },
   {
-    test: /\.worker\.js$/,
-    use: { loader: 'worker-loader' },
-  },
-  {
     test: /\.svga$/,
     use: { loader: 'url-loader' },
   },

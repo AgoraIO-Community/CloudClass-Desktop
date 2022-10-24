@@ -14,7 +14,6 @@
   ],
   "main": "lib/edu_sdk.bundle.js",
   "types": "lib/agora-classroom-sdk/src/infra/api/index.d.ts",
-  "swSrcPath": "./src/infra/sw/service-worker.ts",
   "agora_electron": {
     "electron_version": "12.0.0",
     "prebuilt": true
