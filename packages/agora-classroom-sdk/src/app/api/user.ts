@@ -71,7 +71,7 @@ export class UserApi {
   }
 
   /**
-   * 注销账户
+   * 退出账户
    * @returns
    *
    **/
@@ -79,8 +79,8 @@ export class UserApi {
    * Close Account
    * @returns
    */
-  public async closeAccount() {
-    const url = `${this.domain}/sso/v2/users/auth`;
+  public async logoutAccount() {
+    const url = `${this.domain}/sso/v2/users/logout`;
     return request.delete<Response<null>>(url);
   }
 }

@@ -73,26 +73,28 @@ export class UserStore {
   @action.bound
   async login(params: { callbackURL: string; region?: 'cn' | 'en' }) {
     const { callbackURL, region = '' } = params;
-    const redirect_url = await UserApi.shared.getAuthorizedURL({
+    const redirectUrl = await UserApi.shared.getAuthorizedURL({
       redirectUrl: callbackURL,
       toRegion: region || getRegion() === AgoraRegion.CN ? 'cn' : 'en',
     });
-    window.location.href = redirect_url;
+    window.location.href = redirectUrl;
   }
 
   @action.bound
   async logout() {
+    await UserApi.shared.logoutAccount();
     token.clear();
     this.setLogin(false);
     this.clearUserInfo();
     console.warn('Accounts have been logout');
-    return;
+    window.location.href = `https://sso2.agora.io/api/v0/logout?redirect_uri=${
+      window.location.origin + window.location.pathname
+    }`;
   }
 
   @action.bound
   async clearUserInfo() {
     this.setUserInfo(null);
-    return;
   }
 }
 
