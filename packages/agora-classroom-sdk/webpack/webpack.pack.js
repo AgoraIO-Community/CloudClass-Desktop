@@ -35,6 +35,8 @@ const config = {
         parallel: false,
         extractComments: false,
         terserOptions: {
+          keep_classnames: true,
+          keep_fnames: true,
           compress: {
             warnings: false, // 删除无用代码时是否给出警告
             drop_debugger: true, // 删除所有的debugger

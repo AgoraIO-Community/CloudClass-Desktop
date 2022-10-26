@@ -65,7 +65,9 @@ export class UserStore {
       return data;
     } catch (e) {
       console.warn('getUserInfo failed. error:', e);
-      this.logout();
+      token.clear();
+      this.setLogin(false);
+      this.clearUserInfo();
       return Promise.reject(e);
     }
   }
@@ -81,15 +83,13 @@ export class UserStore {
   }
 
   @action.bound
-  async logout() {
+  async logout(params: { callbackURL: string }) {
     await UserApi.shared.logoutAccount();
     token.clear();
     this.setLogin(false);
     this.clearUserInfo();
-    console.warn('Accounts have been logout');
-    window.location.href = `https://sso2.agora.io/api/v0/logout?redirect_uri=${
-      window.location.origin + window.location.pathname
-    }`;
+
+    window.location.href = `https://sso2.agora.io/api/v0/logout?redirect_uri=${params.callbackURL}`;
   }
 
   @action.bound
