@@ -1,22 +1,12 @@
-import { useCallback, useContext } from 'react';
-import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '../stores';
+import { useCallback } from 'react';
+import { useHistory } from 'react-router';
 
 export const useLogout = () => {
-  const { logout: userLogout } = useContext(UserStoreContext);
-  const { clearRooms } = useContext(RoomStoreContext);
-  const { setLoading } = useContext(GlobalStoreContext);
+  const history = useHistory();
 
   const logout = useCallback(async () => {
-    setLoading(true);
-    return userLogout()
-      .then(() => {
-        clearRooms();
-        return;
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [clearRooms, userLogout]);
+    history.replace('/logout');
+  }, []);
 
   return { logout };
 };

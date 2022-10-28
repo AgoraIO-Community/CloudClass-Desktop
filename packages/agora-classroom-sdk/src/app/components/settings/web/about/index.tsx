@@ -1,18 +1,13 @@
 import logo from '@/app/assets/logo.svg';
-import { UserStoreContext } from '@/app/stores';
-import { Index_URL } from '@/app/utils';
+import { useLogout } from '@/app/hooks';
 import { privacyPolicyURL, useAgreementURL } from '@/infra/utils/url';
 import { EduClassroomConfig } from 'agora-edu-core';
-import { useCallback, useContext } from 'react';
-import { useLocation } from 'react-router';
+
 import { useI18n } from '~ui-kit';
 import './index.css';
 export const About = () => {
-  const { logout } = useContext(UserStoreContext);
+  const { logout } = useLogout();
   const transI18n = useI18n();
-  const { pathname, search } = useLocation();
-  // const from = `${pathname}${search}`;
-  const callbackURL = pathname === '/' ? Index_URL : `${Index_URL}`;
 
   return (
     <div className="about-setting leading-8">
@@ -38,7 +33,7 @@ export const About = () => {
       <div
         className="logout-btn px-6 rounded-md border inline-block cursor-pointer"
         onClick={() => {
-          logout({ callbackURL: callbackURL });
+          logout();
         }}>
         {transI18n('settings_logout')}
       </div>

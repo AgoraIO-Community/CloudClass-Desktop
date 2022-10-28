@@ -11,7 +11,6 @@ import { JoinRoom } from '../pages/join-room';
 import { LaunchPage } from '../pages/launch';
 import { LaunchWindow } from '../pages/launch-window';
 import { Logout } from '../pages/logout';
-import { RecordationSearchPage } from '../pages/recordation-search';
 import { Welcome } from '../pages/welcome';
 import { HomeRouteContainer } from './home';
 import { PageRouter } from './type';
@@ -23,11 +22,13 @@ export type AppRouteComponent = {
 };
 
 export const routesMap: Record<string, AppRouteComponent> = {
+  // Animation container
   [PageRouter.Index]: {
     path: '/',
     component: () => <HomeRouteContainer />,
     exact: false,
   },
+  // For PC
   [PageRouter.Welcome]: {
     path: '/',
     component: () => <Welcome />,
@@ -53,6 +54,13 @@ export const routesMap: Record<string, AppRouteComponent> = {
     component: () => <LaunchPage />,
     exact: true,
   },
+  // Legacy landing page
+  [PageRouter.FlexHome]: {
+    path: '/flex',
+    component: () => <HomePage />,
+    exact: true,
+  },
+  // For H5
   [PageRouter.H5Index]: {
     path: '/h5',
     component: () => <H5JoinRoom />,
@@ -68,24 +76,16 @@ export const routesMap: Record<string, AppRouteComponent> = {
     component: () => <H5Invite />,
     exact: true,
   },
-  [PageRouter.Logout]: {
-    path: '/logout',
-    component: () => <Logout />,
-    exact: true,
-  },
-  [PageRouter.FlexHome]: {
-    path: '/flex',
-    component: () => <HomePage />,
-    exact: true,
-  },
-  [PageRouter.ShareLinkPage]: {
-    path: '/share',
-    component: () => <HomePage />,
-    exact: true,
-  },
+  // Legacy landing page for H5
   [PageRouter.FlexH5Home]: {
     path: '/flex/h5login',
     component: () => <HomeH5Page />,
+    exact: true,
+  },
+  // Path that will serve for share usage
+  [PageRouter.ShareLinkPage]: {
+    path: '/share',
+    component: () => <HomePage />,
     exact: true,
   },
   [PageRouter.VocationalHome]: {
@@ -98,14 +98,14 @@ export const routesMap: Record<string, AppRouteComponent> = {
     component: () => <VocationalHomeH5Page />,
     exact: true,
   },
-  [PageRouter.RecordationSearchPage]: {
-    path: '/recordation-search/:p',
-    component: () => <RecordationSearchPage />,
-    exact: true,
-  },
   [PageRouter.Window]: {
     path: '/window',
     component: () => <LaunchWindow />,
     exact: true,
   },
+  [PageRouter.Logout]: {
+    path: '/logout',
+    component: () => <Logout />,
+    exact: true,
+  }
 };

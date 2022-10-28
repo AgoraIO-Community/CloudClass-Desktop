@@ -1,4 +1,3 @@
-import { AgoraRegion } from 'agora-rte-sdk';
 import { action, autorun, observable } from 'mobx';
 import { UserApi, UserInfo } from '../api/user';
 import { token } from '../utils';
@@ -9,7 +8,6 @@ import {
   LS_USER_INFO,
   setLSStore,
 } from '../utils/local-storage';
-import { getRegion } from './global';
 
 export class UserStore {
   constructor() {
@@ -70,26 +68,6 @@ export class UserStore {
       this.clearUserInfo();
       return Promise.reject(e);
     }
-  }
-
-  @action.bound
-  async login(params: { callbackURL: string; region?: 'cn' | 'en' }) {
-    const { callbackURL, region = '' } = params;
-    const redirectUrl = await UserApi.shared.getAuthorizedURL({
-      redirectUrl: callbackURL,
-      toRegion: region || getRegion() === AgoraRegion.CN ? 'cn' : 'en',
-    });
-    window.location.href = redirectUrl;
-  }
-
-  @action.bound
-  async logout(params: { callbackURL: string }) {
-    await UserApi.shared.logoutAccount();
-    token.clear();
-    this.setLogin(false);
-    this.clearUserInfo();
-
-    window.location.href = `https://sso2.agora.io/api/v0/logout?redirect_uri=${params.callbackURL}`;
   }
 
   @action.bound

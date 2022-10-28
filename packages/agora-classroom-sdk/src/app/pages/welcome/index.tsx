@@ -36,12 +36,14 @@ export const Welcome = observer(() => {
   const [shareModal, setShareModal] = useState(false);
   const { setLoading } = useContext(GlobalStoreContext);
   const { quickJoinRoom } = useJoinRoom();
-  const toJoinRoomPage = useAuthCallback(() => {
+
+  const toJoinRoomPage = () => {
     history.push('/join-room');
-  });
-  const toCreateRoomPage = useAuthCallback(() => {
+  }
+
+  const toCreateRoomPage = () => {
     history.push('/create-room');
-  });
+  }
 
   const [shareRoomInfo, setShareRoomInfo] = useState<ShareInfo>({
     owner: '',
@@ -93,7 +95,7 @@ export const Welcome = observer(() => {
     [nickName, userStore.userInfo, quickJoinRoom],
   );
 
-  const onDetail = useCallback((data: RoomInfo) => {}, []);
+  const onDetail = useCallback((data: RoomInfo) => { }, []);
 
   const roomRefresh = useCallback(() => {
     setLoading(true);

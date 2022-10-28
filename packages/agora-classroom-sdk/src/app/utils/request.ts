@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { UserApi } from '../api/user';
-import { Index_URL } from './';
+import { indexUrl } from './';
 import { token } from './token';
 
 export interface Response<T = unknown> {
@@ -55,11 +55,11 @@ request.interceptors.response.use(
           })
           .catch((refreshTokenError) => {
             // refreshToken 接口报错，直接登出。
-            history.pushState({}, '', `${Index_URL}#/logout`);
+            history.pushState({}, '', `${indexUrl}#/logout`);
             return refreshTokenError;
           });
       } else {
-        history.pushState({}, '', `${Index_URL}#/logout`);
+        history.pushState({}, '', `${indexUrl}#/logout`);
         return error;
       }
     }

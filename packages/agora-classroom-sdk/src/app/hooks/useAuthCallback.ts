@@ -1,24 +1,13 @@
 import { useCallback, useContext } from 'react';
-import { GlobalStoreContext, UserStoreContext } from '../stores';
-import { ErrorCode, messageError } from '../utils';
-import { useLogin } from './useLogin';
+import { UserStoreContext } from '../stores';
 
 export const useAuthCallback = (cb: () => void) => {
-  const { isLogin } = useContext(UserStoreContext);
-  const { setLoading } = useContext(GlobalStoreContext);
-  const login = useLogin();
+  const { isLogin, getUserInfo } = useContext(UserStoreContext);
   const func = useCallback(async () => {
     if (!isLogin) {
-      setLoading(true);
-      return login()
-        .catch(() => {
-          messageError(ErrorCode.NETWORK_DISABLE);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      await getUserInfo();
     }
-    return cb && cb();
+    cb && cb();
   }, [isLogin]);
 
   return func;

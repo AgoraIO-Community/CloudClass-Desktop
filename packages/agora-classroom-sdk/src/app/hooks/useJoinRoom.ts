@@ -1,11 +1,6 @@
 import { RtmRole, RtmTokenBuilder } from 'agora-access-token';
 import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
-import {
-  AgoraLatencyLevel,
-  AgoraRegion,
-  AgoraRteEngineConfig,
-  AgoraRteRuntimePlatform,
-} from 'agora-rte-sdk';
+import { AgoraLatencyLevel, AgoraRegion } from 'agora-rte-sdk';
 import { useCallback, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '../stores';

@@ -13,7 +13,7 @@ import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } fr
 import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   ADatePicker,
   ADatePickerProps,
@@ -147,6 +147,10 @@ export const CreateRoom = observer(() => {
     };
   }, []);
 
+  useEffect(() => {
+    form.setFieldValue('name', transI18n('fcr_create_label_room_name_default', { name: userStore.nickName }));
+  }, [userStore.nickName])
+
   const [endTime, setEndTime] = useState(() => {
     return computeEndTime(initialValues.date).format(TimeFormat);
   });
@@ -212,10 +216,10 @@ export const CreateRoom = observer(() => {
 
       const hostingScene = isHostingScene
         ? {
-            videoURL: link,
-            reserveVideoURL: link,
-            finishType: 0,
-          }
+          videoURL: link,
+          reserveVideoURL: link,
+          finishType: 0,
+        }
         : undefined;
 
       const sType = isHostingScene ? EduRoomServiceTypeEnum.HostingScene : serviceType;

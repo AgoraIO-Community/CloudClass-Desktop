@@ -1,5 +1,5 @@
 import { getLSStore, LS_ACCESS_TOKEN, LS_REFRESH_TOKEN, setLSStore } from './local-storage';
-import { Index_URL } from './url';
+import { indexUrl } from './url';
 
 class Token {
   get accessToken() {
@@ -46,7 +46,7 @@ class Token {
       this.accessToken = result.accessToken;
       this.refreshToken = result.refreshToken;
       this.from = result.from;
-      window.history.pushState({}, '', Index_URL);
+      window.history.pushState({}, '', indexUrl);
     }
   }
 }
