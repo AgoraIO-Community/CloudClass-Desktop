@@ -98,6 +98,8 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
             wm.destroy();
             return;
           }
+          //@ts-ignore
+          window._wm = wm;
           this._windowManager = wm;
           this._windowManager.mainView.disableCameraTransform = true;
           this._addWindowManagerEventListeners();
