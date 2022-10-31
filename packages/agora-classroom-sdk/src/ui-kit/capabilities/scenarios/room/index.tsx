@@ -8,12 +8,10 @@ type Props = {
 };
 
 const Room: FC<Props> = observer(({ children }) => {
-  const { initialize, join, destroy } = useStore();
+  const { join } = useStore();
 
   useEffectOnce(() => {
-    initialize();
     join();
-    return destroy;
   });
 
   return <React.Fragment>{children}</React.Fragment>;

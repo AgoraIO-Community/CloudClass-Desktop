@@ -3126,10 +3126,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@netless/app-slide@0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.8.tgz#a2e553f3606697227430c96a5b1d6161a2abeaad"
-  integrity sha512-rY+yDgUhDPyswwwr4XU55o6NvT8R5Q5O4PutNI4kiCC2pBh2dhHV5vqjPT+T1NQ+IINmivV9eADEI8MWHbphuQ==
+"@netless/app-slide@0.2.22":
+  version "0.2.22"
+  resolved "https://registry.yarnpkg.com/@netless/app-slide/-/app-slide-0.2.22.tgz#82fac7fa013fb83026b9eecf9c69c06b791adb2c"
+  integrity sha512-ggvc0u571zC/Vf9J0jBlpiUZhtk/VaAPhToSFknb48QGdxhGpc3Q7PSsetMH2odOx3OsHpLpsQeOWe38sIwy5A==
 
 "@netless/app-talkative@0.1.0":
   version "0.1.0"
@@ -3215,10 +3215,10 @@
   resolved "https://registry.yarnpkg.com/@netless/white-video-plugin/-/white-video-plugin-1.2.23.tgz#ca7ecbc13e9cd76f2656e2dd3e946f97f09708af"
   integrity sha512-8Qvz1NcBhGb+2S9FYy9Xuln0/82q+Bn0EluXxM+BDw/aimhkN1QWxGl++ZysztZ60vzn18vl7p4cJuF2cfslIQ==
 
-"@netless/window-manager@0.4.46":
-  version "0.4.46"
-  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.46.tgz#1f63ce671f952ed5cb53142f8813cb346335333d"
-  integrity sha512-w2IiPkC3klNIzl13H6snv9WACekBj/5Gj9RSv7H2OllrmrOfNQqVRBVT9j2F4zYse7uUlbSCGYgchT/X65HwlQ==
+"@netless/window-manager@0.4.49":
+  version "0.4.49"
+  resolved "https://registry.yarnpkg.com/@netless/window-manager/-/window-manager-0.4.49.tgz#06fb24b1d9b43a8f4a4ea9300831f5ac1275a078"
+  integrity sha512-319UF/iWMQ5oaws56gv4N92udbNjY4diGJVXt27AWuebQ5TgTy7yfwhcEwkjjoqOrMBxu1A7xK57Kj5CMsLP5w==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/telebox-insider" "0.2.27"

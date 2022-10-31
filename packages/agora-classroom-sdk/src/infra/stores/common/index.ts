@@ -135,9 +135,6 @@ export class EduClassroomUIStore {
     }
     this._installed = true;
 
-    //initialize domain stores
-    this.classroomStore.initialize();
-
     //initialize ui stores
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
@@ -149,9 +146,8 @@ export class EduClassroomUIStore {
       }
     });
 
-    const { initialize } = this.classroomStore.connectionStore;
-
-    initialize();
+    //initialize domain stores
+    this.classroomStore.initialize();
 
     //@ts-ignore
     window.globalStore = this;
@@ -179,10 +175,9 @@ export class EduClassroomUIStore {
         }),
       );
     }
-    // 默认开启大小流
-    // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+
     try {
-      const launchLowStreamCameraEncoderConfigurations = (
+      const lowStreamCameraEncoderConfigurations = (
         EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
       )?.defaultLowStreamCameraEncoderConfigurations;
 
@@ -190,13 +185,11 @@ export class EduClassroomUIStore {
       await this.classroomStore.mediaStore.enableDualStream(enableDualStream);
 
       await this.classroomStore.mediaStore.setLowStreamParameter(
-        launchLowStreamCameraEncoderConfigurations ||
-          EduClassroomConfig.defaultLowStreamParameter(),
+        lowStreamCameraEncoderConfigurations || EduClassroomConfig.defaultLowStreamParameter(),
       );
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
-    // }
 
     try {
       await joinRTC();
@@ -209,7 +202,7 @@ export class EduClassroomUIStore {
    * 销毁所有 UIStore
    */
   destroy() {
-    this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+    this.classroomStore.destroy();
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
         const uiStore = this[propertyName as keyof EduClassroomUIStore];
@@ -219,7 +212,5 @@ export class EduClassroomUIStore {
         }
       }
     });
-
-    this.classroomStore.destroy();
   }
 }
