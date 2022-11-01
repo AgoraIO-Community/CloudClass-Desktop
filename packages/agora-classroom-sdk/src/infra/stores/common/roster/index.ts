@@ -438,7 +438,8 @@ export class RosterUIStore extends EduUIStoreBase {
 
     const { list } = iterateMap(studentList, {
       onMap: (userUuid: string, { userName }) => {
-        const { acceptedList, chatMuted } = this.classroomStore.roomStore;
+        const { acceptedList } = this.classroomStore.roomStore;
+        const { chatMuted } = this.classroomStore.messageStore;
         const { rewards } = this.classroomStore.userStore;
         const { grantedUsers, connected: boardReady } = this.boardApi;
         const uid = userUuid;

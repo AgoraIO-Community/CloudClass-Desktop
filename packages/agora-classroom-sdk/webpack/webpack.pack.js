@@ -1,7 +1,6 @@
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const webpackMerge = require('webpack-merge');
-const { InjectManifest } = require('workbox-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
@@ -10,9 +9,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const baseConfig = require('./webpack.base');
 const { ROOT_PATH } = require('./utils/index');
 const { pack } = require('./utils/loaders');
-const packageJson = require('../package.json');
-
-const { swSrcPath = '' } = packageJson;
 
 const config = {
   mode: 'production',
@@ -39,6 +35,8 @@ const config = {
         parallel: false,
         extractComments: false,
         terserOptions: {
+          keep_classnames: true,
+          keep_fnames: true,
           compress: {
             warnings: false, // 删除无用代码时是否给出警告
             drop_debugger: true, // 删除所有的debugger

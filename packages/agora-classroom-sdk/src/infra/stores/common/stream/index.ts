@@ -24,6 +24,7 @@ import { EduStreamTool, EduStreamToolCategory } from './tool';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AGServiceErrorCode,
+  ClassroomState,
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
@@ -31,9 +32,10 @@ import {
   iterateSet,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@/infra/utils/interaction';
-import { SvgIconEnum, TooltipPlacement, transI18n } from '~ui-kit';
+import { SvgIconEnum, transI18n } from '~ui-kit';
 import { extractStreamBySourceType, extractUserStreams } from '@/infra/utils/extract';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@/infra/utils/event-center';
+import { ShareStreamStateKeeper } from './state-keeper';
 
 export enum StreamIconColor {
   active = '#357bf6',
@@ -62,7 +64,62 @@ export class StreamUIStore extends EduUIStoreBase {
   @observable
   streamWindowUserUuids: string[] = [];
 
+  shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
+
+  @computed
+  get screenShareStateAccessor() {
+    return {
+      trackState: this.classroomStore.mediaStore.localScreenShareTrackState,
+      classroomState: this.classroomStore.connectionStore.classroomState,
+    };
+  }
   onInstall() {
+    //this reaction is responsible to update screenshare track state when approporiate
+    this._disposers.push(
+      reaction(
+        () => this.screenShareStateAccessor,
+        (value) => {
+          const { trackState, classroomState } = value;
+          if (classroomState === ClassroomState.Connected) {
+            //only set state when classroom is connected, the state will also be refreshed when classroom state become connected
+            this.shareScreenStateKeeperMap
+              .get(this.classroomStore.connectionStore.sceneId)
+              ?.setShareScreenState(trackState);
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      computed(() => this.classroomStore.connectionStore.scene).observe(
+        ({ newValue, oldValue }) => {
+          if (oldValue) {
+            this.shareScreenStateKeeperMap.get(oldValue.sceneId)?.stop();
+          }
+          if (newValue) {
+            const stateKeeper = new ShareStreamStateKeeper(
+              async (targetState: AgoraRteMediaSourceState) => {
+                if (targetState === AgoraRteMediaSourceState.started) {
+                  const { rtcToken, streamUuid }: { rtcToken: string; streamUuid: string } =
+                    await this.classroomStore.streamStore.publishScreenShare(newValue);
+                  this.classroomStore.streamStore.initializeScreenShareStream(
+                    newValue,
+                    streamUuid,
+                    rtcToken,
+                  );
+                } else if (
+                  targetState === AgoraRteMediaSourceState.stopped ||
+                  targetState === AgoraRteMediaSourceState.error
+                ) {
+                  await this.classroomStore.streamStore.unpublishScreenShare(newValue);
+                  this.classroomStore.streamStore.destroyScreenShareStream(newValue);
+                }
+              },
+            );
+            this.shareScreenStateKeeperMap.set(newValue.sceneId, stateKeeper);
+          }
+        },
+      ),
+    );
     this._disposers.push(
       computed(() => this.classroomStore.userStore.rewards).observe(({ newValue, oldValue }) => {
         const anims: { id: string; userUuid: string }[] = [];

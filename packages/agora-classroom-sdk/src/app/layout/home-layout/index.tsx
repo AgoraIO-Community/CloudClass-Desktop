@@ -1,28 +1,17 @@
-import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
+import { useLangSwitchValue } from '@/app/hooks/useLangSwitchValue';
 import { observer } from 'mobx-react';
 import { FC, PropsWithChildren } from 'react';
 import { getI18n } from 'react-i18next';
 import './index.css';
+import textImgEn from '@/app/assets/fcr-welcome-left-text-en.png';
+import textImgZh from '@/app/assets/fcr-welcome-left-text-zh.png';
 
 export const HomeLayout: FC<PropsWithChildren<unknown>> = observer(({ children }) => {
   const i18n = getI18n();
 
-  const slogan = useElementWithI18n({
-    en: (
-      <div className="text">
-        BUILD
-        <br />
-        ONLINE CLASSROOM
-        <br />
-        IN MINUTES
-      </div>
-    ),
-    zh: (
-      <div className="text">
-        轻松创建
-        <br /> 线上专属课堂
-      </div>
-    ),
+  const slogan = useLangSwitchValue({
+    en: <img className="text-img en" src={textImgEn} />,
+    zh: <img className="text-img zh" src={textImgZh} />,
   });
 
   return (

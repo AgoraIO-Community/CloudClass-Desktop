@@ -18,6 +18,7 @@ import {
   EduClassroomConfig,
   EduClassroomStore,
   LeaveReason,
+  Platform,
 } from 'agora-edu-core';
 import { WidgetUIStore } from './widget';
 import { GroupUIStore } from './group-ui';
@@ -134,9 +135,6 @@ export class EduClassroomUIStore {
     }
     this._installed = true;
 
-    //initialize domain stores
-    this.classroomStore.initialize();
-
     //initialize ui stores
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
@@ -148,9 +146,8 @@ export class EduClassroomUIStore {
       }
     });
 
-    const { initialize } = this.classroomStore.connectionStore;
-
-    initialize();
+    //initialize domain stores
+    this.classroomStore.initialize();
 
     //@ts-ignore
     window.globalStore = this;
@@ -166,35 +163,33 @@ export class EduClassroomUIStore {
     } catch (e) {
       if (AGError.isOf(e as AGError, AGServiceErrorCode.SERV_CANNOT_JOIN_ROOM)) {
         return this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
-      } else {
-        return this.classroomStore.connectionStore.leaveClassroomUntil(
-          LeaveReason.leave,
-          new Promise((resolve) => {
-            this.shareUIStore.addGenericErrorDialog(e as AGError, {
-              onOK: resolve,
-              okBtnText: transI18n('toast.leave_room'),
-            });
-          }),
-        );
       }
+
+      return this.classroomStore.connectionStore.leaveClassroom(
+        LeaveReason.leave,
+        new Promise((resolve) => {
+          this.shareUIStore.addGenericErrorDialog(e as AGError, {
+            onOK: resolve,
+            okBtnText: transI18n('toast.leave_room'),
+          });
+        }),
+      );
     }
-    // 默认开启大小流
-    // if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+
     try {
-      const launchLowStreamCameraEncoderConfigurations = (
+      const lowStreamCameraEncoderConfigurations = (
         EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
       )?.defaultLowStreamCameraEncoderConfigurations;
 
-      await this.classroomStore.mediaStore.enableDualStream(true);
+      const enableDualStream = EduClassroomConfig.shared.platform !== Platform.H5;
+      await this.classroomStore.mediaStore.enableDualStream(enableDualStream);
 
       await this.classroomStore.mediaStore.setLowStreamParameter(
-        launchLowStreamCameraEncoderConfigurations ||
-          EduClassroomConfig.defaultLowStreamParameter(),
+        lowStreamCameraEncoderConfigurations || EduClassroomConfig.defaultLowStreamParameter(),
       );
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
     }
-    // }
 
     try {
       await joinRTC();
@@ -207,6 +202,7 @@ export class EduClassroomUIStore {
    * 销毁所有 UIStore
    */
   destroy() {
+    this.classroomStore.destroy();
     Object.getOwnPropertyNames(this).forEach((propertyName) => {
       if (propertyName.endsWith('UIStore')) {
         const uiStore = this[propertyName as keyof EduClassroomUIStore];
@@ -216,7 +212,5 @@ export class EduClassroomUIStore {
         }
       }
     });
-
-    this.classroomStore.destroy();
   }
 }

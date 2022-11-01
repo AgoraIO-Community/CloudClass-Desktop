@@ -4,23 +4,22 @@ import premiumIcon from '@/app/assets/service-type/fcr_premium.svg';
 import standardIcon from '@/app/assets/service-type/fcr_standard.svg';
 import { RadioIcon } from '@/app/components/radio-icon';
 import { RoomTypeCard } from '@/app/components/room-type-card';
-import { useElementWithI18n, useJoinRoom } from '@/app/hooks';
+import { useJoinRoom, useLangSwitchValue } from '@/app/hooks';
 import { useHistoryBack } from '@/app/hooks/useHistoryBack';
 import { NavFooter, NavPageLayout } from '@/app/layout/nav-page-layout';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
-import { Default_Hosting_URL } from '@/app/utils';
+import { Default_Hosting_URL, ErrorCode, messageError } from '@/app/utils';
 import { EduRoleTypeEnum, EduRoomServiceTypeEnum, EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
 import { observer } from 'mobx-react';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   ADatePicker,
   ADatePickerProps,
   AForm,
   AFormItem,
   AInput,
-  aMessage,
   ATimePicker,
   locale,
   SvgIconEnum,
@@ -139,6 +138,7 @@ export const CreateRoom = observer(() => {
 
   const initialValues: CreateFormValue = useMemo(() => {
     const date = dayjs();
+    date.set('seconds', 0);
     return {
       name: transI18n('fcr_create_label_room_name_default', { name: userStore.nickName }),
       date: date,
@@ -147,11 +147,15 @@ export const CreateRoom = observer(() => {
     };
   }, []);
 
+  useEffect(() => {
+    form.setFieldValue('name', transI18n('fcr_create_label_room_name_default', { name: userStore.nickName }));
+  }, [userStore.nickName])
+
   const [endTime, setEndTime] = useState(() => {
     return computeEndTime(initialValues.date).format(TimeFormat);
   });
 
-  const dateLocale = useElementWithI18n({ zh: locale.zh_CN, en: locale.en_US });
+  const dateLocale = useLangSwitchValue({ zh: locale.zh_CN, en: locale.en_US });
 
   const getFormDateTime = useCallback(() => {
     const time: Dayjs = form.getFieldValue('time');
@@ -204,15 +208,22 @@ export const CreateRoom = observer(() => {
       setLoading(true);
       const { date, time, name, link } = data;
       const dateTime = useCurrentTime ? dayjs() : combDateTime(date, time);
-      const isHostingScene = livePlayback && roomType === EduRoomTypeEnum.RoomBigClass;
+
+      const isHostingScene =
+        livePlayback &&
+        roomType === EduRoomTypeEnum.RoomBigClass &&
+        serviceType === EduRoomServiceTypeEnum.Fusion;
+
       const hostingScene = isHostingScene
         ? {
-            videoURL: link,
-            reserveVideoURL: link,
-            finishType: 0,
-          }
+          videoURL: link,
+          reserveVideoURL: link,
+          finishType: 0,
+        }
         : undefined;
+
       const sType = isHostingScene ? EduRoomServiceTypeEnum.HostingScene : serviceType;
+
       roomStore
         .createRoom({
           roomName: name,
@@ -238,8 +249,12 @@ export const CreateRoom = observer(() => {
             historyBackHandle();
           }
         })
-        .catch(() => {
-          aMessage.error(transI18n('fcr_create_tips_create_failed'));
+        .catch((error) => {
+          if (error.code) {
+            messageError(error.code);
+          } else {
+            messageError(ErrorCode.CREATE_ROOM_FAILED);
+          }
         })
         .finally(() => {
           setLoading(false);
@@ -306,7 +321,7 @@ export const CreateRoom = observer(() => {
                 superPrevIcon={null}
                 suffixIcon={<SvgImg type={SvgIconEnum.CALENDAR} />}
                 popupStyle={{ marginTop: '8px' }}
-                locale={dateLocale}
+                locale={dateLocale!}
               />
             </AFormItem>
             <div className="relative inline-block">

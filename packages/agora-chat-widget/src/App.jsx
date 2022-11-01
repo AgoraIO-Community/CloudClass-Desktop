@@ -29,7 +29,6 @@ const App = function (props) {
 
   // get token config
   const { agoraTokenData } = props;
-
   const state = useSelector((state) => state);
   const apis = state?.apis;
   const showChat = state?.showChat;
@@ -59,7 +58,6 @@ const App = function (props) {
 
   useEffect(() => {
     const propsData = { ...props.pluginStore.context };
-
     const { orgName, appName, chatRoomId, userUuid } = propsData;
 
     if (orgName && appName && chatRoomId && userUuid && !loggedIn.current && apis) {
@@ -89,16 +87,16 @@ const App = function (props) {
           <Chat />
         </div>
       ) : (
-          <div className="fcr-hx-chat">
+        <div className="fcr-hx-chat">
           <div
-              className="fcr-hx-show-chat-icon"
+            className="fcr-hx-show-chat-icon"
             onClick={() => {
               // 展开聊天
               onChangeModal();
             }}>
             {/* <img src={showChat_icon} width="24" height="24" /> */}
             <SvgImg type={SvgIconEnum.CHAT} />
-              {(showRed || showAnnouncementNotice) && <div className="fcr-hx-chat-notice"></div>}
+            {(showRed || showAnnouncementNotice) && <div className="fcr-hx-chat-notice"></div>}
           </div>
         </div>
       )}

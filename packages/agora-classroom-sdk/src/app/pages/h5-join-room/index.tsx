@@ -1,7 +1,7 @@
 import { CommonHelmet } from '@/app/components/common-helmet';
 import { useSettingsH5 } from '@/app/components/settings';
 import { useRoomIdForm } from '@/app/hooks';
-import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
+import { useLangSwitchValue } from '@/app/hooks/useLangSwitchValue';
 import { useJoinRoom } from '@/app/hooks/useJoinRoom';
 import { useNickNameForm } from '@/app/hooks/useNickNameForm';
 import { useNoAuthUser } from '@/app/hooks/useNoAuthUser';
@@ -23,6 +23,7 @@ import {
   useI18n,
 } from '~ui-kit';
 import './index.css';
+import { messageError } from '@/app/utils';
 
 type JoinFormValue = {
   roomId: string;
@@ -53,6 +54,10 @@ export const H5JoinRoom = observer(() => {
           nickName: data.nickName,
           platform: Platform.H5,
           userId: userId,
+        }).catch((error) => {
+          if (error.code) {
+            messageError(error.code);
+          }
         });
       })
       .finally(() => {
@@ -67,7 +72,7 @@ export const H5JoinRoom = observer(() => {
     }
   };
 
-  const welcomeElement = useElementWithI18n({
+  const welcomeElement = useLangSwitchValue({
     en: (
       <div className="welcome">
         Welcome to

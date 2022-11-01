@@ -1,6 +1,8 @@
+import { roomApi } from '@/app/api';
 import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import { GlobalStoreContext } from '@/app/stores';
 import { GlobalLaunchOption } from '@/app/stores/global';
+import { courseware } from '@/app/utils/courseware';
 import { LanguageEnum } from '@/infra/api';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { storage } from '@/infra/utils';
@@ -18,7 +20,6 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useHistory } from 'react-router';
 import { H5Login } from '~ui-kit/scaffold';
-import { HomeApi } from '../../api/home';
 import { MessageDialog } from './message-dialog';
 
 const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
@@ -112,7 +113,7 @@ export const HomeH5Page = observer(() => {
 
   const history = useHistory();
 
-  const [courseWareList] = useState<any[]>(storage.getCourseWareSaveList());
+  const [courseWareList] = useState(courseware.getList());
 
   let tokenDomain = '';
   let tokenDomainCollection: any = {};
@@ -169,7 +170,7 @@ export const HomeH5Page = observer(() => {
             }
           }
 
-          const { token, appId } = await HomeApi.shared.loginNoAuth(userUuid, roomUuid, role);
+          const { token, appId } = await roomApi.getCredentialNoAuth({ userUuid, roomUuid, role });
 
           const config: GlobalLaunchOption = {
             appId,

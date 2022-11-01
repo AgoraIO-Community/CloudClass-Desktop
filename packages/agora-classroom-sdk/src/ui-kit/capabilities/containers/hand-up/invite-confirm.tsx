@@ -1,10 +1,10 @@
 import { useStore } from '@/infra/hooks/ui-store';
-import { GlobalStorage } from '@/infra/utils';
+import { HandUpUIStore } from '@/infra/stores/common/hand-up';
+import { DialogCategory, EduShareUIStore } from '@/infra/stores/common/share-ui';
+import { EduClassroomConfig, Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { Button, Modal, transI18n } from '~ui-kit';
-import { DialogCategory, EduShareUIStore } from '@/infra/stores/common/share-ui';
-import { HandUpUIStore } from '@/infra/stores/common/hand-up';
 import './invite-confirm.css';
 
 interface InviteConfirmContainerProps {
@@ -53,7 +53,7 @@ export const InviteConfirmContainer: React.FC<InviteConfirmContainerProps> = obs
       onClose && onClose();
     };
 
-    const isH5 = GlobalStorage.read('platform') === 'h5';
+    const isH5 = EduClassroomConfig.shared.platform === Platform.H5;
 
     const Comp = isH5 ? H5inviteConfirm : PCinviteConfirm;
 

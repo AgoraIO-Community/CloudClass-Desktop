@@ -5,7 +5,7 @@ import roomListEmptyImg from '@/app/assets/welcome-empty-list.png';
 import { useAuthCallback, useJoinRoom } from '@/app/hooks';
 import { RoomListItem } from '@/app/pages/welcome/room-list';
 import { GlobalStoreContext, RoomStoreContext, UserStoreContext } from '@/app/stores';
-import { token } from '@/app/utils';
+import { ErrorCode, messageError } from '@/app/utils';
 import { Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -29,18 +29,22 @@ import { Share, ShareInfo } from './share';
 export const Welcome = observer(() => {
   const history = useHistory();
   const transI18n = useI18n();
-  const { fetching, fetchMoreRoomList, refreshRoomList, clearRooms, rooms, total } =
+  const { fetching, fetchMoreRoomList, refreshRoomList, rooms, total } =
     useContext(RoomStoreContext);
   const userStore = useContext(UserStoreContext);
+  const { isLogin, nickName } = userStore;
   const [shareModal, setShareModal] = useState(false);
   const { setLoading } = useContext(GlobalStoreContext);
   const { quickJoinRoom } = useJoinRoom();
-  const toJoinRoomPage = useAuthCallback(() => {
+
+  const toJoinRoomPage = () => {
     history.push('/join-room');
-  });
-  const toCreateRoomPage = useAuthCallback(() => {
+  }
+
+  const toCreateRoomPage = () => {
     history.push('/create-room');
-  });
+  }
+
   const [shareRoomInfo, setShareRoomInfo] = useState<ShareInfo>({
     owner: '',
     startTime: 0,
@@ -52,7 +56,7 @@ export const Welcome = observer(() => {
   const onShare = useCallback(
     (data: RoomInfo) => {
       setShareRoomInfo({
-        owner: userStore.nickName,
+        owner: nickName,
         startTime: data.startTime,
         endTime: data.endTime,
         roomId: data.roomId,
@@ -60,7 +64,7 @@ export const Welcome = observer(() => {
       });
       setShareModal(true);
     },
-    [userStore.nickName],
+    [nickName],
   );
 
   const onJoin = useCallback(
@@ -69,38 +73,46 @@ export const Welcome = observer(() => {
       quickJoinRoom({
         roomId: data.roomId,
         role: data.role,
-        nickName: userStore.nickName,
+        nickName: nickName,
         userId: userStore.userInfo!.companyId,
         platform: Platform.PC,
-      }).finally(() => {
-        setLoading(false);
-      });
-    },
-    [userStore.nickName, userStore.userInfo, quickJoinRoom],
-  );
-
-  const onDetail = useCallback((data: RoomInfo) => {}, []);
-
-  useEffect(() => {
-    if (userStore.isLogin) {
-      setLoading(true);
-      refreshRoomList().finally(() => {
-        setLoading(false);
-      });
-    } else {
-      if (token.accessToken) {
-        setLoading(true);
-        clearRooms();
-        userStore.getUserInfo().finally(() => {
+      })
+        .then(() => {
+          refreshRoomList();
+        })
+        .catch((error) => {
+          console.warn('welcome page quickJoinRoom failed. error:%o', error);
+          if (error.code) {
+            messageError(error.code);
+          } else {
+            messageError(ErrorCode.FETCH_ROOM_INFO_FAILED);
+          }
+        })
+        .finally(() => {
           setLoading(false);
         });
-      }
+    },
+    [nickName, userStore.userInfo, quickJoinRoom],
+  );
+
+  const onDetail = useCallback((data: RoomInfo) => { }, []);
+
+  const roomRefresh = useCallback(() => {
+    setLoading(true);
+    return refreshRoomList().finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isLogin && total === 0) {
+      roomRefresh();
     }
-  }, [userStore.isLogin]);
+  }, [isLogin, total]);
 
   return (
     <div className="welcome-container">
-      <div className="header">{userStore.isLogin ? <Menu></Menu> : null}</div>
+      <div className="header">{isLogin ? <Menu></Menu> : null}</div>
       <div className={`content ${rooms.size ? '' : 'room-list-empty'}`} id="scrollableDiv">
         <div className="welcome-title">{transI18n('fcr_home_label_welcome_message')}</div>
         <div className="room-list-empty-img">
@@ -129,6 +141,9 @@ export const Welcome = observer(() => {
             dataLength={rooms.size}
             next={fetchMoreRoomList}
             hasMore={rooms.size < total}
+            //TODO 下拉刷新可以做，需要调整下dom的结构
+            pullDownToRefresh
+            refreshFunction={roomRefresh}
             loader={
               <ASkeleton
                 paragraph={{

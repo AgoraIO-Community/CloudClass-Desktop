@@ -6,10 +6,11 @@ import {
   roomUsers,
   isUserMute,
   announcementNotice,
+  roomUserMute,
 } from '../redux/actions/roomAction';
 import _ from 'lodash';
 import { message } from 'antd';
-import { CHAT_TABS_KEYS } from '../contants';
+import { CHAT_TABS_KEYS, MUTE_CONFIG } from '../contants';
 import WebIM from './WebIM';
 import { ROLE } from '../contants'
 
@@ -21,7 +22,7 @@ export const createListener = (store) => {
     const { apis } = store.getState();
     WebIM.conn.listen({
       onOpened: () => {
-        console.log('onOpened>>>');
+        console.log('onOpened>>>', store.getState());
         store.dispatch(statusAction(true));
         // message.success(transI18n('chat.login_success'));
         apis.userInfoAPI.setUserInfo(new_IM_Data);
@@ -95,6 +96,7 @@ export const createListener = (store) => {
         if (new_IM_Data.chatRoomId !== message.gid) return;
         const roomUserList = _.get(store.getState(), 'room.roomUsers');
         const showChat = store.getState().showChat;
+        const currentLoginUser = store.getState().propsData.userUuid;
         switch (message.type) {
           case 'memberJoinChatRoomSuccess':
             if (!isAdmins) return
@@ -139,14 +141,24 @@ export const createListener = (store) => {
           case 'rmChatRoomMute':
             store.dispatch(roomAllMute(false));
             break;
-          // 删除聊天室白名单成员
-          case 'rmUserFromChatRoomWhiteList':
-            apis.muteAPI.getRoomWhileList(message.gid);
+          // 移除个人禁言
+          case 'removeMute':
+            if (currentLoginUser === message.to) {
+              apis.muteAPI.removeUserProperties();
+            }
+            if (isAdmins) {
+              store.dispatch(roomUserMute(message.to, MUTE_CONFIG.unMute))
+            }
             store.dispatch(isUserMute(false));
             break;
-          // 增加聊天室白名单成员
-          case 'addUserToChatRoomWhiteList':
-            apis.muteAPI.getRoomWhileList(message.gid);
+          // 添加个人禁言
+          case 'addMute':
+            if (currentLoginUser === message.to) {
+              apis.muteAPI.setUserProperties();
+            }
+            if (isAdmins) {
+              store.dispatch(roomUserMute(message.to, MUTE_CONFIG.mute))
+            }
             store.dispatch(isUserMute(true));
             break;
           default:

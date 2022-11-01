@@ -92,6 +92,7 @@ export type SlideOptions = {
   resolution?: number;
   autoResolution?: boolean;
   autoFPS?: boolean;
+  maxResolutionLevel?: number;
 };
 
 export type MountOptions = {

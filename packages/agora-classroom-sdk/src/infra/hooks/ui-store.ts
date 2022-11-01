@@ -1,4 +1,4 @@
-import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoomTypeEnum, Platform } from 'agora-edu-core';
 import React from 'react';
 import { EduContext } from '../contexts';
 import { EduClassroomUIStore } from '../stores/common';
@@ -26,10 +26,13 @@ export function useStore(): EduClassroomUIStore {
   const oneToOneUIStores = React.useContext(EduContext.shared).oneToOneUI;
   const interactiveUIStores = React.useContext(EduContext.shared).interactiveUI;
   const lectureUIStores = React.useContext(EduContext.shared).lectureUI;
+  const lectureH5UIStores = React.useContext(EduContext.shared).lectureH5UI;
   const vocationalUIStores = React.useContext(EduContext.shared).vocationalUI;
+  const vocationalH5UIStores = React.useContext(EduContext.shared).vocationalH5UI;
 
   const type = EduClassroomConfig.shared.sessionInfo.roomType;
   const isVocational = EduClassroomConfig.shared.sessionInfo.roomServiceType !== 0;
+  const isH5 = EduClassroomConfig.shared.platform === Platform.H5;
   switch (type) {
     case EduRoomTypeEnum.Room1v1Class:
       return oneToOneUIStores;
@@ -37,9 +40,9 @@ export function useStore(): EduClassroomUIStore {
       return interactiveUIStores;
     case EduRoomTypeEnum.RoomBigClass:
       if (isVocational) {
-        return vocationalUIStores;
+        return isH5 ? vocationalH5UIStores : vocationalUIStores;
       } else {
-        return lectureUIStores;
+        return isH5 ? lectureH5UIStores : lectureUIStores;
       }
     default:
       throw new Error(`Unsupported room type ${type}`);

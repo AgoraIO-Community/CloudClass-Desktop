@@ -189,17 +189,13 @@ const ShareCard = observer(() => {
       <Layout direction="col">
         <Layout className="justify-between">
           <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_name')}</span>
-          <span
-            style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }}
-            title={roomName}>
+          <span className={'w-1/2 truncate text-right'} title={roomName}>
             {roomName}
           </span>
         </Layout>
         <Layout className="justify-between mt-3">
           <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_id')}</span>
-          <span
-            style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }}
-            title={roomUuid}>
+          <span className={'w-1/2 truncate text-right'} title={roomUuid}>
             {roomUuid}
           </span>
         </Layout>

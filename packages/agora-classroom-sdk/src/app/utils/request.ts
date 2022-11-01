@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { UserApi } from '../api/user';
+import { indexUrl } from './';
 import { token } from './token';
-import { historyPushLogout } from './';
 
 export interface Response<T = unknown> {
   code: string;
@@ -55,11 +55,11 @@ request.interceptors.response.use(
           })
           .catch((refreshTokenError) => {
             // refreshToken 接口报错，直接登出。
-            historyPushLogout();
+            history.pushState({}, '', `${indexUrl}#/logout`);
             return refreshTokenError;
           });
       } else {
-        historyPushLogout();
+        history.pushState({}, '', `${indexUrl}#/logout`);
         return error;
       }
     }

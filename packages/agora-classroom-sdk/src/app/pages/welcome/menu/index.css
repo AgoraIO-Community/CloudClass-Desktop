@@ -14,13 +14,12 @@
 }
 
 .welcome-menu:hover .menu-avatar {
-  /* translate: 200% 200%; */
-  transform: scale(2, 2) translateY(10px) translateX(-10px);
+  transform: scale(1.5, 1.5) translateY(10px) translateX(-10px);
 }
 
 .welcome-menu .menu-content {
-  display: none;
-  width: 250px;
+  @apply hidden overflow-hidden;
+  width: 212px;
   /* white */
   background: #ffffff;
   box-shadow: 10px 10px 60px -8px rgba(0, 0, 0, 0.08);
@@ -34,7 +33,7 @@
   color: #030303;
 
   position: relative;
-  left: -180px;
+  left: -150px;
 }
 
 .welcome-menu:hover .menu-content {
@@ -45,17 +44,17 @@
   @apply truncate;
   /* fcr_light_background1 */
   background: #f8faff;
-  height: 103px;
-  padding: 55px 30px 0;
+  height: 80px;
+  padding: 42px 30px 0;
 }
 
 .welcome-menu .menu-content .menu-list {
-  padding: 16px 6px 6px 6px;
+  padding: 6px 6px 6px 6px;
 }
 
 .welcome-menu .menu-list .menu-item {
   @apply cursor-pointer relative flex items-center;
-  height: 66px;
+  height: 48px;
   border-radius: 14px;
   padding: 0 24px;
 }
@@ -83,9 +82,9 @@
   content: '';
   height: 1px;
   background: #efefef;
-  margin: 0 auto;
-  width: 80%;
+  width: 100%;
   position: absolute;
+  left: 0;
   top: -6px;
 }
 

@@ -9,7 +9,6 @@ import {
   Row,
   Table,
   TableHeader,
-  transI18n,
   SvgImg,
   Button,
   Modal,
@@ -22,17 +21,17 @@ import {
   UploadItem,
   Input,
   SvgIconEnum,
+  useI18n
 } from '~ui-kit';
 import CloudToolbar from './cloud-toolbar';
 import CloudMinimize from './cloud-minimize';
 import CloudMoreMenu from './cloud-more-menu';
-import { FileTypeSvgColor, UploadItem as CloudUploadItem } from '@/infra/stores/common/cloud-drive';
-import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
-import { debounce } from 'lodash';
+import { FileTypeSvgColor } from '@/infra/stores/common/cloud-drive';
 import { CloudDriveCourseResource } from '@/infra/stores/common/cloud-drive/struct';
 import { supportedTypes } from '@/infra/stores/common/cloud-drive/helper';
 
 const UploadSuccessToast = () => {
+  const transI18n = useI18n();
   return (
     <Toast
       closeToast={() => { }}
@@ -47,12 +46,13 @@ const UploadSuccessToast = () => {
   );
 };
 
-const UploadModal = () => {
+const UploadModal = observer(() => {
   const { cloudUIStore } = useStore();
   const { setShowUploadMinimize, setShowUploadModal, uploadingProgresses, classroomStore } =
     cloudUIStore;
   const { cloudDriveStore } = classroomStore;
   const { retryUpload, cancelUpload } = cloudDriveStore;
+  const transI18n = useI18n();
 
   return (
     <Modal
@@ -82,11 +82,11 @@ const UploadModal = () => {
       />
     </Modal>
   );
-};
+});
 
 export const PersonalResourcesContainer = observer(() => {
   const [onlineCoursewareModalVisible, setOnlineCoursewareModalVisible] = useState(false);
-  const uploadingRef = useRef(false);
+  const transI18n = useI18n();
   const { cloudUIStore, shareUIStore } = useStore();
   const { addConfirmDialog } = shareUIStore;
   const {
@@ -98,28 +98,25 @@ export const PersonalResourcesContainer = observer(() => {
     setAllPersonalResourceSelected,
     isPersonalResSelectedAll,
     hasSelectedPersonalRes,
-    uploadingProgresses,
     personalResourcesTotalNum,
     pageSize,
     currentPersonalResPage,
     removePersonalResources,
     uploadPersonalResource,
-    addOnlineCourseware,
+    reloadPersonalResources,
     fetchPersonalResources,
     personalResources,
     searchPersonalResourcesKeyword,
     setSearchPersonalResourcesKeyword,
     showUploadMinimize,
     setShowUploadMinimize,
-    uploadState,
-    setUploadState,
     showUploadModal,
     setShowUploadModal,
     showUploadToast,
-    setShowUploadToast,
+    validateFiles
   } = cloudUIStore;
 
-  const fileRef = useRef<HTMLInputElement | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchPersonalResources({
@@ -131,37 +128,6 @@ export const PersonalResourcesContainer = observer(() => {
       setSearchPersonalResourcesKeyword('');
     };
   }, []);
-  const debouncedFetchPersonalResources = useCallback(
-    debounce(() => {
-      fetchPersonalResources({
-        pageNo: currentPersonalResPage,
-        pageSize,
-        resourceName: searchPersonalResourcesKeyword,
-      });
-    }, 500),
-    [currentPersonalResPage, pageSize, searchPersonalResourcesKeyword],
-  );
-  useEffect(() => {
-    if (!uploadingProgresses.length) {
-      setShowUploadModal(false);
-    }
-    if (
-      uploadingRef.current &&
-      uploadingProgresses.length > 0 &&
-      uploadingProgresses.length ===
-      uploadingProgresses.filter(
-        (item: CloudUploadItem) => item.status === CloudDriveResourceUploadStatus.Success,
-      ).length
-    ) {
-      uploadingRef.current = false;
-      setUploadState('success');
-      setShowUploadToast(true);
-      showUploadModal && setShowUploadModal(false);
-      setTimeout(() => {
-        setShowUploadToast(false);
-      }, 1000);
-    }
-  }, [uploadingProgresses]);
 
   const onClickSelectAll = () => {
     setAllPersonalResourceSelected(!hasSelectedPersonalRes);
@@ -178,27 +144,11 @@ export const PersonalResourcesContainer = observer(() => {
   };
 
   const handleUpload = async (evt: ChangeEvent<HTMLInputElement>) => {
-    try {
-      const files = evt.target.files || [];
-      if (files?.length) {
-        setShowUploadModal(true);
-        setUploadState('uploading');
-        const taskArr = [];
-        uploadingRef.current = true;
-        for (const file of files) {
-          taskArr.push(
-            uploadPersonalResource(file).finally(() => {
-              debouncedFetchPersonalResources();
-            }),
-          );
-        }
-      }
-    } catch (e) {
-      setShowUploadModal(false);
-      setUploadState('error');
-      throw e;
-    } finally {
-      fileRef.current!.value = '';
+    const files = Array.from(evt.target.files || []);
+
+    if (validateFiles(files)) {
+      const filesArr = Array.from(files);
+      uploadPersonalResource(filesArr);
     }
   };
 
@@ -225,15 +175,12 @@ export const PersonalResourcesContainer = observer(() => {
     });
   };
 
-  const keyWordChangeHandle = useCallback(
+  const keywordChangeHandle = useCallback(
     (keyword: string) => {
       setSearchPersonalResourcesKeyword(keyword);
     },
     [setSearchPersonalResourcesKeyword],
   );
-  const onOnlineCoursewareSubmit = async (formData: IUploadOnlineCoursewareData) => {
-    await addOnlineCourseware(formData);
-  };
   return (
     <>
       {showUploadToast ? <UploadSuccessToast /> : null}
@@ -241,7 +188,7 @@ export const PersonalResourcesContainer = observer(() => {
       <CloudToolbar
         fileCounts={personalResourcesTotalNum}
         keyword={searchPersonalResourcesKeyword}
-        onKeywordChange={keyWordChangeHandle}
+        onKeywordChange={keywordChangeHandle}
         onRefresh={() => {
           fetchPersonalResources({
             pageNo: 1,
@@ -374,10 +321,7 @@ export const PersonalResourcesContainer = observer(() => {
                 }
               }}>
               {showUploadMinimize ? (
-                <CloudMinimize
-                  state={uploadState}
-                  uploadingProgresses={uploadingProgresses as unknown as UploadItem[]}
-                />
+                <CloudMinimize />
               ) : null}
             </div>
             <div className="cloud-btn-group-right">
@@ -387,7 +331,7 @@ export const PersonalResourcesContainer = observer(() => {
                 accept={supportedTypes.map((item) => '.' + item).join(',')}
                 onChange={handleUpload}
                 multiple
-                type="file"></input>
+                type="file" />
               <div className="upload-btn-group">
                 <Button type="primary" onClick={triggerUpload}>
                   {transI18n('cloud.upload')}
@@ -418,10 +362,9 @@ export const PersonalResourcesContainer = observer(() => {
       </Table>
       <UploadOnlineCoursewareModal
         visible={onlineCoursewareModalVisible}
-        onOk={onOnlineCoursewareSubmit}
         onCancel={() => {
           setOnlineCoursewareModalVisible(false);
-          debouncedFetchPersonalResources();
+          reloadPersonalResources();
         }}></UploadOnlineCoursewareModal>
     </>
   );
@@ -433,16 +376,17 @@ export interface IUploadOnlineCoursewareData {
 const UploadOnlineCoursewareModal = (props: {
   visible: boolean;
   onCancel: () => void;
-  onOk: (formData: IUploadOnlineCoursewareData) => Promise<void>;
 }) => {
-  const { visible, onCancel, onOk } = props;
+  const { visible, onCancel } = props;
   const [formData, setFormData] = useState({
     url: '',
     resourceName: '',
   });
   const {
     shareUIStore: { addToast },
+    cloudUIStore: { addOnlineCourseware }
   } = useStore();
+  const transI18n = useI18n();
   const onSubmit = async () => {
     if (!formData.url || !formData.resourceName) {
       addToast(transI18n('fcr_online_courseware_input_content'), 'warning');
@@ -456,7 +400,7 @@ const UploadOnlineCoursewareModal = (props: {
       addToast(transI18n('fcr_online_courseware_valid_url'), 'warning');
       return;
     }
-    await onOk(formData);
+    await addOnlineCourseware(formData);
 
     addToast(transI18n('cloud.upload_success'), 'success');
     onCancel();

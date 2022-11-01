@@ -6,9 +6,8 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useLayoutEffect, useState } from 'react';
 import { RoomPretest } from '~containers/pretest/new';
-import { Watermark } from '../containers/widget/slots';
+import { useEffect, useState } from 'react';
 import { OneToOneScenario } from './1v1';
 import { BigClassScenario } from './big-class';
 import { BigClassScenarioH5 } from './big-class-h5';
@@ -59,13 +58,14 @@ export const renderRoomSceneWith = (
 
 export const Scenarios: React.FC<ScenariosProps> = observer(
   ({ pretest, roomType, roomServiceType }) => {
-    const { initialize } = useStore();
+    const { initialize, destroy } = useStore();
     const [initialized, setInitialized] = useState(false);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       initialize();
       setInitialized(true);
-    }, [initialize]);
+      return destroy;
+    }, []);
 
     const [showPretest, setPretest] = useState(pretest);
 

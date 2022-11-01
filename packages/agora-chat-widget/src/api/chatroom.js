@@ -33,9 +33,10 @@ export class ChatRoomAPI {
 
     WebIM.conn.joinChatRoom(options).then((res) => {
       // message.success(transI18n('chat.join_room_success'));
-      this.getRoomInfo(options.roomId);
+      this.getRoomInfo(options.roomId, roleType);
+      // 学生登陆 加入聊天室成功后，检查自己是否被禁言
       if (roleType === ROLE.student.id) {
-        this.muteAPI.isChatRoomWhiteUser(userUuid);
+        this.muteAPI.getCurrentUserStatus();
       }
       if (roleType === ROLE.teacher.id || roleType === ROLE.assistant.id) {
         this.getRoomsAdmin(roomId);
@@ -45,7 +46,7 @@ export class ChatRoomAPI {
   };
 
   // 获取聊天室详情
-  getRoomInfo = (roomId) => {
+  getRoomInfo = (roomId, roleType) => {
     let options = {
       chatRoomId: roomId, // 聊天室id
     };
@@ -69,10 +70,12 @@ export class ChatRoomAPI {
         }
         this.userInfoAPI.getUserInfo({ member: newArr });
         this.getAnnouncement(roomId);
-        this.muteAPI.getRoomWhileList(roomId);
+        if (roleType === ROLE.teacher.id || roleType === ROLE.assistant.id) {
+          this.muteAPI.getChatRoomMuteList(roomId);
+        }
       })
       .catch((err) => {
-        message.error(transI18n('get_room_info'));
+        message.error(transI18n('chat.get_room_info'));
         console.log('getRoomInfo>>>', err);
       });
   };

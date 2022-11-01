@@ -815,10 +815,10 @@ export class GroupUIStore extends EduUIStoreBase {
 
       const dialogId = this.shareUIStore.addConfirmDialog(title, content, {
         onOK: () => {
-          this.classroomStore.groupStore.acceptGroupInvited(groupUuid);
+          this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
         },
         onCancel: () => {
-          this.classroomStore.groupStore.rejectGroupInvited(groupUuid);
+          this.classroomStore.groupStore.rejectGroupInvite(groupUuid);
         },
         actions: ['ok', 'cancel'],
         btnText: {

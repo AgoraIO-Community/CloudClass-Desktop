@@ -1,7 +1,8 @@
 import { formatRoomID } from '@/app/hooks';
-import { useElementWithI18n } from '@/app/hooks/useComWithI18n';
+import { useLangSwitchValue } from '@/app/hooks/useLangSwitchValue';
 import { GlobalStoreContext } from '@/app/stores';
 import { shareLink } from '@/app/utils/share';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { FC, useContext, useMemo } from 'react';
@@ -26,11 +27,16 @@ export const Share: FC<ShareProps> = observer(({ data }) => {
   const transI18n = useI18n();
   const globalStore = useContext(GlobalStoreContext);
   const link = useMemo(() => {
-    const url = shareLink.generateUrl({ roomId, owner, region: globalStore.region });
+    const url = shareLink.generateUrl({
+      roomId,
+      owner,
+      region: globalStore.region,
+      role: EduRoleTypeEnum.student,
+    });
     return url;
   }, [owner, roomId, globalStore.region]);
 
-  const roomInfoCopy = useElementWithI18n({
+  const roomInfoCopy = useLangSwitchValue({
     en: `${owner} invites you to a classroomRoom
 Room Name：${roomName}
 Time：${dayjs(startTime).format('YYYY/MM/DD HH:mm')}-${dayjs(endTime).format(
@@ -51,7 +57,7 @@ Or copy the room ID to join the room：${formatRoomID(roomId)}`,
 或复制课堂ID加入课堂：${formatRoomID(roomId)}`,
   });
 
-  const roomLinkCopy = useElementWithI18n({
+  const roomLinkCopy = useLangSwitchValue({
     en: `Link：${link}
 Room ID：${formatRoomID(roomId)}`,
     zh: `链接：${link}
@@ -70,7 +76,7 @@ Room ID：${formatRoomID(roomId)}`,
       <footer>
         {/**@ts-ignore**/}
         <CopyToClipboard
-          text={roomInfoCopy}
+          text={roomInfoCopy!}
           onCopy={(_, result) => {
             if (result) {
               aMessage.success(transI18n('fcr_share_tips_copy_all_success'));
@@ -82,7 +88,7 @@ Room ID：${formatRoomID(roomId)}`,
         </CopyToClipboard>
         {/**@ts-ignore**/}
         <CopyToClipboard
-          text={roomLinkCopy}
+          text={roomLinkCopy!}
           onCopy={(_, result) => {
             if (result) {
               aMessage.success(transI18n('fcr_share_tips_copy_id_success'));

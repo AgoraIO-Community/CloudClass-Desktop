@@ -1,5 +1,5 @@
 import { Route, Switch, useLocation } from 'react-router';
-import { PageAnimation } from '../components/page-animation';
+import { SliderAnimation } from '../components/page-animation';
 import { HomeLayout } from '../layout/home-layout';
 import { routesMap } from './maps';
 import { PageRouter } from './type';
@@ -16,7 +16,7 @@ export const HomeRouteContainer = () => {
   return (
     <>
       <HomeLayout>
-        <PageAnimation>
+        <SliderAnimation>
           <Switch location={location}>
             {homeRoutes.map((item, index) => {
               const route = routesMap[item];
@@ -31,7 +31,7 @@ export const HomeRouteContainer = () => {
               );
             })}
           </Switch>
-        </PageAnimation>
+        </SliderAnimation>
       </HomeLayout>
     </>
   );

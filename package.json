@@ -69,6 +69,7 @@
     "thread-loader": "3.0.4",
     "typedoc": "0.22.10",
     "url-loader": "4.1.1",
+    "worker-loader": "3.0.8",
     "vconsole": "^3.10.1",
     "webpack": "5.54.0",
     "webpack-bundle-analyzer": "4.5.0",
@@ -76,7 +77,6 @@
     "webpack-dev-server": "4.2.1",
     "webpack-merge": "5.8.0",
     "webpackbar": "5.0.0-3",
-    "worker-loader": "3.0.8",
     "recast": "0.21.1"
   },
   "agora_electron": {

@@ -56,7 +56,8 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
   }
 
   private _installPlugins() {
-    const { minFPS, maxFPS, resolution, autoResolution, autoFPS, debug } = this._options;
+    const { minFPS, maxFPS, resolution, autoResolution, autoFPS, maxResolutionLevel, debug } =
+      this._options;
     WindowManager.register({
       kind: 'Slide',
       src: SlideApp,
@@ -67,6 +68,7 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
         resolution,
         autoResolution,
         autoFPS,
+        maxResolutionLevel,
       },
     });
 
@@ -96,6 +98,8 @@ export class FcrBoardMainWindow implements FcrBoardMainWindowEventEmitter {
             wm.destroy();
             return;
           }
+          //@ts-ignore
+          window._wm = wm;
           this._windowManager = wm;
           this._windowManager.mainView.disableCameraTransform = true;
           this._addWindowManagerEventListeners();

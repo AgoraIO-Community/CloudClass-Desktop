@@ -62,7 +62,10 @@ export const Select: FC<SelectProps> = ({
         <a
           className={textCls}
           style={{ padding: '14px 20px 14px 12px' }}
-          href="javascript:void(0);"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+          }}
           onMouseDown={handleFocus}
           onFocus={handleFocus}
           onBlur={handleBlur}>

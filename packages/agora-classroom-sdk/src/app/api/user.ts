@@ -1,7 +1,7 @@
 import { getRegion } from '@/app/stores/global';
 import { request, Response } from '@/app/utils/request';
 import axios from 'axios';
-import { getTokenDomain } from '../utils/env';
+import { getApiDomain } from '../utils/domain';
 
 type RefreshTokenResponse = {
   accessToken: string;
@@ -33,7 +33,7 @@ export class UserApi {
   static shared = new UserApi();
 
   private get domain() {
-    return getTokenDomain(getRegion());
+    return getApiDomain(getRegion());
   }
 
   public async getAuthorizedURL(params: GetAuthorizedURLRequest) {
@@ -71,7 +71,7 @@ export class UserApi {
   }
 
   /**
-   * 注销账户
+   * 退出账户
    * @returns
    *
    **/
@@ -79,8 +79,8 @@ export class UserApi {
    * Close Account
    * @returns
    */
-  public async closeAccount() {
-    const url = `${this.domain}/sso/v2/users/auth`;
+  public async logoutAccount() {
+    const url = `${this.domain}/sso/v2/users/logout`;
     return request.delete<Response<null>>(url);
   }
 }

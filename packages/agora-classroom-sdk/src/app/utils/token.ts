@@ -1,5 +1,5 @@
 import { getLSStore, LS_ACCESS_TOKEN, LS_REFRESH_TOKEN, setLSStore } from './local-storage';
-import { Index_URL } from './url';
+import { indexUrl } from './url';
 
 class Token {
   get accessToken() {
@@ -18,18 +18,35 @@ class Token {
     setLSStore<string | null>(LS_REFRESH_TOKEN, value);
   }
 
+  from: null | string = null;
+
   clear() {
     this.accessToken = null;
     this.refreshToken = null;
   }
 
-  constructor() {}
+  private _parse(search: string) {
+    const query = search.slice(1);
+    if (!query) {
+      return null;
+    }
+    const params = new URLSearchParams(query);
+    const refreshToken = params.get('refreshToken') || params.get('rt');
+    const accessToken = params.get('accessToken') || params.get('at');
+    const from = params.get('from');
+    if (refreshToken && accessToken) {
+      return { accessToken, refreshToken, from: from };
+    }
+    return null;
+  }
 
-  init() {
-    if (window.__accessToken && window.__refreshToken) {
-      token.accessToken = window.__accessToken;
-      token.refreshToken = window.__refreshToken;
-      history.replaceState({}, '', Index_URL);
+  update(search: string) {
+    const result = this._parse(search);
+    if (result) {
+      this.accessToken = result.accessToken;
+      this.refreshToken = result.refreshToken;
+      this.from = result.from;
+      window.history.pushState({}, '', indexUrl);
     }
   }
 }

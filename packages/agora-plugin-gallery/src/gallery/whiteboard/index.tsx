@@ -289,8 +289,8 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     const mainWindow = this._boardMainWindow;
     const { sessionInfo } = this.classroomConfig;
     if (mainWindow) {
-      const attr = mainWindow.getAttributes();
-      await this.classroomStore.api.setWindowManagerAttributes(sessionInfo.roomUuid, attr);
+      const attrs = mainWindow.getAttributes();
+      await this.classroomStore.api.setWindowManagerAttributes(sessionInfo.roomUuid, { attributes: JSON.stringify(attrs) });
     }
   }
 
@@ -302,9 +302,9 @@ export class FcrBoardWidget extends AgoraWidgetBase implements AgoraWidgetLifecy
     const mainWindow = this._boardMainWindow;
     const { sessionInfo } = this.classroomConfig;
     if (mainWindow) {
-      const attributes = await this.classroomStore.api.getWindowManagerAttributes(sessionInfo.roomUuid);
+      const { attributes } = await this.classroomStore.api.getWindowManagerAttributes(sessionInfo.roomUuid);
 
-      mainWindow.setAttributes(attributes);
+      mainWindow.setAttributes(JSON.parse(attributes));
     }
   }
 
