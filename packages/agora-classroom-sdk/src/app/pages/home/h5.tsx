@@ -3,6 +3,7 @@ import { HomeSettingContainerH5 } from '@/app/pages/home/home-setting/h5';
 import { GlobalStoreContext } from '@/app/stores';
 import { GlobalLaunchOption } from '@/app/stores/global';
 import { courseware } from '@/app/utils/courseware';
+import { REACT_APP_AGORA_APP_SDK_DOMAIN, REACT_APP_AGORA_APP_TOKEN_DOMAIN } from '@/app/utils/env';
 import { LanguageEnum } from '@/infra/api';
 import { FcrMultiThemeMode } from '@/infra/types/config';
 import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
@@ -21,8 +22,8 @@ import { useHistory } from 'react-router';
 import { H5Login } from '~ui-kit/scaffold';
 import { MessageDialog } from './message-dialog';
 
-const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
-const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
+declare const CLASSROOM_SDK_VERSION: string;
+
 const useTheme = () => {
   useEffect(() => {
     loadGeneratedFiles();

@@ -2,6 +2,7 @@ import { roomApi } from '@/app/api';
 import { GlobalStoreContext } from '@/app/stores';
 import { GlobalLaunchOption } from '@/app/stores/global';
 import { courseware } from '@/app/utils/courseware';
+import { REACT_APP_AGORA_APP_SDK_DOMAIN, REACT_APP_AGORA_APP_TOKEN_DOMAIN, REACT_APP_PUBLISH_DATE } from '@/app/utils/env';
 import { LanguageEnum } from '@/infra/api';
 import {
   EduClassroomConfig,
@@ -22,9 +23,7 @@ import { HomeSettingContainerH5 } from './home-setting/h5';
 import { MessageDialog } from './message-dialog';
 import { useTheme } from './vocational';
 
-const REACT_APP_AGORA_APP_TOKEN_DOMAIN = process.env.REACT_APP_AGORA_APP_TOKEN_DOMAIN;
-const REACT_APP_PUBLISH_DATE = process.env.REACT_APP_PUBLISH_DATE || '';
-const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
+declare const CLASSROOM_SDK_VERSION: string;
 
 const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: number } = {
   'vocational-class': 1,

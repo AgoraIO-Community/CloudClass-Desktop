@@ -2,9 +2,11 @@ import logo from '@/app/assets/logo.svg';
 import { useLogout } from '@/app/hooks';
 import { privacyPolicyURL, useAgreementURL } from '@/infra/utils/url';
 import { EduClassroomConfig } from 'agora-edu-core';
-
 import { useI18n } from '~ui-kit';
 import './index.css';
+
+declare const CLASSROOM_SDK_VERSION: string;
+
 export const About = () => {
   const { logout } = useLogout();
   const transI18n = useI18n();

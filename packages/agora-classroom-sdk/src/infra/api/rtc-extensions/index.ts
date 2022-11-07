@@ -53,7 +53,7 @@ const builtInExtionsionInitializers: Record<string, ExtensionInitializer> = {
   },
 };
 
-const loadRTCExtension = <T>(name: string) => {
+const loadRTCExtension = <T extends IBaseProcessor>(name: string) => {
   const obj = builtInExtionsionInitializers[name];
   if (!builtInExtensionsKeeper[name]) {
     builtInExtensionsKeeper[name] = obj.createInstance();
