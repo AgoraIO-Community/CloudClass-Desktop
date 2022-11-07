@@ -97,6 +97,7 @@ export enum SvgIconEnum {
   PLACEHOLDER_NO_SETUP = 'placeholder-no-setup',
   PLACEHOLDER_NOT_PRESENT = 'placeholder-not-present',
   PPT = 'ppt',
+  PRETEST_SPEAKER = 'pretest-speaker',
   RECORD = 'record',
   RECORDING = 'recording',
   RED_CAUTION = 'red-caution',
@@ -128,7 +129,6 @@ export enum SvgIconEnum {
   STREAM_WINDOW_ON = 'stream-window-on',
   SWITCH_SCREEN_SHARE = 'switch-screen-share',
   SWITCH_SCREEN_SHARE_ACTIVE = 'switch-screen-share-active',
-  TEST_SPEAKER = 'test-speaker',
   TEXT = 'text',
   TOAST_INFO = 'toast-info',
   TOAST_SUCCESS = 'toast-success',
@@ -150,7 +150,6 @@ export enum SvgIconEnum {
   ZOOM_IN = 'zoom-in',
   ZOOM_OUT = 'zoom-out',
   NONE = 'none',
-  UNDERLINE = 'underline',
   MARK = 'mark',
   ADD = 'add',
 }

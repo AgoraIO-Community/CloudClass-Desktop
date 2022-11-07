@@ -1,17 +1,15 @@
 import { Field } from '@/app/components/form-field';
+import { AgoraEduSDK } from '@/infra/api';
 import { useStore } from '@/infra/hooks/ui-store';
 import { BeautyType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useRef, useEffect, useCallback } from 'react';
-
 import tw, { styled, css } from 'twin.macro';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip, transI18n } from '~ui-kit';
 import { ASlider } from '~ui-kit/components/slider';
-import underline from './assets/underline.png';
+import { indicatorURI } from './data-uris';
 import './pretest-video.css';
 
-const DEFAULT_IMAGE_EFFECTS = require.context('./assets/effect/', false, /^.*\.jpg/);
-const DEFAULT_VIDEO_EFFECTS = require.context('./assets/effect/', false, /^.*\.mp4/);
 export const PretestVideo = () => {
   return (
     <VideoContainer>
@@ -132,9 +130,6 @@ const VideoOperatorTab = observer(() => {
     pretestUIStore: {
       currentEffectType,
       setCurrentEffectOption,
-      cameraVirtualBackgroundProcessor,
-      cameraBeautyProcessor,
-      initVideoEffect,
       underlineLeft,
       setUnderlineLeft,
     },
@@ -143,12 +138,6 @@ const VideoOperatorTab = observer(() => {
   const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
     setCurrentEffectOption(type);
     setUnderlineLeft(event.currentTarget.offsetLeft);
-  }, []);
-
-  useEffect(() => {
-    if (!cameraVirtualBackgroundProcessor && !cameraBeautyProcessor) {
-      initVideoEffect();
-    }
   }, []);
 
   return (
@@ -164,7 +153,17 @@ const VideoOperatorTab = observer(() => {
           onClick={(e) => handleTabClick(e, 'beauty')}>
           {transI18n('media.beauty')}
         </TabTitle>
-        <ForceBar translateLeft={underlineLeft}></ForceBar>
+        <img src={indicatorURI}
+          style={{
+            top: 13,
+            left: 21,
+            width: 76,
+            height: 17,
+            transition: '0.3s all ease',
+            transform: `translate3d(${underlineLeft}px, 0, 0)`,
+            position: 'absolute'
+          }}
+        />
       </TabHeader>
       <TabContent>
         {currentEffectType === 'virtualBackground' && <Background />}
@@ -223,51 +222,49 @@ const Background = observer(() => {
           />
         </BackgroundItem>
       </Tooltip>
-      <Tooltip
+      {/* <Tooltip
         title={transI18n('pretest.add')}
         placement="top"
         mouseEnterDelay={3}
         overlayClassName="pretestTooltip">
         <BackgroundItem>
-          {/* <input
-                ref={fileRef}
-                id="upload-image"
-                accept={imageTypes.map((item) => '.' + item).join(',')}
-                onChange={handleUpload}
-                multiple
-                type="file"></input> */}
           <SvgImg type={SvgIconEnum.ADD} colors={{ iconPrimary: '#000' }} size={40} />
         </BackgroundItem>
-      </Tooltip>
-      {DEFAULT_IMAGE_EFFECTS.keys().map((item) => (
-        <BackgroundItem
-          activity={currentVirtualBackground === item}
-          key={item}
-          image={DEFAULT_IMAGE_EFFECTS(item)}
-          onClick={() =>
-            handleBackgroundChange(item, { type: 'img', url: DEFAULT_IMAGE_EFFECTS(item) })
-          }>
-          {currentVirtualBackground === item && (
-            <SvgImg
-              className="svg-mark"
-              type={SvgIconEnum.MARK}
-              colors={{ iconPrimary: '#0056FD' }}
-            />
-          )}
-        </BackgroundItem>
-      ))}
-      {DEFAULT_VIDEO_EFFECTS.keys().map((item) => {
+      </Tooltip> */}
+      {AgoraEduSDK.virtualBackgroundImages.map((item) => {
+        const assetURL = item;
         return (
           <BackgroundItem
-            key={item}
-            activity={currentVirtualBackground === item}
+            activity={currentVirtualBackground === assetURL}
+            key={assetURL}
+            image={assetURL}
             onClick={() =>
-              handleBackgroundChange(item, { type: 'video', url: DEFAULT_VIDEO_EFFECTS(item) })
+              handleBackgroundChange(assetURL, { type: 'img', url: assetURL })
+            }>
+            {currentVirtualBackground === assetURL && (
+              <SvgImg
+                className="svg-mark"
+                type={SvgIconEnum.MARK}
+                colors={{ iconPrimary: '#0056FD' }}
+              />
+            )}
+          </BackgroundItem>
+        )
+      }
+      )}
+      {AgoraEduSDK.virtualBackgroundVideos.map((item) => {
+        const assetURL = item;
+        return (
+          <BackgroundItem
+            key={assetURL}
+            activity={currentVirtualBackground === assetURL}
+            onClick={() =>
+              handleBackgroundChange(assetURL, { type: 'video', url: assetURL })
             }>
             <video autoPlay loop muted>
-              <source src={DEFAULT_VIDEO_EFFECTS(item)} type="video/mp4" />
+              <source src={assetURL} type="video/mp4" />
             </video>
-            {currentVirtualBackground === item && (
+            {currentVirtualBackground === assetURL && (
               <SvgImg
                 className="svg-mark"
                 type={SvgIconEnum.MARK}
@@ -433,19 +430,6 @@ const TabTitle = styled.div<{ activity: boolean }>`
   ${tw`text-level2`}
   cursor: pointer;
 `;
-
-const ForceBar = styled.span<{ translateLeft: number }>`
-  display: block;
-  position: absolute;
-  top: 13px;
-  left: 21px;
-  width: 76px;
-  height: 17px;
-  transform: translate3d(0, 0, 0);
-  background: url(${underline}) no-repeat center/contain;
-  transition: 0.3s all ease;
-  transform: ${(props) => `translate3d(${props.translateLeft}px, 0, 0)`};
-`;
 const TabContent = styled.div`
   padding-top: 15px;
   padding-left: 2px;
@@ -542,8 +526,8 @@ const BackgroundItem = styled.div<{ image?: string; activity?: boolean }>`
     height: 66px;
     border-radius: 12px;
     ${(props) =>
-      props.activity &&
-      css`
+    props.activity &&
+    css`
         border: 2px solid #0056fd;
       `}
   }

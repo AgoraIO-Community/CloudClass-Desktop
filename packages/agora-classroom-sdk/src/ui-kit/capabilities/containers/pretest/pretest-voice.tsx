@@ -1,13 +1,11 @@
 import { useStore } from '@/infra/hooks/ui-store';
-import { EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import tw, { styled } from 'twin.macro';
 import { AButton as Button, SvgImg, transI18n, SvgIconEnum } from '~ui-kit';
 import { Volume } from './volume';
-import PretestAudio from './assets/pretest-audio.mp3';
-import { isProduction } from '@/app/utils/env';
 import { Field } from '@/app/components/form-field';
+import { pretestAudioURI } from './data-uris';
 
 export const PretestVoice = observer(() => {
   return (
@@ -52,19 +50,11 @@ const SpeakerTest = observer(() => {
       stopPlaybackDeviceTest,
     },
   } = useStore();
-
-  const urlRef = useRef<string>(PretestAudio);
   const handlePlaybackChange = useCallback((value) => {
     setPlaybackDevice(value);
   }, []);
 
   useEffect(() => {
-    if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
-      const path = window.require('path');
-      urlRef.current = isProduction
-        ? `${window.process.resourcesPath}/pretest-audio.mp3`
-        : path.resolve('./assets/pretest-audio.mp3');
-    }
     return stopPlaybackDeviceTest;
   }, []);
 
@@ -84,8 +74,8 @@ const SpeakerTest = observer(() => {
         />
         <AButton
           type="primary"
-          icon={<SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.SPEAKER} size={16} />}
-          onClick={() => startPlaybackDeviceTest(urlRef.current)}>
+          icon={<SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.PRETEST_SPEAKER} size={16} />}
+          onClick={() => startPlaybackDeviceTest(pretestAudioURI)}>
           {transI18n('pretest.test')}
         </AButton>
       </ItemForm>

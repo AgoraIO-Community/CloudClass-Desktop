@@ -6,7 +6,7 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { RoomPretest } from '~containers/pretest/new';
+import { RoomPretest } from '@/ui-kit/capabilities/containers/pretest';
 import { useEffect, useState } from 'react';
 import { OneToOneScenario } from './1v1';
 import { BigClassScenario } from './big-class';

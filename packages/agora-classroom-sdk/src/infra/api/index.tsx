@@ -2,7 +2,6 @@ import { vocationalNeedPreset } from '@/app/pages/home/vocational';
 import { ControlBar } from '@/ui-kit/capabilities/containers/fragments';
 import { Scenarios } from '@/ui-kit/capabilities/scenarios';
 import {
-  AgoraEduClassroomEvent,
   CloudDriveResource,
   EduClassroomConfig,
   EduEventCenter,
@@ -26,10 +25,8 @@ import {
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
-
 import { FcrTheme } from '~ui-kit';
 import { EduContext } from '../contexts';
-
 import { createCloudResource } from '../stores/common/cloud-drive/helper';
 import { FcrMultiThemeMode, FcrUIConfig } from '../types/config';
 import {
@@ -44,10 +41,7 @@ import {
 
 import './polyfills';
 import { Providers } from './providers';
-import {
-  BeautyEffectExtensionIInstance,
-  VirtualBackgroundExtensionInstance,
-} from './rtc-extensions';
+import { initializeBuiltInExtensions, setAssetsBaseUrl } from './rtc-extensions';
 import {
   AgoraWidgetBase,
   BoardWindowAnimationOptions,
@@ -74,7 +68,9 @@ export class AgoraEduSDK {
   private static _theme: FcrTheme;
   private static _shareUrl: string;
   //default use GLOBAL region(including CN)
-  private static region: EduRegion = EduRegion.CN;
+  private static _region: EduRegion = EduRegion.CN;
+  private static _virtualBackgroundImages: string[] = [];
+  private static _virtualBackgroundVideos: string[] = [];
 
   private static _convertRegion(region: string): EduRegion {
     switch (region) {
@@ -165,7 +161,7 @@ export class AgoraEduSDK {
   static config(config: ConfigParams) {
     this._appId = config.appId;
     if (config.region) {
-      this.region = this._convertRegion(config.region);
+      this._region = this._convertRegion(config.region);
     }
   }
 
@@ -195,6 +191,14 @@ export class AgoraEduSDK {
 
   static get shareUrl() {
     return this._shareUrl;
+  }
+
+  static get virtualBackgroundImages() {
+    return this._virtualBackgroundImages;
+  }
+
+  static get virtualBackgroundVideos() {
+    return this._virtualBackgroundVideos;
   }
 
   private static _validateOptions(option: LaunchOption) {
@@ -303,13 +307,27 @@ export class AgoraEduSDK {
       delete this._widgets[widgetName];
     }
 
+    if (option.webrtcExtensionBaseUrl) {
+      setAssetsBaseUrl(option.webrtcExtensionBaseUrl);
+    }
+
+    if (option.virtualBackgroundImages) {
+      this._virtualBackgroundImages = option.virtualBackgroundImages
+    }
+
+    if (option.virtualBackgroundVideos) {
+      this._virtualBackgroundVideos = option.virtualBackgroundVideos;
+    }
+
+    const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } = initializeBuiltInExtensions();
+
     const config = new EduClassroomConfig(
       this._appId,
       sessionInfo,
       option.recordUrl || '',
       {
         latencyLevel,
-        region: this.region,
+        region: this._region,
         rtcConfigs: {
           ...this._convertMediaOptions(option.mediaOptions),
           ...{
@@ -318,7 +336,7 @@ export class AgoraEduSDK {
               !vocationalNeedPreset(roleType, roomServiceType),
           },
         },
-        rtcSDKExtensions: [VirtualBackgroundExtensionInstance, BeautyEffectExtensionIInstance],
+        rtcSDKExtensions: [virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance],
       },
       platform,
       Object.assign(
@@ -345,12 +363,6 @@ export class AgoraEduSDK {
 
     EduClassroomConfig.setConfig(config);
 
-    EduEventCenter.shared.onClassroomEvents((event: AgoraEduClassroomEvent) => {
-      if (event === AgoraEduClassroomEvent.Destroyed) {
-        unmountComponentAtNode(dom);
-      }
-    });
-
     EduEventCenter.shared.onClassroomEvents(option.listener);
 
     const themeMode = uiMode ?? FcrMultiThemeMode.light;
@@ -366,8 +378,11 @@ export class AgoraEduSDK {
       </Providers>,
       dom,
     );
-  }
 
+    return () => {
+      unmountComponentAtNode(dom);
+    }
+  }
   /**
    * 运行窗口UI
    * @param dom
@@ -409,15 +424,15 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${
-      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-    }/edu/apps/${appId}`;
+    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+      }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',
       pathPrefix,
     });
   }
+
 }
 
 loadGeneratedFiles();

@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { AGMediaOptions, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
+import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 import { CloudDriveResourceConvertProgress } from '../stores/common/cloud-drive/type';
 import { AgoraWidgetBase } from '../stores/common/widget/widget-base';
 import { FcrMultiThemeMode } from '../types/config';
@@ -87,6 +88,9 @@ export type LaunchOption = {
   recordRetryTimeout?: number; // 录制重试间隔
   uiMode?: FcrMultiThemeMode;
   shareUrl?: string; // 分享URL
+  virtualBackgroundImages?: string[]; // 虚拟背景图片
+  virtualBackgroundVideos?: string[]; // 虚拟背景视频
+  webrtcExtensionBaseUrl?: string; // WebRTC 扩展插件包路径前缀
 };
 
 /**
@@ -137,4 +141,14 @@ export type BoardWindowAnimationOptions = {
   resolution?: number;
   autoResolution?: boolean;
   autoFPS?: boolean;
+};
+
+export type ExtensionInitializer = {
+  createInstance: () => IExtension<IBaseProcessor>;
+  createProcessor: (extension: IExtension<IBaseProcessor>) => Promise<IBaseProcessor>;
+};
+
+export type ProcessorInitializer<T extends IBaseProcessor> = {
+  name: string;
+  createProcessor: () => Promise<T>;
 };

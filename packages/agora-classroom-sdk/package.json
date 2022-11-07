@@ -49,12 +49,6 @@
     "files": [
       "build/**/*"
     ],
-    "extraResources": [
-      {
-        "from": "./assets/pretest-audio.mp3",
-        "to": "pretest-audio.mp3"
-      }
-    ],
     "artifactName": "${productName}-${version}.${ext}",
     "mac": {
       "target": [
@@ -103,7 +97,7 @@
     }
   },
   "scripts": {
-    "electron": "cross-env RTE_RUNTIME_PLATFORM=electron ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron ./app/\"",
+    "electron": "cross-env ELECTRON_START_URL=http://localhost:3000 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron ./app/\"",
     "electron:client": "cross-env ELECTRON_START_URL=http://localhost:3000 electron ./app/",
     "electron:copy:electron:mac": "cpx './app/**/*.js' ./build",
     "electron:copy:electron:win": "cpx \"./app/**/*.js\" ./build",
@@ -262,6 +256,7 @@
     "workbox-webpack-plugin": "6.3.0",
     "zlib": "1.0.5",
     "agora-extension-virtual-background": "1.1.1",
-    "agora-extension-beauty-effect": "1.0.1-beta"
+    "agora-extension-beauty-effect": "1.0.1-beta",
+    "agora-extension-ai-denoiser": "1.0.0"
   }
 }

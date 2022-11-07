@@ -270,7 +270,7 @@ export class CloudUIStore extends EduUIStoreBase {
     this.setShowUploadModal(true);
     this.setUploadState('uploading');
 
-    for (let idx = 0; idx < files.length; files.length++) {
+    for (let idx = 0; idx < files.length; idx++) {
       const file = files[idx];
 
       try {

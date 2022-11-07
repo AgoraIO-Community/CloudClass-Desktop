@@ -5,7 +5,6 @@ import { GlobalLaunchOption } from '@/app/stores/global';
 import { courseware } from '@/app/utils/courseware';
 import { LanguageEnum } from '@/infra/api';
 import { FcrMultiThemeMode } from '@/infra/types/config';
-import { storage } from '@/infra/utils';
 import { applyTheme, loadGeneratedFiles, themes } from '@/infra/utils/config-loader';
 import {
   EduClassroomConfig,

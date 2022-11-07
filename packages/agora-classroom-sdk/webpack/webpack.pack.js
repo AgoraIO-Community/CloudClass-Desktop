@@ -4,6 +4,7 @@ const webpackMerge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv-webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const baseConfig = require('./webpack.base');
@@ -16,10 +17,10 @@ const config = {
     edu_sdk: './src/infra/api/index.tsx',
   },
   output: {
-    publicPath: '',
+    path: path.resolve(ROOT_PATH, 'lib'),
+    publicPath: './',
     filename: '[name].bundle.js',
     libraryTarget: 'umd',
-    path: path.resolve(ROOT_PATH, 'lib'),
     clean: true,
   },
   module: {
@@ -52,6 +53,26 @@ const config = {
     }),
     new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production'),
+    }),
+    // copy wasm files of Web RTC SDK extension from node_modules
+    new CopyPlugin({
+      patterns: [
+        // ai denoiser
+        {
+          from: path.resolve(ROOT_PATH, '../../node_modules/agora-extension-ai-denoiser/external'),
+          to: path.resolve(ROOT_PATH, './lib/extensions/ai-denoiser'),
+          noErrorOnMissing: true,
+        },
+        //virtual background
+        {
+          from: path.resolve(
+            ROOT_PATH,
+            '../../node_modules/agora-extension-virtual-background/wasms',
+          ),
+          to: path.resolve(ROOT_PATH, './lib/extensions/agora-extension-virtual-background'),
+          noErrorOnMissing: true,
+        },
+      ],
     }),
     // new BundleAnalyzerPlugin(),
   ],

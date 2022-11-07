@@ -1,9 +1,9 @@
-import { Button, CheckBox, Modal, Select, transI18n } from '~ui-kit';
+import { CheckBox, Select, transI18n } from '~ui-kit';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
 import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
-import { RoomPretest } from '../pretest/new';
+import { RoomPretest } from '../pretest';
 
 export const CameraMirrorCheckBox = observer((props: { id?: string }) => {
   const {

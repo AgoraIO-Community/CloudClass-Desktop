@@ -99,12 +99,12 @@ const serviceTypeOptions = [
     value: EduRoomServiceTypeEnum.LiveStandard,
     icon: <img src={standardIcon} />,
   },
-  {
-    label: 'fcr_create_label_service_type_CDN',
-    description: 'fcr_create_label_latency_CDN',
-    value: EduRoomServiceTypeEnum.Fusion,
-    icon: <img src={cdnIcon} />,
-  },
+  // {
+  //   label: 'fcr_create_label_service_type_CDN',
+  //   description: 'fcr_create_label_latency_CDN',
+  //   value: EduRoomServiceTypeEnum.Fusion,
+  //   icon: <img src={cdnIcon} />,
+  // },
 ];
 
 export const CreateRoom = observer(() => {

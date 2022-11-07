@@ -5891,10 +5891,10 @@ agora-chat@^1.0.4:
   resolved "https://registry.yarnpkg.com/agora-chat/-/agora-chat-1.0.6.tgz#d209d3383eae4cf3ba9a830f47971adfde6a51a2"
   integrity sha512-477rxA5j21ZoOa2jdnVob2cjP5xruTgjFa8rUXwzFJVbwJvsesXTFcU2OTbnjTKcB0Gshx7nr1G/2oEJSmUkTA==
 
-agora-electron-sdk@3.6.1-rc.4-build.406:
-  version "3.6.1-rc.4-build.406"
-  resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-3.6.1-rc.4-build.406.tgz#d8e2a1ad9eb6aa192f3d51388b68ab64f31a17e5"
-  integrity sha512-/VmmteDlHfygIBf08QRESKxUpgUNy2Vpotw1A3tlxATIl4HlFExWjJQML+grkBvxPgHf9VAH6glcnJmpZA8Ufw==
+agora-electron-sdk@3.6.1-rc.9-build.817:
+  version "3.6.1-rc.9-build.817"
+  resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-3.6.1-rc.9-build.817.tgz#5ab7748ae6fc2fecef6ce4e4d569d6a44b35e496"
+  integrity sha512-UAmFvtzG+w/xEr9bVIIyEOIFZ/vry9RZeHjeyKc9R0IQgYnb0APRSHsExbdX5mcmjKTu2GghEYhjzFY3dntSzQ==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     download "^7.1.0"
@@ -5909,6 +5909,11 @@ agora-electron-sdk@3.6.1-rc.4-build.406:
     shelljs "^0.8.5"
     yuv-buffer "^1.0.0"
     yuv-canvas "^1.2.1"
+
+agora-extension-ai-denoiser@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/agora-extension-ai-denoiser/-/agora-extension-ai-denoiser-1.0.0.tgz#ea9846e5c0692154996df90803531d53f768feaa"
+  integrity sha512-9U5En2TCLizLYpnakZju3+LrR6hpP5DrGW5oPLd/x+kYpg47kBodcke9z2hq11vM9hEf7Tpo28Q33GO1wQxEzQ==
 
 agora-extension-beauty-effect@1.0.1-beta:
   version "1.0.1-beta"
@@ -23773,10 +23778,10 @@ webpack@4:
     watchpack "^1.7.4"
     webpack-sources "^1.4.1"
 
-webpack@5.54.0:
-  version "5.54.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.54.0.tgz#629f0cd14c7a4340af758a3c7cef25c50670ae4d"
-  integrity sha512-MAVKJMsIUotOQKzFOmN8ZkmMlj7BOyjDU6t1lomW9dWOme5WTStzGa3HMLdV1KYD1AiFETGsznL4LMSvj4tukw==
+webpack@5.58.2:
+  version "5.58.2"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.58.2.tgz#6b4af12fc9bd5cbedc00dc0a2fc2b9592db16b44"
+  integrity sha512-3S6e9Vo1W2ijk4F4PPWRIu6D/uGgqaPmqw+av3W3jLDujuNkdxX5h5c+RQ6GkjVR+WwIPOfgY8av+j5j4tMqJw==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.50"

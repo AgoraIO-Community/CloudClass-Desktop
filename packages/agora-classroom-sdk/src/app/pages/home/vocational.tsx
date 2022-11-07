@@ -33,6 +33,9 @@ import { Home } from '~ui-kit/scaffold';
 import { HomeSettingContainer } from './home-setting';
 import { MessageDialog } from './message-dialog';
 
+declare const BUILD_TIME: string;
+declare const BUILD_COMMIT_ID: string;
+
 const SCENARIOS_ROOM_SUBTYPE_MAP: { [key: string]: number } = {
   'vocational-class': 1,
   'big-class': 0,
