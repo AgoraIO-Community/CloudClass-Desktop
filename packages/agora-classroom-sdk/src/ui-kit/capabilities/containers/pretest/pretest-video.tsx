@@ -6,8 +6,8 @@ import { useRef, useEffect, useCallback, useState } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip, transI18n } from '~ui-kit';
 import { ASlider } from '~ui-kit/components/slider';
-import { indicatorURI } from './data-uris';
 import { Field } from './form-field';
+import indicator from './assets/indicator.png';
 import './index.css';
 
 export const PretestVideo = () => {
@@ -166,7 +166,7 @@ const VideoOperatorTab = observer(() => {
             {transI18n('media.beauty')}
           </TabTitle>
         }
-        <img src={indicatorURI}
+        <img src={indicator}
           style={{
             top: 13,
             left: 21,

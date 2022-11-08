@@ -38,8 +38,8 @@
   "build": {
     "extraResources": [
       {
-        "from": "./public/assets",
-        "to": "assets"
+        "from": "src/ui-kit/capabilities/containers/pretest/assets/pretest-audio.mp3",
+        "to": "assets/pretest-audio.mp3"
       }
     ],
     "asar": true,

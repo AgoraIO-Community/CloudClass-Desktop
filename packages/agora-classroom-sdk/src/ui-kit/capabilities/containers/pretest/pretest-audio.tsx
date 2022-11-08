@@ -5,9 +5,9 @@ import tw, { styled } from 'twin.macro';
 import { Button, SvgImg, useI18n, SvgIconEnum } from '~ui-kit';
 import { Volume } from './volume';
 import { Field } from './form-field';
-import { pretestAudioURI } from './data-uris';
 import { EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 import { getAssetURL } from '@/infra/utils';
+import pretestAudio from './assets/pretest-audio.mp3';
 
 export const PretestVoice = observer(() => {
   return (
@@ -77,7 +77,7 @@ const SpeakerTest = observer(() => {
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
       return getAssetURL('pretest-audio.mp3');
     }
-    return pretestAudioURI
+    return pretestAudio
   }, [])
 
   return (
