@@ -375,6 +375,9 @@ export const zh = {
     audio: '音频',
     add: '新增',
     none: '无背景',
+    audio_noise_cancellation: 'AI降噪',
+    on: '开启',
+    off: '关闭',
   },
   'biz-header': {
     perf: 'Perf',

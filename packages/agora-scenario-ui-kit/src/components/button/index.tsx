@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import { EventHandler, FC, SyntheticEvent, useEffect, useRef } from 'react';
+import { SvgIconEnum, SvgImg } from '../svg-img';
 import { BaseProps } from '../util/type';
 import './index.css';
 
@@ -23,6 +24,7 @@ export interface ButtonProps extends BaseProps {
   onClick?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
   onMouseOver?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
   onMouseLeave?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
+  icon?: React.ReactElement
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -33,6 +35,7 @@ export const Button: FC<ButtonProps> = ({
   className,
   action,
   animate = true,
+  icon,
   ...restProps
 }) => {
   const cls = classnames({
@@ -64,7 +67,10 @@ export const Button: FC<ButtonProps> = ({
     <button ref={buttonRef} className={`${cls} group`} disabled={disabled} {...restProps}>
       {animate ? <div className="fcr-btn-ripple" ref={rippleRef}></div> : null}
       <div className="absolute top-0 left-0 w-full h-full z-0 bg-black opacity-0 group-hover:opacity-10 focus:opacity-20"></div>
-      <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
+      <div className='flex items-center justify-center'>
+        {icon}
+        <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
+      </div>
     </button>
   );
 };

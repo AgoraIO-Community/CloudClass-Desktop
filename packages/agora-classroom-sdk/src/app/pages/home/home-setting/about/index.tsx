@@ -1,4 +1,4 @@
-import { privacyPolicyURL, useAgreementURL } from '@/infra/utils/url';
+import { privacyPolicyURL, useAgreementURL } from '@/app/utils/url';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { transI18n } from '~ui-kit';
 import logo from '../assets/logo.svg';

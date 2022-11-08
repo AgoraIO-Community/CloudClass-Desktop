@@ -66,6 +66,9 @@ export class StreamUIStore extends EduUIStoreBase {
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
 
+  @observable
+  settingsOpened = false;
+
   @computed
   get screenShareStateAccessor() {
     return {
@@ -150,7 +153,7 @@ export class StreamUIStore extends EduUIStoreBase {
 
     this._disposers.push(
       reaction(
-        () => this.streamWindowUserUuids,
+        () => ({ uuids: this.streamWindowUserUuids, pretestOpened: this.settingsOpened }),
         () => {
           this.allUIStreams.forEach((stream) => {
             this._setRenderAt(stream);
@@ -165,7 +168,9 @@ export class StreamUIStore extends EduUIStoreBase {
   @bound
   private _setRenderAt(stream: EduStreamUI) {
     const userUuids = this.streamWindowUserUuids;
-    if (userUuids.includes(stream.fromUser.userUuid)) {
+    if (this.settingsOpened && stream.stream.isLocal) {
+      stream.setRenderAt('Setting');
+    } else if (userUuids.includes(stream.fromUser.userUuid)) {
       stream.setRenderAt('Window');
     } else {
       stream.setRenderAt('Bar');
@@ -286,26 +291,14 @@ export class StreamUIStore extends EduUIStoreBase {
     return stream;
   }
 
+  /**
+   * 屏幕共享流
+   * @returns
+   */
   @computed get screenShareStream(): EduStream | undefined {
     const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid as string;
     const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
     return stream;
-  }
-
-  /**
-   * 老师屏幕共享流信息
-   * @returns
-   */
-  @computed get teacherScreenShareStream(): EduStreamUI | undefined {
-    const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid;
-    const stream = extractStreamBySourceType(
-      this.teacherStreams,
-      AgoraRteVideoSourceType.ScreenShare,
-    );
-
-    if (streamUuid && stream && stream.stream.streamUuid === streamUuid) {
-      return stream;
-    }
   }
 
   /**
@@ -869,6 +862,11 @@ export class StreamUIStore extends EduUIStoreBase {
   @action.bound
   removeStreamBoundsByStreamUuid(streamUuid: string) {
     this.streamsBounds.delete(streamUuid);
+  }
+
+  @action.bound
+  setSettingsOpened(opened: boolean) {
+    this.settingsOpened = opened;
   }
 
   onDestroy() {

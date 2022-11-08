@@ -19,7 +19,7 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
             <CheckBox
               checked={isMirror}
               onChange={(e) => {
-                setMirror((e.target as any).checked);
+                setMirror(e.target.checked);
               }}
             />
             <span className="camera-mode">{transI18n('media.mirror')}</span>

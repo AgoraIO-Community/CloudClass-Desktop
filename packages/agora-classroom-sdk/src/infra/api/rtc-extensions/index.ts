@@ -4,11 +4,10 @@ import VirtualBackgroundExtension, {
 import BeautyEffectExtension, { IBeautyProcessor } from 'agora-extension-beauty-effect';
 import { AIDenoiserExtension, IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { ExtensionInitializer, ProcessorInitializer } from '../type';
-import { REACT_APP_AGORA_APP_ASSETS_CDN } from '@/app/utils/env';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { IBaseProcessor } from 'agora-rte-extension';
 
-let assetsBaseUrl = REACT_APP_AGORA_APP_ASSETS_CDN;
+let assetsBaseUrl = process.env.REACT_APP_AGORA_APP_ASSETS_CDN || './';
 
 export const builtInExtensions = {
   virtualBackgroundExtension: 'VirtualBackgroundExtension',

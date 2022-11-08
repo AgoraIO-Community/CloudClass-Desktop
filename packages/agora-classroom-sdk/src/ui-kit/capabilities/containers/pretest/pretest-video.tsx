@@ -1,14 +1,14 @@
-import { Field } from '@/app/components/form-field';
 import { AgoraEduSDK } from '@/infra/api';
 import { useStore } from '@/infra/hooks/ui-store';
 import { BeautyType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import tw, { styled, css } from 'twin.macro';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip, transI18n } from '~ui-kit';
 import { ASlider } from '~ui-kit/components/slider';
 import { indicatorURI } from './data-uris';
-import './pretest-video.css';
+import { Field } from './form-field';
+import './index.css';
 
 export const PretestVideo = () => {
   return (
@@ -82,9 +82,15 @@ const VideoSidler = observer(() => {
       activeBeautyType,
       currentEffectType,
       setActiveBeautyValue,
-      resetBeautyValue,
+      setActiveBeautyType
     },
   } = useStore();
+
+
+  const handleReset = useCallback(() => {
+    setActiveBeautyType('none');
+  }, []);
+
   return activeBeautyType !== 'none' && currentEffectType === 'beauty' ? (
     <VideoSliderPanel>
       <Slider
@@ -95,7 +101,7 @@ const VideoSidler = observer(() => {
         onChange={setActiveBeautyValue}
         vertical={true}
       />
-      <RefreshButton onClick={resetBeautyValue}>
+      <RefreshButton onClick={handleReset}>
         <SvgImg type={SvgIconEnum.CLOUD_REFRESH} colors={{ iconPrimary: '#fff' }} size={14} />
       </RefreshButton>
     </VideoSliderPanel>
@@ -130,29 +136,36 @@ const VideoOperatorTab = observer(() => {
     pretestUIStore: {
       currentEffectType,
       setCurrentEffectOption,
-      underlineLeft,
-      setUnderlineLeft,
+      virtualBackgroundSupported,
+      beautySupported
     },
   } = useStore();
 
+  const [indicatorPos, setIndicatorPos] = useState(0);
+
   const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
     setCurrentEffectOption(type);
-    setUnderlineLeft(event.currentTarget.offsetLeft);
+    setIndicatorPos(event.currentTarget.offsetLeft);
   }, []);
 
   return (
     <>
       <TabHeader>
-        <TabTitle
-          activity={currentEffectType === 'virtualBackground'}
-          onClick={(e) => handleTabClick(e, 'virtualBackground')}>
-          {transI18n('media.virtualBackground')}
-        </TabTitle>
-        <TabTitle
-          activity={currentEffectType === 'beauty'}
-          onClick={(e) => handleTabClick(e, 'beauty')}>
-          {transI18n('media.beauty')}
-        </TabTitle>
+        {virtualBackgroundSupported &&
+          <TabTitle
+            activity={currentEffectType === 'virtualBackground'}
+            onClick={(e) => handleTabClick(e, 'virtualBackground')}>
+            {transI18n('media.virtualBackground')}
+          </TabTitle>
+        }
+        {
+          beautySupported &&
+          <TabTitle
+            activity={currentEffectType === 'beauty'}
+            onClick={(e) => handleTabClick(e, 'beauty')}>
+            {transI18n('media.beauty')}
+          </TabTitle>
+        }
         <img src={indicatorURI}
           style={{
             top: 13,
@@ -160,7 +173,7 @@ const VideoOperatorTab = observer(() => {
             width: 76,
             height: 17,
             transition: '0.3s all ease',
-            transform: `translate3d(${underlineLeft}px, 0, 0)`,
+            transform: `translate3d(${indicatorPos}px, 0, 0)`,
             position: 'absolute'
           }}
         />
@@ -177,8 +190,6 @@ const Background = observer(() => {
   const {
     pretestUIStore: { currentVirtualBackground, handleBackgroundChange },
   } = useStore();
-
-  // const fileRef = useRef<HTMLInputElement | null>(null);
 
   // const handleUpload = async (evt: ChangeEvent<HTMLInputElement>) => {
   //   try {
@@ -211,7 +222,7 @@ const Background = observer(() => {
         title={transI18n('pretest.none')}
         placement="top"
         mouseEnterDelay={3}
-        overlayClassName="pretestTooltip">
+        overlayClassName="fcr-pretest-tooltip">
         <BackgroundItem
           activity={currentVirtualBackground === 'none'}
           onClick={() => handleBackgroundChange('none')}>
@@ -222,15 +233,6 @@ const Background = observer(() => {
           />
         </BackgroundItem>
       </Tooltip>
-      {/* <Tooltip
-        title={transI18n('pretest.add')}
-        placement="top"
-        mouseEnterDelay={3}
-        overlayClassName="pretestTooltip">
-        <BackgroundItem>
-          <SvgImg type={SvgIconEnum.ADD} colors={{ iconPrimary: '#000' }} size={40} />
-        </BackgroundItem>
-      </Tooltip> */}
       {AgoraEduSDK.virtualBackgroundImages.map((item) => {
         const assetURL = item;
         return (
@@ -332,13 +334,14 @@ const VideoContainer = styled.div`
   padding-right: 21px;
   display: flex;
   flex-direction: column;
-  flex: 1;
 `;
 
 const VideoPanel = styled.div`
   position: relative;
   height: 254px;
   border-radius: 14px;
+  width: 469px;
+  height: 254px;
 `;
 
 const VideoSliderPanel = styled.div`
@@ -352,6 +355,7 @@ const VideoSliderPanel = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const Slider = styled(ASlider)`
   flex: 1;
   & .ant-slider-vertical {
@@ -373,6 +377,7 @@ const Slider = styled(ASlider)`
     margin-left: -3px;
   }
 `;
+
 const RefreshButton = styled.span`
   display: flex;
   justify-content: center;
@@ -420,6 +425,7 @@ const TabHeader = styled.div`
   border-bottom: 1px solid rgba(220, 234, 254, 1);
   ${tw`border-divider`};
 `;
+
 const TabTitle = styled.div<{ activity: boolean }>`
   width: 92px;
   text-align: center;
@@ -430,10 +436,9 @@ const TabTitle = styled.div<{ activity: boolean }>`
   ${tw`text-level2`}
   cursor: pointer;
 `;
+
 const TabContent = styled.div`
-  padding-top: 15px;
-  padding-left: 2px;
-  padding-right: 2px;
+  padding: 15px 2px;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;

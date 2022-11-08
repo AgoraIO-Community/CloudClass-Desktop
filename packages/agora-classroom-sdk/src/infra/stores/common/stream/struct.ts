@@ -2,12 +2,14 @@ import { EduClassroomConfig, EduRoleTypeEnum, EduStream, RteRole2EduRole } from 
 import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 
+type VideoPlacement = 'Window' | 'Bar' | 'Setting';
+
 /**
  * 业务流 UI 对象
  */
 export class EduStreamUI {
   @observable
-  private _renderAt: 'Window' | 'Bar' = 'Bar';
+  private _renderAt: VideoPlacement = 'Bar';
   readonly stream: EduStream;
 
   constructor(stream: EduStream) {
@@ -57,7 +59,7 @@ export class EduStreamUI {
   }
 
   @action.bound
-  setRenderAt(at: 'Bar' | 'Window') {
+  setRenderAt(at: VideoPlacement) {
     this._renderAt = at;
   }
 }

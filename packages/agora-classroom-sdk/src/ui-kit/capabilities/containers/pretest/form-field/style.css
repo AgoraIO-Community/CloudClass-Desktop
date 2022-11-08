@@ -1,0 +1,80 @@
+.form-field-label {
+  font-family: 'Montserrat Roboto';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 21px;
+  color: #030303;
+}
+
+.form-field {
+  box-sizing: border-box;
+  height: 48px;
+}
+
+.form-field input,
+.form-field .select {
+  font-size: 12px;
+  line-height: 18px;
+  outline: none;
+  border: 1px solid #e3e7ef;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #030303;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-field .select a:link,
+.form-field .select a:hover,
+.form-field .select a:active,
+.form-field .select a:visited {
+  color: #030303;
+}
+
+.form-field input::placeholder,
+.form-field .placeholder-text {
+  color: #bbbbbb;
+}
+
+.form-field input:focus:not(:read-only),
+.form-field .select.expand {
+  border-color: #030303;
+  box-shadow: 0 0 0px 3px rgb(143, 144, 152, 0.2);
+}
+
+.form-field .options {
+  padding: 2px;
+  z-index: 10;
+}
+
+.form-field .option {
+  font-family: 'Montserrat Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  color: #030303;
+  padding: 9px 12px;
+}
+
+.form-field .option:hover {
+  font-weight: 800;
+  color: #1e1e1e;
+  border-radius: 8px;
+  background: #f8f8f8;
+}
+
+.form-field .option.selected {
+  font-weight: 800;
+}
+
+.form-field .error input,
+.form-field .select.error {
+  border-color: #f5655c !important;
+  box-shadow: 0 0 0px 3px rgba(245, 101, 92, 0.2) !important;
+}
+
+.form-field .error-text {
+  color: #f5655c;
+  font-size: 12px;
+  bottom: -24px;
+}

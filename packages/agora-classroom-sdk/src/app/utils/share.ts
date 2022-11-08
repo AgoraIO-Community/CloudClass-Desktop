@@ -1,5 +1,5 @@
 import { EduRegion } from 'agora-edu-core';
-import { EduRoleTypeEnum } from './../../../../agora-edu-core/src/type';
+import { EduRoleTypeEnum } from 'agora-edu-core';
 import { REACT_APP_SHARE_LINK_PREFIX } from './env';
 
 export type ShareContent = {
@@ -30,7 +30,7 @@ export class ShareLink {
 
   private decode(str: string): ShareContent | null {
     try {
-      const jsonStr: any = window.atob(str);
+      const jsonStr = window.atob(str);
       const data = JSON.parse(jsonStr);
       if (data.owner && data.owner !== '') {
         data.owner = decodeURI(data.owner);

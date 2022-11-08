@@ -1,4 +1,4 @@
-import { privacyPolicyURL, useAgreementURL } from '@/infra/utils/url';
+import { privacyPolicyURL, useAgreementURL } from '@/app/utils/url';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { FC } from 'react';
 import { useI18n } from '~ui-kit';

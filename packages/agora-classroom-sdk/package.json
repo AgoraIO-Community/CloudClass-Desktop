@@ -36,6 +36,12 @@
     ]
   },
   "build": {
+    "extraResources": [
+      {
+        "from": "./public/assets",
+        "to": "assets"
+      }
+    ],
     "asar": true,
     "asarUnpack": [
       "node_modules/agora-rdc-core/**/*"

@@ -1,4 +1,4 @@
-.pretestTooltip .tooltip-inner {
+.fcr-pretest-tooltip .tooltip-inner {
   min-width: 70px;
   height: 42px;
   line-height: 42px;
@@ -9,6 +9,14 @@
   color: #fff;
   font-size: 14px;
 }
-.pretestTooltip .tooltip-arrow-content {
+.fcr-pretest-tooltip .tooltip-arrow-content {
   background: #0056fd;
+}
+
+.fcr-speaker-test-btn {
+  width: 100px;
+  height: 46px;
+  /* fcr_black */
+  background: #000000;
+  border-radius: 10px;
 }

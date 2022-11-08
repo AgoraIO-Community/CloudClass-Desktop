@@ -97,6 +97,8 @@ export enum SvgIconEnum {
   PLACEHOLDER_NO_SETUP = 'placeholder-no-setup',
   PLACEHOLDER_NOT_PRESENT = 'placeholder-not-present',
   PPT = 'ppt',
+  PRETEST_CHECK = 'pretest-check',
+  PRETEST_CHECKED = 'pretest-checked',
   PRETEST_SPEAKER = 'pretest-speaker',
   RECORD = 'record',
   RECORDING = 'recording',

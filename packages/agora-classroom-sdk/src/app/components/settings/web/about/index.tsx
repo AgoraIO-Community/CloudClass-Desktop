@@ -1,6 +1,6 @@
 import logo from '@/app/assets/logo.svg';
 import { useLogout } from '@/app/hooks';
-import { privacyPolicyURL, useAgreementURL } from '@/infra/utils/url';
+import { privacyPolicyURL, useAgreementURL } from '@/app/utils/url';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { useI18n } from '~ui-kit';
 import './index.css';

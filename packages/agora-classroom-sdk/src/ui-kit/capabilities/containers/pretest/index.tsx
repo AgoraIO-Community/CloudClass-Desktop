@@ -7,7 +7,7 @@ import { transI18n, SvgImg, SvgIconEnum, OverlayWrap } from '~ui-kit';
 import { BaseProps } from '~ui-kit/components/util/type';
 import { Footer } from './pretest-footer';
 import { PretestVideo } from './pretest-video';
-import { PretestVoice } from './pretest-voice';
+import { PretestVoice } from './pretest-audio';
 
 export interface PretestProps extends BaseProps {
   className?: string;
@@ -107,6 +107,7 @@ const PreTestTabLeftContent = styled.div`
   flex-basis: 160px;
   padding-top: 40px;
   border-right: 1px solid #dceafe;
+  flex-shrink: 0;
   ${tw`border-divider`};
 `;
 

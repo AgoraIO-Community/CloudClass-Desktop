@@ -1,4 +1,4 @@
-import { ErrorCodeMessage, ErrorCode } from '@/app/utils/error';
+import { ErrorCode, ErrorCodeMessage } from '@/app/utils/error';
 
 export default {
   home_product_name: 'Flexible Classroom',
@@ -18,13 +18,6 @@ export default {
   home_form_error_role_type_empty: 'Role type is required',
   home_form_error_room_type_empty: 'Room type is required',
   home_form_error_room_name_limit: 'Between {min} and {max} characters',
-  //补充
-  [ErrorCodeMessage[ErrorCode.NETWORK_DISABLE]]:
-    'Network connection error, please try again later.',
-  [ErrorCodeMessage[ErrorCode.COURSE_HAS_ENDED]]: 'The course has ended',
-  [ErrorCodeMessage[ErrorCode.INVALID_ROOM_ID]]: 'Room ID is invalid',
-  [ErrorCodeMessage[ErrorCode.INVALID_ROOM_INFO]]: 'Invalid room info',
-  [ErrorCodeMessage[ErrorCode.ROOM_IS_ENDED]]: 'The current room live has ended',
   fcr_home_label_room_list_no_more: 'It is all, nothing more 🤐',
   fcr_logout_tips: 'The user account has expired, please login again later',
   fcr_join_room_tips_ui_config_not_ready: 'UI config be not ready',
@@ -137,7 +130,6 @@ export default {
   fcr_join_room_tips_empty_id: "The Room ID doesn't exist",
   fcr_join_room_tips_small_classroom: 'Small Classroom is not supported by now ',
   fcr_join_room_tips_1on1: '1 on 1 is not supported by now ',
-  [ErrorCodeMessage[ErrorCode.INVALID_CLASS_MODE_H5]]: 'Only big classroom is supported on HTML5',
   fcr_join_room_tips_role: 'Role Teacher is not supported on HTML5',
   fcr_share_link_label_welcome: 'Welcome to Flexible Classroom ',
   fcr_share_link_label_slogon: 'Flexible classroom',
@@ -147,4 +139,12 @@ export default {
   fcr_share_h5_tips_class_mode: 'Only big classroom is supported on HTML5',
   fcr_share_h5_tips_role_teacher: 'Role Teacher is not supported on HTML5',
   fcr_share_link_tips_name: 'Please input your name ',
+  //补充
+  [ErrorCodeMessage[ErrorCode.NETWORK_DISABLE]]:
+    'Network connection error, please try again later.',
+  [ErrorCodeMessage[ErrorCode.COURSE_HAS_ENDED]]: 'The course has ended',
+  [ErrorCodeMessage[ErrorCode.INVALID_ROOM_ID]]: 'Room ID is invalid',
+  [ErrorCodeMessage[ErrorCode.INVALID_ROOM_INFO]]: 'Invalid room info',
+  [ErrorCodeMessage[ErrorCode.ROOM_IS_ENDED]]: 'The current room live has ended',
+  [ErrorCodeMessage[ErrorCode.INVALID_CLASS_MODE_H5]]: 'Only big classroom is supported on HTML5',
 };

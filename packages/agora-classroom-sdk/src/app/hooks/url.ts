@@ -28,8 +28,7 @@ export const getAssetURL = (relativeURL: string) => {
     return isProduction
       ? `${window.process.resourcesPath}/pretest-audio.mp3`
       : // for local development
-        path.resolve(`public/assets/${relativeURL}`);
+        path.resolve(`/assets/${relativeURL}`);
   }
-  // return isProduction ? `${assetsBaseUrl}/assets/${relativeURL}` :
   return `./assets/${relativeURL}`;
 };

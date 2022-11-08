@@ -387,6 +387,9 @@ export const en = {
     audio: 'audio',
     add: 'Add',
     none: 'No Background',
+    audio_noise_cancellation: 'Audio Noise Cancellation',
+    on: 'On',
+    off: 'Off',
   },
   'biz-header': {
     perf: 'Perf',

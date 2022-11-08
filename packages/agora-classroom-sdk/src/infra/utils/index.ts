@@ -1,5 +1,10 @@
+import { EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 import { isEmpty } from 'lodash';
 import { LanguageEnum } from '../api';
+
+declare const NODE_ENV: string;
+
+export const isProduction = NODE_ENV === 'production';
 
 export const getBrowserLanguage = (): LanguageEnum => {
   const usrlang = navigator.language;
@@ -277,6 +282,18 @@ export const dataURIToFile = (dataURI: string, filename: string) => {
   const file = new File([ab], filename, { type: mimeString });
   return file;
 };
-export const humpToLine = (str: string) => {
+export const jumpToLine = (str: string) => {
   return str.replace(/([A-Z])/g, '_$1').toLowerCase();
+};
+
+export const getAssetURL = (relativeURL: string) => {
+  if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
+    if (!window.require) return;
+    const path = window.require('path');
+    return isProduction
+      ? `${window.process.resourcesPath}/assets/${relativeURL}`
+      : // for local development
+        path.resolve(`./public/assets/${relativeURL}`);
+  }
+  return `./assets/${relativeURL}`;
 };

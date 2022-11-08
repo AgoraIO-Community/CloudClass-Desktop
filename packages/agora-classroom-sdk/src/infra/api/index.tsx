@@ -1,4 +1,3 @@
-import { vocationalNeedPreset } from '@/app/pages/home/vocational';
 import { ControlBar } from '@/ui-kit/capabilities/containers/fragments';
 import { Scenarios } from '@/ui-kit/capabilities/scenarios';
 import {
@@ -58,7 +57,7 @@ import {
 export * from './type';
 
 export class AgoraEduSDK {
-  private static _config: any = {};
+  private static _config: Record<string, string> = {};
   private static _widgets: Record<string, typeof AgoraWidgetBase> = {};
   private static _coursewareList: CourseWareList = [];
   private static _boardWindowAnimationOptions: BoardWindowAnimationOptions = {};
@@ -321,6 +320,14 @@ export class AgoraEduSDK {
 
     const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } = initializeBuiltInExtensions();
 
+    // 1. 伪直播场景不需要pretest
+    // 2. 合流转推场景下的学生角色不需要pretest
+    const noDevicePermission = roleType === EduRoleTypeEnum.invisible || !(
+      roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
+      (roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
+        roleType !== EduRoleTypeEnum.teacher)
+    );
+
     const config = new EduClassroomConfig(
       this._appId,
       sessionInfo,
@@ -331,9 +338,7 @@ export class AgoraEduSDK {
         rtcConfigs: {
           ...this._convertMediaOptions(option.mediaOptions),
           ...{
-            noDevicePermission:
-              roleType === EduRoleTypeEnum.invisible ||
-              !vocationalNeedPreset(roleType, roomServiceType),
+            noDevicePermission
           },
         },
         rtcSDKExtensions: [virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance],

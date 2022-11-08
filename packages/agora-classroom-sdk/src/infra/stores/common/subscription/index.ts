@@ -5,8 +5,7 @@ import { EduUIStoreBase } from '../base';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { CDNRoomSubscription } from './cdn-room';
 import { MainRoomSubscription } from './main-room';
-import { EduRoomServiceTypeEnum, EduRoomTypeEnum, EduRoleTypeEnum } from 'agora-edu-core';
-import { EduSessionInfo } from 'agora-edu-core/lib/type';
+import { EduRoomServiceTypeEnum, EduRoomTypeEnum, EduSessionInfo } from 'agora-edu-core';
 
 @Log.attach({ proxyMethods: false })
 export class SubscriptionUIStore extends EduUIStoreBase {

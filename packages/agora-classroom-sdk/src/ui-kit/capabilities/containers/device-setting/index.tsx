@@ -1,9 +1,9 @@
-import { CheckBox, Select, transI18n } from '~ui-kit';
+import { CheckBox, Select } from '~ui-kit';
 import { observer } from 'mobx-react';
-import classnames from 'classnames';
 import { useStore } from '@/infra/hooks/ui-store';
 import './index.css';
 import { RoomPretest } from '../pretest';
+import { useEffect } from 'react';
 
 export const CameraMirrorCheckBox = observer((props: { id?: string }) => {
   const {
@@ -14,7 +14,7 @@ export const CameraMirrorCheckBox = observer((props: { id?: string }) => {
     <CheckBox
       id={props.id}
       checked={isMirror}
-      onChange={(e: any) => {
+      onChange={(e) => {
         setMirror(e.target.checked);
       }}
     />
@@ -66,130 +66,19 @@ export const PlaybackSelect = observer(() => {
   );
 });
 
-const StageChoose = observer(() => {
-  const {
-    deviceSettingUIStore: { stageVisible, setStageVisible },
-  } = useStore();
 
-  return (
-    <div
-      className="device-title"
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: 0,
-      }}>
-      <div>{transI18n('device.stage_area')}</div>
-      <div style={{ display: 'flex' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '40px',
-          }}>
-          {[true, false].map((value) => (
-            <label
-              className="cursor-pointer"
-              style={{ display: 'flex', alignItems: 'center' }}
-              htmlFor={`${value}`}
-              key={`${+value}`}>
-              <input
-                type="radio"
-                id={`${value}`}
-                name="device-selection"
-                onChange={(_) => setStageVisible(value)}
-                checked={value ? stageVisible : !stageVisible}
-              />
-              <span className="device-desc" style={{ marginLeft: 5 }}>
-                {value ? transI18n('stage.visible') : transI18n('stage.hidden')}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-});
-
-type SettingProps = {
-  className?: string;
-  restProps?: unknown;
-};
-
-const Setting: React.FC<SettingProps> = observer(({ className, ...restProps }) => {
-  const {
-    deviceSettingUIStore: { deviceStage },
-  } = useStore();
-  const cls = classnames({
-    [`setting`]: 1,
-    [`${className}`]: !!className,
-  });
-
-  return (
-    <div className={cls} {...restProps} style={{ width: 318 }}>
-      <div className="device-choose">
-        <div
-          className="device-title"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>{transI18n('device.camera')}</div>
-          <div style={{ display: 'flex' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}>
-              <CameraMirrorCheckBox id="CameraMirrorCheckBox" />
-              <label htmlFor="CameraMirrorCheckBox" className="beauty-desc cursor-pointer">
-                {transI18n('media.mirror')}
-              </label>
-            </div>
-          </div>
-        </div>
-        <CameraSelect />
-      </div>
-      <div className="device-choose">
-        <div className="device-title">{transI18n('device.microphone')}</div>
-        <MicrophoneSelect />
-      </div>
-      <div className="device-choose">
-        <div className="device-title">{transI18n('device.speaker')}</div>
-        <PlaybackSelect />
-      </div>
-      {deviceStage ? (
-        <div className="device-choose">
-          <StageChoose />
-        </div>
-      ) : null}
-    </div>
-  );
-});
-
-export const RoomDeviceSettingContainer = observer(({ id }: any) => {
+export const RoomDeviceSettingContainer = observer(({ id }: { id: string }) => {
   const {
     shareUIStore: { removeDialog },
+    streamUIStore: { setSettingsOpened }
   } = useStore();
 
+  useEffect(() => {
+    setSettingsOpened(true);
+    return () => {
+      setSettingsOpened(false);
+    }
+  }, []);
+
   return <RoomPretest onOK={() => removeDialog(id)} />;
-  // return (
-  //   <Modal
-  //     title={<span>{transI18n('pretest.settingTitle')}</span>}
-  //     style={{ width: 360 }}
-  //     footer={[
-  //       <Button key="ok" action="ok">
-  //         {transI18n('toast.confirm')}
-  //       </Button>,
-  //     ]}
-  //     onCancel={() => {
-  //       removeDialog(id);
-  //     }}
-  //     onOk={() => {
-  //       removeDialog(id);
-  //     }}
-  //     closable={true}>
-  //     <Setting />
-  //   </Modal>
-  // );
 });

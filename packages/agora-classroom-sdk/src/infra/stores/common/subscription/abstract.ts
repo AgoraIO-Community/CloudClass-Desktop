@@ -10,8 +10,8 @@ import {
   Injectable,
   AGRtcConnectionType,
   AgoraRteVideoSourceType,
+  AGRtcChannel,
 } from 'agora-rte-sdk';
-import { AGRtcChannel } from 'agora-rte-sdk/lib/core/rtc/channel';
 
 export abstract class SceneSubscription {
   protected logger!: Injectable.Logger;

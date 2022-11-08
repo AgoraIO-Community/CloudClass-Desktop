@@ -1,11 +1,13 @@
 import { useStore } from '@/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { FC, useCallback, useEffect } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import tw, { styled } from 'twin.macro';
-import { AButton as Button, SvgImg, transI18n, SvgIconEnum } from '~ui-kit';
+import { Button, SvgImg, useI18n, SvgIconEnum } from '~ui-kit';
 import { Volume } from './volume';
-import { Field } from '@/app/components/form-field';
+import { Field } from './form-field';
 import { pretestAudioURI } from './data-uris';
+import { EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
+import { getAssetURL } from '@/infra/utils';
 
 export const PretestVoice = observer(() => {
   return (
@@ -20,6 +22,7 @@ const MicrophoneTest = observer(() => {
   const {
     pretestUIStore: { setRecordingDevice, currentRecordingDeviceId, recordingDevicesList },
   } = useStore();
+  const transI18n = useI18n();
   return (
     <ItemCard>
       <ItemCardTitle>{transI18n('media.microphone')}</ItemCardTitle>
@@ -48,6 +51,9 @@ const SpeakerTest = observer(() => {
       setPlaybackDevice,
       startPlaybackDeviceTest,
       stopPlaybackDeviceTest,
+      setAIDenoiser,
+      aiDenoiserEnabled,
+      aiDenoiserSupported
     },
   } = useStore();
   const handlePlaybackChange = useCallback((value) => {
@@ -57,6 +63,22 @@ const SpeakerTest = observer(() => {
   useEffect(() => {
     return stopPlaybackDeviceTest;
   }, []);
+
+  const transI18n = useI18n();
+
+  const enableAIDenoiser = useCallback(() => {
+    setAIDenoiser(true);
+  }, []);
+  const disableAIDenoiser = useCallback(() => {
+    setAIDenoiser(false);
+  }, []);
+
+  const audioPlayUrl = useMemo(() => {
+    if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
+      return getAssetURL('pretest-audio.mp3');
+    }
+    return pretestAudioURI
+  }, [])
 
   return (
     <ItemCard>
@@ -72,13 +94,30 @@ const SpeakerTest = observer(() => {
           }))}
           onChange={handlePlaybackChange}
         />
-        <AButton
+        <Button
+          className='fcr-speaker-test-btn'
           type="primary"
-          icon={<SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.PRETEST_SPEAKER} size={16} />}
-          onClick={() => startPlaybackDeviceTest(pretestAudioURI)}>
+          icon={<SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.PRETEST_SPEAKER} size={24} />}
+          onClick={() => startPlaybackDeviceTest(audioPlayUrl)}>
           {transI18n('pretest.test')}
-        </AButton>
+        </Button>
       </ItemForm>
+      {
+        aiDenoiserSupported && <React.Fragment>
+          <ItemCardTitle className='mt-4'> {transI18n('pretest.audio_noise_cancellation')}</ItemCardTitle>
+          <div className='flex'>
+            <div onClick={enableAIDenoiser} className="cursor-pointer flex mr-4">
+              <SvgImg type={aiDenoiserEnabled ? SvgIconEnum.PRETEST_CHECKED : SvgIconEnum.PRETEST_CHECK} />
+              {transI18n('pretest.on')}
+            </div>
+            <div onClick={disableAIDenoiser} className="cursor-pointer flex">
+              <SvgImg type={aiDenoiserEnabled ? SvgIconEnum.PRETEST_CHECK : SvgIconEnum.PRETEST_CHECKED} />
+              {transI18n('pretest.off')}
+            </div>
+          </div>
+        </React.Fragment>
+      }
+
     </ItemCard>
   );
 });
@@ -107,7 +146,6 @@ const PreTestContainer = styled.div`
 const ItemCard = styled.div`
   border-radius: 18px;
   padding: 20px;
-  height: 156px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -132,25 +170,6 @@ const ItemForm = styled.div`
   & .form-field-label {
     display: none;
   }
-`;
-
-const AButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-indent: 6px;
-  font-size: 16px;
-  background: #000;
-  height: 42px;
-  flex-basis: 100px;
-  flex-shrink: 0;
-  border-color: #000;
-  &:hover,
-  &:focus {
-    background: #000;
-    border-color: #000;
-  }
-  /* .ant-btn-primary:hover, .ant-btn-primary:focus */
 `;
 
 const VolumeDanceContainer = styled.div`
