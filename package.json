@@ -14,10 +14,6 @@
   ],
   "main": "lib/edu_sdk.bundle.js",
   "types": "lib/infra/api/index.d.ts",
-  "agora_electron": {
-    "electron_version": "12.0.0",
-    "prebuilt": true
-  },
   "scripts": {
     "build": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack/webpack.prod.js",
     "build:types": "tsc -p tsconfig.json",
@@ -43,14 +39,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "peerDependencies": {
-    "agora-electron-sdk": "*"
-  },
-  "peerDependenciesMeta": {
-    "agora-electron-sdk": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@types/react-copy-to-clipboard": "5.0.4",
