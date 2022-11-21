@@ -172,11 +172,15 @@ export class NotificationUIStore extends EduUIStoreBase {
       event === AgoraEduClassroomEvent.RewardReceived ||
       event === AgoraEduClassroomEvent.BatchRewardReceived
     ) {
-      const userNames = param;
-      if (userNames.length > 3) {
+      const users: { userUuid: string; userName: string }[] = param;
+      const userNames = users.map((user) => user.userName);
+      if (users.length > 3) {
         this.shareUIStore.addToast(
           transI18n('toast2.teacher.reward2', {
-            reason1: userNames.slice(0, 3).join(','),
+            reason1: userNames
+              .slice(0, 3)
+
+              .join(','),
             reason2: userNames.length,
           }),
         );

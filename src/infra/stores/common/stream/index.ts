@@ -23,9 +23,11 @@ import { EduStreamUI, StreamBounds } from './struct';
 import { EduStreamTool, EduStreamToolCategory } from './tool';
 import { v4 as uuidv4 } from 'uuid';
 import {
+  AgoraEduClassroomEvent,
   AGServiceErrorCode,
   ClassroomState,
   EduClassroomConfig,
+  EduEventCenter,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   EduStream,
@@ -124,33 +126,6 @@ export class StreamUIStore extends EduUIStoreBase {
         },
       ),
     );
-    this._disposers.push(
-      computed(() => this.classroomStore.userStore.rewards).observe(({ newValue, oldValue }) => {
-        const anims: { id: string; userUuid: string }[] = [];
-        for (const [userUuid] of newValue) {
-          let previousReward = 0;
-          if (oldValue) {
-            previousReward = oldValue.get(userUuid) || 0;
-          }
-          const reward = newValue.get(userUuid) || 0;
-          const onPodium = this.classroomStore.roomStore.acceptedList.some(
-            ({ userUuid: thisUuid }) => thisUuid === userUuid,
-          );
-          const haveAnimation =
-            EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
-            onPodium;
-          // Add an animation to the award animation queue only if the student is on podium
-          if (reward > previousReward && haveAnimation) {
-            anims.push({ id: uuidv4(), userUuid: userUuid });
-          }
-        }
-        if (anims.length > 0) {
-          runInAction(() => {
-            this.awardAnims = this.awardAnims.concat(anims);
-          });
-        }
-      }),
-    );
 
     this._disposers.push(
       reaction(
@@ -164,8 +139,32 @@ export class StreamUIStore extends EduUIStoreBase {
     );
 
     EduEventUICenter.shared.onClassroomUIEvents(this._handleStreamWindowListChange);
+    EduEventCenter.shared.onClassroomEvents(this._handleRewardsChange);
   }
-
+  @bound
+  _handleRewardsChange(e: AgoraEduClassroomEvent, params: unknown) {
+    if (
+      e === AgoraEduClassroomEvent.RewardReceived ||
+      e === AgoraEduClassroomEvent.BatchRewardReceived
+    ) {
+      const users = params as { userUuid: string; userName: string }[];
+      const anims: { id: string; userUuid: string }[] = [];
+      users.forEach((user) => {
+        const onPodium = this.classroomStore.roomStore.acceptedList.some(
+          ({ userUuid: thisUuid }) => thisUuid === user.userUuid,
+        );
+        const haveAnimation =
+          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
+          onPodium;
+        haveAnimation && anims.push({ id: uuidv4(), userUuid: user.userUuid });
+      });
+      if (anims.length > 0) {
+        runInAction(() => {
+          this.awardAnims = this.awardAnims.concat(anims);
+        });
+      }
+    }
+  }
   @bound
   private _setRenderAt(stream: EduStreamUI) {
     const userUuids = this.streamWindowUserUuids;
@@ -872,6 +871,7 @@ export class StreamUIStore extends EduUIStoreBase {
 
   onDestroy() {
     EduEventUICenter.shared.offClassroomUIEvents(this._handleStreamWindowListChange);
+    EduEventCenter.shared.offClassroomEvents(this._handleRewardsChange);
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
