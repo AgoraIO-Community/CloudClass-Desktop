@@ -256,3 +256,8 @@
 .cloud-driver-tab .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   @apply text-level1;
 }
+
+
+.cloud-driver-tab.ant-tabs > .ant-tabs-nav {
+  margin: 0;
+}
