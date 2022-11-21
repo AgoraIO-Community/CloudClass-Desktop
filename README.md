@@ -1,44 +1,21 @@
-> _其他语言版本：[简体中文](README.zh.md)_
+### agora-classroom-sdk
 
-## CloudClass Desktop
+For publishing npm package agora-classroom-sdk (Web & Electron). Get more information from https://docs.agora.io
 
-## Install
+### Requirements
 
-```bash
-# install all dependencies via lerna and npm
-yarn bootstrap
-```
+- TypeScript/JavaScript
+- React
+- Agora Developer Account
+- Chrome Web Browser / Electron Environment
 
-## Config
+### Platform Support
 
-```bash
-# copy config template to agora-classroom-sdk project
-cp .env.example packages/agora-classroom-sdk/.env
+- > = 66.0 Chrome Browser
+- > = Electron 7.1.2
 
-# fill the config with your agora.io development environment
-```
+### Question / Issue Report
 
-## How to generate RtmToken using your own AppId and Secret
+- [https://github.com/AgoraIO-Community/CloudClass-Desktop/issues/new](https://github.com/AgoraIO-Community/CloudClass-Desktop/issues/new)
 
-```bash
-# If .env contains `REACT_APP_AGORA_APP_ID` and `REACT_APP_AGORA_APP_CERTIFICATE` configurations, the client will automatically generate an RTM Token for you
-REACT_APP_AGORA_APP_ID=
-REACT_APP_AGORA_APP_CERTIFICATE=
-```
-
-## Run
-
-```bash
-yarn dev
-```
-
-## Pack the Electron client
-
-```bash
-# Build Web Resources
-yarn build:demo
-# Build a Windows client(Run `yarn build:demo` to build Web resources before pack electron)
-yarn pack:electron:win
-# Build a Mac client(Run `yarn build:demo` to build Web resources before pack electron)
-yarn pack:electron:mac
-```
+- [www.agora.io](https://www.agoar.io)

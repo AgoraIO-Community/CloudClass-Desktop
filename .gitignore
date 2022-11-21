@@ -15,5 +15,4 @@ lib
 packages/agora-log-sdk
 package-lock.json
 *.log
-packages/agora-classroom-sdk/agoraAddonlog.txt
 .vscode/

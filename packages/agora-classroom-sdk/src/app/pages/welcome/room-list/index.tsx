@@ -1,1 +1,0 @@
-export { RoomListItem } from './item';
