@@ -53,6 +53,7 @@ import {
 import { FcrMultiThemeMode, FcrTheme, FcrUIConfig, addResourceBundle } from 'agora-common-libs';
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
+import { toUpper } from 'lodash';
 
 export * from './type';
 
@@ -77,7 +78,7 @@ export class AgoraEduSDK {
   private static _virtualBackgroundVideos: string[] = [];
 
   private static _convertRegion(region: string): EduRegion {
-    switch (region) {
+    switch (toUpper(region)) {
       case 'CN':
         return EduRegion.CN;
       case 'AS':
