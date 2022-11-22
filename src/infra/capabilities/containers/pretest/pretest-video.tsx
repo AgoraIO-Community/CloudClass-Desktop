@@ -308,7 +308,9 @@ const Beauty = observer(() => {
                 size={40}
               />
             </BeautyIcon>
-            <BeautyName activity={!!item.value}>{transI18n(`media.${item.id}`)}</BeautyName>
+            <BeautyName activity={activeBeautyType === item.id}>
+              {transI18n(`media.${item.id}`)}
+            </BeautyName>
           </BeautyItem>
         );
       })}
@@ -341,6 +343,7 @@ const RefreshButton: FC<{ onClick: () => void }> = ({ children, onClick }) => (
       borderRadius: 1000,
       background: 'rgba(52, 52, 52, 0.9)',
       cursor: 'pointer',
+      alignItems: 'center',
     }}>
     {children}
   </span>
@@ -369,6 +372,7 @@ const TabHeader: FC = ({ children }) => (
     className="flex w-full relative"
     style={{
       borderBottom: '1px solid rgba(220, 234, 254, 1)',
+      marginTop: '20px',
     }}>
     {children}
   </div>
@@ -400,8 +404,6 @@ const TabContent: FC = ({ children }) => {
       style={{
         padding: '15px 2px',
         flex: 1,
-        overflowY: 'auto',
-        overflowX: 'hidden',
       }}>
       {' '}
       {children}
@@ -423,8 +425,9 @@ const BeautyItem: FC<{ activity: boolean; onClick: () => void }> = ({
   return (
     <div
       onClick={onClick}
-      className={`relative ${activity ? 'fcr-pretest__beauty-item--active' : 'fcr-pretest__beauty-item'
-        }`}
+      className={`relative ${
+        activity ? 'fcr-pretest__beauty-item--active' : 'fcr-pretest__beauty-item'
+      }`}
       style={{
         width: 82,
         height: 82,
@@ -432,6 +435,7 @@ const BeautyItem: FC<{ activity: boolean; onClick: () => void }> = ({
         padding: '6px 6px 0 6px',
         boxSizing: 'border-box',
         cursor: 'pointer',
+        background: '#F8F8F8',
       }}>
       {children}
     </div>
@@ -443,14 +447,10 @@ const BeautyIcon: FC<{
   activity: boolean;
 }> = ({ children, icon, activity }) => {
   let background = '';
-  if (icon === 'none') {
-    background = 'transparent';
+  if (activity) {
+    background = '#E5EEFF';
   } else {
-    if (activity) {
-      background = '#E5EEFF';
-    } else {
-      background = '#fff';
-    }
+    background = '#fff';
   }
 
   return (
@@ -508,12 +508,14 @@ const BackgroundItem: FC<{ image?: string; activity?: boolean; onClick: () => vo
   return (
     <div
       onClick={onClick}
-      className={`${activity ? 'fcr-pretest-background--active' : 'fcr-pretest-background'
-        } relative flex justify-center items-center cursor-pointer`}
+      className={`${
+        activity ? 'fcr-pretest-background--active' : 'fcr-pretest-background'
+      } relative flex justify-center items-center cursor-pointer`}
       style={{
         width: 82,
         height: 60,
         borderRadius: 8,
+        background: '#F8F8F8',
         ...styleProps,
       }}>
       {children}

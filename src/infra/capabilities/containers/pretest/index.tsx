@@ -141,7 +141,7 @@ const PreTestTitle: FC = ({ children }) => (
 );
 
 const PreTestTabContent: FC = ({ children }) => (
-  <div className="flex flex-grow flex-col">{children}</div>
+  <div className="flex flex-grow flex-col justify-between">{children}</div>
 );
 
 const PreTestTabHeader: FC<{ activity: boolean; onClick: () => void }> = ({

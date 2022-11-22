@@ -51,7 +51,7 @@ export class PretestUIStore extends EduUIStoreBase {
   @observable currentPretestTab: DeviceType | 'stage' = 'video'; // 音视频选项
   @observable aiDenoiserEnabled = false; // 是否开启AI降噪
   @observable backgroundImage = []; // 虚拟背景
-  @observable currentVirtualBackground = ''; // 当前选择虚拟背景选项
+  @observable currentVirtualBackground = 'none'; // 当前选择虚拟背景选项
 
   private _virtualBackgroundProcessor?: IVirtualBackgroundProcessor;
   private _beautyEffectProcessor?: IBeautyProcessor;

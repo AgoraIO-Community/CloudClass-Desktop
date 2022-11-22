@@ -29,7 +29,8 @@
   display: none;
 }
 
-.fcr-pretest__beauty-item::before {
+.fcr-pretest__beauty-item::before,
+.fcr-pretest__beauty-item--active::before {
   content: '';
   position: absolute;
   top: -3px;
@@ -46,7 +47,8 @@
   border-color: #0056fd;
 }
 
-.fcr-pretest-background::before {
+.fcr-pretest-background::before,
+.fcr-pretest-background--active::before {
   content: '';
   display: block;
   left: -3px;
