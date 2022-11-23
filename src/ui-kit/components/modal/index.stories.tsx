@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import React, { useState } from 'react';
+import { transI18n } from 'agora-common-libs';
 import { Button } from '../button';
-import { transI18n } from '../i18n';
 import { Modal } from '../modal';
 
 const meta: Meta = {

@@ -1,11 +1,7 @@
 const path = require('path');
-const { ROOT_PATH } = require('../agora-demo-app/webpack/utils');
+const { ROOT_PATH } = require('./webpack/utils');
 module.exports = {
-  purge: [
-    path.resolve(ROOT_PATH, 'src/**/*.{ts,tsx}'),
-    path.resolve(ROOT_PATH, '../agora-classroom-sdk/src/**/*.{ts,tsx}'),
-    path.resolve(ROOT_PATH, '../agora-proctor-sdk/src/**/*.{ts,tsx}'),
-  ],
+  purge: [path.resolve(ROOT_PATH, 'src/**/*.{ts,tsx}')],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {

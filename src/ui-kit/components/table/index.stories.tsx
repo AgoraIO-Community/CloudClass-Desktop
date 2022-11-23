@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Button, Modal } from '..';
 import { Col, Inline, Row, Table, TableHeader } from '.';
 import { Progress } from '../progress';
-import { Tabs, TabPane } from '../tabs';
+import { ATabs, ATabPane } from '../tabs';
 import { Placeholder } from '../placeholder';
 import { Loading } from '../loading';
 import { CheckBox } from '../checkbox';
@@ -313,13 +313,13 @@ export const CourseWareManager = ({
   return (
     <div className="agora-board-resources">
       <div className="btn-pin">
-        <SvgImg type={SvgIconEnum.CLOSE} onClick={onCancel} />
+        <SvgImg type={SvgIconEnum.CLOSE} />
       </div>
-      <Tabs defaultActiveKey="2" onChange={handleChange}>
-        <TabPane tab="公共资源" key="1">
+      <ATabs activeKey="2" onChange={handleChange}>
+        <ATabPane tab="公共资源" key="1">
           <CloudStorage size={1} />
-        </TabPane>
-        <TabPane tab="我的资源" key="2" style={{ position: 'relative' }}>
+        </ATabPane>
+        <ATabPane tab="我的资源" key="2">
           <Row className="btn-group margin-gap">
             <Button type="primary">上传</Button>
             <Button type="ghost">删除</Button>
@@ -333,18 +333,14 @@ export const CourseWareManager = ({
               transform: 'translate(-50%, -50%)',
               width: 450,
             }}>
-            <Loading
-              hasLoadingGif={false}
-              uploadItemList={[
-              ]}
-            />
+            <Loading hasLoadingGif={false} uploadItemList={[]} />
           </Modal>
           <CheckList size={1} progress={20} />
-        </TabPane>
-        <TabPane tab="下载课件" key="3">
+        </ATabPane>
+        <ATabPane tab="下载课件" key="3">
           <UploadList size={1} progress={20} />
-        </TabPane>
-      </Tabs>
+        </ATabPane>
+      </ATabs>
     </div>
   );
 };

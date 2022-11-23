@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import { Progress } from '@classroom/ui-kit/components/progress';
 import './index.css';
@@ -8,6 +7,13 @@ import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
 import { SvgImg, SvgIconEnum } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
+
+export declare enum CloudDriveResourceUploadStatus {
+  Pending = 'pending',
+  Success = 'success',
+  Failed = 'failed',
+  Canceled = 'canceled',
+}
 
 export interface UploadItem {
   resourceUuid: string;
@@ -106,47 +112,47 @@ export const Loading: FC<LoadingProps> = ({
                 )}
                 {(item.status === CloudDriveResourceUploadStatus.Pending ||
                   item.status === CloudDriveResourceUploadStatus.Failed) && (
-                    <div className="fcr-loading-progress">
-                      {item.status === CloudDriveResourceUploadStatus.Pending && (
-                        <>
-                          <Progress
-                            width={60}
-                            type="download"
-                            progress={item.currentProgress as number}
-                          />
-                          <span className="fcr-upload-pending-text">{item.currentProgress}%</span>
-                        </>
-                      )}
-                      {item.status === CloudDriveResourceUploadStatus.Failed && (
-                        <span className="fcr-upload-error-text">
-                          {transI18n('whiteboard.upload-error')}
-                        </span>
-                      )}
-
-                      <span style={{ display: 'flex' }}>
-                        {item.status === CloudDriveResourceUploadStatus.Failed && (
-                          <SvgImg
-                            type={SvgIconEnum.CLOUD_REFRESH}
-                            size={24}
-                            style={{ color: '#7B88A0', cursor: 'pointer' }}
-                            onClick={() => {
-                              onRetry && onRetry(item.resourceUuid);
-                            }}
-                          />
-                        )}
-                        {item.status === CloudDriveResourceUploadStatus.Pending && (
-                          <SvgImg
-                            type={SvgIconEnum.CLOSE}
-                            size={24}
-                            style={{ color: '#7B88A0', cursor: 'pointer' }}
-                            onClick={() => {
-                              onCancel && onCancel(item.resourceUuid);
-                            }}
-                          />
-                        )}
+                  <div className="fcr-loading-progress">
+                    {item.status === CloudDriveResourceUploadStatus.Pending && (
+                      <>
+                        <Progress
+                          width={60}
+                          type="download"
+                          progress={item.currentProgress as number}
+                        />
+                        <span className="fcr-upload-pending-text">{item.currentProgress}%</span>
+                      </>
+                    )}
+                    {item.status === CloudDriveResourceUploadStatus.Failed && (
+                      <span className="fcr-upload-error-text">
+                        {transI18n('whiteboard.upload-error')}
                       </span>
-                    </div>
-                  )}
+                    )}
+
+                    <span style={{ display: 'flex' }}>
+                      {item.status === CloudDriveResourceUploadStatus.Failed && (
+                        <SvgImg
+                          type={SvgIconEnum.CLOUD_REFRESH}
+                          size={24}
+                          style={{ color: '#7B88A0', cursor: 'pointer' }}
+                          onClick={() => {
+                            onRetry && onRetry(item.resourceUuid);
+                          }}
+                        />
+                      )}
+                      {item.status === CloudDriveResourceUploadStatus.Pending && (
+                        <SvgImg
+                          type={SvgIconEnum.CLOSE}
+                          size={24}
+                          style={{ color: '#7B88A0', cursor: 'pointer' }}
+                          onClick={() => {
+                            onCancel && onCancel(item.resourceUuid);
+                          }}
+                        />
+                      )}
+                    </span>
+                  </div>
+                )}
               </div>
               <div>
                 {noCloseBtn ? (

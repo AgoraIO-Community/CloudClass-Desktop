@@ -1,5 +1,5 @@
 import React from 'react';
-import { FcrTheme, ThemeProvider } from '../src/components/theme';
+import { FcrTheme, ThemeProvider } from 'agora-common-libs';
 
 const theme: FcrTheme = {
 

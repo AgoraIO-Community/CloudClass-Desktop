@@ -372,7 +372,7 @@ const AudioVolumeEffect = observer(
   ({
     stream,
     duration = 3000,
-    minTriggerVolume = 15,
+    minTriggerVolume = 35,
   }: {
     stream: EduStreamUI;
     duration?: number;
