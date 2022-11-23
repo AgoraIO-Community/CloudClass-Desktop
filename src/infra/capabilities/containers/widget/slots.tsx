@@ -97,10 +97,7 @@ export const ChatH5 = observer(function Chat() {
 
   useEffect(() => {
     if (ready) {
-      const chatWidgetId =
-        EduClassroomConfig.shared.rteEngineConfig.region === EduRegion.CN
-          ? 'easemobIM'
-          : 'io.agora.widget.chat';
+      const chatWidgetId = 'easemobIM';
 
       if (ready) {
         widgetUIStore.createWidget(chatWidgetId);
