@@ -12,6 +12,7 @@ export enum SvgIconEnum {
   BOARD_NOT_GRANTED = 'board-not-granted',
   BUFFING = 'buffing',
   CALENDAR = 'calendar',
+  CAMERA = 'camera',
   CAMERA_DISABLED = 'camera-disabled',
   CAMERA_ENABLED = 'camera-enabled',
   CHAT = 'chat',
@@ -63,6 +64,7 @@ export enum SvgIconEnum {
   MENU_UNFOLD = 'menu-unfold',
   MIC_DISABLED = 'mic-disabled',
   MIC_ENABLED = 'mic-enabled',
+  MICROPHONE = 'microphone',
   MICROPHONE_OFF = 'microphone-off',
   MICROPHONE_OFF_OUTLINE = 'microphone-off-outline',
   MICROPHONE_ON = 'microphone-on',
@@ -156,4 +158,6 @@ export enum SvgIconEnum {
   ADD = 'add',
   CLOCK = 'clock',
   STAGE = 'stage',
+  RESET = 'reset',
+  INDICATOR = 'indicator',
 }

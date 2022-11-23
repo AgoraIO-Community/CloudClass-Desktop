@@ -2,18 +2,17 @@ import { AgoraEduSDK } from '@classroom/infra/api';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { BeautyType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useRef, useEffect, useCallback, useState, FC } from 'react';
+import { useRef, useEffect, useCallback, useState, FC, useContext } from 'react';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { themeContext, useI18n } from 'agora-common-libs';
 import { ASlider } from '@classroom/ui-kit/components/slider';
 import { Field } from './form-field';
-import indicator from './assets/indicator.png';
 import './index.css';
 
 export const PretestVideo = () => {
   return (
     <div
-      className="flex flex-col"
+      className="flex flex-col items-center"
       style={{
         paddingTop: 40,
         paddingLeft: 21,
@@ -62,7 +61,7 @@ const VideoPreviewTest = observer(() => {
       style={{
         height: 254,
         borderRadius: 14,
-        width: 469,
+        width: 450,
       }}>
       <PretestVideoPlayerLocalCameraPlaceholder />
       <VideoPlayerOperator />
@@ -114,7 +113,7 @@ const VideoSidler = observer(() => {
         vertical={true}
       />
       <RefreshButton onClick={handleReset}>
-        <SvgImg type={SvgIconEnum.CLOUD_REFRESH} colors={{ iconPrimary: '#fff' }} size={14} />
+        <SvgImg type={SvgIconEnum.RESET} colors={{ iconPrimary: '#fff' }} size={20} />
       </RefreshButton>
     </VideoSliderPanel>
   ) : null;
@@ -156,7 +155,7 @@ const VideoOperatorTab = observer(() => {
   const transI18n = useI18n();
 
   const [indicatorPos, setIndicatorPos] = useState(0);
-
+  const { textLevel1 } = useContext(themeContext);
   const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
     setCurrentEffectOption(type);
     setIndicatorPos(event.currentTarget.offsetLeft);
@@ -179,8 +178,9 @@ const VideoOperatorTab = observer(() => {
             {transI18n('media.beauty')}
           </TabTitle>
         )}
-        <img
-          src={indicator}
+        <SvgImg
+          type={SvgIconEnum.INDICATOR}
+          colors={{ iconPrimary: textLevel1 }}
           style={{
             top: 13,
             left: 21,
@@ -206,7 +206,7 @@ const Background = observer(() => {
   } = useStore();
 
   const transI18n = useI18n();
-
+  const { iconPrimary, brand } = useContext(themeContext);
   return (
     <BackgroundContainer>
       <Tooltip
@@ -219,7 +219,7 @@ const Background = observer(() => {
           onClick={() => handleBackgroundChange('none')}>
           <SvgImg
             type={SvgIconEnum.NONE}
-            colors={{ iconPrimary: currentVirtualBackground === 'none' ? '#0056FD' : '#000' }}
+            colors={{ iconPrimary: currentVirtualBackground === 'none' ? brand : iconPrimary }}
             size={40}
           />
         </BackgroundItem>
@@ -236,7 +236,7 @@ const Background = observer(() => {
               <SvgImg
                 className="svg-mark"
                 type={SvgIconEnum.MARK}
-                colors={{ iconPrimary: '#0056FD' }}
+                colors={{ iconPrimary: brand }}
               />
             )}
           </BackgroundItem>
@@ -256,7 +256,7 @@ const Background = observer(() => {
               <SvgImg
                 className="svg-mark"
                 type={SvgIconEnum.MARK}
-                colors={{ iconPrimary: '#0056FD' }}
+                colors={{ iconPrimary: brand }}
               />
             )}
           </BackgroundItem>
@@ -287,6 +287,8 @@ const Beauty = observer(() => {
         { id: 'buffing', icon: SvgIconEnum.BUFFING, value: buffingValue },
         { id: 'ruddy', icon: SvgIconEnum.RUDDY, value: ruddyValue },
       ].map((item) => {
+        const { iconPrimary, brand } = useContext(themeContext);
+
         return (
           <BeautyItem
             key={item.id}
@@ -301,8 +303,8 @@ const Beauty = observer(() => {
                   iconPrimary:
                     item.id === 'none'
                       ? activeBeautyType === item.id
-                        ? '#0056FD'
-                        : '#000'
+                        ? brand
+                        : iconPrimary
                       : '#fff',
                 }}
                 size={40}
@@ -384,7 +386,7 @@ const TabTitle: FC<{ activity: boolean; onClick: (e: React.MouseEvent<HTMLDivEle
     return (
       <div
         onClick={onClick}
-        className="text-center cursor-pointer"
+        className="text-center cursor-pointer text-level1"
         style={{
           width: 92,
           marginRight: 36,
@@ -404,6 +406,7 @@ const TabContent: FC = ({ children }) => {
       style={{
         padding: '15px 2px',
         flex: 1,
+        alignSelf: 'flex-start',
       }}>
       {' '}
       {children}
@@ -425,7 +428,7 @@ const BeautyItem: FC<{ activity: boolean; onClick: () => void }> = ({
   return (
     <div
       onClick={onClick}
-      className={`relative ${
+      className={`relative bg-component ${
         activity ? 'fcr-pretest__beauty-item--active' : 'fcr-pretest__beauty-item'
       }`}
       style={{
@@ -435,7 +438,6 @@ const BeautyItem: FC<{ activity: boolean; onClick: () => void }> = ({
         padding: '6px 6px 0 6px',
         boxSizing: 'border-box',
         cursor: 'pointer',
-        background: '#F8F8F8',
       }}>
       {children}
     </div>
@@ -446,11 +448,12 @@ const BeautyIcon: FC<{
   icon: string;
   activity: boolean;
 }> = ({ children, icon, activity }) => {
+  const { background: backgroundColor } = useContext(themeContext);
   let background = '';
   if (activity) {
     background = '#E5EEFF';
   } else {
-    background = '#fff';
+    background = backgroundColor;
   }
 
   return (
@@ -510,12 +513,11 @@ const BackgroundItem: FC<{ image?: string; activity?: boolean; onClick: () => vo
       onClick={onClick}
       className={`${
         activity ? 'fcr-pretest-background--active' : 'fcr-pretest-background'
-      } relative flex justify-center items-center cursor-pointer`}
+      } relative flex justify-center items-center cursor-pointer bg-component`}
       style={{
         width: 82,
         height: 60,
         borderRadius: 8,
-        background: '#F8F8F8',
         ...styleProps,
       }}>
       {children}

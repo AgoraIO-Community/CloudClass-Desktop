@@ -363,7 +363,7 @@ export const en = {
     ruddy: 'Ruddy',
     default: 'Default',
     none: 'None',
-    virtualBackground: 'background',
+    virtualBackground: 'Background',
   },
   stage: {
     visible: 'Show',

@@ -82,8 +82,10 @@ export const RoomDeviceSettingContainer = observer(({ id }: { id: string }) => {
 
   return (
     <RoomPretest
+      closeable
       showStage={EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass}
       onOK={() => removeDialog(id)}
+      onCancel={() => removeDialog(id)}
     />
   );
 });

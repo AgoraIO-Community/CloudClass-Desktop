@@ -363,7 +363,7 @@ export const en = {
     ruddy: 'Ruddy',
     default: 'Default',
     none: 'None',
-    virtualBackground: 'background',
+    virtualBackground: 'Background',
   },
   stage: {
     visible: 'Show',
@@ -383,9 +383,9 @@ export const en = {
       'The device has installed, Please click setting and select the new device.',
     teacher_device_may_not_work: "There is something wrong with the teacher's device",
     test: 'Test',
-    video: 'video',
-    audio: 'audio',
-    stage: 'stage',
+    video: 'Video',
+    audio: 'Audio',
+    stage: 'Stage',
 
     add: 'Add',
     none: 'No Background',

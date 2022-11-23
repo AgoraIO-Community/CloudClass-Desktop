@@ -11,7 +11,6 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
     } = useStore();
     const handleJoinClassroom = useCallback(() => {
       onOK();
-
     }, []);
     const transI18n = useI18n();
     return (
@@ -23,7 +22,7 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
           borderTop: '1px solid #dceafe',
         }}>
         {visibleMirror ? (
-          <span className="flex items-center text-level1" >
+          <span className="flex items-center text-level1">
             <CheckBox
               checked={isMirror}
               onChange={(e) => {
@@ -32,7 +31,9 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
             />
             <span className="camera-mode">{transI18n('media.mirror')}</span>
           </span>
-        ) : <span />}
+        ) : (
+          <span />
+        )}
         <Button
           className="text-white"
           style={{

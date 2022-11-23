@@ -16,6 +16,7 @@ export interface PretestProps extends BaseProps {
   closeable?: boolean;
   onCancel?: () => void;
   showStage?: boolean;
+  pertestTitle?: string;
 }
 
 type DeviceType = 'audio' | 'video';
@@ -23,20 +24,22 @@ type DeviceType = 'audio' | 'video';
 const SETTINGS: (DeviceType | 'stage')[] = ['audio', 'video', 'stage'];
 const DEVICE_SETTINGS: DeviceType[] = ['audio', 'video'];
 const SvgImgType = {
-  audio: SvgIconEnum.MICROPHONE_ON,
-  video: SvgIconEnum.RECORDING,
+  audio: SvgIconEnum.MICROPHONE,
+  video: SvgIconEnum.CAMERA,
   stage: SvgIconEnum.STAGE,
 };
 
-export const RoomPretest: FC<PretestProps> = observer(({ onOK, closeable, showStage = false }) => {
-  return (
-    <PretestModal closeable={closeable}>
-      <DeviceTest showStage={showStage} onOK={onOK} />
-    </PretestModal>
-  );
-});
+export const RoomPretest: FC<PretestProps> = observer(
+  ({ onOK, closeable, showStage = false, pertestTitle, onCancel }) => {
+    return (
+      <PretestModal onCancel={onCancel} closeable={closeable}>
+        <DeviceTest showStage={showStage} pertestTitle={pertestTitle} onOK={onOK} />
+      </PretestModal>
+    );
+  },
+);
 
-const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false }) => {
+const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false, pertestTitle }) => {
   const {
     pretestUIStore: { currentPretestTab, setCurrentTab },
   } = useStore();
@@ -54,14 +57,14 @@ const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false }) => {
   return (
     <PreTestContent>
       <PreTestTabLeftContent>
-        <PreTestTitle>{transI18n('pretest.settingTitle')}</PreTestTitle>
+        <PreTestTitle>{pertestTitle || transI18n('pretest.settingTitle')}</PreTestTitle>
         {(showStage ? SETTINGS : DEVICE_SETTINGS).map((item) => (
           <PreTestTabHeader
             key={item}
             activity={currentPretestTab === item}
             onClick={() => handleTabChange(item)}>
             <Icon type={item} activity={currentPretestTab === item}>
-              <SvgImg type={SvgImgType[item]} colors={{ iconPrimary: '#fff' }} size={18} />
+              <SvgImg type={SvgImgType[item]} colors={{ iconPrimary: '#fff' }} size={24} />
             </Icon>
             {transI18n(`pretest.${item}`)}
           </PreTestTabHeader>
@@ -77,32 +80,34 @@ const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false }) => {
   );
 });
 
-const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean }> = ({
-  children,
-  closeable,
-}) => {
-  const [opened, setOpened] = useState(false);
+const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean; onCancel?: () => void }> =
+  ({ children, closeable, onCancel }) => {
+    const [opened, setOpened] = useState(false);
 
-  useEffect(() => {
-    setOpened(true);
-  }, []);
+    useEffect(() => {
+      setOpened(true);
+    }, []);
 
-  return (
-    <OverlayWrap opened={opened}>
-      <Modal>
-        {closeable && <></>}
-        {children}
-      </Modal>
-    </OverlayWrap>
-  );
-};
+    return (
+      <OverlayWrap opened={opened}>
+        <Modal>
+          {closeable && (
+            <div className="fcr-pretest-modal-closeable" onClick={onCancel}>
+              <SvgImg type={SvgIconEnum.CLOSE} colors={{ iconPrimary: '#fff' }}></SvgImg>
+            </div>
+          )}
+          {children}
+        </Modal>
+      </OverlayWrap>
+    );
+  };
 
 const Modal: FC = ({ children }) => (
   <div
-    className="bg-component"
+    className="bg-component fcr-pretest-modal"
     style={{
-      width: 671,
-      height: 630,
+      width: 730,
+      height: 656,
       borderRadius: primaryRadius,
       boxShadow: '-1px 10px 60px rgba(0, 0, 0, 0.12)',
       overflow: 'hidden',

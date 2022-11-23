@@ -10,7 +10,7 @@ export const PretestStage = observer(() => {
     <div
       className="flex flex-grow flex-col"
       style={{
-        padding: '40px 30px',
+        padding: '60px 30px 40px',
         gap: 20,
       }}>
       <StageManager />
