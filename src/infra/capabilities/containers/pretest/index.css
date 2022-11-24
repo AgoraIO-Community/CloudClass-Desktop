@@ -1,0 +1,132 @@
+.fcr-pretest-modal {
+  background-image: url(./assets/modal-bg.svg);
+  background-position: top center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+.fcr-pretest-modal-closeable {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: rgba(52, 52, 52, 0.72);
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.fcr-pretest-tooltip .tooltip-inner {
+  min-width: 70px;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 0 16px;
+  background: #0056fd;
+  color: #fff;
+  font-size: 14px;
+}
+.fcr-pretest-tooltip .tooltip-arrow-content {
+  background: #0056fd;
+}
+
+.fcr-speaker-test-btn {
+  width: 100px;
+  height: 46px;
+  /* fcr_black */
+  background: #000000;
+  border-radius: 10px;
+}
+
+.fcr-pretest-audio .form-field-wrap {
+  width: 100%;
+}
+
+.fcr-pretest-audio .form-field-label {
+  display: none;
+}
+
+.fcr-pretest__beauty-item::before,
+.fcr-pretest__beauty-item--active::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  display: block;
+  width: 88px;
+  height: 88px;
+  border: 2px solid transparent;
+  border-radius: 11px;
+  border-color: transparent;
+}
+
+.fcr-pretest__beauty-item--active::before {
+  border-color: #0056fd;
+}
+
+.fcr-pretest-background::before,
+.fcr-pretest-background--active::before {
+  content: '';
+  display: block;
+  left: -3px;
+  top: -3px;
+  position: absolute;
+  width: 88px;
+  height: 66px;
+  border-radius: 12px;
+}
+
+.fcr-pretest-background--active::before {
+  border: 2px solid #0056fd;
+}
+
+.fcr-pretest-background .svg-mark,
+.fcr-pretest-background--active .svg-mark {
+  position: absolute;
+  left: 33%;
+  top: 33%;
+}
+
+.fcr-pretest-slider .ant-slider-vertical {
+  width: 16px;
+}
+.fcr-pretest-slider.slider .ant-slider-track,
+.fcr-pretest-slider.slider .ant-slider-step,
+.fcr-pretest-slider.slider .ant-slider-rail {
+  width: 10px;
+  border-radius: 8px;
+}
+.fcr-pretest-slider.slider .ant-slider-handle {
+  width: 16px;
+  height: 16px;
+  border: none;
+  box-shadow: 0 0 0px 5px rgb(255 255 255 / 79%);
+}
+.fcr-pretest-slider .ant-slider-vertical .ant-slider-handle {
+  margin-left: -3px;
+}
+
+.fcr-pretest-camera-list .form-field .select {
+  background: rgba(61, 64, 75, 0.8);
+  color: #fff;
+  border-color: transparent;
+}
+.fcr-pretest-camera-list .form-field .select svg path {
+  fill: #fff;
+}
+.fcr-pretest-camera-list .form-field .select a:link,
+.fcr-pretest-camera-list .form-field .select a:hover,
+.fcr-pretest-camera-list .form-field .select a:active,
+.fcr-pretest-camera-list .form-field .select a:visited,
+.fcr-pretest-camera-list .form-field .option {
+  color: #fff;
+}
+
+.fcr-pretest-camera-list .form-field .option:hover {
+  background: transparent;
+  color: #fff;
+  font-weight: 800;
+}

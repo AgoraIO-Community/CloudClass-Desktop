@@ -1,0 +1,14 @@
+/* fix bug: tabs 某些 css 找不到，所以手动补充下*/
+.fcr-theme .ant-tabs-tabpane-hidden {
+  display: none;
+}
+
+.whiteboard .tabs-top {
+  width: 100%;
+}
+.whiteboard .tabs-top .tabs-nav-list {
+  overflow-x: auto;
+}
+.whiteboard .tabs-top .tabs-nav-operations {
+  display: none !important;
+}

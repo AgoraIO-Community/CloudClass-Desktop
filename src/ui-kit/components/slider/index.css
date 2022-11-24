@@ -1,0 +1,14 @@
+.fcr-theme.slider .ant-slider {
+  margin: 0;
+}
+
+.fcr-theme.slider .ant-slider-track,
+.fcr-theme.slider .ant-slider-track:hover,
+.fcr-theme.slider .ant-slider:hover .ant-slider-track {
+  background-color: #0073ff;
+}
+.fcr-theme.slider .ant-slider-handle,
+.fcr-theme.slider .ant-slider-handle:hover,
+.fcr-theme.slider .ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open) {
+  border-color: #0073ff;
+}

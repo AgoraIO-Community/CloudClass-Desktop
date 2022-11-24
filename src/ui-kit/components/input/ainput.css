@@ -1,0 +1,22 @@
+.fcr-theme.ant-input {
+  border-radius: 12px;
+}
+
+.fcr-theme.ant-input:focus {
+  border: 1px solid #030303 !important;
+}
+
+.fcr-theme.ant-input-affix-wrapper {
+  border-radius: 12px;
+}
+
+.fcr-theme.ant-input-affix-wrapper > input.ant-input:focus {
+  border: none !important;
+}
+
+.fcr-theme.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
+.fcr-theme.ant-input-affix-wrapper:focus,
+.fcr-theme .ant-input-affix-wrapper-focused {
+  border-color: #030303;
+  box-shadow: 0 0 0 3px rgb(143 144 152 / 20%);
+}

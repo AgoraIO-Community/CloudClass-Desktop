@@ -1,0 +1,244 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: unset !important;
+}
+
+.btn-pin {
+  position: absolute;
+  right: 16px;
+  top: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #a7a7ca;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.btn-pin > .icon-close {
+  width: 20px !important;
+  height: 20px !important;
+  cursor: pointer;
+}
+
+.rc-mask {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.horizontal {
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 2px;
+}
+
+.fixed-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 999;
+}
+
+.chat-panel {
+  @apply bg-component;
+  position: relative;
+  flex: 1;
+  border-radius: 4px;
+  /* min-width: 300px; */
+}
+
+.edu-room {
+  height: 100%;
+}
+.chat-panel .tabs {
+  top: 0;
+  left: 0;
+  flex: 1 1;
+  position: relative;
+}
+
+.agora-board-resources .tabs {
+  position: inherit;
+  top: 0;
+  left: 0;
+}
+
+.agora-board-resources input[type='file'] {
+  display: none;
+}
+
+.mirror canvas {
+  transform: scaleX(1) !important;
+}
+
+.mirror video {
+  transform: scaleX(1) !important;
+}
+
+.filename {
+  @apply text-level1;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 71px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header.with-tab {
+  position: absolute;
+  right: 0;
+  top: 4px;
+  justify-content: flex-end;
+  flex: 1 1;
+  z-index: 9;
+  border: 0;
+}
+
+.placeholder-desc {
+  position: absolute;
+  font-size: 13px;
+  font-weight: 400;
+  color: #7d8798;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  z-index: 999;
+  transform: translateY(74px);
+}
+
+.aisde-fixed {
+  transition: 0.5s;
+  margin-right: 0;
+  min-width: unset;
+  z-index: 201;
+  height: unset;
+  position: absolute;
+  overflow: unset;
+  transform: translateX(0);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  bottom: 15px;
+  right: 10px;
+  pointer-events: none;
+}
+.aisde-fixed > div {
+  margin-right: 8px;
+  pointer-events: auto;
+}
+.aisde-fixed:last-child {
+  margin-right: 0;
+}
+
+.aisde-fixed-full-collapse {
+  transition: 0.5s;
+  margin-right: -300px;
+}
+.telebox-collector {
+  @apply bg-component !important;
+}
+.telebox-collector img {
+  display: inline-block !important;
+}
+
+.teacher-stream-container .video-player-overlay {
+  display: flex;
+}
+
+.teacher-stream-container .video-player-overlay .video-player {
+  flex: 1;
+}
+
+.big-class-h5 {
+  transition: all 0.3s ease;
+}
+.big-class-h5 .chat-panel {
+  min-width: unset;
+}
+
+.fullsize-video-container .video-player-overlay {
+  width: 100%;
+  height: 100%;
+}
+.fullsize-video-container .video-player {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.roster-btn-active {
+  background-color: #0073ff !important;
+}
+.roster-btn-active path {
+  fill: #fff;
+}
+
+.hands-up-manager > .fcr-card:hover,
+.hands-up-sender:hover,
+.roster-btn:hover,
+.chat-panel:hover .show-chat-icon,
+.chat-panel:hover .chat-min {
+  background-color: #0073ff;
+}
+
+.hands-up-manager > .fcr-card:hover path,
+.hands-up-sender:hover path,
+.roster-btn:hover path,
+.chat-min:hover path {
+  fill: #fff;
+}
+
+.mid-class-room .search-teacher-name .roster-username {
+  width: 66px;
+}
+
+.table-col-item .roster-username {
+  padding-left: 0px !important;
+}
+
+.rtm-chat {
+  background: transparent;
+}
+
+.rtm-chat-4.rtm-platform-pc .small-class-chat-fixed {
+  @apply border border-solid border-divider !important;
+  width: 300px;
+  height: 500px;
+}
+
+.rtm-chat-2.rtm-platform-pc .small-class-chat-fixed {
+  height: 100% !important;
+}
+
+.mid-class-room .chat-panel {
+  min-width: unset;
+  background: transparent;
+}
+
+.h5-chat-pannel {
+  background: unset;
+}
+
+#stage-container {
+  /* background: #f9f9fc; */
+}
+
+.fcr-room-bg {
+  @apply bg-foreground;
+}

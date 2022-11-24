@@ -1,0 +1,19 @@
+.fcr-theme.ant-picker {
+  border-radius: 12px;
+}
+
+.fcr-theme .ant-picker-focused,
+.fcr-theme.ant-picker:hover,
+.ant-picker-focused {
+  border-color: #030303;
+  box-shadow: 0 0 0 3px rgb(143 144 152 / 20%);
+}
+
+.fcr-theme .ant-picker-panel-container {
+  border-radius: 14px;
+}
+
+.fcr-theme .ant-picker-cell .ant-picker-cell-inner,
+.fcr-theme .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border-radius: 10px;
+}

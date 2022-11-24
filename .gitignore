@@ -14,6 +14,6 @@ lib
 .eslintcache
 packages/agora-log-sdk
 package-lock.json
+yarn.lock
 *.log
-packages/agora-classroom-sdk/agoraAddonlog.txt
 .vscode/

@@ -1,0 +1,15 @@
+.fcr-theme .ant-form-item-explain-error {
+  /* SB- error Red */
+  color: #f5655c;
+  padding-left: 12px;
+}
+
+.fcr-theme .ant-form-item-explain,
+.fcr-theme .ant-form-item-extra {
+  min-height: 20px;
+  line-height: 1.3;
+}
+
+.fcr-theme .ant-form-item {
+  margin-bottom: 20px;
+}
