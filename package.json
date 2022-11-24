@@ -73,6 +73,7 @@
     "@use-gesture/react": "10.2.11",
     "agora-edu-core": "2.8.0",
     "agora-rte-sdk": "2.8.0",
+    "agora-common-libs": "2.8.1",
     "animate.css": "4.1.1",
     "autoprefixer": "10.2.5",
     "axios": "0.19.2",
