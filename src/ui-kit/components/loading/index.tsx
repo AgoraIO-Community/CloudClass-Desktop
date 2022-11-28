@@ -8,7 +8,7 @@ import circleLoadingGif from './assets/circle-loading.gif';
 import { SvgImg, SvgIconEnum } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 
-export declare enum CloudDriveResourceUploadStatus {
+enum CloudDriveResourceUploadStatus {
   Pending = 'pending',
   Success = 'success',
   Failed = 'failed',
