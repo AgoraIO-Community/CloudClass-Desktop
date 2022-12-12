@@ -326,15 +326,7 @@ export class AgoraEduSDK {
     const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } =
       initializeBuiltInExtensions();
 
-    // 1. 伪直播场景不需要pretest
-    // 2. 合流转推场景下的学生角色不需要pretest
-    const noDevicePermission =
-      roleType === EduRoleTypeEnum.invisible ||
-      !(
-        roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
-        (roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN &&
-          roleType !== EduRoleTypeEnum.teacher)
-      );
+    const noDevicePermission = roleType === EduRoleTypeEnum.invisible;
 
     const config = new EduClassroomConfig(
       this._appId,
