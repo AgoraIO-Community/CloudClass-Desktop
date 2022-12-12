@@ -80,7 +80,6 @@ const ScreenShareCardContent = (props: {
       <ul>
         <li>{t('fcr_share_title_singel_window')}</li>
         <li>{t('fcr_share_title_full_screen')}</li>
-        <li>{t('fcr_share_title_sound')}</li>
       </ul>
     </div>
   ) : (
@@ -95,7 +94,6 @@ const ScreenShareCardContent = (props: {
       <ul>
         <li>{t('fcr_share_title_any_student')}</li>
         <li>{t('fcr_share_title_full_screen')}</li>
-        <li>{t('fcr_share_title_sound')}</li>
       </ul>
     </div>
   );

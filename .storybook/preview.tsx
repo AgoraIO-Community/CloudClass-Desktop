@@ -2,7 +2,6 @@ import React from 'react';
 import { FcrTheme, ThemeProvider } from 'agora-common-libs';
 
 const theme: FcrTheme = {
-
   /**
    * 背景色
    */
@@ -56,5 +55,37 @@ const theme: FcrTheme = {
   textLink: '#357bf6',
 };
 
+export const jumpToLine = (str: string) => {
+  return str.replace(/([A-Z])/g, '_$1').toLowerCase();
+};
 
-export const decorators = [(Story) => <ThemeProvider value={theme}>{Story()}</ThemeProvider>];
+export const applyTheme = (theme: FcrTheme) => {
+  let cssString = '';
+
+  for (const colorName in theme) {
+    cssString += `--fcr_system_${jumpToLine(colorName)}_color: ${theme[colorName]};`;
+  }
+
+  const fcrGlobalStyleSheetId = 'theme-sheet';
+
+  const fcrStyleSheet = document.querySelector(`#${fcrGlobalStyleSheetId}`);
+  if (fcrStyleSheet) {
+    fcrStyleSheet.textContent = `:root{
+      ${cssString}
+    }`;
+  } else {
+    const newStyleSheet = document.createElement('style');
+    newStyleSheet.id = fcrGlobalStyleSheetId;
+    newStyleSheet.textContent = `:root{
+      ${cssString}
+    }`;
+    document.head.appendChild(newStyleSheet);
+  }
+};
+
+export const decorators = [
+  (Story) => {
+    applyTheme(theme);
+    return <ThemeProvider value={theme}>{Story()}</ThemeProvider>;
+  },
+];

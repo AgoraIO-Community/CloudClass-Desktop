@@ -1,11 +1,12 @@
 import classnames from 'classnames';
 import { FC, useMemo, useState } from 'react';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
-import { Button, Modal, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
+import { Button, CheckBox, Modal, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import './index.css';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { AGScreenShareDevice } from 'agora-rte-sdk';
 import { transI18n, useI18n } from 'agora-common-libs';
+import { DevicePlatform, getPlatform } from 'agora-edu-core';
 
 export const ScreenPickerDialog = ({
   id,
@@ -15,7 +16,7 @@ export const ScreenPickerDialog = ({
   desktopList,
 }: {
   id: string;
-  onOK?: (id: string) => void;
+  onOK?: (id: string, withAudio: boolean) => void;
   onCancel?: () => void;
   windowList: (AGScreenShareDevice & { imagebase64: string })[];
   desktopList: (AGScreenShareDevice & { imagebase64: string })[];
@@ -43,9 +44,9 @@ export const ScreenPickerDialog = ({
           removeDialog(id);
           onCancel && onCancel();
         }}
-        onOK={() => {
+        onOK={(withAudio) => {
           removeDialog(id);
-          onOK && onOK(activeId);
+          onOK && onOK(activeId, withAudio);
         }}
         currentActiveId={activeId}
         onActiveItem={setActiveId}
@@ -63,7 +64,7 @@ export interface ScreenPickerProps extends BaseProps {
   windowList: (AGScreenShareDevice & { imagebase64: string })[];
   onActiveItem: (id: string) => void;
   currentActiveId?: string;
-  onOK?: () => void;
+  onOK?: (withAudio: boolean) => void;
   onCancel?: () => void;
 }
 
@@ -86,6 +87,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
     return [...windowList, ...desktopList].find((i) => currentActiveId === i.id)?.title;
   }, [currentActiveId, windowList, desktopList]);
   const t = useI18n();
+  const [withAudio, setWithAudio] = useState(false);
   return (
     <>
       <div className={cls}>{screenShareTitle}</div>
@@ -159,6 +161,16 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
         </div>
       </div>
       <div className="screen-picker-footer" key="screen-picker-footer">
+        {getPlatform() === DevicePlatform.WINDOWS && (
+          <div className="screen-picker-footer-with-audio">
+            <CheckBox
+              checked={withAudio}
+              onChange={(e) => {
+                setWithAudio(e.target.checked);
+              }}
+              text={t('fcr_share_title_share_audio')}></CheckBox>
+          </div>
+        )}
         <div className="screen-picker-footer-text">
           {activeTitle && transI18n('fcr_share_selected', { reason: activeTitle })}
         </div>
@@ -170,7 +182,7 @@ export const ScreenPicker: FC<ScreenPickerProps> = ({
             className="screen-picker-footer-confirm-btn"
             key="ok"
             type={'primary'}
-            onClick={onOK}
+            onClick={() => onOK && onOK(withAudio)}
             action="ok"
             disabled={currentActiveId === ''}>
             {t('fcr_share_title_share_window')}

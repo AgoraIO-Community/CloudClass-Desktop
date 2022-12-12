@@ -594,6 +594,8 @@ export const en = {
   fcr_alert_submit: 'OK',
   fcr_alert_cancel: 'Cancel',
   fcr_stage_label_title: 'Whether to show the stage',
+  fcr_share_title_share_audio: 'Share PC audio',
+
   /** Remote Control */
   begin_class: 'Begin class',
   edu_error: {

@@ -30,6 +30,8 @@ import {
   EduEventCenter,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
+  EduRteEngineConfig,
+  EduRteRuntimePlatform,
   EduStream,
   iterateSet,
 } from 'agora-edu-core';
@@ -105,8 +107,22 @@ export class StreamUIStore extends EduUIStoreBase {
             const stateKeeper = new ShareStreamStateKeeper(
               async (targetState: AgoraRteMediaSourceState) => {
                 if (targetState === AgoraRteMediaSourceState.started) {
+                  const isElectron = EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron;
+                  const enableAudio =
+                    this.classroomStore.mediaStore.localScreenShareAudioTrackState ===
+                    AgoraRteMediaSourceState.started;
+                  //electron声卡采集合并到本地音频流,所以electron下屏幕共享流的audioPublishState设为Unpublished
+                  const audioPublishState = !isElectron
+                    ? enableAudio
+                      ? AgoraRteMediaPublishState.Published
+                      : AgoraRteMediaPublishState.Unpublished
+                    : AgoraRteMediaPublishState.Unpublished;
                   const { rtcToken, streamUuid }: { rtcToken: string; streamUuid: string } =
-                    await this.classroomStore.streamStore.publishScreenShare(newValue);
+                    await this.classroomStore.streamStore.publishScreenShare(newValue, {
+                      audioState: audioPublishState,
+                      audioSourceState:
+                        this.classroomStore.mediaStore.localScreenShareAudioTrackState,
+                    });
                   this.classroomStore.streamStore.initializeScreenShareStream(
                     newValue,
                     streamUuid,
