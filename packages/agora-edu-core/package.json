@@ -62,7 +62,8 @@
     "uuid": "3.3.3",
     "white-web-sdk": "2.16.37",
     "video.js": "7.10.0",
-    "deep-diff": "1.0.2"
+    "deep-diff": "1.0.2",
+    "jspdf": "2.5.1"
   },
   "browserslist": {
     "production": [
