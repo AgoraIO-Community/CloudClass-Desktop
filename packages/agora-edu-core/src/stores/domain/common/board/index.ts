@@ -59,6 +59,7 @@ export class BoardStore extends EduStoreBase {
   @observable redoSteps = 0;
   @observable currentSceneIndex = 0;
   @observable scenesCount = 0;
+  private _joined = false;
 
   // ---------- computeds --------
   @computed
@@ -71,6 +72,7 @@ export class BoardStore extends EduStoreBase {
   @action.bound
   async joinBoard(role: EduRoleTypeEnum) {
     try {
+      this._joined = true;
       const {
         identity, // identity from outer
         isWritable,
@@ -141,6 +143,7 @@ export class BoardStore extends EduStoreBase {
 
   leaveBoard = async () => {
     try {
+      this._joined = false;
       this.unmount();
       await this._room?.disconnect();
     } catch (err) {
@@ -592,6 +595,11 @@ export class BoardStore extends EduStoreBase {
   private _whiteboardEventListeners: Partial<RoomCallbacks> = {
     onPhaseChanged: (phase: RoomPhase) => {
       this.classroomStore.connectionStore.setWhiteboardState(phase);
+      if (phase === 'disconnected' && this._joined) {
+        setTimeout(() => {
+          this.classroomStore.boardStore.joinBoard(EduClassroomConfig.shared.sessionInfo.role);
+        });
+      }
     },
     onRoomStateChanged: (state: Partial<RoomState>) => {
       runInAction(() => {
@@ -693,6 +701,14 @@ export class BoardStore extends EduStoreBase {
     try {
       room = await client.joinRoom(data, this._whiteboardEventListeners);
     } catch (e) {
+      if (this._joined) {
+        // start retry at the begining of next tick
+        setTimeout(() => {
+          if (this._joined) {
+            this._joinBoradRoom(client, params);
+          }
+        });
+      }
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_BOARD_JOIN_API_FAILED,
         e as Error,
