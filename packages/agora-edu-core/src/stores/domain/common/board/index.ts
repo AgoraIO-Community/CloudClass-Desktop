@@ -612,8 +612,6 @@ export class BoardStore extends EduStoreBase {
           this.classroomStore.boardStore.joinBoard(EduClassroomConfig.shared.sessionInfo.role);
         });
       }
-      if (phase === 'connected') {
-      }
     },
     onRoomStateChanged: (state: Partial<RoomState>) => {
       runInAction(() => {
@@ -715,13 +713,6 @@ export class BoardStore extends EduStoreBase {
     try {
       room = await client.joinRoom(data, this._whiteboardEventListeners);
     } catch (e) {
-      if (this._joined) {
-        // start retry at the begining of next tick
-        setTimeout(() => {
-          this.joinBoard(EduClassroomConfig.shared.sessionInfo.role);
-          this._joinBoradRoom(client, params);
-        });
-      }
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_BOARD_JOIN_API_FAILED,
         e as Error,
