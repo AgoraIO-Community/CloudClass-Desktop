@@ -309,14 +309,7 @@ export class ConnectionStore extends EduStoreBase {
     }
 
     //join whiteboard
-    let [err] = await to(
-      this.classroomStore.boardStore.joinBoard(EduClassroomConfig.shared.sessionInfo.role),
-    );
-    err &&
-      EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_CONN_JOIN_WHITEBOARD_FAIL,
-        err,
-      );
+    this.classroomStore.boardStore.joinBoard(EduClassroomConfig.shared.sessionInfo.role);
   }
 
   @bound

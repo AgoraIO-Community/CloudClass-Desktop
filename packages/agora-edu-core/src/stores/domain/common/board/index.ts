@@ -46,6 +46,7 @@ const DEFAULT_COLOR: Color = {
 };
 
 type AGGlobalState = GlobalState & { grantUsers?: string[] };
+type MountOptions = Pick<MountParams, 'containerSizeRatio' | 'collectorContainer'>;
 
 export class BoardStore extends EduStoreBase {
   // ------ observables  -----------
@@ -60,6 +61,8 @@ export class BoardStore extends EduStoreBase {
   @observable currentSceneIndex = 0;
   @observable scenesCount = 0;
   private _joined = false;
+  private _mounted = false;
+  private _mountOptions?: MountOptions;
 
   // ---------- computeds --------
   @computed
@@ -138,6 +141,13 @@ export class BoardStore extends EduStoreBase {
         AGEduErrorCode.EDU_ERR_BOARD_JOIN_FAILED,
         e as Error,
       );
+    } finally {
+      // mount window manager if the window manager has been destroyed but ever mounted.
+      // this might happen when the room is reconnected after a disconnection.
+      const { _windowManager, _whiteBoardContainer, _mounted } = this;
+      if (!_windowManager && _whiteBoardContainer && !_mounted) {
+        this.mount(_whiteBoardContainer, this._mountOptions);
+      }
     }
   }
 
@@ -155,12 +165,11 @@ export class BoardStore extends EduStoreBase {
     this.setRoom(undefined);
   };
 
-  mount = (
-    dom: HTMLDivElement,
-    options: Pick<MountParams, 'containerSizeRatio' | 'collectorContainer'> = {},
-  ) => {
+  mount = (dom: HTMLElement, options: MountOptions = {}) => {
     // const { sessionInfo } = EduClassroomConfig.shared;
     this._whiteBoardContainer = dom;
+    this._mountOptions = options;
+    this._mounted = true;
     WindowManager.mount({
       cursor: true,
       room: this.room,
@@ -194,6 +203,7 @@ export class BoardStore extends EduStoreBase {
         }, 500);
       })
       .catch((e) => {
+        this._mounted = false;
         EduErrorCenter.shared.handleNonThrowableError(
           AGEduErrorCode.EDU_ERR_BOARD_WINDOW_MANAGER_MOUNT_FAIL,
           e,
@@ -202,9 +212,10 @@ export class BoardStore extends EduStoreBase {
   };
 
   unmount = () => {
+    this._mounted = false;
     this._windowManager?.destroy();
     this._windowManager = undefined;
-    this._whiteBoardContainer = undefined;
+    // this._whiteBoardContainer = undefined;
   };
 
   @bound
@@ -596,9 +607,12 @@ export class BoardStore extends EduStoreBase {
     onPhaseChanged: (phase: RoomPhase) => {
       this.classroomStore.connectionStore.setWhiteboardState(phase);
       if (phase === 'disconnected' && this._joined) {
+        this.unmount();
         setTimeout(() => {
           this.classroomStore.boardStore.joinBoard(EduClassroomConfig.shared.sessionInfo.role);
         });
+      }
+      if (phase === 'connected') {
       }
     },
     onRoomStateChanged: (state: Partial<RoomState>) => {
@@ -704,9 +718,8 @@ export class BoardStore extends EduStoreBase {
       if (this._joined) {
         // start retry at the begining of next tick
         setTimeout(() => {
-          if (this._joined) {
-            this._joinBoradRoom(client, params);
-          }
+          this.joinBoard(EduClassroomConfig.shared.sessionInfo.role);
+          this._joinBoradRoom(client, params);
         });
       }
       return EduErrorCenter.shared.handleThrowableError(
