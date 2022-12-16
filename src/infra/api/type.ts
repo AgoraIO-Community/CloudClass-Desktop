@@ -1,12 +1,11 @@
 import {
   AgoraEduClassroomEvent,
   EduRoleTypeEnum,
-  EduRoomServiceTypeEnum,
   EduRoomTypeEnum,
   EduRtcConfig,
   Platform,
 } from 'agora-edu-core';
-import { AGMediaOptions, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
+import { AGMediaOptions, AgoraLatencyLevel, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 import { CloudDriveResourceConvertProgress } from '../stores/common/cloud-drive/type';
 import { AgoraWidgetBase } from '../stores/common/widget/widget-base';
@@ -69,7 +68,6 @@ export type LaunchOption = {
   roomUuid: string; // 房间uuid
   roleType: EduRoleTypeEnum; // 角色
   roomType: EduRoomTypeEnum; // 房间类型
-  roomServiceType?: EduRoomServiceTypeEnum; // 房间服务类型
   roomName: string; // 房间名称
   listener: ListenerCallback; // launch状态
   pretest: boolean; // 开启设备检测
@@ -82,7 +80,7 @@ export type LaunchOption = {
   widgets?: { [key: string]: typeof AgoraWidgetBase };
   userFlexProperties?: { [key: string]: unknown }; //用户自订属性
   mediaOptions?: LaunchMediaOptions;
-  latencyLevel?: 1 | 2;
+  latencyLevel?: AgoraLatencyLevel;
   platform?: Platform;
   recordOptions?: BoardWindowAnimationOptions; // 白板录制参数
   recordRetryTimeout?: number; // 录制重试间隔
