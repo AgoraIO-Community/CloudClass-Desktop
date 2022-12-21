@@ -118,6 +118,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
             this.classroomStore.widgetStore.setActive(
               `streamWindow-${newValue}`,
               {
+                position: { xaxis: 1, yaxis: 1 },
+                size: { width: 1, height: 1 },
                 extra: {
                   userUuid,
                 },
