@@ -269,6 +269,7 @@ export class AgoraEduSDK {
       latencyLevel,
       userFlexProperties,
       language,
+      tenantUuid
     } = option;
     //TODO will be removed in the near future, dont change it as only EduRoomServiceTypeEnum.LivePremium is supported.
     const roomServiceType = EduRoomServiceTypeEnum.LivePremium;
@@ -285,6 +286,7 @@ export class AgoraEduSDK {
       flexProperties: userFlexProperties,
       token: rtmToken,
       startTime,
+      tenantUuid
     };
 
     this._shareUrl = shareUrl;
