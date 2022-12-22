@@ -182,7 +182,7 @@ export class StreamUIStore extends EduUIStoreBase {
     }
   }
   @bound
-  private _setRenderAt(stream: EduStreamUI) {
+  protected _setRenderAt(stream: EduStreamUI) {
     const userUuids = this.streamWindowUserUuids;
     if (this.settingsOpened && stream.stream.isLocal) {
       stream.setRenderAt('Setting');
