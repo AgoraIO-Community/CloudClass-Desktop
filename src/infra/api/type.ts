@@ -89,7 +89,6 @@ export type LaunchOption = {
   virtualBackgroundImages?: string[]; // 虚拟背景图片
   virtualBackgroundVideos?: string[]; // 虚拟背景视频
   webrtcExtensionBaseUrl?: string; // WebRTC 扩展插件包路径前缀
-  tenantUuid?: string; // 租户ID
 };
 
 /**
