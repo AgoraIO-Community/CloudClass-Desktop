@@ -5,6 +5,7 @@ import {
   AgoraRteVideoSourceType,
   AGRenderMode,
   bound,
+  AgoraRteAudioSourceType,
 } from 'agora-rte-sdk';
 import {
   action,
@@ -122,6 +123,7 @@ export class StreamUIStore extends EduUIStoreBase {
                       audioState: audioPublishState,
                       audioSourceState:
                         this.classroomStore.mediaStore.localScreenShareAudioTrackState,
+                      audioSourceType: AgoraRteAudioSourceType.ScreenShare,
                     });
                   this.classroomStore.streamStore.initializeScreenShareStream(
                     newValue,
