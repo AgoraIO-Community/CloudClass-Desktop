@@ -34,15 +34,18 @@ export class MainRoomSubscription extends SceneSubscription {
         sourceType: stream.videoSourceType,
       });
 
-      if (stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare) {
-        switch (stream.audioState) {
-          case AgoraRteMediaPublishState.Published:
+      switch (stream.audioState) {
+        case AgoraRteMediaPublishState.Published:
+          if (stream.audioSourceType === AgoraRteAudioSourceType.Mic) {
             scene.rtcChannel.muteLocalAudioStream(false);
-            break;
-          case AgoraRteMediaPublishState.Unpublished:
+          }
+
+          break;
+        case AgoraRteMediaPublishState.Unpublished:
+          if (stream.audioSourceType === AgoraRteAudioSourceType.Mic) {
             scene.rtcChannel.muteLocalAudioStream(true);
-            break;
-        }
+          }
+          break;
       }
     });
   }
@@ -74,10 +77,14 @@ export class MainRoomSubscription extends SceneSubscription {
 
       switch (stream.audioState) {
         case AgoraRteMediaPublishState.Published:
-          scene.rtcChannel.muteLocalAudioStream(false);
+          if (stream.audioSourceType === AgoraRteAudioSourceType.Mic) {
+            scene.rtcChannel.muteLocalAudioStream(false);
+          }
           break;
         case AgoraRteMediaPublishState.Unpublished:
-          scene.rtcChannel.muteLocalAudioStream(true);
+          if (stream.audioSourceType === AgoraRteAudioSourceType.Mic) {
+            scene.rtcChannel.muteLocalAudioStream(true);
+          }
           break;
       }
     });

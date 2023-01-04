@@ -60,7 +60,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
 
         if (stream && stream.videoSourceType !== AgoraRteVideoSourceType.ScreenShare) {
           const uiStream = new EduStreamUI(stream);
-
+          this._setRenderAt(uiStream);
           streams.push(uiStream);
         }
       }

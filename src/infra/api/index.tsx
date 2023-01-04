@@ -254,7 +254,6 @@ export class AgoraEduSDK {
       userUuid,
       userName,
       roleType,
-      roomServiceType = EduRoomServiceTypeEnum.LiveStandard,
       rtmToken,
       roomUuid,
       roomName,
@@ -269,8 +268,11 @@ export class AgoraEduSDK {
       shareUrl = '',
       latencyLevel,
       userFlexProperties,
-      language,
+      language
     } = option;
+    //TODO will be removed in the near future, dont change it as only EduRoomServiceTypeEnum.LivePremium is supported.
+    const roomServiceType = EduRoomServiceTypeEnum.LivePremium;
+
     const sessionInfo = {
       userUuid,
       userName,
@@ -282,7 +284,7 @@ export class AgoraEduSDK {
       duration,
       flexProperties: userFlexProperties,
       token: rtmToken,
-      startTime,
+      startTime
     };
 
     this._shareUrl = shareUrl;
@@ -299,17 +301,6 @@ export class AgoraEduSDK {
       [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
       [this._getWidgetName(FcrWatermarkWidget)]: FcrWatermarkWidget,
     };
-
-    //TODO:待优化。 问题：合流转推(学生) 和 伪直播 场景不需要白板插件，因为它们使用的都是大班课的班型，所以不能通过后端禁用白板。
-    const withoutBoardWidget =
-      option.roomServiceType === EduRoomServiceTypeEnum.HostingScene ||
-      (EduRoomServiceTypeEnum.MixStreamCDN === option.roomServiceType &&
-        option.roleType === EduRoleTypeEnum.student);
-
-    if (withoutBoardWidget) {
-      const widgetName = this._getWidgetName(FcrBoardWidget);
-      delete this._widgets[widgetName];
-    }
 
     if (option.webrtcExtensionBaseUrl) {
       setAssetsBaseUrl(option.webrtcExtensionBaseUrl);

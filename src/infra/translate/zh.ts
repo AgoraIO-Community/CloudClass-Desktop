@@ -578,6 +578,7 @@ export const zh = {
   fcr_alert_submit: '确认',
   fcr_alert_cancel: '取消',
   fcr_stage_label_title: '是否显示讲台区域',
+  fcr_share_title_share_audio: '同时共享电脑声音',
 
   /** Remote Control */
   begin_class: '开始上课',

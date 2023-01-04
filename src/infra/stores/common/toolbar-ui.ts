@@ -118,6 +118,8 @@ export class ToolbarUIStore extends EduUIStoreBase {
             this.classroomStore.widgetStore.setActive(
               `streamWindow-${newValue}`,
               {
+                position: { xaxis: 1, yaxis: 1 },
+                size: { width: 1, height: 1 },
                 extra: {
                   userUuid,
                 },
@@ -308,10 +310,12 @@ export class ToolbarUIStore extends EduUIStoreBase {
       this.classroomStore.mediaStore.stopScreenShareCapture();
     } else {
       if (this.classroomStore.mediaStore.isScreenDeviceEnumerateSupported()) {
+        //electron开启屏幕选择
         this.selectScreenShareDevice();
       } else {
         //not supported, start directly
-        this.classroomStore.mediaStore.startScreenShareCapture();
+        //web不需要传入屏幕id和类型，置为undefined，开启分享声音
+        this.classroomStore.mediaStore.startScreenShareCapture({ withAudio: true });
       }
     }
   }
@@ -344,7 +348,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       .filter((win) => !win.isCurrent);
     const collections = [...displays, ...windows];
     this.shareUIStore.addDialog(DialogCategory.ScreenPicker, {
-      onOK: async (itemId: string) => {
+      onOK: async (itemId: string, withAudio: boolean) => {
         const id = toJS(itemId);
         const item = collections.find((c) => {
           return isEqual(c.id, id);
@@ -361,7 +365,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
             });
           }
           setTimeout(() => {
-            this.classroomStore.mediaStore.startScreenShareCapture(itemId, item.type);
+            this.classroomStore.mediaStore.startScreenShareCapture({
+              id: itemId,
+              type: item.type,
+              withAudio,
+            });
             this.classroomStore.mediaStore.setCurrentScreenShareDevice(item);
           }, 0);
         }

@@ -4,7 +4,7 @@ import { useStore } from '@classroom/infra/hooks/ui-store';
 import './index.css';
 import { RoomPretest } from '../pretest';
 import { useEffect } from 'react';
-import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
+import { EduClassroomConfig, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 
 export const CameraMirrorCheckBox = observer((props: { id?: string }) => {
   const {
@@ -83,7 +83,10 @@ export const RoomDeviceSettingContainer = observer(({ id }: { id: string }) => {
   return (
     <RoomPretest
       closeable
-      showStage={EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass}
+      showStage={
+        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass &&
+        EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
+      }
       onOK={() => removeDialog(id)}
       onCancel={() => removeDialog(id)}
     />
