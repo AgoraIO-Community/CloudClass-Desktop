@@ -1122,7 +1122,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
   };
 
   @action.bound
-  handleWidgetInformationFromServer(widgets: any) {
+  handleWidgetInformationFromServer(widgets: any, userUuid: string) {
     forEach(widgets, (value: WidgetTrackStruct, key) => {
       const widgetStreamWindowUuid = key.match(/streamWindow-(.*)/);
       if (widgetStreamWindowUuid?.length) {
@@ -1137,7 +1137,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         size &&
           this._setStreamWindowMap(`${streamUuid}`, {
             ...streamWindowValue,
-            userUuid: value.extra.userUuid,
+            userUuid,
           });
       }
     });
@@ -1225,11 +1225,12 @@ export class StreamWindowUIStore extends EduUIStoreBase {
 
     this._disposers.push(
       reaction(
-        () => this.streamWindowUserUuids,
+        () => [this.streamWindowUserUuids, this.streamWindowStreamUuids],
         () => {
           EduEventUICenter.shared.emitClassroomUIEvents(
             AgoraEduClassroomUIEvent.streamWindowsChange,
             [...this.streamWindowUserUuids],
+            [...this.streamWindowStreamUuids]
           );
         },
       ),
@@ -1351,7 +1352,7 @@ class SceneEventHandler {
   ) => {
     if (changedRoomProperties.includes('widgets')) {
       if (isEmpty(cause)) {
-        this._store.handleWidgetInformationFromServer(roomProperties.widgets);
+        this._store.handleWidgetInformationFromServer(roomProperties.widgets, operator.userUuid);
         this._store._setStreamWindowUpdate(true);
       } else {
         const {
@@ -1374,7 +1375,10 @@ class SceneEventHandler {
             }
           }
           if (actionType === 1) {
-            this._store.handleWidgetInformationFromServer(roomProperties.widgets);
+            this._store.handleWidgetInformationFromServer(
+              roomProperties.widgets,
+              operator.userUuid,
+            );
           }
         }
       }
