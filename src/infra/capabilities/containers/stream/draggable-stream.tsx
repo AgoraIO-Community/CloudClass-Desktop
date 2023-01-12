@@ -70,10 +70,19 @@ export const DragableStream = observer(
     playerStyle?: CSSProperties;
   }) => {
     const { streamWindowUIStore } = useStore();
-    const { streamDraggable: streamDragable, handleDBClickStreamWindow } = streamWindowUIStore;
+    const {
+      streamDraggable: streamDragable,
+      handleDBClickStreamWindow,
+      streamWindowStreamUuids,
+    } = streamWindowUIStore;
+
+    // control whether this block should interact with mouse events or gestures
+    // because there will be two blocks that trigger dbclick events, one is visible for user to interact with, one is hidden as a placeholder which should be non-interactive
+    const interactable =
+      stream?.stream.streamUuid && !streamWindowStreamUuids.includes(stream.stream.streamUuid);
 
     const handleStreamDoubleClick = () => {
-      streamDragable && stream && handleDBClickStreamWindow(stream.stream);
+      interactable && streamDragable && stream && handleDBClickStreamWindow(stream.stream);
     };
 
     return stream ? (

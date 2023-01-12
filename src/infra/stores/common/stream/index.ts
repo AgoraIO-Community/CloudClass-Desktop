@@ -62,13 +62,13 @@ export class StreamUIStore extends EduUIStoreBase {
   streamsBounds: Map<string, StreamBounds> = new Map();
 
   /**
-   * 视频窗口ID列表
+   * 视频窗口流ID列表
    */
   /** @en
    * video stream ID list
    */
   @observable
-  streamWindowUserUuids: string[] = [];
+  streamWindowStreamUuids: string[] = [];
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
 
@@ -147,7 +147,7 @@ export class StreamUIStore extends EduUIStoreBase {
 
     this._disposers.push(
       reaction(
-        () => ({ uuids: this.streamWindowUserUuids, pretestOpened: this.settingsOpened }),
+        () => ({ uuids: this.streamWindowStreamUuids, pretestOpened: this.settingsOpened }),
         () => {
           this.allUIStreams.forEach((stream) => {
             this._setRenderAt(stream);
@@ -185,10 +185,10 @@ export class StreamUIStore extends EduUIStoreBase {
   }
   @bound
   protected _setRenderAt(stream: EduStreamUI) {
-    const userUuids = this.streamWindowUserUuids;
+    const streamUuids = this.streamWindowStreamUuids;
     if (this.settingsOpened && stream.stream.isLocal) {
       stream.setRenderAt('Setting');
-    } else if (userUuids.includes(stream.fromUser.userUuid)) {
+    } else if (streamUuids.includes(stream.stream.streamUuid)) {
       stream.setRenderAt('Window');
     } else {
       stream.setRenderAt('Bar');
@@ -196,9 +196,13 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  private _handleStreamWindowListChange(evt: AgoraEduClassroomUIEvent, args: unknown) {
+  private _handleStreamWindowListChange(
+    evt: AgoraEduClassroomUIEvent,
+    userUuids: unknown,
+    streamUuids: unknown,
+  ) {
     if (evt === AgoraEduClassroomUIEvent.streamWindowsChange) {
-      this.streamWindowUserUuids = args as string[];
+      this.streamWindowStreamUuids = streamUuids as string[];
     }
   }
 
