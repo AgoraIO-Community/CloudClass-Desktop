@@ -8,6 +8,8 @@ import { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import courseWareList from './courseware-list';
 
+
+
 export const LaunchPage = observer(() => {
   const homeStore = useHomeStore();
 

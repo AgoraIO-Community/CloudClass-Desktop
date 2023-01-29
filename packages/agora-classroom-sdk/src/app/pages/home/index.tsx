@@ -24,6 +24,10 @@ addResource();
 const REACT_APP_AGORA_APP_SDK_DOMAIN = process.env.REACT_APP_AGORA_APP_SDK_DOMAIN;
 const REACT_APP_AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
 const REACT_APP_AGORA_APP_CERTIFICATE = process.env.REACT_APP_AGORA_APP_CERTIFICATE;
+const convertLanguage = (lng: string): LanguageEnum => {
+  if (lng.startsWith('zh')) return 'zh';
+  return 'en';
+};
 
 declare global {
   interface Window {
@@ -35,6 +39,7 @@ declare global {
     __launchRoomType: string;
     __launchCompanyId: string;
     __launchProjectId: string;
+    __launchBuilderRegion: string;
   }
 }
 
@@ -66,9 +71,12 @@ export const useBuilderConfig = () => {
   useEffect(() => {
     const companyId = window.__launchCompanyId;
     const projectId = window.__launchProjectId;
+    const builderRegion = window.__launchBuilderRegion;
 
     if (companyId && projectId) {
-      HomeApi.shared.setBuilderDomainRegion(EduRegion.CN);
+      HomeApi.shared.setBuilderDomainRegion(
+        builderRegion === EduRegion.CN ? EduRegion.CN : EduRegion.NA,
+      );
       HomeApi.shared.getBuilderResource(companyId, projectId).then(({ scenes, themes }) => {
         builderResource.current = {
           scenes: scenes ?? {},
@@ -115,7 +123,7 @@ export const HomePage = () => {
   useEffect(() => {
     const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
     const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
-    homeStore.setLanguage(language as LanguageEnum);
+    homeStore.setLanguage(convertLanguage(language));
     homeStore.setRegion(region as EduRegion);
   }, []);
 
@@ -174,9 +182,11 @@ export const HomePage = () => {
       const shareUrl =
         AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron
           ? ''
-          : `${location.origin}${location.pathname
-          }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${EduRoleTypeEnum.student
-          }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
+          : `${location.origin}${
+              location.pathname
+            }?roomName=${roomName}&roomType=${roomType}&region=${region}&language=${language}&roleType=${
+              EduRoleTypeEnum.student
+            }&companyId=${companyId ?? ''}&projectId=${projectId ?? ''}#/share`;
 
       console.log('## get rtm Token from demo server', token);
 
@@ -294,24 +304,29 @@ export const SettingsButton = () => {
   const [hover, setHover] = useState(false);
   const handleOver = () => {
     setHover(true);
-  }
+  };
 
   const handleLeave = () => {
     setHover(false);
-  }
+  };
 
   const textColor = hover ? '#fff' : '#030303';
   const backgroundColor = hover ? '#030303' : '#fff';
 
   return (
     <HomeSettingContainer>
-      <Button animate={false} onMouseOver={handleOver} onMouseLeave={handleLeave} style={{ background: backgroundColor, transition: 'all .2s' }}>
-        <div className='flex items-center'>
+      <Button
+        animate={false}
+        onMouseOver={handleOver}
+        onMouseLeave={handleLeave}
+        style={{ background: backgroundColor, transition: 'all .2s' }}>
+        <div className="flex items-center">
           <SvgImg type={SvgIconEnum.SET_OUTLINE} size={16} colors={{ iconPrimary: textColor }} />
-          <span className='ml-1' style={{ color: textColor }}>
+          <span className="ml-1" style={{ color: textColor }}>
             {t('settings_setting')}
           </span>
         </div>
       </Button>
-    </HomeSettingContainer>);
-}
+    </HomeSettingContainer>
+  );
+};

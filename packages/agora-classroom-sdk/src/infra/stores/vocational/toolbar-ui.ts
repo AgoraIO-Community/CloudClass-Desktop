@@ -23,14 +23,14 @@ export class VocationalToolbarUIStore extends ToolbarUIStore {
           value: 'clicker',
           label: 'scaffold.clicker',
           icon: 'select',
-          category: ToolbarItemCategory.Selector,
+          category: ToolbarItemCategory.Clicker,
         }),
         ToolbarItem.fromData({
           // selector use clicker icon
           value: 'selection',
           label: 'scaffold.selector',
           icon: 'clicker',
-          category: ToolbarItemCategory.Clicker,
+          category: ToolbarItemCategory.Selector,
         }),
         ToolbarItem.fromData({
           value: 'pen',
