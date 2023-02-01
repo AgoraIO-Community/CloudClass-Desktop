@@ -121,8 +121,8 @@ export const HomePage = () => {
   const { builderResource, sceneOptions, configReady } = useBuilderConfig();
 
   useEffect(() => {
-    const language = window.__launchLanguage || homeStore.language || getBrowserLanguage();
-    const region = window.__launchRegion || homeStore.region || regionByLang[getBrowserLanguage()];
+    const language = homeStore.language || window.__launchLanguage || getBrowserLanguage();
+    const region = homeStore.region || window.__launchRegion || regionByLang[getBrowserLanguage()];
     homeStore.setLanguage(convertLanguage(language));
     homeStore.setRegion(region as EduRegion);
   }, []);
