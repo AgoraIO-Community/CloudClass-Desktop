@@ -358,7 +358,7 @@ export const en = {
     microphone_error: 'Device exception, microphone is unplugged or occupied and cannot be used.',
     mirror: 'Mirror',
     beauty: 'Beauty',
-    whitening: 'Whitening',
+    whitening: 'Brightening',
     buffing: 'Buffing',
     ruddy: 'Ruddy',
     default: 'Default',
