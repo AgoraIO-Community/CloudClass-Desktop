@@ -1,5 +1,6 @@
 import {
   AgoraEduClassroomEvent,
+  ConversionOption,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   EduRtcConfig,
@@ -27,6 +28,7 @@ export type ListenerCallback = (evt: AgoraEduClassroomEvent, ...args: unknown[])
 export enum WindowID {
   Main = 'main',
   RemoteControlBar = 'remote-control-bar',
+  VideoGallery = 'video-gallery',
 }
 
 export type LanguageEnum = 'en' | 'zh';
@@ -121,13 +123,7 @@ export type CourseWareItem = {
   updateTime: number;
   taskUuid?: string;
   taskProgress?: CloudDriveResourceConvertProgress;
-  conversion?: {
-    outputFormat: string;
-    preview: boolean;
-    scale: number;
-    type: 'dynamic' | 'static';
-    canvasVersion: boolean;
-  };
+  conversion?: ConversionOption;
   initOpen?: boolean;
 };
 

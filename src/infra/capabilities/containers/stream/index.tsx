@@ -1,6 +1,9 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
-import { CameraPlaceholderType } from '@classroom/infra/stores/common/type';
+import {
+  CameraPlaceholderType,
+  EduStreamUI,
+  VideoPlacement,
+} from '@classroom/infra/stores/common/stream/struct';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import classnames from 'classnames';
 import { debounce } from 'lodash';
@@ -197,7 +200,7 @@ export const StreamPlayerOverlay = observer(({ stream }: { stream: EduStreamUI }
 
 export const StreamPlayer: FC<{
   stream: EduStreamUI;
-  renderAt: 'Window' | 'Bar';
+  renderAt: VideoPlacement;
   style?: CSSProperties;
   toolbarDisabled?: boolean;
 }> = observer(({ stream, style, renderAt, toolbarDisabled }) => {

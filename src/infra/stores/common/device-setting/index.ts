@@ -1,7 +1,6 @@
 import { AGError, AgoraRteMediaSourceState, bound, Log, Logger } from 'agora-rte-sdk';
 import { action, computed, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { CameraPlaceholderType } from '../type';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AgoraEduClassroomEvent,
@@ -13,8 +12,9 @@ import {
   EduRoleTypeEnum,
   EduRoomTypeEnum,
 } from 'agora-edu-core';
-import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@classroom/infra/utils/event-center';
 import { transI18n } from 'agora-common-libs';
+import { CameraPlaceholderType } from '../stream/struct';
+import { LayoutMaskCode } from '../type';
 
 export type SettingToast = {
   id: string;
@@ -506,16 +506,12 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         this.classroomStore.connectionStore.sceneId ===
         this.classroomStore.connectionStore.mainRoomScene?.sceneId;
       if (isMainRoom) {
-        this.classroomStore.roomStore.updateFlexProperties({ stage: +stage }, { cmd: 1 });
+        const area = stage
+          ? this.getters.layoutMaskCode | LayoutMaskCode.StageVisible
+          : this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible;
+        this.classroomStore.roomStore.updateFlexProperties({ area }, null);
         if (!stage) {
-          this.classroomStore.roomStore
-            .stopCarousel()
-            .then(() => {
-              EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
-            })
-            .catch(() => {
-              EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
-            });
+          this.classroomStore.roomStore.stopCarousel();
         }
       } else {
         this.logger.info('cannot hide stage area in a sub room');

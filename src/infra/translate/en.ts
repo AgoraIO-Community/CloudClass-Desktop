@@ -77,7 +77,6 @@ export const en = {
     order_every: 'order every',
     seconds: 'seconds',
     no_more_data: 'No more data',
-    supervise_student: 'Supervise',
   },
   hands_up: 'Hands Up',
   on_podium_max_count:
@@ -786,4 +785,8 @@ export const en = {
   fcr_copy_share_link: 'Invite Link:',
   fcr_copy_share_link_copy: 'Copy link',
   fcr_copy_success: 'Copy success',
+  // Video Gallery
+  fcr_video_gallery_modal_title: 'VideoGallery',
+  fcr_video_gallery_on_stage: 'On Stage',
+  fcr_video_gallery_off_stage: 'Off Stage',
 };

@@ -1,4 +1,4 @@
-import { ControlBar } from '../capabilities/containers/fragments';
+import { ControlBar, VideoGallery } from '../capabilities/containers/fragments';
 import { Scenarios } from '../capabilities/scenarios';
 import {
   CloudDriveResource,
@@ -7,7 +7,6 @@ import {
   EduMediaEncryptionMode,
   EduRegion,
   EduRoleTypeEnum,
-  EduRoomServiceTypeEnum,
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
@@ -268,10 +267,8 @@ export class AgoraEduSDK {
       shareUrl = '',
       latencyLevel,
       userFlexProperties,
-      language
+      language,
     } = option;
-    //TODO will be removed in the near future, dont change it as only EduRoomServiceTypeEnum.LivePremium is supported.
-    const roomServiceType = EduRoomServiceTypeEnum.LivePremium;
 
     const sessionInfo = {
       userUuid,
@@ -280,11 +277,10 @@ export class AgoraEduSDK {
       roomUuid,
       roomName,
       roomType,
-      roomServiceType,
       duration,
       flexProperties: userFlexProperties,
       token: rtmToken,
-      startTime
+      startTime,
     };
 
     this._shareUrl = shareUrl;
@@ -374,11 +370,7 @@ export class AgoraEduSDK {
 
     render(
       <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
-        <Scenarios
-          pretest={platform !== Platform.H5 && pretest}
-          roomType={roomType}
-          roomServiceType={roomServiceType}
-        />
+        <Scenarios pretest={platform !== Platform.H5 && pretest} roomType={roomType} />
       </Providers>,
       dom,
     );
@@ -396,6 +388,7 @@ export class AgoraEduSDK {
   static launchWindow(dom: HTMLElement, option: LaunchWindowOption) {
     const mapping = {
       [WindowID.RemoteControlBar]: ControlBar,
+      [WindowID.VideoGallery]: VideoGallery,
     };
 
     const Component = mapping[option.windowID];

@@ -2,7 +2,7 @@ import { EduClassroomConfig, EduRoleTypeEnum, EduStream, RteRole2EduRole } from 
 import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 
-type VideoPlacement = 'Window' | 'Bar' | 'Setting';
+export type VideoPlacement = 'Window' | 'Bar' | 'Setting' | 'VideoGallery';
 
 /**
  * 业务流 UI 对象
@@ -74,4 +74,38 @@ export interface StreamBounds {
   readonly bottom: number;
   readonly left: number;
   [key: string]: number;
+}
+
+/**
+ * 视频流占位符类型
+ */
+export enum CameraPlaceholderType {
+  /**
+   * 摄像头打开
+   */
+  none = 'none',
+  /**
+   * 设备正在打开
+   */
+  loading = 'loading',
+  /**
+   * 摄像头关闭
+   */
+  muted = 'muted',
+  /**
+   * 摄像头损坏
+   */
+  broken = 'broken',
+  /**
+   * 摄像头禁用
+   */
+  disabled = 'disabled',
+  /**
+   * 老师不在教室
+   */
+  notpresent = 'notpresent',
+  /**
+   * 老师摄像头占位符（大小窗场景）
+   */
+  nosetup = 'nosetup',
 }

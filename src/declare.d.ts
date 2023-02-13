@@ -6,3 +6,9 @@ declare module 'twin.macro' {
   const styled: typeof styledImport;
   const css: typeof cssImport;
 }
+
+declare module '@classroom/infra/stores/common/base' {
+  declare interface LoggerAttached {
+    get logger(): Injectable.Logger;
+  }
+}

@@ -6,7 +6,6 @@ import { PensContainer } from './pens';
 import { ToolCabinetContainer } from './tool-cabinet';
 import { BoardCleanersContainer } from './board-cleaners';
 import { SliceContainer } from './slice';
-import { ToolbarItemCategory } from '@classroom/infra/stores/common/type';
 import {
   visibilityControl,
   visibilityListItemControl,
@@ -21,6 +20,7 @@ import {
   rosterEnabled,
   toolbarEnabled,
 } from 'agora-common-libs';
+import { ToolbarItemCategory } from '@classroom/infra/stores/common/toolbar/type';
 
 export const WhiteboardToolbar = visibilityControl(
   observer(() => {

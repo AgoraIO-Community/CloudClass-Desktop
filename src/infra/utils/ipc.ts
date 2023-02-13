@@ -20,15 +20,21 @@ type ChannelMessageCallback = (
   message: ChannelMessage,
   ...args: any
 ) => void;
+
 type ChannelMessageListenerOptions = {
   once?: boolean;
 };
 
-export const withTimeout = <T>(p: Promise<T>, timeout = 3000) =>
+type RTCRawDataCallback = (event: IpcRendererEvent, payload: unknown) => void;
+
+export const withTimeout = <T>(p: Promise<T>, detail: unknown, timeout = 5000) =>
   Promise.race([
     p,
     new Promise<T>((_, reject) => {
-      setTimeout(reject, timeout);
+      setTimeout(
+        () => reject(`IPC timeout for ${timeout}ms, detail: ${JSON.stringify(detail)}`),
+        timeout,
+      );
     }),
   ]);
 
@@ -49,8 +55,7 @@ export const sendToMainProcess = async (channel: ChannelType, ...args: unknown[]
         if (!resp.code) {
           resolve(resp.data);
         } else {
-          Logger.error('IPC call failed');
-          reject();
+          reject(`failed IPC call returned with code: ${resp.code}`);
         }
       };
 
@@ -61,16 +66,21 @@ export const sendToMainProcess = async (channel: ChannelType, ...args: unknown[]
 
         ipc.send(channel, replyChannelName, ...args);
       } catch (e) {
-        Logger.error('failed to call IPC', e);
-        reject();
+        reject(`failed to call IPC: ${(e as Error).message}`);
       }
     } else {
-      Logger.error('IPC cannot call in browser');
-      reject();
+      reject('IPC cannot call in browser');
     }
   });
 
-  return withTimeout(p);
+  let data = null;
+
+  try {
+    data = await withTimeout(p, { channel, args });
+  } catch (e) {
+    Logger.error(e);
+  }
+  return data;
 };
 
 /**
@@ -126,6 +136,53 @@ export const listenChannelMessage = (
     if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
       const ipc = window.require('electron').ipcRenderer;
       ipc.off(channel, _callback);
+    }
+  };
+};
+
+/**
+ * RTC裸数据传输
+ * @param windowID
+ * @param payload
+ */
+export const transmitRTCRawData = (windowID: WindowID, payload: unknown) => {
+  const ipc = window.require('electron').ipcRenderer;
+
+  try {
+    // this raw data will be forwarded thourgh renderer process > main process > renderer process.
+    // data converting will occur in each forward, so we format the data to a json string before
+    // transmit for reducing performance overhead
+    ipc.send(ChannelType.RTCRawDataTransmit, windowID, payload);
+  } catch (e) {
+    Logger.error('failed to transmit over IPC', e);
+  }
+};
+
+/**
+ * 接收RTC裸数据
+ * @param callback
+ * @returns
+ */
+export const receiveRTCRawData = (callback: RTCRawDataCallback) => {
+  const _callback = (event: IpcRendererEvent, payload: unknown) => {
+    // this raw data will be forwarded thourgh renderer process > main process > renderer process.
+    // data converting will occur in each forward, so we format the data to a json string before
+    // transmit for reducing performance overhead
+    callback(event, payload);
+  };
+
+  if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+    const ipc = window.require('electron').ipcRenderer;
+
+    ipc.on(ChannelType.RTCRawDataTransmit, _callback);
+  } else {
+    Logger.warn('cannot listen to IPC in browser, ignore');
+  }
+  //   dispose
+  return () => {
+    if (AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron) {
+      const ipc = window.require('electron').ipcRenderer;
+      ipc.off(ChannelType.RTCRawDataTransmit, _callback);
     }
   };
 };

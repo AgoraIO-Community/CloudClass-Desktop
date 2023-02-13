@@ -1,5 +1,4 @@
-import { WidgetTrackStruct } from '../type';
-import { StreamWindow, StreamWindowBounds } from './type';
+import { StreamWindow, StreamWindowBounds, WidgetTrackStruct } from './type';
 
 export function isNum(num: unknown): boolean {
   return typeof num === 'number' && !isNaN(num);

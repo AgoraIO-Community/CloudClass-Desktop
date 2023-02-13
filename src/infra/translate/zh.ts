@@ -77,7 +77,6 @@ export const zh = {
     order_every: '轮播',
     seconds: '秒',
     no_more_data: '没有更多数据了',
-    supervise_student: '监听',
   },
   hands_up: '举手',
   on_podium_max_count: '上台人数已达上限，无法继续邀请学生上台',
@@ -769,4 +768,8 @@ export const zh = {
   fcr_copy_share_link: '邀请链接:',
   fcr_copy_share_link_copy: '复制链接',
   fcr_copy_success: '复制成功',
+  // 扩展屏
+  fcr_video_gallery_modal_title: '扩展屏',
+  fcr_video_gallery_on_stage: '上台',
+  fcr_video_gallery_off_stage: '下台',
 };

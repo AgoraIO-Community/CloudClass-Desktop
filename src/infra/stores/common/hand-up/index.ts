@@ -2,7 +2,6 @@ import {
   AGServiceErrorCode,
   EduClassroomConfig,
   EduRoleTypeEnum,
-  EduRoomServiceTypeEnum,
   EduRoomTypeEnum,
   HandUpProgress,
   PodiumSrouce,
@@ -11,9 +10,11 @@ import {
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
 import { action, computed, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-
 import { transI18n } from 'agora-common-libs';
-import { FetchUserParam, FetchUserType, OnPodiumStateEnum } from '../type';
+import { OnPodiumStateEnum } from './type';
+import { FetchUserParam, FetchUserType } from '../roster/type';
+import { listenChannelMessage } from '@classroom/infra/utils/ipc';
+import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
 
 export type UserWaveArmInfo = {
   userUuid: string;
@@ -29,35 +30,29 @@ export type UserHandUpInfo = {
 };
 
 export class HandUpUIStore extends EduUIStoreBase {
-  onInstall() {}
+  private _disposers: (() => void)[] = [];
+  onInstall() {
+    this._disposers.push(
+      listenChannelMessage(ChannelType.Message, (event, message) => {
+        if (message.type == IPCMessageType.InviteStage) {
+          const { type, userUuid } = message.payload as { type: 'on' | 'off'; userUuid: string };
+          if (type === 'on') {
+            this.onPodium(userUuid);
+          } else {
+            this.offPodium(userUuid);
+          }
+        }
+      }),
+    );
+  }
 
   private _curInvitedInfo: HandUpProgress | undefined = undefined;
   private _refuseInvitedTs = 0;
 
   /**
-   * 当前是否为职教
-   */
-  get isVocational() {
-    return EduClassroomConfig.shared.sessionInfo.roomServiceType !== 0;
-  }
-
-  /**
-   * 当前是否为混合模式
-   */
-  get isMixCDNRTC() {
-    return (
-      this.isVocational &&
-      EduClassroomConfig.shared.sessionInfo.roomServiceType === EduRoomServiceTypeEnum.Fusion
-    );
-  }
-
-  /**
    * 持续挥手时间
    */
   get waveArmDurationTime() {
-    if (this.isMixCDNRTC) {
-      return 5;
-    }
     return 3;
   }
 
@@ -137,27 +132,6 @@ export class HandUpUIStore extends EduUIStoreBase {
       }
     });
     return acceptedList.concat(waveArmList).concat(inviteList).concat(idleList);
-  }
-
-  /**
-   * 是否达到最大邀请人数
-   */
-  @computed
-  get inviteListMaxLimit(): boolean {
-    const inviteList = this.classroomStore.roomStore.inviteList;
-    const waveArmList = this.classroomStore.roomStore.waveArmList;
-    const maxCount = this.classroomStore.handUpStore.handsUpLimit.maxWait;
-    return inviteList.length + waveArmList.length >= maxCount;
-  }
-
-  /**
-   * 是否达到最大上台人数
-   */
-  @computed
-  get acceptedListMaxLimit(): boolean {
-    const acceptedList = this.classroomStore.roomStore.acceptedList;
-    const maxCount = this.classroomStore.handUpStore.handsUpLimit.maxAccept;
-    return acceptedList.length >= maxCount;
   }
 
   /**
@@ -262,7 +236,6 @@ export class HandUpUIStore extends EduUIStoreBase {
    * @param userUuid
    */
   invite(userUuid: string, duration: number, payload?: any) {
-    console.warn('邀请');
     this.classroomStore.handUpStore
       .invitePodium(userUuid, duration, payload)
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
@@ -273,7 +246,6 @@ export class HandUpUIStore extends EduUIStoreBase {
    * @param userUuid
    */
   confirmInvited() {
-    console.warn('同意上台');
     this.classroomStore.handUpStore
       .confirmInvited()
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
@@ -359,6 +331,7 @@ export class HandUpUIStore extends EduUIStoreBase {
   /**
    * 获取下一页的用户列表
    */
+  @bound
   @Lodash.debounced(300, { trailing: true })
   fetchUsersList(override?: Partial<FetchUserParam>, reset?: boolean) {
     const params = {
@@ -387,22 +360,8 @@ export class HandUpUIStore extends EduUIStoreBase {
     this._nextPageId = 0;
   }
 
-  @Lodash.debounced(300, { trailing: true })
-  invitePodium(user: UserHandUpInfo) {
-    if (user.onPodiumState === OnPodiumStateEnum.waveArming) {
-      this.onPodium(user.uid);
-    }
-    if (user.onPodiumState === OnPodiumStateEnum.onPodiuming) {
-      this.offPodium(user.uid);
-    }
-    if (
-      user.onPodiumState === OnPodiumStateEnum.idleing &&
-      !this.inviteListMaxLimit &&
-      !this.acceptedListMaxLimit
-    ) {
-      this.invite(user.uid, 5);
-    }
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
-
-  onDestroy() {}
 }

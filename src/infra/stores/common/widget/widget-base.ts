@@ -9,7 +9,7 @@ import {
   TrackOptions,
 } from 'agora-edu-core';
 import { Point } from 'electron';
-import { EduShareUIStore } from '../share-ui';
+import { EduShareUIStore } from '../share';
 import { AgoraWidgetTrackMode } from './type';
 import { AgoraWidgetTrackController } from './widget-track';
 

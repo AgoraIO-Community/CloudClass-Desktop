@@ -7,9 +7,7 @@ import {
 } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { CameraPlaceholderType, DeviceStateChangedReason } from '../type';
 import { v4 as uuidv4 } from 'uuid';
-import { computedFn } from 'mobx-utils';
 import {
   AgoraEduClassroomEvent,
   BeautyType,
@@ -23,6 +21,8 @@ import { builtInExtensions, getProcessorInitializer } from '@classroom/infra/api
 import { IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';
 import { IBeautyProcessor } from 'agora-extension-beauty-effect';
+import { DeviceStateChangedReason } from './type';
+import { CameraPlaceholderType } from '../stream/struct';
 
 export type PretestToast = {
   id: string;
@@ -42,7 +42,7 @@ const DEFAULT_BEAUTY_OPTION = {
   sharpnessLevel: 0,
 };
 
-@Log.attach({ proxyMethods: false })
+@Log.attach()
 export class PretestUIStore extends EduUIStoreBase {
   private _disposers: (Lambda | IReactionDisposer)[] = [];
   @observable currentEffectType: EffectType =
@@ -519,14 +519,6 @@ export class PretestUIStore extends EduUIStoreBase {
         return 0;
     }
   }
-  /**
-   * 美颜类型 Icon
-   */
-  activeBeautyTypeIcon = computedFn((item) =>
-    this.activeBeautyType === item.id
-      ? { icon: item.icon, color: '#fff' }
-      : { icon: item.icon, color: 'rgba(255,255,255,.5)' },
-  );
 
   /**
    * 显示 Toast 信息

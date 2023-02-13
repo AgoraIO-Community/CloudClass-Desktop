@@ -1,5 +1,5 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { GroupMethod } from '@classroom/infra/stores/common/group-ui';
+import { GroupMethod } from '@classroom/infra/stores/common/group';
 import { observer } from 'mobx-react';
 import { useState, FC } from 'react';
 import { Button, RadioGroup, InputNumber } from '@classroom/ui-kit';

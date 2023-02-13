@@ -5,10 +5,11 @@ import {
   AgoraRteMediaPublishState,
   Lodash,
   AGError,
+  bound,
 } from 'agora-rte-sdk';
 import { RosterUIStore } from '../common/roster';
 import { DeviceState, Operations, Profile } from '../common/roster/type';
-import { DialogCategory } from '../common/share-ui';
+import { DialogCategory } from '../common/share';
 import { BoardGrantState } from '@classroom/ui-kit';
 
 export class LectureRosterUIStore extends RosterUIStore {
@@ -43,6 +44,7 @@ export class LectureRosterUIStore extends RosterUIStore {
   /**
    * 获取下一页的用户列表
    */
+  @bound
   @Lodash.debounced(300, { trailing: true })
   fetchNextUsersList(override?: Partial<FetchUserParam>, reset?: boolean) {
     const params = {

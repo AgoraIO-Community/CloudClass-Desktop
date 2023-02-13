@@ -17,11 +17,10 @@ import {
 } from 'agora-rte-sdk';
 import { computed, reaction, toJS } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { DialogCategory } from '../share-ui';
+import { DialogCategory } from '../share';
 import { mapToObject } from '@classroom/infra/utils';
-import { RemoteControlBarUIParams } from '../type';
 import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
-import { ControlState } from './type';
+import { ControlState, RemoteControlBarUIParams } from './type';
 import { transI18n } from 'agora-common-libs';
 
 export class RemoteControlUIStore extends EduUIStoreBase {

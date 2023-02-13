@@ -9,9 +9,8 @@ import {
   bound,
 } from 'agora-rte-sdk';
 import { toLower } from 'lodash';
-import { computedFn } from 'mobx-utils';
 import { EduUIStoreBase } from '../base';
-import { DialogCategory } from '../share-ui';
+import { DialogCategory } from '../share';
 
 import { Operations, DeviceState, Operation, Profile } from './type';
 import { interactionThrottleHandler } from '@classroom/infra/utils/interaction';
@@ -80,6 +79,7 @@ export class RosterUIStore extends EduUIStoreBase {
    * 开始轮播
    * @param start
    */
+  @bound
   @Lodash.debounced(500, { trailing: true })
   private startCarousel(start: boolean) {
     const { startCarousel, stopCarousel } = this.classroomStore.roomStore;
@@ -213,10 +213,6 @@ export class RosterUIStore extends EduUIStoreBase {
           this.clickKick(profile);
           break;
         }
-        case 'supervise-student': {
-          this.chickStudentView(profile);
-          break;
-        }
       }
     },
     (message) => this.shareUIStore.addToast(message, 'warning'),
@@ -338,64 +334,6 @@ export class RosterUIStore extends EduUIStoreBase {
       onOk,
     });
   };
-
-  chickStudentView = (profile: Profile) => {
-    const uid = profile.uid;
-    this.subcribeUsers(1, { publishUserUuids: [`${uid}`] });
-    this.shareUIStore.addDialog(DialogCategory.StreamView, { id: uid });
-  };
-
-  /**
-   * 获取指定学生 stream
-   * @param uid
-   * @returns
-   */
-  getStudentStream = computedFn((uid: string) => {
-    const streamSet = new Set<EduStreamUI>();
-    const streamUuids = this.classroomStore.streamStore.streamByUserUuid.get(uid) || new Set();
-    for (const streamUuid of streamUuids) {
-      const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-      if (stream) {
-        const uiStream = new EduStreamUI(stream);
-        streamSet.add(uiStream);
-      }
-    }
-    if (streamSet.size > 1) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_UNEXPECTED_STUDENT_STREAM_LENGTH,
-        new Error(`unexpected stream size ${streamSet.size}`),
-      );
-    }
-    return Array.from(streamSet)[0];
-  });
-
-  /**
-   * 关闭视频监听
-   */
-  @bound
-  closeStudentView() {
-    this.subcribeUsers(0);
-  }
-
-  /**
-   * 开启扩展屏状态，并且发布需要订阅的学生流信息
-   * @param state
-   * @param data
-   */
-  @bound
-  async subcribeUsers(
-    state: 1 | 0,
-    data?: {
-      publishUserUuids?: string[] | undefined;
-      unpublishUserUuids?: string[];
-    },
-  ) {
-    try {
-      await this.classroomStore.streamStore.updateExpandedScopeAndStreams(state, data);
-    } catch (e) {
-      this.shareUIStore.addGenericErrorDialog(e as AGError);
-    }
-  }
 
   /** Computed */
 

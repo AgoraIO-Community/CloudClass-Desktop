@@ -1,6 +1,6 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { LectureRoomStreamUIStore } from '@classroom/infra/stores/lecture/stream-ui';
-import { OneToOneStreamUIStore } from '@classroom/infra/stores/one-on-one/stream-ui';
+import { LectureRoomStreamUIStore } from '@classroom/infra/stores/lecture/stream';
+import { OneToOneStreamUIStore } from '@classroom/infra/stores/one-on-one/stream';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { Aside } from '@classroom/ui-kit';

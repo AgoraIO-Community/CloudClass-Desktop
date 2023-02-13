@@ -9,12 +9,20 @@ export enum ChannelType {
   Message = 'browser-window-message',
   UpdateBrowserWindow = 'update-browser-window',
   MoveWindowToTargetScreen = 'move-window-to-target-screen',
+  MoveWindowAlignToWindow = 'move-window-align-to-window',
   ShortCutCapture = 'short-cut-capture', // 环信截图事件
+  RTCRawDataTransmit = 'rtc-raw-data-transmit',
 }
 /**
  * IPC消息类型
  */
 export enum IPCMessageType {
+  /** App事件 */
+  // 关闭窗口（用户点击关闭）
+  BrowserWindowClose = 'BrowserWindowClose',
+  // 窗口已关闭（窗口进程被关闭）
+  BrowserWindowClosed = 'BrowserWindowClosed',
+  /** 远程控制 */
   // 控制栏授权状态变更
   ControlStateChanged = 'ControlStateChanged',
   // 隐藏控制栏
@@ -29,8 +37,18 @@ export enum IPCMessageType {
   StopScreenShareAndRemoteControl = 'StopScreenShareAndRemoteControl',
   //切换分享内容
   SwitchScreenShareDevice = 'SwitchScreenShareDevice',
+  /** 白板 */
   // 截图完成
   ShortCutCaptureDone = 'ShortCutCaptureDone',
   // 未授权
   ShortCutCaptureDenied = 'ShortCutCaptureDenied',
+  /** 扩展屏 */
+  // 获取扩展屏状态
+  FetchVideoGalleryState = 'FetchVideoGalleryState',
+  // 获取扩展状态变更
+  VideoGalleryStateUpdated = 'VideoGalleryStateUpdated',
+  // 更新扩展屏状态
+  UpdateVideoGalleryState = 'UpdateVideoGalleryState',
+  // 邀请上台
+  InviteStage = 'InviteStage',
 }

@@ -3,7 +3,7 @@ import { Toast } from '@classroom/ui-kit';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './index.css';
-import { ToastType } from '@classroom/infra/stores/common/share-ui';
+import { ToastType } from '@classroom/infra/stores/common/share';
 
 export const ToastContainer = observer(() => {
   const { shareUIStore } = useStore();

@@ -1,6 +1,6 @@
 {
   "name": "agora-classroom-sdk",
-  "version": "2.8.12",
+  "version": "2.8.20",
   "homepage": ".",
   "sideEffects": [
     "*.css"
@@ -15,7 +15,6 @@
   "main": "lib/edu_sdk.bundle.js",
   "types": "lib/infra/api/index.d.ts",
   "scripts": {
-    "build": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack/webpack.prod.js",
     "build:types": "tsc -p tsconfig.json",
     "build:docs": "typedoc",
     "pack:npm": "run-s bundle:npm build:types",
@@ -41,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "@types/js-md5": "0.7.0",
     "@types/react-copy-to-clipboard": "5.0.4",
     "@types/axios": "0.14.0",
     "@types/classnames": "2.2.11",

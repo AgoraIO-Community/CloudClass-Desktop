@@ -184,6 +184,7 @@ export class CloudUIStore extends EduUIStoreBase {
   /**
    * 刷新资源列表
    */
+  @bound
   @Lodash.debounced(500)
   async reloadPersonalResources() {
     this.fetchPersonalResources({

@@ -4,7 +4,7 @@
  * - `'static'`: 静态资源
  */
 
-import { CloudDriveResource } from 'agora-edu-core';
+import { CloudDriveResource, ConversionOption } from 'agora-edu-core';
 import { CloudDriveResourceConvertProgress } from './type';
 
 /** @en
@@ -15,13 +15,7 @@ import { CloudDriveResourceConvertProgress } from './type';
 export class CloudDriveCourseResource extends CloudDriveResource {
   private _taskProgress: CloudDriveResourceConvertProgress;
   taskUuid: string;
-  conversion: {
-    outputFormat: string;
-    preview: boolean;
-    scale: number;
-    type: 'dynamic' | 'static';
-    canvasVersion?: boolean;
-  };
+  conversion: ConversionOption;
   scenes: {
     name?: string;
     previewUrl?: string;
@@ -38,13 +32,7 @@ export class CloudDriveCourseResource extends CloudDriveResource {
     updateTime: number;
     taskProgress: CloudDriveResourceConvertProgress;
     taskUuid: string;
-    conversion: {
-      outputFormat: string;
-      preview: boolean;
-      scale: number;
-      type: 'dynamic' | 'static';
-      canvasVersion: boolean;
-    };
+    conversion: ConversionOption;
     initOpen?: boolean;
   }) {
     super(data);

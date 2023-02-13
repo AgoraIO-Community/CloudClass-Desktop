@@ -1,16 +1,16 @@
-import { AGError, AgoraRteLogLevel, Log } from 'agora-rte-sdk';
-import { BoardUIStore } from './board-ui';
+import { AGError, bound, Log } from 'agora-rte-sdk';
+import { BoardUIStore } from './board';
 import { CloudUIStore } from './cloud-drive';
 import { DeviceSettingUIStore } from './device-setting/index';
 import { HandUpUIStore } from './hand-up';
-import { NavigationBarUIStore } from './nav-ui';
+import { NavigationBarUIStore } from './nav';
 import { RosterUIStore } from './roster';
-import { EduShareUIStore } from './share-ui';
+import { EduShareUIStore } from './share';
 import { StreamUIStore } from './stream';
-import { ToolbarUIStore } from './toolbar-ui';
+import { ToolbarUIStore } from './toolbar';
 import { LayoutUIStore } from './layout';
 import { EduUIStoreBase } from './base';
-import { NotificationUIStore } from './notification-ui';
+import { NotificationUIStore } from './notification';
 import { StreamWindowUIStore } from './stream-window';
 import { PretestUIStore } from './pretest';
 import {
@@ -21,12 +21,14 @@ import {
   Platform,
 } from 'agora-edu-core';
 import { WidgetUIStore } from './widget';
-import { GroupUIStore } from './group-ui';
+import { GroupUIStore } from './group';
 import { ConvertMediaOptionsConfig } from '@classroom/infra/api';
 import { RemoteControlUIStore } from './remote-control';
 import { SubscriptionUIStore } from './subscription';
+import { VideoGalleryUIStore } from './video-gallery';
 import { transI18n } from 'agora-common-libs';
-@Log.attach({ level: AgoraRteLogLevel.INFO })
+import { Getters } from './getters';
+
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;
   protected _boardUIStore: BoardUIStore;
@@ -46,27 +48,31 @@ export class EduClassroomUIStore {
   protected _remoteControlUIStore: RemoteControlUIStore;
   protected _streamWindowUIStore: StreamWindowUIStore;
   protected _subscriptionUIStore: SubscriptionUIStore;
+  protected _videoGalleryUIStore: VideoGalleryUIStore;
+  protected _getters: Getters;
   private _installed = false;
 
   constructor(store: EduClassroomStore) {
     this._classroomStore = store;
+    this._getters = new Getters(this);
     this._shareUIStore = new EduShareUIStore();
-    this._boardUIStore = new BoardUIStore(store, this.shareUIStore);
-    this._cloudUIStore = new CloudUIStore(store, this.shareUIStore);
-    this._streamUIStore = new StreamUIStore(store, this.shareUIStore);
-    this._rosterUIStore = new RosterUIStore(store, this.shareUIStore);
-    this._handUpUIStore = new HandUpUIStore(store, this.shareUIStore);
-    this._pretestUIStore = new PretestUIStore(store, this.shareUIStore);
-    this._deviceSettingUIStore = new DeviceSettingUIStore(store, this.shareUIStore);
-    this._navigationBarUIStore = new NavigationBarUIStore(store, this.shareUIStore);
-    this._toolbarUIStore = new ToolbarUIStore(store, this.shareUIStore);
-    this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore);
-    this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore);
-    this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore);
-    this._groupUIStore = new GroupUIStore(store, this.shareUIStore);
-    this._remoteControlUIStore = new RemoteControlUIStore(store, this.shareUIStore);
-    this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore);
-    this._subscriptionUIStore = new SubscriptionUIStore(store, this.shareUIStore);
+    this._boardUIStore = new BoardUIStore(store, this.shareUIStore, this._getters);
+    this._cloudUIStore = new CloudUIStore(store, this.shareUIStore, this._getters);
+    this._streamUIStore = new StreamUIStore(store, this.shareUIStore, this._getters);
+    this._rosterUIStore = new RosterUIStore(store, this.shareUIStore, this._getters);
+    this._handUpUIStore = new HandUpUIStore(store, this.shareUIStore, this._getters);
+    this._pretestUIStore = new PretestUIStore(store, this.shareUIStore, this._getters);
+    this._deviceSettingUIStore = new DeviceSettingUIStore(store, this.shareUIStore, this._getters);
+    this._navigationBarUIStore = new NavigationBarUIStore(store, this.shareUIStore, this._getters);
+    this._toolbarUIStore = new ToolbarUIStore(store, this.shareUIStore, this._getters);
+    this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore, this._getters);
+    this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore, this._getters);
+    this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore, this._getters);
+    this._groupUIStore = new GroupUIStore(store, this.shareUIStore, this._getters);
+    this._remoteControlUIStore = new RemoteControlUIStore(store, this.shareUIStore, this._getters);
+    this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore, this._getters);
+    this._subscriptionUIStore = new SubscriptionUIStore(store, this.shareUIStore, this._getters);
+    this._videoGalleryUIStore = new VideoGalleryUIStore(store, this.shareUIStore, this._getters);
   }
 
   /**
@@ -124,11 +130,19 @@ export class EduClassroomUIStore {
   get streamWindowUIStore() {
     return this._streamWindowUIStore;
   }
+  get videoGalleryUIStore() {
+    return this._videoGalleryUIStore;
+  }
+  get getters() {
+    return this._getters;
+  }
 
   /**
    * 初始化所有 UIStore
    * @returns
    */
+  @bound
+  @Log.trace
   initialize() {
     if (this._installed) {
       return;
@@ -156,6 +170,8 @@ export class EduClassroomUIStore {
   /**
    * 加入教室，之后加入 RTC 频道
    */
+  @bound
+  @Log.trace
   async join() {
     const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
     try {
@@ -201,6 +217,8 @@ export class EduClassroomUIStore {
   /**
    * 销毁所有 UIStore
    */
+  @bound
+  @Log.trace
   destroy() {
     this.classroomStore.destroy();
     Object.getOwnPropertyNames(this).forEach((propertyName) => {

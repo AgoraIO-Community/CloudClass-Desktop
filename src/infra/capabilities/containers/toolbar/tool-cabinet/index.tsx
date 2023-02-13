@@ -9,12 +9,12 @@ import {
   cabinetEnabled,
   screenShareEnabled,
   visibilityControl,
-  visibilityListItemControl
+  visibilityListItemControl,
 } from 'agora-common-libs';
 import { useExtensionCabinets } from '@classroom/infra/hooks/cabinet';
 import React, { FC, useCallback, useState } from 'react';
 import clsn from 'classnames';
-import { CabinetItemEnum } from '@classroom/infra/stores/common/type';
+import { CabinetItemEnum } from '@classroom/infra/stores/common/toolbar/type';
 
 export const ToolCabinetContainer = visibilityControl(
   observer(() => {

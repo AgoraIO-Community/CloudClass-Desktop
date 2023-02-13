@@ -1,41 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 
-type UseWatchCallback<T> = (prev: T | undefined) => void;
-type UseWatchConfig = {
-  immediate: boolean;
-};
-
-export const useWatch = <T>(
-  dep: T,
-  callback: UseWatchCallback<T>,
-  config: UseWatchConfig = { immediate: false },
-) => {
-  const { immediate } = config;
-
-  const prev = useRef<T>();
-  const inited = useRef(false);
-  const stop = useRef(false);
-  const execute = () => callback(prev.current);
-
-  useEffect(() => {
-    if (!stop.current) {
-      if (!inited.current) {
-        inited.current = true;
-        if (immediate) {
-          execute();
-        }
-      } else {
-        execute();
-      }
-      prev.current = dep;
-    }
-  }, [dep]);
-
-  return () => {
-    stop.current = true;
-  };
-};
-
 export const useUnMount = (cb: CallableFunction) => {
   useEffect(() => {
     return () => cb();
@@ -76,16 +40,6 @@ export const useTimeout = (fn: CallableFunction, delay: number) => {
   }, [timer]);
 };
 
-export const usePrevious = <Type>(value: Type) => {
-  const previousValue = useRef<Type>(value);
-
-  useEffect(() => {
-    previousValue.current = value;
-  }, [value]);
-
-  return previousValue.current;
-};
-
 export const useDebounce = <T>(value: T, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
@@ -97,29 +51,48 @@ export const useDebounce = <T>(value: T, delay?: number) => {
   return debouncedValue;
 };
 
-export const useDraggableDefaultCenterPosition = (
-  {
-    draggableHeight,
-    draggableWidth,
-  }: {
-    draggableWidth: number;
-    draggableHeight: number;
-  },
-  innerSize?: {
-    innerHeight: number;
-    innerWidth: number;
-  },
-) => {
-  const pos = useMemo(() => {
+/**
+ * figure out a position that the target can make use to be centered in the container which has the `bounds` class.
+ * @param
+ *  draggableHeight: target's height
+ *  draggableWidth: target's width
+ *  bounds: class of the container which the target will be centered in
+ * @returns
+ */
+export const useDraggableDefaultCenterPosition = ({
+  draggableHeight,
+  draggableWidth,
+  bounds,
+}: {
+  draggableWidth: number;
+  draggableHeight: number;
+  bounds?: string;
+}) => {
+  const innerSize = useMemo(() => {
+    if (bounds) {
+      const innerEle = document.querySelector(bounds);
+      if (innerEle) {
+        return {
+          innerHeight: innerEle.clientHeight,
+          innerWidth: innerEle.clientWidth,
+        };
+      }
+    }
+    return {
+      innerHeight: window.innerHeight,
+      innerWidth: window.innerWidth,
+    };
+  }, [window.innerHeight, window.innerWidth]);
+
+  const rect = useMemo(() => {
     const { innerHeight, innerWidth } = innerSize || window;
 
     const x = (innerWidth - draggableWidth) / 2;
 
     const y = (innerHeight - draggableHeight) / 2;
 
-    // dont need returing width and height but need pass type checking
-    return { x, y } as Record<'x' | 'y' | 'width' | 'height', number>;
+    return { x, y, width: draggableWidth, height: draggableHeight };
   }, [draggableHeight, draggableWidth]);
 
-  return pos;
+  return rect;
 };

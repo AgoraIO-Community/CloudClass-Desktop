@@ -1,4 +1,4 @@
-import { EduNavAction, EduNavRecordActionPayload } from '@classroom/infra/stores/common/nav-ui';
+import { EduNavAction, EduNavRecordActionPayload } from '@classroom/infra/stores/common/nav';
 import { observer } from 'mobx-react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import {

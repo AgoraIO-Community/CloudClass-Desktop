@@ -1,8 +1,8 @@
 import { AgoraWidgetController } from 'agora-edu-core';
-import { Injectable } from 'agora-rte-sdk';
+import { Log, Logger } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 import uuid from 'uuid';
-import { CabinetItem } from '../stores/common/type';
+import { CabinetItem } from '../stores/common/toolbar/type';
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from './events';
 import {
   FcrBoardH5WindowConfig,
@@ -12,8 +12,9 @@ import {
   WebviewOpenParams,
 } from './type';
 
+@Log.attach()
 export class Extension {
-  private logger!: Injectable.Logger;
+  logger!: Logger;
   private _controller?: AgoraWidgetController;
   @observable.shallow
   private _registeredCabinetItems: CabinetItem[] = [];

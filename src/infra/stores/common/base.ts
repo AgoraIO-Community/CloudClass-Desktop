@@ -1,14 +1,14 @@
-import { Injectable } from 'agora-rte-sdk';
 import { EduClassroomStore } from 'agora-edu-core';
-import { EduShareUIStore } from './share-ui';
+import { EduShareUIStore } from './share';
 import { Board } from '@classroom/infra/protocol/board';
 import { Extension } from '@classroom/infra/protocol';
 import { Getters } from './getters';
+import { Logger } from 'agora-rte-sdk';
 
 export abstract class EduUIStoreBase {
   private static _boardApi = new Board();
   private static _extensionApi = new Extension();
-  protected logger!: Injectable.Logger;
+  protected readonly logger!: Logger;
   /**
    * 参数覆盖
    */
@@ -31,10 +31,10 @@ export abstract class EduUIStoreBase {
    * @param store
    * @param shareUIStore
    */
-  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore) {
+  constructor(store: EduClassroomStore, shareUIStore: EduShareUIStore, getters: Getters) {
     this.classroomStore = store;
     this.shareUIStore = shareUIStore;
-    this.getters = new Getters(this.classroomStore);
+    this.getters = getters;
   }
 
   /**

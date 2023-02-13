@@ -1,6 +1,6 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { HandUpUIStore } from '@classroom/infra/stores/common/hand-up';
-import { DialogCategory, EduShareUIStore } from '@classroom/infra/stores/common/share-ui';
+import { DialogCategory, EduShareUIStore } from '@classroom/infra/stores/common/share';
 import { EduClassroomConfig, Platform } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
@@ -25,11 +25,9 @@ export const useInvitedModal = (
       shareUIStore.addDialog(DialogCategory.InviteConfirm, {
         id: 'inviteConfirm',
         onOk: () => {
-          console.log('ok');
           handUpUIStore.confirmInvited();
         },
         onCancel: () => {
-          console.log('cancel');
           handUpUIStore.refuseInvited();
         },
       });

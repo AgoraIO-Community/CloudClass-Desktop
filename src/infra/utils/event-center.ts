@@ -4,9 +4,7 @@ export const AgoraEduClassRoomUIType = 'classroom-ui-events';
 
 export enum AgoraEduClassroomUIEvent {
   offStreamWindow = 'off-stream-window',
-  streamWindowsChange = 'stream-window-change',
   toggleTeacherStreamWindow = 'toggle-teacher-stream-window',
-  hiddenStage = 'hidden-stage',
   toggleWhiteboard = 'toggle-whiteboard',
   dragFileOverBoard = 'drag-file-over-board',
   dropFileOnBoard = 'drop-file-on-board',

@@ -1,5 +1,5 @@
 import { AgoraWidgetController, EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
-import { bound, Injectable, Log } from 'agora-rte-sdk';
+import { bound, Log, Logger } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, toJS } from 'mobx';
 import { AgoraEduSDK } from '../api';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '../utils/event-center';
@@ -9,7 +9,7 @@ import { BoardConnectionState, BoardMountState, FcrBoardShape, FcrBoardTool } fr
 
 @Log.attach({ proxyMethods: false })
 export class Board {
-  private logger!: Injectable.Logger;
+  logger!: Logger;
   private _controller?: AgoraWidgetController;
   private _disposers: IReactionDisposer[] = [];
   @observable

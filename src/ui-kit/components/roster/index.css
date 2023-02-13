@@ -25,8 +25,7 @@
   white-space: nowrap;
 }
 
-.roster-wrap .main-title,
-.supervise-container .main-title {
+.roster-wrap .main-title {
   @apply bg-icon-selected-color text-level1;
   position: relative;
   display: inline-flex;
@@ -39,8 +38,7 @@
   padding-left: 19px;
 }
 
-.roster-wrap,
-.supervise-container {
+.roster-wrap {
   @apply border border-solid border-divider;
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47, 65%, 146%, 15%);

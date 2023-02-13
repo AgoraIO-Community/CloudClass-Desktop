@@ -11,7 +11,18 @@ export interface StreamWindow {
    * 是否填充到多视频区域
    */
   contain: boolean;
-  userUuid: string;
 }
 
 export type StreamWindowBounds = Omit<StreamWindow, 'userUuid'>;
+
+export interface WidgetTrackStruct {
+  state: number;
+  position: { xaxis: number; yaxis: number };
+  size: { width: number; height: number };
+  extra: {
+    contain: boolean;
+    zIndex: number;
+    userUuid: string;
+    [key: string]: any;
+  };
+}

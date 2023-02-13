@@ -1,19 +1,11 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
-import {
-  ATabPane,
-  ATabs,
-  SvgImg,
-  OverlayWrap,
-  Popover,
-  SvgIconEnum,
-} from '@classroom/ui-kit';
+import { ATabPane, ATabs, SvgImg, OverlayWrap, Popover, SvgIconEnum } from '@classroom/ui-kit';
 import { PublicResourcesContainer } from './public-resource';
 import { PersonalResourcesContainer } from './person-resource';
 import './index.css';
 import { CloudDriverContainerProps } from '.';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
-import { throttle } from 'lodash';
 import CloudHelp from './cloud-help';
 import { useI18n } from 'agora-common-libs';
 
@@ -36,38 +28,21 @@ export const CloudDriver = ({ onClose, activeKey, handleChange }: CloudDriverPro
     setOpened(true);
   }, []);
   const transI18n = useI18n();
-  const boundsClassName = 'classroom-track-bounds';
-  const innerSize = useMemo(
-    throttle(() => {
-      const innerEle = document.getElementsByClassName(boundsClassName)[0];
-      if (innerEle) {
-        return {
-          innerHeight: innerEle.clientHeight,
-          innerWidth: innerEle.clientWidth,
-        };
-      }
-      return {
-        innerHeight: window.innerHeight,
-        innerWidth: window.innerWidth,
-      };
-    }, 200),
-    [window.innerHeight, window.innerWidth],
-  );
-  const defaultPos = useDraggableDefaultCenterPosition(
-    {
-      draggableWidth: modalSize.width,
-      draggableHeight: modalSize.height,
-    },
-    innerSize,
-  );
+  const bounds = '.classroom-track-bounds';
+  const cancel = '.ant-tabs-tab';
+  const defaultRect = useDraggableDefaultCenterPosition({
+    draggableWidth: modalSize.width,
+    draggableHeight: modalSize.height,
+    bounds,
+  });
   return (
     <OverlayWrap opened={opened} onExited={onClose}>
       <Rnd
-        bounds={'.' + boundsClassName}
-        dragHandleClassName="tabs-nav"
-        cancel=".tabs-tab"
+        bounds={bounds}
+        cancel={cancel}
+        dragHandleClassName="ant-tabs-nav"
         enableResizing={false}
-        default={defaultPos}>
+        default={defaultRect}>
         <div className="agora-board-resources cloud-wrap" style={modalSize}>
           <div className="btn-pin">
             <Popover content={<CloudHelp />} placement={'bottom'}>

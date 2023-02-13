@@ -1,20 +1,12 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { OnPodiumStateEnum } from '@classroom/infra/stores/common/type';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Col,
-  Row,
-  Search,
-  SvgIconEnum,
-  SvgImg,
-  Table,
-  TableHeader,
-} from '@classroom/ui-kit';
+import { Col, Row, Search, SvgIconEnum, SvgImg, Table, TableHeader } from '@classroom/ui-kit';
 import { transI18n, useI18n } from 'agora-common-libs';
 import './invite-table.css';
+import { OnPodiumStateEnum } from '@classroom/infra/stores/common/hand-up/type';
 
 interface InviteTableProps {
   onSearchChange?: (keyword: string) => void;
@@ -50,14 +42,7 @@ const getOnPodiumStateString = (state: OnPodiumStateEnum): string => {
 export const InviteTable: React.FC<InviteTableProps> = observer(() => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const { handUpUIStore } = useStore();
-  const {
-    userList,
-    fetchUsersList,
-    resetStudentList,
-    invitePodium,
-    inviteListMaxLimit,
-    acceptedListMaxLimit,
-  } = handUpUIStore;
+  const { userList, fetchUsersList, resetStudentList } = handUpUIStore;
   const transI18n = useI18n();
   useEffect(() => {
     fetchUsersList({ nextId: null }, true);
@@ -98,29 +83,26 @@ export const InviteTable: React.FC<InviteTableProps> = observer(() => {
         <Table className="table-container">
           {dataSource.length
             ? dataSource.map((item) => {
-              const { name, role, uid, onPodiumState } = item;
-              return (
-                <Row height={10} border={1} key={uid}>
-                  <Col>
-                    <div className="table-user-name" title={name}>
-                      {name}
-                    </div>
-                  </Col>
-                  <Col>{getRoleString(role)}</Col>
-                  <Col
-                    className={cls({
-                      'podium-btn': 1,
-                      ['podium-state-' + onPodiumState]: 1,
-                      ['podium-max-limit']:
-                        onPodiumState === OnPodiumStateEnum.idleing &&
-                        (inviteListMaxLimit || acceptedListMaxLimit),
-                    })}
-                    onClick={() => invitePodium(item)}>
-                    {getOnPodiumStateString(onPodiumState)}
-                  </Col>
-                </Row>
-              );
-            })
+                const { name, role, uid, onPodiumState } = item;
+                return (
+                  <Row height={10} border={1} key={uid}>
+                    <Col>
+                      <div className="table-user-name" title={name}>
+                        {name}
+                      </div>
+                    </Col>
+                    <Col>{getRoleString(role)}</Col>
+                    <Col
+                      className={cls({
+                        'podium-btn': 1,
+                        ['podium-state-' + onPodiumState]: 1,
+                        ['podium-max-limit']: onPodiumState === OnPodiumStateEnum.idleing,
+                      })}>
+                      {getOnPodiumStateString(onPodiumState)}
+                    </Col>
+                  </Row>
+                );
+              })
             : null}
         </Table>
       </Table>

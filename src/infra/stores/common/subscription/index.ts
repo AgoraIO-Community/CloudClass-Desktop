@@ -2,22 +2,20 @@ import { AgoraRteScene, Log } from 'agora-rte-sdk';
 import { computed, IReactionDisposer, Lambda, reaction } from 'mobx';
 import { SceneSubscription } from './abstract';
 import { EduUIStoreBase } from '../base';
-import { EduClassroomConfig } from 'agora-edu-core';
-import { CDNRoomSubscription } from './cdn-room';
 import { MainRoomSubscription } from './main-room';
-import { EduRoomServiceTypeEnum, EduRoomTypeEnum, EduSessionInfo } from 'agora-edu-core';
+import { Getters } from '../getters';
 
 @Log.attach({ proxyMethods: false })
 export class SubscriptionUIStore extends EduUIStoreBase {
   private _disposers: (IReactionDisposer | Lambda)[] = [];
 
-  private static _sceneSubscriptions: Map<string, SceneSubscription> = new Map<
+  private _sceneSubscriptions: Map<string, SceneSubscription> = new Map<
     string,
     SceneSubscription
   >();
 
   setActive(sceneId: string) {
-    SubscriptionUIStore._sceneSubscriptions.forEach((sub, subSceneId) => {
+    this._sceneSubscriptions.forEach((sub, subSceneId) => {
       if (subSceneId === sceneId) {
         sub.setActive(true);
       } else {
@@ -26,24 +24,39 @@ export class SubscriptionUIStore extends EduUIStoreBase {
     });
   }
 
-  setCDNMode(cdnMode: boolean) {
-    SubscriptionUIStore._sceneSubscriptions.forEach((sub) => {
-      if (sub.active) {
-        sub.setCDNMode(cdnMode);
-      }
-    });
-  }
-
   createSceneSubscription(scene: AgoraRteScene) {
-    if (!SubscriptionUIStore._sceneSubscriptions.has(scene.sceneId)) {
-      const sub = SubscriptionFactory.createSubscription(scene);
+    if (!this._sceneSubscriptions.has(scene.sceneId)) {
+      const sub = SubscriptionFactory.createSubscription(scene, this.getters);
 
-      sub && SubscriptionUIStore._sceneSubscriptions.set(scene.sceneId, sub);
+      sub && this._sceneSubscriptions.set(scene.sceneId, sub);
     }
-    return SubscriptionUIStore._sceneSubscriptions.get(scene.sceneId);
+    return this._sceneSubscriptions.get(scene.sceneId);
   }
 
-  onInstall(): void {
+  removeSceneSubscription(scene: AgoraRteScene) {
+    const sub = this._sceneSubscriptions.get(scene.sceneId);
+    if (sub) {
+      sub.destroy();
+      this._sceneSubscriptions.delete(scene.sceneId);
+    }
+  }
+
+  clearSubscription() {
+    this._sceneSubscriptions.forEach((sub) => {
+      sub.destroy();
+    });
+    this._sceneSubscriptions.clear();
+  }
+
+  printStat() {
+    const { scene } = this.classroomStore.connectionStore;
+    if (scene) {
+      const sub = this._sceneSubscriptions.get(scene.sceneId);
+      sub?.printStat();
+    }
+  }
+
+  onInstall() {
     this._disposers.push(
       reaction(
         () => this.classroomStore.connectionStore.scene,
@@ -58,49 +71,21 @@ export class SubscriptionUIStore extends EduUIStoreBase {
     this._disposers.push(
       computed(() => this.classroomStore.connectionStore.subRoomScene).observe(({ oldValue }) => {
         if (oldValue) {
-          SubscriptionUIStore._sceneSubscriptions.delete(oldValue.sceneId);
+          this.removeSceneSubscription(oldValue);
         }
       }),
     );
-    this._disposers.push(
-      reaction(
-        () => this.classroomStore.roomStore.isCDNMode,
-        (isCDNMode) => {
-          this.setCDNMode(isCDNMode);
-        },
-      ),
-    );
   }
 
-  onDestroy(): void {
-    SubscriptionUIStore._sceneSubscriptions.clear();
+  onDestroy() {
+    this.clearSubscription();
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }
 }
 
 class SubscriptionFactory {
-  static createSubscription(scene: AgoraRteScene) {
-    if (isCDNSubscriptionRoom(EduClassroomConfig.shared.sessionInfo)) {
-      return new CDNRoomSubscription(scene);
-    }
-    return new MainRoomSubscription(scene);
+  static createSubscription(scene: AgoraRteScene, getters: Getters) {
+    return new MainRoomSubscription(scene, getters);
   }
-}
-
-function isCDNSubscriptionRoom(sessionInfo: EduSessionInfo) {
-  const { roomServiceType, roomType } = sessionInfo;
-  if (
-    roomType === EduRoomTypeEnum.RoomBigClass &&
-    roomServiceType === EduRoomServiceTypeEnum.MixStreamCDN
-  ) {
-    return true;
-  }
-  if (
-    roomType === EduRoomTypeEnum.RoomBigClass &&
-    roomServiceType === EduRoomServiceTypeEnum.HostingScene
-  ) {
-    return true;
-  }
-  return false;
 }

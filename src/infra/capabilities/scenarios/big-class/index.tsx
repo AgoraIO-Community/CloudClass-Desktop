@@ -16,7 +16,7 @@ import { WidgetContainer } from '../../containers/widget';
 import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';
 import { BigClassAside as Aside } from '@classroom/infra/capabilities/containers/aside';
 import Room from '../room';
-import { StreamWindowsContainer } from '../../containers/stream-windows-container';
+import { StreamWindowsContainer } from '../../containers/stream-window';
 
 export const BigClassScenario = () => {
   // layout
