@@ -53,24 +53,12 @@ export class LectureH5BoardUIStore extends BoardUIStore {
 
   @computed
   get boardContainerWidth() {
-    if (this.borderZoomStatus !== 'zoom-out') {
-      return this.shareUIStore.classroomViewportSize.h5Width;
-    }
-    const { h5Width } = this.shareUIStore.classroomViewportSize;
-    if (this.shareUIStore.orientation !== 'portrait') {
-      return (h5Width as number) * 0.697;
-    }
-    return h5Width as number;
+    return this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
   }
 
   @computed
   get boardContainerHeight() {
-    if (this.borderZoomStatus !== 'zoom-out') {
-      return this.shareUIStore.classroomViewportSize.h5Height;
-    }
-    // 白板宽高比
-    // return (this.boardContainerWidth as number) * 0.5634;
-    return '100%';
+    return this.boardContainerWidth * (9 / 16);
   }
 
   @action.bound

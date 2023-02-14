@@ -7,6 +7,8 @@ import React, { useEffect } from 'react';
 import { Layout, SvgImg } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../config';
+import { AgoraWidgetBase } from '@classroom/infra/api';
+import { Widget } from './';
 
 export const Chat = observer(function Chat() {
   const { widgetUIStore } = useStore();
@@ -55,10 +57,20 @@ const Spinner = () => {
   );
 };
 
-export const WhiteboardH5 = observer(function Board() {
+export const CountDownMobile = observer(() => {
+  return <div className="fcr-countdown-h5-widget"></div>;
+});
+export const PollMobile = observer(() => {
+  const {
+    shareUIStore: { isLandscape },
+  } = useStore();
+  return <div className={`fcr-poll-h5-widget ${isLandscape ? '' : 'relative'}`}></div>;
+});
+export const WhiteboardMobile = observer(function Board() {
   const {
     boardUIStore,
     streamUIStore: { containerH5VisibleCls },
+    shareUIStore: { isLandscape },
   } = useLectureH5UIStores() as EduLectureH5UIStore;
 
   const {
@@ -67,16 +79,22 @@ export const WhiteboardH5 = observer(function Board() {
     handleBoradZoomStatus,
     boardContainerHeight,
     boardContainerWidth,
+    mounted,
   } = boardUIStore;
-
+  const height = mounted ? boardContainerHeight : 0;
   return (
     <div
       className={classnames('whiteboard-h5-container w-full relative', containerH5VisibleCls)}
-      style={{ height: boardContainerHeight, width: boardContainerWidth }}>
+      style={{
+        height: height,
+        width: boardContainerWidth,
+        visibility: isLandscape ? 'hidden' : 'visible',
+        overflow: 'hidden',
+      }}>
       <div
         style={{
-          height: boardUIStore.boardContainerHeight,
-          width: boardUIStore.boardContainerWidth,
+          height: height,
+          width: boardContainerWidth,
           zIndex: ComponentLevelRules.WhiteBoard,
         }}
         className="widget-slot-board"
@@ -90,11 +108,22 @@ export const WhiteboardH5 = observer(function Board() {
   );
 });
 
-export const ChatH5 = observer(function Chat() {
-  const { widgetUIStore } = useStore();
-  const { layoutUIStore, streamUIStore } = useLectureH5UIStores();
+export const ChatMobile = observer(function Chat() {
+  const {
+    widgetUIStore,
+    streamUIStore: { teacherCameraStream, studentCameraStreams, studentVideoStreamSize, isPiP },
+    boardUIStore: { boardContainerHeight, mounted },
+  } = useLectureH5UIStores();
   const { ready } = widgetUIStore;
-
+  const h5Height = document.body.clientHeight;
+  const chatH5Height =
+    h5Height -
+    (!mounted && !teacherCameraStream ? boardContainerHeight : 0) -
+    (mounted ? boardContainerHeight : 0) -
+    (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
+      ? boardContainerHeight
+      : 0) -
+    (studentCameraStreams.length > 0 ? studentVideoStreamSize.height : 0);
   useEffect(() => {
     if (ready) {
       const chatWidgetId = 'easemobIM';
@@ -109,16 +138,7 @@ export const ChatH5 = observer(function Chat() {
     }
   }, [ready]);
 
-  return (
-    <Layout
-      className={classnames(
-        layoutUIStore.chatWidgetH5Cls,
-        streamUIStore.containerH5VisibleCls,
-        'h5-chat-pannel',
-      )}>
-      <div className="widget-slot-chat w-full h-full" />
-    </Layout>
-  );
+  return <div className="widget-slot-chat-h5" style={{ height: chatH5Height }} />;
 });
 
 export const Watermark = observer(function Chat() {

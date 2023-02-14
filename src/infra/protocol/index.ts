@@ -8,6 +8,7 @@ import {
   FcrBoardH5WindowConfig,
   FcrBoardMaterialWindowConfig,
   FcrBoardMediaWindowConfig,
+  OrientationStates,
   StreamMediaPlayerOpenParams,
   WebviewOpenParams,
 } from './type';
@@ -18,7 +19,6 @@ export class Extension {
   private _controller?: AgoraWidgetController;
   @observable.shallow
   private _registeredCabinetItems: CabinetItem[] = [];
-
   @computed
   get cabinetItems() {
     return this._registeredCabinetItems;
@@ -80,6 +80,9 @@ export class Extension {
     this._broadcastMessage(AgoraExtensionRoomEvent.BoardOpenH5ResourceWindow, [resource]);
   }
 
+  updateOrientationStates(param: OrientationStates) {
+    this._broadcastMessage(AgoraExtensionRoomEvent.OrientationStatesChanged, param);
+  }
   private _broadcastMessage(event: AgoraExtensionRoomEvent, args?: unknown, messageId?: string) {
     if (!messageId) {
       messageId = uuid();

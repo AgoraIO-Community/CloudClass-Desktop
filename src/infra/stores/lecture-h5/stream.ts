@@ -11,6 +11,16 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
   onInstall(): void {
     super.onInstall();
+    this._disposers.push(
+      reaction(
+        () => this.shareUIStore.isLandscape,
+        (isLandscape) => {
+          if (isLandscape) {
+            this.setIsPiP(false);
+          }
+        },
+      ),
+    );
 
     this._disposers.push(
       reaction(
@@ -26,10 +36,18 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   }
 
   @observable
+  isPiP = false;
+
+  @observable
   streamZoomStatus = 'zoom-out';
 
   @observable
   carouselPosition = 0;
+
+  @action.bound
+  setIsPiP(isPiP: boolean) {
+    this.isPiP = isPiP;
+  }
 
   @action.bound
   carouselNext() {
@@ -61,28 +79,22 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
   @computed
   get teacherVideoStreamSize() {
-    let width = 0,
-      height = 0;
-
-    width =
-      this.shareUIStore.orientation === 'portrait'
-        ? (this.shareUIStore.classroomViewportSize.h5Width as number)
-        : (this.shareUIStore.classroomViewportSize.h5Width as number) * this._teacherWidthRatio;
-    height = (9 / 16) * width;
-
-    return { width, height };
+    return this.isPiP
+      ? {}
+      : this.shareUIStore.isLandscape
+      ? {
+          width: this.shareUIStore.forceLandscape ? window.innerHeight : window.innerWidth,
+          height: this.shareUIStore.forceLandscape ? window.innerWidth : window.innerHeight,
+        }
+      : {
+          width: window.innerWidth,
+          height: (9 / 16) * window.innerWidth,
+        };
   }
 
   @computed
   get studentVideoStreamSize() {
-    const restWidth =
-      this.shareUIStore.orientation === 'landscape'
-        ? (this.shareUIStore.classroomViewportSize.h5Width as number) -
-          this.teacherVideoStreamSize.width -
-          2
-        : (this.shareUIStore.classroomViewportSize.h5Width as number);
-
-    const width = restWidth / this.carouselShowCount - this._gapInPx;
+    const width = this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
 
     const height = (65 / 115) * width;
 

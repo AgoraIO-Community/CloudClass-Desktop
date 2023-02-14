@@ -5,7 +5,7 @@ import { RoomPretest } from '@classroom/infra/capabilities/containers/pretest';
 import { useEffect, useState } from 'react';
 import { OneToOneScenario } from './1v1';
 import { BigClassScenario } from './big-class';
-import { BigClassScenarioH5 } from './big-class-h5';
+import { BigClassScenarioMobile } from './big-class-mobile/index.mobile';
 import { MidClassScenario } from './mid-class';
 import '@classroom/ui-kit/styles/global.css';
 import '@classroom/ui-kit/styles/scenario.css';
@@ -21,7 +21,7 @@ export const renderRoomSceneWith = (roomType: EduRoomTypeEnum) => {
     }
     case EduRoomTypeEnum.RoomBigClass: {
       return EduClassroomConfig.shared.platform === Platform.H5 ? (
-        <BigClassScenarioH5 />
+        <BigClassScenarioMobile />
       ) : (
         <BigClassScenario />
       );

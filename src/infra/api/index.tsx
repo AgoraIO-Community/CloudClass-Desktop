@@ -313,7 +313,7 @@ export class AgoraEduSDK {
     const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } =
       initializeBuiltInExtensions();
 
-    const noDevicePermission = roleType === EduRoleTypeEnum.invisible;
+    const noDevicePermission = roleType === EduRoleTypeEnum.invisible || platform === Platform.H5;
 
     const config = new EduClassroomConfig(
       this._appId,

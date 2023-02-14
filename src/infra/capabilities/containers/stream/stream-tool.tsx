@@ -156,3 +156,7 @@ const ToolItem: FC<{
     return true;
   },
 );
+
+export const StreamPlayerToolbarH5 = observer(() => {
+  return <div className="fcr-"></div>;
+});

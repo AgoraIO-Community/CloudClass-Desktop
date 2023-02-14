@@ -13,3 +13,8 @@
 .widget-slot-chat {
   /* @apply bg-background; */
 }
+.widget-slot-chat-h5 {
+}
+.fcr-countdown-h5-widget {
+  position: relative;
+}

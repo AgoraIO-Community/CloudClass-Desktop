@@ -3,7 +3,7 @@ import { getEduErrorMessage, getErrorServCode } from '@classroom/infra/utils/err
 import { sendToMainProcess } from '@classroom/infra/utils/ipc';
 import { ChannelType } from '@classroom/infra/utils/ipc-channels';
 import { AGError, AGRteErrorCode, bound, Lodash, Log, Logger, Scheduler } from 'agora-rte-sdk';
-import { action, observable, runInAction } from 'mobx';
+import { action, observable, runInAction, computed } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from 'agora-common-libs';
 import { getRootDimensions } from '../layout/helper';
@@ -33,7 +33,7 @@ export interface ToastType {
   type?: ToastTypeEnum;
 }
 
-export type ToastTypeEnum = 'success' | 'error' | 'warning';
+export type ToastTypeEnum = 'success' | 'error' | 'warning' | 'info' | 'normal';
 
 export interface DialogType {
   id: string;
@@ -52,7 +52,6 @@ export class EduShareUIStore {
   private _containerNode = window;
   private _matchMedia = window.matchMedia('(orientation: portrait)');
   private _resizeEventListenerAdded = false;
-
   /**
    * 教室UI布局完毕
    */
@@ -84,6 +83,31 @@ export class EduShareUIStore {
 
   @observable
   orientation: OrientationEnum = OrientationEnum.portrait;
+
+  @observable
+  forceLandscape = false;
+
+  @computed
+  get isLandscape() {
+    return this.orientation === OrientationEnum.landscape || this.forceLandscape;
+  }
+
+  @action.bound
+  setForceLandscape(forceLandscape: boolean) {
+    this.forceLandscape = forceLandscape;
+  }
+
+  /**
+   * 添加一条 单例 Toast 信息
+   * @param desc
+   * @returns
+   */
+  @action.bound
+  addSingletonToast(desc: string, type: ToastTypeEnum) {
+    const id = uuidv4();
+    this.toastQueue = [{ id, desc, type }];
+    return id;
+  }
 
   /**
    * 显示一条 Toast 信息
@@ -287,6 +311,7 @@ export class EduShareUIStore {
 
   @action.bound
   handleOrientationchange() {
+    this.forceLandscape = false;
     // If there are matches, we're in portrait
     if (this._matchMedia.matches) {
       // Portrait orientation

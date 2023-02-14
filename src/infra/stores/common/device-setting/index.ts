@@ -509,7 +509,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         const area = stage
           ? this.getters.layoutMaskCode | LayoutMaskCode.StageVisible
           : this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible;
-        this.classroomStore.roomStore.updateFlexProperties({ area }, null);
+        this.classroomStore.roomStore.updateFlexProperties({ properties: { area }, cause: null });
         if (!stage) {
           this.classroomStore.roomStore.stopCarousel();
         }

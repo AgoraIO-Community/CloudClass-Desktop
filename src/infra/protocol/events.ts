@@ -32,6 +32,8 @@ export enum AgoraExtensionRoomEvent {
   OpenStreamMediaPlayer = 'open-stream-media-player',
   // 返回授权用户列表
   ResponseGrantedList = 'response-granted-list',
+  // 横竖屏切换
+  OrientationStatesChanged = 'orientation-changed',
 }
 
 /**
@@ -70,4 +72,10 @@ export enum AgoraExtensionWidgetEvent {
   UnregisterCabinetTool = 'unregister-cabinet-tool',
   // 请求授权用户列表
   RequestGrantedList = 'request-granted-list',
+  //请求当前横竖屏状态
+  RequestOrientationStates = 'request-orientation',
+  //取消强制横屏
+  QuitForceLandscape = 'quit-force-landscape',
+  //唤起单例Toast
+  AddSingletonToast = 'add-singleton-toast',
 }

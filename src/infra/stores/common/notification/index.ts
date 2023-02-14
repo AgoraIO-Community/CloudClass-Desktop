@@ -1,4 +1,4 @@
-import { action, computed, IReactionDisposer, Lambda, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, Lambda, observable, reaction, when } from 'mobx';
 import dayjs from 'dayjs';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { EduUIStoreBase } from '../base';
@@ -11,6 +11,7 @@ import {
   EduEventCenter,
   EduRoleTypeEnum,
   LeaveReason,
+  Platform,
 } from 'agora-edu-core';
 import { ToastFilter } from '@classroom/infra/utils/toast-filter';
 import { getEduErrorMessage } from '@classroom/infra/utils/error';
@@ -21,7 +22,12 @@ export class NotificationUIStore extends EduUIStoreBase {
   private _notificationTask?: Scheduler.Task;
   private _prevClassState = ClassState.beforeClass;
   private _disposers: (IReactionDisposer | Lambda)[] = [];
-
+  private _isMobile = EduClassroomConfig.shared.platform === Platform.H5;
+  @observable leaveClass = false;
+  @action.bound
+  setLeaveRoom(leaveClass: boolean) {
+    this.leaveClass = leaveClass;
+  }
   /** Observables */
 
   /** Methods */
@@ -78,16 +84,18 @@ export class NotificationUIStore extends EduUIStoreBase {
           } else if (ClassState.close === state) {
             this.classroomStore.connectionStore.leaveClassroom(
               LeaveReason.leave,
-              new Promise((resolve) => {
-                this.shareUIStore.addConfirmDialog(
-                  transI18n('toast.leave_room'),
-                  transI18n('error.class_end'),
-                  {
-                    onOK: resolve,
-                    actions: ['ok'],
-                  },
-                );
-              }),
+              this._isMobile
+                ? when(() => this.leaveClass)
+                : new Promise((resolve) => {
+                    this.shareUIStore.addConfirmDialog(
+                      transI18n('toast.leave_room'),
+                      transI18n('error.class_end'),
+                      {
+                        onOK: resolve,
+                        actions: ['ok'],
+                      },
+                    );
+                  }),
             );
           }
         },

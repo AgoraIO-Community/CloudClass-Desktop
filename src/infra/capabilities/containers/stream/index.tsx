@@ -247,40 +247,6 @@ export const StreamPlayer: FC<{
   );
 });
 
-type StreamPlayerH5Props = {
-  stream: EduStreamUI;
-  toolbarDisabled?: boolean;
-  className?: string;
-  style?: CSSProperties;
-};
-
-export const StreamPlayerH5 = observer<FC<StreamPlayerH5Props>>(
-  ({ stream, toolbarDisabled = true, className = '', style }) => {
-    const [toolbarVisible, setToolbarVisible] = useState(false);
-
-    const handleMouseEnter = () => {
-      setToolbarVisible(true);
-    };
-
-    const handleMouseLeave = () => {
-      setToolbarVisible(false);
-    };
-
-    return (
-      <div
-        className={`fcr-stream-player-h5 ${className}`}
-        style={style}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}>
-        <StreamPlayerCameraPlaceholder stream={stream} />
-        <TrackPlayer stream={stream} />
-        <StreamPlayerOverlay stream={stream} />
-        {!toolbarDisabled && <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />}
-      </div>
-    );
-  },
-);
-
 const ANIMATION_DELAY = 500;
 
 export const CarouselGroup = observer(

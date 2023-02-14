@@ -15,7 +15,7 @@ export const ToastContainer = observer(() => {
         <CSSTransition classNames="toast-animation" timeout={1000} key={`${value.id}`}>
           <Toast
             style={{ position: 'absolute', top: 50 * (idx + 1), zIndex: 9999 }}
-            type={value.type}
+            type={value.type as 'success' | 'error' | 'warning'}
             closeToast={() => {
               removeToast(value.id);
             }}>

@@ -341,13 +341,19 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
                 (this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible) |
                 LayoutMaskCode.VideoGalleryVisible;
 
-              await this.classroomStore.roomStore.updateFlexProperties({ area }, null);
+              await this.classroomStore.roomStore.updateFlexProperties({
+                properties: { area },
+                cause: null,
+              });
             } else {
               const area =
                 (this.getters.layoutMaskCode & ~LayoutMaskCode.VideoGalleryVisible) |
                 LayoutMaskCode.StageVisible;
 
-              await this.classroomStore.roomStore.updateFlexProperties({ area }, null);
+              await this.classroomStore.roomStore.updateFlexProperties({
+                properties: { area },
+                cause: null,
+              });
               this.updateUsers(false, []);
             }
           } catch (e) {
