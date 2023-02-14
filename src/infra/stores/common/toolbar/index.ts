@@ -466,7 +466,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           return;
         }
         if (this.getters.videoGalleryStarted) {
-          this.shareUIStore.addToast('fcr_video_gallery_close_video_gallery');
+          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_video_gallery'));
         } else {
           this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
         }
@@ -476,7 +476,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           return;
         }
         if (this.getters.breakoutRoomStarted) {
-          this.shareUIStore.addToast('fcr_video_gallery_close_breakout_room');
+          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_breakout_room'));
         } else {
           this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
         }

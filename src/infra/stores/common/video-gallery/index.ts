@@ -320,10 +320,10 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
     this._disposers.push(
       // when client user change page, the published user list should update
       reaction(
-        () => [this.curVideoUserList, this.getters.videoGalleryStarted],
+        () => [this.curVideoUserList, this.open],
         () => {
-          if (this.open && this.curVideoUserList.length) {
-            this.updateUsers(true, this.curVideoUserList);
+          if (this.open) {
+            this.updateUsers(true, this.curVideoUserList.length ? this.curVideoUserList : []);
           }
         },
       ),
