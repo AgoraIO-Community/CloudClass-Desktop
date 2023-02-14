@@ -789,4 +789,6 @@ export const en = {
   fcr_video_gallery_modal_title: 'VideoGallery',
   fcr_video_gallery_on_stage: 'On Stage',
   fcr_video_gallery_off_stage: 'Off Stage',
+  fcr_video_gallery_close_breakout_room: 'Please close breakout room first',
+  fcr_video_gallery_close_video_gallery: 'Please close video gallery first',
 };

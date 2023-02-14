@@ -26,7 +26,7 @@ import { DialogCategory } from '../share';
 import { EduStreamUI } from '../stream/struct';
 import { LayoutMaskCode } from '../type';
 
-@Log.attach({ proxyMethods: true })
+@Log.attach()
 export class VideoGalleryUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
   readonly videoGalleryConfig = {
@@ -320,7 +320,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
     this._disposers.push(
       // when client user change page, the published user list should update
       reaction(
-        () => [this.curVideoUserList, this.getters.videoGalleryOpened],
+        () => [this.curVideoUserList, this.getters.videoGalleryStarted],
         () => {
           if (this.open && this.curVideoUserList.length) {
             this.updateUsers(true, this.curVideoUserList);
@@ -368,7 +368,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
       reaction(
         () => [
           this.getters.windowStreamUserUuids,
-          this.getters.videoGalleryOpened,
+          this.getters.videoGalleryStarted,
           this.getters.stageVisible,
           this.stageUserUuids,
         ],
@@ -379,9 +379,9 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
             const isOffStage = !this.stageUserUuids.includes(userUuid);
 
             if (this.getters.stageVisible) {
-              this._setLocalPreview(this.getters.videoGalleryOpened && isOffStage);
+              this._setLocalPreview(this.getters.videoGalleryStarted && isOffStage);
             } else {
-              this._setLocalPreview(this.getters.videoGalleryOpened && noStreamWindow);
+              this._setLocalPreview(this.getters.videoGalleryStarted && noStreamWindow);
             }
           }
         },

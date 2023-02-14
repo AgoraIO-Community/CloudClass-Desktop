@@ -1,7 +1,7 @@
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { useCallback } from 'react';
 import { FC } from 'react';
-import { VideoGalleryPortal } from '../../dialog/video-grid';
+import { VideoGalleryPortal } from '../../dialog/video-gallery';
 import { RtcEngineContext } from './context';
 import { useRtcEngine, useVideoGalleryState } from './hooks';
 import { RemoteRenderer } from './renderer';

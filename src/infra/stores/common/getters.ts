@@ -1,5 +1,6 @@
 import { extractUserStreams } from '@classroom/infra/utils/extract';
-import { EduStream, EduUserStruct } from 'agora-edu-core';
+import { EduStream, EduUserStruct, GroupState } from 'agora-edu-core';
+import { ExpandedScopeState } from 'agora-edu-core';
 import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
 import { computed } from 'mobx';
 import { EduClassroomUIStore } from '.';
@@ -27,12 +28,22 @@ export class Getters {
   }
 
   /**
-   * 扩展屏是否打开
-   * @returns
+   * 扩展屏是否已开启
    */
   @computed
-  get videoGalleryOpened() {
-    return !!(this.layoutMaskCode & LayoutMaskCode.VideoGalleryVisible);
+  get videoGalleryStarted() {
+    return (
+      this._classroomUIStore.classroomStore.roomStore.expandedScope?.state ===
+      ExpandedScopeState.open
+    );
+  }
+
+  /**
+   * 分组讨论是否已开启
+   */
+  @computed
+  get breakoutRoomStarted() {
+    return this._classroomUIStore.classroomStore.groupStore.state === GroupState.OPEN;
   }
 
   /**
@@ -50,7 +61,7 @@ export class Getters {
    * 扩展屏流ID
    */
   @computed
-  get gridVideoStreamUuids() {
+  get galleryVideoStreamUuids() {
     if (this._classroomUIStore.videoGalleryUIStore.open) {
       return this._classroomUIStore.videoGalleryUIStore.curStreamList.map(
         (stream) => stream.stream.streamUuid,

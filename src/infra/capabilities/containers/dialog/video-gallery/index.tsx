@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { Rnd } from 'react-rnd';
-import { OverlayWrap, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
+import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
-import { ForceDirection, useDragAnalyzer, useGridVideoInitializer, useVideoPage } from './hooks';
+import { ForceDirection, useDragAnalyzer, useVideoGalleryInitializer, useVideoPage } from './hooks';
 import { TrackPlayer } from '../../stream/track-player';
 import { Pager } from './pager';
 import { Setting } from './setting';
@@ -64,8 +64,6 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
   }, []);
 
   const handleDragOut = useCallback((forceDirection: ForceDirection) => {
-    // sendToMainProcess();
-    // setToolVisible(true);
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
       removeDialog(id);
 
@@ -88,7 +86,7 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
     detectMovement: defaults.detectMovement,
   });
 
-  useGridVideoInitializer();
+  useVideoGalleryInitializer();
 
   const {
     videoGalleryConfigOptions,
@@ -104,54 +102,52 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
   const renderVideo = useCallback((stream: EduStreamUI) => <TrackPlayer stream={stream} />, []);
 
   return (
-    <OverlayWrap>
-      <Rnd
-        ref={rndRef}
-        dragHandleClassName="main-title"
-        enableResizing
-        default={defaultRect}
-        bounds={bounds}
-        {...constraints}
-        {...eventHandlers}>
-        {/* modal */}
-        <div className="fcr-video-grid w-full h-full flex flex-col">
-          {/* close */}
-          <div className="btn-pin">
-            <SvgImg
-              type={SvgIconEnum.FULLSCREEN}
-              className="cursor-pointer"
-              size={20}
-              style={{ marginRight: 12 }}
-              onClick={handleFullSize}
-            />
-            <SvgImg
-              type={SvgIconEnum.CLOSE}
-              className="cursor-pointer"
-              onClick={handleClose}
-              size={20}
-            />
-          </div>
-          {/* title */}
-          <div className="main-title">{transI18n('fcr_video_gallery_modal_title')}</div>
-          {/* content */}
-          <VideoGalleryPortal
-            className="main-content"
-            streamList={streamList}
-            options={videoGalleryConfigOptions}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            curPage={curPage}
-            nextPage={nextPage}
-            prevPage={prevPage}
-            totalPageNum={totalPageNum}
-            renderVideo={renderVideo}
-            stageUserUuids={stageUserUuids}
-            onStageClick={onPodium}
-            offStageClick={offPodium}
+    <Rnd
+      ref={rndRef}
+      dragHandleClassName="main-title"
+      enableResizing
+      default={defaultRect}
+      bounds={bounds}
+      {...constraints}
+      {...eventHandlers}>
+      {/* modal */}
+      <div className="fcr-video-grid w-full h-full flex flex-col">
+        {/* close */}
+        <div className="btn-pin">
+          <SvgImg
+            type={SvgIconEnum.FULLSCREEN}
+            className="cursor-pointer"
+            size={20}
+            style={{ marginRight: 12 }}
+            onClick={handleFullSize}
+          />
+          <SvgImg
+            type={SvgIconEnum.CLOSE}
+            className="cursor-pointer"
+            onClick={handleClose}
+            size={20}
           />
         </div>
-      </Rnd>
-    </OverlayWrap>
+        {/* title */}
+        <div className="main-title">{transI18n('fcr_video_gallery_modal_title')}</div>
+        {/* content */}
+        <VideoGalleryPortal
+          className="main-content"
+          streamList={streamList}
+          options={videoGalleryConfigOptions}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          curPage={curPage}
+          nextPage={nextPage}
+          prevPage={prevPage}
+          totalPageNum={totalPageNum}
+          renderVideo={renderVideo}
+          stageUserUuids={stageUserUuids}
+          onStageClick={onPodium}
+          offStageClick={offPodium}
+        />
+      </div>
+    </Rnd>
   );
 });
 
@@ -183,15 +179,19 @@ export const VideoGalleryPortal: FC<ProtalProps> = ({
     return range(0, pageSize).map((n) => streamList[n]);
   }, [pageSize, streamList]);
 
+  const pagerVisible = totalPageNum > 1;
+
   return (
     <div className={containerCls}>
       <Setting pageSize={pageSize} setPageSize={setPageSize} options={options} />
-      <Pager
-        curPage={curPage}
-        nextPage={nextPage}
-        prevPage={prevPage}
-        totalPageNum={totalPageNum}
-      />
+      {pagerVisible && (
+        <Pager
+          curPage={curPage}
+          nextPage={nextPage}
+          prevPage={prevPage}
+          totalPageNum={totalPageNum}
+        />
+      )}
       {/* video grid */}
       <div className="fcr-video-grid-wrap">
         {list.map((stream, i) => (

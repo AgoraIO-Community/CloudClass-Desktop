@@ -4,7 +4,7 @@ import { MouseEvent, RefObject } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 import { DraggableData, Rnd, RndDragEvent } from 'react-rnd';
 
-export const useGridVideoInitializer = () => {
+export const useVideoGalleryInitializer = () => {
   const { videoGalleryUIStore } = useStore();
 
   const { setOpen } = videoGalleryUIStore;

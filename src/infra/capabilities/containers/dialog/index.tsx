@@ -17,7 +17,8 @@ import { RemoteControlConfirm } from './remote-control-confirm';
 import { RoomDeviceSettingContainer } from '../device-setting';
 import { InviteConfirmContainer } from '../hand-up/invite-confirm';
 import { InvitePodiumContainer } from '../hand-up/invite-container';
-import { VideoGallery } from './video-grid';
+import { VideoGallery } from './video-gallery';
+import React from 'react';
 
 const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode => {
   switch (category) {
@@ -62,19 +63,19 @@ export const DialogContainer: React.FC<unknown> = observer(() => {
   const { shareUIStore } = useStore();
   const { dialogQueue } = shareUIStore;
 
-  const cls = classnames({
-    [`rc-mask`]: !!dialogQueue.length,
-  });
-
   return (
-    <div className={cls}>
+    <React.Fragment>
       {dialogQueue.map(({ id, category, props }) => {
-        return (
-          <div key={id} className="fixed-container">
-            {getDialog(category, id, props)}
+        const { showMask = true } = props as { showMask: boolean };
+
+        return showMask ? (
+          <div className="rc-mask" key={id}>
+            <div className="fixed-container">{getDialog(category, id, props)}</div>
           </div>
+        ) : (
+          getDialog(category, id, props)
         );
       })}
-    </div>
+    </React.Fragment>
   );
 });

@@ -462,10 +462,25 @@ export class ToolbarUIStore extends EduUIStoreBase {
         }
         break;
       case CabinetItemEnum.BreakoutRoom:
-        this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
+        if (this.shareUIStore.hasDialog(DialogCategory.BreakoutRoom)) {
+          return;
+        }
+        if (this.getters.videoGalleryStarted) {
+          this.shareUIStore.addToast('fcr_video_gallery_close_video_gallery');
+        } else {
+          this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
+        }
         break;
       case CabinetItemEnum.VideoGallery:
-        this.shareUIStore.addDialog(DialogCategory.VideoGallery);
+        if (this.shareUIStore.hasDialog(DialogCategory.VideoGallery)) {
+          return;
+        }
+        if (this.getters.breakoutRoomStarted) {
+          this.shareUIStore.addToast('fcr_video_gallery_close_breakout_room');
+        } else {
+          this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
+        }
+
         break;
     }
   }
