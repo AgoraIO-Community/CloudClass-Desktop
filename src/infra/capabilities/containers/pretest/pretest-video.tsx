@@ -2,7 +2,16 @@ import { AgoraEduSDK } from '@classroom/infra/api';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { BeautyType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useRef, useEffect, useCallback, useState, FC, useContext } from 'react';
+import {
+  useRef,
+  useEffect,
+  useCallback,
+  useState,
+  FC,
+  useContext,
+  forwardRef,
+  ReactNode,
+} from 'react';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip } from '@classroom/ui-kit';
 import { themeContext, useI18n } from 'agora-common-libs';
 import { ASlider } from '@classroom/ui-kit/components/slider';
@@ -153,37 +162,59 @@ const VideoOperatorTab = observer(() => {
   } = useStore();
 
   const transI18n = useI18n();
+  const virtualBackgroundRef = useRef<HTMLDivElement>(null);
+  const beautyRef = useRef<HTMLDivElement>(null);
 
   const [indicatorPos, setIndicatorPos] = useState(0);
   const { textLevel1 } = useContext(themeContext);
+  const moveIndicatorToTargetEle = (ele: HTMLElement) => {
+    setIndicatorPos(ele.offsetLeft + ele.offsetWidth - 76);
+  };
   const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
     setCurrentEffectOption(type);
-    setIndicatorPos(event.currentTarget.offsetLeft);
+    moveIndicatorToTargetEle(event.target as HTMLElement);
   }, []);
 
+  useEffect(() => {
+    const ref = currentEffectType === 'beauty' ? beautyRef : virtualBackgroundRef;
+    ref.current && moveIndicatorToTargetEle(ref.current);
+  }, []);
   return (
     <>
       <TabHeader>
         {virtualBackgroundSupported && (
           <TabTitle
+            ref={virtualBackgroundRef}
             activity={currentEffectType === 'virtualBackground'}
             onClick={(e) => handleTabClick(e, 'virtualBackground')}>
             {transI18n('media.virtualBackground')}
+            <SvgImg
+              className="absolute -top-2 inline-block pointer-events-none ml-1"
+              type={SvgIconEnum.BETA}
+              size={29}
+            />
           </TabTitle>
         )}
         {beautySupported && (
           <TabTitle
+            ref={beautyRef}
             activity={currentEffectType === 'beauty'}
             onClick={(e) => handleTabClick(e, 'beauty')}>
             {transI18n('media.beauty')}
+            <SvgImg
+              className="absolute -top-2 inline-block pointer-events-none ml-1"
+              type={SvgIconEnum.BETA}
+              size={29}
+            />
           </TabTitle>
         )}
         <SvgImg
+          className="pointer-events-none"
           type={SvgIconEnum.INDICATOR}
           colors={{ iconPrimary: textLevel1 }}
           style={{
-            top: 13,
-            left: 21,
+            top: 15,
+            left: 0,
             width: 76,
             height: 17,
             transition: '0.3s all ease',
@@ -375,30 +406,37 @@ const TabHeader: FC = ({ children }) => (
     style={{
       borderBottom: '1px solid rgba(220, 234, 254, 1)',
       marginTop: '20px',
+      gap: '7px',
     }}>
     {children}
   </div>
 );
 
-const TabTitle: FC<{ activity: boolean; onClick: (e: React.MouseEvent<HTMLDivElement>) => void }> =
-  ({ children, activity, onClick }) => {
-    const fontWeight = activity ? 800 : 400;
-    return (
-      <div
-        onClick={onClick}
-        className="text-center cursor-pointer text-level1"
-        style={{
-          width: 92,
-          marginRight: 36,
-          fontSize: 14,
-          padding: 2,
-          fontWeight,
-        }}>
-        {' '}
-        {children}
-      </div>
-    );
-  };
+const TabTitle = forwardRef<
+  HTMLDivElement,
+  {
+    children: ReactNode[];
+    activity: boolean;
+    onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+  }
+>(({ children, activity, onClick }, ref) => {
+  const textShadow = activity ? '1px 0 0 black' : 'none';
+  return (
+    <div
+      ref={ref}
+      onClick={onClick}
+      className="text-center cursor-pointer text-level1 relative"
+      style={{
+        marginRight: 36,
+        fontSize: 14,
+        padding: 2,
+        textShadow,
+      }}>
+      {' '}
+      {children}
+    </div>
+  );
+});
 
 const TabContent: FC = ({ children }) => {
   return (

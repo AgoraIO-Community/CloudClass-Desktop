@@ -160,4 +160,5 @@ export enum SvgIconEnum {
   STAGE = 'stage',
   RESET = 'reset',
   INDICATOR = 'indicator',
+  BETA = 'beta',
 }
