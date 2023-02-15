@@ -168,7 +168,7 @@ const VideoOperatorTab = observer(() => {
   const [indicatorPos, setIndicatorPos] = useState(0);
   const { textLevel1 } = useContext(themeContext);
   const moveIndicatorToTargetEle = (ele: HTMLElement) => {
-    setIndicatorPos(ele.offsetLeft + ele.offsetWidth - 76);
+    setIndicatorPos(ele.offsetLeft + ele.offsetWidth - 40);
   };
   const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
     setCurrentEffectOption(type);
@@ -191,7 +191,7 @@ const VideoOperatorTab = observer(() => {
             <SvgImg
               className="absolute -top-2 inline-block pointer-events-none ml-1"
               type={SvgIconEnum.BETA}
-              size={29}
+              size={31}
             />
           </TabTitle>
         )}
@@ -204,19 +204,19 @@ const VideoOperatorTab = observer(() => {
             <SvgImg
               className="absolute -top-2 inline-block pointer-events-none ml-1"
               type={SvgIconEnum.BETA}
-              size={29}
+              size={31}
             />
           </TabTitle>
         )}
         <SvgImg
           className="pointer-events-none"
           type={SvgIconEnum.INDICATOR}
+          size={40}
           colors={{ iconPrimary: textLevel1 }}
           style={{
-            top: 15,
-            left: 0,
-            width: 76,
-            height: 17,
+            top: 4,
+            left: 10,
+
             transition: '0.3s all ease',
             transform: `translate3d(${indicatorPos}px, 0, 0)`,
             position: 'absolute',
@@ -402,9 +402,10 @@ const VideoDeviceListPanel: FC = ({ children }) => {
 
 const TabHeader: FC = ({ children }) => (
   <div
-    className="flex w-full relative"
+    className="flex w-full relative border-divider"
     style={{
-      borderBottom: '1px solid rgba(220, 234, 254, 1)',
+      borderBottomWidth: '1px',
+      borderBottomStyle: 'solid',
       marginTop: '20px',
       gap: '7px',
     }}>

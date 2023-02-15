@@ -19,7 +19,8 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
         style={{
           height: 90,
           padding: '0 28px',
-          borderTop: '1px solid #dceafe',
+          borderTopWidth: '1px',
+          borderTopStyle: 'solid',
         }}>
         {visibleMirror ? (
           <span className="flex items-center text-level1">
