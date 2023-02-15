@@ -466,7 +466,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
           return;
         }
         if (this.getters.videoGalleryStarted) {
-          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_video_gallery'), 'warning');
+          this.shareUIStore.addToast(
+            transI18n('fcr_expansion_screen_tips_close_expansion_screen'),
+            'warning',
+          );
         } else {
           this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
         }
@@ -476,7 +479,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           return;
         }
         if (this.getters.breakoutRoomStarted) {
-          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_breakout_room'), 'warning');
+          this.shareUIStore.addToast(transI18n('fcr_expansion_screen_tips_close_group'), 'warning');
         } else {
           this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
         }
@@ -651,7 +654,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       {
         id: CabinetItemEnum.VideoGallery,
         iconType: 'whiteboard',
-        name: transI18n('fcr_video_gallery_modal_title'),
+        name: transI18n('fcr_expansion_screen_button_expansion_screen'),
       },
       {
         id: CabinetItemEnum.Laser,

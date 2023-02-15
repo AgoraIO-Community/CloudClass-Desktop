@@ -157,7 +157,9 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
           />
         </div>
         {/* title */}
-        <div className="main-title">{transI18n('fcr_video_gallery_modal_title')}</div>
+        <div className="main-title">
+          {transI18n('fcr_expansion_screen_button_expansion_screen')}
+        </div>
         {/* content */}
         <VideoGalleryPortal
           className="main-content"
@@ -322,8 +324,8 @@ const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
   }
 
   const opText = stageUserUuids.includes(stream.fromUser.userUuid)
-    ? t('fcr_video_gallery_off_stage')
-    : t('fcr_video_gallery_on_stage');
+    ? t('fcr_expansion_screen_button_down')
+    : t('fcr_expansion_screen_button_on');
 
   const showStageButton = EduRoleTypeEnum.student === stream.role;
 

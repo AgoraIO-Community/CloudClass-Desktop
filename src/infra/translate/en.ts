@@ -786,10 +786,11 @@ export const en = {
   fcr_copy_share_link_copy: 'Copy link',
   fcr_copy_success: 'Copy success',
   // Video Gallery
-  fcr_video_gallery_modal_title: 'VideoGallery',
-  fcr_video_gallery_on_stage: 'On Stage',
-  fcr_video_gallery_off_stage: 'Off Stage',
-  fcr_video_gallery_close_breakout_room: 'Please close breakout room first',
+  fcr_expansion_screen_button_expansion_screen: 'External display',
+  fcr_expansion_screen_button_on: 'On stage',
+  fcr_expansion_screen_button_down: 'Down stage',
+  fcr_expansion_screen_tips_close_group: 'Please close breakout room',
+  fcr_expansion_screen_tips_close_expansion_screen: 'Please close expansion display',
   fcr_video_gallery_close_video_gallery: 'Please close video gallery first',
   fcr_video_gallery_message_teacher_is_watching: 'Teacher is watching you',
 };

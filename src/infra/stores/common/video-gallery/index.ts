@@ -8,7 +8,6 @@ import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels
 import { transI18n } from 'agora-common-libs';
 import {
   EduClassroomConfig,
-  EduClassroomStore,
   EduRoleTypeEnum,
   EduRteEngineConfig,
   EduRteRuntimePlatform,
@@ -369,14 +368,6 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
                   cause: null,
                 });
               } else {
-                const area =
-                  (this.getters.layoutMaskCode & ~LayoutMaskCode.VideoGalleryVisible) |
-                  LayoutMaskCode.StageVisible;
-
-                await this.classroomStore.roomStore.updateFlexProperties({
-                  properties: { area },
-                  cause: null,
-                });
                 this._updateUsers(false, []);
               }
             } catch (e) {

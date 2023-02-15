@@ -675,6 +675,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
    * @param streamUuid
    * @returns
    */
+  @bound
   handleStreamWindowClick(stream: EduStream) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let timeoutID: any = null;

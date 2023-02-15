@@ -355,13 +355,14 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
    */
   get deviceStage() {
     if (EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.teacher) return;
+    const isInSubRoom = this.getters.isInSubRoom;
     switch (EduClassroomConfig.shared.sessionInfo.roomType) {
       case EduRoomTypeEnum.Room1v1Class:
         return false;
       case EduRoomTypeEnum.RoomBigClass:
         return false;
       case EduRoomTypeEnum.RoomSmallClass:
-        return true;
+        return !isInSubRoom;
     }
   }
 
@@ -502,20 +503,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   @bound
   setStageVisible(stage: boolean) {
     try {
-      const isMainRoom =
-        this.classroomStore.connectionStore.sceneId ===
-        this.classroomStore.connectionStore.mainRoomScene?.sceneId;
-      if (isMainRoom) {
-        const area = stage
-          ? this.getters.layoutMaskCode | LayoutMaskCode.StageVisible
-          : this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible;
-        this.classroomStore.roomStore.updateFlexProperties({ properties: { area }, cause: null });
-        if (!stage) {
-          this.classroomStore.roomStore.stopCarousel();
-        }
-      } else {
-        this.logger.info('cannot hide stage area in a sub room');
-      }
+      const area = stage
+        ? this.getters.layoutMaskCode | LayoutMaskCode.StageVisible
+        : this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible;
+      this.classroomStore.roomStore.updateFlexProperties({ properties: { area }, cause: null });
     } catch (e) {
       if (
         !AGError.isOf(

@@ -769,10 +769,10 @@ export const zh = {
   fcr_copy_share_link_copy: '复制链接',
   fcr_copy_success: '复制成功',
   // 扩展屏
-  fcr_video_gallery_modal_title: '扩展屏',
-  fcr_video_gallery_on_stage: '上台',
-  fcr_video_gallery_off_stage: '下台',
-  fcr_video_gallery_close_breakout_room: '请先关闭分组讨论',
-  fcr_video_gallery_close_video_gallery: '请先关闭扩展屏',
+  fcr_expansion_screen_button_expansion_screen: '扩展屏',
+  fcr_expansion_screen_button_on: '上台',
+  fcr_expansion_screen_button_down: '下台',
+  fcr_expansion_screen_tips_close_group: '请先关闭分组讨论',
+  fcr_expansion_screen_tips_close_expansion_screen: '请先关闭扩展屏',
   fcr_video_gallery_message_teacher_is_watching: '老师正在浏览你的视频画面',
 };

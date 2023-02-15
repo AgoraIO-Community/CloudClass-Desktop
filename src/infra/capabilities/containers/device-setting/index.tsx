@@ -3,12 +3,12 @@ import { useStore } from '@classroom/infra/hooks/ui-store';
 import './index.css';
 import { RoomPretest } from '../pretest';
 import { useEffect } from 'react';
-import { EduClassroomConfig, EduRoleTypeEnum, EduRoomTypeEnum } from 'agora-edu-core';
 
 export const RoomDeviceSettingContainer = observer(({ id }: { id: string }) => {
   const {
     shareUIStore: { removeDialog },
     streamUIStore: { setSettingsOpened },
+    deviceSettingUIStore: { deviceStage },
   } = useStore();
 
   useEffect(() => {
@@ -21,10 +21,7 @@ export const RoomDeviceSettingContainer = observer(({ id }: { id: string }) => {
   return (
     <RoomPretest
       closeable
-      showStage={
-        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomSmallClass &&
-        EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-      }
+      showStage={deviceStage}
       onOK={() => removeDialog(id)}
       onCancel={() => removeDialog(id)}
     />

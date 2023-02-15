@@ -52,6 +52,21 @@ export class RosterUIStore extends EduUIStoreBase {
         },
       ),
     );
+
+    this._disposers.push(
+      reaction(
+        () => [this.getters.stageVisible],
+        () => {
+          if (
+            EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher &&
+            !this.getters.stageVisible &&
+            !this.getters.isInSubRoom
+          ) {
+            this.classroomStore.roomStore.stopCarousel();
+          }
+        },
+      ),
+    );
   }
 
   /** Observables */
@@ -481,7 +496,7 @@ export class RosterUIStore extends EduUIStoreBase {
     if (canKickOut && isInMainRoom) {
       functions.push('kick');
     }
-    if (canOperateCarousel && isInMainRoom && !this.groupStarted && this.stageVisible) {
+    if (canOperateCarousel && isInMainRoom && !this.groupStarted && this.getters.stageVisible) {
       functions.push('carousel');
     }
     if (canSearchInRoster) {
@@ -511,11 +526,6 @@ export class RosterUIStore extends EduUIStoreBase {
   @computed
   get groupStarted() {
     return this.classroomStore.groupStore.state === GroupState.OPEN;
-  }
-
-  @computed
-  get stageVisible() {
-    return this.getters.stageVisible;
   }
 
   /** Getters */
