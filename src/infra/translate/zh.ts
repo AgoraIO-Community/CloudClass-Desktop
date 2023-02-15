@@ -774,4 +774,5 @@ export const zh = {
   fcr_video_gallery_off_stage: '下台',
   fcr_video_gallery_close_breakout_room: '请先关闭分组讨论',
   fcr_video_gallery_close_video_gallery: '请先关闭扩展屏',
+  fcr_video_gallery_message_teacher_is_watching: '老师正在浏览你的视频画面',
 };

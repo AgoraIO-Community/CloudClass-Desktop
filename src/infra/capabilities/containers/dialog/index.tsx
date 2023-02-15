@@ -1,6 +1,5 @@
-import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { CloudDriverContainer } from '@classroom/infra/capabilities/containers/cloud-driver';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { RosterContainer } from '../roster/user-list';
@@ -18,7 +17,6 @@ import { RoomDeviceSettingContainer } from '../device-setting';
 import { InviteConfirmContainer } from '../hand-up/invite-confirm';
 import { InvitePodiumContainer } from '../hand-up/invite-container';
 import { VideoGallery } from './video-gallery';
-import React from 'react';
 
 const getDialog = (category: DialogCategory, id: string, props?: any): ReactNode => {
   switch (category) {
@@ -73,7 +71,7 @@ export const DialogContainer: React.FC<unknown> = observer(() => {
             <div className="fixed-container">{getDialog(category, id, props)}</div>
           </div>
         ) : (
-          getDialog(category, id, props)
+          <React.Fragment key={id}>{getDialog(category, id, props)}</React.Fragment>
         );
       })}
     </React.Fragment>

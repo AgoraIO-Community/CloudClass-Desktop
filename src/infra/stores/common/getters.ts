@@ -2,6 +2,7 @@ import { extractUserStreams } from '@classroom/infra/utils/extract';
 import { EduStream, EduUserStruct, GroupState } from 'agora-edu-core';
 import { ExpandedScopeState } from 'agora-edu-core';
 import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
+import { isNumber } from 'lodash';
 import { computed } from 'mobx';
 import { EduClassroomUIStore } from '.';
 import { LayoutMaskCode } from './type';
@@ -15,8 +16,11 @@ export class Getters {
   @computed
   get layoutMaskCode() {
     const { flexProps } = this._classroomUIStore.classroomStore.roomStore;
-    // 未设置情况下开启讲台
-    return (flexProps.area || LayoutMaskCode.None | LayoutMaskCode.StageVisible) as number;
+    if (!isNumber(flexProps.area)) {
+      // 未设置情况下开启讲台
+      return LayoutMaskCode.None | LayoutMaskCode.StageVisible;
+    }
+    return flexProps.area;
   }
 
   /**
@@ -133,5 +137,13 @@ export class Getters {
     ]);
 
     return Array.from(cameraStreams);
+  }
+
+  /**
+   * 是否在分组房间
+   */
+  @computed
+  get isInSubRoom() {
+    return !!this._classroomUIStore.classroomStore.groupStore.currentSubRoom;
   }
 }

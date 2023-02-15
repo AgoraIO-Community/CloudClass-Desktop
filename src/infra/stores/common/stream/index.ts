@@ -180,6 +180,13 @@ export class StreamUIStore extends EduUIStoreBase {
       stream.setRenderAt('Setting');
     } else if (streamWindowUserUuids.includes(stream.fromUser.userUuid)) {
       stream.setRenderAt('Window');
+    } else if (
+      /** 只有老师需要把自己显示在gallery中，学生看老师此时应该是显示在讲台 */
+      this.getters.videoGalleryStarted &&
+      stream.stream.isLocal &&
+      stream.role === EduRoleTypeEnum.teacher
+    ) {
+      stream.setRenderAt('Gallery');
     } else {
       stream.setRenderAt('Bar');
     }

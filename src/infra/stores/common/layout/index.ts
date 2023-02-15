@@ -11,7 +11,7 @@ export class LayoutUIStore extends EduUIStoreBase {
 
   @computed
   get isInSubRoom() {
-    return !!this.classroomStore.groupStore.currentSubRoom;
+    return this.getters.isInSubRoom;
   }
 
   @computed

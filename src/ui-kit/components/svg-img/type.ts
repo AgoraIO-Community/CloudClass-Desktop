@@ -38,6 +38,7 @@ export enum SvgIconEnum {
   EXTENSION_ACTIVED = 'extension-actived',
   FORWARD = 'forward',
   FULLSCREEN = 'fullscreen',
+  FULLSCREEN_SHRINK = 'fullscreen-shrink',
   GROUP_DISCUSS = 'group-discuss',
   H5 = 'h5',
   HAND = 'hand',

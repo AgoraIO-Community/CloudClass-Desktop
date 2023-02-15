@@ -5,14 +5,14 @@ import { PathOptions } from '../svg-dict';
 export const path = (props: PathOptions) => (
   <g fill="none">
     <path
-      d="M12.5 15L8 19.5M8 19.5L8 16.7368M8 19.5L10.7632 19.5"
+      d="M19.5 8L15 12.5M15 12.5L15 9.28571M15 12.5L18.2143 12.5"
       stroke={props.iconPrimary}
       stroke-width="1.2"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
-      d="M15 12.5L19.5 8M19.5 8L19.5 10.7632M19.5 8L16.7368 8"
+      d="M8 19.5L12.5 15M12.5 15L12.5 18.2143M12.5 15L9.28571 15"
       stroke={props.iconPrimary}
       stroke-width="1.2"
       stroke-linecap="round"

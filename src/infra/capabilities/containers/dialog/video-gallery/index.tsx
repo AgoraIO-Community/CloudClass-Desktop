@@ -13,7 +13,7 @@ import { Setting } from './setting';
 import './index.css';
 import classNames from 'classnames';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
-import { EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
+import { EduRoleTypeEnum, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 import { Props as SettingProps } from './setting';
 import { Props as PagerProps } from './pager';
 import { range } from 'lodash';
@@ -26,13 +26,13 @@ interface VideoGalleryProps {
 const bounds = '.classroom-track-bounds';
 
 const constraints = {
-  minHeight: 250,
-  minWidth: 350,
+  minHeight: 380,
+  minWidth: 675,
 };
 
 const defaults = {
-  modalWidth: 500,
-  modalHeight: 300,
+  modalWidth: 675,
+  modalHeight: 380,
   detectMovement: 100,
 };
 
@@ -46,22 +46,50 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
 
   const rndRef = useRef<Rnd>(null);
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const windowCacheBounds = useRef({ width: 0, height: 0, x: 0, y: 0 });
+
   const handleClose = useCallback(() => {
     removeDialog(id);
     videoGalleryUIStore.setOpen(false);
   }, [id]);
 
-  const handleFullSize = useCallback(() => {
-    let containerEl = null;
-    if ((containerEl = document.querySelector(bounds))) {
-      const fixOffset = navHeight;
-      rndRef.current?.updatePosition({ x: 0, y: fixOffset });
+  const handleFullscreen = useCallback(() => {
+    let containerEl = document.querySelector(bounds);
+    if (isFullscreen) {
+      const { x, y, width, height } = windowCacheBounds.current;
+      rndRef.current?.updatePosition({ x, y });
+
       rndRef.current?.updateSize({
-        width: containerEl.clientWidth,
-        height: containerEl.clientHeight,
+        width,
+        height,
       });
+    } else {
+      if (containerEl) {
+        const fixOffset = navHeight;
+        const ele = rndRef.current?.getSelfElement();
+        const { x, y } = rndRef.current?.getDraggablePosition() || { x: 0, y: 0 };
+
+        if (ele) {
+          windowCacheBounds.current = {
+            width: ele.clientWidth,
+            height: ele.clientHeight,
+            x,
+            y,
+          };
+        }
+
+        rndRef.current?.updatePosition({ x: 0, y: fixOffset });
+
+        rndRef.current?.updateSize({
+          width: containerEl.clientWidth,
+          height: containerEl.clientHeight,
+        });
+      }
     }
-  }, []);
+    setIsFullscreen((v) => !v);
+  }, [isFullscreen]);
 
   const handleDragOut = useCallback((forceDirection: ForceDirection) => {
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
@@ -105,7 +133,7 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
     <Rnd
       ref={rndRef}
       dragHandleClassName="main-title"
-      enableResizing
+      enableResizing={false}
       default={defaultRect}
       bounds={bounds}
       {...constraints}
@@ -115,11 +143,11 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
         {/* close */}
         <div className="btn-pin">
           <SvgImg
-            type={SvgIconEnum.FULLSCREEN}
+            type={isFullscreen ? SvgIconEnum.FULLSCREEN_SHRINK : SvgIconEnum.FULLSCREEN}
             className="cursor-pointer"
             size={20}
             style={{ marginRight: 12 }}
-            onClick={handleFullSize}
+            onClick={handleFullscreen}
           />
           <SvgImg
             type={SvgIconEnum.CLOSE}
@@ -156,7 +184,7 @@ type ProtalProps = {
   streamList: EduStreamUI[];
 } & SettingProps &
   PagerProps &
-  HoverWrapProps;
+  StageHoverProps;
 
 export const VideoGalleryPortal: FC<ProtalProps> = ({
   className,
@@ -195,7 +223,7 @@ export const VideoGalleryPortal: FC<ProtalProps> = ({
       {/* video grid */}
       <div className="fcr-video-grid-wrap">
         {list.map((stream, i) => (
-          <HoverWrap
+          <StageHover
             key={i}
             index={i}
             total={list.length}
@@ -212,20 +240,20 @@ export const VideoGalleryPortal: FC<ProtalProps> = ({
   );
 };
 
-type HoverWrapProps = {
+type StageHoverProps = {
   renderVideo: (stream: EduStreamUI) => React.ReactElement;
   stageUserUuids: string[];
   onStageClick: (userUuid: string) => void;
   offStageClick: (userUuid: string) => void;
 };
-type HoverWrapItemProps = {
+type StageHoverItemProps = {
   stream: EduStreamUI;
   index: number;
   total: number;
   pageSize: number;
 };
 
-const HoverWrap: FC<HoverWrapProps & HoverWrapItemProps> = ({
+const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
   pageSize,
   stageUserUuids,
   onStageClick,
@@ -297,6 +325,8 @@ const HoverWrap: FC<HoverWrapProps & HoverWrapItemProps> = ({
     ? t('fcr_video_gallery_off_stage')
     : t('fcr_video_gallery_on_stage');
 
+  const showStageButton = EduRoleTypeEnum.student === stream.role;
+
   return (
     <div
       style={style}
@@ -306,13 +336,15 @@ const HoverWrap: FC<HoverWrapProps & HoverWrapItemProps> = ({
       {stageUserUuids.includes(stream.fromUser.userUuid)
         ? renderPlaceholder()
         : renderVideo(stream)}
-      <animated.div
-        style={hoverLayerStyle}
-        className="fcr-video-grid-button"
-        onClick={handleClick(stream.fromUser.userUuid)}>
-        <SvgImg type={SvgIconEnum.ON_PODIUM} colors={{ iconPrimary: 'rgba(255,255,255,0.87)' }} />
-        <span>{opText}</span>
-      </animated.div>
+      {showStageButton && (
+        <animated.div
+          style={hoverLayerStyle}
+          className="fcr-video-grid-button"
+          onClick={handleClick(stream.fromUser.userUuid)}>
+          <SvgImg type={SvgIconEnum.ON_PODIUM} colors={{ iconPrimary: 'rgba(255,255,255,0.87)' }} />
+          <span>{opText}</span>
+        </animated.div>
+      )}
       <span className="fcr-video-grid-nameplate absolute">{stream.fromUser.userName}</span>
     </div>
   );

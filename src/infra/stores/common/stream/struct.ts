@@ -2,7 +2,7 @@ import { EduClassroomConfig, EduRoleTypeEnum, EduStream, RteRole2EduRole } from 
 import { AgoraFromUser, AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
 import { action, computed, observable } from 'mobx';
 
-export type VideoPlacement = 'Window' | 'Bar' | 'Setting' | 'VideoGallery';
+export type VideoPlacement = 'Window' | 'Bar' | 'Setting' | 'Gallery';
 
 /**
  * 业务流 UI 对象

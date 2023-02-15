@@ -183,7 +183,6 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       title: transI18n('biz-header.exit'),
       iconType: SvgIconEnum.EXIT,
       onClick: async () => {
-        const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
         this.shareUIStore.addDialog(DialogCategory.Quit, {
           onOk: (back: boolean) => {
             if (back) {
@@ -192,7 +191,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
               this.classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
             }
           },
-          showOption: isInSubRoom,
+          showOption: this.getters.isInSubRoom,
         });
       },
     };
@@ -375,7 +374,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       commonActions.splice(1, 0, shareAction);
     }
 
-    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
+    const isInSubRoom = this.getters.isInSubRoom;
 
     let actions: EduNavAction<EduNavRecordActionPayload | undefined>[] = [];
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {

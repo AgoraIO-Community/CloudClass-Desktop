@@ -466,7 +466,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           return;
         }
         if (this.getters.videoGalleryStarted) {
-          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_video_gallery'));
+          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_video_gallery'), 'warning');
         } else {
           this.shareUIStore.addDialog(DialogCategory.BreakoutRoom);
         }
@@ -476,7 +476,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
           return;
         }
         if (this.getters.breakoutRoomStarted) {
-          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_breakout_room'));
+          this.shareUIStore.addToast(transI18n('fcr_video_gallery_close_breakout_room'), 'warning');
         } else {
           this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
         }
@@ -621,6 +621,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * 当前激活的工具
    * @returns
    */
+  @computed
   get activeCabinetItems() {
     return this._activeCabinetItems;
   }
@@ -629,6 +630,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
    * 工具箱列表
    * @returns
    */
+  @computed
   get cabinetItems(): CabinetItem[] {
     const extapps = [
       {
@@ -651,23 +653,30 @@ export class ToolbarUIStore extends EduUIStoreBase {
         iconType: 'whiteboard',
         name: transI18n('fcr_video_gallery_modal_title'),
       },
-    ];
-
-    if (this.boardApi.mounted) {
-      extapps.push({
+      {
         id: CabinetItemEnum.Laser,
         iconType: 'laser-pointer',
         name: transI18n('scaffold.laser_pointer'),
-      });
-    }
+      },
+    ];
 
     let apps = this.extensionApi.cabinetItems.concat(
       extapps.filter((item) => this.allowedCabinetItems.includes(item.id)),
     );
 
+    const excludes: string[] = [];
+
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant) {
-      apps = apps.filter((it) => it.id !== CabinetItemEnum.BreakoutRoom);
+      excludes.push(CabinetItemEnum.BreakoutRoom);
     }
+    if (!this.boardApi.mounted) {
+      excludes.push(CabinetItemEnum.Laser);
+    }
+    if (this.getters.isInSubRoom) {
+      excludes.push(CabinetItemEnum.VideoGallery);
+    }
+
+    apps = apps.filter((it) => !excludes.includes(it.id));
 
     return apps;
   }

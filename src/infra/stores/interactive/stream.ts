@@ -44,9 +44,8 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       this.carouselPosition,
       this.carouselPosition + this.carouselStudentShowCount,
     );
-    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
 
-    if (!isInSubRoom) {
+    if (!this.getters.isInSubRoom) {
       carouselStudentList = carouselStudentList.filter(
         ({ userUuid }) => !groupUuidByUserUuid.has(userUuid),
       );
@@ -78,9 +77,7 @@ export class InteractiveRoomStreamUIStore extends StreamUIStore {
       this._setRenderAt(stream);
     }
 
-    const isInSubRoom = this.classroomStore.groupStore.currentSubRoom;
-
-    if (!isInSubRoom) {
+    if (!this.getters.isInSubRoom) {
       if (stream) {
         const { groupUuidByUserUuid } = this.classroomStore.groupStore;
 

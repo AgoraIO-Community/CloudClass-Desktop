@@ -5,8 +5,10 @@ import {
   transmitRTCRawData,
 } from '@classroom/infra/utils/ipc';
 import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
+import { transI18n } from 'agora-common-libs';
 import {
   EduClassroomConfig,
+  EduClassroomStore,
   EduRoleTypeEnum,
   EduRteEngineConfig,
   EduRteRuntimePlatform,
@@ -49,6 +51,13 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   localPreview = false;
 
   @computed
+  get isLocalRendered() {
+    return this.curVideoUserList.some(
+      (userUuid) => EduClassroomConfig.shared.sessionInfo.userUuid === userUuid,
+    );
+  }
+
+  @computed
   get stageUserUuids() {
     return this.getters.stageUsers.map(({ userUuid }) => userUuid);
   }
@@ -64,11 +73,17 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   // which users should show in video grid
   @computed
   get allVideoUserList() {
-    const { list } = iterateMap(this.classroomStore.userStore.studentList, {
+    const { list } = iterateMap(this.classroomStore.userStore.users, {
       onMap(userUuid) {
         return userUuid;
       },
+      onFilter(key, item) {
+        return (
+          item.userRole === EduRoleTypeEnum.teacher || item.userRole === EduRoleTypeEnum.student
+        );
+      },
     });
+
     return list;
   }
   // how many page user can scroll
@@ -139,11 +154,12 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
 
   // update user list and change open state
   @bound
-  updateUsers(open: boolean, userList: string[]) {
+  private _updateUsers(open: boolean, userList: string[]) {
     if (this.loading) {
       return;
     }
     this.logger.info('updateUsers', open, userList);
+
     this._setLoading(true);
     this.classroomStore.streamStore
       .updateExpandedScopeAndStreams(open ? 1 : 0, {
@@ -194,7 +210,9 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
     // filter out raw data captured from local
     let rawArr = info as { uid: number }[];
 
-    rawArr = rawArr.filter(({ uid }) => uid !== 0);
+    if (!this.isLocalRendered) {
+      rawArr = rawArr.filter(({ uid }) => uid !== 0);
+    }
 
     if (rawArr.length) {
       transmitRTCRawData(WindowID.VideoGallery, rawArr);
@@ -222,84 +240,113 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   }
 
   onInstall() {
-    if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
-      // create a electron browser window when SDK launches,
-      this.shareUIStore.openWindow(WindowID.VideoGallery, {
-        options: {
-          width: 500,
-          height: 300,
-          show: false,
-          allowRendererProcessReuse: false,
-          preventClose: true,
-        },
-      });
-
-      this._disposers.push(
-        reaction(
-          () => this.externalOpen,
-          (externalOpen) => {
-            if (externalOpen) {
-              //@ts-ignore
-              this.classroomStore.connectionStore.scene.rtcChannel._adapter.base.rtcEngine.on(
-                'agoraVideoRawData',
-                this._rtcRawDataCallback,
-              );
-            } else {
-              //@ts-ignore
-              this.classroomStore.connectionStore.scene.rtcChannel._adapter.base.rtcEngine.off(
-                'agoraVideoRawData',
-                this._rtcRawDataCallback,
-              );
-            }
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
+        // create a electron browser window when SDK launches,
+        this.shareUIStore.openWindow(WindowID.VideoGallery, {
+          options: {
+            width: 500,
+            height: 300,
+            show: false,
+            allowRendererProcessReuse: false,
+            preventClose: true,
           },
-        ),
-      );
+        });
 
-      this._disposers.push(
-        listenChannelMessage(ChannelType.Message, (event, message) => {
-          if (message.type == IPCMessageType.FetchVideoGalleryState) {
-            this._sendVideoGalleryState();
-          }
-          if (message.type === IPCMessageType.UpdateVideoGalleryState) {
-            const { payload } = message as { payload: any };
-            if (payload?.curPage) {
-              if (this.loading) {
-                return;
+        this._disposers.push(
+          reaction(
+            () => this.externalOpen,
+            (externalOpen) => {
+              if (externalOpen) {
+                //@ts-ignore
+                this.classroomStore.connectionStore.scene.rtcChannel._adapter.base.rtcEngine.on(
+                  'agoraVideoRawData',
+                  this._rtcRawDataCallback,
+                );
+              } else {
+                //@ts-ignore
+                this.classroomStore.connectionStore.scene.rtcChannel._adapter.base.rtcEngine.off(
+                  'agoraVideoRawData',
+                  this._rtcRawDataCallback,
+                );
               }
-              this._setCurPage(payload.curPage);
+            },
+          ),
+        );
+
+        this._disposers.push(
+          listenChannelMessage(ChannelType.Message, (event, message) => {
+            if (message.type == IPCMessageType.FetchVideoGalleryState) {
+              this._sendVideoGalleryState();
             }
-            if (payload?.pageSize) {
-              this.setPageSize(payload.pageSize);
+            if (message.type === IPCMessageType.UpdateVideoGalleryState) {
+              const { payload } = message as { payload: any };
+              if (payload?.curPage) {
+                if (this.loading) {
+                  return;
+                }
+                this._setCurPage(payload.curPage);
+              }
+              if (payload?.pageSize) {
+                this.setPageSize(payload.pageSize);
+              }
             }
-          }
-          if (message.type === IPCMessageType.BrowserWindowClose) {
-            const { payload } = message as { payload: any };
-            if (payload === WindowID.VideoGallery) {
-              this.closeExternalWindow();
-              this.shareUIStore.addDialog(DialogCategory.VideoGallery);
+            if (message.type === IPCMessageType.BrowserWindowClose) {
+              const { payload } = message as { payload: any };
+              if (payload === WindowID.VideoGallery) {
+                this.closeExternalWindow();
+                this.shareUIStore.addDialog(DialogCategory.VideoGallery);
+              }
             }
-          }
-        }),
-      );
+          }),
+        );
+
+        this._disposers.push(
+          reaction(
+            () => [this.curPage, this.pageSize, this.curStreamList, this.stageUserUuids],
+            () => {
+              this._sendVideoGalleryState();
+            },
+          ),
+        );
+        this._disposers.push(
+          reaction(
+            () => [this.curStreamList],
+            () => {
+              this.curStreamList.forEach(({ stream }) => {
+                this.classroomStore.streamStore.setRemoteVideoStreamType(
+                  stream.streamUuid,
+                  AGRemoteVideoStreamType.LOW_STREAM,
+                );
+              });
+            },
+          ),
+        );
+
+        this._disposers.push(
+          // when tool is opened, update layout
+          reaction(
+            () => [this.open],
+            () => {
+              if (!this.open) {
+                this.closeExternalWindow();
+              }
+            },
+          ),
+        );
+      }
 
       this._disposers.push(
+        // when client user change page, the published user list should update
         reaction(
-          () => [this.curPage, this.pageSize, this.curStreamList, this.stageUserUuids],
+          () => [this.curVideoUserList, this.open],
           () => {
-            this._sendVideoGalleryState();
-          },
-        ),
-      );
-      this._disposers.push(
-        reaction(
-          () => [this.curStreamList],
-          () => {
-            this.curStreamList.forEach(({ stream }) => {
-              this.classroomStore.streamStore.setRemoteVideoStreamType(
-                stream.streamUuid,
-                AGRemoteVideoStreamType.LOW_STREAM,
+            if (this.open) {
+              const userList = this.curVideoUserList.filter(
+                (userUuid) => userUuid !== EduClassroomConfig.shared.sessionInfo.userUuid,
               );
-            });
+              this._updateUsers(true, userList);
+            }
           },
         ),
       );
@@ -308,73 +355,50 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
         // when tool is opened, update layout
         reaction(
           () => [this.open],
-          () => {
-            if (!this.open) {
-              this.closeExternalWindow();
+          async () => {
+            try {
+              if (this.open) {
+                await this.classroomStore.handUpStore.offPodiumAll();
+
+                const area =
+                  (this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible) |
+                  LayoutMaskCode.VideoGalleryVisible;
+
+                await this.classroomStore.roomStore.updateFlexProperties({
+                  properties: { area },
+                  cause: null,
+                });
+              } else {
+                const area =
+                  (this.getters.layoutMaskCode & ~LayoutMaskCode.VideoGalleryVisible) |
+                  LayoutMaskCode.StageVisible;
+
+                await this.classroomStore.roomStore.updateFlexProperties({
+                  properties: { area },
+                  cause: null,
+                });
+                this._updateUsers(false, []);
+              }
+            } catch (e) {
+              this.shareUIStore.addGenericErrorDialog(e as AGError);
             }
           },
         ),
       );
     }
 
-    this._disposers.push(
-      // when client user change page, the published user list should update
-      reaction(
-        () => [this.curVideoUserList, this.open],
-        () => {
-          if (this.open) {
-            this.updateUsers(true, this.curVideoUserList.length ? this.curVideoUserList : []);
-          }
-        },
-      ),
-    );
-    this._disposers.push(
-      // when tool is opened, update layout
-      reaction(
-        () => [this.open],
-        async () => {
-          try {
-            if (this.open) {
-              await this.classroomStore.handUpStore.offPodiumAll();
-
-              const area =
-                (this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible) |
-                LayoutMaskCode.VideoGalleryVisible;
-
-              await this.classroomStore.roomStore.updateFlexProperties({
-                properties: { area },
-                cause: null,
-              });
-            } else {
-              const area =
-                (this.getters.layoutMaskCode & ~LayoutMaskCode.VideoGalleryVisible) |
-                LayoutMaskCode.StageVisible;
-
-              await this.classroomStore.roomStore.updateFlexProperties({
-                properties: { area },
-                cause: null,
-              });
-              this.updateUsers(false, []);
-            }
-          } catch (e) {
-            this.shareUIStore.addGenericErrorDialog(e as AGError);
-          }
-        },
-      ),
-    );
-
-    this._disposers.push(
-      // if the local user dose not have a stream window and video grid tool is opened, show local camera preview at right bottom corner
-      reaction(
-        () => [
-          this.getters.windowStreamUserUuids,
-          this.getters.videoGalleryStarted,
-          this.getters.stageVisible,
-          this.stageUserUuids,
-        ],
-        () => {
-          const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
-          if (role === EduRoleTypeEnum.student) {
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
+      this._disposers.push(
+        // if the local user dose not have a stream window and video grid tool is opened, show local camera preview at right bottom corner
+        reaction(
+          () => [
+            this.getters.windowStreamUserUuids,
+            this.getters.videoGalleryStarted,
+            this.getters.stageVisible,
+            this.stageUserUuids,
+          ],
+          () => {
+            const { userUuid } = EduClassroomConfig.shared.sessionInfo;
             const noStreamWindow = !this.getters.windowStreamUserUuids.includes(userUuid);
             const isOffStage = !this.stageUserUuids.includes(userUuid);
 
@@ -383,10 +407,23 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
             } else {
               this._setLocalPreview(this.getters.videoGalleryStarted && noStreamWindow);
             }
-          }
-        },
-      ),
-    );
+          },
+        ),
+      );
+      this._disposers.push(
+        reaction(
+          () => [this.localPreview],
+          () => {
+            if (this.localPreview) {
+              this.shareUIStore.addToast(
+                transI18n('fcr_video_gallery_message_teacher_is_watching'),
+                'success',
+              );
+            }
+          },
+        ),
+      );
+    }
   }
   onDestroy() {
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
