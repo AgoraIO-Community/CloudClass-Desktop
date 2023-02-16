@@ -30,6 +30,7 @@ import { LayoutMaskCode } from '../type';
 @Log.attach()
 export class VideoGalleryUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
+  private _dialogId?: string;
   readonly videoGalleryConfig = {
     '2x2': 4,
     '3x3': 9,
@@ -72,14 +73,15 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   // which users should show in video grid
   @computed
   get allVideoUserList() {
+    const { stageVisible } = this.getters;
     const { list } = iterateMap(this.classroomStore.userStore.users, {
       onMap(userUuid) {
         return userUuid;
       },
       onFilter(key, item) {
-        return (
-          item.userRole === EduRoleTypeEnum.teacher || item.userRole === EduRoleTypeEnum.student
-        );
+        return stageVisible
+          ? item.userRole === EduRoleTypeEnum.student
+          : item.userRole === EduRoleTypeEnum.teacher || item.userRole === EduRoleTypeEnum.student;
       },
     });
 
@@ -123,7 +125,9 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
       },
     });
 
-    return list;
+    return list.sort(({ fromUser }) =>
+      fromUser.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid ? -1 : 1,
+    );
   }
   // client user clicks next button
   @action.bound
@@ -147,8 +151,11 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  setOpen(open: boolean) {
+  setOpen(open: boolean, id?: string) {
     this.open = open;
+    if (open) {
+      this._dialogId = id;
+    }
   }
 
   // update user list and change open state
@@ -220,8 +227,13 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
 
   private _sendVideoGalleryState() {
     const options = toJS(this.videoGalleryConfigOptions);
-    const streamList = this.curStreamList.map(({ stream, fromUser }) => {
-      return { stream, fromUser: toJS(fromUser) };
+    const streamList = this.curStreamList.map(({ stream, fromUser, role, isMirrorMode }) => {
+      return {
+        stream: { ...stream, isLocal: stream.isLocal },
+        fromUser: toJS(fromUser),
+        role,
+        isMirrorMode,
+      };
     });
     const stageUserUuids = toJS(this.stageUserUuids);
 
@@ -240,6 +252,20 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
 
   onInstall() {
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      this._disposers.push(
+        reaction(
+          () => [this.getters.videoGalleryStarted],
+          () => {
+            const dialogOpened = this.shareUIStore.dialogQueue.some(
+              ({ category }) => category === DialogCategory.VideoGallery,
+            );
+
+            if (this.getters.videoGalleryStarted && !dialogOpened) {
+              this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
+            }
+          },
+        ),
+      );
       if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
         // create a electron browser window when SDK launches,
         this.shareUIStore.openWindow(WindowID.VideoGallery, {
@@ -293,8 +319,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
             if (message.type === IPCMessageType.BrowserWindowClose) {
               const { payload } = message as { payload: any };
               if (payload === WindowID.VideoGallery) {
-                this.closeExternalWindow();
-                this.shareUIStore.addDialog(DialogCategory.VideoGallery);
+                this.setOpen(false);
               }
             }
           }),
@@ -329,6 +354,11 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
             () => {
               if (!this.open) {
                 this.closeExternalWindow();
+                if (this._dialogId) {
+                  this.shareUIStore.removeDialog(this._dialogId);
+                }
+              } else {
+                this.openExternalWindow('right');
               }
             },
           ),

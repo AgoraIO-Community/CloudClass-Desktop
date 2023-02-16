@@ -11,6 +11,7 @@ import {
   EduErrorCenter,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
+  EduRteEngineConfig,
   iterateMap,
 } from 'agora-edu-core';
 import {
@@ -21,6 +22,7 @@ import {
   AgoraRteVideoSourceType,
   AGScreenShareDevice,
   bound,
+  Log,
 } from 'agora-rte-sdk';
 import { isEqual } from 'lodash';
 import { action, computed, observable, reaction, runInAction, toJS, when } from 'mobx';
@@ -38,6 +40,7 @@ import { rgbToHexColor } from '../../../utils/board-utils';
 import { conversionOption, fileExt2ContentType } from '../cloud-drive/helper';
 import { transI18n } from 'agora-common-libs';
 
+@Log.attach({ proxyMethods: false })
 export class ToolbarUIStore extends EduUIStoreBase {
   readonly defaultColors = [
     '#ffffff',
@@ -462,9 +465,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
         }
         break;
       case CabinetItemEnum.BreakoutRoom:
-        if (this.shareUIStore.hasDialog(DialogCategory.BreakoutRoom)) {
-          return;
-        }
         if (this.getters.videoGalleryStarted) {
           this.shareUIStore.addToast(
             transI18n('fcr_expansion_screen_tips_close_expansion_screen'),
@@ -475,7 +475,12 @@ export class ToolbarUIStore extends EduUIStoreBase {
         }
         break;
       case CabinetItemEnum.VideoGallery:
-        if (this.shareUIStore.hasDialog(DialogCategory.VideoGallery)) {
+        const dialogOpened = this.shareUIStore.dialogQueue.some(
+          ({ category }) => category === DialogCategory.VideoGallery,
+        );
+
+        if (dialogOpened) {
+          this.logger.info('video gallery already started');
           return;
         }
         if (this.getters.breakoutRoomStarted) {
@@ -667,19 +672,24 @@ export class ToolbarUIStore extends EduUIStoreBase {
       extapps.filter((item) => this.allowedCabinetItems.includes(item.id)),
     );
 
-    const excludes: string[] = [];
+    const excludes = new Set<string>();
 
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant) {
-      excludes.push(CabinetItemEnum.BreakoutRoom);
+      excludes.add(CabinetItemEnum.BreakoutRoom);
     }
     if (!this.boardApi.mounted) {
-      excludes.push(CabinetItemEnum.Laser);
-    }
-    if (this.getters.isInSubRoom) {
-      excludes.push(CabinetItemEnum.VideoGallery);
+      excludes.add(CabinetItemEnum.Laser);
     }
 
-    apps = apps.filter((it) => !excludes.includes(it.id));
+    if (this.getters.isInSubRoom) {
+      excludes.add(CabinetItemEnum.VideoGallery);
+    }
+
+    if (EduRteEngineConfig.platform !== AgoraRteRuntimePlatform.Electron) {
+      excludes.add(CabinetItemEnum.VideoGallery);
+    }
+
+    apps = apps.filter((it) => !excludes.has(it.id));
 
     return apps;
   }

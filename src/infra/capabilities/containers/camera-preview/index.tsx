@@ -8,7 +8,7 @@ export const CameraPreview = observer(() => {
     <div
       className="fcr-camera-preview absolute"
       style={{ width: 160 * 2, height: 90 * 2, bottom: 20, right: 20 }}>
-      <LocalTrackPlayer className="w-full h-full" />
+      <LocalTrackPlayer className="w-full h-full overflow-hidden" />
     </div>
   ) : null;
 });

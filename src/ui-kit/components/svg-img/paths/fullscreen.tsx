@@ -5,20 +5,20 @@ import { PathOptions } from '../svg-dict';
 export const path = (props: PathOptions) => (
   <g fill="none">
     <path
-      d="M12.5 15L8 19.5M8 19.5L8 16.7368M8 19.5L10.7632 19.5"
+      d="M26 22L38 10M38 10L38 20.3684M38 10L27.6316 10"
       stroke={props.iconPrimary}
-      stroke-width="1.2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.05714"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
-      d="M15 12.5L19.5 8M19.5 8L19.5 10.7632M19.5 8L16.7368 8"
+      d="M22 26L10 38M10 38L10 27.6316M10 38L20.3684 38"
       stroke={props.iconPrimary}
-      stroke-width="1.2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.05714"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </g>
 );
 
-export const viewBox = '0 0 28 28';
+export const viewBox = '0 0 48 48';

@@ -1,18 +1,8 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { Logger } from 'agora-rte-sdk';
 import { MouseEvent, RefObject } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { DraggableData, Rnd, RndDragEvent } from 'react-rnd';
-
-export const useVideoGalleryInitializer = () => {
-  const { videoGalleryUIStore } = useStore();
-
-  const { setOpen } = videoGalleryUIStore;
-
-  useEffect(() => {
-    setOpen(true);
-  }, []);
-};
 
 /**
  * pagniation control, update published user list when user scroll into page

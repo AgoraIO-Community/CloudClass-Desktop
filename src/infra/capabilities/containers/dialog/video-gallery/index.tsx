@@ -1,12 +1,13 @@
+import React from 'react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { FC, useCallback, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { Rnd } from 'react-rnd';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
-import { ForceDirection, useDragAnalyzer, useVideoGalleryInitializer, useVideoPage } from './hooks';
+import { ForceDirection, useDragAnalyzer, useVideoPage } from './hooks';
 import { TrackPlayer } from '../../stream/track-player';
 import { Pager } from './pager';
 import { Setting } from './setting';
@@ -54,6 +55,10 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
     removeDialog(id);
     videoGalleryUIStore.setOpen(false);
   }, [id]);
+
+  useEffect(() => {
+    videoGalleryUIStore.setOpen(true, id);
+  }, []);
 
   const handleFullscreen = useCallback(() => {
     let containerEl = document.querySelector(bounds);
@@ -114,8 +119,6 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
     detectMovement: defaults.detectMovement,
   });
 
-  useVideoGalleryInitializer();
-
   const {
     videoGalleryConfigOptions,
     setPageSize,
@@ -131,6 +134,7 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
 
   return (
     <Rnd
+      style={{ display: 'none' }}
       ref={rndRef}
       dragHandleClassName="main-title"
       enableResizing={false}

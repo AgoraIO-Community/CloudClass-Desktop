@@ -261,15 +261,6 @@ export class EduShareUIStore {
   }
 
   /**
-   * 模态框是否打开
-   * @param category
-   */
-  @action.bound
-  hasDialog(category: DialogCategory) {
-    return this.dialogQueue.some((d) => category === d.category);
-  }
-
-  /**
    * 移除模态框
    * @param id
    */

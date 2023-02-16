@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { VideoGalleryPortal } from '../../dialog/video-gallery';
 import { RtcEngineContext } from './context';
 import { useRtcEngine, useVideoGalleryState } from './hooks';
-import { RemoteRenderer } from './renderer';
+import { VideoRenderer } from './renderer';
 
 type Props = {
   //
@@ -28,7 +28,13 @@ export const VideoGallery: FC<Props> = () => {
   const { rtcEngine } = useRtcEngine();
 
   const renderVideo = useCallback(
-    (stream: EduStreamUI) => <RemoteRenderer uid={parseInt(stream.stream.streamUuid)} />,
+    (stream: EduStreamUI) => (
+      <VideoRenderer
+        uid={parseInt(stream.stream.streamUuid)}
+        isLocal={stream.stream.isLocal}
+        isMirrorMode={stream.isMirrorMode}
+      />
+    ),
     [],
   );
 

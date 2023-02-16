@@ -1,14 +1,11 @@
-import { WindowID } from '@classroom/infra/api';
-import { listenChannelMessage, sendToRendererProcess } from '@classroom/infra/utils/ipc';
-import { ChannelType } from '@classroom/infra/utils/ipc-channels';
-import { CSSProperties, FC, useContext, useEffect, useRef, useState } from 'react';
+import { CSSProperties, FC, useContext, useEffect, useRef } from 'react';
 import { RtcEngineContext } from './context';
 
 /**
  * 本地视频渲染
  * @returns
  */
-export const LocalRenderer = () => {
+export const LocalRenderer: FC<{ isMirrorMode: boolean }> = ({ isMirrorMode }) => {
   const domRef = useRef<HTMLDivElement>(null);
   const context = useContext(RtcEngineContext);
 
@@ -24,7 +21,12 @@ export const LocalRenderer = () => {
     };
   }, [context.rtcEngine]);
 
-  return <div style={{ width: '100%', height: '100%' }} ref={domRef} />;
+  const style: CSSProperties = { width: '100%', height: '100%', overflow: 'hidden' };
+  if (!isMirrorMode) {
+    style.transform = 'rotateY(180deg)';
+  }
+
+  return <div style={style} ref={domRef} />;
 };
 
 /**
@@ -53,27 +55,14 @@ export const RemoteRenderer: FC<{ uid: number }> = ({ uid }) => {
   return <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} ref={domRef} />;
 };
 
-export const VideoRenderers = () => {
-  const [streams, setStreams] = useState<{ uid: number; channelId: string }[]>([]);
-
-  useEffect(() => {
-    sendToRendererProcess(WindowID.Main, ChannelType.Message, {
-      type: 'rtc-stream-refersh',
-    });
-    const rtcRegisterEventDisposer = listenChannelMessage(ChannelType.Message, (e, message) => {
-      if (message.type === 'rtc-stream-updated') {
-        setStreams(message.payload as typeof streams);
-      }
-    });
-
-    return rtcRegisterEventDisposer;
-  }, []);
-
-  return (
-    <div>
-      {streams.map(({ uid }) =>
-        uid === 0 ? <LocalRenderer key={uid} /> : <RemoteRenderer key={uid} uid={uid} />,
-      )}
-    </div>
+export const VideoRenderer: FC<{ uid: number; isLocal: boolean; isMirrorMode: boolean }> = ({
+  uid,
+  isLocal,
+  isMirrorMode,
+}) => {
+  return isLocal ? (
+    <LocalRenderer key={uid} isMirrorMode={isMirrorMode} />
+  ) : (
+    <RemoteRenderer key={uid} uid={uid} />
   );
 };
