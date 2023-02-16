@@ -94,9 +94,10 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
   @computed
   get studentVideoStreamSize() {
-    const width = this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
+    const width =
+      ((this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth) * 119) / 375;
 
-    const height = (65 / 115) * width;
+    const height = (68 / 119) * width;
 
     return { width, height };
   }

@@ -2,7 +2,7 @@ import { EduClassroomStore, EduRoomTypeEnum } from 'agora-edu-core';
 import { EduClassroomUIStore } from '../stores/common';
 import { EduInteractiveUIClassStore } from '../stores/interactive';
 import { EduLectureUIStore } from '../stores/lecture';
-import { EduLectureH5UIStore } from '../stores/lecture-h5';
+import { EduLectureH5UIStore } from '../stores/lecture-mobile';
 import { Edu1v1ClassUIStore } from '../stores/one-on-one';
 
 export class EduUIStoreFactory {

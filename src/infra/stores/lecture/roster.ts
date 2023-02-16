@@ -1,5 +1,11 @@
 import { observable, action, computed, runInAction, reaction } from 'mobx';
-import { FetchUserParam, FetchUserType, EduRoleTypeEnum } from 'agora-edu-core';
+import {
+  FetchUserParam,
+  FetchUserType,
+  EduRoleTypeEnum,
+  EduClassroomConfig,
+  ClassroomState,
+} from 'agora-edu-core';
 import {
   AgoraRteMediaSourceState,
   AgoraRteMediaPublishState,
@@ -206,7 +212,25 @@ export class LectureRosterUIStore extends RosterUIStore {
 
   onInstall() {
     super.onInstall();
-
+    const { role, userName } = EduClassroomConfig.shared.sessionInfo;
+    const isTeacher = role === EduRoleTypeEnum.teacher;
+    isTeacher &&
+      this._disposers.push(
+        reaction(
+          () => {
+            return this.classroomStore.connectionStore.classroomState;
+          },
+          (classroomState) => {
+            if (classroomState === ClassroomState.Connected) {
+              if (this.classroomStore.roomStore.flexProps['teacherName'] !== userName) {
+                this.classroomStore.roomStore.updateFlexProperties({
+                  properties: { teacherName: userName },
+                });
+              }
+            }
+          },
+        ),
+      );
     this._disposers.push(
       reaction(
         () => this._usersList.length,

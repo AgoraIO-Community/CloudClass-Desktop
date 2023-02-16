@@ -775,4 +775,11 @@ export const zh = {
   fcr_expansion_screen_tips_close_group: '请先关闭分组讨论',
   fcr_expansion_screen_tips_close_expansion_screen: '请先关闭扩展屏',
   fcr_video_gallery_message_teacher_is_watching: '老师正在浏览你的视频画面',
+  fcr_H5_status_upcoming: '本届课程已结束',
+  fcr_H5_tips_chat_book: '你可以去预约其他课程啦',
+  fcr_h5_label_gotit: '我知道了',
+  fcr_H5_tips_chat_pollclosed: '老师关闭投票',
+  fcr_H5_tips_chat_pollopened: '老师开启投票',
+
+  fcr_home_status_teacher_leave: '老师离开教室',
 };

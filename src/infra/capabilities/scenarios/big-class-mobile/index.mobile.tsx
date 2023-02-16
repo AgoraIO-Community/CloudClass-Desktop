@@ -1,5 +1,5 @@
 import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
-import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-h5';
+import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useEffect } from 'react';
@@ -24,6 +24,7 @@ import { ToastContainerMobile } from '../../containers/toast/index.mobile';
 import { ClassState, EduClassroomConfig } from 'agora-edu-core';
 import { ComponentLevelRulesMobile } from '../../config';
 import { ScreenShareContainerMobile } from '../../containers/screen-share/index.mobile';
+import { useI18n } from 'agora-common-libs';
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -67,7 +68,6 @@ export const BigClassScenarioMobile = observer(() => {
           ) : (
             <>
               <WhiteboardMobile />
-              <ToastContainerMobile></ToastContainerMobile>
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
               <H5TeacherStreamChatContainer />
@@ -77,6 +77,7 @@ export const BigClassScenarioMobile = observer(() => {
               <CountDownMobile></CountDownMobile>
               <ChatMobile />
               <PollMobile></PollMobile>
+              <ToastContainerMobile></ToastContainerMobile>
             </>
           )}
         </LayoutOrientation>
@@ -140,16 +141,18 @@ const AfterClassMobileDialog = observer(() => {
   const {
     notificationUIStore: { setLeaveRoom },
   } = useStore();
+  const transI18n = useI18n();
+
   return (
     <div
       className="fcr-after-class-mobile-dialog-mask fixed w-full h-full l-0 t-0"
       style={{ zIndex: ComponentLevelRulesMobile.Level3 }}>
       <div className="fcr-after-class-mobile-dialog">
         <div className="fcr-after-class-mobile-dialog-img"></div>
-        <h1>本节课程已结束！</h1>
-        <h2>你可以去预约其它的课程啦</h2>
+        <h1>{transI18n('fcr_H5_status_upcoming')}</h1>
+        <h2>{transI18n('fcr_H5_tips_chat_book')}</h2>
         <div className="fcr-after-class-mobile-dialog-btn" onClick={() => setLeaveRoom(true)}>
-          我知道了
+          {transI18n('fcr_h5_label_gotit ')}
         </div>
       </div>
     </div>

@@ -792,5 +792,12 @@ export const en = {
   fcr_expansion_screen_tips_close_group: 'Please close breakout room',
   fcr_expansion_screen_tips_close_expansion_screen: 'Please close expansion display',
   fcr_video_gallery_close_video_gallery: 'Please close video gallery first',
+  fcr_H5_status_upcoming: 'The course has ended',
+  fcr_H5_tips_chat_book: 'You can book other courses now',
+  fcr_h5_label_gotit: 'Got it',
+  fcr_H5_tips_chat_pollclosed: 'Poll closed',
+  fcr_H5_tips_chat_pollopened: 'Poll opened',
+
+  fcr_home_status_teacher_leave: 'The teacher has left the room',
   fcr_video_gallery_message_teacher_is_watching: 'Teacher is watching you',
 };

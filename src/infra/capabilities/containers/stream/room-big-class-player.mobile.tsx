@@ -1,5 +1,5 @@
 import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
-import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-h5';
+import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
 import { StreamPlayerH5 } from './index.mobile';
 import { CSSProperties, FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
@@ -9,16 +9,18 @@ import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import dayjs from 'dayjs';
 import { Scheduler } from 'agora-rte-sdk';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
-import { transI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs';
 
 const RoomBigTeacherStreamH5Tool = ({
-  onPip,
+  isPiP,
+  onPiP,
   onLandscape,
   size,
   visible = false,
 }: {
+  isPiP: boolean;
   size: 'lg' | 'sm';
-  onPip: () => void;
+  onPiP: () => void;
   onLandscape: () => void;
   visible: boolean;
 }) => {
@@ -26,7 +28,10 @@ const RoomBigTeacherStreamH5Tool = ({
     <div
       style={{ opacity: visible ? 1 : 0, visibility: visible ? 'visible' : 'hidden' }}
       className={`fcr-stream-h5-tool-${size}`}>
-      <SvgImg onClick={onPip} type={SvgIconEnum.PIP} size={24}></SvgImg>
+      <SvgImg
+        onClick={onPiP}
+        type={isPiP ? SvgIconEnum.PIP_OFF : SvgIconEnum.PIP_ON}
+        size={24}></SvgImg>
       <SvgImg onClick={onLandscape} type={SvgIconEnum.LANDSCAPE} size={24}></SvgImg>
     </div>
   );
@@ -169,7 +174,7 @@ export const RoomBigTeacherStreamH5Container: FC = observer(() => {
   const onLandspce = () => {
     setForceLandscape(true);
   };
-  const onPip = () => {
+  const onPiP = () => {
     setIsPiP(!isPiP);
   };
 
@@ -191,10 +196,11 @@ export const RoomBigTeacherStreamH5Container: FC = observer(() => {
         transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
       }}>
       <RoomBigTeacherStreamH5Tool
+        isPiP={isPiP}
         visible={toolVisible && !isLandscape}
         size={isPiP ? 'sm' : 'lg'}
         onLandscape={onLandspce}
-        onPip={onPip}></RoomBigTeacherStreamH5Tool>
+        onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
       <StreamPlayerH5
         stream={teacherCameraStream}
         style={{
@@ -229,7 +235,7 @@ export const RoomBigStudentStreamsH5Container: FC = observer(() => {
         containerH5VisibleCls,
         addtionalContainerH5VisibleCls,
       )}
-      style={{ height: studentVideoStreamContainerHeight }}>
+      style={{ height: studentVideoStreamContainerHeight, width: '100vw' }}>
       <div className={classnames('items-center', 'flex-row', 'flex')}>
         {studentCameraStreams.map((stream) => {
           return (
@@ -258,7 +264,9 @@ export const H5RoomPlaceholder = observer(() => {
       },
     },
   } = useLectureH5UIStores();
-  const endTime = startTime || 0 + ((duration && duration * 1000) || 0);
+  const transI18n = useI18n();
+
+  const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
   return !teacherCameraStream && !mounted ? (
     <div className="fcr-h5-room-placeholder" style={{ height: boardContainerHeight }}>
       <p>

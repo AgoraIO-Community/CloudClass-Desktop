@@ -4,7 +4,7 @@ import { EduContext } from '../contexts';
 import { EduClassroomUIStore } from '../stores/common';
 import { EduInteractiveUIClassStore } from '../stores/interactive';
 import { EduLectureUIStore } from '../stores/lecture';
-import { EduLectureH5UIStore } from '../stores/lecture-h5';
+import { EduLectureH5UIStore } from '../stores/lecture-mobile';
 import { Edu1v1ClassUIStore } from '../stores/one-on-one';
 
 export const use1v1UIStores = () =>

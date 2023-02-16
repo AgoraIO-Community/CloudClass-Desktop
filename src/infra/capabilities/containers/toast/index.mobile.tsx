@@ -25,7 +25,7 @@ export const ToastContainerMobile = observer(() => {
     <div
       style={{
         opacity: visible ? '1' : '0',
-        zIndex: ComponentLevelRulesMobile.Level2,
+        zIndex: ComponentLevelRulesMobile.Level3,
         background: currToast?.type === 'info' ? '#4262FF' : '#000',
       }}
       className={`fcr-mobile-toast-container ${

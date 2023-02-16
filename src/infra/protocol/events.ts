@@ -78,4 +78,6 @@ export enum AgoraExtensionWidgetEvent {
   QuitForceLandscape = 'quit-force-landscape',
   //唤起单例Toast
   AddSingletonToast = 'add-singleton-toast',
+  //投票器激活状态变更
+  PollActiveStateChanged = 'poll-active-state-changed',
 }

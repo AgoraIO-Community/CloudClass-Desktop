@@ -14,14 +14,14 @@ module.exports = {
     tailwindcss(tailwindConfig),
     postcssPxToViewport({
       viewportWidth: 375,
-      unitPrecision: 3,
+      unitPrecision: 5,
       viewportUnit: 'vw',
       fontViewportUnit: 'vw',
       include: [/\/mobile\//, /\.mobile\./],
       exclude: [/\/node_modules\//i],
       landscape: true, // 是否处理横屏情况
       landscapeUnit: 'vw', // (String) 横屏时使用的单位
-      landscapeWidth: 667, // (Number) 横屏时使用的视口宽度
+      landscapeWidth: 812, // (Number) 横屏时使用的视口宽度
       landscapeHeight: 375, // (Number) 横屏时使用的视口宽度
     }),
   ],

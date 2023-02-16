@@ -162,6 +162,8 @@ export enum SvgIconEnum {
   STAGE = 'stage',
   RESET = 'reset',
   INDICATOR = 'indicator',
-  PIP = 'pip',
+  PIP_ON = 'pip-on',
+  PIP_OFF = 'pip-off',
+
   LANDSCAPE = 'landscape',
 }
