@@ -8,7 +8,7 @@ import {
   RteRole2EduRole,
 } from 'agora-edu-core';
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { transI18n } from 'agora-common-libs';
 import { OnPodiumStateEnum } from './type';
@@ -44,6 +44,21 @@ export class HandUpUIStore extends EduUIStoreBase {
         }
       }),
     );
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      this._disposers.push(
+        reaction(
+          () => [this.getters.stageVisible],
+          () => {
+            if (!this.getters.stageVisible) {
+              this.classroomStore.handUpStore.allowHandsUp(1, false);
+            } else {
+              this.classroomStore.handUpStore.allowHandsUp(1, true);
+            }
+          },
+        ),
+      );
+    }
   }
 
   private _curInvitedInfo: HandUpProgress | undefined = undefined;

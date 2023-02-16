@@ -52,21 +52,18 @@ export class RosterUIStore extends EduUIStoreBase {
         },
       ),
     );
-
-    this._disposers.push(
-      reaction(
-        () => [this.getters.stageVisible],
-        () => {
-          if (
-            EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher &&
-            !this.getters.stageVisible &&
-            !this.getters.isInSubRoom
-          ) {
-            this.classroomStore.roomStore.stopCarousel();
-          }
-        },
-      ),
-    );
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      this._disposers.push(
+        reaction(
+          () => [this.getters.stageVisible],
+          () => {
+            if (!this.getters.stageVisible) {
+              this.classroomStore.roomStore.stopCarousel();
+            }
+          },
+        ),
+      );
+    }
   }
 
   /** Observables */
