@@ -398,6 +398,13 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
                   cause: null,
                 });
               } else {
+                const area = this.getters.layoutMaskCode & ~LayoutMaskCode.VideoGalleryVisible;
+
+                await this.classroomStore.roomStore.updateFlexProperties({
+                  properties: { area },
+                  cause: null,
+                });
+                
                 this._updateUsers(false, []);
               }
             } catch (e) {
