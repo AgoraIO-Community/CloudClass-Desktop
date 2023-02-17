@@ -12,9 +12,10 @@ type StreamPlayerMobileProps = {
   stream: EduStreamUI;
   className?: string;
   style?: CSSProperties;
+  onClick?: () => void;
 };
 export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
-  ({ stream, className = '', style }) => {
+  ({ stream, className = '', style, onClick }) => {
     const {
       shareUIStore: { isLandscape },
       classroomStore: {
@@ -35,7 +36,7 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
       }
     }, [isLandscape, stream.stream.videoState, rtcState]);
     return (
-      <div className={`fcr-stream-player-h5 ${className}`} style={style}>
+      <div onClick={onClick} className={`fcr-stream-player-h5 ${className}`} style={style}>
         <TrackPlayer stream={stream} />
       </div>
     );
@@ -43,6 +44,7 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
 );
 export const TeacherCameraPlaceHolderMobile = observer(() => {
   const {
+    layoutUIStore: { toggleLandscapeToolBarVisible },
     streamUIStore: { teacherVideoStreamSize },
     classroomStore: {
       roomStore: { flexProps },
@@ -50,6 +52,7 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
   } = useLectureH5UIStores();
   return (
     <div
+      onClick={toggleLandscapeToolBarVisible}
       className="t-0 l-0"
       style={{
         background: 'rgba(39, 41, 47, 1)',

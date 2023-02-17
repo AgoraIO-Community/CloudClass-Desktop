@@ -72,6 +72,10 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
     this._landscapeToolBarVisible = !this._landscapeToolBarVisible;
     this._updateMobileLandscapeToolBarVisible();
   }
+  @bound
+  private _handleTouchStart() {
+    this._landscapeToolBarVisibleTask?.stop();
+  }
   onInstall(): void {
     this._disposers.push(
       reaction(
@@ -85,10 +89,13 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
         ({ isLandscape, isConnected }) => {
           if (isLandscape && isConnected) {
             this._setLandscapeToolBarVisible(true);
+            window.addEventListener('touchstart', this._handleTouchStart, { once: true });
             this._landscapeToolBarVisibleTask = Scheduler.shared.addDelayTask(() => {
+              window.removeEventListener('touchstart', this._handleTouchStart);
               this._setLandscapeToolBarVisible(false);
             }, 4000);
           } else {
+            window.removeEventListener('touchstart', this._handleTouchStart);
             this._landscapeToolBarVisibleTask?.stop();
             this._setLandscapeToolBarVisible(true);
           }

@@ -1,6 +1,6 @@
 import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
-import { StreamPlayerMobile, TeacherCameraPlaceHolderMobile } from './index.mobile';
+import { StreamPlayerMobile } from './index.mobile';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
@@ -159,6 +159,7 @@ export const RoomBigTeacherStreamContainerMobile = observer(
     const {
       streamUIStore,
       shareUIStore: { isLandscape, setForceLandscape },
+      layoutUIStore: { toggleLandscapeToolBarVisible },
     } = useLectureH5UIStores() as EduLectureH5UIStore;
     const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP } = streamUIStore;
     const ref = useRef<HTMLDivElement>(null);
@@ -202,6 +203,7 @@ export const RoomBigTeacherStreamContainerMobile = observer(
           onLandscape={onLandspce}
           onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
         <StreamPlayerMobile
+          onClick={toggleLandscapeToolBarVisible}
           stream={teacherCameraStream}
           style={{
             width: '100%',

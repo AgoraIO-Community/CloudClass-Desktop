@@ -71,11 +71,12 @@ export const BigClassScenarioMobile = observer(() => {
               <WhiteboardMobile />
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
-              <H5TeacherStreamChatContainer />
+              <TeacherStreamChatContainerMobile />
+              <CountDownMobile></CountDownMobile>
+
               {!isLandscape && (
                 <RoomBigStudentStreamsH5Container></RoomBigStudentStreamsH5Container>
               )}
-              <CountDownMobile></CountDownMobile>
               <ChatMobile />
               <PollMobile></PollMobile>
               <ToastContainerMobile></ToastContainerMobile>
@@ -107,7 +108,7 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
   );
 });
 
-const H5TeacherStreamChatContainer = observer(() => {
+const TeacherStreamChatContainerMobile = observer(() => {
   const {
     shareUIStore: { isLandscape },
     streamUIStore: { teacherCameraStream },
@@ -115,10 +116,7 @@ const H5TeacherStreamChatContainer = observer(() => {
     layoutUIStore: { toggleLandscapeToolBarVisible },
   } = useLectureH5UIStores() as EduLectureH5UIStore;
   return (
-    <Layout
-      onClick={toggleLandscapeToolBarVisible}
-      direction="col"
-      className={classnames(containerH5VisibleCls)}>
+    <Layout direction="col" className={classnames(containerH5VisibleCls)}>
       {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (
         <TeacherCameraPlaceHolderMobile></TeacherCameraPlaceHolderMobile>
       )}
