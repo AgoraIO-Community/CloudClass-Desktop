@@ -34,6 +34,8 @@ export enum AgoraExtensionRoomEvent {
   ResponseGrantedList = 'response-granted-list',
   // 横竖屏切换
   OrientationStatesChanged = 'orientation-changed',
+  // 移动端大班课横屏清屏状态变化
+  MobileLandscapeToolBarVisibleChanged = 'mobile-landscape-tool-bar-visible-changed',
 }
 
 /**
@@ -80,4 +82,6 @@ export enum AgoraExtensionWidgetEvent {
   AddSingletonToast = 'add-singleton-toast',
   //投票器激活状态变更
   PollActiveStateChanged = 'poll-active-state-changed',
+  //请求当前横屏清屏状态
+  RequestMobileLandscapeToolBarVisible = 'request-mobile-landscape-tool-bar-visible',
 }

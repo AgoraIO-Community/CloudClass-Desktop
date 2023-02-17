@@ -6,12 +6,14 @@ import './index.css';
 export interface LayoutProps extends BaseProps {
   direction?: 'row' | 'col' | 'col-reverse';
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 
 export const Layout: FC<LayoutProps> = ({
   direction = 'row',
   className,
   children,
+  onClick,
   ...restProps
 }) => {
   const cls = classnames({
@@ -19,7 +21,7 @@ export const Layout: FC<LayoutProps> = ({
     [`${className}`]: !!className,
   });
   return (
-    <div className={cls} {...restProps}>
+    <div onClick={onClick} className={cls} {...restProps}>
       {children}
     </div>
   );

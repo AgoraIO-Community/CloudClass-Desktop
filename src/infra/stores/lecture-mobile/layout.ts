@@ -1,11 +1,14 @@
 import { AgoraExtensionWidgetEvent } from '@classroom/infra/api';
 import { transI18n } from 'agora-common-libs';
-import { bound } from 'agora-rte-sdk';
+import { ClassroomState, ClassState } from 'agora-edu-core';
+import { bound, Scheduler } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, reaction } from 'mobx';
 import { LayoutUIStore } from '../common/layout';
 import { ToastTypeEnum } from '../common/share';
 export class LectureH5LayoutUIStore extends LayoutUIStore {
   private _disposers: (() => void)[] = [];
+  private _landscapeToolBarVisible = true;
+  private _landscapeToolBarVisibleTask: Scheduler.Task | null = null;
   @computed
   get flexOrientationCls() {
     return this.shareUIStore.orientation === 'portrait' ? 'col-reverse' : 'row';
@@ -53,7 +56,45 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
       this.shareUIStore.addSingletonToast(transI18n('fcr_H5_tips_chat_pollclosed'), 'info');
     }
   }
+  @bound
+  private _updateMobileLandscapeToolBarVisible() {
+    this.extensionApi.updateMobileLandscapeToolBarVisible(this._landscapeToolBarVisible);
+  }
+  @bound
+  private _setLandscapeToolBarVisible(visible: boolean) {
+    this._landscapeToolBarVisible = visible;
+    this._updateMobileLandscapeToolBarVisible();
+  }
+  @bound
+  toggleLandscapeToolBarVisible() {
+    if (!this.shareUIStore.isLandscape) return;
+    this._landscapeToolBarVisibleTask?.stop();
+    this._landscapeToolBarVisible = !this._landscapeToolBarVisible;
+    this._updateMobileLandscapeToolBarVisible();
+  }
   onInstall(): void {
+    this._disposers.push(
+      reaction(
+        () => {
+          return {
+            isLandscape: this.shareUIStore.isLandscape,
+            isConnected:
+              this.classroomStore.connectionStore.classroomState === ClassroomState.Connected,
+          };
+        },
+        ({ isLandscape, isConnected }) => {
+          if (isLandscape && isConnected) {
+            this._setLandscapeToolBarVisible(true);
+            this._landscapeToolBarVisibleTask = Scheduler.shared.addDelayTask(() => {
+              this._setLandscapeToolBarVisible(false);
+            }, 4000);
+          } else {
+            this._landscapeToolBarVisibleTask?.stop();
+            this._setLandscapeToolBarVisible(true);
+          }
+        },
+      ),
+    );
     this._disposers.push(
       computed(() => {
         return this.classroomStore.userStore.teacherList.size;
@@ -73,6 +114,10 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
         if (oldValue?.widgetController) {
           const widgetController = oldValue.widgetController;
           widgetController.removeBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.RequestMobileLandscapeToolBarVisible,
+            onMessage: this._updateMobileLandscapeToolBarVisible,
+          });
+          widgetController.removeBroadcastListener({
             messageType: AgoraExtensionWidgetEvent.PollActiveStateChanged,
             onMessage: this._handlePollWidgetActiveStateChanged,
           });
@@ -91,6 +136,10 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
         }
         if (newValue.widgetController) {
           const widgetController = newValue.widgetController;
+          widgetController.addBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.RequestMobileLandscapeToolBarVisible,
+            onMessage: this._updateMobileLandscapeToolBarVisible,
+          });
           widgetController.addBroadcastListener({
             messageType: AgoraExtensionWidgetEvent.PollActiveStateChanged,
             onMessage: this._handlePollWidgetActiveStateChanged,

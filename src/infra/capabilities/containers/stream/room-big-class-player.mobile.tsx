@@ -1,7 +1,7 @@
 import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
-import { StreamPlayerH5 } from './index.mobile';
-import { CSSProperties, FC, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { StreamPlayerMobile, TeacherCameraPlaceHolderMobile } from './index.mobile';
+import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
@@ -154,64 +154,65 @@ const useMobileStreamDrag = ({
     pos,
   };
 };
-export const RoomBigTeacherStreamH5Container: FC = observer(() => {
-  const {
-    streamUIStore,
-    shareUIStore: { isLandscape, setForceLandscape },
-  } = useLectureH5UIStores() as EduLectureH5UIStore;
-  const { teacherCameraStream, teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP } =
-    streamUIStore;
-  const ref = useRef<HTMLDivElement>(null);
+export const RoomBigTeacherStreamContainerMobile = observer(
+  ({ teacherCameraStream }: { teacherCameraStream: EduStreamUI }) => {
+    const {
+      streamUIStore,
+      shareUIStore: { isLandscape, setForceLandscape },
+    } = useLectureH5UIStores() as EduLectureH5UIStore;
+    const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP } = streamUIStore;
+    const ref = useRef<HTMLDivElement>(null);
 
-  const { showTool, toolVisible } = useMobileStreamTool({
-    triggerRef: ref as MutableRefObject<HTMLDivElement>,
-    teacherCameraStream,
-  });
-  const { pos } = useMobileStreamDrag({
-    isPiP,
-    triggerRef: ref as MutableRefObject<HTMLDivElement>,
-  });
-  const onLandspce = () => {
-    setForceLandscape(true);
-  };
-  const onPiP = () => {
-    setIsPiP(!isPiP);
-  };
+    const { showTool, toolVisible } = useMobileStreamTool({
+      triggerRef: ref as MutableRefObject<HTMLDivElement>,
+      teacherCameraStream,
+    });
+    const { pos } = useMobileStreamDrag({
+      isPiP,
+      triggerRef: ref as MutableRefObject<HTMLDivElement>,
+    });
+    const onLandspce = () => {
+      setForceLandscape(true);
+    };
+    const onPiP = () => {
+      setIsPiP(!isPiP);
+    };
 
-  useEffect(() => {
-    showTool();
-  }, [isPiP]);
+    useEffect(() => {
+      showTool();
+    }, [isPiP]);
 
-  return teacherCameraStream && !teacherCameraStream.isCameraMuted ? (
-    <div
-      ref={ref}
-      className={classnames(
-        'relative',
-        streamLayoutContainerCls,
-        'fcr-stream-h5',
-        isPiP && 'fcr-stream-h5-draggable',
-      )}
-      style={{
-        ...teacherVideoStreamSize,
-        transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
-      }}>
-      <RoomBigTeacherStreamH5Tool
-        isPiP={isPiP}
-        visible={toolVisible && !isLandscape}
-        size={isPiP ? 'sm' : 'lg'}
-        onLandscape={onLandspce}
-        onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
-      <StreamPlayerH5
-        stream={teacherCameraStream}
+    return (
+      <div
+        ref={ref}
+        className={classnames(
+          'relative',
+          streamLayoutContainerCls,
+          'fcr-stream-h5',
+          isPiP && 'fcr-stream-h5-draggable',
+        )}
         style={{
-          width: '100%',
-          height: '100%',
-          position: isPiP ? 'static' : 'relative',
-        }}
-      />
-    </div>
-  ) : null;
-});
+          ...teacherVideoStreamSize,
+          transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
+        }}>
+        <RoomBigTeacherStreamH5Tool
+          isPiP={isPiP}
+          visible={toolVisible && !isLandscape}
+          size={isPiP ? 'sm' : 'lg'}
+          onLandscape={onLandspce}
+          onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
+        <StreamPlayerMobile
+          stream={teacherCameraStream}
+          style={{
+            width: '100%',
+            height: '100%',
+            position: isPiP ? 'static' : 'relative',
+          }}
+        />
+      </div>
+    );
+  },
+);
 
 export const RoomBigStudentStreamsH5Container: FC = observer(() => {
   const {
@@ -239,14 +240,14 @@ export const RoomBigStudentStreamsH5Container: FC = observer(() => {
       <div className={classnames('items-center', 'flex-row', 'flex')}>
         {studentCameraStreams.map((stream) => {
           return (
-            <StreamPlayerH5
+            <StreamPlayerMobile
               style={{
                 width: studentVideoStreamSize.width,
                 height: studentVideoStreamSize.height,
                 position: 'relative',
                 flexShrink: 0,
               }}
-              stream={stream}></StreamPlayerH5>
+              stream={stream}></StreamPlayerMobile>
           );
         })}
       </div>

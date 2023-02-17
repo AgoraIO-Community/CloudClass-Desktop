@@ -8,7 +8,7 @@ import { Layout, LayoutProps } from '@classroom/ui-kit/components/layout';
 import {
   H5RoomPlaceholder,
   RoomBigStudentStreamsH5Container,
-  RoomBigTeacherStreamH5Container,
+  RoomBigTeacherStreamContainerMobile,
 } from '@classroom/infra/capabilities/containers/stream/room-big-class-player.mobile';
 import { WidgetContainerMobile } from '../../containers/widget/index.mobile';
 import {
@@ -25,6 +25,7 @@ import { ClassState, EduClassroomConfig } from 'agora-edu-core';
 import { ComponentLevelRulesMobile } from '../../config';
 import { ScreenShareContainerMobile } from '../../containers/screen-share/index.mobile';
 import { useI18n } from 'agora-common-libs';
+import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -33,7 +34,7 @@ export const BigClassScenarioMobile = observer(() => {
       },
     },
     shareUIStore: { isLandscape, forceLandscape },
-  } = useStore();
+  } = useLectureH5UIStores();
   return (
     <Room>
       <H5LayoutContainer>
@@ -52,7 +53,7 @@ export const BigClassScenarioMobile = observer(() => {
             isLandscape
               ? forceLandscape
                 ? { width: window.innerHeight }
-                : { height: window.innerHeight }
+                : { height: window.innerHeight, position: 'absolute', top: 0, left: 0 }
               : {}
           }
           className={
@@ -108,14 +109,22 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
 
 const H5TeacherStreamChatContainer = observer(() => {
   const {
+    shareUIStore: { isLandscape },
     streamUIStore: { teacherCameraStream },
     boardUIStore: { containerH5VisibleCls },
+    layoutUIStore: { toggleLandscapeToolBarVisible },
   } = useLectureH5UIStores() as EduLectureH5UIStore;
   return (
-    <Layout direction="col" className={classnames(containerH5VisibleCls)}>
-      {teacherCameraStream && !teacherCameraStream.isCameraMuted ? (
-        <RoomBigTeacherStreamH5Container />
-      ) : null}
+    <Layout
+      onClick={toggleLandscapeToolBarVisible}
+      direction="col"
+      className={classnames(containerH5VisibleCls)}>
+      {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (
+        <TeacherCameraPlaceHolderMobile></TeacherCameraPlaceHolderMobile>
+      )}
+      {teacherCameraStream && !teacherCameraStream.isCameraMuted && (
+        <RoomBigTeacherStreamContainerMobile teacherCameraStream={teacherCameraStream} />
+      )}
     </Layout>
   );
 });

@@ -8,12 +8,12 @@ import './index.mobile.css';
 import { TrackPlayer } from '../stream/track-player';
 import { AgoraRteMediaPublishState, AGRemoteVideoStreamType, AGRtcState } from 'agora-rte-sdk';
 
-type StreamPlayerH5Props = {
+type StreamPlayerMobileProps = {
   stream: EduStreamUI;
   className?: string;
   style?: CSSProperties;
 };
-export const StreamPlayerH5 = observer<FC<StreamPlayerH5Props>>(
+export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
   ({ stream, className = '', style }) => {
     const {
       shareUIStore: { isLandscape },
@@ -41,3 +41,37 @@ export const StreamPlayerH5 = observer<FC<StreamPlayerH5Props>>(
     );
   },
 );
+export const TeacherCameraPlaceHolderMobile = observer(() => {
+  const {
+    streamUIStore: { teacherVideoStreamSize },
+    classroomStore: {
+      roomStore: { flexProps },
+    },
+  } = useLectureH5UIStores();
+  return (
+    <div
+      className="t-0 l-0"
+      style={{
+        background: 'rgba(39, 41, 47, 1)',
+        ...teacherVideoStreamSize,
+      }}>
+      <div
+        className="fcr-stream-placeholder-mobile rounded-full absolute top-0 bottom-0 left-0 right-0 m-auto text-center"
+        style={{ background: 'rgba(66, 98, 255, 1)' }}>
+        {generateShortUserName(flexProps['teacherName'] || 'teacher')}
+      </div>
+    </div>
+  );
+});
+/**
+ * 生成用户缩略姓名
+ */
+const generateShortUserName = (name: string) => {
+  const names = name.split(' ');
+  const [firstWord] = names;
+  const lastWord = names[names.length - 1];
+  const firstLetter = firstWord.split('')[0];
+  const secondLetter =
+    names.length > 1 ? lastWord.split('')[0] : lastWord.length > 1 ? lastWord.split('')[1] : '';
+  return `${firstLetter}${secondLetter}`.toUpperCase();
+};

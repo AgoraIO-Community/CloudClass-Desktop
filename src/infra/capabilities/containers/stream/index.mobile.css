@@ -65,3 +65,11 @@
   line-height: 150%;
   color: #000000;
 }
+.fcr-stream-placeholder-mobile {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+}
