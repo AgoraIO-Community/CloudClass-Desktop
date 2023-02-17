@@ -1,3 +1,4 @@
+import { useClickAnywhere } from '@classroom/infra/hooks';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import classNames from 'classnames';
@@ -31,8 +32,12 @@ export const Setting: FC<Props> = observer(({ options, setPageSize, pageSize }) 
     };
   }, []);
 
+  const ref = useClickAnywhere(() => {
+    setOpened(false);
+  });
+
   return (
-    <div className="fcr-video-grid-settings">
+    <div className="fcr-video-grid-settings" ref={ref}>
       {/* dropdown button */}
       <div className="fcr-video-grid-settings-button" onClick={handleOpen}>
         <SvgImg type={SvgIconEnum.MATRIX} size={26} colors={{ iconPrimary: '#000' }} />

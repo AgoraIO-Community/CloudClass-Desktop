@@ -5,6 +5,7 @@ import {
   AGServiceErrorCode,
   ClassroomState,
   ClassState,
+  DEVICE_DISABLE,
   EduClassroomConfig,
   EduRoleTypeEnum,
   LeaveReason,
@@ -58,38 +59,12 @@ export class NavigationBarUIStore extends EduUIStoreBase {
         },
       ),
     );
-
-    this._disposers.push(
-      reaction(
-        () => this.getters.windowStreamUserUuids,
-        () => {
-          const isContainTeacher = this.getters.windowStreamUserUuids.find(
-            (userUuid) => userUuid === EduClassroomConfig.shared.sessionInfo.userUuid,
-          );
-          this.teacherStreamWindow = !!isContainTeacher;
-        },
-      ),
-    );
   }
-  //observables
-  // @observable isRecording = false;
-
-  // 老师流是否在大窗中展示
-  @observable teacherStreamWindow = false;
 
   // 是否显示share弹层
   @observable shareVisible = false;
 
   //computed
-  /**
-   * 准备好挂载到 DOM
-   * @returns
-   */
-  @computed
-  get readyToMount() {
-    return this.classroomStore.connectionStore.engine !== undefined;
-  }
-
   @computed
   get recordStatus() {
     if (
@@ -121,21 +96,30 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 本地摄像头设备是否关闭
+   * 是否选择摄像头设备
    * @returns
    */
-  @computed get localCameraOff() {
-    return (
-      this.classroomStore.mediaStore.localCameraTrackState !== AgoraRteMediaSourceState.started
-    );
+  @computed
+  get localCameraOff() {
+    const { cameraDeviceId } = this.classroomStore.mediaStore;
+
+    return typeof cameraDeviceId === 'undefined' || cameraDeviceId == DEVICE_DISABLE;
   }
 
   /**
-   * 本地麦克风设备是否关闭
+   * 是否选择麦克风设备
    */
   @computed
   get localMicOff() {
-    return this.classroomStore.mediaStore.localMicTrackState !== AgoraRteMediaSourceState.started;
+    const { recordingDeviceId } = this.classroomStore.mediaStore;
+    return typeof recordingDeviceId === 'undefined' || recordingDeviceId === DEVICE_DISABLE;
+  }
+
+  @computed
+  get hasStreamWindow() {
+    return this.getters.windowStreamUserUuids.includes(
+      EduClassroomConfig.shared.sessionInfo.userUuid,
+    );
   }
 
   /**
@@ -148,20 +132,11 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get localNavCameraOff() {
-    if (
-      (typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
-        this.classroomStore.roomStore.flexProps.stage) ||
-      typeof this.classroomStore.roomStore.flexProps.stage === 'undefined'
-    ) {
+    if (this.getters.stageVisible || this.getters.videoGalleryStarted) {
       return this.localCameraOff;
+    } else {
+      return !this.hasStreamWindow;
     }
-    if (
-      typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
-      !this.classroomStore.roomStore.flexProps.stage
-    ) {
-      return !this.teacherStreamWindow;
-    }
-    return this.localCameraOff;
   }
 
   /**
@@ -785,7 +760,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     return duration.format('HH : mm : ss');
   }
 
-  @action
+  @action.bound
   closeShare() {
     this.shareVisible = false;
   }
@@ -805,31 +780,29 @@ export class NavigationBarUIStore extends EduUIStoreBase {
   /**
    * 切换本地摄像头设备开关状态
    */
-  @bound
   private _toggleLocalVideo() {
-    if (this.localCameraOff) {
-      this.classroomStore.mediaStore.enableLocalVideo(true);
-    } else {
+    if (!this.localCameraOff) {
       this.classroomStore.mediaStore.enableLocalVideo(false);
+    } else {
+      this.classroomStore.mediaStore.enableLocalVideo(true);
     }
   }
 
   /**
    * 切换本地麦克风设备开关状态
    */
-  @bound
   private _toggleLocalAudio() {
-    if (this.localMicOff) {
-      this.classroomStore.mediaStore.enableLocalAudio(true);
-    } else {
+    if (!this.localMicOff) {
       this.classroomStore.mediaStore.enableLocalAudio(false);
+    } else {
+      this.classroomStore.mediaStore.enableLocalAudio(true);
     }
   }
 
   /**
    * 打开关闭老师的 streamWindow
    */
-  _toggleStreamWindow() {
+  private _toggleStreamWindow() {
     EduEventUICenter.shared.emitClassroomUIEvents(
       AgoraEduClassroomUIEvent.toggleTeacherStreamWindow,
       this.localNavCameraOff,
@@ -840,23 +813,11 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * stage === true 那么控制摄像头开关
    * stage === flase 控制老师窗口的展示和关闭
    */
-  @bound
   private _toggleNavCamera() {
-    if (
-      (typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
-        this.classroomStore.roomStore.flexProps.stage) ||
-      typeof this.classroomStore.roomStore.flexProps.stage === 'undefined'
-    ) {
+    if (this.getters.stageVisible || this.getters.videoGalleryStarted) {
       this._toggleLocalVideo();
-      return;
-    }
-    if (
-      typeof this.classroomStore.roomStore.flexProps.stage !== 'undefined' &&
-      !this.classroomStore.roomStore.flexProps.stage
-    ) {
-      // 🖊️ streamwindowMap 中是否有 teacher stream uuid
+    } else {
       this._toggleStreamWindow();
-      return;
     }
   }
 

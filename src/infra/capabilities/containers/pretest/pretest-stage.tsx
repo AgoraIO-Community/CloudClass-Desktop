@@ -1,7 +1,7 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import { Button, SvgImg, SvgIconEnum } from '@classroom/ui-kit';
+import { FC } from 'react';
+import { SvgImg, SvgIconEnum } from '@classroom/ui-kit';
 
 import { useI18n } from 'agora-common-libs';
 

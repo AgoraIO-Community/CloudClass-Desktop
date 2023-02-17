@@ -42,7 +42,7 @@ export const VideoGallery: FC<Props> = () => {
     <RtcEngineContext.Provider value={{ rtcEngine }}>
       <div className="w-full h-full flex flex-col">
         <VideoGalleryPortal
-          className="main-content"
+          className="main-content h-full"
           streamList={streamList}
           options={options}
           pageSize={pageSize}

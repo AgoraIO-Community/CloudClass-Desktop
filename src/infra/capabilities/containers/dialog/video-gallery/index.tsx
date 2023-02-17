@@ -166,7 +166,7 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
         </div>
         {/* content */}
         <VideoGalleryPortal
-          className="main-content"
+          className="main-content h-full"
           streamList={streamList}
           options={videoGalleryConfigOptions}
           pageSize={pageSize}

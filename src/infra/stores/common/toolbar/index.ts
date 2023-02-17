@@ -486,7 +486,14 @@ export class ToolbarUIStore extends EduUIStoreBase {
         if (this.getters.breakoutRoomStarted) {
           this.shareUIStore.addToast(transI18n('fcr_expansion_screen_tips_close_group'), 'warning');
         } else {
-          this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
+          this.classroomStore.handUpStore
+            .offPodiumAll()
+            .then(() => {
+              this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
+            })
+            .catch((e) => {
+              this.shareUIStore.addGenericErrorDialog(e);
+            });
         }
 
         break;
@@ -658,7 +665,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
       },
       {
         id: CabinetItemEnum.VideoGallery,
-        iconType: 'whiteboard',
+        iconType: 'video-gallery',
         name: transI18n('fcr_expansion_screen_button_expansion_screen'),
       },
       {

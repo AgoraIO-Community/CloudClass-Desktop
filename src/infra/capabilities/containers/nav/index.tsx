@@ -33,6 +33,7 @@ import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color'
 import ClipboardJS from 'clipboard';
 import { AgoraEduSDK } from '@classroom/infra/api';
 import { useI18n } from 'agora-common-libs';
+import { useClickAnywhere } from '@classroom/infra/hooks';
 
 const SignalContent = observer(() => {
   const { navigationBarUIStore } = useStore();
@@ -140,15 +141,15 @@ const Actions = observer(() => {
     <React.Fragment>
       {actions.length
         ? actions.map((a) =>
-          a.id === 'Record' ? (
-            <NavigationBarRecordAction
-              key={a.iconType}
-              action={a as EduNavAction<EduNavRecordActionPayload>}
-            />
-          ) : (
-            <NavigationBarAction key={a.iconType} action={a as EduNavAction} />
-          ),
-        )
+            a.id === 'Record' ? (
+              <NavigationBarRecordAction
+                key={a.iconType}
+                action={a as EduNavAction<EduNavRecordActionPayload>}
+              />
+            ) : (
+              <NavigationBarAction key={a.iconType} action={a as EduNavAction} />
+            ),
+          )
         : null}
     </React.Fragment>
   );
@@ -177,52 +178,61 @@ const ShareCard = observer(() => {
     }
   }, []);
 
+  const ref = useClickAnywhere(() => {
+    navigationBarUIStore.closeShare();
+  });
+
   const t = useI18n();
 
   return (
-    <Card
+    <div
+      ref={ref}
       className={cls}
       style={{
         display: navigationBarUIStore.shareVisible ? 'block' : 'none',
         right: 42,
         top: 30,
-        padding: 20,
-        borderRadius: 10,
       }}>
-      <Layout direction="col">
-        <Layout className="justify-between">
-          <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_name')}</span>
-          <span className={'w-1/2 truncate text-right'} title={roomName}>
-            {roomName}
-          </span>
+      <Card
+        style={{
+          padding: 20,
+          borderRadius: 10,
+        }}>
+        <Layout direction="col">
+          <Layout className="justify-between">
+            <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_name')}</span>
+            <span className={'w-1/2 truncate text-right'} title={roomName}>
+              {roomName}
+            </span>
+          </Layout>
+          <Layout className="justify-between mt-3">
+            <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_id')}</span>
+            <span className={'w-1/2 truncate text-right'} title={roomUuid}>
+              {roomUuid}
+            </span>
+          </Layout>
+          <Layout className="justify-between mt-3">
+            <span className="text-14 whitespace-nowrap">{t('fcr_copy_share_link')}</span>
+            <Button type="ghost" style={{ marginLeft: 40 }} size="xs">
+              <Layout className="mx-4 items-center">
+                <SvgImg
+                  type={SvgIconEnum.LINK_SOLID}
+                  colors={{ iconPrimary: InteractionStateColors.allow }}
+                  size={16}
+                />
+                <span
+                  ref={copyRef}
+                  data-clipboard-text={`${AgoraEduSDK.shareUrl}`}
+                  className="text-12 cursor-pointer whitespace-nowrap"
+                  style={{ color: InteractionStateColors.allow, marginLeft: 4 }}>
+                  {t('fcr_copy_share_link_copy')}
+                </span>
+              </Layout>
+            </Button>
+          </Layout>
         </Layout>
-        <Layout className="justify-between mt-3">
-          <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_id')}</span>
-          <span className={'w-1/2 truncate text-right'} title={roomUuid}>
-            {roomUuid}
-          </span>
-        </Layout>
-        <Layout className="justify-between mt-3">
-          <span className="text-14 whitespace-nowrap">{t('fcr_copy_share_link')}</span>
-          <Button type="ghost" style={{ marginLeft: 40 }} size="xs">
-            <Layout className="mx-4 items-center">
-              <SvgImg
-                type={SvgIconEnum.LINK_SOLID}
-                colors={{ iconPrimary: InteractionStateColors.allow }}
-                size={16}
-              />
-              <span
-                ref={copyRef}
-                data-clipboard-text={`${AgoraEduSDK.shareUrl}`}
-                className="text-12 cursor-pointer whitespace-nowrap"
-                style={{ color: InteractionStateColors.allow, marginLeft: 4 }}>
-                {t('fcr_copy_share_link_copy')}
-              </span>
-            </Layout>
-          </Button>
-        </Layout>
-      </Layout>
-    </Card>
+      </Card>
+    </div>
   );
 });
 
@@ -282,30 +292,19 @@ export const NavigationBarAction = visibilityListItemControl(
   },
 );
 
-export const NavigationBar = visibilityControl(
-  observer(() => {
-    const { navigationBarUIStore } = useStore();
-
-    const { readyToMount } = navigationBarUIStore;
-
-    if (!readyToMount) {
-      return null;
-    }
-
-    return (
-      <Header className="fcr-biz-header">
-        <div className="header-signal">
-          <SignalQuality />
-        </div>
-        <div className="fcr-biz-header-title-wrap">
-          <RoomState />
-        </div>
-        <div className="header-actions">
-          <Actions />
-          <ShareCard />
-        </div>
-      </Header>
-    );
-  }),
-  headerEnabled,
-);
+export const NavigationBar = visibilityControl(() => {
+  return (
+    <Header className="fcr-biz-header">
+      <div className="header-signal">
+        <SignalQuality />
+      </div>
+      <div className="fcr-biz-header-title-wrap">
+        <RoomState />
+      </div>
+      <div className="header-actions">
+        <Actions />
+        <ShareCard />
+      </div>
+    </Header>
+  );
+}, headerEnabled);

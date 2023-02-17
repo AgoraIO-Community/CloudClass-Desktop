@@ -973,6 +973,7 @@ export class StreamWindowUIStore extends EduUIStoreBase {
         const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamWindowUuid);
 
         perStreamWindow.extra.operatorUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
+        perStreamWindow.extra.userUuid = stream?.fromUser.userUuid || '';
         perStreamWindow.state = 1;
         streamWidgetMap.set(
           streamWindowUuid,

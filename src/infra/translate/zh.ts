@@ -774,7 +774,7 @@ export const zh = {
   fcr_expansion_screen_button_down: '下台',
   fcr_expansion_screen_tips_close_group: '请先关闭分组讨论',
   fcr_expansion_screen_tips_close_expansion_screen: '请先关闭扩展屏',
-  fcr_video_gallery_message_teacher_is_watching: '老师正在浏览你的视频画面',
+  fcr_expansion_screen_tips_teacher_watching: '老师正在浏览你的视频画面',
   fcr_H5_status_upcoming: '本届课程已结束',
   fcr_H5_tips_chat_book: '你可以去预约其他课程啦',
   fcr_h5_label_gotit: '我知道了',

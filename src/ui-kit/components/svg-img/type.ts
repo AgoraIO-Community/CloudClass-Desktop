@@ -147,6 +147,7 @@ export enum SvgIconEnum {
   UNDO = 'undo',
   UNKNOWN = 'unknown',
   UNKNOWN_SIGNAL = 'unknown-signal',
+  VIDEO_GALLERY = 'video-gallery',
   VIDEO = 'video',
   VOTE = 'vote',
   WHITEBOARD = 'whiteboard',

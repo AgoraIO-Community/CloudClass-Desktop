@@ -102,6 +102,8 @@ export class WidgetInfo {
   extra: {
     contain: boolean;
     zIndex: number;
+    // old Android version needs this property
+    userUuid: string;
   };
 
   constructor({
@@ -123,6 +125,8 @@ export class WidgetInfo {
     extra: {
       contain: boolean;
       zIndex: number;
+      // old Android version needs this property
+      userUuid: string;
     };
     state: 1 | 0;
   }) {

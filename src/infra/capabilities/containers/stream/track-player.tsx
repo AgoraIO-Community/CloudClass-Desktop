@@ -61,7 +61,7 @@ export const RemoteTrackPlayer: FC<RemoteTrackPlayerProps> = observer(
       if (rtcRef.current) {
         setupRemoteVideo(stream, rtcRef.current, mirrorMode);
       }
-    }, [mirrorMode, setupRemoteVideo]);
+    }, [stream, setupRemoteVideo]);
 
     return <div style={style} className={`${className}`} ref={rtcRef} />;
   },

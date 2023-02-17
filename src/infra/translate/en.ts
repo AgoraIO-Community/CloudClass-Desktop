@@ -791,7 +791,7 @@ export const en = {
   fcr_expansion_screen_button_down: 'Down stage',
   fcr_expansion_screen_tips_close_group: 'Please close breakout room',
   fcr_expansion_screen_tips_close_expansion_screen: 'Please close expansion display',
-  fcr_video_gallery_close_video_gallery: 'Please close video gallery first',
+  fcr_expansion_screen_tips_teacher_watching: 'The teacher is viewing your video screen',
   fcr_H5_status_upcoming: 'The course has ended',
   fcr_H5_tips_chat_book: 'You can book other courses now',
   fcr_h5_label_gotit: 'Got it',

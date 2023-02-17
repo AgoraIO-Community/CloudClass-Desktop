@@ -85,7 +85,9 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
       },
     });
 
-    return list;
+    return list.sort((userUuid) =>
+      userUuid === EduClassroomConfig.shared.sessionInfo.userUuid ? -1 : 1,
+    );
   }
   // how many page user can scroll
   @computed
@@ -106,9 +108,13 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   get curStreamList() {
     const { streamByUserUuid, streamByStreamUuid } = this.classroomStore.streamStore;
     const { curVideoUserList } = this;
-    const { list } = iterateMap(streamByUserUuid, {
-      onMap(userUuid, streams) {
-        let cameraStream: EduStream | undefined;
+
+    const list: EduStreamUI[] = [];
+
+    curVideoUserList.forEach((userUuid) => {
+      let cameraStream: EduStream | undefined;
+      const streams = streamByUserUuid.get(userUuid);
+      if (streams) {
         streams.forEach((streamUuid) => {
           const stream = streamByStreamUuid.get(streamUuid);
           if (stream && stream.videoSourceType === AgoraRteVideoSourceType.Camera) {
@@ -116,18 +122,14 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
           }
         });
         if (cameraStream) {
-          return new EduStreamUI(cameraStream);
+          list.push(new EduStreamUI(cameraStream));
+        } else {
+          this.logger.warn(`Camera stream of user [${userUuid}] dose not existed.`);
         }
-        throw new Error(`Camera stream of user [${userUuid}] dose not existed.`);
-      },
-      onFilter(key, stream) {
-        return stream && curVideoUserList.includes(key);
-      },
+      }
     });
 
-    return list.sort(({ fromUser }) =>
-      fromUser.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid ? -1 : 1,
-    );
+    return list;
   }
   // client user clicks next button
   @action.bound
@@ -148,6 +150,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   @action.bound
   setPageSize(pageSize: number) {
     this.pageSize = pageSize;
+    this.curPage = 0;
   }
 
   @action.bound
@@ -387,8 +390,6 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
           async () => {
             try {
               if (this.open) {
-                await this.classroomStore.handUpStore.offPodiumAll();
-
                 const area =
                   (this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible) |
                   LayoutMaskCode.VideoGalleryVisible;
@@ -444,7 +445,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
           () => {
             if (this.localPreview) {
               this.shareUIStore.addToast(
-                transI18n('fcr_video_gallery_message_teacher_is_watching'),
+                transI18n('fcr_expansion_screen_tips_teacher_watching'),
                 'success',
               );
             }
