@@ -2,28 +2,29 @@ import { AgoraExtensionWidgetEvent } from '@classroom/infra/api';
 import { transI18n } from 'agora-common-libs';
 import { ClassroomState, ClassState } from 'agora-edu-core';
 import { bound, Scheduler } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import { LayoutUIStore } from '../common/layout';
 import { ToastTypeEnum } from '../common/share';
 export class LectureH5LayoutUIStore extends LayoutUIStore {
   private _disposers: (() => void)[] = [];
-  private _landscapeToolBarVisible = true;
+  @observable landscapeToolBarVisible = true;
   private _landscapeToolBarVisibleTask: Scheduler.Task | null = null;
-  @computed
-  get flexOrientationCls() {
-    return this.shareUIStore.orientation === 'portrait' ? 'col-reverse' : 'row';
-  }
+  @observable actionSheetVisible = false;
 
-  @computed
-  get chatWidgetH5Cls() {
-    return this.shareUIStore.orientation === 'portrait' ? 'aisde-fixed' : 'flex-1';
+  @action.bound
+  setActionSheetVisible(visible: boolean) {
+    this.actionSheetVisible = visible;
   }
 
   @computed
   get h5ContainerCls() {
     return this.shareUIStore.orientation === 'portrait' ? '' : 'justify-center items-center';
   }
-
+  @computed
+  get classRoomPlacholderMobileHeight() {
+    const innerWidth = this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
+    return innerWidth * (190 / 375);
+  }
   @computed
   get h5LayoutUIDimensions() {
     return this.shareUIStore.orientation === 'portrait'
@@ -58,18 +59,18 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
   }
   @bound
   private _updateMobileLandscapeToolBarVisible() {
-    this.extensionApi.updateMobileLandscapeToolBarVisible(this._landscapeToolBarVisible);
+    this.extensionApi.updateMobileLandscapeToolBarVisible(this.landscapeToolBarVisible);
   }
-  @bound
+  @action.bound
   private _setLandscapeToolBarVisible(visible: boolean) {
-    this._landscapeToolBarVisible = visible;
+    this.landscapeToolBarVisible = visible;
     this._updateMobileLandscapeToolBarVisible();
   }
-  @bound
+  @action.bound
   toggleLandscapeToolBarVisible() {
     if (!this.shareUIStore.isLandscape) return;
     this._landscapeToolBarVisibleTask?.stop();
-    this._landscapeToolBarVisible = !this._landscapeToolBarVisible;
+    this.landscapeToolBarVisible = !this.landscapeToolBarVisible;
     this._updateMobileLandscapeToolBarVisible();
   }
   @bound
@@ -98,6 +99,7 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
             window.removeEventListener('touchstart', this._handleTouchStart);
             this._landscapeToolBarVisibleTask?.stop();
             this._setLandscapeToolBarVisible(true);
+            this.setActionSheetVisible(false);
           }
         },
       ),

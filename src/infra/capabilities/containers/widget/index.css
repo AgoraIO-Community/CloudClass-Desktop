@@ -17,3 +17,7 @@
 .fcr-countdown-h5-widget {
   position: relative;
 }
+.whiteboard-mobile-container .netless-whiteboard-wrapper {
+  background: #fff;
+  border-color: #fff;
+}

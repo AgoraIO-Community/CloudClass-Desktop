@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 import { Layout, LayoutProps } from '@classroom/ui-kit/components/layout';
 import {
   H5RoomPlaceholder,
-  RoomBigStudentStreamsH5Container,
+  RoomBigStudentStreamsContainerMobile,
   RoomBigTeacherStreamContainerMobile,
 } from '@classroom/infra/capabilities/containers/stream/room-big-class-player.mobile';
 import { WidgetContainerMobile } from '../../containers/widget/index.mobile';
@@ -26,6 +26,7 @@ import { ComponentLevelRulesMobile } from '../../config';
 import { ScreenShareContainerMobile } from '../../containers/screen-share/index.mobile';
 import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
+import { ActionSheetMobile } from '../../containers/action-sheet-mobile/index.mobile';
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -75,11 +76,12 @@ export const BigClassScenarioMobile = observer(() => {
               <CountDownMobile></CountDownMobile>
 
               {!isLandscape && (
-                <RoomBigStudentStreamsH5Container></RoomBigStudentStreamsH5Container>
+                <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
               )}
               <ChatMobile />
               <PollMobile></PollMobile>
               <ToastContainerMobile></ToastContainerMobile>
+              <ActionSheetMobile></ActionSheetMobile>
             </>
           )}
         </LayoutOrientation>
@@ -159,7 +161,7 @@ const AfterClassMobileDialog = observer(() => {
         <h1>{transI18n('fcr_H5_status_upcoming')}</h1>
         <h2>{transI18n('fcr_H5_tips_chat_book')}</h2>
         <div className="fcr-after-class-mobile-dialog-btn" onClick={() => setLeaveRoom(true)}>
-          {transI18n('fcr_h5_label_gotit ')}
+          {transI18n('fcr_h5_label_gotit')}
         </div>
       </div>
     </div>

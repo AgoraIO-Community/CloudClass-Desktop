@@ -84,7 +84,7 @@ export const WhiteboardMobile = observer(function Board() {
   const height = mounted ? boardContainerHeight : 0;
   return (
     <div
-      className={classnames('whiteboard-h5-container w-full relative', containerH5VisibleCls)}
+      className={classnames('whiteboard-mobile-container w-full relative', containerH5VisibleCls)}
       style={{
         height: height,
         width: boardContainerWidth,
@@ -111,23 +111,34 @@ export const WhiteboardMobile = observer(function Board() {
 export const ChatMobile = observer(function Chat() {
   const {
     widgetUIStore,
-    streamUIStore: { teacherCameraStream, studentCameraStreams, studentVideoStreamSize, isPiP },
+    streamUIStore: {
+      teacherCameraStream,
+      studentCameraStreams,
+      studentVideoStreamSize,
+      studentStreamsVisible,
+      isPiP,
+    },
     boardUIStore: { boardContainerHeight, mounted },
     shareUIStore: { isLandscape, forceLandscape },
+    layoutUIStore: { classRoomPlacholderMobileHeight },
   } = useLectureH5UIStores();
   const { ready } = widgetUIStore;
   const [chatH5Height, setChatH5Height] = useState(0);
   const calcHeight = () => {
     const h5Height = document.body.clientHeight;
-
+    //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
     const height =
       h5Height -
-      (!mounted && !teacherCameraStream ? boardContainerHeight : 0) -
+      (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted)
+        ? classRoomPlacholderMobileHeight
+        : 0) -
       (mounted ? boardContainerHeight : 0) -
       (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
         ? boardContainerHeight
         : 0) -
-      (studentCameraStreams.length > 0 ? studentVideoStreamSize.height : 0);
+      (studentCameraStreams.length > 0 && studentStreamsVisible
+        ? studentVideoStreamSize.height
+        : 0);
     setChatH5Height(height);
   };
   useEffect(calcHeight, [
@@ -140,6 +151,7 @@ export const ChatMobile = observer(function Chat() {
     studentCameraStreams.length,
     studentVideoStreamSize.height,
     teacherCameraStream?.isCameraMuted,
+    studentStreamsVisible,
   ]);
   useEffect(() => {
     window.addEventListener('resize', calcHeight);

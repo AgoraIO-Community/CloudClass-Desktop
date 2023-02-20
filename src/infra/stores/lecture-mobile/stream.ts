@@ -34,7 +34,7 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
       ),
     );
   }
-
+  @observable studentStreamsVisible = true;
   @observable
   isPiP = false;
 
@@ -43,7 +43,10 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
   @observable
   carouselPosition = 0;
-
+  @action.bound
+  toggleStudentStreamsVisible() {
+    this.studentStreamsVisible = !this.studentStreamsVisible;
+  }
   @action.bound
   setIsPiP(isPiP: boolean) {
     this.isPiP = isPiP;
@@ -104,9 +107,11 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
   @computed
   get studentVideoStreamContainerHeight() {
-    return this.shareUIStore.orientation === 'landscape'
+    return !this.shareUIStore.isLandscape &&
+      this.studentStreamsVisible &&
+      this.studentCameraStreams.length > 0
       ? this.studentVideoStreamSize.height
-      : 'unset';
+      : '0px';
   }
   @computed
   get containerH5Extend() {

@@ -5,12 +5,12 @@ import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
-import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
+import { SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 import dayjs from 'dayjs';
 import { Scheduler } from 'agora-rte-sdk';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { useI18n } from 'agora-common-libs';
-
+import './index.mobile.css';
 const RoomBigTeacherStreamH5Tool = ({
   isPiP,
   onPiP,
@@ -216,8 +216,9 @@ export const RoomBigTeacherStreamContainerMobile = observer(
   },
 );
 
-export const RoomBigStudentStreamsH5Container: FC = observer(() => {
+export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
   const {
+    shareUIStore: { isLandscape, forceLandscape },
     streamUIStore,
     boardUIStore: { containerH5VisibleCls: addtionalContainerH5VisibleCls },
   } = useLectureH5UIStores() as EduLectureH5UIStore;
@@ -228,18 +229,43 @@ export const RoomBigStudentStreamsH5Container: FC = observer(() => {
     containerH5VisibleCls,
     studentVideoStreamContainerHeight,
     containerH5Extend,
+    studentStreamsVisible,
+    toggleStudentStreamsVisible,
   } = streamUIStore;
   return (
     <div
       className={classnames(
         'items-center',
-        'overflow-x-auto',
+        'relative',
         containerH5Extend,
         containerH5VisibleCls,
         addtionalContainerH5VisibleCls,
       )}
-      style={{ height: studentVideoStreamContainerHeight, width: '100vw' }}>
-      <div className={classnames('items-center', 'flex-row', 'flex')}>
+      style={{
+        height: studentVideoStreamContainerHeight,
+        width: '100vw',
+        background: '#F4F4FF',
+      }}>
+      {studentCameraStreams.length > 0 && (
+        <div className="fcr-stream-collapse-mobile">
+          <SvgImgMobile
+            onClick={toggleStudentStreamsVisible}
+            style={{ transform: `rotateX(${studentStreamsVisible ? '0deg' : '180deg'})` }}
+            type={SvgIconEnum.COLLAPSE_STREAM_MOBILE}
+            size={40}
+            landscape={isLandscape}
+            forceLandscape={forceLandscape}></SvgImgMobile>
+        </div>
+      )}
+
+      <div
+        className={classnames(
+          'items-center',
+          'flex-row',
+          'flex',
+          'justify-start',
+          'overflow-x-auto',
+        )}>
         {studentCameraStreams.map((stream) => {
           return (
             <StreamPlayerMobile
@@ -260,7 +286,8 @@ export const RoomBigStudentStreamsH5Container: FC = observer(() => {
 export const H5RoomPlaceholder = observer(() => {
   const {
     streamUIStore: { teacherCameraStream },
-    boardUIStore: { boardContainerHeight, mounted },
+    layoutUIStore: { classRoomPlacholderMobileHeight },
+    boardUIStore: { mounted },
     classroomStore: {
       roomStore: {
         classroomSchedule: { startTime, duration },
@@ -270,8 +297,8 @@ export const H5RoomPlaceholder = observer(() => {
   const transI18n = useI18n();
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
-  return !teacherCameraStream && !mounted ? (
-    <div className="fcr-h5-room-placeholder" style={{ height: boardContainerHeight }}>
+  return (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !mounted ? (
+    <div className="fcr-h5-room-placeholder" style={{ height: classRoomPlacholderMobileHeight }}>
       <p>
         {transI18n('fcr_copy_room_id')} {EduClassroomConfig.shared.sessionInfo.roomUuid}
       </p>

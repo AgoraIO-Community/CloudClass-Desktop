@@ -170,4 +170,6 @@ export enum SvgIconEnum {
   PIP_OFF = 'pip-off',
 
   LANDSCAPE = 'landscape',
+  SHARE_MOBILE = 'share-mobile',
+  COLLAPSE_STREAM_MOBILE = 'collapse-stream-mobile',
 }
