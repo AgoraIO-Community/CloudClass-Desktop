@@ -329,9 +329,11 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       minHeightPercent = minHeight / height;
     if (info.width < minWidthPercent) {
       info.width = minWidthPercent;
+      info.x = Math.min(1 - info.width, info.x);
     }
     if (info.height < minHeightPercent) {
       info.height = minHeightPercent;
+      info.y = Math.min(1 - info.height, info.y);
     }
     this.streamWindowMap.set(streamUuid, info);
   }
