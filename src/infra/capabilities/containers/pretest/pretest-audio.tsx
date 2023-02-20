@@ -112,10 +112,7 @@ const SpeakerTest = observer(() => {
       </ItemForm>
       {aiDenoiserSupported && (
         <React.Fragment>
-          <ItemCardTitle>
-            {transI18n('pretest.audio_noise_cancellation')}
-            <SvgImg className="inline-block ml-1" type={SvgIconEnum.BETA} size={31} />
-          </ItemCardTitle>
+          <ItemCardTitle>{transI18n('pretest.audio_noise_cancellation')}</ItemCardTitle>
           <div className="flex">
             <div onClick={enableAIDenoiser} className="cursor-pointer mr-4 flex items-center">
               <SvgImg
