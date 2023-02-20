@@ -4,24 +4,22 @@ import { StreamPlayerCameraPlaceholder } from '../stream';
 import { LocalTrackPlayer } from '../stream/track-player';
 
 export const CameraPreview = observer(() => {
-  const { videoGalleryUIStore } = useStore();
+  const { videoGalleryUIStore, streamUIStore } = useStore();
 
-  return videoGalleryUIStore.localPreview ? (
+  return videoGalleryUIStore.localPreview && videoGalleryUIStore.localCameraStream ? (
     <div
-      className="fcr-camera-preview absolute overflow-hidden"
+      className="fcr-camera-preview absolute overflow-hidden border border-divider"
       style={{
         width: 220,
         height: 124,
         bottom: 15,
-        left: 25,
-        boxShadow: '0px 0px 30px -8px rgba(0, 0, 0, 0.14)',
+        right: 10,
         borderRadius: 8,
-        border: '1px solid #E3E7EF',
       }}>
-      {videoGalleryUIStore.localCameraStream && (
-        <StreamPlayerCameraPlaceholder stream={videoGalleryUIStore.localCameraStream} />
+      <StreamPlayerCameraPlaceholder stream={videoGalleryUIStore.localCameraStream} />
+      {!streamUIStore.settingsOpened && (
+        <LocalTrackPlayer className="w-full h-full overflow-hidden" />
       )}
-      <LocalTrackPlayer className="w-full h-full overflow-hidden" />
     </div>
   ) : null;
 });

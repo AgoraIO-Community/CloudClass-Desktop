@@ -98,7 +98,7 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
     if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Electron) {
       removeDialog(id);
 
-      videoGalleryUIStore.openExternalWindow(forceDirection);
+      videoGalleryUIStore.openExternalWindow();
     }
   }, []);
 

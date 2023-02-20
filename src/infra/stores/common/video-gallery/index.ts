@@ -181,9 +181,9 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  openExternalWindow(direction: string) {
+  openExternalWindow() {
     this.shareUIStore.moveWindowAlignToWindow(WindowID.VideoGallery, WindowID.Main, {
-      direction,
+      horizontal: 'center',
     });
     this.shareUIStore.showWindow(WindowID.VideoGallery);
     this.externalOpen = true;
@@ -367,7 +367,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
                   this.shareUIStore.removeDialog(this._dialogId);
                 }
               } else {
-                this.openExternalWindow('right');
+                this.openExternalWindow();
               }
             },
           ),
