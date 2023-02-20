@@ -15,6 +15,7 @@ import { OnPodiumStateEnum } from './type';
 import { FetchUserParam, FetchUserType } from '../roster/type';
 import { listenChannelMessage } from '@classroom/infra/utils/ipc';
 import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
+import { interactionThrottleHandler } from '@classroom/infra/utils/interaction';
 
 export type UserWaveArmInfo = {
   userUuid: string;
@@ -48,9 +49,9 @@ export class HandUpUIStore extends EduUIStoreBase {
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
       this._disposers.push(
         reaction(
-          () => [this.getters.stageVisible],
+          () => [this.getters.videoGalleryStarted],
           () => {
-            if (!this.getters.stageVisible) {
+            if (this.getters.videoGalleryStarted) {
               this.classroomStore.handUpStore.allowHandsUp(1, false);
             } else {
               this.classroomStore.handUpStore.allowHandsUp(1, true);
@@ -227,24 +228,26 @@ export class HandUpUIStore extends EduUIStoreBase {
    * 学生上台(接受学生举手)
    * @param userUuid
    */
-  @bound
-  onPodium(userUuid: string) {
-    this.classroomStore.handUpStore
-      .onPodium(userUuid, PodiumSrouce.AcceptedByTeacher)
-      .catch((e) => {
-        if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
-          this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
-        } else if (
-          !AGError.isOf(
-            e,
-            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
-          )
-        ) {
-          this.shareUIStore.addGenericErrorDialog(e);
-        }
-      });
-  }
+  onPodium = interactionThrottleHandler(
+    (userUuid: string) => {
+      this.classroomStore.handUpStore
+        .onPodium(userUuid, PodiumSrouce.AcceptedByTeacher)
+        .catch((e) => {
+          if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
+            this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
+          } else if (
+            !AGError.isOf(
+              e,
+              AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+              AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+            )
+          ) {
+            this.shareUIStore.addGenericErrorDialog(e);
+          }
+        });
+    },
+    (message) => this.shareUIStore.addToast(message, 'warning'),
+  );
 
   /**
    * 邀请学生上台
@@ -279,12 +282,14 @@ export class HandUpUIStore extends EduUIStoreBase {
    * 学生下台
    * @param userUuid
    */
-  @bound
-  offPodium(userUuid: string) {
-    this.classroomStore.handUpStore
-      .offPodium(userUuid)
-      .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
-  }
+  offPodium = interactionThrottleHandler(
+    (userUuid: string) => {
+      this.classroomStore.handUpStore
+        .offPodium(userUuid)
+        .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
+    },
+    (message) => this.shareUIStore.addToast(message, 'warning'),
+  );
 
   /**
    * 老师拒绝学生上台

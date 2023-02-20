@@ -138,7 +138,7 @@ const StreamPlayerOverlayAwardNo = observer(({ stream }: { stream: EduStreamUI }
   );
 });
 
-const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
+export const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
   const { cameraPlaceholder } = streamUIStore;
   return (

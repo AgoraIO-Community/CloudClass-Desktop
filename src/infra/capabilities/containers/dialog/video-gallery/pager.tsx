@@ -18,11 +18,9 @@ export const Pager: FC<Props> = ({ prevPage, curPage, totalPageNum, nextPage }) 
       <div className="fcr-video-grid-pager__prev">
         <div className="fcr-video-grid-pager__button" onClick={prevPage}>
           <SvgImg
-            type={SvgIconEnum.BACKWARD}
-            colors={{
-              iconPrimary: '#fff',
-            }}
+            type={SvgIconEnum.CHEVRON_RIGHT}
             size={32}
+            style={{ transform: 'rotate(180deg)' }}
           />
         </div>
         <span className="fcr-video-grid-pager__label">
@@ -32,13 +30,7 @@ export const Pager: FC<Props> = ({ prevPage, curPage, totalPageNum, nextPage }) 
       {/*  */}
       <div className="fcr-video-grid-pager__next">
         <div className="fcr-video-grid-pager__button" onClick={nextPage}>
-          <SvgImg
-            type={SvgIconEnum.FORWARD}
-            colors={{
-              iconPrimary: '#fff',
-            }}
-            size={32}
-          />
+          <SvgImg type={SvgIconEnum.CHEVRON_RIGHT} size={32} />
         </div>
         <span className="fcr-video-grid-pager__label">
           {curPage + 1}/{totalPageNum}

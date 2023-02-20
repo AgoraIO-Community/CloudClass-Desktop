@@ -68,6 +68,7 @@ export class AgoraEduSDK {
   private static _boardWindowAnimationOptions: BoardWindowAnimationOptions = {};
   private static _language: string;
   private static _appId = '';
+  private static _uiMode: FcrMultiThemeMode;
   private static _uiConfig: FcrUIConfig;
   private static _theme: FcrTheme;
   private static _shareUrl: string;
@@ -193,6 +194,10 @@ export class AgoraEduSDK {
     return this._theme;
   }
 
+  static get uiMode() {
+    return this._uiMode;
+  }
+
   static get shareUrl() {
     return this._shareUrl;
   }
@@ -285,6 +290,7 @@ export class AgoraEduSDK {
 
     this._shareUrl = shareUrl;
     this._language = language;
+    this._uiMode = uiMode ?? FcrMultiThemeMode.light;
 
     this._widgets = {
       ...option.widgets,
@@ -361,8 +367,7 @@ export class AgoraEduSDK {
 
     EduEventCenter.shared.onClassroomEvents(option.listener);
 
-    const themeMode = uiMode ?? FcrMultiThemeMode.light;
-    this._selectUITheme(themeMode, option.roomType);
+    this._selectUITheme(this._uiMode, option.roomType);
     applyTheme(this._theme);
 
     addResourceBundle('en', en);
@@ -393,15 +398,17 @@ export class AgoraEduSDK {
 
     const Component = mapping[option.windowID];
 
-    const themeMode = option.uiMode ?? FcrMultiThemeMode.light;
-    this._selectUITheme(themeMode, option.roomType);
+    this._language = option.language;
+    this._uiMode = option.uiMode ?? FcrMultiThemeMode.light;
+
+    this._selectUITheme(this._uiMode, option.roomType);
     applyTheme(this._theme);
 
     addResourceBundle('en', en);
     addResourceBundle('zh', zh);
 
     render(
-      <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
+      <Providers language={this._language} uiConfig={this.uiConfig} theme={this.theme}>
         {Component && <Component {...option.args} />}
       </Providers>,
       dom,

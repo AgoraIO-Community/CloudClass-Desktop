@@ -9,7 +9,7 @@ import { themeContext } from 'agora-common-libs';
 export type SvgImgProps = BaseProps & {
   type: SvgIconEnum;
   colors?: Partial<PathOptions>;
-  size?: number;
+  size?: number | string;
   onClick?: (e: MouseEvent) => void;
   onMouseDown?: (e: MouseEvent) => void;
   onMouseUp?: (e: MouseEvent) => void;

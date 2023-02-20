@@ -27,16 +27,7 @@ export const VideoGallery: FC<Props> = () => {
 
   const { rtcEngine } = useRtcEngine();
 
-  const renderVideo = useCallback(
-    (stream: EduStreamUI) => (
-      <VideoRenderer
-        uid={parseInt(stream.stream.streamUuid)}
-        isLocal={stream.stream.isLocal}
-        isMirrorMode={stream.isMirrorMode}
-      />
-    ),
-    [],
-  );
+  const renderVideo = useCallback((stream: EduStreamUI) => <VideoRenderer stream={stream} />, []);
 
   return (
     <RtcEngineContext.Provider value={{ rtcEngine }}>

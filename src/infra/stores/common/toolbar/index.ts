@@ -39,6 +39,7 @@ import {
 import { rgbToHexColor } from '../../../utils/board-utils';
 import { conversionOption, fileExt2ContentType } from '../cloud-drive/helper';
 import { transI18n } from 'agora-common-libs';
+import { LayoutMaskCode } from '../type';
 
 @Log.attach({ proxyMethods: false })
 export class ToolbarUIStore extends EduUIStoreBase {
@@ -486,14 +487,28 @@ export class ToolbarUIStore extends EduUIStoreBase {
         if (this.getters.breakoutRoomStarted) {
           this.shareUIStore.addToast(transI18n('fcr_expansion_screen_tips_close_group'), 'warning');
         } else {
-          this.classroomStore.handUpStore
-            .offPodiumAll()
-            .then(() => {
-              this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
-            })
-            .catch((e) => {
-              this.shareUIStore.addGenericErrorDialog(e);
+          try {
+            const area =
+              (this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible) |
+              LayoutMaskCode.VideoGalleryVisible;
+
+            if (this.getters.stageUserUuids.length > 0) {
+              this.shareUIStore.addToast(
+                transI18n('fcr_expansion_screen_tips_need_invite_student_on_stage'),
+              );
+            }
+
+            await this.classroomStore.handUpStore.offPodiumAll();
+
+            await this.classroomStore.roomStore.updateFlexProperties({
+              properties: { area },
+              cause: null,
             });
+
+            this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
+          } catch (e) {
+            this.shareUIStore.addGenericErrorDialog(e as AGError);
+          }
         }
 
         break;

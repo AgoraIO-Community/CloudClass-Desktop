@@ -1,4 +1,7 @@
 import { IconWithState } from '@classroom/ui-kit/components/util/type';
+import { EduStream } from 'agora-edu-core';
+import { AgoraRteMediaPublishState, AgoraRteMediaSourceState } from 'agora-rte-sdk';
+import { CameraPlaceholderType } from './struct';
 
 /**
  * 视频窗工具类型
@@ -44,3 +47,25 @@ export class EduStreamTool {
     }
   }
 }
+
+export const getCameraPlaceholder = (stream: EduStream) => {
+  const videoSourceState = stream.videoSourceState;
+
+  let placeholder = CameraPlaceholderType.none;
+
+  const deviceDisabled = videoSourceState === AgoraRteMediaSourceState.stopped;
+
+  if (deviceDisabled) {
+    return CameraPlaceholderType.disabled;
+  }
+
+  if (
+    stream.videoState === AgoraRteMediaPublishState.Published &&
+    videoSourceState === AgoraRteMediaSourceState.started
+  ) {
+    placeholder = CameraPlaceholderType.none;
+  } else {
+    placeholder = CameraPlaceholderType.muted;
+  }
+  return placeholder;
+};

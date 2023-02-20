@@ -1,2 +1,2 @@
 export { ControlBar } from './control-bar';
-export { VideoGallery } from './video-grid';
+export { VideoGallery } from './video-gallery';

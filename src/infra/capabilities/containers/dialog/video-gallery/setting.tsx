@@ -1,5 +1,4 @@
 import { useClickAnywhere } from '@classroom/infra/hooks';
-import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import classNames from 'classnames';
 import { observer } from 'mobx-react-lite';
@@ -40,9 +39,12 @@ export const Setting: FC<Props> = observer(({ options, setPageSize, pageSize }) 
     <div className="fcr-video-grid-settings" ref={ref}>
       {/* dropdown button */}
       <div className="fcr-video-grid-settings-button" onClick={handleOpen}>
-        <SvgImg type={SvgIconEnum.MATRIX} size={26} colors={{ iconPrimary: '#000' }} />
+        <SvgImg type={SvgIconEnum.MATRIX} size={26} />
         <span className="fcr-video-grid-settings-button-text">{buttonText}</span>
-        <SvgImg type={SvgIconEnum.DROPDOWN} colors={{ iconPrimary: '#000' }} />
+        <SvgImg
+          style={{ transform: opened ? 'rotate(180deg)' : 'rotate(0deg)', transition: '.3s all' }}
+          type={SvgIconEnum.DROPDOWN}
+        />
       </div>
       {/* dropdown list options */}
       <div className={dropdownCls}>

@@ -9,14 +9,12 @@ import { useI18n } from 'agora-common-libs';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
 import { ForceDirection, useDragAnalyzer, useVideoPage } from './hooks';
 import { TrackPlayer } from '../../stream/track-player';
-import { Pager } from './pager';
-import { Setting } from './setting';
+import { Pager, Props as PagerProps } from './pager';
+import { Setting, Props as SettingProps } from './setting';
 import './index.css';
 import classNames from 'classnames';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { EduRoleTypeEnum, EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
-import { Props as SettingProps } from './setting';
-import { Props as PagerProps } from './pager';
 import { range } from 'lodash';
 import { PlaceholderStateColors } from '@classroom/ui-kit/utilities/state-color';
 
@@ -185,14 +183,14 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
   );
 });
 
-type ProtalProps = {
+type PortalProps = {
   className: string;
   streamList: EduStreamUI[];
 } & SettingProps &
   PagerProps &
   StageHoverProps;
 
-export const VideoGalleryPortal: FC<ProtalProps> = ({
+export const VideoGalleryPortal: FC<PortalProps> = ({
   className,
   streamList,
   options,
@@ -207,7 +205,7 @@ export const VideoGalleryPortal: FC<ProtalProps> = ({
   onStageClick,
   offStageClick,
 }) => {
-  const containerCls = classNames(className, 'flex-grow relative');
+  const containerCls = classNames(className, 'fcr-video-grid-portal flex-grow relative');
 
   const list = useMemo(() => {
     return range(0, pageSize).map((n) => streamList[n]);
@@ -276,6 +274,7 @@ const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
   }, [pageSize]);
 
   const [hovered, setHovered] = useState(false);
+  const transI18n = useI18n();
 
   const gridSize = `${100 / needSize}%`;
 
@@ -283,10 +282,14 @@ const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
     return (
       <div className="fcr-video-grid-podium-status">
         <SvgImg
-          type={SvgIconEnum.ON_PODIUM}
-          size={114}
+          style={{ height: '27%' }}
+          size="100%"
+          type={SvgIconEnum.GOOFFSTAGE}
           colors={{ iconPrimary: PlaceholderStateColors.normal }}
         />
+        <span style={{ fontSize: 12, color: '#97BAF9' }}>
+          {transI18n('fcr_expansion_screen_tips_student_on_stage')}
+        </span>
       </div>
     );
   }, []);
@@ -310,21 +313,23 @@ const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
   const style = {
     width: gridSize,
     height: gridSize,
-    background: '#F9F9FC',
-    position: 'relative',
   } as React.CSSProperties;
+
+  let cls = classNames('overflow-hidden', 'fcr-video-grid-border', 'relative');
 
   //
   if ((index + 1) % needSize !== 0) {
-    style.borderRight = '1px solid #EEEEF7';
+    style.borderRightWidth = 1;
+    style.borderRightStyle = 'solid';
   }
   //
   if (index < total - needSize) {
-    style.borderBottom = '1px solid #EEEEF7';
+    style.borderBottomWidth = 1;
+    style.borderBottomStyle = 'solid';
   }
 
   if (!stream) {
-    return <div style={style} key={`${index}`} />;
+    return <div className={cls} style={style} />;
   }
 
   const opText = stageUserUuids.includes(stream.fromUser.userUuid)
@@ -333,21 +338,23 @@ const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
 
   const showStageButton = EduRoleTypeEnum.student === stream.role;
 
+  const isOnStage = stageUserUuids.includes(stream.fromUser.userUuid);
+  const stageIcon = isOnStage ? SvgIconEnum.GOOFFSTAGE : SvgIconEnum.GOONSTAGE;
+
   return (
     <div
+      className={cls}
       style={style}
       key={stream.stream.streamUuid}
       onMouseEnter={handleMouseHover(true)}
       onMouseLeave={handleMouseHover(false)}>
-      {stageUserUuids.includes(stream.fromUser.userUuid)
-        ? renderPlaceholder()
-        : renderVideo(stream)}
+      {isOnStage ? renderPlaceholder() : renderVideo(stream)}
       {showStageButton && (
         <animated.div
           style={hoverLayerStyle}
           className="fcr-video-grid-button"
           onClick={handleClick(stream.fromUser.userUuid)}>
-          <SvgImg type={SvgIconEnum.ON_PODIUM} colors={{ iconPrimary: 'rgba(255,255,255,0.87)' }} />
+          <SvgImg type={stageIcon} colors={{ iconPrimary: 'rgba(255,255,255,0.87)' }} />
           <span>{opText}</span>
         </animated.div>
       )}

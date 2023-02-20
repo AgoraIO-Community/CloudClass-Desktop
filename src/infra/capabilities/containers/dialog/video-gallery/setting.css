@@ -12,13 +12,13 @@
 .fcr-video-grid-settings .fcr-video-grid-settings-button {
   width: 88px;
   height: 30px;
-  background: #ffffff;
   border-radius: 8px;
   font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  @apply bg-component text-level1;
 }
 
 .fcr-video-grid-settings .fcr-video-grid-settings-button-text {
@@ -28,11 +28,12 @@
 .fcr-video-grid-settings .fcr-video-grid-settings-dropdown {
   box-sizing: border-box;
   width: 88px;
-  background: rgba(254, 254, 255, 0.95);
+  /* background: rgba(254, 254, 255, 0.95); */
   box-shadow: 0px 4px 50px -8px rgba(143, 143, 143, 0.3);
   border-radius: 8px;
   margin-top: 4px;
   padding: 12px 0;
+  @apply bg-component text-level1;
 }
 
 .fcr-video-grid-settings-dropdown--closed {
@@ -53,4 +54,5 @@
 
 .fcr-video-grid-settings .fcr-video-grid-settings-dropdown .fcr-video-grid-settings-inner-el:hover {
   background: #eff4fe;
+  @apply bg-brand text-level1;
 }

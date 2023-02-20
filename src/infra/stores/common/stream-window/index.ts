@@ -1142,9 +1142,12 @@ export class StreamWindowUIStore extends EduUIStoreBase {
       computed(() => this.getters.stageCameraStreams).observe(({ newValue, oldValue }) => {
         if (this._streamWindowUpdatedFromRoom) {
           this._handleStageStreamRemoved(newValue, oldValue);
-        }
-        if (this._streamWindowUpdatedFromRoom && !this.getters.stageVisible) {
-          this._handleStageStreamAdded(newValue, oldValue);
+          const { roomType } = EduClassroomConfig.shared.sessionInfo;
+          if (roomType === EduRoomTypeEnum.RoomBigClass) {
+            this._handleStageStreamAdded(newValue, oldValue);
+          } else if (roomType === EduRoomTypeEnum.RoomSmallClass && !this.getters.stageVisible) {
+            this._handleStageStreamAdded(newValue, oldValue);
+          }
         }
       }),
     );

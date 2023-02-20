@@ -51,6 +51,11 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   localPreview = false;
 
   @computed
+  get localCameraStream() {
+    return this.getters.localCameraStream ? new EduStreamUI(this.getters.localCameraStream) : null;
+  }
+
+  @computed
   get isLocalRendered() {
     return this.curVideoUserList.some(
       (userUuid) => EduClassroomConfig.shared.sessionInfo.userUuid === userUuid,
@@ -59,7 +64,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
 
   @computed
   get stageUserUuids() {
-    return this.getters.stageUsers.map(({ userUuid }) => userUuid);
+    return this.getters.stageUserUuids;
   }
 
   @computed
@@ -73,21 +78,16 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
   // which users should show in video grid
   @computed
   get allVideoUserList() {
-    const { stageVisible } = this.getters;
     const { list } = iterateMap(this.classroomStore.userStore.users, {
       onMap(userUuid) {
         return userUuid;
       },
       onFilter(key, item) {
-        return stageVisible
-          ? item.userRole === EduRoleTypeEnum.student
-          : item.userRole === EduRoleTypeEnum.teacher || item.userRole === EduRoleTypeEnum.student;
+        return item.userRole === EduRoleTypeEnum.student;
       },
     });
 
-    return list.sort((userUuid) =>
-      userUuid === EduClassroomConfig.shared.sessionInfo.userUuid ? -1 : 1,
-    );
+    return list;
   }
   // how many page user can scroll
   @computed
@@ -230,14 +230,18 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
 
   private _sendVideoGalleryState() {
     const options = toJS(this.videoGalleryConfigOptions);
-    const streamList = this.curStreamList.map(({ stream, fromUser, role, isMirrorMode }) => {
-      return {
-        stream: { ...stream, isLocal: stream.isLocal },
-        fromUser: toJS(fromUser),
-        role,
-        isMirrorMode,
-      };
-    });
+
+    const streamList = this.curStreamList.map(
+      ({ stream, fromUser, role, isMirrorMode, isCameraMuted }) => {
+        return {
+          stream: { ...stream, isLocal: stream.isLocal },
+          fromUser: toJS(fromUser),
+          role,
+          isMirrorMode,
+          isCameraMuted,
+        };
+      },
+    );
     const stageUserUuids = toJS(this.stageUserUuids);
 
     sendToRendererProcess(WindowID.VideoGallery, ChannelType.Message, {
@@ -273,8 +277,10 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
         // create a electron browser window when SDK launches,
         this.shareUIStore.openWindow(WindowID.VideoGallery, {
           options: {
-            width: 500,
-            height: 300,
+            width: 600,
+            height: 360,
+            minWidth: 600,
+            minHeight: 360,
             show: false,
             allowRendererProcessReuse: false,
             preventClose: true,
@@ -330,7 +336,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
 
         this._disposers.push(
           reaction(
-            () => [this.curPage, this.pageSize, this.curStreamList, this.stageUserUuids],
+            () => [this.curPage, this.pageSize, this.curStreamList, this.getters.stageUserUuids],
             () => {
               this._sendVideoGalleryState();
             },
@@ -389,23 +395,14 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
           () => [this.open],
           async () => {
             try {
-              if (this.open) {
-                const area =
-                  (this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible) |
-                  LayoutMaskCode.VideoGalleryVisible;
-
-                await this.classroomStore.roomStore.updateFlexProperties({
-                  properties: { area },
-                  cause: null,
-                });
-              } else {
+              if (!this.open) {
                 const area = this.getters.layoutMaskCode & ~LayoutMaskCode.VideoGalleryVisible;
 
                 await this.classroomStore.roomStore.updateFlexProperties({
                   properties: { area },
                   cause: null,
                 });
-                
+
                 this._updateUsers(false, []);
               }
             } catch (e) {
@@ -424,12 +421,12 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
             this.getters.windowStreamUserUuids,
             this.getters.videoGalleryStarted,
             this.getters.stageVisible,
-            this.stageUserUuids,
+            this.getters.stageUserUuids,
           ],
           () => {
             const { userUuid } = EduClassroomConfig.shared.sessionInfo;
             const noStreamWindow = !this.getters.windowStreamUserUuids.includes(userUuid);
-            const isOffStage = !this.stageUserUuids.includes(userUuid);
+            const isOffStage = !this.getters.stageUserUuids.includes(userUuid);
 
             if (this.getters.stageVisible) {
               this._setLocalPreview(this.getters.videoGalleryStarted && isOffStage);

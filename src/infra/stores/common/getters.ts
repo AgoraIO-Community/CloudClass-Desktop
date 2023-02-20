@@ -75,6 +75,15 @@ export class Getters {
   }
 
   /**
+   * 台上用户ID
+   */
+  @computed
+  get stageUserUuids() {
+    const { roomStore } = this._classroomUIStore.classroomStore;
+    return roomStore.acceptedList.map(({ userUuid }) => userUuid);
+  }
+
+  /**
    * 老师流信息
    * @returns
    */
@@ -109,26 +118,18 @@ export class Getters {
   }
 
   /**
-   * 台上人员列表
-   */
-  @computed
-  get stageUsers(): EduUserStruct[] {
-    const { userStore, roomStore } = this._classroomUIStore.classroomStore;
-    return roomStore.acceptedList
-      .map(({ userUuid }) => userStore.users.get(userUuid))
-      .filter((user) => !!user) as EduUserStruct[];
-  }
-
-  /**
    * 台上人员流列表
    */
   @computed
   get stageCameraStreams(): EduStream[] {
-    const { streamStore } = this._classroomUIStore.classroomStore;
+    const { streamStore, userStore } = this._classroomUIStore.classroomStore;
     const { streamByStreamUuid, streamByUserUuid } = streamStore;
 
-    const users = this.stageUsers.reduce((prev, user) => {
-      prev.set(user.userUuid, user);
+    const users = this.stageUserUuids.reduce((prev, userUuid) => {
+      const user = userStore.users.get(userUuid);
+      if (user) {
+        prev.set(userUuid, user);
+      }
       return prev;
     }, new Map<string, EduUserStruct>());
 
@@ -145,5 +146,31 @@ export class Getters {
   @computed
   get isInSubRoom() {
     return !!this._classroomUIStore.classroomStore.groupStore.currentSubRoom;
+  }
+
+  /**
+   * 本地摄像头视频流
+   */
+  @computed
+  get localCameraStream() {
+    const { localCameraStreamUuid, streamByStreamUuid } =
+      this._classroomUIStore.classroomStore.streamStore;
+    if (!localCameraStreamUuid) {
+      return;
+    }
+    return streamByStreamUuid.get(localCameraStreamUuid);
+  }
+
+  /**
+   * 本地屏幕视频流
+   */
+  @computed
+  get localScreenStream() {
+    const { localShareStreamUuid, streamByStreamUuid } =
+      this._classroomUIStore.classroomStore.streamStore;
+    if (!localShareStreamUuid) {
+      return;
+    }
+    return streamByStreamUuid.get(localShareStreamUuid);
   }
 }

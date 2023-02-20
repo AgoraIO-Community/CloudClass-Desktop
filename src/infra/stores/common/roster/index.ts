@@ -15,16 +15,13 @@ import { DialogCategory } from '../share';
 import { Operations, DeviceState, Operation, Profile } from './type';
 import { interactionThrottleHandler } from '@classroom/infra/utils/interaction';
 import {
-  AGEduErrorCode,
   AGServiceErrorCode,
   EduClassroomConfig,
-  EduErrorCenter,
   EduRoleTypeEnum,
   GroupState,
   iterateMap,
 } from 'agora-edu-core';
 import { BoardGrantState } from '@classroom/ui-kit';
-import { EduStreamUI } from '../stream/struct';
 import { transI18n } from 'agora-common-libs';
 
 export class RosterUIStore extends EduUIStoreBase {

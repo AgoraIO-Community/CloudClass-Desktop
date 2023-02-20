@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from 'agora-common-libs';
 import { getRootDimensions } from '../layout/helper';
 import { ConfirmDialogAction, OrientationEnum } from '../type';
+import { EduClassroomConfig } from 'agora-edu-core';
 
 export enum DialogCategory {
   CloudDriver,
@@ -384,6 +385,8 @@ export class EduShareUIStore {
       payload.args,
       payload.options,
       AgoraEduSDK.language,
+      AgoraEduSDK.uiMode,
+      EduClassroomConfig.shared.sessionInfo.roomType,
     );
   }
   @bound
