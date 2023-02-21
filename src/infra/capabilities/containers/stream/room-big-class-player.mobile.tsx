@@ -27,7 +27,7 @@ const RoomBigTeacherStreamH5Tool = ({
   return (
     <div
       style={{ opacity: visible ? 1 : 0, visibility: visible ? 'visible' : 'hidden' }}
-      className={`fcr-stream-h5-tool-${size}`}>
+      className={`fcr-stream-mobile-tool-${size}`}>
       <SvgImg
         onClick={onPiP}
         type={isPiP ? SvgIconEnum.PIP_OFF : SvgIconEnum.PIP_ON}
@@ -189,8 +189,8 @@ export const RoomBigTeacherStreamContainerMobile = observer(
         className={classnames(
           'relative',
           streamLayoutContainerCls,
-          'fcr-stream-h5',
-          isPiP && 'fcr-stream-h5-draggable',
+          'fcr-stream-mobile',
+          isPiP && 'fcr-stream-mobile-draggable',
         )}
         style={{
           ...teacherVideoStreamSize,
@@ -298,7 +298,9 @@ export const H5RoomPlaceholder = observer(() => {
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
   return (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !mounted ? (
-    <div className="fcr-h5-room-placeholder" style={{ height: classRoomPlacholderMobileHeight }}>
+    <div
+      className="fcr-mobile-room-placeholder"
+      style={{ height: classRoomPlacholderMobileHeight }}>
       <p>
         {transI18n('fcr_copy_room_id')} {EduClassroomConfig.shared.sessionInfo.roomUuid}
       </p>

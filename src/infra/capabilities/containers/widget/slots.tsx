@@ -58,13 +58,13 @@ const Spinner = () => {
 };
 
 export const CountDownMobile = observer(() => {
-  return <div className="fcr-countdown-h5-widget"></div>;
+  return <div className="fcr-countdown-mobile-widget"></div>;
 });
 export const PollMobile = observer(() => {
   const {
     shareUIStore: { isLandscape },
   } = useStore();
-  return <div className={`fcr-poll-h5-widget ${isLandscape ? '' : 'relative'}`}></div>;
+  return <div className={`fcr-poll-mobile-widget ${isLandscape ? '' : 'relative'}`}></div>;
 });
 export const WhiteboardMobile = observer(function Board() {
   const {
@@ -174,7 +174,7 @@ export const ChatMobile = observer(function Chat() {
 
   return (
     <div
-      className="widget-slot-chat-h5"
+      className="widget-slot-chat-mobile"
       style={{ height: chatH5Height, background: isLandscape ? '#27292f' : 'transparent' }}
     />
   );

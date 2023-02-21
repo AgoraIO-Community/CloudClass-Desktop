@@ -60,8 +60,8 @@ export const BigClassScenarioMobile = observer(() => {
           className={
             isLandscape
               ? forceLandscape
-                ? 'fcr-h5-landscape-container-rotate'
-                : 'fcr-h5-landscape-container'
+                ? 'fcr-mobile-landscape-container-rotate'
+                : 'fcr-mobile-landscape-container'
               : ''
           }
           direction="col">
@@ -79,9 +79,10 @@ export const BigClassScenarioMobile = observer(() => {
                 <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
               )}
               <ChatMobile />
-              <PollMobile></PollMobile>
+
               <ToastContainerMobile></ToastContainerMobile>
               <ActionSheetMobile></ActionSheetMobile>
+              <PollMobile></PollMobile>
             </>
           )}
         </LayoutOrientation>

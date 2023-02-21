@@ -7,7 +7,7 @@ import { ComponentLevelRulesMobile } from '../../config';
 import ClipboardJS from 'clipboard';
 
 import './index.mobile.css';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 export const ActionSheetMobile = observer(() => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -18,23 +18,25 @@ export const ActionSheetMobile = observer(() => {
     layoutUIStore: { actionSheetVisible, setActionSheetVisible, landscapeToolBarVisible },
     shareUIStore: { addSingletonToast, isLandscape, forceLandscape },
   } = useLectureH5UIStores();
-  const copyLink = () => {
+
+  useEffect(() => {
     if (!ref.current) return;
     const clipboard = new ClipboardJS(ref.current);
     clipboard.on('success', () => {
       addSingletonToast(transI18n('fcr_copy_success'), 'normal');
-      clipboard.destroy();
+
       setActionSheetVisible(false);
     });
-  };
-  return isLandscape ? (
+    () => clipboard.destroy;
+  }, []);
+  return (
     <>
       <div
         className="fcr-action-sheet-mobile-trigger"
         style={{
           zIndex: ComponentLevelRulesMobile.Level3,
-          opacity: landscapeToolBarVisible ? 1 : 0,
-          visibility: landscapeToolBarVisible ? 'visible' : 'hidden',
+          opacity: landscapeToolBarVisible && isLandscape ? 1 : 0,
+          visibility: landscapeToolBarVisible && isLandscape ? 'visible' : 'hidden',
         }}
         onClick={() => setActionSheetVisible(true)}>
         <SvgImgMobile
@@ -43,16 +45,13 @@ export const ActionSheetMobile = observer(() => {
           type={SvgIconEnum.SHARE_MOBILE}
           size={24}></SvgImgMobile>
       </div>
-      {createPortal(
-        <div
-          className="fcr-action-sheet-mobile-mask"
-          style={{
-            display: actionSheetVisible ? 'block' : 'none',
-            zIndex: ComponentLevelRulesMobile.Level3,
-          }}></div>,
-        document.body,
-      )}
 
+      <div
+        className="fcr-action-sheet-mobile-mask"
+        style={{
+          display: actionSheetVisible ? 'block' : 'none',
+          zIndex: ComponentLevelRulesMobile.Level3,
+        }}></div>
       <div
         className="fcr-action-sheet-mobile"
         style={{
@@ -63,13 +62,9 @@ export const ActionSheetMobile = observer(() => {
           <div
             className="fcr-action-sheet-mobile-actions-item"
             data-clipboard-text={`${shareUrl}`}
-            ref={ref}
-            onClick={copyLink}>
+            ref={ref}>
             <div className="fcr-action-sheet-mobile-actions-item-icon">
-              <SvgImg
-                type={SvgIconEnum.LINK_SOLID}
-                size={36}
-                colors={{ iconPrimary: '#fff' }}></SvgImg>
+              <SvgImg type={SvgIconEnum.LINK} size={36} colors={{ iconPrimary: '#fff' }}></SvgImg>
             </div>
             <div className="fcr-action-sheet-mobile-actions-item-text">
               {transI18n('fcr_copy_share_link_copy')}
@@ -83,5 +78,5 @@ export const ActionSheetMobile = observer(() => {
         </div>
       </div>
     </>
-  ) : null;
+  );
 });

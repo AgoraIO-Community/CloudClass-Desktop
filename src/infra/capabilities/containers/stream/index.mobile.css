@@ -1,4 +1,4 @@
-.fcr-stream-h5-tool-lg {
+.fcr-stream-mobile-tool-lg {
   width: 30px;
   height: 92px;
   border-radius: 15px;
@@ -16,7 +16,7 @@
   padding: 15px 0;
   transition: all 0.2s;
 }
-.fcr-stream-h5-tool-sm {
+.fcr-stream-mobile-tool-sm {
   width: 30px;
   height: 80px;
   border-radius: 8px;
@@ -32,7 +32,7 @@
   padding: 10px 0;
   transition: all 0.2s;
 }
-.fcr-stream-h5-draggable {
+.fcr-stream-mobile-draggable {
   position: fixed !important;
   width: 140px;
   height: 80px;
@@ -42,25 +42,25 @@
   top: 50%;
   z-index: 9;
 }
-.fcr-stream-h5 {
+.fcr-stream-mobile {
   /* transition: all 0.2s; */
 }
 
-.fcr-h5-room-placeholder {
+.fcr-mobile-room-placeholder {
   display: flex;
   padding-left: 23px;
   justify-content: center;
   flex-direction: column;
   background: url('./assets/room-placholder-bg.jpg') no-repeat top left / cover;
 }
-.fcr-h5-room-placeholder > p {
+.fcr-mobile-room-placeholder > p {
   font-weight: 400;
   font-size: 14px;
   line-height: 150%;
   color: #757575;
   margin: 0;
 }
-.fcr-h5-room-placeholder h3 {
+.fcr-mobile-room-placeholder h3 {
   font-weight: 500;
   font-size: 18px;
   line-height: 150%;

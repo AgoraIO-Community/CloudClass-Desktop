@@ -36,7 +36,7 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
       }
     }, [isLandscape, stream.stream.videoState, rtcState]);
     return (
-      <div onClick={onClick} className={`fcr-stream-player-h5 ${className}`} style={style}>
+      <div onClick={onClick} className={`fcr-stream-player-mobile ${className}`} style={style}>
         <TrackPlayer stream={stream} />
       </div>
     );

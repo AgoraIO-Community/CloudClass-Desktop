@@ -1,16 +1,16 @@
-.fcr-h5-landscape-container {
+.fcr-mobile-landscape-container {
   width: 100vw;
   position: relative;
 }
-.fcr-h5-landscape-container-rotate {
+.fcr-mobile-landscape-container-rotate {
   height: 100vw;
   transform: rotate(90deg);
   transform-origin: 50vw center;
   position: relative;
   flex-shrink: 0;
 }
-.fcr-h5-landscape-container video,
-.fcr-h5-landscape-container-rotate video {
+.fcr-mobile-landscape-container video,
+.fcr-mobile-landscape-container-rotate video {
   object-fit: contain !important;
 }
 .fcr-after-class-mobile-dialog-mask {

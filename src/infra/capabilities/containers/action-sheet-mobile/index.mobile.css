@@ -31,6 +31,7 @@
   flex-direction: column;
   width: fit-content;
   justify-content: center;
+  align-items: center;
   gap: 11px;
 }
 .fcr-action-sheet-mobile-actions-item-icon {
@@ -55,7 +56,7 @@
   height: 100%;
   left: 0;
   top: 0;
-  pointer-events: none;
+  background: rgba(0, 0, 0, 0.5);
 }
 .fcr-action-sheet-mobile-trigger {
   width: 34px;
@@ -64,8 +65,8 @@
   background: rgba(240, 242, 248, 0.6);
   backdrop-filter: blur(25px);
   position: fixed;
-  top: 20px;
-  right: 30px;
+  top: 16px;
+  right: 16px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
