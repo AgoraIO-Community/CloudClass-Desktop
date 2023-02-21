@@ -8,11 +8,10 @@ import ClipboardJS from 'clipboard';
 
 import './index.mobile.css';
 import { useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { AgoraEduSDK } from '@classroom/infra/api';
 export const ActionSheetMobile = observer(() => {
   const ref = useRef<HTMLDivElement | null>(null);
   const transI18n = useI18n();
-  const shareUrl = `${location.origin}${location.pathname}#/h5-invite?roomId=${EduClassroomConfig.shared.sessionInfo.roomUuid}`;
 
   const {
     layoutUIStore: { actionSheetVisible, setActionSheetVisible, landscapeToolBarVisible },
@@ -61,7 +60,7 @@ export const ActionSheetMobile = observer(() => {
         <div className="fcr-action-sheet-mobile-actions">
           <div
             className="fcr-action-sheet-mobile-actions-item"
-            data-clipboard-text={`${shareUrl}`}
+            data-clipboard-text={`${AgoraEduSDK.shareUrl}`}
             ref={ref}>
             <div className="fcr-action-sheet-mobile-actions-item-icon">
               <SvgImg type={SvgIconEnum.LINK} size={36} colors={{ iconPrimary: '#fff' }}></SvgImg>
