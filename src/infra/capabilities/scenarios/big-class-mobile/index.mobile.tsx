@@ -57,13 +57,10 @@ export const BigClassScenarioMobile = observer(() => {
                 : { height: window.innerHeight, position: 'absolute', top: 0, left: 0 }
               : {}
           }
-          className={
-            isLandscape
-              ? forceLandscape
-                ? 'fcr-mobile-landscape-container-rotate'
-                : 'fcr-mobile-landscape-container'
-              : ''
-          }
+          className={classnames({
+            'fcr-mobile-landscape-container-rotate': forceLandscape,
+            'fcr-mobile-landscape-container': isLandscape && !forceLandscape,
+          })}
           direction="col">
           {state === ClassState.close ? (
             <AfterClassMobileDialog></AfterClassMobileDialog>
@@ -80,9 +77,9 @@ export const BigClassScenarioMobile = observer(() => {
               )}
               <ChatMobile />
 
+              <PollMobile></PollMobile>
               <ToastContainerMobile></ToastContainerMobile>
               <ActionSheetMobile></ActionSheetMobile>
-              <PollMobile></PollMobile>
             </>
           )}
         </LayoutOrientation>
@@ -97,7 +94,6 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
   const { shareUIStore } = useLectureH5UIStores();
   useEffect(() => {
     shareUIStore.addOrientationchange();
-
     shareUIStore.addWindowResizeEventListener();
     return () => {
       shareUIStore.removeOrientationchange();
@@ -116,7 +112,6 @@ const TeacherStreamChatContainerMobile = observer(() => {
     shareUIStore: { isLandscape },
     streamUIStore: { teacherCameraStream },
     boardUIStore: { containerH5VisibleCls },
-    layoutUIStore: { toggleLandscapeToolBarVisible },
   } = useLectureH5UIStores() as EduLectureH5UIStore;
   return (
     <Layout direction="col" className={classnames(containerH5VisibleCls)}>

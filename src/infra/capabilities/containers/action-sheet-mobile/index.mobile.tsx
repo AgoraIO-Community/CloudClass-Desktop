@@ -33,7 +33,7 @@ export const ActionSheetMobile = observer(() => {
       <div
         className="fcr-action-sheet-mobile-trigger"
         style={{
-          zIndex: ComponentLevelRulesMobile.Level3,
+          zIndex: ComponentLevelRulesMobile.Level2,
           opacity: landscapeToolBarVisible && isLandscape ? 1 : 0,
           visibility: landscapeToolBarVisible && isLandscape ? 'visible' : 'hidden',
         }}

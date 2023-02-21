@@ -20,4 +20,5 @@
 .whiteboard-mobile-container .netless-whiteboard-wrapper {
   background: #fff;
   border-color: #fff;
+  pointer-events: none;
 }
