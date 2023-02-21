@@ -112,7 +112,7 @@ const SpeakerTest = observer(() => {
       </ItemForm>
       {aiDenoiserSupported && (
         <React.Fragment>
-          <ItemCardTitle> {transI18n('pretest.audio_noise_cancellation')}</ItemCardTitle>
+          <ItemCardTitle>{transI18n('pretest.audio_noise_cancellation')}</ItemCardTitle>
           <div className="flex">
             <div onClick={enableAIDenoiser} className="cursor-pointer mr-4 flex items-center">
               <SvgImg
@@ -149,7 +149,7 @@ const VolumeDance: FC = observer(() => {
 const ItemCardTitle: FC = ({ children }) => {
   return (
     <div
-      className="mt-4 text-level1"
+      className="mt-4 text-level1 flex items-center"
       style={{
         fontWeight: 700,
         fontSize: 16,

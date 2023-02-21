@@ -124,7 +124,8 @@ const PreTestTabLeftContent: FC = ({ children }) => (
     style={{
       flexBasis: 160,
       paddingTop: 40,
-      borderRight: '1px solid #dceafe',
+      borderRightWidth: '1px',
+      borderStyle: 'solid',
       flexShrink: 0,
     }}>
     {' '}
