@@ -27,11 +27,11 @@ const StageManager = observer(() => {
     <ItemCard>
       <ItemCardTitle> {transI18n('fcr_stage_label_title')}</ItemCardTitle>
       <div className="flex">
-        <div onClick={() => setStageVisible(true)} className="cursor-pointer flex mr-4">
+        <div onClick={() => setStageVisible(true)} className="text-level1 cursor-pointer flex mr-4">
           <SvgImg type={stageVisible ? SvgIconEnum.PRETEST_CHECKED : SvgIconEnum.PRETEST_CHECK} />
           {transI18n('stage.visible')}
         </div>
-        <div onClick={() => setStageVisible(false)} className="cursor-pointer flex">
+        <div onClick={() => setStageVisible(false)} className="text-level1 cursor-pointer flex">
           <SvgImg type={stageVisible ? SvgIconEnum.PRETEST_CHECK : SvgIconEnum.PRETEST_CHECKED} />
           {transI18n('stage.hidden')}
         </div>

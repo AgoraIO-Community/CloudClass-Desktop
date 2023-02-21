@@ -11,9 +11,9 @@ export const path = ({ iconPrimary }: PathOptions) => (
     <path
       d="M8 8.75L11.5 12.5M11.5 12.5V10.25M11.5 12.5H9.25"
       stroke="#4E4E64"
-      stroke-width="1.25"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="1.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </>
 );
