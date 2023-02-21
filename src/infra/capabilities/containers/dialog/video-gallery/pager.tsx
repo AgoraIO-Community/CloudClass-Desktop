@@ -1,6 +1,5 @@
-import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { observer } from 'mobx-react';
+import classNames from 'classnames';
 import { FC } from 'react';
 import './pager.css';
 
@@ -12,10 +11,18 @@ export type Props = {
 };
 
 export const Pager: FC<Props> = ({ prevPage, curPage, totalPageNum, nextPage }) => {
+  const prevCls = classNames('fcr-video-grid-pager__prev', {
+    hidden: curPage === 0,
+  });
+
+  const nextCls = classNames('fcr-video-grid-pager__next', {
+    hidden: curPage + 1 === totalPageNum,
+  });
+
   return (
     <div className="fcr-video-grid-pager">
       {/*  */}
-      <div className="fcr-video-grid-pager__prev">
+      <div className={prevCls}>
         <div className="fcr-video-grid-pager__button" onClick={prevPage}>
           <SvgImg
             type={SvgIconEnum.CHEVRON_RIGHT}
@@ -28,7 +35,7 @@ export const Pager: FC<Props> = ({ prevPage, curPage, totalPageNum, nextPage }) 
         </span>
       </div>
       {/*  */}
-      <div className="fcr-video-grid-pager__next">
+      <div className={nextCls}>
         <div className="fcr-video-grid-pager__button" onClick={nextPage}>
           <SvgImg type={SvgIconEnum.CHEVRON_RIGHT} size={32} />
         </div>

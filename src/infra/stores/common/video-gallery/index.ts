@@ -315,7 +315,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
             }
             if (message.type === IPCMessageType.UpdateVideoGalleryState) {
               const { payload } = message as { payload: any };
-              if (payload?.curPage) {
+              if (typeof payload?.curPage !== 'undefined') {
                 if (this.loading) {
                   return;
                 }
