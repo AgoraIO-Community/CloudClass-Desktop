@@ -12,9 +12,11 @@ import {
   AgoraEduClassroomEvent,
   BeautyType,
   DEVICE_DISABLE,
+  EduClassroomConfig,
   EduEventCenter,
   EduRteEngineConfig,
   EduRteRuntimePlatform,
+  Platform,
 } from 'agora-edu-core';
 import { transI18n } from 'agora-common-libs';
 import { builtInExtensions, getProcessorInitializer } from '@classroom/infra/api/rtc-extensions';
@@ -62,7 +64,8 @@ export class PretestUIStore extends EduUIStoreBase {
       reaction(
         () =>
           this.classroomStore.connectionStore.engine &&
-          EduRteEngineConfig.platform === EduRteRuntimePlatform.Web,
+          EduRteEngineConfig.platform === EduRteRuntimePlatform.Web &&
+          EduClassroomConfig.shared.platform !== Platform.H5,
         (processorsRequired) => {
           if (processorsRequired) {
             getProcessorInitializer<IVirtualBackgroundProcessor>(
