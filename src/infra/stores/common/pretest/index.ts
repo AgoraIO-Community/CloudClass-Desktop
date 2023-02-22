@@ -14,6 +14,7 @@ import {
   DEVICE_DISABLE,
   EduClassroomConfig,
   EduEventCenter,
+  EduRoleTypeEnum,
   EduRteEngineConfig,
   EduRteRuntimePlatform,
   Platform,
@@ -65,7 +66,8 @@ export class PretestUIStore extends EduUIStoreBase {
         () =>
           this.classroomStore.connectionStore.engine &&
           EduRteEngineConfig.platform === EduRteRuntimePlatform.Web &&
-          EduClassroomConfig.shared.platform !== Platform.H5,
+          EduClassroomConfig.shared.platform !== Platform.H5 &&
+          EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible,
         (processorsRequired) => {
           if (processorsRequired) {
             getProcessorInitializer<IVirtualBackgroundProcessor>(
