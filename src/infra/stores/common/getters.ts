@@ -1,5 +1,11 @@
 import { extractUserStreams } from '@classroom/infra/utils/extract';
-import { EduStream, EduUserStruct, GroupState } from 'agora-edu-core';
+import {
+  EduClassroomConfig,
+  EduRoomTypeEnum,
+  EduStream,
+  EduUserStruct,
+  GroupState,
+} from 'agora-edu-core';
 import { ExpandedScopeState } from 'agora-edu-core';
 import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
 import { isNumber } from 'lodash';
@@ -17,7 +23,14 @@ export class Getters {
   get layoutMaskCode() {
     const { flexProps } = this._classroomUIStore.classroomStore.roomStore;
     if (!isNumber(flexProps.area)) {
-      // 未设置情况下开启讲台
+      // 1v1和大班课默认讲台不开启
+      if (
+        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
+        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass
+      ) {
+        return LayoutMaskCode.None;
+      }
+      // 小班课默认开启讲台
       return LayoutMaskCode.None | LayoutMaskCode.StageVisible;
     }
     return flexProps.area;
