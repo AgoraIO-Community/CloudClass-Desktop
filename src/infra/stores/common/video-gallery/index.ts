@@ -458,6 +458,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
         'agoraVideoRawData',
         this._rtcRawDataCallback,
       );
+      this.shareUIStore.hideWindow(WindowID.VideoGallery);
       this.shareUIStore.closeWindow(WindowID.VideoGallery);
     }
     this._disposers.forEach((d) => d());

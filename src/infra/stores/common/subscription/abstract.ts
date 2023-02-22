@@ -1,3 +1,4 @@
+import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
 import {
   AgoraMediaControl,
   AgoraRteEventType,
@@ -29,6 +30,10 @@ export abstract class SceneSubscription {
 
   get active() {
     return this._active;
+  }
+
+  get subscribeAll() {
+    return EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class;
   }
 
   constructor(protected scene: AgoraRteScene, protected getters: Getters) {
@@ -218,15 +223,17 @@ export abstract class SceneSubscription {
       stream.audioSourceState === AgoraRteMediaSourceState.started &&
       stream.audioState === AgoraRteMediaPublishState.Published;
 
-    const isTeacher = this.getters.teacherCameraStream?.streamUuid === stream.streamUuid;
+    if (!this.subscribeAll) {
+      const isTeacher = this.getters.teacherCameraStream?.streamUuid === stream.streamUuid;
 
-    const isOnStage = this.getters.stageCameraStreams.some(
-      ({ streamUuid }) => streamUuid === stream.streamUuid,
-    );
+      const isOnStage = this.getters.stageCameraStreams.some(
+        ({ streamUuid }) => streamUuid === stream.streamUuid,
+      );
 
-    const isCoHost = isTeacher || isOnStage;
+      const isCoHost = isTeacher || isOnStage;
 
-    unmuteAudio = unmuteAudio && isCoHost;
+      unmuteAudio = unmuteAudio && isCoHost;
+    }
 
     return { muteVideo: !unmuteVideo, muteAudio: !unmuteAudio };
   }
