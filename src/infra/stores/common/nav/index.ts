@@ -8,6 +8,7 @@ import {
   DEVICE_DISABLE,
   EduClassroomConfig,
   EduRoleTypeEnum,
+  EduRoomTypeEnum,
   LeaveReason,
   RecordMode,
   RecordStatus,
@@ -132,10 +133,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get localNavCameraOff() {
-    if (this.getters.stageVisible) {
+    if (
+      EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
+      EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass
+    ) {
       return this.localCameraOff;
     } else {
-      return !this.hasStreamWindow;
+      if (this.getters.stageVisible) {
+        return this.localCameraOff;
+      } else {
+        return !this.hasStreamWindow;
+      }
     }
   }
 
@@ -814,10 +822,17 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    * stage === flase 控制老师窗口的展示和关闭
    */
   private _toggleNavCamera() {
-    if (this.getters.stageVisible) {
+    if (
+      EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
+      EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass
+    ) {
       this._toggleLocalVideo();
     } else {
-      this._toggleStreamWindow();
+      if (this.getters.stageVisible) {
+        this._toggleLocalVideo();
+      } else {
+        this._toggleStreamWindow();
+      }
     }
   }
 
