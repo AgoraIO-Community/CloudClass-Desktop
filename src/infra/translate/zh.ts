@@ -769,7 +769,7 @@ export const zh = {
   fcr_copy_share_link_copy: '复制链接',
   fcr_copy_success: '复制成功',
   // 扩展屏
-  fcr_expansion_screen_button_expansion_screen: '扩展屏',
+  fcr_expansion_screen_button_expansion_screen: '视频墙',
   fcr_expansion_screen_button_on: '上台',
   fcr_expansion_screen_button_down: '下台',
   fcr_expansion_screen_tips_close_group: '请先关闭分组讨论',
