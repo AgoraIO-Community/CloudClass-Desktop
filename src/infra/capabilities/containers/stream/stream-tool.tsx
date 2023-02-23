@@ -5,7 +5,19 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { Popover, SvgIcon, SvgImg, Tooltip } from '@classroom/ui-kit';
-import { FcrUIConfig, studentBoardAuthEnabled, studentCameraToolEnabled, studentMicrophoneToolEnabled, studentOffStageEnabled, studentRewardEnabled, studentStreamToolsPanelEnabled, teacherOffStageEnabled, teacherResetPosEnabled, teacherStreamToolsPanelEnabled, visibilityListItemControl } from 'agora-common-libs';
+import {
+  FcrUIConfig,
+  studentBoardAuthEnabled,
+  studentCameraToolEnabled,
+  studentMicrophoneToolEnabled,
+  studentOffStageEnabled,
+  studentRewardEnabled,
+  studentStreamToolsPanelEnabled,
+  teacherOffStageEnabled,
+  teacherResetPosEnabled,
+  teacherStreamToolsPanelEnabled,
+  visibilityListItemControl,
+} from 'agora-common-libs';
 
 export const StreamPlayerToolbar: FC<{
   visible: boolean;
@@ -25,11 +37,16 @@ export const StreamPlayerToolbar: FC<{
         }}
         overlayClassName="video-player-tools-popover"
         content={
-          stream.stream.isLocal ? (
-            <LocalStreamPlayerTools />
-          ) : (
-            <RemoteStreamPlayerTools stream={stream} />
-          )
+          <div
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+            }}>
+            {stream.stream.isLocal ? (
+              <LocalStreamPlayerTools />
+            ) : (
+              <RemoteStreamPlayerTools stream={stream} />
+            )}
+          </div>
         }
         placement={placement ?? toolbarPlacement}>
         <div className="stream-player-toolbar-placement w-full h-full absolute top-0 left-0" />
@@ -139,3 +156,7 @@ const ToolItem: FC<{
     return true;
   },
 );
+
+export const StreamPlayerToolbarH5 = observer(() => {
+  return <div className="fcr-"></div>;
+});

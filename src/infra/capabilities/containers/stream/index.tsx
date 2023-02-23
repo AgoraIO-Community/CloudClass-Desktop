@@ -1,6 +1,9 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
-import { CameraPlaceholderType } from '@classroom/infra/stores/common/type';
+import {
+  CameraPlaceholderType,
+  EduStreamUI,
+  VideoPlacement,
+} from '@classroom/infra/stores/common/stream/struct';
 import { EduRoleTypeEnum } from 'agora-edu-core';
 import classnames from 'classnames';
 import { debounce } from 'lodash';
@@ -135,7 +138,7 @@ const StreamPlayerOverlayAwardNo = observer(({ stream }: { stream: EduStreamUI }
   );
 });
 
-const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
+export const StreamPlayerCameraPlaceholder = observer(({ stream }: { stream: EduStreamUI }) => {
   const { streamUIStore } = useStore();
   const { cameraPlaceholder } = streamUIStore;
   return (
@@ -197,7 +200,7 @@ export const StreamPlayerOverlay = observer(({ stream }: { stream: EduStreamUI }
 
 export const StreamPlayer: FC<{
   stream: EduStreamUI;
-  renderAt: 'Window' | 'Bar';
+  renderAt: VideoPlacement;
   style?: CSSProperties;
   toolbarDisabled?: boolean;
 }> = observer(({ stream, style, renderAt, toolbarDisabled }) => {
@@ -243,40 +246,6 @@ export const StreamPlayer: FC<{
     </div>
   );
 });
-
-type StreamPlayerH5Props = {
-  stream: EduStreamUI;
-  toolbarDisabled?: boolean;
-  className?: string;
-  style?: CSSProperties;
-};
-
-export const StreamPlayerH5 = observer<FC<StreamPlayerH5Props>>(
-  ({ stream, toolbarDisabled = true, className = '', style }) => {
-    const [toolbarVisible, setToolbarVisible] = useState(false);
-
-    const handleMouseEnter = () => {
-      setToolbarVisible(true);
-    };
-
-    const handleMouseLeave = () => {
-      setToolbarVisible(false);
-    };
-
-    return (
-      <div
-        className={`fcr-stream-player-h5 ${className}`}
-        style={style}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}>
-        <StreamPlayerCameraPlaceholder stream={stream} />
-        <TrackPlayer stream={stream} />
-        <StreamPlayerOverlay stream={stream} />
-        {!toolbarDisabled && <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />}
-      </div>
-    );
-  },
-);
 
 const ANIMATION_DELAY = 500;
 

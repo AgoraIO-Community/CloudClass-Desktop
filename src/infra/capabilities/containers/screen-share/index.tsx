@@ -1,4 +1,4 @@
-import { useStore } from '@classroom/infra/hooks/ui-store';
+import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
 import { EduStream } from 'agora-edu-core';
 import { AGRenderMode } from 'agora-rte-sdk';
 import classnames from 'classnames';
@@ -30,7 +30,7 @@ const ScreenShareLocalTrackPlayer = observer(() => {
   );
 });
 
-const ScreenShareRemoteTrackPlayer = observer(
+export const ScreenShareRemoteTrackPlayer = observer(
   ({ style, stream, className }: { style?: any; stream: EduStream; className?: string }) => {
     const { streamUIStore } = useStore();
     const { setupRemoteVideo } = streamUIStore;

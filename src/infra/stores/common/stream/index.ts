@@ -2,10 +2,9 @@ import {
   AGError,
   AgoraRteMediaSourceState,
   AgoraRteMediaPublishState,
-  AgoraRteVideoSourceType,
+  AgoraRteAudioSourceType,
   AGRenderMode,
   bound,
-  AgoraRteAudioSourceType,
 } from 'agora-rte-sdk';
 import {
   action,
@@ -19,8 +18,7 @@ import {
 import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
 import { computedFn } from 'mobx-utils';
 import { EduUIStoreBase } from '../base';
-import { CameraPlaceholderType } from '../type';
-import { EduStreamUI, StreamBounds } from './struct';
+import { CameraPlaceholderType, EduStreamUI, StreamBounds } from './struct';
 import { EduStreamTool, EduStreamToolCategory } from './tool';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -34,13 +32,10 @@ import {
   EduRteEngineConfig,
   EduRteRuntimePlatform,
   EduStream,
-  iterateSet,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@classroom/infra/utils/interaction';
 import { SvgIconEnum } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
-import { extractStreamBySourceType, extractUserStreams } from '@classroom/infra/utils/extract';
-import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@classroom/infra/utils/event-center';
 import { ShareStreamStateKeeper } from './state-keeper';
 
 export enum StreamIconColor {
@@ -60,15 +55,6 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @observable
   streamsBounds: Map<string, StreamBounds> = new Map();
-
-  /**
-   * 视频窗口流ID列表
-   */
-  /** @en
-   * video stream ID list
-   */
-  @observable
-  streamWindowStreamUuids: string[] = [];
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
 
@@ -147,7 +133,10 @@ export class StreamUIStore extends EduUIStoreBase {
 
     this._disposers.push(
       reaction(
-        () => ({ uuids: this.streamWindowStreamUuids, pretestOpened: this.settingsOpened }),
+        () => ({
+          uuids: this.getters.windowStreamUserUuids,
+          pretestOpened: this.settingsOpened,
+        }),
         () => {
           this.allUIStreams.forEach((stream) => {
             this._setRenderAt(stream);
@@ -156,7 +145,6 @@ export class StreamUIStore extends EduUIStoreBase {
       ),
     );
 
-    EduEventUICenter.shared.onClassroomUIEvents(this._handleStreamWindowListChange);
     EduEventCenter.shared.onClassroomEvents(this._handleRewardsChange);
   }
   @bound
@@ -185,24 +173,13 @@ export class StreamUIStore extends EduUIStoreBase {
   }
   @bound
   protected _setRenderAt(stream: EduStreamUI) {
-    const streamUuids = this.streamWindowStreamUuids;
+    const streamWindowUserUuids = this.getters.windowStreamUserUuids;
     if (this.settingsOpened && stream.stream.isLocal) {
       stream.setRenderAt('Setting');
-    } else if (streamUuids.includes(stream.stream.streamUuid)) {
+    } else if (streamWindowUserUuids.includes(stream.fromUser.userUuid)) {
       stream.setRenderAt('Window');
     } else {
       stream.setRenderAt('Bar');
-    }
-  }
-
-  @action.bound
-  private _handleStreamWindowListChange(
-    evt: AgoraEduClassroomUIEvent,
-    userUuids: unknown,
-    streamUuids: unknown,
-  ) {
-    if (evt === AgoraEduClassroomUIEvent.streamWindowsChange) {
-      this.streamWindowStreamUuids = streamUuids as string[];
     }
   }
 
@@ -218,79 +195,13 @@ export class StreamUIStore extends EduUIStoreBase {
   @computed get allUIStreams(): Map<string, EduStreamUI> {
     const uiStreams = new Map<string, EduStreamUI>();
 
-    [this.teacherStreams, this.studentStreams].forEach((streams) => {
-      streams.forEach((stream) => {
-        uiStreams.set(stream.stream.streamUuid, stream);
-      });
+    [this.teacherCameraStream, ...this.studentCameraStreams].forEach((streamUI) => {
+      if (streamUI) {
+        uiStreams.set(streamUI.stream.streamUuid, streamUI);
+      }
     });
 
     return uiStreams;
-  }
-
-  /**
-   * 老师流信息列表
-   * @returns
-   */
-  @computed get teacherStreams(): Set<EduStreamUI> {
-    const { teacherList } = this.classroomStore.userStore;
-
-    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
-
-    const streams = extractUserStreams(teacherList, streamByUserUuid, streamByStreamUuid);
-
-    const uiStreams = iterateSet(streams, {
-      onMap: (stream) => {
-        const uiStream = new EduStreamUI(stream);
-        this._setRenderAt(uiStream);
-        return uiStream;
-      },
-    }).list;
-
-    return new Set(uiStreams);
-  }
-
-  /**
-   * 助教流信息列表
-   * @returns
-   */
-  @computed get assistantStreams(): Set<EduStreamUI> {
-    const { assistantList } = this.classroomStore.userStore;
-
-    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
-
-    const streams = extractUserStreams(assistantList, streamByUserUuid, streamByStreamUuid);
-
-    const uiStreams = iterateSet(streams, {
-      onMap: (stream) => {
-        const uiStream = new EduStreamUI(stream);
-        this._setRenderAt(uiStream);
-        return uiStream;
-      },
-    }).list;
-
-    return new Set(uiStreams);
-  }
-
-  /**
-   * 学生流信息列表
-   * @returns
-   */
-  @computed get studentStreams(): Set<EduStreamUI> {
-    const { studentList } = this.classroomStore.userStore;
-
-    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
-
-    const streams = extractUserStreams(studentList, streamByUserUuid, streamByStreamUuid);
-
-    const uiStreams = iterateSet(streams, {
-      onMap: (stream) => {
-        const uiStream = new EduStreamUI(stream);
-        this._setRenderAt(uiStream);
-        return uiStream;
-      },
-    }).list;
-
-    return new Set(uiStreams);
   }
 
   /**
@@ -298,7 +209,13 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get teacherCameraStream(): EduStreamUI | undefined {
-    const stream = extractStreamBySourceType(this.teacherStreams, AgoraRteVideoSourceType.Camera);
+    let stream = undefined;
+    const { teacherCameraStream } = this.getters;
+
+    if (teacherCameraStream) {
+      stream = new EduStreamUI(teacherCameraStream);
+      this._setRenderAt(stream);
+    }
 
     return stream;
   }
@@ -308,9 +225,31 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get studentCameraStream(): EduStreamUI | undefined {
-    const stream = extractStreamBySourceType(this.studentStreams, AgoraRteVideoSourceType.Camera);
+    let stream = undefined;
+    const { studentCameraStreams } = this.getters;
+
+    if (studentCameraStreams.length) {
+      stream = new EduStreamUI(studentCameraStreams[0]);
+      this._setRenderAt(stream);
+    }
 
     return stream;
+  }
+
+  /**
+   * 学生流信息（教室内只有一个学生时使用，如果有一个以上老师请使用 studentStreams）
+   * @returns
+   */
+  @computed get studentCameraStreams(): EduStreamUI[] {
+    const { studentCameraStreams } = this.getters;
+
+    const streams = studentCameraStreams.map((stream) => {
+      const streamUI = new EduStreamUI(stream);
+      this._setRenderAt(streamUI);
+      return streamUI;
+    });
+
+    return streams;
   }
 
   /**
@@ -504,7 +443,7 @@ export class StreamUIStore extends EduUIStoreBase {
       { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.half },
       transI18n('Clear Podiums'),
       {
-        interactable: !!this.studentStreams.size,
+        interactable: !!this.studentCameraStreams.length,
         hoverIconType: { icon: SvgIconEnum.ON_PODIUM, color: InteractionStateColors.allow },
         onClick: async () => {
           try {
@@ -892,7 +831,6 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   onDestroy() {
-    EduEventUICenter.shared.offClassroomUIEvents(this._handleStreamWindowListChange);
     EduEventCenter.shared.offClassroomEvents(this._handleRewardsChange);
     this._disposers.forEach((d) => d());
     this._disposers = [];

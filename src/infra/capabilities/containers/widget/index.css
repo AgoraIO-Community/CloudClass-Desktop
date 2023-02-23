@@ -13,3 +13,12 @@
 .widget-slot-chat {
   /* @apply bg-background; */
 }
+
+.fcr-countdown-mobile-widget {
+  position: relative;
+}
+.whiteboard-mobile-container .netless-whiteboard-wrapper {
+  background: #fff;
+  border-color: #fff;
+  pointer-events: none;
+}

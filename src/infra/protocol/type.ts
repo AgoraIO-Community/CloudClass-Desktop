@@ -1,3 +1,5 @@
+import { OrientationEnum } from '../stores/common/type';
+
 export enum BoardConnectionState {
   Disconnected = 0,
   Connecting = 1,
@@ -71,4 +73,9 @@ export type FcrBoardH5WindowConfig = {
   resourceUuid: string;
   resourceUrl: string;
   title: string;
+};
+
+export type OrientationStates = {
+  orientation: OrientationEnum;
+  forceLandscape: boolean;
 };

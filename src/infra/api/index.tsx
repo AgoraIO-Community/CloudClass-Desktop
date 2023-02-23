@@ -1,4 +1,4 @@
-import { ControlBar } from '../capabilities/containers/fragments';
+import { ControlBar, VideoGallery } from '../capabilities/containers/fragments';
 import { Scenarios } from '../capabilities/scenarios';
 import {
   CloudDriveResource,
@@ -7,7 +7,6 @@ import {
   EduMediaEncryptionMode,
   EduRegion,
   EduRoleTypeEnum,
-  EduRoomServiceTypeEnum,
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
@@ -69,6 +68,7 @@ export class AgoraEduSDK {
   private static _boardWindowAnimationOptions: BoardWindowAnimationOptions = {};
   private static _language: string;
   private static _appId = '';
+  private static _uiMode: FcrMultiThemeMode;
   private static _uiConfig: FcrUIConfig;
   private static _theme: FcrTheme;
   private static _shareUrl: string;
@@ -194,6 +194,10 @@ export class AgoraEduSDK {
     return this._theme;
   }
 
+  static get uiMode() {
+    return this._uiMode;
+  }
+
   static get shareUrl() {
     return this._shareUrl;
   }
@@ -268,10 +272,8 @@ export class AgoraEduSDK {
       shareUrl = '',
       latencyLevel,
       userFlexProperties,
-      language
+      language,
     } = option;
-    //TODO will be removed in the near future, dont change it as only EduRoomServiceTypeEnum.LivePremium is supported.
-    const roomServiceType = EduRoomServiceTypeEnum.LivePremium;
 
     const sessionInfo = {
       userUuid,
@@ -280,15 +282,15 @@ export class AgoraEduSDK {
       roomUuid,
       roomName,
       roomType,
-      roomServiceType,
       duration,
       flexProperties: userFlexProperties,
       token: rtmToken,
-      startTime
+      startTime,
     };
 
     this._shareUrl = shareUrl;
     this._language = language;
+    this._uiMode = uiMode ?? FcrMultiThemeMode.light;
 
     this._widgets = {
       ...option.widgets,
@@ -317,7 +319,7 @@ export class AgoraEduSDK {
     const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } =
       initializeBuiltInExtensions();
 
-    const noDevicePermission = roleType === EduRoleTypeEnum.invisible;
+    const noDevicePermission = roleType === EduRoleTypeEnum.invisible || platform === Platform.H5;
 
     const config = new EduClassroomConfig(
       this._appId,
@@ -365,8 +367,7 @@ export class AgoraEduSDK {
 
     EduEventCenter.shared.onClassroomEvents(option.listener);
 
-    const themeMode = uiMode ?? FcrMultiThemeMode.light;
-    this._selectUITheme(themeMode, option.roomType);
+    this._selectUITheme(this._uiMode, option.roomType);
     applyTheme(this._theme);
 
     addResourceBundle('en', en);
@@ -374,11 +375,7 @@ export class AgoraEduSDK {
 
     render(
       <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
-        <Scenarios
-          pretest={platform !== Platform.H5 && pretest}
-          roomType={roomType}
-          roomServiceType={roomServiceType}
-        />
+        <Scenarios pretest={platform !== Platform.H5 && pretest} roomType={roomType} />
       </Providers>,
       dom,
     );
@@ -396,19 +393,22 @@ export class AgoraEduSDK {
   static launchWindow(dom: HTMLElement, option: LaunchWindowOption) {
     const mapping = {
       [WindowID.RemoteControlBar]: ControlBar,
+      [WindowID.VideoGallery]: VideoGallery,
     };
 
     const Component = mapping[option.windowID];
 
-    const themeMode = option.uiMode ?? FcrMultiThemeMode.light;
-    this._selectUITheme(themeMode, option.roomType);
+    this._language = option.language;
+    this._uiMode = option.uiMode ?? FcrMultiThemeMode.light;
+
+    this._selectUITheme(this._uiMode, option.roomType);
     applyTheme(this._theme);
 
     addResourceBundle('en', en);
     addResourceBundle('zh', zh);
 
     render(
-      <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
+      <Providers language={this._language} uiConfig={this.uiConfig} theme={this.theme}>
         {Component && <Component {...option.args} />}
       </Providers>,
       dom,

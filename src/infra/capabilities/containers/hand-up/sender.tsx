@@ -89,22 +89,13 @@ class FSM {
 
 export const WaveArmSender: FC<BaseWaveArmProps> = observer(({ isH5, isOnPodium, onOffPodium }) => {
   const { handUpUIStore, shareUIStore } = useStore();
-  const {
-    waveArm,
-    teacherUuid,
-    waveArmDurationTime,
-    inviteListMaxLimit,
-    acceptedListMaxLimit,
-    isMixCDNRTC,
-    beingInvited,
-  } = handUpUIStore;
+  const { waveArm, teacherUuid, beingInvited, waveArmDurationTime } = handUpUIStore;
   const fsm = useMemo(() => new FSM(WaveArmStateEnum.waveArmBefore), []);
   const [firstTip, setFirstTip] = useState<boolean>(false);
   const [showTip, setShowTip] = useState<boolean>(false);
 
   const [countDownNum, setCountDownNum] = useState<number>(0);
   const [startCountDown, setStartCountDown] = useState<boolean>(false);
-  const isMaxLimit = isMixCDNRTC && (inviteListMaxLimit || acceptedListMaxLimit);
 
   useInvitedModal(beingInvited, handUpUIStore, shareUIStore);
 
@@ -142,17 +133,11 @@ export const WaveArmSender: FC<BaseWaveArmProps> = observer(({ isH5, isOnPodium,
   }, []);
 
   const handleMouseDown = () => {
-    if (isMaxLimit) {
-      return;
-    }
     setFirstTip(true);
     fsm.changeState(WaveArmStateEnum.waveArming, waveArmDurationTime);
   };
 
   const handleMouseUp = () => {
-    if (isMaxLimit) {
-      return;
-    }
     fsm.changeState(WaveArmStateEnum.waveArmAfter, waveArmDurationTime);
   };
 
@@ -200,7 +185,7 @@ export const WaveArmSender: FC<BaseWaveArmProps> = observer(({ isH5, isOnPodium,
         className="hands-up-btn"
         onTouchStart={!isOnPodium ? handleMouseDown : undefined}
         onTouchEnd={!isOnPodium ? handleMouseUp : undefined}
-        disabled={!!countDownNum || isMaxLimit}>
+        disabled={!!countDownNum}>
         {!countDownNum
           ? transI18n('vocational.handsUp')
           : `${transI18n('vocational.handsUpReviewing')} ${countDownNum}s`}

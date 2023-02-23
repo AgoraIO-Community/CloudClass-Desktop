@@ -1,6 +1,6 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { useInterval } from '@classroom/infra/hooks/utilites';
-import { DialogCategory } from '@classroom/infra/stores/common/share-ui';
+import { DialogCategory } from '@classroom/infra/stores/common/share';
 import classnames from 'classnames';
 import { throttle } from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';

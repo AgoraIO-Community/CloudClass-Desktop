@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useMemo } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Rnd } from 'react-rnd';
 import { Search } from '../input';
 import { SvgIconEnum, SvgImg } from '../svg-img';
@@ -9,7 +9,6 @@ import { useI18n } from 'agora-common-libs';
 import { useColumns } from './hooks';
 import { OverlayWrap } from '../overlay-wrap';
 import { useDraggableDefaultCenterPosition } from '../../utilities/hooks';
-import { throttle } from 'lodash';
 
 const modalSize = { width: 606, height: 402 };
 
@@ -29,31 +28,11 @@ export const Roster: FC<RosterProps> = ({
   useEffect(() => {
     setOpened(true);
   }, []);
-  const innerSize = useMemo(
-    throttle(() => {
-      if (bounds) {
-        const innerEle = document.getElementsByClassName(bounds)[0];
-        if (innerEle) {
-          return {
-            innerHeight: innerEle.clientHeight,
-            innerWidth: innerEle.clientWidth,
-          };
-        }
-      }
-      return {
-        innerHeight: window.innerHeight,
-        innerWidth: window.innerWidth,
-      };
-    }, 200),
-    [window.innerHeight, window.innerWidth],
-  );
-  const defaultPos = useDraggableDefaultCenterPosition(
-    {
-      draggableWidth: width || modalSize.width,
-      draggableHeight: modalSize.height,
-    },
-    innerSize,
-  );
+  const defaultRect = useDraggableDefaultCenterPosition({
+    draggableWidth: width || modalSize.width,
+    draggableHeight: modalSize.height,
+    bounds,
+  });
 
   const showSearch = functions.includes('search');
   const showCarousel = functions.includes('carousel');
@@ -65,9 +44,9 @@ export const Roster: FC<RosterProps> = ({
     <OverlayWrap opened={opened} onExited={onClose}>
       <Rnd
         dragHandleClassName="main-title"
-        bounds={'.' + bounds}
+        bounds={bounds}
         enableResizing={false}
-        default={defaultPos}>
+        default={defaultRect}>
         <div
           className="roster-wrap"
           style={{ minWidth: width || modalSize.width, height: modalSize.height }}>
@@ -125,12 +104,12 @@ export const Roster: FC<RosterProps> = ({
                       style={
                         width
                           ? {
-                            paddingLeft: isFirstColumn ? 25 : 0,
-                            flex: isFirstColumn ? '0 1 auto' : 1,
-                          }
+                              paddingLeft: isFirstColumn ? 25 : 0,
+                              flex: isFirstColumn ? '0 1 auto' : 1,
+                            }
                           : {
-                            paddingLeft: isFirstColumn ? 25 : 0,
-                          }
+                              paddingLeft: isFirstColumn ? 25 : 0,
+                            }
                       }>
                       {transI18n(name)}
                     </Col>

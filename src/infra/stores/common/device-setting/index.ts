@@ -1,8 +1,6 @@
-import { AGError, AgoraRteMediaSourceState, bound, Log, Logger } from 'agora-rte-sdk';
-import { action, computed, Lambda, observable, reaction } from 'mobx';
+import { AGError, bound, Log } from 'agora-rte-sdk';
+import { computed, Lambda, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { CameraPlaceholderType } from '../type';
-import { v4 as uuidv4 } from 'uuid';
 import {
   AgoraEduClassroomEvent,
   AGServiceErrorCode,
@@ -13,16 +11,13 @@ import {
   EduRoleTypeEnum,
   EduRoomTypeEnum,
 } from 'agora-edu-core';
-import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@classroom/infra/utils/event-center';
-import { transI18n } from 'agora-common-libs';
+import { LayoutMaskCode } from '../type';
 
 export type SettingToast = {
   id: string;
   type: 'video' | 'audio_recording' | 'audio_playback' | 'error';
   info: string;
 };
-
-type AddToastArgs = Omit<SettingToast, 'id'>;
 
 @Log.attach({ proxyMethods: false })
 export class DeviceSettingUIStore extends EduUIStoreBase {
@@ -192,21 +187,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
 
   /**
-   * Toast 消息列表
-   */
-  @observable
-  toastQueue: SettingToast[] = [];
-
-  /**
-   * 过滤类型为 error 的 toast 消息列表
-   * @returns 过滤后的 Toast 消息列表
-   */
-  @computed
-  get errorToastQueue() {
-    return this.toastQueue.filter((t) => t.type === 'error');
-  }
-
-  /**
    * 获取视频设备信息
    **/
   /** @en
@@ -235,225 +215,25 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 摄像头设备信息
-   * @returns 设备列表
-   */
-  @computed get cameraDevicesList() {
-    return this.classroomStore.mediaStore.videoCameraDevices.map((item) => ({
-      label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
-      value: item.deviceid,
-    }));
-  }
-
-  /**
-   * 麦克风设备信息
-   * @returns 设备列表
-   */
-  @computed get recordingDevicesList() {
-    return this.classroomStore.mediaStore.audioRecordingDevices.map((item) => ({
-      label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
-      value: item.deviceid,
-    }));
-  }
-
-  /**
-   *
-   * 扬声器设备
-   * @returns 设备列表
-   */
-  @computed get playbackDevicesList() {
-    const playbackDevicesList = this.classroomStore.mediaStore.audioPlaybackDevices.map((item) => ({
-      label: item.devicename,
-      value: item.deviceid,
-    }));
-    return playbackDevicesList.length
-      ? playbackDevicesList
-      : [
-          {
-            label: transI18n(`media.default`),
-            value: 'default',
-          },
-        ];
-  }
-
-  /**
-   * 当前摄像头设备ID
-   * @returns
-   */
-  @computed get currentCameraDeviceId(): string {
-    return this.classroomStore.mediaStore.cameraDeviceId ?? '';
-  }
-
-  /**
-   * 当前麦克风设备ID
-   * @returns
-   */
-  @computed get currentRecordingDeviceId(): string {
-    return this.classroomStore.mediaStore.recordingDeviceId ?? '';
-  }
-
-  /**
-   * 当前扬声器设备ID
-   * @returns
-   */
-  @computed get currentPlaybackDeviceId(): string {
-    return this.classroomStore.mediaStore.playbackDeviceId ?? 'default';
-  }
-
-  /**
-   * 扬声器测试音量
-   * @returns 音量 0 ~ 1
-   */
-  @computed get localPlaybackTestVolume(): number {
-    return this.classroomStore.mediaStore.localPlaybackTestVolume * 100;
-  }
-
-  /**
-   * 本地摄像头设备状态
-   * @returns
-   */
-  @computed get localCameraTrackState(): AgoraRteMediaSourceState {
-    return this.classroomStore.mediaStore.localCameraTrackState;
-  }
-
-  /**
-   * 本地麦克风设备状态
-   * @returns
-   */
-  @computed get localMicTrackState(): AgoraRteMediaSourceState {
-    return this.classroomStore.mediaStore.localMicTrackState;
-  }
-
-  /**
-   * 本地摄像头是否开启
-   * @returns
-   */
-  @computed get localCameraOff() {
-    return this.localCameraTrackState !== AgoraRteMediaSourceState.started;
-  }
-
-  /**
-   * 本地麦克风设备是否开启
-   * @returns
-   */
-  @computed get localMicOff() {
-    return this.localMicTrackState !== AgoraRteMediaSourceState.started;
-  }
-
-  /**
-   * 本地音频设备状态显示的 Icon 类型
-   * microphone-off 麦克风开启
-   * microphone-on  麦克风关闭
-   * @returns Icon 类型
-   */
-  @computed get localMicIconType() {
-    return this.localMicOff ? 'microphone-off' : 'microphone-on';
-  }
-
-  /**
    * 是否可设置隐藏/显示讲台区域
    */
+  @computed
   get deviceStage() {
     if (EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.teacher) return;
+    const isInSubRoom = this.getters.isInSubRoom;
     switch (EduClassroomConfig.shared.sessionInfo.roomType) {
       case EduRoomTypeEnum.Room1v1Class:
         return false;
       case EduRoomTypeEnum.RoomBigClass:
         return false;
       case EduRoomTypeEnum.RoomSmallClass:
-        return true;
+        return !isInSubRoom;
     }
   }
 
-  /**
-   * 讲台状态
-   */
   @computed
   get stageVisible() {
     return this.getters.stageVisible;
-  }
-
-  /**
-   * 本地视频状态显示的占位符类型
-   * @returns
-   */
-  @computed get localCameraPlaceholder(): CameraPlaceholderType {
-    let placeholder = CameraPlaceholderType.none;
-    switch (this.localCameraTrackState) {
-      case AgoraRteMediaSourceState.started:
-        placeholder = CameraPlaceholderType.none;
-        break;
-      case AgoraRteMediaSourceState.starting:
-        placeholder = CameraPlaceholderType.loading;
-        break;
-      case AgoraRteMediaSourceState.stopped:
-        placeholder = CameraPlaceholderType.muted;
-        break;
-      case AgoraRteMediaSourceState.error:
-        placeholder = CameraPlaceholderType.broken;
-        break;
-    }
-    return placeholder;
-  }
-
-  /**
-   * 是否开启镜像
-   * @returns
-   */
-  @computed
-  get isMirror() {
-    return this.classroomStore.mediaStore.isMirror;
-  }
-
-  /**
-   * 显示一个 Toast 提示
-   * @param toast
-   */
-  @action.bound
-  addToast(toast: AddToastArgs) {
-    Logger.info(`[setting] add toast ${toast.type}`);
-    this.toastQueue.push({
-      id: uuidv4(),
-      ...toast,
-    });
-  }
-
-  /**
-   * 隐藏一个 Toast 提示
-   * @param id
-   * @returns
-   */
-  @action.bound
-  removeToast(id: string) {
-    this.toastQueue = this.toastQueue.filter((value) => value.id !== id);
-    return id;
-  }
-
-  /**
-   * 设置镜像开启或关闭
-   * @param v 开启或关闭
-   */
-  @bound
-  setMirror(v: boolean) {
-    this.classroomStore.mediaStore.setMirror(v);
-  }
-
-  /**
-   * 打开本地摄像头
-   * @param value 开启或关闭
-   */
-  @bound
-  enableLocalVideo(value: boolean) {
-    this.classroomStore.mediaStore.enableLocalVideo(value);
-  }
-
-  /**
-   * 打开本地麦克风
-   * @param value 开启或关闭
-   */
-  @bound
-  enableLocalAudio(value: boolean) {
-    this.classroomStore.mediaStore.enableLocalAudio(value);
   }
 
   /**
@@ -483,43 +263,25 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     this.classroomStore.mediaStore.setPlaybackDevice(id);
   }
 
-  @bound
-  toggleCamera() {
-    const nextDevice = this.cameraDevicesList
-      .filter((camera) => camera.value !== DEVICE_DISABLE)
-      .find((camera) => camera.value !== this.currentCameraDeviceId);
-    if (!nextDevice) {
-      return;
-    }
-    this.setCameraDevice(nextDevice.value);
-  }
-
   /**
    * 设置讲台开关
    * 停止轮询 业务逻辑
    * @param stage
    */
   @bound
-  setStageVisible(stage: boolean) {
+  async setStageVisible(stage: boolean) {
     try {
-      const isMainRoom =
-        this.classroomStore.connectionStore.sceneId ===
-        this.classroomStore.connectionStore.mainRoomScene?.sceneId;
-      if (isMainRoom) {
-        this.classroomStore.roomStore.updateFlexProperties({ stage: +stage }, { cmd: 1 });
-        if (!stage) {
-          this.classroomStore.roomStore
-            .stopCarousel()
-            .then(() => {
-              EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
-            })
-            .catch(() => {
-              EduEventUICenter.shared.emitClassroomUIEvents(AgoraEduClassroomUIEvent.hiddenStage);
-            });
-        }
-      } else {
-        this.logger.info('cannot hide stage area in a sub room');
+      const area = stage
+        ? this.getters.layoutMaskCode | LayoutMaskCode.StageVisible
+        : this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible;
+      if (!stage) {
+        await this.classroomStore.handUpStore.offPodiumAll();
       }
+
+      await this.classroomStore.roomStore.updateFlexProperties({
+        properties: { area },
+        cause: null,
+      });
     } catch (e) {
       if (
         !AGError.isOf(

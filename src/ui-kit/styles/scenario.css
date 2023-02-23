@@ -166,10 +166,11 @@ body,
   flex: 1;
 }
 
-.big-class-h5 {
+.big-class-mobile {
   transition: all 0.3s ease;
+  width: 100%;
 }
-.big-class-h5 .chat-panel {
+.big-class-mobile .chat-panel {
   min-width: unset;
 }
 

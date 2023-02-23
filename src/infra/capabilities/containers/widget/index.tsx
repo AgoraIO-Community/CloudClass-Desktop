@@ -27,7 +27,7 @@ export const WidgetContainer = observer(() => {
   );
 });
 
-const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
+export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
   const containerDom = useRef<HTMLElement>();
 
   const [mounted, setMounted] = useState(false);

@@ -18,8 +18,9 @@ import { ScreenShareContainer } from '../../containers/screen-share';
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
 import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';
-import { StreamWindowsContainer } from '../../containers/stream-windows-container';
+import { StreamWindowsContainer } from '../../containers/stream-window';
 import { RemoteControlToolbar } from '../../containers/remote-control/toolbar';
+import CameraPreview from '../../containers/camera-preview';
 
 export const MidClassScenario = () => {
   // layout
@@ -54,6 +55,7 @@ export const MidClassScenario = () => {
           <WidgetContainer />
           <ToastContainer />
           <Award />
+          <CameraPreview />
           <Watermark />
         </SceneSwitch>
       </FixedAspectRatioRootBox>

@@ -1,43 +1,22 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { OverlayWrap, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
-import { throttle } from 'lodash';
 import { InviteTable } from './invite-table';
 import './invite-container.css';
 import { useI18n } from 'agora-common-libs';
 interface InvitePodiumContainerProps {
   onClose: () => void;
 }
-const bounds = 'classroom-track-bounds';
+const bounds = '.classroom-track-bounds';
 const modalSize = { width: 606, height: 402 };
 
 export const InvitePodiumContainer: React.FC<InvitePodiumContainerProps> = ({ onClose }) => {
-  const innerSize = useMemo(
-    throttle(() => {
-      if (bounds) {
-        const innerEle = document.getElementsByClassName(bounds)[0];
-        if (innerEle) {
-          return {
-            innerHeight: innerEle.clientHeight,
-            innerWidth: innerEle.clientWidth,
-          };
-        }
-      }
-      return {
-        innerHeight: window.innerHeight,
-        innerWidth: window.innerWidth,
-      };
-    }, 200),
-    [window.innerHeight, window.innerWidth],
-  );
-  const defaultPos = useDraggableDefaultCenterPosition(
-    {
-      draggableWidth: modalSize.width,
-      draggableHeight: modalSize.height,
-    },
-    innerSize,
-  );
+  const defaultRect = useDraggableDefaultCenterPosition({
+    draggableWidth: modalSize.width,
+    draggableHeight: modalSize.height,
+    bounds,
+  });
   const [opened, setOpened] = useState(false);
   useEffect(() => {
     setOpened(true);
@@ -48,9 +27,9 @@ export const InvitePodiumContainer: React.FC<InvitePodiumContainerProps> = ({ on
     <OverlayWrap opened={opened} onExited={onClose}>
       <Rnd
         dragHandleClassName="inviteTitle"
-        bounds={'.' + bounds}
+        bounds={bounds}
         enableResizing={false}
-        default={defaultPos}>
+        default={defaultRect}>
         <div className="inviteContainer">
           <div className="inviteTitle">
             {transI18n('invite.title')}

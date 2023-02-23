@@ -34,7 +34,6 @@ export const DragableContainer: FC<{
     !active && setTranslate([0, 0]);
     if (Math.abs(mx) >= 3 || Math.abs(my) >= 3) {
       handleDragStream({ stream: stream.stream, active, xy });
-      // active && setVisible(false);
     }
   });
 

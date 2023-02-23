@@ -3,7 +3,7 @@ import { Toast } from '@classroom/ui-kit';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './index.css';
-import { ToastType } from '@classroom/infra/stores/common/share-ui';
+import { ToastType } from '@classroom/infra/stores/common/share';
 
 export const ToastContainer = observer(() => {
   const { shareUIStore } = useStore();
@@ -15,7 +15,7 @@ export const ToastContainer = observer(() => {
         <CSSTransition classNames="toast-animation" timeout={1000} key={`${value.id}`}>
           <Toast
             style={{ position: 'absolute', top: 50 * (idx + 1), zIndex: 9999 }}
-            type={value.type}
+            type={value.type as 'success' | 'error' | 'warning'}
             closeToast={() => {
               removeToast(value.id);
             }}>

@@ -1,3 +1,4 @@
+import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
 import {
   AgoraMediaControl,
   AgoraRteEventType,
@@ -7,33 +8,37 @@ import {
   AgoraRteScene,
   AgoraStream,
   AgoraUser,
-  Injectable,
-  AGRtcConnectionType,
-  AgoraRteVideoSourceType,
   AGRtcChannel,
+  AgoraRteVideoSourceType,
+  AGRtcConnectionType,
+  AgoraRteAudioSourceType,
+  Logger,
+  Log,
 } from 'agora-rte-sdk';
+import { pad, padEnd } from 'lodash';
+import { IReactionDisposer, reaction } from 'mobx';
+import { Getters } from '../getters';
+import { RemoteStreamMuteStatus } from './type';
 
 export abstract class SceneSubscription {
-  protected logger!: Injectable.Logger;
-
+  logger!: Logger;
+  protected _disposers: IReactionDisposer[] = [];
   protected _active = false;
-  protected _isCdnMode = false;
-
   protected _rtcChannel: AGRtcChannel;
   protected _mediaControl: AgoraMediaControl;
+  protected _muteRegistry: Map<string, { muteVideo: boolean; muteAudio: boolean }> = new Map();
 
   get active() {
     return this._active;
   }
 
-  get isCDNMode() {
-    return this._isCdnMode;
+  get subscribeAll() {
+    return EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class;
   }
 
-  constructor(protected _scene: AgoraRteScene) {
-    const scene = _scene;
-    this._rtcChannel = _scene.rtcChannel;
-    this._mediaControl = _scene.engine.getAgoraMediaControl();
+  constructor(protected scene: AgoraRteScene, protected getters: Getters) {
+    this._rtcChannel = scene.rtcChannel;
+    this._mediaControl = scene.engine.getAgoraMediaControl();
     this._active = true;
 
     scene.on(AgoraRteEventType.UserAdded, (users: AgoraUser[]) => {
@@ -96,6 +101,30 @@ export abstract class SceneSubscription {
         this.handleRemoteStreamRemoved(streams);
       },
     );
+
+    this._disposers.push(
+      reaction(
+        () => this.getters.stageCameraStreams,
+        () => {
+          this.getters.studentCameraStreams.forEach((stream) => {
+            const { muteAudio } = this.isMuted(stream);
+            if (stream.isLocal) {
+              this.logger.info(
+                `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
+              );
+              scene.rtcChannel.muteLocalAudioStream(muteAudio);
+              this.putRegistry(stream.streamUuid, { muteAudio });
+            } else {
+              this.logger.info(
+                `muteRemoteAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
+              );
+              scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteAudio);
+              this.putRegistry(stream.streamUuid, { muteAudio });
+            }
+          });
+        },
+      ),
+    );
   }
 
   protected abstract handleLocalStreamAdded(streams: AgoraStream[]): void;
@@ -104,6 +133,40 @@ export abstract class SceneSubscription {
   protected abstract handleRemoteStreamAdded(streams: AgoraStream[]): void;
   protected abstract handleRemoteStreamUpdated(streams: AgoraStream[]): void;
   protected abstract handleRemoteStreamRemoved(streams: AgoraStream[]): void;
+
+  setActive(active: boolean) {
+    this._active = active;
+  }
+
+  destroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
+  }
+
+  printStat() {
+    this.logger.info(pad('', 60, '-'));
+    this.logger.info(
+      `${padEnd('streamUuid', 20)}${padEnd('muteVideo', 20)}${padEnd('muteAudio', 20)}`,
+    );
+    this._muteRegistry.forEach(({ muteAudio, muteVideo }, streamUuid) => {
+      if (streamUuid === this.scene.localUser?.streamUuid) {
+        this.logger.info(
+          `${padEnd(`${streamUuid}-local`, 20)}${padEnd(`${muteVideo}`, 20)}${padEnd(
+            `${muteAudio}`,
+            20,
+          )}`,
+        );
+      } else {
+        this.logger.info(
+          `${padEnd(`${streamUuid}`, 20)}${padEnd(`${muteVideo}`, 20)}${padEnd(
+            `${muteAudio}`,
+            20,
+          )}`,
+        );
+      }
+    });
+    this.logger.info(pad('', 60, '-'));
+  }
 
   private _handleUserRemoved(users: AgoraUser[], scene: AgoraRteScene, type?: number) {
     let removedLocalStreams: AgoraStream[] = [];
@@ -129,83 +192,121 @@ export abstract class SceneSubscription {
     this.handleRemoteStreamRemoved(removedRemoteStreams);
   }
 
-  setActive(active: boolean) {
-    this._active = active;
+  protected putRegistry(
+    streamUuid: string,
+    { muteVideo, muteAudio }: { muteVideo?: boolean; muteAudio?: boolean },
+  ) {
+    let stat = this._muteRegistry.get(streamUuid);
+    if (!stat) {
+      stat = { muteVideo: true, muteAudio: true };
+      this._muteRegistry.set(streamUuid, stat);
+    }
+
+    if (typeof muteVideo !== 'undefined') {
+      stat.muteVideo = muteVideo;
+    }
+
+    if (typeof muteAudio !== 'undefined') {
+      stat.muteAudio = muteAudio;
+    }
+  }
+  protected removeRegistry(streamUuid: string) {
+    this._muteRegistry.delete(streamUuid);
   }
 
-  setCDNMode(cdnMode: boolean) {
-    this._isCdnMode = cdnMode;
-  }
-
-  protected _canStreamBeSubscribed(stream: AgoraStream): RemoteStreamSubscribeStatus {
-    const video =
+  protected isMuted(stream: AgoraStream) {
+    const unmuteVideo =
       stream.videoSourceState === AgoraRteMediaSourceState.started &&
       stream.videoState === AgoraRteMediaPublishState.Published;
-    const audio =
+
+    let unmuteAudio =
       stream.audioSourceState === AgoraRteMediaSourceState.started &&
       stream.audioState === AgoraRteMediaPublishState.Published;
 
-    return { video, audio };
+    if (!this.subscribeAll) {
+      const isTeacher = this.getters.teacherCameraStream?.streamUuid === stream.streamUuid;
+
+      const isOnStage = this.getters.stageCameraStreams.some(
+        ({ streamUuid }) => streamUuid === stream.streamUuid,
+      );
+
+      const isCoHost = isTeacher || isOnStage;
+
+      unmuteAudio = unmuteAudio && isCoHost;
+    }
+
+    return { muteVideo: !unmuteVideo, muteAudio: !unmuteAudio };
   }
 
-  protected muteRemoteStream: MuteRemoteStreamHandle = (scene, stream, muteStatus) => {
-    if (muteStatus.audio !== undefined) {
-      scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteStatus.audio);
+  protected muteRemoteStream(
+    scene: AgoraRteScene,
+    stream: AgoraStream,
+    muteStatus: RemoteStreamMuteStatus,
+  ) {
+    if (muteStatus.muteAudio !== undefined) {
+      this.logger.info(
+        `muteRemoteAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteStatus.muteAudio}]`,
+      );
+      scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteStatus.muteAudio);
+      this.putRegistry(stream.streamUuid, { muteAudio: muteStatus.muteAudio });
     }
-    if (muteStatus.video !== undefined) {
-      scene.rtcChannel.muteRemoteVideoStream(stream.streamUuid, muteStatus.video);
+    if (muteStatus.muteVideo !== undefined) {
+      this.logger.info(
+        `muteRemoteVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteStatus.muteVideo}]`,
+      );
+      scene.rtcChannel.muteRemoteVideoStream(stream.streamUuid, muteStatus.muteVideo);
+      this.putRegistry(stream.streamUuid, { muteVideo: muteStatus.muteVideo });
     }
     return muteStatus;
-  };
+  }
 
-  protected muteRemoteStreams(
-    scene: AgoraRteScene,
-    streams: AgoraStream[],
-    interceptorHandle?: MuteRemoteStreamHandle,
-  ) {
+  protected getStreamConnType(stream: AgoraStream) {
+    const type =
+      stream.streamName === 'secondary' ||
+      stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
+        ? AGRtcConnectionType.sub
+        : AGRtcConnectionType.main;
+    return type;
+  }
+
+  protected muteLocalStream(scene: AgoraRteScene, stream: AgoraStream) {
+    const { muteVideo, muteAudio } = this.isMuted(stream);
+
+    const connType = this.getStreamConnType(stream);
+
+    switch (stream.videoSourceType) {
+      case AgoraRteVideoSourceType.Camera:
+        this.logger.info(
+          `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
+        );
+        scene.rtcChannel.muteLocalVideoStream(muteVideo, connType);
+        this.putRegistry(stream.streamUuid, { muteVideo });
+        break;
+      case AgoraRteVideoSourceType.ScreenShare:
+        this.logger.info(
+          `muteLocalScreen, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
+        );
+        scene.rtcChannel.muteLocalScreenStream(muteVideo, connType);
+        this.putRegistry(stream.streamUuid, { muteVideo });
+        break;
+    }
+
+    switch (stream.audioSourceType) {
+      case AgoraRteAudioSourceType.Mic:
+        this.logger.info(
+          `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
+        );
+        scene.rtcChannel.muteLocalAudioStream(muteAudio, connType);
+        this.putRegistry(stream.streamUuid, { muteAudio });
+        break;
+    }
+  }
+
+  protected muteRemoteStreams(scene: AgoraRteScene, streams: AgoraStream[]) {
     streams.forEach((stream) => {
-      let states = this._canStreamBeSubscribed(stream);
-      states.video = !states.video;
-      states.audio = !states.audio;
-      if (interceptorHandle) {
-        states = interceptorHandle(scene, stream, states);
-      }
+      let states = this.isMuted(stream);
+
       this.muteRemoteStream(scene, stream, states);
     });
   }
-
-  protected muteLocalVideoStream: MuteLocalVideoStreamHandle = (scene, options) => {
-    const { mute, connectionType, sourceType } = options;
-    switch (sourceType) {
-      case AgoraRteVideoSourceType.Camera:
-        scene.rtcChannel.muteLocalVideoStream(mute, connectionType);
-        break;
-      case AgoraRteVideoSourceType.ScreenShare:
-        scene.rtcChannel.muteLocalScreenStream(mute, connectionType);
-        break;
-    }
-    return options;
-  };
 }
-
-type RemoteStreamSubscribeStatus = {
-  video?: boolean;
-  audio?: boolean;
-};
-
-type MuteRemoteStreamHandle = (
-  scene: AgoraRteScene,
-  stream: AgoraStream,
-  muteStatus: RemoteStreamSubscribeStatus,
-) => RemoteStreamSubscribeStatus;
-
-type LocalVideoStreamSubscribeOption = {
-  mute: boolean;
-  connectionType: AGRtcConnectionType;
-  sourceType: AgoraRteVideoSourceType;
-};
-
-type MuteLocalVideoStreamHandle = (
-  scene: AgoraRteScene,
-  options: LocalVideoStreamSubscribeOption,
-) => void;

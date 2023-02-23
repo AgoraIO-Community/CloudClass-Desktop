@@ -2,18 +2,20 @@ import {
   AGServiceErrorCode,
   EduClassroomConfig,
   EduRoleTypeEnum,
-  EduRoomServiceTypeEnum,
   EduRoomTypeEnum,
   HandUpProgress,
   PodiumSrouce,
   RteRole2EduRole,
 } from 'agora-edu-core';
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-
 import { transI18n } from 'agora-common-libs';
-import { FetchUserParam, FetchUserType, OnPodiumStateEnum } from '../type';
+import { OnPodiumStateEnum } from './type';
+import { FetchUserParam, FetchUserType } from '../roster/type';
+import { listenChannelMessage } from '@classroom/infra/utils/ipc';
+import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
+import { interactionThrottleHandler } from '@classroom/infra/utils/interaction';
 
 export type UserWaveArmInfo = {
   userUuid: string;
@@ -29,35 +31,44 @@ export type UserHandUpInfo = {
 };
 
 export class HandUpUIStore extends EduUIStoreBase {
-  onInstall() {}
+  private _disposers: (() => void)[] = [];
+  onInstall() {
+    this._disposers.push(
+      listenChannelMessage(ChannelType.Message, (event, message) => {
+        if (message.type == IPCMessageType.InviteStage) {
+          const { type, userUuid } = message.payload as { type: 'on' | 'off'; userUuid: string };
+          if (type === 'on') {
+            this.onPodium(userUuid);
+          } else {
+            this.offPodium(userUuid);
+          }
+        }
+      }),
+    );
+
+    if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
+      this._disposers.push(
+        reaction(
+          () => [this.getters.videoGalleryStarted],
+          () => {
+            if (this.getters.videoGalleryStarted) {
+              this.classroomStore.handUpStore.allowHandsUp(1, false);
+            } else {
+              this.classroomStore.handUpStore.allowHandsUp(1, true);
+            }
+          },
+        ),
+      );
+    }
+  }
 
   private _curInvitedInfo: HandUpProgress | undefined = undefined;
   private _refuseInvitedTs = 0;
 
   /**
-   * 当前是否为职教
-   */
-  get isVocational() {
-    return EduClassroomConfig.shared.sessionInfo.roomServiceType !== 0;
-  }
-
-  /**
-   * 当前是否为混合模式
-   */
-  get isMixCDNRTC() {
-    return (
-      this.isVocational &&
-      EduClassroomConfig.shared.sessionInfo.roomServiceType === EduRoomServiceTypeEnum.Fusion
-    );
-  }
-
-  /**
    * 持续挥手时间
    */
   get waveArmDurationTime() {
-    if (this.isMixCDNRTC) {
-      return 5;
-    }
     return 3;
   }
 
@@ -140,27 +151,6 @@ export class HandUpUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 是否达到最大邀请人数
-   */
-  @computed
-  get inviteListMaxLimit(): boolean {
-    const inviteList = this.classroomStore.roomStore.inviteList;
-    const waveArmList = this.classroomStore.roomStore.waveArmList;
-    const maxCount = this.classroomStore.handUpStore.handsUpLimit.maxWait;
-    return inviteList.length + waveArmList.length >= maxCount;
-  }
-
-  /**
-   * 是否达到最大上台人数
-   */
-  @computed
-  get acceptedListMaxLimit(): boolean {
-    const acceptedList = this.classroomStore.roomStore.acceptedList;
-    const maxCount = this.classroomStore.handUpStore.handsUpLimit.maxAccept;
-    return acceptedList.length >= maxCount;
-  }
-
-  /**
    * 是否被邀请上台
    * @returns
    */
@@ -238,31 +228,32 @@ export class HandUpUIStore extends EduUIStoreBase {
    * 学生上台(接受学生举手)
    * @param userUuid
    */
-  @bound
-  onPodium(userUuid: string) {
-    this.classroomStore.handUpStore
-      .onPodium(userUuid, PodiumSrouce.AcceptedByTeacher)
-      .catch((e) => {
-        if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
-          this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
-        } else if (
-          !AGError.isOf(
-            e,
-            AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-            AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
-          )
-        ) {
-          this.shareUIStore.addGenericErrorDialog(e);
-        }
-      });
-  }
+  onPodium = interactionThrottleHandler(
+    (userUuid: string) => {
+      this.classroomStore.handUpStore
+        .onPodium(userUuid, PodiumSrouce.AcceptedByTeacher)
+        .catch((e) => {
+          if (AGError.isOf(e, AGServiceErrorCode.SERV_ACCEPT_MAX_COUNT)) {
+            this.shareUIStore.addToast(transI18n('on_podium_max_count'), 'warning');
+          } else if (
+            !AGError.isOf(
+              e,
+              AGServiceErrorCode.SERV_PROCESS_CONFLICT,
+              AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
+            )
+          ) {
+            this.shareUIStore.addGenericErrorDialog(e);
+          }
+        });
+    },
+    (message) => this.shareUIStore.addToast(message, 'warning'),
+  );
 
   /**
    * 邀请学生上台
    * @param userUuid
    */
   invite(userUuid: string, duration: number, payload?: any) {
-    console.warn('邀请');
     this.classroomStore.handUpStore
       .invitePodium(userUuid, duration, payload)
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
@@ -273,7 +264,6 @@ export class HandUpUIStore extends EduUIStoreBase {
    * @param userUuid
    */
   confirmInvited() {
-    console.warn('同意上台');
     this.classroomStore.handUpStore
       .confirmInvited()
       .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
@@ -292,12 +282,14 @@ export class HandUpUIStore extends EduUIStoreBase {
    * 学生下台
    * @param userUuid
    */
-  @bound
-  offPodium(userUuid: string) {
-    this.classroomStore.handUpStore
-      .offPodium(userUuid)
-      .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
-  }
+  offPodium = interactionThrottleHandler(
+    (userUuid: string) => {
+      this.classroomStore.handUpStore
+        .offPodium(userUuid)
+        .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
+    },
+    (message) => this.shareUIStore.addToast(message, 'warning'),
+  );
 
   /**
    * 老师拒绝学生上台
@@ -359,6 +351,7 @@ export class HandUpUIStore extends EduUIStoreBase {
   /**
    * 获取下一页的用户列表
    */
+  @bound
   @Lodash.debounced(300, { trailing: true })
   fetchUsersList(override?: Partial<FetchUserParam>, reset?: boolean) {
     const params = {
@@ -387,22 +380,8 @@ export class HandUpUIStore extends EduUIStoreBase {
     this._nextPageId = 0;
   }
 
-  @Lodash.debounced(300, { trailing: true })
-  invitePodium(user: UserHandUpInfo) {
-    if (user.onPodiumState === OnPodiumStateEnum.waveArming) {
-      this.onPodium(user.uid);
-    }
-    if (user.onPodiumState === OnPodiumStateEnum.onPodiuming) {
-      this.offPodium(user.uid);
-    }
-    if (
-      user.onPodiumState === OnPodiumStateEnum.idleing &&
-      !this.inviteListMaxLimit &&
-      !this.acceptedListMaxLimit
-    ) {
-      this.invite(user.uid, 5);
-    }
+  onDestroy() {
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
-
-  onDestroy() {}
 }

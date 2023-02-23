@@ -35,7 +35,7 @@ export const supportedTypes = [
 export const createCloudResource = (data: CourseWareItem): CloudDriveResource | never => {
   const ext = data.ext?.toLowerCase?.();
   if (convertableTypes.includes(ext)) {
-    if (!data.taskProgress || !data.taskUuid || !data.conversion) {
+    if (!data.taskProgress || !data.taskUuid) {
       return EduErrorCenter.shared.handleThrowableError(
         AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
         new Error(`invalid convertable file ${ext}`),
@@ -49,7 +49,7 @@ export const createCloudResource = (data: CourseWareItem): CloudDriveResource | 
       updateTime: data.updateTime,
       taskProgress: data.taskProgress,
       taskUuid: data.taskUuid,
-      conversion: data.conversion,
+      conversion: data.conversion || {},
       initOpen: data.initOpen,
     });
   } else if (mediaVideoTypes.includes(ext)) {

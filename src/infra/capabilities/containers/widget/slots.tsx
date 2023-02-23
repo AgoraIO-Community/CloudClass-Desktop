@@ -1,11 +1,11 @@
 import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
-import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-h5';
+import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
 import { EduClassroomConfig, EduRegion } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { useEffect } from 'react';
-import { Layout, SvgImg } from '@classroom/ui-kit';
-import { transI18n } from 'agora-common-libs';
+import React, { useEffect, useState } from 'react';
+import { SvgImg } from '@classroom/ui-kit';
+import { useI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../config';
 
 export const Chat = observer(function Chat() {
@@ -46,6 +46,8 @@ export const Whiteboard = observer(function Board() {
 });
 
 const Spinner = () => {
+  const transI18n = useI18n();
+
   return (
     <div className="spinner-container">
       <div className="spinner-contianer-innner">
@@ -55,10 +57,20 @@ const Spinner = () => {
   );
 };
 
-export const WhiteboardH5 = observer(function Board() {
+export const CountDownMobile = observer(() => {
+  return <div className="fcr-countdown-mobile-widget"></div>;
+});
+export const PollMobile = observer(() => {
+  const {
+    shareUIStore: { isLandscape },
+  } = useStore();
+  return <div className={`fcr-poll-mobile-widget ${isLandscape ? '' : 'relative'}`}></div>;
+});
+export const WhiteboardMobile = observer(function Board() {
   const {
     boardUIStore,
     streamUIStore: { containerH5VisibleCls },
+    shareUIStore: { isLandscape },
   } = useLectureH5UIStores() as EduLectureH5UIStore;
 
   const {
@@ -67,16 +79,22 @@ export const WhiteboardH5 = observer(function Board() {
     handleBoradZoomStatus,
     boardContainerHeight,
     boardContainerWidth,
+    mounted,
   } = boardUIStore;
-
+  const height = mounted ? boardContainerHeight : 0;
   return (
     <div
-      className={classnames('whiteboard-h5-container w-full relative', containerH5VisibleCls)}
-      style={{ height: boardContainerHeight, width: boardContainerWidth }}>
+      className={classnames('whiteboard-mobile-container w-full relative', containerH5VisibleCls)}
+      style={{
+        height: height,
+        width: boardContainerWidth,
+        visibility: isLandscape ? 'hidden' : 'visible',
+        overflow: 'hidden',
+      }}>
       <div
         style={{
-          height: boardUIStore.boardContainerHeight,
-          width: boardUIStore.boardContainerWidth,
+          height: height,
+          width: boardContainerWidth,
           zIndex: ComponentLevelRules.WhiteBoard,
         }}
         className="widget-slot-board"
@@ -90,10 +108,55 @@ export const WhiteboardH5 = observer(function Board() {
   );
 });
 
-export const ChatH5 = observer(function Chat() {
-  const { widgetUIStore } = useStore();
-  const { layoutUIStore, streamUIStore } = useLectureH5UIStores();
+export const ChatMobile = observer(function Chat() {
+  const {
+    widgetUIStore,
+    streamUIStore: {
+      teacherCameraStream,
+      studentCameraStreams,
+      studentVideoStreamSize,
+      studentStreamsVisible,
+      isPiP,
+    },
+    boardUIStore: { boardContainerHeight, mounted },
+    shareUIStore: { isLandscape, forceLandscape },
+    layoutUIStore: { classRoomPlacholderMobileHeight },
+  } = useLectureH5UIStores();
   const { ready } = widgetUIStore;
+  const [chatH5Height, setChatH5Height] = useState(0);
+  const calcHeight = () => {
+    const h5Height = document.body.clientHeight;
+    //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
+    const height =
+      h5Height -
+      (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted)
+        ? classRoomPlacholderMobileHeight
+        : 0) -
+      (mounted ? boardContainerHeight : 0) -
+      (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
+        ? boardContainerHeight
+        : 0) -
+      (studentCameraStreams.length > 0 && studentStreamsVisible
+        ? studentVideoStreamSize.height
+        : 0);
+    setChatH5Height(height);
+  };
+  useEffect(calcHeight, [
+    isLandscape,
+    forceLandscape,
+    mounted,
+    teacherCameraStream,
+    boardContainerHeight,
+    isPiP,
+    studentCameraStreams.length,
+    studentVideoStreamSize.height,
+    teacherCameraStream?.isCameraMuted,
+    studentStreamsVisible,
+  ]);
+  useEffect(() => {
+    window.addEventListener('resize', calcHeight);
+    () => window.removeEventListener('resize', calcHeight);
+  }, []);
 
   useEffect(() => {
     if (ready) {
@@ -110,14 +173,10 @@ export const ChatH5 = observer(function Chat() {
   }, [ready]);
 
   return (
-    <Layout
-      className={classnames(
-        layoutUIStore.chatWidgetH5Cls,
-        streamUIStore.containerH5VisibleCls,
-        'h5-chat-pannel',
-      )}>
-      <div className="widget-slot-chat w-full h-full" />
-    </Layout>
+    <div
+      className="widget-slot-chat-mobile"
+      style={{ height: chatH5Height, background: isLandscape ? '#27292f' : 'transparent' }}
+    />
   );
 });
 

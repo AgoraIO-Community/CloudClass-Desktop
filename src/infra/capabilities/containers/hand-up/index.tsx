@@ -8,7 +8,7 @@ import { WaveArmSender as WaveArmSenderContainer } from './sender';
 
 export const WaveArmManagerContainer = observer(() => {
   const { handUpUIStore } = useStore();
-  const { waveArmCount, hasWaveArmUser, isVocational } = handUpUIStore;
+  const { waveArmCount, hasWaveArmUser } = handUpUIStore;
   return (
     <WaveArmManager hasWaveArmUser={hasWaveArmUser} waveArmCount={waveArmCount}>
       <WaveArmListContainer />

@@ -11,7 +11,7 @@ import { RemoteControlContainer } from '../../containers/remote-control';
 import { SceneSwitch } from '../../containers/scene-switch';
 import { ScenesController } from '../../containers/scenes-controller';
 import { ScreenShareContainer } from '../../containers/screen-share';
-import { StreamWindowsContainer } from '../../containers/stream-windows-container';
+import { StreamWindowsContainer } from '../../containers/stream-window';
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
 import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';

@@ -1,4 +1,5 @@
-import { DependencyList, useMemo } from 'react';
+import { DependencyList, useEffect, useMemo, useRef } from 'react';
+import { clickAnywhere } from '../utils';
 import { interactionThrottleHandler } from '../utils/interaction';
 
 export const useInteractionThrottleHandler = <T>(
@@ -11,4 +12,16 @@ export const useInteractionThrottleHandler = <T>(
       limitMs: options.limitMs,
     }) as T;
   }, deps);
+};
+
+export const useClickAnywhere = (cb: () => void) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      return clickAnywhere(ref.current, cb);
+    }
+  }, []);
+
+  return ref;
 };

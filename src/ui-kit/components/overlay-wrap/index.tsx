@@ -5,13 +5,18 @@ import { CSSTransition } from 'react-transition-group';
 import './index.css';
 
 interface OverlayWrapProps extends BaseProps {
-  opened: boolean;
+  opened?: boolean;
   centered?: boolean;
   onExited?: (() => void) | undefined;
 }
 
+/**
+ *
+ * @param param0
+ * @returns
+ */
 export const OverlayWrap: FC<OverlayWrapProps> = ({
-  opened,
+  opened = true,
   onExited,
   className,
   children,

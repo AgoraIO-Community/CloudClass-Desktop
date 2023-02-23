@@ -1,14 +1,21 @@
 import { observable, action, computed, runInAction, reaction } from 'mobx';
-import { FetchUserParam, FetchUserType, EduRoleTypeEnum } from 'agora-edu-core';
+import {
+  FetchUserParam,
+  FetchUserType,
+  EduRoleTypeEnum,
+  EduClassroomConfig,
+  ClassroomState,
+} from 'agora-edu-core';
 import {
   AgoraRteMediaSourceState,
   AgoraRteMediaPublishState,
   Lodash,
   AGError,
+  bound,
 } from 'agora-rte-sdk';
 import { RosterUIStore } from '../common/roster';
 import { DeviceState, Operations, Profile } from '../common/roster/type';
-import { DialogCategory } from '../common/share-ui';
+import { DialogCategory } from '../common/share';
 import { BoardGrantState } from '@classroom/ui-kit';
 
 export class LectureRosterUIStore extends RosterUIStore {
@@ -43,6 +50,7 @@ export class LectureRosterUIStore extends RosterUIStore {
   /**
    * 获取下一页的用户列表
    */
+  @bound
   @Lodash.debounced(300, { trailing: true })
   fetchNextUsersList(override?: Partial<FetchUserParam>, reset?: boolean) {
     const params = {
@@ -204,7 +212,25 @@ export class LectureRosterUIStore extends RosterUIStore {
 
   onInstall() {
     super.onInstall();
-
+    const { role, userName } = EduClassroomConfig.shared.sessionInfo;
+    const isTeacher = role === EduRoleTypeEnum.teacher;
+    isTeacher &&
+      this._disposers.push(
+        reaction(
+          () => {
+            return this.classroomStore.connectionStore.classroomState;
+          },
+          (classroomState) => {
+            if (classroomState === ClassroomState.Connected) {
+              if (this.classroomStore.roomStore.flexProps['teacherName'] !== userName) {
+                this.classroomStore.roomStore.updateFlexProperties({
+                  properties: { teacherName: userName },
+                });
+              }
+            }
+          },
+        ),
+      );
     this._disposers.push(
       reaction(
         () => this._usersList.length,

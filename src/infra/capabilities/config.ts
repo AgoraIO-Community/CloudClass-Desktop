@@ -13,3 +13,8 @@ export enum ComponentLevelRules {
   StreamWindow,
   TeachTools,
 }
+export enum ComponentLevelRulesMobile {
+  Level1 = 1,
+  Level2 = 10,
+  Level3 = 20,
+}

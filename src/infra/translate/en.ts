@@ -77,7 +77,6 @@ export const en = {
     order_every: 'order every',
     seconds: 'seconds',
     no_more_data: 'No more data',
-    supervise_student: 'Supervise',
   },
   hands_up: 'Hands Up',
   on_podium_max_count:
@@ -786,4 +785,21 @@ export const en = {
   fcr_copy_share_link: 'Invite Link:',
   fcr_copy_share_link_copy: 'Copy link',
   fcr_copy_success: 'Copy success',
+  // Video Gallery
+  fcr_expansion_screen_button_expansion_screen: 'Video gallery',
+  fcr_expansion_screen_button_on: 'On stage',
+  fcr_expansion_screen_button_down: 'Down stage',
+  fcr_expansion_screen_tips_close_group: 'Please close breakout room',
+  fcr_expansion_screen_tips_close_expansion_screen: 'Please close expansion display',
+  fcr_expansion_screen_tips_teacher_watching: 'The teacher is viewing your video screen',
+  fcr_expansion_screen_tips_need_invite_student_on_stage:
+    'After enabling the video gallery, you need to manually invite students to join call',
+  fcr_expansion_screen_tips_student_on_stage: 'The student has joined call',
+  fcr_H5_status_upcoming: 'The course has ended',
+  fcr_H5_tips_chat_book: 'You can book other courses now',
+  fcr_h5_label_gotit: 'Got it',
+  fcr_H5_tips_chat_pollclosed: 'Poll closed',
+  fcr_H5_tips_chat_pollopened: 'Poll opened',
+
+  fcr_home_status_teacher_leave: 'The teacher has left the room',
 };
