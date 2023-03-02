@@ -27,7 +27,7 @@ import { ScreenShareContainerMobile } from '../../containers/screen-share/index.
 import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
 import { ActionSheetMobile } from '../../containers/action-sheet-mobile/index.mobile';
-import { Card, Loading } from '@classroom/ui-kit';
+import { Card, Loading, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -78,11 +78,14 @@ export const BigClassScenarioMobile = observer(() => {
               {!isLandscape && (
                 <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
               )}
+              <AutoPlayFailedTip></AutoPlayFailedTip>
+
               <ChatMobile />
 
               <PollMobile></PollMobile>
               <ToastContainerMobile></ToastContainerMobile>
               <ActionSheetMobile></ActionSheetMobile>
+              <DialogContainerMobile></DialogContainerMobile>
             </>
           )}
         </LayoutOrientation>
@@ -182,3 +185,70 @@ const MobileLoadingContainer = observer(() => {
     </div>
   ) : null;
 });
+const AutoPlayFailedTip = observer(() => {
+  const {
+    shareUIStore: { isLandscape, forceLandscape },
+    streamUIStore: { showAutoPlayFailedTip, closeAutoPlayFailedTip },
+  } = useLectureH5UIStores();
+  const transI18n = useI18n();
+  return showAutoPlayFailedTip ? (
+    <div
+      onClick={closeAutoPlayFailedTip}
+      className={classnames(
+        'fcr-mobile-auto-play-failed absolute top-0 left-0 w-full h-full flex justify-center',
+        { 'fcr-mobile-auto-play-failed-landscape': isLandscape },
+      )}>
+      <div>
+        <SvgImgMobile
+          landscape={isLandscape}
+          forceLandscape={forceLandscape}
+          type={SvgIconEnum.AUTO_PLAY_FAILED}
+          size={130}></SvgImgMobile>
+        <div className="fcr-mobile-auto-play-failed-btn">{transI18n('fcr_H5_click_to_play')}</div>
+      </div>
+    </div>
+  ) : null;
+});
+export const DialogContainerMobile: React.FC<unknown> = observer(() => {
+  const { shareUIStore } = useStore();
+  const { dialogQueue } = shareUIStore;
+
+  return (
+    <React.Fragment>
+      {dialogQueue.map(({ props }) => {
+        return (
+          <GenericErrorDialogMobile
+            {...(props as GenericErrorDialogMobileProps)}></GenericErrorDialogMobile>
+        );
+      })}
+    </React.Fragment>
+  );
+});
+interface GenericErrorDialogMobileProps {
+  onOK: () => void;
+  okBtnText: string;
+  title: string;
+  content: string;
+  error: Error;
+}
+export const GenericErrorDialogMobile = ({
+  onOK,
+  title,
+  content,
+  okBtnText,
+}: GenericErrorDialogMobileProps) => {
+  return (
+    <div
+      className="fcr-mobile-dialog-mask fixed w-full h-full l-0 t-0"
+      style={{ zIndex: ComponentLevelRulesMobile.Level3 }}>
+      <div className="fcr-mobile-dialog">
+        <div className="fcr-mobile-dialog-img"></div>
+        <h1>{title}</h1>
+        <h2>{content}</h2>
+        <div className="fcr-mobile-dialog-btn" onClick={onOK}>
+          {okBtnText}
+        </div>
+      </div>
+    </div>
+  );
+};

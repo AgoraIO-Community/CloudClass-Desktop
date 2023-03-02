@@ -8,7 +8,7 @@ export const ToastContainerMobile = observer(() => {
   const {
     shareUIStore: { toastQueue, isLandscape },
   } = useStore();
-  const currToast = toastQueue[0];
+  const currToast = toastQueue[Math.max(toastQueue.length - 1, 0)];
 
   const [visible, setVisible] = useState(false);
   const delayTaskRef = useRef<Scheduler.Task | null>(null);

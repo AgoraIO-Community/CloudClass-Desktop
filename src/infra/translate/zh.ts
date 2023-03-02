@@ -783,6 +783,7 @@ export const zh = {
   fcr_h5_label_gotit: '我知道了',
   fcr_H5_tips_chat_pollclosed: '老师关闭投票',
   fcr_H5_tips_chat_pollopened: '老师开启投票',
+  fcr_H5_click_to_play: '点击播放',
 
   fcr_home_status_teacher_leave: '老师离开教室',
 };
