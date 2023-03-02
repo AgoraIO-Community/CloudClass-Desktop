@@ -1,6 +1,6 @@
 import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
-import { EduClassroomConfig, EduRegion } from 'agora-edu-core';
+import { EduClassroomConfig } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
@@ -175,7 +175,10 @@ export const ChatMobile = observer(function Chat() {
   return (
     <div
       className="widget-slot-chat-mobile"
-      style={{ height: chatH5Height, background: isLandscape ? '#27292f' : 'transparent' }}
+      style={{
+        height: chatH5Height,
+        background: '#27292f',
+      }}
     />
   );
 });

@@ -21,12 +21,13 @@ import {
 import Room from '../room';
 import './index.mobile.css';
 import { ToastContainerMobile } from '../../containers/toast/index.mobile';
-import { ClassState, EduClassroomConfig } from 'agora-edu-core';
+import { ClassroomState, ClassState, EduClassroomConfig } from 'agora-edu-core';
 import { ComponentLevelRulesMobile } from '../../config';
 import { ScreenShareContainerMobile } from '../../containers/screen-share/index.mobile';
 import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
 import { ActionSheetMobile } from '../../containers/action-sheet-mobile/index.mobile';
+import { Card, Loading } from '@classroom/ui-kit';
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -38,6 +39,8 @@ export const BigClassScenarioMobile = observer(() => {
   } = useLectureH5UIStores();
   return (
     <Room>
+      <MobileLoadingContainer></MobileLoadingContainer>
+
       <H5LayoutContainer>
         <Helmet>
           <title>{EduClassroomConfig.shared.sessionInfo.roomName}</title>
@@ -162,4 +165,20 @@ const AfterClassMobileDialog = observer(() => {
       </div>
     </div>
   );
+});
+const MobileLoadingContainer = observer(() => {
+  const {
+    classroomStore: {
+      connectionStore: { classroomState },
+    },
+  } = useLectureH5UIStores();
+  return classroomState !== ClassroomState.Connected ? (
+    <div
+      style={{ zIndex: ComponentLevelRulesMobile.Level3 }}
+      className="w-screen h-screen fixed left-0 top-0 flex items-center justify-center">
+      <Card width={90} height={90}>
+        <Loading></Loading>
+      </Card>
+    </div>
+  ) : null;
 });

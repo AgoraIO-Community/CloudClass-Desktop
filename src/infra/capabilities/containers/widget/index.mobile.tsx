@@ -12,14 +12,18 @@ export const WidgetContainerMobile = observer(() => {
   return (
     <>
       <div className="widget-container z-0">
-        {z0Widgets.map((w: AgoraWidgetBase) => {
-          return <WidgetMobile key={w.widgetId} widget={w} />;
-        })}
+        {z0Widgets
+          .filter((w) => w.widgetId !== 'mediaPlayer' && w.widgetId !== 'webView')
+          .map((w: AgoraWidgetBase) => {
+            return <WidgetMobile key={w.widgetId} widget={w} />;
+          })}
       </div>
       <div className="widget-container z-10">
-        {z10Widgets.map((w: AgoraWidgetBase) => (
-          <WidgetMobile key={w.widgetId} widget={w} />
-        ))}
+        {z10Widgets
+          .filter((w) => w.widgetId !== 'mediaPlayer' && w.widgetId !== 'webView')
+          .map((w: AgoraWidgetBase) => (
+            <WidgetMobile key={w.widgetId} widget={w} />
+          ))}
       </div>
     </>
   );

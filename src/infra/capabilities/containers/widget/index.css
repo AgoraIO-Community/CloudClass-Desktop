@@ -18,7 +18,8 @@
   position: relative;
 }
 .whiteboard-mobile-container .netless-whiteboard-wrapper {
-  background: #fff;
+  background-color: #fff;
+
   border-color: #fff;
   pointer-events: none;
 }
