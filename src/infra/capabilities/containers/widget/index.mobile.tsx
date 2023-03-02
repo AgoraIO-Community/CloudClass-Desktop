@@ -13,14 +13,14 @@ export const WidgetContainerMobile = observer(() => {
     <>
       <div className="widget-container z-0">
         {z0Widgets
-          .filter((w) => w.widgetId !== 'mediaPlayer' && w.widgetId !== 'webView')
+          .filter((w) => w.widgetName !== 'mediaPlayer' && w.widgetName !== 'webView')
           .map((w: AgoraWidgetBase) => {
             return <WidgetMobile key={w.widgetId} widget={w} />;
           })}
       </div>
       <div className="widget-container z-10">
         {z10Widgets
-          .filter((w) => w.widgetId !== 'mediaPlayer' && w.widgetId !== 'webView')
+          .filter((w) => w.widgetName !== 'mediaPlayer' && w.widgetName !== 'webView')
           .map((w: AgoraWidgetBase) => (
             <WidgetMobile key={w.widgetId} widget={w} />
           ))}
