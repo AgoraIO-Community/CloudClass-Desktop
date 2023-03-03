@@ -1,4 +1,9 @@
-import { EduClassroomConfig, EduRoomTypeEnum } from 'agora-edu-core';
+import {
+  EduClassroomConfig,
+  EduRoleTypeEnum,
+  EduRoomTypeEnum,
+  RteRole2EduRole,
+} from 'agora-edu-core';
 import {
   AgoraMediaControl,
   AgoraRteEventType,
@@ -224,12 +229,18 @@ export abstract class SceneSubscription {
       stream.audioState === AgoraRteMediaPublishState.Published;
 
     if (!this.subscribeAll) {
-      const isTeacherCamera = this.getters.teacherCameraStream?.streamUuid === stream.streamUuid;
+      const role = RteRole2EduRole(
+        EduClassroomConfig.shared.sessionInfo.roomType,
+        stream.fromUser.role,
+      );
+      const isTeacherCamera = role === EduRoleTypeEnum.teacher;
       const isScreenShare = stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare;
 
       const isOnStage = this.getters.stageCameraStreams.some(
         ({ streamUuid }) => streamUuid === stream.streamUuid,
       );
+
+      this.logger.info(`isMuted: stream=[${stream.streamUuid}], isTeacherCamera=[${isTeacherCamera}], isScreenShare=[${isScreenShare}], isOnStage=[${isOnStage}]`);
 
       const isCoHost = isTeacherCamera || isScreenShare || isOnStage;
 
