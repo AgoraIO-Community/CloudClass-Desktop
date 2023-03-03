@@ -104,6 +104,9 @@
   justify-content: flex-start;
   flex-direction: column;
 }
+.fcr-mobile-auto-play-failed.fcr-mobile-auto-play-failed-no-board > div {
+  padding-top: 20px;
+}
 .fcr-mobile-auto-play-failed.fcr-mobile-auto-play-failed-landscape > div {
   padding-top: 0;
   justify-content: center;

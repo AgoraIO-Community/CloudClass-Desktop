@@ -188,15 +188,20 @@ const MobileLoadingContainer = observer(() => {
 const AutoPlayFailedTip = observer(() => {
   const {
     shareUIStore: { isLandscape, forceLandscape },
-    streamUIStore: { showAutoPlayFailedTip, closeAutoPlayFailedTip },
+    streamUIStore: { showAutoPlayFailedTip, closeAutoPlayFailedTip, teacherCameraStream },
+    boardUIStore: { mounted },
   } = useLectureH5UIStores();
   const transI18n = useI18n();
   return showAutoPlayFailedTip ? (
     <div
-      onClick={closeAutoPlayFailedTip}
+      onMouseDown={closeAutoPlayFailedTip}
       className={classnames(
         'fcr-mobile-auto-play-failed absolute top-0 left-0 w-full h-full flex justify-center',
         { 'fcr-mobile-auto-play-failed-landscape': isLandscape },
+        {
+          'fcr-mobile-auto-play-failed-no-board':
+            (!mounted || !teacherCameraStream) && !isLandscape,
+        },
       )}>
       <div>
         <SvgImgMobile
