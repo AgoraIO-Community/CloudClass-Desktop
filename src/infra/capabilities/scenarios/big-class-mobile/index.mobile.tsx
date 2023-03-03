@@ -192,9 +192,14 @@ const AutoPlayFailedTip = observer(() => {
     boardUIStore: { mounted },
   } = useLectureH5UIStores();
   const transI18n = useI18n();
+  useEffect(() => {
+    if (showAutoPlayFailedTip) {
+      window.addEventListener('touchstart', closeAutoPlayFailedTip, { once: true });
+    }
+    return () => window.removeEventListener('touchstart', closeAutoPlayFailedTip);
+  }, [showAutoPlayFailedTip]);
   return showAutoPlayFailedTip ? (
     <div
-      onMouseDown={closeAutoPlayFailedTip}
       className={classnames(
         'fcr-mobile-auto-play-failed absolute top-0 left-0 w-full h-full flex justify-center',
         { 'fcr-mobile-auto-play-failed-landscape': isLandscape },
