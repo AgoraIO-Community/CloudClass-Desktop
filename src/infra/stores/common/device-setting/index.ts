@@ -278,10 +278,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         await this.classroomStore.handUpStore.offPodiumAll();
       }
 
-      await this.classroomStore.roomStore.updateFlexProperties({
-        properties: { area },
-        cause: null,
-      });
+      await this.classroomStore.roomStore.updateFlexProperties({ area }, null);
     } catch (e) {
       if (
         !AGError.isOf(

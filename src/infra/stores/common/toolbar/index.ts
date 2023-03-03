@@ -500,10 +500,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
             await this.classroomStore.handUpStore.offPodiumAll();
 
-            await this.classroomStore.roomStore.updateFlexProperties({
-              properties: { area },
-              cause: null,
-            });
+            await this.classroomStore.roomStore.updateFlexProperties({ area }, null);
 
             this.shareUIStore.addDialog(DialogCategory.VideoGallery, { showMask: false });
           } catch (e) {

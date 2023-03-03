@@ -223,9 +223,7 @@ export class LectureRosterUIStore extends RosterUIStore {
           (classroomState) => {
             if (classroomState === ClassroomState.Connected) {
               if (this.classroomStore.roomStore.flexProps['teacherName'] !== userName) {
-                this.classroomStore.roomStore.updateFlexProperties({
-                  properties: { teacherName: userName },
-                });
+                this.classroomStore.roomStore.updateFlexProperties({ teacherName: userName }, null);
               }
             }
           },

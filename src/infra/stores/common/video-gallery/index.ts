@@ -398,10 +398,7 @@ export class VideoGalleryUIStore extends EduUIStoreBase {
               if (!this.open) {
                 const area = this.getters.layoutMaskCode & ~LayoutMaskCode.VideoGalleryVisible;
 
-                await this.classroomStore.roomStore.updateFlexProperties({
-                  properties: { area },
-                  cause: null,
-                });
+                await this.classroomStore.roomStore.updateFlexProperties({ area }, null);
 
                 this._updateUsers(false, []);
               }
