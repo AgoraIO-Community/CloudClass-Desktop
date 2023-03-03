@@ -224,13 +224,14 @@ export abstract class SceneSubscription {
       stream.audioState === AgoraRteMediaPublishState.Published;
 
     if (!this.subscribeAll) {
-      const isTeacher = this.getters.teacherCameraStream?.streamUuid === stream.streamUuid;
+      const isTeacherCamera = this.getters.teacherCameraStream?.streamUuid === stream.streamUuid;
+      const isScreenShare = stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare;
 
       const isOnStage = this.getters.stageCameraStreams.some(
         ({ streamUuid }) => streamUuid === stream.streamUuid,
       );
 
-      const isCoHost = isTeacher || isOnStage;
+      const isCoHost = isTeacherCamera || isScreenShare || isOnStage;
 
       unmuteAudio = unmuteAudio && isCoHost;
     }

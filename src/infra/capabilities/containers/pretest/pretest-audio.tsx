@@ -25,21 +25,9 @@ export const PretestVoice = observer(() => {
 
 const MicrophoneTest = observer(() => {
   const {
-    pretestUIStore: {
-      setRecordingDevice,
-      currentRecordingDeviceId,
-      recordingDevicesList,
-      startRecordingDeviceTest,
-      stopRecordingDeviceTest,
-    },
+    pretestUIStore: { setRecordingDevice, currentRecordingDeviceId, recordingDevicesList },
   } = useStore();
   const transI18n = useI18n();
-  useEffect(() => {
-    startRecordingDeviceTest();
-    return () => {
-      stopRecordingDeviceTest();
-    };
-  }, []);
   return (
     <ItemCard>
       <ItemCardTitle>{transI18n('media.microphone')}</ItemCardTitle>
