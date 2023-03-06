@@ -81,7 +81,7 @@ export const WhiteboardMobile = observer(function Board() {
     boardContainerWidth,
     mounted,
   } = boardUIStore;
-  const height = mounted ? boardContainerHeight : 0;
+  const height = mounted && !isLandscape ? boardContainerHeight : 0;
   return (
     <div
       className={classnames('whiteboard-mobile-container w-full relative', containerH5VisibleCls)}
@@ -141,22 +141,11 @@ export const ChatMobile = observer(function Chat() {
         : 0);
     setChatH5Height(height);
   };
-  useEffect(calcHeight, [
-    isLandscape,
-    forceLandscape,
-    mounted,
-    teacherCameraStream,
-    boardContainerHeight,
-    isPiP,
-    studentCameraStreams.length,
-    studentVideoStreamSize.height,
-    teacherCameraStream?.isCameraMuted,
-    studentStreamsVisible,
-  ]);
   useEffect(() => {
+    calcHeight();
     window.addEventListener('resize', calcHeight);
     () => window.removeEventListener('resize', calcHeight);
-  }, []);
+  }, [isLandscape, forceLandscape, mounted, teacherCameraStream, boardContainerHeight, isPiP, studentCameraStreams.length, studentVideoStreamSize.height, teacherCameraStream?.isCameraMuted, studentStreamsVisible]);
 
   useEffect(() => {
     if (ready) {
