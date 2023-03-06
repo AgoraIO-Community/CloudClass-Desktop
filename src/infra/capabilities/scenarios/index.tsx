@@ -51,7 +51,11 @@ export const Scenarios: React.FC<ScenariosProps> = observer(({ pretest, roomType
   }
 
   if (showPretest) {
-    return <RoomPretest onOK={() => setPretest(false)} />;
+    return (
+      <div className="w-screen h-screen">
+        <RoomPretest onOK={() => setPretest(false)} />;
+      </div>
+    );
   }
 
   return renderRoomSceneWith(roomType);
