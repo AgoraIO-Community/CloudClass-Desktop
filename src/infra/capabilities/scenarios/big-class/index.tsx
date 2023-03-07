@@ -17,35 +17,66 @@ import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';
 import { BigClassAside as Aside } from '@classroom/infra/capabilities/containers/aside';
 import Room from '../room';
 import { StreamWindowsContainer } from '../../containers/stream-window';
+import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
+import { RecordPlayer } from '../../containers/record-player';
 
 export const BigClassScenario = () => {
   // layout
   const layoutCls = classnames('edu-room', 'big-class-room');
+
+  const isInvisible = EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.invisible;
+  const isTeacher =
+    EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
+    EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant;
+  const isStudent = EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student;
 
   return (
     <Room>
       <FixedAspectRatioRootBox trackMargin={{ top: 27 }}>
         <SceneSwitch>
           <Layout className={layoutCls} direction="col">
-            <NavigationBar />
+            {/* 录制隐藏导航栏 */}
+            {!isInvisible && <NavigationBar />}
             <Layout className="flex-grow items-stretch fcr-room-bg h-full">
               <Layout
                 className="flex-grow items-stretch relative"
                 direction="col"
                 style={{ paddingTop: 2 }}>
-                <Whiteboard />
+                {/* 学生隐藏白板 */}
+                {!isStudent && <Whiteboard />}
+                {/* 学生显示录制视频 */}
+                {isStudent && <RecordPlayer />}
                 <ScreenShareContainer />
                 <WhiteboardToolbar />
                 <ScenesController />
-                <Float bottom={15} right={10} align="flex-end" gap={2}>
-                  <HandsUpContainer />
-                </Float>
-                <StreamWindowsContainer />
+                {/* 录制隐藏举手图标 */}
+                {!isInvisible && (
+                  <Float bottom={15} right={10} align="flex-end" gap={2}>
+                    <HandsUpContainer />
+                  </Float>
+                )}
+                {/* 学生隐藏浮窗 */}
+                {!isStudent && <StreamWindowsContainer />}
               </Layout>
-              <Aside>
-                <RoomBigTeacherStreamContainer />
-                <Chat />
-              </Aside>
+              {/* 录制隐藏侧边栏 */}
+              {isTeacher && (
+                <Aside>
+                  <RoomBigTeacherStreamContainer />
+                  <Chat />
+                </Aside>
+              )}
+              {/* 学生仅显示聊天 */}
+              {isStudent && (
+                <Aside>
+                  <Chat />
+                </Aside>
+              )}
+              {/* 录制右上角显示老师视频 */}
+              {isInvisible && (
+                <div style={{ position: 'absolute', right: 0, top: 0 }}>
+                  <RoomBigTeacherStreamContainer />
+                </div>
+              )}
             </Layout>
             <DialogContainer />
             <LoadingContainer />

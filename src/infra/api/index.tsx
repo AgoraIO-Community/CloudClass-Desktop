@@ -298,11 +298,14 @@ export class AgoraEduSDK {
       [this._getWidgetName(AgoraCountdown)]: AgoraCountdown,
       [this._getWidgetName(AgoraSelector)]: AgoraSelector,
       [this._getWidgetName(AgoraPolling)]: AgoraPolling,
-      [this._getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
       [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
       [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
       [this._getWidgetName(FcrWatermarkWidget)]: FcrWatermarkWidget,
     };
+
+    if (roleType !== EduRoleTypeEnum.student) {
+      this.widgets[this._getWidgetName(FcrBoardWidget)] = FcrBoardWidget;
+    }
 
     if (option.webrtcExtensionBaseUrl) {
       setAssetsBaseUrl(option.webrtcExtensionBaseUrl);

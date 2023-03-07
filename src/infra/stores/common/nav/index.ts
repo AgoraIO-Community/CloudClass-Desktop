@@ -738,6 +738,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
       webRecordConfig: {
         rootUrl: `${recordUrl}?language=${AgoraEduSDK.language}`,
         videoBitrate: 3000,
+        publishRtmp: true, //将录制内容推送至CDN
       },
       mode: RecordMode.Web,
       retryTimeout: recordRetryTimeout,
