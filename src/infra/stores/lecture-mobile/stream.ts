@@ -1,16 +1,41 @@
-import { Log } from 'agora-rte-sdk';
+import { AgoraMediaControlEventType, Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { SvgIconEnum } from '@classroom/ui-kit';
 import { StreamUIStore } from '../common/stream';
 
 @Log.attach({ proxyMethods: false })
 export class LectureH5RoomStreamUIStore extends StreamUIStore {
+  @observable showAutoPlayFailedTip = false;
+
   private _teacherWidthRatio = 0.31;
 
   private _gapInPx = 2;
 
+  @action.bound
+  private _onVideoAutoPlayFailed() {
+    this.showAutoPlayFailedTip = true;
+  }
+  @action.bound
+  closeAutoPlayFailedTip() {
+    this.showAutoPlayFailedTip = false;
+  }
+
   onInstall(): void {
     super.onInstall();
+
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.connectionStore.engine,
+        (engine) => {
+          if (engine) {
+            this.classroomStore.mediaStore.mediaControl.on(
+              AgoraMediaControlEventType.videoAutoPlayFailed,
+              this._onVideoAutoPlayFailed,
+            );
+          }
+        },
+      ),
+    );
     this._disposers.push(
       reaction(
         () => this.shareUIStore.isLandscape,
@@ -34,6 +59,7 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
       ),
     );
   }
+
   @observable studentStreamsVisible = true;
   @observable
   isPiP = false;

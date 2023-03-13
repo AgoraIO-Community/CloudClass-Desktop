@@ -1,6 +1,6 @@
 import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
-import { EduClassroomConfig, EduRegion } from 'agora-edu-core';
+import { EduClassroomConfig } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
@@ -81,7 +81,7 @@ export const WhiteboardMobile = observer(function Board() {
     boardContainerWidth,
     mounted,
   } = boardUIStore;
-  const height = mounted ? boardContainerHeight : 0;
+  const height = mounted && !isLandscape ? boardContainerHeight : 0;
   return (
     <div
       className={classnames('whiteboard-mobile-container w-full relative', containerH5VisibleCls)}
@@ -141,22 +141,11 @@ export const ChatMobile = observer(function Chat() {
         : 0);
     setChatH5Height(height);
   };
-  useEffect(calcHeight, [
-    isLandscape,
-    forceLandscape,
-    mounted,
-    teacherCameraStream,
-    boardContainerHeight,
-    isPiP,
-    studentCameraStreams.length,
-    studentVideoStreamSize.height,
-    teacherCameraStream?.isCameraMuted,
-    studentStreamsVisible,
-  ]);
   useEffect(() => {
+    calcHeight();
     window.addEventListener('resize', calcHeight);
     () => window.removeEventListener('resize', calcHeight);
-  }, []);
+  }, [isLandscape, forceLandscape, mounted, teacherCameraStream, boardContainerHeight, isPiP, studentCameraStreams.length, studentVideoStreamSize.height, teacherCameraStream?.isCameraMuted, studentStreamsVisible]);
 
   useEffect(() => {
     if (ready) {
@@ -175,7 +164,10 @@ export const ChatMobile = observer(function Chat() {
   return (
     <div
       className="widget-slot-chat-mobile"
-      style={{ height: chatH5Height, background: isLandscape ? '#27292f' : 'transparent' }}
+      style={{
+        height: chatH5Height,
+        background: '#27292f',
+      }}
     />
   );
 });

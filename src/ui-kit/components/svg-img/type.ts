@@ -172,4 +172,5 @@ export enum SvgIconEnum {
   SHARE_MOBILE = 'share-mobile',
   COLLAPSE_STREAM_MOBILE = 'collapse-stream-mobile',
   BETA = 'beta',
+  AUTO_PLAY_FAILED = 'auto-play-failed',
 }

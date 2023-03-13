@@ -69,9 +69,13 @@ export class Getters {
   @computed
   get windowStreamUserUuids() {
     const { streamStore } = this._classroomUIStore.classroomStore;
+
     return Array.from(this._classroomUIStore.streamWindowUIStore.streamWindowMap.keys())
-      .map((streamUuid) => streamStore.streamByStreamUuid.get(streamUuid)?.fromUser.userUuid)
-      .filter((userUuid) => !!userUuid);
+      .filter((streamUuid) => {
+        const stream = streamStore.streamByStreamUuid.get(streamUuid);
+        return stream && stream.videoSourceType === AgoraRteVideoSourceType.Camera;
+      })
+      .map((streamUuid) => streamStore.streamByStreamUuid.get(streamUuid)?.fromUser.userUuid);
   }
 
   /**

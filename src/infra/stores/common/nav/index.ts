@@ -253,7 +253,7 @@ export class NavigationBarUIStore extends EduUIStoreBase {
     const studentActions: EduNavAction[] = [
       {
         id: 'AskForHelp',
-        title: 'AskForHelp',
+        title: transI18n('fcr_group_help_title'),
         iconType: SvgIconEnum.ASK_FOR_HELP,
         iconColor: this.teacherInCurrentRoom ? '#D2D2E2' : undefined,
         onClick: () => {

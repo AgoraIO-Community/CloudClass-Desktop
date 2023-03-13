@@ -309,19 +309,21 @@ export class EduShareUIStore {
       this.classroomViewportSize.h5Height = scopeSize.height;
     });
   }
-
-  @action.bound
+  @bound
+  @Lodash.debounced(100)
   handleOrientationchange() {
-    this.forceLandscape = false;
-    // If there are matches, we're in portrait
-    if (this._matchMedia.matches) {
-      // Portrait orientation
-      this.orientation = OrientationEnum.portrait;
-    } else {
-      // Landscape orientation
-      this.orientation = OrientationEnum.landscape;
-      this.updateClassroomViewportSize();
-    }
+    runInAction(() => {
+      this.forceLandscape = false;
+      // If there are matches, we're in portrait
+      if (this._matchMedia.matches) {
+        // Portrait orientation
+        this.orientation = OrientationEnum.portrait;
+      } else {
+        // Landscape orientation
+        this.orientation = OrientationEnum.landscape;
+        this.updateClassroomViewportSize();
+      }
+    });
   }
 
   /**

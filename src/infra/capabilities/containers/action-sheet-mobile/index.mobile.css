@@ -32,7 +32,9 @@
   width: fit-content;
   justify-content: center;
   align-items: center;
-  gap: 11px;
+}
+.fcr-action-sheet-mobile-actions-item > div:not(:last-child) {
+  margin-bottom: 11px;
 }
 .fcr-action-sheet-mobile-actions-item-icon {
   width: 52px;

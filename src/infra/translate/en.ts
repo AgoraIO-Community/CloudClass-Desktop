@@ -800,6 +800,7 @@ export const en = {
   fcr_h5_label_gotit: 'Got it',
   fcr_H5_tips_chat_pollclosed: 'Poll closed',
   fcr_H5_tips_chat_pollopened: 'Poll opened',
+  fcr_H5_click_to_play: 'Play',
 
   fcr_home_status_teacher_leave: 'The teacher has left the room',
 };
