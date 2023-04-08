@@ -44,9 +44,6 @@ module.exports.base = [
               },
             ],
             '@babel/plugin-transform-modules-commonjs',
-            'babel-plugin-twin',
-            'babel-plugin-macros',
-            'babel-plugin-styled-components',
           ],
         },
       },
@@ -104,16 +101,6 @@ module.exports.base = [
                 loose: true,
               },
             ],
-            'babel-plugin-twin',
-            [
-              'babel-plugin-macros',
-              {
-                twin: {
-                  config: path.resolve(ROOT_PATH, './tailwind.config.js'),
-                },
-              },
-            ],
-            'babel-plugin-styled-components',
           ],
         },
       },
