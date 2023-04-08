@@ -1,5 +1,5 @@
 import { Button } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import './index.css';
 interface IPropsTypes {
   onOK: () => void;

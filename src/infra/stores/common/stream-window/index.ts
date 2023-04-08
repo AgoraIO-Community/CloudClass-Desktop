@@ -20,7 +20,7 @@ import { cloneDeep, forEach, isEmpty } from 'lodash';
 import { action, computed, IReactionDisposer, Lambda, observable } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { DraggableData } from 'react-draggable';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 import { EduUIStoreBase } from '../base';
 import { StreamBounds } from '../stream/struct';
 import {

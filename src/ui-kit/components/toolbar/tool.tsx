@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { BaseProps } from '../util/type';
 import { SvgIconEnum } from '../svg-img/type';
 import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 export interface ToolItem extends BaseProps {
   value: string;
   label: any;

@@ -1,9 +1,17 @@
 import classnames from 'classnames';
-import React, { createRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  createRef,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import ReactDOM from 'react-dom';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import './index.css';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 export type ProgressType = 'download';
 
@@ -13,7 +21,7 @@ export interface ProgressProps extends BaseProps {
   type: ProgressType;
 }
 
-export const Progress: React.FC<ProgressProps> = ({
+export const Progress: React.FC<PropsWithChildren<ProgressProps>> = ({
   progress,
   width,
   children,
@@ -51,9 +59,6 @@ export const Progress: React.FC<ProgressProps> = ({
     </div>
   );
 };
-
-
-
 
 type ProgressListItem = Pick<ProgressProps, 'width' | 'progress'> & { key: string; auto?: boolean };
 

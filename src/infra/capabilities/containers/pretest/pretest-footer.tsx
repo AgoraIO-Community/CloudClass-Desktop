@@ -2,7 +2,7 @@ import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { FC, useCallback } from 'react';
 import { AButton as Button, CheckBox } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer(
   ({ onOK, visibleMirror }) => {

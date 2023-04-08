@@ -4,7 +4,7 @@ import { EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { StreamPlaceholder } from '.';
-import { visibilityControl, studentVideoEnabled, teacherVideoEnabled } from 'agora-common-libs';
+import { visibilityControl, studentVideoEnabled, teacherVideoEnabled } from 'agora-common-libs/lib/ui';
 import { DragableStream } from './draggable-stream';
 
 export const Room1v1StreamsContainer = () => {

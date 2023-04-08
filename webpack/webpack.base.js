@@ -3,10 +3,8 @@ const webpack = require('webpack');
 const webpackbar = require('webpackbar');
 const eduCoreVersion = require('agora-edu-core/package.json').version;
 const rteVersion = require('agora-rte-sdk/package.json').version;
-const { ROOT_PATH, ALIAS } = require('./utils/index');
+const { ROOT_PATH } = require('./utils/index');
 const { base } = require('./utils/loaders');
-
-const classroomSdkVersion = require('../package.json').version;
 
 module.exports = {
   externals: {
@@ -24,7 +22,6 @@ module.exports = {
       '@classroom': path.resolve(ROOT_PATH, 'src'),
       'agora-classroom-sdk': path.resolve(ROOT_PATH, 'src/infra/api'),
       'agora-plugin-gallery': path.resolve(ROOT_PATH, '../agora-plugin-gallery/src'),
-      ...ALIAS,
     },
   },
   module: {
@@ -39,7 +36,6 @@ module.exports = {
     new webpack.DefinePlugin({
       RTE_SDK_VERSION: JSON.stringify(rteVersion),
       EDU_SDK_VERSION: JSON.stringify(eduCoreVersion),
-      CLASSROOM_SDK_VERSION: JSON.stringify(classroomSdkVersion),
       BUILD_TIME: JSON.stringify(Date.now()),
       BUILD_COMMIT_ID: JSON.stringify(process.env.FCR_BUILD_COMMIT_ID),
     }),

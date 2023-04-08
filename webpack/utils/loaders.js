@@ -125,6 +125,29 @@ module.exports.base = [
   },
 ];
 
+module.exports.dev = [
+  {
+    test: /\.css$/i,
+    use: [
+      {
+        loader: 'style-loader',
+      },
+      {
+        loader: 'css-loader',
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          postcssOptions: {
+            ident: 'postcss',
+            config: path.resolve(ROOT_PATH, './postcss.config.js'),
+          },
+        },
+      },
+    ],
+  },
+];
+
 module.exports.pack = [
   {
     test: /\.css$/i,

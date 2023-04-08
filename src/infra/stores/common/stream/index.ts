@@ -35,7 +35,7 @@ import {
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@classroom/infra/utils/interaction';
 import { SvgIconEnum } from '@classroom/ui-kit';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 import { ShareStreamStateKeeper } from './state-keeper';
 
 export enum StreamIconColor {

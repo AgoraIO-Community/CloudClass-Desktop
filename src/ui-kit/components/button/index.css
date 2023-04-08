@@ -1,5 +1,5 @@
 .fcr-btn {
-  @apply cursor-pointer text-base rounded-full relative overflow-hidden;
+  @apply fcr-cursor-pointer text-base rounded-full fcr-relative overflow-hidden;
 }
 
 .fcr-btn-primary {
@@ -20,27 +20,27 @@
 }
 
 .fcr-btn-secondary {
-  @apply bg-white border-divider border text-brand;
+  @apply bg-white fcr-border-divider fcr-border text-brand;
 }
 
 .fcr-btn-secondary:hover {
-  @apply bg-white border-divider border text-brand;
+  @apply bg-white fcr-border-divider fcr-border text-brand;
 }
 
 .fcr-btn-secondary:active {
-  @apply text-brand bg-white border-divider border;
+  @apply text-brand bg-white fcr-border-divider border;
 }
 
 .fcr-btn-ghost {
-  @apply text-brand bg-white border-divider border;
+  @apply text-brand bg-white fcr-border-divider border;
 }
 
 .fcr-btn-ghost:hover {
-  @apply text-brand bg-white border-divider border;
+  @apply text-brand bg-white fcr-border-divider border;
 }
 
 .fcr-btn-ghost:active {
-  @apply text-brand bg-white border-divider border;
+  @apply text-brand bg-white fcr-border-divider border;
 }
 
 .fcr-btn-xs {
@@ -62,11 +62,11 @@
 }
 
 .fcr-btn:focus {
-  @apply outline-none;
+  @apply fcr-outline-none;
 }
 
 .fcr-btn[disabled] {
-  @apply disabled:opacity-50 pointer-events-none;
+  @apply fcr-opacity-50 fcr-pointer-events-none;
 }
 
 .fcr-btn.fcr-btn-xs[disabled],

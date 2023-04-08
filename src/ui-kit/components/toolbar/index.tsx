@@ -1,10 +1,10 @@
-import { FC, useState, useRef, useEffect, useContext } from 'react';
+import { FC, useState, useRef, useEffect, useContext, PropsWithChildren } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import './index.css';
 import { useMounted } from '@classroom/ui-kit/utilities/hooks';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { themeContext } from 'agora-common-libs';
+import { themeContext } from 'agora-common-libs/lib/ui';
 export { Pens } from './pens';
 export { ToolCabinet } from './tool-cabinet';
 export { BoardCleaners } from './board-cleaners';
@@ -17,7 +17,7 @@ export interface ToolbarProps extends BaseProps {
   onOpenedChange?: (opened: boolean) => void;
 }
 
-export const Toolbar: FC<ToolbarProps> = ({
+export const Toolbar: FC<PropsWithChildren<ToolbarProps>> = ({
   className,
   style,
   defaultOpened = true,

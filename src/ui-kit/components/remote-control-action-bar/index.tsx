@@ -1,4 +1,4 @@
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { FC } from 'react';
 import { Select } from '../select';
 import { SvgIconEnum, SvgImg } from '../svg-img';

@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import { useState } from 'react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { Button, Modal } from '@classroom/ui-kit';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 import { BaseDialogProps } from '.';
 
 export const Quit: React.FC<

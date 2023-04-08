@@ -1,13 +1,13 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { primaryRadius, brandColor } from '@classroom/infra/utils/colors';
 import { observer } from 'mobx-react';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { SvgImg, SvgIconEnum, OverlayWrap } from '@classroom/ui-kit';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import { Footer } from './pretest-footer';
 import { PretestVideo } from './pretest-video';
 import { PretestVoice } from './pretest-audio';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { PretestStage } from './pretest-stage';
 
 export interface PretestProps extends BaseProps {
@@ -114,9 +114,9 @@ const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean; onCance
     );
   };
 
-const Modal: FC = ({ children }) => (
+const Modal: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="bg-component fcr-pretest-modal"
+    className="fcr-bg-component fcr-pretest-modal"
     style={{
       width: 730,
       height: 656,
@@ -128,9 +128,11 @@ const Modal: FC = ({ children }) => (
   </div>
 );
 
-const PreTestContent: FC = ({ children }) => <div className="flex w-full h-full">{children}</div>;
+const PreTestContent: FC<PropsWithChildren> = ({ children }) => (
+  <div className="flex w-full h-full">{children}</div>
+);
 
-const PreTestTabLeftContent: FC = ({ children }) => (
+const PreTestTabLeftContent: FC<PropsWithChildren> = ({ children }) => (
   <div
     className="border-divider"
     style={{
@@ -145,7 +147,7 @@ const PreTestTabLeftContent: FC = ({ children }) => (
   </div>
 );
 
-const PreTestTitle: FC = ({ children }) => (
+const PreTestTitle: FC<PropsWithChildren> = ({ children }) => (
   <div
     className="text-level1"
     style={{
@@ -158,11 +160,11 @@ const PreTestTitle: FC = ({ children }) => (
   </div>
 );
 
-const PreTestTabContent: FC = ({ children }) => (
+const PreTestTabContent: FC<PropsWithChildren> = ({ children }) => (
   <div className="flex flex-grow flex-col justify-between">{children}</div>
 );
 
-const PreTestTabHeader: FC<{ activity: boolean; onClick: () => void }> = ({
+const PreTestTabHeader: FC<PropsWithChildren<{ activity: boolean; onClick: () => void }>> = ({
   children,
   activity,
   onClick,
@@ -193,7 +195,7 @@ const PreTestTabHeader: FC<{ activity: boolean; onClick: () => void }> = ({
   );
 };
 
-const Icon: FC<{ type: DeviceType | 'stage'; activity: boolean }> = ({
+const Icon: FC<PropsWithChildren<{ type: DeviceType | 'stage'; activity: boolean }>> = ({
   children,
   type,
   activity,

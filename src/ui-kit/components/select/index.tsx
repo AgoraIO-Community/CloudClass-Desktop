@@ -4,7 +4,7 @@ import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import ReactSelect from 'react-select';
 import { CSSTransition } from 'react-transition-group';
 import './index.css';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 export type SelectOption = {
   label: string;

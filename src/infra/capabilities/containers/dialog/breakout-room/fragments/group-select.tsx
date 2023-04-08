@@ -26,7 +26,7 @@ import { GroupPanel } from '../group';
 import { UserPanel } from '../user';
 import './index.css';
 import { ConfirmPanel } from '../confirm-panel';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 type LinkButtonProps = {
   text: string;
@@ -596,7 +596,7 @@ const BroadcastInput = ({
   };
 
   return (
-    <div className="breakout-room-broadcast-input border rounded-sm p-1 relative">
+    <div className="breakout-room-broadcast-input fcr-border rounded-sm p-1 relative">
       <textarea
         className="w-full h-full"
         value={text}

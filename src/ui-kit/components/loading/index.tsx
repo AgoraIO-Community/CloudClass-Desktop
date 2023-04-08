@@ -6,7 +6,7 @@ import './index.css';
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
 import { SvgImg, SvgIconEnum } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 enum CloudDriveResourceUploadStatus {
   Pending = 'pending',

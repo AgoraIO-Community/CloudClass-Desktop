@@ -1,4 +1,4 @@
-import { FcrMultiThemes } from "agora-common-libs";
+import { FcrMultiThemes } from 'agora-common-libs/lib/ui';
 
 class FcrMultiThemesImpl implements FcrMultiThemes {
   get light() {
@@ -92,6 +92,187 @@ class FcrMultiThemesImpl implements FcrMultiThemes {
       get textLink(): string {
         return '#357bf6';
       },
+
+      /**
+       * 块颜色 1
+       */
+      /** @en
+       * Block color 1
+       */
+      get v2Block1() {
+        return '';
+      },
+      /**
+       * 块颜色 2
+       */
+      /** @en
+       * Block color 2
+       */
+      get v2Block2() {
+        return '';
+      },
+      /**
+       * 块颜色 3
+       */
+      /** @en
+       * Block color 3
+       */
+      get v2Block3() {
+        return '';
+      },
+      /**
+       * 块颜色 4
+       */
+      /** @en
+       * Block color 4
+       */
+      get v2Block4() {
+        return '';
+      },
+      /**
+       * 块颜色 5
+       */
+      /** @en
+       * Block color 5
+       */
+      get v2Block5() {
+        return '';
+      },
+      /**
+       * 块颜色 6
+       */
+      /** @en
+       * Block color 6
+       */
+      get v2Block6() {
+        return '';
+      },
+      /**
+       * 块颜色 7
+       */
+      /** @en
+       * Block color 7
+       */
+      get v2Block7() {
+        return '';
+      },
+      /**
+       * 块颜色 8
+       */
+      /** @en
+       * Block color 8
+       */
+      get v2Block8() {
+        return '';
+      },
+      /**
+       * 边框和线条颜色 1
+       */
+      /** @en
+       * Border and line color 1
+       */
+      get v2Line1() {
+        return '';
+      },
+      /**
+       * 字体颜色 1
+       */
+      /** @en
+       * Font color 1
+       */
+      get v2Text1() {
+        return '';
+      },
+      /**
+       * 字体颜色 2
+       */
+      /** @en
+       * Font color 2
+       */
+      get v2Text2() {
+        return '';
+      },
+      /**
+       * 字体颜色 3
+       */
+      /** @en
+       * Font color 3
+       */
+      get v2Text3() {
+        return '';
+      },
+      /**
+       * 图标颜色 1
+       */
+      /** @en
+       * Icon color 1
+       */
+      get v2Icon1() {
+        return '';
+      },
+      /**
+       * 图标颜色 2
+       */
+      /** @en
+       * Icon color 2
+       */
+      get v2Icon2() {
+        return '';
+      },
+      /**
+       * 悬浮颜色
+       */
+      /** @en
+       * Hover color
+       */
+      get v2Hover() {
+        return '';
+      },
+      /**
+       * 阴影颜色 1
+       */
+      /** @en
+       * Shadow color 1
+       */
+      get v2Shadow1() {
+        return '';
+      },
+      /**
+       * 阴影颜色 2
+       */
+      /** @en
+       * Shadow color 2
+       */
+      get v2Shadow2() {
+        return '';
+      },
+      /**
+       * 阴影颜色 3
+       */
+      /** @en
+       * Shadow color 3
+       */
+      get v2Shadow3() {
+        return '';
+      },
+      /**
+       * 基色
+       */
+      /** @en
+       * essential color
+       */
+      get v2Essential() {
+        return '';
+      },
+      /**
+       * 基色反色
+       */
+      /** @en
+       *  essential color inverse
+       */
+      get v2EssentialInverse() {
+        return '';
+      },
     };
   }
   get dark() {
@@ -184,6 +365,187 @@ class FcrMultiThemesImpl implements FcrMultiThemes {
       },
       get textLink(): string {
         return '#317af7';
+      },
+
+      /**
+       * 块颜色 1
+       */
+      /** @en
+       * Block color 1
+       */
+      get v2Block1() {
+        return '';
+      },
+      /**
+       * 块颜色 2
+       */
+      /** @en
+       * Block color 2
+       */
+      get v2Block2() {
+        return '';
+      },
+      /**
+       * 块颜色 3
+       */
+      /** @en
+       * Block color 3
+       */
+      get v2Block3() {
+        return '';
+      },
+      /**
+       * 块颜色 4
+       */
+      /** @en
+       * Block color 4
+       */
+      get v2Block4() {
+        return '';
+      },
+      /**
+       * 块颜色 5
+       */
+      /** @en
+       * Block color 5
+       */
+      get v2Block5() {
+        return '';
+      },
+      /**
+       * 块颜色 6
+       */
+      /** @en
+       * Block color 6
+       */
+      get v2Block6() {
+        return '';
+      },
+      /**
+       * 块颜色 7
+       */
+      /** @en
+       * Block color 7
+       */
+      get v2Block7() {
+        return '';
+      },
+      /**
+       * 块颜色 8
+       */
+      /** @en
+       * Block color 8
+       */
+      get v2Block8() {
+        return '';
+      },
+      /**
+       * 边框和线条颜色 1
+       */
+      /** @en
+       * Border and line color 1
+       */
+      get v2Line1() {
+        return '';
+      },
+      /**
+       * 字体颜色 1
+       */
+      /** @en
+       * Font color 1
+       */
+      get v2Text1() {
+        return '';
+      },
+      /**
+       * 字体颜色 2
+       */
+      /** @en
+       * Font color 2
+       */
+      get v2Text2() {
+        return '';
+      },
+      /**
+       * 字体颜色 3
+       */
+      /** @en
+       * Font color 3
+       */
+      get v2Text3() {
+        return '';
+      },
+      /**
+       * 图标颜色 1
+       */
+      /** @en
+       * Icon color 1
+       */
+      get v2Icon1() {
+        return '';
+      },
+      /**
+       * 图标颜色 2
+       */
+      /** @en
+       * Icon color 2
+       */
+      get v2Icon2() {
+        return '';
+      },
+      /**
+       * 悬浮颜色
+       */
+      /** @en
+       * Hover color
+       */
+      get v2Hover() {
+        return '';
+      },
+      /**
+       * 阴影颜色 1
+       */
+      /** @en
+       * Shadow color 1
+       */
+      get v2Shadow1() {
+        return '';
+      },
+      /**
+       * 阴影颜色 2
+       */
+      /** @en
+       * Shadow color 2
+       */
+      get v2Shadow2() {
+        return '';
+      },
+      /**
+       * 阴影颜色 3
+       */
+      /** @en
+       * Shadow color 3
+       */
+      get v2Shadow3() {
+        return '';
+      },
+      /**
+       * 基色
+       */
+      /** @en
+       * essential color
+       */
+      get v2Essential() {
+        return '';
+      },
+      /**
+       * 基色反色
+       */
+      /** @en
+       *  essential color inverse
+       */
+      get v2EssentialInverse() {
+        return '';
       },
     };
   }

@@ -6,7 +6,7 @@ import { Operation, SupportedFunction } from '@classroom/ui-kit';
 import { useColumns } from './hooks';
 import loadingSrc from './assets/loading.gif';
 import { debounce } from 'lodash';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 type RosterTableProps = {
   list: Profile[];

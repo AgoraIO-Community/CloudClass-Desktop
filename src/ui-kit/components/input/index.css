@@ -1,5 +1,5 @@
 .fcr-input-wrapper {
-  @apply border-divider border border-solid text-level1;
+  @apply fcr-border-divider fcr-border  fcr-border-solid fcr-text-level1;
   background-color: transparent;
   position: relative;
   display: inline-block;
@@ -31,17 +31,17 @@
 }
 
 .fcr-input-wrapper:not(.fcr-input-wrapper-disabled):hover {
-  @apply border-brand;
+  @apply fcr-border-brand;
   border-right-width: 1px !important;
   z-index: 1;
 }
 
 .fcr-input-wrapper-disabled {
-  @apply text-level2;
+  @apply fcr-text-level2;
 }
 
 .fcr-input-wrapper-focused {
-  @apply border-brand;
+  @apply fcr-border-brand;
   border-right-width: 1px !important;
   outline: 0;
 }
@@ -61,11 +61,11 @@
 
 .fcr-input-wrapper input::-webkit-input-placeholder {
   /* WebKit browsers */
-  @apply text-level3;
+  @apply fcr-text-level3;
   font-size: 14px;
 }
 .fcr-input-wrapper input:disabled {
-  @apply text-disable;
+  @apply fcr-text-disable;
 }
 .fcr-input-search-wrapper {
   padding-top: 0;

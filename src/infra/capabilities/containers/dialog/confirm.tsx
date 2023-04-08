@@ -2,7 +2,7 @@ import { ConfirmDialogAction } from '@classroom/infra/stores/common/type';
 import { observer } from 'mobx-react';
 import { Button, Modal } from '@classroom/ui-kit';
 import { BaseDialogProps } from '.';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 export const Confirm: React.FC<
   BaseDialogProps & {

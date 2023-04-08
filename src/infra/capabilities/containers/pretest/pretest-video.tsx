@@ -2,7 +2,7 @@ import { AgoraEduSDK } from '@classroom/infra/api';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { BeautyType } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import {
+import React, {
   useRef,
   useEffect,
   useCallback,
@@ -11,9 +11,11 @@ import {
   useContext,
   forwardRef,
   ReactNode,
+  PropsWithChildren,
 } from 'react';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip } from '@classroom/ui-kit';
-import { themeContext, useI18n } from 'agora-common-libs';
+import { themeContext } from 'agora-common-libs/lib/ui';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { ASlider } from '@classroom/ui-kit/components/slider';
 import { Field } from './form-field';
 import './index.css';
@@ -170,10 +172,13 @@ const VideoOperatorTab = observer(() => {
   const moveIndicatorToTargetEle = (ele: HTMLElement) => {
     setIndicatorPos(ele.offsetLeft + ele.offsetWidth - 40);
   };
-  const handleTabClick = useCallback((event, type: 'virtualBackground' | 'beauty') => {
-    setCurrentEffectOption(type);
-    moveIndicatorToTargetEle(event.target as HTMLElement);
-  }, []);
+  const handleTabClick = useCallback(
+    (event: React.MouseEvent, type: 'virtualBackground' | 'beauty') => {
+      setCurrentEffectOption(type);
+      moveIndicatorToTargetEle(event.target as HTMLElement);
+    },
+    [],
+  );
 
   useEffect(() => {
     const ref = currentEffectType === 'beauty' ? beautyRef : virtualBackgroundRef;
@@ -351,7 +356,7 @@ const Beauty = observer(() => {
   );
 });
 
-const VideoSliderPanel: FC = ({ children }) => (
+const VideoSliderPanel: FC<PropsWithChildren> = ({ children }) => (
   <div
     className="absolute h-full flex flex-col items-center"
     style={{
@@ -364,7 +369,7 @@ const VideoSliderPanel: FC = ({ children }) => (
   </div>
 );
 
-const RefreshButton: FC<{ onClick: () => void }> = ({ children, onClick }) => (
+const RefreshButton: FC<PropsWithChildren<{ onClick: () => void }>> = ({ children, onClick }) => (
   <span
     onClick={onClick}
     className="flex justify-center align-items"
@@ -382,7 +387,7 @@ const RefreshButton: FC<{ onClick: () => void }> = ({ children, onClick }) => (
   </span>
 );
 
-const VideoDeviceListPanel: FC = ({ children }) => {
+const VideoDeviceListPanel: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       className="fcr-pretest-camera-list absolute"
@@ -400,7 +405,7 @@ const VideoDeviceListPanel: FC = ({ children }) => {
   );
 };
 
-const TabHeader: FC = ({ children }) => (
+const TabHeader: FC<PropsWithChildren> = ({ children }) => (
   <div
     className="flex w-full relative border-divider"
     style={{
@@ -439,7 +444,7 @@ const TabTitle = forwardRef<
   );
 });
 
-const TabContent: FC = ({ children }) => {
+const TabContent: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       style={{
@@ -453,13 +458,13 @@ const TabContent: FC = ({ children }) => {
   );
 };
 
-const BeautyContainer: FC = ({ children }) => (
+const BeautyContainer: FC<PropsWithChildren> = ({ children }) => (
   <div style={{ gap: 7 }} className="flex">
     {children}
   </div>
 );
 
-const BeautyItem: FC<{ activity: boolean; onClick: () => void }> = ({
+const BeautyItem: FC<PropsWithChildren<{ activity: boolean; onClick: () => void }>> = ({
   children,
   activity,
   onClick,
@@ -467,7 +472,7 @@ const BeautyItem: FC<{ activity: boolean; onClick: () => void }> = ({
   return (
     <div
       onClick={onClick}
-      className={`relative bg-component ${
+      className={`relative fcr-bg-component ${
         activity ? 'fcr-pretest__beauty-item--active' : 'fcr-pretest__beauty-item'
       }`}
       style={{
@@ -483,10 +488,12 @@ const BeautyItem: FC<{ activity: boolean; onClick: () => void }> = ({
   );
 };
 
-const BeautyIcon: FC<{
-  icon: string;
-  activity: boolean;
-}> = ({ children, icon, activity }) => {
+const BeautyIcon: FC<
+  PropsWithChildren<{
+    icon: string;
+    activity: boolean;
+  }>
+> = ({ children, icon, activity }) => {
   const { background: backgroundColor } = useContext(themeContext);
   let background = '';
   if (activity) {
@@ -508,7 +515,7 @@ const BeautyIcon: FC<{
   );
 };
 
-const BeautyName: FC<{ activity: boolean }> = ({ children, activity }) => {
+const BeautyName: FC<PropsWithChildren<{ activity: boolean }>> = ({ children, activity }) => {
   const color = activity ? '#0056fd' : '#757575';
   return (
     <span
@@ -525,7 +532,7 @@ const BeautyName: FC<{ activity: boolean }> = ({ children, activity }) => {
   );
 };
 
-const BackgroundContainer: FC = ({ children }) => (
+const BackgroundContainer: FC<PropsWithChildren> = ({ children }) => (
   <div
     className="flex"
     style={{
@@ -536,12 +543,9 @@ const BackgroundContainer: FC = ({ children }) => (
   </div>
 );
 
-const BackgroundItem: FC<{ image?: string; activity?: boolean; onClick: () => void }> = ({
-  children,
-  image,
-  activity,
-  onClick,
-}) => {
+const BackgroundItem: FC<
+  PropsWithChildren<{ image?: string; activity?: boolean; onClick: () => void }>
+> = ({ children, image, activity, onClick }) => {
   const styleProps = image && {
     backgroundImage: `url(${image})`,
     backgroundSize: 'cover',
@@ -552,7 +556,7 @@ const BackgroundItem: FC<{ image?: string; activity?: boolean; onClick: () => vo
       onClick={onClick}
       className={`${
         activity ? 'fcr-pretest-background--active' : 'fcr-pretest-background'
-      } relative flex justify-center items-center cursor-pointer bg-component`}
+      } relative flex justify-center items-center cursor-pointer fcr-bg-component`}
       style={{
         width: 82,
         height: 60,

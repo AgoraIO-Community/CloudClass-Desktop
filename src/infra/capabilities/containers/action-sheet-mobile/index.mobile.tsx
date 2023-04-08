@@ -1,6 +1,6 @@
 import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
 import { SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { ComponentLevelRulesMobile } from '../../config';

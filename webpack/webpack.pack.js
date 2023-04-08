@@ -48,9 +48,6 @@ const config = {
     ],
   },
   plugins: [
-    new dotenv({
-      path: path.resolve(ROOT_PATH, '../../.env'),
-    }),
     new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production'),
     }),

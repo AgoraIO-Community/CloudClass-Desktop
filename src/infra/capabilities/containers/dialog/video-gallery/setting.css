@@ -18,7 +18,7 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  @apply bg-component text-level1 border border-divider;
+  @apply fcr-bg-component fcr-text-level1 fcr-border fcr-border-divider;
 }
 
 .fcr-video-grid-settings .fcr-video-grid-settings-button-text {
@@ -33,7 +33,7 @@
   border-radius: 8px;
   margin-top: 4px;
   padding: 12px 0;
-  @apply bg-component text-level1 border border-divider;
+  @apply fcr-bg-component fcr-text-level1 fcr-border fcr-border-divider;
 }
 
 .fcr-video-grid-settings-dropdown--closed {
@@ -54,5 +54,5 @@
 
 .fcr-video-grid-settings .fcr-video-grid-settings-dropdown .fcr-video-grid-settings-inner-el:hover {
   background: #eff4fe;
-  @apply bg-brand text-level1;
+  @apply bg-brand fcr-text-level1;
 }

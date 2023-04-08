@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useState, MouseEvent } from 'react';
 import { CheckBox, Search, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { Panel } from './panel';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 type UserPanelProps = {
   groupUuid?: string;

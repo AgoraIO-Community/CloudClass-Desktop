@@ -9,7 +9,7 @@ import { SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 import dayjs from 'dayjs';
 import { Scheduler } from 'agora-rte-sdk';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import './index.mobile.css';
 const RoomBigTeacherStreamH5Tool = ({
   isPiP,

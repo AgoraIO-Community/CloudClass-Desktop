@@ -1,29 +1,53 @@
 /**
- * 教室事件
  * 此类事件从教室发出，在Widget中监听
+ */
+/** @en
+ * Events that come from SDK toward widget
  */
 export enum AgoraExtensionRoomEvent {
   /** 白板 */
+  // 设置白板工具
   BoardSelectTool = 'board-select-tool',
+  // 添加一页白板
   BoardAddPage = 'board-add-page',
+  // 删除一页白板
   BoardRemovePage = 'board-remove-page',
+  // 设置白板页面
   BoardGotoPage = 'board-goto-page',
+  // 撤销
   BoardUndo = 'board-undo',
+  // 重做
   BoardRedo = 'board-redo',
+  // 清空白板
   BoardClean = 'board-clean',
+  // 放置一张图片到白板上
   BoardPutImageResource = 'board-put-image-resource',
+  // 放置一张图片到指定白板窗口
   BoardPutImageResourceIntoWindow = 'board-put-image-resource-into-window',
+  // 打开文档类课件
   BoardOpenMaterialResourceWindow = 'board-open-material-resource-window',
+  // 打开多媒体文件
   BoardOpenMediaResourceWindow = 'board-open-media-resource-window',
+  // 打开一个Web窗口
   BoardOpenH5ResourceWindow = 'board-open-h5-resource-window',
+  // 设置白板图形工具
   BoardDrawShape = 'board-draw-shape',
+  // 授予白板权限
   BoardGrantPrivilege = 'board-grant-privilege',
+  // 设置白板笔迹宽度
   BoardChangeStrokeWidth = 'board-change-stroke-width',
+  // 设置白板笔迹颜色
   BoardChangeStrokeColor = 'board-change-stroke-color',
+  // 保存白板笔迹
   BoardSaveAttributes = 'board-save-attributes',
+  // 加在白板笔迹
   BoardLoadAttributes = 'board-load-attributes',
+  // 获取白板快照图片
   BoardGetSnapshotImageList = 'board-get-snapshot-image-list',
+  // 设置白板操作延时
   BoardSetDelay = 'board-set-delay',
+  // 设置课件动画渲染参数
+  BoardSetAnimationOptions = 'board-set-animation-options',
   // 开关白板
   ToggleBoard = 'toggle-board',
   // 打开 Webview
@@ -39,8 +63,10 @@ export enum AgoraExtensionRoomEvent {
 }
 
 /**
- * Widget事件
  * 此事件从Widget发出，在教室内监听
+ */
+/** @en
+ * Events that come from widget toward SDK
  */
 export enum AgoraExtensionWidgetEvent {
   /** 白板 */

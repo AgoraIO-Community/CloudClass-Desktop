@@ -5,7 +5,7 @@ import { Button, CheckBox, Modal, SvgIconEnum, SvgImg } from '@classroom/ui-kit'
 import './index.css';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { AGScreenShareDevice } from 'agora-rte-sdk';
-import { transI18n, useI18n } from 'agora-common-libs';
+import { transI18n, useI18n } from 'agora-common-libs/lib/i18n';
 import { DevicePlatform, getPlatform } from 'agora-edu-core';
 
 export const ScreenPickerDialog = ({

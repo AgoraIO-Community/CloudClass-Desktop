@@ -53,7 +53,7 @@ export class CloudDriveCourseResource extends CloudDriveResource {
     }
     if (data.taskProgress.images) {
       this.scenes = Object.keys(data.taskProgress.images).map((key) => {
-        const { width, height, url } = data.taskProgress.images[key];
+        const { width, height, url } = data.taskProgress.images[key as unknown as number];
         return {
           name: `${key}`,
           contentUrl: url,

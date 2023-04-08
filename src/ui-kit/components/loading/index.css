@@ -1,5 +1,5 @@
 .fcr-loading {
-  @apply flex bg-component flex-col justify-center items-center;
+  @apply fcr-flex fcr-bg-component fcr-flex-col fcr-justify-center fcr-items-center;
 }
 
 .fcr-loading-upload-list {
@@ -12,14 +12,14 @@
   display: none;
 }
 .fcr-loading .fcr-loading-text {
-  @apply text-level1;
+  @apply fcr-text-level1;
   font-size: 13px;
   font-weight: 400;
   margin-bottom: 24px;
 }
 
 .fcr-loading .fcr-loading-progress {
-  @apply flex justify-center items-center;
+  @apply fcr-flex fcr-justify-center fcr-items-center;
 }
 
 .fcr-loading .fcr-loading-progress-number {
@@ -34,7 +34,7 @@
 }
 
 .fcr-loading .fcr-loading-upload-item {
-  @apply flex justify-start items-center;
+  @apply fcr-flex justify-start fcr-items-center;
 }
 
 .fcr-loading .fcr-loading-upload-item:not(:nth-child(1)) {
@@ -44,7 +44,7 @@
 .fcr-loading .fcr-loading-file-name {
   margin-left: 4px;
   font-size: 13px;
-  @apply flex-1 text-level1;
+  @apply fcr-flex-1 fcr-text-level1;
   width: 120px;
   white-space: nowrap;
   word-wrap: break-word;
@@ -53,7 +53,7 @@
 }
 
 .fcr-loading .fcr-loading-file-size {
-  @apply text-level2;
+  @apply fcr-text-level2;
   font-size: 13px;
   color: #586376;
   margin-right: 33px;

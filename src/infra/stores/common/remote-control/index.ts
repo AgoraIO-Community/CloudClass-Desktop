@@ -21,7 +21,7 @@ import { DialogCategory } from '../share';
 import { mapToObject } from '@classroom/infra/utils';
 import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
 import { ControlState, RemoteControlBarUIParams } from './type';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 
 export class RemoteControlUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];

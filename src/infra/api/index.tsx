@@ -10,16 +10,6 @@ import {
   EduRoomTypeEnum,
   Platform,
 } from 'agora-edu-core';
-import {
-  AgoraCountdown,
-  AgoraHXChatWidget,
-  AgoraPolling,
-  AgoraSelector,
-  FcrBoardWidget,
-  FcrStreamMediaPlayerWidget,
-  FcrWatermarkWidget,
-  FcrWebviewWidget,
-} from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { EduContext } from '../contexts';
@@ -38,7 +28,6 @@ import './polyfills';
 import { Providers } from './providers';
 import { initializeBuiltInExtensions, setAssetsBaseUrl } from './rtc-extensions';
 import {
-  AgoraWidgetBase,
   BoardWindowAnimationOptions,
   ConfigParams,
   ConvertMediaOptionsConfig,
@@ -49,15 +38,14 @@ import {
   LaunchWindowOption,
   WindowID,
 } from './type';
-import { FcrMultiThemeMode, FcrTheme, FcrUIConfig, addResourceBundle } from 'agora-common-libs';
+import { FcrMultiThemeMode, FcrTheme, FcrUIConfig } from 'agora-common-libs/lib/ui';
+import { addResourceBundle } from 'agora-common-libs/lib/i18n';
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
 import { toUpper } from 'lodash';
+import { AgoraWidgetBase } from 'agora-common-libs/lib/widget';
 
 export * from './type';
-
-export * from '../protocol/type';
-export * from '../protocol/events';
 
 export { applyTheme, loadGeneratedFiles, themes } from '../utils/config-loader';
 
@@ -245,11 +233,6 @@ export class AgoraEduSDK {
     }
   }
 
-  private static _getWidgetName(widgetClass: unknown) {
-    const Clz = widgetClass as typeof AgoraWidgetBase;
-    return Object.create(Clz.prototype).widgetName;
-  }
-
   static launch(dom: HTMLElement, option: LaunchOption) {
     EduContext.reset();
     this._validateOptions(option);
@@ -273,6 +256,7 @@ export class AgoraEduSDK {
       latencyLevel,
       userFlexProperties,
       language,
+      widgets = {},
     } = option;
 
     const sessionInfo = {
@@ -292,17 +276,7 @@ export class AgoraEduSDK {
     this._language = language;
     this._uiMode = uiMode ?? FcrMultiThemeMode.light;
 
-    this._widgets = {
-      ...option.widgets,
-      [this._getWidgetName(AgoraHXChatWidget)]: AgoraHXChatWidget,
-      [this._getWidgetName(AgoraCountdown)]: AgoraCountdown,
-      [this._getWidgetName(AgoraSelector)]: AgoraSelector,
-      [this._getWidgetName(AgoraPolling)]: AgoraPolling,
-      [this._getWidgetName(FcrBoardWidget)]: FcrBoardWidget,
-      [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
-      [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
-      [this._getWidgetName(FcrWatermarkWidget)]: FcrWatermarkWidget,
-    };
+    this._widgets = widgets;
 
     if (option.webrtcExtensionBaseUrl) {
       setAssetsBaseUrl(option.webrtcExtensionBaseUrl);
@@ -316,7 +290,7 @@ export class AgoraEduSDK {
       this._virtualBackgroundVideos = option.virtualBackgroundVideos;
     }
 
-    const { virtualBackgroundExtension, beautyEffectExtensionInstance, aiDenoiserInstance } =
+    const { virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension } =
       initializeBuiltInExtensions();
 
     const noDevicePermission = roleType === EduRoleTypeEnum.invisible || platform === Platform.H5;
@@ -334,11 +308,7 @@ export class AgoraEduSDK {
             noDevicePermission,
           },
         },
-        rtcSDKExtensions: [
-          virtualBackgroundExtension,
-          beautyEffectExtensionInstance,
-          aiDenoiserInstance,
-        ],
+        rtcSDKExtensions: [virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension],
       },
       platform,
       Object.assign(
@@ -392,6 +362,7 @@ export class AgoraEduSDK {
    */
   static launchWindow(dom: HTMLElement, option: LaunchWindowOption) {
     const mapping = {
+      [WindowID.Main]: null,
       [WindowID.RemoteControlBar]: ControlBar,
       [WindowID.VideoGallery]: VideoGallery,
     };

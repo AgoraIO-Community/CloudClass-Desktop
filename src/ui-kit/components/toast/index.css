@@ -8,7 +8,7 @@
   padding: 0 14px;
   animation: toastAnimation 0.2s;
   transition: top 0.3s, opacity 0.1s;
-  @apply text-white cursor-pointer flex items-center justify-center box-border relative;
+  @apply text-white fcr-cursor-pointer fcr-flex fcr-items-center fcr-justify-center fcr-box-border relative;
 }
 
 @keyframes toastAnimation {

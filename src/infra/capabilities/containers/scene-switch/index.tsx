@@ -1,5 +1,5 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 import { observer } from 'mobx-react';
 import { FC, useEffect } from 'react';
 import { Card, Loading } from '@classroom/ui-kit';

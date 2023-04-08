@@ -13,7 +13,7 @@ import { difference, range } from 'lodash';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import uuidv4 from 'uuid';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 
 export enum GroupMethod {
   AUTO,

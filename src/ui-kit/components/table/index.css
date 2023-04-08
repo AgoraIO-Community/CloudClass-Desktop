@@ -1,6 +1,6 @@
 .table-flex-container {
   @apply flex;
-  @apply flex-col;
+  @apply fcr-flex-col;
 }
 
 .table-row-item {
@@ -11,10 +11,10 @@
 }
 
 .table-col-item {
-  @apply text-level1;
+  @apply fcr-text-level1;
   @apply flex;
-  @apply flex-1;
-  @apply items-center;
+  @apply fcr-flex-1;
+  @apply fcr-items-center;
   font-size: 13px;
   /* font-family: PingFangSC-Regular, PingFang SC; */
   font-weight: 400;
@@ -23,18 +23,18 @@
 
 .table-header {
   @apply flex;
-  @apply flex-1;
+  @apply fcr-flex-1;
   @apply flex-row;
-  @apply bg-icon-selected-color;
+  @apply fcr-bg-icon-selected-color;
   font-size: 13px;
   line-height: 18px;
   padding: 10px 0;
   padding-left: 19px;
-  @apply border-bottom-width-1 border-divider;
+  @apply border-bottom-width-1 fcr-border-divider;
   line-height: 20px;
 }
 .agora-board-resources .border-bottom-width-1 {
-  @apply border-divider;
+  @apply fcr-border-divider;
 }
 
 .border-bottom-width-1 {

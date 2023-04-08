@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, PropsWithChildren, ReactNode } from 'react';
 import { BaseProps } from '../util/type';
 import { CSSTransition } from 'react-transition-group';
 import './index.css';
@@ -11,7 +11,7 @@ export interface AffixProps extends BaseProps {
   onCollapse?: () => void;
 }
 
-export const Affix: FC<AffixProps> = ({
+export const Affix: FC<PropsWithChildren<AffixProps>> = ({
   style,
   className,
   collapse,
@@ -21,11 +21,10 @@ export const Affix: FC<AffixProps> = ({
   content,
   onCollapse,
 }) => {
-
   return (
     <CSSTransition in={!collapse} timeout={500} classNames="fcr-affix-collapse">
       {!collapse ? (
-        children as any
+        (children as any)
       ) : (
         <div
           className={className}
@@ -33,10 +32,10 @@ export const Affix: FC<AffixProps> = ({
             ...(collapse
               ? {}
               : {
-                position: 'absolute',
-                top,
-                left,
-              }),
+                  position: 'absolute',
+                  top,
+                  left,
+                }),
             ...style,
           }}
           onClick={() => onCollapse && onCollapse()}>

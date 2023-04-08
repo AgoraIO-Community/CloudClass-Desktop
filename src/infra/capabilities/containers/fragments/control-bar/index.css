@@ -1,5 +1,5 @@
 .fcr-remote-control-bar {
-  @apply bg-component;
+  @apply fcr-bg-component;
   display: flex;
   align-items: center;
   justify-content: space-between;

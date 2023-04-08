@@ -2,7 +2,7 @@
   position: relative;
 }
 .options-container {
-  @apply border border-solid border-divider bg-component;
+  @apply fcr-border  fcr-border-solid fcr-border-divider fcr-bg-component;
   position: absolute;
   z-index: 2;
   width: 100%;
@@ -48,7 +48,7 @@
 }
 
 .options-container .option-item {
-  @apply text-level2;
+  @apply fcr-text-level2;
   background: transparent;
   height: 34px;
   cursor: pointer;
@@ -63,10 +63,10 @@
   overflow: hidden;
 }
 .options-container .option-item.is-select {
-  @apply bg-component text-brand;
+  @apply fcr-bg-component text-brand;
 }
 .options-container .option-item:hover {
-  @apply bg-icon-selected-color text-level1;
+  @apply fcr-bg-icon-selected-color fcr-text-level1;
 }
 .options-container .option-item.text-center {
   text-align: center;
@@ -90,11 +90,11 @@
   margin-left: 1px !important;
 }
 .react-select-container .react-select__single-value {
-  @apply text-level1;
+  @apply fcr-text-level1;
 }
 .react-select__placeholder,
 .react-select__single-value {
-  @apply text-level1;
+  @apply fcr-text-level1;
   max-width: calc(100% - 71px);
   overflow: hidden;
   white-space: nowrap;
@@ -109,7 +109,7 @@
   background: transparent !important;
 }
 .react-select-container .react-select__option {
-  @apply bg-component text-level1 border-divider;
+  @apply fcr-bg-component fcr-text-level1 fcr-border-divider;
 }
 .react-select__option:hover {
   color: #191919 !important;
@@ -124,14 +124,14 @@
 }
 
 .react-select-container .react-select__control {
-  @apply border border-solid border-divider;
+  @apply fcr-border  fcr-border-solid fcr-border-divider;
   background: transparent;
   box-sizing: border-box;
   transition: all 0.3s !important;
 }
 
 .react-select__control:hover {
-  @apply bg-component;
+  @apply fcr-bg-component;
 
   border: 1px solid #357bf6 !important;
 }

@@ -5,7 +5,7 @@ import {
   transmitRTCRawData,
 } from '@classroom/infra/utils/ipc';
 import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
-import { transI18n } from 'agora-common-libs';
+import { transI18n } from 'agora-common-libs/lib/i18n';
 import {
   EduClassroomConfig,
   EduRoleTypeEnum,

@@ -2,7 +2,7 @@ import { useStore } from '@classroom/infra/hooks/ui-store';
 import { FC } from 'react';
 import { Card, Modal } from '@classroom/ui-kit';
 import './index.css';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { ScreenShareRoleType } from '@classroom/infra/stores/common/toolbar/type';
 
 export const ScreenShareDialog = ({

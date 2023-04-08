@@ -7,7 +7,7 @@ import './index.css';
 import { CloudDriverContainerProps } from '.';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
 import CloudHelp from './cloud-help';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 export enum ActiveKeyEnum {
   public = '1',

@@ -3,7 +3,7 @@ import { useInterval } from '@classroom/infra/hooks/utilites';
 import { DialogCategory } from '@classroom/infra/stores/common/share';
 import classnames from 'classnames';
 import { throttle } from 'lodash';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, Popover, SvgIcon, SvgIconEnum, SvgImg } from '@classroom/ui-kit/components';
 import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
 import { BaseWaveArmProps, UserWaveArmInfo } from './types';
@@ -13,7 +13,7 @@ export interface WaveArmManagerProps extends BaseWaveArmProps {
   waveArmCount: number;
 }
 
-export const WaveArmManager: FC<WaveArmManagerProps> = ({
+export const WaveArmManager: FC<PropsWithChildren<WaveArmManagerProps>> = ({
   width = 40,
   height = 40,
   borderRadius = 40,

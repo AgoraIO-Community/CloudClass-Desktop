@@ -1,5 +1,5 @@
 .volume-indicators {
-  @apply flex flex-col;
+  @apply fcr-flex fcr-flex-col;
   margin-left: 10px;
 }
 

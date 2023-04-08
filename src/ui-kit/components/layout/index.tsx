@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../util/type';
 import './index.css';
@@ -27,7 +27,7 @@ export const Layout: FC<LayoutProps> = ({
   );
 };
 
-export const Header: FC<BaseProps> = ({ className, children, ...restProps }) => {
+export const Header: FC<PropsWithChildren<BaseProps>> = ({ className, children, ...restProps }) => {
   const cls = classnames({
     [`fcr-layout-header`]: 1,
     [`${className}`]: !!className,
@@ -40,7 +40,7 @@ export const Header: FC<BaseProps> = ({ className, children, ...restProps }) => 
   );
 };
 
-export const Aside: FC<BaseProps> = ({ className, children, ...restProps }) => {
+export const Aside: FC<PropsWithChildren<BaseProps>> = ({ className, children, ...restProps }) => {
   const cls = classnames({
     [`fcr-layout-aside`]: 1,
     [`${className}`]: !!className,
@@ -52,7 +52,11 @@ export const Aside: FC<BaseProps> = ({ className, children, ...restProps }) => {
   );
 };
 
-export const Content: FC<BaseProps> = ({ className, children, ...restProps }) => {
+export const Content: FC<PropsWithChildren<BaseProps>> = ({
+  className,
+  children,
+  ...restProps
+}) => {
   const cls = classnames({
     [`fcr-layout-content`]: 1,
     [`${className}`]: !!className,

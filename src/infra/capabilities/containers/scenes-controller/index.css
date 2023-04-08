@@ -7,7 +7,7 @@
   z-index: 2;
   width: auto !important;
   border-radius: 20px;
-  @apply bg-component;
+  @apply fcr-bg-component;
 }
 
 .scenes-controller-line {
@@ -28,7 +28,7 @@
 }
 
 .scenes-controller-info {
-  @apply text-level2;
+  @apply fcr-text-level2;
   font-size: 14px;
   user-select: none;
   margin: 0 6px;

@@ -1,24 +1,27 @@
-import {
-  AgoraEduSDK,
-  AgoraExtensionWidgetEvent,
-  AgoraMultiInstanceWidget,
-  AgoraTrackSyncedWidget,
-  AgoraWidgetBase,
-  AgoraWidgetLifecycle,
-} from '@classroom/infra/api';
+import { AgoraEduSDK } from '@classroom/infra/api';
 import {
   counterEnabled,
   pollEnabled,
   popupQuizEnabled,
   chatEnabled,
   boardEnabled,
-} from 'agora-common-libs';
+} from 'agora-common-libs/lib/ui';
+import {
+  AgoraMultiInstanceWidget,
+  AgoraTrackSyncedWidget,
+  AgoraWidgetBase,
+  AgoraWidgetLifecycle,
+  AgoraWidgetTrackMode,
+} from 'agora-common-libs/lib/widget';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { AgoraWidgetTrackMode } from './type';
-import { AgoraWidgetTrackController } from './widget-track';
+import { AgoraWidgetTrackController } from 'agora-common-libs/lib/widget/widget-track';
+import {
+  AgoraExtensionRoomEvent,
+  AgoraExtensionWidgetEvent,
+} from '@classroom/infra/protocol/events';
 
 @Log.attach({ proxyMethods: false })
 export class WidgetUIStore extends EduUIStoreBase {
@@ -282,7 +285,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       prev[key] = value;
 
       return prev;
-    }, {});
+    }, {} as any);
 
     return widgets;
   }
@@ -348,6 +351,11 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
             });
+
+            controller.broadcast(
+              AgoraExtensionRoomEvent.BoardSetAnimationOptions,
+              AgoraEduSDK.boardWindowAnimationOptions,
+            );
           }
         },
       ),

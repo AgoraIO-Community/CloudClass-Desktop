@@ -28,13 +28,13 @@ import CloudMoreMenu from './cloud-more-menu';
 import { FileTypeSvgColor } from '@classroom/infra/stores/common/cloud-drive';
 import { CloudDriveCourseResource } from '@classroom/infra/stores/common/cloud-drive/struct';
 import { supportedTypes } from '@classroom/infra/stores/common/cloud-drive/helper';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 const UploadSuccessToast = () => {
   const transI18n = useI18n();
   return (
     <Toast
-      closeToast={() => { }}
+      closeToast={() => {}}
       style={{
         position: 'absolute',
         left: '50%',
@@ -237,7 +237,10 @@ export const PersonalResourcesContainer = observer(() => {
                       type={fileNameToType(ext)}
                       style={{
                         marginRight: '6px',
-                        color: FileTypeSvgColor[fileNameToType(resourceName)],
+                        color:
+                          FileTypeSvgColor[
+                            fileNameToType(resourceName) as keyof typeof FileTypeSvgColor
+                          ],
                       }}
                     />
                     <Inline className="filename" title={resourceName}>
@@ -245,16 +248,16 @@ export const PersonalResourcesContainer = observer(() => {
                         dangerouslySetInnerHTML={{
                           __html: searchPersonalResourcesKeyword
                             ? resourceName.replaceAll(
-                              searchPersonalResourcesKeyword,
-                              `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
-                            )
+                                searchPersonalResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
+                              )
                             : resourceName,
                         }}></span>
                     </Inline>
                   </Col>
                   <Col>
                     {item.resource instanceof CloudDriveCourseResource &&
-                      item.resource.status === 'Converting' ? (
+                    item.resource.status === 'Converting' ? (
                       <>
                         <Inline className="text-level1">
                           <CircleLoading width="18" height="18" />

@@ -5,7 +5,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { Rnd } from 'react-rnd';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
 import { ForceDirection, useDragAnalyzer, useVideoPage } from './hooks';
 import { TrackPlayer } from '../../stream/track-player';

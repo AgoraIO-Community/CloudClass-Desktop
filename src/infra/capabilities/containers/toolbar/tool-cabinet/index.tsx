@@ -2,7 +2,6 @@ import { observer } from 'mobx-react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgImg, ToolCabinet, SvgIconEnum } from '@classroom/ui-kit';
 import {
-  useI18n,
   boardLaserPointerEnabled,
   boardSwitchEnabled,
   breakoutRoomEnabled,
@@ -10,7 +9,8 @@ import {
   screenShareEnabled,
   visibilityControl,
   visibilityListItemControl,
-} from 'agora-common-libs';
+} from 'agora-common-libs/lib/ui';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { useExtensionCabinets } from '@classroom/infra/hooks/cabinet';
 import React, { FC, useCallback, useState } from 'react';
 import clsn from 'classnames';

@@ -6,7 +6,7 @@ import { Start } from './fragments/start';
 import { GroupSelect } from './fragments/group-select';
 import { GroupState } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 export const BreakoutRoomDialog = observer(({ id }: { id: string }) => {
   const { shareUIStore, groupUIStore } = useStore();

@@ -1,5 +1,5 @@
 import { Search, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 export type CloudToolbarProps = {
   /**

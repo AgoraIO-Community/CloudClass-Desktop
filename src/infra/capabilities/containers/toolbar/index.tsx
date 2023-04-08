@@ -19,7 +19,7 @@ import {
   cloudStorageEnabled,
   rosterEnabled,
   toolbarEnabled,
-} from 'agora-common-libs';
+} from 'agora-common-libs/lib/ui';
 import { ToolbarItemCategory } from '@classroom/infra/stores/common/toolbar/type';
 
 export const WhiteboardToolbar = visibilityControl(

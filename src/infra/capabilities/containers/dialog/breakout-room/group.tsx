@@ -1,7 +1,7 @@
 import { FC, ReactElement, MouseEvent } from 'react';
 import { MultiRootTree, TreeModel, TreeNode } from '@classroom/ui-kit';
 import { Panel } from './panel';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 type GroupPanelProps = {
   groups: { text: string; id: string }[];

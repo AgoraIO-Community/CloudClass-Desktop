@@ -85,7 +85,7 @@
 }
 
 .popover-inner-content {
-  @apply text-level1;
+  @apply fcr-text-level1;
   padding: 16px 20px;
 }
 
@@ -150,7 +150,7 @@
 .popover-placement-right > .popover-content > .popover-arrow,
 .popover-placement-rightTop > .popover-content > .popover-arrow,
 .popover-placement-rightBottom > .popover-content > .popover-arrow {
-  @apply border-divider;
+  @apply fcr-border-divider;
   left: 6px;
   border-top-color: transparent;
   border-right-color: transparent;
@@ -196,7 +196,7 @@
 .popover-placement-left > .popover-content > .popover-arrow,
 .popover-placement-leftTop > .popover-content > .popover-arrow,
 .popover-placement-leftBottom > .popover-content > .popover-arrow {
-  @apply border-divider;
+  @apply fcr-border-divider;
 
   right: 7px;
 

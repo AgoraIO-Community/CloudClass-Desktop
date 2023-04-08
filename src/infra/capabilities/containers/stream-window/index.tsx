@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useEffect, useState } from 'react';
+import { CSSProperties, FC, PropsWithChildren, useEffect, useState } from 'react';
 import { EduStreamUI, StreamBounds } from '@classroom/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
 import { Rnd } from 'react-rnd';
@@ -10,7 +10,7 @@ import { StreamWindow } from '@classroom/infra/stores/common/stream-window/type'
 import useMeasure from 'react-use-measure';
 import { StreamPlayerToolbar } from '../stream/stream-tool';
 
-const WindowContainer: FC = observer(({ children }) => {
+const WindowContainer: FC<PropsWithChildren> = observer(({ children }) => {
   const { streamWindowUIStore, boardUIStore } = useStore();
   const [measureRef, bounds] = useMeasure();
 

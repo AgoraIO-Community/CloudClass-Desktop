@@ -43,5 +43,5 @@
 
 .fcr-video-grid-pager__label {
   font-size: 12px;
-  @apply text-level1;
+  @apply fcr-text-level1;
 }

@@ -1,5 +1,5 @@
 import { EduRoomTypeEnum } from 'agora-edu-core';
-import { FcrMultiThemes, FcrTheme, FcrUIConfig } from 'agora-common-libs';
+import { FcrMultiThemes, FcrTheme, FcrUIConfig } from 'agora-common-libs/lib/ui';
 import { room1V1Class, roomBigClass, roomMidClass } from '../configs/base-ui';
 import { baseTheme } from '../configs/base-theme';
 import { jumpToLine } from '.';
@@ -46,7 +46,9 @@ export const applyTheme = (theme: FcrTheme) => {
   let cssString = '';
 
   for (const colorName in theme) {
-    cssString += `--fcr_system_${jumpToLine(colorName)}_color: ${theme[colorName]};`;
+    cssString += `--fcr_system_${jumpToLine(colorName)}_color: ${
+      theme[colorName as keyof typeof theme]
+    };`;
   }
 
   const fcrStyleSheet = document.querySelector(`#${fcrGlobalStyleSheetId}`);

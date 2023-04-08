@@ -1,5 +1,5 @@
 .sub-title {
-  @apply text-level2;
+  @apply fcr-text-level2;
   font-size: 13px;
   font-weight: 400;
   align-self: flex-start;
@@ -14,34 +14,34 @@
 }
 
 .program-item {
-  @apply border border-solid border-divider;
+  @apply fcr-border  fcr-border-solid fcr-border-divider;
   width: 185px;
   height: 150px;
   border-radius: 4px;
   margin-right: 16px;
   margin-bottom: 18px;
-  @apply box-border flex flex-col justify-center items-center cursor-pointer float-left;
+  @apply fcr-box-border fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer float-left;
 }
 .program-item-active {
-  @apply border border-solid border-brand;
+  @apply fcr-border  fcr-border-solid fcr-border-brand;
 }
 .program-item-img {
   width: 159px;
   height: 101px;
-  @apply border border-solid border-divider;
+  @apply fcr-border  fcr-border-solid fcr-border-divider;
   margin-top: 10px;
   background-position: center;
   background-size: 100%;
-  @apply box-border;
+  @apply fcr-box-border;
 }
 
 .program-item-title {
   margin-top: 6px;
-  @apply flex justify-center items-center;
+  @apply fcr-flex fcr-justify-center fcr-items-center;
 }
 
 .program-item-title .title-text {
-  @apply text-level1;
+  @apply fcr-text-level1;
   margin-left: 7px;
   font-size: 12px;
   font-weight: 400;
@@ -51,7 +51,7 @@
   max-width: 100px;
 }
 .programs h5 {
-  @apply border-b border-solid border-divider text-level1;
+  @apply border-b  fcr-border-solid fcr-border-divider fcr-text-level1;
   font-weight: bold;
   font-size: 14px;
   padding-bottom: 5px;
@@ -69,7 +69,7 @@
   margin-left: 15px;
 }
 .screen-picker-footer-text {
-  @apply text-level1;
+  @apply fcr-text-level1;
   flex: 1;
   font-size: 14px;
   overflow: hidden;

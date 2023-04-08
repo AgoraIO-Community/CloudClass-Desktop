@@ -3,7 +3,7 @@ import { useInteractiveUIStores } from '@classroom/infra/hooks/ui-store';
 import { useCallback, useState } from 'react';
 import { EduInteractiveUIClassStore } from '@classroom/infra/stores/interactive';
 import { CarouselGroup, NavGroup } from '.';
-import { visibilityControl, studentVideoEnabled, teacherVideoEnabled } from 'agora-common-libs';
+import { visibilityControl, studentVideoEnabled, teacherVideoEnabled } from 'agora-common-libs/lib/ui';
 import { DragableStream } from './draggable-stream';
 
 export const RoomMidStreamsContainer = observer(() => {

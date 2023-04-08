@@ -11,7 +11,7 @@ import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels
 import { ControlState, RemoteControlBarUIParams } from '@classroom/infra/stores/common/remote-control/type';
 import { EduUserStruct } from 'agora-edu-core';
 import { Select, SvgIcon, Tooltip, SvgIconEnum } from '@classroom/ui-kit';
-import { transI18n, useI18n } from 'agora-common-libs';
+import { transI18n, useI18n } from 'agora-common-libs/lib/i18n';
 
 type Props = {
   canReSelectScreen?: boolean;

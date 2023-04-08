@@ -4,7 +4,7 @@ import { OverlayWrap, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { useDraggableDefaultCenterPosition } from '@classroom/ui-kit/utilities/hooks';
 import { InviteTable } from './invite-table';
 import './invite-container.css';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 interface InvitePodiumContainerProps {
   onClose: () => void;
 }

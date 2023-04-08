@@ -9,8 +9,8 @@ import {
 import { AGMediaOptions, AgoraLatencyLevel, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 import { CloudDriveResourceConvertProgress } from '../stores/common/cloud-drive/type';
-import { AgoraWidgetBase } from '../stores/common/widget/widget-base';
-import { FcrMultiThemeMode } from 'agora-common-libs';
+import { FcrMultiThemeMode } from 'agora-common-libs/lib/ui';
+import { AgoraWidgetBase } from 'agora-common-libs/lib/widget';
 
 export type AgoraRegion = Uppercase<AgoraRegionString>;
 
@@ -103,16 +103,6 @@ export type LaunchWindowOption = {
   roomType: EduRoomTypeEnum;
   uiMode: FcrMultiThemeMode;
 };
-
-export { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '../protocol/events';
-export { AgoraWidgetTrackMode } from '../stores/common/widget/type';
-export { AgoraWidgetBase } from '../stores/common/widget/widget-base';
-export type {
-  AgoraMultiInstanceWidget,
-  AgoraTrackSyncedWidget,
-  AgoraWidgetLifecycle,
-  AgoraWidgetRenderable,
-} from '../stores/common/widget/widget-base';
 
 export type CourseWareItem = {
   resourceName: string;

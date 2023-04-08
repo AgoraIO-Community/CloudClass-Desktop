@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgImg, BoardCleaners, SvgIconEnum } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
 
 export const BoardCleanersContainer = observer(() => {

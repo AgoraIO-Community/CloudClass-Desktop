@@ -3,7 +3,7 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { OverlayWrap } from '../overlay-wrap';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
-import { themeContext } from 'agora-common-libs';
+import { themeContext } from 'agora-common-libs/lib/ui';
 export interface ModalProps {
   /** 标题 */
   title?: string | React.ReactNode;

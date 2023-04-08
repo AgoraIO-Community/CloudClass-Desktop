@@ -1,7 +1,7 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
-import { visibilityControl, raiseHandEnabled } from 'agora-common-libs';
+import { visibilityControl, raiseHandEnabled } from 'agora-common-libs/lib/ui';
 import './index.css';
 import { StudentsWaveArmList, WaveArmManager } from './manager';
 import { WaveArmSender as WaveArmSenderContainer } from './sender';

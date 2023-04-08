@@ -3,7 +3,7 @@ import { CheckBox } from '@classroom/ui-kit/components/checkbox';
 import { Input } from '@classroom/ui-kit/components/input';
 import { Select } from '../select';
 import { CarouselProps } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs/lib/i18n';
 
 type CarouselSettingProps = CarouselProps;
 

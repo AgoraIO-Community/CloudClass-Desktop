@@ -23,7 +23,8 @@ export interface ButtonProps extends BaseProps {
   onClick?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
   onMouseOver?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
   onMouseLeave?: EventHandler<SyntheticEvent<HTMLButtonElement>>;
-  icon?: React.ReactElement
+  icon?: React.ReactElement;
+  children?: React.ReactNode;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -66,7 +67,7 @@ export const Button: FC<ButtonProps> = ({
     <button ref={buttonRef} className={`${cls} group`} disabled={disabled} {...restProps}>
       {animate ? <div className="fcr-btn-ripple" ref={rippleRef}></div> : null}
       <div className="absolute top-0 left-0 w-full h-full z-0 bg-black opacity-0 group-hover:opacity-10 focus:opacity-20"></div>
-      <div className='flex items-center justify-center'>
+      <div className="flex items-center justify-center">
         {icon}
         <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
       </div>
