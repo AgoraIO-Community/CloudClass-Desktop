@@ -12,7 +12,7 @@
   pointer-events: auto;
 }
 .remote-control-action-bar .divide {
-  @apply bg-background;
+  @apply fcr-bg-background;
   width: 1px;
   height: 16px;
   margin: 0 5px;

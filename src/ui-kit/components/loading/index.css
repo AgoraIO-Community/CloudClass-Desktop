@@ -23,7 +23,7 @@
 }
 
 .fcr-loading .fcr-loading-progress-number {
-  @apply text-brand;
+  @apply fcr-text-brand;
   font-size: 18px;
   font-weight: 400;
   margin-left: 12px;
@@ -34,7 +34,7 @@
 }
 
 .fcr-loading .fcr-loading-upload-item {
-  @apply fcr-flex justify-start fcr-items-center;
+  @apply fcr-flex fcr-justify-start fcr-items-center;
 }
 
 .fcr-loading .fcr-loading-upload-item:not(:nth-child(1)) {
@@ -61,19 +61,19 @@
 }
 
 .fcr-loading .fcr-upload-success-text {
-  @apply text-safe;
+  @apply fcr-text-safe;
   font-size: 13px;
   font-weight: 400;
   margin-left: 7px;
 }
 .fcr-loading .fcr-upload-error-text {
-  @apply text-error;
+  @apply fcr-text-error;
   font-size: 13px;
   font-weight: 400;
   margin-left: 7px;
 }
 .fcr-loading .fcr-upload-pending-text {
-  @apply text-brand;
+  @apply fcr-text-brand;
   font-size: 13px;
   margin-left: 6px;
 }

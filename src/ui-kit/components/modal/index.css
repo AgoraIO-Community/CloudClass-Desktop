@@ -53,7 +53,7 @@
 }
 
 .modal-title {
-  @apply fcr-box-border fcr-flex fcr-justify-between fcr-items-center fcr-relative fcr-bg-icon-selected-color fcr-border-divider border-b  fcr-border-solid;
+  @apply fcr-box-border fcr-flex fcr-justify-between fcr-items-center fcr-relative fcr-bg-icon-selected-color fcr-border-divider fcr-border-b  fcr-border-solid;
   height: 28px;
   line-height: 28px;
   padding: 0 10px 0 15px;

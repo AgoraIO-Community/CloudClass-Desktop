@@ -63,7 +63,7 @@
   overflow: hidden;
 }
 .options-container .option-item.is-select {
-  @apply fcr-bg-component text-brand;
+  @apply fcr-bg-component fcr-text-brand;
 }
 .options-container .option-item:hover {
   @apply fcr-bg-icon-selected-color fcr-text-level1;

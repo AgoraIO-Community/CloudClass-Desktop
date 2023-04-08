@@ -24,7 +24,7 @@ td.biz-col.label.right {
 }
 
 .fcr-biz-header {
-  @apply bg-foreground fcr-border-divider fcr-text-level2 fcr-border  fcr-border-solid;
+  @apply fcr-bg-foreground fcr-border-divider fcr-text-level2 fcr-border  fcr-border-solid;
   /* 因为 iconfont icon设计不合规无法对齐 特此 hack */
   padding: 0 15px 0 8px;
   border-top: 0px;

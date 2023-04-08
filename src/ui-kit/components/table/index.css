@@ -1,18 +1,18 @@
 .table-flex-container {
-  @apply flex;
+  @apply fcr-flex;
   @apply fcr-flex-col;
 }
 
 .table-row-item {
-  @apply flex;
-  @apply flex-row;
+  @apply fcr-flex;
+  @apply fcr-flex-row;
   font-size: 13px;
   /* padding-left: 19px; */
 }
 
 .table-col-item {
   @apply fcr-text-level1;
-  @apply flex;
+  @apply fcr-flex;
   @apply fcr-flex-1;
   @apply fcr-items-center;
   font-size: 13px;
@@ -22,15 +22,15 @@
 }
 
 .table-header {
-  @apply flex;
+  @apply fcr-flex;
   @apply fcr-flex-1;
-  @apply flex-row;
+  @apply fcr-flex-row;
   @apply fcr-bg-icon-selected-color;
   font-size: 13px;
   line-height: 18px;
   padding: 10px 0;
   padding-left: 19px;
-  @apply border-bottom-width-1 fcr-border-divider;
+  @apply fcr-border-b fcr-border-divider;
   line-height: 20px;
 }
 .agora-board-resources .border-bottom-width-1 {

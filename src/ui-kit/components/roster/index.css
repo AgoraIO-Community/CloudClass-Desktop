@@ -100,13 +100,13 @@
 }
 
 .roster-container .roster-table {
-  @apply border-t  fcr-border-solid fcr-border-divider;
+  @apply fcr-border-t  fcr-border-solid fcr-border-divider;
   flex: 1;
   min-height: 0;
 }
 
 .roster-table .table-container .table-row-item .table-col-item {
-  @apply box-content fcr-text-level1;
+  @apply fcr-box-content fcr-text-level1;
   height: 40px;
 }
 

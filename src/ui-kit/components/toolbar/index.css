@@ -37,7 +37,7 @@
 }
 
 .toolbar > .tools {
-  @apply hidden;
+  @apply fcr-hidden;
   overflow-y: scroll;
   height: 100%;
   scrollbar-width: none;
@@ -52,7 +52,7 @@
 }
 
 .toolbar-shadow {
-  @apply bg-background;
+  @apply fcr-bg-background;
   bottom: -2px;
   position: absolute;
   height: 20px;
@@ -62,7 +62,7 @@
 }
 
 .toolbar-shadow-up {
-  @apply bg-background;
+  @apply fcr-bg-background;
   top: -2px;
   position: absolute;
   height: 20px;
@@ -95,7 +95,7 @@
 }
 
 .tool {
-  @apply fcr-cursor-pointer text-center relative;
+  @apply fcr-cursor-pointer fcr-text-center fcr-relative;
   height: 25px;
   width: 29px;
   line-height: 1;
@@ -118,7 +118,7 @@
 }
 
 .tool .expandable {
-  @apply absolute;
+  @apply fcr-absolute;
   bottom: 0;
   right: 0;
   font-size: 24px;
@@ -131,7 +131,7 @@
 
 .tool.expand,
 .tool:hover {
-  @apply rounded-full fcr-bg-component;
+  @apply fcr-rounded-full fcr-bg-component;
 }
 
 .tool > svg {
@@ -139,7 +139,7 @@
 }
 
 .expand-tools {
-  @apply fcr-flex flex-row fcr-items-center flex-wrap;
+  @apply fcr-flex fcr-flex-row fcr-items-center fcr-flex-wrap;
 }
 
 .expand-tools.colors {
@@ -151,7 +151,7 @@
 }
 
 .expand-tool.color {
-  @apply fcr-flex fcr-justify-center fcr-items-center rounded-full;
+  @apply fcr-flex fcr-justify-center fcr-items-center fcr-rounded-full;
   height: 22px;
   width: 22px;
   margin: 6px 8px;
@@ -167,7 +167,7 @@
 }
 
 .expand-tool.color > .circle {
-  @apply rounded-full;
+  @apply fcr-rounded-full;
   height: 18px;
   width: 18px;
 }
@@ -182,7 +182,7 @@
 }
 
 .expand-tool > .active-indicator {
-  @apply rounded-full;
+  @apply fcr-rounded-full;
   width: 3px;
   height: 3px;
   background: #868f9f;
@@ -215,18 +215,18 @@
   width: 100px;
   height: 78px;
   color: #7b88a0;
-  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer float-left;
+  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-float-left;
 }
 .expand-tools .cleaner-item {
   width: 30px;
   height: 30px;
   color: #7b88a0;
-  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer float-left;
+  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-float-left;
 }
 .expand-tools .slice-item {
   width: 70px;
   color: #7b88a0;
-  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer float-left;
+  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-float-left;
 }
 .expand-tools .slice-item .slice-item-icon {
   width: 40px;
@@ -349,7 +349,7 @@
 }
 
 .tool-cabinet-popover .popover-arrow {
-  @apply border-r border-t  fcr-border-solid fcr-border-divider;
+  @apply fcr-border-r fcr-border-t  fcr-border-solid fcr-border-divider;
 }
 
 .tool-cabinet-popover .popover-inner {
@@ -365,10 +365,10 @@
 }
 
 .cabinet-item:not(.cabinet-item-last) {
-  @apply border-b  fcr-border-solid fcr-border-divider;
+  @apply fcr-border-b  fcr-border-solid fcr-border-divider;
 }
 
 /* 3 6 9 */
 .cabinet-item:not(:nth-child(3n)) {
-  @apply border-r  fcr-border-solid fcr-border-divider;
+  @apply fcr-border-r  fcr-border-solid fcr-border-divider;
 }

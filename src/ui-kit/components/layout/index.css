@@ -14,21 +14,20 @@
 }
 
 .fcr-layout-content {
-  @apply fcr-flex flex-row fcr-flex-1 fcr-h-full;
+  @apply fcr-flex fcr-flex-row fcr-flex-1 fcr-h-full;
   position: relative;
   width: 0;
 }
 
 .fcr-layout-header {
-  @apply fcr-flex flex-row fcr-justify-center fcr-items-center fcr-w-full;
+  @apply fcr-flex fcr-flex-row fcr-justify-center fcr-items-center fcr-w-full;
   flex: 0 0 27px;
 }
 
 .fcr-layout-aside {
-  @apply fcr-flex fcr-flex-col border-l  fcr-border-divider fcr-h-full;
+  @apply fcr-flex fcr-flex-col fcr-border-l  fcr-border-divider fcr-h-full fcr-overflow-hidden;
   /* width: 19rem; */
   border-left: none;
-  @apply overflow-hidden;
   gap: 4px;
   margin-left: 2px;
   position: relative;

@@ -20,7 +20,7 @@
   border-radius: 4px;
   margin-right: 16px;
   margin-bottom: 18px;
-  @apply fcr-box-border fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer float-left;
+  @apply fcr-box-border fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-float-left;
 }
 .program-item-active {
   @apply fcr-border  fcr-border-solid fcr-border-brand;
@@ -51,7 +51,7 @@
   max-width: 100px;
 }
 .programs h5 {
-  @apply border-b  fcr-border-solid fcr-border-divider fcr-text-level1;
+  @apply fcr-border-b  fcr-border-solid fcr-border-divider fcr-text-level1;
   font-weight: bold;
   font-size: 14px;
   padding-bottom: 5px;

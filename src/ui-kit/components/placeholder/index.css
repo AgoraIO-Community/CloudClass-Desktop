@@ -10,7 +10,7 @@
 }
 
 .camera-placeholder {
-  @apply bg-background;
+  @apply fcr-bg-background;
   overflow: hidden;
   position: relative;
   height: 100%;

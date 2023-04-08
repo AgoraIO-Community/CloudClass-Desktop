@@ -1,46 +1,46 @@
 .fcr-btn {
-  @apply fcr-cursor-pointer text-base rounded-full fcr-relative overflow-hidden;
+  @apply fcr-cursor-pointer fcr-text-base fcr-rounded-full fcr-relative fcr-overflow-hidden;
 }
 
 .fcr-btn-primary {
-  @apply text-white bg-brand;
-  @apply active:bg-brand;
+  @apply fcr-text-white fcr-bg-brand;
+  @apply active:fcr-bg-brand;
 }
 
 .fcr-btn-danger {
-  @apply text-error bg-white  border;
+  @apply fcr-text-error fcr-bg-white  fcr-border;
 }
 
 .fcr-btn-danger:hover {
-  @apply text-error;
+  @apply fcr-text-error;
 }
 
 .fcr-btn-danger:active {
-  @apply text-error;
+  @apply fcr-text-error;
 }
 
 .fcr-btn-secondary {
-  @apply bg-white fcr-border-divider fcr-border text-brand;
+  @apply fcr-bg-white fcr-border-divider fcr-border fcr-text-brand;
 }
 
 .fcr-btn-secondary:hover {
-  @apply bg-white fcr-border-divider fcr-border text-brand;
+  @apply fcr-bg-white fcr-border-divider fcr-border fcr-text-brand;
 }
 
 .fcr-btn-secondary:active {
-  @apply text-brand bg-white fcr-border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-ghost {
-  @apply text-brand bg-white fcr-border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-ghost:hover {
-  @apply text-brand bg-white fcr-border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-ghost:active {
-  @apply text-brand bg-white fcr-border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-xs {

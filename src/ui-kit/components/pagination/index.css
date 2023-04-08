@@ -16,7 +16,7 @@
 }
 
 .agora-pagination .rc-pagination-item-active {
-  @apply bg-brand;
+  @apply fcr-bg-brand;
 }
 .agora-pagination .rc-pagination-item-active a {
   color: white;

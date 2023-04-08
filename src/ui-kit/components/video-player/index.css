@@ -4,7 +4,7 @@
 }
 
 .v-indicator {
-  @apply rounded;
+  @apply fcr-rounded;
   height: 1px;
   width: 6px;
   background-color: #357bf6;

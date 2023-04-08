@@ -53,7 +53,7 @@
 
 .breakout-room .rounded-btn,
 .breakout-room .ripple-circle {
-  @apply rounded !important;
+  @apply fcr-rounded !important;
 }
 
 .breakout-room .fcr-btn-secondary {

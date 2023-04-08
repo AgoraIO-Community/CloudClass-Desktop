@@ -54,5 +54,5 @@
 
 .fcr-video-grid-settings .fcr-video-grid-settings-dropdown .fcr-video-grid-settings-inner-el:hover {
   background: #eff4fe;
-  @apply bg-brand fcr-text-level1;
+  @apply fcr-bg-brand fcr-text-level1;
 }

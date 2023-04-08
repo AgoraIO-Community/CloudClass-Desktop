@@ -64,7 +64,7 @@
   text-align: center;
 }
 .screen-share-dialog-container-tips > span:first-child {
-  @apply text-error;
+  @apply fcr-text-error;
 
   padding-right: 4px;
 }

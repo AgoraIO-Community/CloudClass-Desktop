@@ -124,7 +124,7 @@
 }
 
 .cloud-btn-group {
-  @apply border-t  fcr-border-solid fcr-border-divider;
+  @apply fcr-border-t  fcr-border-solid fcr-border-divider;
   position: absolute;
   bottom: 0;
   left: 0;

@@ -218,7 +218,7 @@ body,
 }
 
 .rtm-chat-4.rtm-platform-pc .small-class-chat-fixed {
-  @apply fcr-border  fcr-border-solid fcr-border-divider !important;
+  @apply fcr-border fcr-border-solid fcr-border-divider !important;
   width: 300px;
   height: 500px;
 }
@@ -241,5 +241,5 @@ body,
 }
 
 .fcr-room-bg {
-  @apply bg-foreground;
+  @apply fcr-bg-foreground;
 }
