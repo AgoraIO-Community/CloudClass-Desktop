@@ -27,6 +27,7 @@ import {
 export class WidgetUIStore extends EduUIStoreBase {
   private _disposers: (Lambda | IReactionDisposer)[] = [];
   private _registeredWidgets: Record<string, typeof AgoraWidgetBase> = {};
+  private _viewportResizeObserver?: ResizeObserver;
   @observable
   private _widgetInstances: Record<string, AgoraWidgetBase> = {};
 
@@ -290,6 +291,24 @@ export class WidgetUIStore extends EduUIStoreBase {
     return widgets;
   }
 
+  private _notifyViewportChange() {
+    this.widgetInstanceList.forEach((instance) => {
+      const clientRect = document
+        .querySelector(`.${this.shareUIStore.classroomViewportClassName}`)
+        ?.getBoundingClientRect();
+
+      if (clientRect) {
+        this.logger.info('notify to all widgets that viewport boundaries changed');
+        instance.onViewportBoundaryUpdate(clientRect);
+      } else {
+        this.logger.warn(
+          'cannot get viewport boudnaries by classname:',
+          this.shareUIStore.classroomViewportClassName,
+        );
+      }
+    });
+  }
+
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
 
@@ -360,9 +379,13 @@ export class WidgetUIStore extends EduUIStoreBase {
         },
       ),
     );
+    this._viewportResizeObserver = this.shareUIStore.addViewportResizeObserver(
+      this._notifyViewportChange,
+    );
   }
 
   onDestroy() {
+    this._viewportResizeObserver?.disconnect();
     this.classroomStore.widgetStore.removeWidgetStateListener(this._stateListener);
     this._disposers.forEach((d) => d());
     this._disposers = [];
