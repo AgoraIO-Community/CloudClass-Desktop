@@ -1,625 +1,497 @@
 import { CourseWareList } from 'agora-edu-core';
 
-const akasuoCourseWareList = [
-  {
-    initOpen: true,
-    resourceName: 'Dynamic_Comparing Animals (1)_1',
-    resourceUuid: '82320729_122565',
-    ext: 'pptx',
-    url: '',
-    conversion: {
-      type: 'dynamic',
-    },
-    size: 14,
-    updateTime: 0,
-    scenes: [
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/1.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 1',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/2.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 2',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/3.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 3',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/4.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 4',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/5.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 5',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/6.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 6',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/7.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 7',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/8.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 8',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/9.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 9',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/10.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 10',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/11.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 11',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/12.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 12',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/13.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 13',
-      },
-      {
-        ppt: {
-          src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/14.slide',
-          width: 1890,
-          height: 1058,
-        },
-        name: 'Scene 14',
-      },
-    ],
-    convert: true,
-    taskUuid: '288e965056d811eba09c951e24c96d50',
-    taskToken: null,
-    taskProgress: {
-      totalPageSize: 14,
-      convertedPageSize: 14,
-      convertedPercentage: 100,
-      convertedFileList: [
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/1.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 1',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/2.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 2',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/3.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 3',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/4.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 4',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/5.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 5',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/6.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 6',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/7.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 7',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/8.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 8',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/9.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 9',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/10.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 10',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/11.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 11',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/12.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 12',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/13.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 13',
-        },
-        {
-          ppt: {
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/288e965056d811eba09c951e24c96d50/14.slide',
-            width: 1890,
-            height: 1058,
-          },
-          name: 'Scene 14',
-        },
-      ],
-    },
-  },
-  {
-    initOpen: true,
-    resourceName: 'Static_Comparing Animals (1)_2',
-    resourceUuid: '82320729_122566',
-    ext: 'pdf',
-    url: '',
-    conversion: {
-      type: 'static',
-    },
-    size: 21,
-    updateTime: 0,
-    scenes: [
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/1.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 1',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/2.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 2',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/3.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 3',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/4.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 4',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/5.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 5',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/6.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 6',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/7.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 7',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/8.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 8',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/9.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 9',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/10.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 10',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/11.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 11',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/12.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 12',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/13.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 13',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/14.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 14',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/15.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 15',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/16.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 16',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/17.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 17',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/18.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 18',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/19.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 19',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/20.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 20',
-      },
-      {
-        ppt: {
-          src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/21.jpeg',
-          width: 1133,
-          height: 634,
-        },
-        name: 'Scene 21',
-      },
-    ],
-    convert: true,
-    taskUuid: '0c40e220e48a11ea90665b6e81485f25',
-    taskToken: null,
-    taskProgress: {
-      totalPageSize: 21,
-      convertedPageSize: 21,
-      convertedPercentage: 100,
-      convertedFileList: [
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/1.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 1',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/2.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 2',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/3.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 3',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/4.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 4',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/5.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 5',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/6.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 6',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/7.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 7',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/8.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 8',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/9.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 9',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/10.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 10',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/11.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 11',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/12.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 12',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/13.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 13',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/14.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 14',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/15.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 15',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/16.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 16',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/17.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 17',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/18.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 18',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/19.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 19',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/20.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 20',
-        },
-        {
-          ppt: {
-            src: 'https://agoracategroy.acadsoc.com.cn/staticConvert/0c40e220e48a11ea90665b6e81485f25/21.jpeg',
-            width: 1133,
-            height: 634,
-          },
-          name: 'Scene 21',
-        },
-      ],
-    },
-  },
-];
-
 export default [
   {
-    resourceUuid: '20c2281deddefa96a97fe16b3628b456',
-    resourceName: 'Agora Flexible Classroom v2.1 Demo Instructions.pptx',
+    resourceUuid: 'fb5042e5be454a18b58c167d43f5ea9b',
+    size: 14774511,
+    ext: 'pdf',
+    url: 'https://ad-apaas.obs.cn-east-2.myhuaweicloud.com:443/cloud-disk/f488493d1886435f963dfb3d95984fd4/b1c77b0d29a645e9a505fd944fab21041/fb5042e5be454a18b58c167d43f5ea9b.pdf',
+    parentResourceUuid: 'root',
+    type: 1,
+    convertType: 1,
+    resourceName: 'L28pdf.pdf',
+    updateTime: 1681874829027,
+    taskUuid: '4bb03e5058b649b3a47b2232407e4ac0',
+    taskToken:
+      'NETLESSTASK_YWs9VkJmMjI5ZEQtVFFQQW9YZiZub25jZT0xNjgxODc0NzgyNTA0MDAmcm9sZT0wJnNpZz1iYTk4Njg1YjE2M2ZhNDZkMThjYzM2YTJiYjY3NzM5N2ZkMGE3YzUwYTQyYjY5OTA4N2JhYzRiZDEyZWVlNWQ2JnV1aWQ9NGJiMDNlNTA1OGI2NDliM2E0N2IyMjMyNDA3ZTRhYzA',
+    conversion: {
+      type: 'static',
+      preview: true,
+      scale: 1.2,
+      outputFormat: 'png',
+      canvasVersion: true,
+    },
+    taskProgress: {
+      totalPageSize: 0,
+      convertedPageSize: 0,
+      convertedFileList: [],
+      currentStep: '',
+      status: 'Finished',
+      convertedPercentage: 100,
+      images: {
+        '1': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/1.png',
+        },
+        '2': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/2.png',
+        },
+        '3': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/3.png',
+        },
+        '4': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/4.png',
+        },
+        '5': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/5.png',
+        },
+        '6': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/6.png',
+        },
+        '7': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/7.png',
+        },
+        '8': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/8.png',
+        },
+        '9': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/9.png',
+        },
+        '10': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/10.png',
+        },
+        '11': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/11.png',
+        },
+        '12': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/12.png',
+        },
+        '13': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/13.png',
+        },
+        '14': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/14.png',
+        },
+        '15': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/15.png',
+        },
+        '16': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/16.png',
+        },
+        '17': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/17.png',
+        },
+        '18': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/18.png',
+        },
+        '19': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/19.png',
+        },
+        '20': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/20.png',
+        },
+        '21': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/21.png',
+        },
+        '22': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/22.png',
+        },
+        '23': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/23.png',
+        },
+        '24': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/24.png',
+        },
+        '25': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/25.png',
+        },
+        '26': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/26.png',
+        },
+        '27': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/27.png',
+        },
+        '28': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/28.png',
+        },
+        '29': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/4bb03e5058b649b3a47b2232407e4ac0/29.png',
+        },
+      },
+    },
+    version: 4,
+  },
+  {
+    resourceUuid: '805b16fee0ad46d0812039ac2cdf2a7c',
+    size: 2796544,
+    ext: 'doc',
+    url: 'https://ad-apaas.obs.cn-east-2.myhuaweicloud.com:443/cloud-disk/f488493d1886435f963dfb3d95984fd4/b1c77b0d29a645e9a505fd944fab21041/805b16fee0ad46d0812039ac2cdf2a7c.doc',
+    parentResourceUuid: 'root',
+    type: 1,
+    convertType: 1,
+    resourceName: 'Mac VPN配置doc.doc',
+    updateTime: 1681874800951,
+    taskUuid: '0e3b020e933942fcb7f5cbd3cbffe243',
+    taskToken:
+      'NETLESSTASK_YWs9VkJmMjI5ZEQtVFFQQW9YZiZub25jZT0xNjgxODc0NzM3OTcyMDAmcm9sZT0wJnNpZz01ODNiZjhlMGYyNzRlZGRlNjc0OGJlZWJmMTM5YzZiMDhlYjc4ODdiYzY0OTgzNmIwZmE1YWE1NDI0YWM1NmM5JnV1aWQ9MGUzYjAyMGU5MzM5NDJmY2I3ZjVjYmQzY2JmZmUyNDM',
+    conversion: {
+      type: 'static',
+      preview: true,
+      scale: 1.2,
+      outputFormat: 'png',
+      canvasVersion: true,
+    },
+    taskProgress: {
+      totalPageSize: 0,
+      convertedPageSize: 0,
+      convertedFileList: [],
+      currentStep: '',
+      status: 'Finished',
+      convertedPercentage: 100,
+      images: {
+        '1': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/0e3b020e933942fcb7f5cbd3cbffe243/1.png',
+        },
+        '2': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/0e3b020e933942fcb7f5cbd3cbffe243/2.png',
+        },
+        '3': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/0e3b020e933942fcb7f5cbd3cbffe243/3.png',
+        },
+        '4': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/0e3b020e933942fcb7f5cbd3cbffe243/4.png',
+        },
+        '5': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/0e3b020e933942fcb7f5cbd3cbffe243/5.png',
+        },
+        '6': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/0e3b020e933942fcb7f5cbd3cbffe243/6.png',
+        },
+      },
+    },
+    version: 4,
+  },
+  {
+    resourceUuid: 'e03e104bded2415fbb29deab88475101',
+    size: 27112448,
+    ext: 'ppt',
+    url: 'https://ad-apaas.obs.cn-east-2.myhuaweicloud.com:443/cloud-disk/f488493d1886435f963dfb3d95984fd4/b1c77b0d29a645e9a505fd944fab21041/e03e104bded2415fbb29deab88475101.ppt',
+    parentResourceUuid: 'root',
+    type: 1,
+    convertType: 2,
+    resourceName: 'L28ppt.ppt',
+    updateTime: 1681874799864,
+    taskUuid: '2ec67487ceb24ea287ac659fba383177',
+    taskToken:
+      'NETLESSTASK_YWs9VkJmMjI5ZEQtVFFQQW9YZiZub25jZT0xNjgxODc0Nzk5NjkyMDAmcm9sZT0wJnNpZz05OTc0MWI4OTYzMzFlZmUzMDk4ZjJjZmMzYjNlMjIwY2RhYTQyYzI5OTdhYWFlOTI5NTEyYTdkMzI1NDc2YzQ0JnV1aWQ9MmVjNjc0ODdjZWIyNGVhMjg3YWM2NTlmYmEzODMxNzc',
+    conversion: {
+      type: 'static',
+      preview: true,
+      scale: 1.2,
+      outputFormat: 'png',
+      canvasVersion: true,
+    },
+    taskProgress: {
+      totalPageSize: 0,
+      convertedPageSize: 0,
+      convertedFileList: [],
+      currentStep: '',
+      status: 'Finished',
+      convertedPercentage: 100,
+      images: {
+        '1': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/1.png',
+        },
+        '2': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/2.png',
+        },
+        '3': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/3.png',
+        },
+        '4': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/4.png',
+        },
+        '5': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/5.png',
+        },
+        '6': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/6.png',
+        },
+        '7': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/7.png',
+        },
+        '8': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/8.png',
+        },
+        '9': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/9.png',
+        },
+        '10': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/10.png',
+        },
+        '11': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/11.png',
+        },
+        '12': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/12.png',
+        },
+        '13': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/13.png',
+        },
+        '14': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/14.png',
+        },
+        '15': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/15.png',
+        },
+        '16': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/16.png',
+        },
+        '17': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/17.png',
+        },
+        '18': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/18.png',
+        },
+        '19': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/19.png',
+        },
+        '20': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/20.png',
+        },
+        '21': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/21.png',
+        },
+        '22': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/22.png',
+        },
+        '23': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/23.png',
+        },
+        '24': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/24.png',
+        },
+        '25': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/25.png',
+        },
+        '26': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/26.png',
+        },
+        '27': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/27.png',
+        },
+        '28': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/28.png',
+        },
+        '29': {
+          width: 1152,
+          height: 648,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/2ec67487ceb24ea287ac659fba383177/29.png',
+        },
+      },
+    },
+    version: 4,
+  },
+  {
+    resourceUuid: '5783d77fb4814ddbabde5895bfbd7084',
+    size: 2756088,
+    ext: 'docx',
+    url: 'https://ad-apaas.obs.cn-east-2.myhuaweicloud.com:443/cloud-disk/f488493d1886435f963dfb3d95984fd4/b1c77b0d29a645e9a505fd944fab21041/5783d77fb4814ddbabde5895bfbd7084.docx',
+    parentResourceUuid: 'root',
+    type: 1,
+    convertType: 1,
+    resourceName: 'Mac VPN配docx.docx',
+    updateTime: 1681874795505,
+    taskUuid: '1ef4843573474dfba3f4ee84813e883c',
+    taskToken:
+      'NETLESSTASK_YWs9VkJmMjI5ZEQtVFFQQW9YZiZub25jZT0xNjgxODc0NzM2MjM3MDAmcm9sZT0wJnNpZz1hZDgxNGU1OTg0Zjc3ZGVlNWQxYWNiMmRjMzQ4NGFmNjI5MjJkZTU2MWVhNmU2NmRiNWRhNmQzNmE5ZjI3ZGM4JnV1aWQ9MWVmNDg0MzU3MzQ3NGRmYmEzZjRlZTg0ODEzZTg4M2M',
+    conversion: {
+      type: 'static',
+      preview: true,
+      scale: 1.2,
+      outputFormat: 'png',
+      canvasVersion: true,
+    },
+    taskProgress: {
+      totalPageSize: 0,
+      convertedPageSize: 0,
+      convertedFileList: [],
+      currentStep: '',
+      status: 'Finished',
+      convertedPercentage: 100,
+      images: {
+        '1': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/1ef4843573474dfba3f4ee84813e883c/1.png',
+        },
+        '2': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/1ef4843573474dfba3f4ee84813e883c/2.png',
+        },
+        '3': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/1ef4843573474dfba3f4ee84813e883c/3.png',
+        },
+        '4': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/1ef4843573474dfba3f4ee84813e883c/4.png',
+        },
+        '5': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/1ef4843573474dfba3f4ee84813e883c/5.png',
+        },
+        '6': {
+          width: 993,
+          height: 1404,
+          url: 'https://convertcdn-sg.netless.link/staticConvert/1ef4843573474dfba3f4ee84813e883c/6.png',
+        },
+      },
+    },
+    version: 4,
+  },
+  {
+    resourceUuid: 'f1d6f34819934f40b61ac38469be8503',
+    size: 21547008,
     ext: 'pptx',
-    size: 8478024,
-    url: 'https://agora-adc-artifacts.oss-cn-beijing.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/test02090054/20c2281deddefa96a97fe16b3628b456.pptx',
-    updateTime: 1646988472045,
-    taskUuid: 'b81275a0a11711ecb94f39bd66b92986',
+    url: 'https://ad-apaas.obs.cn-east-2.myhuaweicloud.com:443/cloud-disk/f488493d1886435f963dfb3d95984fd4/b1c77b0d29a645e9a505fd944fab21041/f1d6f34819934f40b61ac38469be8503.pptx',
+    parentResourceUuid: 'root',
+    type: 1,
+    convertType: 1,
+    resourceName: 'apaasPPT_media.pptx',
+    updateTime: 1681874792033,
+    taskUuid: '5168474648d640b4a94e878c7736547a',
+    taskToken:
+      'NETLESSTASK_YWs9VkJmMjI5ZEQtVFFQQW9YZiZub25jZT0xNjgxODc0NzYxMTY0MDAmcm9sZT0wJnNpZz03MDFmZTFhYzA5ZjFlMzBlYzIzMDEwNDIyODM5YjIwYzdlZTYzYmViNzE4MGQ3NzE1ZDM5Y2VlOTFhZDBhMmE1JnV1aWQ9NTE2ODQ3NDY0OGQ2NDBiNGE5NGU4NzhjNzczNjU0N2E',
     conversion: {
       type: 'dynamic',
       preview: true,
@@ -628,156 +500,147 @@ export default [
       canvasVersion: true,
     },
     taskProgress: {
+      totalPageSize: 0,
+      convertedPageSize: 0,
+      convertedFileList: [],
+      currentStep: '',
       status: 'Finished',
-      totalPageSize: 14,
-      convertedPageSize: 14,
       convertedPercentage: 100,
+      prefix: 'https://convertcdn-sg.netless.link/dynamicConvert',
+      previews: {
+        '1': 'https://convertcdn-sg.netless.link/dynamicConvert/5168474648d640b4a94e878c7736547a/preview/1.png',
+        '2': 'https://convertcdn-sg.netless.link/dynamicConvert/5168474648d640b4a94e878c7736547a/preview/2.png',
+        '3': 'https://convertcdn-sg.netless.link/dynamicConvert/5168474648d640b4a94e878c7736547a/preview/3.png',
+        '4': 'https://convertcdn-sg.netless.link/dynamicConvert/5168474648d640b4a94e878c7736547a/preview/4.png',
+        '5': 'https://convertcdn-sg.netless.link/dynamicConvert/5168474648d640b4a94e878c7736547a/preview/5.png',
+      },
+      note: 'https://convertcdn-sg.netless.link/dynamicConvert/5168474648d640b4a94e878c7736547a/jsonOutput/note.json',
+    },
+    version: 4,
+  },
+  {
+    resourceUuid: '19cacef5ce4a4e1285e5b390bd603ee6',
+    size: 103960,
+    ext: 'pdf',
+    url: 'https://ad-apaas.obs.cn-east-2.myhuaweicloud.com:443/cloud-disk/47b7535dcb9a4bb4aa592115266eae98/d601b463c6bf1e014ebb59350ca7dd4f1/19cacef5ce4a4e1285e5b390bd603ee6.pdf',
+    parentResourceUuid: 'root',
+    type: 1,
+    convertType: 2,
+    resourceName: '超级小班分组逻辑.pdf',
+    updateTime: 1681980685437,
+    taskUuid: '58742dacb2014209b05f8c93ae1cf663',
+    taskToken:
+      'NETLESSTASK_YWs9VkJmMjI5ZEQtVFFQQW9YZiZub25jZT0xNjgxOTgwNjg1NDA4MDAmcm9sZT0wJnNpZz0yZGMzYTljZjlmZDBlZWJiYmQzNTY1Mjg4ZTdjMGY2NGZlZDMwODM1ZDc4ZjZiM2I4YTZlYjE2NDQ1YzlhZDNiJnV1aWQ9NTg3NDJkYWNiMjAxNDIwOWIwNWY4YzkzYWUxY2Y2NjM',
+    conversion: {
+      type: 'static',
+      preview: true,
+      scale: 1.2,
+      outputFormat: 'png',
+    },
+    taskProgress: {
+      totalPageSize: 0,
+      convertedPageSize: 0,
       convertedFileList: [
         {
           ppt: {
-            width: 1280,
-            height: 720,
+            width: 734,
+            height: 950,
             preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/1.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/1.slide',
+              'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/1.png',
+            src: 'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/1.png',
           },
           name: '1',
         },
         {
           ppt: {
-            width: 1280,
-            height: 720,
+            width: 734,
+            height: 950,
             preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/2.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/2.slide',
+              'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/2.png',
+            src: 'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/2.png',
           },
           name: '2',
         },
         {
           ppt: {
-            width: 1280,
-            height: 720,
+            width: 734,
+            height: 950,
             preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/3.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/3.slide',
+              'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/3.png',
+            src: 'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/3.png',
           },
           name: '3',
         },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/4.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/4.slide',
-          },
-          name: '4',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/5.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/5.slide',
-          },
-          name: '5',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/6.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/6.slide',
-          },
-          name: '6',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/7.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/7.slide',
-          },
-          name: '7',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/8.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/8.slide',
-          },
-          name: '8',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/9.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/9.slide',
-          },
-          name: '9',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/10.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/10.slide',
-          },
-          name: '10',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/11.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/11.slide',
-          },
-          name: '11',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/12.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/12.slide',
-          },
-          name: '12',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/13.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/13.slide',
-          },
-          name: '13',
-        },
-        {
-          ppt: {
-            width: 1280,
-            height: 720,
-            preview:
-              'https://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/preview/14.png',
-            src: 'pptx://convertcdn.netless.link/dynamicConvert/b81275a0a11711ecb94f39bd66b92986/14.slide',
-          },
-          name: '14',
-        },
       ],
-      currentStep: 'Packaging',
-      prefix: 'https://convertcdn.netless.link/dynamicConvert',
+      currentStep: '',
+      status: 'Finished',
+      convertedPercentage: 100,
+      images: {
+        '1': {
+          width: 734,
+          height: 950,
+          url: 'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/1.png',
+        },
+        '2': {
+          width: 734,
+          height: 950,
+          url: 'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/2.png',
+        },
+        '3': {
+          width: 734,
+          height: 950,
+          url: 'https://convertcdn.netless.link/staticConvert/58742dacb2014209b05f8c93ae1cf663/3.png',
+        },
+      },
     },
-    initOpen: true,
+    version: 4,
   },
-  ...akasuoCourseWareList,
+  {
+    resourceUuid: 'd014aeb2ca29408196b1277fab123a79',
+    size: 8478024,
+    ext: 'pptx',
+    url: 'https://ad-apaas.obs.cn-east-2.myhuaweicloud.com:443/cloud-disk/f488493d1886435f963dfb3d95984fd4/d601b463c6bf1e014ebb59350ca7dd4f1/d014aeb2ca29408196b1277fab123a79.pptx',
+    parentResourceUuid: 'root',
+    type: 1,
+    convertType: 2,
+    resourceName: 'Agora Flexible Classroom v2.1 Demo Instructions.pptx',
+    updateTime: 1681887281190,
+    taskUuid: '7868d4cff16c4065866aa2e9cff5ed86',
+    taskToken:
+      'NETLESSTASK_YWs9VkJmMjI5ZEQtVFFQQW9YZiZub25jZT0xNjgxODg3MjgxMDMxMDAmcm9sZT0wJnNpZz03ZGZjOTBhZDhhMGU1N2U1YzQwMTcyYTdjMTUwODNlYmY0MzQ3YzdjNTAwNDM2MTA0NzdjYjM1ZTU0NzYyZmJlJnV1aWQ9Nzg2OGQ0Y2ZmMTZjNDA2NTg2NmFhMmU5Y2ZmNWVkODY',
+    conversion: {
+      type: 'dynamic',
+      preview: true,
+      scale: 1.2,
+      outputFormat: 'png',
+      canvasVersion: true,
+    },
+    taskProgress: {
+      totalPageSize: 0,
+      convertedPageSize: 0,
+      convertedFileList: [],
+      currentStep: '',
+      status: 'Finished',
+      convertedPercentage: 100,
+      prefix: 'https://convertcdn-sg.netless.link/dynamicConvert',
+      previews: {
+        '1': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/1.png',
+        '2': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/2.png',
+        '3': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/3.png',
+        '4': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/4.png',
+        '5': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/5.png',
+        '6': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/6.png',
+        '7': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/7.png',
+        '8': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/8.png',
+        '9': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/9.png',
+        '10': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/10.png',
+        '11': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/11.png',
+        '12': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/12.png',
+        '13': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/13.png',
+        '14': 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/preview/14.png',
+      },
+      note: 'https://convertcdn-sg.netless.link/dynamicConvert/7868d4cff16c4065866aa2e9cff5ed86/jsonOutput/note.json',
+    },
+    version: 4,
+  },
 ] as CourseWareList;
