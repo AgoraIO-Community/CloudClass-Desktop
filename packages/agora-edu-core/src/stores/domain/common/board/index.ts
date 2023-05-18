@@ -329,7 +329,7 @@ export class BoardStore extends EduStoreBase {
         /**
          * 老师第一次登陆，清空白板，收回白板，记录标识位
          */
-        this.room.removeScenes('/');
+        this.room.cleanCurrentScene(true);
         this.room.setGlobalState({
           grantUsers: [],
           teacherFirstLogin: true,
