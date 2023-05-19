@@ -329,7 +329,15 @@ export class BoardStore extends EduStoreBase {
         /**
          * 老师第一次登陆，清空白板，收回白板，记录标识位
          */
-        this.room.cleanCurrentScene(false);
+        this.room.removeScenes('/');
+
+        setTimeout(() => {
+          // @ts-ignore
+          Object.keys(this._windowManager?.apps).forEach((appId) => {
+            this._windowManager?.closeApp(appId);
+          });
+        }, 500);
+
         this.room.setGlobalState({
           grantUsers: [],
           teacherFirstLogin: true,
@@ -417,7 +425,7 @@ export class BoardStore extends EduStoreBase {
     if (resource.conversion.canvasVersion) {
       const url = resource.taskProgress?.prefix;
       // 判断是否为带 canvasVersion 参数的转换文件
-      await this.windowManager.addApp({
+      const appid = await this.windowManager.addApp({
         kind: 'Slide',
         options: {
           scenePath: `/ppt${scenePath}`,
@@ -428,8 +436,10 @@ export class BoardStore extends EduStoreBase {
           url,
         },
       });
+
+      console.log('appid', appid);
     } else {
-      await this.windowManager.addApp({
+      const appid = await this.windowManager.addApp({
         kind: BuiltinApps.DocsViewer,
         options: {
           scenePath,
@@ -437,6 +447,7 @@ export class BoardStore extends EduStoreBase {
           scenes: resource.scenes,
         },
       });
+      console.log('appid', appid);
     }
   }
 
