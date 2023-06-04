@@ -1,3 +1,4 @@
+## This release is Only for ASIA region
 > _其他语言版本：[简体中文](README.zh.md)_
 
 ## CloudClass Desktop
