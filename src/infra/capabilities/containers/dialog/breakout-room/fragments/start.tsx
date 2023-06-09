@@ -16,11 +16,11 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
 
   const { createGroups, numberToBeAssigned, MAX_USER_COUNT } = groupUIStore;
 
-  const [groupNum, setGroupNum] = useState(1);
+  const [groupNum, setGroupNum] = useState<number | undefined>(1);
 
   const [type, setType] = useState(GroupMethod.AUTO);
 
-  const perGroup = Math.floor(numberToBeAssigned / groupNum);
+  const perGroup = groupNum ? Math.floor(numberToBeAssigned / groupNum) : 0;
   const transI18n = useI18n();
 
   return (
@@ -31,7 +31,11 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
         <InputNumber
           value={groupNum}
           onChange={(num) => {
-            setGroupNum(num);
+            if (typeof num === 'number') {
+              setGroupNum(num);
+            } else {
+              setGroupNum(undefined);
+            }
           }}
           min={1}
           max={20}
@@ -98,8 +102,10 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
           size="xs"
           className="rounded-btn"
           onClick={() => {
-            createGroups(type, groupNum);
-            onNext({ groupNum });
+            if (groupNum) {
+              createGroups(type, groupNum);
+              onNext({ groupNum });
+            }
           }}>
           {transI18n('breakout_room.create_submit')}
         </Button>
