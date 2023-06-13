@@ -69,13 +69,10 @@
 # ========== Guidelines End=============
 # --------------------------------------------------------------------------------------------------------------------------
 
-echo Package_Publish: $Package_Publish
-echo is_tag_fetch: $is_tag_fetch
-echo arch: $arch
-echo source_root: %source_root%
-echo output: /tmp/jenkins/${project}_out
-echo build_date: $build_date
-echo build_time: $build_time
-echo release_version: $release_version
-echo short_version: $short_version
-echo pwd: `pwd`
+. ../apaas-cicd-web/utilities/tools.sh
+. ../apaas-cicd-web/build/$ci_script_version/dependency.sh
+. ../apaas-cicd-web/build/$ci_script_version/build.sh
+
+
+
+build_lib
