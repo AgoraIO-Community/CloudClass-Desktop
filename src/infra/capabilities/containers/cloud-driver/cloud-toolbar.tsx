@@ -1,5 +1,5 @@
 import { Search, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export type CloudToolbarProps = {
   /**
@@ -26,7 +26,7 @@ export default function CloudToolbar({
   keyword,
   onKeywordChange,
   showRefresh = true,
-  onRefresh = () => { },
+  onRefresh = () => {},
 }: CloudToolbarProps) {
   const transI18n = useI18n();
   return (

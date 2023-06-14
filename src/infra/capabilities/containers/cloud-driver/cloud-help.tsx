@@ -1,6 +1,6 @@
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { FileTypeSvgColor } from '@classroom/infra/stores/common/cloud-drive';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { useMemo } from 'react';
 
 export default function CloudHelp() {

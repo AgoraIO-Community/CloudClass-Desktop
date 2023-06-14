@@ -1,5 +1,5 @@
 import React from 'react';
-import { FcrTheme, ThemeProvider } from 'agora-common-libs/lib/ui';
+import { FcrTheme, ThemeProvider } from 'agora-common-libs';
 
 const theme: FcrTheme = {
   /**
@@ -73,7 +73,7 @@ const theme: FcrTheme = {
   v2Shadow2: '',
   v2Shadow3: '',
   v2Essential: '',
-  v2EssentialInverse: ''
+  v2EssentialInverse: '',
 };
 
 export const jumpToLine = (str: string) => {

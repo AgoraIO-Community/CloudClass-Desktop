@@ -8,10 +8,13 @@ import { WindowID } from '@classroom/infra/api';
 import './index.css';
 import { DevicePlatform } from 'agora-edu-core';
 import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
-import { ControlState, RemoteControlBarUIParams } from '@classroom/infra/stores/common/remote-control/type';
+import {
+  ControlState,
+  RemoteControlBarUIParams,
+} from '@classroom/infra/stores/common/remote-control/type';
 import { EduUserStruct } from 'agora-edu-core';
 import { Select, SvgIcon, Tooltip, SvgIconEnum } from '@classroom/ui-kit';
-import { transI18n, useI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n, useI18n } from 'agora-common-libs';
 
 type Props = {
   canReSelectScreen?: boolean;

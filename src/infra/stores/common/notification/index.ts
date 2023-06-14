@@ -16,7 +16,7 @@ import {
 import { ToastFilter } from '@classroom/infra/utils/toast-filter';
 import { getEduErrorMessage } from '@classroom/infra/utils/error';
 import { Duration } from 'dayjs/plugin/duration';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 
 export class NotificationUIStore extends EduUIStoreBase {
   private _notificationTask?: Scheduler.Task;

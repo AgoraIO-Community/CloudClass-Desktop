@@ -4,7 +4,7 @@ import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import './index.css';
 import { useMounted } from '@classroom/ui-kit/utilities/hooks';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { themeContext } from 'agora-common-libs/lib/ui';
+import { themeContext } from 'agora-common-libs';
 export { Pens } from './pens';
 export { ToolCabinet } from './tool-cabinet';
 export { BoardCleaners } from './board-cleaners';

@@ -1,7 +1,7 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { Pens, SvgIconEnum } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export type PensContainerProps = {
   onClick: (pen: string) => void;

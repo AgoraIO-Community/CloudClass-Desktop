@@ -26,13 +26,13 @@ import {
   headerEnabled,
   cameraSwitchEnabled,
   microphoneSwitchEnabled,
-} from 'agora-common-libs/lib/ui';
+} from 'agora-common-libs';
 import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
 import ClipboardJS from 'clipboard';
 import { AgoraEduSDK } from '@classroom/infra/api';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 import { useClickAnywhere } from '@classroom/infra/hooks';
 
 const SignalContent = observer(() => {

@@ -7,7 +7,7 @@ import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import { Footer } from './pretest-footer';
 import { PretestVideo } from './pretest-video';
 import { PretestVoice } from './pretest-audio';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 import { PretestStage } from './pretest-stage';
 
 export interface PretestProps extends BaseProps {

@@ -11,7 +11,7 @@ import {
 import { AGError, AGErrorWrapper, bound, Lodash, Scheduler } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { SvgIconEnum } from '@classroom/ui-kit';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { EduUIStoreBase } from '../base';
 import {
   conversionOption,

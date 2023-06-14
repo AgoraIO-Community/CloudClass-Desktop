@@ -1,5 +1,5 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { AgoraWidgetBase } from 'agora-common-libs/lib/widget';
+import { AgoraWidgetBase } from 'agora-common-libs';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';

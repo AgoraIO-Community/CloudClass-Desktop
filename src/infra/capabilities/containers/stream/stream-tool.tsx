@@ -17,7 +17,7 @@ import {
   teacherResetPosEnabled,
   teacherStreamToolsPanelEnabled,
   visibilityListItemControl,
-} from 'agora-common-libs/lib/ui';
+} from 'agora-common-libs';
 
 export const StreamPlayerToolbar: FC<{
   visible: boolean;

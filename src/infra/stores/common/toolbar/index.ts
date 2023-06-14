@@ -38,7 +38,7 @@ import {
 } from './type';
 import { rgbToHexColor } from '../../../utils/board-utils';
 import { conversionOption, fileExt2ContentType } from '../cloud-drive/helper';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { LayoutMaskCode } from '../type';
 
 @Log.attach({ proxyMethods: false })

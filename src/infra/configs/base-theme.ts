@@ -1,4 +1,4 @@
-import { FcrMultiThemes } from 'agora-common-libs/lib/ui';
+import { FcrMultiThemes } from 'agora-common-libs';
 
 class FcrMultiThemesImpl implements FcrMultiThemes {
   get light() {

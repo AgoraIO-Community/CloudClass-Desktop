@@ -7,7 +7,7 @@ import { Field } from './form-field';
 import { EduRteEngineConfig, EduRteRuntimePlatform } from 'agora-edu-core';
 import { getAssetURL } from '@classroom/infra/utils';
 import pretestAudio from './assets/pretest-audio.mp3';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export const PretestVoice = observer(() => {
   return (

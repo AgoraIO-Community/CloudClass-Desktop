@@ -3,7 +3,7 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { OverlayWrap } from '../overlay-wrap';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
-import { themeContext } from 'agora-common-libs/lib/ui';
+import { themeContext } from 'agora-common-libs';
 export interface ModalProps {
   /** 标题 */
   title?: string | React.ReactNode;
@@ -35,16 +35,13 @@ export interface ModalProps {
   id?: string;
 }
 
-
 export const Modal: FC<ModalProps> = ({
   title = 'modal title',
   closable = false,
   footer,
   style,
-  onOk = (e: React.MouseEvent<HTMLElement>) => {
-  },
-  onCancel = (e: React.MouseEvent<HTMLElement>) => {
-  },
+  onOk = (e: React.MouseEvent<HTMLElement>) => {},
+  onCancel = (e: React.MouseEvent<HTMLElement>) => {},
   children,
   className,
   component,

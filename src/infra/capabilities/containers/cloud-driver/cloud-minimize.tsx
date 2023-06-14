@@ -2,8 +2,7 @@ import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
 import { CircleLoading, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
-import { useI18n } from 'agora-common-libs/lib/i18n';
-
+import { useI18n } from 'agora-common-libs';
 
 export default observer(function CloudMinimize() {
   const { cloudUIStore } = useStore();

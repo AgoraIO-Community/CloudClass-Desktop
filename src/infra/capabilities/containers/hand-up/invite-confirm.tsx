@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { Button, Modal } from '@classroom/ui-kit';
 import './invite-confirm.css';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 interface InviteConfirmContainerProps {
   id: string;

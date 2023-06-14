@@ -22,7 +22,7 @@ import {
   iterateMap,
 } from 'agora-edu-core';
 import { BoardGrantState } from '@classroom/ui-kit';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 
 export class RosterUIStore extends EduUIStoreBase {
   /**

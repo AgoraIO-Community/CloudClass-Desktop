@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 import './index.css';
 
 const ScreenShareLocalTrackPlayer = observer(() => {

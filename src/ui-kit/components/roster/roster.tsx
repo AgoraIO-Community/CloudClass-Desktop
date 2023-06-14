@@ -5,7 +5,7 @@ import { SvgIconEnum, SvgImg } from '../svg-img';
 import { Col, Table, TableHeader } from '../table';
 import { CarouselSetting } from './carousel-setting';
 import { RosterProps } from './';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 import { useColumns } from './hooks';
 import { OverlayWrap } from '../overlay-wrap';
 import { useDraggableDefaultCenterPosition } from '../../utilities/hooks';

@@ -24,7 +24,7 @@ import {
 import dayjs from 'dayjs';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction } from 'mobx';
 import { SvgIconEnum } from '@classroom/ui-kit';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { NetworkStateColors } from '@classroom/ui-kit/utilities/state-color';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share';

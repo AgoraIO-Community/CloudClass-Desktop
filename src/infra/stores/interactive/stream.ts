@@ -8,7 +8,7 @@ import {
 import { AGError, AgoraRteVideoSourceType, Log } from 'agora-rte-sdk';
 import { action, computed, observable, reaction } from 'mobx';
 import { computedFn } from 'mobx-utils';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { SvgIconEnum } from '@classroom/ui-kit';
 import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
 import { StreamUIStore } from '../common/stream';

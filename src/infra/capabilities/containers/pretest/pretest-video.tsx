@@ -14,8 +14,8 @@ import React, {
   PropsWithChildren,
 } from 'react';
 import { CameraPlaceHolder, SvgIconEnum, SvgImg, Tooltip } from '@classroom/ui-kit';
-import { themeContext } from 'agora-common-libs/lib/ui';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { themeContext } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs';
 import { ASlider } from '@classroom/ui-kit/components/slider';
 import { Field } from './form-field';
 import './index.css';

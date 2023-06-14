@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
 import { SvgImg } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../config';
 
 export const Chat = observer(function Chat() {

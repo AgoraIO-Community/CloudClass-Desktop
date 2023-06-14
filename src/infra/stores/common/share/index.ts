@@ -5,7 +5,7 @@ import { ChannelType } from '@classroom/infra/utils/ipc-channels';
 import { AGError, AGRteErrorCode, bound, Lodash, Log, Logger, Scheduler } from 'agora-rte-sdk';
 import { action, observable, runInAction, computed } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { getRootDimensions } from '../layout/helper';
 import { ConfirmDialogAction, OrientationEnum } from '../type';
 import { EduClassroomConfig } from 'agora-edu-core';

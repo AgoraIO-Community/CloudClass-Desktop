@@ -28,7 +28,7 @@ import CloudMoreMenu from './cloud-more-menu';
 import { FileTypeSvgColor } from '@classroom/infra/stores/common/cloud-drive';
 import { CloudDriveCourseResource } from '@classroom/infra/stores/common/cloud-drive/struct';
 import { supportedTypes } from '@classroom/infra/stores/common/cloud-drive/helper';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 const UploadSuccessToast = () => {
   const transI18n = useI18n();

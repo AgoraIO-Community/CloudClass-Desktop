@@ -4,7 +4,7 @@ import cls from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Row, Search, SvgIconEnum, SvgImg, Table, TableHeader } from '@classroom/ui-kit';
-import { transI18n, useI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n, useI18n } from 'agora-common-libs';
 import './invite-table.css';
 import { OnPodiumStateEnum } from '@classroom/infra/stores/common/hand-up/type';
 

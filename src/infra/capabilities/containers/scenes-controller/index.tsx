@@ -5,7 +5,7 @@ import './index.css';
 import { observer } from 'mobx-react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
-import { themeContext } from 'agora-common-libs/lib/ui';
+import { themeContext } from 'agora-common-libs';
 
 export const ScenesController: FC = observer(() => {
   const {

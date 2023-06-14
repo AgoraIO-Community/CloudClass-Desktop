@@ -4,7 +4,7 @@ import React, { FC, PropsWithChildren, useEffect, useRef, useState } from 'react
 import { createPortal } from 'react-dom';
 import './index.css';
 import { TrackCore } from './track';
-import { AgoraTrackSyncedWidget, AgoraWidgetBase } from 'agora-common-libs/lib/widget';
+import { AgoraTrackSyncedWidget, AgoraWidgetBase } from 'agora-common-libs';
 
 export const WidgetContainer = observer(() => {
   const {

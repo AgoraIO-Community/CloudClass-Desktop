@@ -24,7 +24,7 @@ import { ToastContainerMobile } from '../../containers/toast/index.mobile';
 import { ClassroomState, ClassState, EduClassroomConfig } from 'agora-edu-core';
 import { ComponentLevelRulesMobile } from '../../config';
 import { ScreenShareContainerMobile } from '../../containers/screen-share/index.mobile';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
 import { ActionSheetMobile } from '../../containers/action-sheet-mobile/index.mobile';
 import { Card, Loading, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';

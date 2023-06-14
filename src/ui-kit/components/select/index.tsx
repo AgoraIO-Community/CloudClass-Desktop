@@ -4,7 +4,7 @@ import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import ReactSelect from 'react-select';
 import { CSSTransition } from 'react-transition-group';
 import './index.css';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export type SelectOption = {
   label: string;
@@ -42,8 +42,8 @@ export const Select: FC<SelectProps> = ({
   size,
   direction = 'down',
   defaultValue,
-  onOpen = () => { },
-  onClose = () => { },
+  onOpen = () => {},
+  onClose = () => {},
   ...restProps
 }) => {
   const transI18n = useI18n();

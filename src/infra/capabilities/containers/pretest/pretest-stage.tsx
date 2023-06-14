@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { FC, PropsWithChildren } from 'react';
 import { SvgImg, SvgIconEnum } from '@classroom/ui-kit';
 
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export const PretestStage = observer(() => {
   return (

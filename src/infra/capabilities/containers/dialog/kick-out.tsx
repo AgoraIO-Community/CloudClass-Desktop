@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { Button, Modal } from '@classroom/ui-kit';
 import { BaseDialogProps } from '.';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export const KickOut: React.FC<BaseDialogProps & { onOk: (ban: boolean) => void }> = observer(
   ({ id, onOk }) => {

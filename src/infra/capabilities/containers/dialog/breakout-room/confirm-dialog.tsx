@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Button } from '@classroom/ui-kit';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 
 type ConfirmDialogProps = {
   children: React.ReactNode;

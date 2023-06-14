@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { useState, FC } from 'react';
 import { Button, RadioGroup, InputNumber } from '@classroom/ui-kit';
 import './index.css';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 type Props = {
   onCancel: () => void;

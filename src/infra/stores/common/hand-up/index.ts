@@ -10,7 +10,7 @@ import {
 import { AGError, bound, Lodash } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { OnPodiumStateEnum } from './type';
 import { FetchUserParam, FetchUserType } from '../roster/type';
 import { listenChannelMessage } from '@classroom/infra/utils/ipc';

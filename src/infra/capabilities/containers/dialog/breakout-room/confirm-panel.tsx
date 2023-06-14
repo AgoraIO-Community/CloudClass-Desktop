@@ -1,7 +1,7 @@
 import React, { FC, ReactElement } from 'react';
 import { Button } from '@classroom/ui-kit';
 import { Panel } from './panel';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 type ConfirmPanelProps = {
   title: string;

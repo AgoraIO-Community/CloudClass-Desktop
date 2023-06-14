@@ -19,7 +19,7 @@ import {
   EduRteRuntimePlatform,
   Platform,
 } from 'agora-edu-core';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { builtInExtensions, getProcessorInitializer } from '@classroom/infra/api/rtc-extensions';
 import { IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';

@@ -6,7 +6,7 @@ import { Operation, SupportedFunction } from '@classroom/ui-kit';
 import { useColumns } from './hooks';
 import loadingSrc from './assets/loading.gif';
 import { debounce } from 'lodash';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 type RosterTableProps = {
   list: Profile[];
@@ -47,13 +47,13 @@ export const InteractiveCol = ({
 
   const interactiveEvents = interactable
     ? {
-      onMouseEnter: () => {
-        setHovered(true);
-      },
-      onMouseLeave: () => {
-        setHovered(false);
-      },
-    }
+        onMouseEnter: () => {
+          setHovered(true);
+        },
+        onMouseLeave: () => {
+          setHovered(false);
+        },
+      }
     : {};
 
   const hoverClass = interactable && !isFirstColumn ? 'roster-col-hover' : '';
@@ -66,12 +66,12 @@ export const InteractiveCol = ({
       style={
         col.width
           ? {
-            paddingLeft: isFirstColumn ? 25 : 0,
-            flex: isFirstColumn ? '0 1 auto' : 1,
-          }
+              paddingLeft: isFirstColumn ? 25 : 0,
+              flex: isFirstColumn ? '0 1 auto' : 1,
+            }
           : {
-            paddingLeft: isFirstColumn ? 25 : 0,
-          }
+              paddingLeft: isFirstColumn ? 25 : 0,
+            }
       }
       {...interactiveEvents}>
       {col.render(data, hovered)}
@@ -82,7 +82,7 @@ export const InteractiveCol = ({
 export const RosterTable: React.FC<RosterTableProps> = ({
   list = [],
   functions = [],
-  onActionClick = () => { },
+  onActionClick = () => {},
 }) => {
   const cols = useColumns(functions);
 
@@ -142,7 +142,7 @@ const useLoadMore = (onLoadMore: () => void, hasMore: boolean) => {
 export const InfiniteScrollRosterTable: React.FC<InfiniteScrollRosterTableProps> = ({
   list = [],
   functions = [],
-  onActionClick = () => { },
+  onActionClick = () => {},
   onFetch,
   hasMore = true,
 }) => {

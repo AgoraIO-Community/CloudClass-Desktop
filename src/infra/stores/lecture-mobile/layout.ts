@@ -1,4 +1,4 @@
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { ClassroomState, ClassState } from 'agora-edu-core';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';

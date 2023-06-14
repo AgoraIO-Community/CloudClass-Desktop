@@ -5,7 +5,7 @@ import { EduLectureUIStore } from '@classroom/infra/stores/lecture';
 import { DragableStream } from './draggable-stream';
 import { StreamPlaceholder } from '.';
 import { observer } from 'mobx-react';
-import { teacherVideoEnabled, visibilityControl } from 'agora-common-libs/lib/ui';
+import { teacherVideoEnabled, visibilityControl } from 'agora-common-libs';
 
 export const RoomBigTeacherStreamContainer = () => {
   return (

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgImg, Slice, SvgIconEnum } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export const SliceContainer = observer(() => {
   const { toolbarUIStore } = useStore();

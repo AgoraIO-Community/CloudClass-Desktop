@@ -38,12 +38,12 @@ import {
   LaunchWindowOption,
   WindowID,
 } from './type';
-import { FcrMultiThemeMode, FcrTheme, FcrUIConfig } from 'agora-common-libs/lib/ui';
-import { addResourceBundle } from 'agora-common-libs/lib/i18n';
+import { FcrMultiThemeMode, FcrTheme, FcrUIConfig } from 'agora-common-libs';
+import { addResourceBundle } from 'agora-common-libs';
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
 import { toUpper } from 'lodash';
-import { AgoraWidgetBase } from 'agora-common-libs/lib/widget';
+import { AgoraWidgetBase } from 'agora-common-libs';
 
 export * from './type';
 

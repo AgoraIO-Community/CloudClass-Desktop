@@ -11,7 +11,7 @@ import React, {
 import ReactDOM from 'react-dom';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import './index.css';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export type ProgressType = 'download';
 

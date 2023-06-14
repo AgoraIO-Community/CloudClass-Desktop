@@ -5,19 +5,19 @@ import {
   popupQuizEnabled,
   chatEnabled,
   boardEnabled,
-} from 'agora-common-libs/lib/ui';
+} from 'agora-common-libs';
 import {
   AgoraMultiInstanceWidget,
   AgoraTrackSyncedWidget,
   AgoraWidgetBase,
   AgoraWidgetLifecycle,
   AgoraWidgetTrackMode,
-} from 'agora-common-libs/lib/widget';
+} from 'agora-common-libs';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { AgoraWidgetTrackController } from 'agora-common-libs/lib/widget/widget-track';
+import { AgoraWidgetTrackController } from 'agora-common-libs';
 import {
   AgoraExtensionRoomEvent,
   AgoraExtensionWidgetEvent,

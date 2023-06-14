@@ -6,7 +6,7 @@ import { Col, Inline, Placeholder, Row, Table, TableHeader, SvgImg } from '@clas
 import CloudToolbar from './cloud-toolbar';
 import { useCallback, useEffect } from 'react';
 import { FileTypeSvgColor } from '@classroom/infra/stores/common/cloud-drive';
-import { useI18n } from 'agora-common-libs/lib/i18n';
+import { useI18n } from 'agora-common-libs';
 
 export const PublicResourcesContainer = observer(() => {
   const { cloudUIStore } = useStore();

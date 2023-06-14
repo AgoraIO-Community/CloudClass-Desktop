@@ -1,5 +1,5 @@
 import React from 'react';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 
 export type CloudMoreMenuProps = {
   resourceUuid: string;

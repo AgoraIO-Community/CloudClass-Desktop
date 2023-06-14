@@ -26,7 +26,7 @@ import { ConvertMediaOptionsConfig } from '@classroom/infra/api';
 import { RemoteControlUIStore } from './remote-control';
 import { SubscriptionUIStore } from './subscription';
 import { VideoGalleryUIStore } from './video-gallery';
-import { transI18n } from 'agora-common-libs/lib/i18n';
+import { transI18n } from 'agora-common-libs';
 import { Getters } from './getters';
 import { computed } from 'mobx';
 import { EduStreamUI } from './stream/struct';
