@@ -19,7 +19,8 @@
     "build:docs": "typedoc",
     "pack:npm": "run-s bundle:npm build:types",
     "bundle:npm": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack.config.js",
-    "storybook": "start-storybook -p 6006 --no-manager-cache"
+    "storybook": "start-storybook -p 6006 --no-manager-cache",
+    "ci:build": "run-s bundle:npm build:types"
   },
   "eslintConfig": {
     "extends": [
