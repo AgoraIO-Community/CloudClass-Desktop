@@ -52,7 +52,7 @@
 }
 
 .video-player-overlay .camera-placeholder {
-  @apply fcr-bg-background fcr-border-divider fcr-border  fcr-border-solid;
+  @apply bg-background border-divider border  border-solid;
   overflow: hidden;
   position: relative;
   height: 100%;
@@ -223,17 +223,17 @@
 }
 
 .top-right-info {
-  @apply fcr-absolute fcr-top-0 fcr-right-0 fcr-flex fcr-items-center;
+  @apply absolute top-0 right-0 flex items-center;
   padding: 8px;
 }
 
 .bottom-left-info {
-  @apply fcr-absolute fcr-bottom-0 fcr-left-0 fcr-flex fcr-items-end;
+  @apply absolute bottom-0 left-0 flex items-end;
   padding: 0 8px;
 }
 
 .bottom-right-info {
-  @apply fcr-absolute fcr-bottom-0 fcr-right-0;
+  @apply absolute bottom-0 right-0;
   padding: 0 8px;
 }
 
@@ -243,13 +243,13 @@
 }
 
 .stars-label {
-  @apply fcr-text-white;
+  @apply text-white;
   font-size: 12px;
   text-shadow: 0px 1px 2px rgba(13, 29, 61, 0.8);
 }
 
 .username2 {
-  @apply fcr-text-white fcr-font-medium;
+  @apply text-white font-medium;
   font-size: 12px;
   /* letter-spacing: -0.41px; */
   text-shadow: 0 1px 2px rgb(13 29 61 / 80%);
@@ -260,7 +260,7 @@
 }
 
 .video-player-tools {
-  @apply fcr-flex fcr-flex-col fcr-items-center fcr-gap-2 fcr-bg-component;
+  @apply flex flex-col items-center gap-2 bg-component;
   width: 36px;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 18px;
@@ -268,7 +268,7 @@
 }
 
 .video-player-tools > svg {
-  @apply fcr-box-content;
+  @apply box-content;
   font-size: 22px;
   color: #357bf6;
 }
@@ -305,7 +305,7 @@
 .video-player-tools-popover.popover-placement-bottom .video-player-tools,
 .video-player-tools-popover.popover-placement-top .video-player-tools {
   margin-top: 2px;
-  @apply fcr-flex fcr-flex-row fcr-items-center fcr-justify-center;
+  @apply flex flex-row items-center justify-center;
   height: 36px;
   width: auto;
 }
@@ -354,12 +354,12 @@
 }
 
 .fcr-stream-player-container .camera-placeholder {
-  @apply fcr-border  fcr-border-solid fcr-border-divider;
+  @apply border  border-solid border-divider;
   border-radius: 4px;
   overflow: hidden;
 }
 .fcr-audio-volume-effect {
-  @apply  fcr-border-solid fcr-border-safe;
+  @apply border-solid border-safe;
   border-width: 3px;
   position: absolute;
   width: 100%;

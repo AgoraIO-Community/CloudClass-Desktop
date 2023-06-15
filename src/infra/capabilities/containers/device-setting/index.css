@@ -11,7 +11,7 @@
 .setting .device-title,
 .setting .device-text,
 .setting .beauty-text {
-  @apply fcr-text-level1;
+  @apply text-level1;
   font-size: 12px;
   font-weight: 400;
   margin-bottom: 10px;
@@ -24,13 +24,13 @@
 .setting .device-volume,
 .setting .beauty-value {
   margin-top: 15px;
-  @apply fcr-flex;
+  @apply flex;
 }
 
 .setting .device-volume .slider,
 .setting .beauty-value .slider {
   margin-left: 6px;
-  @apply fcr-flex-1;
+  @apply flex-1;
 }
 
 .setting .beauty-show-number {
@@ -41,7 +41,7 @@
 }
 .beauty-desc,
 .device-desc {
-  @apply fcr-text-level1;
+  @apply text-level1;
 }
 
 input[name='device-selection'] {

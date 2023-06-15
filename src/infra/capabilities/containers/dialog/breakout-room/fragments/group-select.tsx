@@ -589,7 +589,7 @@ const BroadcastInput = ({
   };
 
   return (
-    <div className="breakout-room-broadcast-input fcr-border rounded-sm p-1 relative">
+    <div className="breakout-room-broadcast-input border rounded-sm p-1 relative">
       <textarea
         className="w-full h-full"
         value={text}

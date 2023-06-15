@@ -15,7 +15,7 @@
 }
 
 .breakout-room .modal-title {
-  @apply fcr-bg-icon-selected-color;
+  @apply bg-icon-selected-color;
   height: 28px;
 }
 
@@ -33,7 +33,7 @@
   width: 280px;
   height: 174px;
   border-radius: 4px;
-  @apply fcr-border  fcr-border-solid fcr-border-divider;
+  @apply border  border-solid border-divider;
 }
 
 .breakout-room .group-select {
@@ -42,18 +42,18 @@
 
 /** 40px for header, 20px for bottom padding */
 .breakout-room .content-area {
-  @apply fcr-bg-component;
+  @apply bg-component;
   position: relative;
   height: calc(100% - 40px + 20px);
 }
 
 .breakout-room .content-area.start {
-  @apply fcr-bg-component;
+  @apply bg-component;
 }
 
 .breakout-room .rounded-btn,
 .breakout-room .ripple-circle {
-  @apply fcr-rounded !important;
+  @apply rounded !important;
 }
 
 .breakout-room .fcr-btn-secondary {
@@ -74,18 +74,18 @@
   box-shadow: none;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 6px;
-  @apply fcr-bg-component fcr-border  fcr-border-solid fcr-border-divider;
+  @apply bg-component border  border-solid border-divider;
 }
 .breakout-room-group-panel .popover-arrow {
   display: none;
 }
 
 .breakout-room-group-panel .fcr-tree-node:hover {
-  @apply fcr-bg-icon-selected-color;
+  @apply bg-icon-selected-color;
 }
 
 .breakout-room .fcr-tree-node:hover {
-  @apply fcr-bg-icon-selected-color;
+  @apply bg-icon-selected-color;
 }
 
 .breakout-room .link-width {
@@ -111,11 +111,11 @@
 
 .breakout-room-broadcast-input {
   top: 9px;
-  @apply fcr-border-divider;
+  @apply border-divider;
 }
 
 .breakout-room-broadcast-input textarea {
-  @apply fcr-bg-component fcr-text-level1;
+  @apply bg-component text-level1;
   outline: none;
   resize: none;
   border: none;
@@ -126,7 +126,7 @@
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  @apply fcr-text-level2;
+  @apply text-level2;
   top: 0;
   right: 0;
   bottom: 0;
@@ -158,11 +158,11 @@
 .group-user-checkbox + span > span {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  @apply fcr-text-level2;
+  @apply text-level2;
 }
 
 .group-user-checkbox:checked + span > span {
-  @apply fcr-text-level1;
+  @apply text-level1;
 }
 
 .panel-content .fcr-pure-material-checkbox:hover span > span {
@@ -170,7 +170,7 @@
 }
 
 .confirm-panel-wrap .confirm-panel-title {
-  @apply fcr-text-level1;
+  @apply text-level1;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -186,7 +186,7 @@
   position: absolute;
   top: -28px;
   left: 0;
-  @apply fcr-bg-component;
+  @apply bg-component;
   width: 100%;
   height: calc(100% + 30px);
   z-index: 999;
@@ -196,7 +196,7 @@
   position: absolute;
   width: 400px;
   height: 189px;
-  @apply fcr-bg-component fcr-border  fcr-border-solid fcr-border-divider;
+  @apply bg-component border  border-solid border-divider;
   box-shadow: 0px 2px 8px 0px rgba(47, 65, 146, 0.15);
   border-radius: 10px;
   top: 0;
@@ -216,7 +216,7 @@
   font-size: 16px;
   font-family: PingFang-SC-Bold, PingFang-SC;
   font-weight: bold;
-  @apply fcr-text-level1;
+  @apply text-level1;
   text-align: center;
   margin-top: 40px;
 }
@@ -225,7 +225,7 @@
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  @apply fcr-text-level2;
+  @apply text-level2;
   text-align: center;
 }
 

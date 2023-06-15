@@ -1,5 +1,5 @@
 .inviteContainer {
-  @apply fcr-bg-component;
+  @apply bg-component;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 6px;
   position: relative;
@@ -8,7 +8,7 @@
   /* color: #191919; */
 }
 .inviteContainer .inviteTitle {
-  @apply fcr-bg-icon-selected-color fcr-text-level1;
+  @apply bg-icon-selected-color text-level1;
   position: relative;
   display: inline-flex;
   align-items: center;

@@ -51,7 +51,7 @@ body,
 }
 
 .chat-panel {
-  @apply fcr-bg-component;
+  @apply bg-component;
   position: relative;
   flex: 1;
   border-radius: 4px;
@@ -87,7 +87,7 @@ body,
 }
 
 .filename {
-  @apply fcr-text-level1;
+  @apply text-level1;
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -152,7 +152,7 @@ body,
   margin-right: -300px;
 }
 .telebox-collector {
-  @apply fcr-bg-component !important;
+  @apply bg-component !important;
 }
 .telebox-collector img {
   display: inline-block !important;
@@ -218,7 +218,7 @@ body,
 }
 
 .rtm-chat-4.rtm-platform-pc .small-class-chat-fixed {
-  @apply fcr-border fcr-border-solid fcr-border-divider !important;
+  @apply border border-solid border-divider !important;
   width: 300px;
   height: 500px;
 }
@@ -241,5 +241,5 @@ body,
 }
 
 .fcr-room-bg {
-  @apply fcr-bg-foreground;
+  @apply bg-foreground;
 }

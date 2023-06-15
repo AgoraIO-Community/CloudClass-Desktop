@@ -1,10 +1,10 @@
 .volume-indicators {
-  @apply fcr-flex fcr-flex-col;
+  @apply flex flex-col;
   margin-left: 10px;
 }
 
 .v-indicator {
-  @apply fcr-rounded;
+  @apply rounded;
   height: 1px;
   width: 6px;
   background-color: #357bf6;

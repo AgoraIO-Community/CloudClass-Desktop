@@ -1,5 +1,5 @@
 .invite-table-wrap {
-  @apply fcr-bg-component fcr-border  fcr-border-solid fcr-border-divider;
+  @apply bg-component border  border-solid border-divider;
 }
 
 .invite-table-wrap .search {
@@ -21,7 +21,7 @@
 }
 
 .invite-table-wrap .search .input-search::-webkit-input-placeholder {
-  @apply fcr-text-level1;
+  @apply text-level1;
   font-size: 13px;
 }
 .invite-table-wrap .loading {
@@ -33,7 +33,7 @@
 }
 
 .table-row-item.table-header .table-col-item {
-  @apply fcr-text-level2;
+  @apply text-level2;
 }
 
 .invite-table-wrap .table-row-item {
@@ -42,7 +42,7 @@
 }
 
 .invite-table-wrap .table-row-item:hover {
-  @apply fcr-bg-icon-selected-hover-color;
+  @apply bg-icon-selected-hover-color;
 }
 
 .invite-table-wrap .table-row-item .table-col-item:last-child {

@@ -27,5 +27,5 @@
 }
 
 .can-hover:hover {
-  @apply fcr-bg-icon-selected-color;
+  @apply bg-icon-selected-color;
 }

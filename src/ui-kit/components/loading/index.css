@@ -1,5 +1,5 @@
 .fcr-loading {
-  @apply fcr-flex fcr-bg-component fcr-flex-col fcr-justify-center fcr-items-center;
+  @apply flex bg-component flex-col justify-center items-center;
 }
 
 .fcr-loading-upload-list {
@@ -12,18 +12,18 @@
   display: none;
 }
 .fcr-loading .fcr-loading-text {
-  @apply fcr-text-level1;
+  @apply text-level1;
   font-size: 13px;
   font-weight: 400;
   margin-bottom: 24px;
 }
 
 .fcr-loading .fcr-loading-progress {
-  @apply fcr-flex fcr-justify-center fcr-items-center;
+  @apply flex justify-center items-center;
 }
 
 .fcr-loading .fcr-loading-progress-number {
-  @apply fcr-text-brand;
+  @apply text-brand;
   font-size: 18px;
   font-weight: 400;
   margin-left: 12px;
@@ -34,7 +34,7 @@
 }
 
 .fcr-loading .fcr-loading-upload-item {
-  @apply fcr-flex fcr-justify-start fcr-items-center;
+  @apply flex justify-start items-center;
 }
 
 .fcr-loading .fcr-loading-upload-item:not(:nth-child(1)) {
@@ -44,7 +44,7 @@
 .fcr-loading .fcr-loading-file-name {
   margin-left: 4px;
   font-size: 13px;
-  @apply fcr-flex-1 fcr-text-level1;
+  @apply flex-1 text-level1;
   width: 120px;
   white-space: nowrap;
   word-wrap: break-word;
@@ -53,7 +53,7 @@
 }
 
 .fcr-loading .fcr-loading-file-size {
-  @apply fcr-text-level2;
+  @apply text-level2;
   font-size: 13px;
   color: #586376;
   margin-right: 33px;
@@ -61,19 +61,19 @@
 }
 
 .fcr-loading .fcr-upload-success-text {
-  @apply fcr-text-safe;
+  @apply text-safe;
   font-size: 13px;
   font-weight: 400;
   margin-left: 7px;
 }
 .fcr-loading .fcr-upload-error-text {
-  @apply fcr-text-error;
+  @apply text-error;
   font-size: 13px;
   font-weight: 400;
   margin-left: 7px;
 }
 .fcr-loading .fcr-upload-pending-text {
-  @apply fcr-text-brand;
+  @apply text-brand;
   font-size: 13px;
   margin-left: 6px;
 }

@@ -54,7 +54,7 @@
 }
 
 .popover-inner {
-  @apply fcr-bg-background;
+  @apply bg-background;
   background-clip: padding-box;
   border-radius: 2px;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
@@ -85,7 +85,7 @@
 }
 
 .popover-inner-content {
-  @apply fcr-text-level1;
+  @apply text-level1;
   padding: 16px 20px;
 }
 
@@ -117,7 +117,7 @@
 }
 
 .popover-arrow {
-  @apply fcr-bg-background;
+  @apply bg-background;
   position: absolute;
   display: block;
   width: 8.48528137px;
@@ -130,7 +130,7 @@
 .popover-placement-top > .popover-content > .popover-arrow,
 .popover-placement-topLeft > .popover-content > .popover-arrow,
 .popover-placement-topRight > .popover-content > .popover-arrow {
-  @apply fcr-border-background;
+  @apply border-background;
   bottom: 6.2px;
 }
 
@@ -150,7 +150,7 @@
 .popover-placement-right > .popover-content > .popover-arrow,
 .popover-placement-rightTop > .popover-content > .popover-arrow,
 .popover-placement-rightBottom > .popover-content > .popover-arrow {
-  @apply fcr-border-divider;
+  @apply border-divider;
   left: 6px;
   border-top-color: transparent;
   border-right-color: transparent;
@@ -174,7 +174,7 @@
 .popover-placement-bottom > .popover-content > .popover-arrow,
 .popover-placement-bottomLeft > .popover-content > .popover-arrow,
 .popover-placement-bottomRight > .popover-content > .popover-arrow {
-  @apply fcr-border-background;
+  @apply border-background;
 
   top: 6px;
   box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.06);
@@ -196,7 +196,7 @@
 .popover-placement-left > .popover-content > .popover-arrow,
 .popover-placement-leftTop > .popover-content > .popover-arrow,
 .popover-placement-leftBottom > .popover-content > .popover-arrow {
-  @apply fcr-border-divider;
+  @apply border-divider;
 
   right: 7px;
 

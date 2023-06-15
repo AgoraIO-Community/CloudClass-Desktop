@@ -14,7 +14,7 @@
   position: relative;
 }
 .page-loading-text {
-  @apply fcr-text-level1;
+  @apply text-level1;
   position: absolute;
   bottom: -50px;
   white-space: nowrap;

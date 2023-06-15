@@ -1,5 +1,5 @@
 .volume {
-  @apply fcr-flex;
+  @apply flex;
 }
 .volume-item {
   margin-right: 3px;

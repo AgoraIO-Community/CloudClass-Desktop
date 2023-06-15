@@ -1,5 +1,5 @@
 .fcr-video-grid .main-title {
-  @apply fcr-bg-icon-selected-color fcr-text-level1;
+  @apply bg-icon-selected-color text-level1;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -17,7 +17,7 @@
 }
 
 .fcr-video-grid {
-  @apply fcr-border  fcr-border-solid fcr-border-divider;
+  @apply border  border-solid border-divider;
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47, 65%, 146%, 15%);
   border-radius: 6px;
@@ -40,7 +40,7 @@
 }
 
 .fcr-video-grid-portal {
-  @apply fcr-bg-component;
+  @apply bg-component;
 }
 
 .fcr-video-grid-wrap {
@@ -79,5 +79,5 @@
 }
 
 .fcr-video-grid-border {
-  @apply fcr-border-divider;
+  @apply border-divider;
 }

@@ -15,7 +15,7 @@ export const CameraPreview = observer(() => {
 
   return localPreview && localCameraStream ? (
     <div
-      className="fcr-camera-preview absolute overflow-hidden fcr-border border-divider"
+      className="fcr-camera-preview absolute overflow-hidden border border-divider"
       style={{
         width: 220,
         height: 124,

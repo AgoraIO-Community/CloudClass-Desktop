@@ -472,7 +472,7 @@ const BeautyItem: FC<PropsWithChildren<{ activity: boolean; onClick: () => void 
   return (
     <div
       onClick={onClick}
-      className={`relative fcr-bg-component ${
+      className={`relative bg-component ${
         activity ? 'fcr-pretest__beauty-item--active' : 'fcr-pretest__beauty-item'
       }`}
       style={{
@@ -556,7 +556,7 @@ const BackgroundItem: FC<
       onClick={onClick}
       className={`${
         activity ? 'fcr-pretest-background--active' : 'fcr-pretest-background'
-      } relative flex justify-center items-center cursor-pointer fcr-bg-component`}
+      } relative flex justify-center items-center cursor-pointer bg-component`}
       style={{
         width: 82,
         height: 60,

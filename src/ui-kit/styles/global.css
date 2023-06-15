@@ -8,5 +8,5 @@
 
 html,
 html body {
-  @apply fcr-font-scenario;
+  @apply font-scenario;
 }

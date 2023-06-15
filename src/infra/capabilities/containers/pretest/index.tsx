@@ -116,7 +116,7 @@ const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean; onCance
 
 const Modal: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="fcr-bg-component fcr-pretest-modal"
+    className="bg-component fcr-pretest-modal"
     style={{
       width: 730,
       height: 656,

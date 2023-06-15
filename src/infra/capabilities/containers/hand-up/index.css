@@ -1,12 +1,12 @@
 .students-hands-up .fcr-card {
-  @apply fcr-block fcr-overflow-y-scroll;
+  @apply block overflow-y-scroll;
 }
 
 .students-hands-up .student-item {
-  @apply fcr-border-b  fcr-border-solid fcr-border-divider;
+  @apply border-b  border-solid border-divider;
   width: 100%;
   padding: 4px 10px 4px 16px;
-  @apply fcr-box-border fcr-flex fcr-justify-between fcr-items-center;
+  @apply box-border flex justify-between items-center;
   height: 41px;
 }
 
@@ -16,13 +16,13 @@
 }
 
 .hands-up .fcr-card {
-  @apply fcr-bg-component;
+  @apply bg-component;
   position: relative;
 }
 
 .student-box .student-name,
 .student-item .student-name {
-  @apply fcr-text-level2;
+  @apply text-level2;
   font-size: 14px;
   width: 120px;
   overflow: hidden;
@@ -37,7 +37,7 @@
 }
 
 .card-hands-up-active {
-  @apply fcr-bg-brand;
+  @apply bg-brand;
 }
 
 .hands-box-line {
@@ -82,7 +82,7 @@
 }
 
 .hands-up-tip {
-  @apply fcr-bg-component fcr-border  fcr-border-solid fcr-border-divider fcr-text-level1;
+  @apply bg-component border  border-solid border-divider text-level1;
   position: absolute;
   padding: 0 10px;
   height: 28px;
