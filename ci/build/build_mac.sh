@@ -13,6 +13,13 @@ lib_dependencies=(
 . ../apaas-cicd-web/build/$ci_script_version/dependency.sh
 . ../apaas-cicd-web/build/$ci_script_version/build.sh
 
+if [ "$debug" == "true" ]; then
+    # show environment variables
+    echo "------------- variables --------------------"
+    set
+    echo "--------------------------------------------"
+fi
+
 check_dependencies $source_root $build_branch "${lib_dependencies[*]}"
 
 build_lib $source_root $ci_source_root agora-classroom-sdk $build_branch
