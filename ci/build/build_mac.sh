@@ -8,6 +8,16 @@ lib_dependencies=(
     agora-edu-core
     agora-common-libs
 )
+lib_versions=(
+    2.8.21
+    2.8.21
+    2.8.1
+)
+lib_branches=(
+    feature/online-class-sdk
+    feature/online-class-sdk
+    feature/online-class-sdk
+)
 
 . ../apaas-cicd-web/utilities/tools.sh
 . ../apaas-cicd-web/build/$ci_script_version/dependency.sh
@@ -20,6 +30,6 @@ if [ "$debug" == "true" ]; then
     echo "--------------------------------------------"
 fi
 
-check_dependencies $source_root $build_branch "${lib_dependencies[*]}"
+check_dependencies $source_root $build_branch "${lib_dependencies[*]}" "${lib_versions[*]}" "${lib_branches[*]}"
 
 build_lib $source_root $ci_source_root agora-classroom-sdk $build_branch
