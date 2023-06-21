@@ -32,8 +32,8 @@ fi
 
 download_packages $source_root $build_branch "${lib_dependencies[*]}" "${lib_versions[*]}" "${lib_branches[*]}"
 
-install_packages $source_root
-
 link_packages $source_root
+
+install_packages $source_root
 
 build_lib $source_root $ci_source_root agora-classroom-sdk $build_branch
