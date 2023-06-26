@@ -845,7 +845,7 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   onDestroy() {
-    EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
+    EduEventCenter.shared.offClassroomEvents(this._handleClassroomEvent);
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }

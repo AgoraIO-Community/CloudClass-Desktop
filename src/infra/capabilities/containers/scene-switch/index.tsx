@@ -38,7 +38,7 @@ const PageLoading = () => {
         }}>
         <Loading />
         <p className="m-0 text-level1">
-          {!layoutUIStore.isInSubRoom
+          {layoutUIStore.currentSubRoomName
             ? transI18n('fcr_group_joining', {
                 reason: layoutUIStore.currentSubRoomName,
               })

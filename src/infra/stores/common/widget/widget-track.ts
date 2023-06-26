@@ -8,7 +8,7 @@ import {
   TrackOptions,
 } from 'agora-edu-core';
 import { bound } from 'agora-rte-sdk';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, IReactionDisposer, reaction } from 'mobx';
 import { AgoraTrackSyncedWidget, AgoraWidgetBase } from './widget-base';
 
 export class AgoraWidgetTrackController {
@@ -35,6 +35,8 @@ export class AgoraWidgetTrackController {
 
   private _resizeObserver?: ResizeObserver;
 
+  private _disposer: IReactionDisposer;
+
   constructor(
     belongToWidget: AgoraWidgetBase,
     trackProps: AgoraWidgetTrack,
@@ -55,6 +57,15 @@ export class AgoraWidgetTrackController {
     });
 
     this._handleViewportResize();
+
+    this._disposer = reaction(
+      () => this._widget.shareUIStore.layoutReady,
+      (layoutReady) => {
+        if (layoutReady) {
+          this._handleViewportResize();
+        }
+      },
+    );
 
     this._track = this._initializeTrack(trackProps);
     this._zIndex = trackProps.zIndex ?? 0;
@@ -247,6 +258,7 @@ export class AgoraWidgetTrackController {
   }
 
   destory() {
+    this._disposer();
     this._resizeObserver?.disconnect();
     this._resizeObserver = undefined;
   }
