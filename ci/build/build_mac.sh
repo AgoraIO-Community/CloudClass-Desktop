@@ -32,7 +32,7 @@ fi
 
 download_packages $source_root $build_branch "${lib_dependencies[*]}" "${lib_versions[*]}" "${lib_branches[*]}"
 
-link_packages $source_root
+make_monorepo $source_root
 
 install_packages $source_root
 
