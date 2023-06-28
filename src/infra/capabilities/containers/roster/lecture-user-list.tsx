@@ -33,7 +33,7 @@ export const LectureRosterContainer: FC<LectureRosterContainerProps> = observer(
   return (
     <Roster
       width={width}
-      bounds="classroom-track-bounds"
+      bounds=".classroom-track-bounds"
       hostname={teacherName}
       keyword={searchKeyword}
       carouselProps={carouselProps}
