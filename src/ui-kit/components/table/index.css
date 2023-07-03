@@ -30,7 +30,7 @@
   line-height: 18px;
   padding: 10px 0;
   padding-left: 19px;
-  @apply border-bottom-width-1 border-divider;
+  @apply border-b border-divider;
   line-height: 20px;
 }
 .agora-board-resources .border-bottom-width-1 {

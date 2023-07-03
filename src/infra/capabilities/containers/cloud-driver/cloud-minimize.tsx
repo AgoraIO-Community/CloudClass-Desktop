@@ -4,7 +4,6 @@ import { CircleLoading, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { CloudDriveResourceUploadStatus } from 'agora-edu-core';
 import { useI18n } from 'agora-common-libs';
 
-
 export default observer(function CloudMinimize() {
   const { cloudUIStore } = useStore();
   const { uploadingProgresses, uploadState } = cloudUIStore;

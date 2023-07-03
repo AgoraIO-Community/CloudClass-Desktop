@@ -53,7 +53,7 @@
 }
 
 .modal-title {
-  @apply box-border flex justify-between items-center relative bg-icon-selected-color border-divider border-b border-solid;
+  @apply box-border flex justify-between items-center relative bg-icon-selected-color border-divider border-b  border-solid;
   height: 28px;
   line-height: 28px;
   padding: 0 10px 0 15px;

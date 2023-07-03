@@ -53,6 +53,27 @@ const theme: FcrTheme = {
   textLevel3: '#7b88a0',
   textDisable: '#bdbdca',
   textLink: '#357bf6',
+  // v2
+  v2Block1: '',
+  v2Block2: '',
+  v2Block3: '',
+  v2Block4: '',
+  v2Block5: '',
+  v2Block6: '',
+  v2Block7: '',
+  v2Block8: '',
+  v2Line1: '',
+  v2Text1: '',
+  v2Text2: '',
+  v2Text3: '',
+  v2Icon1: '',
+  v2Icon2: '',
+  v2Hover: '',
+  v2Shadow1: '',
+  v2Shadow2: '',
+  v2Shadow3: '',
+  v2Essential: '',
+  v2EssentialInverse: '',
 };
 
 export const jumpToLine = (str: string) => {

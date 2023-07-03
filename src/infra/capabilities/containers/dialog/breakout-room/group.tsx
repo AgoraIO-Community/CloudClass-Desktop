@@ -30,7 +30,7 @@ export const GroupPanel: FC<GroupPanelProps> = ({
       panelId={panelId}
       className="breakout-room-group-panel"
       trigger={children as ReactElement}
-      onClose={() => { }}>
+      onClose={() => {}}>
       <div
         className="panel-content py-2"
         style={{ width: 200, height: 200, overflow: 'auto' }}
@@ -50,8 +50,8 @@ export const GroupPanel: FC<GroupPanelProps> = ({
                     <span className="tree-node-tips">
                       {node.children?.length
                         ? transI18n('breakout_room.group_current_has_students', {
-                          reason: `${node.children?.length}`,
-                        })
+                            reason: `${node.children?.length}`,
+                          })
                         : transI18n('breakout_room.group_current_empty')}
                     </span>
                   </>

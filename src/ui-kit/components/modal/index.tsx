@@ -35,16 +35,13 @@ export interface ModalProps {
   id?: string;
 }
 
-
 export const Modal: FC<ModalProps> = ({
   title = 'modal title',
   closable = false,
   footer,
   style,
-  onOk = (e: React.MouseEvent<HTMLElement>) => {
-  },
-  onCancel = (e: React.MouseEvent<HTMLElement>) => {
-  },
+  onOk = (e: React.MouseEvent<HTMLElement>) => {},
+  onCancel = (e: React.MouseEvent<HTMLElement>) => {},
   children,
   className,
   component,

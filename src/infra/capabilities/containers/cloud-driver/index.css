@@ -69,7 +69,7 @@
 }
 
 .cloud-wrap {
-  @apply border-divider border border-solid;
+  @apply border-divider border  border-solid;
 }
 .cloud-wrap .table-header .table-col-item,
 .cloud-wrap .table-col-item {
@@ -124,7 +124,7 @@
 }
 
 .cloud-btn-group {
-  @apply border-t border-solid border-divider;
+  @apply border-t  border-solid border-divider;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -256,7 +256,6 @@
 .cloud-driver-tab .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   @apply text-level1;
 }
-
 
 .cloud-driver-tab.ant-tabs > .ant-tabs-nav {
   margin: 0;

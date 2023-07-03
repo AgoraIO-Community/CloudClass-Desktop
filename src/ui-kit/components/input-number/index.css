@@ -1,5 +1,5 @@
 .fcr-input-number-wrapper {
-  @apply text-level1 border border-solid border-divider;
+  @apply text-level1 border  border-solid border-divider;
   position: relative;
   width: 100%;
   height: 100%;

@@ -110,7 +110,7 @@ export const appendBuffer = (buffer1: Float32Array, buffer2: Float32Array) => {
   return tmp;
 };
 export const mapToObject = (map: Map<any, any>) => {
-  return [...map.entries()].reduce((obj, [key, value]) => ((obj[key] = value), obj), {});
+  return [...map.entries()].reduce((obj, [key, value]) => ((obj[key] = value), obj), {} as any);
 };
 
 const ImageFileTypes = [

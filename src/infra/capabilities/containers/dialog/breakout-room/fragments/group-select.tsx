@@ -12,14 +12,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { GroupState } from 'agora-edu-core';
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import {
-  Button,
-  MultiRootTree,
-  TreeNode,
-  TreeModel,
-  CheckBox,
-  Modal,
-} from '@classroom/ui-kit';
+import { Button, MultiRootTree, TreeNode, TreeModel, CheckBox, Modal } from '@classroom/ui-kit';
 import classnames from 'classnames';
 import { usePanelState, PanelStateContext } from '../panel';
 import { GroupPanel } from '../group';
@@ -325,8 +318,8 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
           <span className="tree-node-tips">
             {childrenLength
               ? t('breakout_room.group_current_has_students', {
-                reason: `${childrenLength}`,
-              })
+                  reason: `${childrenLength}`,
+                })
               : t('breakout_room.group_current_empty')}
           </span>
         )}

@@ -69,7 +69,7 @@
   padding-right: 4px;
 }
 .screen-share-dialog-container .fcr-card {
-  @apply border border-solid border-divider;
+  @apply border  border-solid border-divider;
   cursor: pointer;
   box-shadow: none;
   border-radius: 4px !important;

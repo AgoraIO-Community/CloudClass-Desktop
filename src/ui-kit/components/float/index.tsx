@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 
 export interface FloatProps extends BaseProps {
@@ -13,7 +13,7 @@ export interface FloatProps extends BaseProps {
   gap: number;
 }
 
-export const Float: FC<FloatProps> = ({
+export const Float: FC<PropsWithChildren<FloatProps>> = ({
   top,
   left,
   bottom,

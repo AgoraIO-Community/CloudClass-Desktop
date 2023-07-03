@@ -1,6 +1,6 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, PropsWithChildren, useCallback, useEffect, useMemo } from 'react';
 import { Button, SvgImg, SvgIconEnum } from '@classroom/ui-kit';
 import { Volume } from './volume';
 import { Field } from './form-field';
@@ -61,7 +61,7 @@ const SpeakerTest = observer(() => {
       aiDenoiserSupported,
     },
   } = useStore();
-  const handlePlaybackChange = useCallback((value) => {
+  const handlePlaybackChange = useCallback((value: string) => {
     setPlaybackDevice(value);
   }, []);
 
@@ -146,7 +146,7 @@ const VolumeDance: FC = observer(() => {
   );
 });
 
-const ItemCardTitle: FC = ({ children }) => {
+const ItemCardTitle: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       className="mt-4 text-level1 flex items-center"
@@ -159,7 +159,7 @@ const ItemCardTitle: FC = ({ children }) => {
   );
 };
 
-const ItemForm: FC = ({ children }) => {
+const ItemForm: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       className="fcr-pretest-audio flex justify-center items-center"
@@ -172,7 +172,7 @@ const ItemForm: FC = ({ children }) => {
   );
 };
 
-const ItemCard: FC = ({ children }) => (
+const ItemCard: FC<PropsWithChildren> = ({ children }) => (
   <div
     className="flex flex-col"
     style={{

@@ -5,7 +5,6 @@ import { AutoSizer } from 'react-virtualized';
 import './widget-modal.css';
 import { themeContext } from 'agora-common-libs';
 
-
 type WidgetModalProps = {
   title: string;
   closable: boolean;

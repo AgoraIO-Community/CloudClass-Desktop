@@ -1,6 +1,6 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { SvgImg, SvgIconEnum } from '@classroom/ui-kit';
 
 import { useI18n } from 'agora-common-libs';
@@ -40,7 +40,7 @@ const StageManager = observer(() => {
   );
 });
 
-const ItemCardTitle: FC = ({ children }) => {
+const ItemCardTitle: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       className="text-level1"
@@ -53,7 +53,7 @@ const ItemCardTitle: FC = ({ children }) => {
   );
 };
 
-const ItemCard: FC = ({ children }) => (
+const ItemCard: FC<PropsWithChildren> = ({ children }) => (
   <div
     className="flex flex-col"
     style={{

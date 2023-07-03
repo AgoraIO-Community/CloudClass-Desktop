@@ -349,7 +349,7 @@
 }
 
 .tool-cabinet-popover .popover-arrow {
-  @apply border-r border-t border-solid border-divider;
+  @apply border-r border-t  border-solid border-divider;
 }
 
 .tool-cabinet-popover .popover-inner {
@@ -357,7 +357,7 @@
 }
 
 .tool-cabinet-popover .popover-inner-content {
-  @apply border border-solid border-divider;
+  @apply border  border-solid border-divider;
   padding: 0;
 }
 .tool-cabinet-popover .cabinet-item {
@@ -365,10 +365,10 @@
 }
 
 .cabinet-item:not(.cabinet-item-last) {
-  @apply border-b border-solid border-divider;
+  @apply border-b  border-solid border-divider;
 }
 
 /* 3 6 9 */
 .cabinet-item:not(:nth-child(3n)) {
-  @apply border-r border-solid border-divider;
+  @apply border-r  border-solid border-divider;
 }

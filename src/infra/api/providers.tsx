@@ -1,12 +1,10 @@
-import { FC } from 'react';
-import { I18nProvider, ThemeProvider, FcrTheme, FcrUIConfig, UIConfigProvider } from 'agora-common-libs';
+import { FC, PropsWithChildren } from 'react';
+import { ThemeProvider, FcrTheme, FcrUIConfig, UIConfigProvider } from 'agora-common-libs';
+import { I18nProvider } from 'agora-common-libs';
 
-export const Providers: FC<{ language: string; uiConfig: FcrUIConfig; theme: FcrTheme }> = ({
-  children,
-  language,
-  uiConfig,
-  theme,
-}) => {
+export const Providers: FC<
+  PropsWithChildren<{ language: string; uiConfig: FcrUIConfig; theme: FcrTheme }>
+> = ({ children, language, uiConfig, theme }) => {
   return (
     <I18nProvider language={language}>
       <ThemeProvider value={theme}>

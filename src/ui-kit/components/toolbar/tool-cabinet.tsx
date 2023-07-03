@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { Popover } from '@classroom/ui-kit/components/popover';
 import { Tooltip } from '@classroom/ui-kit/components/tooltip';
 import { SvgImg, SvgIcon, SvgIconEnum } from '@classroom/ui-kit/components/svg-img';
@@ -10,7 +10,7 @@ export interface ToolCabinetProps {
   onVisibilityChange: (visible: boolean) => void;
 }
 
-export const ToolCabinet: FC<ToolCabinetProps> = ({
+export const ToolCabinet: FC<PropsWithChildren<ToolCabinetProps>> = ({
   label,
   children,
   visible,

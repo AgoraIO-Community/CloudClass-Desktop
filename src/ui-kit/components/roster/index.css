@@ -39,7 +39,7 @@
 }
 
 .roster-wrap {
-  @apply border border-solid border-divider;
+  @apply border  border-solid border-divider;
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47, 65%, 146%, 15%);
   border-radius: 6px;
@@ -93,14 +93,14 @@
 }
 
 .roster-container {
-  @apply bg-component border border-solid border-divider;
+  @apply bg-component border  border-solid border-divider;
   display: flex;
   flex-direction: column;
   height: calc(100% - 45px);
 }
 
 .roster-container .roster-table {
-  @apply border-t border-solid border-divider;
+  @apply border-t  border-solid border-divider;
   flex: 1;
   min-height: 0;
 }

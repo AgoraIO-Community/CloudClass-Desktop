@@ -1,10 +1,10 @@
-import { AgoraTrackSyncedWidget, AgoraWidgetBase } from '@classroom/infra/api/type';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './index.css';
 import { TrackCore } from './track';
+import { AgoraTrackSyncedWidget, AgoraWidgetBase } from 'agora-common-libs';
 
 export const WidgetContainer = observer(() => {
   const {
@@ -80,54 +80,56 @@ export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
   return null;
 });
 
-const WidgetTrackControl: FC<{ widget: AgoraWidgetBase }> = observer(({ widget, children }) => {
-  const tsw = widget as unknown as AgoraTrackSyncedWidget;
+const WidgetTrackControl: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>> = observer(
+  ({ widget, children }) => {
+    const tsw = widget as unknown as AgoraTrackSyncedWidget;
 
-  const {
-    track,
-    zIndex,
-    minHeight,
-    minWidth,
-    draggable,
-    resizable,
-    dragCancelClassName,
-    dragHandleClassName,
-    updateToRemote,
-    boundaryClassName,
-    updateZIndexToRemote,
-  } = tsw;
+    const {
+      track,
+      zIndex,
+      minHeight,
+      minWidth,
+      draggable,
+      resizable,
+      dragCancelClassName,
+      dragHandleClassName,
+      updateToRemote,
+      boundaryClassName,
+      updateZIndexToRemote,
+    } = tsw;
 
-  const [controlled, setControlled] = useState(() => tsw.controlled);
+    const [controlled, setControlled] = useState(() => tsw.controlled);
 
-  useEffect(() => {
-    const handleChange = (controlled: boolean) => {
-      setControlled(controlled);
-    };
-    tsw.addControlStateListener(handleChange);
+    useEffect(() => {
+      const handleChange = (controlled: boolean) => {
+        setControlled(controlled);
+      };
+      tsw.addControlStateListener(handleChange);
 
-    return () => {
-      tsw.removeControlStateListener(handleChange);
-    };
-  }, []);
+      return () => {
+        tsw.removeControlStateListener(handleChange);
+      };
+    }, []);
 
-  const handleZIndexUpdate = () => updateZIndexToRemote(widget.latestZIndex);
+    const handleZIndexUpdate = () => updateZIndexToRemote(widget.latestZIndex);
 
-  return (
-    <TrackCore
-      key={widget.widgetId}
-      minHeight={minHeight}
-      minWidth={minWidth}
-      draggable={draggable}
-      resizable={resizable}
-      controlled={controlled}
-      cancel={dragCancelClassName}
-      handle={dragHandleClassName}
-      boundaryName={boundaryClassName}
-      track={track}
-      zIndex={zIndex}
-      onChange={updateToRemote}
-      onZIndexChange={handleZIndexUpdate}>
-      {children}
-    </TrackCore>
-  );
-});
+    return (
+      <TrackCore
+        key={widget.widgetId}
+        minHeight={minHeight}
+        minWidth={minWidth}
+        draggable={draggable}
+        resizable={resizable}
+        controlled={controlled}
+        cancel={dragCancelClassName}
+        handle={dragHandleClassName}
+        boundaryName={boundaryClassName}
+        track={track}
+        zIndex={zIndex}
+        onChange={updateToRemote}
+        onZIndexChange={handleZIndexUpdate}>
+        {children}
+      </TrackCore>
+    );
+  },
+);

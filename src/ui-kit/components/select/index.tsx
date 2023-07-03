@@ -42,8 +42,8 @@ export const Select: FC<SelectProps> = ({
   size,
   direction = 'down',
   defaultValue,
-  onOpen = () => { },
-  onClose = () => { },
+  onOpen = () => {},
+  onClose = () => {},
   ...restProps
 }) => {
   const transI18n = useI18n();

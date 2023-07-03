@@ -21,7 +21,7 @@
 
 .start-sub-title + div > .fcr-input-wrapper,
 .group-search-wrap .fcr-input-wrapper {
-  @apply bg-component border border-solid border-divider;
+  @apply bg-component border  border-solid border-divider;
   border-radius: 4px;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .group-start-footer {
-  @apply border-t border-solid border-divider;
+  @apply border-t  border-solid border-divider;
   box-sizing: border-box;
   padding-right: 20px;
   display: flex;
@@ -59,7 +59,7 @@
 }
 
 .group-select-footer {
-  @apply bg-component border border-solid border-divider;
+  @apply bg-component border  border-solid border-divider;
   height: 58px;
 }
 
@@ -71,7 +71,7 @@
 }
 
 .group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root {
-  @apply bg-component border border-solid border-divider;
+  @apply bg-component border  border-solid border-divider;
   margin-bottom: 10px;
   border-radius: 4px;
 }
@@ -162,7 +162,7 @@ input[name='breakout-room-type']:checked:after {
 }
 
 .group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root > .fcr-tree-node + .fcr-tree-root {
-  @apply border-t border-solid border-divider;
+  @apply border-t  border-solid border-divider;
 }
 
 .breakout-room-group-panel .popover-arrow {

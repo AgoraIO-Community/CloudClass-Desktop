@@ -25,10 +25,9 @@
 }
 
 .fcr-layout-aside {
-  @apply flex flex-col border-l  border-divider h-full;
+  @apply flex flex-col border-l  border-divider h-full overflow-hidden;
   /* width: 19rem; */
   border-left: none;
-  @apply overflow-hidden;
   gap: 4px;
   margin-left: 2px;
   position: relative;

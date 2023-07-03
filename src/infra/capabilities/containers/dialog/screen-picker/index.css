@@ -14,7 +14,7 @@
 }
 
 .program-item {
-  @apply border border-solid border-divider;
+  @apply border  border-solid border-divider;
   width: 185px;
   height: 150px;
   border-radius: 4px;
@@ -23,12 +23,12 @@
   @apply box-border flex flex-col justify-center items-center cursor-pointer float-left;
 }
 .program-item-active {
-  @apply border border-solid border-brand;
+  @apply border  border-solid border-brand;
 }
 .program-item-img {
   width: 159px;
   height: 101px;
-  @apply border border-solid border-divider;
+  @apply border  border-solid border-divider;
   margin-top: 10px;
   background-position: center;
   background-size: 100%;
@@ -51,7 +51,7 @@
   max-width: 100px;
 }
 .programs h5 {
-  @apply border-b border-solid border-divider text-level1;
+  @apply border-b  border-solid border-divider text-level1;
   font-weight: bold;
   font-size: 14px;
   padding-bottom: 5px;

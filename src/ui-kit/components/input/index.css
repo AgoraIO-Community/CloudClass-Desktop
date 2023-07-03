@@ -1,5 +1,5 @@
 .fcr-input-wrapper {
-  @apply border-divider border border-solid text-level1;
+  @apply border-divider border  border-solid text-level1;
   background-color: transparent;
   position: relative;
   display: inline-block;

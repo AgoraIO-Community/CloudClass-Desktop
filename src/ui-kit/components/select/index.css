@@ -2,7 +2,7 @@
   position: relative;
 }
 .options-container {
-  @apply border border-solid border-divider bg-component;
+  @apply border  border-solid border-divider bg-component;
   position: absolute;
   z-index: 2;
   width: 100%;
@@ -124,7 +124,7 @@
 }
 
 .react-select-container .react-select__control {
-  @apply border border-solid border-divider;
+  @apply border  border-solid border-divider;
   background: transparent;
   box-sizing: border-box;
   transition: all 0.3s !important;
