@@ -9,14 +9,14 @@ lib_dependencies=(
     agora-common-libs
 )
 lib_versions=(
-    2.8.21
-    2.8.21
-    2.8.1
+    2.9.0
+    2.9.0
+    2.9.0
 )
 lib_branches=(
-    feature/online-class-sdk
-    feature/online-class-sdk
-    feature/online-class-sdk
+    release/2.9.0
+    release/2.9.0
+    release/2.9.0
 )
 
 . ../apaas-cicd-web/utilities/tools.sh
