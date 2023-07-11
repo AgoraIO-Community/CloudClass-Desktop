@@ -8,7 +8,7 @@ import { EduClassroomConfig } from 'agora-edu-core';
 import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 import { isProduction } from '@classroom/infra/utils';
 
-let assetsBaseUrl = isProduction ? process.env.REACT_APP_AGORA_APP_ASSETS_CDN : '';
+let assetsBaseUrl = isProduction ? 'https://solutions-apaas.agora.io/static' : '';
 
 export const builtInExtensions = {
   virtualBackgroundExtension: 'VirtualBackgroundExtension',
