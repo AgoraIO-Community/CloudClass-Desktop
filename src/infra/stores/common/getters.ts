@@ -8,7 +8,7 @@ import {
 } from 'agora-edu-core';
 import { ExpandedScopeState } from 'agora-edu-core';
 import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
-import { isNumber } from 'lodash';
+import isNumber from 'lodash/isNumber';
 import { computed } from 'mobx';
 import { EduClassroomUIStore } from '.';
 import { LayoutMaskCode } from './type';

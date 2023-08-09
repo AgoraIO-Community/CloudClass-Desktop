@@ -6,7 +6,7 @@ import {
   EduClassroomConfig,
   EduErrorCenter,
 } from 'agora-edu-core';
-import { toLower } from 'lodash';
+import toLower from 'lodash/toLower';
 import {
   CloudDriveCourseResource,
   CloudDriveH5Resource,

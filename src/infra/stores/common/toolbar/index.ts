@@ -24,7 +24,7 @@ import {
   bound,
   Log,
 } from 'agora-rte-sdk';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { action, computed, observable, reaction, runInAction, toJS, when } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share';

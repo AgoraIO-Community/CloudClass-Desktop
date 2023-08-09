@@ -1,5 +1,5 @@
 import { bound, Log, Logger } from 'agora-rte-sdk';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 
 export enum WorkPriority {
   high,

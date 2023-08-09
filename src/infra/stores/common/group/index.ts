@@ -9,7 +9,8 @@ import {
   SceneType,
 } from 'agora-edu-core';
 import { AGError, AGRtcConnectionType, bound, Log, AGRtcState } from 'agora-rte-sdk';
-import { difference, range } from 'lodash';
+import difference from 'lodash/difference';
+import range from 'lodash/range';
 import { action, computed, IReactionDisposer, observable, reaction, runInAction, when } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import uuidv4 from 'uuid';
