@@ -50,7 +50,7 @@ export const Col: React.FC<ColProps> = ({
   const cls = classnames({
     'table-col-item': 1,
     [`${className}`]: !!className,
-    [`justify-${align}`]: !!align,
+    [`fcr-justify-${align}`]: !!align,
     [`flex-width-${width}`]: !!width,
     [hoverClass!]: hovered,
   });
@@ -94,8 +94,8 @@ export const Row: React.FC<RowProps> = ({
   const cls = classnames({
     'table-row-item': 1,
     [`${className}`]: !!className,
-    [`justify-${align}`]: !!align,
-    [`border-bottom-width-${border}`]: !!border,
+    [`fcr-justify-${align}`]: !!align,
+    [`fcr-border-bottom-width-${border}`]: !!border,
     [`table-row-x-${height}`]: !!height,
     [`item-gap-${gap}`]: !!gap,
     [hoverClass!]: hovered,

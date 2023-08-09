@@ -10,7 +10,7 @@ import { teacherVideoEnabled, visibilityControl } from 'agora-common-libs';
 export const RoomBigTeacherStreamContainer = () => {
   return (
     <div
-      className="teacher-stream-container flex flex-col"
+      className="teacher-stream-container fcr-flex fcr-flex-col"
       id="aisde-streams-container"
       style={{
         marginBottom: -2,

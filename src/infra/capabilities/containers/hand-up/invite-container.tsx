@@ -36,7 +36,7 @@ export const InvitePodiumContainer: React.FC<InvitePodiumContainerProps> = ({ on
             <div className="btn-pin">
               <SvgImg
                 type={SvgIconEnum.CLOSE}
-                className="cursor-pointer"
+                className="fcr-cursor-pointer"
                 onClick={() => {
                   setOpened(false);
                 }}

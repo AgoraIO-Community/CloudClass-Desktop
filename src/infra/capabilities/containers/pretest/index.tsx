@@ -116,7 +116,7 @@ const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean; onCance
 
 const Modal: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="bg-component fcr-pretest-modal"
+    className="fcr-bg-component fcr-pretest-modal"
     style={{
       width: 730,
       height: 656,
@@ -129,12 +129,12 @@ const Modal: FC<PropsWithChildren> = ({ children }) => (
 );
 
 const PreTestContent: FC<PropsWithChildren> = ({ children }) => (
-  <div className="flex w-full h-full">{children}</div>
+  <div className="fcr-flex fcr-w-full fcr-h-full">{children}</div>
 );
 
 const PreTestTabLeftContent: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="border-divider"
+    className="fcr-border-divider"
     style={{
       flexBasis: 160,
       paddingTop: 40,
@@ -149,7 +149,7 @@ const PreTestTabLeftContent: FC<PropsWithChildren> = ({ children }) => (
 
 const PreTestTitle: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="text-level1"
+    className="fcr-text-level1"
     style={{
       fontWeight: 800,
       fontSize: 26,
@@ -161,7 +161,7 @@ const PreTestTitle: FC<PropsWithChildren> = ({ children }) => (
 );
 
 const PreTestTabContent: FC<PropsWithChildren> = ({ children }) => (
-  <div className="flex flex-grow flex-col justify-between">{children}</div>
+  <div className="fcr-flex fcr-flex-grow fcr-flex-col fcr-justify-between">{children}</div>
 );
 
 const PreTestTabHeader: FC<PropsWithChildren<{ activity: boolean; onClick: () => void }>> = ({
@@ -172,11 +172,11 @@ const PreTestTabHeader: FC<PropsWithChildren<{ activity: boolean; onClick: () =>
   const background = activity ? brandColor : 'transparent';
   const fontWeight = activity ? 700 : 500;
 
-  const text = activity ? 'text-white' : 'text-level1';
+  const text = activity ? 'fcr-text-white' : 'fcr-text-level1';
 
   return (
     <div
-      className={`flex items-center ${text}`}
+      className={`fcr-flex fcr-items-center ${text}`}
       onClick={onClick}
       style={{
         margin: '0 15px',
@@ -216,7 +216,7 @@ const Icon: FC<PropsWithChildren<{ type: DeviceType | 'stage'; activity: boolean
 
   return (
     <div
-      className="flex justify-center items-center"
+      className="fcr-flex fcr-justify-center fcr-items-center"
       style={{
         width: 28,
         height: 28,

@@ -13,25 +13,25 @@ type DocsProps = {
 
 export const Docs = ({ placeholderDesc }: DocsProps) => (
   <>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <Placeholder />
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <Placeholder placeholderType="noFile" />
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <Placeholder placeholderType="noQuestion" />
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <CameraPlaceHolder state="loading" />
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <CameraPlaceHolder state="broken" />
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <CameraPlaceHolder state="muted" />
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <CameraPlaceHolder state="disabled" />
     </div>
   </>

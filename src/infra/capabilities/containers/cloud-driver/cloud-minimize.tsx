@@ -15,7 +15,7 @@ export default observer(function CloudMinimize() {
         <span className="upload-minimize-content">
           <CircleLoading width="18" height="18" />
           <span className="upload-minimize-text">
-            <span className="mr-1">{transI18n('cloud.upload_list')}</span>
+            <span className="fcr-mr-1">{transI18n('cloud.upload_list')}</span>
             {
               uploadingProgresses.filter(
                 (item) => item.status === CloudDriveResourceUploadStatus.Success,

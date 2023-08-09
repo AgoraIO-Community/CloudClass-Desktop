@@ -154,7 +154,7 @@ const StreamPlaceholderWaveArmPlaceholder = observer(({ stream }: { stream: EduS
 
 const StreamPlayerOverlayName = observer(({ stream }: { stream: EduStreamUI }) => {
   return (
-    <span title={stream.stream.fromUser.userName} className="username2 pointer-events-auto">
+    <span title={stream.stream.fromUser.userName} className="username2 fcr-pointer-events-auto">
       {stream.stream.fromUser.userName}
     </span>
   );
@@ -169,7 +169,7 @@ export const StreamPlayerOverlay = observer(({ stream }: { stream: EduStreamUI }
   const grantVisible = layerItems && layerItems.includes('grant');
 
   return (
-    <div className="video-player-overlay z-10 pointer-events-none">
+    <div className="video-player-overlay fcr-z-10 fcr-pointer-events-none">
       <AudioVolumeEffect stream={stream} minTriggerVolume={50} />
       <AwardAnimations stream={stream} />
       <div className="top-right-info">
@@ -266,7 +266,7 @@ export const CarouselGroup = observer(
     const width = useDebounce(carouselStreams.length ? fullWith : 0, ANIMATION_DELAY);
 
     return (
-      <TransitionGroup className="flex overflow-hidden" style={{ width }}>
+      <TransitionGroup className="fcr-flex fcr-overflow-hidden" style={{ width }}>
         {carouselStreams.map((stream: EduStreamUI, idx: number) => {
           const style = {
             marginRight: idx === carouselStreams.length - 1 ? 0 : gap - 2,

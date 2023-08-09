@@ -13,12 +13,12 @@ export const WidgetContainer = observer(() => {
 
   return (
     <React.Fragment>
-      <div className="widget-container z-0">
+      <div className="widget-container fcr-z-0">
         {z0Widgets.map((w: AgoraWidgetBase) => (
           <Widget key={w.widgetId} widget={w} />
         ))}
       </div>
-      <div className="widget-container z-10">
+      <div className="widget-container fcr-z-10">
         {z10Widgets.map((w: AgoraWidgetBase) => (
           <Widget key={w.widgetId} widget={w} />
         ))}

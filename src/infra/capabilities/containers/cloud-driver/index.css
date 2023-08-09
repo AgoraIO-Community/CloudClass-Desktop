@@ -7,7 +7,7 @@
 }
 
 .agora-board-resources {
-  @apply bg-component;
+  @apply fcr-bg-component;
   box-shadow: 0px 2px 6px 0px rgba(47, 65, 146, 0.15);
   border-radius: 6px;
   /* border: 1px solid #E3E3EC; */
@@ -34,11 +34,11 @@
 }
 
 .agora-board-resources .tabs-nav {
-  @apply bg-component;
+  @apply fcr-bg-component;
 }
 
 .agora-board-resources .rc-tabs-nav {
-  @apply bg-component;
+  @apply fcr-bg-component;
   height: 40px;
 }
 
@@ -58,7 +58,7 @@
 
 .agora-board-resources .tabs-tab,
 .agora-board-resources .tabs-tab .tabs-tab-active {
-  @apply text-level1;
+  @apply fcr-text-level1;
 }
 .agora-board-resources .form-checkbox {
   margin-right: 15px;
@@ -69,11 +69,11 @@
 }
 
 .cloud-wrap {
-  @apply border-divider border  border-solid;
+  @apply fcr-border-divider fcr-border fcr-border-solid;
 }
 .cloud-wrap .table-header .table-col-item,
 .cloud-wrap .table-col-item {
-  @apply text-level1;
+  @apply fcr-text-level1;
 }
 
 .cloud-wrap .table-container {
@@ -86,17 +86,17 @@
 .cloud-wrap .table-container-upload .placeholder {
   position: relative;
   top: -47px;
-  @apply bg-component;
+  @apply fcr-bg-component;
 }
 
 .cloud-panel {
-  @apply bg-component;
+  @apply fcr-bg-component;
   box-sizing: border-box;
   padding: 7px 15px;
 }
 .cloud-wrap .table-header,
 .cloud-panel .table-container {
-  @apply bg-component;
+  @apply fcr-bg-component;
 }
 .cloud-panel,
 .cloud-panel-right {
@@ -105,7 +105,7 @@
   align-items: center;
 }
 .cloud-panel-right {
-  @apply text-level1;
+  @apply fcr-text-level1;
 }
 
 .cloud-panel-right .input-prefix {
@@ -124,7 +124,7 @@
 }
 
 .cloud-btn-group {
-  @apply border-t  border-solid border-divider;
+  @apply fcr-border-t fcr-border-solid fcr-border-divider;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -194,7 +194,7 @@
 }
 
 .more-menu-item {
-  @apply text-level1;
+  @apply fcr-text-level1;
   width: 100%;
   font-size: 13px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -203,11 +203,11 @@
 }
 
 .more-menu-item:hover {
-  @apply bg-icon-selected-color text-level1;
+  @apply fcr-bg-icon-selected-color fcr-text-level1;
 }
 
 .cloud-help-title {
-  @apply text-level1;
+  @apply fcr-text-level1;
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -240,7 +240,7 @@
   border-radius: 6px;
 }
 .upload-btn-group .upload-btn-popover {
-  @apply text-level1 border-divider;
+  @apply fcr-text-level1 fcr-border-divider;
   padding: 0 14px;
 }
 
@@ -250,11 +250,11 @@
 
 .cloud-driver-tab .ant-tabs-tab,
 .cloud-driver-tab .ant-tabs-tab:hover {
-  @apply text-level3;
+  @apply fcr-text-level3;
 }
 
 .cloud-driver-tab .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  @apply text-level1;
+  @apply fcr-text-level1;
 }
 
 .cloud-driver-tab.ant-tabs > .ant-tabs-nav {

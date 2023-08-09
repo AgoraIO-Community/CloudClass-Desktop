@@ -19,7 +19,7 @@ export const RemoteControlContainer = observer(() => {
     <div
       ref={ref}
       id="remote-control-track-area"
-      className={`w-full absolute`}
+      className={`fcr-w-full fcr-absolute`}
       style={{
         bottom: 0,
         pointerEvents: isRemoteControlling && isHost ? 'auto' : 'none',

@@ -109,7 +109,7 @@ export class StreamUIStore extends EduUIStoreBase {
                       audioState: audioPublishState,
                       audioSourceState:
                         this.classroomStore.mediaStore.localScreenShareAudioTrackState,
-                      audioSourceType: AgoraRteAudioSourceType.ScreenShare,
+                      audioSourceType: AgoraRteAudioSourceType.Loopback,
                     });
                   this.classroomStore.streamStore.initializeScreenShareStream(
                     newValue,
@@ -301,11 +301,8 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @computed get localScreenShareOff() {
     return (
-      (EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.student &&
-        this.classroomStore.mediaStore.localScreenShareTrackState !==
-          AgoraRteMediaSourceState.started) ||
-      (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student &&
-        !this.classroomStore.remoteControlStore.isControlled)
+      EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.student &&
+      this.classroomStore.mediaStore.localScreenShareTrackState !== AgoraRteMediaSourceState.started
     );
   }
 

@@ -9,7 +9,7 @@ export const TrackPlayer: FC<{ stream: EduStreamUI; className?: string; style?: 
   observer(({ stream, className, style }) => {
     const cls = classnames({
       [`video-player`]: 1,
-      ['invisible']: stream.isCameraMuted,
+      ['fcr-invisible']: stream.isCameraMuted,
       [`${className}`]: !!className,
     });
 

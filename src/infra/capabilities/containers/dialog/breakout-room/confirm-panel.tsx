@@ -26,7 +26,7 @@ export const ConfirmPanel: FC<ConfirmPanelProps> = ({
       trigger={children as ReactElement}>
       <div className="confirm-panel-wrap">
         <div className="confirm-panel-title">{title}</div>
-        <div className="confirm-panel-footer flex justify-end">
+        <div className="confirm-panel-footer fcr-flex fcr-justify-end">
           <Button
             type="secondary"
             size="xs"

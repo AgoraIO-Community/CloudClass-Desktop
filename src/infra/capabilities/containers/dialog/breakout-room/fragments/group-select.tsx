@@ -40,7 +40,7 @@ const LinkButton = ({
 }: LinkButtonProps) => {
   const [hover, setHover] = useState(false);
 
-  const cls = classnames('link-btn text-center py-1', className, hover && hoverClassName);
+  const cls = classnames('link-btn fcr-text-center fcr-py-1', className, hover && hoverClassName);
 
   return (
     <div
@@ -100,7 +100,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
       {btns}
       {groupState === GroupState.OPEN ? (
         currentSubRoom === groupUuid ? (
-          <div className="link-width py-1 pr-4 text-center hl-text">
+          <div className="link-width fcr-py-1 fcr-pr-4 fcr-text-center hl-text">
             {t('breakout_room.joined')}
           </div>
         ) : existGroupName ? (
@@ -116,7 +116,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
               closeAll();
             }}>
             <LinkButton
-              className="pr-4 hl-text text-right"
+              className="fcr-pr-4 hl-text fcr-text-right"
               text={groupUuid && t('fcr_group_button_join')}
             />
           </ConfirmPanel>
@@ -134,7 +134,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
             setGroupUsers(groupUuid, users);
           }}>
           <LinkButton
-            className={visiblePanelId === userPanelId ? 'active-bg px-4' : 'hl-text px-4'}
+            className={visiblePanelId === userPanelId ? 'active-bg fcr-px-4' : 'hl-text fcr-px-4'}
             text={t('breakout_room.assign')}
           />
         </UserPanel>
@@ -172,7 +172,7 @@ const UserButtons: FC<UserButtonsProps> = observer(({ userUuid, groupUuid }) => 
   }, [groups, groupUuid]);
 
   return (
-    <div className="flex">
+    <div className="fcr-flex">
       <GroupPanel
         panelId={moveToPanelId}
         groups={filteredGroups}
@@ -230,7 +230,7 @@ const RenameInput: FC<RenameInputProps> = ({ editing, text, onSubmit }) => {
   return editing ? (
     <input
       maxLength={16}
-      className="px-1 group-rename-input"
+      className="fcr-px-1 group-rename-input"
       ref={(ref) => {
         ref?.focus();
       }}
@@ -343,7 +343,7 @@ const GroupTreeNode: FC<GroupTreeNodeProps> = ({ node, level }) => {
         setMouseEnter(false);
       }}
       content={content}
-      tail={!notJoined ? tialNode : <div className="py-1">&nbsp;</div>}
+      tail={!notJoined ? tialNode : <div className="fcr-py-1">&nbsp;</div>}
     />
   );
 };
@@ -366,7 +366,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
   const t = useI18n();
 
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="fcr-h-full fcr-w-full fcr-flex fcr-flex-col">
       {showConfirmDialog && (
         <Modal
           style={{ width: 300 }}
@@ -394,7 +394,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
       )}
 
       <div
-        className="overflow-auto py-2 group-scroll-overflow"
+        className="fcr-overflow-auto fcr-py-2 group-scroll-overflow"
         style={{
           height: broadcastVisible ? 330 : 354,
           flexGrow: broadcastVisible ? 0 : 1,
@@ -404,7 +404,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
         }}>
         <PanelStateContext.Provider value={panelState}>
           <MultiRootTree
-            childClassName="breakout-room-tree pl-4"
+            childClassName="breakout-room-tree fcr-pl-4"
             data={groups}
             renderNode={(node, level) => <GroupTreeNode node={node} level={level} />}
             showArrowAlways
@@ -412,7 +412,7 @@ export const GroupSelect: FC<Props> = observer(({ onNext }) => {
         </PanelStateContext.Provider>
       </div>
       {groupState === GroupState.OPEN ? null : (
-        <div className="flex justify-start items-center group-tips-wrap">
+        <div className="fcr-flex fcr-justify-start fcr-items-center group-tips-wrap">
           <CheckBox
             checked={isCopyContent}
             onChange={(e: any) => {
@@ -463,7 +463,7 @@ const Footer: FC<{
     <Button
       size="xs"
       type="secondary"
-      className="rounded-btn mr-2 recreate-btn"
+      className="rounded-btn fcr-mr-2 recreate-btn"
       onClick={() => {
         stopGroup(onNext);
       }}>
@@ -475,7 +475,7 @@ const Footer: FC<{
     <Button
       size="xs"
       type="secondary"
-      className="rounded-btn mr-2 add-group-btn"
+      className="rounded-btn fcr-mr-2 add-group-btn"
       onClick={addGroup}>
       {t('breakout_room.add_group')}
     </Button>
@@ -495,7 +495,7 @@ const Footer: FC<{
     <Button
       size="xs"
       type="secondary"
-      className="rounded-btn mr-2 px-1 broadcast-btn"
+      className="rounded-btn fcr-mr-2 fcr-px-1 broadcast-btn"
       onClick={() => {
         setBroadcastVisible(true);
       }}>
@@ -509,7 +509,7 @@ const Footer: FC<{
   };
 
   const initial = (
-    <div className="flex justify-end px-4 py-2">
+    <div className="fcr-flex fcr-justify-end fcr-px-4 fcr-py-2">
       {reCreateButton}
       {addGroupButton}
       {startButton}
@@ -517,7 +517,7 @@ const Footer: FC<{
   );
 
   const started = (
-    <div className="flex justify-end px-4 py-2">
+    <div className="fcr-flex fcr-justify-end fcr-px-4 fcr-py-2">
       {broadcastButton}
       {startButton}
     </div>
@@ -525,7 +525,7 @@ const Footer: FC<{
 
   const broadcast = (
     <Fragment>
-      <div className="px-4">
+      <div className="fcr-px-4">
         <BroadcastInput
           limit={300}
           onChange={(text) => {
@@ -533,11 +533,11 @@ const Footer: FC<{
           }}
         />
       </div>
-      <div className="flex justify-end px-4 py-2">
+      <div className="fcr-flex fcr-justify-end fcr-px-4 fcr-py-2">
         <Button
           size="xs"
           type="secondary"
-          className="rounded-btn mr-2"
+          className="rounded-btn fcr-mr-2"
           onClick={() => {
             setBroadcastVisible(false);
           }}>
@@ -589,14 +589,14 @@ const BroadcastInput = ({
   };
 
   return (
-    <div className="breakout-room-broadcast-input border rounded-sm p-1 relative">
+    <div className="breakout-room-broadcast-input fcr-border fcr-rounded-sm fcr-p-1 fcr-relative">
       <textarea
-        className="w-full h-full"
+        className="fcr-w-full fcr-h-full"
         value={text}
         onChange={handleChange}
         placeholder={t('breakout_room.send_to_all_placeholder')}
       />
-      <span className="absolute" style={{ bottom: 4, right: 4 }}>
+      <span className="fcr-absolute" style={{ bottom: 4, right: 4 }}>
         {text.length}/{limit}
       </span>
     </div>

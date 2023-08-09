@@ -25,9 +25,9 @@ export const Float: FC<PropsWithChildren<FloatProps>> = ({
   gap,
 }) => {
   const cls = classNames(
-    'absolute z-50 flex',
-    direction === 'row' ? 'flex-row' : 'flex-col',
-    `gap-${gap ?? 0}`,
+    'fcr-absolute fcr-z-50 fcr-flex',
+    direction === 'row' ? 'fcr-flex-row' : 'fcr-flex-col',
+    `fcr-gap-${gap ?? 0}`,
   );
   return (
     <div

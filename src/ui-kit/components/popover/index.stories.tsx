@@ -16,7 +16,7 @@ export const Docs: FC<PopoverProps> = (props) => {
           <Button>Popover</Button>
         </Popover>
       </div>
-      <div className="mt-10">
+      <div className="fcr-mt-10">
         <Popover
           trigger="click"
           overlayClassName="raw-popover"

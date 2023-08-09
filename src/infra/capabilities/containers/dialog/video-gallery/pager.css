@@ -14,7 +14,7 @@
   align-items: center;
   padding-bottom: 5px;
   z-index: 110;
-  @apply bg-foreground;
+  @apply fcr-bg-foreground;
 }
 
 .fcr-video-grid-pager__prev {
@@ -35,13 +35,13 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  @apply bg-background;
+  @apply fcr-bg-background;
 }
 .fcr-video-grid-pager__button:hover {
-  @apply bg-brand;
+  @apply fcr-bg-brand;
 }
 
 .fcr-video-grid-pager__label {
   font-size: 12px;
-  @apply text-level1;
+  @apply fcr-text-level1;
 }

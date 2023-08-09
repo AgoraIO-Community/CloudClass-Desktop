@@ -26,7 +26,7 @@ export const Chat = observer(function Chat() {
     }
   }, [ready]);
 
-  return <div className="widget-slot-chat h-full" />;
+  return <div className="widget-slot-chat fcr-h-full" />;
 });
 
 export const Whiteboard = observer(function Board() {
@@ -64,7 +64,7 @@ export const PollMobile = observer(() => {
   const {
     shareUIStore: { isLandscape },
   } = useStore();
-  return <div className={`fcr-poll-mobile-widget ${isLandscape ? '' : 'relative'}`}></div>;
+  return <div className={`fcr-poll-mobile-widget ${isLandscape ? '' : 'fcr-relative'}`}></div>;
 });
 export const WhiteboardMobile = observer(function Board() {
   const {
@@ -84,7 +84,7 @@ export const WhiteboardMobile = observer(function Board() {
   const height = mounted && !isLandscape ? boardContainerHeight : 0;
   return (
     <div
-      className={classnames('whiteboard-mobile-container w-full relative', containerH5VisibleCls)}
+      className={classnames('whiteboard-mobile-container fcr-w-full fcr-relative', containerH5VisibleCls)}
       style={{
         height: height,
         width: boardContainerWidth,
@@ -197,6 +197,6 @@ export const Watermark = observer(function Chat() {
   }, [ready, watermark]);
 
   return (
-    <div className="widget-slot-watermark h-full w-full absolute top-0 left-0 pointer-events-none" />
+    <div className="widget-slot-watermark fcr-h-full fcr-w-full fcr-absolute fcr-top-0 fcr-left-0 fcr-pointer-events-none" />
   );
 });

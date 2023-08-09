@@ -397,42 +397,12 @@ export class ToolbarUIStore extends EduUIStoreBase {
           EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
         ) {
           if (this.isScreenSharing) {
-            if (this.classroomStore.remoteControlStore.isRemoteControlling) {
-              const isTeacher =
-                EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
-              const isTeacherControlStudent =
-                this.classroomStore.remoteControlStore.isHost && isTeacher;
-              if (isTeacherControlStudent) {
-                this.classroomStore.remoteControlStore.quitControlRequest();
-              } else {
-                this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
-                this.classroomStore.mediaStore.stopScreenShareCapture();
-              }
-            } else {
-              this.classroomStore.mediaStore.stopScreenShareCapture();
-            }
+            this.classroomStore.mediaStore.stopScreenShareCapture();
             return;
           }
           this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
             onOK: (screenShareType: ScreenShareRoleType) => {
-              if (screenShareType === ScreenShareRoleType.Teacher) {
-                this.startLocalScreenShare();
-              } else {
-                const studentList = this.classroomStore.userStore.studentList;
-                if (studentList.size <= 0)
-                  return this.shareUIStore.addToast(transI18n('fcr_share_no_student'), 'warning');
-                const canControlledStudentList =
-                  this.classroomStore.remoteControlStore.canControlledStudentList;
-
-                if (canControlledStudentList.size > 0) {
-                  const { list } = iterateMap(canControlledStudentList, {
-                    onMap: (_key, item) => item,
-                  });
-                  this.classroomStore.remoteControlStore.sendControlRequst(list[0]?.userUuid);
-                } else {
-                  this.shareUIStore.addToast(transI18n('fcr_share_device_no_support'), 'warning');
-                }
-              }
+              this.startLocalScreenShare();
             },
           });
         } else {
@@ -772,7 +742,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   @computed
   get teacherTools(): ToolbarItem[] {
     let _tools: ToolbarItem[] = [];
-    if (this.boardApi.mounted && !this.classroomStore.remoteControlStore.isHost) {
+    if (this.boardApi.mounted) {
       _tools = [
         ToolbarItem.fromData({
           value: 'clicker',
@@ -881,7 +851,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
     const mounted = this.boardApi.mounted;
     const whiteboardAuthorized = this.boardApi.grantedUsers.has(userUuid);
 
-    if (!mounted || !whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
+    if (!mounted || !whiteboardAuthorized) {
       //allowed to view user list only if not granted
       return [
         ToolbarItem.fromData({

@@ -12,7 +12,7 @@ import { useI18n } from 'agora-common-libs';
 export const PretestVoice = observer(() => {
   return (
     <div
-      className="flex flex-grow flex-col"
+      className="fcr-flex fcr-flex-grow fcr-flex-col"
       style={{
         padding: '60px 30px 40px',
         gap: 20,
@@ -113,18 +113,18 @@ const SpeakerTest = observer(() => {
       {aiDenoiserSupported && (
         <React.Fragment>
           <ItemCardTitle>{transI18n('pretest.audio_noise_cancellation')}</ItemCardTitle>
-          <div className="flex">
-            <div onClick={enableAIDenoiser} className="cursor-pointer mr-4 flex items-center">
+          <div className="fcr-flex">
+            <div onClick={enableAIDenoiser} className="fcr-cursor-pointer fcr-mr-4 fcr-flex fcr-items-center">
               <SvgImg
                 type={aiDenoiserEnabled ? SvgIconEnum.PRETEST_CHECKED : SvgIconEnum.PRETEST_CHECK}
               />
-              <span className="text-level1">{transI18n('pretest.on')}</span>
+              <span className="fcr-text-level1">{transI18n('pretest.on')}</span>
             </div>
-            <div onClick={disableAIDenoiser} className="cursor-pointer flex items-center">
+            <div onClick={disableAIDenoiser} className="fcr-cursor-pointer fcr-flex fcr-items-center">
               <SvgImg
                 type={aiDenoiserEnabled ? SvgIconEnum.PRETEST_CHECK : SvgIconEnum.PRETEST_CHECKED}
               />
-              <span className="text-level1">{transI18n('pretest.off')}</span>
+              <span className="fcr-text-level1">{transI18n('pretest.off')}</span>
             </div>
           </div>
         </React.Fragment>
@@ -139,7 +139,7 @@ const VolumeDance: FC = observer(() => {
   } = useStore();
 
   return (
-    <div className="flex" style={{ gap: 10 }}>
+    <div className="fcr-flex" style={{ gap: 10 }}>
       <SvgImg type={SvgIconEnum.MICROPHONE_ON} />
       <Volume maxLength={18} cursor={localVolume} peek={100} />
     </div>
@@ -149,7 +149,7 @@ const VolumeDance: FC = observer(() => {
 const ItemCardTitle: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
-      className="mt-4 text-level1 flex items-center"
+      className="fcr-mt-4 fcr-text-level1 fcr-flex fcr-items-center"
       style={{
         fontWeight: 700,
         fontSize: 16,
@@ -162,7 +162,7 @@ const ItemCardTitle: FC<PropsWithChildren> = ({ children }) => {
 const ItemForm: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
-      className="fcr-pretest-audio flex justify-center items-center"
+      className="fcr-pretest-audio fcr-flex fcr-justify-center fcr-items-center"
       style={{
         gap: 8,
         height: 42,
@@ -174,7 +174,7 @@ const ItemForm: FC<PropsWithChildren> = ({ children }) => {
 
 const ItemCard: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="flex flex-col"
+    className="fcr-flex fcr-flex-col"
     style={{
       borderRadius: 18,
       padding: 20,

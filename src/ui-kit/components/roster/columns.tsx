@@ -20,7 +20,7 @@ const Icon = ({
   canClick?: boolean;
   children?: React.ReactNode;
 }) => {
-  const cls = classNames('w-full h-full flex justify-center items-center', canClick && 'clickable');
+  const cls = classNames('fcr-w-full fcr-h-full fcr-flex fcr-justify-center fcr-items-center', canClick && 'clickable');
   return (
     <div className={cls}>
       <SvgImg type={type.icon} colors={{ iconPrimary: type.color }} />

@@ -59,14 +59,14 @@ export const UserPanel: FC<UserPanelProps> = ({
         )}
         {users.length ? (
           <div
-            className="panel-content py-2 px-2 overflow-auto"
+            className="panel-content fcr-py-2 fcr-px-2 fcr-overflow-auto"
             style={{
               height: 'calc(100% - 20px)',
             }}
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
             }}>
-            <div className="flex flex-wrap justify-start">
+            <div className="fcr-flex fcr-flex-wrap fcr-justify-start">
               {users
                 .filter((item) => {
                   if (!keyword) return true;

@@ -259,10 +259,10 @@ export const PersonalResourcesContainer = observer(() => {
                     {item.resource instanceof CloudDriveCourseResource &&
                     item.resource.status === 'Converting' ? (
                       <>
-                        <Inline className="text-level1">
+                        <Inline className="fcr-text-level1">
                           <CircleLoading width="18" height="18" />
                         </Inline>
-                        <Inline className="text-level1" style={{ marginLeft: '6px' }}>
+                        <Inline className="fcr-text-level1" style={{ marginLeft: '6px' }}>
                           {item.resource?.convertedPercentage}%
                         </Inline>
                       </>
@@ -284,10 +284,10 @@ export const PersonalResourcesContainer = observer(() => {
                   </Col>
 
                   <Col>
-                    <Inline className="text-level1">{formatFileSize(size)}</Inline>
+                    <Inline className="fcr-text-level1">{formatFileSize(size)}</Inline>
                   </Col>
                   <Col>
-                    <Inline className="text-level1">
+                    <Inline className="fcr-text-level1">
                       {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
                     </Inline>
                   </Col>

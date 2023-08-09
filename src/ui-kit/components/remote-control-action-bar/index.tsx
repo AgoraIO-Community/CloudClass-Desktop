@@ -24,7 +24,7 @@ export const RemoteControlActionBar: FC<IPropsTypes> = (props) => {
   return (
     <div className="remote-control-action-bar">
       <div className="student-list">
-        <span className="text-level1">{t('fcr_share_title_controling')}</span>
+        <span className="fcr-text-level1">{t('fcr_share_title_controling')}</span>
         <Select
           value={value}
           options={studentList.map((i) => {

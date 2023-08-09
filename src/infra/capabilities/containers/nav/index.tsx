@@ -68,7 +68,7 @@ const SignalQuality = visibilityControl(
       <Popover content={<SignalContent />} placement="bottomLeft">
         <div className={`biz-signal-quality ${networkQualityClass}`}>
           <SvgImg
-            className="cursor-pointer"
+            className="fcr-cursor-pointer"
             type={networkQualityIcon.icon}
             colors={{ iconPrimary: networkQualityIcon.color }}
             size={24}
@@ -157,7 +157,7 @@ const Actions = observer(() => {
 
 const ShareCard = observer(() => {
   const { navigationBarUIStore, shareUIStore } = useStore();
-  const cls = classNames('absolute z-20', {});
+  const cls = classNames('fcr-absolute fcr-z-20', {});
   const { roomName, roomUuid } = EduClassroomConfig.shared.sessionInfo;
   const copyRef = useRef<HTMLSpanElement>(null);
   const transI18n = useI18n();
@@ -199,22 +199,22 @@ const ShareCard = observer(() => {
           borderRadius: 10,
         }}>
         <Layout direction="col">
-          <Layout className="justify-between">
-            <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_name')}</span>
-            <span className={'w-1/2 truncate text-right'} title={roomName}>
+          <Layout className="fcr-justify-between">
+            <span className="fcr-text-14 fcr-whitespace-nowrap">{t('fcr_copy_room_name')}</span>
+            <span className={'fcr-w-1/2 fcr-truncate fcr-text-right'} title={roomName}>
               {roomName}
             </span>
           </Layout>
-          <Layout className="justify-between mt-3">
-            <span className="text-14 whitespace-nowrap">{t('fcr_copy_room_id')}</span>
-            <span className={'w-1/2 truncate text-right'} title={roomUuid}>
+          <Layout className="fcr-justify-between fcr-mt-3">
+            <span className="fcr-text-14 fcr-whitespace-nowrap">{t('fcr_copy_room_id')}</span>
+            <span className={'fcr-w-1/2 fcr-truncate fcr-text-right'} title={roomUuid}>
               {roomUuid}
             </span>
           </Layout>
-          <Layout className="justify-between mt-3">
-            <span className="text-14 whitespace-nowrap">{t('fcr_copy_share_link')}</span>
+          <Layout className="fcr-justify-between fcr-mt-3">
+            <span className="fcr-text-14 fcr-whitespace-nowrap">{t('fcr_copy_share_link')}</span>
             <Button type="ghost" style={{ marginLeft: 40 }} size="xs">
-              <Layout className="mx-4 items-center">
+              <Layout className="fcr-mx-4 fcr-items-center">
                 <SvgImg
                   type={SvgIconEnum.LINK_SOLID}
                   colors={{ iconPrimary: InteractionStateColors.allow }}
@@ -223,7 +223,7 @@ const ShareCard = observer(() => {
                 <span
                   ref={copyRef}
                   data-clipboard-text={`${AgoraEduSDK.shareUrl}`}
-                  className="text-12 cursor-pointer whitespace-nowrap"
+                  className="fcr-text-12 fcr-cursor-pointer fcr-whitespace-nowrap"
                   style={{ color: InteractionStateColors.allow, marginLeft: 4 }}>
                   {t('fcr_copy_share_link_copy')}
                 </span>
@@ -240,7 +240,7 @@ const NavigationBarRecordAction = observer(
   ({ action }: { action: EduNavAction<EduNavRecordActionPayload> }) => {
     const { payload } = action;
     return payload ? (
-      <div className="flex items-center">
+      <div className="fcr-flex fcr-items-center">
         {payload.recordStatus === RecordStatus.started && (
           <i className="record-heartbeat animate-pulse"></i>
         )}

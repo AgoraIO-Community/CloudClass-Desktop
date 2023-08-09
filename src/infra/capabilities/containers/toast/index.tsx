@@ -10,7 +10,7 @@ export const ToastContainer = observer(() => {
   const { toastQueue, removeToast } = shareUIStore;
 
   return (
-    <TransitionGroup className="flex justify-center absolute top-0 left-0 w-full h-full pointer-events-none">
+    <TransitionGroup className="fcr-flex fcr-justify-center fcr-absolute fcr-top-0 fcr-left-0 fcr-w-full fcr-h-full fcr-pointer-events-none">
       {toastQueue.map((value: ToastType, idx: number) => (
         <CSSTransition classNames="toast-animation" timeout={1000} key={`${value.id}`}>
           <Toast

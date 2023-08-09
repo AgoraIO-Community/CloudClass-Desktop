@@ -67,7 +67,7 @@ export const applyTheme = (theme: FcrTheme) => {
 };
 
 export const loadGeneratedFiles = () => {
-  const ctxRequire = require.context('@classroom/generated', true, /.*\.ts$/);
+  const ctxRequire = require.context('../../generated', true, /.*\.ts$/);
 
   ctxRequire.keys().forEach((id) => {
     ctxRequire(id);

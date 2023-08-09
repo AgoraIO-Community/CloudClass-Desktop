@@ -43,7 +43,7 @@ export const InteractiveCol = ({
     }
   };
 
-  const colCls = classNames(!isFirstColumn ? 'justify-center' : 'justify-start');
+  const colCls = classNames(!isFirstColumn ? 'fcr-justify-center' : 'fcr-justify-start');
 
   const interactiveEvents = interactable
     ? {
@@ -89,7 +89,7 @@ export const RosterTable: React.FC<RosterTableProps> = ({
   return (
     <Table className="table-container">
       {list.map((data: Profile) => (
-        <Row className="border-bottom-width-1" key={data.uid} hoverClass="roster-row-hover">
+        <Row className="fcr-border-bottom-width-1" key={data.uid} hoverClass="roster-row-hover">
           {cols.map((col: Column, idx: number) => (
             <InteractiveCol
               data={data}
@@ -151,14 +151,14 @@ export const InfiniteScrollRosterTable: React.FC<InfiniteScrollRosterTableProps>
   const { onScroll } = useLoadMore(onFetch, hasMore);
   const loader = (
     <img
-      className="mx-auto"
+      className="fcr-mx-auto"
       src={loadingSrc}
       style={{ width: 32, marginLeft: 'auto', marginRight: 'auto' }}
     />
   );
   const noMore = (
     <p
-      className="py-3"
+      className="fcr-py-3"
       style={{ textAlign: 'center', fontSize: 13, color: '#7B88A0', padding: '10px 0' }}>
       {transI18n('roster.no_more_data')}
     </p>
@@ -167,7 +167,7 @@ export const InfiniteScrollRosterTable: React.FC<InfiniteScrollRosterTableProps>
   return (
     <Table className="table-container" onScroll={onScroll}>
       {list.map((data: Profile) => (
-        <Row className="border-bottom-width-1" key={data.uid} hoverClass="roster-row-hover">
+        <Row className="fcr-border-bottom-width-1" key={data.uid} hoverClass="roster-row-hover">
           {cols.map((col: Column, idx: number) => (
             <InteractiveCol
               data={data}

@@ -8,7 +8,7 @@
   padding: 0 14px;
   animation: toastAnimation 0.2s;
   transition: top 0.3s, opacity 0.1s;
-  @apply text-white cursor-pointer flex items-center justify-center box-border relative;
+  @apply fcr-text-white fcr-cursor-pointer fcr-flex fcr-items-center fcr-justify-center fcr-box-border fcr-relative;
 }
 
 @keyframes toastAnimation {
@@ -32,15 +32,15 @@
 }
 
 .toast-success {
-  @apply bg-safe  border-safe border;
+  @apply fcr-bg-safe fcr-border-safe fcr-border;
 }
 
 .toast-error {
-  @apply bg-error border-error border;
+  @apply fcr-bg-error fcr-border-error fcr-border;
 }
 
 .toast-warning {
-  @apply bg-warning border-warning border;
+  @apply fcr-bg-warning fcr-border-warning fcr-border;
 }
 
 .toast .toast-progress {

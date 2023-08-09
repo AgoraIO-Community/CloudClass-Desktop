@@ -16,7 +16,7 @@ export const Docs = () => {
   const [selectedOption, setSelectedOption] = useState('');
   return (
     <>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Select
           value={selectedOption}
           onChange={(value) => {
@@ -27,7 +27,7 @@ export const Docs = () => {
           options={options}
         />
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Select
           value={selectedOption}
           onChange={(value) => {

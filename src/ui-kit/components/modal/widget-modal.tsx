@@ -36,7 +36,7 @@ export const WidgetModal: FC<WidgetModalProps> = ({
   onFullScreen,
   onReload,
 }) => {
-  const cls = classnames('widget-modal', 'relative', 'w-full', 'h-full', className);
+  const cls = classnames('widget-modal', 'fcr-relative', 'fcr-w-full', 'fcr-h-full', className);
   const resizeTimes = useRef(0);
   const { textLevel1 } = useContext(themeContext);
   const handleResize = useCallback(
@@ -52,7 +52,7 @@ export const WidgetModal: FC<WidgetModalProps> = ({
   return (
     <div className={cls} style={{ minHeight, minWidth }}>
       <AutoSizer onResize={handleResize}>
-        {() => <div className="w-full h-full absolute" style={{ zIndex: -1 }} />}
+        {() => <div className="fcr-w-full fcr-h-full fcr-absolute" style={{ zIndex: -1 }} />}
       </AutoSizer>
       <div className="modal-title">
         <div className="modal-title-text">{title}</div>

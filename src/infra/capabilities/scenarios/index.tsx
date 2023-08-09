@@ -52,7 +52,7 @@ export const Scenarios: React.FC<ScenariosProps> = observer(({ pretest, roomType
 
   if (showPretest) {
     return (
-      <div className="w-screen h-screen">
+      <div className="fcr-w-screen fcr-h-screen">
         <RoomPretest onOK={() => setPretest(false)} />;
       </div>
     );

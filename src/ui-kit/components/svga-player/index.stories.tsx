@@ -9,7 +9,7 @@ const meta: Meta = {
 
 export const Docs = () => (
   <>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <SvgaPlayer url="" width={100} height={100} />
     </div>
   </>

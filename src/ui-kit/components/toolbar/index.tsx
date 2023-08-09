@@ -144,8 +144,8 @@ export const Toolbar: FC<PropsWithChildren<ToolbarProps>> = ({
           reachTop
             ? opened
               ? 'toolbar-shadow-up'
-              : 'toolbar-shadow-up hidden'
-            : 'toolbar-shadow-up hidden'
+              : 'toolbar-shadow-up fcr-hidden'
+            : 'toolbar-shadow-up fcr-hidden'
         }></div>
       <div
         className={

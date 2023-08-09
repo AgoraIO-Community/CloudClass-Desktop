@@ -23,17 +23,17 @@ function asyncOkFunction(e: any): Promise<void> {
 
 export const Docs = ({ title }: DocsProps) => (
   <>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <Modal title={title} footer={[<Button type="secondary">test</Button>, <Button>test</Button>]}>
         <p>你确定要下课吗？</p>
       </Modal>
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <Modal title={title} closable={false} footer={[<Button>test</Button>]}>
         <p>试用时间到，教室已解散！</p>
       </Modal>
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <Modal
         title={title}
         style={{ width: 320 }}
@@ -72,7 +72,7 @@ export const KickStudents = () => {
             value="kicked_once"
             onClick={() => setValue('kicked_once')}
           />
-          <span className="ml-2">{transI18n('radio.kicked_once')}</span>
+          <span className="fcr-ml-2">{transI18n('radio.kicked_once')}</span>
         </label>
         <label className="customize-radio">
           <input
@@ -81,7 +81,7 @@ export const KickStudents = () => {
             value="kicked_ban"
             onClick={() => setValue('kicked_ban')}
           />
-          <span className="ml-2">{transI18n('radio.ban')}</span>
+          <span className="fcr-ml-2">{transI18n('radio.ban')}</span>
         </label>
       </div>
     </Modal>

@@ -23,7 +23,7 @@ import './index.css';
 export const PretestVideo = () => {
   return (
     <div
-      className="flex flex-col items-center"
+      className="fcr-flex fcr-flex-col fcr-items-center"
       style={{
         paddingTop: 40,
         paddingLeft: 21,
@@ -68,7 +68,7 @@ export const PretestVideoPlayerLocalCameraPlaceholder = observer(() => {
 const VideoPreviewTest = observer(() => {
   return (
     <div
-      className="relative"
+      className="fcr-relative"
       style={{
         height: 254,
         borderRadius: 14,
@@ -115,7 +115,7 @@ const VideoSidler = observer(() => {
   return activeBeautyType !== 'none' && currentEffectType === 'beauty' ? (
     <VideoSliderPanel>
       <ASlider
-        className="fcr-pretest-slider flex-grow"
+        className="fcr-pretest-slider fcr-flex-grow"
         min={0}
         max={100}
         value={activeBeautyValue}
@@ -194,7 +194,7 @@ const VideoOperatorTab = observer(() => {
             onClick={(e) => handleTabClick(e, 'virtualBackground')}>
             {transI18n('media.virtualBackground')}
             <SvgImg
-              className="absolute -top-2 inline-block pointer-events-none ml-1"
+              className="fcr-absolute fcr-top-2 fcr-inline-block fcr-pointer-events-none fcr-ml-1"
               type={SvgIconEnum.BETA}
               size={31}
             />
@@ -207,14 +207,14 @@ const VideoOperatorTab = observer(() => {
             onClick={(e) => handleTabClick(e, 'beauty')}>
             {transI18n('media.beauty')}
             <SvgImg
-              className="absolute -top-2 inline-block pointer-events-none ml-1"
+              className="fcr-absolute fcr-top-2 fcr-inline-block fcr-pointer-events-none fcr-ml-1"
               type={SvgIconEnum.BETA}
               size={31}
             />
           </TabTitle>
         )}
         <SvgImg
-          className="pointer-events-none"
+          className="fcr-pointer-events-none"
           type={SvgIconEnum.INDICATOR}
           size={40}
           colors={{ iconPrimary: textLevel1 }}
@@ -358,7 +358,7 @@ const Beauty = observer(() => {
 
 const VideoSliderPanel: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="absolute h-full flex flex-col items-center"
+    className="fcr-absolute fcr-h-full fcr-flex fcr-flex-col fcr-items-center"
     style={{
       padding: '18px 0',
       top: 0,
@@ -372,7 +372,7 @@ const VideoSliderPanel: FC<PropsWithChildren> = ({ children }) => (
 const RefreshButton: FC<PropsWithChildren<{ onClick: () => void }>> = ({ children, onClick }) => (
   <span
     onClick={onClick}
-    className="flex justify-center align-items"
+    className="fcr-flex fcr-justify-center fcr-align-items"
     style={{
       width: 28,
       height: 28,
@@ -390,7 +390,7 @@ const RefreshButton: FC<PropsWithChildren<{ onClick: () => void }>> = ({ childre
 const VideoDeviceListPanel: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
-      className="fcr-pretest-camera-list absolute"
+      className="fcr-pretest-camera-list fcr-absolute"
       style={{
         left: 10,
         bottom: 10,
@@ -407,7 +407,7 @@ const VideoDeviceListPanel: FC<PropsWithChildren> = ({ children }) => {
 
 const TabHeader: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="flex w-full relative border-divider"
+    className="fcr-flex fcr-w-full fcr-relative fcr-border-divider"
     style={{
       borderBottomWidth: '1px',
       borderBottomStyle: 'solid',
@@ -431,7 +431,7 @@ const TabTitle = forwardRef<
     <div
       ref={ref}
       onClick={onClick}
-      className="text-center cursor-pointer text-level1 relative"
+      className="fcr-text-center fcr-cursor-pointer fcr-text-level1 fcr-relative"
       style={{
         marginRight: 36,
         fontSize: 14,
@@ -459,7 +459,7 @@ const TabContent: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const BeautyContainer: FC<PropsWithChildren> = ({ children }) => (
-  <div style={{ gap: 7 }} className="flex">
+  <div style={{ gap: 7 }} className="fcr-flex">
     {children}
   </div>
 );
@@ -472,7 +472,7 @@ const BeautyItem: FC<PropsWithChildren<{ activity: boolean; onClick: () => void 
   return (
     <div
       onClick={onClick}
-      className={`relative bg-component ${
+      className={`fcr-relative fcr-bg-component ${
         activity ? 'fcr-pretest__beauty-item--active' : 'fcr-pretest__beauty-item'
       }`}
       style={{
@@ -504,7 +504,7 @@ const BeautyIcon: FC<
 
   return (
     <div
-      className="flex justify-center items-center"
+      className="fcr-flex fcr-justify-center fcr-items-center"
       style={{
         height: 56,
         borderRadius: 6,
@@ -534,7 +534,7 @@ const BeautyName: FC<PropsWithChildren<{ activity: boolean }>> = ({ children, ac
 
 const BackgroundContainer: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="flex"
+    className="fcr-flex"
     style={{
       flexWrap: 'wrap',
       gap: 10,
@@ -556,7 +556,7 @@ const BackgroundItem: FC<
       onClick={onClick}
       className={`${
         activity ? 'fcr-pretest-background--active' : 'fcr-pretest-background'
-      } relative flex justify-center items-center cursor-pointer bg-component`}
+      } fcr-relative fcr-flex fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-bg-component`}
       style={{
         width: 82,
         height: 60,

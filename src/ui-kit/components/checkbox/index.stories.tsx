@@ -12,7 +12,7 @@ export const Docs = () => {
 
   return (
     <>
-      <div className="mt-2 ml-2">
+      <div className="fcr-mt-2 fcr-ml-2">
         <CheckBox
           text={'非禁用'}
           checked={checked}
@@ -21,14 +21,14 @@ export const Docs = () => {
           }}
         />
       </div>
-      <div className="mt-2 ml-2">
+      <div className="fcr-mt-2 fcr-ml-2">
         <CheckBox
           text={'半选'}
           indeterminate
           // disabled
         />
       </div>
-      <div className="mt-2 ml-2">
+      <div className="fcr-mt-2 fcr-ml-2">
         <CheckBox
           disabled
           text={'禁用'}

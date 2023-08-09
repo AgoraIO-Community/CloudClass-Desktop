@@ -54,7 +54,7 @@ export const Roster: FC<RosterProps> = ({
           <div className="btn-pin">
             <SvgImg
               type={SvgIconEnum.CLOSE}
-              className="cursor-pointer"
+              className="fcr-cursor-pointer"
               onClick={() => {
                 setOpened(false);
               }}
@@ -100,7 +100,7 @@ export const Roster: FC<RosterProps> = ({
                   return (
                     <Col
                       key={key}
-                      className={isFirstColumn ? 'justify-start' : 'justify-center'}
+                      className={isFirstColumn ? 'fcr-justify-start' : 'fcr-justify-center'}
                       style={
                         width
                           ? {

@@ -42,7 +42,7 @@ export const KickOut: React.FC<BaseDialogProps & { onOk: (ban: boolean) => void 
               checked={type === 'kicked_once'}
               onChange={() => setType('kicked_once')}
             />
-            <span className="ml-2">{transI18n('radio.kicked_once')}</span>
+            <span className="fcr-ml-2">{transI18n('radio.kicked_once')}</span>
           </label>
           <label className="customize-radio">
             <input
@@ -51,7 +51,7 @@ export const KickOut: React.FC<BaseDialogProps & { onOk: (ban: boolean) => void 
               value="kicked_ban"
               onChange={() => setType('kicked_ban')}
             />
-            <span className="ml-2">{transI18n('radio.ban')}</span>
+            <span className="fcr-ml-2">{transI18n('radio.ban')}</span>
           </label>
         </div>
       </Modal>

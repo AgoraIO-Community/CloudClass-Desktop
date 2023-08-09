@@ -21,7 +21,7 @@ const WindowContainer: FC<PropsWithChildren> = observer(({ children }) => {
   return (
     <div
       id="stream-window-container"
-      className="w-full absolute flex-shrink-0 bottom-0"
+      className="fcr-w-full fcr-absolute fcr-flex-shrink-0 fcr-bottom-0"
       style={{ height: boardUIStore.boardAreaHeight, pointerEvents: 'none' }}
       ref={measureRef}>
       {children}

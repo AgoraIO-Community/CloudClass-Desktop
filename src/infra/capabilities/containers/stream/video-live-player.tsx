@@ -158,11 +158,11 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
   const placeholderElement = useMemo(() => {
     return (
       <div
-        className="absolute w-full h-full top-0 left-0 flex items-center justify-center flex-col z-10"
+        className="fcr-absolute fcr-w-full fcr-h-full fcr-top-0 fcr-left-0 fcr-flex fcr-items-center fcr-justify-center fcr-flex-col fcr-z-10"
         style={{ backgroundColor: 'rgb(249 249 252)' }}>
         {placeholderIcon}
         {placeholderText !== '' ? (
-          <p className="text-base" style={{ color: '#7B88A0' }}>
+          <p className="fcr-text-base" style={{ color: '#7B88A0' }}>
             {placeholderText}
           </p>
         ) : (
@@ -173,16 +173,16 @@ const VideoLivePlayerBaseCom: ForwardRefRenderFunction<VideoLivePlayerRef, Video
   }, [placeholderIcon, placeholderText]);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="fcr-relative fcr-w-full fcr-h-full fcr-flex fcr-items-center fcr-justify-center">
       <video
         src={url}
         style={style}
-        className={`pointer-events-none w-full h-full ${className}`}
+        className={`fcr-pointer-events-none fcr-w-full fcr-h-full ${className}`}
         ref={videoRef}
       />
       {interactiveNeeded ? (
         <div
-          className="absolute w-full h-full cursor-pointer top-0 left-0 video-live-player-play-btn"
+          className="fcr-absolute fcr-w-full fcr-h-full fcr-cursor-pointer fcr-top-0 fcr-left-0 video-live-player-play-btn"
           onClick={() => {
             playHandle(getLiveTime());
           }}></div>

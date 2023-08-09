@@ -41,7 +41,7 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
           max={20}
         />
         <div className="start-sub-title">{transI18n('breakout_room.group_type')}</div>
-        <div className="flex justify-start">
+        <div className="fcr-flex fcr-justify-start">
           <RadioGroup
             gap={3}
             direction="vertical"
@@ -55,7 +55,7 @@ export const Start: FC<Props> = observer(({ onCancel, onNext }) => {
               setType(value);
             }}
           />
-          <div className="inline-flex flex-col">
+          <div className="fcr-inline-flex fcr-flex-col">
             <div
               style={{
                 marginLeft: 16,

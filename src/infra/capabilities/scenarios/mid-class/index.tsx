@@ -34,7 +34,7 @@ export const MidClassScenario = () => {
           <Layout className={layoutCls} direction="col">
             <NavigationBar />
             <Layout
-              className="flex-grow items-stretch relative justify-center fcr-room-bg"
+              className="fcr-flex-grow fcr-items-stretch fcr-relative fcr-justify-center fcr-room-bg"
               direction="col">
               <RoomMidStreamsContainer />
               <Whiteboard />

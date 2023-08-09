@@ -141,19 +141,19 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
       {...constraints}
       {...eventHandlers}>
       {/* modal */}
-      <div className="fcr-video-grid w-full h-full flex flex-col">
+      <div className="fcr-video-grid fcr-w-full fcr-h-full fcr-flex fcr-flex-col">
         {/* close */}
         <div className="btn-pin">
           <SvgImg
             type={isFullscreen ? SvgIconEnum.FULLSCREEN_SHRINK : SvgIconEnum.FULLSCREEN}
-            className="cursor-pointer"
+            className="fcr-cursor-pointer"
             size={20}
             style={{ marginRight: 12 }}
             onClick={handleFullscreen}
           />
           <SvgImg
             type={SvgIconEnum.CLOSE}
-            className="cursor-pointer"
+            className="fcr-cursor-pointer"
             onClick={handleClose}
             size={20}
           />
@@ -164,7 +164,7 @@ export const VideoGallery: FC<VideoGalleryProps> = observer(({ id }) => {
         </div>
         {/* content */}
         <VideoGalleryPortal
-          className="main-content h-full"
+          className="main-content fcr-h-full"
           streamList={streamList}
           options={videoGalleryConfigOptions}
           pageSize={pageSize}
@@ -205,7 +205,7 @@ export const VideoGalleryPortal: FC<PortalProps> = ({
   onStageClick,
   offStageClick,
 }) => {
-  const containerCls = classNames(className, 'fcr-video-grid-portal flex-grow relative');
+  const containerCls = classNames(className, 'fcr-video-grid-portal fcr-flex-grow fcr-relative');
 
   const list = useMemo(() => {
     return range(0, pageSize).map((n) => streamList[n]);
@@ -315,7 +315,7 @@ const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
     height: gridSize,
   } as React.CSSProperties;
 
-  let cls = classNames('overflow-hidden', 'fcr-video-grid-border', 'relative');
+  let cls = classNames('fcr-overflow-hidden', 'fcr-video-grid-border', 'fcr-relative');
 
   //
   if ((index + 1) % needSize !== 0) {
@@ -358,7 +358,7 @@ const StageHover: FC<StageHoverProps & StageHoverItemProps> = ({
           <span>{opText}</span>
         </animated.div>
       )}
-      <span className="fcr-video-grid-nameplate absolute">{stream.fromUser.userName}</span>
+      <span className="fcr-video-grid-nameplate fcr-absolute">{stream.fromUser.userName}</span>
     </div>
   );
 };

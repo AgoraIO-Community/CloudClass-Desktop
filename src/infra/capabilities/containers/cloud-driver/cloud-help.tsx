@@ -58,10 +58,10 @@ export default function CloudHelp() {
             />
           </div>
           <div className="help-tip-right">
-            <div className={'text-level1'} style={{ fontSize: 13 }}>
+            <div className={'fcr-text-level1'} style={{ fontSize: 13 }}>
               {item.desc}
             </div>
-            <div className={'text-level1'} style={{ fontSize: 12 }}>
+            <div className={'fcr-text-level1'} style={{ fontSize: 12 }}>
               {transI18n('cloud.fileType')}: {item.supportType.join(' ')}
             </div>
           </div>

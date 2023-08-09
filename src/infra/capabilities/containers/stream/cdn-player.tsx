@@ -111,7 +111,7 @@ export const CDNPlayer: React.FC<CDNPlayerProps> = observer(
     const placeholderElement = useMemo(() => {
       return (
         <div
-          className="absolute w-full h-full top-0 left-0 flex items-center justify-center flex-col"
+          className="fcr-absolute fcr-w-full fcr-h-full fcr-top-0 fcr-left-0 fcr-flex fcr-items-center fcr-justify-center fcr-flex-col"
           style={{ backgroundColor: 'rgb(249 249 252)' }}>
           {placeholderIcon}
           {text}
@@ -120,15 +120,15 @@ export const CDNPlayer: React.FC<CDNPlayerProps> = observer(
     }, [placeholderIcon, placeholderText]);
 
     return (
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="fcr-relative fcr-w-full fcr-h-full fcr-flex fcr-items-center fcr-justify-center">
         <div
           style={style}
-          className={`flex-1 max-w-full max-h-full ${className || ''}`}
+          className={`fcr-flex-1 fcr-max-w-full fcr-max-h-full ${className || ''}`}
           ref={domRef}></div>
         {loading ? placeholderElement : null}
         {interactiveNeeded ? (
           <div
-            className="absolute w-full h-full cursor-pointer top-0 left-0 cdn-player-play-btn"
+            className="fcr-absolute fcr-w-full fcr-h-full fcr-cursor-pointer fcr-top-0 fcr-left-0 cdn-player-play-btn"
             onClick={handlePlay}
           />
         ) : null}

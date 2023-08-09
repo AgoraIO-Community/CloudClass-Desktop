@@ -35,7 +35,7 @@ export const Progress: React.FC<PropsWithChildren<ProgressProps>> = ({
   });
 
   const bgCls = classnames({
-    [`overflow-hidden h-2 text-xs flex rounded bg-${type}-bg`]: 1,
+    [`fcr-overflow-hidden fcr-h-2 fcr-text-xs fcr-flex fcr-rounded bg-${type}-bg`]: 1,
     ['progress-height']: 1,
   });
 

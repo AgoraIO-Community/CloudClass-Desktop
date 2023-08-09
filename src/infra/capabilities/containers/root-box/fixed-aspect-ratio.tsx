@@ -24,10 +24,10 @@ const FixedAspectRatioContainer: React.FC<FixedAspectRatioProps> = observer(
     const { shareUIStore } = useStore();
 
     return (
-      <div className="flex bg-black justify-center items-center h-screen w-screen">
+      <div className="fcr-flex fcr-bg-black fcr-justify-center fcr-items-center fcr-h-screen fcr-w-screen">
         <div
           style={style}
-          className={`w-full h-full relative ${shareUIStore.classroomViewportClassName}`}>
+          className={`fcr-w-full fcr-h-full fcr-relative ${shareUIStore.classroomViewportClassName}`}>
           {children}
         </div>
       </div>
@@ -41,7 +41,7 @@ export const TrackArea = ({ top = 0, boundaryName }: { top?: number; boundaryNam
   return (
     <div
       ref={dom}
-      className={`${boundaryName} w-full absolute`}
+      className={`${boundaryName} fcr-w-full fcr-absolute`}
       style={{ height: `calc( 100% - ${top}px )`, top, zIndex: -1 }}
     />
   );

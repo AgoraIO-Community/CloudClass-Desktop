@@ -49,7 +49,7 @@ export const StreamPlayerToolbar: FC<{
           </div>
         }
         placement={placement ?? toolbarPlacement}>
-        <div className="stream-player-toolbar-placement w-full h-full absolute top-0 left-0" />
+        <div className="stream-player-toolbar-placement fcr-w-full fcr-h-full fcr-absolute fcr-top-0 fcr-left-0" />
       </Popover>
     );
   },
@@ -156,7 +156,3 @@ const ToolItem: FC<{
     return true;
   },
 );
-
-export const StreamPlayerToolbarH5 = observer(() => {
-  return <div className="fcr-"></div>;
-});
