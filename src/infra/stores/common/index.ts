@@ -23,7 +23,6 @@ import {
 import { WidgetUIStore } from './widget';
 import { GroupUIStore } from './group';
 import { ConvertMediaOptionsConfig } from '@classroom/infra/api';
-import { RemoteControlUIStore } from './remote-control';
 import { SubscriptionUIStore } from './subscription';
 import { VideoGalleryUIStore } from './video-gallery';
 import { transI18n } from 'agora-common-libs';
@@ -47,7 +46,6 @@ export class EduClassroomUIStore {
   protected _pretestUIStore: PretestUIStore;
   protected _widgetUIStore: WidgetUIStore;
   protected _groupUIStore: GroupUIStore;
-  protected _remoteControlUIStore: RemoteControlUIStore;
   protected _streamWindowUIStore: StreamWindowUIStore;
   protected _subscriptionUIStore: SubscriptionUIStore;
   protected _videoGalleryUIStore: VideoGalleryUIStore;
@@ -71,7 +69,6 @@ export class EduClassroomUIStore {
     this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore, this._getters);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore, this._getters);
     this._groupUIStore = new GroupUIStore(store, this.shareUIStore, this._getters);
-    this._remoteControlUIStore = new RemoteControlUIStore(store, this.shareUIStore, this._getters);
     this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore, this._getters);
     this._subscriptionUIStore = new SubscriptionUIStore(store, this.shareUIStore, this._getters);
     this._videoGalleryUIStore = new VideoGalleryUIStore(store, this.shareUIStore, this._getters);
@@ -125,9 +122,6 @@ export class EduClassroomUIStore {
   }
   get groupUIStore() {
     return this._groupUIStore;
-  }
-  get remoteControlUIStore() {
-    return this._remoteControlUIStore;
   }
   get streamWindowUIStore() {
     return this._streamWindowUIStore;

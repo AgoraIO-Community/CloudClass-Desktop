@@ -130,6 +130,7 @@ export const en = {
     unknown: 'Unknown error occured. Code: {errCode} Details: {message}',
     room_is_full: 'The room is full',
     network_timeout: 'Network request timeout',
+    join_error_rtm: 'Invalid AppId or token',
   },
   toast: {
     mute_chat: 'You were silenced by {hostName}',

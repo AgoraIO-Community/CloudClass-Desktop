@@ -5,19 +5,18 @@ import {
   popupQuizEnabled,
   chatEnabled,
   boardEnabled,
-} from 'agora-common-libs';
-import {
   AgoraMultiInstanceWidget,
   AgoraTrackSyncedWidget,
   AgoraWidgetBase,
   AgoraWidgetLifecycle,
   AgoraWidgetTrackMode,
+  AgoraWidgetTrackController,
+  AgoraUiCapableConfirmDialogProps,
 } from 'agora-common-libs';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { AgoraWidgetTrackController } from 'agora-common-libs';
 import {
   AgoraExtensionRoomEvent,
   AgoraExtensionWidgetEvent,
@@ -88,7 +87,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       const widget = new (WidgetClass as any)(
         widgetController,
         this.classroomStore,
-        this.shareUIStore,
+        this._createUiCapable(),
         AgoraEduSDK.uiConfig,
         AgoraEduSDK.theme,
       ) as AgoraWidgetBase;
@@ -291,6 +290,7 @@ export class WidgetUIStore extends EduUIStoreBase {
     return widgets;
   }
 
+  @bound
   private _notifyViewportChange() {
     this.widgetInstanceList.forEach((instance) => {
       const clientRect = document
@@ -309,10 +309,18 @@ export class WidgetUIStore extends EduUIStoreBase {
     });
   }
 
+  private _createUiCapable() {
+    return {
+      addToast: (message: string, type: 'error' | 'success' | 'warning') => {
+        this.shareUIStore.addToast(message, type);
+      },
+      addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {},
+    };
+  }
+
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
 
-    this.classroomStore.widgetStore.addWidgetStateListener(this._stateListener);
     // switch between widget controllers of scenes
     this._disposers.push(
       reaction(
@@ -355,6 +363,7 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
             });
+            oldController.removeWidgetStateListener(this._stateListener);
           }
           // install widgets
           if (controller) {
@@ -375,18 +384,40 @@ export class WidgetUIStore extends EduUIStoreBase {
               AgoraExtensionRoomEvent.BoardSetAnimationOptions,
               AgoraEduSDK.boardWindowAnimationOptions,
             );
+            controller.addWidgetStateListener(this._stateListener);
           }
         },
       ),
     );
-    this._viewportResizeObserver = this.shareUIStore.addViewportResizeObserver(
-      this._notifyViewportChange,
+    this._disposers.push(
+      reaction(
+        () => this.shareUIStore.layoutReady,
+        (layoutReady) => {
+          if (layoutReady) {
+            this._viewportResizeObserver = this.shareUIStore.addViewportResizeObserver(
+              this._notifyViewportChange,
+            );
+          } else {
+            if (this._viewportResizeObserver) {
+              this._viewportResizeObserver?.disconnect();
+              this._viewportResizeObserver = undefined;
+            }
+          }
+        },
+      ),
     );
+
+    this._disposers.push(reaction(() => this.widgetInstanceList, this._notifyViewportChange));
   }
 
   onDestroy() {
-    this._viewportResizeObserver?.disconnect();
-    this.classroomStore.widgetStore.removeWidgetStateListener(this._stateListener);
+    if (this._viewportResizeObserver) {
+      this._viewportResizeObserver?.disconnect();
+      this._viewportResizeObserver = undefined;
+    }
+    this.classroomStore.widgetStore.widgetController?.removeWidgetStateListener(
+      this._stateListener,
+    );
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }

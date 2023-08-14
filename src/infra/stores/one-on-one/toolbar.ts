@@ -13,7 +13,7 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
   @computed
   get teacherTools(): ToolbarItem[] {
     let _tools: ToolbarItem[] = [];
-    if (this.boardApi.mounted && !this.classroomStore.remoteControlStore.isHost) {
+    if (this.boardApi.mounted) {
       _tools = [
         ToolbarItem.fromData({
           value: 'clicker',
@@ -103,7 +103,7 @@ export class OneToOneToolbarUIStore extends ToolbarUIStore {
     const { sessionInfo } = EduClassroomConfig.shared;
     const whiteboardAuthorized = this.boardApi.grantedUsers.has(sessionInfo.userUuid);
 
-    if (!whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
+    if (!whiteboardAuthorized) {
       return [];
     }
 

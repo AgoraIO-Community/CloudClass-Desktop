@@ -41,7 +41,9 @@ export const Scenarios: React.FC<ScenariosProps> = observer(({ pretest, roomType
   useEffect(() => {
     initialize();
     setInitialized(true);
-    return destroy;
+    return () => {
+      destroy();
+    };
   }, []);
 
   const [showPretest, setPretest] = useState(pretest);

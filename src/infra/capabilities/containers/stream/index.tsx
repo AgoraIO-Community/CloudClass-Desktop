@@ -34,6 +34,7 @@ import { DragableContainer, DragableStream } from './draggable-stream';
 import './index.css';
 import { StreamPlayerToolbar } from './stream-tool';
 import { TrackPlayer } from './track-player';
+import { AGRenderMode } from 'agora-rte-sdk';
 
 export const AwardAnimations = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
@@ -203,7 +204,8 @@ export const StreamPlayer: FC<{
   renderAt: VideoPlacement;
   style?: CSSProperties;
   toolbarDisabled?: boolean;
-}> = observer(({ stream, style, renderAt, toolbarDisabled }) => {
+  renderMode?: AGRenderMode;
+}> = observer(({ stream, style, renderAt, toolbarDisabled, renderMode }) => {
   const { streamWindowUIStore } = useStore();
   const { visibleStream } = streamWindowUIStore;
   const hasDetached = visibleStream(stream.stream.streamUuid);
@@ -234,7 +236,7 @@ export const StreamPlayer: FC<{
       {!invisible && (
         <React.Fragment>
           <StreamPlayerCameraPlaceholder stream={stream} />
-          {shouldRenderVideo && <TrackPlayer stream={stream} />}
+          {shouldRenderVideo && <TrackPlayer stream={stream} renderMode={renderMode} />}
           {shouldRenderVideo && <StreamPlayerOverlay stream={stream} />}
           {shouldRenderVideo && !toolbarDisabled && (
             <StreamPlayerToolbar stream={stream} visible={toolbarVisible} />

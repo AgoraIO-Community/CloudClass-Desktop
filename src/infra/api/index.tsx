@@ -1,4 +1,4 @@
-import { ControlBar, VideoGallery } from '../capabilities/containers/fragments';
+import { VideoGallery } from '../capabilities/containers/fragments';
 import { Scenarios } from '../capabilities/scenarios';
 import {
   CloudDriveResource,
@@ -38,7 +38,7 @@ import {
   LaunchWindowOption,
   WindowID,
 } from './type';
-import { FcrMultiThemeMode, FcrTheme, FcrUIConfig } from 'agora-common-libs';
+import { FcrMultiThemeMode, FcrTheme, FcrUIConfig, changeLanguage } from 'agora-common-libs';
 import { addResourceBundle } from 'agora-common-libs';
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
@@ -343,6 +343,8 @@ export class AgoraEduSDK {
     addResourceBundle('en', en);
     addResourceBundle('zh', zh);
 
+    changeLanguage(language);
+
     render(
       <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
         <Scenarios pretest={platform !== Platform.H5 && pretest} roomType={roomType} />
@@ -363,7 +365,6 @@ export class AgoraEduSDK {
   static launchWindow(dom: HTMLElement, option: LaunchWindowOption) {
     const mapping = {
       [WindowID.Main]: null,
-      [WindowID.RemoteControlBar]: ControlBar,
       [WindowID.VideoGallery]: VideoGallery,
     };
 

@@ -10,6 +10,18 @@ import pretestAudio from './assets/pretest-audio.mp3';
 import { useI18n } from 'agora-common-libs';
 
 export const PretestVoice = observer(() => {
+  const {
+    pretestUIStore: { startRecordingDeviceTest, stopRecordingDeviceTest },
+  } = useStore();
+  const store = useStore();
+  useEffect(() => {
+    console.log('store', store);
+    startRecordingDeviceTest();
+
+    return () => {
+      stopRecordingDeviceTest();
+    };
+  }, []);
   return (
     <div
       className="fcr-flex fcr-flex-grow fcr-flex-col"
@@ -114,13 +126,17 @@ const SpeakerTest = observer(() => {
         <React.Fragment>
           <ItemCardTitle>{transI18n('pretest.audio_noise_cancellation')}</ItemCardTitle>
           <div className="fcr-flex">
-            <div onClick={enableAIDenoiser} className="fcr-cursor-pointer fcr-mr-4 fcr-flex fcr-items-center">
+            <div
+              onClick={enableAIDenoiser}
+              className="fcr-cursor-pointer fcr-mr-4 fcr-flex fcr-items-center">
               <SvgImg
                 type={aiDenoiserEnabled ? SvgIconEnum.PRETEST_CHECKED : SvgIconEnum.PRETEST_CHECK}
               />
               <span className="fcr-text-level1">{transI18n('pretest.on')}</span>
             </div>
-            <div onClick={disableAIDenoiser} className="fcr-cursor-pointer fcr-flex fcr-items-center">
+            <div
+              onClick={disableAIDenoiser}
+              className="fcr-cursor-pointer fcr-flex fcr-items-center">
               <SvgImg
                 type={aiDenoiserEnabled ? SvgIconEnum.PRETEST_CHECK : SvgIconEnum.PRETEST_CHECKED}
               />

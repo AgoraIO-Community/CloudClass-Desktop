@@ -12,7 +12,6 @@ import {
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   EduRteEngineConfig,
-  iterateMap,
 } from 'agora-edu-core';
 import {
   AGError,
@@ -29,13 +28,7 @@ import { action, computed, observable, reaction, runInAction, toJS, when } from 
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share';
 import { EduStreamUI } from '../stream/struct';
-import {
-  CabinetItem,
-  CabinetItemEnum,
-  ScreenShareRoleType,
-  ToolbarItem,
-  ToolbarItemCategory,
-} from './type';
+import { CabinetItem, CabinetItemEnum, ToolbarItem, ToolbarItemCategory } from './type';
 import { rgbToHexColor } from '../../../utils/board-utils';
 import { conversionOption, fileExt2ContentType } from '../cloud-drive/helper';
 import { transI18n } from 'agora-common-libs';
@@ -155,10 +148,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
     );
     this._disposers.push(
       reaction(
-        () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
-        (isScreenSharingOrRemoteControlling) => {
+        () => this.classroomStore.roomStore.isScreenSharing,
+        (isScreenSharing) => {
           runInAction(() => {
-            if (isScreenSharingOrRemoteControlling) {
+            if (isScreenSharing) {
               this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
             } else {
               this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
@@ -363,7 +356,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
             this.classroomStore.mediaStore.localScreenShareTrackState ===
             AgoraRteMediaSourceState.started
           ) {
-            this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
             this.classroomStore.mediaStore.stopScreenShareCapture();
             await when(() => {
               return this.classroomStore.streamStore.shareStreamTokens.size === 0;
@@ -391,23 +383,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
   async openBuiltinCabinet(id: string) {
     switch (id) {
       case CabinetItemEnum.ScreenShare:
-        if (
-          AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass &&
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-        ) {
-          if (this.isScreenSharing) {
-            this.classroomStore.mediaStore.stopScreenShareCapture();
-            return;
-          }
-          this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
-            onOK: (screenShareType: ScreenShareRoleType) => {
-              this.startLocalScreenShare();
-            },
-          });
-        } else {
-          this.startLocalScreenShare();
+        if (this.isScreenSharing) {
+          this.classroomStore.mediaStore.stopScreenShareCapture();
+          return;
         }
+        this.startLocalScreenShare();
         break;
       case CabinetItemEnum.Laser:
         this.setTool(id);

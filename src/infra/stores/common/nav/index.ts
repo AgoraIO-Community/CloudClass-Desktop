@@ -9,6 +9,7 @@ import {
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
+  EduUserStruct,
   LeaveReason,
   RecordMode,
   RecordStatus,
@@ -701,11 +702,15 @@ export class NavigationBarUIStore extends EduUIStoreBase {
    */
   @computed
   get currScreenShareTitle() {
-    const currSharedUser = this.classroomStore.remoteControlStore.currSharedUser;
-    if (currSharedUser)
+    const { teacherList } = this.classroomStore.userStore;
+    const { isScreenSharing } = this.classroomStore.roomStore;
+    if (isScreenSharing && teacherList.size) {
+      const user = teacherList.values().next().value as EduUserStruct;
+
       return `${transI18n('fcr_share_sharing', {
-        reason: currSharedUser.userName,
+        reason: user.userName,
       })}`;
+    }
   }
   /**
    * 所在房间名称

@@ -122,7 +122,7 @@ export class LectrueToolbarUIStore extends ToolbarUIStore {
     const mounted = this.boardApi.mounted;
     const whiteboardAuthorized = this.boardApi.grantedUsers.has(userUuid);
 
-    if (!mounted || !whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
+    if (!mounted || !whiteboardAuthorized) {
       return [];
     }
     return [

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from 'agora-common-libs';
 import { getRootDimensions } from '../layout/helper';
 import { ConfirmDialogAction, OrientationEnum } from '../type';
-import { EduClassroomConfig } from 'agora-edu-core';
+import { AGEduErrorCode, EduClassroomConfig } from 'agora-edu-core';
 
 export enum DialogCategory {
   CloudDriver,
@@ -172,6 +172,10 @@ export class EduShareUIStore {
       message = transI18n('error.network_timeout');
     } else {
       message = getEduErrorMessage(error) || message;
+    }
+
+    if (error.original.name === 'RtmUnauthenticatedError') {
+      message = transI18n('error.join_error_rtm');
     }
 
     this.addDialog(DialogCategory.ErrorGeneric, {

@@ -41,12 +41,7 @@ export const RoomPretest: FC<PretestProps> = observer(
 
 const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false, pertestTitle }) => {
   const {
-    pretestUIStore: {
-      currentPretestTab,
-      setCurrentTab,
-      startRecordingDeviceTest,
-      stopRecordingDeviceTest,
-    },
+    pretestUIStore: { currentPretestTab, setCurrentTab },
   } = useStore();
 
   const handleOK = useCallback(() => {
@@ -58,13 +53,6 @@ const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false, pertes
   }, []);
 
   const transI18n = useI18n();
-
-  useEffect(() => {
-    startRecordingDeviceTest();
-    return () => {
-      stopRecordingDeviceTest();
-    };
-  }, []);
 
   return (
     <PreTestContent>

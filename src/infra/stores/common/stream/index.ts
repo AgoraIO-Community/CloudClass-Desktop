@@ -763,8 +763,8 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @bound
-  setupLocalVideo(dom: HTMLElement, mirror = false) {
-    return this.classroomStore.mediaStore.setupLocalVideo(dom, mirror);
+  setupLocalVideo(dom: HTMLElement, mirror = false, renderMode?: AGRenderMode) {
+    return this.classroomStore.mediaStore.setupLocalVideo(dom, mirror, renderMode);
   }
 
   /**
@@ -800,16 +800,7 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @bound
   stopScreenShareCapture() {
-    if (this.classroomStore.remoteControlStore.isRemoteControlling) {
-      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-        this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
-        this.classroomStore.mediaStore.stopScreenShareCapture();
-      } else {
-        this.classroomStore.remoteControlStore.quitControlRequest();
-      }
-    } else {
-      return this.classroomStore.mediaStore.stopScreenShareCapture();
-    }
+    return this.classroomStore.mediaStore.stopScreenShareCapture();
   }
 
   @action.bound

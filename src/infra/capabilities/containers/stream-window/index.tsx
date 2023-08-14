@@ -9,6 +9,7 @@ import { StreamPlayer } from '../stream';
 import { StreamWindow } from '@classroom/infra/stores/common/stream-window/type';
 import useMeasure from 'react-use-measure';
 import { StreamPlayerToolbar } from '../stream/stream-tool';
+import { AGRenderMode } from 'agora-rte-sdk';
 
 const WindowContainer: FC<PropsWithChildren> = observer(({ children }) => {
   const { streamWindowUIStore, boardUIStore } = useStore();
@@ -133,6 +134,7 @@ export const TransitionStreamWindow = observer(
               stream={stream}
               style={{ width: '100%', height: '100%' }}
               toolbarDisabled
+              renderMode={AGRenderMode.fit}
             />
           ) : null}
         </animated.div>

@@ -27,7 +27,6 @@ export type ListenerCallback = (evt: AgoraEduClassroomEvent, ...args: unknown[])
 
 export enum WindowID {
   Main = 'main',
-  RemoteControlBar = 'remote-control-bar',
   VideoGallery = 'video-gallery',
 }
 
