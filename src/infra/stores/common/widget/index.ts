@@ -5,10 +5,7 @@ import {
   popupQuizEnabled,
   chatEnabled,
   boardEnabled,
-  AgoraMultiInstanceWidget,
-  AgoraTrackSyncedWidget,
-  AgoraWidgetBase,
-  AgoraWidgetLifecycle,
+  AgoraCloudClassWidget as AgoraWidgetBase,
   AgoraWidgetTrackMode,
   AgoraWidgetTrackController,
   AgoraUiCapableConfirmDialogProps,
@@ -176,56 +173,54 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
 
   private _callWidgetCreate(widget: AgoraWidgetBase, props: unknown, userProps: unknown) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onCreate) {
-      (widget as unknown as AgoraWidgetLifecycle).onCreate(props, userProps);
+    if (widget.onCreate) {
+      widget.onCreate(props, userProps);
     }
   }
 
   private _callWidgetSetInstanceId(widget: AgoraWidgetBase, instanceId: string) {
-    if ((widget as unknown as AgoraMultiInstanceWidget).setInstanceId) {
-      (widget as unknown as AgoraMultiInstanceWidget).setInstanceId(instanceId);
+    if (widget.setInstanceId) {
+      widget.setInstanceId(instanceId);
     }
   }
 
   private _callWidgetPropertiesUpdate(widget: AgoraWidgetBase, props: unknown) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onPropertiesUpdate) {
-      (widget as unknown as AgoraWidgetLifecycle).onPropertiesUpdate(props);
+    if (widget.onPropertiesUpdate) {
+      widget.onPropertiesUpdate(props);
     }
   }
   private _callWidgetUserPropertiesUpdate(widget: AgoraWidgetBase, userProps: unknown) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onUserPropertiesUpdate) {
-      (widget as unknown as AgoraWidgetLifecycle).onUserPropertiesUpdate(userProps);
+    if (widget.onUserPropertiesUpdate) {
+      widget.onUserPropertiesUpdate(userProps);
     }
   }
 
   private _callWidgetDestroy(widget: AgoraWidgetBase) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onDestroy) {
-      (widget as unknown as AgoraWidgetLifecycle).onDestroy();
+    if (widget.onDestroy) {
+      widget.onDestroy();
     }
   }
 
   private _callWidgetUpdateTrack(widget: AgoraWidgetBase, trackProps: unknown) {
-    if ((widget as unknown as AgoraTrackSyncedWidget).updateToLocal) {
-      (widget as unknown as AgoraTrackSyncedWidget).updateToLocal(trackProps as AgoraWidgetTrack);
-      (widget as unknown as AgoraTrackSyncedWidget).updateZIndexToLocal(
-        (trackProps as AgoraWidgetTrack).zIndex ?? 0,
-      );
+    if (widget.updateToLocal) {
+      widget.updateToLocal(trackProps as AgoraWidgetTrack);
+      widget.updateZIndexToLocal((trackProps as AgoraWidgetTrack).zIndex ?? 0);
     }
   }
 
   private _getWidgetTrackMode(widget: AgoraWidgetBase) {
-    return (widget as unknown as AgoraTrackSyncedWidget).trackMode;
+    return widget.trackMode;
   }
 
   private _callWidgetInstall(widget: AgoraWidgetBase, controller: AgoraWidgetController) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onInstall) {
-      (widget as unknown as AgoraWidgetLifecycle).onInstall(controller);
+    if (widget.onInstall) {
+      widget.onInstall(controller);
     }
   }
 
   private _callWidgetUninstall(widget: AgoraWidgetBase, controller: AgoraWidgetController) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onUninstall) {
-      (widget as unknown as AgoraWidgetLifecycle).onUninstall(controller);
+    if (widget.onUninstall) {
+      widget.onUninstall(controller);
     }
   }
 
