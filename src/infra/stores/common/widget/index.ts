@@ -69,12 +69,12 @@ export class WidgetUIStore extends EduUIStoreBase {
     const WidgetClass = this._registeredWidgets[widgetName];
 
     if (!WidgetClass) {
-      this.logger.info(`Widget [${widgetName}] is active but not registered`);
+      this.logger.info(`widget [${widgetName}] is active but not registered`);
       return;
     }
 
     if (this._widgetInstances[widgetId]) {
-      this.logger.info(`Widget [${widgetName}] is already active`);
+      this.logger.info(`widget [${widgetName}] is already active`);
       return;
     }
 
@@ -89,6 +89,8 @@ export class WidgetUIStore extends EduUIStoreBase {
         AgoraEduSDK.theme,
       ) as AgoraWidgetBase;
 
+      this.logger.info('widget instance is created:', widgetId);
+
       if (instanceId) {
         this._callWidgetSetInstanceId(widget, instanceId);
       }
@@ -96,7 +98,11 @@ export class WidgetUIStore extends EduUIStoreBase {
       const trackProps =
         widgetController.getWidgetTrack(widget.widgetId) || (defaults?.trackProperties ?? {});
 
+      this.logger.info('widget trackProps:', trackProps);
+
       const trackMode = this._getWidgetTrackMode(widget);
+
+      this.logger.info('widget trackMode:', trackMode);
 
       if (trackMode) {
         const trackController = new AgoraWidgetTrackController(widget, trackProps, {
@@ -104,10 +110,14 @@ export class WidgetUIStore extends EduUIStoreBase {
         });
 
         widget.setTrackController(trackController);
+
+        this.logger.info('set widget track controller:', trackController);
       }
 
       const props =
         widgetController?.getWidgetProperties(widget.widgetId) || (defaults?.properties ?? {});
+
+      this.logger.info('widget props:', props);
 
       const userProps =
         widgetController?.getWidgetUserProperties(widget.widgetId) ||
@@ -116,8 +126,10 @@ export class WidgetUIStore extends EduUIStoreBase {
       this._callWidgetCreate(widget, props, userProps);
 
       this._widgetInstances[widgetId] = widget;
+
+      this.logger.info(`widget [${widgetId}] is ready to render`);
     } else {
-      this.logger.info('Widget controller not ready for creating widget');
+      this.logger.info('widget controller not ready for creating widget');
     }
   }
 
@@ -174,29 +186,44 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   private _callWidgetCreate(widget: AgoraWidgetBase, props: unknown, userProps: unknown) {
     if (widget.onCreate) {
+      this.logger.info(
+        `call widget [${widget.widgetId}] onCreate, props: ${JSON.stringify(
+          props,
+        )}, userProps: ${JSON.stringify(userProps)}`,
+      );
       widget.onCreate(props, userProps);
     }
   }
 
   private _callWidgetSetInstanceId(widget: AgoraWidgetBase, instanceId: string) {
     if (widget.setInstanceId) {
+      this.logger.info(`call widget [${widget.widgetId}] setInstanceId, instanceId: ${instanceId}`);
       widget.setInstanceId(instanceId);
     }
   }
 
   private _callWidgetPropertiesUpdate(widget: AgoraWidgetBase, props: unknown) {
     if (widget.onPropertiesUpdate) {
+      this.logger.info(
+        `call widget [${widget.widgetId}] onPropertiesUpdate, props: ${JSON.stringify(props)}`,
+      );
       widget.onPropertiesUpdate(props);
     }
   }
   private _callWidgetUserPropertiesUpdate(widget: AgoraWidgetBase, userProps: unknown) {
     if (widget.onUserPropertiesUpdate) {
+      this.logger.info(
+        `call widget [${widget.widgetId}] onUserPropertiesUpdate, userProps: ${JSON.stringify(
+          userProps,
+        )}`,
+      );
       widget.onUserPropertiesUpdate(userProps);
     }
   }
 
   private _callWidgetDestroy(widget: AgoraWidgetBase) {
     if (widget.onDestroy) {
+      this.logger.info(`call widget [${widget.widgetId}] onDestroy`);
       widget.onDestroy();
     }
   }
@@ -214,12 +241,14 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   private _callWidgetInstall(widget: AgoraWidgetBase, controller: AgoraWidgetController) {
     if (widget.onInstall) {
+      this.logger.info(`call widget [${widget.widgetName}] onInstall`);
       widget.onInstall(controller);
     }
   }
 
   private _callWidgetUninstall(widget: AgoraWidgetBase, controller: AgoraWidgetController) {
     if (widget.onUninstall) {
+      this.logger.info(`call widget [${widget.widgetName}] onUninstall`);
       widget.onUninstall(controller);
     }
   }

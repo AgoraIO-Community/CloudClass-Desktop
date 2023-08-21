@@ -1,5 +1,5 @@
 import { AgoraEduSDK, WindowID } from '@classroom/infra/api';
-import { getEduErrorMessage, getErrorServCode } from '@classroom/infra/utils/error';
+import { getEduErrorMessage } from '@classroom/infra/utils/error';
 import { sendToMainProcess } from '@classroom/infra/utils/ipc';
 import { ChannelType } from '@classroom/infra/utils/ipc-channels';
 import { AGError, AGRteErrorCode, bound, Lodash, Log, Logger, Scheduler } from 'agora-rte-sdk';
@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { transI18n } from 'agora-common-libs';
 import { getRootDimensions } from '../layout/helper';
 import { ConfirmDialogAction, OrientationEnum } from '../type';
-import { AGEduErrorCode, EduClassroomConfig } from 'agora-edu-core';
+import { EduClassroomConfig } from 'agora-edu-core';
 
 export enum DialogCategory {
   CloudDriver,
@@ -155,8 +155,7 @@ export class EduShareUIStore {
     let title = '';
 
     if (error.codeList && error.codeList.length > 0) {
-      const servCode = getErrorServCode(error);
-      title = `Error ${error.codeList[error.codeList.length - 1]}${servCode ? `-${servCode}` : ''}`;
+      title = `Error ${error.codeList[error.codeList.length - 1]}`;
     } else {
       title = `Unknown Error`;
     }
@@ -172,10 +171,6 @@ export class EduShareUIStore {
       message = transI18n('error.network_timeout');
     } else {
       message = getEduErrorMessage(error) || message;
-    }
-
-    if (error.original.name === 'RtmUnauthenticatedError') {
-      message = transI18n('error.join_error_rtm');
     }
 
     this.addDialog(DialogCategory.ErrorGeneric, {

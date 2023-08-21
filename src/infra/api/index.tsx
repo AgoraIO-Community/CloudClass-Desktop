@@ -1,4 +1,4 @@
-import { VideoGallery } from '../capabilities/containers/fragments';
+import { VideoGallery } from '../capabilities/containers/fragments/video-gallery';
 import { Scenarios } from '../capabilities/scenarios';
 import {
   CloudDriveResource,
@@ -38,12 +38,17 @@ import {
   LaunchWindowOption,
   WindowID,
 } from './type';
-import { FcrMultiThemeMode, FcrTheme, FcrUIConfig, changeLanguage } from 'agora-common-libs';
-import { addResourceBundle } from 'agora-common-libs';
+import {
+  FcrMultiThemeMode,
+  FcrTheme,
+  FcrUIConfig,
+  addResourceBundle,
+  AgoraWidgetBase,
+  Logger,
+} from 'agora-common-libs';
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
 import { toUpper } from 'lodash';
-import { AgoraWidgetBase } from 'agora-common-libs';
 
 export * from './type';
 
@@ -234,6 +239,7 @@ export class AgoraEduSDK {
   }
 
   static launch(dom: HTMLElement, option: LaunchOption) {
+    Logger.info('[AgoraEduSDK]launched with options:', option);
     EduContext.reset();
     this._validateOptions(option);
     const {
@@ -342,8 +348,6 @@ export class AgoraEduSDK {
 
     addResourceBundle('en', en);
     addResourceBundle('zh', zh);
-
-    changeLanguage(language);
 
     render(
       <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>

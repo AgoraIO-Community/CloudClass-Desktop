@@ -128,7 +128,6 @@ export const zh = {
     unknown: '发生未知错误，错误代码: {errCode}, 信息: {message}',
     room_is_full: '当前房间已满，请点击确认离开教室',
     network_timeout: '网络请求超时',
-    join_error_rtm: 'AppId 或 Token 无效',
   },
   toast: {
     mute_chat: '你已被老师禁言了',
@@ -665,6 +664,7 @@ export const zh = {
     '600080': '设置小流参数失败',
     '600090': '加入RDC房间失败',
     '600096': '设置直播模式失败',
+    '600103': 'AppId 或 Token 无效',
   },
   edu_serv_error: {
     '20400200': '未传入用户唯一标识',

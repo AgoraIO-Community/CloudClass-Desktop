@@ -27,8 +27,6 @@ import { SubscriptionUIStore } from './subscription';
 import { VideoGalleryUIStore } from './video-gallery';
 import { transI18n } from 'agora-common-libs';
 import { Getters } from './getters';
-import { computed } from 'mobx';
-import { EduStreamUI } from './stream/struct';
 
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;
@@ -196,7 +194,7 @@ export class EduClassroomUIStore {
       const enableDualStream = EduClassroomConfig.shared.platform !== Platform.H5;
       await this.classroomStore.mediaStore.enableDualStream(enableDualStream);
 
-      await this.classroomStore.mediaStore.setLowStreamParameter(
+      this.classroomStore.mediaStore.setLowStreamParameter(
         lowStreamCameraEncoderConfigurations || EduClassroomConfig.defaultLowStreamParameter(),
       );
     } catch (e) {
