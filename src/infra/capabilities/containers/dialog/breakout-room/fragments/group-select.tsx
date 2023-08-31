@@ -93,7 +93,7 @@ const GroupButtons: FC<GroupButtonsProps> = observer(({ groupUuid, btns }) => {
 
   return (
     <div
-      className="flex"
+      className="fcr-flex"
       onClick={(e) => {
         e.stopPropagation();
       }}>
