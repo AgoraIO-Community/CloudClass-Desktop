@@ -19,6 +19,7 @@ import {
   FcrStreamMediaPlayerWidget,
   FcrWatermarkWidget,
   FcrWebviewWidget,
+  FcrCanvasLayerWidget,
 } from 'agora-plugin-gallery';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -302,6 +303,7 @@ export class AgoraEduSDK {
       [this._getWidgetName(FcrWebviewWidget)]: FcrWebviewWidget,
       [this._getWidgetName(FcrStreamMediaPlayerWidget)]: FcrStreamMediaPlayerWidget,
       [this._getWidgetName(FcrWatermarkWidget)]: FcrWatermarkWidget,
+      [this._getWidgetName(FcrCanvasLayerWidget)]: FcrCanvasLayerWidget,
     };
 
     if (option.webrtcExtensionBaseUrl) {

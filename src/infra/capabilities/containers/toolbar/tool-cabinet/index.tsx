@@ -41,8 +41,15 @@ export const ToolCabinetContainer = visibilityControl(
 
     const handleClick = useCallback((cabinetId: string) => {
       setVisible(false);
+      /**
+       * `openRemotely` means opening this widget on all other remote clients
+       */
+      let openRemotely = false;
+      if (cabinetId === 'canvas') {
+        openRemotely = true;
+      }
       isInstalled(cabinetId)
-        ? openExtensionCabinet(cabinetId, false)
+        ? openExtensionCabinet(cabinetId, openRemotely)
         : openBuiltinCabinet(cabinetId);
     }, []);
 
