@@ -173,5 +173,3 @@ export const Modal: FC<ModalProps> = ({
 
   return hasMask ? <div className="modal-mask">{resultJsx}</div> : resultJsx;
 };
-
-export * from './amodal';

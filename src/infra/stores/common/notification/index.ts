@@ -159,14 +159,6 @@ export class NotificationUIStore extends EduUIStoreBase {
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
       this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');
     }
-    // teacher grant permission
-    if (event === AgoraEduClassroomEvent.TeacherGrantPermission) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
-    }
-    // teacher revoke permission
-    if (event === AgoraEduClassroomEvent.TeacherRevokePermission) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
-    }
     // user accpeted to stage
     if (event === AgoraEduClassroomEvent.UserAcceptToStage) {
       this.shareUIStore.addToast(transI18n('toast2.teacher.accept.onpodium'));
