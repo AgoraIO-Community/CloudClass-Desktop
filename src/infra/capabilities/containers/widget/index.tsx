@@ -104,10 +104,14 @@ const WidgetTrackControl: FC<PropsWithChildren<{ widget: AgoraWidgetBase }>> = o
       const handleChange = (controlled: boolean) => {
         setControlled(controlled);
       };
-      tsw.addControlStateListener(handleChange);
+      if (tsw.addControlStateListener) {
+        tsw.addControlStateListener(handleChange);
+      }
 
       return () => {
-        tsw.removeControlStateListener(handleChange);
+        if (tsw.removeControlStateListener) {
+          tsw.removeControlStateListener(handleChange);
+        }
       };
     }, []);
 
