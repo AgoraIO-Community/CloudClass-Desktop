@@ -660,7 +660,9 @@ export class GroupUIStore extends EduUIStoreBase {
       while (true) {
         try {
           await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
-
+          await this.getters.classroomUIStore.enableDualStream(
+            this.classroomStore.connectionStore.scene,
+          );
           await this.classroomStore.connectionStore.joinRTC();
         } catch (e) {
           this.logger.error('change sub room err', e);

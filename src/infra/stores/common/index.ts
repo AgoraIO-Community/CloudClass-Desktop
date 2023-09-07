@@ -1,4 +1,4 @@
-import { AGError, bound, Log } from 'agora-rte-sdk';
+import { AGError, AgoraRteScene, AGRtcConnectionType, bound, Log } from 'agora-rte-sdk';
 import { BoardUIStore } from './board';
 import { CloudUIStore } from './cloud-drive';
 import { DeviceSettingUIStore } from './device-setting/index';
@@ -160,6 +160,29 @@ export class EduClassroomUIStore {
     //@ts-ignore
     window.globalStore = this;
   }
+  @bound
+  async enableDualStream(fromScene?: AgoraRteScene) {
+    try {
+      const lowStreamCameraEncoderConfigurations = (
+        EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
+      )?.defaultLowStreamCameraEncoderConfigurations;
+
+      const enableDualStream = EduClassroomConfig.shared.platform !== Platform.H5;
+      await this.classroomStore.mediaStore.enableDualStream(
+        enableDualStream,
+        AGRtcConnectionType.main,
+        fromScene,
+      );
+
+      await this.classroomStore.mediaStore.setLowStreamParameter(
+        lowStreamCameraEncoderConfigurations || EduClassroomConfig.defaultLowStreamParameter(),
+        AGRtcConnectionType.main,
+        fromScene,
+      );
+    } catch (e) {
+      this.shareUIStore.addGenericErrorDialog(e as AGError);
+    }
+  }
 
   /**
    * 加入教室，之后加入 RTC 频道
@@ -185,22 +208,7 @@ export class EduClassroomUIStore {
         }),
       );
     }
-
-    try {
-      const lowStreamCameraEncoderConfigurations = (
-        EduClassroomConfig.shared.rteEngineConfig.rtcConfigs as ConvertMediaOptionsConfig
-      )?.defaultLowStreamCameraEncoderConfigurations;
-
-      const enableDualStream = EduClassroomConfig.shared.platform !== Platform.H5;
-      await this.classroomStore.mediaStore.enableDualStream(enableDualStream);
-
-      this.classroomStore.mediaStore.setLowStreamParameter(
-        lowStreamCameraEncoderConfigurations || EduClassroomConfig.defaultLowStreamParameter(),
-      );
-    } catch (e) {
-      this.shareUIStore.addGenericErrorDialog(e as AGError);
-    }
-
+    await this.enableDualStream();
     try {
       await joinRTC();
     } catch (e) {

@@ -15,7 +15,9 @@ import { LayoutMaskCode } from './type';
 
 export class Getters {
   constructor(private _classroomUIStore: EduClassroomUIStore) {}
-
+  get classroomUIStore() {
+    return this._classroomUIStore;
+  }
   /**
    * 讲台
    */
