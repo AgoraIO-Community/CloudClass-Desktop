@@ -1,10 +1,6 @@
 {
   "name": "agora-classroom-sdk",
   "version": "2.9.0",
-  "homepage": ".",
-  "sideEffects": [
-    "*.css"
-  ],
   "keywords": [
     "agora",
     "WebRTC",
@@ -21,12 +17,6 @@
     "bundle:npm": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 webpack --config ./webpack.config.js",
     "storybook": "start-storybook -p 6006 --no-manager-cache",
     "ci:build": "run-s bundle:npm build:types"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "prettier"
-    ]
   },
   "browserslist": {
     "production": [
