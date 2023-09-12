@@ -141,7 +141,7 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   }
   @computed
   get containerH5Extend() {
-    return this.shareUIStore.orientation === 'landscape' ? 'flex-1' : '';
+    return this.shareUIStore.orientation === 'landscape' ? 'fcr-flex-1' : '';
   }
 
   @computed
@@ -174,12 +174,12 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
 
   @computed
   get containerH5VisibleCls() {
-    return this.streamZoomStatus !== 'zoom-out' ? 'hidden' : '';
+    return this.streamZoomStatus !== 'zoom-out' ? 'fcr-hidden' : '';
   }
 
   @computed
   get iconZoomVisibleCls() {
-    return this.shareUIStore.orientation === 'portrait' ? 'hidden' : '';
+    return this.shareUIStore.orientation === 'portrait' ? 'fcr-hidden' : '';
   }
 
   get gap() {
