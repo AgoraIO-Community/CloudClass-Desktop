@@ -89,7 +89,7 @@ const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean; onCance
     }, []);
 
     return (
-      <OverlayWrap opened={opened}>
+      <OverlayWrap className="fcr-bg-background" opened={opened}>
         <Modal>
           {closeable && (
             <div className="fcr-pretest-modal-closeable" onClick={onCancel}>
