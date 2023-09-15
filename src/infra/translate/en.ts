@@ -130,6 +130,7 @@ export const en = {
     unknown: 'Unknown error occured. Code: {errCode} Details: {message}',
     room_is_full: 'The room is full',
     network_timeout: 'Network request timeout',
+    request_limit_exceeded: 'Network requests are too frequent',
   },
   toast: {
     mute_chat: 'You were silenced by {hostName}',

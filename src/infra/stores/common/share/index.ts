@@ -169,6 +169,11 @@ export class EduShareUIStore {
       error.codeList.includes(AGRteErrorCode.RTE_ERR_RESTFUL_NETWORK_TIMEOUT_ERR)
     ) {
       message = transI18n('error.network_timeout');
+    } else if (
+      error.codeList &&
+      error.codeList.includes(AGRteErrorCode.RTE_ERR_RESTFUL_LIMIT_EXCEED_ERR)
+    ) {
+      message = transI18n('error.request_limit_exceeded');
     } else {
       message = getEduErrorMessage(error) || message;
     }

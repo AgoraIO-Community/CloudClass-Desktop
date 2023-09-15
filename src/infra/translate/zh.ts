@@ -128,6 +128,7 @@ export const zh = {
     unknown: '发生未知错误，错误代码: {errCode}, 信息: {message}',
     room_is_full: '当前房间已满，请点击确认离开教室',
     network_timeout: '网络请求超时',
+    request_limit_exceeded: '网络请求过于频繁',
   },
   toast: {
     mute_chat: '你已被老师禁言了',

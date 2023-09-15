@@ -10,7 +10,7 @@ export const getEduErrorMessage = (error: Error) => {
   if (error instanceof AGError && error.codeList && error.codeList.length) {
     const code = error.codeList[error.codeList.length - 1];
 
-    if (error.servCode) {
+    if (error.servCode && error.servCode !== -1) {
       return transI18n(`edu_serv_error.${error.servCode}`);
     } else {
       return transI18n(`edu_error.${code}`);
