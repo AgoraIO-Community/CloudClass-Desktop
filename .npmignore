@@ -41,3 +41,4 @@ entitlements.mac.plist
 *.*~agoraAddonlog.txt
 docs
 Jenkinsfile_bitbucket.groovy
+webpack.config.js
