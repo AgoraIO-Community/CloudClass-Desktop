@@ -1,5 +1,5 @@
-import { AgoraWidgetBase } from '@classroom/infra/api';
 import { useStore } from '@classroom/infra/hooks/ui-store';
+import { AgoraWidgetBase } from 'agora-common-libs';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -11,14 +11,14 @@ export const WidgetContainerMobile = observer(() => {
 
   return (
     <>
-      <div className="widget-container z-0">
+      <div className="widget-container fcr-z-0">
         {z0Widgets
           .filter((w) => w.widgetName !== 'mediaPlayer' && w.widgetName !== 'webView')
           .map((w: AgoraWidgetBase) => {
             return <WidgetMobile key={w.widgetId} widget={w} />;
           })}
       </div>
-      <div className="widget-container z-10">
+      <div className="widget-container fcr-z-10">
         {z10Widgets
           .filter((w) => w.widgetName !== 'mediaPlayer' && w.widgetName !== 'webView')
           .map((w: AgoraWidgetBase) => (

@@ -15,7 +15,7 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
     const transI18n = useI18n();
     return (
       <div
-        className="flex items-center justify-between relative border-divider"
+        className="fcr-flex fcr-items-center fcr-justify-between fcr-relative fcr-border-divider"
         style={{
           height: 90,
           padding: '0 28px',
@@ -23,7 +23,7 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
           borderTopStyle: 'solid',
         }}>
         {visibleMirror ? (
-          <span className="flex items-center text-level1">
+          <span className="fcr-flex fcr-items-center fcr-text-level1">
             <CheckBox
               checked={isMirror}
               onChange={(e) => {
@@ -36,7 +36,7 @@ export const Footer: FC<{ onOK: () => void; visibleMirror: boolean }> = observer
           <span />
         )}
         <Button
-          className="text-white"
+          className="fcr-text-white"
           style={{
             width: 200,
             height: 50,

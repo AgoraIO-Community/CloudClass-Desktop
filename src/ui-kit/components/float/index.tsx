@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 
 export interface FloatProps extends BaseProps {
@@ -13,7 +13,7 @@ export interface FloatProps extends BaseProps {
   gap: number;
 }
 
-export const Float: FC<FloatProps> = ({
+export const Float: FC<PropsWithChildren<FloatProps>> = ({
   top,
   left,
   bottom,
@@ -25,9 +25,9 @@ export const Float: FC<FloatProps> = ({
   gap,
 }) => {
   const cls = classNames(
-    'absolute z-50 flex',
-    direction === 'row' ? 'flex-row' : 'flex-col',
-    `gap-${gap ?? 0}`,
+    'fcr-absolute fcr-z-50 fcr-flex',
+    direction === 'row' ? 'fcr-flex-row' : 'fcr-flex-col',
+    `fcr-gap-${gap ?? 0}`,
   );
   return (
     <div

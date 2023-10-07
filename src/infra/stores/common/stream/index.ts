@@ -109,7 +109,7 @@ export class StreamUIStore extends EduUIStoreBase {
                       audioState: audioPublishState,
                       audioSourceState:
                         this.classroomStore.mediaStore.localScreenShareAudioTrackState,
-                      audioSourceType: AgoraRteAudioSourceType.ScreenShare,
+                      audioSourceType: AgoraRteAudioSourceType.Loopback,
                     });
                   this.classroomStore.streamStore.initializeScreenShareStream(
                     newValue,
@@ -301,11 +301,8 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @computed get localScreenShareOff() {
     return (
-      (EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.student &&
-        this.classroomStore.mediaStore.localScreenShareTrackState !==
-          AgoraRteMediaSourceState.started) ||
-      (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student &&
-        !this.classroomStore.remoteControlStore.isControlled)
+      EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.student &&
+      this.classroomStore.mediaStore.localScreenShareTrackState !== AgoraRteMediaSourceState.started
     );
   }
 
@@ -766,8 +763,8 @@ export class StreamUIStore extends EduUIStoreBase {
    * @returns
    */
   @bound
-  setupLocalVideo(dom: HTMLElement, mirror = false) {
-    return this.classroomStore.mediaStore.setupLocalVideo(dom, mirror);
+  setupLocalVideo(dom: HTMLElement, mirror = false, renderMode?: AGRenderMode) {
+    return this.classroomStore.mediaStore.setupLocalVideo(dom, mirror, renderMode);
   }
 
   /**
@@ -803,16 +800,7 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @bound
   stopScreenShareCapture() {
-    if (this.classroomStore.remoteControlStore.isRemoteControlling) {
-      if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher) {
-        this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
-        this.classroomStore.mediaStore.stopScreenShareCapture();
-      } else {
-        this.classroomStore.remoteControlStore.quitControlRequest();
-      }
-    } else {
-      return this.classroomStore.mediaStore.stopScreenShareCapture();
-    }
+    return this.classroomStore.mediaStore.stopScreenShareCapture();
   }
 
   @action.bound

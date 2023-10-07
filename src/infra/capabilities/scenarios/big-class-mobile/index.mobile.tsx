@@ -142,7 +142,7 @@ const H5LayoutContainer: FC<Props> = observer(({ children }) => {
   } = useLectureH5UIStores() as EduLectureH5UIStore;
   return (
     <section
-      className={`h5-layout-container flex h-full ${h5ContainerCls}  ${classroomViewportClassName}`}
+      className={`h5-layout-container fcr-flex fcr-h-full ${h5ContainerCls} ${classroomViewportClassName}`}
       style={{ backgroundColor: '#f9f9fc' }}>
       {children}
     </section>
@@ -156,7 +156,7 @@ const AfterClassMobileDialog = observer(() => {
 
   return (
     <div
-      className="fcr-after-class-mobile-dialog-mask fixed w-full h-full l-0 t-0"
+      className="fcr-after-class-mobile-dialog-mask fcr-fixed fcr-w-full fcr-h-full fcr-l-0 fcr-t-0"
       style={{ zIndex: ComponentLevelRulesMobile.Level3 }}>
       <div className="fcr-after-class-mobile-dialog">
         <div className="fcr-after-class-mobile-dialog-img"></div>
@@ -178,7 +178,7 @@ const MobileLoadingContainer = observer(() => {
   return classroomState !== ClassroomState.Connected ? (
     <div
       style={{ zIndex: ComponentLevelRulesMobile.Level3 }}
-      className="w-screen h-screen fixed left-0 top-0 flex items-center justify-center">
+      className="fcr-w-screen fcr-h-screen fcr-fixed fcr-left-0 fcr-top-0 fcr-flex fcr-items-center fcr-justify-center">
       <Card width={90} height={90}>
         <Loading></Loading>
       </Card>
@@ -201,7 +201,7 @@ const AutoPlayFailedTip = observer(() => {
   return showAutoPlayFailedTip ? (
     <div
       className={classnames(
-        'fcr-mobile-auto-play-failed absolute top-0 left-0 w-full h-full flex justify-center',
+        'fcr-mobile-auto-play-failed fcr-absolute fcr-top-0 fcr-left-0 fcr-w-full fcr-h-full fcr-flex fcr-justify-center',
         { 'fcr-mobile-auto-play-failed-landscape': isLandscape },
         {
           'fcr-mobile-auto-play-failed-no-board':
@@ -249,7 +249,7 @@ export const GenericErrorDialogMobile = ({
 }: GenericErrorDialogMobileProps) => {
   return (
     <div
-      className="fcr-mobile-dialog-mask fixed w-full h-full l-0 t-0"
+      className="fcr-mobile-dialog-mask fcr-fixed fcr-w-full fcr-h-full fcr-l-0 fcr-t-0"
       style={{ zIndex: ComponentLevelRulesMobile.Level3 }}>
       <div className="fcr-mobile-dialog">
         <div className="fcr-mobile-dialog-img"></div>

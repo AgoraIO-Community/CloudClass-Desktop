@@ -41,8 +41,8 @@ export const Confirm: React.FC<
       id={id}
       style={{ width: 300 }}
       title={title}
-      onOk={opts && opts.onOk ? opts.onOk : () => { }}
-      onCancel={opts && opts.onCancel ? opts.onCancel : () => { }}
+      onOk={opts && opts.onOk ? opts.onOk : () => {}}
+      onCancel={opts && opts.onCancel ? opts.onCancel : () => {}}
       footer={footer}>
       <p>{content}</p>
     </Modal>

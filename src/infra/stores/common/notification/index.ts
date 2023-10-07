@@ -7,14 +7,11 @@ import {
   ClassroomState,
   ClassState,
   EduClassroomConfig,
-  EduErrorCenter,
   EduEventCenter,
   EduRoleTypeEnum,
   LeaveReason,
   Platform,
 } from 'agora-edu-core';
-import { ToastFilter } from '@classroom/infra/utils/toast-filter';
-import { getEduErrorMessage } from '@classroom/infra/utils/error';
 import { Duration } from 'dayjs/plugin/duration';
 import { transI18n } from 'agora-common-libs';
 
@@ -41,20 +38,7 @@ export class NotificationUIStore extends EduUIStoreBase {
       .map((userUuid: string) => userList.get(userUuid)?.userName || 'unknown');
   }
 
-  @bound
-  private _handleError(code: string, error: Error) {
-    if (ToastFilter.shouldBlockToast(error)) {
-      return;
-    }
-    const emsg =
-      getEduErrorMessage(error) ||
-      (error.message.length > 64 ? `${error.message.substr(0, 64)}...` : error.message);
-
-    this.shareUIStore.addToast(emsg, 'error');
-  }
-
   onInstall() {
-    EduErrorCenter.shared.on('error', this._handleError);
     // class is end
     this._disposers.push(
       reaction(
@@ -158,14 +142,6 @@ export class NotificationUIStore extends EduUIStoreBase {
     // teacher turn off my mic
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
       this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');
-    }
-    // teacher grant permission
-    if (event === AgoraEduClassroomEvent.TeacherGrantPermission) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
-    }
-    // teacher revoke permission
-    if (event === AgoraEduClassroomEvent.TeacherRevokePermission) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
     }
     // user accpeted to stage
     if (event === AgoraEduClassroomEvent.UserAcceptToStage) {
@@ -318,7 +294,6 @@ export class NotificationUIStore extends EduUIStoreBase {
   }
 
   onDestroy() {
-    EduErrorCenter.shared.off('error', this._handleError);
     EduEventCenter.shared.offClassroomEvents(this._handleClassroomEvent);
     this._notificationTask?.stop();
     this._disposers.forEach((d) => d());

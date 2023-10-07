@@ -13,7 +13,7 @@ export const Volume: FC<VolumeProps> = ({ maxLength = 12, cursor, peek = 12 }) =
   }, [maxLength, peek, cursor]);
 
   return (
-    <div className='flex items-center' style={{
+    <div className='fcr-flex fcr-items-center' style={{
       width: '100%',
       height: '100%',
       gap: 4,

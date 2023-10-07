@@ -61,27 +61,24 @@ export const ScreenShareContainer = observer<FC<ScreenShareContainerProps>>(
     const {
       boardUIStore: { boardAreaHeight },
       streamUIStore: { screenShareStream },
-      classroomStore: {
-        remoteControlStore: { isControlled, isHost },
-      },
     } = useStore();
 
     const remotecls = classnames(
       'remote-screen-share-container',
-      'absolute',
-      'bottom-0',
+      'fcr-absolute',
+      'fcr-bottom-0',
       className,
     );
 
     const localcls = classnames('local-screen-share-container', className);
 
-    return screenShareStream || isControlled ? (
+    return screenShareStream ? (
       <React.Fragment>
-        {screenShareStream?.isLocal || isControlled ? (
+        {screenShareStream?.isLocal ? (
           <div className={localcls} style={{ top: `calc(100% - ${boardAreaHeight}px)` }}>
             <ScreenShareLocalTrackPlayer />
           </div>
-        ) : screenShareStream && !screenShareStream.isLocal && !isHost ? (
+        ) : screenShareStream && !screenShareStream.isLocal ? (
           <div className={remotecls} style={{ height: boardAreaHeight }}>
             <ScreenShareRemoteTrackPlayer stream={screenShareStream} />
           </div>

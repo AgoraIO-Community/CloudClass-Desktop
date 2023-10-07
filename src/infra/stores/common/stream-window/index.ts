@@ -16,7 +16,9 @@ import {
   Lodash,
   AGRtcState,
 } from 'agora-rte-sdk';
-import { cloneDeep, forEach, isEmpty } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import forEach from 'lodash/forEach';
+import isEmpty from 'lodash/isEmpty';
 import { action, computed, IReactionDisposer, Lambda, observable } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { DraggableData } from 'react-draggable';

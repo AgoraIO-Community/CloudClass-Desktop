@@ -10,9 +10,6 @@ import { themeContext } from 'agora-common-libs';
 export const ScenesController: FC = observer(() => {
   const {
     boardUIStore,
-    classroomStore: {
-      remoteControlStore: { isHost },
-    },
     streamWindowUIStore: { containedStreamWindowCoverOpacity },
     toolbarUIStore: { setTool },
   } = useStore();
@@ -33,7 +30,7 @@ export const ScenesController: FC = observer(() => {
   const isLastScene = currentSceneIndex + 1 === scenesCount;
   const { brand, iconPrimary } = useContext(themeContext);
 
-  return mounted && (isTeacherOrAssistant || isGrantedBoard) && !isHost ? (
+  return mounted && (isTeacherOrAssistant || isGrantedBoard) ? (
     <Card
       className={classNames('scenes-controller-container')}
       style={{ opacity: containedStreamWindowCoverOpacity }}>

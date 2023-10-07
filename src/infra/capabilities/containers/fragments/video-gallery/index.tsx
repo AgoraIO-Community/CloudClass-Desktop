@@ -31,9 +31,9 @@ export const VideoGallery: FC<Props> = () => {
 
   return (
     <RtcEngineContext.Provider value={{ rtcEngine }}>
-      <div className="w-full h-full flex flex-col">
+      <div className="fcr-w-full fcr-h-full fcr-flex fcr-flex-col">
         <VideoGalleryPortal
-          className="main-content h-full"
+          className="main-content fcr-h-full"
           streamList={streamList}
           options={options}
           pageSize={pageSize}

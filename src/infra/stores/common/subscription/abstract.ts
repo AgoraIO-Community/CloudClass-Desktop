@@ -20,7 +20,8 @@ import {
   Logger,
   Log,
 } from 'agora-rte-sdk';
-import { pad, padEnd } from 'lodash';
+import pad from 'lodash/pad';
+import padEnd from 'lodash/padEnd';
 import { IReactionDisposer, reaction } from 'mobx';
 import { Getters } from '../getters';
 import { RemoteStreamMuteStatus } from './type';
@@ -240,7 +241,9 @@ export abstract class SceneSubscription {
         ({ streamUuid }) => streamUuid === stream.streamUuid,
       );
 
-      this.logger.info(`isMuted: stream=[${stream.streamUuid}], isTeacherCamera=[${isTeacherCamera}], isScreenShare=[${isScreenShare}], isOnStage=[${isOnStage}]`);
+      this.logger.info(
+        `isMuted: stream=[${stream.streamUuid}], isTeacherCamera=[${isTeacherCamera}], isScreenShare=[${isScreenShare}], isOnStage=[${isOnStage}]`,
+      );
 
       const isCoHost = isTeacherCamera || isScreenShare || isOnStage;
 

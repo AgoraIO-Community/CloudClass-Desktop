@@ -1,12 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const autoprefixer = require('autoprefixer');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const tailwindcss = require('tailwindcss');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const tailwindConfig = require('./tailwind.config');
-const postcssPxToViewport = require('./webpack/postcss-plugin/px-to-vw');
+const postcssPxToViewport = require('agora-common-libs/presets/postcss-plugin/px-to-vw/index.js');
 
 module.exports = {
   plugins: [

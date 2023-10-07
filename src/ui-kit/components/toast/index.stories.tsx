@@ -31,10 +31,10 @@ export const Docs = ({ success, error, warning, toastText, toastType = 'success'
       <div>
         <Toast>{success}</Toast>
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Toast type="error">{error}</Toast>
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         {visible ? (
           <Toast
             type="warning"
@@ -48,7 +48,7 @@ export const Docs = ({ success, error, warning, toastText, toastType = 'success'
           ''
         )}
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Button
           size="lg"
           onClick={() => {
@@ -61,7 +61,7 @@ export const Docs = ({ success, error, warning, toastText, toastType = 'success'
           show toast - default right top corner
         </Button>
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Button
           size="lg"
           onClick={() => {

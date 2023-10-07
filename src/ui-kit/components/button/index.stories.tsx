@@ -22,7 +22,7 @@ export const Docs = ({ primary, secondary, ghost, danger }: DocsProps) => (
       <Button type="ghost">{ghost}</Button>
       <Button type="danger">{danger}</Button>
     </div>
-    <div className="mt-4">
+    <div className="fcr-mt-4">
       <Button size="lg">{primary}</Button>
       <Button type="secondary" size="lg">
         {secondary}
@@ -35,7 +35,7 @@ export const Docs = ({ primary, secondary, ghost, danger }: DocsProps) => (
       </Button>
     </div>
     <h5>Disabled</h5>
-    <div className="my-4">
+    <div className="fcr-my-4">
       <Button size="lg" disabled>
         {primary}
       </Button>
@@ -49,7 +49,7 @@ export const Docs = ({ primary, secondary, ghost, danger }: DocsProps) => (
         {danger}
       </Button>
     </div>
-    <div className="my-4">
+    <div className="fcr-my-4">
       <Button size="sm" disabled>
         {primary}
       </Button>

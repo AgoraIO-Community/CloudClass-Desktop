@@ -1,5 +1,5 @@
 .scene-switch-loading {
-  @apply bg-background;
+  @apply fcr-bg-background;
   display: flex;
   justify-content: center;
   align-items: center;

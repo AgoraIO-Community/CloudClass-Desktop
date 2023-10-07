@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { PathOptions } from 'agora-plugin-gallery/src/components/svg-img/svg-dict';
+import { PathOptions } from '../svg-dict';
 
 export const path = ({ iconPrimary }: PathOptions) => (
   <>

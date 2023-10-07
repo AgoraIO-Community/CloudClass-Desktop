@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect, useContext } from 'react';
+import { FC, useState, useRef, useEffect, useContext, PropsWithChildren } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import './index.css';
@@ -17,7 +17,7 @@ export interface ToolbarProps extends BaseProps {
   onOpenedChange?: (opened: boolean) => void;
 }
 
-export const Toolbar: FC<ToolbarProps> = ({
+export const Toolbar: FC<PropsWithChildren<ToolbarProps>> = ({
   className,
   style,
   defaultOpened = true,
@@ -144,8 +144,8 @@ export const Toolbar: FC<ToolbarProps> = ({
           reachTop
             ? opened
               ? 'toolbar-shadow-up'
-              : 'toolbar-shadow-up hidden'
-            : 'toolbar-shadow-up hidden'
+              : 'toolbar-shadow-up fcr-hidden'
+            : 'toolbar-shadow-up fcr-hidden'
         }></div>
       <div
         className={

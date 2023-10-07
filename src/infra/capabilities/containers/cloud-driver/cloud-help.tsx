@@ -3,7 +3,6 @@ import { FileTypeSvgColor } from '@classroom/infra/stores/common/cloud-drive';
 import { transI18n } from 'agora-common-libs';
 import { useMemo } from 'react';
 
-
 export default function CloudHelp() {
   const cloudHelpTips = useMemo(() => {
     return [
@@ -45,8 +44,6 @@ export default function CloudHelp() {
     ];
   }, []);
 
-
-
   return (
     <div className="cloud-help">
       <div className="cloud-help-title" style={{ marginBottom: 14 }}>
@@ -55,13 +52,16 @@ export default function CloudHelp() {
       {cloudHelpTips.map((item, index) => (
         <div className="cloud-help-tip" key={index}>
           <div className="help-tip-left">
-            <SvgImg type={item.svgType} style={{ color: FileTypeSvgColor[item.svgType] }} />
+            <SvgImg
+              type={item.svgType}
+              style={{ color: FileTypeSvgColor[item.svgType as keyof typeof FileTypeSvgColor] }}
+            />
           </div>
           <div className="help-tip-right">
-            <div className={'text-level1'} style={{ fontSize: 13 }}>
+            <div className={'fcr-text-level1'} style={{ fontSize: 13 }}>
               {item.desc}
             </div>
-            <div className={'text-level1'} style={{ fontSize: 12 }}>
+            <div className={'fcr-text-level1'} style={{ fontSize: 12 }}>
               {transI18n('cloud.fileType')}: {item.supportType.join(' ')}
             </div>
           </div>

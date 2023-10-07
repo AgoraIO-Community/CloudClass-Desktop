@@ -5,10 +5,10 @@ import BeautyEffectExtension, { IBeautyProcessor } from 'agora-extension-beauty-
 import { AIDenoiserExtension, IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
 import { ExtensionInitializer, ProcessorInitializer } from '../type';
 import { EduClassroomConfig } from 'agora-edu-core';
-import { IBaseProcessor } from 'agora-rte-extension';
+import { IBaseProcessor, IExtension } from 'agora-rte-extension';
 import { isProduction } from '@classroom/infra/utils';
 
-let assetsBaseUrl = isProduction ? process.env.REACT_APP_AGORA_APP_ASSETS_CDN : '';
+let assetsBaseUrl = isProduction ? 'https://solutions-apaas.agora.io/static' : '';
 
 export const builtInExtensions = {
   virtualBackgroundExtension: 'VirtualBackgroundExtension',
@@ -16,7 +16,9 @@ export const builtInExtensions = {
   aiDenoiserExtension: 'AIDenoiserExtension',
 };
 
-const builtInExtensionsKeeper = {};
+const builtInExtensionsKeeper: Partial<
+  Record<keyof typeof builtInExtensions, IExtension<IBaseProcessor>>
+> = {};
 
 export const setAssetsBaseUrl = (baseUrl: string) => {
   assetsBaseUrl = baseUrl;
@@ -55,11 +57,12 @@ const builtInExtionsionInitializers: Record<string, ExtensionInitializer> = {
 
 const loadRTCExtension = <T extends IBaseProcessor>(name: string) => {
   const obj = builtInExtionsionInitializers[name];
-  if (!builtInExtensionsKeeper[name]) {
-    builtInExtensionsKeeper[name] = obj.createInstance();
+  const key = name as keyof typeof builtInExtensionsKeeper;
+  if (!builtInExtensionsKeeper[key]) {
+    builtInExtensionsKeeper[key] = obj.createInstance();
   }
 
-  const instance = builtInExtensionsKeeper[name];
+  const instance = builtInExtensionsKeeper[key] as IExtension<IBaseProcessor>;
 
   return {
     name,
@@ -72,10 +75,12 @@ export const initializeBuiltInExtensions = () => ({
   virtualBackgroundExtension: loadRTCExtension<IVirtualBackgroundProcessor>(
     builtInExtensions.virtualBackgroundExtension,
   ),
-  beautyEffectExtensionInstance: loadRTCExtension<IBeautyProcessor>(
+  beautyEffectExtension: loadRTCExtension<IBeautyProcessor>(
     builtInExtensions.beautyEffectExtension,
   ),
-  aiDenoiserInstance: loadRTCExtension<IAIDenoiserProcessor>(builtInExtensions.aiDenoiserExtension),
+  aiDenoiserExtension: loadRTCExtension<IAIDenoiserProcessor>(
+    builtInExtensions.aiDenoiserExtension,
+  ),
 });
 
 export const getProcessorInitializer = <T extends IBaseProcessor>(

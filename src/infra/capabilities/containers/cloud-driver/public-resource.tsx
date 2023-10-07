@@ -2,15 +2,7 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react';
 import { CloudDriveResource } from 'agora-edu-core';
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import {
-  Col,
-  Inline,
-  Placeholder,
-  Row,
-  Table,
-  TableHeader,
-  SvgImg,
-} from '@classroom/ui-kit';
+import { Col, Inline, Placeholder, Row, Table, TableHeader, SvgImg } from '@classroom/ui-kit';
 import CloudToolbar from './cloud-toolbar';
 import { useCallback, useEffect } from 'react';
 import { FileTypeSvgColor } from '@classroom/infra/stores/common/cloud-drive';
@@ -77,7 +69,10 @@ export const PublicResourcesContainer = observer(() => {
                       type={fileNameToType(ext)}
                       style={{
                         marginRight: '6px',
-                        color: FileTypeSvgColor[fileNameToType(resourceName)],
+                        color:
+                          FileTypeSvgColor[
+                            fileNameToType(resourceName) as keyof typeof FileTypeSvgColor
+                          ],
                       }}
                     />
                     <Inline className="filename" title={resourceName}>
@@ -85,9 +80,9 @@ export const PublicResourcesContainer = observer(() => {
                         dangerouslySetInnerHTML={{
                           __html: searchPublicResourcesKeyword
                             ? resourceName.replaceAll(
-                              searchPublicResourcesKeyword,
-                              `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
-                            )
+                                searchPublicResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPublicResourcesKeyword}</span>`,
+                              )
                             : resourceName,
                         }}></span>
                     </Inline>

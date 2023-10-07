@@ -1,22 +1,22 @@
 .agora-pagination .rc-pagination-prev,
 .rc-pagination-item,
 .rc-pagination-next {
-  @apply bg-component;
+  @apply fcr-bg-component;
   border-radius: 6px;
 }
 
 .agora-pagination .rc-pagination-prev .rc-pagination-item-link,
 .rc-pagination-next .rc-pagination-item-link {
   border-radius: 6px;
-  @apply text-level2 bg-component;
+  @apply fcr-text-level2 fcr-bg-component;
 }
 
 .agora-pagination .rc-pagination-item a {
-  @apply text-level2;
+  @apply fcr-text-level2;
 }
 
 .agora-pagination .rc-pagination-item-active {
-  @apply bg-brand;
+  @apply fcr-bg-brand;
 }
 .agora-pagination .rc-pagination-item-active a {
   color: white;

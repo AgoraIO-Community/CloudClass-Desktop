@@ -1,17 +1,11 @@
 import { isSupportedImageType } from '@classroom/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@classroom/infra/utils/event-center';
-import {
-  AGEduErrorCode,
-  AgoraEduClassroomEvent,
-  EduClassroomConfig,
-  EduEventCenter,
-  EduRoleTypeEnum,
-  getImageSize,
-} from 'agora-edu-core';
+import { AGEduErrorCode, EduClassroomConfig, EduRoleTypeEnum, getImageSize } from 'agora-edu-core';
 import { AGErrorWrapper, bound } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { conversionOption, extractFileExt, fileExt2ContentType } from '../cloud-drive/helper';
+import { transI18n } from 'agora-common-libs';
 
 export class BoardUIStore extends EduUIStoreBase {
   protected _disposers: (IReactionDisposer | Lambda)[] = [];
@@ -95,12 +89,10 @@ export class BoardUIStore extends EduUIStoreBase {
           const newGranted = newValue;
 
           if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
-            EduEventCenter.shared.emitClasroomEvents(AgoraEduClassroomEvent.TeacherGrantPermission);
+            this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
           }
           if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
-            EduEventCenter.shared.emitClasroomEvents(
-              AgoraEduClassroomEvent.TeacherRevokePermission,
-            );
+            this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
           }
         }),
       );

@@ -53,13 +53,13 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
   return (
     <div
       onClick={toggleLandscapeToolBarVisible}
-      className="t-0 l-0"
+      className="fcr-t-0 fcr-l-0"
       style={{
         background: 'rgba(39, 41, 47, 1)',
         ...teacherVideoStreamSize,
       }}>
       <div
-        className="fcr-stream-placeholder-mobile rounded-full absolute top-0 bottom-0 left-0 right-0 m-auto text-center"
+        className="fcr-stream-placeholder-mobile fcr-rounded-full fcr-absolute fcr-top-0 fcr-bottom-0 fcr-left-0 fcr-right-0 fcr-m-auto fcr-text-center"
         style={{ background: 'rgba(66, 98, 255, 1)' }}>
         {generateShortUserName(flexProps['teacherName'] || 'teacher')}
       </div>

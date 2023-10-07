@@ -14,8 +14,8 @@ export const RoomMidStreamsContainer = observer(() => {
   return (
     <div
       id="stage-container"
-      className={`w-full flex-grow flex-shrink-0 ${stageVisible ? '' : 'hidden'}`}>
-      <div className="h-full flex justify-center items-center relative">
+      className={`fcr-w-full fcr-flex-grow fcr-flex-shrink-0 ${stageVisible ? '' : 'fcr-hidden'}`}>
+      <div className="fcr-h-full fcr-flex fcr-justify-center fcr-items-center fcr-relative">
         <TeacherStream />
         <StudentStreams />
       </div>

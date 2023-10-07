@@ -41,7 +41,6 @@ export const Docs = () => {
               白板
             </>
           }
-          closable={false}
           key="0">
           <div>公共资源</div>
           <div>公共资源</div>

@@ -43,21 +43,24 @@ export const Select: FC<SelectProps> = ({
     setExpanded(true);
   };
 
-  const optionsCls = classNames('options w-full', {
-    hidden: !expanded,
+  const optionsCls = classNames('options fcr-w-full', {
+    'fcr-hidden': !expanded,
   });
 
-  const textCls = classNames('inline-block w-full flex items-center justify-between', {
-    'placeholder-text': !value,
-  });
+  const textCls = classNames(
+    'fcr-inline-block fcr-w-full fcr-flex fcr-items-center fcr-justify-between',
+    {
+      'placeholder-text': !value,
+    },
+  );
 
-  const containerCls = classNames('absolute top-0 w-full select', {
+  const containerCls = classNames('fcr-absolute fcr-top-0 fcr-w-full select', {
     expand: expanded,
     error: !!error,
   });
 
   return (
-    <div className="relative w-full">
+    <div className="fcr-relative fcr-w-full">
       <div className={containerCls}>
         <a
           className={textCls}
@@ -81,10 +84,10 @@ export const Select: FC<SelectProps> = ({
             }
           />
         </a>
-        <span className="error-text absolute block right-0">{error}</span>
+        <span className="error-text fcr-absolute fcr-block fcr-right-0">{error}</span>
         <div className={optionsCls}>
           {options.map(({ text, value: v }, index) => {
-            const cls = classNames('option cursor-pointer', {
+            const cls = classNames('option fcr-cursor-pointer', {
               selected: value === v,
             });
             return (

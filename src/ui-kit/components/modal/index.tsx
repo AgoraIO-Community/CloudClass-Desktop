@@ -35,16 +35,13 @@ export interface ModalProps {
   id?: string;
 }
 
-
 export const Modal: FC<ModalProps> = ({
   title = 'modal title',
   closable = false,
   footer,
   style,
-  onOk = (e: React.MouseEvent<HTMLElement>) => {
-  },
-  onCancel = (e: React.MouseEvent<HTMLElement>) => {
-  },
+  onOk = (e: React.MouseEvent<HTMLElement>) => {},
+  onCancel = (e: React.MouseEvent<HTMLElement>) => {},
   children,
   className,
   component,
@@ -176,5 +173,3 @@ export const Modal: FC<ModalProps> = ({
 
   return hasMask ? <div className="modal-mask">{resultJsx}</div> : resultJsx;
 };
-
-export * from './amodal';

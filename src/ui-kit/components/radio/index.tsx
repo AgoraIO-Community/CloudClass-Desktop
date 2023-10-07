@@ -22,11 +22,11 @@ type RadioGroupProps = {
 };
 
 export const Radio: FC<RadioProps> = ({ label, onChange, className, name, checked = false }) => {
-  const cls = classNames('inline-flex items-center cursor-pointer', className);
+  const cls = classNames('fcr-inline-flex fcr-items-center fcr-cursor-pointer', className);
 
   return (
     <div className={cls}>
-      <input type="radio" className="mr-1" name={name} checked={checked} onChange={onChange} />
+      <input type="radio" className="fcr-mr-1" name={name} checked={checked} onChange={onChange} />
       <span onClick={onChange}>{label}</span>
     </div>
   );
@@ -42,11 +42,11 @@ export const RadioGroup: FC<RadioGroupProps> = ({
 }) => {
   const isHorizontal = direction === 'horizontal';
 
-  const cls = classNames('inline-flex', {
-    'flex-col': !isHorizontal,
+  const cls = classNames('fcr-inline-flex', {
+    'fcr-flex-col': !isHorizontal,
   });
 
-  const radioCls = classNames(isHorizontal ? `mr-${gap}` : `mb-${gap}`);
+  const radioCls = classNames(isHorizontal ? `fcr-mr-${gap}` : `fcr-mb-${gap}`);
 
   return (
     <div className={cls}>

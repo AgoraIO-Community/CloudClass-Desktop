@@ -8,7 +8,7 @@ import {
   Lodash,
   bound,
 } from 'agora-rte-sdk';
-import { toLower } from 'lodash';
+import toLower from 'lodash/toLower';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share';
 

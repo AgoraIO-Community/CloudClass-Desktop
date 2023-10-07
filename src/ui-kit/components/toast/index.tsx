@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useCallback, useEffect, useRef } from 'react';
+import { CSSProperties, FC, PropsWithChildren, useCallback, useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import Notification from 'rc-notification';
@@ -32,7 +32,7 @@ export interface ToastProps extends BaseProps {
   canStop?: boolean;
 }
 
-type ToastType = FC<ToastProps> & {
+type ToastType = FC<PropsWithChildren<ToastProps>> & {
   show: (params: ToastProps) => void;
 };
 

@@ -1,10 +1,10 @@
-import { AgoraExtensionWidgetEvent } from '@classroom/infra/api';
 import { transI18n } from 'agora-common-libs';
 import { ClassroomState, ClassState } from 'agora-edu-core';
 import { bound, Scheduler } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
 import { LayoutUIStore } from '../common/layout';
 import { ToastTypeEnum } from '../common/share';
+import { AgoraExtensionWidgetEvent } from '@classroom/infra/protocol/events';
 export class LectureH5LayoutUIStore extends LayoutUIStore {
   private _disposers: (() => void)[] = [];
   @observable landscapeToolBarVisible = true;

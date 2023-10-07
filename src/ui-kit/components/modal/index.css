@@ -3,7 +3,7 @@
   border-radius: 8px;
   border: 1px solid;
   padding-bottom: 20px;
-  @apply box-border bg-component border-divider;
+  @apply fcr-box-border fcr-bg-component fcr-border-divider;
   min-width: 280px;
 }
 
@@ -25,7 +25,7 @@
   font-size: 13px;
   display: flex;
   justify-content: center;
-  @apply items-center inline-flex justify-center text-level1;
+  @apply fcr-items-center fcr-inline-flex fcr-justify-center fcr-text-level1;
 }
 
 .customize-radio {
@@ -33,16 +33,16 @@
 }
 
 .customize-radio input[type='radio'] {
-  @apply text-level1 !important;
+  @apply fcr-text-level1 !important;
   height: 14px;
 }
 
 .customize-radio input[type='radio'] ~ span {
-  @apply text-level1 !important;
+  @apply fcr-text-level1 !important;
 }
 
 .customize-radio input[type='radio']:checked ~ span {
-  @apply text-level1 !important;
+  @apply fcr-text-level1 !important;
 }
 
 .rc-notification-mask {
@@ -53,7 +53,7 @@
 }
 
 .modal-title {
-  @apply box-border flex justify-between items-center relative bg-icon-selected-color border-divider border-b border-solid;
+  @apply fcr-box-border fcr-flex fcr-justify-between fcr-items-center fcr-relative fcr-bg-icon-selected-color fcr-border-divider fcr-border-b fcr-border-solid;
   height: 28px;
   line-height: 28px;
   padding: 0 10px 0 15px;
@@ -62,7 +62,7 @@
 }
 
 .modal-title-text {
-  @apply text-level1;
+  @apply fcr-text-level1;
   font-size: 12px;
 }
 
@@ -75,17 +75,17 @@
 }
 
 .modal-content {
-  @apply box-border flex flex-col justify-center items-center text-level1;
+  @apply fcr-box-border fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-text-level1;
   padding: 30px 20px;
 }
 
 .modal-content p {
   margin-bottom: 0;
-  @apply text-level1;
+  @apply fcr-text-level1;
 }
 
 .modal-footer {
-  @apply flex justify-center items-center;
+  @apply fcr-flex fcr-justify-center fcr-items-center;
 }
 
 .btn-div {

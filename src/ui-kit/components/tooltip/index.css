@@ -39,7 +39,7 @@
   padding-right: 8px;
 }
 .tooltip-inner {
-  @apply bg-component text-level1;
+  @apply fcr-bg-component fcr-text-level1;
   min-width: 30px;
   min-height: 22.75px;
   padding: 4.5px 7.5px;
@@ -60,7 +60,7 @@
   pointer-events: none;
 }
 .tooltip-arrow-content {
-  @apply bg-component;
+  @apply fcr-bg-component;
   position: absolute;
   top: 0;
   right: 0;

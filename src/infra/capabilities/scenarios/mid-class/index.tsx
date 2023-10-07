@@ -12,14 +12,12 @@ import { Award } from '../../containers/award';
 import Room from '../room';
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { Float } from '@classroom/ui-kit';
-import { RemoteControlContainer } from '../../containers/remote-control';
 import { ScenesController } from '../../containers/scenes-controller';
 import { ScreenShareContainer } from '../../containers/screen-share';
 import { WhiteboardToolbar } from '../../containers/toolbar';
 import { WidgetContainer } from '../../containers/widget';
 import { Chat, Watermark, Whiteboard } from '../../containers/widget/slots';
 import { StreamWindowsContainer } from '../../containers/stream-window';
-import { RemoteControlToolbar } from '../../containers/remote-control/toolbar';
 import CameraPreview from '../../containers/camera-preview';
 
 export const MidClassScenario = () => {
@@ -34,15 +32,13 @@ export const MidClassScenario = () => {
           <Layout className={layoutCls} direction="col">
             <NavigationBar />
             <Layout
-              className="flex-grow items-stretch relative justify-center fcr-room-bg"
+              className="fcr-flex-grow fcr-items-stretch fcr-relative fcr-justify-center fcr-room-bg"
               direction="col">
               <RoomMidStreamsContainer />
               <Whiteboard />
               <ScreenShareContainer />
-              <RemoteControlContainer />
               <StreamWindowsContainer />
             </Layout>
-            <RemoteControlToolbar />
             <WhiteboardToolbar />
             <ScenesController />
             <Float bottom={15} right={10} align="flex-end" gap={2}>

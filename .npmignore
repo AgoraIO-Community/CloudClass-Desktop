@@ -13,6 +13,7 @@ icons/
 dist/
 node_modules/
 guides/
+ci/
 
 # files
 rollup.config.js
@@ -39,3 +40,5 @@ entitlements.mac.plist
 *.map
 *.*~agoraAddonlog.txt
 docs
+Jenkinsfile_bitbucket.groovy
+webpack.config.js

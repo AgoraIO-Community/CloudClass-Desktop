@@ -1,34 +1,33 @@
 .fcr-layout {
-  @apply flex;
+  @apply fcr-flex;
 }
 
 .fcr-layout-row {
-  @apply flex-row;
+  @apply fcr-flex-row;
 }
 
 .fcr-layout-col {
-  @apply flex-col;
+  @apply fcr-flex-col;
 }
 .fcr-layout-col-reverse {
-  @apply flex-col-reverse;
+  @apply fcr-flex-col-reverse;
 }
 
 .fcr-layout-content {
-  @apply flex flex-row flex-1 h-full;
+  @apply fcr-flex fcr-flex-row fcr-flex-1 fcr-h-full;
   position: relative;
   width: 0;
 }
 
 .fcr-layout-header {
-  @apply flex flex-row justify-center items-center w-full;
+  @apply fcr-flex fcr-flex-row fcr-justify-center fcr-items-center fcr-w-full;
   flex: 0 0 27px;
 }
 
 .fcr-layout-aside {
-  @apply flex flex-col border-l  border-divider h-full;
+  @apply fcr-flex fcr-flex-col fcr-border-l fcr-border-divider fcr-h-full fcr-overflow-hidden;
   /* width: 19rem; */
   border-left: none;
-  @apply overflow-hidden;
   gap: 4px;
   margin-left: 2px;
   position: relative;

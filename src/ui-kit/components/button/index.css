@@ -1,46 +1,47 @@
 .fcr-btn {
-  @apply cursor-pointer text-base rounded-full relative overflow-hidden;
+  @apply fcr-cursor-pointer fcr-text-base fcr-rounded-full fcr-relative fcr-overflow-hidden;
 }
 
 .fcr-btn-primary {
-  @apply text-white bg-brand;
-  @apply active:bg-brand;
+  @apply fcr-text-white fcr-bg-brand;
 }
-
+.fcr-btn-primary:active {
+  @apply fcr-bg-brand;
+}
 .fcr-btn-danger {
-  @apply text-error bg-white  border;
+  @apply fcr-text-error fcr-bg-white fcr-border;
 }
 
 .fcr-btn-danger:hover {
-  @apply text-error;
+  @apply fcr-text-error;
 }
 
 .fcr-btn-danger:active {
-  @apply text-error;
+  @apply fcr-text-error;
 }
 
 .fcr-btn-secondary {
-  @apply bg-white border-divider border text-brand;
+  @apply fcr-bg-white fcr-border-divider fcr-border fcr-text-brand;
 }
 
 .fcr-btn-secondary:hover {
-  @apply bg-white border-divider border text-brand;
+  @apply fcr-bg-white fcr-border-divider fcr-border fcr-text-brand;
 }
 
 .fcr-btn-secondary:active {
-  @apply text-brand bg-white border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-ghost {
-  @apply text-brand bg-white border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-ghost:hover {
-  @apply text-brand bg-white border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-ghost:active {
-  @apply text-brand bg-white border-divider border;
+  @apply fcr-text-brand fcr-bg-white fcr-border-divider fcr-border;
 }
 
 .fcr-btn-xs {
@@ -62,11 +63,11 @@
 }
 
 .fcr-btn:focus {
-  @apply outline-none;
+  @apply fcr-outline-none;
 }
 
 .fcr-btn[disabled] {
-  @apply disabled:opacity-50 pointer-events-none;
+  @apply fcr-opacity-50 fcr-pointer-events-none;
 }
 
 .fcr-btn.fcr-btn-xs[disabled],
@@ -86,7 +87,7 @@
   overflow: hidden;
 }
 
-@keyframes fcr-btn-ripple {
+@keyframes btn-ripple {
   from {
     transform: scale(0);
     opacity: 1;
@@ -102,7 +103,7 @@
   border: 1px solid transparent;
   border-radius: 50%;
   pointer-events: none;
-  animation: fcr-btn-ripple 0.75s 1;
+  animation: btn-ripple 0.75s 1;
   top: 50%;
   left: 50%;
 }

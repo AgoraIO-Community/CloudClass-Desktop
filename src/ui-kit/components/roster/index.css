@@ -26,7 +26,7 @@
 }
 
 .roster-wrap .main-title {
-  @apply bg-icon-selected-color text-level1;
+  @apply fcr-bg-icon-selected-color fcr-text-level1;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -39,7 +39,7 @@
 }
 
 .roster-wrap {
-  @apply border border-solid border-divider;
+  @apply fcr-border fcr-border-solid fcr-border-divider;
   background: #fff;
   box-shadow: 0 2px 6px 0 rgba(47, 65%, 146%, 15%);
   border-radius: 6px;
@@ -83,30 +83,30 @@
 }
 
 .roster-header {
-  @apply text-level1;
+  @apply fcr-text-level1;
   font-size: 13px;
   padding: 11px 20px;
 }
 
 .roster-header > label {
-  @apply text-level2;
+  @apply fcr-text-level2;
 }
 
 .roster-container {
-  @apply bg-component border border-solid border-divider;
+  @apply fcr-bg-component fcr-border fcr-border-solid fcr-border-divider;
   display: flex;
   flex-direction: column;
   height: calc(100% - 45px);
 }
 
 .roster-container .roster-table {
-  @apply border-t border-solid border-divider;
+  @apply fcr-border-t fcr-border-solid fcr-border-divider;
   flex: 1;
   min-height: 0;
 }
 
 .roster-table .table-container .table-row-item .table-col-item {
-  @apply box-content text-level1;
+  @apply fcr-box-content fcr-text-level1;
   height: 40px;
 }
 
@@ -135,7 +135,7 @@
 }
 
 .search-teacher-name label {
-  @apply text-level2;
+  @apply fcr-text-level2;
 }
 
 .search-teacher-name .roster-username {
@@ -199,11 +199,11 @@
 }
 
 .roster-row-hover {
-  @apply bg-icon-selected-color;
+  @apply fcr-bg-icon-selected-color;
 }
 
 .roster-col-hover .clickable {
-  @apply bg-component;
+  @apply fcr-bg-component;
   cursor: pointer;
 }
 
@@ -218,5 +218,5 @@
 }
 
 .carousel-desc {
-  @apply text-level2;
+  @apply fcr-text-level2;
 }

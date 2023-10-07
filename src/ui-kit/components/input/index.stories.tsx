@@ -19,7 +19,7 @@ export const Docs = () => {
   return (
     <>
       <h1>Input 组件</h1>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Input
           type="number"
           value={input5}
@@ -37,7 +37,7 @@ export const Docs = () => {
           max={32}
         />
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Input
           value={input0}
           onChange={(e) => {
@@ -48,7 +48,7 @@ export const Docs = () => {
           placeholder="这个是校验只能输入英文数字的input"
         />
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Input
           placeholder="前置是纯文本的placeholder"
           prefix={<span style={{ color: '#333' }}>纯文本</span>}
@@ -58,7 +58,7 @@ export const Docs = () => {
           }}
         />
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Input
           placeholder="前置是icon的placeholder"
           prefix={<SvgImg type={SvgIconEnum.PEN} />}
@@ -68,7 +68,7 @@ export const Docs = () => {
           }}
         />
       </div>
-      <div className="mt-4">
+      <div className="fcr-mt-4">
         <Input
           placeholder="这个是有后置的placeholder"
           value={input3}
@@ -76,14 +76,6 @@ export const Docs = () => {
             setInput3(e.target.value);
           }}
           suffix={<Button>Button</Button>}
-        />
-      </div>
-      <h1 className="mt-4">Search 组件</h1>
-      <div className="mt-4">
-        <Search
-          onSearch={(value) => console.log(value)}
-          suffix={<SvgIcon type={SvgIconEnum.SEARCH} />}
-          placeholder={'search的placeholder'}
         />
       </div>
     </>

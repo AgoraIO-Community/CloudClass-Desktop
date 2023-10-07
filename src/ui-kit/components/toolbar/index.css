@@ -1,6 +1,6 @@
 .toolbar {
   height: 100%;
-  @apply bg-component;
+  @apply fcr-bg-component;
 }
 
 .toolbar.opened {
@@ -12,7 +12,7 @@
 }
 
 .toolbar .menu {
-  @apply flex justify-center items-center cursor-pointer;
+  @apply fcr-flex fcr-justify-center fcr-items-center fcr-cursor-pointer;
   transform: translateX(-2px);
   padding: 0;
   position: absolute;
@@ -37,7 +37,7 @@
 }
 
 .toolbar > .tools {
-  @apply hidden;
+  @apply fcr-hidden;
   overflow-y: scroll;
   height: 100%;
   scrollbar-width: none;
@@ -48,11 +48,11 @@
 }
 
 .toolbar.opened > .tools {
-  @apply flex flex-col items-center;
+  @apply fcr-flex fcr-flex-col fcr-items-center;
 }
 
 .toolbar-shadow {
-  @apply bg-background;
+  @apply fcr-bg-background;
   bottom: -2px;
   position: absolute;
   height: 20px;
@@ -62,7 +62,7 @@
 }
 
 .toolbar-shadow-up {
-  @apply bg-background;
+  @apply fcr-bg-background;
   top: -2px;
   position: absolute;
   height: 20px;
@@ -95,7 +95,7 @@
 }
 
 .tool {
-  @apply cursor-pointer text-center relative;
+  @apply fcr-cursor-pointer fcr-text-center fcr-relative;
   height: 25px;
   width: 29px;
   line-height: 1;
@@ -118,7 +118,7 @@
 }
 
 .tool .expandable {
-  @apply absolute;
+  @apply fcr-absolute;
   bottom: 0;
   right: 0;
   font-size: 24px;
@@ -131,7 +131,7 @@
 
 .tool.expand,
 .tool:hover {
-  @apply rounded-full bg-component;
+  @apply fcr-rounded-full fcr-bg-component;
 }
 
 .tool > svg {
@@ -139,7 +139,7 @@
 }
 
 .expand-tools {
-  @apply flex flex-row items-center flex-wrap;
+  @apply fcr-flex fcr-flex-row fcr-items-center fcr-flex-wrap;
 }
 
 .expand-tools.colors {
@@ -147,11 +147,11 @@
 }
 
 .expand-tool {
-  @apply flex flex-col items-center  cursor-pointer;
+  @apply fcr-flex fcr-flex-col fcr-items-center  fcr-cursor-pointer;
 }
 
 .expand-tool.color {
-  @apply flex justify-center items-center rounded-full;
+  @apply fcr-flex fcr-justify-center fcr-items-center fcr-rounded-full;
   height: 22px;
   width: 22px;
   margin: 6px 8px;
@@ -167,7 +167,7 @@
 }
 
 .expand-tool.color > .circle {
-  @apply rounded-full;
+  @apply fcr-rounded-full;
   height: 18px;
   width: 18px;
 }
@@ -182,7 +182,7 @@
 }
 
 .expand-tool > .active-indicator {
-  @apply rounded-full;
+  @apply fcr-rounded-full;
   width: 3px;
   height: 3px;
   background: #868f9f;
@@ -215,23 +215,23 @@
   width: 100px;
   height: 78px;
   color: #7b88a0;
-  @apply flex flex-col justify-center items-center cursor-pointer float-left;
+  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-float-left;
 }
 .expand-tools .cleaner-item {
   width: 30px;
   height: 30px;
   color: #7b88a0;
-  @apply flex flex-col justify-center items-center cursor-pointer float-left;
+  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-float-left;
 }
 .expand-tools .slice-item {
   width: 70px;
   color: #7b88a0;
-  @apply flex flex-col justify-center items-center cursor-pointer float-left;
+  @apply fcr-flex fcr-flex-col fcr-justify-center fcr-items-center fcr-cursor-pointer fcr-float-left;
 }
 .expand-tools .slice-item .slice-item-icon {
   width: 40px;
   height: 40px;
-  @apply flex  justify-center items-center cursor-pointer;
+  @apply fcr-flex fcr-justify-center fcr-items-center fcr-cursor-pointer;
 }
 .expand-tools .cabinet-item img,
 .expand-tools .cleaner-item img,
@@ -249,7 +249,7 @@
 .expand-tools .cabinet-item:hover,
 .expand-tools .cleaner-item:hover,
 .expand-tools .slice-item:hover {
-  @apply bg-icon-selected-color text-level1;
+  @apply fcr-bg-icon-selected-color fcr-text-level1;
 }
 
 .customize-dialog-popover .popover-inner-content {
@@ -349,7 +349,7 @@
 }
 
 .tool-cabinet-popover .popover-arrow {
-  @apply border-r border-t border-solid border-divider;
+  @apply fcr-border-r fcr-border-t  fcr-border-solid fcr-border-divider;
 }
 
 .tool-cabinet-popover .popover-inner {
@@ -357,7 +357,7 @@
 }
 
 .tool-cabinet-popover .popover-inner-content {
-  @apply border border-solid border-divider;
+  @apply fcr-border fcr-border-solid fcr-border-divider;
   padding: 0;
 }
 .tool-cabinet-popover .cabinet-item {
@@ -365,10 +365,10 @@
 }
 
 .cabinet-item:not(.cabinet-item-last) {
-  @apply border-b border-solid border-divider;
+  @apply fcr-border-b fcr-border-solid fcr-border-divider;
 }
 
 /* 3 6 9 */
 .cabinet-item:not(:nth-child(3n)) {
-  @apply border-r border-solid border-divider;
+  @apply fcr-border-r fcr-border-solid fcr-border-divider;
 }

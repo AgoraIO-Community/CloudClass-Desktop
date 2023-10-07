@@ -54,7 +54,7 @@ export const Pens: FC<PensProps> = ({
   const content = useCallback(
     () => (
       <div className={`expand-tools pens colors`}>
-        <div className="flex flex-wrap justify-between">
+        <div className="fcr-flex fcr-flex-wrap fcr-justify-between">
           {pens.map((pen) => {
             const penIcon = getPenShapeIcon(pen);
 
@@ -93,7 +93,7 @@ export const Pens: FC<PensProps> = ({
         />
 
         <div className="pens-colors-line"></div>
-        <div className="flex flex-wrap justify-between">
+        <div className="fcr-flex fcr-flex-wrap fcr-justify-between">
           {colors.map((color) => (
             <div
               key={color}

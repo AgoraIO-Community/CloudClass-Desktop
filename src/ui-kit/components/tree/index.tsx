@@ -69,8 +69,8 @@ export const Tree: FC<TreeProps> = ({
 
   const [expanded, setExtpanded] = useState(false);
 
-  const cls = classNames('fcr-tree-node flex items-center cursor-pointer', {
-    [`mb-${gap}`]: !!gap,
+  const cls = classNames('fcr-tree-node fcr-flex fcr-items-center fcr-cursor-pointer', {
+    [`fcr-mb-${gap}`]: !!gap,
     [`${childClassName}`]: !!childClassName,
   });
 
@@ -103,7 +103,7 @@ export const Tree: FC<TreeProps> = ({
         {renderNode ? (
           renderNode(data, level)
         ) : (
-          <div className="flex-grow flex justify-between items-center">
+          <div className="fcr-flex-grow fcr-flex fcr-justify-between fcr-items-center">
             <span>{data.text}</span>
           </div>
         )}
@@ -132,7 +132,7 @@ type TreeNodeProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const TreeNode: FC<TreeNodeProps> = ({ content, tail, className, ...htmlProps }) => {
-  const cls = classNames('flex-grow flex justify-between items-center', className);
+  const cls = classNames('fcr-flex-grow fcr-flex fcr-justify-between fcr-items-center', className);
   return (
     <div className={cls} {...htmlProps}>
       <span>{content}</span>

@@ -187,7 +187,7 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       <div
         ref={ref}
         className={classnames(
-          'relative',
+          'fcr-relative',
           streamLayoutContainerCls,
           'fcr-stream-mobile',
           isPiP && 'fcr-stream-mobile-draggable',
@@ -235,8 +235,8 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
   return (
     <div
       className={classnames(
-        'items-center',
-        'relative',
+        'fcr-items-center',
+        'fcr-relative',
         containerH5Extend,
         containerH5VisibleCls,
         addtionalContainerH5VisibleCls,
@@ -260,11 +260,11 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
 
       <div
         className={classnames(
-          'items-center',
-          'flex-row',
-          'flex',
-          'justify-start',
-          'overflow-x-auto',
+          'fcr-items-center',
+          'fcr-flex-row',
+          'fcr-flex',
+          'fcr-justify-start',
+          'fcr-overflow-x-auto',
         )}>
         {studentCameraStreams.map((stream) => {
           return (

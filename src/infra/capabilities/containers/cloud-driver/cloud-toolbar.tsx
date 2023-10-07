@@ -26,7 +26,7 @@ export default function CloudToolbar({
   keyword,
   onKeywordChange,
   showRefresh = true,
-  onRefresh = () => { },
+  onRefresh = () => {},
 }: CloudToolbarProps) {
   const transI18n = useI18n();
   return (

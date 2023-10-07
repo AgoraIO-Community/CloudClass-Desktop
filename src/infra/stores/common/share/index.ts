@@ -1,5 +1,5 @@
 import { AgoraEduSDK, WindowID } from '@classroom/infra/api';
-import { getEduErrorMessage, getErrorServCode } from '@classroom/infra/utils/error';
+import { getEduErrorMessage } from '@classroom/infra/utils/error';
 import { sendToMainProcess } from '@classroom/infra/utils/ipc';
 import { ChannelType } from '@classroom/infra/utils/ipc-channels';
 import { AGError, AGRteErrorCode, bound, Lodash, Log, Logger, Scheduler } from 'agora-rte-sdk';
@@ -155,8 +155,7 @@ export class EduShareUIStore {
     let title = '';
 
     if (error.codeList && error.codeList.length > 0) {
-      const servCode = getErrorServCode(error);
-      title = `Error ${error.codeList[error.codeList.length - 1]}${servCode ? `-${servCode}` : ''}`;
+      title = `Error ${error.codeList[error.codeList.length - 1]}`;
     } else {
       title = `Unknown Error`;
     }
@@ -170,6 +169,11 @@ export class EduShareUIStore {
       error.codeList.includes(AGRteErrorCode.RTE_ERR_RESTFUL_NETWORK_TIMEOUT_ERR)
     ) {
       message = transI18n('error.network_timeout');
+    } else if (
+      error.codeList &&
+      error.codeList.includes(AGRteErrorCode.RTE_ERR_RESTFUL_LIMIT_EXCEED_ERR)
+    ) {
+      message = transI18n('error.request_limit_exceeded');
     } else {
       message = getEduErrorMessage(error) || message;
     }

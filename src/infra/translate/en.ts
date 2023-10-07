@@ -130,6 +130,7 @@ export const en = {
     unknown: 'Unknown error occured. Code: {errCode} Details: {message}',
     room_is_full: 'The room is full',
     network_timeout: 'Network request timeout',
+    request_limit_exceeded: 'Network requests are too frequent',
   },
   toast: {
     mute_chat: 'You were silenced by {hostName}',
@@ -680,6 +681,7 @@ export const en = {
     '600080': 'Failed to set low stream parameter',
     '600090': 'Failed to join rdc room',
     '600096': 'Failed to set latency level',
+    '600103': 'Invalid AppId or token',
   },
   edu_serv_error: {
     '20400200': 'UserUuid is required!',

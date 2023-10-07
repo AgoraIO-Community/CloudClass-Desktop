@@ -1,7 +1,7 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { primaryRadius, brandColor } from '@classroom/infra/utils/colors';
 import { observer } from 'mobx-react';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { SvgImg, SvgIconEnum, OverlayWrap } from '@classroom/ui-kit';
 import { BaseProps } from '@classroom/ui-kit/components/util/type';
 import { Footer } from './pretest-footer';
@@ -41,12 +41,7 @@ export const RoomPretest: FC<PretestProps> = observer(
 
 const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false, pertestTitle }) => {
   const {
-    pretestUIStore: {
-      currentPretestTab,
-      setCurrentTab,
-      startRecordingDeviceTest,
-      stopRecordingDeviceTest,
-    },
+    pretestUIStore: { currentPretestTab, setCurrentTab },
   } = useStore();
 
   const handleOK = useCallback(() => {
@@ -58,13 +53,6 @@ const DeviceTest: FC<PretestProps> = observer(({ onOK, showStage = false, pertes
   }, []);
 
   const transI18n = useI18n();
-
-  useEffect(() => {
-    startRecordingDeviceTest();
-    return () => {
-      stopRecordingDeviceTest();
-    };
-  }, []);
 
   return (
     <PreTestContent>
@@ -101,7 +89,7 @@ const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean; onCance
     }, []);
 
     return (
-      <OverlayWrap opened={opened}>
+      <OverlayWrap className="fcr-bg-background" opened={opened}>
         <Modal>
           {closeable && (
             <div className="fcr-pretest-modal-closeable" onClick={onCancel}>
@@ -114,9 +102,9 @@ const PretestModal: FC<{ children: React.ReactNode; closeable?: boolean; onCance
     );
   };
 
-const Modal: FC = ({ children }) => (
+const Modal: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="bg-component fcr-pretest-modal"
+    className="fcr-bg-component fcr-pretest-modal"
     style={{
       width: 730,
       height: 656,
@@ -128,11 +116,13 @@ const Modal: FC = ({ children }) => (
   </div>
 );
 
-const PreTestContent: FC = ({ children }) => <div className="flex w-full h-full">{children}</div>;
+const PreTestContent: FC<PropsWithChildren> = ({ children }) => (
+  <div className="fcr-flex fcr-w-full fcr-h-full">{children}</div>
+);
 
-const PreTestTabLeftContent: FC = ({ children }) => (
+const PreTestTabLeftContent: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="border-divider"
+    className="fcr-border-divider"
     style={{
       flexBasis: 160,
       paddingTop: 40,
@@ -145,9 +135,9 @@ const PreTestTabLeftContent: FC = ({ children }) => (
   </div>
 );
 
-const PreTestTitle: FC = ({ children }) => (
+const PreTestTitle: FC<PropsWithChildren> = ({ children }) => (
   <div
-    className="text-level1"
+    className="fcr-text-level1"
     style={{
       fontWeight: 800,
       fontSize: 26,
@@ -158,11 +148,11 @@ const PreTestTitle: FC = ({ children }) => (
   </div>
 );
 
-const PreTestTabContent: FC = ({ children }) => (
-  <div className="flex flex-grow flex-col justify-between">{children}</div>
+const PreTestTabContent: FC<PropsWithChildren> = ({ children }) => (
+  <div className="fcr-flex fcr-flex-grow fcr-flex-col fcr-justify-between">{children}</div>
 );
 
-const PreTestTabHeader: FC<{ activity: boolean; onClick: () => void }> = ({
+const PreTestTabHeader: FC<PropsWithChildren<{ activity: boolean; onClick: () => void }>> = ({
   children,
   activity,
   onClick,
@@ -170,11 +160,11 @@ const PreTestTabHeader: FC<{ activity: boolean; onClick: () => void }> = ({
   const background = activity ? brandColor : 'transparent';
   const fontWeight = activity ? 700 : 500;
 
-  const text = activity ? 'text-white' : 'text-level1';
+  const text = activity ? 'fcr-text-white' : 'fcr-text-level1';
 
   return (
     <div
-      className={`flex items-center ${text}`}
+      className={`fcr-flex fcr-items-center ${text}`}
       onClick={onClick}
       style={{
         margin: '0 15px',
@@ -193,7 +183,7 @@ const PreTestTabHeader: FC<{ activity: boolean; onClick: () => void }> = ({
   );
 };
 
-const Icon: FC<{ type: DeviceType | 'stage'; activity: boolean }> = ({
+const Icon: FC<PropsWithChildren<{ type: DeviceType | 'stage'; activity: boolean }>> = ({
   children,
   type,
   activity,
@@ -214,7 +204,7 @@ const Icon: FC<{ type: DeviceType | 'stage'; activity: boolean }> = ({
 
   return (
     <div
-      className="flex justify-center items-center"
+      className="fcr-flex fcr-justify-center fcr-items-center"
       style={{
         width: 28,
         height: 28,

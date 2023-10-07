@@ -38,17 +38,17 @@ export class LectureH5BoardUIStore extends BoardUIStore {
 
   @computed
   get iconZoomVisibleCls() {
-    return this.shareUIStore.orientation === 'portrait' ? 'hidden' : '';
+    return this.shareUIStore.orientation === 'portrait' ? 'fcr-hidden' : '';
   }
 
   @computed
   get containerH5VisibleCls() {
-    return this.borderZoomStatus !== 'zoom-out' ? 'hidden' : '';
+    return this.borderZoomStatus !== 'zoom-out' ? 'fcr-hidden' : '';
   }
 
   @computed
   get whiteboardContainerCls() {
-    return this.shareUIStore.orientation !== 'portrait' ? 'flex-1' : '';
+    return this.shareUIStore.orientation !== 'portrait' ? 'fcr-flex-1' : '';
   }
 
   @computed

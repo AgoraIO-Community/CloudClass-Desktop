@@ -12,7 +12,6 @@ import {
   EduRoleTypeEnum,
   EduRoomTypeEnum,
   EduRteEngineConfig,
-  iterateMap,
 } from 'agora-edu-core';
 import {
   AGError,
@@ -24,18 +23,12 @@ import {
   bound,
   Log,
 } from 'agora-rte-sdk';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { action, computed, observable, reaction, runInAction, toJS, when } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { DialogCategory } from '../share';
 import { EduStreamUI } from '../stream/struct';
-import {
-  CabinetItem,
-  CabinetItemEnum,
-  ScreenShareRoleType,
-  ToolbarItem,
-  ToolbarItemCategory,
-} from './type';
+import { CabinetItem, CabinetItemEnum, ToolbarItem, ToolbarItemCategory } from './type';
 import { rgbToHexColor } from '../../../utils/board-utils';
 import { conversionOption, fileExt2ContentType } from '../cloud-drive/helper';
 import { transI18n } from 'agora-common-libs';
@@ -155,10 +148,10 @@ export class ToolbarUIStore extends EduUIStoreBase {
     );
     this._disposers.push(
       reaction(
-        () => this.classroomStore.remoteControlStore.isScreenSharingOrRemoteControlling,
-        (isScreenSharingOrRemoteControlling) => {
+        () => this.classroomStore.roomStore.isScreenSharing,
+        (isScreenSharing) => {
           runInAction(() => {
-            if (isScreenSharingOrRemoteControlling) {
+            if (isScreenSharing) {
               this._activeCabinetItems.add(CabinetItemEnum.ScreenShare);
             } else {
               this._activeCabinetItems.delete(CabinetItemEnum.ScreenShare);
@@ -363,7 +356,6 @@ export class ToolbarUIStore extends EduUIStoreBase {
             this.classroomStore.mediaStore.localScreenShareTrackState ===
             AgoraRteMediaSourceState.started
           ) {
-            this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
             this.classroomStore.mediaStore.stopScreenShareCapture();
             await when(() => {
               return this.classroomStore.streamStore.shareStreamTokens.size === 0;
@@ -391,53 +383,11 @@ export class ToolbarUIStore extends EduUIStoreBase {
   async openBuiltinCabinet(id: string) {
     switch (id) {
       case CabinetItemEnum.ScreenShare:
-        if (
-          AgoraRteEngineConfig.platform === AgoraRteRuntimePlatform.Electron &&
-          EduClassroomConfig.shared.sessionInfo.roomType !== EduRoomTypeEnum.RoomBigClass &&
-          EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher
-        ) {
-          if (this.isScreenSharing) {
-            if (this.classroomStore.remoteControlStore.isRemoteControlling) {
-              const isTeacher =
-                EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
-              const isTeacherControlStudent =
-                this.classroomStore.remoteControlStore.isHost && isTeacher;
-              if (isTeacherControlStudent) {
-                this.classroomStore.remoteControlStore.quitControlRequest();
-              } else {
-                this.classroomStore.remoteControlStore.unauthorizeStudentToControl();
-                this.classroomStore.mediaStore.stopScreenShareCapture();
-              }
-            } else {
-              this.classroomStore.mediaStore.stopScreenShareCapture();
-            }
-            return;
-          }
-          this.shareUIStore.addDialog(DialogCategory.ScreenShare, {
-            onOK: (screenShareType: ScreenShareRoleType) => {
-              if (screenShareType === ScreenShareRoleType.Teacher) {
-                this.startLocalScreenShare();
-              } else {
-                const studentList = this.classroomStore.userStore.studentList;
-                if (studentList.size <= 0)
-                  return this.shareUIStore.addToast(transI18n('fcr_share_no_student'), 'warning');
-                const canControlledStudentList =
-                  this.classroomStore.remoteControlStore.canControlledStudentList;
-
-                if (canControlledStudentList.size > 0) {
-                  const { list } = iterateMap(canControlledStudentList, {
-                    onMap: (_key, item) => item,
-                  });
-                  this.classroomStore.remoteControlStore.sendControlRequst(list[0]?.userUuid);
-                } else {
-                  this.shareUIStore.addToast(transI18n('fcr_share_device_no_support'), 'warning');
-                }
-              }
-            },
-          });
-        } else {
-          this.startLocalScreenShare();
+        if (this.isScreenSharing) {
+          this.classroomStore.mediaStore.stopScreenShareCapture();
+          return;
         }
+        this.startLocalScreenShare();
         break;
       case CabinetItemEnum.Laser:
         this.setTool(id);
@@ -772,7 +722,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
   @computed
   get teacherTools(): ToolbarItem[] {
     let _tools: ToolbarItem[] = [];
-    if (this.boardApi.mounted && !this.classroomStore.remoteControlStore.isHost) {
+    if (this.boardApi.mounted) {
       _tools = [
         ToolbarItem.fromData({
           value: 'clicker',
@@ -881,7 +831,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
     const mounted = this.boardApi.mounted;
     const whiteboardAuthorized = this.boardApi.grantedUsers.has(userUuid);
 
-    if (!mounted || !whiteboardAuthorized || this.classroomStore.remoteControlStore.isHost) {
+    if (!mounted || !whiteboardAuthorized) {
       //allowed to view user list only if not granted
       return [
         ToolbarItem.fromData({

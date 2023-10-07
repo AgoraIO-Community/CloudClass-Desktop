@@ -17,7 +17,7 @@ export const SceneSwitch: FC<Props> = observer(({ children }) => {
   }, [groupUIStore.joiningSubRoom]);
 
   return (
-    <div className="w-full h-full bg-white">
+    <div className="fcr-w-full fcr-h-full fcr-bg-white">
       {/* Loading */}
       {groupUIStore.joiningSubRoom ? <PageLoading /> : children}
     </div>
@@ -30,14 +30,14 @@ const PageLoading = () => {
   return (
     <div className="scene-switch-loading">
       <Card
-        className="absolute inline-flex flex-col inset-auto p-4"
+        className="fcr-absolute fcr-inline-flex fcr-flex-col fcr-inset-auto fcr-p-4"
         style={{
           width: 'unset!important',
           height: 'unset!important',
           borderRadius: 12,
         }}>
         <Loading />
-        <p className="m-0 text-level1">
+        <p className="fcr-m-0 fcr-text-level1">
           {layoutUIStore.currentSubRoomName
             ? transI18n('fcr_group_joining', {
                 reason: layoutUIStore.currentSubRoomName,

@@ -116,7 +116,7 @@ export const CameraPlaceHolder: React.FC<CameraPlaceHolderProps> = ({
     <div
       className={cls}
       style={{
-        zIndex: cameraSvgZIndex[state],
+        zIndex: cameraSvgZIndex[state as keyof typeof cameraSvgZIndex],
         ...style,
       }}>
       <SvgImg

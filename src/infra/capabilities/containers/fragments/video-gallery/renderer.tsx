@@ -75,12 +75,12 @@ export const VideoRenderer: FC<{ stream: EduStreamUI }> = ({ stream }) => {
   const isLocal = stream.stream.isLocal;
   const isMirrorMode = stream.isMirrorMode;
 
-  const cls = classNames('relative', {
+  const cls = classNames('fcr-relative', {
     invisible: stream.isCameraMuted,
   });
 
   return (
-    <div className="w-full h-full relative">
+    <div className="fcr-w-full fcr-h-full fcr-relative">
       <CameraPlaceHolder style={{ position: 'absolute', top: 0 }} state={placeholder} />
 
       {isLocal ? (

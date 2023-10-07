@@ -23,15 +23,15 @@ export type FieldProps = {
 } & CommonProps;
 
 export const Field: FC<FieldProps> = ({ label, type, width, ...resetProps }) => {
-  const clsn = classNames('form-field-wrap flex flex-col', {
+  const clsn = classNames('form-field-wrap fcr-flex fcr-flex-col', {
     [type]: type ?? 'text',
   });
   const style = { width };
 
   return (
     <label className={clsn} style={style}>
-      <span className="form-field-label mb-1">{label}</span>
-      <div className="form-field flex items-start w-full">
+      <span className="form-field-label fcr-mb-1">{label}</span>
+      <div className="form-field fcr-flex fcr-items-start fcr-w-full">
         {type === 'text' && <TextInput {...resetProps} />}
         {type === 'select' && <Select {...resetProps} />}
       </div>
@@ -73,11 +73,11 @@ export const TextInput: FC<CommonProps> = ({
     onChange(e.target.value);
   };
 
-  const iconCls = classNames('absolute cursor-pointer', {
+  const iconCls = classNames('fcr-absolute fcr-cursor-pointer', {
     invisible: readOnly || !focused,
   });
 
-  const cls = classNames('relative w-full h-full', {
+  const cls = classNames('fcr-relative fcr-w-full fcr-h-full', {
     error: !!error,
   });
 
@@ -86,7 +86,7 @@ export const TextInput: FC<CommonProps> = ({
       <input
         ref={inputRef}
         readOnly={readOnly}
-        className="w-full"
+        className="fcr-w-full"
         placeholder={placeholder}
         style={{ padding: '14px 32px 14px 12px' }}
         onFocus={handleFocus}
@@ -96,7 +96,7 @@ export const TextInput: FC<CommonProps> = ({
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
       />
-      <span className="error-text absolute block right-0">{error}</span>
+      <span className="error-text fcr-absolute fcr-block fcr-right-0">{error}</span>
       <SvgImg
         className={iconCls}
         type={SvgIconEnum.CLOSE}

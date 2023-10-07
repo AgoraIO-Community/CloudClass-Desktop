@@ -1,29 +1,29 @@
-import {
-  AgoraEduSDK,
-  AgoraExtensionWidgetEvent,
-  AgoraMultiInstanceWidget,
-  AgoraTrackSyncedWidget,
-  AgoraWidgetBase,
-  AgoraWidgetLifecycle,
-} from '@classroom/infra/api';
+import { AgoraEduSDK } from '@classroom/infra/api';
 import {
   counterEnabled,
   pollEnabled,
   popupQuizEnabled,
   chatEnabled,
   boardEnabled,
+  AgoraCloudClassWidget as AgoraWidgetBase,
+  AgoraWidgetTrackMode,
+  AgoraWidgetTrackController,
+  AgoraUiCapableConfirmDialogProps,
 } from 'agora-common-libs';
 import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { AgoraWidgetTrackMode } from './type';
-import { AgoraWidgetTrackController } from './widget-track';
+import {
+  AgoraExtensionRoomEvent,
+  AgoraExtensionWidgetEvent,
+} from '@classroom/infra/protocol/events';
 
 @Log.attach({ proxyMethods: false })
 export class WidgetUIStore extends EduUIStoreBase {
   private _disposers: (Lambda | IReactionDisposer)[] = [];
   private _registeredWidgets: Record<string, typeof AgoraWidgetBase> = {};
+  private _viewportResizeObserver?: ResizeObserver;
   @observable
   private _widgetInstances: Record<string, AgoraWidgetBase> = {};
 
@@ -69,12 +69,12 @@ export class WidgetUIStore extends EduUIStoreBase {
     const WidgetClass = this._registeredWidgets[widgetName];
 
     if (!WidgetClass) {
-      this.logger.info(`Widget [${widgetName}] is active but not registered`);
+      this.logger.info(`widget [${widgetName}] is active but not registered`);
       return;
     }
 
     if (this._widgetInstances[widgetId]) {
-      this.logger.info(`Widget [${widgetName}] is already active`);
+      this.logger.info(`widget [${widgetName}] is already active`);
       return;
     }
 
@@ -84,10 +84,12 @@ export class WidgetUIStore extends EduUIStoreBase {
       const widget = new (WidgetClass as any)(
         widgetController,
         this.classroomStore,
-        this.shareUIStore,
+        this._createUiCapable(),
         AgoraEduSDK.uiConfig,
         AgoraEduSDK.theme,
       ) as AgoraWidgetBase;
+
+      this.logger.info('widget instance is created:', widgetId);
 
       if (instanceId) {
         this._callWidgetSetInstanceId(widget, instanceId);
@@ -96,7 +98,11 @@ export class WidgetUIStore extends EduUIStoreBase {
       const trackProps =
         widgetController.getWidgetTrack(widget.widgetId) || (defaults?.trackProperties ?? {});
 
+      this.logger.info('widget trackProps:', trackProps);
+
       const trackMode = this._getWidgetTrackMode(widget);
+
+      this.logger.info('widget trackMode:', trackMode);
 
       if (trackMode) {
         const trackController = new AgoraWidgetTrackController(widget, trackProps, {
@@ -104,10 +110,14 @@ export class WidgetUIStore extends EduUIStoreBase {
         });
 
         widget.setTrackController(trackController);
+
+        this.logger.info('set widget track controller:', trackController);
       }
 
       const props =
         widgetController?.getWidgetProperties(widget.widgetId) || (defaults?.properties ?? {});
+
+      this.logger.info('widget props:', props);
 
       const userProps =
         widgetController?.getWidgetUserProperties(widget.widgetId) ||
@@ -116,8 +126,10 @@ export class WidgetUIStore extends EduUIStoreBase {
       this._callWidgetCreate(widget, props, userProps);
 
       this._widgetInstances[widgetId] = widget;
+
+      this.logger.info(`widget [${widgetId}] is ready to render`);
     } else {
-      this.logger.info('Widget controller not ready for creating widget');
+      this.logger.info('widget controller not ready for creating widget');
     }
   }
 
@@ -173,56 +185,71 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
 
   private _callWidgetCreate(widget: AgoraWidgetBase, props: unknown, userProps: unknown) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onCreate) {
-      (widget as unknown as AgoraWidgetLifecycle).onCreate(props, userProps);
+    if (widget.onCreate) {
+      this.logger.info(
+        `call widget [${widget.widgetId}] onCreate, props: ${JSON.stringify(
+          props,
+        )}, userProps: ${JSON.stringify(userProps)}`,
+      );
+      widget.onCreate(props, userProps);
     }
   }
 
   private _callWidgetSetInstanceId(widget: AgoraWidgetBase, instanceId: string) {
-    if ((widget as unknown as AgoraMultiInstanceWidget).setInstanceId) {
-      (widget as unknown as AgoraMultiInstanceWidget).setInstanceId(instanceId);
+    if (widget.setInstanceId) {
+      this.logger.info(`call widget [${widget.widgetId}] setInstanceId, instanceId: ${instanceId}`);
+      widget.setInstanceId(instanceId);
     }
   }
 
   private _callWidgetPropertiesUpdate(widget: AgoraWidgetBase, props: unknown) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onPropertiesUpdate) {
-      (widget as unknown as AgoraWidgetLifecycle).onPropertiesUpdate(props);
+    if (widget.onPropertiesUpdate) {
+      this.logger.info(
+        `call widget [${widget.widgetId}] onPropertiesUpdate, props: ${JSON.stringify(props)}`,
+      );
+      widget.onPropertiesUpdate(props);
     }
   }
   private _callWidgetUserPropertiesUpdate(widget: AgoraWidgetBase, userProps: unknown) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onUserPropertiesUpdate) {
-      (widget as unknown as AgoraWidgetLifecycle).onUserPropertiesUpdate(userProps);
+    if (widget.onUserPropertiesUpdate) {
+      this.logger.info(
+        `call widget [${widget.widgetId}] onUserPropertiesUpdate, userProps: ${JSON.stringify(
+          userProps,
+        )}`,
+      );
+      widget.onUserPropertiesUpdate(userProps);
     }
   }
 
   private _callWidgetDestroy(widget: AgoraWidgetBase) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onDestroy) {
-      (widget as unknown as AgoraWidgetLifecycle).onDestroy();
+    if (widget.onDestroy) {
+      this.logger.info(`call widget [${widget.widgetId}] onDestroy`);
+      widget.onDestroy();
     }
   }
 
   private _callWidgetUpdateTrack(widget: AgoraWidgetBase, trackProps: unknown) {
-    if ((widget as unknown as AgoraTrackSyncedWidget).updateToLocal) {
-      (widget as unknown as AgoraTrackSyncedWidget).updateToLocal(trackProps as AgoraWidgetTrack);
-      (widget as unknown as AgoraTrackSyncedWidget).updateZIndexToLocal(
-        (trackProps as AgoraWidgetTrack).zIndex ?? 0,
-      );
+    if (widget.updateToLocal) {
+      widget.updateToLocal(trackProps as AgoraWidgetTrack);
+      widget.updateZIndexToLocal((trackProps as AgoraWidgetTrack).zIndex ?? 0);
     }
   }
 
   private _getWidgetTrackMode(widget: AgoraWidgetBase) {
-    return (widget as unknown as AgoraTrackSyncedWidget).trackMode;
+    return widget.trackMode;
   }
 
   private _callWidgetInstall(widget: AgoraWidgetBase, controller: AgoraWidgetController) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onInstall) {
-      (widget as unknown as AgoraWidgetLifecycle).onInstall(controller);
+    if (widget.onInstall) {
+      this.logger.info(`call widget [${widget.widgetName}] onInstall`);
+      widget.onInstall(controller);
     }
   }
 
   private _callWidgetUninstall(widget: AgoraWidgetBase, controller: AgoraWidgetController) {
-    if ((widget as unknown as AgoraWidgetLifecycle).onUninstall) {
-      (widget as unknown as AgoraWidgetLifecycle).onUninstall(controller);
+    if (widget.onUninstall) {
+      this.logger.info(`call widget [${widget.widgetName}] onUninstall`);
+      widget.onUninstall(controller);
     }
   }
 
@@ -282,15 +309,42 @@ export class WidgetUIStore extends EduUIStoreBase {
       prev[key] = value;
 
       return prev;
-    }, {});
+    }, {} as any);
 
     return widgets;
+  }
+
+  @bound
+  private _notifyViewportChange() {
+    this.logger.info('notify to all widgets that viewport boundaries changed');
+    this.widgetInstanceList.forEach((instance) => {
+      const clientRect = document
+        .querySelector(`.${this.shareUIStore.classroomViewportClassName}`)
+        ?.getBoundingClientRect();
+
+      if (clientRect && instance.onViewportBoundaryUpdate) {
+        instance.onViewportBoundaryUpdate(clientRect);
+      } else {
+        this.logger.warn(
+          'cannot get viewport boudnaries by classname:',
+          this.shareUIStore.classroomViewportClassName,
+        );
+      }
+    });
+  }
+
+  private _createUiCapable() {
+    return {
+      addToast: (message: string, type: 'error' | 'success' | 'warning') => {
+        this.shareUIStore.addToast(message, type);
+      },
+      addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {},
+    };
   }
 
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
 
-    this.classroomStore.widgetStore.addWidgetStateListener(this._stateListener);
     // switch between widget controllers of scenes
     this._disposers.push(
       reaction(
@@ -333,6 +387,7 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
             });
+            oldController.removeWidgetStateListener(this._stateListener);
           }
           // install widgets
           if (controller) {
@@ -348,14 +403,45 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
             });
+
+            controller.broadcast(
+              AgoraExtensionRoomEvent.BoardSetAnimationOptions,
+              AgoraEduSDK.boardWindowAnimationOptions,
+            );
+            controller.addWidgetStateListener(this._stateListener);
           }
         },
       ),
     );
+    this._disposers.push(
+      reaction(
+        () => this.shareUIStore.layoutReady,
+        (layoutReady) => {
+          if (layoutReady) {
+            this._viewportResizeObserver = this.shareUIStore.addViewportResizeObserver(
+              this._notifyViewportChange,
+            );
+          } else {
+            if (this._viewportResizeObserver) {
+              this._viewportResizeObserver?.disconnect();
+              this._viewportResizeObserver = undefined;
+            }
+          }
+        },
+      ),
+    );
+
+    this._disposers.push(reaction(() => this.widgetInstanceList, this._notifyViewportChange));
   }
 
   onDestroy() {
-    this.classroomStore.widgetStore.removeWidgetStateListener(this._stateListener);
+    if (this._viewportResizeObserver) {
+      this._viewportResizeObserver?.disconnect();
+      this._viewportResizeObserver = undefined;
+    }
+    this.classroomStore.widgetStore.widgetController?.removeWidgetStateListener(
+      this._stateListener,
+    );
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }

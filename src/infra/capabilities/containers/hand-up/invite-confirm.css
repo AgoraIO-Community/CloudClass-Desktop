@@ -2,7 +2,7 @@
   text-align: center;
   font-size: 13px;
   font-weight: 400;
-  @apply text-level2;
+  @apply fcr-text-level2;
   line-height: 18px;
   width: 208px;
   margin: 0 auto;

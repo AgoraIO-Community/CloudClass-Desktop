@@ -30,15 +30,15 @@ export const GroupPanel: FC<GroupPanelProps> = ({
       panelId={panelId}
       className="breakout-room-group-panel"
       trigger={children as ReactElement}
-      onClose={() => { }}>
+      onClose={() => {}}>
       <div
-        className="panel-content py-2"
+        className="panel-content fcr-py-2"
         style={{ width: 200, height: 200, overflow: 'auto' }}
         onClick={(e: MouseEvent) => {
           e.stopPropagation();
         }}>
         <MultiRootTree
-          childClassName="breakout-room-tree px-4 py-1"
+          childClassName="breakout-room-tree fcr-px-4 fcr-py-1"
           disableExpansion={!canExpand}
           data={groups}
           renderNode={(node, level) => (
@@ -50,8 +50,8 @@ export const GroupPanel: FC<GroupPanelProps> = ({
                     <span className="tree-node-tips">
                       {node.children?.length
                         ? transI18n('breakout_room.group_current_has_students', {
-                          reason: `${node.children?.length}`,
-                        })
+                            reason: `${node.children?.length}`,
+                          })
                         : transI18n('breakout_room.group_current_empty')}
                     </span>
                   </>

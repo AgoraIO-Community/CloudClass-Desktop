@@ -6,7 +6,7 @@
 
 .start-main-title,
 .start-sub-title {
-  @apply text-level2;
+  @apply fcr-text-level2;
   font-size: 16px;
   font-family: PingFang-SC-Bold, PingFang-SC;
   font-weight: bold;
@@ -21,7 +21,7 @@
 
 .start-sub-title + div > .fcr-input-wrapper,
 .group-search-wrap .fcr-input-wrapper {
-  @apply bg-component border border-solid border-divider;
+  @apply fcr-bg-component fcr-border fcr-border-solid fcr-border-divider;
   border-radius: 4px;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .group-start-footer {
-  @apply border-t border-solid border-divider;
+  @apply fcr-border-t fcr-border-solid fcr-border-divider;
   box-sizing: border-box;
   padding-right: 20px;
   display: flex;
@@ -52,26 +52,26 @@
 }
 
 .group-tips {
-  @apply text-level2;
+  @apply fcr-text-level2;
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
 }
 
 .group-select-footer {
-  @apply bg-component border border-solid border-divider;
+  @apply fcr-bg-component fcr-border fcr-border-solid fcr-border-divider;
   height: 58px;
 }
 
 .group-select-footer > div {
-  @apply bg-component;
+  @apply fcr-bg-component;
   width: 100%;
   height: 100%;
   align-items: center;
 }
 
 .group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root {
-  @apply bg-component border border-solid border-divider;
+  @apply fcr-bg-component fcr-border fcr-border-solid fcr-border-divider;
   margin-bottom: 10px;
   border-radius: 4px;
 }
@@ -98,28 +98,28 @@
   margin-right: 15px;
 }
 .remove-btn {
-  @apply text-error;
+  @apply fcr-text-error;
   margin-right: 15px;
 }
 
 .breakout-room .fcr-tree-node span {
-  @apply text-level1;
+  @apply fcr-text-level1;
 }
 
 .breakout-room .fcr-tree-node .tree-node-tips {
   font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  @apply text-level2;
+  @apply fcr-text-level2;
   margin-left: 10px;
 }
 
 .group-select-footer .fcr-btn-danger:hover {
-  @apply text-level1 bg-error;
+  @apply fcr-text-level1 fcr-bg-error;
 }
 
 input[name='breakout-room-type'] + span {
-  @apply text-level2;
+  @apply fcr-text-level2;
 }
 
 input[name='breakout-room-type'] {
@@ -138,7 +138,7 @@ input[name='breakout-room-type']:checked:after {
 }
 
 .group-rename-input {
-  @apply bg-component text-level1;
+  @apply fcr-bg-component fcr-text-level1;
   outline: 1px solid #357bf6;
 }
 
@@ -162,7 +162,7 @@ input[name='breakout-room-type']:checked:after {
 }
 
 .group-scroll-overflow > .fcr-multi-tree-root > .fcr-tree-root > .fcr-tree-node + .fcr-tree-root {
-  @apply border-t border-solid border-divider;
+  @apply fcr-border-t fcr-border-solid fcr-border-divider;
 }
 
 .breakout-room-group-panel .popover-arrow {

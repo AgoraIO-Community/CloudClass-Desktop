@@ -20,7 +20,6 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "suppressImplicitAnyIndexErrors": true,
     "noEmitHelpers": true,
     "noEmitOnError": false,
     "emitDeclarationOnly": true,

@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useEffect, useState } from 'react';
+import { CSSProperties, FC, PropsWithChildren, useEffect, useState } from 'react';
 import { EduStreamUI, StreamBounds } from '@classroom/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
 import { Rnd } from 'react-rnd';
@@ -9,8 +9,9 @@ import { StreamPlayer } from '../stream';
 import { StreamWindow } from '@classroom/infra/stores/common/stream-window/type';
 import useMeasure from 'react-use-measure';
 import { StreamPlayerToolbar } from '../stream/stream-tool';
+import { AGRenderMode } from 'agora-rte-sdk';
 
-const WindowContainer: FC = observer(({ children }) => {
+const WindowContainer: FC<PropsWithChildren> = observer(({ children }) => {
   const { streamWindowUIStore, boardUIStore } = useStore();
   const [measureRef, bounds] = useMeasure();
 
@@ -21,7 +22,7 @@ const WindowContainer: FC = observer(({ children }) => {
   return (
     <div
       id="stream-window-container"
-      className="w-full absolute flex-shrink-0 bottom-0"
+      className="fcr-w-full fcr-absolute fcr-flex-shrink-0 fcr-bottom-0"
       style={{ height: boardUIStore.boardAreaHeight, pointerEvents: 'none' }}
       ref={measureRef}>
       {children}
@@ -133,6 +134,7 @@ export const TransitionStreamWindow = observer(
               stream={stream}
               style={{ width: '100%', height: '100%' }}
               toolbarDisabled
+              renderMode={AGRenderMode.fit}
             />
           ) : null}
         </animated.div>

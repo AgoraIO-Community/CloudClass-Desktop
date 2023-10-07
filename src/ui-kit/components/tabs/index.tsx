@@ -1,6 +1,6 @@
 import Tabs, { TabPaneProps, TabsProps } from 'antd/lib/tabs';
 import classNames from 'classnames';
-import React, { FC } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import { SvgIconEnum, SvgImg } from '../svg-img';
 import './index.css';
 
@@ -19,7 +19,13 @@ export type ATabsProps = Pick<
   | 'items'
 >;
 
-export const ATabs: FC<ATabsProps> = ({ type, className, onEdit, centered, ...props }) => {
+export const ATabs: FC<PropsWithChildren<ATabsProps>> = ({
+  type,
+  className,
+  onEdit,
+  centered,
+  ...props
+}) => {
   const { moreIcon = <SvgImg type={SvgIconEnum.MORE} /> } = props;
 
   return (
@@ -29,6 +35,6 @@ export const ATabs: FC<ATabsProps> = ({ type, className, onEdit, centered, ...pr
 
 export type ATabPaneProps = Pick<TabPaneProps, 'className' | 'tab' | 'tabKey'>;
 
-export const ATabPane: FC<ATabPaneProps> = ({ className, ...props }) => {
+export const ATabPane: FC<PropsWithChildren<ATabPaneProps>> = ({ className, ...props }) => {
   return <Tabs.TabPane {...props} className={classNames({ 'fcr-theme': 1 }, className)} />;
 };

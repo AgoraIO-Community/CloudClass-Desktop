@@ -34,7 +34,7 @@ const UploadSuccessToast = () => {
   const transI18n = useI18n();
   return (
     <Toast
-      closeToast={() => { }}
+      closeToast={() => {}}
       style={{
         position: 'absolute',
         left: '50%',
@@ -237,7 +237,10 @@ export const PersonalResourcesContainer = observer(() => {
                       type={fileNameToType(ext)}
                       style={{
                         marginRight: '6px',
-                        color: FileTypeSvgColor[fileNameToType(resourceName)],
+                        color:
+                          FileTypeSvgColor[
+                            fileNameToType(resourceName) as keyof typeof FileTypeSvgColor
+                          ],
                       }}
                     />
                     <Inline className="filename" title={resourceName}>
@@ -245,21 +248,21 @@ export const PersonalResourcesContainer = observer(() => {
                         dangerouslySetInnerHTML={{
                           __html: searchPersonalResourcesKeyword
                             ? resourceName.replaceAll(
-                              searchPersonalResourcesKeyword,
-                              `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
-                            )
+                                searchPersonalResourcesKeyword,
+                                `<span style="color: #357BF6">${searchPersonalResourcesKeyword}</span>`,
+                              )
                             : resourceName,
                         }}></span>
                     </Inline>
                   </Col>
                   <Col>
                     {item.resource instanceof CloudDriveCourseResource &&
-                      item.resource.status === 'Converting' ? (
+                    item.resource.status === 'Converting' ? (
                       <>
-                        <Inline className="text-level1">
+                        <Inline className="fcr-text-level1">
                           <CircleLoading width="18" height="18" />
                         </Inline>
-                        <Inline className="text-level1" style={{ marginLeft: '6px' }}>
+                        <Inline className="fcr-text-level1" style={{ marginLeft: '6px' }}>
                           {item.resource?.convertedPercentage}%
                         </Inline>
                       </>
@@ -281,10 +284,10 @@ export const PersonalResourcesContainer = observer(() => {
                   </Col>
 
                   <Col>
-                    <Inline className="text-level1">{formatFileSize(size)}</Inline>
+                    <Inline className="fcr-text-level1">{formatFileSize(size)}</Inline>
                   </Col>
                   <Col>
-                    <Inline className="text-level1">
+                    <Inline className="fcr-text-level1">
                       {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
                     </Inline>
                   </Col>
