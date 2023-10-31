@@ -14,13 +14,7 @@ type DocsProps = {
   maxLength: number;
 };
 
-export const Docs = ({ width, height, currentVolume, maxLength }: DocsProps) => (
-  <div className="fcr-mt-4">
-    <Volume width={width} height={height} currentVolume={currentVolume} maxLength={maxLength} />
-  </div>
-);
-
-export const AudioVolumeDocs = () => {
+export const Docs = () => {
   const [currentVolume, setCurrentVolume] = useState(0);
   let timer;
   useEffect(() => {
