@@ -45,6 +45,7 @@ import {
   addResourceBundle,
   AgoraWidgetBase,
   Logger,
+  changeLanguage,
 } from 'agora-common-libs';
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
@@ -284,6 +285,8 @@ export class AgoraEduSDK {
 
     this._widgets = widgets;
 
+    changeLanguage(language);
+
     if (option.webrtcExtensionBaseUrl) {
       setAssetsBaseUrl(option.webrtcExtensionBaseUrl);
     }
@@ -378,6 +381,8 @@ export class AgoraEduSDK {
 
     this._language = option.language;
     this._uiMode = option.uiMode ?? FcrMultiThemeMode.light;
+
+    changeLanguage(option.language);
 
     this._selectUITheme(this._uiMode, option.roomType);
     applyTheme(this._theme);
