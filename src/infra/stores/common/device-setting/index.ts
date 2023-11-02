@@ -2,12 +2,10 @@ import { AGError, bound, Log } from 'agora-rte-sdk';
 import { computed, Lambda, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import {
-  AgoraEduClassroomEvent,
   AGServiceErrorCode,
   ClassroomState,
   DEVICE_DISABLE,
   EduClassroomConfig,
-  EduEventCenter,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
 } from 'agora-edu-core';
@@ -130,21 +128,41 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       computed(() => this.classroomStore.mediaStore.audioRecordingDevices).observe(
         ({ newValue, oldValue }) => {
           const { recordingDeviceId } = this.classroomStore.mediaStore;
-          // 避免初始化阶段触发新设备的弹窗通知
+          const newDefaultDevice = newValue?.find((v) => v.isDefault);
+
           if (oldValue && oldValue.length > 1) {
             const inOldList = oldValue.find((v) => v.deviceid === recordingDeviceId);
             const inNewList = newValue.find((v) => v.deviceid === recordingDeviceId);
-            if ((inOldList && !inNewList) || recordingDeviceId === DEVICE_DISABLE) {
+            if (
+              (inOldList && !inNewList) ||
+              recordingDeviceId === DEVICE_DISABLE ||
+              (newDefaultDevice && newDefaultDevice.deviceid !== recordingDeviceId)
+            ) {
               //change to first device if there's any
-              newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+              newValue.length > 0 &&
+                this.setRecordingDevice(newDefaultDevice?.deviceid || newValue[0].deviceid);
             }
           } else {
             if (EduClassroomConfig.shared.openRecordingDeviceAfterLaunch) {
               // initailize, pick the first device
-              newValue.length > 0 && this.setRecordingDevice(newValue[0].deviceid);
+              newValue.length > 0 &&
+                this.setRecordingDevice(newDefaultDevice?.deviceid || newValue[0].deviceid);
             } else {
               this.setRecordingDevice(DEVICE_DISABLE);
             }
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.mediaStore.playbackDeviceId,
+        () => {
+          const { playbackDeviceId } = this.classroomStore.mediaStore;
+          if (playbackDeviceId) {
+            const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+            this.logger.info('change playback device to', playbackDeviceId);
+            track.setPlaybackDevice(playbackDeviceId);
           }
         },
       ),
@@ -154,17 +172,19 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       computed(() => this.classroomStore.mediaStore.audioPlaybackDevices).observe(
         ({ newValue, oldValue }) => {
           const { playbackDeviceId } = this.classroomStore.mediaStore;
-          // 避免初始化阶段触发新设备的弹窗通知
-          if (oldValue && oldValue.length > 0) {
-            const inOldList = oldValue.find((v) => v.deviceid === playbackDeviceId);
+          const newDefaultDevice = newValue?.find((v) => v.isDefault);
+          if (newDefaultDevice) {
+            if (newDefaultDevice.deviceid !== playbackDeviceId) {
+              this.setPlaybackDevice(newDefaultDevice.deviceid);
+            }
+          } else if (newValue.length > 0) {
+            const inOldList = oldValue?.find((v) => v.deviceid === playbackDeviceId);
             const inNewList = newValue.find((v) => v.deviceid === playbackDeviceId);
-            if (inOldList && !inNewList) {
-              //change to first device if there's any
-              newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
+            if (!inOldList || (inOldList && !inNewList)) {
+              this.setPlaybackDevice(newValue[0].deviceid);
             }
           } else {
-            // initailize, pick the first device
-            newValue.length > 0 && this.setPlaybackDevice(newValue[0].deviceid);
+            this.setPlaybackDevice('default');
           }
         },
       ),

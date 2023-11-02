@@ -332,10 +332,15 @@ export class PretestUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get recordingDevicesList() {
-    return this.classroomStore.mediaStore.audioRecordingDevices.map((item) => ({
-      label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
-      value: item.deviceid,
-    }));
+    return this.classroomStore.mediaStore.audioRecordingDevices
+      .slice()
+      .sort((d) => {
+        return d.isDefault ? -1 : 0;
+      })
+      .map((item) => ({
+        label: item.deviceid === DEVICE_DISABLE ? transI18n('disabled') : item.devicename,
+        value: item.deviceid,
+      }));
   }
 
   /**
@@ -343,10 +348,15 @@ export class PretestUIStore extends EduUIStoreBase {
    * @returns
    */
   @computed get playbackDevicesList() {
-    const playbackDevicesList = this.classroomStore.mediaStore.audioPlaybackDevices.map((item) => ({
-      label: item.devicename,
-      value: item.deviceid,
-    }));
+    const playbackDevicesList = this.classroomStore.mediaStore.audioPlaybackDevices
+      .slice()
+      .sort((d) => {
+        return d.isDefault ? -1 : 0;
+      })
+      .map((item) => ({
+        label: item.devicename,
+        value: item.deviceid,
+      }));
     return playbackDevicesList.length
       ? playbackDevicesList
       : [
