@@ -666,7 +666,7 @@ export const en = {
     '600064': 'Failed to upload file to cloud resource',
     '600065': 'Failed to update ExtApp properties',
     '600066': 'Failed to update ExtApp properties',
-    '600067': 'Failed to convert cloud resource',
+    '600067': 'Courseware conversion failed. Please delete and upload again',
     '600068': 'The resource is converting',
     '600069': 'Failed to get all students off the podium',
     '600070': 'Failed to update Whiteboard state',
@@ -805,4 +805,5 @@ export const en = {
   fcr_H5_click_to_play: 'Play',
 
   fcr_home_status_teacher_leave: 'The teacher has left the room',
+  fcr_failed_converting: 'Failed',
 };

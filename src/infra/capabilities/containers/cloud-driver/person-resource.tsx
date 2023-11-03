@@ -29,6 +29,7 @@ import { FileTypeSvgColor } from '@classroom/infra/stores/common/cloud-drive';
 import { CloudDriveCourseResource } from '@classroom/infra/stores/common/cloud-drive/struct';
 import { supportedTypes } from '@classroom/infra/stores/common/cloud-drive/helper';
 import { useI18n } from 'agora-common-libs';
+import classNames from 'classnames';
 
 const UploadSuccessToast = () => {
   const transI18n = useI18n();
@@ -222,6 +223,13 @@ export const PersonalResourcesContainer = observer(() => {
                 size = 0,
                 resourceUuid = '',
               } = item.resource || {};
+              let isFailedConverting = false;
+              if (
+                item.resource instanceof CloudDriveCourseResource &&
+                item.resource.status === 'Fail'
+              ) {
+                isFailedConverting = true;
+              }
               const checked = item.checked;
               return (
                 <Row height={10} border={1} key={resourceUuid}>
@@ -287,8 +295,20 @@ export const PersonalResourcesContainer = observer(() => {
                     <Inline className="fcr-text-level1">{formatFileSize(size)}</Inline>
                   </Col>
                   <Col>
-                    <Inline className="fcr-text-level1">
-                      {!!updateTime ? dayjs(updateTime).format('YYYY-MM-DD HH:mm') : '- -'}
+                    <Inline
+                      className={classNames('fcr-text-level1', {
+                        'cloud-driver-failed-converting': isFailedConverting,
+                      })}>
+                      {isFailedConverting ? (
+                        <span className='cloud-driver-failed_converting-info'>
+                          <SvgImg type={SvgIconEnum.FCR_PPT_BROKEN} />{' '}
+                          {transI18n('fcr_failed_converting')}
+                        </span>
+                      ) : !!updateTime ? (
+                        dayjs(updateTime).format('YYYY-MM-DD HH:mm')
+                      ) : (
+                        '- -'
+                      )}
                     </Inline>
                   </Col>
                 </Row>

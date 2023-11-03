@@ -173,4 +173,5 @@ export enum SvgIconEnum {
   COLLAPSE_STREAM_MOBILE = 'collapse-stream-mobile',
   BETA = 'beta',
   AUTO_PLAY_FAILED = 'auto-play-failed',
+  FCR_PPT_BROKEN = 'fcr-ppt-broken'
 }

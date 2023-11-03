@@ -1,11 +1,5 @@
 import { CourseWareItem } from '@classroom/infra/api';
-import {
-  AGEduErrorCode,
-  CloudDriveResource,
-  ConversionOption,
-  EduClassroomConfig,
-  EduErrorCenter,
-} from 'agora-edu-core';
+import { CloudDriveResource, ConversionOption, EduClassroomConfig } from 'agora-edu-core';
 import toLower from 'lodash/toLower';
 import {
   CloudDriveCourseResource,
@@ -35,105 +29,78 @@ export const supportedTypes = [
 export const createCloudResource = (data: CourseWareItem): CloudDriveResource | never => {
   const ext = data.ext?.toLowerCase?.();
   if (convertableTypes.includes(ext)) {
-    if (!data.taskProgress || !data.taskUuid) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-        new Error(`invalid convertable file ${ext}`),
-      );
-    }
     return new CloudDriveCourseResource({
       ext: ext,
       resourceName: data.resourceName,
       resourceUuid: data.resourceUuid,
       size: data.size,
       updateTime: data.updateTime,
-      taskProgress: data.taskProgress,
-      taskUuid: data.taskUuid,
+      taskProgress: data.taskProgress || {
+        status: 'Fail',
+        totalPageSize: 0,
+        convertedPageSize: 0,
+        convertedPercentage: 0,
+        convertedFileList: [],
+        currentStep: '',
+        previews: [],
+        images: [],
+      },
+      taskUuid: data.taskUuid || '',
       conversion: data.conversion || {},
       initOpen: data.initOpen,
     });
   } else if (mediaVideoTypes.includes(ext)) {
-    if (!data.url) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-        new Error(`invalid video file ${ext}`),
-      );
-    }
     return new CloudDriveMediaResource({
       ext: ext,
       resourceName: data.resourceName,
       resourceUuid: data.resourceUuid,
       size: data.size,
       updateTime: data.updateTime,
-      url: data.url,
+      url: data.url || '',
       type: 'video',
       initOpen: data.initOpen,
     });
   } else if (mediaAudioTypes.includes(ext)) {
-    if (!data.url) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-        new Error(`invalid audio file ${ext}`),
-      );
-    }
     return new CloudDriveMediaResource({
       ext: ext,
       resourceName: data.resourceName,
       resourceUuid: data.resourceUuid,
       size: data.size,
       updateTime: data.updateTime,
-      url: data.url,
+      url: data.url || '',
       type: 'audio',
       initOpen: data.initOpen,
     });
   } else if (h5Type === ext) {
-    if (!data.url) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-        new Error(`invalid h5 file ${ext}`),
-      );
-    }
     return new CloudDriveH5Resource({
       ext: ext,
       resourceName: data.resourceName,
       resourceUuid: data.resourceUuid,
       size: data.size,
       updateTime: data.updateTime,
-      url: data.url,
+      url: data.url || '',
       type: 'h5',
       initOpen: data.initOpen,
     });
   } else if (linkType === ext) {
-    if (!data.url) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-        new Error(`invalid link file ${ext}`),
-      );
-    }
     return new CloudDriveLinkResource({
       ext: ext,
       resourceName: data.resourceName,
       resourceUuid: data.resourceUuid,
       size: data.size,
       updateTime: data.updateTime,
-      url: data.url,
+      url: data.url || '',
       initOpen: data.initOpen,
       type: 'link',
     });
   } else {
-    if (!data.url) {
-      return EduErrorCenter.shared.handleThrowableError(
-        AGEduErrorCode.EDU_ERR_INVALID_CLOUD_RESOURCE,
-        new Error(`invalid image file ${ext}`),
-      );
-    }
     return new CloudDriveImageResource({
       ext: ext,
       resourceName: data.resourceName,
       resourceUuid: data.resourceUuid,
       size: data.size,
       updateTime: data.updateTime,
-      url: data.url,
+      url: data.url || '',
       initOpen: data.initOpen,
     });
   }
