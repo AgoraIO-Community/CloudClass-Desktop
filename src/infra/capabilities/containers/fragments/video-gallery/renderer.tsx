@@ -76,7 +76,7 @@ export const VideoRenderer: FC<{ stream: EduStreamUI }> = ({ stream }) => {
   const isMirrorMode = stream.isMirrorMode;
 
   const cls = classNames('fcr-relative', {
-    invisible: stream.isCameraMuted,
+    'fcr-invisible': stream.isCameraMuted,
   });
 
   return (
