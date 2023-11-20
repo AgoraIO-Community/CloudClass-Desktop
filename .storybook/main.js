@@ -1,5 +1,4 @@
 const path = require('path');
-const { ROOT_PATH } = require('../webpack/utils');
 
 module.exports = {
   typescript: {
@@ -19,17 +18,18 @@ module.exports = {
       },
     },
   ],
-  babel: async (options) => {
-    return {
-      ...options,
-    };
-  },
   webpackFinal: async (config) => {
     config.resolve.extensions.push('.ts', '.tsx');
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@classroom': path.resolve(ROOT_PATH, 'src'),
+      '@classroom': path.resolve(__dirname, '../src'),
+      'agora-common-libs': path.resolve(__dirname, '../../agora-common-libs/lib'),
     };
+
+    config.module.rules.push({
+      test: /agora-common-libs\/.*\/(annotation)|(widget)/,
+      use: { loader: 'null-loader' },
+    });
 
     return config;
   },

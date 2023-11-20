@@ -13,13 +13,6 @@ type DocsProps = {
   title: string;
 };
 
-function asyncOkFunction(e: any): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 3000);
-  });
-}
 
 export const Docs = ({ title }: DocsProps) => (
   <>
@@ -48,44 +41,5 @@ Docs.args = {
   title: 'Modal Title',
 };
 
-export const KickStudents = () => {
-  const [value, setValue] = useState<string>('');
-
-  return (
-    <Modal
-      style={{ width: 300 }}
-      title={'移出学生'}
-      onOk={() => {
-        console.log(value);
-      }}
-      footer={[
-        <Button type="secondary" action="cancel">
-          取消
-        </Button>,
-        <Button action="ok">确定</Button>,
-      ]}>
-      <div className="radio-container">
-        <label className="customize-radio">
-          <input
-            type="radio"
-            name="kickType"
-            value="kicked_once"
-            onClick={() => setValue('kicked_once')}
-          />
-          <span className="fcr-ml-2">{transI18n('radio.kicked_once')}</span>
-        </label>
-        <label className="customize-radio">
-          <input
-            type="radio"
-            name="kickType"
-            value="kicked_ban"
-            onClick={() => setValue('kicked_ban')}
-          />
-          <span className="fcr-ml-2">{transI18n('radio.ban')}</span>
-        </label>
-      </div>
-    </Modal>
-  );
-};
 
 export default meta;

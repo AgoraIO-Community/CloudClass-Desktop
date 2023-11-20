@@ -9,7 +9,7 @@ export const CameraPreview = observer(() => {
   const { localCameraStream, localPreview } = videoGalleryUIStore;
 
   const cls = classNames('fcr-w-full fcr-h-full fcr-overflow-hidden', {
-    invisible: localCameraStream ? localCameraStream.isCameraMuted : false,
+    'fcr-invisible': localCameraStream ? localCameraStream.isCameraMuted : false,
   });
 
   return localPreview && localCameraStream ? (

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FcrTheme, ThemeProvider } from 'agora-common-libs';
+import '../src/ui-kit/styles/global.css';
 
 const theme: FcrTheme = {
   /**

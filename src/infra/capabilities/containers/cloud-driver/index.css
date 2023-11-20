@@ -260,3 +260,11 @@
 .cloud-driver-tab.ant-tabs > .ant-tabs-nav {
   margin: 0;
 }
+
+.cloud-driver-failed-converting {
+  color: rgba(251, 88, 78, 1) !important;
+}
+.cloud-driver-failed_converting-info {
+  display: flex;
+  align-items: center;
+}
