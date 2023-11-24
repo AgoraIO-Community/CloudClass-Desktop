@@ -51,6 +51,7 @@ import {
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
 import { toUpper } from 'lodash';
+import { isLocked, lock, unlock } from './lock';
 
 export * from './type';
 
@@ -251,6 +252,14 @@ export class AgoraEduSDK {
   }
 
   static launch(dom: HTMLElement, option: LaunchOption) {
+    if (isLocked()) {
+      Logger.error(
+        '[AgoraEduSDK]failed to launch as you have already launched a classroom, you need to destory it by call the function returned by the launch method before you relaunch it',
+      );
+      return () => {
+        /** noop */
+      };
+    }
     Logger.info('[AgoraEduSDK]launched with options:', option);
     EduContext.reset();
     this._validateOptions(option);
@@ -373,8 +382,10 @@ export class AgoraEduSDK {
       dom,
     );
 
+    lock();
     return () => {
       unmountComponentAtNode(dom);
+      unlock();
     };
   }
   /**
