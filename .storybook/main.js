@@ -23,7 +23,7 @@ module.exports = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@classroom': path.resolve(__dirname, '../src'),
-      'agora-common-libs': path.resolve(__dirname, '../../agora-common-libs/lib'),
+      'agora-common-libs': path.resolve(__dirname, '../../../node_modules/agora-common-libs/lib'),
     };
 
     config.module.rules.push({
