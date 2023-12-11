@@ -9,14 +9,14 @@ lib_dependencies=(
     agora-common-libs
 )
 lib_versions=(
-    2.9.2
-    2.9.2
-    2.9.4
+    2.9.10
+    2.9.10
+    2.9.10
 )
 lib_branches=(
-    release/2.9.2
-    release/2.9.2
-    release/2.9.4
+    release/2.9.10
+    release/2.9.10
+    release/2.9.10
 )
 
 . ../apaas-cicd-web/utilities/tools.sh

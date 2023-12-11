@@ -5,6 +5,7 @@ import {
   EduRoomTypeEnum,
   EduRtcConfig,
   Platform,
+  AgoraCloudProxyType,
 } from 'agora-edu-core';
 import { AGMediaOptions, AgoraLatencyLevel, AGVideoEncoderConfiguration } from 'agora-rte-sdk';
 import { IBaseProcessor, IExtension } from 'agora-rte-extension';
@@ -89,6 +90,7 @@ export type LaunchOption = {
   virtualBackgroundImages?: string[]; // 虚拟背景图片
   virtualBackgroundVideos?: string[]; // 虚拟背景视频
   webrtcExtensionBaseUrl?: string; // WebRTC 扩展插件包路径前缀
+  cloudProxy?: AgoraCloudProxyType; // 云代理类型
 };
 
 /**

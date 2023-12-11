@@ -28,6 +28,8 @@ import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
 import { ActionSheetMobile } from '../../containers/action-sheet-mobile/index.mobile';
 import { Card, Loading, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
+import { DialogCategory } from '@classroom/infra/stores/common/share';
+import { ConfirmDialogAction } from '@classroom/infra/stores/common/type';
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -222,24 +224,56 @@ const AutoPlayFailedTip = observer(() => {
 export const DialogContainerMobile: React.FC<unknown> = observer(() => {
   const { shareUIStore } = useStore();
   const { dialogQueue } = shareUIStore;
+  const transI18n = useI18n();
 
   return (
     <React.Fragment>
-      {dialogQueue.map(({ props }) => {
-        return (
-          <GenericErrorDialogMobile
-            {...(props as GenericErrorDialogMobileProps)}></GenericErrorDialogMobile>
-        );
-      })}
+      {dialogQueue
+        .filter(
+          (dialog) =>
+            dialog.category === DialogCategory.ErrorGeneric ||
+            dialog.category === DialogCategory.Confirm,
+        )
+        .map(({ id, props, category }) => {
+          let dialogProps: GenericErrorDialogMobileProps;
+          if (category === DialogCategory.Confirm) {
+            const confirmProps = props as ConfirmDialogMobileProps;
+            dialogProps = {
+              title: confirmProps.title,
+              content: confirmProps.content,
+              okBtnText: confirmProps.opts.btnText?.ok ?? transI18n('toast.confirm'),
+              onOK: confirmProps.opts.onOk,
+            };
+          } else {
+            const genericErrorProps = props as GenericErrorDialogMobileProps;
+            dialogProps = {
+              title: genericErrorProps.title,
+              content: genericErrorProps.content,
+              okBtnText: genericErrorProps.okBtnText,
+              onOK: genericErrorProps.onOK,
+            };
+          }
+
+          return <GenericErrorDialogMobile key={id} {...dialogProps}></GenericErrorDialogMobile>;
+        })}
     </React.Fragment>
   );
 });
+interface ConfirmDialogMobileProps {
+  title: string;
+  content: string;
+  opts: {
+    actions: ConfirmDialogAction[] | undefined;
+    btnText: Record<ConfirmDialogAction, string> | undefined;
+    onOk: () => void;
+    onCancel: () => void;
+  };
+}
 interface GenericErrorDialogMobileProps {
   onOK: () => void;
   okBtnText: string;
   title: string;
   content: string;
-  error: Error;
 }
 export const GenericErrorDialogMobile = ({
   onOK,
@@ -255,7 +289,11 @@ export const GenericErrorDialogMobile = ({
         <div className="fcr-mobile-dialog-img"></div>
         <h1>{title}</h1>
         <h2>{content}</h2>
-        <div className="fcr-mobile-dialog-btn" onClick={onOK}>
+        <div
+          className="fcr-mobile-dialog-btn"
+          onClick={() => {
+            onOK();
+          }}>
           {okBtnText}
         </div>
       </div>
