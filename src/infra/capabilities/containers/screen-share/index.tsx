@@ -1,4 +1,4 @@
-import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import { EduStream } from 'agora-edu-core';
 import { AGRenderMode } from 'agora-rte-sdk';
 import classnames from 'classnames';
@@ -7,6 +7,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import './index.css';
+import { ComponentLevelRules } from '../../config';
 
 const ScreenShareLocalTrackPlayer = observer(() => {
   const transI18n = useI18n();
@@ -75,7 +76,12 @@ export const ScreenShareContainer = observer<FC<ScreenShareContainerProps>>(
     return screenShareStream ? (
       <React.Fragment>
         {screenShareStream?.isLocal ? (
-          <div className={localcls} style={{ top: `calc(100% - ${boardAreaHeight}px)` }}>
+          <div
+            className={localcls}
+            style={{
+              top: `calc(100% - ${boardAreaHeight}px)`,
+              zIndex: ComponentLevelRules.ScreenShare,
+            }}>
             <ScreenShareLocalTrackPlayer />
           </div>
         ) : screenShareStream && !screenShareStream.isLocal ? (

@@ -90,7 +90,8 @@ export type LaunchOption = {
   virtualBackgroundImages?: string[]; // 虚拟背景图片
   virtualBackgroundVideos?: string[]; // 虚拟背景视频
   webrtcExtensionBaseUrl?: string; // WebRTC 扩展插件包路径前缀
-  cloudProxy?: AgoraCloudProxyType; // 云代理类型
+  rtcCloudProxyType?: AgoraCloudProxyType; // RTC 云代理类型
+  rtmCloudProxyEnabled?: boolean; // 是否开启 RTM 云代理
 };
 
 /**

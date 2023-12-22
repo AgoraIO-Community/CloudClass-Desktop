@@ -72,8 +72,6 @@ export class AgoraEduSDK {
   private static _region: EduRegion = EduRegion.CN;
   private static _virtualBackgroundImages: string[] = [];
   private static _virtualBackgroundVideos: string[] = [];
-  private static _cloudProxy?: AgoraCloudProxyType;
-
   private static _convertRegion(region: string): EduRegion {
     switch (toUpper(region)) {
       case 'CN':
@@ -207,10 +205,6 @@ export class AgoraEduSDK {
     return this._virtualBackgroundVideos;
   }
 
-  static get cloudProxy() {
-    return this._cloudProxy;
-  }
-
   private static _validateOptions(option: LaunchOption) {
     const isInvalid = (value: string) => value === undefined || value === null || value === '';
 
@@ -244,10 +238,10 @@ export class AgoraEduSDK {
     } else if (isInvalid(option.roomUuid)) {
       throw new Error('AgoraEduSDK: roomUuid is required');
     } else if (
-      typeof option.cloudProxy !== 'undefined' &&
-      ![AgoraCloudProxyType.None, AgoraCloudProxyType.TCP, AgoraCloudProxyType.UDP]
+      typeof option.rtcCloudProxyType !== 'undefined' &&
+      ![AgoraCloudProxyType.Automatic, AgoraCloudProxyType.TCP, AgoraCloudProxyType.UDP]
     ) {
-      throw new Error(`AgoraEduSDK: ${option.cloudProxy} is not valid value for cloudProxy`);
+      throw new Error(`AgoraEduSDK: ${option.rtcCloudProxyType} is not valid value for cloudProxy`);
     }
   }
 
@@ -302,7 +296,6 @@ export class AgoraEduSDK {
     this._shareUrl = shareUrl;
     this._language = language;
     this._uiMode = uiMode ?? FcrMultiThemeMode.light;
-    this._cloudProxy = option.cloudProxy;
 
     this._widgets = widgets;
 
@@ -339,6 +332,8 @@ export class AgoraEduSDK {
           },
         },
         rtcSDKExtensions: [virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension],
+        rtcCloudProxyType: option.rtcCloudProxyType,
+        rtmCloudProxyEnabled: option.rtmCloudProxyEnabled,
       },
       platform,
       Object.assign(

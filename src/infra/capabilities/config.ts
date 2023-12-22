@@ -9,6 +9,7 @@
  */
 export enum ComponentLevelRules {
   WhiteBoard,
+  ScreenShare,
   OnlineCourseware,
   StreamWindow,
   TeachTools,

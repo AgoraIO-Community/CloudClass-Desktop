@@ -26,6 +26,7 @@ import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background'
 import { IBeautyProcessor } from 'agora-extension-beauty-effect';
 import { DeviceStateChangedReason } from './type';
 import { CameraPlaceholderType } from '../stream/struct';
+import { matchVirtualSoundCardPattern } from './helper';
 
 export type PretestToast = {
   id: string;
@@ -334,6 +335,7 @@ export class PretestUIStore extends EduUIStoreBase {
   @computed get recordingDevicesList() {
     return this.classroomStore.mediaStore.audioRecordingDevices
       .slice()
+      .filter(({ devicename }) => !matchVirtualSoundCardPattern(devicename))
       .sort((d) => {
         return d.isDefault ? -1 : 0;
       })
@@ -350,6 +352,7 @@ export class PretestUIStore extends EduUIStoreBase {
   @computed get playbackDevicesList() {
     const playbackDevicesList = this.classroomStore.mediaStore.audioPlaybackDevices
       .slice()
+      .filter(({ devicename }) => !matchVirtualSoundCardPattern(devicename))
       .sort((d) => {
         return d.isDefault ? -1 : 0;
       })

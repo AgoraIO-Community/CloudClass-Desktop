@@ -22,7 +22,7 @@ import {
 } from 'agora-edu-core';
 import { WidgetUIStore } from './widget';
 import { GroupUIStore } from './group';
-import { AgoraEduSDK, ConvertMediaOptionsConfig } from '@classroom/infra/api';
+import { ConvertMediaOptionsConfig } from '@classroom/infra/api';
 import { SubscriptionUIStore } from './subscription';
 import { VideoGalleryUIStore } from './video-gallery';
 import { transI18n } from 'agora-common-libs';
@@ -190,7 +190,7 @@ export class EduClassroomUIStore {
   @bound
   @Log.trace
   async join() {
-    const { joinClassroom, joinRTC, setCloudProxy } = this.classroomStore.connectionStore;
+    const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
     try {
       await joinClassroom();
     } catch (e) {
@@ -210,9 +210,6 @@ export class EduClassroomUIStore {
     }
     await this.enableDualStream();
     try {
-      if (AgoraEduSDK.cloudProxy) {
-        setCloudProxy(AgoraEduSDK.cloudProxy);
-      }
       await joinRTC();
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);

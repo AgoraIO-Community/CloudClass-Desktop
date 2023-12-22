@@ -10,6 +10,7 @@ import { StreamWindow } from '@classroom/infra/stores/common/stream-window/type'
 import useMeasure from 'react-use-measure';
 import { StreamPlayerToolbar } from '../stream/stream-tool';
 import { AGRenderMode } from 'agora-rte-sdk';
+import { ComponentLevelRules } from '../../config';
 
 const WindowContainer: FC<PropsWithChildren> = observer(({ children }) => {
   const { streamWindowUIStore, boardUIStore } = useStore();
@@ -23,7 +24,7 @@ const WindowContainer: FC<PropsWithChildren> = observer(({ children }) => {
     <div
       id="stream-window-container"
       className="fcr-w-full fcr-absolute fcr-flex-shrink-0 fcr-bottom-0"
-      style={{ height: boardUIStore.boardAreaHeight, pointerEvents: 'none' }}
+      style={{ height: boardUIStore.boardAreaHeight, pointerEvents: 'none', zIndex: ComponentLevelRules.StreamWindow }}
       ref={measureRef}>
       {children}
     </div>

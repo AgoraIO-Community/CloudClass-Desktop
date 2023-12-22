@@ -13,9 +13,7 @@ export const PretestVoice = observer(() => {
   const {
     pretestUIStore: { startRecordingDeviceTest, stopRecordingDeviceTest },
   } = useStore();
-  const store = useStore();
   useEffect(() => {
-    console.log('store', store);
     startRecordingDeviceTest();
 
     return () => {

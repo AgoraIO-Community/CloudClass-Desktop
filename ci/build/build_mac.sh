@@ -3,25 +3,16 @@ ci_source_root=../apaas-cicd-web
 build_branch=$cloudclass_desktop_branch
 
 ci_script_version=v1
-lib_dependencies=(
-    agora-rte-sdk
-    agora-edu-core
-    agora-common-libs
-)
-lib_versions=(
-    2.9.10
-    2.9.10
-    2.9.10
-)
-lib_branches=(
-    release/2.9.10
-    release/2.9.10
-    release/2.9.10
-)
 
+. ../apaas-cicd-web/versions.sh
 . ../apaas-cicd-web/utilities/tools.sh
 . ../apaas-cicd-web/build/$ci_script_version/dependency.sh
 . ../apaas-cicd-web/build/$ci_script_version/build.sh
+
+# pick up agora-rte-sdk agora-edu-core agora-common-libs
+lib_dependencies=(${lib_dependencies[@]:0:3})
+lib_versions=(${lib_versions[@]:0:3})
+lib_branches=(${lib_branches[@]:0:3})
 
 if [ "$debug" == "true" ]; then
     # show environment variables

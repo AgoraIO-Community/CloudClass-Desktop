@@ -10,6 +10,7 @@ import {
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import { LayoutMaskCode } from '../type';
+import { matchVirtualSoundCardPattern } from '../pretest/helper';
 
 export type SettingToast = {
   id: string;
@@ -128,8 +129,13 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       computed(() => this.classroomStore.mediaStore.audioRecordingDevices).observe(
         ({ newValue, oldValue }) => {
           const { recordingDeviceId } = this.classroomStore.mediaStore;
-          const newDefaultDevice = newValue?.find((v) => v.isDefault);
-
+          const nonVsdDeviceList = newValue.filter(
+            (v) => !matchVirtualSoundCardPattern(v.devicename),
+          );
+          let newDefaultDevice = nonVsdDeviceList.find((v) => v.isDefault);
+          if (!newDefaultDevice && nonVsdDeviceList.length > 0) {
+            newDefaultDevice = nonVsdDeviceList[0];
+          }
           if (oldValue && oldValue.length > 1) {
             const inOldList = oldValue.find((v) => v.deviceid === recordingDeviceId);
             const inNewList = newValue.find((v) => v.deviceid === recordingDeviceId);
@@ -172,7 +178,13 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       computed(() => this.classroomStore.mediaStore.audioPlaybackDevices).observe(
         ({ newValue, oldValue }) => {
           const { playbackDeviceId } = this.classroomStore.mediaStore;
-          const newDefaultDevice = newValue?.find((v) => v.isDefault);
+          const nonVsdDeviceList = newValue.filter(
+            (v) => !matchVirtualSoundCardPattern(v.devicename),
+          );
+          let newDefaultDevice = nonVsdDeviceList.find((v) => v.isDefault);
+          if (!newDefaultDevice && nonVsdDeviceList.length > 0) {
+            newDefaultDevice = nonVsdDeviceList[0];
+          }
           if (newDefaultDevice) {
             if (newDefaultDevice.deviceid !== playbackDeviceId) {
               this.setPlaybackDevice(newDefaultDevice.deviceid);
