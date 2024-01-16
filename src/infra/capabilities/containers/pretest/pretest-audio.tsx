@@ -37,6 +37,9 @@ const MicrophoneTest = observer(() => {
   const {
     pretestUIStore: { setRecordingDevice, currentRecordingDeviceId, recordingDevicesList },
   } = useStore();
+  const {
+    deviceSettingUIStore: { setUserHasSelectedAudioRecordingDevice },
+  } = useStore();
   const transI18n = useI18n();
   return (
     <ItemCard>
@@ -50,7 +53,10 @@ const MicrophoneTest = observer(() => {
             text: value.label,
             value: value.value,
           }))}
-          onChange={(value) => setRecordingDevice(value)}
+          onChange={(value) => {
+            setRecordingDevice(value);
+            setUserHasSelectedAudioRecordingDevice();
+          }}
         />
       </ItemForm>
       <VolumeDance />
@@ -70,9 +76,11 @@ const SpeakerTest = observer(() => {
       aiDenoiserEnabled,
       aiDenoiserSupported,
     },
+    deviceSettingUIStore: { setUserHasSelectedAudioPlaybackDevice },
   } = useStore();
   const handlePlaybackChange = useCallback((value: string) => {
     setPlaybackDevice(value);
+    setUserHasSelectedAudioPlaybackDevice();
   }, []);
 
   useEffect(() => {
