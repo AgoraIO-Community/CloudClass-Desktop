@@ -26,7 +26,8 @@ import { ComponentLevelRulesMobile } from '../../config';
 import { ScreenShareContainerMobile } from '../../containers/screen-share/index.mobile';
 import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
-import { ActionSheetMobile } from '../../containers/action-sheet-mobile/index.mobile';
+import { ShareActionSheetMobile } from '../../containers/action-sheet-mobile/share.mobile';
+import { HandsUpActionSheetMobile } from '../../containers/action-sheet-mobile/hands-up.mobile';
 import { Card, Loading, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 import { DialogCategory } from '@classroom/infra/stores/common/share';
 import { ConfirmDialogAction } from '@classroom/infra/stores/common/type';
@@ -38,6 +39,7 @@ export const BigClassScenarioMobile = observer(() => {
       },
     },
     shareUIStore: { isLandscape, forceLandscape },
+    layoutUIStore: { setHandsUpActionSheetVisible },
   } = useLectureH5UIStores();
   return (
     <Room>
@@ -85,9 +87,11 @@ export const BigClassScenarioMobile = observer(() => {
               <ChatMobile />
 
               <PollMobile></PollMobile>
-              <ToastContainerMobile></ToastContainerMobile>
-              <ActionSheetMobile></ActionSheetMobile>
+              <ShareActionSheetMobile></ShareActionSheetMobile>
+              <HandsUpActionSheetMobile></HandsUpActionSheetMobile>
+
               <DialogContainerMobile></DialogContainerMobile>
+              <ToastContainerMobile></ToastContainerMobile>
             </>
           )}
         </LayoutOrientation>

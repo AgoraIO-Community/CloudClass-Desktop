@@ -789,4 +789,19 @@ export const zh = {
 
   fcr_home_status_teacher_leave: '老师离开教室',
   fcr_failed_converting: '转换失败',
+
+  fcr_raisehand_label_choose_interaction_mode: '请至少选择一种互动方式',
+  fcr_raisehand_button_mute: '静音',
+  fcr_raisehand_button_unmute: '解除静音',
+  fcr_raisehand_button_start_video: '开启视频',
+  fcr_raisehand_button_stop_video: '停止视频',
+  fcr_raisehand_button_switch: '切换摄像头',
+  fcr_raisehand_button_request_interaction: '申请互动',
+  fcr_raisehand_button_disconnect_interaction: '断开互动',
+  fcr_raisehand_label_waiting_teacher_approve: '正在等待老师通过你的互动申请',
+  fcr_raisehand_label_waiting_interaction: '等待互动...',
+  fcr_raisehand_label_Interacting: '正在互动',
+  fcr_raisehand_label_Interacting_now: '现在可以开始互动了',
+  fcr_raisehand_tips_interaction_approved: '已通过互动申请',
+  fcr_raisehand_tips_interaction_denied: '互动申请被拒绝',
 };

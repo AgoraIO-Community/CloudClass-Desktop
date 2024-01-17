@@ -20,6 +20,7 @@ export const WaveArmListContainer = observer(() => {
   const { handUpUIStore } = useStore();
   const { onPodium } = handUpUIStore;
   const { userWaveArmList } = handUpUIStore;
+
   return <StudentsWaveArmList userWaveArmList={userWaveArmList} onClick={onPodium} />;
 });
 

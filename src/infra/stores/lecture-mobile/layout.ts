@@ -5,17 +5,34 @@ import { action, computed, IReactionDisposer, observable, reaction } from 'mobx'
 import { LayoutUIStore } from '../common/layout';
 import { ToastTypeEnum } from '../common/share';
 import { AgoraExtensionWidgetEvent } from '@classroom/infra/protocol/events';
+export enum MobileCallState {
+  Initialize = 'initialize',
+  Processing = 'processing',
+  VoiceCall = 'voiceCall',
+  VideoCall = 'videoCall',
+  VideoAndVoiceCall = 'videoAndVoiceCall',
+  DeviceOffCall = 'deviceOffCall',
+}
 export class LectureH5LayoutUIStore extends LayoutUIStore {
   private _disposers: (() => void)[] = [];
   @observable landscapeToolBarVisible = true;
   private _landscapeToolBarVisibleTask: Scheduler.Task | null = null;
-  @observable actionSheetVisible = false;
+  @observable shareActionSheetVisible = false;
 
   @action.bound
-  setActionSheetVisible(visible: boolean) {
-    this.actionSheetVisible = visible;
+  setShareActionSheetVisible(visible: boolean) {
+    this.shareActionSheetVisible = visible;
   }
 
+  @observable handsUpActionSheetVisible = false;
+  @action.bound
+  setHandsUpActionSheetVisible(visible: boolean) {
+    this.handsUpActionSheetVisible = visible;
+  }
+  @action.bound
+  openHandsUpActionSheet() {
+    this.setHandsUpActionSheetVisible(true);
+  }
   @computed
   get h5ContainerCls() {
     return this.shareUIStore.orientation === 'portrait' ? '' : 'justify-center items-center';
@@ -77,6 +94,10 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
   private _handleTouchStart() {
     this._landscapeToolBarVisibleTask?.stop();
   }
+  @bound
+  broadcastCallState(callState: MobileCallState) {
+    this.extensionApi.updateMobileCallState(callState);
+  }
   onInstall(): void {
     this._disposers.push(
       reaction(
@@ -99,7 +120,7 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
             window.removeEventListener('touchstart', this._handleTouchStart);
             this._landscapeToolBarVisibleTask?.stop();
             this._setLandscapeToolBarVisible(true);
-            this.setActionSheetVisible(false);
+            this.setShareActionSheetVisible(false);
           }
         },
       ),
@@ -123,6 +144,10 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
         if (oldValue?.widgetController) {
           const widgetController = oldValue.widgetController;
           widgetController.removeBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.OpenMobileHandsActionSheet,
+            onMessage: this.openHandsUpActionSheet,
+          });
+          widgetController.removeBroadcastListener({
             messageType: AgoraExtensionWidgetEvent.RequestMobileLandscapeToolBarVisible,
             onMessage: this._updateMobileLandscapeToolBarVisible,
           });
@@ -145,6 +170,10 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
         }
         if (newValue.widgetController) {
           const widgetController = newValue.widgetController;
+          widgetController.addBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.OpenMobileHandsActionSheet,
+            onMessage: this.openHandsUpActionSheet,
+          });
           widgetController.addBroadcastListener({
             messageType: AgoraExtensionWidgetEvent.RequestMobileLandscapeToolBarVisible,
             onMessage: this._updateMobileLandscapeToolBarVisible,

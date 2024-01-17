@@ -12,6 +12,7 @@ import {
   StreamMediaPlayerOpenParams,
   WebviewOpenParams,
 } from './type';
+import { MobileCallState } from '../stores/lecture-mobile/layout';
 
 @Log.attach()
 export class Extension {
@@ -85,6 +86,9 @@ export class Extension {
   }
   updateMobileLandscapeToolBarVisible(visible: boolean) {
     this._broadcastMessage(AgoraExtensionRoomEvent.MobileLandscapeToolBarVisibleChanged, visible);
+  }
+  updateMobileCallState(callState: MobileCallState) {
+    this._broadcastMessage(AgoraExtensionRoomEvent.MobileCallStateChanged, callState);
   }
   private _broadcastMessage(event: AgoraExtensionRoomEvent, args?: unknown, messageId?: string) {
     if (!messageId) {

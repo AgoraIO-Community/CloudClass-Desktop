@@ -94,7 +94,22 @@ export class HandUpUIStore extends EduUIStoreBase {
    */
   @observable
   private _userList = [];
-
+  @computed
+  get isOnPodiuming() {
+    const _acceptedList = this.classroomStore.roomStore.acceptedList;
+    const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
+    return _acceptedList.some((item) => {
+      return item.userUuid === userUuid;
+    });
+  }
+  @computed
+  get isWavingArm() {
+    const _waveArmList = this.classroomStore.roomStore.waveArmList;
+    const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
+    return _waveArmList.some((item) => {
+      return item.userUuid === userUuid;
+    });
+  }
   @computed
   get userList(): UserHandUpInfo[] {
     const _acceptedList = this.classroomStore.roomStore.acceptedList;
