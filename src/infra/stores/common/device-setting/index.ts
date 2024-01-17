@@ -291,10 +291,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               }
             }
           }
-
-          if (newValue.length === 0) {
-            this.setPlaybackDevice('default');
-          }
         },
       ),
     );
