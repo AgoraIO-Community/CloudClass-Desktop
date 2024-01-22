@@ -5,9 +5,9 @@ import { TooltipProps as RcTooltipProps } from 'rc-tooltip/lib/Tooltip';
 import getPlacements, { AdjustOverflow, PlacementsConfig } from './placements';
 import classnames from 'classnames';
 import { placements as Placements } from 'rc-tooltip/lib/placements';
-import { getTransitionName } from '@classroom/ui-kit/components/util/motion';
-import { PresetColorTypes } from '@classroom/ui-kit/components/util/colors';
-import { getOS } from '@classroom/ui-kit/utilities';
+import { getTransitionName } from '../util/motion';
+import { PresetColorTypes } from '../util/colors';
+import { getOS } from '../../utilities';
 import './index.css';
 
 export type { AdjustOverflow, PlacementsConfig };

@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react';
 import ReactDOM from 'react-dom';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 import './index.css';
 import { useI18n } from 'agora-common-libs';
 

@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 import { CSSTransition } from 'react-transition-group';
 import './index.css';
 

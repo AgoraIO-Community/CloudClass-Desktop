@@ -1,14 +1,8 @@
-import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
-import React, { useCallback, useMemo } from 'react';
-import { Button, Modal } from '..';
+import React from 'react';
 import { Col, Inline, Row, Table, TableHeader } from '.';
-import { Progress } from '../progress';
-import { ATabs, ATabPane } from '../tabs';
 import { Placeholder } from '../placeholder';
-import { Loading } from '../loading';
-import { CheckBox } from '../checkbox';
-import { SvgIconEnum, SvgImg } from '../svg-img';
+import { SvgImg } from '../svg-img';
 
 const meta: Meta = {
   title: 'Components/Table',

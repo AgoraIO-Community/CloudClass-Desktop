@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
-import { Progress } from '@classroom/ui-kit/components/progress';
+import { BaseProps } from '../util/type';
+import { Progress } from '../progress';
 import './index.css';
 import loadingGif from './assets/loading.gif';
 import circleLoadingGif from './assets/circle-loading.gif';
-import { SvgImg, SvgIconEnum } from '@classroom/ui-kit';
+import { SvgImg, SvgIconEnum } from '..';
 import { useI18n } from 'agora-common-libs';
 
 enum CloudDriveResourceUploadStatus {

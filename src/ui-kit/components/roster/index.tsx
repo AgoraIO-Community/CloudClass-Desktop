@@ -1,4 +1,4 @@
-import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
+import { InteractionStateColors } from '../../utilities/state-color';
 import { SvgIconEnum } from '../svg-img';
 import './index.css';
 

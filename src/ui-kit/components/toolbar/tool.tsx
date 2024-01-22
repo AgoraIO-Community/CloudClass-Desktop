@@ -1,10 +1,10 @@
 import React, { FC, ReactEventHandler } from 'react';
-import { Tooltip } from '@classroom/ui-kit/components/tooltip';
-import { SvgIcon } from '@classroom/ui-kit/components/svg-img';
+import { Tooltip } from '../tooltip';
+import { SvgIcon } from '../svg-img';
 import classnames from 'classnames';
 import { BaseProps } from '../util/type';
 import { SvgIconEnum } from '../svg-img/type';
-import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
+import { InteractionStateColors } from '../../utilities/state-color';
 import { useI18n } from 'agora-common-libs';
 export interface ToolItem extends BaseProps {
   value: string;
