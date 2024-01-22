@@ -33,11 +33,13 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         () => this.cameraAccessors,
         () => {
           const { cameraDeviceId, mediaControl } = this.classroomStore.mediaStore;
+          if (cameraDeviceId) {
+            const track = mediaControl.createCameraVideoTrack();
+            track.setDeviceId(cameraDeviceId);
+          }
           if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
             // if idle, e.g. pretest
             if (cameraDeviceId && cameraDeviceId !== DEVICE_DISABLE) {
-              const track = mediaControl.createCameraVideoTrack();
-              track.setDeviceId(cameraDeviceId);
               this._enableLocalVideo(true);
             } else {
               //if no device selected, disable device
@@ -53,8 +55,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               this._enableLocalVideo(false);
             } else {
               if (cameraDeviceId && cameraDeviceId !== DEVICE_DISABLE) {
-                const track = mediaControl.createCameraVideoTrack();
-                track.setDeviceId(cameraDeviceId);
                 this.logger.info('enableLocalVideo => true. Reason: camera device selected');
                 this._enableLocalVideo(true);
               } else {
@@ -72,11 +72,13 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         () => this.micAccessors,
         () => {
           const { recordingDeviceId, mediaControl } = this.classroomStore.mediaStore;
+          if (recordingDeviceId) {
+            const track = mediaControl.createMicrophoneAudioTrack();
+            track.setRecordingDevice(recordingDeviceId);
+          }
           if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
             // if idle, e.g. pretest
             if (recordingDeviceId && recordingDeviceId !== DEVICE_DISABLE) {
-              const track = mediaControl.createMicrophoneAudioTrack();
-              track.setRecordingDevice(recordingDeviceId);
               this._enableLocalAudio(true);
             } else {
               //if no device selected, disable device
@@ -92,8 +94,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
               this._enableLocalAudio(false);
             } else {
               if (recordingDeviceId && recordingDeviceId !== DEVICE_DISABLE) {
-                const track = mediaControl.createMicrophoneAudioTrack();
-                track.setRecordingDevice(recordingDeviceId);
                 this.logger.info('enableLocalAudio => true. Reason: mic device selected');
                 this._enableLocalAudio(true);
               } else {

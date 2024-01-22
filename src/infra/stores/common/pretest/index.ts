@@ -1,6 +1,7 @@
 import {
   AGBeautyEffect,
   AGLighteningLevel,
+  AgoraRtcLocalVideoCanvas,
   AgoraRteMediaSourceState,
   bound,
   Log,
@@ -61,6 +62,10 @@ export class PretestUIStore extends EduUIStoreBase {
   private _beautyEffectProcessor?: IBeautyProcessor;
   private _aiDenoiserProcessor?: IAIDenoiserProcessor;
 
+  private _virtualBackgroundProcessorForPreview?: IVirtualBackgroundProcessor;
+  private _beautyEffectProcessorForPreview?: IBeautyProcessor;
+  private _aiDenoiserProcessorForPreview?: IAIDenoiserProcessor;
+
   onInstall() {
     this._disposers.push(
       reaction(
@@ -95,6 +100,32 @@ export class PretestUIStore extends EduUIStoreBase {
                 this.logger.info('AiDenoiserProcessor initialized');
                 this._aiDenoiserProcessor = processor;
                 this.classroomStore.mediaStore.addMicrophoneProcessors([processor]);
+              });
+
+            getProcessorInitializer<IVirtualBackgroundProcessor>(
+              builtInExtensions.virtualBackgroundExtension,
+            )
+              .createProcessor()
+              .then((processor) => {
+                this.logger.info('VirtualBackgroundProcessor initialized');
+                this._virtualBackgroundProcessorForPreview = processor;
+                this.classroomStore.mediaStore.addPreviewCameraProcessors([processor]);
+              });
+
+            getProcessorInitializer<IBeautyProcessor>(builtInExtensions.beautyEffectExtension)
+              .createProcessor()
+              .then((processor) => {
+                this.logger.info('BeautyEffectProcessor initialized');
+                this._beautyEffectProcessorForPreview = processor;
+                this.classroomStore.mediaStore.addPreviewCameraProcessors([processor]);
+              });
+
+            getProcessorInitializer<IAIDenoiserProcessor>(builtInExtensions.aiDenoiserExtension)
+              .createProcessor()
+              .then((processor) => {
+                this.logger.info('AiDenoiserProcessor initialized');
+                this._aiDenoiserProcessorForPreview = processor;
+                this.classroomStore.mediaStore.addPreviewMicrophoneProcessors([processor]);
               });
           }
         },
@@ -165,15 +196,17 @@ export class PretestUIStore extends EduUIStoreBase {
 
             if (activeBeautyType === 'none') {
               if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Web) {
-                if (!this._beautyEffectProcessor) return;
-                this.beautyEffectProcessor.disable();
+                this._beautyEffectProcessor?.disable();
+                this._beautyEffectProcessorForPreview?.disable();
               } else {
                 mediaControl.setBeautyEffectOptions(false, beautyEffectOptions);
               }
             } else {
               if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Web) {
-                this.beautyEffectProcessor.setOptions(beautyEffectOptions);
-                this.beautyEffectProcessor.enable();
+                this._beautyEffectProcessor?.setOptions(beautyEffectOptions);
+                this._beautyEffectProcessor?.enable();
+                this._beautyEffectProcessorForPreview?.setOptions(beautyEffectOptions);
+                this._beautyEffectProcessorForPreview?.enable();
               } else {
                 mediaControl.setBeautyEffectOptions(true, beautyEffectOptions);
               }
@@ -192,10 +225,11 @@ export class PretestUIStore extends EduUIStoreBase {
         ({ engine, aiDenoiserEnabled }) => {
           if (engine) {
             if (!aiDenoiserEnabled) {
-              if (!this._aiDenoiserProcessor) return;
-              this.aiDenoiserProcessor.disable();
+              this._aiDenoiserProcessor?.disable();
+              this._aiDenoiserProcessorForPreview?.disable();
             } else {
-              this.aiDenoiserProcessor.enable();
+              this._aiDenoiserProcessor?.enable();
+              this._aiDenoiserProcessorForPreview?.enable();
             }
           }
         },
@@ -214,25 +248,6 @@ export class PretestUIStore extends EduUIStoreBase {
 
   get aiDenoiserSupported() {
     return EduRteEngineConfig.platform === EduRteRuntimePlatform.Web;
-  }
-
-  get virtualBackgroundProcessor() {
-    if (!this._virtualBackgroundProcessor) {
-      throw new Error('VirtualBackgroundProcessor is not initialized yet');
-    }
-    return this._virtualBackgroundProcessor;
-  }
-  get beautyEffectProcessor() {
-    if (!this._beautyEffectProcessor) {
-      throw new Error('BeautyEffectProcessor is not initialized yet');
-    }
-    return this._beautyEffectProcessor;
-  }
-  get aiDenoiserProcessor() {
-    if (!this._aiDenoiserProcessor) {
-      throw new Error('AiDenoiserProcessor is not initialized yet');
-    }
-    return this._aiDenoiserProcessor;
   }
 
   /**
@@ -405,6 +420,16 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 本地音量（设备检测）
+   * @returns
+   */
+  @computed get localPreviewVolume(): number {
+    return this.classroomStore.mediaStore.recordingDeviceId === DEVICE_DISABLE
+      ? 0
+      : this.classroomStore.mediaStore.localPreviewMicAudioVolume * 100;
+  }
+
+  /**
    * 扬声器测试音量
    * @returns 音量 0 ~ 1
    */
@@ -429,6 +454,14 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   /**
+   * 本地摄像头设备状态（设备检测）
+   * @returns
+   */
+  @computed get localPreviewCameraTrackState(): AgoraRteMediaSourceState {
+    return this.classroomStore.mediaStore.localPreviewCameraTrackState;
+  }
+
+  /**
    * 本地摄像头是否开启
    * @returns
    */
@@ -442,6 +475,13 @@ export class PretestUIStore extends EduUIStoreBase {
    */
   @computed get localMicOff() {
     return this.localMicTrackState !== AgoraRteMediaSourceState.started;
+  }
+
+  /**
+   * 本地摄像头是否开启（设备检测）
+   */
+  @computed get localPreviewCameraOff() {
+    return this.localCameraTrackState !== AgoraRteMediaSourceState.started;
   }
 
   /**
@@ -461,6 +501,29 @@ export class PretestUIStore extends EduUIStoreBase {
   @computed get localCameraPlaceholder(): CameraPlaceholderType {
     let placeholder = CameraPlaceholderType.none;
     switch (this.localCameraTrackState) {
+      case AgoraRteMediaSourceState.started:
+        placeholder = CameraPlaceholderType.none;
+        break;
+      case AgoraRteMediaSourceState.starting:
+        placeholder = CameraPlaceholderType.loading;
+        break;
+      case AgoraRteMediaSourceState.stopped:
+        placeholder = CameraPlaceholderType.muted;
+        break;
+      case AgoraRteMediaSourceState.error:
+        placeholder = CameraPlaceholderType.broken;
+        break;
+    }
+    return placeholder;
+  }
+
+  /**
+   * 本地视频状态显示的占位符类型（设备检测）
+   * @returns
+   */
+  @computed get localPreviewCameraPlaceholder(): CameraPlaceholderType {
+    let placeholder = CameraPlaceholderType.none;
+    switch (this.localPreviewCameraTrackState) {
       case AgoraRteMediaSourceState.started:
         placeholder = CameraPlaceholderType.none;
         break;
@@ -634,6 +697,11 @@ export class PretestUIStore extends EduUIStoreBase {
   @action.bound
   setCameraDevice(id: string) {
     this.classroomStore.mediaStore.setCameraDevice(id);
+    if (id === DEVICE_DISABLE) {
+      this.stopCameraPreview();
+    } else {
+      this.startCameraPreview();
+    }
   }
 
   /**
@@ -644,8 +712,10 @@ export class PretestUIStore extends EduUIStoreBase {
   setRecordingDevice(id: string) {
     this.classroomStore.mediaStore.setRecordingDevice(id);
     if (id === DEVICE_DISABLE) {
+      this.stopAudioRecordingPreview();
       this.stopRecordingDeviceTest();
     } else {
+      this.startAudioRecordingPreview();
       this.startRecordingDeviceTest();
     }
   }
@@ -730,7 +800,8 @@ export class PretestUIStore extends EduUIStoreBase {
   ) {
     this.currentVirtualBackground = key;
     if (key === 'none') {
-      this.virtualBackgroundProcessor.disable();
+      this._virtualBackgroundProcessor?.disable();
+      this._virtualBackgroundProcessorForPreview?.disable();
     }
     if (value) {
       const { type, url } = value;
@@ -763,8 +834,55 @@ export class PretestUIStore extends EduUIStoreBase {
     type,
     source,
   }: { type: 'img'; source: HTMLImageElement } | { type: 'video'; source: HTMLVideoElement }) {
-    this.virtualBackgroundProcessor.setOptions({ type, source });
-    this.virtualBackgroundProcessor.enable();
+    this._virtualBackgroundProcessor?.setOptions({ type, source });
+    this._virtualBackgroundProcessor?.enable();
+    this._virtualBackgroundProcessorForPreview?.setOptions({ type, source });
+    this._virtualBackgroundProcessorForPreview?.enable();
+  }
+
+  @bound
+  startCameraPreview() {
+    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+    const processors = [];
+
+    if (this._virtualBackgroundProcessorForPreview) {
+      processors.push(this._virtualBackgroundProcessorForPreview);
+    }
+    if (this._beautyEffectProcessorForPreview) {
+      processors.push(this._beautyEffectProcessorForPreview);
+    }
+    track.startPreview(processors);
+    console.log('start camera preview');
+  }
+  @bound
+  stopCameraPreview() {
+    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+    track.stopPreview();
+    console.log('stop camera preview');
+  }
+  @bound
+  startAudioRecordingPreview() {
+    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+    const processors = [];
+    if (this._aiDenoiserProcessorForPreview) {
+      processors.push(this._aiDenoiserProcessorForPreview);
+    }
+    track.startPreview(processors);
+    console.log('start microphone preview');
+  }
+  @bound
+  stopAudioRecordingPreview() {
+    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+
+    track.stopPreview();
+    console.log('stop microphone preview');
+  }
+
+  @bound
+  setupLocalVideoPreview(dom: HTMLElement, mirror: boolean) {
+    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+    track.setPreviewView(new AgoraRtcLocalVideoCanvas(dom, mirror));
+    console.log('setup local video preview');
   }
 
   @bound

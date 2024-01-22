@@ -11,12 +11,19 @@ import { useI18n } from 'agora-common-libs';
 
 export const PretestVoice = observer(() => {
   const {
-    pretestUIStore: { startRecordingDeviceTest, stopRecordingDeviceTest },
+    pretestUIStore: {
+      startRecordingDeviceTest,
+      stopRecordingDeviceTest,
+      startAudioRecordingPreview,
+      stopAudioRecordingPreview,
+    },
   } = useStore();
   useEffect(() => {
+    startAudioRecordingPreview();
     startRecordingDeviceTest();
 
     return () => {
+      stopAudioRecordingPreview();
       stopRecordingDeviceTest();
     };
   }, []);
@@ -157,13 +164,13 @@ const SpeakerTest = observer(() => {
 
 const VolumeDance: FC = observer(() => {
   const {
-    pretestUIStore: { localVolume },
+    pretestUIStore: { localPreviewVolume },
   } = useStore();
 
   return (
     <div className="fcr-flex" style={{ gap: 10 }}>
       <SvgImg type={SvgIconEnum.MICROPHONE_ON} />
-      <Volume maxLength={18} cursor={localVolume} peek={100} />
+      <Volume maxLength={18} cursor={localPreviewVolume} peek={100} />
     </div>
   );
 });
