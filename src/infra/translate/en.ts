@@ -822,4 +822,5 @@ export const en = {
   fcr_raisehand_label_Interacting_now: 'You can start interacting now.',
   fcr_raisehand_tips_interaction_approved: 'Interaction Request Approved',
   fcr_raisehand_tips_interaction_denied: 'Interaction Request Denied',
+  fcr_raisehand_tips_waiting_interaction_close_all: 'Please keep at least one means of interaction',
 };

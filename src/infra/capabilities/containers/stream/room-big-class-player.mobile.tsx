@@ -32,7 +32,7 @@ const RoomBigTeacherStreamH5Tool = ({
         onClick={onPiP}
         type={isPiP ? SvgIconEnum.PIP_OFF : SvgIconEnum.PIP_ON}
         size={24}></SvgImg>
-      <SvgImg onClick={onLandscape} type={SvgIconEnum.LANDSCAPE} size={24}></SvgImg>
+      {/* <SvgImg onClick={onLandscape} type={SvgIconEnum.LANDSCAPE} size={24}></SvgImg> */}
     </div>
   );
 };

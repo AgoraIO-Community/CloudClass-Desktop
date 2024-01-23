@@ -1,6 +1,6 @@
 .fcr-stream-mobile-tool-lg {
   width: 30px;
-  height: 92px;
+  height: 52px;
   border-radius: 15px;
   display: flex;
   position: absolute;
@@ -26,7 +26,7 @@
   right: 0px;
   bottom: 0px;
   z-index: 1;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: column;
   align-items: center;
   padding: 10px 0;

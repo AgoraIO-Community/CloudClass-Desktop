@@ -23,7 +23,20 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
     this.showAutoPlayFailedTip = true;
   }
   @action.bound
+  private _onAudioContextStateChanged(
+    currState: AudioContextState | 'interrupted',
+    prevState: AudioContextState | 'interrupted' | undefined,
+  ) {
+    if (currState === 'interrupted') {
+      this.showAutoPlayFailedTip = true;
+    }
+    if (currState === 'running') {
+      this.showAutoPlayFailedTip = false;
+    }
+  }
+  @action.bound
   closeAutoPlayFailedTip() {
+    this.classroomStore.mediaStore.mediaControl.resumeAudioContext();
     this.showAutoPlayFailedTip = false;
   }
   @bound
@@ -83,6 +96,10 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
             this.classroomStore.mediaStore.mediaControl.on(
               AgoraMediaControlEventType.videoAutoPlayFailed,
               this._onVideoAutoPlayFailed,
+            );
+            this.classroomStore.mediaStore.mediaControl.on(
+              AgoraMediaControlEventType.audioContextStateChanged,
+              this._onAudioContextStateChanged,
             );
           }
         },

@@ -157,8 +157,9 @@ export const HandsUpActionSheetMobile = observer(() => {
   };
   const toggleCamera = () => {
     const enable = !cameraOn;
-    if (!isInitialize) {
-      enableLocalVideo(enable);
+    if (callState === MobileCallState.Processing && !enable && !deviceStatus.mic) {
+      addSingletonToast(transI18n('fcr_raisehand_tips_waiting_interaction_close_all'), 'info');
+      return;
     }
     setDeviceStatus({
       ...deviceStatus,
@@ -167,8 +168,9 @@ export const HandsUpActionSheetMobile = observer(() => {
   };
   const toggleMic = () => {
     const enable = !micOn;
-    if (!isInitialize) {
-      enableLocalAudio(enable);
+    if (callState === MobileCallState.Processing && !enable && !deviceStatus.camera) {
+      addSingletonToast(transI18n('fcr_raisehand_tips_waiting_interaction_close_all'), 'info');
+      return;
     }
     setDeviceStatus({
       ...deviceStatus,

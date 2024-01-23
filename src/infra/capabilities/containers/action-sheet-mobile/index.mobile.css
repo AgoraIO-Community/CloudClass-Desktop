@@ -166,8 +166,8 @@
 .fcr-hands-up-action-sheet-mobile-prepare-head {
   height: 60px;
   line-height: 60px;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 400;
   text-align: center;
   color: #fff;
 }
@@ -238,10 +238,14 @@
 .fcr-hands-up-action-sheet-mobile-device-head {
   height: 40px;
   text-align: center;
-  line-height: 40px;
   font-size: 13px;
   font-weight: 400;
   color: #fff;
+  max-width: 285px;
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 .fcr-hands-up-action-sheet-mobile-device-wrapper {
   height: 240px;
