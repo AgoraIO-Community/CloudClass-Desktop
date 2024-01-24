@@ -128,8 +128,6 @@ export const listenChannelMessage = (
       ipc.on(channel, _callback);
     }
     Logger.info(`listen to main process\' [${channel}] channel message`, channel);
-  } else {
-    Logger.warn('cannot listen to IPC in browser, ignore');
   }
   //   dispose
   return () => {
@@ -175,8 +173,6 @@ export const receiveRTCRawData = (callback: RTCRawDataCallback) => {
     const ipc = window.require('electron').ipcRenderer;
 
     ipc.on(ChannelType.RTCRawDataTransmit, _callback);
-  } else {
-    Logger.warn('cannot listen to IPC in browser, ignore');
   }
   //   dispose
   return () => {

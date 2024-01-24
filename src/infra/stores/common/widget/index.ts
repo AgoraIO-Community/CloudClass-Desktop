@@ -316,7 +316,6 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   @bound
   private _notifyViewportChange() {
-    this.logger.info('notify to all widgets that viewport boundaries changed');
     this.widgetInstanceList.forEach((instance) => {
       const clientRect = document
         .querySelector(`.${this.shareUIStore.classroomViewportClassName}`)
