@@ -645,6 +645,7 @@ export class ToolbarUIStore extends EduUIStoreBase {
 
     if (EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant) {
       excludes.add(CabinetItemEnum.BreakoutRoom);
+      excludes.add(CabinetItemEnum.VideoGallery);
     }
     if (!this.boardApi.mounted) {
       excludes.add(CabinetItemEnum.Laser);
