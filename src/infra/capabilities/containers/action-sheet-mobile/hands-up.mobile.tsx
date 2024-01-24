@@ -216,10 +216,12 @@ export const HandsUpActionSheetMobile = observer(() => {
           <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.CLOSE} size={16}></SvgImg>
         </div>
         <div className="fcr-hands-up-action-sheet-mobile-device-head">
-          {!isInitialize &&
-            !isOnPodiuming &&
-            transI18n('fcr_raisehand_label_waiting_teacher_approve')}
-          {isOnPodiuming && transI18n('fcr_raisehand_label_Interacting_now')}
+          <div>
+            {!isInitialize &&
+              !isOnPodiuming &&
+              transI18n('fcr_raisehand_label_waiting_teacher_approve')}
+            {isOnPodiuming && transI18n('fcr_raisehand_label_Interacting_now')}
+          </div>
         </div>
         <div className="fcr-hands-up-action-sheet-mobile-device-wrapper">
           <div className="fcr-hands-up-action-sheet-mobile-device-player">
