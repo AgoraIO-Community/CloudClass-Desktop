@@ -7,6 +7,7 @@ import { transI18n } from 'agora-common-libs';
 
 @Log.attach({ proxyMethods: false })
 export class LectureH5RoomStreamUIStore extends StreamUIStore {
+  @observable localVideoRenderAt: 'Preview' | 'Window' = 'Window';
   @observable showAutoPlayFailedTip = false;
 
   private _teacherWidthRatio = 0.31;
@@ -14,6 +15,10 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
   private _gapInPx = 2;
 
   private _interactionDeniedCallback = () => {};
+  @action.bound
+  setLocalVideoRenderAt(renderAt: 'Preview' | 'Window') {
+    this.localVideoRenderAt = renderAt;
+  }
   @action.bound
   setInteractionDeniedCallback(callback: () => void) {
     this._interactionDeniedCallback = callback;

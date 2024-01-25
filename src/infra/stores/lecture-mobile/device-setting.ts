@@ -1,8 +1,6 @@
 import { Lambda, reaction, observable, action } from 'mobx';
 import { DeviceSettingUIStore } from '../common/device-setting';
 import { DEVICE_DISABLE } from 'agora-edu-core';
-import { bound } from 'agora-common-libs';
-import { AgoraRtcLocalVideoCanvas } from 'agora-rte-sdk';
 export class LectureH5DeviceSettingUIStore extends DeviceSettingUIStore {
   private disposers: Array<Lambda> = [];
   @observable facingMode: 'user' | 'environment' = 'user';
@@ -11,33 +9,6 @@ export class LectureH5DeviceSettingUIStore extends DeviceSettingUIStore {
     this.facingMode = this.facingMode === 'user' ? 'environment' : 'user';
     const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
     track.setFacingMode(this.facingMode);
-  }
-  @bound
-  startCameraPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-    track.startPreview();
-  }
-  @bound
-  stopCameraPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-    track.stopPreview();
-  }
-  @bound
-  startAudioRecordingPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-
-    track.startPreview();
-  }
-  @bound
-  stopAudioRecordingPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-
-    track.stopPreview();
-  }
-  @bound
-  setupLocalVideoPreview(dom: HTMLElement, mirror: boolean) {
-    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-    track.setPreviewView(new AgoraRtcLocalVideoCanvas(dom, mirror));
   }
 
   private enableLocalVideo = (value: boolean) => {

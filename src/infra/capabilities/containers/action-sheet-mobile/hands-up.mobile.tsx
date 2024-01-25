@@ -5,29 +5,14 @@ import { observer } from 'mobx-react';
 import { ComponentLevelRulesMobile } from '../../config';
 
 import './index.mobile.css';
-import { FC, useEffect, useRef, useState, CSSProperties, memo, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
-import { generateShortUserName } from '../stream/index.mobile';
+import { LocalTrackPlayer, generateShortUserName } from '../stream/index.mobile';
 import { FSM, WaveArmStateEnum } from '../hand-up/sender';
 import { MicrophoneIndicator } from './mic';
 import { MobileCallState } from '@classroom/infra/stores/lecture-mobile/layout';
-export const LocalPreviewTrackPlayer: FC<{ style: CSSProperties }> = memo(
-  observer(({ style }) => {
-    const {
-      deviceSettingUIStore: { setupLocalVideoPreview, facingMode },
-    } = useLectureH5UIStores();
-    const ref = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-      if (ref.current) {
-        setupLocalVideoPreview(ref.current, facingMode === 'environment');
-      }
-    }, [facingMode]);
-
-    return <div style={style} ref={ref}></div>;
-  }),
-);
 export const HandsUpActionSheetMobile = observer(() => {
   const transI18n = useI18n();
   const {
@@ -35,14 +20,8 @@ export const HandsUpActionSheetMobile = observer(() => {
       mediaStore: { enableLocalVideo, enableLocalAudio },
       handUpStore: { cancelWaveArm },
     },
-    streamUIStore: { localPreviewVolume, localVolume, localMicOff, setInteractionDeniedCallback },
-    deviceSettingUIStore: {
-      startCameraPreview,
-      stopCameraPreview,
-      startAudioRecordingPreview,
-      stopAudioRecordingPreview,
-      toggleFacingMode,
-    },
+    streamUIStore: { localVolume, setInteractionDeniedCallback, setLocalVideoRenderAt },
+    deviceSettingUIStore: { toggleFacingMode },
     handUpUIStore: {
       waveArm,
       waveArmDurationTime,
@@ -68,7 +47,7 @@ export const HandsUpActionSheetMobile = observer(() => {
   const cameraOn = deviceStatus.camera;
   const isInitialize = callState === MobileCallState.Initialize;
   const isHandsUpAvailable = !isInitialize || micOn || cameraOn;
-  const volume = isInitialize ? 0 : localMicOff ? localPreviewVolume : localVolume;
+  const volume = isInitialize ? 0 : localVolume;
   useEffect(() => {
     let task: Scheduler.Task | undefined = undefined;
     const userName = EduClassroomConfig.shared.sessionInfo.userName;
@@ -94,19 +73,9 @@ export const HandsUpActionSheetMobile = observer(() => {
       task?.stop();
     };
   }, []);
-  useEffect(() => {
-    if (devicePreviewViewVisible) {
-      deviceStatus.camera ? startCameraPreview() : stopCameraPreview();
-      deviceStatus.mic ? startAudioRecordingPreview() : stopAudioRecordingPreview();
-    } else {
-      stopCameraPreview();
-      stopAudioRecordingPreview();
-    }
-  }, [devicePreviewViewVisible, deviceStatus.camera, deviceStatus.mic]);
+
   useEffect(() => {
     if (isOnPodiuming) {
-      enableLocalVideo(deviceStatus.camera);
-      enableLocalAudio(deviceStatus.mic);
       if (deviceStatus.camera && deviceStatus.mic) {
         setCallState(MobileCallState.VideoAndVoiceCall);
       } else if (deviceStatus.mic) {
@@ -116,11 +85,17 @@ export const HandsUpActionSheetMobile = observer(() => {
       } else {
         setCallState(MobileCallState.DeviceOffCall);
       }
-    } else {
-      enableLocalVideo(false);
-      enableLocalAudio(false);
     }
   }, [isOnPodiuming, deviceStatus.camera, deviceStatus.mic]);
+  useEffect(() => {
+    if (callState === MobileCallState.Initialize) {
+      enableLocalAudio(false);
+      enableLocalVideo(false);
+    } else {
+      enableLocalAudio(deviceStatus.mic);
+      enableLocalVideo(deviceStatus.camera);
+    }
+  }, [callState, deviceStatus.camera, deviceStatus.mic]);
   useEffect(() => {
     broadcastCallState(callState);
   }, [callState]);
@@ -135,7 +110,9 @@ export const HandsUpActionSheetMobile = observer(() => {
       setDevicePreviewViewVisible(false);
     }
   }, [handsUpActionSheetVisible, isWavingArm, isOnPodiuming]);
-
+  useEffect(() => {
+    setLocalVideoRenderAt(devicePreviewViewVisible ? 'Preview' : 'Window');
+  }, [devicePreviewViewVisible]);
   useEffect(() => {
     if (isOnPodiuming) {
       addSingletonToast(transI18n('fcr_raisehand_tips_interaction_approved'), 'info');
@@ -187,6 +164,7 @@ export const HandsUpActionSheetMobile = observer(() => {
     resetDeviceStatus();
     setHandsUpActionSheetVisible(false);
     setCallState(MobileCallState.Initialize);
+    addSingletonToast(transI18n('fcr_raisehand_tips_interaction_disconnected'), 'info');
   };
   const resetDeviceStatus = () => {
     setDeviceStatus({
@@ -229,7 +207,7 @@ export const HandsUpActionSheetMobile = observer(() => {
               {generateShortUserName(userName)}
             </div>
             {cameraOn && !isInitialize && (
-              <LocalPreviewTrackPlayer style={{ height: '100%' }}></LocalPreviewTrackPlayer>
+              <LocalTrackPlayer renderAt="Preview" style={{ height: '100%' }}></LocalTrackPlayer>
             )}
           </div>
         </div>

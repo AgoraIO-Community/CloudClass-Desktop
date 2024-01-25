@@ -805,4 +805,5 @@ export const zh = {
   fcr_raisehand_tips_interaction_approved: '已通过互动申请',
   fcr_raisehand_tips_interaction_denied: '互动申请被拒绝',
   fcr_raisehand_tips_waiting_interaction_close_all: '请至少保留一种互动方式',
+  fcr_raisehand_tips_interaction_disconnected: '互动已断开',
 };

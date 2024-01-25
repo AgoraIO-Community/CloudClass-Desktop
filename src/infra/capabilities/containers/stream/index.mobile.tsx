@@ -1,8 +1,7 @@
 import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
-import { CSSProperties, FC, useEffect, useRef } from 'react';
-import { CameraPlaceHolder } from '@classroom/ui-kit';
+import { CSSProperties, FC, memo, useEffect, useRef } from 'react';
 
 import './index.mobile.css';
 import { TrackPlayer } from '../stream/track-player';
@@ -93,32 +92,35 @@ export const LocalTrackPlayerMobile = observer(({ stream }: { stream: EduStreamU
       <div className={classNames('fcr-stream-player-mobil-placeholder')}>
         {generateShortUserName(userName)}
       </div>
-      {!stream?.isCameraMuted && <LocalTrackPlayer />}
+      {!stream?.isCameraMuted && (
+        <LocalTrackPlayer
+          renderAt="Window"
+          style={{
+            width: studentVideoStreamSize.width,
+            height: studentVideoStreamSize.height,
+            position: 'relative',
+            flexShrink: 0,
+          }}
+        />
+      )}
     </div>
   );
 });
-const LocalTrackPlayer = observer(() => {
-  const {
-    streamUIStore: { setupLocalVideo, studentVideoStreamSize },
-    deviceSettingUIStore: { facingMode },
-  } = useLectureH5UIStores();
-  const ref = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    if (ref.current) {
-      setupLocalVideo(ref.current, facingMode === 'environment');
-    }
-  }, [setupLocalVideo, facingMode]);
-  return (
-    <div
-      style={{
-        width: studentVideoStreamSize.width,
-        height: studentVideoStreamSize.height,
-        position: 'relative',
-        flexShrink: 0,
-      }}
-      ref={ref}></div>
-  );
-});
+export const LocalTrackPlayer = memo(
+  observer(({ style, renderAt }: { style: CSSProperties; renderAt: 'Preview' | 'Window' }) => {
+    const {
+      streamUIStore: { setupLocalVideo, localVideoRenderAt },
+      deviceSettingUIStore: { facingMode },
+    } = useLectureH5UIStores();
+    const ref = useRef<HTMLDivElement | null>(null);
+    useEffect(() => {
+      if (ref.current && localVideoRenderAt === renderAt) {
+        setupLocalVideo(ref.current, facingMode === 'environment');
+      }
+    }, [setupLocalVideo, facingMode, localVideoRenderAt]);
+    return <div style={style} ref={ref}></div>;
+  }),
+);
 /**
  * 生成用户缩略姓名
  */
