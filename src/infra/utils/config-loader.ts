@@ -14,6 +14,7 @@ export const uiConfigs: Record<string, FcrUIConfig> = {
   [EduRoomTypeEnum.Room1v1Class]: room1V1Class,
   [EduRoomTypeEnum.RoomSmallClass]: roomMidClass,
   [EduRoomTypeEnum.RoomBigClass]: roomBigClass,
+  [EduRoomTypeEnum.CloudClass]: roomMidClass,
 };
 
 export const supportedRoomTypes: EduRoomTypeEnum[] = [];

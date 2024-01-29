@@ -37,6 +37,7 @@ import {
   LaunchMediaOptions,
   LaunchOption,
   LaunchWindowOption,
+  RoomTemplate,
   WindowID,
 } from './type';
 import {
@@ -226,6 +227,7 @@ export class AgoraEduSDK {
         EduRoomTypeEnum.Room1v1Class,
         EduRoomTypeEnum.RoomBigClass,
         EduRoomTypeEnum.RoomSmallClass,
+        EduRoomTypeEnum.CloudClass,
       ].includes(option.roomType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roomType!');
@@ -291,6 +293,7 @@ export class AgoraEduSDK {
       flexProperties: userFlexProperties,
       token: rtmToken,
       startTime,
+      roomTemplate: RoomTemplate.FINITY_CLOUD_CLASS,
     };
 
     this._shareUrl = shareUrl;

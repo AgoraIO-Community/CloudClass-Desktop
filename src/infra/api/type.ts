@@ -139,3 +139,6 @@ export type ProcessorInitializer<T extends IBaseProcessor> = {
   name: string;
   createProcessor: () => Promise<T>;
 };
+export enum RoomTemplate {
+  FINITY_CLOUD_CLASS = 'scene_finity_v1',
+}

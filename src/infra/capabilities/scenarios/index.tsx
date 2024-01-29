@@ -19,7 +19,7 @@ export const renderRoomSceneWith = (roomType: EduRoomTypeEnum) => {
     case EduRoomTypeEnum.Room1v1Class: {
       return <OneToOneScenario />;
     }
-    case EduRoomTypeEnum.RoomBigClass: {
+    case (EduRoomTypeEnum.RoomBigClass, EduRoomTypeEnum.CloudClass): {
       return EduClassroomConfig.shared.platform === Platform.H5 ? (
         <BigClassScenarioMobile />
       ) : (

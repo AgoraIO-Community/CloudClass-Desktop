@@ -27,7 +27,7 @@ import { ScreenShareContainerMobile } from '../../containers/screen-share/index.
 import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
 import { ActionSheetMobile } from '../../containers/action-sheet-mobile/index.mobile';
-import { Card, Loading, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
+import { Card, Loading, SvgIconEnum, SvgImgMobile } from '@classroom/ui-kit';
 import { DialogCategory } from '@classroom/infra/stores/common/share';
 import { ConfirmDialogAction } from '@classroom/infra/stores/common/type';
 export const BigClassScenarioMobile = observer(() => {

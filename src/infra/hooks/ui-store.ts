@@ -29,7 +29,7 @@ export function useStore(): EduClassroomUIStore {
       return oneToOneUIStores;
     case EduRoomTypeEnum.RoomSmallClass:
       return interactiveUIStores;
-    case EduRoomTypeEnum.RoomBigClass:
+    case (EduRoomTypeEnum.RoomBigClass, EduRoomTypeEnum.CloudClass):
       return isH5 ? lectureH5UIStores : lectureUIStores;
     default:
       throw new Error(`Unsupported room type ${type}`);
