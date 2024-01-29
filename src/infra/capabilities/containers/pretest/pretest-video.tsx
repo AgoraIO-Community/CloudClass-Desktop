@@ -21,6 +21,14 @@ import { Field } from './form-field';
 import './index.css';
 
 export const PretestVideo = () => {
+  const {
+    pretestUIStore: { startCameraPreview, stopCameraPreview },
+  } = useStore();
+  useEffect(() => {
+    startCameraPreview();
+    return stopCameraPreview;
+  }, []);
+
   return (
     <div
       className="fcr-flex fcr-flex-col fcr-items-center"
@@ -37,13 +45,13 @@ export const PretestVideo = () => {
 
 export const TrackPlayer = observer(() => {
   const {
-    pretestUIStore: { setupLocalVideo, isMirror },
+    pretestUIStore: { setupLocalVideoPreview, isMirror },
   } = useStore();
 
   const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (ref.current) {
-      setupLocalVideo(ref.current, isMirror);
+      setupLocalVideoPreview(ref.current, isMirror);
     }
   }, [ref, isMirror]);
   return (
@@ -82,17 +90,17 @@ const VideoPreviewTest = observer(() => {
 
 const VideoPlayerOperator = observer(() => {
   const {
-    pretestUIStore: { localCameraOff },
+    pretestUIStore: { localPreviewCameraOff },
   } = useStore();
   return (
     <>
       <VideoDeviceList />
-      {!localCameraOff ? (
+      {!localPreviewCameraOff && (
         <>
           <TrackPlayer />
           <VideoSidler />
         </>
-      ) : null}
+      )}
     </>
   );
 });
@@ -425,7 +433,7 @@ const TabTitle = forwardRef<
     activity: boolean;
     onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
   }
->(({ children, activity, onClick }, ref) => {
+>(function TabTitle({ children, activity, onClick }, ref) {
   const textShadow = activity ? '1px 0 0 black' : 'none';
   return (
     <div

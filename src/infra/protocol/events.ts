@@ -60,6 +60,8 @@ export enum AgoraExtensionRoomEvent {
   OrientationStatesChanged = 'orientation-changed',
   // 移动端大班课横屏清屏状态变化
   MobileLandscapeToolBarVisibleChanged = 'mobile-landscape-tool-bar-visible-changed',
+  //mobile连麦状态变更
+  MobileCallStateChanged = 'mobile-call-state-changed',
 }
 
 /**
@@ -110,4 +112,6 @@ export enum AgoraExtensionWidgetEvent {
   PollActiveStateChanged = 'poll-active-state-changed',
   //请求当前横屏清屏状态
   RequestMobileLandscapeToolBarVisible = 'request-mobile-landscape-tool-bar-visible',
+  //打开mobile web的举手弹窗
+  OpenMobileHandsActionSheet = 'open-mobile-hands-up-action-sheet',
 }

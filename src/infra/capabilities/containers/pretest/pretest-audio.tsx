@@ -11,12 +11,19 @@ import { useI18n } from 'agora-common-libs';
 
 export const PretestVoice = observer(() => {
   const {
-    pretestUIStore: { startRecordingDeviceTest, stopRecordingDeviceTest },
+    pretestUIStore: {
+      startRecordingDeviceTest,
+      stopRecordingDeviceTest,
+      startAudioRecordingPreview,
+      stopAudioRecordingPreview,
+    },
   } = useStore();
   useEffect(() => {
+    startAudioRecordingPreview();
     startRecordingDeviceTest();
 
     return () => {
+      stopAudioRecordingPreview();
       stopRecordingDeviceTest();
     };
   }, []);
@@ -37,6 +44,9 @@ const MicrophoneTest = observer(() => {
   const {
     pretestUIStore: { setRecordingDevice, currentRecordingDeviceId, recordingDevicesList },
   } = useStore();
+  const {
+    deviceSettingUIStore: { setUserHasSelectedAudioRecordingDevice },
+  } = useStore();
   const transI18n = useI18n();
   return (
     <ItemCard>
@@ -50,7 +60,10 @@ const MicrophoneTest = observer(() => {
             text: value.label,
             value: value.value,
           }))}
-          onChange={(value) => setRecordingDevice(value)}
+          onChange={(value) => {
+            setRecordingDevice(value);
+            setUserHasSelectedAudioRecordingDevice();
+          }}
         />
       </ItemForm>
       <VolumeDance />
@@ -70,9 +83,11 @@ const SpeakerTest = observer(() => {
       aiDenoiserEnabled,
       aiDenoiserSupported,
     },
+    deviceSettingUIStore: { setUserHasSelectedAudioPlaybackDevice },
   } = useStore();
   const handlePlaybackChange = useCallback((value: string) => {
     setPlaybackDevice(value);
+    setUserHasSelectedAudioPlaybackDevice();
   }, []);
 
   useEffect(() => {
@@ -149,13 +164,13 @@ const SpeakerTest = observer(() => {
 
 const VolumeDance: FC = observer(() => {
   const {
-    pretestUIStore: { localVolume },
+    pretestUIStore: { localPreviewVolume },
   } = useStore();
 
   return (
     <div className="fcr-flex" style={{ gap: 10 }}>
       <SvgImg type={SvgIconEnum.MICROPHONE_ON} />
-      <Volume maxLength={18} cursor={localVolume} peek={100} />
+      <Volume maxLength={18} cursor={localPreviewVolume} peek={100} />
     </div>
   );
 });

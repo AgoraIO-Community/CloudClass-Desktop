@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { Popover } from '@classroom/ui-kit/components/popover';
-import { Tooltip } from '@classroom/ui-kit/components/tooltip';
+import { Popover } from '../popover';
+import { Tooltip } from '../tooltip';
 import { ToolItem } from './tool';
-import { SvgImg, SvgIcon, SvgIconEnum } from '@classroom/ui-kit/components/svg-img';
-import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
+import { SvgImg, SvgIcon, SvgIconEnum } from '../svg-img';
+import { InteractionStateColors } from '../../utilities/state-color';
 
 export interface SliceItem {
   id: string;

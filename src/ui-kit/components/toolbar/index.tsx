@@ -1,9 +1,9 @@
 import { FC, useState, useRef, useEffect, useContext, PropsWithChildren } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 import './index.css';
-import { useMounted } from '@classroom/ui-kit/utilities/hooks';
-import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
+import { useMounted } from '../../utilities/hooks';
+import { SvgIconEnum, SvgImg } from '../..';
 import { themeContext } from 'agora-common-libs';
 export { Pens } from './pens';
 export { ToolCabinet } from './tool-cabinet';

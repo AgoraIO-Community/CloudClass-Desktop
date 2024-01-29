@@ -22,12 +22,11 @@ module.exports = {
     config.resolve.extensions.push('.ts', '.tsx');
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@classroom': path.resolve(__dirname, '../src'),
       'agora-common-libs': path.resolve(__dirname, '../../../node_modules/agora-common-libs/lib'),
     };
 
     config.module.rules.push({
-      test: /agora-common-libs\/.*\/(annotation)|(widget)/,
+      test: /agora-common-libs\/.*\/(annotation)|(widget)|(agora-rte-sdk)/,
       use: { loader: 'null-loader' },
     });
 

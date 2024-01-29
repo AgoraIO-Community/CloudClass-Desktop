@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { FC, useState } from 'react';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 import { SvgIcon } from '..';
 import { SvgIconEnum } from '../svg-img/type';
 import './style.css';

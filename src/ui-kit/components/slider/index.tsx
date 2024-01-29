@@ -1,7 +1,7 @@
 import Slider, { SliderSingleProps } from 'antd/lib/slider';
 import classnames from 'classnames';
 import { FC } from 'react';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 import './index.css';
 type tooltipPositionProps = 'top' | 'bottom' | '';
 export interface ASliderProps extends BaseProps {

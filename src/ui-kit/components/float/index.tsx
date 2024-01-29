@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { FC, PropsWithChildren } from 'react';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 
 export interface FloatProps extends BaseProps {
   top?: number;

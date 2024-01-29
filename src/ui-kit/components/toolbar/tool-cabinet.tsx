@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren } from 'react';
-import { Popover } from '@classroom/ui-kit/components/popover';
-import { Tooltip } from '@classroom/ui-kit/components/tooltip';
-import { SvgImg, SvgIcon, SvgIconEnum } from '@classroom/ui-kit/components/svg-img';
-import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
+import { Popover } from '../popover';
+import { Tooltip } from '../tooltip';
+import { SvgImg, SvgIcon, SvgIconEnum } from '../svg-img';
+import { InteractionStateColors } from '../../utilities/state-color';
 
 export interface ToolCabinetProps {
   label: string;

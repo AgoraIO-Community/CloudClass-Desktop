@@ -1,6 +1,6 @@
 .fcr-stream-mobile-tool-lg {
   width: 30px;
-  height: 92px;
+  height: 52px;
   border-radius: 15px;
   display: flex;
   position: absolute;
@@ -26,7 +26,7 @@
   right: 0px;
   bottom: 0px;
   z-index: 1;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: column;
   align-items: center;
   padding: 10px 0;
@@ -87,4 +87,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.fcr-stream-player-mobile {
+  background: rgba(67, 67, 78, 1);
+  position: relative;
+}
+.fcr-stream-player-mobil-placeholder {
+  position: absolute;
+  background: rgba(66, 98, 255, 1);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  line-height: 30px;
+  text-align: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.fcr-stream-player-mobil-placeholder-teacher {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 30px;
 }

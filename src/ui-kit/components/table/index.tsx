@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React, { useState, ReactElement } from 'react';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 import './index.css';
 import ConfigProvider from 'antd/lib/config-provider';
 import Empty from 'antd/lib/empty';

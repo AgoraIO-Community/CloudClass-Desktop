@@ -1,4 +1,4 @@
-.fcr-action-sheet-mobile {
+.fcr-share-action-sheet-mobile {
   width: 355px;
   height: 210px;
   background: rgba(254, 254, 255, 0.95);
@@ -16,7 +16,7 @@
   flex-direction: column;
   justify-content: space-between;
 }
-.fcr-action-sheet-mobile-cancel-btn {
+.fcr-share-action-sheet-mobile-cancel-btn {
   background: #f5f5f5;
   border-radius: 50px;
   height: 46px;
@@ -26,17 +26,17 @@
   font-weight: 600;
   color: #000;
 }
-.fcr-action-sheet-mobile-actions-item {
+.fcr-share-action-sheet-mobile-actions-item {
   display: flex;
   flex-direction: column;
   width: fit-content;
   justify-content: center;
   align-items: center;
 }
-.fcr-action-sheet-mobile-actions-item > div:not(:last-child) {
+.fcr-share-action-sheet-mobile-actions-item > div:not(:last-child) {
   margin-bottom: 11px;
 }
-.fcr-action-sheet-mobile-actions-item-icon {
+.fcr-share-action-sheet-mobile-actions-item-icon {
   width: 52px;
   height: 52px;
   border-radius: 52px;
@@ -45,14 +45,14 @@
   justify-content: center;
   align-items: center;
 }
-.fcr-action-sheet-mobile-actions-item-text {
+.fcr-share-action-sheet-mobile-actions-item-text {
   font-weight: 500;
   font-size: 12px;
   line-height: 150%;
   color: #000000;
   text-align: center;
 }
-.fcr-action-sheet-mobile-mask {
+.fcr-share-action-sheet-mobile-mask {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -60,7 +60,7 @@
   top: 0;
   background: rgba(0, 0, 0, 0.5);
 }
-.fcr-action-sheet-mobile-trigger {
+.fcr-share-action-sheet-mobile-trigger {
   width: 34px;
   height: 34px;
   border-radius: 34px;
@@ -73,4 +73,214 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+/********** HandsUp **********/
+.fcr-hands-up-action-sheet-mobile {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.fcr-hands-up-action-sheet-mobile-active {
+  height: 447px;
+  bottom: -448px;
+}
+.fcr-hands-up-action-sheet-mobile-btn {
+  background: rgba(66, 98, 255, 1);
+  border-radius: 50px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+}
+.fcr-hands-up-action-sheet-mobile-btn-disabled {
+  opacity: 0.5;
+}
+.fcr-hands-up-action-sheet-mobile-btn-cancel {
+  background: rgba(251, 88, 78, 1);
+}
+.fcr-hands-up-action-sheet-mobile-actions-item {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+}
+.fcr-hands-up-action-sheet-mobile-actions-item > div:not(:last-child) {
+  margin-bottom: 11px;
+}
+.fcr-hands-up-action-sheet-mobile-actions-item-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 52px;
+  background: #faa11d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fcr-hands-up-action-sheet-mobile-actions-item-text {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 150%;
+  color: #000000;
+  text-align: center;
+}
+.fcr-hands-up-action-sheet-mobile-mask {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.fcr-hands-up-action-sheet-mobile-trigger {
+  width: 34px;
+  height: 34px;
+  border-radius: 34px;
+  background: rgba(240, 242, 248, 0.6);
+  backdrop-filter: blur(25px);
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-hands-up-action-sheet-mobile-prepare {
+  background-color: rgba(32, 32, 32, 1);
+  padding: 0 20px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  height: 217px;
+  position: fixed;
+  bottom: -218px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  transition: all 0.2s;
+}
+.fcr-hands-up-action-sheet-mobile-prepare-head {
+  height: 60px;
+  line-height: 60px;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: center;
+  color: #fff;
+}
+.fcr-hands-up-action-sheet-mobile-prepare-head-hands-up {
+  text-align: left;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 400;
+}
+.fcr-hands-up-action-sheet-mobile-prepare-head-disabled:not(.fcr-hands-up-action-sheet-mobile-prepare-head-hands-up) {
+  color: rgba(251, 88, 78, 1);
+}
+.fcr-hands-up-action-sheet-mobile-prepare-options {
+  height: 82px;
+  display: flex;
+  justify-content: space-around;
+  background-color: rgba(47, 47, 47, 0.95);
+  border-radius: 12px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+.fcr-hands-up-action-sheet-mobile-prepare-options-item {
+  width: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.fcr-hands-up-action-sheet-mobile-prepare-options-active {
+  color: rgba(66, 98, 255, 1);
+}
+.fcr-hands-up-action-sheet-mobile-prepare-options-switch {
+  color: #fff;
+}
+.fcr-hands-up-action-sheet-mobile-prepare-options-switch-disabled {
+  color: rgba(187, 187, 187, 1);
+}
+.fcr-hands-up-action-sheet-mobile-close {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 20px;
+  top: 18px;
+  background-color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-hands-up-action-sheet-mobile-device .fcr-hands-up-action-sheet-mobile-close {
+  top: 10px;
+  width: 20px;
+  height: 20px;
+}
+.fcr-hands-up-action-sheet-mobile-device {
+  width: 100%;
+  height: 280px;
+  background: rgba(66, 98, 255, 0.8);
+  position: fixed;
+  bottom: -280px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  transition: all 0.2s;
+}
+.fcr-hands-up-action-sheet-mobile-device-active {
+  transform: translate3d(0, -477px, 0);
+}
+.fcr-hands-up-action-sheet-mobile-device-head {
+  height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fcr-hands-up-action-sheet-mobile-device-head > div {
+  max-width: 285px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 400;
+  max-width: 285px;
+  color: #fff;
+}
+.fcr-hands-up-action-sheet-mobile-device-wrapper {
+  height: 240px;
+
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  background-color: rgba(47, 47, 47, 0.95);
+  padding: 20px;
+}
+.fcr-hands-up-action-sheet-mobile-device-player {
+  width: 100%;
+  height: 190px;
+  background: rgba(67, 67, 78, 1);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transform: rotate(0deg);
+}
+.fcr-hands-up-action-sheet-mobile-device-placeholer {
+  position: absolute;
+  background: rgba(66, 98, 255, 1);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  line-height: 80px;
+  text-align: center;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 700;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }

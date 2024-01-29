@@ -3,6 +3,7 @@ import { LectureH5BoardUIStore } from './board';
 import { LectureH5RoomStreamUIStore } from './stream';
 import { LectureH5LayoutUIStore } from './layout';
 import { EduClassroomUIStore } from '../common';
+import { LectureH5DeviceSettingUIStore } from './device-setting';
 
 export class EduLectureH5UIStore extends EduClassroomUIStore {
   constructor(store: EduClassroomStore) {
@@ -10,6 +11,11 @@ export class EduLectureH5UIStore extends EduClassroomUIStore {
     this._streamUIStore = new LectureH5RoomStreamUIStore(store, this.shareUIStore, this._getters);
     this._boardUIStore = new LectureH5BoardUIStore(store, this.shareUIStore, this._getters);
     this._layoutUIStore = new LectureH5LayoutUIStore(store, this.shareUIStore, this._getters);
+    this._deviceSettingUIStore = new LectureH5DeviceSettingUIStore(
+      store,
+      this.shareUIStore,
+      this._getters,
+    );
   }
 
   get streamUIStore() {
@@ -22,5 +28,8 @@ export class EduLectureH5UIStore extends EduClassroomUIStore {
 
   get layoutUIStore() {
     return this._layoutUIStore as LectureH5LayoutUIStore;
+  }
+  get deviceSettingUIStore() {
+    return this._deviceSettingUIStore as LectureH5DeviceSettingUIStore;
   }
 }

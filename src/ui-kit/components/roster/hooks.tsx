@@ -8,7 +8,7 @@ import {
   superviseColumn,
 } from './columns';
 import { Column } from './';
-import { SupportedFunction } from '@classroom/ui-kit';
+import { SupportedFunction } from '..';
 import { sortBy } from 'lodash';
 
 export const useColumns = (functions: SupportedFunction[]) => {

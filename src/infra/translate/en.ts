@@ -806,4 +806,22 @@ export const en = {
 
   fcr_home_status_teacher_leave: 'The teacher has left the room',
   fcr_failed_converting: 'Failed',
+
+  fcr_raisehand_label_choose_interaction_mode: 'Please choose at least one interaction mode',
+  fcr_raisehand_button_mute: 'Mute',
+  fcr_raisehand_button_unmute: 'Unmute',
+  fcr_raisehand_button_start_video: 'Start Video',
+  fcr_raisehand_button_stop_video: 'Stop Video',
+  fcr_raisehand_button_switch: 'Switch',
+  fcr_raisehand_button_request_interaction: 'Request for Interaction',
+  fcr_raisehand_button_disconnect_interaction: 'Disconnect Interaction',
+  fcr_raisehand_label_waiting_teacher_approve:
+    'Waiting for the teacher to approve your interaction request.',
+  fcr_raisehand_label_waiting_interaction: 'Waiting for Interaction',
+  fcr_raisehand_label_Interacting: 'Interacting',
+  fcr_raisehand_label_Interacting_now: 'You can start interacting now.',
+  fcr_raisehand_tips_interaction_approved: 'Interaction Request Approved',
+  fcr_raisehand_tips_interaction_denied: 'Interaction Request Denied',
+  fcr_raisehand_tips_waiting_interaction_close_all: 'Please keep at least one means of interaction',
+  fcr_raisehand_tips_interaction_disconnected: 'Interaction has been disconnected.',
 };

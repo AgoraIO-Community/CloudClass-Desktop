@@ -20,7 +20,7 @@ export interface HandlerCondition {
   callbackFn: () => void;
 }
 
-class FSM {
+export class FSM {
   currentState: WaveArmStateEnum;
   handlers: HandlerCondition[];
   timer: ReturnType<typeof setTimeout> | null = null;

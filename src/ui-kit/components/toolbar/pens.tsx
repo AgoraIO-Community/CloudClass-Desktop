@@ -1,9 +1,9 @@
 import { FC, useCallback, useState } from 'react';
-import { Popover } from '@classroom/ui-kit/components/popover';
-import { ASlider } from '@classroom/ui-kit/components/slider';
-import { SvgIcon, SvgIconEnum, SvgImg } from '@classroom/ui-kit/components/svg-img';
-import { Tooltip } from '@classroom/ui-kit/components/tooltip';
-import { InteractionStateColors } from '@classroom/ui-kit/utilities/state-color';
+import { Popover } from '../popover';
+import { ASlider } from '../slider';
+import { SvgIcon, SvgIconEnum, SvgImg } from '../svg-img';
+import { Tooltip } from '../tooltip';
+import { InteractionStateColors } from '../../utilities/state-color';
 import { ToolItem } from './tool';
 import { getPenIcon, getPenShapeIcon } from './util';
 export interface PensProps extends ToolItem {

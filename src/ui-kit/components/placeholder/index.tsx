@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
-import { BaseProps, IconWithState } from '@classroom/ui-kit/components/util/type';
+import { BaseProps, IconWithState } from '../util/type';
 import { SvgIconEnum, SvgImg } from '../svg-img';
-import { Z_INDEX_RULES } from '@classroom/ui-kit/utilities/style-config';
+import { Z_INDEX_RULES } from '../../utilities/style-config';
 import './index.css';
 import {
   InteractionStateColors,
   PlaceholderStateColors,
-} from '@classroom/ui-kit/utilities/state-color';
+} from '../../utilities/state-color';
 
 type PlaceholderType =
   | 'emptyHistory'

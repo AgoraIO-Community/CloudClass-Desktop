@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import classNames from 'classnames';
-import { Column, Profile } from '@classroom/ui-kit/components/roster';
-import { Col, Row, Table } from '@classroom/ui-kit/components/table';
-import { Operation, SupportedFunction } from '@classroom/ui-kit';
+import { Column, Profile } from '../roster';
+import { Col, Row, Table } from '../table';
+import { Operation, SupportedFunction } from '..';
 import { useColumns } from './hooks';
 import loadingSrc from './assets/loading.gif';
 import { debounce } from 'lodash';

@@ -1,8 +1,8 @@
 import { FC, useCallback } from 'react';
-import { CheckBox } from '@classroom/ui-kit/components/checkbox';
-import { Input } from '@classroom/ui-kit/components/input';
+import { CheckBox } from '../checkbox';
+import { Input } from '../input';
 import { Select } from '../select';
-import { CarouselProps } from '@classroom/ui-kit';
+import { CarouselProps } from '..';
 import { useI18n } from 'agora-common-libs';
 
 type CarouselSettingProps = CarouselProps;

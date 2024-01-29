@@ -77,14 +77,14 @@ export class AgoraEduSDK {
     switch (toUpper(region)) {
       case 'CN':
         return EduRegion.CN;
-      case 'AS':
+      case 'AP':
         return EduRegion.AP;
       case 'EU':
         return EduRegion.EU;
       case 'NA':
         return EduRegion.NA;
     }
-    return region as EduRegion;
+    return toUpper(region) as EduRegion;
   }
   private static _convertMediaOptions(opts?: LaunchMediaOptions): ConvertMediaOptionsConfig {
     const config: ConvertMediaOptionsConfig = {};

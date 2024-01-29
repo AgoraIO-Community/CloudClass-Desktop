@@ -1,9 +1,9 @@
 import { CSSProperties, FC, PropsWithChildren, useCallback, useEffect, useRef } from 'react';
 import classnames from 'classnames';
-import { BaseProps } from '@classroom/ui-kit/components/util/type';
+import { BaseProps } from '../util/type';
 import Notification from 'rc-notification';
 import './index.css';
-import { useTimeout } from '@classroom/ui-kit/utilities/hooks';
+import { useTimeout } from '../../utilities/hooks';
 import { SvgImg } from '../svg-img';
 import { SvgIconEnum } from '../svg-img/type';
 

@@ -1,28 +1,98 @@
-import { AgoraMediaControlEventType, Log } from 'agora-rte-sdk';
+import { AgoraMediaControlEventType, AgoraRteEventType, Log, bound } from 'agora-rte-sdk';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { SvgIconEnum } from '@classroom/ui-kit';
 import { StreamUIStore } from '../common/stream';
+import { EduClassroomConfig, EduRoleTypeEnum, RteRole2EduRole } from 'agora-edu-core';
+import { transI18n } from 'agora-common-libs';
 
 @Log.attach({ proxyMethods: false })
 export class LectureH5RoomStreamUIStore extends StreamUIStore {
+  @observable localVideoRenderAt: 'Preview' | 'Window' = 'Window';
   @observable showAutoPlayFailedTip = false;
 
   private _teacherWidthRatio = 0.31;
 
   private _gapInPx = 2;
 
+  private _interactionDeniedCallback = () => {};
+  @action.bound
+  setLocalVideoRenderAt(renderAt: 'Preview' | 'Window') {
+    this.localVideoRenderAt = renderAt;
+  }
+  @action.bound
+  setInteractionDeniedCallback(callback: () => void) {
+    this._interactionDeniedCallback = callback;
+  }
   @action.bound
   private _onVideoAutoPlayFailed() {
     this.showAutoPlayFailedTip = true;
   }
   @action.bound
+  private _onAudioContextStateChanged(
+    currState: AudioContextState | 'interrupted',
+    prevState: AudioContextState | 'interrupted' | undefined,
+  ) {
+    if (currState === 'interrupted') {
+      this.showAutoPlayFailedTip = true;
+    }
+    if (currState === 'running') {
+      this.showAutoPlayFailedTip = false;
+    }
+  }
+  @action.bound
   closeAutoPlayFailedTip() {
+    this.classroomStore.mediaStore.mediaControl.resumeAudioContext();
     this.showAutoPlayFailedTip = false;
   }
-
+  @bound
+  _handleRoomPropertiesChange(
+    changedRoomProperties: string[],
+    roomProperties: any,
+    operator: any,
+    cause: any,
+  ) {
+    const { cmd, data } = cause || {};
+    if (cmd === 501) {
+      const process = data.processUuid;
+      if (process === 'waveArm') {
+        const { userUuid, roomType } = EduClassroomConfig.shared.sessionInfo;
+        switch (data.actionType) {
+          case 1:
+            //add progress
+            break;
+          case 3:
+            //remove progress
+            if (
+              data.removeProgress.findIndex(
+                (item: { userUuid: string }) => item.userUuid === userUuid,
+              ) !== -1 &&
+              RteRole2EduRole(roomType, operator.role) === EduRoleTypeEnum.teacher
+            ) {
+              this.shareUIStore.addSingletonToast(
+                transI18n('fcr_raisehand_tips_interaction_denied'),
+                'info',
+              );
+              this._interactionDeniedCallback();
+            }
+            break;
+        }
+      }
+    }
+  }
   onInstall(): void {
     super.onInstall();
-
+    this._disposers.push(
+      computed(() => this.classroomStore.connectionStore.scene).observe(
+        ({ newValue, oldValue }) => {
+          if (oldValue) {
+            oldValue.off(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+          }
+          if (newValue) {
+            newValue.on(AgoraRteEventType.RoomPropertyUpdated, this._handleRoomPropertiesChange);
+          }
+        },
+      ),
+    );
     this._disposers.push(
       reaction(
         () => this.classroomStore.connectionStore.engine,
@@ -31,6 +101,10 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
             this.classroomStore.mediaStore.mediaControl.on(
               AgoraMediaControlEventType.videoAutoPlayFailed,
               this._onVideoAutoPlayFailed,
+            );
+            this.classroomStore.mediaStore.mediaControl.on(
+              AgoraMediaControlEventType.audioContextStateChanged,
+              this._onAudioContextStateChanged,
             );
           }
         },
@@ -101,6 +175,9 @@ export class LectureH5RoomStreamUIStore extends StreamUIStore {
       : (this.streamZoomStatus = 'zoom-in');
   }
 
+  @computed get localPreviewVolume(): number {
+    return this.classroomStore.mediaStore.localPreviewMicAudioVolume * 100;
+  }
   @computed
   get carouselShowCount() {
     return this.shareUIStore.orientation === 'portrait' ? 3 : 4;

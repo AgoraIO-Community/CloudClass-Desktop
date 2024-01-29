@@ -1,6 +1,6 @@
 import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
-import { StreamPlayerMobile } from './index.mobile';
+import { LocalTrackPlayerMobile, StreamPlayerMobile } from './index.mobile';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
@@ -32,7 +32,7 @@ const RoomBigTeacherStreamH5Tool = ({
         onClick={onPiP}
         type={isPiP ? SvgIconEnum.PIP_OFF : SvgIconEnum.PIP_ON}
         size={24}></SvgImg>
-      <SvgImg onClick={onLandscape} type={SvgIconEnum.LANDSCAPE} size={24}></SvgImg>
+      {/* <SvgImg onClick={onLandscape} type={SvgIconEnum.LANDSCAPE} size={24}></SvgImg> */}
     </div>
   );
 };
@@ -224,7 +224,6 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
   } = useLectureH5UIStores() as EduLectureH5UIStore;
   const {
     studentVideoStreamSize,
-
     studentCameraStreams,
     containerH5VisibleCls,
     studentVideoStreamContainerHeight,
@@ -267,8 +266,14 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
           'fcr-overflow-x-auto',
         )}>
         {studentCameraStreams.map((stream) => {
-          return (
+          const isLocal = stream.stream.isLocal;
+          return isLocal ? (
+            <LocalTrackPlayerMobile
+              key={stream.stream.streamUuid}
+              stream={stream}></LocalTrackPlayerMobile>
+          ) : (
             <StreamPlayerMobile
+              key={stream.stream.streamUuid}
               style={{
                 width: studentVideoStreamSize.width,
                 height: studentVideoStreamSize.height,
