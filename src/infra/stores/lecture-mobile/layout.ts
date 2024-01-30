@@ -1,10 +1,11 @@
 import { transI18n } from 'agora-common-libs';
-import { ClassroomState, ClassState } from 'agora-edu-core';
+import { ClassroomState } from 'agora-edu-core';
 import { bound, Scheduler } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { LayoutUIStore } from '../common/layout';
 import { ToastTypeEnum } from '../common/share';
 import { AgoraExtensionWidgetEvent } from '@classroom/infra/protocol/events';
+import { getIOSVersion, isIOS, isWeChatBrowser } from '@classroom/infra/utils';
 export enum MobileCallState {
   Initialize = 'initialize',
   Processing = 'processing',
@@ -31,7 +32,22 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
   }
   @action.bound
   openHandsUpActionSheet() {
+    const isSupported = this.checkIsSupportCall();
+    if (!isSupported) {
+      this.shareUIStore.addSingletonToast(
+        transI18n('fcr_raisehand_tips_not_supported_browser'),
+        'info',
+      );
+      return;
+    }
     this.setHandsUpActionSheetVisible(true);
+  }
+
+  checkIsSupportCall() {
+    if (isIOS() && isWeChatBrowser() && getIOSVersion() < 14.3) {
+      return false;
+    }
+    return true;
   }
   @computed
   get h5ContainerCls() {

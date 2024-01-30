@@ -1,5 +1,5 @@
 import { AgoraEduSDK } from '@classroom/infra/api';
-import { number2Percent } from '@classroom/infra/utils';
+import { number2Percent, setUrlParameters } from '@classroom/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@classroom/infra/utils/event-center';
 import {
   AGServiceErrorCode,
@@ -732,7 +732,9 @@ export class NavigationBarUIStore extends EduUIStoreBase {
 
     const args = {
       webRecordConfig: {
-        rootUrl: `${recordUrl}?language=${AgoraEduSDK.language}`,
+        rootUrl: setUrlParameters(recordUrl, {
+          language: AgoraEduSDK.language,
+        }),
         videoBitrate: 3000,
       },
       mode: RecordMode.Web,

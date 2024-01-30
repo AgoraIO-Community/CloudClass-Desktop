@@ -187,3 +187,30 @@ export const clickAnywhere = (el: HTMLElement, cb: () => void) => {
     window.removeEventListener('mousedown', callbackHandler);
   };
 };
+export const isIOS = () => {
+  const u = navigator.userAgent;
+  return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+};
+
+export const getIOSVersion = () => {
+  const reg = /os [\d._]*/gi;
+  const v = navigator.userAgent.match(reg);
+  if (!v) {
+    return 0;
+  }
+  return v[0] ? Number(v[0].match(/\d+(_\d)*/gi)?.[0].replace(/_/g, '.')) : 0;
+};
+export const isWeChatBrowser = () => {
+  const ua: string = navigator.userAgent.toLowerCase();
+  return /micromessenger/.test(ua);
+};
+export const setUrlParameters = (
+  url: string,
+  params: { [key: string]: string | number | boolean },
+) => {
+  const urlObj = new URL(url);
+  for (const key in params) {
+    urlObj.searchParams.set(key, params[key].toString());
+  }
+  return urlObj.toString();
+};
