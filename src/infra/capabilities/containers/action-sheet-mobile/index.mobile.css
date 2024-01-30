@@ -233,7 +233,7 @@
   transition: all 0.2s;
 }
 .fcr-hands-up-action-sheet-mobile-device-active {
-  transform: translate3d(0, -477px, 0);
+  transform: translate3d(0, -539px, 0);
 }
 .fcr-hands-up-action-sheet-mobile-device-head {
   height: 40px;
@@ -250,7 +250,7 @@
   color: #fff;
 }
 .fcr-hands-up-action-sheet-mobile-device-wrapper {
-  height: 240px;
+  height: 302px;
 
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
@@ -259,7 +259,7 @@
 }
 .fcr-hands-up-action-sheet-mobile-device-player {
   width: 100%;
-  height: 190px;
+  height: 252px;
   background: rgba(67, 67, 78, 1);
   border-radius: 8px;
   overflow: hidden;

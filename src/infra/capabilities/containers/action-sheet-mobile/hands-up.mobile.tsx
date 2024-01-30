@@ -176,6 +176,7 @@ export const HandsUpActionSheetMobile = observer(() => {
   return (
     <>
       <div
+        onClick={() => setHandsUpActionSheetVisible(false)}
         className="fcr-hands-up-action-sheet-mobile-mask"
         style={{
           display: handsUpActionSheetVisible ? 'block' : 'none',
