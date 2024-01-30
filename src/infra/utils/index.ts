@@ -193,13 +193,16 @@ export const isIOS = () => {
 };
 
 export const getIOSVersion = () => {
-  const reg = /os [\d._]*/gi;
-  const v = navigator.userAgent.match(reg);
-  if (!v) {
-    return 0;
+  const match = navigator.userAgent.match(/OS (\d+)_(\d+)_?(\d+)?/);
+  let version = null;
+
+  if (match !== undefined && match !== null) {
+    version = [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(String(match[3] || 0), 10)];
+    return parseFloat(version.join('.'));
   }
-  return v[0] ? Number(v[0].match(/\d+(_\d)*/gi)?.[0].replace(/_/g, '.')) : 0;
+  return 0;
 };
+
 export const isWeChatBrowser = () => {
   const ua: string = navigator.userAgent.toLowerCase();
   return /micromessenger/.test(ua);
