@@ -114,4 +114,6 @@ export enum AgoraExtensionWidgetEvent {
   RequestMobileLandscapeToolBarVisible = 'request-mobile-landscape-tool-bar-visible',
   //打开mobile web的举手弹窗
   OpenMobileHandsActionSheet = 'open-mobile-hands-up-action-sheet',
+  //更新倒计时状态
+  CountdownTimerStateChanged = 'countdown-timer-state-changed',
 }

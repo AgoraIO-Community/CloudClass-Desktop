@@ -786,6 +786,8 @@ export const zh = {
   fcr_H5_tips_chat_pollclosed: '老师关闭投票',
   fcr_H5_tips_chat_pollopened: '老师开启投票',
   fcr_H5_click_to_play: '点击播放',
+  fcr_H5_tips_end_poll: '老师已结束投票',
+
 
   fcr_home_status_teacher_leave: '老师离开教室',
   fcr_failed_converting: '转换失败',

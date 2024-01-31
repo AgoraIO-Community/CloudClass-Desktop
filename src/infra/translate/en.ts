@@ -803,6 +803,7 @@ export const en = {
   fcr_H5_tips_chat_pollclosed: 'Poll closed',
   fcr_H5_tips_chat_pollopened: 'Poll opened',
   fcr_H5_click_to_play: 'Play',
+  fcr_H5_tips_end_poll: 'Teacher has ended the polls',
 
   fcr_home_status_teacher_leave: 'The teacher has left the room',
   fcr_failed_converting: 'Failed',
