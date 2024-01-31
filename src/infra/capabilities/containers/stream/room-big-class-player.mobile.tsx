@@ -11,6 +11,7 @@ import { Scheduler } from 'agora-rte-sdk';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { useI18n } from 'agora-common-libs';
 import './index.mobile.css';
+import Award from '../award';
 const RoomBigTeacherStreamH5Tool = ({
   isPiP,
   onPiP,
@@ -154,6 +155,7 @@ const useMobileStreamDrag = ({
     pos,
   };
 };
+
 export const RoomBigTeacherStreamContainerMobile = observer(
   ({ teacherCameraStream }: { teacherCameraStream: EduStreamUI }) => {
     const {
@@ -215,7 +217,6 @@ export const RoomBigTeacherStreamContainerMobile = observer(
     );
   },
 );
-
 export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
   const {
     shareUIStore: { isLandscape, forceLandscape },
@@ -267,21 +268,24 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
         )}>
         {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
-          return isLocal ? (
-            <LocalTrackPlayerMobile
-              key={stream.stream.streamUuid}
-              stream={stream}></LocalTrackPlayerMobile>
-          ) : (
-            <StreamPlayerMobile
-              key={stream.stream.streamUuid}
-              style={{
-                width: studentVideoStreamSize.width,
-                height: studentVideoStreamSize.height,
-                position: 'relative',
-                flexShrink: 0,
-              }}
-              stream={stream}></StreamPlayerMobile>
-          );
+          return (<div key={stream.stream.streamUuid} className="fcr-relative">
+            {isLocal ?
+              <LocalTrackPlayerMobile
+                key={stream.stream.streamUuid}
+                stream={stream}></LocalTrackPlayerMobile>
+              :
+              <StreamPlayerMobile
+                key={stream.stream.streamUuid}
+                style={{
+                  width: studentVideoStreamSize.width,
+                  height: studentVideoStreamSize.height,
+                  position: 'relative',
+                  flexShrink: 0,
+                }}
+                stream={stream}></StreamPlayerMobile>
+            }
+            <Award stream={stream} />
+          </div>)
         })}
       </div>
     </div>

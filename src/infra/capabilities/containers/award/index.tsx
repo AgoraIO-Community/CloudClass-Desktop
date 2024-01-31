@@ -4,29 +4,38 @@ import { SvgaPlayer, SoundPlayer } from '@classroom/ui-kit';
 
 import RewardSVGA from '../stream/assets/svga/reward.svga';
 import RewardSound from '../stream/assets/audio/reward.mp3';
+import { useRef } from 'react';
+import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 
-export const Award = observer(() => {
+export const Award = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
-    layoutUIStore: { awardAnims, removeAward },
+    streamUIStore: { streamAwardAnims, removeAward },
   } = useStore();
+  const ref = useRef<HTMLDivElement>(null);
 
-  return (
-    <div className="center-reward">
-      {awardAnims.map((anim) => {
+  return stream ? (
+    <div ref={ref} className="center-reward">
+      {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
+        const width = ref.current?.clientWidth || 0;
+        const height = ref.current?.clientHeight || 0;
         return (
           <SvgaPlayer
             key={anim.id}
-            style={{ position: 'absolute', transform: 'scale(1.5)' }}
+            width={width}
+            height={height}
+            style={{ position: 'absolute' }}
             url={RewardSVGA}
             onFinish={() => {
               removeAward(anim.id);
-            }}></SvgaPlayer>
+            }}
+          ></SvgaPlayer>
         );
       })}
-      {awardAnims.map((anim) => {
+
+      {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
         return <SoundPlayer url={RewardSound} key={anim.id} />;
       })}
     </div>
-  );
+  ) : null;
 });
 export default Award;

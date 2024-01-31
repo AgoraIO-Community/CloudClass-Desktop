@@ -156,13 +156,7 @@ export class StreamUIStore extends EduUIStoreBase {
       const users = params as { userUuid: string; userName: string }[];
       const anims: { id: string; userUuid: string }[] = [];
       users.forEach((user) => {
-        const onPodium = this.classroomStore.roomStore.acceptedList.some(
-          ({ userUuid: thisUuid }) => thisUuid === user.userUuid,
-        );
-        const haveAnimation =
-          EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
-          onPodium;
-        haveAnimation && anims.push({ id: uuidv4(), userUuid: user.userUuid });
+        anims.push({ id: uuidv4(), userUuid: user.userUuid });
       });
       if (anims.length > 0) {
         runInAction(() => {
@@ -473,13 +467,13 @@ export class StreamUIStore extends EduUIStoreBase {
       videoSourceStopped
         ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disabled }
         : videoMuted
-        ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disallow }
-        : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
+          ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disallow }
+          : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
       videoSourceStopped
         ? transI18n('Camera Not Available')
         : videoMuted
-        ? transI18n('Open Camera')
-        : transI18n('Close Camera'),
+          ? transI18n('Open Camera')
+          : transI18n('Close Camera'),
       {
         //can interact when source is not stopped
         interactable: !videoSourceStopped,
@@ -512,13 +506,13 @@ export class StreamUIStore extends EduUIStoreBase {
       audioSourceStopped
         ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
         : audioMuted
-        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow }
-        : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
+          ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow }
+          : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
       audioSourceStopped
         ? transI18n('Microphone Not Available')
         : audioMuted
-        ? transI18n('Open Microphone')
-        : transI18n('Close Microphone'),
+          ? transI18n('Open Microphone')
+          : transI18n('Close Microphone'),
       {
         //can interact when source is not stopped
         interactable: !audioSourceStopped,
