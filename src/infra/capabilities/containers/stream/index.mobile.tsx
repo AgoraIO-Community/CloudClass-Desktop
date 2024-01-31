@@ -115,7 +115,7 @@ export const LocalTrackPlayer = memo(
     const ref = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
       if (ref.current && localVideoRenderAt === renderAt) {
-        setupLocalVideo(ref.current, facingMode === 'environment');
+        setupLocalVideo(ref.current, facingMode === 'user');
       }
     }, [setupLocalVideo, facingMode, localVideoRenderAt]);
     return <div style={style} ref={ref}></div>;
