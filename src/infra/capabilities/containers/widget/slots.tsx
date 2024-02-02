@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../config';
+import classNames from 'classnames';
 
 export const Chat = observer(function Chat() {
   const { widgetUIStore } = useStore();
@@ -57,8 +58,10 @@ const Spinner = () => {
   );
 };
 
-export const CountDownMobile = observer(() => {
-  return <div className="fcr-countdown-mobile-widget"></div>;
+export const CountDownMobile = observer(({ haveStream }: { haveStream: boolean }) => {
+  return <div className={classNames('fcr-countdown-mobile-widget', {
+    'fcr-countdown-mobile-widget-have-stream': haveStream,
+  })}></div>;
 });
 export const PollMobile = observer(() => {
   const {

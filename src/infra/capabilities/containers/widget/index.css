@@ -17,6 +17,9 @@
 .fcr-countdown-mobile-widget {
   position: relative;
 }
+.fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile{
+  bottom: 162px;
+}
 .whiteboard-mobile-container .netless-whiteboard-wrapper {
   background-color: #fff;
 

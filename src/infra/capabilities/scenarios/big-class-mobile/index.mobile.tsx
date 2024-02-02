@@ -39,6 +39,7 @@ export const BigClassScenarioMobile = observer(() => {
       },
     },
     shareUIStore: { isLandscape, forceLandscape },
+    streamUIStore: { teacherCameraStream },
     layoutUIStore: { setHandsUpActionSheetVisible },
   } = useLectureH5UIStores();
   return (
@@ -77,7 +78,8 @@ export const BigClassScenarioMobile = observer(() => {
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
               <TeacherStreamChatContainerMobile />
-              <CountDownMobile></CountDownMobile>
+              {/* className={teacherCameraStream && !teacherCameraStream.isCameraMuted ? 'fcr-mobile-have-tc-stream-warapper' : 'fcr-mobile-no-have-tc-stream-warapper'} */}
+              <CountDownMobile haveStream={!!(teacherCameraStream && !teacherCameraStream.isCameraMuted)}></CountDownMobile>
 
               {!isLandscape && (
                 <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
