@@ -31,6 +31,7 @@ import { ShareActionSheetMobile } from '../../containers/action-sheet-mobile/sha
 import { HandsUpActionSheetMobile } from '../../containers/action-sheet-mobile/hands-up.mobile';
 import { DialogCategory } from '@classroom/infra/stores/common/share';
 import { ConfirmDialogAction } from '@classroom/infra/stores/common/type';
+import { ClassRoomDialogContainer } from '../../containers/confirm-dialog-mobile';
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -94,6 +95,7 @@ export const BigClassScenarioMobile = observer(() => {
 
               <DialogContainerMobile></DialogContainerMobile>
               <ToastContainerMobile></ToastContainerMobile>
+              <ClassRoomDialogContainer></ClassRoomDialogContainer>
             </>
           )}
         </LayoutOrientation>

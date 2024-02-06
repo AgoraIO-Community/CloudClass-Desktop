@@ -787,7 +787,12 @@ export const zh = {
   fcr_H5_tips_chat_pollopened: '老师开启投票',
   fcr_H5_click_to_play: '点击播放',
   fcr_H5_tips_end_poll: '老师已结束投票',
-
+  fcr_user_tips_teacher_start_video_title: '请求开启视频',
+  fcr_user_tips_teacher_start_video_content: '老师请求您开启视频',
+  fcr_user_tips_teacher_unmute_title: '请求解除禁言',
+  fcr_user_tips_teacher_unmute_content: '老师请求您解除禁言',
+  fcr_user_tips_teacher_unmute_ok: '确定',
+  fcr_user_tips_teacher_unmute_cancel: '取消',
 
   fcr_home_status_teacher_leave: '老师离开教室',
   fcr_failed_converting: '转换失败',

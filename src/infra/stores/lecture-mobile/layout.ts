@@ -5,6 +5,9 @@ import { action, computed, IReactionDisposer, observable, reaction } from 'mobx'
 import { LayoutUIStore } from '../common/layout';
 import { ToastTypeEnum } from '../common/share';
 import { AgoraExtensionWidgetEvent } from '@classroom/infra/protocol/events';
+import { CommonDialogType, DialogType } from './type';
+import { v4 as uuidv4 } from 'uuid';
+
 export enum MobileCallState {
   Initialize = 'initialize',
   Processing = 'processing',
@@ -47,9 +50,9 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
     return this.shareUIStore.orientation === 'portrait'
       ? {}
       : {
-          height: this.shareUIStore.classroomViewportSize.h5Height,
-          width: this.shareUIStore.classroomViewportSize.h5Width,
-        };
+        height: this.shareUIStore.classroomViewportSize.h5Height,
+        width: this.shareUIStore.classroomViewportSize.h5Width,
+      };
   }
   @bound
   private _updateOrientationStates() {
@@ -98,6 +101,32 @@ export class LectureH5LayoutUIStore extends LayoutUIStore {
   broadcastCallState(callState: MobileCallState) {
     this.extensionApi.updateMobileCallState(callState);
   }
+  @observable dialogMap: Map<string, { type: DialogType }> = new Map();
+
+  hasDialogOf(type: DialogType) {
+    let exist = false;
+    this.dialogMap.forEach(({ type: dialogType }) => {
+      if (dialogType === type) {
+        exist = true;
+      }
+    });
+
+    return exist;
+  }
+  isDialogIdExist(id: string) {
+    return this.dialogMap.has(id);
+  }
+  addDialog(type: 'confirm', params: CommonDialogType): void;
+
+  @action.bound
+  addDialog(type: unknown, params?: CommonDialogType<unknown>) {
+    this.dialogMap.set(params?.id || uuidv4(), { ...(params as any), type: type as DialogType });
+  }
+
+  @action.bound
+  deleteDialog = (id: string) => {
+    this.dialogMap.delete(id);
+  };
   onInstall(): void {
     this._disposers.push(
       reaction(
