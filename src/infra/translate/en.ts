@@ -831,4 +831,6 @@ export const en = {
   fcr_raisehand_tips_interaction_denied: 'Interaction Request Denied',
   fcr_raisehand_tips_waiting_interaction_close_all: 'Please keep at least one means of interaction',
   fcr_raisehand_tips_interaction_disconnected: 'Interaction has been disconnected.',
+  fcr_raisehand_tips_not_supported_browser:
+    'The current browser does not support the function of joining the call.',
 };

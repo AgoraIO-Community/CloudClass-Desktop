@@ -813,4 +813,5 @@ export const zh = {
   fcr_raisehand_tips_interaction_denied: '互动申请被拒绝',
   fcr_raisehand_tips_waiting_interaction_close_all: '请至少保留一种互动方式',
   fcr_raisehand_tips_interaction_disconnected: '互动已断开',
+  fcr_raisehand_tips_not_supported_browser: '当前浏览器不支持连麦功能',
 };
