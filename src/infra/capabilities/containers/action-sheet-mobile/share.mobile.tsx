@@ -1,4 +1,4 @@
-import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { EduClassroomConfig } from 'agora-edu-core';
@@ -16,7 +16,7 @@ export const ShareActionSheetMobile = observer(() => {
   const {
     layoutUIStore: { shareActionSheetVisible, setShareActionSheetVisible, landscapeToolBarVisible },
     shareUIStore: { addSingletonToast, isLandscape, forceLandscape },
-  } = useLectureH5UIStores();
+  } = useStore();
 
   useEffect(() => {
     if (!ref.current) return;

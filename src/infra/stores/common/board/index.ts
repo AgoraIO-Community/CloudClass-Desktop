@@ -2,7 +2,15 @@ import { isSupportedImageType } from '@classroom/infra/utils';
 import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@classroom/infra/utils/event-center';
 import { AGEduErrorCode, EduClassroomConfig, EduRoleTypeEnum, getImageSize } from 'agora-edu-core';
 import { AGErrorWrapper, bound } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, Lambda, observable, runInAction } from 'mobx';
+import {
+  action,
+  computed,
+  IReactionDisposer,
+  Lambda,
+  observable,
+  reaction,
+  runInAction,
+} from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { conversionOption, extractFileExt, fileExt2ContentType } from '../cloud-drive/helper';
 import { transI18n } from 'agora-common-libs';
@@ -12,7 +20,7 @@ export class BoardUIStore extends EduUIStoreBase {
   protected get uiOverrides() {
     return {
       ...super.uiOverrides,
-      heightRatio: 1,
+      heightRatio: 0.79,
     };
   }
 
@@ -78,9 +86,28 @@ export class BoardUIStore extends EduUIStoreBase {
   get mounted() {
     return this.boardApi.mounted;
   }
+  @computed
+  get iconZoomVisibleCls() {
+    return this.shareUIStore.orientation === 'portrait' ? 'fcr-hidden' : '';
+  }
 
+  @computed
+  get whiteboardContainerCls() {
+    return this.shareUIStore.orientation !== 'portrait' ? 'fcr-flex-1' : '';
+  }
+
+  @computed
+  get boardContainerWidth() {
+    return this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
+  }
+
+  @computed
+  get boardContainerHeight() {
+    return this.boardContainerWidth * (9 / 16);
+  }
   onInstall() {
     const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
+
     if (role === EduRoleTypeEnum.student) {
       // only student
       this._disposers.push(

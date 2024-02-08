@@ -127,18 +127,12 @@ export class NotificationUIStore extends EduUIStoreBase {
         this.classroomStore.connectionStore.leaveClassroom(LeaveReason.kickOut);
       }
     }
-    // teacher turn on my mic
-    if (event === AgoraEduClassroomEvent.TeacherTurnOnMyMic) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.turn.on.my.mic'));
-    }
+
     // teacher turn off my mic
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyMic) {
       this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.mic'), 'error');
     }
-    // teacher turn on my mic
-    if (event === AgoraEduClassroomEvent.TeacherTurnOnMyCam) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.turn.on.my.cam'));
-    }
+
     // teacher turn off my mic
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
       this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');

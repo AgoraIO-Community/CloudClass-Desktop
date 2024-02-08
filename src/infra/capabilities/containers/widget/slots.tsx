@@ -1,10 +1,8 @@
-import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
-import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
-import { SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../config';
 import classNames from 'classnames';
@@ -59,9 +57,12 @@ const Spinner = () => {
 };
 
 export const CountDownMobile = observer(({ haveStream }: { haveStream: boolean }) => {
-  return <div className={classNames('fcr-countdown-mobile-widget', {
-    'fcr-countdown-mobile-widget-have-stream': haveStream,
-  })}></div>;
+  return (
+    <div
+      className={classNames('fcr-countdown-mobile-widget', {
+        'fcr-countdown-mobile-widget-have-stream': haveStream,
+      })}></div>
+  );
 });
 export const PollMobile = observer(() => {
   const {
@@ -74,20 +75,16 @@ export const WhiteboardMobile = observer(function Board() {
     boardUIStore,
     streamUIStore: { containerH5VisibleCls },
     shareUIStore: { isLandscape },
-  } = useLectureH5UIStores() as EduLectureH5UIStore;
+  } = useStore();
 
-  const {
-    iconBorderZoomType,
-    iconZoomVisibleCls,
-    handleBoradZoomStatus,
-    boardContainerHeight,
-    boardContainerWidth,
-    mounted,
-  } = boardUIStore;
+  const { boardContainerHeight, boardContainerWidth, mounted } = boardUIStore;
   const height = mounted && !isLandscape ? boardContainerHeight : 0;
   return (
     <div
-      className={classnames('whiteboard-mobile-container fcr-w-full fcr-relative', containerH5VisibleCls)}
+      className={classnames(
+        'whiteboard-mobile-container fcr-w-full fcr-relative',
+        containerH5VisibleCls,
+      )}
       style={{
         height: height,
         width: boardContainerWidth,
@@ -101,11 +98,6 @@ export const WhiteboardMobile = observer(function Board() {
           zIndex: ComponentLevelRules.WhiteBoard,
         }}
         className="widget-slot-board"
-      />
-      <SvgImg
-        type={iconBorderZoomType}
-        className={classnames('whiteboard-zoom-status', iconZoomVisibleCls)}
-        onClick={handleBoradZoomStatus}
       />
     </div>
   );
@@ -124,7 +116,7 @@ export const ChatMobile = observer(function Chat() {
     boardUIStore: { boardContainerHeight, mounted },
     shareUIStore: { isLandscape, forceLandscape },
     layoutUIStore: { classRoomPlacholderMobileHeight },
-  } = useLectureH5UIStores();
+  } = useStore();
   const { ready } = widgetUIStore;
   const [chatH5Height, setChatH5Height] = useState(0);
   const calcHeight = () => {

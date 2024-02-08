@@ -1,16 +1,16 @@
-import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { Scheduler, useI18n } from 'agora-common-libs';
+import { useI18n } from 'agora-common-libs';
 import { observer } from 'mobx-react';
 import { ComponentLevelRulesMobile } from '../../config';
 
 import './index.mobile.css';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
 import { LocalTrackPlayer, generateShortUserName } from '../stream/index.mobile';
 import { MicrophoneIndicator } from './mic';
-import { MobileCallState } from '@classroom/infra/stores/lecture-mobile/layout';
+import { MobileCallState } from '@classroom/infra/stores/common/type';
 
 export const HandsUpActionSheetMobile = observer(() => {
   const transI18n = useI18n();
@@ -18,18 +18,21 @@ export const HandsUpActionSheetMobile = observer(() => {
     classroomStore: {
       mediaStore: { enableLocalVideo, enableLocalAudio },
     },
-    streamUIStore: { localVolume, setInteractionDeniedCallback, setLocalVideoRenderAt },
-    deviceSettingUIStore: { toggleFacingMode },
-    shareUIStore: { addSingletonToast },
+    streamUIStore: { localVolume, setLocalVideoRenderAt },
+    deviceSettingUIStore: {
+      toggleFacingMode,
+      isCameraDeviceEnabled,
+      isAudioRecordingDeviceEnabled,
+    },
     layoutUIStore: { handsUpActionSheetVisible, setHandsUpActionSheetVisible, broadcastCallState },
-  } = useLectureH5UIStores();
+  } = useStore();
   const [devicePreviewViewVisible, setDevicePreviewViewVisible] = useState(false);
   const [callState, setCallState] = useState(MobileCallState.Processing);
   const [deviceStatus, setDeviceStatus] = useState({
     mic: false,
     camera: false,
   });
-  const { userName, userUuid } = EduClassroomConfig.shared.sessionInfo;
+  const { userName } = EduClassroomConfig.shared.sessionInfo;
   const micOn = deviceStatus.mic;
   const cameraOn = deviceStatus.camera;
   const volume = localVolume;
@@ -46,14 +49,15 @@ export const HandsUpActionSheetMobile = observer(() => {
     }
   }, [deviceStatus.camera, deviceStatus.mic]);
   useEffect(() => {
-    if (callState === MobileCallState.Initialize) {
-      enableLocalAudio(false);
-      enableLocalVideo(false);
-    } else {
-      enableLocalAudio(deviceStatus.mic);
-      enableLocalVideo(deviceStatus.camera);
-    }
+    enableLocalAudio(deviceStatus.mic);
+    enableLocalVideo(deviceStatus.camera);
   }, [callState, deviceStatus.camera, deviceStatus.mic]);
+  useEffect(() => {
+    setDeviceStatus({
+      mic: isAudioRecordingDeviceEnabled,
+      camera: isCameraDeviceEnabled,
+    });
+  }, [isCameraDeviceEnabled, isAudioRecordingDeviceEnabled]);
   useEffect(() => {
     broadcastCallState(callState);
   }, [callState]);
@@ -104,18 +108,14 @@ export const HandsUpActionSheetMobile = observer(() => {
           transform: `translate3d(0, ${handsUpActionSheetVisible ? '-100%' : 0}, 0)`,
           zIndex: ComponentLevelRulesMobile.Level3,
         }}>
-        <div
-          className='fcr-hands-up-action-sheet-mobile-device'
-        >
+        <div className="fcr-hands-up-action-sheet-mobile-device">
           <div
             className="fcr-hands-up-action-sheet-mobile-close"
             onClick={() => setHandsUpActionSheetVisible(false)}>
             <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.CLOSE} size={16}></SvgImg>
           </div>
           <div className="fcr-hands-up-action-sheet-mobile-device-head">
-            <div>
-              {transI18n('fcr_raisehand_label_Interacting_now')}
-            </div>
+            <div>{transI18n('fcr_raisehand_label_Interacting_now')}</div>
           </div>
           <div className="fcr-hands-up-action-sheet-mobile-device-wrapper">
             <div className="fcr-hands-up-action-sheet-mobile-device-player">
@@ -128,14 +128,9 @@ export const HandsUpActionSheetMobile = observer(() => {
             </div>
           </div>
         </div>
-        <div
-          className="fcr-hands-up-action-sheet-mobile-prepare"
-        >
+        <div className="fcr-hands-up-action-sheet-mobile-prepare">
           <div>
-            <div
-              className='fcr-hands-up-action-sheet-mobile-prepare-head'>
-              连接互动
-            </div>
+            <div className="fcr-hands-up-action-sheet-mobile-prepare-head">连接互动</div>
             <div className="fcr-hands-up-action-sheet-mobile-prepare-options">
               <div
                 className="fcr-hands-up-action-sheet-mobile-prepare-options-item"
@@ -176,8 +171,7 @@ export const HandsUpActionSheetMobile = observer(() => {
                   'fcr-hands-up-action-sheet-mobile-prepare-options-item',
                   'fcr-hands-up-action-sheet-mobile-prepare-options-switch',
                   {
-                    'fcr-hands-up-action-sheet-mobile-prepare-options-switch-disabled':
-                      !cameraOn,
+                    'fcr-hands-up-action-sheet-mobile-prepare-options-switch-disabled': !cameraOn,
                   },
                 )}
                 onClick={cameraOn ? toggleFacingMode : undefined}>

@@ -1,4 +1,4 @@
-import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
 import { CSSProperties, FC, memo, useEffect, useRef } from 'react';
@@ -23,7 +23,7 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
         streamStore: { setRemoteVideoStreamType },
         connectionStore: { rtcState },
       },
-    } = useLectureH5UIStores();
+    } = useStore();
     useEffect(() => {
       if (
         rtcState === AGRtcState.Connected &&
@@ -59,7 +59,7 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
     classroomStore: {
       roomStore: { flexProps },
     },
-  } = useLectureH5UIStores();
+  } = useStore();
   return (
     <div
       onClick={toggleLandscapeToolBarVisible}
@@ -79,7 +79,7 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
 export const LocalTrackPlayerMobile = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
     streamUIStore: { studentVideoStreamSize },
-  } = useLectureH5UIStores();
+  } = useStore();
   const userName = EduClassroomConfig.shared.sessionInfo.userName;
 
   return (
@@ -111,7 +111,7 @@ export const LocalTrackPlayer = memo(
     const {
       streamUIStore: { setupLocalVideo, localVideoRenderAt },
       deviceSettingUIStore: { facingMode },
-    } = useLectureH5UIStores();
+    } = useStore();
     const ref = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
       if (ref.current && localVideoRenderAt === renderAt) {

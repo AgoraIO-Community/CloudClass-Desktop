@@ -1,4 +1,4 @@
-import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
 import { LocalTrackPlayerMobile, StreamPlayerMobile } from './index.mobile';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
@@ -162,7 +162,7 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       streamUIStore,
       shareUIStore: { isLandscape, setForceLandscape },
       layoutUIStore: { toggleLandscapeToolBarVisible },
-    } = useLectureH5UIStores() as EduLectureH5UIStore;
+    } = useStore() as EduLectureH5UIStore;
     const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP } = streamUIStore;
     const ref = useRef<HTMLDivElement>(null);
 
@@ -222,7 +222,7 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
     shareUIStore: { isLandscape, forceLandscape },
     streamUIStore,
     boardUIStore: { containerH5VisibleCls: addtionalContainerH5VisibleCls },
-  } = useLectureH5UIStores() as EduLectureH5UIStore;
+  } = useStore() as EduLectureH5UIStore;
   const {
     studentVideoStreamSize,
     studentCameraStreams,
@@ -268,24 +268,26 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
         )}>
         {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
-          return (<div key={stream.stream.streamUuid} className="fcr-relative">
-            {isLocal ?
-              <LocalTrackPlayerMobile
-                key={stream.stream.streamUuid}
-                stream={stream}></LocalTrackPlayerMobile>
-              :
-              <StreamPlayerMobile
-                key={stream.stream.streamUuid}
-                style={{
-                  width: studentVideoStreamSize.width,
-                  height: studentVideoStreamSize.height,
-                  position: 'relative',
-                  flexShrink: 0,
-                }}
-                stream={stream}></StreamPlayerMobile>
-            }
-            <Award stream={stream} />
-          </div>)
+          return (
+            <div key={stream.stream.streamUuid} className="fcr-relative">
+              {isLocal ? (
+                <LocalTrackPlayerMobile
+                  key={stream.stream.streamUuid}
+                  stream={stream}></LocalTrackPlayerMobile>
+              ) : (
+                <StreamPlayerMobile
+                  key={stream.stream.streamUuid}
+                  style={{
+                    width: studentVideoStreamSize.width,
+                    height: studentVideoStreamSize.height,
+                    position: 'relative',
+                    flexShrink: 0,
+                  }}
+                  stream={stream}></StreamPlayerMobile>
+              )}
+              <Award stream={stream} />
+            </div>
+          );
         })}
       </div>
     </div>
@@ -302,7 +304,7 @@ export const H5RoomPlaceholder = observer(() => {
         classroomSchedule: { startTime, duration },
       },
     },
-  } = useLectureH5UIStores();
+  } = useStore();
   const transI18n = useI18n();
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);

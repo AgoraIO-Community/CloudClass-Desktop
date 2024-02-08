@@ -27,16 +27,11 @@ import {
 
 import './polyfills';
 import { Providers } from './providers';
-import { initializeBuiltInExtensions, setAssetsBaseUrl } from './rtc-extensions';
 import {
-  BoardWindowAnimationOptions,
   ConfigParams,
   ConvertMediaOptionsConfig,
-  CourseWareItem,
-  CourseWareList,
   LaunchMediaOptions,
   LaunchOption,
-  LaunchWindowOption,
   RoomTemplate,
   WindowID,
 } from './type';
@@ -61,8 +56,6 @@ export { applyTheme, loadGeneratedFiles, themes } from '../utils/config-loader';
 export class AgoraEduSDK {
   private static _config: Record<string, string> = {};
   private static _widgets: Record<string, typeof AgoraWidgetBase> = {};
-  private static _coursewareList: CourseWareList = [];
-  private static _boardWindowAnimationOptions: BoardWindowAnimationOptions = {};
   private static _language: string;
   private static _appId = '';
   private static _uiMode: FcrMultiThemeMode;
@@ -170,14 +163,6 @@ export class AgoraEduSDK {
     return this._widgets || {};
   }
 
-  static get courseWareList(): CloudDriveResource[] {
-    return this._coursewareList || [];
-  }
-
-  static get boardWindowAnimationOptions(): BoardWindowAnimationOptions {
-    return this._boardWindowAnimationOptions || {};
-  }
-
   static get language() {
     return this._language || 'en';
   }
@@ -260,7 +245,6 @@ export class AgoraEduSDK {
     EduContext.reset();
     this._validateOptions(option);
     const {
-      pretest,
       userUuid,
       userName,
       roleType,
@@ -268,12 +252,9 @@ export class AgoraEduSDK {
       roomUuid,
       roomName,
       roomType,
-      courseWareList,
       duration,
       platform = Platform.PC,
       startTime,
-      recordOptions,
-      recordRetryTimeout,
       uiMode,
       shareUrl = '',
       latencyLevel,
@@ -304,27 +285,12 @@ export class AgoraEduSDK {
 
     changeLanguage(language);
 
-    if (option.webrtcExtensionBaseUrl) {
-      setAssetsBaseUrl(option.webrtcExtensionBaseUrl);
-    }
-
-    if (option.virtualBackgroundImages) {
-      this._virtualBackgroundImages = option.virtualBackgroundImages;
-    }
-
-    if (option.virtualBackgroundVideos) {
-      this._virtualBackgroundVideos = option.virtualBackgroundVideos;
-    }
-
-    const { virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension } =
-      initializeBuiltInExtensions();
-
     const noDevicePermission = roleType === EduRoleTypeEnum.invisible || platform === Platform.H5;
 
     const config = new EduClassroomConfig(
       this._appId,
       sessionInfo,
-      option.recordUrl || '',
+      '',
       {
         latencyLevel,
         region: this._region,
@@ -334,14 +300,14 @@ export class AgoraEduSDK {
             noDevicePermission,
           },
         },
-        rtcSDKExtensions: [virtualBackgroundExtension, beautyEffectExtension, aiDenoiserExtension],
+        rtcSDKExtensions: [],
         rtcCloudProxyType: option.rtcCloudProxyType,
         rtmCloudProxyEnabled: option.rtmCloudProxyEnabled,
       },
       platform,
       Object.assign(
-        { openCameraDeviceAfterLaunch: pretest, openRecordingDeviceAfterLaunch: pretest },
-        recordRetryTimeout ? { recordRetryTimeout } : {},
+        { openCameraDeviceAfterLaunch: false, openRecordingDeviceAfterLaunch: false },
+        {},
       ),
     );
 
@@ -352,16 +318,6 @@ export class AgoraEduSDK {
     config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) =>
       this._config.host ? this._config.host.includes(v) : false,
     );
-
-    if (courseWareList) {
-      this._coursewareList = courseWareList.map((data: CourseWareItem) =>
-        createCloudResource(data),
-      );
-    }
-
-    if (recordOptions) {
-      this._boardWindowAnimationOptions = recordOptions;
-    }
 
     EduClassroomConfig.setConfig(config);
 
@@ -375,7 +331,7 @@ export class AgoraEduSDK {
 
     render(
       <Providers language={option.language} uiConfig={this.uiConfig} theme={this.theme}>
-        <Scenarios pretest={platform !== Platform.H5 && pretest} roomType={roomType} />
+        <Scenarios pretest={false} roomType={roomType} />
       </Providers>,
       dom,
     );
@@ -384,42 +340,6 @@ export class AgoraEduSDK {
     return () => {
       unmountComponentAtNode(dom);
       unlock();
-    };
-  }
-  /**
-   * 运行窗口UI
-   * @param dom
-   * @param option
-   * @returns
-   */
-  static launchWindow(dom: HTMLElement, option: LaunchWindowOption) {
-    const mapping = {
-      [WindowID.Main]: null,
-      [WindowID.VideoGallery]: VideoGallery,
-    };
-
-    const Component = mapping[option.windowID];
-
-    this._language = option.language;
-    this._uiMode = option.uiMode ?? FcrMultiThemeMode.light;
-
-    changeLanguage(option.language);
-
-    this._selectUITheme(this._uiMode, option.roomType);
-    applyTheme(this._theme);
-
-    addResourceBundle('en', en);
-    addResourceBundle('zh', zh);
-
-    render(
-      <Providers language={this._language} uiConfig={this.uiConfig} theme={this.theme}>
-        {Component && <Component {...option.args} />}
-      </Providers>,
-      dom,
-    );
-
-    return () => {
-      unmountComponentAtNode(dom);
     };
   }
 

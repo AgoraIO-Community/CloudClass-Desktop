@@ -1,5 +1,4 @@
-import { useLectureH5UIStores, useStore } from '@classroom/infra/hooks/ui-store';
-import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { FC, useEffect } from 'react';
@@ -9,7 +8,7 @@ import {
   H5RoomPlaceholder,
   RoomBigStudentStreamsContainerMobile,
   RoomBigTeacherStreamContainerMobile,
-} from '@classroom/infra/capabilities/containers/stream/room-big-class-player.mobile';
+} from '@classroom/infra/capabilities/containers/stream/player.mobile';
 import { WidgetContainerMobile } from '../../containers/widget/index.mobile';
 import {
   ChatMobile,
@@ -42,7 +41,7 @@ export const BigClassScenarioMobile = observer(() => {
     shareUIStore: { isLandscape, forceLandscape },
     streamUIStore: { teacherCameraStream },
     layoutUIStore: { setHandsUpActionSheetVisible },
-  } = useLectureH5UIStores();
+  } = useStore();
   return (
     <Room>
       <MobileLoadingContainer></MobileLoadingContainer>
@@ -80,7 +79,10 @@ export const BigClassScenarioMobile = observer(() => {
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
               <TeacherStreamChatContainerMobile />
               {/* className={teacherCameraStream && !teacherCameraStream.isCameraMuted ? 'fcr-mobile-have-tc-stream-warapper' : 'fcr-mobile-no-have-tc-stream-warapper'} */}
-              <CountDownMobile haveStream={!!(teacherCameraStream && !teacherCameraStream.isCameraMuted)}></CountDownMobile>
+              <CountDownMobile
+                haveStream={
+                  !!(teacherCameraStream && !teacherCameraStream.isCameraMuted)
+                }></CountDownMobile>
 
               {!isLandscape && (
                 <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
@@ -107,7 +109,7 @@ export const BigClassScenarioMobile = observer(() => {
 });
 
 const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...restProps }) => {
-  const { shareUIStore } = useLectureH5UIStores();
+  const { shareUIStore } = useStore();
   useEffect(() => {
     shareUIStore.addOrientationchange();
     shareUIStore.addWindowResizeEventListener();
@@ -126,9 +128,8 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
 const TeacherStreamChatContainerMobile = observer(() => {
   const {
     shareUIStore: { isLandscape },
-    streamUIStore: { teacherCameraStream },
-    boardUIStore: { containerH5VisibleCls },
-  } = useLectureH5UIStores() as EduLectureH5UIStore;
+    streamUIStore: { teacherCameraStream, containerH5VisibleCls },
+  } = useStore();
   return (
     <Layout direction="col" className={classnames(containerH5VisibleCls)}>
       {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (
@@ -149,7 +150,7 @@ const H5LayoutContainer: FC<Props> = observer(({ children }) => {
   const {
     layoutUIStore: { h5ContainerCls },
     shareUIStore: { classroomViewportClassName },
-  } = useLectureH5UIStores() as EduLectureH5UIStore;
+  } = useStore();
   return (
     <section
       className={`h5-layout-container fcr-flex fcr-h-full ${h5ContainerCls} ${classroomViewportClassName}`}
@@ -184,7 +185,7 @@ const MobileLoadingContainer = observer(() => {
     classroomStore: {
       connectionStore: { classroomState },
     },
-  } = useLectureH5UIStores();
+  } = useStore();
   return classroomState !== ClassroomState.Connected ? (
     <div
       style={{ zIndex: ComponentLevelRulesMobile.Level3 }}
@@ -200,7 +201,7 @@ const AutoPlayFailedTip = observer(() => {
     shareUIStore: { isLandscape, forceLandscape },
     streamUIStore: { showAutoPlayFailedTip, closeAutoPlayFailedTip, teacherCameraStream },
     boardUIStore: { mounted },
-  } = useLectureH5UIStores();
+  } = useStore();
   const transI18n = useI18n();
   useEffect(() => {
     if (showAutoPlayFailedTip) {

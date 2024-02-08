@@ -16,26 +16,12 @@ export class EduContext {
   }
 
   static create() {
-    const oneToOne = EduStoreFactory.createWithType(EduRoomTypeEnum.Room1v1Class);
-    const interactive = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass);
-    const lecture = EduStoreFactory.createWithType(EduRoomTypeEnum.RoomBigClass);
-
-    const oneToOneUI = EduUIStoreFactory.createWithType(EduRoomTypeEnum.Room1v1Class, oneToOne);
-    const interactiveUI = EduUIStoreFactory.createWithType(
-      EduRoomTypeEnum.RoomSmallClass,
-      interactive,
+    const UIStore = EduUIStoreFactory.create(
+      EduStoreFactory.createWithType(EduRoomTypeEnum.RoomSmallClass),
     );
-    const lectureUI = EduUIStoreFactory.createWithType(EduRoomTypeEnum.RoomBigClass, lecture);
-    const lectureH5UI = EduUIStoreFactory.createWithTypeH5(EduRoomTypeEnum.RoomBigClass, lecture);
 
     return React.createContext({
-      oneToOne,
-      interactive,
-      lecture,
-      oneToOneUI,
-      interactiveUI,
-      lectureUI,
-      lectureH5UI,
+      UIStore,
     });
   }
 }

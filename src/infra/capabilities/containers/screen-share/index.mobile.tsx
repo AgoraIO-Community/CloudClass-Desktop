@@ -1,4 +1,4 @@
-import { useLectureH5UIStores } from '@classroom/infra/hooks/ui-store';
+import { useStore } from '@classroom/infra/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import './index.css';
@@ -8,7 +8,7 @@ export const ScreenShareContainerMobile = observer(() => {
   const {
     boardUIStore: { boardContainerHeight },
     streamUIStore: { screenShareStream },
-  } = useLectureH5UIStores();
+  } = useStore();
 
   const remotecls = classnames('remote-screen-share-container', 'fcr-absolute', 'fcr-top-0');
 

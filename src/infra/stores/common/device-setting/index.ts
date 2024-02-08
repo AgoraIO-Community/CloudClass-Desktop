@@ -1,67 +1,210 @@
 import { AGError, bound, Log } from 'agora-rte-sdk';
-import { computed, Lambda, reaction, toJS } from 'mobx';
+import { action, computed, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import {
   AGServiceErrorCode,
-  ClassroomState,
   DEVICE_DISABLE,
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
 } from 'agora-edu-core';
 import { LayoutMaskCode } from '../type';
-import { matchVirtualSoundCardPattern } from '../pretest/helper';
 
+import { transI18n } from 'agora-common-libs';
+import { runInAction } from 'mobx';
+import { AgoraRteCustomMessage, AgoraRteMediaSourceState } from 'agora-rte-sdk';
+import {
+  CustomMessageCommandType,
+  CustomMessageData,
+  CustomMessageDeviceState,
+  CustomMessageDeviceSwitchType,
+  CustomMessageDeviceType,
+  DeviceSwitchDialogId,
+} from '../type';
 export type SettingToast = {
   id: string;
   type: 'video' | 'audio_recording' | 'audio_playback' | 'error';
   info: string;
 };
-
 @Log.attach({ proxyMethods: false })
 export class DeviceSettingUIStore extends EduUIStoreBase {
-  private _defaultSystemAudioRecordingDeviceId?: string;
-  private _defaultSystemAudioPlaybackDeviceId?: string;
-  private _userHasSelectedAudioRecordingDevice = false;
-  private _userHasSelectedAudioPlaybackDevice = false;
-
+  @observable
+  private _cameraDeviceEnabled = false;
+  @observable
+  private _audioRecordingDeviceEnabled = false;
+  @observable facingMode: 'user' | 'environment' = 'user';
+  @action.bound
+  toggleFacingMode() {
+    this.facingMode = this.facingMode === 'user' ? 'environment' : 'user';
+    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+    track.setFacingMode(this.facingMode);
+  }
+  get isCameraDeviceEnabled() {
+    return this._cameraDeviceEnabled;
+  }
+  get isAudioRecordingDeviceEnabled() {
+    return this._audioRecordingDeviceEnabled;
+  }
+  private enableLocalVideo = (value: boolean) => {
+    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
+    if (value) {
+      track.start();
+    } else {
+      track.stop();
+    }
+    return;
+  };
+  private enableLocalAudio = (value: boolean) => {
+    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
+    if (value) {
+      track.start();
+    } else {
+      track.stop();
+    }
+  };
   private _disposers: Array<Lambda> = [];
-  onInstall() {
-    // 摄像头设备变更
+  @bound
+  private _onReceiveChannelMessage(message: AgoraRteCustomMessage) {
+    const data = message.payload as CustomMessageData<CustomMessageDeviceSwitchType>;
+    const cmd = data.cmd;
+    switch (cmd) {
+      case CustomMessageCommandType.deviceSwitchBatch: {
+        const deviceSwitchData = data.data;
+        if (deviceSwitchData.deviceState === CustomMessageDeviceState.open) {
+          if (message.fromUser.userUuid === this.classroomStore.userStore.localUser?.userUuid)
+            return;
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.camera) {
+            const dialogId = DeviceSwitchDialogId.StartVideo;
+            const hasStartVideoDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+
+            if (!hasStartVideoDialog && !this._cameraDeviceEnabled) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+                title: transI18n('fcr_user_tips_teacher_start_video_title'),
+                content: transI18n('fcr_user_tips_teacher_start_video_content'),
+                okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
+                cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
+                onOk: () => {
+                  this.enableLocalVideo(true);
+                  this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
+                  this.getStates();
+                },
+              });
+            }
+          }
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.mic) {
+            const dialogId = DeviceSwitchDialogId.Unmute;
+            const hasUnmuteDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+            if (!hasUnmuteDialog && !this.classroomStore.mediaStore.localMicTrackState) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+                title: transI18n('fcr_user_tips_teacher_unmute_title'),
+                content: transI18n('fcr_user_tips_teacher_unmute_content'),
+                okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
+                cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
+                onOk: () => {
+                  this.enableLocalAudio(true);
+                  this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
+                  this.getStates();
+                },
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+  @bound
+  private _onReceivePeerMessage(message: AgoraRteCustomMessage) {
+    const data = message.payload as CustomMessageData<CustomMessageDeviceSwitchType>;
+    const cmd = data.cmd;
+    switch (cmd) {
+      case CustomMessageCommandType.deviceSwitch: {
+        const deviceSwitchData = data.data;
+        if (deviceSwitchData.deviceState === CustomMessageDeviceState.open) {
+          if (message.fromUser.userUuid === this.classroomStore.userStore.localUser?.userUuid)
+            return;
+
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.camera) {
+            const dialogId = DeviceSwitchDialogId.StartVideo;
+            console.log(this.getters.classroomUIStore.layoutUIStore);
+            const hasStartVideoDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+            if (!hasStartVideoDialog && !this._cameraDeviceEnabled) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+                title: transI18n('fcr_user_tips_teacher_start_video_title'),
+                content: transI18n('fcr_user_tips_teacher_start_video_content'),
+                okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
+                cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
+                onOk: () => {
+                  this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
+                  this.enableLocalVideo(true);
+                  this.getStates();
+                },
+              });
+            }
+          }
+          if (deviceSwitchData.deviceType === CustomMessageDeviceType.mic) {
+            const dialogId = DeviceSwitchDialogId.Unmute;
+            const hasUnmuteDialog =
+              this.getters.classroomUIStore.layoutUIStore.isDialogIdExist(dialogId);
+            if (!hasUnmuteDialog && !this._audioRecordingDeviceEnabled) {
+              this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+                id: dialogId,
+                title: transI18n('fcr_user_tips_teacher_unmute_title'),
+                content: transI18n('fcr_user_tips_teacher_unmute_content'),
+                okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
+                cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
+                onOk: () => {
+                  this.enableLocalAudio(true);
+                  this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
+                  this.getStates();
+                },
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+  onInstall(): void {
+    this.classroomStore.roomStore.addCustomMessageObserver({
+      onReceiveChannelMessage: this._onReceiveChannelMessage,
+      onReceivePeerMessage: this._onReceivePeerMessage,
+    });
+    this._disposers.push(
+      reaction(
+        () => {
+          return {
+            localMicTrackState: this.classroomStore.mediaStore.localMicTrackState,
+            localCameraTrackState: this.classroomStore.mediaStore.localCameraTrackState,
+          };
+        },
+        ({ localMicTrackState, localCameraTrackState }) => {
+          runInAction(() => {
+            this._cameraDeviceEnabled = localCameraTrackState === AgoraRteMediaSourceState.started;
+            this._audioRecordingDeviceEnabled =
+              localMicTrackState === AgoraRteMediaSourceState.started;
+          });
+        },
+      ),
+    );
     this._disposers.push(
       reaction(
         () => this.cameraAccessors,
         () => {
           const { cameraDeviceId, mediaControl } = this.classroomStore.mediaStore;
-          if (cameraDeviceId) {
+          if (cameraDeviceId !== undefined && cameraDeviceId !== DEVICE_DISABLE) {
             const track = mediaControl.createCameraVideoTrack();
             track.setDeviceId(cameraDeviceId);
-          }
-          if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
-            // if idle, e.g. pretest
-            if (cameraDeviceId && cameraDeviceId !== DEVICE_DISABLE) {
-              this._enableLocalVideo(true);
-            } else {
-              //if no device selected, disable device
-              this._enableLocalVideo(false);
-            }
-          } else if (
-            this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
-          ) {
-            // once connected, should follow stream
-            if (!this.classroomStore.streamStore.localCameraStreamUuid) {
-              this.logger.info('enableLocalVideo => false. Reason: no local camera stream found.');
-              // if no local stream
-              this._enableLocalVideo(false);
-            } else {
-              if (cameraDeviceId && cameraDeviceId !== DEVICE_DISABLE) {
-                this.logger.info('enableLocalVideo => true. Reason: camera device selected');
-                this._enableLocalVideo(true);
-              } else {
-                this.logger.info('enableLocalVideo => false. Reason: camera device not selected');
-                this._enableLocalVideo(false);
-              }
-            }
+            this.logger.info('enableLocalVideo => true. Reason: camera device selected');
+            this.enableLocalVideo(true);
+          } else {
+            this.logger.info('enableLocalVideo => false. Reason: camera device not selected');
+            this.enableLocalVideo(false);
           }
         },
       ),
@@ -72,228 +215,26 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         () => this.micAccessors,
         () => {
           const { recordingDeviceId, mediaControl } = this.classroomStore.mediaStore;
-          if (recordingDeviceId) {
+          if (recordingDeviceId !== undefined && recordingDeviceId !== DEVICE_DISABLE) {
             const track = mediaControl.createMicrophoneAudioTrack();
             track.setRecordingDevice(recordingDeviceId);
-          }
-          if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
-            // if idle, e.g. pretest
-            if (recordingDeviceId && recordingDeviceId !== DEVICE_DISABLE) {
-              this._enableLocalAudio(true);
-            } else {
-              //if no device selected, disable device
-              this._enableLocalAudio(false);
-            }
-          } else if (
-            this.classroomStore.connectionStore.classroomState === ClassroomState.Connected
-          ) {
-            // once connected, should follow stream
-            if (!this.classroomStore.streamStore.localMicStreamUuid) {
-              this.logger.info('enableLocalAudio => false. Reason: no local mic stream found.');
-              // if no local stream
-              this._enableLocalAudio(false);
-            } else {
-              if (recordingDeviceId && recordingDeviceId !== DEVICE_DISABLE) {
-                this.logger.info('enableLocalAudio => true. Reason: mic device selected');
-                this._enableLocalAudio(true);
-              } else {
-                this.logger.info('enableLocalAudio => false. Reason: mic device not selected');
-                this._enableLocalAudio(false);
-              }
-            }
+            this.logger.info('enableLocalAudio => true. Reason: mic device selected');
+            this.enableLocalAudio(true);
+          } else {
+            this.logger.info('enableLocalAudio => false. Reason: mic device not selected');
+            this.enableLocalAudio(false);
           }
         },
       ),
     );
-    // 处理视频设备变动
-    this._disposers.push(
-      computed(() => this.classroomStore.mediaStore.videoCameraDevices).observe(
-        ({ newValue, oldValue }) => {
-          const { cameraDeviceId } = this.classroomStore.mediaStore;
-
-          const _newValue = newValue.filter(({ deviceid }) => {
-            return deviceid !== DEVICE_DISABLE;
-          });
-
-          const _oldValue = oldValue?.filter(({ deviceid }) => {
-            return deviceid !== DEVICE_DISABLE;
-          });
-
-          // if there's a new device plugged in and no devices selected yet, switch to default device
-          if (!cameraDeviceId && _newValue.length > (_oldValue?.length ?? 0)) {
-            this.logger.info('set to first camera device', toJS(newValue[0]));
-            if (newValue[0]) {
-              this.setCameraDevice(newValue[0].deviceid);
-            }
-            // device unplugged
-          } else if (_newValue.length < (_oldValue?.length ?? 0)) {
-            const unpluggedDevice = _oldValue?.find((v) => {
-              return !_newValue.find((newv) => newv.deviceid === v.deviceid);
-            });
-            this.logger.info('camera device unplugged', toJS(unpluggedDevice));
-            if (unpluggedDevice) {
-              if (cameraDeviceId === unpluggedDevice.deviceid) {
-                this._enableLocalVideo(false);
-                this.setCameraDevice(DEVICE_DISABLE);
-              }
-            }
-          }
-
-          // device list initialized
-          if (!oldValue?.length) {
-            if (!EduClassroomConfig.shared.openCameraDeviceAfterLaunch) {
-              this.setCameraDevice(DEVICE_DISABLE);
-            }
-          }
-        },
-      ),
-    );
-    // 处理录音设备变动
-    this._disposers.push(
-      computed(() => this.classroomStore.mediaStore.audioRecordingDevices).observe(
-        ({ newValue, oldValue }) => {
-          const { recordingDeviceId } = this.classroomStore.mediaStore;
-
-          const _newValue = newValue.filter(({ deviceid, devicename }) => {
-            return deviceid !== DEVICE_DISABLE && !matchVirtualSoundCardPattern(devicename);
-          });
-
-          const _oldValue = oldValue?.filter(({ deviceid, devicename }) => {
-            return deviceid !== DEVICE_DISABLE && !matchVirtualSoundCardPattern(devicename);
-          });
-
-          // if there's a new device plugged in and no devices selected yet, switch to default device
-          if (!recordingDeviceId && _newValue.length > (_oldValue?.length ?? 0)) {
-            const defaultDevice = _newValue.find((v) => v.isDefault);
-            this.logger.info('set default audio recording device', toJS(defaultDevice));
-            if (defaultDevice) {
-              this._defaultSystemAudioRecordingDeviceId = defaultDevice.deviceid;
-              this.setRecordingDevice(defaultDevice.deviceid);
-            }
-            // there's a new device plugged in but there's already a device selected, switch to the new one
-          } else if (_newValue.length > (_oldValue?.length ?? 0)) {
-            const pluggedDevice = _newValue.find((v) => {
-              return !_oldValue?.find((old) => old.deviceid === v.deviceid);
-            });
-            this.logger.info('new audio recording device plugged in', toJS(pluggedDevice));
-            if (pluggedDevice && !this._userHasSelectedAudioRecordingDevice) {
-              this.setRecordingDevice(pluggedDevice.deviceid);
-            }
-            // there's a device unplugged, switch to the default device if the default device exists otherwise switch to the first device
-          } else if (_newValue.length < (_oldValue?.length ?? 0)) {
-            const unpluggedDevice = _oldValue?.find((v) => {
-              return !_newValue.find((newv) => newv.deviceid === v.deviceid);
-            });
-            this.logger.info('audio recording device unplugged', toJS(unpluggedDevice));
-
-            if (unpluggedDevice) {
-              if (unpluggedDevice.deviceid === recordingDeviceId) {
-                const defaultDevice = _newValue.find(
-                  (v) => v.isDefault || this._defaultSystemAudioRecordingDeviceId === v.deviceid,
-                );
-
-                if (defaultDevice) {
-                  this.logger.info(
-                    'switch to the default audio recording device',
-                    toJS(defaultDevice),
-                  );
-                  this.setRecordingDevice(defaultDevice.deviceid);
-                } else if (_newValue.length > 0) {
-                  this.logger.info(
-                    'switch to the default audio recording device',
-                    toJS(_newValue[0]),
-                  );
-                  this.setRecordingDevice(_newValue[0].deviceid);
-                }
-              }
-            }
-          }
-
-          // device list initialized
-          if (!oldValue?.length) {
-            if (!EduClassroomConfig.shared.openRecordingDeviceAfterLaunch) {
-              this.setRecordingDevice(DEVICE_DISABLE);
-              this._userHasSelectedAudioRecordingDevice = true;
-            }
-          }
-        },
-      ),
-    );
-    this._disposers.push(
-      reaction(
-        () => this.classroomStore.mediaStore.playbackDeviceId,
-        () => {
-          const { playbackDeviceId } = this.classroomStore.mediaStore;
-          if (playbackDeviceId) {
-            const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-            this.logger.info('change playback device to', playbackDeviceId);
-            track.setPlaybackDevice(playbackDeviceId);
-          }
-        },
-      ),
-    );
-    // 处理扬声器设备变动
-    this._disposers.push(
-      computed(() => this.classroomStore.mediaStore.audioPlaybackDevices).observe(
-        ({ newValue, oldValue }) => {
-          const { playbackDeviceId } = this.classroomStore.mediaStore;
-
-          const _newValue = newValue.filter(({ deviceid, devicename }) => {
-            return deviceid !== DEVICE_DISABLE && !matchVirtualSoundCardPattern(devicename);
-          });
-
-          const _oldValue = oldValue?.filter(({ deviceid, devicename }) => {
-            return deviceid !== DEVICE_DISABLE && !matchVirtualSoundCardPattern(devicename);
-          });
-          // if there's a new device plugged in and no devices selected yet, switch to default device
-          if (!playbackDeviceId && _newValue.length > (_oldValue?.length ?? 0)) {
-            const defaultDevice = _newValue.find((v) => v.isDefault);
-            this.logger.info('set default audio playback device', toJS(defaultDevice));
-            if (defaultDevice) {
-              this._defaultSystemAudioPlaybackDeviceId = defaultDevice.deviceid;
-              this.setPlaybackDevice(defaultDevice.deviceid);
-            }
-            // there's a new device plugged in but there's already a device selected, switch to the new one
-          } else if (_newValue.length > (_oldValue?.length ?? 0)) {
-            const pluggedDevice = _newValue.find((v) => {
-              return !_oldValue?.find((old) => old.deviceid === v.deviceid);
-            });
-            this.logger.info('new audio playback device plugged in', toJS(pluggedDevice));
-            if (pluggedDevice && !this._userHasSelectedAudioPlaybackDevice) {
-              this.setPlaybackDevice(pluggedDevice.deviceid);
-            }
-            // there's a device unplugged, switch to the default device if the default device exists otherwise switch to the first device
-          } else if (_newValue.length < (_oldValue?.length ?? 0)) {
-            const unpluggedDevice = _oldValue?.find((v) => {
-              return !_newValue.find((newv) => newv.deviceid === v.deviceid);
-            });
-            this.logger.info('audio playback device unplugged', toJS(unpluggedDevice));
-
-            if (unpluggedDevice) {
-              if (unpluggedDevice.deviceid === playbackDeviceId) {
-                const defaultDevice = _newValue.find(
-                  (v) => v.isDefault || this._defaultSystemAudioPlaybackDeviceId === v.deviceid,
-                );
-
-                if (defaultDevice) {
-                  this.logger.info(
-                    'switch to the default audio playback device',
-                    toJS(defaultDevice),
-                  );
-                  this.setPlaybackDevice(defaultDevice.deviceid);
-                } else if (_newValue.length > 0) {
-                  this.logger.info(
-                    'switch to the default audio playback device',
-                    toJS(_newValue[0]),
-                  );
-                  this.setPlaybackDevice(_newValue[0].deviceid);
-                }
-              }
-            }
-          }
-        },
-      ),
-    );
+  }
+  onDestroy() {
+    this.classroomStore.roomStore.removeCustomMessageObserver({
+      onReceiveChannelMessage: this._onReceiveChannelMessage,
+      onReceivePeerMessage: this._onReceivePeerMessage,
+    });
+    this._disposers.forEach((d) => d());
+    this._disposers = [];
   }
 
   /**
@@ -430,9 +371,4 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       track.stop();
     }
   };
-
-  onDestroy() {
-    this._disposers.forEach((d) => d());
-    this._disposers = [];
-  }
 }

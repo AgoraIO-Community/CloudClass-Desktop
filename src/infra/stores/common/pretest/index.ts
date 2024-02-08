@@ -1,30 +1,22 @@
 import {
   AGBeautyEffect,
   AGLighteningLevel,
-  AgoraRtcLocalVideoCanvas,
   AgoraRteMediaSourceState,
   bound,
   Log,
 } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, Lambda, observable } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { v4 as uuidv4 } from 'uuid';
 import {
   AgoraEduClassroomEvent,
   BeautyType,
   DEVICE_DISABLE,
-  EduClassroomConfig,
   EduEventCenter,
-  EduRoleTypeEnum,
   EduRteEngineConfig,
   EduRteRuntimePlatform,
-  Platform,
 } from 'agora-edu-core';
 import { transI18n } from 'agora-common-libs';
-import { builtInExtensions, getProcessorInitializer } from '@classroom/infra/api/rtc-extensions';
-import { IAIDenoiserProcessor } from 'agora-extension-ai-denoiser';
-import { IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';
-import { IBeautyProcessor } from 'agora-extension-beauty-effect';
 import { DeviceStateChangedReason } from './type';
 import { CameraPlaceholderType } from '../stream/struct';
 import { matchVirtualSoundCardPattern } from './helper';
@@ -54,84 +46,8 @@ export class PretestUIStore extends EduUIStoreBase {
     EduRteEngineConfig.platform === EduRteRuntimePlatform.Web ? 'virtualBackground' : 'beauty'; // 视频效果选项
   @observable beautyEffectOptions: AGBeautyEffect = DEFAULT_BEAUTY_OPTION; // 美颜参数
   @observable currentPretestTab: DeviceType | 'stage' = 'video'; // 音视频选项
-  @observable aiDenoiserEnabled = false; // 是否开启AI降噪
-  @observable backgroundImage = []; // 虚拟背景
-  @observable currentVirtualBackground = 'none'; // 当前选择虚拟背景选项
-
-  private _virtualBackgroundProcessor?: IVirtualBackgroundProcessor;
-  private _beautyEffectProcessor?: IBeautyProcessor;
-  private _aiDenoiserProcessor?: IAIDenoiserProcessor;
-
-  private _virtualBackgroundProcessorForPreview?: IVirtualBackgroundProcessor;
-  private _beautyEffectProcessorForPreview?: IBeautyProcessor;
-  private _aiDenoiserProcessorForPreview?: IAIDenoiserProcessor;
 
   onInstall() {
-    this._disposers.push(
-      reaction(
-        () =>
-          this.classroomStore.connectionStore.engine &&
-          EduRteEngineConfig.platform === EduRteRuntimePlatform.Web &&
-          EduClassroomConfig.shared.platform !== Platform.H5 &&
-          EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.invisible,
-        (processorsRequired) => {
-          if (processorsRequired) {
-            getProcessorInitializer<IVirtualBackgroundProcessor>(
-              builtInExtensions.virtualBackgroundExtension,
-            )
-              .createProcessor()
-              .then((processor) => {
-                this.logger.info('VirtualBackgroundProcessor initialized');
-                this._virtualBackgroundProcessor = processor;
-                this.classroomStore.mediaStore.addCameraProcessors([processor]);
-              });
-
-            getProcessorInitializer<IBeautyProcessor>(builtInExtensions.beautyEffectExtension)
-              .createProcessor()
-              .then((processor) => {
-                this.logger.info('BeautyEffectProcessor initialized');
-                this._beautyEffectProcessor = processor;
-                this.classroomStore.mediaStore.addCameraProcessors([processor]);
-              });
-
-            getProcessorInitializer<IAIDenoiserProcessor>(builtInExtensions.aiDenoiserExtension)
-              .createProcessor()
-              .then((processor) => {
-                this.logger.info('AiDenoiserProcessor initialized');
-                this._aiDenoiserProcessor = processor;
-                this.classroomStore.mediaStore.addMicrophoneProcessors([processor]);
-              });
-
-            getProcessorInitializer<IVirtualBackgroundProcessor>(
-              builtInExtensions.virtualBackgroundExtension,
-            )
-              .createProcessor()
-              .then((processor) => {
-                this.logger.info('VirtualBackgroundProcessor initialized');
-                this._virtualBackgroundProcessorForPreview = processor;
-                this.classroomStore.mediaStore.addPreviewCameraProcessors([processor]);
-              });
-
-            getProcessorInitializer<IBeautyProcessor>(builtInExtensions.beautyEffectExtension)
-              .createProcessor()
-              .then((processor) => {
-                this.logger.info('BeautyEffectProcessor initialized');
-                this._beautyEffectProcessorForPreview = processor;
-                this.classroomStore.mediaStore.addPreviewCameraProcessors([processor]);
-              });
-
-            getProcessorInitializer<IAIDenoiserProcessor>(builtInExtensions.aiDenoiserExtension)
-              .createProcessor()
-              .then((processor) => {
-                this.logger.info('AiDenoiserProcessor initialized');
-                this._aiDenoiserProcessorForPreview = processor;
-                this.classroomStore.mediaStore.addPreviewMicrophoneProcessors([processor]);
-              });
-          }
-        },
-      ),
-    );
-
     // 处理视频设备变动
     const videoDisposer = computed(() => this.classroomStore.mediaStore.videoCameraDevices).observe(
       ({ newValue, oldValue }) => {
@@ -182,59 +98,6 @@ export class PretestUIStore extends EduUIStoreBase {
     });
 
     this._disposers.push(playbackDisposer);
-
-    this._disposers.push(
-      reaction(
-        () => ({
-          engine: this.classroomStore.connectionStore.engine,
-          activeBeautyType: this.activeBeautyType,
-          beautyEffectOptions: this.beautyEffectOptions,
-        }),
-        ({ engine, activeBeautyType, beautyEffectOptions }) => {
-          if (engine) {
-            const mediaControl = engine.getAgoraMediaControl();
-
-            if (activeBeautyType === 'none') {
-              if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Web) {
-                this._beautyEffectProcessor?.disable();
-                this._beautyEffectProcessorForPreview?.disable();
-              } else {
-                mediaControl.setBeautyEffectOptions(false, beautyEffectOptions);
-              }
-            } else {
-              if (EduRteEngineConfig.platform === EduRteRuntimePlatform.Web) {
-                this._beautyEffectProcessor?.setOptions(beautyEffectOptions);
-                this._beautyEffectProcessor?.enable();
-                this._beautyEffectProcessorForPreview?.setOptions(beautyEffectOptions);
-                this._beautyEffectProcessorForPreview?.enable();
-              } else {
-                mediaControl.setBeautyEffectOptions(true, beautyEffectOptions);
-              }
-            }
-          }
-        },
-      ),
-    );
-
-    this._disposers.push(
-      reaction(
-        () => ({
-          aiDenoiserEnabled: this.aiDenoiserEnabled,
-          engine: this.classroomStore.connectionStore.engine,
-        }),
-        ({ engine, aiDenoiserEnabled }) => {
-          if (engine) {
-            if (!aiDenoiserEnabled) {
-              this._aiDenoiserProcessor?.disable();
-              this._aiDenoiserProcessorForPreview?.disable();
-            } else {
-              this._aiDenoiserProcessor?.enable();
-              this._aiDenoiserProcessorForPreview?.enable();
-            }
-          }
-        },
-      ),
-    );
 
     EduEventCenter.shared.onClassroomEvents(this._handleInteractionEvents);
   }
@@ -691,36 +554,6 @@ export class PretestUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 设置当前使用摄像头设备
-   * @param id
-   */
-  @action.bound
-  setCameraDevice(id: string) {
-    this.classroomStore.mediaStore.setCameraDevice(id);
-    if (id === DEVICE_DISABLE) {
-      this.stopCameraPreview();
-    } else {
-      this.startCameraPreview();
-    }
-  }
-
-  /**
-   * 设置当前使用麦克风设备
-   * @param id
-   */
-  @action.bound
-  setRecordingDevice(id: string) {
-    this.classroomStore.mediaStore.setRecordingDevice(id);
-    if (id === DEVICE_DISABLE) {
-      this.stopAudioRecordingPreview();
-      this.stopRecordingDeviceTest();
-    } else {
-      this.startAudioRecordingPreview();
-      this.startRecordingDeviceTest();
-    }
-  }
-
-  /**
    * 设置美颜类型
    * @param value
    */
@@ -791,98 +624,6 @@ export class PretestUIStore extends EduUIStoreBase {
   @action.bound
   setCurrentTab(type: DeviceType | 'stage') {
     this.currentPretestTab = type;
-  }
-
-  @action.bound
-  handleBackgroundChange(
-    key: string,
-    value?: { type: 'img'; url: string } | { type: 'video'; url: string },
-  ) {
-    this.currentVirtualBackground = key;
-    if (key === 'none') {
-      this._virtualBackgroundProcessor?.disable();
-      this._virtualBackgroundProcessorForPreview?.disable();
-    }
-    if (value) {
-      const { type, url } = value;
-      if (type === 'img') {
-        const image = new Image();
-        image.src = url;
-        image.addEventListener('load', () => {
-          this.setVirtualBackground({ type: 'img', source: image });
-        });
-      } else {
-        const video = document.createElement('video');
-        video.src = url;
-        video.addEventListener('loadeddata', () => {
-          this.setVirtualBackground({ type: 'video', source: video });
-        });
-        video.autoplay = true;
-        video.loop = true;
-        video.muted = true;
-      }
-    }
-  }
-
-  @action.bound
-  setAIDenoiser(enable: boolean) {
-    this.aiDenoiserEnabled = enable;
-  }
-
-  @bound
-  setVirtualBackground({
-    type,
-    source,
-  }: { type: 'img'; source: HTMLImageElement } | { type: 'video'; source: HTMLVideoElement }) {
-    this._virtualBackgroundProcessor?.setOptions({ type, source });
-    this._virtualBackgroundProcessor?.enable();
-    this._virtualBackgroundProcessorForPreview?.setOptions({ type, source });
-    this._virtualBackgroundProcessorForPreview?.enable();
-  }
-
-  @bound
-  startCameraPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-    const processors = [];
-
-    if (this._virtualBackgroundProcessorForPreview) {
-      processors.push(this._virtualBackgroundProcessorForPreview);
-    }
-    if (this._beautyEffectProcessorForPreview) {
-      processors.push(this._beautyEffectProcessorForPreview);
-    }
-    track.startPreview(processors);
-    console.log('start camera preview');
-  }
-  @bound
-  stopCameraPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-    track.stopPreview();
-    console.log('stop camera preview');
-  }
-  @bound
-  startAudioRecordingPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-    const processors = [];
-    if (this._aiDenoiserProcessorForPreview) {
-      processors.push(this._aiDenoiserProcessorForPreview);
-    }
-    track.startPreview(processors);
-    console.log('start microphone preview');
-  }
-  @bound
-  stopAudioRecordingPreview() {
-    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-
-    track.stopPreview();
-    console.log('stop microphone preview');
-  }
-
-  @bound
-  setupLocalVideoPreview(dom: HTMLElement, mirror: boolean) {
-    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-    track.setPreviewView(new AgoraRtcLocalVideoCanvas(dom, mirror));
-    console.log('setup local video preview');
   }
 
   @bound

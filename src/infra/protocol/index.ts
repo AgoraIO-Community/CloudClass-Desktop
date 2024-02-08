@@ -12,7 +12,7 @@ import {
   StreamMediaPlayerOpenParams,
   WebviewOpenParams,
 } from './type';
-import { MobileCallState } from '../stores/lecture-mobile/layout';
+import { MobileCallState } from '../stores/common/type';
 
 @Log.attach()
 export class Extension {
