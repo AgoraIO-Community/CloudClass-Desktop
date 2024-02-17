@@ -10,6 +10,8 @@ import {
   EduRoomTypeEnum,
   Platform,
   AgoraCloudProxyType,
+  getPlatform,
+  DevicePlatform,
 } from 'agora-edu-core';
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
@@ -244,6 +246,9 @@ export class AgoraEduSDK {
     Logger.info('[AgoraEduSDK]launched with options:', option);
     EduContext.reset();
     this._validateOptions(option);
+    const defaultPlatform = getPlatform() === DevicePlatform.H5 ? Platform.H5 : Platform.PC;
+    const flexProperties = Object.assign(option.userFlexProperties || {}, { device: { platform: defaultPlatform } })
+    option.userFlexProperties = flexProperties
     const {
       userUuid,
       userName,
@@ -355,9 +360,8 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${
-      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-    }/edu/apps/${appId}`;
+    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+      }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',
