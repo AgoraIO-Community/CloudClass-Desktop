@@ -225,31 +225,9 @@ export abstract class SceneSubscription {
       stream.videoSourceState === AgoraRteMediaSourceState.started &&
       stream.videoState === AgoraRteMediaPublishState.Published;
 
-    let unmuteAudio =
+    const unmuteAudio =
       stream.audioSourceState === AgoraRteMediaSourceState.started &&
       stream.audioState === AgoraRteMediaPublishState.Published;
-
-    if (!this.subscribeAll) {
-      const role = RteRole2EduRole(
-        EduClassroomConfig.shared.sessionInfo.roomType,
-        stream.fromUser.role,
-      );
-      const isTeacherCamera = role === EduRoleTypeEnum.teacher;
-      const isScreenShare = stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare;
-
-      const isOnStage = this.getters.stageCameraStreams.some(
-        ({ streamUuid }) => streamUuid === stream.streamUuid,
-      );
-
-      this.logger.info(
-        `isMuted: stream=[${stream.streamUuid}], isTeacherCamera=[${isTeacherCamera}], isScreenShare=[${isScreenShare}], isOnStage=[${isOnStage}]`,
-      );
-
-      const isCoHost = isTeacherCamera || isScreenShare || isOnStage;
-
-      unmuteAudio = unmuteAudio && isCoHost;
-    }
-
     return { muteVideo: !unmuteVideo, muteAudio: !unmuteAudio };
   }
 
@@ -278,7 +256,7 @@ export abstract class SceneSubscription {
   protected getStreamConnType(stream: AgoraStream) {
     const type =
       stream.streamName === 'secondary' ||
-      stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
+        stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
         ? AGRtcConnectionType.sub
         : AGRtcConnectionType.main;
     return type;
@@ -322,7 +300,7 @@ export abstract class SceneSubscription {
 
   protected muteRemoteStreams(scene: AgoraRteScene, streams: AgoraStream[]) {
     streams.forEach((stream) => {
-      let states = this.isMuted(stream);
+      const states = this.isMuted(stream);
 
       this.muteRemoteStream(scene, stream, states);
     });

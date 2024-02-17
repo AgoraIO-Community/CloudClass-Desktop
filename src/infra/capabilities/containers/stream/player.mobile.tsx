@@ -1,6 +1,5 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
-import { LocalTrackPlayerMobile, StreamPlayerMobile } from './index.mobile';
+import { LocalTrackPlayerMobile, StreamPlayerMobile, generateShortUserName } from './index.mobile';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
@@ -12,6 +11,7 @@ import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { useI18n } from 'agora-common-libs';
 import './index.mobile.css';
 import Award from '../award';
+import { MicrophoneIndicator } from '../action-sheet-mobile/mic';
 const RoomBigTeacherStreamH5Tool = ({
   isPiP,
   onPiP,
@@ -42,7 +42,7 @@ const useMobileStreamTool = ({
   teacherCameraStream,
 }: {
   triggerRef: MutableRefObject<HTMLDivElement>;
-  teacherCameraStream: EduStreamUI | undefined;
+  teacherCameraStream?: EduStreamUI | undefined;
 }) => {
   const [toolVisible, setToolVisible] = useState(true);
   const toolVisibleTaskRef = useRef<Scheduler.Task>();
@@ -162,10 +162,10 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       streamUIStore,
       shareUIStore: { isLandscape, setForceLandscape },
       layoutUIStore: { toggleLandscapeToolBarVisible },
-    } = useStore() as EduLectureH5UIStore;
+    } = useStore();
     const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP } = streamUIStore;
     const ref = useRef<HTMLDivElement>(null);
-
+    const userName = teacherCameraStream.fromUser.userName;
     const { showTool, toolVisible } = useMobileStreamTool({
       triggerRef: ref as MutableRefObject<HTMLDivElement>,
       teacherCameraStream,
@@ -198,12 +198,16 @@ export const RoomBigTeacherStreamContainerMobile = observer(
           ...teacherVideoStreamSize,
           transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
         }}>
+        <div className='fcr-stream-mobile-name' style={{ opacity: toolVisible && !isLandscape ? 1 : 0, visibility: toolVisible && !isLandscape ? 'visible' : 'hidden' }}
+        >{userName || 'teacher'}</div>
         <RoomBigTeacherStreamH5Tool
           isPiP={isPiP}
           visible={toolVisible && !isLandscape}
           size={isPiP ? 'sm' : 'lg'}
           onLandscape={onLandspce}
-          onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
+          onPiP={onPiP}
+        >
+        </RoomBigTeacherStreamH5Tool>
         <StreamPlayerMobile
           onClick={toggleLandscapeToolBarVisible}
           stream={teacherCameraStream}
@@ -217,12 +221,31 @@ export const RoomBigTeacherStreamContainerMobile = observer(
     );
   },
 );
+
+export const AudioRecordinDeviceIcon = observer(
+  ({ size = 32, stream }: { size?: number; stream: EduStreamUI }) => {
+    const {
+      streamUIStore: { remoteStreamVolume, localVolume },
+    } = useStore();
+    const isLocalStream = !!stream?.stream.isLocal;
+    const isMicMuted = !!stream?.isMicMuted
+    const volume = isLocalStream ? localVolume : remoteStreamVolume(stream);
+    return <div style={{ flexShrink: 0 }}>
+      {isMicMuted ?
+        <SvgImg type={SvgIconEnum.UNMUTE_MOBILE} size={20} colors={{ iconPrimary: '#F5655C' }}></SvgImg>
+        :
+        <MicrophoneIndicator size={size} voicePercent={volume} iconPrimary='#787676' />}
+    </div>;
+  },
+);
 export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
   const {
     shareUIStore: { isLandscape, forceLandscape },
     streamUIStore,
-    boardUIStore: { containerH5VisibleCls: addtionalContainerH5VisibleCls },
-  } = useStore() as EduLectureH5UIStore;
+    classroomStore: {
+      userStore: { rewards },
+    },
+  } = useStore();
   const {
     studentVideoStreamSize,
     studentCameraStreams,
@@ -232,8 +255,15 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
     studentStreamsVisible,
     toggleStudentStreamsVisible,
   } = streamUIStore;
+  const addtionalContainerH5VisibleCls = containerH5VisibleCls;
+  const ref = useRef<HTMLDivElement>(null);
+  const { showTool, toolVisible } = useMobileStreamTool({
+    triggerRef: ref as MutableRefObject<HTMLDivElement>,
+    // teacherCameraStream,
+  });
   return (
     <div
+      ref={ref}
       className={classnames(
         'fcr-items-center',
         'fcr-relative',
@@ -257,7 +287,6 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
             forceLandscape={forceLandscape}></SvgImgMobile>
         </div>
       )}
-
       <div
         className={classnames(
           'fcr-items-center',
@@ -268,6 +297,7 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
         )}>
         {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
+          const reward = rewards.get(stream.fromUser.userUuid);
           return (
             <div key={stream.stream.streamUuid} className="fcr-relative">
               {isLocal ? (
@@ -285,6 +315,20 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
                   }}
                   stream={stream}></StreamPlayerMobile>
               )}
+              <div
+                className='fcr-stream-mobile-stu-top-left'
+                style={{ opacity: toolVisible ? 1 : 0, visibility: toolVisible ? 'visible' : 'hidden' }}
+              >
+                <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
+                <span className='fcr-stream-mobile-stu-x'>x</span>
+                <span>{reward || 0}</span>
+              </div>
+              <div className='fcr-stream-mobile-stu-bottom-left' style={{ opacity: toolVisible ? 1 : 0, visibility: toolVisible ? 'visible' : 'hidden' }} >
+                <AudioRecordinDeviceIcon stream={stream} size={20} />
+                <span>
+                  {stream.fromUser.userName}
+                </span>
+              </div>
               <Award stream={stream} />
             </div>
           );
