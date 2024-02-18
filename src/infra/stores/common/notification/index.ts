@@ -1,6 +1,13 @@
 import { action, computed, IReactionDisposer, Lambda, observable, reaction, when } from 'mobx';
 import dayjs from 'dayjs';
-import { bound, Scheduler } from 'agora-rte-sdk';
+import {
+  AGNetworkQuality,
+  AgoraRteAudioSourceType,
+  AgoraRteMediaSourceState,
+  AgoraRteVideoSourceType,
+  bound,
+  Scheduler,
+} from 'agora-rte-sdk';
 import { EduUIStoreBase } from '../base';
 import {
   AgoraEduClassroomEvent,
@@ -37,8 +44,68 @@ export class NotificationUIStore extends EduUIStoreBase {
       .filter((userUuid: string) => userList.has(userUuid))
       .map((userUuid: string) => userList.get(userUuid)?.userName || 'unknown');
   }
+  /**
+   * 网络质量状态
+   * @returns
+   */
+  @computed
+  get networkQuality() {
+    let hasPublishedCameraStream = false;
+    let hasPublishedMicStream = false;
 
+    const { streamByStreamUuid, streamByUserUuid } = this.classroomStore.streamStore;
+
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    const streamUuids = streamByUserUuid.get(userUuid) || new Set();
+
+    for (const streamUuid of streamUuids) {
+      const stream = streamByStreamUuid.get(streamUuid);
+
+      if (
+        stream &&
+        stream.videoSourceType === AgoraRteVideoSourceType.Camera &&
+        stream.audioSourceState === AgoraRteMediaSourceState.started
+      ) {
+        hasPublishedCameraStream = true;
+      }
+
+      if (
+        stream &&
+        stream.audioSourceType === AgoraRteAudioSourceType.Mic &&
+        stream.audioSourceState === AgoraRteMediaSourceState.started
+      ) {
+        hasPublishedMicStream = true;
+      }
+    }
+
+    const { downlinkNetworkQuality, uplinkNetworkQuality } = this.classroomStore.statisticsStore;
+
+    if ([downlinkNetworkQuality, uplinkNetworkQuality].includes(AGNetworkQuality.down)) {
+      return AGNetworkQuality.down;
+    }
+
+    if (hasPublishedCameraStream || hasPublishedMicStream) {
+      return Math.min(downlinkNetworkQuality, uplinkNetworkQuality) as AGNetworkQuality;
+    }
+
+    return downlinkNetworkQuality;
+  }
   onInstall() {
+    this._disposers.push(
+      reaction(
+        () => this.networkQuality,
+        (networkQuality) => {
+          if (networkQuality === AGNetworkQuality.bad) {
+            this.shareUIStore.addToast(transI18n('nav.singal_poor_tip'), 'warning');
+          }
+
+          if (networkQuality === AGNetworkQuality.down) {
+            this.shareUIStore.addToast(transI18n('nav.singal_down_tip'), 'error');
+          }
+        },
+      ),
+    );
+
     // class is end
     this._disposers.push(
       reaction(

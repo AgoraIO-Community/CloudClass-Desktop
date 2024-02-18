@@ -1,18 +1,6 @@
-import { isSupportedImageType } from '@classroom/infra/utils';
-import { AgoraEduClassroomUIEvent, EduEventUICenter } from '@classroom/infra/utils/event-center';
-import { AGEduErrorCode, EduClassroomConfig, EduRoleTypeEnum, getImageSize } from 'agora-edu-core';
-import { AGErrorWrapper, bound } from 'agora-rte-sdk';
-import {
-  action,
-  computed,
-  IReactionDisposer,
-  Lambda,
-  observable,
-  reaction,
-  runInAction,
-} from 'mobx';
+import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
+import { action, computed, IReactionDisposer, Lambda, observable } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { conversionOption, extractFileExt, fileExt2ContentType } from '../cloud-drive/helper';
 import { transI18n } from 'agora-common-libs';
 
 export class BoardUIStore extends EduUIStoreBase {
@@ -124,19 +112,6 @@ export class BoardUIStore extends EduUIStoreBase {
         }),
       );
     }
-    EduEventUICenter.shared.onClassroomUIEvents(this._handleUIEvents);
-  }
-
-  @bound
-  private _handleUIEvents(e: AgoraEduClassroomUIEvent, ...args: any) {
-    switch (e) {
-      case AgoraEduClassroomUIEvent.dragFileOverBoard:
-        this.handleDragOver(args[0]);
-        break;
-      case AgoraEduClassroomUIEvent.dropFileOnBoard:
-        this.hanldeDrop(args[0]);
-        break;
-    }
   }
 
   @action.bound
@@ -159,101 +134,7 @@ export class BoardUIStore extends EduUIStoreBase {
     this.boardApi.setDelay(delay);
   }
 
-  /**
-   * for teacher and assistent only
-   *
-   * @param event
-   */
-  @action.bound
-  handleDragOver(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    if (
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant
-    ) {
-      const file = event.dataTransfer.files[0];
-      if (file && isSupportedImageType(file)) {
-        event.dataTransfer.dropEffect = 'copy';
-      }
-    }
-  }
-
-  /**
-   * for teacher and assistent only
-   * @param event
-   */
-  @action.bound
-  async hanldeDrop(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    if (
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher ||
-      EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.assistant
-    ) {
-      try {
-        const file = event.dataTransfer.files[0];
-        if (file) {
-          if (isSupportedImageType(file)) {
-            runInAction(() => {
-              this.isCopying = true;
-            });
-
-            const { uploadPersonalResource, calcResourceUuid } =
-              this.classroomStore.cloudDriveStore;
-
-            const resourceUuid = await calcResourceUuid(file);
-
-            const size = await getImageSize(file);
-
-            let ext = extractFileExt(file.name);
-            if (!ext) {
-              return this.shareUIStore.addGenericErrorDialog(
-                AGErrorWrapper(
-                  AGEduErrorCode.EDU_ERR_UPLOAD_FAILED_NO_FILE_EXT,
-                  new Error(`no file ext`),
-                ),
-              );
-            }
-
-            ext = ext.toLowerCase();
-
-            const contentType = fileExt2ContentType(ext);
-            const conversion = conversionOption(ext);
-
-            const resourceInfo = await uploadPersonalResource(
-              file,
-              resourceUuid,
-              ext,
-              contentType,
-              conversion,
-            );
-
-            if (resourceInfo?.url) {
-              const rect = (event.target as HTMLDivElement).getBoundingClientRect();
-              const rx = event.clientX - rect.left;
-              const ry = event.clientY - rect.top;
-              this.boardApi.putImageResource(resourceInfo.url, {
-                x: rx,
-                y: ry,
-                width: size.width,
-                height: size.height,
-              });
-            }
-
-            runInAction(() => {
-              this.isCopying = false;
-            });
-          }
-        }
-      } catch (e) {
-        runInAction(() => {
-          this.isCopying = false;
-        });
-      }
-    }
-  }
-
   onDestroy() {
-    EduEventUICenter.shared.offClassroomUIEvents(this._handleUIEvents);
     this._disposers.forEach((d) => d());
     this._disposers = [];
   }

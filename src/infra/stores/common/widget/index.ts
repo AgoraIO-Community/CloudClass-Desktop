@@ -105,15 +105,18 @@ export class WidgetUIStore extends EduUIStoreBase {
       this.logger.info('widget trackMode:', trackMode);
 
       if (trackMode) {
-        const trackController = new AgoraWidgetTrackController(widget, {
-          position: {
-            xaxis: 0,
-            yaxis: 0,
-          }
-
-        }, {
-          posOnly: trackMode === AgoraWidgetTrackMode.TrackPositionOnly,
-        });
+        const trackController = new AgoraWidgetTrackController(
+          widget,
+          {
+            position: {
+              xaxis: 0,
+              yaxis: 0,
+            },
+          },
+          {
+            posOnly: trackMode === AgoraWidgetTrackMode.TrackPositionOnly,
+          },
+        );
 
         widget.setTrackController(trackController);
 
@@ -343,7 +346,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       addToast: (message: string, type: 'error' | 'success' | 'warning') => {
         this.shareUIStore.addToast(message, type);
       },
-      addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => { },
+      addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {},
     };
   }
 
@@ -409,10 +412,6 @@ export class WidgetUIStore extends EduUIStoreBase {
               onMessage: this._handleBecomeInactive,
             });
 
-            controller.broadcast(
-              AgoraExtensionRoomEvent.BoardSetAnimationOptions,
-              AgoraEduSDK.boardWindowAnimationOptions,
-            );
             controller.addWidgetStateListener(this._stateListener);
           }
         },

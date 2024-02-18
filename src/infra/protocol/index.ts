@@ -1,9 +1,7 @@
 import { AgoraWidgetController } from 'agora-edu-core';
 import { Log, Logger } from 'agora-rte-sdk';
-import { action, computed, observable } from 'mobx';
 import uuid from 'uuid';
-import { CabinetItem } from '../stores/common/toolbar/type';
-import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from './events';
+import { AgoraExtensionRoomEvent } from './events';
 import {
   FcrBoardH5WindowConfig,
   FcrBoardMaterialWindowConfig,
@@ -18,49 +16,10 @@ import { MobileCallState } from '../stores/common/type';
 export class Extension {
   logger!: Logger;
   private _controller?: AgoraWidgetController;
-  @observable.shallow
-  private _registeredCabinetItems: CabinetItem[] = [];
-  @computed
-  get cabinetItems() {
-    return this._registeredCabinetItems;
-  }
-
   install(controller: AgoraWidgetController) {
     this._controller = controller;
-    this._controller.addBroadcastListener({
-      messageType: AgoraExtensionWidgetEvent.RegisterCabinetTool,
-      onMessage: this._handleRegisterCabinetTool,
-    });
-    this._controller.addBroadcastListener({
-      messageType: AgoraExtensionWidgetEvent.UnregisterCabinetTool,
-      onMessage: this._handleUnregisterCabinetTool,
-    });
   }
-
-  uninstall() {
-    this._controller?.removeBroadcastListener({
-      messageType: AgoraExtensionWidgetEvent.RegisterCabinetTool,
-      onMessage: this._handleRegisterCabinetTool,
-    });
-    this._controller?.removeBroadcastListener({
-      messageType: AgoraExtensionWidgetEvent.UnregisterCabinetTool,
-      onMessage: this._handleUnregisterCabinetTool,
-    });
-  }
-
-  @action.bound
-  private _handleRegisterCabinetTool(cabinetItem: CabinetItem) {
-    const existed = this._registeredCabinetItems.some(({ id }) => id === cabinetItem.id);
-    if (!existed) {
-      this._registeredCabinetItems.push(cabinetItem);
-    }
-  }
-
-  @action.bound
-  private _handleUnregisterCabinetTool(id: string) {
-    this._registeredCabinetItems = this._registeredCabinetItems.filter((item) => id !== item.id);
-  }
-
+  uninstall() {}
   openWebview(params: WebviewOpenParams) {
     this._broadcastMessage(AgoraExtensionRoomEvent.OpenWebview, params);
   }

@@ -12,7 +12,6 @@ import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { transI18n } from 'agora-common-libs';
 import { OnPodiumStateEnum } from './type';
-import { FetchUserParam, FetchUserType } from '../roster/type';
 import { listenChannelMessage } from '@classroom/infra/utils/ipc';
 import { ChannelType, IPCMessageType } from '@classroom/infra/utils/ipc-channels';
 import { interactionThrottleHandler } from '@classroom/infra/utils/interaction';
@@ -70,17 +69,6 @@ export class HandUpUIStore extends EduUIStoreBase {
    */
   get waveArmDurationTime() {
     return 3;
-  }
-
-  /**
-   * 查询下一页的参数
-   */
-  get fetchUserListParams() {
-    return {
-      nextId: this._nextPageId,
-      count: 10000,
-      type: FetchUserType.all,
-    };
   }
 
   /**
@@ -361,29 +349,6 @@ export class HandUpUIStore extends EduUIStoreBase {
         .waveArm(teacherUuid, duration as 3 | -1, payload)
         .catch((e) => this.shareUIStore.addGenericErrorDialog(e));
     }
-  }
-
-  /**
-   * 获取下一页的用户列表
-   */
-  @bound
-  @Lodash.debounced(300, { trailing: true })
-  fetchUsersList(override?: Partial<FetchUserParam>, reset?: boolean) {
-    const params = {
-      ...this.fetchUserListParams,
-      ...override,
-    } as FetchUserParam;
-    this.classroomStore.userStore
-      .fetchUserList(params)
-      .then((data) => {
-        runInAction(() => {
-          this._nextPageId = data.nextId;
-          this._userList = (reset ? [] : this._userList).concat(data.list);
-        });
-      })
-      .catch((e) => {
-        this.shareUIStore.addGenericErrorDialog(e);
-      });
   }
 
   /**

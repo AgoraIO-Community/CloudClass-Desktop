@@ -1,16 +1,12 @@
 import { AGError, AgoraRteScene, AGRtcConnectionType, bound, Log } from 'agora-rte-sdk';
 import { BoardUIStore } from './board';
-import { CloudUIStore } from './cloud-drive';
 import { DeviceSettingUIStore } from './device-setting/index';
 import { HandUpUIStore } from './hand-up';
-import { NavigationBarUIStore } from './nav';
-import { RosterUIStore } from './roster';
 import { EduShareUIStore } from './share';
 import { StreamUIStore } from './stream';
 import { LayoutUIStore } from './layout';
 import { EduUIStoreBase } from './base';
 import { NotificationUIStore } from './notification';
-import { PretestUIStore } from './pretest';
 import {
   AGServiceErrorCode,
   EduClassroomConfig,
@@ -29,15 +25,11 @@ export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;
   protected _boardUIStore: BoardUIStore;
   protected _shareUIStore: EduShareUIStore;
-  protected _cloudUIStore: CloudUIStore;
   protected _streamUIStore: StreamUIStore;
-  protected _rosterUIStore: RosterUIStore;
   protected _handUpUIStore: HandUpUIStore;
   protected _deviceSettingUIStore: DeviceSettingUIStore;
-  protected _navigationBarUIStore: NavigationBarUIStore;
   protected _layoutUIStore: LayoutUIStore;
   protected _notificationUIStore: NotificationUIStore;
-  protected _pretestUIStore: PretestUIStore;
   protected _widgetUIStore: WidgetUIStore;
   protected _groupUIStore: GroupUIStore;
   protected _subscriptionUIStore: SubscriptionUIStore;
@@ -49,13 +41,9 @@ export class EduClassroomUIStore {
     this._getters = new Getters(this);
     this._shareUIStore = new EduShareUIStore();
     this._boardUIStore = new BoardUIStore(store, this.shareUIStore, this._getters);
-    this._cloudUIStore = new CloudUIStore(store, this.shareUIStore, this._getters);
     this._streamUIStore = new StreamUIStore(store, this.shareUIStore, this._getters);
-    this._rosterUIStore = new RosterUIStore(store, this.shareUIStore, this._getters);
     this._handUpUIStore = new HandUpUIStore(store, this.shareUIStore, this._getters);
-    this._pretestUIStore = new PretestUIStore(store, this.shareUIStore, this._getters);
     this._deviceSettingUIStore = new DeviceSettingUIStore(store, this.shareUIStore, this._getters);
-    this._navigationBarUIStore = new NavigationBarUIStore(store, this.shareUIStore, this._getters);
     this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore, this._getters);
     this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore, this._getters);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore, this._getters);
@@ -76,23 +64,16 @@ export class EduClassroomUIStore {
   get boardUIStore() {
     return this._boardUIStore;
   }
-  get cloudUIStore() {
-    return this._cloudUIStore;
-  }
+
   get streamUIStore() {
     return this._streamUIStore;
   }
-  get rosterUIStore() {
-    return this._rosterUIStore;
-  }
+
   get handUpUIStore() {
     return this._handUpUIStore;
   }
   get deviceSettingUIStore() {
     return this._deviceSettingUIStore;
-  }
-  get navigationBarUIStore() {
-    return this._navigationBarUIStore;
   }
 
   get layoutUIStore() {
@@ -101,9 +82,7 @@ export class EduClassroomUIStore {
   get notificationUIStore() {
     return this._notificationUIStore;
   }
-  get pretestUIStore() {
-    return this._pretestUIStore;
-  }
+
   get widgetUIStore() {
     return this._widgetUIStore;
   }

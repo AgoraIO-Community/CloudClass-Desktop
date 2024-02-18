@@ -1,7 +1,5 @@
-import { VideoGallery } from '../capabilities/containers/fragments/video-gallery';
 import { Scenarios } from '../capabilities/scenarios';
 import {
-  CloudDriveResource,
   EduClassroomConfig,
   EduEventCenter,
   EduMediaEncryptionMode,
@@ -14,7 +12,6 @@ import {
 import { ApiBase } from 'agora-rte-sdk';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { EduContext } from '../contexts';
-import { createCloudResource } from '../stores/common/cloud-drive/helper';
 import {
   applyTheme,
   loadGeneratedFiles,
@@ -33,7 +30,6 @@ import {
   LaunchMediaOptions,
   LaunchOption,
   RoomTemplate,
-  WindowID,
 } from './type';
 import {
   FcrMultiThemeMode,
