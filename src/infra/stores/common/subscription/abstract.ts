@@ -322,7 +322,7 @@ export abstract class SceneSubscription {
 
   protected muteRemoteStreams(scene: AgoraRteScene, streams: AgoraStream[]) {
     streams.forEach((stream) => {
-      let states = this.isMuted(stream);
+      const states = this.isMuted(stream);
 
       this.muteRemoteStream(scene, stream, states);
     });

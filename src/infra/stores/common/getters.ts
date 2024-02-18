@@ -65,33 +65,9 @@ export class Getters {
     return this._classroomUIStore.classroomStore.groupStore.state === GroupState.OPEN;
   }
 
-  /**
-   * 小窗用户ID
-   */
-  @computed
-  get windowStreamUserUuids() {
-    const { streamStore } = this._classroomUIStore.classroomStore;
+  
 
-    return Array.from(this._classroomUIStore.streamWindowUIStore.streamWindowMap.keys())
-      .filter((streamUuid) => {
-        const stream = streamStore.streamByStreamUuid.get(streamUuid);
-        return stream && stream.videoSourceType === AgoraRteVideoSourceType.Camera;
-      })
-      .map((streamUuid) => streamStore.streamByStreamUuid.get(streamUuid)?.fromUser.userUuid);
-  }
-
-  /**
-   * 扩展屏流ID
-   */
-  @computed
-  get galleryVideoStreamUuids() {
-    if (this._classroomUIStore.videoGalleryUIStore.open) {
-      return this._classroomUIStore.videoGalleryUIStore.curStreamList.map(
-        (stream) => stream.stream.streamUuid,
-      );
-    }
-    return [];
-  }
+ 
 
   /**
    * 台上用户ID

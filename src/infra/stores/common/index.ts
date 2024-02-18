@@ -7,11 +7,9 @@ import { NavigationBarUIStore } from './nav';
 import { RosterUIStore } from './roster';
 import { EduShareUIStore } from './share';
 import { StreamUIStore } from './stream';
-import { ToolbarUIStore } from './toolbar';
 import { LayoutUIStore } from './layout';
 import { EduUIStoreBase } from './base';
 import { NotificationUIStore } from './notification';
-import { StreamWindowUIStore } from './stream-window';
 import { PretestUIStore } from './pretest';
 import {
   AGServiceErrorCode,
@@ -24,7 +22,6 @@ import { WidgetUIStore } from './widget';
 import { GroupUIStore } from './group';
 import { ConvertMediaOptionsConfig } from '@classroom/infra/api';
 import { SubscriptionUIStore } from './subscription';
-import { VideoGalleryUIStore } from './video-gallery';
 import { transI18n } from 'agora-common-libs';
 import { Getters } from './getters';
 
@@ -38,15 +35,12 @@ export class EduClassroomUIStore {
   protected _handUpUIStore: HandUpUIStore;
   protected _deviceSettingUIStore: DeviceSettingUIStore;
   protected _navigationBarUIStore: NavigationBarUIStore;
-  protected _toolbarUIStore: ToolbarUIStore;
   protected _layoutUIStore: LayoutUIStore;
   protected _notificationUIStore: NotificationUIStore;
   protected _pretestUIStore: PretestUIStore;
   protected _widgetUIStore: WidgetUIStore;
   protected _groupUIStore: GroupUIStore;
-  protected _streamWindowUIStore: StreamWindowUIStore;
   protected _subscriptionUIStore: SubscriptionUIStore;
-  protected _videoGalleryUIStore: VideoGalleryUIStore;
   protected _getters: Getters;
   private _installed = false;
 
@@ -62,14 +56,11 @@ export class EduClassroomUIStore {
     this._pretestUIStore = new PretestUIStore(store, this.shareUIStore, this._getters);
     this._deviceSettingUIStore = new DeviceSettingUIStore(store, this.shareUIStore, this._getters);
     this._navigationBarUIStore = new NavigationBarUIStore(store, this.shareUIStore, this._getters);
-    this._toolbarUIStore = new ToolbarUIStore(store, this.shareUIStore, this._getters);
     this._layoutUIStore = new LayoutUIStore(store, this.shareUIStore, this._getters);
     this._notificationUIStore = new NotificationUIStore(store, this.shareUIStore, this._getters);
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore, this._getters);
     this._groupUIStore = new GroupUIStore(store, this.shareUIStore, this._getters);
-    this._streamWindowUIStore = new StreamWindowUIStore(store, this.shareUIStore, this._getters);
     this._subscriptionUIStore = new SubscriptionUIStore(store, this.shareUIStore, this._getters);
-    this._videoGalleryUIStore = new VideoGalleryUIStore(store, this.shareUIStore, this._getters);
   }
 
   /**
@@ -103,9 +94,7 @@ export class EduClassroomUIStore {
   get navigationBarUIStore() {
     return this._navigationBarUIStore;
   }
-  get toolbarUIStore() {
-    return this._toolbarUIStore;
-  }
+
   get layoutUIStore() {
     return this._layoutUIStore;
   }
@@ -121,12 +110,7 @@ export class EduClassroomUIStore {
   get groupUIStore() {
     return this._groupUIStore;
   }
-  get streamWindowUIStore() {
-    return this._streamWindowUIStore;
-  }
-  get videoGalleryUIStore() {
-    return this._videoGalleryUIStore;
-  }
+
   get getters() {
     return this._getters;
   }

@@ -183,20 +183,6 @@ export class StreamUIStore extends EduUIStoreBase {
       ),
     );
 
-    this._disposers.push(
-      reaction(
-        () => ({
-          uuids: this.getters.windowStreamUserUuids,
-          pretestOpened: this.settingsOpened,
-        }),
-        () => {
-          this.allUIStreams.forEach((stream) => {
-            this._setRenderAt(stream);
-          });
-        },
-      ),
-    );
-
     EduEventCenter.shared.onClassroomEvents(this._handleRewardsChange);
   }
   @bound
@@ -215,17 +201,6 @@ export class StreamUIStore extends EduUIStoreBase {
           this.awardAnims = this.awardAnims.concat(anims);
         });
       }
-    }
-  }
-  @bound
-  protected _setRenderAt(stream: EduStreamUI) {
-    const streamWindowUserUuids = this.getters.windowStreamUserUuids;
-    if (this.settingsOpened && stream.stream.isLocal) {
-      stream.setRenderAt('Setting');
-    } else if (streamWindowUserUuids.includes(stream.fromUser.userUuid)) {
-      stream.setRenderAt('Window');
-    } else {
-      stream.setRenderAt('Bar');
     }
   }
 
@@ -260,7 +235,6 @@ export class StreamUIStore extends EduUIStoreBase {
 
     if (teacherCameraStream) {
       stream = new EduStreamUI(teacherCameraStream);
-      this._setRenderAt(stream);
     }
 
     return stream;
@@ -276,7 +250,6 @@ export class StreamUIStore extends EduUIStoreBase {
 
     if (studentCameraStreams.length) {
       stream = new EduStreamUI(studentCameraStreams[0]);
-      this._setRenderAt(stream);
     }
 
     return stream;
@@ -291,7 +264,6 @@ export class StreamUIStore extends EduUIStoreBase {
 
     const streams = studentCameraStreams.map((stream) => {
       const streamUI = new EduStreamUI(stream);
-      this._setRenderAt(streamUI);
       return streamUI;
     });
 

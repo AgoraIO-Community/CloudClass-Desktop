@@ -88,13 +88,10 @@ export const BigClassScenarioMobile = observer(() => {
                 <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
               )}
               <AutoPlayFailedTip></AutoPlayFailedTip>
-
               <ChatMobile />
-
               <PollMobile></PollMobile>
               <ShareActionSheetMobile></ShareActionSheetMobile>
               <HandsUpActionSheetMobile></HandsUpActionSheetMobile>
-
               <DialogContainerMobile></DialogContainerMobile>
               <ToastContainerMobile></ToastContainerMobile>
               <ClassRoomDialogContainer></ClassRoomDialogContainer>

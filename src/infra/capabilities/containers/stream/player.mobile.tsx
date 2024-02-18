@@ -1,5 +1,4 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { EduLectureH5UIStore } from '@classroom/infra/stores/lecture-mobile';
 import { LocalTrackPlayerMobile, StreamPlayerMobile } from './index.mobile';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
@@ -162,7 +161,7 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       streamUIStore,
       shareUIStore: { isLandscape, setForceLandscape },
       layoutUIStore: { toggleLandscapeToolBarVisible },
-    } = useStore() as EduLectureH5UIStore;
+    } = useStore();
     const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP } = streamUIStore;
     const ref = useRef<HTMLDivElement>(null);
 
@@ -221,8 +220,7 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
   const {
     shareUIStore: { isLandscape, forceLandscape },
     streamUIStore,
-    boardUIStore: { containerH5VisibleCls: addtionalContainerH5VisibleCls },
-  } = useStore() as EduLectureH5UIStore;
+  } = useStore();
   const {
     studentVideoStreamSize,
     studentCameraStreams,
@@ -239,7 +237,6 @@ export const RoomBigStudentStreamsContainerMobile: FC = observer(() => {
         'fcr-relative',
         containerH5Extend,
         containerH5VisibleCls,
-        addtionalContainerH5VisibleCls,
       )}
       style={{
         height: studentVideoStreamContainerHeight,
