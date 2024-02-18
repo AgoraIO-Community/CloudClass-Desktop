@@ -2,7 +2,7 @@ import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import './index.css';
 import { SvgIconEnum, SvgImg } from '..';
-import { isNumber } from 'lodash';
+import isNumber from 'lodash/isNumber';
 
 type InputNumberProps = {
   min: number;

@@ -10,7 +10,7 @@ export const ScreenShareContainerMobile = observer(() => {
     streamUIStore: { screenShareStream },
   } = useStore();
 
-  const remotecls = classnames('remote-screen-share-container', 'fcr-absolute', 'fcr-top-0');
+  const remotecls = classnames('remote-screen-share-container', 'fcr-absolute', 'fcr-t-0');
 
   return screenShareStream ? (
     <div className={remotecls} style={{ height: boardContainerHeight }}>

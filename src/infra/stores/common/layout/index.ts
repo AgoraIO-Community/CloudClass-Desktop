@@ -182,7 +182,9 @@ export class LayoutUIStore extends EduUIStoreBase {
   }
   @computed
   get h5ContainerCls() {
-    return this.shareUIStore.orientation === 'portrait' ? '' : 'justify-center items-center';
+    return this.shareUIStore.orientation === 'portrait'
+      ? ''
+      : 'fcr-justify-center fcr-items-center';
   }
   @computed
   get classRoomPlacholderMobileHeight() {

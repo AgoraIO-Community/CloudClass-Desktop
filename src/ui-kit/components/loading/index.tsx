@@ -4,7 +4,6 @@ import { BaseProps } from '../util/type';
 import { Progress } from '../progress';
 import './index.css';
 import loadingGif from './assets/loading.gif';
-import circleLoadingGif from './assets/circle-loading.gif';
 import { SvgImg, SvgIconEnum } from '..';
 import { useI18n } from 'agora-common-libs';
 
@@ -188,8 +187,4 @@ export const Loading: FC<LoadingProps> = ({
       )}
     </div>
   );
-};
-
-export const CircleLoading: FC<CircleLoadingProps> = ({ width = '60', height = '60' }) => {
-  return <img src={circleLoadingGif} width={width} height={height} alt="loading gif" />;
 };

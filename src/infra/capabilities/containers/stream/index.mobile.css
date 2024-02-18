@@ -64,19 +64,6 @@
   border-radius: 4px;
 }
 
-.video-player-video-loading {
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  cursor: pointer;
-  background: url('./assets/svga/video-loadings.gif') no-repeat center;
-}
-
 .video-player-play-btn {
   width: 100%;
   height: 100%;
@@ -202,17 +189,7 @@
 .audio-volume.microphone-off {
   --main-color: red;
 }
-.wave-arm-placeholder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-size: auto 67.7%;
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  background-image: url('./assets/svga/wave-arm.gif');
-}
+
 .stream-zoom-status {
   position: absolute;
   right: 6px;

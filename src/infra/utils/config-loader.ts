@@ -66,11 +66,3 @@ export const applyTheme = (theme: FcrTheme) => {
     document.head.appendChild(newStyleSheet);
   }
 };
-
-export const loadGeneratedFiles = () => {
-  const ctxRequire = require.context('../../generated', true, /.*\.ts$/);
-
-  ctxRequire.keys().forEach((id) => {
-    ctxRequire(id);
-  });
-};

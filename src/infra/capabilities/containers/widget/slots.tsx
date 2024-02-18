@@ -192,6 +192,6 @@ export const Watermark = observer(function Chat() {
   }, [ready, watermark]);
 
   return (
-    <div className="widget-slot-watermark fcr-h-full fcr-w-full fcr-absolute fcr-top-0 fcr-left-0 fcr-pointer-events-none" />
+    <div className="widget-slot-watermark fcr-h-full fcr-w-full fcr-absolute fcr-t-0 fcr-left-0 fcr-pointer-events-none" />
   );
 });

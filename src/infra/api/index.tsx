@@ -14,7 +14,6 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { EduContext } from '../contexts';
 import {
   applyTheme,
-  loadGeneratedFiles,
   loadTheme,
   loadUIConfig,
   supportedRoomTypes,
@@ -42,12 +41,12 @@ import {
 } from 'agora-common-libs';
 import { en } from '../translate/en';
 import { zh } from '../translate/zh';
-import { toUpper } from 'lodash';
+import toUpper from 'lodash/toUpper';
 import { isLocked, lock, unlock } from './lock';
 
 export * from './type';
 
-export { applyTheme, loadGeneratedFiles, themes } from '../utils/config-loader';
+export { applyTheme, themes } from '../utils/config-loader';
 
 export class AgoraEduSDK {
   private static _config: Record<string, string> = {};
@@ -361,5 +360,3 @@ export class AgoraEduSDK {
     });
   }
 }
-
-loadGeneratedFiles();

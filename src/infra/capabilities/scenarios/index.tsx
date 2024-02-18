@@ -3,7 +3,7 @@ import { EduRoomTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { BigClassScenarioMobile } from './mobile/index.mobile';
-import '@classroom/ui-kit/styles/global.css';
+// import '@classroom/ui-kit/styles/global.css';
 import '@classroom/ui-kit/styles/scenario.css';
 export type ScenariosProps = {
   pretest: boolean;

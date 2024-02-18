@@ -69,7 +69,7 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
         ...teacherVideoStreamSize,
       }}>
       <div
-        className="fcr-stream-placeholder-mobile fcr-rounded-full fcr-absolute fcr-top-0 fcr-bottom-0 fcr-left-0 fcr-right-0 fcr-m-auto fcr-text-center"
+        className="fcr-stream-placeholder-mobile fcr-rounded-full fcr-absolute fcr-t-0 fcr-b-0 fcr-l-0 fcr-r-0 fcr-m-auto fcr-text-center"
         style={{ background: 'rgba(66, 98, 255, 1)' }}>
         {generateShortUserName(flexProps['teacherName'] || 'teacher')}
       </div>

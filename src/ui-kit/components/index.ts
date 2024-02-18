@@ -14,7 +14,6 @@ export * from './popover';
 export * from './progress';
 export * from './radio';
 export * from './root-box';
-export * from './roster';
 export * from './sound-player';
 export * from './svg-img';
 export * from './svga-player';

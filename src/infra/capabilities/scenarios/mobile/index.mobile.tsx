@@ -186,7 +186,7 @@ const MobileLoadingContainer = observer(() => {
   return classroomState !== ClassroomState.Connected ? (
     <div
       style={{ zIndex: ComponentLevelRulesMobile.Level3 }}
-      className="fcr-w-screen fcr-h-screen fcr-fixed fcr-left-0 fcr-top-0 fcr-flex fcr-items-center fcr-justify-center">
+      className="fcr-w-screen fcr-h-screen fcr-fixed fcr-left-0 fcr-t-0 fcr-flex fcr-items-center fcr-justify-center">
       <Card width={90} height={90}>
         <Loading></Loading>
       </Card>
@@ -209,7 +209,7 @@ const AutoPlayFailedTip = observer(() => {
   return showAutoPlayFailedTip ? (
     <div
       className={classnames(
-        'fcr-mobile-auto-play-failed fcr-absolute fcr-top-0 fcr-left-0 fcr-w-full fcr-h-full fcr-flex fcr-justify-center',
+        'fcr-mobile-auto-play-failed fcr-absolute fcr-t-0 fcr-l-0 fcr-w-full fcr-h-full fcr-flex fcr-justify-center',
         { 'fcr-mobile-auto-play-failed-landscape': isLandscape },
         {
           'fcr-mobile-auto-play-failed-no-board':
