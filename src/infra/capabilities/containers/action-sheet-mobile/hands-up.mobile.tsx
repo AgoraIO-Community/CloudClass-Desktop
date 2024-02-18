@@ -138,7 +138,7 @@ export const HandsUpActionSheetMobile = observer(() => {
                 {micOn ? (
                   <MicrophoneIndicator voicePercent={volume} size={40}></MicrophoneIndicator>
                 ) : (
-                  <SvgImg type={SvgIconEnum.UNMUTE_MOBILE} size={40}></SvgImg>
+                  <SvgImg type={SvgIconEnum.UNMUTE_MOBILE} size={40} colors={{ iconPrimary: 'white' }}></SvgImg>
                 )}
 
                 <span
