@@ -4,8 +4,7 @@
   right: 0;
   left: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-
+  background: rgba(8, 8, 8, 0.4);
   height: 100%;
   z-index: 1050;
 
@@ -20,13 +19,14 @@
 }
 .fcr-dialog-wrap{
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
   left: 10px;
   right: 10px;
-padding: 20px 24px;
+  padding: 24px 20px;
 border-radius: 20px;
-/* gap: 20px */
-background-color: #202020;
+  background: #3C3C3C;
+
+
 }
 .fcr-confirm-dialog-title {
   @apply fcr-font-title fcr-text-1;

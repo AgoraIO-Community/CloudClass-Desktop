@@ -53,6 +53,10 @@ export class EduStreamUI {
     return RteRole2EduRole(EduClassroomConfig.shared.sessionInfo.roomType, this.fromUser.role);
   }
 
+  get isVideoStreamPublished() {
+    return this.stream.videoState === AgoraRteMediaPublishState.Published;
+  }
+
   @computed
   get renderAt() {
     return this._renderAt;

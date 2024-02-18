@@ -179,4 +179,7 @@ export enum SvgIconEnum {
   MUTE_MOBILE = 'mute-mobile',
   UNMUTE_MOBILE = 'unmute-mobile',
   VIDEO_SWITCH_MOBILE = 'video-switch-mobile',
+  FCR_REWARD = 'fcr-reward',
+  FCR_MOBILE_LEFT = 'fcr-mobile-left',
+  FCR_MOBILE_RIGHT = 'fcr-mobile-right',
 }

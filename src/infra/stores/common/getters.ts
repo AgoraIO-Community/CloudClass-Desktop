@@ -1,20 +1,23 @@
 import { extractUserStreams } from '@classroom/infra/utils/extract';
 import {
   EduClassroomConfig,
+  EduRoleTypeEnum,
   EduRoomTypeEnum,
   EduStream,
   EduUserStruct,
   GroupState,
 } from 'agora-edu-core';
 import { ExpandedScopeState } from 'agora-edu-core';
-import { AgoraRteVideoSourceType } from 'agora-rte-sdk';
+import { AgoraRteMediaSourceState, AgoraRteVideoSourceType } from 'agora-rte-sdk';
 import isNumber from 'lodash/isNumber';
 import { computed } from 'mobx';
 import { EduClassroomUIStore } from '.';
 import { LayoutMaskCode } from './type';
+import { EduStreamUI } from './stream/struct';
+import { computedFn } from 'mobx-utils';
 
 export class Getters {
-  constructor(private _classroomUIStore: EduClassroomUIStore) {}
+  constructor(private _classroomUIStore: EduClassroomUIStore) { }
   get classroomUIStore() {
     return this._classroomUIStore;
   }
@@ -65,9 +68,9 @@ export class Getters {
     return this._classroomUIStore.classroomStore.groupStore.state === GroupState.OPEN;
   }
 
-  
 
- 
+
+
 
   /**
    * 台上用户ID
@@ -167,5 +170,108 @@ export class Getters {
       return;
     }
     return streamByStreamUuid.get(localShareStreamUuid);
+  }
+  @computed
+  get screenShareUIStream() {
+    const streamUuid = this._classroomUIStore.classroomStore.roomStore
+      .screenShareStreamUuid as string;
+    const stream =
+      this._classroomUIStore.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+    return stream ? new EduStreamUI(stream) : null;
+  }
+  @computed
+  get isScreenSharing() {
+    return !!this.screenShareUIStream;
+  }
+  @computed
+  get isLocalScreenSharing() {
+    return (
+      this.classroomUIStore.classroomStore.mediaStore.localScreenShareTrackState ===
+      AgoraRteMediaSourceState.started
+    );
+  }
+  @computed
+  get pinnedUIStream() {
+    const stream = this._classroomUIStore.classroomStore.streamStore.streamByStreamUuid.get(
+      this.classroomUIStore.streamUIStore.pinnedStreamUuid,
+    );
+    return stream ? new EduStreamUI(stream) : null;
+  }
+  userCameraStreamByUserUuid = computedFn((userUuid: string) => {
+    const cameraStreams: EduStream[] = [];
+    this.cameraStreams.forEach((stream) => {
+      if (stream.fromUser.userUuid === userUuid) cameraStreams.push(stream);
+    });
+    return cameraStreams[0];
+  });
+  @computed
+  get localUser() {
+    return this._classroomUIStore.classroomStore.userStore.localUser;
+  }
+  @computed
+  get cameraStreams() {
+    const { streamByUserUuid, streamByStreamUuid } =
+      this._classroomUIStore.classroomStore.streamStore;
+    const cameraStreams = extractUserStreams(
+      this._classroomUIStore.classroomStore.userStore.users,
+      streamByUserUuid,
+      streamByStreamUuid,
+      [AgoraRteVideoSourceType.Camera],
+    );
+    return cameraStreams;
+  }
+  @computed
+  get cameraUIStreams() {
+    const isIngroupLocal = this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
+      this.localUser?.userUuid || '',
+    );
+    return Array.from(this.cameraStreams)
+      .filter((stream) => {
+        return isIngroupLocal
+          ? true
+          : !this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
+            stream.fromUser.userUuid,
+          );
+      })
+      .map((stream) => new EduStreamUI(stream));
+  }
+  @computed
+  get studentCameraUIStreams() {
+    // const isIngroupLocal = this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
+    //   this.localUser?.userUuid || '',
+    // );
+    const { classroomStore } = this._classroomUIStore;
+    const { studentList } = classroomStore.userStore;
+    const { streamByStreamUuid, streamByUserUuid } = classroomStore.streamStore;
+
+    const cameraStreams = extractUserStreams(studentList, streamByUserUuid, streamByStreamUuid, [
+      AgoraRteVideoSourceType.Camera,
+    ]);
+
+    return Array.from(cameraStreams).map((stream) => new EduStreamUI(stream));
+    // return Array.from(this.cameraStreams)
+    //   .filter((stream) => {
+    //     return isIngroupLocal
+    //       ? true
+    //       : !this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
+    //         stream.fromUser.userUuid,
+    //       );
+    //   })
+    //   .map((stream) => new EduStreamUI(stream));
+  }
+  get isBoardWidgetActive() {
+    return this._classroomUIStore.widgetUIStore.widgetInstanceList.some((widget) => {
+      return widget.widgetName === 'netlessBoard';
+    });
+  }
+  @computed
+  get teacherUIStream() {
+    return this.cameraUIStreams.find((stream) => {
+      return stream.role === EduRoleTypeEnum.teacher;
+    });
+  }
+
+  get activeWidgetIds() {
+    return this._classroomUIStore.widgetUIStore.widgetInstanceList.map((w) => w.widgetId);
   }
 }

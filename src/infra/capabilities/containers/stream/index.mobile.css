@@ -64,6 +64,19 @@
   border-radius: 4px;
 }
 
+.video-player-video-loading {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  cursor: pointer;
+  background: url('./assets/svga/video-loadings.gif') no-repeat center;
+}
+
 .video-player-play-btn {
   width: 100%;
   height: 100%;
@@ -189,7 +202,17 @@
 .audio-volume.microphone-off {
   --main-color: red;
 }
-
+.wave-arm-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-size: auto 67.7%;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-image: url('./assets/svga/wave-arm.gif');
+}
 .stream-zoom-status {
   position: absolute;
   right: 6px;
@@ -321,6 +344,7 @@
   right: 0;
   margin: auto;
   pointer-events: none;
+  z-index: 1;
 }
 
 .fcr-stream-player-container {
@@ -376,6 +400,72 @@
   align-items: center;
   padding: 10px 0;
   transition: all 0.2s;
+}
+.fcr-stream-mobile-name {
+  position: absolute;
+  left: 2px;
+  bottom: 3px;
+  /* width: 71px; */
+  height: 20px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(55, 60, 66, 1);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  z-index: 1;
+  padding: 0 7px;
+  transition: all 0.2s;
+}
+.fcr-stream-mobile-stu-bottom-left {
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+  /* width: 71px; */
+  height: 20px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(55, 60, 66, 1);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  z-index: 1;
+  padding-right: 7px;
+  max-width: 100%;
+  transition: all 0.2s;
+}
+.fcr-stream-mobile-stu-bottom-left span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fcr-stream-mobile-stu-top-left {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  /* width: 71px; */
+  height: 20px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(55, 60, 66, 1);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  z-index: 1;
+  padding-right: 4px;
+  max-width: 100%;
+  transition: all 0.2s;
+}
+.fcr-stream-mobile-stu-x {
+  font-size: 300;
+  font-size: 10px;
+  margin-right: 3px;
 }
 .fcr-stream-mobile-draggable {
   position: fixed !important;

@@ -1,13 +1,14 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect } from 'react';
+import React, { FC, MutableRefObject, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { Layout, LayoutProps } from '@classroom/ui-kit/components/layout';
 import {
   H5RoomPlaceholder,
   RoomBigStudentStreamsContainerMobile,
   RoomBigTeacherStreamContainerMobile,
+  useMobileStreamTool,
 } from '@classroom/infra/capabilities/containers/stream/player.mobile';
 import { WidgetContainerMobile } from '../../containers/widget/index.mobile';
 import {
@@ -31,6 +32,8 @@ import { HandsUpActionSheetMobile } from '../../containers/action-sheet-mobile/h
 import { DialogCategory } from '@classroom/infra/stores/common/share';
 import { ConfirmDialogAction } from '@classroom/infra/stores/common/type';
 import { ClassRoomDialogContainer } from '../../containers/confirm-dialog-mobile';
+import { StreamToolContext, streamTool } from '../../containers/stream/context';
+
 export const BigClassScenarioMobile = observer(() => {
   const {
     classroomStore: {
@@ -77,16 +80,7 @@ export const BigClassScenarioMobile = observer(() => {
               <WhiteboardMobile />
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
-              <TeacherStreamChatContainerMobile />
-              {/* className={teacherCameraStream && !teacherCameraStream.isCameraMuted ? 'fcr-mobile-have-tc-stream-warapper' : 'fcr-mobile-no-have-tc-stream-warapper'} */}
-              <CountDownMobile
-                haveStream={
-                  !!(teacherCameraStream && !teacherCameraStream.isCameraMuted)
-                }></CountDownMobile>
-
-              {!isLandscape && (
-                <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
-              )}
+              <StreamMobile></StreamMobile>
               <AutoPlayFailedTip></AutoPlayFailedTip>
               <ChatMobile />
               <PollMobile></PollMobile>
@@ -122,18 +116,47 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
   );
 });
 
+const StreamMobile = observer(() => {
+  const {
+    shareUIStore: { isLandscape },
+    streamUIStore: { teacherCameraStream },
+  } = useStore();
+  const ref = useRef<HTMLDivElement>(null);
+
+  const { showTool, toolVisible } = useMobileStreamTool({
+    triggerRef: ref as MutableRefObject<HTMLDivElement>,
+    // teacherCameraStream,
+  });
+
+  return (
+    <StreamToolContext.Provider value={streamTool(ref, toolVisible, showTool)}>
+      <TeacherStreamChatContainerMobile />
+      <CountDownMobile
+        haveStream={
+          !!(teacherCameraStream && !teacherCameraStream.isCameraMuted)
+        }></CountDownMobile>
+      {
+        !isLandscape && (
+          // currentRef={ref} toolVisible={toolVisible} showTool={showTool}
+          <RoomBigStudentStreamsContainerMobile ></RoomBigStudentStreamsContainerMobile>
+        )
+      }
+    </StreamToolContext.Provider>
+  )
+})
 const TeacherStreamChatContainerMobile = observer(() => {
   const {
     shareUIStore: { isLandscape },
     streamUIStore: { teacherCameraStream, containerH5VisibleCls },
   } = useStore();
+
   return (
     <Layout direction="col" className={classnames(containerH5VisibleCls)}>
       {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (
         <TeacherCameraPlaceHolderMobile></TeacherCameraPlaceHolderMobile>
       )}
       {teacherCameraStream && !teacherCameraStream.isCameraMuted && (
-        <RoomBigTeacherStreamContainerMobile teacherCameraStream={teacherCameraStream} />
+        <RoomBigTeacherStreamContainerMobile stream={teacherCameraStream} />
       )}
     </Layout>
   );

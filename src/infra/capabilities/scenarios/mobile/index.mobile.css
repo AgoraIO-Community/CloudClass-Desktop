@@ -126,6 +126,12 @@
   padding: 0 5px;
 }
 
+.fcr-countdown-mobile-widget {
+  position: relative;
+}
+.fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile{
+  bottom: 162px;
+}
 /****/
 
 .fcr-flex {

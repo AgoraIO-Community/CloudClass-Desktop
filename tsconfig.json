@@ -30,8 +30,15 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@classroom/*": ["src/*"],
-      "agora-classroom-sdk": ["src/infra/api"]
+      "@classroom/*": [
+        "src/*"
+      ],
+      "agora-classroom-sdk": [
+        "src/infra/api"
+      ],
+      "@components/*": [
+        "../fcr-ui-kit/src/components/*",
+      ],
     }
   },
   "include": [

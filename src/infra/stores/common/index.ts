@@ -20,6 +20,7 @@ import { ConvertMediaOptionsConfig } from '@classroom/infra/api';
 import { SubscriptionUIStore } from './subscription';
 import { transI18n } from 'agora-common-libs';
 import { Getters } from './getters';
+import { PresentationUIStore } from './presentation-view';
 
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;
@@ -35,6 +36,7 @@ export class EduClassroomUIStore {
   protected _subscriptionUIStore: SubscriptionUIStore;
   protected _getters: Getters;
   private _installed = false;
+  protected _presentationUIStore: PresentationUIStore;
 
   constructor(store: EduClassroomStore) {
     this._classroomStore = store;
@@ -49,6 +51,7 @@ export class EduClassroomUIStore {
     this._widgetUIStore = new WidgetUIStore(store, this.shareUIStore, this._getters);
     this._groupUIStore = new GroupUIStore(store, this.shareUIStore, this._getters);
     this._subscriptionUIStore = new SubscriptionUIStore(store, this.shareUIStore, this._getters);
+    this._presentationUIStore = new PresentationUIStore(this.classroomStore, this.shareUIStore, this._getters);
   }
 
   /**
@@ -92,6 +95,9 @@ export class EduClassroomUIStore {
 
   get getters() {
     return this._getters;
+  }
+  get presentationUIStore() {
+    return this._presentationUIStore;
   }
 
   /**

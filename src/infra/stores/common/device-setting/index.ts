@@ -88,7 +88,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 onOk: () => {
                   this.enableLocalVideo(true);
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
-                  this.getStates();
                 },
               });
             }
@@ -107,7 +106,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 onOk: () => {
                   this.enableLocalAudio(true);
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
-                  this.getStates();
                 },
               });
             }
@@ -142,7 +140,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 onOk: () => {
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
                   this.enableLocalVideo(true);
-                  this.getStates();
                 },
               });
             }
@@ -161,7 +158,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 onOk: () => {
                   this.enableLocalAudio(true);
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
-                  this.getStates();
                 },
               });
             }

@@ -114,8 +114,10 @@ export const HandsUpActionSheetMobile = observer(() => {
             onClick={() => setHandsUpActionSheetVisible(false)}>
             <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.CLOSE} size={16}></SvgImg>
           </div>
-          <div className="fcr-hands-up-action-sheet-mobile-device-head">
-            <div>{transI18n('fcr_raisehand_label_Interacting_now')}</div>
+          <div className="fcr-hands-up-action-sheet-mobile-device-head" >
+            <div style={{
+              display: cameraOn || micOn ? 'block' : 'none',
+            }}>{transI18n('fcr_raisehand_label_Interacting_now')}</div>
           </div>
           <div className="fcr-hands-up-action-sheet-mobile-device-wrapper">
             <div className="fcr-hands-up-action-sheet-mobile-device-player">
@@ -130,15 +132,15 @@ export const HandsUpActionSheetMobile = observer(() => {
         </div>
         <div className="fcr-hands-up-action-sheet-mobile-prepare">
           <div>
-            <div className="fcr-hands-up-action-sheet-mobile-prepare-head">连接互动</div>
+            <div className="fcr-hands-up-action-sheet-mobile-prepare-head">{transI18n('fcr_raisehand_label_Interacting')}</div>
             <div className="fcr-hands-up-action-sheet-mobile-prepare-options">
               <div
                 className="fcr-hands-up-action-sheet-mobile-prepare-options-item"
                 onClick={toggleMic}>
                 {micOn ? (
-                  <MicrophoneIndicator voicePercent={volume} size={40}></MicrophoneIndicator>
+                  <MicrophoneIndicator voicePercent={volume} size={40} iconPrimary='white'></MicrophoneIndicator>
                 ) : (
-                  <SvgImg type={SvgIconEnum.UNMUTE_MOBILE} size={40}></SvgImg>
+                  <SvgImg type={SvgIconEnum.UNMUTE_MOBILE} size={40} colors={{ iconPrimary: 'white' }}></SvgImg>
                 )}
 
                 <span

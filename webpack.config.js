@@ -17,6 +17,7 @@ const config = {
     alias: {
       '@classroom': path.resolve(ROOT_PATH, './src'),
       'agora-classroom-sdk': path.resolve(ROOT_PATH, './src/infra/api'),
+      '@components': 'fcr-ui-kit/src/components',
     },
   },
 };
