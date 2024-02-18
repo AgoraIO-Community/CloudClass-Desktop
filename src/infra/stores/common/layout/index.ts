@@ -262,7 +262,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   isDialogIdExist(id: string) {
     return this.dialogMap.has(id);
   }
-  addDialog(type: 'confirm', params: CommonDialogType): void;
+  addDialog(type: 'confirm', params?: CommonDialogType<unknown>): void;
 
   @action.bound
   addDialog(type: unknown, params?: CommonDialogType<unknown>) {

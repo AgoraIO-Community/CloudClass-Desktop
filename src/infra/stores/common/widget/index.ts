@@ -14,10 +14,7 @@ import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import {
-  AgoraExtensionRoomEvent,
-  AgoraExtensionWidgetEvent,
-} from '@classroom/infra/protocol/events';
+import { AgoraExtensionWidgetEvent } from '@classroom/infra/protocol/events';
 
 @Log.attach({ proxyMethods: false })
 export class WidgetUIStore extends EduUIStoreBase {

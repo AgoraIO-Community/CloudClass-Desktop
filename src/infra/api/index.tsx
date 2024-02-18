@@ -202,14 +202,7 @@ export class AgoraEduSDK {
       ].includes(option.roleType)
     ) {
       throw new Error('AgoraEduSDK: Invalid roleType!');
-    } else if (
-      ![
-        EduRoomTypeEnum.Room1v1Class,
-        EduRoomTypeEnum.RoomBigClass,
-        EduRoomTypeEnum.RoomSmallClass,
-        EduRoomTypeEnum.CloudClass,
-      ].includes(option.roomType)
-    ) {
+    } else if (![EduRoomTypeEnum.CloudClass].includes(option.roomType)) {
       throw new Error('AgoraEduSDK: Invalid roomType!');
     } else if (isInvalid(option.userName)) {
       throw new Error('AgoraEduSDK: userName is required');
