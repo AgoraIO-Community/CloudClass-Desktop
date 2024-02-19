@@ -3,7 +3,7 @@ import { Scheduler } from 'agora-rte-sdk';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
 import { ComponentLevelRulesMobile } from '../../config';
-import './index.mobile.css';
+import './index.css';
 export const ToastContainerMobile = observer(() => {
   const {
     shareUIStore: { toastQueue, isLandscape },

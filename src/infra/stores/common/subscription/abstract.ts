@@ -1,10 +1,4 @@
 import {
-  EduClassroomConfig,
-  EduRoleTypeEnum,
-  EduRoomTypeEnum,
-  RteRole2EduRole,
-} from 'agora-edu-core';
-import {
   AgoraMediaControl,
   AgoraRteEventType,
   AgoraRteMediaPublishState,
@@ -18,7 +12,6 @@ import {
   AGRtcConnectionType,
   AgoraRteAudioSourceType,
   Logger,
-  Log,
 } from 'agora-rte-sdk';
 import pad from 'lodash/pad';
 import padEnd from 'lodash/padEnd';
@@ -36,10 +29,6 @@ export abstract class SceneSubscription {
 
   get active() {
     return this._active;
-  }
-
-  get subscribeAll() {
-    return EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class;
   }
 
   constructor(protected scene: AgoraRteScene, protected getters: Getters) {
@@ -256,7 +245,7 @@ export abstract class SceneSubscription {
   protected getStreamConnType(stream: AgoraStream) {
     const type =
       stream.streamName === 'secondary' ||
-        stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
+      stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
         ? AGRtcConnectionType.sub
         : AGRtcConnectionType.main;
     return type;

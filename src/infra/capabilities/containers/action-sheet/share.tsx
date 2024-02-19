@@ -1,12 +1,11 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
 import { SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
-import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { ComponentLevelRulesMobile } from '../../config';
 import ClipboardJS from 'clipboard';
 
-import './index.mobile.css';
+import './index.css';
 import { useEffect, useRef } from 'react';
 import { AgoraEduSDK } from '@classroom/infra/api';
 export const ShareActionSheetMobile = observer(() => {

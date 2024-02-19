@@ -8,7 +8,7 @@ import {
   H5RoomPlaceholder,
   RoomBigStudentStreamsContainerMobile,
   RoomBigTeacherStreamContainerMobile,
-} from '@classroom/infra/capabilities/containers/stream/player.mobile';
+} from '@classroom/infra/capabilities/containers/stream/player';
 import { WidgetContainerMobile } from '../../containers/widget/index.mobile';
 import {
   ChatMobile,
@@ -17,21 +17,21 @@ import {
   Watermark,
   WhiteboardMobile,
 } from '../../containers/widget/slots';
-import Room from '../room';
-import './index.mobile.css';
-import { ToastContainerMobile } from '../../containers/toast/index.mobile';
+import './index.css';
+import { ToastContainerMobile } from '../../containers/toast';
 import { ClassroomState, ClassState, EduClassroomConfig } from 'agora-edu-core';
 import { ComponentLevelRulesMobile } from '../../config';
-import { ScreenShareContainerMobile } from '../../containers/screen-share/index.mobile';
+import { ScreenShareContainerMobile } from '../../containers/screen-share';
 import { useI18n } from 'agora-common-libs';
-import { TeacherCameraPlaceHolderMobile } from '../../containers/stream/index.mobile';
+import { TeacherCameraPlaceHolderMobile } from '../../containers/stream';
 import { Card, Loading, SvgIconEnum, SvgImgMobile } from '@classroom/ui-kit';
-import { ShareActionSheetMobile } from '../../containers/action-sheet-mobile/share.mobile';
-import { HandsUpActionSheetMobile } from '../../containers/action-sheet-mobile/hands-up.mobile';
+import { ShareActionSheetMobile } from '../../containers/action-sheet/share';
+import { HandsUpActionSheetMobile } from '../../containers/action-sheet/hands-up';
 import { DialogCategory } from '@classroom/infra/stores/common/share';
 import { ConfirmDialogAction } from '@classroom/infra/stores/common/type';
-import { ClassRoomDialogContainer } from '../../containers/confirm-dialog-mobile';
-export const BigClassScenarioMobile = observer(() => {
+import { ClassRoomDialogContainer } from '../../containers/confirm-dialog';
+import { useEffectOnce } from '@classroom/infra/hooks/utilites';
+export const Scenario = observer(() => {
   const {
     classroomStore: {
       roomStore: {
@@ -40,7 +40,6 @@ export const BigClassScenarioMobile = observer(() => {
     },
     shareUIStore: { isLandscape, forceLandscape },
     streamUIStore: { teacherCameraStream },
-    layoutUIStore: { setHandsUpActionSheetVisible },
   } = useStore();
   return (
     <Room>
@@ -103,6 +102,15 @@ export const BigClassScenarioMobile = observer(() => {
       </H5LayoutContainer>
     </Room>
   );
+});
+const Room: FC<Props> = observer(({ children }) => {
+  const { join } = useStore();
+
+  useEffectOnce(() => {
+    join();
+  });
+
+  return <React.Fragment>{children}</React.Fragment>;
 });
 
 const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...restProps }) => {

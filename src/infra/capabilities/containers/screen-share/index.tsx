@@ -1,38 +1,35 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { EduStream } from 'agora-edu-core';
-import { AGRenderMode } from 'agora-rte-sdk';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
-import { useI18n } from 'agora-common-libs';
 import './index.css';
-import { ComponentLevelRules } from '../../config';
+import { CSSProperties, useEffect, useRef } from 'react';
+import { EduStream } from 'agora-edu-core';
+import { AGRenderMode } from 'agora-rte-sdk';
 
-const ScreenShareLocalTrackPlayer = observer(() => {
-  const transI18n = useI18n();
+export const ScreenShareContainerMobile = observer(() => {
   const {
-    streamUIStore: { stopScreenShareCapture, localScreenShareOff },
+    boardUIStore: { boardContainerHeight },
+    streamUIStore: { screenShareStream },
   } = useStore();
 
-  const [icon, setIcon] = useState(SvgIconEnum.SHARE_DEFAULT);
+  const remotecls = classnames('remote-screen-share-container', 'fcr-absolute', 'fcr-t-0');
 
-  return localScreenShareOff ? null : (
-    <div style={{ width: 108, height: 30 }}>
-      <button
-        className="stop-button"
-        onClick={stopScreenShareCapture}
-        onMouseEnter={() => setIcon(SvgIconEnum.SHARE_HOVER)}
-        onMouseLeave={() => setIcon(SvgIconEnum.SHARE_DEFAULT)}>
-        <SvgImg type={icon} style={{ display: 'flex', marginRight: 2 }} />
-        <span>{transI18n('scaffold.stop_screen_share')}</span>
-      </button>
+  return screenShareStream ? (
+    <div className={remotecls} style={{ height: boardContainerHeight }}>
+      <ScreenShareRemoteTrackPlayer stream={screenShareStream} />
     </div>
-  );
+  ) : null;
 });
-
 export const ScreenShareRemoteTrackPlayer = observer(
-  ({ style, stream, className }: { style?: any; stream: EduStream; className?: string }) => {
+  ({
+    style,
+    stream,
+    className,
+  }: {
+    style?: CSSProperties;
+    stream: EduStream;
+    className?: string;
+  }) => {
     const { streamUIStore } = useStore();
     const { setupRemoteVideo } = streamUIStore;
 
@@ -50,46 +47,5 @@ export const ScreenShareRemoteTrackPlayer = observer(
         className={className}
         ref={ref}></div>
     );
-  },
-);
-
-export type ScreenShareContainerProps = {
-  className?: string;
-};
-
-export const ScreenShareContainer = observer<FC<ScreenShareContainerProps>>(
-  ({ className = '' }) => {
-    const {
-      boardUIStore: { boardAreaHeight },
-      streamUIStore: { screenShareStream },
-    } = useStore();
-
-    const remotecls = classnames(
-      'remote-screen-share-container',
-      'fcr-absolute',
-      'fcr-bottom-0',
-      className,
-    );
-
-    const localcls = classnames('local-screen-share-container', className);
-
-    return screenShareStream ? (
-      <React.Fragment>
-        {screenShareStream?.isLocal ? (
-          <div
-            className={localcls}
-            style={{
-              top: `calc(100% - ${boardAreaHeight}px)`,
-              zIndex: ComponentLevelRules.ScreenShare,
-            }}>
-            <ScreenShareLocalTrackPlayer />
-          </div>
-        ) : screenShareStream && !screenShareStream.isLocal ? (
-          <div className={remotecls} style={{ height: boardAreaHeight }}>
-            <ScreenShareRemoteTrackPlayer stream={screenShareStream} />
-          </div>
-        ) : null}
-      </React.Fragment>
-    ) : null;
   },
 );

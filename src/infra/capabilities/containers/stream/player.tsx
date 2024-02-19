@@ -1,5 +1,5 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { LocalTrackPlayerMobile, StreamPlayerMobile, generateShortUserName } from './index.mobile';
+import { LocalTrackPlayerMobile, StreamPlayerMobile } from '.';
 import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
@@ -9,9 +9,9 @@ import dayjs from 'dayjs';
 import { Scheduler } from 'agora-rte-sdk';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { useI18n } from 'agora-common-libs';
-import './index.mobile.css';
+import './index.css';
 import Award from '../award';
-import { MicrophoneIndicator } from '../action-sheet-mobile/mic';
+import { MicrophoneIndicator } from '../action-sheet/mic';
 const RoomBigTeacherStreamH5Tool = ({
   isPiP,
   onPiP,

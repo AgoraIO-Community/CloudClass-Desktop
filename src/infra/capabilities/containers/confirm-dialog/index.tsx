@@ -1,7 +1,7 @@
 import { iterateMap } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { ConfirmDialog, ConfirmDialogProps } from './confirm-dialog.mobile';
+import { ConfirmDialog, ConfirmDialogProps } from './confirm-dialog';
 
 export const ClassRoomDialogContainer = observer(() => {
   const {
@@ -30,11 +30,9 @@ export const ClassRoomDialogContainer = observer(() => {
               deleteDialog(id);
               confirmDialog.onOk?.();
               confirmDialog.onCancel?.();
-            }}
-          ></ConfirmDialog>
-        )
-      }
-      )}
+            }}></ConfirmDialog>
+        );
+      })}
     </>
   );
 });

@@ -45,7 +45,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   get isAudioRecordingDeviceEnabled() {
     return this._audioRecordingDeviceEnabled;
   }
-  private enableLocalVideo = (value: boolean) => {
+  private _enableLocalVideo = (value: boolean) => {
     const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
     if (value) {
       track.start();
@@ -54,7 +54,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     }
     return;
   };
-  private enableLocalAudio = (value: boolean) => {
+  private _enableLocalAudio = (value: boolean) => {
     const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
     if (value) {
       track.start();
@@ -86,7 +86,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this.enableLocalVideo(true);
+                  this._enableLocalVideo(true);
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
                 },
               });
@@ -104,7 +104,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this.enableLocalAudio(true);
+                  this._enableLocalAudio(true);
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
                 },
               });
@@ -139,7 +139,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
-                  this.enableLocalVideo(true);
+                  this._enableLocalVideo(true);
                 },
               });
             }
@@ -156,7 +156,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this.enableLocalAudio(true);
+                  this._enableLocalAudio(true);
                   this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
                 },
               });
@@ -197,10 +197,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const track = mediaControl.createCameraVideoTrack();
             track.setDeviceId(cameraDeviceId);
             this.logger.info('enableLocalVideo => true. Reason: camera device selected');
-            this.enableLocalVideo(true);
+            this._enableLocalVideo(true);
           } else {
             this.logger.info('enableLocalVideo => false. Reason: camera device not selected');
-            this.enableLocalVideo(false);
+            this._enableLocalVideo(false);
           }
         },
       ),
@@ -215,10 +215,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const track = mediaControl.createMicrophoneAudioTrack();
             track.setRecordingDevice(recordingDeviceId);
             this.logger.info('enableLocalAudio => true. Reason: mic device selected');
-            this.enableLocalAudio(true);
+            this._enableLocalAudio(true);
           } else {
             this.logger.info('enableLocalAudio => false. Reason: mic device not selected');
-            this.enableLocalAudio(false);
+            this._enableLocalAudio(false);
           }
         },
       ),
@@ -262,28 +262,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
 
   /**
-   * 是否可设置隐藏/显示讲台区域
-   */
-  @computed
-  get deviceStage() {
-    if (EduClassroomConfig.shared.sessionInfo.role !== EduRoleTypeEnum.teacher) return;
-    const isInSubRoom = this.getters.isInSubRoom;
-    switch (EduClassroomConfig.shared.sessionInfo.roomType) {
-      case EduRoomTypeEnum.Room1v1Class:
-        return false;
-      case EduRoomTypeEnum.RoomBigClass:
-        return false;
-      case EduRoomTypeEnum.RoomSmallClass:
-        return !isInSubRoom;
-    }
-  }
-
-  @computed
-  get stageVisible() {
-    return this.getters.stageVisible;
-  }
-
-  /**
    * 设置当前使用摄像头设备
    * @param id
    */
@@ -309,62 +287,4 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   setPlaybackDevice(id: string) {
     this.classroomStore.mediaStore.setPlaybackDevice(id);
   }
-
-  @bound
-  setUserHasSelectedAudioRecordingDevice() {
-    this._userHasSelectedAudioRecordingDevice = true;
-  }
-
-  @bound
-  setUserHasSelectedAudioPlaybackDevice() {
-    this._userHasSelectedAudioPlaybackDevice = true;
-  }
-
-  /**
-   * 设置讲台开关
-   * 停止轮询 业务逻辑
-   * @param stage
-   */
-  @bound
-  async setStageVisible(stage: boolean) {
-    try {
-      const area = stage
-        ? this.getters.layoutMaskCode | LayoutMaskCode.StageVisible
-        : this.getters.layoutMaskCode & ~LayoutMaskCode.StageVisible;
-      if (!stage) {
-        await this.classroomStore.handUpStore.offPodiumAll();
-      }
-
-      await this.classroomStore.roomStore.updateFlexProperties({ area }, null);
-    } catch (e) {
-      if (
-        !AGError.isOf(
-          e as Error,
-          AGServiceErrorCode.SERV_PROCESS_CONFLICT,
-          AGServiceErrorCode.SERV_ACCEPT_NOT_FOUND,
-        )
-      ) {
-        this.shareUIStore.addGenericErrorDialog(e as AGError);
-      }
-    }
-  }
-
-  private _enableLocalVideo = (value: boolean) => {
-    const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
-    if (value) {
-      track.start();
-    } else {
-      track.stop();
-    }
-    return;
-  };
-
-  private _enableLocalAudio = (value: boolean) => {
-    const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
-    if (value) {
-      track.start();
-    } else {
-      track.stop();
-    }
-  };
 }

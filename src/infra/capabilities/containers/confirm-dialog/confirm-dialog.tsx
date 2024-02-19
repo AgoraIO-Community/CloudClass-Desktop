@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { FC, ReactNode } from 'react';
 // import { Button, ButtonProps } from '../button';
 import { Button, ButtonProps } from '@classroom/ui-kit';
-import './confirm-dialog.mobile.css';
+import './confirm-dialog.css';
 import { toJS } from 'mobx';
 export interface ConfirmDialogProps {
   /**
@@ -91,10 +91,9 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
   return (
     <div
       className="fcr-dialog-mask"
-    // classNames="fcr-confirm-dialog"
+      // classNames="fcr-confirm-dialog"
     >
-      <div className='fcr-dialog-wrap'>
-
+      <div className="fcr-dialog-wrap">
         <div className="fcr-confirm-dialog-inner-wrap">
           {icon && <div className="fcr-confirm-dialog-inner-icon">{toJS(icon)}</div>}
           <div></div>
@@ -114,14 +113,13 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
                   }}
                   size="sm"
                   {...cancelButtonProps}
-                  className='fcr-btn-mobile fcr-btn-mobile-cancel '
-                >
+                  className="fcr-btn-mobile fcr-btn-mobile-cancel ">
                   {cancelText || 'Cancel'}
                 </Button>
               )}
 
               {okButtonVisible && (
-                <Button onClick={onOk} size="sm" {...okButtonProps} className='fcr-btn-mobile'>
+                <Button onClick={onOk} size="sm" {...okButtonProps} className="fcr-btn-mobile">
                   {okText || 'OK'}
                 </Button>
               )}
@@ -129,7 +127,6 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
           )}
         </div>
       </div>
-
     </div>
   );
 };

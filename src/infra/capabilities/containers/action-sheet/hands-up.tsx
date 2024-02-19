@@ -4,11 +4,11 @@ import { useI18n } from 'agora-common-libs';
 import { observer } from 'mobx-react';
 import { ComponentLevelRulesMobile } from '../../config';
 
-import './index.mobile.css';
+import './index.css';
 import { useEffect, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
-import { LocalTrackPlayer, generateShortUserName } from '../stream/index.mobile';
+import { LocalTrackPlayer, generateShortUserName } from '../stream';
 import { MicrophoneIndicator } from './mic';
 import { MobileCallState } from '@classroom/infra/stores/common/type';
 
@@ -138,7 +138,10 @@ export const HandsUpActionSheetMobile = observer(() => {
                 {micOn ? (
                   <MicrophoneIndicator voicePercent={volume} size={40}></MicrophoneIndicator>
                 ) : (
-                  <SvgImg type={SvgIconEnum.UNMUTE_MOBILE} size={40} colors={{ iconPrimary: 'white' }}></SvgImg>
+                  <SvgImg
+                    type={SvgIconEnum.UNMUTE_MOBILE}
+                    size={40}
+                    colors={{ iconPrimary: 'white' }}></SvgImg>
                 )}
 
                 <span
