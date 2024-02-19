@@ -55,7 +55,7 @@ export class AgoraEduSDK {
   private static _widgets: Record<string, typeof AgoraWidgetBase> = {};
   private static _language: string;
   private static _appId = '';
-  private static _uiMode: FcrMultiThemeMode;
+  private static _uiMode: FcrMultiThemeMode = FcrMultiThemeMode.dark;
   private static _uiConfig: FcrUIConfig;
   private static _theme: FcrTheme;
   private static _shareUrl: string;
@@ -235,8 +235,10 @@ export class AgoraEduSDK {
     EduContext.reset();
     this._validateOptions(option);
     const defaultPlatform = getPlatform() === DevicePlatform.H5 ? Platform.H5 : Platform.PC;
-    const flexProperties = Object.assign(option.userFlexProperties || {}, { device: { platform: defaultPlatform } })
-    option.userFlexProperties = flexProperties
+    const flexProperties = Object.assign(option.userFlexProperties || {}, {
+      device: { platform: defaultPlatform },
+    });
+    option.userFlexProperties = flexProperties;
     const {
       userUuid,
       userName,
@@ -246,9 +248,8 @@ export class AgoraEduSDK {
       roomName,
       roomType,
       duration,
-      platform = Platform.PC,
+
       startTime,
-      uiMode,
       shareUrl = '',
       latencyLevel,
       userFlexProperties,
@@ -272,13 +273,10 @@ export class AgoraEduSDK {
 
     this._shareUrl = shareUrl;
     this._language = language;
-    this._uiMode = uiMode ?? FcrMultiThemeMode.light;
 
     this._widgets = widgets;
 
     changeLanguage(language);
-
-    const noDevicePermission = roleType === EduRoleTypeEnum.invisible || platform === Platform.H5;
 
     const config = new EduClassroomConfig(
       this._appId,
@@ -290,14 +288,14 @@ export class AgoraEduSDK {
         rtcConfigs: {
           ...this._convertMediaOptions(option.mediaOptions),
           ...{
-            noDevicePermission,
+            noDevicePermission: true,
           },
         },
         rtcSDKExtensions: [],
         rtcCloudProxyType: option.rtcCloudProxyType,
         rtmCloudProxyEnabled: option.rtmCloudProxyEnabled,
       },
-      platform,
+      Platform.H5,
       Object.assign(
         { openCameraDeviceAfterLaunch: false, openRecordingDeviceAfterLaunch: false },
         {},
@@ -348,8 +346,9 @@ export class AgoraEduSDK {
       sessionInfo: { roomUuid },
       appId,
     } = EduClassroomConfig.shared;
-    const pathPrefix = `${ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
-      }/edu/apps/${appId}`;
+    const pathPrefix = `${
+      ignoreUrlRegionPrefix ? '' : '/' + region.toLowerCase()
+    }/edu/apps/${appId}`;
     new ApiBase().fetch({
       path: `/v2/rooms/${roomUuid}/records/ready`,
       method: 'PUT',

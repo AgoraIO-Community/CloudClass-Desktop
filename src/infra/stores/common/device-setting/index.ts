@@ -1,14 +1,7 @@
-import { AGError, bound, Log } from 'agora-rte-sdk';
+import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import {
-  AGServiceErrorCode,
-  DEVICE_DISABLE,
-  EduClassroomConfig,
-  EduRoleTypeEnum,
-  EduRoomTypeEnum,
-} from 'agora-edu-core';
-import { LayoutMaskCode } from '../type';
+import { DEVICE_DISABLE } from 'agora-edu-core';
 
 import { transI18n } from 'agora-common-libs';
 import { runInAction } from 'mobx';
@@ -87,7 +80,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
                   this._enableLocalVideo(true);
-                  this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
                 },
               });
             }
@@ -105,7 +97,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
                   this._enableLocalAudio(true);
-                  this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
                 },
               });
             }
@@ -157,7 +148,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
                   this._enableLocalAudio(true);
-                  this.getters.classroomUIStore.shareUIStore.addToast('已开启麦克风');
                 },
               });
             }
