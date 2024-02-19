@@ -10,7 +10,7 @@ import {
   StreamMediaPlayerOpenParams,
   WebviewOpenParams,
 } from './type';
-import { MobileCallState } from '../stores/common/type';
+import { CustomMessageHandsUpState, MobileCallState } from '../stores/common/type';
 
 @Log.attach()
 export class Extension {
@@ -48,6 +48,9 @@ export class Extension {
   }
   updateMobileCallState(callState: MobileCallState) {
     this._broadcastMessage(AgoraExtensionRoomEvent.MobileCallStateChanged, callState);
+  }
+  updateRaiseHandState(state: CustomMessageHandsUpState) {
+    this._broadcastMessage(AgoraExtensionRoomEvent.RaiseHandStateChanged, state);
   }
   private _broadcastMessage(event: AgoraExtensionRoomEvent, args?: unknown, messageId?: string) {
     if (!messageId) {

@@ -22,6 +22,17 @@ export type CustomMessageData<T> = {
   cmd: CustomMessageCommandType;
   data: T;
 };
+export type CustomMessageHandsUpType = {
+  userUuid: string;
+  state: CustomMessageHandsUpState;
+};
+export enum CustomMessageHandsUpState {
+  lowerHand = 0,
+  raiseHand = 1,
+}
+export type CustomMessageHandsUpAllType = {
+  operation: CustomMessageHandsUpState;
+};
 export type CustomMessageDeviceSwitchType = {
   deviceState: CustomMessageDeviceState;
   deviceType: CustomMessageDeviceType;

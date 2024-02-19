@@ -833,4 +833,6 @@ export const en = {
   fcr_raisehand_tips_interaction_disconnected: 'Interaction has been disconnected.',
   fcr_raisehand_tips_not_supported_browser:
     'The current browser does not support the function of joining the call.',
+  fcr_room_tips_lower_hand: 'Teacher lowers your hand',
+  fcr_room_tips_lower_all_hand: 'All student‘s hands lowered',
 };

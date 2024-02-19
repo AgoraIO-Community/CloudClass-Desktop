@@ -62,6 +62,8 @@ export enum AgoraExtensionRoomEvent {
   MobileLandscapeToolBarVisibleChanged = 'mobile-landscape-tool-bar-visible-changed',
   //mobile连麦状态变更
   MobileCallStateChanged = 'mobile-call-state-changed',
+  //举手状态变更
+  RaiseHandStateChanged = 'raise-hand-state-changed',
 }
 
 /**
@@ -116,4 +118,8 @@ export enum AgoraExtensionWidgetEvent {
   OpenMobileHandsActionSheet = 'open-mobile-hands-up-action-sheet',
   //更新倒计时状态
   CountdownTimerStateChanged = 'countdown-timer-state-changed',
+  //举手
+  RaiseHand = 'raise-hand',
+  //取消举手
+  LowerHand = 'lower-hand',
 }
