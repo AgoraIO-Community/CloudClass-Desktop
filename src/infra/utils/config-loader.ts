@@ -1,6 +1,6 @@
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import { FcrMultiThemes, FcrTheme, FcrUIConfig } from 'agora-common-libs';
-import { room1V1Class, roomBigClass, roomMidClass } from '../configs/base-ui';
+import { CloudClass } from '../configs/base-ui';
 import { baseTheme } from '../configs/base-theme';
 import { jumpToLine } from '.';
 
@@ -11,10 +11,7 @@ export const themes: Record<string, FcrMultiThemes> = {
 };
 
 export const uiConfigs: Record<string, FcrUIConfig> = {
-  [EduRoomTypeEnum.Room1v1Class]: room1V1Class,
-  [EduRoomTypeEnum.RoomSmallClass]: roomMidClass,
-  [EduRoomTypeEnum.RoomBigClass]: roomBigClass,
-  [EduRoomTypeEnum.CloudClass]: roomMidClass,
+  [EduRoomTypeEnum.CloudClass]: CloudClass,
 };
 
 export const supportedRoomTypes: EduRoomTypeEnum[] = [];

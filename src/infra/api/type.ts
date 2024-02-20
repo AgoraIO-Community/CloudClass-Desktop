@@ -76,8 +76,6 @@ export type LaunchOption = {
   userFlexProperties?: { [key: string]: unknown }; //用户自订属性
   mediaOptions?: LaunchMediaOptions;
   latencyLevel?: AgoraLatencyLevel;
-  platform?: Platform;
-  uiMode?: FcrMultiThemeMode;
   shareUrl?: string; // 分享URL
   rtcCloudProxyType?: AgoraCloudProxyType; // RTC 云代理类型
   rtmCloudProxyEnabled?: boolean; // 是否开启 RTM 云代理

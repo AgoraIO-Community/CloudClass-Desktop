@@ -1,6 +1,6 @@
 import { useStore } from '@classroom/infra/hooks/ui-store';
-import { LocalTrackPlayerMobile, StreamPlayerMobile } from './index.mobile';
-import { MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
+import { LocalTrackPlayerMobile, StreamPlayerMobile } from '.';
+import { FC, MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
@@ -9,9 +9,9 @@ import dayjs from 'dayjs';
 import { Scheduler } from 'agora-rte-sdk';
 import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { useI18n } from 'agora-common-libs';
-import './index.mobile.css';
+import './index.css';
 import Award from '../award';
-import { MicrophoneIndicator } from '../action-sheet-mobile/mic';
+import { MicrophoneIndicator } from '../action-sheet/mic';
 import { PaginationMobile } from '../pagination-mobile';
 import { StreamContext, StreamToolContext, convertStreamUIStatus } from './context';
 const RoomBigTeacherStreamH5Tool = ({
@@ -365,9 +365,9 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
             );
           })}
         </PaginationMobile>
-      </div>
+      </div >
       {/* </div> */}
-    </div>
+    </div >
   );
 });
 

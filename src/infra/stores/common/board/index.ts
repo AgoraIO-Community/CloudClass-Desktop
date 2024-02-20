@@ -21,7 +21,7 @@ export class BoardUIStore extends EduUIStoreBase {
     const viewportHeight =
       this.shareUIStore.classroomViewportSize.height - this.shareUIStore.navHeight;
 
-    const heightRatio = this.getters.stageVisible ? this.uiOverrides.heightRatio : 1;
+    const heightRatio = this.uiOverrides.heightRatio;
 
     const height = heightRatio * viewportHeight;
 

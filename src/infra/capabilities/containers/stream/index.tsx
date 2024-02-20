@@ -3,8 +3,8 @@ import { EduStreamUI } from '@classroom/infra/stores/common/stream/struct';
 import { observer } from 'mobx-react';
 import { CSSProperties, FC, memo, useContext, useEffect, useRef } from 'react';
 
-import './index.mobile.css';
-import { TrackPlayer } from '../stream/track-player';
+import './index.css';
+import { TrackPlayer } from './track-player';
 import { AgoraRteMediaPublishState, AGRemoteVideoStreamType, AGRtcState } from 'agora-rte-sdk';
 import classNames from 'classnames';
 import { EduClassroomConfig, EduRoleTypeEnum, RteRole2EduRole } from 'agora-edu-core';

@@ -2,8 +2,7 @@ import { useStore } from '@classroom/infra/hooks/ui-store';
 import { EduRoomTypeEnum } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
-import { BigClassScenarioMobile } from './mobile/index.mobile';
-// import '@classroom/ui-kit/styles/global.css';
+import { Scenario } from './scenario';
 import '@classroom/ui-kit/styles/scenario.css';
 export type ScenariosProps = {
   pretest: boolean;
@@ -26,5 +25,5 @@ export const Scenarios: React.FC<ScenariosProps> = observer(() => {
     return null;
   }
 
-  return <BigClassScenarioMobile />;
+  return <Scenario />;
 });

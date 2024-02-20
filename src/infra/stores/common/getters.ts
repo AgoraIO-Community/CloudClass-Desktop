@@ -21,44 +21,6 @@ export class Getters {
   get classroomUIStore() {
     return this._classroomUIStore;
   }
-  /**
-   * 讲台
-   */
-  @computed
-  get layoutMaskCode() {
-    const { flexProps } = this._classroomUIStore.classroomStore.roomStore;
-    if (!isNumber(flexProps.area)) {
-      // 1v1和大班课默认讲台不开启
-      if (
-        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.Room1v1Class ||
-        EduClassroomConfig.shared.sessionInfo.roomType === EduRoomTypeEnum.RoomBigClass
-      ) {
-        return LayoutMaskCode.None;
-      }
-      // 小班课默认开启讲台
-      return LayoutMaskCode.None | LayoutMaskCode.StageVisible;
-    }
-    return flexProps.area;
-  }
-
-  /**
-   * 讲台是否显示
-   */
-  @computed
-  get stageVisible() {
-    return !!(this.layoutMaskCode & LayoutMaskCode.StageVisible);
-  }
-
-  /**
-   * 扩展屏是否已开启
-   */
-  @computed
-  get videoGalleryStarted() {
-    return (
-      this._classroomUIStore.classroomStore.roomStore.expandedScope?.state ===
-      ExpandedScopeState.open
-    );
-  }
 
   /**
    * 分组讨论是否已开启
@@ -67,10 +29,6 @@ export class Getters {
   get breakoutRoomStarted() {
     return this._classroomUIStore.classroomStore.groupStore.state === GroupState.OPEN;
   }
-
-
-
-
 
   /**
    * 台上用户ID

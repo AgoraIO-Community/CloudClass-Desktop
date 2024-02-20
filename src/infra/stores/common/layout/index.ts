@@ -9,6 +9,7 @@ import { getIOSVersion, isIOS, isWeChatBrowser } from '@classroom/infra/utils';
 import { AgoraExtensionWidgetEvent } from '@classroom/infra/protocol/events';
 import { transI18n } from 'agora-common-libs';
 import { ToastTypeEnum } from '../share';
+import { ConfirmDialogProps } from '@classroom/infra/capabilities/containers/confirm-dialog/confirm-dialog';
 export class LayoutUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
   @observable landscapeToolBarVisible = true;
@@ -262,7 +263,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   isDialogIdExist(id: string) {
     return this.dialogMap.has(id);
   }
-  addDialog(type: 'confirm', params?: CommonDialogType<unknown>): void;
+  addDialog(type: 'confirm', params?: CommonDialogType<ConfirmDialogProps>): void;
 
   @action.bound
   addDialog(type: unknown, params?: CommonDialogType<unknown>) {
