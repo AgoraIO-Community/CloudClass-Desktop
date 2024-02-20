@@ -4,7 +4,7 @@ const baseConfig = require('agora-common-libs/presets/webpack.config.base.js');
 const ROOT_PATH = path.resolve(__dirname, './');
 const config = {
   entry: {
-    edu_sdk: './src/infra/api/index.tsx',
+    edu_sdk: './src/index.tsx',
   },
   output: {
     path: path.resolve(ROOT_PATH, 'lib'),
@@ -16,8 +16,7 @@ const config = {
   resolve: {
     alias: {
       '@classroom': path.resolve(ROOT_PATH, './src'),
-      'agora-classroom-sdk': path.resolve(ROOT_PATH, './src/infra/api'),
-      '@components': 'fcr-ui-kit/src/components',
+      'agora-classroom-sdk': path.resolve(ROOT_PATH, './src'),
     },
   },
 };

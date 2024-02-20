@@ -34,11 +34,9 @@
         "src/*"
       ],
       "agora-classroom-sdk": [
-        "src/infra/api"
+        "src"
       ],
-      "@components/*": [
-        "../fcr-ui-kit/src/components/*",
-      ],
+     
     }
   },
   "include": [

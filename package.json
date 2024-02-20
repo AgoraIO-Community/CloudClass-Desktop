@@ -9,7 +9,7 @@
     "Education"
   ],
   "main": "lib/edu_sdk.bundle.js",
-  "types": "lib/infra/api/index.d.ts",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build:types": "tsc -p tsconfig.json",
     "build:docs": "typedoc",
