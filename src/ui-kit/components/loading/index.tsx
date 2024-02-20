@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import classnames from 'classnames';
 import { BaseProps } from '../util/type';
-import { Progress } from '../progress';
 import './index.css';
 import loadingGif from './assets/loading.gif';
 import { SvgImg, SvgIconEnum } from '..';
@@ -78,7 +77,6 @@ export const Loading: FC<LoadingProps> = ({
       {loadingText ? <span className="fcr-loading-text">{loadingText}</span> : ''}
       {hasProgress ? (
         <div className="fcr-loading-progress">
-          <Progress width={160} type="download" progress={currentProgress} />
           <span className="fcr-loading-progress-number">{currentProgress}%</span>
         </div>
       ) : (
@@ -98,11 +96,6 @@ export const Loading: FC<LoadingProps> = ({
               <div>
                 {item.status === CloudDriveResourceUploadStatus.Success && (
                   <div className="fcr-loading-progress">
-                    <Progress
-                      width={60}
-                      type="download"
-                      progress={item.currentProgress as number}
-                    />
                     {/* <span className="upload-pending-text">{item.currentProgress}%</span> */}
                     <span className="fcr-upload-success-text">
                       {transI18n('whiteboard.upload-success')}
@@ -114,11 +107,6 @@ export const Loading: FC<LoadingProps> = ({
                   <div className="fcr-loading-progress">
                     {item.status === CloudDriveResourceUploadStatus.Pending && (
                       <>
-                        <Progress
-                          width={60}
-                          type="download"
-                          progress={item.currentProgress as number}
-                        />
                         <span className="fcr-upload-pending-text">{item.currentProgress}%</span>
                       </>
                     )}
