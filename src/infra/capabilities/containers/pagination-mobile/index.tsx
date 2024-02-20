@@ -88,7 +88,7 @@ export const PaginationMobile: FC<PropsWithChildren<PaginationMobileProps>> = ({
       )}
       <div className={classNames(
         'fcr-pagination-mobile-list-container',
-        nextBtnDisabled ? 'fcr-pagination-mobile-list-kepp-right' : null,
+        nextBtnDisabled && !prevBtnDisabled ? 'fcr-pagination-mobile-list-kepp-right' : null,
       )}>
         {children}
       </div>
