@@ -220,3 +220,11 @@ export const setUrlParameters = (
 export const getRandomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
+const virtualSoundCardPatternList = [/BlackHole/i, /SoundFlower/i, /AgoraALD/i];
+
+export const matchVirtualSoundCardPattern = (deviceName: string) => {
+  return virtualSoundCardPatternList.reduce((prev, pattern) => {
+    pattern.test(deviceName) && (prev = true);
+    return prev;
+  }, false);
+};
