@@ -134,7 +134,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this.getters.classroomUIStore.shareUIStore.addToast('已开启摄像头');
                   this._enableLocalVideo(true);
                 },
               });
