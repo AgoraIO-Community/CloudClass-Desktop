@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { SvgaPlayer, SoundPlayer } from '@classroom/ui-kit';
 
 import RewardSVGA from '../stream/assets/svga/reward.svga';
-import RewardSound from '../stream/assets/audio/reward.mp3';
+import RewardSound from '../stream/assets/audio/reward-sound.mp3';
 import { useRef } from 'react';
 import { EduStreamUI } from '@classroom/uistores/stream/struct';
 
