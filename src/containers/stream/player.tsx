@@ -13,7 +13,7 @@ import './index.css';
 import Award from '../award';
 import { MicrophoneIndicator } from '../action-sheet/mic';
 import { PaginationMobile } from '../pagination-mobile';
-import { StreamContext, StreamToolContext, convertStreamUIStatus } from './context';
+import { StreamContext, convertStreamUIStatus } from './context';
 const RoomBigTeacherStreamH5Tool = ({
   isPiP,
   onPiP,
@@ -163,13 +163,12 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       shareUIStore: { isLandscape, setForceLandscape },
       layoutUIStore: { toggleLandscapeToolBarVisible },
     } = useStore();
-    const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP } = streamUIStore;
-    const userName = stream!.fromUser.userName;
-    const streamToolContext = useContext(StreamToolContext);
-
+    const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP, toolVisible, toggleTool, showTool } = streamUIStore;
+    const userName = stream.fromUser.userName;
+    const ref = useRef<HTMLDivElement>(null)
     const { pos } = useMobileStreamDrag({
       isPiP,
-      triggerRef: streamToolContext?.currentRef as MutableRefObject<HTMLDivElement>,
+      triggerRef: ref as MutableRefObject<HTMLDivElement>,
     });
     const onLandspce = () => {
       setForceLandscape(true);
@@ -177,16 +176,15 @@ export const RoomBigTeacherStreamContainerMobile = observer(
     const onPiP = () => {
       setIsPiP(!isPiP);
     };
-
     useEffect(() => {
       if (isPiP) {
-        streamToolContext?.showTool?.();
+        showTool()
       }
     }, [isPiP]);
 
     return (
       <div
-        ref={streamToolContext?.currentRef}
+        ref={ref}
         className={classnames(
           'fcr-relative',
           streamLayoutContainerCls,
@@ -200,26 +198,28 @@ export const RoomBigTeacherStreamContainerMobile = observer(
         <div
           className="fcr-stream-mobile-name"
           style={{
-            opacity: streamToolContext?.toolVisible && !isLandscape ? 1 : 0,
-            visibility: streamToolContext?.toolVisible && !isLandscape ? 'visible' : 'hidden',
+            opacity: toolVisible && !isLandscape ? 1 : 0,
+            visibility: toolVisible && !isLandscape ? 'visible' : 'hidden',
           }}>
           {userName || 'teacher'}
         </div>
         <RoomBigTeacherStreamH5Tool
           isPiP={isPiP}
-          visible={!!streamToolContext?.toolVisible && !isLandscape}
+          visible={toolVisible && !isLandscape}
           size={isPiP ? 'sm' : 'lg'}
           onLandscape={onLandspce}
           onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
-        <StreamPlayerMobile
-          onClick={toggleLandscapeToolBarVisible}
-          stream={stream!}
-          style={{
-            width: '100%',
-            height: '100%',
-            position: isPiP ? 'static' : 'relative',
-          }}
-        />
+        <div onClick={toggleTool} style={{ width: '100%', height: '100%' }}>
+          <StreamPlayerMobile
+            onClick={toggleLandscapeToolBarVisible}
+            stream={stream}
+            style={{
+              width: '100%',
+              height: '100%',
+              position: isPiP ? 'static' : 'relative',
+            }}
+          />
+        </div>
       </div>
     );
   },
@@ -271,13 +271,15 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
     studentStreamsVisible,
     toggleStudentStreamsVisible,
     subscribeMass,
+    toolVisible,
+    toggleTool
   } = streamUIStore;
-  const streamToolContext = useContext(StreamToolContext);
-  const visible = streamToolContext?.toolVisible && studentStreamsVisible;
+  const visible = toolVisible && studentStreamsVisible;
 
   useEffect(() => {
     subscribeMass(listViewStreamsByPage.map((stream) => stream.stream));
   }, [listViewStreamsByPage]);
+
   return (
     <div
       className={classnames(
@@ -302,72 +304,62 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
             forceLandscape={forceLandscape}></SvgImgMobile>
         </div>
       )}
-      {/* <div
-        className={classnames(
-          'fcr-items-center',
-          'fcr-flex-row',
-          'fcr-flex',
-          'fcr-justify-start',
-          // 'fcr-overflow-x-auto',
-        )}> */}
-
-      <div ref={streamToolContext?.currentRef}>
-        <PaginationMobile
-          onChange={setCurrentPage}
-          direction="row"
-          total={totalPage}
-          current={currentPage}>
-          {listViewStreamsByPage.map((stream) => {
-            const isLocal = stream.stream.isLocal;
-            const reward = rewards.get(stream.fromUser.userUuid);
-            return (
-              <div
-                ref={streamToolContext?.currentRef}
-                key={stream.stream.streamUuid}
-                className="fcr-relative">
-                {isLocal ? (
-                  <LocalTrackPlayerMobile
+      <PaginationMobile
+        onChange={setCurrentPage}
+        direction="row"
+        total={totalPage}
+        current={currentPage}
+        toolVisible={toolVisible}
+      >
+        {listViewStreamsByPage.map((stream) => {
+          const isLocal = stream.stream.isLocal;
+          const reward = rewards.get(stream.fromUser.userUuid);
+          return (
+            <div
+              key={stream.stream.streamUuid}
+              onClick={toggleTool}
+              className="fcr-relative">
+              {isLocal ? (
+                <LocalTrackPlayerMobile
+                  key={stream.stream.streamUuid}
+                  stream={stream}></LocalTrackPlayerMobile>
+              ) : (
+                <StreamContext.Provider value={convertStreamUIStatus(stream)}>
+                  <StreamPlayerMobile
                     key={stream.stream.streamUuid}
-                    stream={stream}></LocalTrackPlayerMobile>
-                ) : (
-                  <StreamContext.Provider value={convertStreamUIStatus(stream)}>
-                    <StreamPlayerMobile
-                      key={stream.stream.streamUuid}
-                      style={{
-                        width: studentVideoStreamSize.width,
-                        height: studentVideoStreamSize.height,
-                        position: 'relative',
-                        flexShrink: 0,
-                      }}
-                      stream={stream}></StreamPlayerMobile>
-                  </StreamContext.Provider>
-                )}
-                <div
-                  className="fcr-stream-mobile-stu-top-left"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    visibility: visible ? 'visible' : 'hidden',
-                  }}>
-                  <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
-                  <span className="fcr-stream-mobile-stu-x">x</span>
-                  <span>{reward || 0}</span>
-                </div>
-                <div
-                  className="fcr-stream-mobile-stu-bottom-left"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    visibility: visible ? 'visible' : 'hidden',
-                  }}>
-                  <AudioRecordinDeviceIcon stream={stream} size={20} />
-                  <span>{stream.fromUser.userName}</span>
-                </div>
-                <Award stream={stream} />
+                    style={{
+                      width: studentVideoStreamSize.width,
+                      height: studentVideoStreamSize.height,
+                      position: 'relative',
+                      flexShrink: 0,
+                    }}
+                    stream={stream}></StreamPlayerMobile>
+                </StreamContext.Provider>
+              )}
+              <div
+                className="fcr-stream-mobile-stu-top-left"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  visibility: visible ? 'visible' : 'hidden',
+                }}>
+                <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
+                <span className="fcr-stream-mobile-stu-x">x</span>
+                <span>{reward || 0}</span>
               </div>
-            );
-          })}
-        </PaginationMobile>
-      </div>
-      {/* </div> */}
+              <div
+                className="fcr-stream-mobile-stu-bottom-left"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  visibility: visible ? 'visible' : 'hidden',
+                }}>
+                <AudioRecordinDeviceIcon stream={stream} size={20} />
+                <span>{stream.fromUser.userName}</span>
+              </div>
+              <Award stream={stream} />
+            </div>
+          );
+        })}
+      </PaginationMobile>
     </div>
   );
 });

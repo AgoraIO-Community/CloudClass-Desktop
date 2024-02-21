@@ -60,6 +60,7 @@ type RenderableVideoDom = {
 };
 export class StreamUIStore extends EduUIStoreBase {
   protected _disposers: (IReactionDisposer | Lambda)[] = [];
+  private _showToolTask: Scheduler.Task | null = null;
 
   /**
    * 视频窗位置信息
@@ -74,6 +75,24 @@ export class StreamUIStore extends EduUIStoreBase {
 
   @observable
   settingsOpened = false;
+
+  @observable
+  toolVisible = true;
+
+  @action.bound
+  toggleTool() {
+    this.toolVisible = !this.toolVisible;
+  }
+  @action.bound
+  showTool() {
+    this._showToolTask?.stop();
+    this.toolVisible = true;
+    this._showToolTask = Scheduler.shared.addDelayTask(() => {
+      runInAction(() => {
+        this.toolVisible = false;
+      });
+    }, 4000);
+  }
 
   @computed
   get screenShareStateAccessor() {
@@ -538,13 +557,13 @@ export class StreamUIStore extends EduUIStoreBase {
       videoSourceStopped
         ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disabled }
         : videoMuted
-        ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disallow }
-        : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
+          ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disallow }
+          : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
       videoSourceStopped
         ? transI18n('Camera Not Available')
         : videoMuted
-        ? transI18n('Open Camera')
-        : transI18n('Close Camera'),
+          ? transI18n('Open Camera')
+          : transI18n('Close Camera'),
       {
         //can interact when source is not stopped
         interactable: !videoSourceStopped,
@@ -577,13 +596,13 @@ export class StreamUIStore extends EduUIStoreBase {
       audioSourceStopped
         ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
         : audioMuted
-        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow }
-        : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
+          ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow }
+          : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
       audioSourceStopped
         ? transI18n('Microphone Not Available')
         : audioMuted
-        ? transI18n('Open Microphone')
-        : transI18n('Close Microphone'),
+          ? transI18n('Open Microphone')
+          : transI18n('Close Microphone'),
       {
         //can interact when source is not stopped
         interactable: !audioSourceStopped,
@@ -896,7 +915,7 @@ export class StreamUIStore extends EduUIStoreBase {
 
   private _gapInPx = 2;
 
-  private _interactionDeniedCallback = () => {};
+  private _interactionDeniedCallback = () => { };
   @action.bound
   setLocalVideoRenderAt(renderAt: 'Preview' | 'Window') {
     this.localVideoRenderAt = renderAt;
@@ -1016,11 +1035,11 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.isPiP
       ? {}
       : this.shareUIStore.isLandscape
-      ? {
+        ? {
           width: this.shareUIStore.forceLandscape ? window.innerHeight : window.innerWidth,
           height: this.shareUIStore.forceLandscape ? window.innerWidth : window.innerHeight,
         }
-      : {
+        : {
           width: window.innerWidth,
           height: (9 / 16) * window.innerWidth,
         };
@@ -1071,9 +1090,9 @@ export class StreamUIStore extends EduUIStoreBase {
   get streamLayoutContainerDimensions() {
     return this.streamZoomStatus !== 'zoom-out'
       ? {
-          width: this.shareUIStore.classroomViewportSize.h5Width,
-          height: this.shareUIStore.classroomViewportSize.h5Height,
-        }
+        width: this.shareUIStore.classroomViewportSize.h5Width,
+        height: this.shareUIStore.classroomViewportSize.h5Height,
+      }
       : {};
   }
 

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 
 import './index.css';
-import { StreamToolContext } from '../stream/context';
+import { useStore } from '@classroom/hooks/ui-store';
 type PaginationProps = {
   current: number;
   total: number;
@@ -12,6 +12,7 @@ type PaginationProps = {
 interface PaginationMobileProps extends PaginationProps {
   wrapperCls?: string;
   direction?: 'row' | 'col';
+  toolVisible: boolean;
 }
 const usePageCounter = (context: { current: number; total: number }) => {
   const [current, setCurrent] = useState(context.current);
@@ -50,9 +51,13 @@ export const PaginationMobile: FC<PropsWithChildren<PaginationMobileProps>> = ({
   onChange = () => { },
   direction = 'row',
   children,
+  toolVisible,
 }) => {
+  const {
+    streamUIStore: { studentStreamsVisible },
+
+  } = useStore();
   const { current: innerCurrent, handleNext, handlePrev, isNext } = usePageCounter({ current, total });
-  const streamToolContext = useContext(StreamToolContext);
 
   useEffect(() => {
     onChange(innerCurrent);
@@ -61,15 +66,14 @@ export const PaginationMobile: FC<PropsWithChildren<PaginationMobileProps>> = ({
   const prevCls = classNames(
     'fcr-pagination-mobile-float__btn',
     prevBtnDisabled ? 'fcr-pagination_btn--disabled' : 'fcr-btn-click-effect',
-    streamToolContext?.toolVisible ? null : 'fcr-pagination_btn--opacity'
+    toolVisible ? null : 'fcr-pagination_btn--opacity'
   );
   const nextBtnDisabled = innerCurrent >= total;
   const nextCls = classNames(
     'fcr-pagination-mobile-float__btn',
     nextBtnDisabled ? 'fcr-pagination_btn--disabled' : 'fcr-btn-click-effect',
-    streamToolContext?.toolVisible ? null : 'fcr-pagination_btn--opacity'
+    toolVisible ? null : 'fcr-pagination_btn--opacity'
   );
-
   return (
     <div
       className={classNames(
@@ -79,7 +83,7 @@ export const PaginationMobile: FC<PropsWithChildren<PaginationMobileProps>> = ({
         wrapperCls,
       )}
     >
-      {!prevBtnDisabled && (
+      {!prevBtnDisabled && studentStreamsVisible && (
         <div className="fcr-pagination-mobile-list__prev">
           <button className={prevCls} onClick={handlePrev}>
             <SvgImg type={SvgIconEnum.FCR_MOBILE_LEFT} size={16} colors={{ iconPrimary: '#000000' }} />
@@ -92,7 +96,7 @@ export const PaginationMobile: FC<PropsWithChildren<PaginationMobileProps>> = ({
       )}>
         {children}
       </div>
-      {!nextBtnDisabled && (
+      {!nextBtnDisabled && studentStreamsVisible && (
         <div className="fcr-pagination-mobile-list__next">
           <button className={nextCls} onClick={handleNext}>
             <SvgImg type={SvgIconEnum.FCR_MOBILE_RIGHT} size={16} colors={{ iconPrimary: '#000000' }} />

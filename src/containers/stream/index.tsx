@@ -8,7 +8,6 @@ import { TrackPlayer } from './track-player';
 import { AgoraRteMediaPublishState, AGRemoteVideoStreamType, AGRtcState } from 'agora-rte-sdk';
 import classNames from 'classnames';
 import { EduClassroomConfig, EduRoleTypeEnum, RteRole2EduRole } from 'agora-edu-core';
-import { StreamContext } from './context';
 
 type StreamPlayerMobileProps = {
   stream: EduStreamUI;
@@ -25,7 +24,6 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
         connectionStore: { rtcState },
       },
     } = useStore();
-    const streamContext = useContext(StreamContext);
     useEffect(() => {
       if (
         rtcState === AGRtcState.Connected &&
@@ -41,17 +39,15 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
     const userName = stream.fromUser.userName;
     const roomType = EduClassroomConfig.shared.sessionInfo.roomType;
     const isTeacher = RteRole2EduRole(roomType, stream.fromUser.role) === EduRoleTypeEnum.teacher;
-    return streamContext?.streamPlayerVisible ? (
-      <div onClick={onClick} className={`fcr-stream-player-mobile ${className}`} style={style}>
-        <div
-          className={classNames('fcr-stream-player-mobil-placeholder', {
-            'fcr-stream-player-mobil-placeholder-teacher': isTeacher,
-          })}>
-          {generateShortUserName(userName)}
-        </div>
-        <TrackPlayer stream={stream} />
+    return <div onClick={onClick} className={`fcr-stream-player-mobile ${className}`} style={style}>
+      <div
+        className={classNames('fcr-stream-player-mobil-placeholder', {
+          'fcr-stream-player-mobil-placeholder-teacher': isTeacher,
+        })}>
+        {generateShortUserName(userName)}
       </div>
-    ) : null;
+      <TrackPlayer stream={stream} />
+    </div>
   },
 );
 export const TeacherCameraPlaceHolderMobile = observer(() => {
@@ -83,7 +79,6 @@ export const LocalTrackPlayerMobile = observer(({ stream }: { stream: EduStreamU
     streamUIStore: { studentVideoStreamSize },
   } = useStore();
   const userName = EduClassroomConfig.shared.sessionInfo.userName;
-
   return (
     <div
       className="fcr-stream-player-mobile"

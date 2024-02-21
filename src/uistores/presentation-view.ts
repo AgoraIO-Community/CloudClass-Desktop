@@ -49,7 +49,6 @@ export class PresentationUIStore extends EduUIStoreBase {
 
   @computed get listViewStreamsByPage() {
     const { studentCameraUIStreams } = this.getters;
-    console.log(studentCameraUIStreams, '===studentCameraUIStreams')
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
     const currentPageStreams = studentCameraUIStreams.slice(start, end);
