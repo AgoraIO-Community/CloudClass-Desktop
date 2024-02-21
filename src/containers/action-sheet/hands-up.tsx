@@ -18,7 +18,7 @@ export const HandsUpActionSheetMobile = observer(() => {
   const {
     classroomStore: {
       mediaStore: { enableLocalVideo, enableLocalAudio },
-      streamStore: { updateRemotePublishState, localCameraStreamUuid }
+      streamStore: { updateRemotePublishState },
     },
     streamUIStore: { localVolume, setLocalVideoRenderAt, localStream },
     deviceSettingUIStore: {
@@ -51,16 +51,23 @@ export const HandsUpActionSheetMobile = observer(() => {
     }
   }, [deviceStatus.camera, deviceStatus.mic]);
   useEffect(() => {
-
     if (deviceStatus.mic && localStream && localStream.isMicMuted) {
-      updateRemotePublishState(EduClassroomConfig.shared.sessionInfo.userUuid, localStream.stream.streamUuid, {
-        audioState: AgoraRteMediaPublishState.Published,
-      })
+      updateRemotePublishState(
+        EduClassroomConfig.shared.sessionInfo.userUuid,
+        localStream.stream.streamUuid,
+        {
+          audioState: AgoraRteMediaPublishState.Published,
+        },
+      );
     }
     if (deviceStatus.camera && localStream && localStream.isCameraMuted) {
-      updateRemotePublishState(EduClassroomConfig.shared.sessionInfo.userUuid, localStream.stream.streamUuid, {
-        videoState: AgoraRteMediaPublishState.Published,
-      })
+      updateRemotePublishState(
+        EduClassroomConfig.shared.sessionInfo.userUuid,
+        localStream.stream.streamUuid,
+        {
+          videoState: AgoraRteMediaPublishState.Published,
+        },
+      );
     }
     enableLocalAudio(deviceStatus.mic);
     enableLocalVideo(deviceStatus.camera);
@@ -156,10 +163,7 @@ export const HandsUpActionSheetMobile = observer(() => {
                 className="fcr-hands-up-action-sheet-mobile-prepare-options-item"
                 onClick={toggleMic}>
                 {micOn ? (
-                  <MicrophoneIndicator
-                    voicePercent={volume}
-                    size={40}
-                    iconPrimary="white"></MicrophoneIndicator>
+                  <MicrophoneIndicator voicePercent={volume} size={40}></MicrophoneIndicator>
                 ) : (
                   <SvgImg
                     type={SvgIconEnum.UNMUTE_MOBILE}

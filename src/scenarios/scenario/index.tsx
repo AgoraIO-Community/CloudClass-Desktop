@@ -41,11 +41,9 @@ export const Scenario = observer(() => {
       },
     },
     shareUIStore: { isLandscape, forceLandscape },
-    streamUIStore: { teacherCameraStream, showTool }
+    streamUIStore: { teacherCameraStream },
   } = useStore();
-  // useEffect(() => {
-  //   showTool()
-  // }, [])
+
   return (
     <Room>
       <MobileLoadingContainer></MobileLoadingContainer>

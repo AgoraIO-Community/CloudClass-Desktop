@@ -128,7 +128,8 @@
 
 .fcr-countdown-mobile-widget {
   position: relative;
+  z-index: 0;
 }
-.fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile{
+.fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile {
   bottom: 162px;
 }

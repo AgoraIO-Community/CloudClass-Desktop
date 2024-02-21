@@ -55,7 +55,7 @@ export class AgoraEduSDK {
   private static _widgets: Record<string, typeof AgoraWidgetBase> = {};
   private static _language: string;
   private static _appId = '';
-  private static _uiMode: FcrMultiThemeMode = FcrMultiThemeMode.dark;
+  private static _uiMode: FcrMultiThemeMode = FcrMultiThemeMode.light;
   private static _uiConfig: FcrUIConfig;
   private static _theme: FcrTheme;
   private static _shareUrl: string;
