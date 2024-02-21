@@ -11,14 +11,16 @@ import classNames from 'classnames';
 import { LocalTrackPlayer, generateShortUserName } from '../stream';
 import { MicrophoneIndicator } from './mic';
 import { MobileCallState } from '@classroom/uistores/type';
+import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
 
 export const HandsUpActionSheetMobile = observer(() => {
   const transI18n = useI18n();
   const {
     classroomStore: {
       mediaStore: { enableLocalVideo, enableLocalAudio },
+      streamStore: { updateRemotePublishState, localCameraStreamUuid }
     },
-    streamUIStore: { localVolume, setLocalVideoRenderAt },
+    streamUIStore: { localVolume, setLocalVideoRenderAt, localStream },
     deviceSettingUIStore: {
       toggleFacingMode,
       isCameraDeviceEnabled,
@@ -49,6 +51,17 @@ export const HandsUpActionSheetMobile = observer(() => {
     }
   }, [deviceStatus.camera, deviceStatus.mic]);
   useEffect(() => {
+
+    if (deviceStatus.mic && localStream && localStream.isMicMuted) {
+      updateRemotePublishState(EduClassroomConfig.shared.sessionInfo.userUuid, localStream.stream.streamUuid, {
+        audioState: AgoraRteMediaPublishState.Published,
+      })
+    }
+    if (deviceStatus.camera && localStream && localStream.isCameraMuted) {
+      updateRemotePublishState(EduClassroomConfig.shared.sessionInfo.userUuid, localStream.stream.streamUuid, {
+        videoState: AgoraRteMediaPublishState.Published,
+      })
+    }
     enableLocalAudio(deviceStatus.mic);
     enableLocalVideo(deviceStatus.camera);
   }, [callState, deviceStatus.camera, deviceStatus.mic]);

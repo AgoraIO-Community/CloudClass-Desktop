@@ -245,7 +245,7 @@ export abstract class SceneSubscription {
   protected getStreamConnType(stream: AgoraStream) {
     const type =
       stream.streamName === 'secondary' ||
-      stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
+        stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
         ? AGRtcConnectionType.sub
         : AGRtcConnectionType.main;
     return type;
@@ -262,7 +262,9 @@ export abstract class SceneSubscription {
           `muteLocalVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteVideo}]`,
         );
         scene.rtcChannel.muteLocalVideoStream(muteVideo, connType);
-        muteVideo && this._mediaControl.createCameraVideoTrack().stop();
+        const disableLocalVideo = stream.videoState === AgoraRteMediaPublishState.Unpublished;
+
+        disableLocalVideo && this._mediaControl.createCameraVideoTrack().stop();
 
         this.putRegistry(stream.streamUuid, { muteVideo });
         break;
@@ -280,7 +282,9 @@ export abstract class SceneSubscription {
         this.logger.info(
           `muteLocalAudio, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteAudio}]`,
         );
-        muteAudio && this._mediaControl.createMicrophoneAudioTrack().stop();
+        const disableLocalAudio = stream.audioState === AgoraRteMediaPublishState.Unpublished;
+
+        disableLocalAudio && this._mediaControl.createMicrophoneAudioTrack().stop();
         scene.rtcChannel.muteLocalAudioStream(muteAudio, connType);
         this.putRegistry(stream.streamUuid, { muteAudio });
         break;
