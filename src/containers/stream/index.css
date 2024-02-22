@@ -526,6 +526,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 .fcr-stream-player-mobile {
   background: rgba(67, 67, 78, 1);
