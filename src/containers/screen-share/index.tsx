@@ -30,15 +30,24 @@ export const ScreenShareRemoteTrackPlayer = observer(
     stream: EduStream;
     className?: string;
   }) => {
-    const { streamUIStore } = useStore();
+    const {
+      streamUIStore,
+      classroomStore: {
+        streamStore: { muteRemoteVideoStream },
+      },
+    } = useStore();
     const { setupRemoteVideo } = streamUIStore;
 
     const ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
       if (ref.current) {
+        muteRemoteVideoStream(stream, false);
         setupRemoteVideo(stream, ref.current, false, AGRenderMode.fit);
       }
+      return () => {
+        muteRemoteVideoStream(stream, true);
+      };
     }, [ref.current, stream]);
 
     return (

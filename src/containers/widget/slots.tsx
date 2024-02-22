@@ -112,6 +112,7 @@ export const ChatMobile = observer(function Chat() {
       studentVideoStreamSize,
       studentStreamsVisible,
       isPiP,
+      screenShareStream,
     },
     boardUIStore: { boardContainerHeight, mounted },
     shareUIStore: { isLandscape, forceLandscape },
@@ -124,6 +125,7 @@ export const ChatMobile = observer(function Chat() {
     //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
     const height =
       h5Height -
+      (screenShareStream ? boardContainerHeight : 0) -
       (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted)
         ? classRoomPlacholderMobileHeight
         : 0) -
