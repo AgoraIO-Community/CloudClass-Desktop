@@ -30,28 +30,25 @@ export const HandsUpActionSheetMobile = observer(() => {
   } = useStore();
   const [devicePreviewViewVisible, setDevicePreviewViewVisible] = useState(false);
   const [callState, setCallState] = useState(MobileCallState.Processing);
-  const [deviceStatus, setDeviceStatus] = useState({
-    mic: false,
-    camera: false,
-  });
+
   const { userName } = EduClassroomConfig.shared.sessionInfo;
-  const micOn = deviceStatus.mic;
-  const cameraOn = deviceStatus.camera;
+  const micOn = isAudioRecordingDeviceEnabled;
+  const cameraOn = isCameraDeviceEnabled;
   const volume = localVolume;
 
   useEffect(() => {
-    if (deviceStatus.camera && deviceStatus.mic) {
+    if (micOn && cameraOn) {
       setCallState(MobileCallState.VideoAndVoiceCall);
-    } else if (deviceStatus.mic) {
+    } else if (micOn) {
       setCallState(MobileCallState.VoiceCall);
-    } else if (deviceStatus.camera) {
+    } else if (cameraOn) {
       setCallState(MobileCallState.VideoCall);
     } else {
       setCallState(MobileCallState.Initialize);
     }
-  }, [deviceStatus.camera, deviceStatus.mic]);
+  }, [cameraOn, micOn]);
   useEffect(() => {
-    if (deviceStatus.mic && localStream && localStream.isMicMuted) {
+    if (micOn && localStream && localStream.isMicMuted) {
       updateRemotePublishState(
         EduClassroomConfig.shared.sessionInfo.userUuid,
         localStream.stream.streamUuid,
@@ -60,7 +57,7 @@ export const HandsUpActionSheetMobile = observer(() => {
         },
       );
     }
-    if (deviceStatus.camera && localStream && localStream.isCameraMuted) {
+    if (cameraOn && localStream && localStream.isCameraMuted) {
       updateRemotePublishState(
         EduClassroomConfig.shared.sessionInfo.userUuid,
         localStream.stream.streamUuid,
@@ -69,15 +66,8 @@ export const HandsUpActionSheetMobile = observer(() => {
         },
       );
     }
-    enableLocalAudio(deviceStatus.mic);
-    enableLocalVideo(deviceStatus.camera);
-  }, [callState, deviceStatus.camera, deviceStatus.mic]);
-  useEffect(() => {
-    setDeviceStatus({
-      mic: isAudioRecordingDeviceEnabled,
-      camera: isCameraDeviceEnabled,
-    });
-  }, [isCameraDeviceEnabled, isAudioRecordingDeviceEnabled]);
+  }, [callState, cameraOn, micOn]);
+
   useEffect(() => {
     broadcastCallState(callState);
   }, [callState]);
@@ -93,24 +83,18 @@ export const HandsUpActionSheetMobile = observer(() => {
   }, [devicePreviewViewVisible]);
 
   const toggleCamera = () => {
-    const enable = !cameraOn;
-    setDeviceStatus({
-      ...deviceStatus,
-      camera: enable,
-    });
+    if (cameraOn) {
+      enableLocalVideo(false);
+    } else {
+      enableLocalVideo(true);
+    }
   };
   const toggleMic = () => {
-    const enable = !micOn;
-    setDeviceStatus({
-      ...deviceStatus,
-      mic: enable,
-    });
-  };
-  const resetDeviceStatus = () => {
-    setDeviceStatus({
-      mic: false,
-      camera: false,
-    });
+    if (micOn) {
+      enableLocalAudio(false);
+    } else {
+      enableLocalAudio(true);
+    }
   };
 
   return (
