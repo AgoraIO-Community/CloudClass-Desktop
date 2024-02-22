@@ -23,8 +23,9 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
       shareUIStore: { isLandscape },
       classroomStore: {
         streamStore: { setRemoteVideoStreamType },
-        connectionStore: { rtcState },
+        connectionStore: { rtcState }
       },
+      streamUIStore: { isPiP },
     } = useStore();
     useEffect(() => {
       if (
@@ -47,6 +48,7 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
         <div
           className={classNames('fcr-stream-player-mobil-placeholder', {
             'fcr-stream-player-mobil-placeholder-teacher': isTeacher,
+            'fcr-stream-player-mobil-placeholder-teacher-pip': isTeacher && isPiP,
           })}>
           {`${first}${last}`}
         </div>
@@ -63,7 +65,7 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
       roomStore: { flexProps },
     },
   } = useStore();
-  const [first, last] = splitName(flexProps['teacherName']);
+  const [first, last] = splitName(flexProps['teacherName'] || 'teacher');
   return (
     <div
       onClick={toggleLandscapeToolBarVisible}

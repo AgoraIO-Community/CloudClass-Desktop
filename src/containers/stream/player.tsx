@@ -79,7 +79,7 @@ export const useMobileStreamTool = ({
     showTool,
   };
 };
-const useMobileStreamDrag = ({
+export const useMobileStreamDrag = ({
   bounds = 'body',
   isPiP,
   triggerRef,
@@ -93,6 +93,15 @@ const useMobileStreamDrag = ({
   const posRef = useRef({ x: 0, y: 0 });
   const cacheRef = useRef({ x: 0, y: 0 });
   const boundsRef = useRef({ top: 0, left: 0, right: 0, bottom: 0 });
+  const initData = () => {
+    const newPos = {
+      x: 0,
+      y: 0,
+    };
+    setPos(newPos);
+    cacheRef.current = newPos;
+    posRef.current = newPos;
+  }
   const handleTouchStart = (e: TouchEvent) => {
     const ele = e.targetTouches[0];
     touchPosRef.current = { x: ele.clientX, y: ele.clientY };
@@ -157,6 +166,7 @@ const useMobileStreamDrag = ({
   }, [isPiP]);
   return {
     pos,
+    initData
   };
 };
 export const RoomBigTeacherStreamContainerMobile = observer(

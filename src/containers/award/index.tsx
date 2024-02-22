@@ -16,8 +16,8 @@ export const Award = observer(({ stream }: { stream: EduStreamUI }) => {
   return stream ? (
     <div ref={ref} className="center-reward">
       {streamAwardAnims(stream).map((anim: { id: string; userUuid: string }) => {
-        const width = ref.current?.clientWidth || 0;
-        const height = ref.current?.clientHeight || 0;
+        const width = ref.current?.clientWidth ? ref.current.clientWidth * 1.5 : 0;
+        const height = ref.current?.clientHeight ? ref.current.clientHeight * 1.5 : 0;
         return (
           <SvgaPlayer
             key={anim.id}

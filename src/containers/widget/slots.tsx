@@ -2,10 +2,11 @@ import { useStore } from '@classroom/hooks/ui-store';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { useEffect, useState } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../configs/config';
 import classNames from 'classnames';
+import { useMobileStreamDrag } from '../stream/player';
 
 export const Chat = observer(function Chat() {
   const { widgetUIStore } = useStore();
@@ -56,12 +57,24 @@ const Spinner = () => {
   );
 };
 
-export const CountDownMobile = observer(({ haveStream }: { haveStream: boolean }) => {
+export const CountDownMobile = observer(() => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { pos, initData } = useMobileStreamDrag({
+    isPiP: true,
+    triggerRef: ref as MutableRefObject<HTMLDivElement>
+  });
+  const {
+    shareUIStore: { isLandscape }
+  } = useStore();
+  useEffect(() => {
+    initData()
+  }, [isLandscape])
   return (
     <div
-      className={classNames('fcr-countdown-mobile-widget', {
-        'fcr-countdown-mobile-widget-have-stream': haveStream,
-      })}></div>
+      ref={ref}
+      className={classNames({ 'fcr-countdown-mobile-widget-landscape': isLandscape, 'fcr-countdown-mobile-widget': !isLandscape })} style={{
+        transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
+      }}></div>
   );
 });
 export const PollMobile = observer(() => {

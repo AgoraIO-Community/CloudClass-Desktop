@@ -555,6 +555,12 @@
   line-height: 80px;
   font-size: 30px;
 }
+.fcr-stream-player-mobil-placeholder-teacher-pip {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+}
 .fcr-pagination-mobile-list__prev,
 .fcr-pagination-mobile-list__next {
   pointer-events: all;

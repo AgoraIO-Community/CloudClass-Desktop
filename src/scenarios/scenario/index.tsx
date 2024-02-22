@@ -79,10 +79,7 @@ export const Scenario = observer(() => {
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
               <TeacherStreamChatContainerMobile />
-              <CountDownMobile
-                haveStream={
-                  !!(teacherCameraStream && !teacherCameraStream.isCameraMuted)
-                }></CountDownMobile>
+              <CountDownMobile></CountDownMobile>
               {!isLandscape && (
                 <>
                   <StudentStreamCollapse></StudentStreamCollapse>
@@ -135,8 +132,11 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
 const TeacherStreamChatContainerMobile = observer(() => {
   const {
     shareUIStore: { isLandscape },
-    streamUIStore: { teacherCameraStream, containerH5VisibleCls },
+    streamUIStore: { teacherCameraStream, containerH5VisibleCls, showTool },
   } = useStore();
+  useEffect(() => {
+    showTool();
+  }, []);
   return (
     <Layout direction="col" className={classnames(containerH5VisibleCls)}>
       {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (
