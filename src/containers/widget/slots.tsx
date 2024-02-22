@@ -73,12 +73,12 @@ export const PollMobile = observer(() => {
 export const WhiteboardMobile = observer(function Board() {
   const {
     boardUIStore,
-    streamUIStore: { containerH5VisibleCls },
+    streamUIStore: { containerH5VisibleCls, screenShareStream },
     shareUIStore: { isLandscape },
   } = useStore();
 
   const { boardContainerHeight, boardContainerWidth, mounted } = boardUIStore;
-  const height = mounted && !isLandscape ? boardContainerHeight : 0;
+  const height = (mounted && !isLandscape) || screenShareStream ? boardContainerHeight : 0;
   return (
     <div
       className={classnames(
@@ -89,7 +89,7 @@ export const WhiteboardMobile = observer(function Board() {
         height: height,
         width: boardContainerWidth,
         visibility: isLandscape ? 'hidden' : 'visible',
-        overflow: 'hidden',
+        // overflow: 'hidden',
       }}>
       <div
         style={{

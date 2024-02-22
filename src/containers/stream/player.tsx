@@ -189,9 +189,15 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       setIsPiP(!isPiP);
     };
     useEffect(() => {
+<<<<<<< Updated upstream
       if (isPiP) {
         showTool();
       }
+=======
+      // if (isPiP) {
+      showTool()
+      // }
+>>>>>>> Stashed changes
     }, [isPiP]);
 
     return (
@@ -221,17 +227,20 @@ export const RoomBigTeacherStreamContainerMobile = observer(
           size={isPiP ? 'sm' : 'lg'}
           onLandscape={onLandspce}
           onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
-        <div onClick={toggleTool} style={{ width: '100%', height: '100%' }}>
-          <StreamPlayerMobile
-            onClick={toggleLandscapeToolBarVisible}
-            stream={stream}
-            style={{
-              width: '100%',
-              height: '100%',
-              position: isPiP ? 'static' : 'relative',
-            }}
-          />
-        </div>
+        {/* <div onClick={toggleTool} style={{ width: '100%', height: '100%' }}> */}
+        <StreamPlayerMobile
+          onClick={() => {
+            toggleTool()
+            toggleLandscapeToolBarVisible()
+          }}
+          stream={stream}
+          style={{
+            width: '100%',
+            height: '100%',
+            position: isPiP ? 'static' : 'relative',
+          }}
+        />
+        {/* </div> */}
       </div>
     );
   },
@@ -253,6 +262,10 @@ export const AudioRecordinDeviceIcon = observer(
             size={20}
             colors={{ iconPrimary: '#F5655C' }}></SvgImg>
         ) : (
+<<<<<<< Updated upstream
+=======
+          // iconPrimary="#787676"
+>>>>>>> Stashed changes
           <MicrophoneIndicator size={size} voicePercent={volume} />
         )}
       </div>
@@ -423,7 +436,7 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
 
 export const H5RoomPlaceholder = observer(() => {
   const {
-    streamUIStore: { teacherCameraStream },
+    streamUIStore: { teacherCameraStream, screenShareStream },
     layoutUIStore: { classRoomPlacholderMobileHeight },
     boardUIStore: { mounted },
     classroomStore: {
@@ -435,7 +448,7 @@ export const H5RoomPlaceholder = observer(() => {
   const transI18n = useI18n();
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
-  return (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !mounted ? (
+  return (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !mounted && !screenShareStream ? (
     <div
       className="fcr-mobile-room-placeholder"
       style={{ height: classRoomPlacholderMobileHeight }}>

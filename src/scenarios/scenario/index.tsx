@@ -78,7 +78,6 @@ export const Scenario = observer(() => {
               <WhiteboardMobile />
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
-              {/* <StreamMobile></StreamMobile> */}
               <TeacherStreamChatContainerMobile />
               <CountDownMobile
                 haveStream={
