@@ -189,15 +189,9 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       setIsPiP(!isPiP);
     };
     useEffect(() => {
-<<<<<<< Updated upstream
-      if (isPiP) {
-        showTool();
-      }
-=======
       // if (isPiP) {
       showTool()
       // }
->>>>>>> Stashed changes
     }, [isPiP]);
 
     return (
@@ -262,10 +256,6 @@ export const AudioRecordinDeviceIcon = observer(
             size={20}
             colors={{ iconPrimary: '#F5655C' }}></SvgImg>
         ) : (
-<<<<<<< Updated upstream
-=======
-          // iconPrimary="#787676"
->>>>>>> Stashed changes
           <MicrophoneIndicator size={size} voicePercent={volume} />
         )}
       </div>
