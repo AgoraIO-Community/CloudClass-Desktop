@@ -87,6 +87,7 @@
     "postcss-loader": "4.0.3"
   },
   "dependencies": {
+    "swiper": "^10.0.0",
     "tinycolor2": "1.4.2",
     "@use-gesture/react": "10.2.11",
     "agora-edu-core": "~2.9.0",

@@ -1,14 +1,13 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC, MutableRefObject, useContext, useEffect, useRef } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Layout, LayoutProps } from '@classroom/ui-kit/components/layout';
 import {
   H5RoomPlaceholder,
   RoomBigStudentStreamsContainerMobile,
   RoomBigTeacherStreamContainerMobile,
-  useMobileStreamTool,
 } from '@classroom/containers/stream/player';
 import { WidgetContainerMobile } from '../../containers/widget/index.mobile';
 import {
@@ -31,8 +30,8 @@ import { HandsUpActionSheetMobile } from '../../containers/action-sheet/hands-up
 import { DialogCategory } from '@classroom/uistores/share';
 import { ConfirmDialogAction } from '@classroom/uistores/type';
 import { ClassRoomDialogContainer } from '../../containers/confirm-dialog';
-
 import { useEffectOnce } from '@classroom/hooks/utilites';
+
 export const Scenario = observer(() => {
   const {
     classroomStore: {
@@ -86,7 +85,10 @@ export const Scenario = observer(() => {
                   !!(teacherCameraStream && !teacherCameraStream.isCameraMuted)
                 }></CountDownMobile>
               {!isLandscape && (
-                <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
+                <>
+                  <StudentStreamCollapse></StudentStreamCollapse>
+                  <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
+                </>
               )}
               <AutoPlayFailedTip></AutoPlayFailedTip>
               <ChatMobile />
@@ -315,3 +317,26 @@ export const GenericErrorDialogMobile = ({
     </div>
   );
 };
+const StudentStreamCollapse = observer(() => {
+  const {
+    streamUIStore: { studentCameraStreams, toggleStudentStreamsVisible, studentStreamsVisible },
+    shareUIStore: { isLandscape },
+  } = useStore();
+  return (
+    <>
+      {studentCameraStreams.length > 0 && (
+        <div className="fcr-stream-collapse-mobile-wrapper">
+          <div className="fcr-stream-collapse-mobile">
+            <SvgImgMobile
+              onClick={toggleStudentStreamsVisible}
+              style={{ transform: `rotateX(${studentStreamsVisible ? '0deg' : '180deg'})` }}
+              type={SvgIconEnum.COLLAPSE_STREAM_MOBILE}
+              size={40}
+              landscape={isLandscape}
+              forceLandscape={false}></SvgImgMobile>
+          </div>
+        </div>
+      )}
+    </>
+  );
+});

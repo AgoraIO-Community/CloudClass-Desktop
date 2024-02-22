@@ -11,7 +11,8 @@ export const TrackPlayer: FC<{
   className?: string;
   style?: CSSProperties;
   renderMode?: AGRenderMode;
-}> = observer(({ stream, className, style, renderMode }) => {
+  visible?: boolean;
+}> = observer(({ stream, className, style, renderMode, visible = true }) => {
   const cls = classnames({
     [`video-player`]: 1,
     ['fcr-invisible']: stream.isCameraMuted,
@@ -22,6 +23,7 @@ export const TrackPlayer: FC<{
     <LocalTrackPlayer className={cls} style={style} renderMode={renderMode} />
   ) : (
     <RemoteTrackPlayer
+      visible={visible}
       className={cls}
       style={style}
       stream={stream.stream}
@@ -37,6 +39,7 @@ type RemoteTrackPlayerProps = {
   className?: string;
   mirrorMode?: boolean;
   renderMode?: AGRenderMode;
+  visible?: boolean;
 };
 
 type LocalTrackPlayerProps = Omit<RemoteTrackPlayerProps, 'stream'>;
@@ -59,18 +62,24 @@ export const LocalTrackPlayer: FC<LocalTrackPlayerProps> = observer(
 );
 
 export const RemoteTrackPlayer: FC<RemoteTrackPlayerProps> = observer(
-  ({ style, stream, className, mirrorMode = true, renderMode }) => {
-    const { classroomStore } = useStore();
-    const { streamStore } = classroomStore;
-    const { setupRemoteVideo } = streamStore;
+  ({ style, stream, className, mirrorMode = true, renderMode, visible = true }) => {
+    const {
+      streamUIStore: { updateVideoDom, removeVideoDom },
+    } = useStore();
 
     const rtcRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-      if (rtcRef.current) {
-        setupRemoteVideo(stream, rtcRef.current, mirrorMode, renderMode);
+      if (rtcRef.current && visible) {
+        updateVideoDom(stream.streamUuid, {
+          dom: rtcRef.current,
+          renderMode: renderMode ?? AGRenderMode.fill,
+        });
       }
-    }, [stream, setupRemoteVideo]);
+      return () => {
+        stream && removeVideoDom(stream.streamUuid);
+      };
+    }, [stream, visible]);
 
     return <div style={style} className={`${className}`} ref={rtcRef} />;
   },

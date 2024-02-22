@@ -1,7 +1,7 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import { LocalTrackPlayerMobile, StreamPlayerMobile } from '.';
 import { FC, MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
-import { EduClassroomConfig } from 'agora-edu-core';
+import { EduClassroomConfig, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
@@ -12,8 +12,11 @@ import { useI18n } from 'agora-common-libs';
 import './index.css';
 import Award from '../award';
 import { MicrophoneIndicator } from '../action-sheet/mic';
-import { PaginationMobile } from '../pagination-mobile';
 import { StreamContext, convertStreamUIStatus } from './context';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import type { Swiper as SwiperType } from 'swiper';
+
+import 'swiper/css';
 const RoomBigTeacherStreamH5Tool = ({
   isPiP,
   onPiP,
@@ -163,9 +166,18 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       shareUIStore: { isLandscape, setForceLandscape },
       layoutUIStore: { toggleLandscapeToolBarVisible },
     } = useStore();
-    const { teacherVideoStreamSize, streamLayoutContainerCls, isPiP, setIsPiP, toolVisible, toggleTool, showTool } = streamUIStore;
+    const {
+      teacherVideoStreamSize,
+      streamLayoutContainerCls,
+      isPiP,
+      setIsPiP,
+      toolVisible,
+      toggleTool,
+      showTool,
+      subscribeMass,
+    } = streamUIStore;
     const userName = stream.fromUser.userName;
-    const ref = useRef<HTMLDivElement>(null)
+    const ref = useRef<HTMLDivElement>(null);
     const { pos } = useMobileStreamDrag({
       isPiP,
       triggerRef: ref as MutableRefObject<HTMLDivElement>,
@@ -178,7 +190,7 @@ export const RoomBigTeacherStreamContainerMobile = observer(
     };
     useEffect(() => {
       if (isPiP) {
-        showTool()
+        showTool();
       }
     }, [isPiP]);
 
@@ -241,7 +253,7 @@ export const AudioRecordinDeviceIcon = observer(
             size={20}
             colors={{ iconPrimary: '#F5655C' }}></SvgImg>
         ) : (
-          <MicrophoneIndicator size={size} voicePercent={volume} iconPrimary="#787676" />
+          <MicrophoneIndicator size={size} voicePercent={volume} />
         )}
       </div>
     );
@@ -249,19 +261,13 @@ export const AudioRecordinDeviceIcon = observer(
 );
 export const RoomBigStudentStreamsContainerMobile = observer(() => {
   const {
-    shareUIStore: { isLandscape, forceLandscape },
     streamUIStore,
     classroomStore: {
       userStore: { rewards },
     },
-    presentationUIStore: {
-      mainViewStream,
-      listViewStreamsByPage,
-      totalPage,
-      currentPage,
-      setCurrentPage,
-    },
   } = useStore();
+  const [current, setCurrent] = useState(0);
+  const visibleStreamsRef = useRef<EduStream[]>([]);
   const {
     studentVideoStreamSize,
     studentCameraStreams,
@@ -269,17 +275,35 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
     studentVideoStreamContainerHeight,
     containerH5Extend,
     studentStreamsVisible,
-    toggleStudentStreamsVisible,
     subscribeMass,
     toolVisible,
-    toggleTool
+    toggleTool,
+    teacherCameraStream,
   } = streamUIStore;
   const visible = toolVisible && studentStreamsVisible;
+  const swiperRef = useRef<SwiperType | null>(null);
 
+  const handlePrev = () => {
+    swiperRef.current?.slideTo(current - 3);
+  };
+  const handleNext = () => {
+    swiperRef.current?.slideTo(current + 3);
+  };
   useEffect(() => {
-    subscribeMass(listViewStreamsByPage.map((stream) => stream.stream));
-  }, [listViewStreamsByPage]);
-
+    swiperRef.current?.update();
+  }, [studentCameraStreams]);
+  useEffect(() => {
+    if (
+      teacherCameraStream &&
+      !teacherCameraStream.isCameraMuted &&
+      !visibleStreamsRef.current.find(
+        (item) => item.streamUuid === teacherCameraStream.stream.streamUuid,
+      )
+    ) {
+      visibleStreamsRef.current.push(teacherCameraStream.stream);
+    }
+    subscribeMass(visibleStreamsRef.current);
+  }, [teacherCameraStream]);
   return (
     <div
       className={classnames(
@@ -289,77 +313,110 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
         containerH5VisibleCls,
       )}
       style={{
+        overflow: 'hidden',
+        transition: 'height .2s',
         height: studentVideoStreamContainerHeight,
         width: '100vw',
         background: '#F4F4FF',
       }}>
-      {studentCameraStreams.length > 0 && (
-        <div className="fcr-stream-collapse-mobile">
-          <SvgImgMobile
-            onClick={toggleStudentStreamsVisible}
-            style={{ transform: `rotateX(${studentStreamsVisible ? '0deg' : '180deg'})` }}
-            type={SvgIconEnum.COLLAPSE_STREAM_MOBILE}
-            size={40}
-            landscape={isLandscape}
-            forceLandscape={forceLandscape}></SvgImgMobile>
+      {current !== 0 && (
+        <div
+          className="fcr-pagination-mobile-float__btn fcr-pagination-mobile-list__prev"
+          onClick={handlePrev}>
+          <SvgImg
+            type={SvgIconEnum.FCR_MOBILE_LEFT}
+            size={16}
+            colors={{ iconPrimary: '#000000' }}
+          />
         </div>
       )}
-      <PaginationMobile
-        onChange={setCurrentPage}
-        direction="row"
-        total={totalPage}
-        current={currentPage}
-        toolVisible={toolVisible}
-      >
-        {listViewStreamsByPage.map((stream) => {
+      {current + 3 < studentCameraStreams.length && (
+        <div
+          className="fcr-pagination-mobile-float__btn fcr-pagination-mobile-list__next"
+          onClick={handleNext}>
+          <SvgImg
+            type={SvgIconEnum.FCR_MOBILE_RIGHT}
+            size={16}
+            colors={{ iconPrimary: '#000000' }}
+          />
+        </div>
+      )}
+
+      <Swiper
+        watchSlidesProgress
+        onActiveIndexChange={(swiper) => {
+          setCurrent(swiper.activeIndex);
+          console.log(swiper.activeIndex, 'swiper.activeIndex');
+        }}
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        slidesPerView={3.2}>
+        {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
           const reward = rewards.get(stream.fromUser.userUuid);
           return (
-            <div
-              key={stream.stream.streamUuid}
-              onClick={toggleTool}
-              className="fcr-relative">
-              {isLocal ? (
-                <LocalTrackPlayerMobile
-                  key={stream.stream.streamUuid}
-                  stream={stream}></LocalTrackPlayerMobile>
-              ) : (
-                <StreamContext.Provider value={convertStreamUIStatus(stream)}>
-                  <StreamPlayerMobile
-                    key={stream.stream.streamUuid}
-                    style={{
-                      width: studentVideoStreamSize.width,
-                      height: studentVideoStreamSize.height,
-                      position: 'relative',
-                      flexShrink: 0,
-                    }}
-                    stream={stream}></StreamPlayerMobile>
-                </StreamContext.Provider>
-              )}
-              <div
-                className="fcr-stream-mobile-stu-top-left"
-                style={{
-                  opacity: visible ? 1 : 0,
-                  visibility: visible ? 'visible' : 'hidden',
-                }}>
-                <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
-                <span className="fcr-stream-mobile-stu-x">x</span>
-                <span>{reward || 0}</span>
-              </div>
-              <div
-                className="fcr-stream-mobile-stu-bottom-left"
-                style={{
-                  opacity: visible ? 1 : 0,
-                  visibility: visible ? 'visible' : 'hidden',
-                }}>
-                <AudioRecordinDeviceIcon stream={stream} size={20} />
-                <span>{stream.fromUser.userName}</span>
-              </div>
-              <Award stream={stream} />
-            </div>
+            <SwiperSlide key={stream.stream.streamUuid}>
+              {({ isVisible }) => {
+                if (isVisible) {
+                  if (
+                    !visibleStreamsRef.current.find(
+                      (item) => item.streamUuid === stream.stream.streamUuid,
+                    )
+                  ) {
+                    visibleStreamsRef.current.push(stream.stream);
+                  }
+                } else {
+                  visibleStreamsRef.current = visibleStreamsRef.current.filter(
+                    (item) => item.streamUuid !== stream.stream.streamUuid,
+                  );
+                }
+                subscribeMass(visibleStreamsRef.current);
+
+                return (
+                  <div onClick={toggleTool} className="fcr-relative">
+                    {isLocal ? (
+                      <LocalTrackPlayerMobile
+                        key={stream.stream.streamUuid}
+                        stream={stream}></LocalTrackPlayerMobile>
+                    ) : (
+                      <StreamContext.Provider value={convertStreamUIStatus(stream)}>
+                        <StreamPlayerMobile
+                          visible={isVisible}
+                          key={stream.stream.streamUuid}
+                          style={{
+                            height: studentVideoStreamSize.height,
+                            position: 'relative',
+                            flexShrink: 0,
+                          }}
+                          stream={stream}></StreamPlayerMobile>
+                      </StreamContext.Provider>
+                    )}
+                    <div
+                      className="fcr-stream-mobile-stu-top-left"
+                      style={{
+                        opacity: visible ? 1 : 0,
+                        visibility: visible ? 'visible' : 'hidden',
+                      }}>
+                      <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
+                      <span className="fcr-stream-mobile-stu-x">x</span>
+                      <span>{reward || 0}</span>
+                    </div>
+                    <div
+                      className="fcr-stream-mobile-stu-bottom-left"
+                      style={{
+                        opacity: visible ? 1 : 0,
+                        visibility: visible ? 'visible' : 'hidden',
+                      }}>
+                      <AudioRecordinDeviceIcon stream={stream} size={20} />
+                      <span>{stream.fromUser.userName}</span>
+                    </div>
+                    <Award stream={stream} />
+                  </div>
+                );
+              }}
+            </SwiperSlide>
           );
         })}
-      </PaginationMobile>
+      </Swiper>
     </div>
   );
 });

@@ -44,6 +44,7 @@ import { interactionThrottleHandler } from '@classroom/utils/interaction';
 import { SvgIconEnum } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
 import { ShareStreamStateKeeper } from './state-keeper';
+import type { Swiper } from 'swiper';
 export enum StreamIconColor {
   active = '#357bf6',
   deactive = '#bdbdca',
@@ -61,7 +62,11 @@ type RenderableVideoDom = {
 export class StreamUIStore extends EduUIStoreBase {
   protected _disposers: (IReactionDisposer | Lambda)[] = [];
   private _showToolTask: Scheduler.Task | null = null;
-
+  swiperRef?: Swiper;
+  @bound
+  setSwiperRef(ref: Swiper) {
+    this.swiperRef = ref;
+  }
   /**
    * 视频窗位置信息
    */
@@ -557,13 +562,13 @@ export class StreamUIStore extends EduUIStoreBase {
       videoSourceStopped
         ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disabled }
         : videoMuted
-          ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disallow }
-          : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
+        ? { icon: SvgIconEnum.CAMERA_DISABLED, color: InteractionStateColors.disallow }
+        : { icon: SvgIconEnum.CAMERA_ENABLED, color: InteractionStateColors.allow },
       videoSourceStopped
         ? transI18n('Camera Not Available')
         : videoMuted
-          ? transI18n('Open Camera')
-          : transI18n('Close Camera'),
+        ? transI18n('Open Camera')
+        : transI18n('Close Camera'),
       {
         //can interact when source is not stopped
         interactable: !videoSourceStopped,
@@ -596,13 +601,13 @@ export class StreamUIStore extends EduUIStoreBase {
       audioSourceStopped
         ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disabled }
         : audioMuted
-          ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow }
-          : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
+        ? { icon: SvgIconEnum.MIC_DISABLED, color: InteractionStateColors.disallow }
+        : { icon: SvgIconEnum.MIC_ENABLED, color: InteractionStateColors.allow },
       audioSourceStopped
         ? transI18n('Microphone Not Available')
         : audioMuted
-          ? transI18n('Open Microphone')
-          : transI18n('Close Microphone'),
+        ? transI18n('Open Microphone')
+        : transI18n('Close Microphone'),
       {
         //can interact when source is not stopped
         interactable: !audioSourceStopped,
@@ -915,7 +920,7 @@ export class StreamUIStore extends EduUIStoreBase {
 
   private _gapInPx = 2;
 
-  private _interactionDeniedCallback = () => { };
+  private _interactionDeniedCallback = () => {};
   @action.bound
   setLocalVideoRenderAt(renderAt: 'Preview' | 'Window') {
     this.localVideoRenderAt = renderAt;
@@ -1035,11 +1040,11 @@ export class StreamUIStore extends EduUIStoreBase {
     return this.isPiP
       ? {}
       : this.shareUIStore.isLandscape
-        ? {
+      ? {
           width: this.shareUIStore.forceLandscape ? window.innerHeight : window.innerWidth,
           height: this.shareUIStore.forceLandscape ? window.innerWidth : window.innerHeight,
         }
-        : {
+      : {
           width: window.innerWidth,
           height: (9 / 16) * window.innerWidth,
         };
@@ -1090,9 +1095,9 @@ export class StreamUIStore extends EduUIStoreBase {
   get streamLayoutContainerDimensions() {
     return this.streamZoomStatus !== 'zoom-out'
       ? {
-        width: this.shareUIStore.classroomViewportSize.h5Width,
-        height: this.shareUIStore.classroomViewportSize.h5Height,
-      }
+          width: this.shareUIStore.classroomViewportSize.h5Width,
+          height: this.shareUIStore.classroomViewportSize.h5Height,
+        }
       : {};
   }
 
@@ -1158,6 +1163,7 @@ export class StreamUIStore extends EduUIStoreBase {
     });
     this.waitingSub = subst;
   }
+
   @bound
   updateVideoDom(streamUuid: string, renderableVideoDom: RenderableVideoDom) {
     this._videoDoms.set(streamUuid, renderableVideoDom);
@@ -1232,7 +1238,6 @@ export class StreamUIStore extends EduUIStoreBase {
       // 加入已订阅
       doneSub = doneSub.concat(newSub);
     }
-
     // 重新渲染视频流
     doneSub.forEach((stream) => {
       const renderableVideoDom = this._videoDoms.get(stream.streamUuid);

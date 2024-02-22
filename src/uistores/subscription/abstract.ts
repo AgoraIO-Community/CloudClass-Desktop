@@ -232,20 +232,14 @@ export abstract class SceneSubscription {
       scene.rtcChannel.muteRemoteAudioStream(stream.streamUuid, muteStatus.muteAudio);
       this.putRegistry(stream.streamUuid, { muteAudio: muteStatus.muteAudio });
     }
-    if (muteStatus.muteVideo !== undefined) {
-      this.logger.info(
-        `muteRemoteVideo, stream=[${stream.streamUuid}], user=[${stream.fromUser.userUuid},${stream.fromUser.userName}], mute=[${muteStatus.muteVideo}]`,
-      );
-      scene.rtcChannel.muteRemoteVideoStream(stream.streamUuid, muteStatus.muteVideo);
-      this.putRegistry(stream.streamUuid, { muteVideo: muteStatus.muteVideo });
-    }
+
     return muteStatus;
   }
 
   protected getStreamConnType(stream: AgoraStream) {
     const type =
       stream.streamName === 'secondary' ||
-        stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
+      stream.videoSourceType === AgoraRteVideoSourceType.ScreenShare
         ? AGRtcConnectionType.sub
         : AGRtcConnectionType.main;
     return type;

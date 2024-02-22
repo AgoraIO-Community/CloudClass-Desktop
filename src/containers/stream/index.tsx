@@ -15,9 +15,10 @@ type StreamPlayerMobileProps = {
   className?: string;
   style?: CSSProperties;
   onClick?: () => void;
+  visible?: boolean;
 };
 export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
-  ({ stream, className = '', style, onClick }) => {
+  ({ stream, className = '', style, onClick, visible = true }) => {
     const {
       shareUIStore: { isLandscape },
       classroomStore: {
@@ -38,18 +39,20 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
       }
     }, [isLandscape, stream.stream.videoState, rtcState]);
     const userName = stream.fromUser.userName;
-    const [first, last] = splitName(userName)
+    const [first, last] = splitName(userName);
     const roomType = EduClassroomConfig.shared.sessionInfo.roomType;
     const isTeacher = RteRole2EduRole(roomType, stream.fromUser.role) === EduRoleTypeEnum.teacher;
-    return <div onClick={onClick} className={`fcr-stream-player-mobile ${className}`} style={style}>
-      <div
-        className={classNames('fcr-stream-player-mobil-placeholder', {
-          'fcr-stream-player-mobil-placeholder-teacher': isTeacher,
-        })}>
-        {`${first}${last}`}
+    return (
+      <div onClick={onClick} className={`fcr-stream-player-mobile ${className}`} style={style}>
+        <div
+          className={classNames('fcr-stream-player-mobil-placeholder', {
+            'fcr-stream-player-mobil-placeholder-teacher': isTeacher,
+          })}>
+          {`${first}${last}`}
+        </div>
+        <TrackPlayer visible={visible} stream={stream} />
       </div>
-      <TrackPlayer stream={stream} />
-    </div>
+    );
   },
 );
 export const TeacherCameraPlaceHolderMobile = observer(() => {
@@ -60,7 +63,7 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
       roomStore: { flexProps },
     },
   } = useStore();
-  const [first, last] = splitName(flexProps['teacherName'])
+  const [first, last] = splitName(flexProps['teacherName']);
   return (
     <div
       onClick={toggleLandscapeToolBarVisible}
@@ -82,7 +85,7 @@ export const LocalTrackPlayerMobile = observer(({ stream }: { stream: EduStreamU
     streamUIStore: { studentVideoStreamSize },
   } = useStore();
   const userName = stream.fromUser.userName;
-  const [first, last] = splitName(userName)
+  const [first, last] = splitName(userName);
   return (
     <div
       className="fcr-stream-player-mobile"
@@ -90,9 +93,7 @@ export const LocalTrackPlayerMobile = observer(({ stream }: { stream: EduStreamU
         width: studentVideoStreamSize.width,
         height: studentVideoStreamSize.height,
       }}>
-      <div className={classNames('fcr-stream-player-mobil-placeholder')}>
-        {`${first}${last}`}
-      </div>
+      <div className={classNames('fcr-stream-player-mobil-placeholder')}>{`${first}${last}`}</div>
       {!stream?.isCameraMuted && (
         <LocalTrackPlayer
           renderAt="Window"
@@ -143,11 +144,11 @@ export const splitName = (userName: string) => {
   const secondLetter =
     names.length > 1 ? lastWord.split('')[0] : lastWord.length > 1 ? lastWord.split('')[1] : '';
   return filterChineseWord([toUpper(firstLetter), toUpper(secondLetter)]);
-}
+};
 const filterChineseWord = (word: string[]) => {
   const reg = /[\u4e00-\u9fa5]/;
   if (reg.test(word[1])) {
     return [word[0], ''];
   }
   return word;
-}
+};
