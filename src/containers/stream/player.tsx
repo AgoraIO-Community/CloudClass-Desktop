@@ -277,6 +277,7 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
     classroomStore: {
       userStore: { rewards },
     },
+    layoutUIStore: {},
   } = useStore();
   const [current, setCurrent] = useState(0);
   const visibleStreamsRef = useRef<EduStream[]>([]);
@@ -329,11 +330,16 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
         transition: 'height .2s',
         height: studentVideoStreamContainerHeight,
         width: '100vw',
-        background: '#F4F4FF',
+        background: 'rgba(56, 56, 67, 1)',
       }}>
       {current !== 0 && (
         <div
-          className="fcr-pagination-mobile-float__btn fcr-pagination-mobile-list__prev"
+          className={classnames(
+            'fcr-pagination-mobile-float__btn fcr-pagination-mobile-list__prev',
+            {
+              'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
+            },
+          )}
           onClick={handlePrev}>
           <SvgImg
             type={SvgIconEnum.FCR_MOBILE_LEFT}
@@ -344,7 +350,12 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
       )}
       {current + 3 < studentCameraStreams.length && (
         <div
-          className="fcr-pagination-mobile-float__btn fcr-pagination-mobile-list__next"
+          className={classnames(
+            'fcr-pagination-mobile-float__btn fcr-pagination-mobile-list__next',
+            {
+              'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
+            },
+          )}
           onClick={handleNext}>
           <SvgImg
             type={SvgIconEnum.FCR_MOBILE_RIGHT}
@@ -360,6 +371,7 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
           setCurrent(swiper.activeIndex);
           console.log(swiper.activeIndex, 'swiper.activeIndex');
         }}
+        allowTouchMove={false}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         slidesPerView={3.2}
         spaceBetween={1}>
