@@ -174,7 +174,6 @@ export const RoomBigTeacherStreamContainerMobile = observer(
       toolVisible,
       toggleTool,
       showTool,
-      subscribeMass,
     } = streamUIStore;
     const userName = stream.fromUser.userName;
     const ref = useRef<HTMLDivElement>(null);
@@ -190,7 +189,7 @@ export const RoomBigTeacherStreamContainerMobile = observer(
     };
     useEffect(() => {
       // if (isPiP) {
-      showTool()
+      showTool();
       // }
     }, [isPiP]);
 
@@ -224,8 +223,8 @@ export const RoomBigTeacherStreamContainerMobile = observer(
         {/* <div onClick={toggleTool} style={{ width: '100%', height: '100%' }}> */}
         <StreamPlayerMobile
           onClick={() => {
-            toggleTool()
-            toggleLandscapeToolBarVisible()
+            toggleTool();
+            toggleLandscapeToolBarVisible();
           }}
           stream={stream}
           style={{
@@ -438,7 +437,9 @@ export const H5RoomPlaceholder = observer(() => {
   const transI18n = useI18n();
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
-  return (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !mounted && !screenShareStream ? (
+  return (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
+    !mounted &&
+    !screenShareStream ? (
     <div
       className="fcr-mobile-room-placeholder"
       style={{ height: classRoomPlacholderMobileHeight }}>

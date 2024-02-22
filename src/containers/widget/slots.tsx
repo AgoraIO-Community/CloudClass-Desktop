@@ -142,7 +142,7 @@ export const ChatMobile = observer(function Chat() {
     calcHeight();
     window.addEventListener('resize', calcHeight);
     () => window.removeEventListener('resize', calcHeight);
-  }, [isLandscape, forceLandscape, mounted, teacherCameraStream, boardContainerHeight, isPiP, studentCameraStreams.length, studentVideoStreamSize.height, teacherCameraStream?.isCameraMuted, studentStreamsVisible]);
+  }, [isLandscape, forceLandscape, mounted, teacherCameraStream, boardContainerHeight, isPiP, studentCameraStreams.length, studentVideoStreamSize.height, teacherCameraStream?.isCameraMuted, studentStreamsVisible, screenShareStream]);
 
   useEffect(() => {
     if (ready) {
