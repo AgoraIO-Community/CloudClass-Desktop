@@ -101,7 +101,7 @@ export const useMobileStreamDrag = ({
     setPos(newPos);
     cacheRef.current = newPos;
     posRef.current = newPos;
-  }
+  };
   const handleTouchStart = (e: TouchEvent) => {
     const ele = e.targetTouches[0];
     touchPosRef.current = { x: ele.clientX, y: ele.clientY };
@@ -166,7 +166,7 @@ export const useMobileStreamDrag = ({
   }, [isPiP]);
   return {
     pos,
-    initData
+    initData,
   };
 };
 export const RoomBigTeacherStreamContainerMobile = observer(
@@ -361,7 +361,8 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
           console.log(swiper.activeIndex, 'swiper.activeIndex');
         }}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
-        slidesPerView={3.2}>
+        slidesPerView={3.2}
+        spaceBetween={1}>
         {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
           const reward = rewards.get(stream.fromUser.userUuid);
