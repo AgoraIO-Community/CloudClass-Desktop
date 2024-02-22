@@ -8,7 +8,7 @@ import './index.css';
 import { useEffect, useState } from 'react';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
-import { LocalTrackPlayer, generateShortUserName } from '../stream';
+import { LocalTrackPlayer, splitName } from '../stream';
 import { MicrophoneIndicator } from './mic';
 import { MobileCallState } from '@classroom/uistores/type';
 import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
@@ -35,6 +35,7 @@ export const HandsUpActionSheetMobile = observer(() => {
     camera: false,
   });
   const { userName } = EduClassroomConfig.shared.sessionInfo;
+  const [first, last] = splitName(userName);
   const micOn = deviceStatus.mic;
   const cameraOn = deviceStatus.camera;
   const volume = localVolume;
@@ -145,7 +146,7 @@ export const HandsUpActionSheetMobile = observer(() => {
           <div className="fcr-hands-up-action-sheet-mobile-device-wrapper">
             <div className="fcr-hands-up-action-sheet-mobile-device-player">
               <div className="fcr-hands-up-action-sheet-mobile-device-placeholer">
-                {generateShortUserName(userName)}
+                {`${first}${last}`}
               </div>
               {cameraOn && (
                 <LocalTrackPlayer renderAt="Preview" style={{ height: '100%' }}></LocalTrackPlayer>
