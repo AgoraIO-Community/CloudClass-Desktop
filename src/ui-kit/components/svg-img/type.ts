@@ -182,4 +182,5 @@ export enum SvgIconEnum {
   FCR_REWARD = 'fcr-reward',
   FCR_MOBILE_LEFT = 'fcr-mobile-left',
   FCR_MOBILE_RIGHT = 'fcr-mobile-right',
+  FCR_QUESTION = 'fcr_question',
 }

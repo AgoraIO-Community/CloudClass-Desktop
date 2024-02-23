@@ -31,7 +31,8 @@ import { DialogCategory } from '@classroom/uistores/share';
 import { ConfirmDialogAction } from '@classroom/uistores/type';
 import { ClassRoomDialogContainer } from '../../containers/confirm-dialog';
 import { useEffectOnce } from '@classroom/hooks/utilites';
-
+import { SceneSwitch } from '@classroom/containers/scene-switch';
+import { GroupInfoPanel } from '@classroom/containers/group-info-panel';
 export const Scenario = observer(() => {
   const {
     classroomStore: {
@@ -40,7 +41,7 @@ export const Scenario = observer(() => {
       },
     },
     shareUIStore: { isLandscape, forceLandscape },
-    streamUIStore: { teacherCameraStream },
+    streamUIStore: { teacherCameraStream, showTool },
   } = useStore();
 
   return (
@@ -74,8 +75,10 @@ export const Scenario = observer(() => {
           {state === ClassState.close ? (
             <AfterClassMobileDialog></AfterClassMobileDialog>
           ) : (
-            <>
+            <SceneSwitch>
+              <GroupInfoPanel />
               <WhiteboardMobile />
+
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
               <TeacherStreamChatContainerMobile />
@@ -94,7 +97,7 @@ export const Scenario = observer(() => {
               <DialogContainerMobile></DialogContainerMobile>
               <ToastContainerMobile></ToastContainerMobile>
               <ClassRoomDialogContainer></ClassRoomDialogContainer>
-            </>
+            </SceneSwitch>
           )}
         </LayoutOrientation>
         <WidgetContainerMobile></WidgetContainerMobile>

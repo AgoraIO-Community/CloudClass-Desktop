@@ -15,6 +15,7 @@ import { action, computed, IReactionDisposer, observable, reaction, runInAction,
 import { EduUIStoreBase } from '../base';
 import uuidv4 from 'uuid';
 import { transI18n } from 'agora-common-libs';
+import { DialogCategory } from '../share';
 
 export enum GroupMethod {
   AUTO,
@@ -34,6 +35,8 @@ export class GroupUIStore extends EduUIStoreBase {
 
   @observable
   localGroups: Map<string, GroupDetail> = new Map();
+  @observable
+  groupName = '';
 
   private _groupNum = 0;
   private _dialogsMap = new Map();
@@ -126,6 +129,16 @@ export class GroupUIStore extends EduUIStoreBase {
     });
 
     return map.get(userUuid);
+  }
+
+  /**
+   * 获取学生所在组信息
+   * @param userUuid
+   */
+  @bound
+  getUserGroupInfo(userUuid: string) {
+    const groupId = this.getUserGroupUuid(userUuid);
+    return groupId && this.groupDetails.get(groupId);
   }
 
   /**
@@ -517,7 +530,7 @@ export class GroupUIStore extends EduUIStoreBase {
         const groupId = `${uuidv4()}`;
 
         groupIds.push(groupId);
-
+        this.groupName = groupDetail.groupName;
         this.localGroups.set(groupId, groupDetail);
       });
       let index = 0;
@@ -567,6 +580,16 @@ export class GroupUIStore extends EduUIStoreBase {
         groupUuid,
         [EduClassroomConfig.shared.sessionInfo.userUuid],
       );
+    }
+  }
+
+  @bound
+  async leaveSubRoom() {
+    // this._leaveSubRoom();
+    const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
+    const { userUuid } = EduClassroomConfig.shared.sessionInfo;
+    if (currentRoomUuid) {
+      await this.classroomStore.groupStore.removeGroupUsers(currentRoomUuid, [userUuid]);
     }
   }
 
@@ -703,7 +726,7 @@ export class GroupUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.checkIn(
         EduClassroomConfig.shared.sessionInfo,
         SceneType.Main,
-        'check-in'
+        'check-in',
       );
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
@@ -809,25 +832,26 @@ export class GroupUIStore extends EduUIStoreBase {
           })
         : transI18n('fcr_group_invitation', { reason: groupName });
 
-      const ok = isTeacher
+      const ok = !isTeacher
         ? transI18n('fcr_group_button_join')
         : transI18n('breakout_room.confirm_invite_student_btn_ok');
 
-      const cancel = isTeacher
+      const cancel = !isTeacher
         ? transI18n('fcr_group_button_later')
         : transI18n('breakout_room.confirm_invite_student_btn_cancel');
 
-      const dialogId = this.shareUIStore.addConfirmDialog(title, content, {
-        onOK: () => {
+      const dialogId = uuidv4();
+      this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+        id: dialogId,
+        title,
+        content,
+        okText: ok,
+        cancelText: cancel,
+        onOk: () => {
           this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
         },
         onCancel: () => {
           this.classroomStore.groupStore.rejectGroupInvite(groupUuid);
-        },
-        actions: ['ok', 'cancel'],
-        btnText: {
-          ok,
-          cancel,
         },
       });
 

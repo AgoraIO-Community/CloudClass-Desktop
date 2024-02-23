@@ -834,4 +834,8 @@ export const en = {
     'The current browser does not support the function of joining the call.',
   fcr_room_tips_lower_hand: 'Teacher lowers your hand',
   fcr_room_tips_lower_all_hand: 'All student‘s hands lowered',
+  fcr_group_button_cancel: 'Cancel',
+  fcr_group_button_invite: 'Invite',
+  fcr_group_tips_leave_content: 'Are you sure you want to leave the group',
+  fcr_group_button_leave_group: 'Return to main Classroom',
 };

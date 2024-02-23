@@ -815,4 +815,8 @@ export const zh = {
   fcr_raisehand_tips_not_supported_browser: '当前浏览器不支持连麦功能',
   fcr_room_tips_lower_hand: '老师放下你的手',
   fcr_room_tips_lower_all_hand: '所有学生都放下手',
+  fcr_group_button_invite: '邀请',
+  fcr_group_button_cancel: '取消',
+  fcr_group_tips_leave_content: '确定要退出分组吗？',
+  fcr_group_button_leave_group: '回到主教室',
 };
