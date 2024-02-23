@@ -819,4 +819,5 @@ export const zh = {
   fcr_group_button_cancel: '取消',
   fcr_group_tips_leave_content: '确定要退出分组吗？',
   fcr_group_button_leave_group: '回到主教室',
+  fcr_group_teacher_not_in_classroom: '老师不在房间内',
 };
