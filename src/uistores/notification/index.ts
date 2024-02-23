@@ -343,13 +343,10 @@ export class NotificationUIStore extends EduUIStoreBase {
       const { inviting } = param;
       const { role } = EduClassroomConfig.shared.sessionInfo;
       if (role === EduRoleTypeEnum.student && inviting) {
-        this.shareUIStore.addConfirmDialog(
-          transI18n('fcr_group_help_title'),
-          transI18n('fcr_group_help_teacher_busy_msg'),
-          {
-            actions: ['ok'],
-          },
-        );
+        this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
+          title: transI18n('fcr_group_help_title'),
+          content: transI18n('fcr_group_help_teacher_busy_msg'),
+        });
       }
     }
   }
