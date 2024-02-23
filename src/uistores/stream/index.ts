@@ -38,6 +38,7 @@ import {
   EduRteEngineConfig,
   EduRteRuntimePlatform,
   EduStream,
+  iterateMap,
   RteRole2EduRole,
 } from 'agora-edu-core';
 import { interactionThrottleHandler } from '@classroom/utils/interaction';
@@ -1157,8 +1158,13 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   @action.bound
-  subscribeMass(streams: EduStream[]) {
-    const subst = streams.filter((s) => {
+  subscribeMass(streams: Map<string, EduStream>) {
+    const { list } = iterateMap(streams, {
+      onMap: (_key, item) => {
+        return item;
+      },
+    });
+    const subst = list.filter((s) => {
       return !s.isLocal;
     });
     this.waitingSub = subst;
