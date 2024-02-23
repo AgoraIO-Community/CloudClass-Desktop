@@ -62,6 +62,21 @@ export interface ConfirmDialogProps {
    * Set the icon on the left of the dialog title and content.
    */
   icon?: ReactNode;
+
+  /**
+   * 对话框位置
+   */
+  /** @en
+   *  Dialog position.
+   */
+  position?: ReactNode;
+  /**
+   * 按钮风格
+   */
+  /**
+   * Button style
+   */
+  buttonStyle?: ReactNode;
   content?: ReactNode;
   okButtonProps?: ButtonProps;
   cancelButtonProps?: ButtonProps;
@@ -78,6 +93,8 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
     title,
     footer,
     onOk,
+    position,
+    buttonStyle,
     // width,
     icon,
     okText,
@@ -88,12 +105,31 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
     cancelButtonVisible = true,
     // getContainer,
   } = props;
+
+  const cls = classNames('fcr-dialog-wrap', { 'fcr-dialog-wrap-middle': position === 'middle' });
+  // const footerCls = classNames('fcr-confirm-dialog-footer', {
+  //   'fcr-confirm-dialog-footer-block': buttonStyle === 'block',
+  // });
+  const btnMobileCls = classNames(
+    { 'fcr-btn-mobile': buttonStyle !== 'block' },
+    { 'fcr-btn-mobile-block': buttonStyle === 'block' },
+  );
+  const cancelBtnMobileCls = classNames(
+    { 'fcr-btn-mobile fcr-btn-mobile-cancel': buttonStyle !== 'block' },
+    { 'fcr-btn-mobile-block fcr-btn-mobile-cancel-block': buttonStyle === 'block' },
+  );
+  const footBtnsCls = classNames(
+    { 'fcr-confirm-dialog-footer-btns': buttonStyle !== 'block' },
+    {
+      'fcr-confirm-dialog-footer-block': buttonStyle === 'block',
+    },
+  );
   return (
     <div
       className="fcr-dialog-mask"
       // classNames="fcr-confirm-dialog"
     >
-      <div className="fcr-dialog-wrap">
+      <div className={cls}>
         <div className="fcr-confirm-dialog-inner-wrap">
           {icon && <div className="fcr-confirm-dialog-inner-icon">{toJS(icon)}</div>}
           <div></div>
@@ -103,23 +139,23 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
           </div>
         </div>
 
-        <div className={classNames('fcr-confirm-dialog-footer')}>
+        <div className={'fcr-confirm-dialog-footer'}>
           {footer || (
-            <div className={classNames('fcr-confirm-dialog-footer-btns')}>
+            <div className={footBtnsCls}>
               {cancelButtonVisible && (
                 <Button
                   onClick={() => {
                     onCancel?.();
                   }}
-                  size="sm"
+                  size="lg"
                   {...cancelButtonProps}
-                  className="fcr-btn-mobile fcr-btn-mobile-cancel ">
+                  className={cancelBtnMobileCls}>
                   {cancelText || 'Cancel'}
                 </Button>
               )}
 
               {okButtonVisible && (
-                <Button onClick={onOk} size="sm" {...okButtonProps} className="fcr-btn-mobile">
+                <Button onClick={onOk} size="lg" {...okButtonProps} className={btnMobileCls}>
                   {okText || 'OK'}
                 </Button>
               )}
