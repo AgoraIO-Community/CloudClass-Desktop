@@ -97,9 +97,10 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
         opacity: toolVisible ? 1 : 0,
         visibility: toolVisible ? 'visible' : 'hidden',
       }}
-      onClick={() => {
-        toggleTool();
-      }}>
+      // onClick={() => {
+      //   toggleTool();
+      // }}
+    >
       <div className="group-name">{groupInfo && groupInfo.groupName}</div>
       <div className="help-button" onClick={handleHelp}>
         <SvgImg type={SvgIconEnum.FCR_QUESTION} size={26} colors={{ iconPrimary: '#fff' }} />
