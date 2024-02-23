@@ -884,8 +884,9 @@ export class GroupUIStore extends EduUIStoreBase {
       const { groupUuid } = args;
       const dialogId = this._dialogsMap.get(groupUuid);
       if (dialogId) {
-        this.shareUIStore.removeDialog(dialogId);
-        this._dialogsMap.delete(groupUuid);
+        // this.shareUIStore.removeDialog(dialogId);
+        // this._dialogsMap.delete(groupUuid);
+        this.getters.classroomUIStore.layoutUIStore.deleteDialog(dialogId);
       }
     }
 
