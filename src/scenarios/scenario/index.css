@@ -141,3 +141,29 @@
 /* .fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile {
   bottom: 162px;
 } */
+.fcr-mobile-room-info-container {
+  position: fixed;
+  top: 8px;
+  right: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.fcr-mobile-room-info-container .fcr-mobile-room-info-user-count-container,.fcr-mobile-room-info-container .fcr-mobile-room-info-time-container{
+  height: 24px;
+  padding: 3px 8px;
+  border-radius: 50px;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fcr-mobile-room-info-user-count-container{
+}
+.fcr-mobile-room-info-time-container{
+  margin-left:5px;
+ 
+}

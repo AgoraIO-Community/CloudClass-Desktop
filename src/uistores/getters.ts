@@ -15,9 +15,26 @@ import { EduClassroomUIStore } from '.';
 import { LayoutMaskCode } from './type';
 import { EduStreamUI } from './stream/struct';
 import { computedFn } from 'mobx-utils';
+import dayjs from 'dayjs';
 
 export class Getters {
-  constructor(private _classroomUIStore: EduClassroomUIStore) {}
+  constructor(private _classroomUIStore: EduClassroomUIStore) { }
+  private formatCountDown(ms: number): string {
+    const duration = dayjs.duration(ms);
+
+    if (duration.days() > 0) {
+      const mmss = duration.format('mm:ss');
+      const h = Math.floor(duration.asHours());
+      return `${h}:${mmss}`;
+    }
+
+    const seconds = Math.floor(ms / 1000);
+    if (seconds < 60 * 60) {
+      return duration.format('mm:ss');
+    }
+
+    return duration.format('HH:mm:ss');
+  }
   get classroomUIStore() {
     return this._classroomUIStore;
   }
@@ -188,8 +205,8 @@ export class Getters {
         return isIngroupLocal
           ? true
           : !this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
-              stream.fromUser.userUuid,
-            );
+            stream.fromUser.userUuid,
+          );
       })
       .map((stream) => new EduStreamUI(stream));
   }
@@ -231,5 +248,67 @@ export class Getters {
 
   get activeWidgetIds() {
     return this._classroomUIStore.widgetUIStore.widgetInstanceList.map((w) => w.widgetId);
+  }
+  @computed
+  get userCount() {
+    const { userCount, teacherList } = this._classroomUIStore.classroomStore.userStore
+    const isTeacherInClass = teacherList.size > 0;
+    return Math.max(
+      userCount - (isTeacherInClass ? 1 : 0),
+      0,
+    );
+  }
+  @computed
+  get calibratedTime() {
+    const { clockTime, clientServerTimeShift } = this._classroomUIStore.classroomStore.roomStore;
+    return clockTime + clientServerTimeShift;
+  }
+  @computed
+  get classTimeDuration(): number {
+    const { classroomSchedule } = this._classroomUIStore.classroomStore.roomStore;
+    let duration = -1;
+    if (classroomSchedule) {
+      switch (classroomSchedule.state) {
+        case 0:
+          if (classroomSchedule.startTime !== undefined) {
+            duration = Math.max(classroomSchedule.startTime - this.calibratedTime, 0);
+          }
+          break;
+        case 1:
+          if (classroomSchedule.startTime !== undefined) {
+            duration = Math.max(this.calibratedTime - classroomSchedule.startTime, 0);
+          }
+          break;
+        case 2:
+          if (
+            classroomSchedule.startTime !== undefined &&
+            classroomSchedule.duration !== undefined
+          ) {
+            duration = Math.max(this.calibratedTime - classroomSchedule.startTime, 0);
+          }
+          break;
+      }
+    }
+    return duration;
+  }
+  @computed
+  get classStatusText() {
+    const duration = this.classTimeDuration || 0;
+
+    if (duration < 0) {
+      return ``;
+    }
+    const {
+      classroomSchedule: { state },
+    } = this._classroomUIStore.classroomStore.roomStore;
+
+    switch (state) {
+      case 1:
+        return `${this.formatCountDown(duration)}`;
+      case 2:
+        return `${this.formatCountDown(duration)}`;
+      default:
+        return ``;
+    }
   }
 }
