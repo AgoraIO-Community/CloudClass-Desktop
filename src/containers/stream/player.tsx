@@ -278,6 +278,7 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
       userStore: { rewards },
     },
     layoutUIStore: {},
+    classroomStore,
   } = useStore();
   const [current, setCurrent] = useState(0);
   const visibleStreamsRef = useRef<Map<string, EduStream>>(new Map());
@@ -375,6 +376,14 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
         {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
           const reward = rewards.get(stream.fromUser.userUuid);
+          const isIngroupLocal = classroomStore.groupStore.groupUuidByUserUuid.get(
+            stream.fromUser.userUuid,
+          );
+          const isMyself =
+            stream.fromUser.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid;
+          if (isIngroupLocal && !isMyself) {
+            return;
+          }
           return (
             <SwiperSlide key={stream.stream.streamUuid}>
               {({ isVisible }) => {
