@@ -26,10 +26,11 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
     classroomStore,
     layoutUIStore: { addDialog },
     shareUIStore: { addToast },
+    streamUIStore,
   } = useStore();
   const transI18n = useI18n();
   const groupInfo = getUserGroupInfo(userUuid);
-
+  const { toolVisible, toggleTool, showTool } = streamUIStore;
   const handleHelp = () => {
     const { updateGroupUsers, currentSubRoom } = classroomStore.groupStore;
     const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
@@ -90,7 +91,15 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
   };
 
   return groupInfo && !isTeacher ? (
-    <div className="group-info-panel">
+    <div
+      className="group-info-panel"
+      style={{
+        opacity: toolVisible ? 1 : 0,
+        visibility: toolVisible ? 'visible' : 'hidden',
+      }}
+      onClick={() => {
+        toggleTool();
+      }}>
       <div className="group-name">{groupInfo && groupInfo.groupName}</div>
       <div className="help-button" onClick={handleHelp}>
         <SvgImg type={SvgIconEnum.FCR_QUESTION} size={26} colors={{ iconPrimary: '#fff' }} />
