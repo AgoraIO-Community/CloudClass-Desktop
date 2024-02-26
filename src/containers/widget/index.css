@@ -20,3 +20,12 @@
   border-color: #fff;
   pointer-events: none;
 }
+.whiteboard-mobile-container::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 50vh;
+  background-color: rgba(0, 0, 0, 0);
+  position: absolute;
+  z-index: 1;
+}
