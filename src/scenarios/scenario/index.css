@@ -130,17 +130,18 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index:9;
+  z-index: 9;
 }
 .fcr-countdown-mobile-widget-landscape {
   position: fixed;
   top: 0;
   right: 0;
-  z-index:9;
+  z-index: 9;
 }
 /* .fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile {
   bottom: 162px;
 } */
+<<<<<<< Updated upstream
 .fcr-mobile-room-info-container {
   position: fixed;
   top: 8px;
@@ -166,4 +167,18 @@
 .fcr-mobile-room-info-time-container{
   margin-left:5px;
  
+=======
+.scene-switch-loading {
+  @apply fcr-bg-background;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  z-index: 999999;
+  left: 0;
+  top: 0;
+>>>>>>> Stashed changes
 }
