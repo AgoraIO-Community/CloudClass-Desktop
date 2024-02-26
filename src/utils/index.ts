@@ -207,6 +207,10 @@ export const isWeChatBrowser = () => {
   const ua: string = navigator.userAgent.toLowerCase();
   return /micromessenger/.test(ua);
 };
+export const isSafari = () => {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1;
+};
 export const setUrlParameters = (
   url: string,
   params: { [key: string]: string | number | boolean },
