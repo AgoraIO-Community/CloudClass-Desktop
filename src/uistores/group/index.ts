@@ -7,6 +7,7 @@ import {
   GroupState,
   PatchGroup,
   SceneType,
+  ClassroomState,
 } from 'agora-edu-core';
 import { AGError, AGRtcConnectionType, bound, Log, AGRtcState } from 'agora-rte-sdk';
 import difference from 'lodash/difference';
@@ -583,6 +584,26 @@ export class GroupUIStore extends EduUIStoreBase {
     }
   }
 
+  /**
+   * 老师所在房间
+   */
+  @computed
+  get teacherGroupUuid() {
+    if (this.classroomStore.connectionStore.classroomState !== ClassroomState.Connected) {
+      return undefined;
+    }
+    const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
+
+    if (teachers.size) {
+      const teacherUuid = teachers.keys().next().value;
+      const { groupUuidByUserUuid } = this.classroomStore.groupStore;
+
+      const teacherGroupUuid = groupUuidByUserUuid.get(teacherUuid);
+      return teacherGroupUuid;
+    }
+    return undefined;
+  }
+
   @bound
   async leaveSubRoom() {
     // this._leaveSubRoom();
@@ -847,6 +868,7 @@ export class GroupUIStore extends EduUIStoreBase {
         content,
         okText: ok,
         cancelText: cancel,
+        position: 'middle',
         onOk: () => {
           this.classroomStore.groupStore.acceptGroupInvite(groupUuid);
         },
@@ -862,8 +884,9 @@ export class GroupUIStore extends EduUIStoreBase {
       const { groupUuid } = args;
       const dialogId = this._dialogsMap.get(groupUuid);
       if (dialogId) {
-        this.shareUIStore.removeDialog(dialogId);
-        this._dialogsMap.delete(groupUuid);
+        // this.shareUIStore.removeDialog(dialogId);
+        // this._dialogsMap.delete(groupUuid);
+        this.getters.classroomUIStore.layoutUIStore.deleteDialog(dialogId);
       }
     }
 

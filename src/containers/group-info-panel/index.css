@@ -1,0 +1,61 @@
+.group-info-panel {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  width: 355px;
+  height: 46px;
+  margin: 0 auto;
+  border-radius: 10px;
+  /* align-content: space-around; */
+  align-items: center;
+  justify-items: flex-end;
+  background-color: rgba(0, 0, 0, 15%);
+  z-index: 2;
+}
+
+.group-name {
+  display: flex;
+  margin-left: 10px;
+  width: 166px;
+  height: 32px;
+  font-family: 'Helvetica Neue';
+  font-weight: 700;
+  size: 14px;
+  line-height: 16px;
+  align-items: center;
+  color: #fff;
+  top: 50%;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+}
+
+.help-button {
+  position: absolute;
+  right: 105px;
+  width: 62px;
+  height: 26px;
+  border-radius: 8px;
+  background-color: #373c42;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  size: 11px;
+  line-height: 24px;
+}
+.leave-group-button {
+  position: absolute;
+  display: flex;
+  width: 90px;
+  height: 26px;
+  right: 7px;
+  background-color: #4262ff;
+  border-radius: 8px;
+  justify-content: center;
+  color: #fff;
+  size: 11px;
+  line-height: 24px;
+}

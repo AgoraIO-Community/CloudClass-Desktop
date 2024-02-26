@@ -17,6 +17,8 @@ import {
   Watermark,
   WhiteboardMobile,
 } from '../../containers/widget/slots';
+import { transI18n } from 'agora-common-libs';
+
 import './index.css';
 import { ToastContainerMobile } from '../../containers/toast';
 import { ClassroomState, ClassState, EduClassroomConfig } from 'agora-edu-core';
@@ -42,8 +44,12 @@ export const Scenario = observer(() => {
     },
     shareUIStore: { isLandscape, forceLandscape },
     streamUIStore: { teacherCameraStream, showTool },
+    shareUIStore,
+    groupUIStore,
   } = useStore();
-
+  useEffect(() => {
+    shareUIStore.setLayoutReady(!groupUIStore.joiningSubRoom);
+  }, [groupUIStore.joiningSubRoom]);
   return (
     <Room>
       <MobileLoadingContainer></MobileLoadingContainer>
@@ -75,14 +81,13 @@ export const Scenario = observer(() => {
           {state === ClassState.close ? (
             <AfterClassMobileDialog></AfterClassMobileDialog>
           ) : (
-            <SceneSwitch>
+            <>
               <GroupInfoPanel />
               <WhiteboardMobile />
 
               {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
               {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
               <TeacherStreamChatContainerMobile />
-              <CountDownMobile></CountDownMobile>
               {!isLandscape && (
                 <>
                   <StudentStreamCollapse></StudentStreamCollapse>
@@ -90,15 +95,30 @@ export const Scenario = observer(() => {
                 </>
               )}
               {!isLandscape && <RoomInfo></RoomInfo>}
+              {groupUIStore.joiningSubRoom ? (
+                <div className="fcr-w-full fcr-h-full fcr-bg-white">
+                  <PageLoading />
+                </div>
+              ) : (
+                ''
+              )}
               <AutoPlayFailedTip></AutoPlayFailedTip>
-              <ChatMobile />
-              <PollMobile></PollMobile>
+              {groupUIStore.joiningSubRoom ? (
+                ''
+              ) : (
+                <>
+                  <ChatMobile />
+                  <PollMobile></PollMobile>
+                </>
+              )}
+              <CountDownMobile></CountDownMobile>
+
               <ShareActionSheetMobile></ShareActionSheetMobile>
               <HandsUpActionSheetMobile></HandsUpActionSheetMobile>
               <DialogContainerMobile></DialogContainerMobile>
               <ToastContainerMobile></ToastContainerMobile>
               <ClassRoomDialogContainer></ClassRoomDialogContainer>
-            </SceneSwitch>
+            </>
           )}
         </LayoutOrientation>
         <WidgetContainerMobile></WidgetContainerMobile>
@@ -107,6 +127,30 @@ export const Scenario = observer(() => {
     </Room>
   );
 });
+const PageLoading = () => {
+  const { layoutUIStore } = useStore();
+
+  return (
+    <div className="scene-switch-loading">
+      <Card
+        className="fcr-absolute fcr-inline-flex fcr-flex-col fcr-inset-auto fcr-p-4"
+        style={{
+          width: 'unset!important',
+          height: 'unset!important',
+          borderRadius: 12,
+        }}>
+        <Loading />
+        <p className="fcr-m-0 fcr-text-level1">
+          {layoutUIStore.currentSubRoomName
+            ? transI18n('fcr_group_joining', {
+                reason: layoutUIStore.currentSubRoomName,
+              })
+            : transI18n('fcr_group_back_main_room')}
+        </p>
+      </Card>
+    </div>
+  );
+};
 const Room: FC<Props> = observer(({ children }) => {
   const { join } = useStore();
 
@@ -348,16 +392,15 @@ const RoomInfo = observer(() => {
     getters: { userCount, classStatusText },
     streamUIStore: { toolVisible },
   } = useStore();
-  return (toolVisible ? <div className='fcr-mobile-room-info-container'>
-    <div className='fcr-mobile-room-info-user-count-container'>
-      <SvgImg
-        type={SvgIconEnum.USER_COUNT}
-        size={18}
-      />
-      <span>{userCount} </span>
+  return toolVisible ? (
+    <div className="fcr-mobile-room-info-container">
+      <div className="fcr-mobile-room-info-user-count-container">
+        <SvgImg type={SvgIconEnum.USER_COUNT} size={18} />
+        <span>{userCount} </span>
+      </div>
+      {classStatusText && (
+        <div className="fcr-mobile-room-info-time-container">{classStatusText}</div>
+      )}
     </div>
-    {classStatusText && <div className='fcr-mobile-room-info-time-container'>
-      {classStatusText}
-    </div>}
-  </div> : null)
-})
+  ) : null;
+});
