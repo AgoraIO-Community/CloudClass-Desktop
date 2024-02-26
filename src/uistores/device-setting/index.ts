@@ -43,7 +43,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   get isAudioRecordingDeviceEnabled() {
     return this._audioRecordingDeviceEnabled;
   }
-  private _enableLocalVideo = (value: boolean) => {
+  enableLocalVideo = (value: boolean) => {
     const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
     if (value) {
       track.start();
@@ -52,7 +52,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     }
     return;
   };
-  private _enableLocalAudio = (value: boolean) => {
+  enableLocalAudio = (value: boolean) => {
     const track = this.classroomStore.mediaStore.mediaControl.createMicrophoneAudioTrack();
     if (value) {
       track.start();
@@ -84,7 +84,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this._enableLocalVideo(true);
+                  this.enableLocalVideo(true);
                 },
               });
             }
@@ -101,7 +101,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this._enableLocalAudio(true);
+                  this.enableLocalAudio(true);
                 },
               });
             }
@@ -134,7 +134,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this._enableLocalVideo(true);
+                  this.enableLocalVideo(true);
                 },
               });
             }
@@ -151,7 +151,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
                 okText: transI18n('fcr_user_tips_teacher_unmute_ok'),
                 cancelText: transI18n('fcr_user_tips_teacher_unmute_cancel'),
                 onOk: () => {
-                  this._enableLocalAudio(true);
+                  this.enableLocalAudio(true);
                 },
               });
             }
@@ -262,7 +262,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             this.logger.info('camera device unplugged', toJS(unpluggedDevice));
             if (unpluggedDevice) {
               if (cameraDeviceId === unpluggedDevice.deviceid) {
-                this._enableLocalVideo(false);
+                this.enableLocalVideo(false);
                 this.setCameraDevice(DEVICE_DISABLE);
               }
             }
@@ -364,10 +364,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const track = mediaControl.createCameraVideoTrack();
             track.setDeviceId(cameraDeviceId);
             this.logger.info('enableLocalVideo => true. Reason: camera device selected');
-            this._enableLocalVideo(true);
+            this.enableLocalVideo(true);
           } else {
             this.logger.info('enableLocalVideo => false. Reason: camera device not selected');
-            this._enableLocalVideo(false);
+            this.enableLocalVideo(false);
           }
         },
       ),
@@ -382,10 +382,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const track = mediaControl.createMicrophoneAudioTrack();
             track.setRecordingDevice(recordingDeviceId);
             this.logger.info('enableLocalAudio => true. Reason: mic device selected');
-            this._enableLocalAudio(true);
+            this.enableLocalAudio(true);
           } else {
             this.logger.info('enableLocalAudio => false. Reason: mic device not selected');
-            this._enableLocalAudio(false);
+            this.enableLocalAudio(false);
           }
         },
       ),

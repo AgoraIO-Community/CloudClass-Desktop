@@ -24,7 +24,7 @@ import { ComponentLevelRulesMobile } from '../../configs/config';
 import { ScreenShareContainerMobile } from '../../containers/screen-share';
 import { useI18n } from 'agora-common-libs';
 import { TeacherCameraPlaceHolderMobile } from '../../containers/stream';
-import { Card, Loading, SvgIconEnum, SvgImgMobile } from '@classroom/ui-kit';
+import { Card, Loading, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 import { ShareActionSheetMobile } from '../../containers/action-sheet/share';
 import { HandsUpActionSheetMobile } from '../../containers/action-sheet/hands-up';
 import { DialogCategory } from '@classroom/uistores/share';
@@ -89,6 +89,7 @@ export const Scenario = observer(() => {
                   <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
                 </>
               )}
+              {!isLandscape && <RoomInfo></RoomInfo>}
               <AutoPlayFailedTip></AutoPlayFailedTip>
               <ChatMobile />
               <PollMobile></PollMobile>
@@ -342,3 +343,21 @@ const StudentStreamCollapse = observer(() => {
     </>
   );
 });
+const RoomInfo = observer(() => {
+  const {
+    getters: { userCount, classStatusText },
+    streamUIStore: { toolVisible },
+  } = useStore();
+  return (toolVisible ? <div className='fcr-mobile-room-info-container'>
+    <div className='fcr-mobile-room-info-user-count-container'>
+      <SvgImg
+        type={SvgIconEnum.USER_COUNT}
+        size={18}
+      />
+      <span>{userCount} </span>
+    </div>
+    {classStatusText && <div className='fcr-mobile-room-info-time-container'>
+      {classStatusText}
+    </div>}
+  </div> : null)
+})

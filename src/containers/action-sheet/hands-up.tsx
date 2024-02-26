@@ -17,7 +17,6 @@ export const HandsUpActionSheetMobile = observer(() => {
   const transI18n = useI18n();
   const {
     classroomStore: {
-      mediaStore: { enableLocalVideo, enableLocalAudio },
       streamStore: { updateRemotePublishState },
     },
     streamUIStore: { localVolume, setLocalVideoRenderAt, localStream },
@@ -25,6 +24,8 @@ export const HandsUpActionSheetMobile = observer(() => {
       toggleFacingMode,
       isCameraDeviceEnabled,
       isAudioRecordingDeviceEnabled,
+      enableLocalVideo,
+      enableLocalAudio,
     },
     layoutUIStore: { handsUpActionSheetVisible, setHandsUpActionSheetVisible, broadcastCallState },
   } = useStore();

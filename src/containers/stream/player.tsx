@@ -281,7 +281,7 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
     classroomStore,
   } = useStore();
   const [current, setCurrent] = useState(0);
-  const visibleStreamsRef = useRef<EduStream[]>([]);
+  const visibleStreamsRef = useRef<Map<string, EduStream>>(new Map());
   const {
     studentVideoStreamSize,
     studentCameraStreams,
@@ -307,14 +307,11 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
   useEffect(() => {
-    if (
-      teacherCameraStream &&
-      !teacherCameraStream.isCameraMuted &&
-      !visibleStreamsRef.current.find(
-        (item) => item.streamUuid === teacherCameraStream.stream.streamUuid,
-      )
-    ) {
-      visibleStreamsRef.current.push(teacherCameraStream.stream);
+    if (teacherCameraStream) {
+      visibleStreamsRef.current.set(
+        teacherCameraStream.stream.streamUuid,
+        teacherCameraStream.stream,
+      );
     }
     subscribeMass(visibleStreamsRef.current);
   }, [teacherCameraStream]);
@@ -391,17 +388,9 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
             <SwiperSlide key={stream.stream.streamUuid}>
               {({ isVisible }) => {
                 if (isVisible) {
-                  if (
-                    !visibleStreamsRef.current.find(
-                      (item) => item.streamUuid === stream.stream.streamUuid,
-                    )
-                  ) {
-                    visibleStreamsRef.current.push(stream.stream);
-                  }
+                  visibleStreamsRef.current.set(stream.stream.streamUuid, stream.stream);
                 } else {
-                  visibleStreamsRef.current = visibleStreamsRef.current.filter(
-                    (item) => item.streamUuid !== stream.stream.streamUuid,
-                  );
+                  visibleStreamsRef.current.delete(stream.stream.streamUuid);
                 }
                 subscribeMass(visibleStreamsRef.current);
 
