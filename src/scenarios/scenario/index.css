@@ -141,7 +141,6 @@
 /* .fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile {
   bottom: 162px;
 } */
-<<<<<<< Updated upstream
 .fcr-mobile-room-info-container {
   position: fixed;
   top: 8px;
@@ -153,7 +152,8 @@
   justify-content: center;
   align-items: flex-end;
 }
-.fcr-mobile-room-info-container .fcr-mobile-room-info-user-count-container,.fcr-mobile-room-info-container .fcr-mobile-room-info-time-container{
+.fcr-mobile-room-info-container .fcr-mobile-room-info-user-count-container,
+.fcr-mobile-room-info-container .fcr-mobile-room-info-time-container {
   height: 24px;
   padding: 3px 8px;
   border-radius: 50px;
@@ -162,12 +162,11 @@
   justify-content: center;
   align-items: center;
 }
-.fcr-mobile-room-info-user-count-container{
+.fcr-mobile-room-info-user-count-container {
 }
-.fcr-mobile-room-info-time-container{
-  margin-left:5px;
- 
-=======
+.fcr-mobile-room-info-time-container {
+  margin-left: 5px;
+}
 .scene-switch-loading {
   @apply fcr-bg-background;
   display: flex;
@@ -180,5 +179,4 @@
   z-index: 999999;
   left: 0;
   top: 0;
->>>>>>> Stashed changes
 }

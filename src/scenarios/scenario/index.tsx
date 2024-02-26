@@ -94,9 +94,7 @@ export const Scenario = observer(() => {
                   <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
                 </>
               )}
-<<<<<<< Updated upstream
               {!isLandscape && <RoomInfo></RoomInfo>}
-=======
               {groupUIStore.joiningSubRoom ? (
                 <div className="fcr-w-full fcr-h-full fcr-bg-white">
                   <PageLoading />
@@ -104,7 +102,6 @@ export const Scenario = observer(() => {
               ) : (
                 ''
               )}
->>>>>>> Stashed changes
               <AutoPlayFailedTip></AutoPlayFailedTip>
               {groupUIStore.joiningSubRoom ? (
                 ''
@@ -112,9 +109,9 @@ export const Scenario = observer(() => {
                 <>
                   <ChatMobile />
                   <PollMobile></PollMobile>
-                  <CountDownMobile></CountDownMobile>
                 </>
               )}
+              <CountDownMobile></CountDownMobile>
 
               <ShareActionSheetMobile></ShareActionSheetMobile>
               <HandsUpActionSheetMobile></HandsUpActionSheetMobile>
@@ -395,16 +392,15 @@ const RoomInfo = observer(() => {
     getters: { userCount, classStatusText },
     streamUIStore: { toolVisible },
   } = useStore();
-  return (toolVisible ? <div className='fcr-mobile-room-info-container'>
-    <div className='fcr-mobile-room-info-user-count-container'>
-      <SvgImg
-        type={SvgIconEnum.USER_COUNT}
-        size={18}
-      />
-      <span>{userCount} </span>
+  return toolVisible ? (
+    <div className="fcr-mobile-room-info-container">
+      <div className="fcr-mobile-room-info-user-count-container">
+        <SvgImg type={SvgIconEnum.USER_COUNT} size={18} />
+        <span>{userCount} </span>
+      </div>
+      {classStatusText && (
+        <div className="fcr-mobile-room-info-time-container">{classStatusText}</div>
+      )}
     </div>
-    {classStatusText && <div className='fcr-mobile-room-info-time-container'>
-      {classStatusText}
-    </div>}
-  </div> : null)
-})
+  ) : null;
+});
