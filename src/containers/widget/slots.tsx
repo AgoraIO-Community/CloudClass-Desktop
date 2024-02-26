@@ -61,18 +61,22 @@ export const CountDownMobile = observer(() => {
   const ref = useRef<HTMLDivElement>(null);
   const { pos, initData } = useMobileStreamDrag({
     isPiP: true,
-    triggerRef: ref as MutableRefObject<HTMLDivElement>
+    triggerRef: ref as MutableRefObject<HTMLDivElement>,
   });
   const {
-    shareUIStore: { isLandscape }
+    shareUIStore: { isLandscape },
   } = useStore();
   useEffect(() => {
-    initData()
-  }, [isLandscape])
+    initData();
+  }, [isLandscape]);
   return (
     <div
       ref={ref}
-      className={classNames({ 'fcr-countdown-mobile-widget-landscape': isLandscape, 'fcr-countdown-mobile-widget': !isLandscape })} style={{
+      className={classNames({
+        'fcr-countdown-mobile-widget-landscape': isLandscape,
+        'fcr-countdown-mobile-widget': !isLandscape,
+      })}
+      style={{
         transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
       }}></div>
   );
@@ -175,7 +179,8 @@ export const ChatMobile = observer(function Chat() {
     <div
       className="widget-slot-chat-mobile"
       style={{
-        height: chatH5Height,
+        height: chatH5Height < 190 ? 190 : chatH5Height,
+
         background: '#27292f',
       }}
     />

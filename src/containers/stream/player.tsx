@@ -328,6 +328,7 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
         transition: 'height .2s',
         height: studentVideoStreamContainerHeight,
         width: '100vw',
+        flexShrink: 0,
         background: 'rgba(56, 56, 67, 1)',
       }}>
       {current !== 0 && (
