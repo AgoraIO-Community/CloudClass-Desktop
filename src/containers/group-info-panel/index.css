@@ -38,6 +38,7 @@
   height: 26px;
   border-radius: 8px;
   background-color: #373c42;
+  padding-right: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
