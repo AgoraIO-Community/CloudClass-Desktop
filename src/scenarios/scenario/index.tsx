@@ -47,6 +47,10 @@ export const Scenario = observer(() => {
     shareUIStore,
     groupUIStore,
   } = useStore();
+  const { getUserGroupInfo } = groupUIStore;
+  const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
+  const groupInfo = getUserGroupInfo(userUuid);
+
   useEffect(() => {
     shareUIStore.setLayoutReady(!groupUIStore.joiningSubRoom);
   }, [groupUIStore.joiningSubRoom]);
@@ -94,7 +98,7 @@ export const Scenario = observer(() => {
                   <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
                 </>
               )}
-              {!isLandscape && <RoomInfo></RoomInfo>}
+              {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
               {groupUIStore.joiningSubRoom ? (
                 <div className="fcr-w-full fcr-h-full fcr-bg-white">
                   <PageLoading />
