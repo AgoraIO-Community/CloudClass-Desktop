@@ -209,6 +209,10 @@ export const en = {
     failed_to_enable_screen_sharing: 'Failed to enable screen sharing',
     failed_to_enable_screen_sharing_permission_denied:
       'Open screen capture failed. Please grant permission for screen capture.',
+    failed_to_enable_camera_permission_denied:
+      'Open camera failed. Please grant permission for camera.',
+    failed_to_enable_microphone_permission_denied:
+      'Open microphone failed. Please grant permission for microphone.',
     failed_to_send_chat: 'Failed to send chat',
     failed_to_translate_chat: 'Failed to translate chat',
     failed_to_send_reward: 'Failed to send reward',

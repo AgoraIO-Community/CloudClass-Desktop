@@ -206,6 +206,8 @@ export const zh = {
     failed_to_initiate_screen_sharing_to_remote: '向远端发起屏幕共享失败',
     failed_to_enable_screen_sharing: '开启屏幕共享失败',
     failed_to_enable_screen_sharing_permission_denied: '开启屏幕共享失败！请先授权屏幕共享权限！',
+    failed_to_enable_camera_permission_denied: '开启摄像头失败！请先授权摄像头权限！',
+    failed_to_enable_microphone_permission_denied: '开启麦克风失败！请先授权麦克风权限！',
     failed_to_send_chat: '发送聊天失败',
     failed_to_translate_chat: '翻译聊天失败',
     failed_to_send_reward: '发送奖励失败',
