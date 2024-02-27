@@ -97,6 +97,7 @@ export const WhiteboardMobile = observer(function Board() {
 
   const { boardContainerHeight, boardContainerWidth, mounted } = boardUIStore;
   const height = (mounted && !isLandscape) || screenShareStream ? boardContainerHeight : 0;
+  whiteBoardRef.current?.style.setProperty('--board-height', height + 'px');
   return (
     <div
       ref={whiteBoardRef}
