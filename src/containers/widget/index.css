@@ -13,7 +13,13 @@
 .widget-slot-chat {
   /* @apply bg-background; */
 }
-
+.whiteboard-mobile-container {
+  flex-shrink: 0;
+  width: 100%;
+}
+.widget-slot-board {
+  width: 100%;
+}
 .whiteboard-mobile-container .netless-whiteboard-wrapper {
   background-color: #fff;
 

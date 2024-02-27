@@ -234,11 +234,7 @@ export class AgoraEduSDK {
     Logger.info('[AgoraEduSDK]launched with options:', option);
     EduContext.reset();
     this._validateOptions(option);
-    const defaultPlatform = getPlatform() === DevicePlatform.H5 ? Platform.H5 : Platform.PC;
-    const flexProperties = Object.assign(option.userFlexProperties || {}, {
-      device: { platform: defaultPlatform },
-    });
-    option.userFlexProperties = flexProperties;
+
     const {
       userUuid,
       userName,

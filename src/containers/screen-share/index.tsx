@@ -8,11 +8,14 @@ import { AGRenderMode } from 'agora-rte-sdk';
 
 export const ScreenShareContainerMobile = observer(() => {
   const {
+    shareUIStore: { isLandscape },
     boardUIStore: { boardContainerHeight },
     streamUIStore: { screenShareStream },
   } = useStore();
 
-  const remotecls = classnames('remote-screen-share-container', 'fcr-t-0');
+  const remotecls = classnames('remote-screen-share-container', 'fcr-t-0', {
+    'remote-screen-share-container-landscape': isLandscape,
+  });
 
   return screenShareStream ? (
     <div className={remotecls} style={{ height: boardContainerHeight }}>

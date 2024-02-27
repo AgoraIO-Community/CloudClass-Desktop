@@ -1,6 +1,7 @@
 .fcr-mobile-landscape-container {
   width: 100vw;
   position: relative;
+  overflow: hidden;
 }
 .fcr-mobile-landscape-container-rotate {
   height: 100vw;

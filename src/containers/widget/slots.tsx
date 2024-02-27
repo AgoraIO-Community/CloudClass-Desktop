@@ -91,12 +91,12 @@ export const WhiteboardMobile = observer(function Board() {
   const whiteBoardRef = useRef<HTMLDivElement>(null);
   const {
     boardUIStore,
-    streamUIStore: { containerH5VisibleCls, screenShareStream, toggleTool },
+    streamUIStore: { containerH5VisibleCls, toggleTool },
     shareUIStore: { isLandscape },
   } = useStore();
 
   const { boardContainerHeight, boardContainerWidth, mounted } = boardUIStore;
-  const height = (mounted && !isLandscape) || screenShareStream ? boardContainerHeight : 0;
+  const height = mounted && !isLandscape ? boardContainerHeight : 0;
   return (
     <div
       ref={whiteBoardRef}
@@ -106,9 +106,7 @@ export const WhiteboardMobile = observer(function Board() {
       )}
       style={{
         height: height,
-        width: boardContainerWidth,
         visibility: isLandscape ? 'hidden' : 'visible',
-        // overflow: 'hidden',
       }}
       onClick={() => {
         toggleTool();
@@ -116,7 +114,6 @@ export const WhiteboardMobile = observer(function Board() {
       <div
         style={{
           height: height,
-          width: boardContainerWidth,
           zIndex: ComponentLevelRules.WhiteBoard,
         }}
         className="widget-slot-board"
@@ -148,7 +145,7 @@ export const ChatMobile = observer(function Chat() {
     const height =
       h5Height -
       (screenShareStream ? boardContainerHeight : 0) -
-      (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted)
+      (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !screenShareStream
         ? classRoomPlacholderMobileHeight
         : 0) -
       (mounted ? boardContainerHeight : 0) -
