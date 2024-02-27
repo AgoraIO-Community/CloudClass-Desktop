@@ -87,6 +87,7 @@ export const Chat = observer(function Chat() {
       studentStreamsVisible,
       isPiP,
       screenShareStream,
+      teacherVideoStreamSize,
     },
     boardUIStore: { boardContainerHeight, mounted },
     shareUIStore: { isLandscape, forceLandscape },
@@ -105,12 +106,13 @@ export const Chat = observer(function Chat() {
         : 0) -
       (mounted ? boardContainerHeight : 0) -
       (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
-        ? boardContainerHeight
+        ? teacherVideoStreamSize.height || 0
         : 0) -
       (studentCameraStreams.length > 0 && studentStreamsVisible
         ? studentVideoStreamSize.height
         : 0);
     setChatH5Height(height);
+    console.log(height, boardContainerHeight, 'heightheight');
   };
   useEffect(() => {
     calcHeight();
