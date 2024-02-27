@@ -100,7 +100,7 @@ export const WhiteboardMobile = observer(function Board() {
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
   useEffect(() => {
     whiteBoardRef.current?.style.setProperty('--board-height', maskHeight + 'px');
-  });
+  }, [maskHeight]);
   return (
     <div
       ref={whiteBoardRef}
