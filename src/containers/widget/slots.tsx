@@ -91,12 +91,16 @@ export const WhiteboardMobile = observer(function Board() {
   const whiteBoardRef = useRef<HTMLDivElement>(null);
   const {
     boardUIStore,
-    streamUIStore: { containerH5VisibleCls, toggleTool },
+    streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream },
     shareUIStore: { isLandscape },
   } = useStore();
 
-  const { boardContainerHeight, boardContainerWidth, mounted } = boardUIStore;
+  const { boardContainerHeight, mounted } = boardUIStore;
   const height = mounted && !isLandscape ? boardContainerHeight : 0;
+  const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
+  useEffect(() => {
+    whiteBoardRef.current?.style.setProperty('--board-height', maskHeight + 'px');
+  });
   return (
     <div
       ref={whiteBoardRef}
