@@ -5,7 +5,7 @@ import { Scheduler, bound } from 'agora-rte-sdk';
 import { CommonDialogType, DialogType, MobileCallState } from '../type';
 import { v4 as uuidv4 } from 'uuid';
 
-import { getIOSVersion, isIOS, isWeChatBrowser } from '@classroom/utils';
+import { getIOSVersion, isIOS, isSafari, isWeChatBrowser } from '@classroom/utils';
 import { AgoraExtensionWidgetEvent } from '@classroom/protocol/events';
 import { transI18n } from 'agora-common-libs';
 import { ToastTypeEnum } from '../share';
@@ -176,7 +176,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   }
 
   checkIsSupportCall() {
-    if (isIOS() && isWeChatBrowser() && getIOSVersion() < 14.3) {
+    if (isIOS() && !isSafari() && getIOSVersion() < 14.3) {
       return false;
     }
     return true;

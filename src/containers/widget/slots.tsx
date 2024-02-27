@@ -184,7 +184,8 @@ export const ChatMobile = observer(function Chat() {
     <div
       className="widget-slot-chat-mobile"
       style={{
-        height: chatH5Height,
+        height: chatH5Height < 190 ? 190 : chatH5Height,
+
         background: '#27292f',
       }}
     />

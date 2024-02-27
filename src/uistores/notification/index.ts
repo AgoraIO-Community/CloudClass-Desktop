@@ -93,6 +93,32 @@ export class NotificationUIStore extends EduUIStoreBase {
   onInstall() {
     this._disposers.push(
       reaction(
+        () => this.classroomStore.mediaStore.localCameraTrackState,
+        (state) => {
+          if (state === AgoraRteMediaSourceState.error) {
+            this.shareUIStore.addSingletonToast(
+              transI18n('toast.failed_to_enable_camera_permission_denied'),
+              'info',
+            );
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
+        () => this.classroomStore.mediaStore.localMicTrackState,
+        (state) => {
+          if (state === AgoraRteMediaSourceState.error) {
+            this.shareUIStore.addSingletonToast(
+              transI18n('toast.failed_to_enable_microphone_permission_denied'),
+              'info',
+            );
+          }
+        },
+      ),
+    );
+    this._disposers.push(
+      reaction(
         () => this.networkQuality,
         (networkQuality) => {
           if (networkQuality === AGNetworkQuality.bad) {
