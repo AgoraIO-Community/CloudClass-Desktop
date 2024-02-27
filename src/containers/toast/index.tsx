@@ -2,9 +2,9 @@ import { useStore } from '@classroom/hooks/ui-store';
 import { Scheduler } from 'agora-rte-sdk';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
-import { ComponentLevelRulesMobile } from '../../configs/config';
+import { ComponentLevelRules } from '../../configs/config';
 import './index.css';
-export const ToastContainerMobile = observer(() => {
+export const ToastContainer = observer(() => {
   const {
     shareUIStore: { toastQueue, isLandscape },
   } = useStore();
@@ -25,7 +25,7 @@ export const ToastContainerMobile = observer(() => {
     <div
       style={{
         opacity: visible ? '1' : '0',
-        zIndex: ComponentLevelRulesMobile.Level3,
+        zIndex: ComponentLevelRules.Level3,
       }}
       className={`fcr-mobile-toast-container ${
         isLandscape ? 'fcr-mobile-toast-container-landscape' : ''

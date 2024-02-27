@@ -6,7 +6,7 @@ import { CSSProperties, useEffect, useRef } from 'react';
 import { EduStream } from 'agora-edu-core';
 import { AGRenderMode } from 'agora-rte-sdk';
 
-export const ScreenShareContainerMobile = observer(() => {
+export const ScreenShareContainer = observer(() => {
   const {
     shareUIStore: { isLandscape },
     boardUIStore: { boardContainerHeight },

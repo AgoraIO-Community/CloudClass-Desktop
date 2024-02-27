@@ -1,5 +1,5 @@
 import { useStore } from '@classroom/hooks/ui-store';
-import { LocalTrackPlayerMobile, StreamPlayerMobile } from '.';
+import { LocalTrackPlayerContainer, StreamPlayer } from '.';
 import { FC, MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
 import { EduClassroomConfig, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
@@ -17,7 +17,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 
 import 'swiper/css';
-const RoomBigTeacherStreamH5Tool = ({
+const TeacherStreamH5Tool = ({
   isPiP,
   onPiP,
   onLandscape,
@@ -169,85 +169,83 @@ export const useMobileStreamDrag = ({
     initData,
   };
 };
-export const RoomBigTeacherStreamContainerMobile = observer(
-  ({ stream }: { stream: EduStreamUI }) => {
-    const {
-      streamUIStore,
-      shareUIStore: { isLandscape, setForceLandscape },
-      layoutUIStore: { toggleLandscapeToolBarVisible },
-    } = useStore();
-    const {
-      teacherVideoStreamSize,
-      streamLayoutContainerCls,
-      isPiP,
-      setIsPiP,
-      toolVisible,
-      toggleTool,
-      showTool,
-    } = streamUIStore;
-    const userName = stream.fromUser.userName;
-    const ref = useRef<HTMLDivElement>(null);
-    const { pos } = useMobileStreamDrag({
-      isPiP,
-      triggerRef: ref as MutableRefObject<HTMLDivElement>,
-    });
-    const onLandspce = () => {
-      setForceLandscape(true);
-    };
-    const onPiP = () => {
-      setIsPiP(!isPiP);
-    };
-    useEffect(() => {
-      // if (isPiP) {
-      showTool();
-      // }
-    }, [isPiP]);
+export const TeacherStreamContainer = observer(({ stream }: { stream: EduStreamUI }) => {
+  const {
+    streamUIStore,
+    shareUIStore: { isLandscape, setForceLandscape },
+    layoutUIStore: { toggleLandscapeToolBarVisible },
+  } = useStore();
+  const {
+    teacherVideoStreamSize,
+    streamLayoutContainerCls,
+    isPiP,
+    setIsPiP,
+    toolVisible,
+    toggleTool,
+    showTool,
+  } = streamUIStore;
+  const userName = stream.fromUser.userName;
+  const ref = useRef<HTMLDivElement>(null);
+  const { pos } = useMobileStreamDrag({
+    isPiP,
+    triggerRef: ref as MutableRefObject<HTMLDivElement>,
+  });
+  const onLandspce = () => {
+    setForceLandscape(true);
+  };
+  const onPiP = () => {
+    setIsPiP(!isPiP);
+  };
+  useEffect(() => {
+    // if (isPiP) {
+    showTool();
+    // }
+  }, [isPiP]);
 
-    return (
+  return (
+    <div
+      ref={ref}
+      className={classnames(
+        'fcr-relative',
+        streamLayoutContainerCls,
+        'fcr-stream-mobile',
+        isPiP && 'fcr-stream-mobile-draggable',
+      )}
+      style={{
+        ...teacherVideoStreamSize,
+        transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
+      }}>
       <div
-        ref={ref}
-        className={classnames(
-          'fcr-relative',
-          streamLayoutContainerCls,
-          'fcr-stream-mobile',
-          isPiP && 'fcr-stream-mobile-draggable',
-        )}
+        className="fcr-stream-mobile-name"
         style={{
-          ...teacherVideoStreamSize,
-          transform: `translate3d(${pos.x}px,${pos.y}px,0)`,
+          opacity: toolVisible && !isLandscape ? 1 : 0,
+          visibility: toolVisible && !isLandscape ? 'visible' : 'hidden',
         }}>
-        <div
-          className="fcr-stream-mobile-name"
-          style={{
-            opacity: toolVisible && !isLandscape ? 1 : 0,
-            visibility: toolVisible && !isLandscape ? 'visible' : 'hidden',
-          }}>
-          {userName || 'teacher'}
-        </div>
-        <RoomBigTeacherStreamH5Tool
-          isPiP={isPiP}
-          visible={toolVisible && !isLandscape}
-          size={isPiP ? 'sm' : 'lg'}
-          onLandscape={onLandspce}
-          onPiP={onPiP}></RoomBigTeacherStreamH5Tool>
-        {/* <div onClick={toggleTool} style={{ width: '100%', height: '100%' }}> */}
-        <StreamPlayerMobile
-          onClick={() => {
-            toggleTool();
-            toggleLandscapeToolBarVisible();
-          }}
-          stream={stream}
-          style={{
-            width: '100%',
-            height: '100%',
-            position: isPiP ? 'static' : 'relative',
-          }}
-        />
-        {/* </div> */}
+        {userName || 'teacher'}
       </div>
-    );
-  },
-);
+      <TeacherStreamH5Tool
+        isPiP={isPiP}
+        visible={toolVisible && !isLandscape}
+        size={isPiP ? 'sm' : 'lg'}
+        onLandscape={onLandspce}
+        onPiP={onPiP}></TeacherStreamH5Tool>
+      {/* <div onClick={toggleTool} style={{ width: '100%', height: '100%' }}> */}
+      <StreamPlayer
+        onClick={() => {
+          toggleTool();
+          toggleLandscapeToolBarVisible();
+        }}
+        stream={stream}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: isPiP ? 'static' : 'relative',
+        }}
+      />
+      {/* </div> */}
+    </div>
+  );
+});
 
 export const AudioRecordinDeviceIcon = observer(
   ({ size = 32, stream }: { size?: number; stream: EduStreamUI }) => {
@@ -271,7 +269,7 @@ export const AudioRecordinDeviceIcon = observer(
     );
   },
 );
-export const RoomBigStudentStreamsContainerMobile = observer(() => {
+export const StudentStreamsContainer = observer(() => {
   const {
     streamUIStore,
     classroomStore: {
@@ -398,12 +396,12 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
                 return (
                   <div onClick={toggleTool} className="fcr-relative">
                     {isLocal ? (
-                      <LocalTrackPlayerMobile
+                      <LocalTrackPlayerContainer
                         key={stream.stream.streamUuid}
-                        stream={stream}></LocalTrackPlayerMobile>
+                        stream={stream}></LocalTrackPlayerContainer>
                     ) : (
                       <StreamContext.Provider value={convertStreamUIStatus(stream)}>
-                        <StreamPlayerMobile
+                        <StreamPlayer
                           visible={isVisible}
                           key={stream.stream.streamUuid}
                           style={{
@@ -411,7 +409,7 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
                             position: 'relative',
                             flexShrink: 0,
                           }}
-                          stream={stream}></StreamPlayerMobile>
+                          stream={stream}></StreamPlayer>
                       </StreamContext.Provider>
                     )}
                     <div
@@ -445,10 +443,10 @@ export const RoomBigStudentStreamsContainerMobile = observer(() => {
   );
 });
 
-export const H5RoomPlaceholder = observer(() => {
+export const RoomPlaceholder = observer(() => {
   const {
     streamUIStore: { teacherCameraStream, screenShareStream },
-    layoutUIStore: { classRoomPlacholderMobileHeight },
+    layoutUIStore: { classRoomPlacholderHeight },
     boardUIStore: { mounted },
     classroomStore: {
       roomStore: {
@@ -462,9 +460,7 @@ export const H5RoomPlaceholder = observer(() => {
   return (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
     !mounted &&
     !screenShareStream ? (
-    <div
-      className="fcr-mobile-room-placeholder"
-      style={{ height: classRoomPlacholderMobileHeight }}>
+    <div className="fcr-mobile-room-placeholder" style={{ height: classRoomPlacholderHeight }}>
       <p>
         {transI18n('fcr_copy_room_id')} {EduClassroomConfig.shared.sessionInfo.roomUuid}
       </p>

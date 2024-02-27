@@ -724,7 +724,7 @@ export class GroupUIStore extends EduUIStoreBase {
     }
 
     if (joinSuccess && EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.student) {
-      // this._grantWhiteboard();
+      this._grantWhiteboard();
     }
   }
 

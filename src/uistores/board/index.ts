@@ -5,28 +5,6 @@ import { transI18n } from 'agora-common-libs';
 
 export class BoardUIStore extends EduUIStoreBase {
   protected _disposers: (IReactionDisposer | Lambda)[] = [];
-  protected get uiOverrides() {
-    return {
-      ...super.uiOverrides,
-      heightRatio: 0.79,
-    };
-  }
-
-  /**
-   * 白板容器高度
-   * @returns
-   */
-  @computed
-  get boardAreaHeight() {
-    const viewportHeight =
-      this.shareUIStore.classroomViewportSize.height - this.shareUIStore.navHeight;
-
-    const heightRatio = this.uiOverrides.heightRatio;
-
-    const height = heightRatio * viewportHeight;
-
-    return height;
-  }
 
   @observable
   isCopying = false;
@@ -91,7 +69,7 @@ export class BoardUIStore extends EduUIStoreBase {
 
   @computed
   get boardContainerHeight() {
-    return this.boardContainerWidth * (9 / 16);
+    return this.boardContainerWidth * (714 / 1548);
   }
   onInstall() {
     const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;

@@ -16,6 +16,7 @@
 .whiteboard-mobile-container {
   flex-shrink: 0;
   width: 100%;
+  overflow: hidden;
 }
 .widget-slot-board {
   width: 100%;

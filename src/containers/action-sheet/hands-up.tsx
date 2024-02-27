@@ -2,7 +2,7 @@ import { useStore } from '@classroom/hooks/ui-store';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { observer } from 'mobx-react';
-import { ComponentLevelRulesMobile } from '../../configs/config';
+import { ComponentLevelRules } from '../../configs/config';
 
 import './index.css';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ import { MicrophoneIndicator } from './mic';
 import { MobileCallState } from '@classroom/uistores/type';
 import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
 
-export const HandsUpActionSheetMobile = observer(() => {
+export const HandsUpActionSheet = observer(() => {
   const transI18n = useI18n();
   const {
     classroomStore: {
@@ -107,13 +107,13 @@ export const HandsUpActionSheetMobile = observer(() => {
         className="fcr-hands-up-action-sheet-mobile-mask"
         style={{
           display: handsUpActionSheetVisible ? 'block' : 'none',
-          zIndex: ComponentLevelRulesMobile.Level3,
+          zIndex: ComponentLevelRules.Level3,
         }}></div>
       <div
         className="fcr-hands-up-action-sheet-mobile"
         style={{
           transform: `translate3d(0, ${handsUpActionSheetVisible ? '-100%' : 0}, 0)`,
-          zIndex: ComponentLevelRulesMobile.Level3,
+          zIndex: ComponentLevelRules.Level3,
         }}>
         <div className="fcr-hands-up-action-sheet-mobile-device">
           <div

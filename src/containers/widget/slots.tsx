@@ -3,61 +3,12 @@ import { EduClassroomConfig } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
-import { useI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../configs/config';
 import classNames from 'classnames';
 import { useMobileStreamDrag } from '../stream/player';
 import './index.css';
-export const Chat = observer(function Chat() {
-  const { widgetUIStore } = useStore();
-  const { ready } = widgetUIStore;
 
-  useEffect(() => {
-    if (ready) {
-      const chatWidgetId = 'easemobIM';
-
-      if (ready) {
-        widgetUIStore.createWidget(chatWidgetId);
-      }
-
-      return () => {
-        widgetUIStore.destroyWidget(chatWidgetId);
-      };
-    }
-  }, [ready]);
-
-  return <div className="widget-slot-chat fcr-h-full" />;
-});
-
-export const Whiteboard = observer(function Board() {
-  const { boardUIStore } = useStore();
-
-  const { isCopying } = boardUIStore;
-
-  return (
-    <React.Fragment>
-      <div
-        style={{ height: boardUIStore.boardAreaHeight, zIndex: ComponentLevelRules.WhiteBoard }}
-        className="widget-slot-board"
-      />
-      {isCopying && <Spinner />}
-    </React.Fragment>
-  );
-});
-
-const Spinner = () => {
-  const transI18n = useI18n();
-
-  return (
-    <div className="spinner-container">
-      <div className="spinner-contianer-innner">
-        <div className="spinner"></div> {transI18n('whiteboard.loading')}
-      </div>
-    </div>
-  );
-};
-
-export const CountDownMobile = observer(() => {
+export const CountDown = observer(() => {
   const ref = useRef<HTMLDivElement>(null);
   const { pos, initData } = useMobileStreamDrag({
     isPiP: true,
@@ -81,13 +32,13 @@ export const CountDownMobile = observer(() => {
       }}></div>
   );
 });
-export const PollMobile = observer(() => {
+export const Poll = observer(() => {
   const {
     shareUIStore: { isLandscape },
   } = useStore();
   return <div className={`fcr-poll-mobile-widget ${isLandscape ? '' : 'fcr-relative'}`}></div>;
 });
-export const WhiteboardMobile = observer(function Board() {
+export const Whiteboard = observer(function Board() {
   const whiteBoardRef = useRef<HTMLDivElement>(null);
   const {
     boardUIStore,
@@ -117,8 +68,8 @@ export const WhiteboardMobile = observer(function Board() {
       }}>
       <div
         style={{
-          height: height,
-          zIndex: ComponentLevelRules.WhiteBoard,
+          height: isLandscape ? 0 : boardContainerHeight,
+          zIndex: ComponentLevelRules.Level0,
         }}
         className="widget-slot-board"
       />
@@ -126,7 +77,7 @@ export const WhiteboardMobile = observer(function Board() {
   );
 });
 
-export const ChatMobile = observer(function Chat() {
+export const Chat = observer(function Chat() {
   const {
     widgetUIStore,
     streamUIStore: {
@@ -139,7 +90,7 @@ export const ChatMobile = observer(function Chat() {
     },
     boardUIStore: { boardContainerHeight, mounted },
     shareUIStore: { isLandscape, forceLandscape },
-    layoutUIStore: { classRoomPlacholderMobileHeight },
+    layoutUIStore: { classRoomPlacholderHeight },
   } = useStore();
   const { ready } = widgetUIStore;
   const [chatH5Height, setChatH5Height] = useState(0);
@@ -150,7 +101,7 @@ export const ChatMobile = observer(function Chat() {
       h5Height -
       (screenShareStream ? boardContainerHeight : 0) -
       (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !screenShareStream
-        ? classRoomPlacholderMobileHeight
+        ? classRoomPlacholderHeight
         : 0) -
       (mounted ? boardContainerHeight : 0) -
       (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP

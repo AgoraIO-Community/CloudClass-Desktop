@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-export const WidgetContainerMobile = observer(() => {
+export const WidgetContainer = observer(() => {
   const {
     widgetUIStore: { z0Widgets, z10Widgets },
   } = useStore();
@@ -13,18 +13,18 @@ export const WidgetContainerMobile = observer(() => {
     <>
       <div className="widget-container fcr-z-0">
         {z0Widgets.map((w: AgoraWidgetBase) => {
-          return <WidgetMobile key={w.widgetId} widget={w} />;
+          return <Widget key={w.widgetId} widget={w} />;
         })}
       </div>
       <div className="widget-container fcr-z-10">
         {z10Widgets.map((w: AgoraWidgetBase) => (
-          <WidgetMobile key={w.widgetId} widget={w} />
+          <Widget key={w.widgetId} widget={w} />
         ))}
       </div>
     </>
   );
 });
-export const WidgetMobile = observer(({ widget }: { widget: AgoraWidgetBase }) => {
+export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
   const containerDom = useRef<HTMLElement>();
 
   const [mounted, setMounted] = useState(false);

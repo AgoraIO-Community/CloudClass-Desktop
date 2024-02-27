@@ -5,30 +5,24 @@ import React, { FC, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Layout, LayoutProps } from '@classroom/ui-kit/components/layout';
 import {
-  H5RoomPlaceholder,
-  RoomBigStudentStreamsContainerMobile,
-  RoomBigTeacherStreamContainerMobile,
+  RoomPlaceholder,
+  StudentStreamsContainer,
+  TeacherStreamContainer,
 } from '@classroom/containers/stream/player';
-import { WidgetContainerMobile } from '../../containers/widget/index.mobile';
-import {
-  ChatMobile,
-  CountDownMobile,
-  PollMobile,
-  Watermark,
-  WhiteboardMobile,
-} from '../../containers/widget/slots';
+import { WidgetContainer } from '../../containers/widget';
+import { Chat, CountDown, Poll, Watermark, Whiteboard } from '../../containers/widget/slots';
 import { transI18n } from 'agora-common-libs';
 
 import './index.css';
-import { ToastContainerMobile } from '../../containers/toast';
+import { ToastContainer } from '../../containers/toast';
 import { ClassroomState, ClassState, EduClassroomConfig } from 'agora-edu-core';
-import { ComponentLevelRulesMobile } from '../../configs/config';
-import { ScreenShareContainerMobile } from '../../containers/screen-share';
+import { ComponentLevelRules } from '../../configs/config';
+import { ScreenShareContainer } from '../../containers/screen-share';
 import { useI18n } from 'agora-common-libs';
-import { TeacherCameraPlaceHolderMobile } from '../../containers/stream';
+import { TeacherCameraPlaceHolder } from '../../containers/stream';
 import { Card, Loading, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
-import { ShareActionSheetMobile } from '../../containers/action-sheet/share';
-import { HandsUpActionSheetMobile } from '../../containers/action-sheet/hands-up';
+import { ShareActionSheet } from '../../containers/action-sheet/share';
+import { HandsUpActionSheet } from '../../containers/action-sheet/hands-up';
 import { DialogCategory } from '@classroom/uistores/share';
 import { ConfirmDialogAction } from '@classroom/uistores/type';
 import { ClassRoomDialogContainer } from '../../containers/confirm-dialog';
@@ -54,9 +48,9 @@ export const Scenario = observer(() => {
   }, [groupUIStore.joiningSubRoom]);
   return (
     <Room>
-      <MobileLoadingContainer></MobileLoadingContainer>
+      <LoadingContainer></LoadingContainer>
 
-      <H5LayoutContainer>
+      <LayoutContainer>
         <Helmet>
           <title>{EduClassroomConfig.shared.sessionInfo.roomName}</title>
           <meta
@@ -81,19 +75,19 @@ export const Scenario = observer(() => {
           })}
           direction="col">
           {state === ClassState.close ? (
-            <AfterClassMobileDialog></AfterClassMobileDialog>
+            <AfterClassDialog></AfterClassDialog>
           ) : (
             <>
               <GroupInfoPanel />
-              <WhiteboardMobile />
+              <Whiteboard />
 
-              {!isLandscape && <H5RoomPlaceholder></H5RoomPlaceholder>}
-              {!isLandscape && <ScreenShareContainerMobile></ScreenShareContainerMobile>}
-              <TeacherStreamChatContainerMobile />
+              {!isLandscape && <RoomPlaceholder></RoomPlaceholder>}
+              {!isLandscape && <ScreenShareContainer></ScreenShareContainer>}
+              <TeacherStream />
               {!isLandscape && (
                 <>
                   <StudentStreamCollapse></StudentStreamCollapse>
-                  <RoomBigStudentStreamsContainerMobile></RoomBigStudentStreamsContainerMobile>
+                  <StudentStreamsContainer></StudentStreamsContainer>
                 </>
               )}
               {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
@@ -109,23 +103,23 @@ export const Scenario = observer(() => {
                 ''
               ) : (
                 <>
-                  <ChatMobile />
-                  <PollMobile></PollMobile>
+                  <Chat />
+                  <Poll></Poll>
                 </>
               )}
-              <CountDownMobile></CountDownMobile>
+              <CountDown></CountDown>
 
-              <ShareActionSheetMobile></ShareActionSheetMobile>
-              <HandsUpActionSheetMobile></HandsUpActionSheetMobile>
-              <DialogContainerMobile></DialogContainerMobile>
-              <ToastContainerMobile></ToastContainerMobile>
+              <ShareActionSheet></ShareActionSheet>
+              <HandsUpActionSheet></HandsUpActionSheet>
+              <DialogContainer></DialogContainer>
+              <ToastContainer></ToastContainer>
               <ClassRoomDialogContainer></ClassRoomDialogContainer>
             </>
           )}
         </LayoutOrientation>
-        <WidgetContainerMobile></WidgetContainerMobile>
+        <WidgetContainer></WidgetContainer>
         <Watermark />
-      </H5LayoutContainer>
+      </LayoutContainer>
     </Room>
   );
 });
@@ -179,7 +173,7 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
     </Layout>
   );
 });
-const TeacherStreamChatContainerMobile = observer(() => {
+const TeacherStream = observer(() => {
   const {
     shareUIStore: { isLandscape },
     streamUIStore: { teacherCameraStream, containerH5VisibleCls, showTool },
@@ -190,10 +184,10 @@ const TeacherStreamChatContainerMobile = observer(() => {
   return (
     <Layout direction="col" style={{ flexShrink: 0 }} className={classnames(containerH5VisibleCls)}>
       {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (
-        <TeacherCameraPlaceHolderMobile></TeacherCameraPlaceHolderMobile>
+        <TeacherCameraPlaceHolder></TeacherCameraPlaceHolder>
       )}
       {teacherCameraStream && !teacherCameraStream.isCameraMuted && (
-        <RoomBigTeacherStreamContainerMobile stream={teacherCameraStream} />
+        <TeacherStreamContainer stream={teacherCameraStream} />
       )}
     </Layout>
   );
@@ -203,7 +197,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const H5LayoutContainer: FC<Props> = observer(({ children }) => {
+const LayoutContainer: FC<Props> = observer(({ children }) => {
   const {
     layoutUIStore: { h5ContainerCls },
     shareUIStore: { classroomViewportClassName },
@@ -216,7 +210,7 @@ const H5LayoutContainer: FC<Props> = observer(({ children }) => {
     </section>
   );
 });
-const AfterClassMobileDialog = observer(() => {
+const AfterClassDialog = observer(() => {
   const {
     notificationUIStore: { setLeaveRoom },
   } = useStore();
@@ -225,7 +219,7 @@ const AfterClassMobileDialog = observer(() => {
   return (
     <div
       className="fcr-after-class-mobile-dialog-mask fcr-fixed fcr-w-full fcr-h-full fcr-l-0 fcr-t-0"
-      style={{ zIndex: ComponentLevelRulesMobile.Level3 }}>
+      style={{ zIndex: ComponentLevelRules.Level3 }}>
       <div className="fcr-after-class-mobile-dialog">
         <div className="fcr-after-class-mobile-dialog-img"></div>
         <h1>{transI18n('fcr_H5_status_upcoming')}</h1>
@@ -237,7 +231,7 @@ const AfterClassMobileDialog = observer(() => {
     </div>
   );
 });
-const MobileLoadingContainer = observer(() => {
+const LoadingContainer = observer(() => {
   const {
     classroomStore: {
       connectionStore: { classroomState },
@@ -245,7 +239,7 @@ const MobileLoadingContainer = observer(() => {
   } = useStore();
   return classroomState !== ClassroomState.Connected ? (
     <div
-      style={{ zIndex: ComponentLevelRulesMobile.Level3 }}
+      style={{ zIndex: ComponentLevelRules.Level3 }}
       className="fcr-w-screen fcr-h-screen fcr-fixed fcr-left-0 fcr-t-0 fcr-flex fcr-items-center fcr-justify-center">
       <Card width={90} height={90}>
         <Loading></Loading>
@@ -287,7 +281,7 @@ const AutoPlayFailedTip = observer(() => {
     </div>
   ) : null;
 });
-export const DialogContainerMobile: React.FC<unknown> = observer(() => {
+export const DialogContainer: React.FC<unknown> = observer(() => {
   const { shareUIStore } = useStore();
   const { dialogQueue } = shareUIStore;
   const transI18n = useI18n();
@@ -301,9 +295,9 @@ export const DialogContainerMobile: React.FC<unknown> = observer(() => {
             dialog.category === DialogCategory.Confirm,
         )
         .map(({ id, props, category }) => {
-          let dialogProps: GenericErrorDialogMobileProps;
+          let dialogProps: GenericErrorDialogProps;
           if (category === DialogCategory.Confirm) {
-            const confirmProps = props as ConfirmDialogMobileProps;
+            const confirmProps = props as ConfirmDialogProps;
             dialogProps = {
               title: confirmProps.title,
               content: confirmProps.content,
@@ -311,7 +305,7 @@ export const DialogContainerMobile: React.FC<unknown> = observer(() => {
               onOK: confirmProps.opts.onOk,
             };
           } else {
-            const genericErrorProps = props as GenericErrorDialogMobileProps;
+            const genericErrorProps = props as GenericErrorDialogProps;
             dialogProps = {
               title: genericErrorProps.title,
               content: genericErrorProps.content,
@@ -320,12 +314,12 @@ export const DialogContainerMobile: React.FC<unknown> = observer(() => {
             };
           }
 
-          return <GenericErrorDialogMobile key={id} {...dialogProps}></GenericErrorDialogMobile>;
+          return <GenericErrorDialog key={id} {...dialogProps}></GenericErrorDialog>;
         })}
     </React.Fragment>
   );
 });
-interface ConfirmDialogMobileProps {
+interface ConfirmDialogProps {
   title: string;
   content: string;
   opts: {
@@ -335,22 +329,22 @@ interface ConfirmDialogMobileProps {
     onCancel: () => void;
   };
 }
-interface GenericErrorDialogMobileProps {
+interface GenericErrorDialogProps {
   onOK: () => void;
   okBtnText: string;
   title: string;
   content: string;
 }
-export const GenericErrorDialogMobile = ({
+export const GenericErrorDialog = ({
   onOK,
   title,
   content,
   okBtnText,
-}: GenericErrorDialogMobileProps) => {
+}: GenericErrorDialogProps) => {
   return (
     <div
       className="fcr-mobile-dialog-mask fcr-fixed fcr-w-full fcr-h-full fcr-l-0 fcr-t-0"
-      style={{ zIndex: ComponentLevelRulesMobile.Level3 }}>
+      style={{ zIndex: ComponentLevelRules.Level3 }}>
       <div className="fcr-mobile-dialog">
         <div className="fcr-mobile-dialog-img"></div>
         <h1>{title}</h1>

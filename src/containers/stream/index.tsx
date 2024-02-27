@@ -17,13 +17,13 @@ type StreamPlayerMobileProps = {
   onClick?: () => void;
   visible?: boolean;
 };
-export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
+export const StreamPlayer = observer<FC<StreamPlayerMobileProps>>(
   ({ stream, className = '', style, onClick, visible = true }) => {
     const {
       shareUIStore: { isLandscape },
       classroomStore: {
         streamStore: { setRemoteVideoStreamType },
-        connectionStore: { rtcState }
+        connectionStore: { rtcState },
       },
       streamUIStore: { isPiP },
     } = useStore();
@@ -57,7 +57,7 @@ export const StreamPlayerMobile = observer<FC<StreamPlayerMobileProps>>(
     );
   },
 );
-export const TeacherCameraPlaceHolderMobile = observer(() => {
+export const TeacherCameraPlaceHolder = observer(() => {
   const {
     layoutUIStore: { toggleLandscapeToolBarVisible },
     streamUIStore: { teacherVideoStreamSize },
@@ -82,7 +82,7 @@ export const TeacherCameraPlaceHolderMobile = observer(() => {
     </div>
   );
 });
-export const LocalTrackPlayerMobile = observer(({ stream }: { stream: EduStreamUI }) => {
+export const LocalTrackPlayerContainer = observer(({ stream }: { stream: EduStreamUI }) => {
   const {
     streamUIStore: { studentVideoStreamSize },
   } = useStore();

@@ -7,14 +7,9 @@
  *          白板
  * -------- 底层 ---------
  */
+
 export enum ComponentLevelRules {
-  WhiteBoard,
-  ScreenShare,
-  OnlineCourseware,
-  StreamWindow,
-  TeachTools,
-}
-export enum ComponentLevelRulesMobile {
+  Level0 = 0,
   Level1 = 1,
   Level2 = 10,
   Level3 = 20,

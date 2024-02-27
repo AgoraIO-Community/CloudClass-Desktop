@@ -188,7 +188,7 @@ export class LayoutUIStore extends EduUIStoreBase {
       : 'fcr-justify-center fcr-items-center';
   }
   @computed
-  get classRoomPlacholderMobileHeight() {
+  get classRoomPlacholderHeight() {
     const innerWidth = this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
     return innerWidth * (190 / 375);
   }
