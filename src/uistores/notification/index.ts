@@ -346,6 +346,7 @@ export class NotificationUIStore extends EduUIStoreBase {
         this.getters.classroomUIStore.layoutUIStore.addDialog('confirm', {
           title: transI18n('fcr_group_help_title'),
           content: transI18n('fcr_group_help_teacher_busy_msg'),
+          cancelButtonVisible: false,
         });
       }
     }
