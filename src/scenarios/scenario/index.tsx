@@ -104,7 +104,7 @@ export const Scenario = observer(() => {
               ) : (
                 <>
                   <Chat />
-                  <Poll></Poll>
+                  {/* <Poll></Poll> */}
                 </>
               )}
               <CountDown></CountDown>
