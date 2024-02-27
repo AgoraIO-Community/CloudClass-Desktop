@@ -203,7 +203,10 @@ export class GroupUIStore extends EduUIStoreBase {
   get groupState() {
     return this.classroomStore.groupStore.state;
   }
-
+  @computed
+  get isInGroup() {
+    return this.classroomStore.groupStore.state === GroupState.OPEN;
+  }
   /**
    * 当前房间
    */

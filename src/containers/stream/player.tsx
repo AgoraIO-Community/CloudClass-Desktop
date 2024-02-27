@@ -437,8 +437,9 @@ export const StudentStreamsContainer = observer(() => {
 export const RoomPlaceholder = observer(() => {
   const {
     streamUIStore: { teacherCameraStream, screenShareStream },
-    layoutUIStore: { classRoomPlacholderHeight },
+    layoutUIStore: { classRoomPlacholderHeight, classRoomPlacholderIngroupHeight },
     boardUIStore: { mounted },
+    groupUIStore: { isInGroup, getUserGroupInfo },
     classroomStore: {
       roomStore: {
         classroomSchedule: { startTime, duration },
@@ -446,19 +447,28 @@ export const RoomPlaceholder = observer(() => {
     },
   } = useStore();
   const transI18n = useI18n();
+  const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
+  const groupInfo = getUserGroupInfo(userUuid);
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
   return (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
     !mounted &&
     !screenShareStream ? (
-    <div className="fcr-mobile-room-placeholder" style={{ height: classRoomPlacholderHeight }}>
-      <p>
-        {transI18n('fcr_copy_room_id')} {EduClassroomConfig.shared.sessionInfo.roomUuid}
-      </p>
-      <h3>{EduClassroomConfig.shared.sessionInfo.roomName}</h3>
-      <p>
-        {dayjs(startTime).format('YYYY.MM.DD HH:mm')}-{dayjs(endTime).format('HH:mm')}
-      </p>
-    </div>
+    !isInGroup ? (
+      <div className="fcr-mobile-room-placeholder" style={{ height: classRoomPlacholderHeight }}>
+        <p>
+          {transI18n('fcr_copy_room_id')} {EduClassroomConfig.shared.sessionInfo.roomUuid}
+        </p>
+        <h3>{EduClassroomConfig.shared.sessionInfo.roomName}</h3>
+        <p>
+          {dayjs(startTime).format('YYYY.MM.DD HH:mm')}-{dayjs(endTime).format('HH:mm')}
+        </p>
+      </div>
+    ) : (
+      <div
+        style={{
+          height: classRoomPlacholderIngroupHeight,
+        }}></div>
+    )
   ) : null;
 });

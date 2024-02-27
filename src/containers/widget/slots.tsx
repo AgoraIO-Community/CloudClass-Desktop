@@ -91,7 +91,8 @@ export const Chat = observer(function Chat() {
     },
     boardUIStore: { boardContainerHeight, mounted },
     shareUIStore: { isLandscape, forceLandscape },
-    layoutUIStore: { classRoomPlacholderHeight },
+    layoutUIStore: { classRoomPlacholderHeight, classRoomPlacholderIngroupHeight },
+    groupUIStore: { isInGroup },
   } = useStore();
   const { ready } = widgetUIStore;
   const [chatH5Height, setChatH5Height] = useState(0);
@@ -102,7 +103,9 @@ export const Chat = observer(function Chat() {
       h5Height -
       (screenShareStream ? boardContainerHeight : 0) -
       (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !screenShareStream
-        ? classRoomPlacholderHeight
+        ? isInGroup
+          ? classRoomPlacholderIngroupHeight
+          : classRoomPlacholderHeight
         : 0) -
       (mounted ? boardContainerHeight : 0) -
       (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP

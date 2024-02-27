@@ -139,8 +139,8 @@ const PageLoading = () => {
         <p className="fcr-m-0 fcr-text-level1">
           {layoutUIStore.currentSubRoomName
             ? transI18n('fcr_group_joining', {
-              reason: layoutUIStore.currentSubRoomName,
-            })
+                reason: layoutUIStore.currentSubRoomName,
+              })
             : transI18n('fcr_group_back_main_room')}
         </p>
       </Card>
@@ -376,10 +376,11 @@ const StudentStreamCollapse = observer(() => {
   const {
     streamUIStore: { studentCameraStreams, toggleStudentStreamsVisible, studentStreamsVisible },
     shareUIStore: { isLandscape },
+    groupUIStore: { isInGroup },
   } = useStore();
   return (
     <>
-      {studentCameraStreams.length > 0 && (
+      {studentCameraStreams.length > 0 && !isInGroup && (
         <div className="fcr-stream-collapse-mobile-wrapper">
           <div className="fcr-stream-collapse-mobile">
             <SvgImgMobile
