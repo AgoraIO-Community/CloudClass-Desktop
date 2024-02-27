@@ -279,7 +279,6 @@ export const StudentStreamsContainer = observer(() => {
     classroomStore,
   } = useStore();
   const [current, setCurrent] = useState(0);
-  const visibleStreamsRef = useRef<Map<string, EduStream>>(new Map());
   const {
     studentVideoStreamSize,
     studentCameraStreams,
@@ -287,10 +286,10 @@ export const StudentStreamsContainer = observer(() => {
     studentVideoStreamContainerHeight,
     containerH5Extend,
     studentStreamsVisible,
+    visibleStreams,
     subscribeMass,
     toolVisible,
     toggleTool,
-    teacherCameraStream,
   } = streamUIStore;
   const visible = toolVisible && studentStreamsVisible;
   const swiperRef = useRef<SwiperType | null>(null);
@@ -304,15 +303,7 @@ export const StudentStreamsContainer = observer(() => {
   useEffect(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
-  useEffect(() => {
-    if (teacherCameraStream) {
-      visibleStreamsRef.current.set(
-        teacherCameraStream.stream.streamUuid,
-        teacherCameraStream.stream,
-      );
-    }
-    subscribeMass(visibleStreamsRef.current);
-  }, [teacherCameraStream]);
+
   return (
     <div
       className={classnames(
@@ -387,11 +378,11 @@ export const StudentStreamsContainer = observer(() => {
             <SwiperSlide key={stream.stream.streamUuid}>
               {({ isVisible }) => {
                 if (isVisible) {
-                  visibleStreamsRef.current.set(stream.stream.streamUuid, stream.stream);
+                  visibleStreams.set(stream.stream.streamUuid, stream.stream);
                 } else {
-                  visibleStreamsRef.current.delete(stream.stream.streamUuid);
+                  visibleStreams.delete(stream.stream.streamUuid);
                 }
-                subscribeMass(visibleStreamsRef.current);
+                subscribeMass(visibleStreams);
 
                 return (
                   <div onClick={toggleTool} className="fcr-relative">

@@ -176,11 +176,23 @@ const LayoutOrientation: FC<LayoutProps> = observer(({ className, children, ...r
 const TeacherStream = observer(() => {
   const {
     shareUIStore: { isLandscape },
-    streamUIStore: { teacherCameraStream, containerH5VisibleCls, showTool },
+    streamUIStore: {
+      teacherCameraStream,
+      containerH5VisibleCls,
+      showTool,
+      visibleStreams,
+      subscribeMass,
+    },
   } = useStore();
   useEffect(() => {
     showTool();
   }, []);
+  useEffect(() => {
+    if (teacherCameraStream) {
+      visibleStreams.set(teacherCameraStream.stream.streamUuid, teacherCameraStream.stream);
+    }
+    subscribeMass(visibleStreams);
+  }, [teacherCameraStream]);
   return (
     <Layout direction="col" style={{ flexShrink: 0 }} className={classnames(containerH5VisibleCls)}>
       {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (

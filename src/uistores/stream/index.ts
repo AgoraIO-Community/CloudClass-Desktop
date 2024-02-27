@@ -1157,6 +1157,8 @@ export class StreamUIStore extends EduUIStoreBase {
     return stream ? new EduStreamUI(stream) : stream;
   }
 
+  visibleStreams = new Map<string, EduStream>();
+
   @action.bound
   subscribeMass(streams: Map<string, EduStream>) {
     const { list } = iterateMap(streams, {
