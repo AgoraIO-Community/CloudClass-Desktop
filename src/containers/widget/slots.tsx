@@ -33,10 +33,7 @@ export const CountDown = observer(() => {
   );
 });
 export const Poll = observer(() => {
-  const {
-    shareUIStore: { isLandscape },
-  } = useStore();
-  return <div className={`fcr-poll-mobile-widget ${isLandscape ? '' : 'fcr-relative'}`}></div>;
+  return <div className={`fcr-poll-mobile-widget`}></div>;
 });
 export const Whiteboard = observer(function Board() {
   const whiteBoardRef = useRef<HTMLDivElement>(null);

@@ -104,11 +104,10 @@ export const Scenario = observer(() => {
               ) : (
                 <>
                   <Chat />
-                  {/* <Poll></Poll> */}
+                  <Poll></Poll>
+                  <CountDown></CountDown>
                 </>
               )}
-              <CountDown></CountDown>
-
               <ShareActionSheet></ShareActionSheet>
               <HandsUpActionSheet></HandsUpActionSheet>
               <DialogContainer></DialogContainer>
@@ -139,8 +138,8 @@ const PageLoading = () => {
         <p className="fcr-m-0 fcr-text-level1">
           {layoutUIStore.currentSubRoomName
             ? transI18n('fcr_group_joining', {
-              reason: layoutUIStore.currentSubRoomName,
-            })
+                reason: layoutUIStore.currentSubRoomName,
+              })
             : transI18n('fcr_group_back_main_room')}
         </p>
       </Card>
