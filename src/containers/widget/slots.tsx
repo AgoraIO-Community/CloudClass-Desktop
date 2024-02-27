@@ -7,7 +7,7 @@ import { useI18n } from 'agora-common-libs';
 import { ComponentLevelRules } from '../../configs/config';
 import classNames from 'classnames';
 import { useMobileStreamDrag } from '../stream/player';
-
+import './index.css';
 export const Chat = observer(function Chat() {
   const { widgetUIStore } = useStore();
   const { ready } = widgetUIStore;
@@ -88,9 +88,10 @@ export const PollMobile = observer(() => {
   return <div className={`fcr-poll-mobile-widget ${isLandscape ? '' : 'fcr-relative'}`}></div>;
 });
 export const WhiteboardMobile = observer(function Board() {
+  const whiteBoardRef = useRef<HTMLDivElement>(null);
   const {
     boardUIStore,
-    streamUIStore: { containerH5VisibleCls, screenShareStream },
+    streamUIStore: { containerH5VisibleCls, screenShareStream, toggleTool },
     shareUIStore: { isLandscape },
   } = useStore();
 
@@ -98,6 +99,7 @@ export const WhiteboardMobile = observer(function Board() {
   const height = (mounted && !isLandscape) || screenShareStream ? boardContainerHeight : 0;
   return (
     <div
+      ref={whiteBoardRef}
       className={classnames(
         'whiteboard-mobile-container fcr-w-full fcr-relative',
         containerH5VisibleCls,
@@ -107,6 +109,9 @@ export const WhiteboardMobile = observer(function Board() {
         width: boardContainerWidth,
         visibility: isLandscape ? 'hidden' : 'visible',
         // overflow: 'hidden',
+      }}
+      onClick={() => {
+        toggleTool();
       }}>
       <div
         style={{

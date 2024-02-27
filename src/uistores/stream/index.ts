@@ -95,7 +95,7 @@ export class StreamUIStore extends EduUIStoreBase {
     this.toolVisible = true;
     this._showToolTask = Scheduler.shared.addDelayTask(() => {
       runInAction(() => {
-        this.toolVisible = false;
+        this.toolVisible = true;
       });
     }, 4000);
   }
