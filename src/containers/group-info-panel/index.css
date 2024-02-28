@@ -1,6 +1,6 @@
 .group-info-panel {
   position: absolute;
-  top: 5px;
+  top: 6px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

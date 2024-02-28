@@ -193,6 +193,11 @@ export class LayoutUIStore extends EduUIStoreBase {
     return innerWidth * (190 / 375);
   }
   @computed
+  get classRoomPlacholderIngroupHeight() {
+    //group tool height + group tool margin top + group tool margin bottom
+    return 46 + 6 + 5;
+  }
+  @computed
   get h5LayoutUIDimensions() {
     return this.shareUIStore.orientation === 'portrait'
       ? {}
