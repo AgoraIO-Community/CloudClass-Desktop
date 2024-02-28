@@ -205,7 +205,10 @@ export class GroupUIStore extends EduUIStoreBase {
   }
   @computed
   get isInGroup() {
-    return this.classroomStore.groupStore.state === GroupState.OPEN;
+    const isIngroupLocal = this.classroomStore.groupStore.groupUuidByUserUuid.get(
+      this.classroomStore.userStore.localUser?.userUuid || '',
+    );
+    return isIngroupLocal;
   }
   /**
    * 当前房间
