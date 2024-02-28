@@ -112,7 +112,6 @@ export const Chat = observer(function Chat() {
         ? studentVideoStreamSize.height
         : 0);
     setChatH5Height(height);
-    console.log(height, boardContainerHeight, 'heightheight');
   };
   useEffect(() => {
     calcHeight();
@@ -134,12 +133,19 @@ export const Chat = observer(function Chat() {
     }
   }, [ready]);
   useEffect(() => {
+    if (isLandscape) {
+      document.body.style.overflowY = 'hidden';
+      return;
+    }
     if (chatH5Height < 190) {
       document.body.style.overflowY = 'auto';
     } else {
       document.body.style.overflowY = 'hidden';
     }
-  }, [chatH5Height]);
+    return () => {
+      document.body.style.overflowY = 'auto';
+    };
+  }, [chatH5Height, isLandscape]);
   return (
     <div
       className="widget-slot-chat-mobile"
