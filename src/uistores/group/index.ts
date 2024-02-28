@@ -17,6 +17,7 @@ import { EduUIStoreBase } from '../base';
 import uuidv4 from 'uuid';
 import { transI18n } from 'agora-common-libs';
 import { DialogCategory } from '../share';
+import { RejectToGroupArgs } from '../type';
 
 export enum GroupMethod {
   AUTO,
@@ -887,11 +888,12 @@ export class GroupUIStore extends EduUIStoreBase {
     }
 
     if (type === AgoraEduClassroomEvent.RejectedToGroup) {
-      const { groupUuid } = args;
+      const { groupUuid, removeProgress } = args as RejectToGroupArgs;
+      const isLocal = removeProgress.some(
+        (item) => item.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid,
+      );
       const dialogId = this._dialogsMap.get(groupUuid);
-      if (dialogId) {
-        // this.shareUIStore.removeDialog(dialogId);
-        // this._dialogsMap.delete(groupUuid);
+      if (dialogId && isLocal) {
         this.getters.classroomUIStore.layoutUIStore.deleteDialog(dialogId);
       }
     }

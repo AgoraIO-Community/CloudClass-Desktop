@@ -47,7 +47,7 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
       return;
     }
     if (teacherGroupUuid === currentSubRoom) {
-      addToast(transI18n('fcr_group_teacher_exist_hint'), 'normal');
+      addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
       return;
     }
     addDialog('confirm', {
@@ -96,11 +96,7 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
       style={{
         opacity: toolVisible ? 1 : 0,
         visibility: toolVisible ? 'visible' : 'hidden',
-      }}
-      // onClick={() => {
-      //   toggleTool();
-      // }}
-    >
+      }}>
       <div className="group-name">{groupInfo && groupInfo.groupName}</div>
       <div className="help-button" onClick={handleHelp}>
         <SvgImg type={SvgIconEnum.FCR_QUESTION} size={16} colors={{ iconPrimary: '#fff' }} />

@@ -512,7 +512,7 @@ export const zh = {
   fcr_group_help_title: '请求帮助',
   fcr_group_help_content: '你可以邀请老师进入小组帮助你',
   fcr_group_help_teacher_busy_msg: '老师正在忙，请稍后重试',
-  fcr_group_teacher_is_helping_others_msg: '	老师正在帮助其他讨论组，请稍后重试',
+  fcr_group_teacher_is_helping_others_msg: '老师正在帮助其他讨论组，请稍后重试',
   fcr_group_teacher_exist_hint: '老师已在小组内',
   fcr_group_invite: '邀请',
   fcr_group_invitation: '老师邀请您加入{reason}',
