@@ -375,11 +375,10 @@ const StudentStreamCollapse = observer(() => {
   const {
     streamUIStore: { studentCameraStreams, toggleStudentStreamsVisible, studentStreamsVisible },
     shareUIStore: { isLandscape },
-    groupUIStore: { isInGroup },
   } = useStore();
   return (
     <>
-      {studentCameraStreams.length > 0 && !isInGroup && (
+      {studentCameraStreams.length > 0 && (
         <div className="fcr-stream-collapse-mobile-wrapper">
           <div className="fcr-stream-collapse-mobile">
             <SvgImgMobile

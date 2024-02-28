@@ -18,7 +18,7 @@ import { computedFn } from 'mobx-utils';
 import dayjs from 'dayjs';
 
 export class Getters {
-  constructor(private _classroomUIStore: EduClassroomUIStore) { }
+  constructor(private _classroomUIStore: EduClassroomUIStore) {}
   private formatCountDown(ms: number): string {
     const duration = dayjs.duration(ms);
 
@@ -61,16 +61,8 @@ export class Getters {
    * @returns
    */
   @computed
-  get teacherCameraStream(): EduStream {
-    const { classroomStore } = this._classroomUIStore;
-    const { teacherList } = classroomStore.userStore;
-    const { streamByStreamUuid, streamByUserUuid } = classroomStore.streamStore;
-
-    const cameraStreams = extractUserStreams(teacherList, streamByUserUuid, streamByStreamUuid, [
-      AgoraRteVideoSourceType.Camera,
-    ]);
-
-    return Array.from(cameraStreams)[0];
+  get teacherCameraStream() {
+    return this.teacherUIStream?.stream;
   }
 
   /**
@@ -79,15 +71,7 @@ export class Getters {
    */
   @computed
   get studentCameraStreams(): EduStream[] {
-    const { classroomStore } = this._classroomUIStore;
-    const { studentList } = classroomStore.userStore;
-    const { streamByStreamUuid, streamByUserUuid } = classroomStore.streamStore;
-
-    const cameraStreams = extractUserStreams(studentList, streamByUserUuid, streamByStreamUuid, [
-      AgoraRteVideoSourceType.Camera,
-    ]);
-
-    return Array.from(cameraStreams);
+    return this.studentCameraUIStreams.map((stream) => stream.stream);
   }
 
   /**
@@ -196,43 +180,31 @@ export class Getters {
     return cameraStreams;
   }
   @computed
-  get cameraUIStreams() {
-    const isIngroupLocal = this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
+  get isInGroup() {
+    return this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
       this.localUser?.userUuid || '',
     );
+  }
+  @computed
+  get cameraUIStreams() {
     return Array.from(this.cameraStreams)
       .filter((stream) => {
-        return isIngroupLocal
+        return this.isInGroup
           ? true
           : !this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
-            stream.fromUser.userUuid,
-          );
+              stream.fromUser.userUuid,
+            );
       })
       .map((stream) => new EduStreamUI(stream));
   }
   @computed
   get studentCameraUIStreams() {
-    // const isIngroupLocal = this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
-    //   this.localUser?.userUuid || '',
-    // );
     const { classroomStore } = this._classroomUIStore;
     const { studentList } = classroomStore.userStore;
-    const { streamByStreamUuid, streamByUserUuid } = classroomStore.streamStore;
 
-    const cameraStreams = extractUserStreams(studentList, streamByUserUuid, streamByStreamUuid, [
-      AgoraRteVideoSourceType.Camera,
-    ]);
-
-    return Array.from(cameraStreams).map((stream) => new EduStreamUI(stream));
-    // return Array.from(this.cameraStreams)
-    //   .filter((stream) => {
-    //     return isIngroupLocal
-    //       ? true
-    //       : !this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
-    //         stream.fromUser.userUuid,
-    //       );
-    //   })
-    //   .map((stream) => new EduStreamUI(stream));
+    return this.cameraUIStreams.filter((stream) => {
+      return studentList.has(stream.fromUser.userUuid);
+    });
   }
   get isBoardWidgetActive() {
     return this._classroomUIStore.widgetUIStore.widgetInstanceList.some((widget) => {
@@ -251,12 +223,9 @@ export class Getters {
   }
   @computed
   get userCount() {
-    const { userCount, teacherList } = this._classroomUIStore.classroomStore.userStore
+    const { userCount, teacherList } = this._classroomUIStore.classroomStore.userStore;
     const isTeacherInClass = teacherList.size > 0;
-    return Math.max(
-      userCount - (isTeacherInClass ? 1 : 0),
-      0,
-    );
+    return Math.max(userCount - (isTeacherInClass ? 1 : 0), 0);
   }
   @computed
   get calibratedTime() {

@@ -366,14 +366,6 @@ export const StudentStreamsContainer = observer(() => {
         {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
           const reward = rewards.get(stream.fromUser.userUuid);
-          const isIngroupLocal = classroomStore.groupStore.groupUuidByUserUuid.get(
-            stream.fromUser.userUuid,
-          );
-          const isMyself =
-            stream.fromUser.userUuid === EduClassroomConfig.shared.sessionInfo.userUuid;
-          if (isIngroupLocal && !isMyself) {
-            return;
-          }
           return (
             <SwiperSlide key={stream.stream.streamUuid}>
               {({ isVisible }) => {
@@ -439,7 +431,7 @@ export const RoomPlaceholder = observer(() => {
     streamUIStore: { teacherCameraStream, screenShareStream },
     layoutUIStore: { classRoomPlacholderHeight, classRoomPlacholderIngroupHeight },
     boardUIStore: { mounted },
-    groupUIStore: { isInGroup, getUserGroupInfo },
+    groupUIStore: { isInGroup },
     classroomStore: {
       roomStore: {
         classroomSchedule: { startTime, duration },
@@ -447,8 +439,6 @@ export const RoomPlaceholder = observer(() => {
     },
   } = useStore();
   const transI18n = useI18n();
-  const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
-  const groupInfo = getUserGroupInfo(userUuid);
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
   return (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
