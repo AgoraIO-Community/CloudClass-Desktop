@@ -357,12 +357,11 @@ export const StudentStreamsContainer = observer(() => {
 
       <Swiper
         watchSlidesProgress
-        onActiveIndexChange={(swiper) => {
+        onActiveIndexChange={(swiper: SwiperType) => {
           setCurrent(swiper.activeIndex);
-          console.log(swiper.activeIndex, 'swiper.activeIndex');
         }}
         allowTouchMove={false}
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        onSwiper={(swiper: SwiperType) => (swiperRef.current = swiper)}
         slidesPerView={3.2}
         spaceBetween={1}>
         {studentCameraStreams.map((stream) => {

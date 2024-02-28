@@ -267,7 +267,7 @@ const AutoPlayFailedTip = observer(() => {
   return showAutoPlayFailedTip ? (
     <div
       className={classnames(
-        'fcr-mobile-auto-play-failed fcr-absolute fcr-t-0 fcr-l-0 fcr-w-full fcr-h-full fcr-flex fcr-justify-center',
+        'fcr-mobile-auto-play-failed fcr-t-0 fcr-l-0 fcr-w-full fcr-h-full fcr-flex fcr-justify-center',
         { 'fcr-mobile-auto-play-failed-landscape': isLandscape },
         {
           'fcr-mobile-auto-play-failed-no-board':

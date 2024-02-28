@@ -37,10 +37,11 @@
   z-index: 1;
 }
 .fcr-poll-mobile-widget {
-  position: absolute;
+  position: fixed;
   padding-left: 20px;
   bottom: 56px;
   display: flex;
   flex-direction: row-reverse;
   gap: 10px;
+  z-index: 1;
 }
