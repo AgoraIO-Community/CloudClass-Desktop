@@ -74,22 +74,22 @@ export class BoardUIStore extends EduUIStoreBase {
   onInstall() {
     const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
 
-    if (role === EduRoleTypeEnum.student) {
-      // only student
-      this._disposers.push(
-        computed(() => this.boardApi.grantedUsers).observe(async ({ newValue, oldValue }) => {
-          const oldGranted = oldValue;
-          const newGranted = newValue;
-
-          if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
-            this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
-          }
-          if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
-            this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
-          }
-        }),
-      );
-    }
+    // if (role === EduRoleTypeEnum.student) {
+    //   // only student
+    //   this._disposers.push(
+    //     computed(() => this.boardApi.grantedUsers).observe(async ({ newValue, oldValue }) => {
+    //       const oldGranted = oldValue;
+    //       const newGranted = newValue;
+    //       const isInGroup = this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
+    //       if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
+    //         this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
+    //       }
+    //       if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
+    //         this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
+    //       }
+    //     }),
+    //   );
+    // }
   }
 
   @action.bound
