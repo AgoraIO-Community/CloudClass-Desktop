@@ -843,4 +843,6 @@ export const en = {
   fcr_group_tips_leave_content: 'Are you sure you want to leave the group',
   fcr_group_button_leave_group: 'Return to main Classroom',
   fcr_group_teacher_not_in_classroom: 'Teacher is not in this classroom',
+  fcr_group_tool_help: 'Help',
+  fcr_group_tool_leave_group: 'Leave group',
 };
