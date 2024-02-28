@@ -103,11 +103,11 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
     >
       <div className="group-name">{groupInfo && groupInfo.groupName}</div>
       <div className="help-button" onClick={handleHelp}>
-        <SvgImg type={SvgIconEnum.FCR_QUESTION} size={26} colors={{ iconPrimary: '#fff' }} />
-        <span style={{ color: 'white' }}>Help</span>
+        <SvgImg type={SvgIconEnum.FCR_QUESTION} size={16} colors={{ iconPrimary: '#fff' }} />
+        <span style={{ color: 'white' }}>{transI18n('fcr_group_tool_help')}</span>
       </div>
       <div className="leave-group-button" onClick={handleLeaveGroup}>
-        Leave group
+        {transI18n('fcr_group_tool_leave_group')}
       </div>
     </div>
   ) : null;
