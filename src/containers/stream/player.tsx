@@ -114,6 +114,8 @@ export const useMobileStreamDrag = ({
   };
 
   const handleTouchMove = (e: TouchEvent) => {
+    e.preventDefault();
+
     const target = e.targetTouches[0];
     if (target) {
       const { clientX, clientY } = target;

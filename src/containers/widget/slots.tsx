@@ -133,7 +133,13 @@ export const Chat = observer(function Chat() {
       };
     }
   }, [ready]);
-
+  useEffect(() => {
+    if (chatH5Height < 190) {
+      document.body.style.overflowY = 'auto';
+    } else {
+      document.body.style.overflowY = 'hidden';
+    }
+  }, [chatH5Height]);
   return (
     <div
       className="widget-slot-chat-mobile"

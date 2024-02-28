@@ -1,6 +1,9 @@
-html,
-body,
-#root {
+html {
+  @apply fcr-font-scenario;
+
+  background-color: unset !important;
+}
+body {
   @apply fcr-font-scenario;
   width: 100%;
   height: 100%;

@@ -96,18 +96,11 @@ export const Scenario = observer(() => {
                   <PageLoading />
                 </div>
               ) : (
-                ''
+                <Chat />
               )}
+              <Poll></Poll>
+              <CountDown></CountDown>
               <AutoPlayFailedTip></AutoPlayFailedTip>
-              {groupUIStore.joiningSubRoom ? (
-                ''
-              ) : (
-                <>
-                  <Chat />
-                  <Poll></Poll>
-                  <CountDown></CountDown>
-                </>
-              )}
               <ShareActionSheet></ShareActionSheet>
               <HandsUpActionSheet></HandsUpActionSheet>
               <DialogContainer></DialogContainer>
