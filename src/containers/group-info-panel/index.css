@@ -42,7 +42,7 @@
   height: 26px;
   border-radius: 8px;
   background-color: #373c42;
-  padding: 0 5px;
+  padding: 0 9px 0 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +55,7 @@
 .leave-group-button {
   display: flex;
   height: 26px;
-  padding: 0 5px;
+  padding: 0 13px;
   background-color: #4262ff;
   border-radius: 8px;
   justify-content: center;
