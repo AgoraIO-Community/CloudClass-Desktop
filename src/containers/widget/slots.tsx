@@ -2,7 +2,7 @@ import { useStore } from '@classroom/hooks/ui-store';
 import { EduClassroomConfig } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { ComponentLevelRules } from '../../configs/config';
 import classNames from 'classnames';
 import { useMobileStreamDrag } from '../stream/player';
@@ -93,6 +93,7 @@ export const Chat = observer(function Chat() {
   } = useStore();
   const { ready } = widgetUIStore;
   const [chatH5Height, setChatH5Height] = useState(0);
+
   const calcHeight = () => {
     const h5Height = document.body.clientHeight;
     //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
@@ -113,13 +114,32 @@ export const Chat = observer(function Chat() {
         : 0);
     setChatH5Height(height);
   };
+  useEffect(calcHeight, [
+    isLandscape,
+    forceLandscape,
+    mounted,
+    teacherCameraStream,
+    boardContainerHeight,
+    isPiP,
+    studentCameraStreams.length,
+    studentVideoStreamSize.height,
+    teacherCameraStream?.isCameraMuted,
+    screenShareStream,
+  ]);
+  useLayoutEffect(() => {
+    if (!studentStreamsVisible) {
+      calcHeight();
+    }
+  }, [studentStreamsVisible]);
   useEffect(() => {
-    calcHeight();
-    window.addEventListener('resize', calcHeight);
-    () => window.removeEventListener('resize', calcHeight);
-  }, [isLandscape, forceLandscape, mounted, teacherCameraStream, boardContainerHeight, isPiP, studentCameraStreams.length, studentVideoStreamSize.height, teacherCameraStream?.isCameraMuted, studentStreamsVisible, screenShareStream]);
+    if (studentStreamsVisible) {
+      calcHeight();
+    }
+  }, [studentStreamsVisible]);
 
   useEffect(() => {
+    window.addEventListener('resize', calcHeight);
+    () => window.removeEventListener('resize', calcHeight);
     if (ready) {
       const chatWidgetId = 'easemobIM';
 

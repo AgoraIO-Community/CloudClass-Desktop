@@ -62,13 +62,6 @@ export const Scenario = observer(() => {
           <meta content="telephone=no" name="format-detection" />
         </Helmet>
         <LayoutOrientation
-          style={
-            isLandscape
-              ? forceLandscape
-                ? { width: window.innerHeight }
-                : { height: window.innerHeight, position: 'absolute', top: 0, left: 0 }
-              : {}
-          }
           className={classnames({
             'fcr-mobile-landscape-container-rotate': forceLandscape,
             'fcr-mobile-landscape-container': isLandscape && !forceLandscape,

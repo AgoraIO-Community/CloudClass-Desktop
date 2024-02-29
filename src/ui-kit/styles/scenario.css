@@ -290,3 +290,6 @@ body {
 .fcr-z-10 {
   z-index: 10;
 }
+.fcr-m-auto {
+  margin: auto;
+}

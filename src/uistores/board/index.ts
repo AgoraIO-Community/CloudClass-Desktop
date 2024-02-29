@@ -64,7 +64,9 @@ export class BoardUIStore extends EduUIStoreBase {
 
   @computed
   get boardContainerWidth() {
-    return this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
+    return this.shareUIStore.isLandscape
+      ? window.document.documentElement.clientWidth
+      : window.document.documentElement.clientWidth;
   }
 
   @computed
