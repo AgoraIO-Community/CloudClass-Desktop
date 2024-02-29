@@ -203,7 +203,6 @@ export const TeacherStreamContainer = observer(({ stream }: { stream: EduStreamU
     showTool();
     // }
   }, [isPiP]);
-
   return (
     <div
       ref={ref}

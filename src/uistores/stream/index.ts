@@ -1042,19 +1042,22 @@ export class StreamUIStore extends EduUIStoreBase {
       ? {}
       : this.shareUIStore.isLandscape
       ? {
-          width: this.shareUIStore.forceLandscape ? window.innerHeight : window.innerWidth,
-          height: this.shareUIStore.forceLandscape ? window.innerWidth : window.innerHeight,
+          width: window.document.documentElement.clientWidth,
+          height: window.document.documentElement.clientHeight,
         }
       : {
-          width: window.innerWidth,
-          height: (9 / 16) * window.innerWidth,
+          width: window.document.documentElement.clientWidth,
+          height: (9 / 16) * window.document.documentElement.clientWidth,
         };
   }
 
   @computed
   get studentVideoStreamSize() {
     const width =
-      ((this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth) * 119) / 375;
+      (this.shareUIStore.isLandscape
+        ? window.document.documentElement.clientWidth
+        : window.document.documentElement.clientWidth) *
+      (119 / 375);
 
     const height = (68 / 119) * width;
 

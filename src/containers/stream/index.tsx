@@ -60,18 +60,20 @@ export const StreamPlayer = observer<FC<StreamPlayerMobileProps>>(
 export const TeacherCameraPlaceHolder = observer(() => {
   const {
     layoutUIStore: { toggleLandscapeToolBarVisible },
-    streamUIStore: { teacherVideoStreamSize },
+    streamUIStore: { teacherVideoStreamSize, teacherCameraStream },
     classroomStore: {
       roomStore: { flexProps },
     },
   } = useStore();
-  const [first, last] = splitName(flexProps['teacherName'] || 'teacher');
+  const [first, last] = splitName(
+    teacherCameraStream?.fromUser.userName || flexProps['teacherName'] || 'teacher',
+  );
   return (
     <div
       onClick={toggleLandscapeToolBarVisible}
-      className="fcr-t-0 fcr-l-0"
       style={{
         background: 'rgba(39, 41, 47, 1)',
+        position: 'relative',
         ...teacherVideoStreamSize,
       }}>
       <div
