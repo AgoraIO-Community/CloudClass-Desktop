@@ -167,6 +167,8 @@ const TeacherStream = observer(() => {
       showTool,
       visibleStreams,
       subscribeMass,
+      isPiP,
+      teacherVideoStreamSize,
     },
   } = useStore();
   useEffect(() => {
@@ -178,8 +180,18 @@ const TeacherStream = observer(() => {
     }
     subscribeMass(visibleStreams);
   }, [teacherCameraStream]);
+  const enabled =
+    isLandscape || (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP);
   return (
-    <Layout direction="col" style={{ flexShrink: 0 }} className={classnames(containerH5VisibleCls)}>
+    <Layout
+      direction="col"
+      style={{
+        flexShrink: 0,
+        height: enabled ? teacherVideoStreamSize.height : 0,
+        transition: 'height .2s',
+        overflow: 'hidden',
+      }}
+      className={classnames(containerH5VisibleCls)}>
       {(!teacherCameraStream || teacherCameraStream.isCameraMuted) && isLandscape && (
         <TeacherCameraPlaceHolder></TeacherCameraPlaceHolder>
       )}

@@ -125,21 +125,12 @@ export const Chat = observer(function Chat() {
     studentVideoStreamSize.height,
     teacherCameraStream?.isCameraMuted,
     screenShareStream,
+    studentStreamsVisible,
   ]);
-  useLayoutEffect(() => {
-    if (!studentStreamsVisible) {
-      calcHeight();
-    }
-  }, [studentStreamsVisible]);
-  useEffect(() => {
-    if (studentStreamsVisible) {
-      calcHeight();
-    }
-  }, [studentStreamsVisible]);
 
   useEffect(() => {
     window.addEventListener('resize', calcHeight);
-    () => window.removeEventListener('resize', calcHeight);
+
     if (ready) {
       const chatWidgetId = 'easemobIM';
 
@@ -149,6 +140,7 @@ export const Chat = observer(function Chat() {
 
       return () => {
         widgetUIStore.destroyWidget(chatWidgetId);
+        window.removeEventListener('resize', calcHeight);
       };
     }
   }, [ready]);
