@@ -9,9 +9,7 @@
   height: 46px;
   margin: 0 auto;
   border-radius: 10px;
-  /* align-content: space-around; */
   align-items: center;
-  justify-items: flex-end;
   background-color: rgba(0, 0, 0, 15%);
   z-index: 2;
 }
@@ -23,7 +21,7 @@
   height: 32px;
   font-family: 'Helvetica Neue';
   font-weight: 700;
-  size: 14px;
+  font-size: 14px;
   line-height: 16px;
   align-items: center;
   color: #fff;
@@ -32,31 +30,37 @@
   text-overflow: ellipsis;
 }
 
+.group-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  width: calc(100% - 166px);
+  justify-content: flex-end;
+}
 .help-button {
-  /* position: absolute; */
   right: 105px;
-  width: 62px;
   height: 26px;
   border-radius: 8px;
   background-color: #373c42;
-  padding-right: 5px;
+  padding: 0 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: #fff;
-  size: 11px;
+  font-size: 11px;
   line-height: 24px;
+  margin-right: 8px;
 }
 .leave-group-button {
   display: flex;
-  width: 90px;
   height: 26px;
-  right: 7px;
+  padding: 0 5px;
   background-color: #4262ff;
   border-radius: 8px;
   justify-content: center;
   color: #fff;
-  size: 11px;
+  font-size: 11px;
   line-height: 24px;
+  margin-right: 7px;
 }
