@@ -40,16 +40,24 @@ export const ScreenShareRemoteTrackPlayer = observer(
       },
     } = useStore();
     const { setupRemoteVideo } = streamUIStore;
-
     const ref = useRef<HTMLDivElement | null>(null);
-
     useEffect(() => {
-      if (ref.current) {
-        muteRemoteVideoStream(stream, false);
-        setupRemoteVideo(stream, ref.current, false, AGRenderMode.fit);
-      }
+      const subscribeAndRender = () => {
+        if (ref.current) {
+          muteRemoteVideoStream(stream, false);
+          setupRemoteVideo(stream, ref.current, false, AGRenderMode.fit);
+        }
+      };
+      const onVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          subscribeAndRender();
+        }
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      subscribeAndRender();
       return () => {
         muteRemoteVideoStream(stream, true);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
       };
     }, [ref.current, stream]);
 

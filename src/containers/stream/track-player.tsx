@@ -52,9 +52,21 @@ export const LocalTrackPlayer: FC<LocalTrackPlayerProps> = observer(
     const ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-      if (ref.current) {
-        setupLocalVideo(ref.current, isMirror, renderMode);
-      }
+      const render = () => {
+        if (ref.current) {
+          setupLocalVideo(ref.current, isMirror, renderMode);
+        }
+      };
+      const onVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          render();
+        }
+      };
+      render();
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      return () => {
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+      };
     }, [isMirror, setupLocalVideo]);
 
     return <div style={style} className={className} ref={ref}></div>;
@@ -70,13 +82,23 @@ export const RemoteTrackPlayer: FC<RemoteTrackPlayerProps> = observer(
     const rtcRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-      if (rtcRef.current && visible) {
-        updateVideoDom(stream.streamUuid, {
-          dom: rtcRef.current,
-          renderMode: renderMode ?? AGRenderMode.fill,
-        });
-      }
+      const render = () => {
+        if (rtcRef.current && visible) {
+          updateVideoDom(stream.streamUuid, {
+            dom: rtcRef.current,
+            renderMode: renderMode ?? AGRenderMode.fill,
+          });
+        }
+      };
+      const onVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          render();
+        }
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      render();
       return () => {
+        document.removeEventListener('visibilitychange', onVisibilityChange);
         stream && removeVideoDom(stream.streamUuid);
       };
     }, [stream, visible]);
