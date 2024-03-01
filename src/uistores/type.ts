@@ -31,9 +31,11 @@ export enum CustomMessageHandsUpState {
   raiseHand = 1,
 }
 export type CustomMessageHandsUpAllType = {
+  roomId?: string;
   operation: CustomMessageHandsUpState;
 };
 export type CustomMessageDeviceSwitchType = {
+  roomId?: string;
   deviceState: CustomMessageDeviceState;
   deviceType: CustomMessageDeviceType;
 };

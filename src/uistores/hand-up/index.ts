@@ -82,6 +82,7 @@ export class HandUpUIStore extends EduUIStoreBase {
         }
         case CustomMessageCommandType.handsUpAll: {
           const data = message.payload.data as CustomMessageHandsUpAllType;
+          if (data.roomId && data.roomId !== this.classroomStore.connectionStore.sceneId) return;
           const { operation } = data;
           if (operation === CustomMessageHandsUpState.lowerHand) {
             this._handleLowerHand();
