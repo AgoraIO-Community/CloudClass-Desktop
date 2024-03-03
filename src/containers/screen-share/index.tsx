@@ -5,6 +5,7 @@ import './index.css';
 import { CSSProperties, useEffect, useRef } from 'react';
 import { EduStream } from 'agora-edu-core';
 import { AGRenderMode } from 'agora-rte-sdk';
+import { useForceRenderWhenVisibilityChanged } from '@classroom/utils/force-render';
 
 export const ScreenShareContainer = observer(() => {
   const {
@@ -12,14 +13,14 @@ export const ScreenShareContainer = observer(() => {
     boardUIStore: { boardContainerHeight },
     streamUIStore: { screenShareStream },
   } = useStore();
-
+  const { renderKey } = useForceRenderWhenVisibilityChanged();
   const remotecls = classnames('remote-screen-share-container', 'fcr-t-0', {
     'remote-screen-share-container-landscape': isLandscape,
   });
 
   return screenShareStream ? (
     <div className={remotecls} style={{ height: boardContainerHeight }}>
-      <ScreenShareRemoteTrackPlayer stream={screenShareStream} />
+      <ScreenShareRemoteTrackPlayer key={renderKey} stream={screenShareStream} />
     </div>
   ) : null;
 });
@@ -48,16 +49,9 @@ export const ScreenShareRemoteTrackPlayer = observer(
           setupRemoteVideo(stream, ref.current, false, AGRenderMode.fit);
         }
       };
-      const onVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
-          subscribeAndRender();
-        }
-      };
-      document.addEventListener('visibilitychange', onVisibilityChange);
       subscribeAndRender();
       return () => {
         muteRemoteVideoStream(stream, true);
-        document.removeEventListener('visibilitychange', onVisibilityChange);
       };
     }, [ref.current, stream]);
 

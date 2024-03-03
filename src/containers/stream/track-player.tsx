@@ -5,6 +5,7 @@ import { CSSProperties, FC, useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import { EduStream } from 'agora-edu-core';
 import { AGRenderMode } from 'agora-rte-sdk';
+import { useForceRenderWhenVisibilityChanged } from '@classroom/utils/force-render';
 
 export const TrackPlayer: FC<{
   stream: EduStreamUI;
@@ -18,11 +19,13 @@ export const TrackPlayer: FC<{
     ['fcr-invisible']: stream.isCameraMuted,
     [`${className}`]: !!className,
   });
+  const { renderKey } = useForceRenderWhenVisibilityChanged();
 
   return stream.stream.isLocal ? (
-    <LocalTrackPlayer className={cls} style={style} renderMode={renderMode} />
+    <LocalTrackPlayer key={renderKey} className={cls} style={style} renderMode={renderMode} />
   ) : (
     <RemoteTrackPlayer
+      key={renderKey}
       visible={visible}
       className={cls}
       style={style}
@@ -57,16 +60,8 @@ export const LocalTrackPlayer: FC<LocalTrackPlayerProps> = observer(
           setupLocalVideo(ref.current, isMirror, renderMode);
         }
       };
-      const onVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
-          render();
-        }
-      };
+
       render();
-      document.addEventListener('visibilitychange', onVisibilityChange);
-      return () => {
-        document.removeEventListener('visibilitychange', onVisibilityChange);
-      };
     }, [isMirror, setupLocalVideo]);
 
     return <div style={style} className={className} ref={ref}></div>;
@@ -90,15 +85,8 @@ export const RemoteTrackPlayer: FC<RemoteTrackPlayerProps> = observer(
           });
         }
       };
-      const onVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
-          render();
-        }
-      };
-      document.addEventListener('visibilitychange', onVisibilityChange);
       render();
       return () => {
-        document.removeEventListener('visibilitychange', onVisibilityChange);
         stream && removeVideoDom(stream.streamUuid);
       };
     }, [stream, visible]);
