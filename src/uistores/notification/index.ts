@@ -223,12 +223,18 @@ export class NotificationUIStore extends EduUIStoreBase {
 
     // teacher turn off my mic
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyMic) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.mic'), 'error');
+      const sceneId = param;
+      if (sceneId === this.classroomStore.connectionStore.sceneId) {
+        this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.mic'), 'error');
+      }
     }
 
     // teacher turn off my mic
     if (event === AgoraEduClassroomEvent.TeacherTurnOffMyCam) {
-      this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');
+      const sceneId = param;
+      if (sceneId === this.classroomStore.connectionStore.sceneId) {
+        this.shareUIStore.addToast(transI18n('toast2.teacher.turn.off.my.cam'), 'error');
+      }
     }
     // user accpeted to stage
     if (event === AgoraEduClassroomEvent.UserAcceptToStage) {
