@@ -109,7 +109,10 @@ export class EduShareUIStore {
     this.toastQueue = [{ id, desc, type }];
     return id;
   }
-
+  @action.bound
+  destroyAllToast() {
+    this.toastQueue = [];
+  }
   /**
    * 显示一条 Toast 信息
    * @param desc

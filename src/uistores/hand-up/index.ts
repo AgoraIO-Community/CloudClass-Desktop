@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { Scheduler, bound, transI18n } from 'agora-common-libs';
 import { OnPodiumStateEnum } from './type';
@@ -100,6 +100,14 @@ export class HandUpUIStore extends EduUIStoreBase {
         onReceivePeerMessage: this._onReceivePeerMessage,
       });
     this._disposers.push(
+      reaction(
+        () => this.classroomStore.connectionStore.scene,
+        () => {
+          this._handleLowerHand();
+        },
+      ),
+    );
+    this._disposers.push(
       computed(() => this.classroomStore.widgetStore.widgetController).observe(
         ({ newValue, oldValue }) => {
           if (oldValue) {
@@ -138,5 +146,6 @@ export class HandUpUIStore extends EduUIStoreBase {
       });
     this._disposers.forEach((d) => d());
     this._disposers = [];
+    this._handsUpTask?.stop();
   }
 }

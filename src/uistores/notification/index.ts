@@ -376,6 +376,13 @@ export class NotificationUIStore extends EduUIStoreBase {
         });
       }
     }
+    if (
+      event === AgoraEduClassroomEvent.LeaveSubRoom ||
+      event === AgoraEduClassroomEvent.JoinSubRoom ||
+      event === AgoraEduClassroomEvent.MoveToOtherGroup
+    ) {
+      this.shareUIStore.destroyAllToast();
+    }
   }
 
   onDestroy() {
