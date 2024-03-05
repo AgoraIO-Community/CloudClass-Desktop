@@ -5,7 +5,7 @@ import { ConfirmDialogAction } from '@classroom/uistores/type';
 import { useI18n } from 'agora-common-libs';
 import { observer } from 'mobx-react';
 import React from 'react';
-
+import './index.css';
 export const AfterClassDialog = observer(() => {
   const {
     notificationUIStore: { setLeaveRoom },
