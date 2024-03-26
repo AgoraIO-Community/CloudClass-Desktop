@@ -30,6 +30,7 @@ import { AutoPlayFailedTip } from '@classroom/containers/auto-play-failed';
 import { Room, LayoutContainer, LayoutOrientation, RoomInfo } from '@classroom/containers/layout';
 import { LoadingContainer, GroupLoading } from '@classroom/containers/loading';
 import { TeacherStream } from '@classroom/containers/teacher-stream';
+import { StreamsSwiper } from '@classroom/containers/streams-swiper';
 export const Scenario = observer(() => {
   const {
     classroomStore: {
@@ -68,25 +69,34 @@ export const Scenario = observer(() => {
             'fcr-mobile-landscape-container-rotate': forceLandscape,
             'fcr-mobile-landscape-container': isLandscape && !forceLandscape,
           })}
-          direction="col">
+          direction={isLandscape ? 'row' : 'col'}>
           {state === ClassState.close ? (
             <AfterClassDialog></AfterClassDialog>
           ) : (
             <>
               <GroupInfoPanel />
-              <Whiteboard />
+              {isLandscape ? (
+                <>
+                  <Whiteboard />
+                  <StreamsSwiper />
+                </>
+              ) : (
+                <>
+                  <Whiteboard />
+                  {!isLandscape && <RoomPlaceholder></RoomPlaceholder>}
+                  {!isLandscape && <ScreenShareContainer></ScreenShareContainer>}
+                  <TeacherStream />
+                  {<StudentStreamsContainer></StudentStreamsContainer>}
+                  {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
+                </>
+              )}
 
-              {!isLandscape && <RoomPlaceholder></RoomPlaceholder>}
-              {!isLandscape && <ScreenShareContainer></ScreenShareContainer>}
-              <TeacherStream />
-              {!isLandscape && <StudentStreamsContainer></StudentStreamsContainer>}
-              {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
               {groupUIStore.joiningSubRoom ? <GroupLoading /> : <Chat />}
               <Poll></Poll>
               <CountDown></CountDown>
               <AutoPlayFailedTip></AutoPlayFailedTip>
               <ShareActionSheet></ShareActionSheet>
-              <HandsUpActionSheet></HandsUpActionSheet>
+              {/* <HandsUpActionSheet></HandsUpActionSheet> */}
               <DialogContainer></DialogContainer>
               <ToastContainer></ToastContainer>
               <ClassRoomDialogContainer></ClassRoomDialogContainer>

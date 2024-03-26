@@ -3,6 +3,12 @@
   position: relative;
   overflow: hidden;
   height: 100%;
+  background-color: black;
+  background-image: linear-gradient(90deg, grey 1%, transparent 1%),
+    linear-gradient(0deg, grey 1%, transparent 1%);
+  background-size: 64px 64px;
+  background-position: 0 0, 32px 32px;
+  justify-content: flex-end;
 }
 .fcr-mobile-landscape-container-rotate {
   height: 100vw;
@@ -15,7 +21,26 @@
 .fcr-mobile-landscape-container-rotate video {
   object-fit: contain !important;
 }
-
+.landscape-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  background-image: linear-gradient(90deg, grey 1%, transparent 1%),
+    linear-gradient(0deg, grey 1%, transparent 1%);
+  background-size: 64px 64px;
+  background-position: 0 0, 32px 32px;
+}
+.landscape-whiteboard-container {
+  height: 100%;
+  width: 50%;
+  background-color: black;
+}
 .fcr-mobile-auto-play-failed {
   position: fixed;
   background-color: rgba(0, 0, 0, 0.5);

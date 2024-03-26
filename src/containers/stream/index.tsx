@@ -49,6 +49,7 @@ export const StreamPlayer = observer<FC<StreamPlayerMobileProps>>(
           className={classNames('fcr-stream-player-mobil-placeholder', {
             'fcr-stream-player-mobil-placeholder-teacher': isTeacher,
             'fcr-stream-player-mobil-placeholder-teacher-pip': isTeacher && isPiP,
+            // 'fcr-stream-player-mobil-placeholder-teacher-bar': isTeacher
           })}>
           {`${first}${last}`}
         </div>

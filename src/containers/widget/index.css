@@ -27,6 +27,12 @@
   border-color: #fff;
   pointer-events: none;
 }
+.whiteboard-mobile-container-landscape .netless-whiteboard-wrapper {
+  /* height: 100%; */
+  background-color: rgba(35, 37, 41, 1);
+
+  border-color: rgba(35, 37, 41, 1);
+}
 .whiteboard-mobile-container::before {
   content: '';
   display: block;

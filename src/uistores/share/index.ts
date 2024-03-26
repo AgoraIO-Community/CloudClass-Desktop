@@ -316,6 +316,42 @@ export class EduShareUIStore {
       this.classroomViewportSize.h5Height = scopeSize.height;
     });
   }
+
+  @bound
+  // @Lodash.debounced(500)
+  updateWhiteBoardViewportSize(width, height) {
+    // const { width, height } = getRootDimensions(this._containerNode);
+    const aspectRatio = 714 / 1548;
+    const curAspectRatio = height / width;
+    const scopeSize = { height, width };
+
+    if (curAspectRatio > aspectRatio) {
+      // shrink height
+      scopeSize.height = width * aspectRatio;
+    } else if (curAspectRatio < aspectRatio) {
+      // shrink width
+      scopeSize.width = height / aspectRatio;
+    } else {
+      scopeSize.width = width;
+      scopeSize.height = height;
+    }
+
+    runInAction(() => {
+      if (
+        scopeSize.width >= this._classroomMinimumSize.width ||
+        scopeSize.height >= this._classroomMinimumSize.height
+      ) {
+        this.classroomViewportSize = { width: scopeSize.width, height: scopeSize.height };
+      } else {
+        this.classroomViewportSize = {
+          width: this._classroomMinimumSize.width,
+          height: this._classroomMinimumSize.height,
+        };
+      }
+      this.classroomViewportSize.h5Width = scopeSize.width;
+      this.classroomViewportSize.h5Height = scopeSize.height;
+    });
+  }
   @bound
   @Lodash.debounced(100)
   handleOrientationchange() {

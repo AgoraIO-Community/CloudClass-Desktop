@@ -297,6 +297,15 @@ export class StreamUIStore extends EduUIStoreBase {
     return uiStreams;
   }
 
+  @computed get allVerticalStreams(): EduStreamUI[] {
+    if (this.teacherCameraStream) {
+      const allUIStreams = [this.teacherCameraStream, ...this.studentCameraStreams.slice()];
+      return allUIStreams;
+    } else {
+      return this.studentCameraStreams;
+    }
+  }
+
   /**
    * 老师流信息（教室内只有一个老师时使用，如果有一个以上老师请使用 teacherStreams）
    * @returns
@@ -1053,11 +1062,10 @@ export class StreamUIStore extends EduUIStoreBase {
 
   @computed
   get studentVideoStreamSize() {
-    const width =
-      (this.shareUIStore.isLandscape
-        ? window.document.documentElement.clientWidth
-        : window.document.documentElement.clientWidth) *
-      (119 / 375);
+    const width = this.shareUIStore.isLandscape
+      ? window.document.documentElement.clientWidth / 5
+      : window.document.documentElement.clientWidth * (119 / 375);
+    console.log('elemnt client width', width);
 
     const height = (68 / 119) * width;
 
@@ -1066,11 +1074,23 @@ export class StreamUIStore extends EduUIStoreBase {
 
   @computed
   get studentVideoStreamContainerHeight() {
-    return !this.shareUIStore.isLandscape &&
-      this.studentStreamsVisible &&
-      this.studentCameraStreams.length > 0
+    return this.studentStreamsVisible && this.studentCameraStreams.length > 0
       ? this.studentVideoStreamSize.height
       : '0px';
+  }
+  @computed
+  get streamWidthVertical() {
+    return this.studentStreamsVisible ? '161px' : '0px';
+  }
+  @computed
+  get swapperRight() {
+    return this.studentStreamsVisible ? '143px' : '0px';
+  }
+
+  @computed
+  get streamsContainerHeight() {
+    const allstreams = this.allVerticalStreams;
+    return allstreams.length * this.studentVideoStreamSize.height;
   }
   @computed
   get containerH5Extend() {

@@ -549,6 +549,12 @@
   bottom: 0;
   margin: auto;
 }
+.fcr-stream-player-mobil-placeholder-teacher-bar {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 30px;
+}
 .fcr-stream-player-mobil-placeholder-teacher {
   width: 80px;
   height: 80px;

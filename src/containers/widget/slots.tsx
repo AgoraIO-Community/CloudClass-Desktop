@@ -39,12 +39,22 @@ export const Whiteboard = observer(function Board() {
   const whiteBoardRef = useRef<HTMLDivElement>(null);
   const {
     boardUIStore,
-    streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream },
-    shareUIStore: { isLandscape },
+    streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
+    shareUIStore: { isLandscape, updateWhiteBoardViewportSize, classroomViewportSize },
   } = useStore();
 
-  const { boardContainerHeight, mounted } = boardUIStore;
-  const height = mounted && !isLandscape ? boardContainerHeight : 0;
+  const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
+  const height = mounted ? boardContainerHeight : 0;
+  const width = studentStreamsVisible
+    ? isLandscape
+      ? boardContainerWidth - 143
+      : ''
+    : boardContainerWidth;
+  useEffect(() => {
+    updateWhiteBoardViewportSize(width, height);
+  }, [studentStreamsVisible, width]);
+  const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
+  document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
   useEffect(() => {
     whiteBoardRef.current?.style.setProperty('--board-height', maskHeight + 'px');
@@ -52,21 +62,27 @@ export const Whiteboard = observer(function Board() {
   return (
     <div
       ref={whiteBoardRef}
-      className={classnames(
-        'whiteboard-mobile-container fcr-w-full fcr-relative',
+      className={classnames('whiteboard-mobile-container', 'fcr-w-full', {
+        'whiteboard-mobile-container-landscape': isLandscape,
+        'fcr-relative': true,
         containerH5VisibleCls,
-      )}
+      })}
       style={{
-        height: height,
-        visibility: isLandscape ? 'hidden' : 'visible',
+        height: height + 'px',
+        visibility: 'visible',
+        width: width + 'px',
+        backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+        // right: right,
       }}
       onClick={() => {
         toggleTool();
       }}>
       <div
         style={{
-          height: isLandscape ? 0 : boardContainerHeight,
+          height: isLandscape ? classroomViewportSize.h5Height : boardContainerHeight,
           zIndex: ComponentLevelRules.Level0,
+          width: classroomViewportSize.h5Width,
+          backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
         }}
         className="widget-slot-board"
       />

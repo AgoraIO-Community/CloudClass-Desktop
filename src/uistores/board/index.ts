@@ -29,6 +29,14 @@ export class BoardUIStore extends EduUIStoreBase {
   }
 
   @computed
+  get boardContainerDimensions() {
+    return {
+      width: this.shareUIStore.classroomViewportSize.h5Width,
+      height: this.shareUIStore.classroomViewportSize.h5Height,
+    };
+  }
+
+  @computed
   get undoSteps() {
     return this.boardApi.undoSteps;
   }
