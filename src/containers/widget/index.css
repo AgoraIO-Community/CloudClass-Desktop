@@ -19,6 +19,9 @@
   overflow: hidden;
 }
 .widget-slot-board {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   width: 100%;
 }
 .whiteboard-mobile-container .netless-whiteboard-wrapper {
@@ -53,4 +56,14 @@
 }
 .widget-slot-chat-mobile {
   transition: height 0.2s;
+}
+.landscape-bottom-tools {
+  position: absolute;
+  height: 50px;
+  bottom: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
 }

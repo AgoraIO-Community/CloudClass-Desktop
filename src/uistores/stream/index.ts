@@ -1051,8 +1051,8 @@ export class StreamUIStore extends EduUIStoreBase {
       ? {}
       : this.shareUIStore.isLandscape
       ? {
-          width: window.document.documentElement.clientWidth,
-          height: window.document.documentElement.clientHeight,
+          width: '100%',
+          height: '100%',
         }
       : {
           width: window.document.documentElement.clientWidth,

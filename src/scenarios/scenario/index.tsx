@@ -31,6 +31,7 @@ import { Room, LayoutContainer, LayoutOrientation, RoomInfo } from '@classroom/c
 import { LoadingContainer, GroupLoading } from '@classroom/containers/loading';
 import { TeacherStream } from '@classroom/containers/teacher-stream';
 import { StreamsSwiper } from '@classroom/containers/streams-swiper';
+import { LandscapeToolPanel } from '@classroom/containers/landscape-tool-panel';
 export const Scenario = observer(() => {
   const {
     classroomStore: {
@@ -38,6 +39,7 @@ export const Scenario = observer(() => {
         classroomSchedule: { state },
       },
     },
+    getters: { isBoardWidgetActive },
     shareUIStore: { isLandscape, forceLandscape },
     shareUIStore,
     groupUIStore,
@@ -77,7 +79,10 @@ export const Scenario = observer(() => {
               <GroupInfoPanel />
               {isLandscape ? (
                 <>
-                  <Whiteboard />
+                  {<Whiteboard />}
+
+                  <LandscapeToolPanel />
+
                   <StreamsSwiper />
                 </>
               ) : (
@@ -88,15 +93,16 @@ export const Scenario = observer(() => {
                   <TeacherStream />
                   {<StudentStreamsContainer></StudentStreamsContainer>}
                   {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
+                  <HandsUpActionSheet></HandsUpActionSheet>
+                  <Poll></Poll>
                 </>
               )}
 
               {groupUIStore.joiningSubRoom ? <GroupLoading /> : <Chat />}
-              <Poll></Poll>
+
               <CountDown></CountDown>
               <AutoPlayFailedTip></AutoPlayFailedTip>
-              <ShareActionSheet></ShareActionSheet>
-              {/* <HandsUpActionSheet></HandsUpActionSheet> */}
+              {!isLandscape && <ShareActionSheet></ShareActionSheet>}
               <DialogContainer></DialogContainer>
               <ToastContainer></ToastContainer>
               <ClassRoomDialogContainer></ClassRoomDialogContainer>

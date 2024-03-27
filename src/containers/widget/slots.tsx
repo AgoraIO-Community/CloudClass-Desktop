@@ -7,6 +7,7 @@ import { ComponentLevelRules } from '../../configs/config';
 import classNames from 'classnames';
 import { useMobileStreamDrag } from '../stream/player';
 import './index.css';
+import { TeacherStream } from '../teacher-stream';
 
 export const CountDown = observer(() => {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,20 +39,21 @@ export const Poll = observer(() => {
 export const Whiteboard = observer(function Board() {
   const whiteBoardRef = useRef<HTMLDivElement>(null);
   const {
+    getters: { isBoardWidgetActive },
+    layoutUIStore: { toggleLandscapeToolBarVisible },
     boardUIStore,
     streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
-    shareUIStore: { isLandscape, updateWhiteBoardViewportSize, classroomViewportSize },
+    shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
   } = useStore();
 
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
-  const height = mounted ? boardContainerHeight : 0;
   const width = studentStreamsVisible
     ? isLandscape
       ? boardContainerWidth - 143
-      : ''
+      : 0
     : boardContainerWidth;
   useEffect(() => {
-    updateWhiteBoardViewportSize(width, height);
+    updateWhiteBoardViewportSize(width, boardContainerHeight);
   }, [studentStreamsVisible, width]);
   const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
   document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
@@ -62,30 +64,31 @@ export const Whiteboard = observer(function Board() {
   return (
     <div
       ref={whiteBoardRef}
-      className={classnames('whiteboard-mobile-container', 'fcr-w-full', {
+      className={classnames('whiteboard-mobile-container fcr-relative', 'fcr-w-full', {
         'whiteboard-mobile-container-landscape': isLandscape,
-        'fcr-relative': true,
         containerH5VisibleCls,
       })}
       style={{
-        height: height + 'px',
-        visibility: 'visible',
+        height: boardContainerHeight + 'px',
         width: width + 'px',
-        backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
-        // right: right,
       }}
       onClick={() => {
         toggleTool();
       }}>
+      {!isBoardWidgetActive && <TeacherStream />}
+
       <div
+        onClick={toggleLandscapeToolBarVisible}
         style={{
-          height: isLandscape ? classroomViewportSize.h5Height : boardContainerHeight,
+          height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
           zIndex: ComponentLevelRules.Level0,
-          width: classroomViewportSize.h5Width,
-          backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+          width: landscapeBoardSize.width,
+          // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
         }}
         className="widget-slot-board"
       />
+
+      {isLandscape ? <div className="landscape-bottom-tools"></div> : ''}
     </div>
   );
 });

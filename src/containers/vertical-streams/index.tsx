@@ -189,7 +189,7 @@ const StreamCollapse = observer(() => {
   } = useStore();
   return (
     <>
-      {studentCameraStreams.length > 0 && (
+      {
         <div className="fcr-stream-collapse-mobile-wrapper-vert">
           <div
             className="fcr-stream-collapse-mobile-vert"
@@ -205,7 +205,7 @@ const StreamCollapse = observer(() => {
               forceLandscape={false}></SvgImgMobile>
           </div>
         </div>
-      )}
+      }
     </>
   );
 });

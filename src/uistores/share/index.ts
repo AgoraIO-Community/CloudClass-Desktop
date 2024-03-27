@@ -82,6 +82,15 @@ export class EduShareUIStore {
     h5Height: 576,
   };
 
+  /**
+   * 横屏下白板尺寸
+   */
+  @observable
+  landscapeBoardSize: { width: number; height: number } = {
+    width: 0,
+    height: 0,
+  };
+
   @observable
   orientation: OrientationEnum = OrientationEnum.portrait;
 
@@ -319,8 +328,7 @@ export class EduShareUIStore {
 
   @bound
   // @Lodash.debounced(500)
-  updateWhiteBoardViewportSize(width, height) {
-    // const { width, height } = getRootDimensions(this._containerNode);
+  updateWhiteBoardViewportSize(width: number, height: number) {
     const aspectRatio = 714 / 1548;
     const curAspectRatio = height / width;
     const scopeSize = { height, width };
@@ -337,19 +345,7 @@ export class EduShareUIStore {
     }
 
     runInAction(() => {
-      if (
-        scopeSize.width >= this._classroomMinimumSize.width ||
-        scopeSize.height >= this._classroomMinimumSize.height
-      ) {
-        this.classroomViewportSize = { width: scopeSize.width, height: scopeSize.height };
-      } else {
-        this.classroomViewportSize = {
-          width: this._classroomMinimumSize.width,
-          height: this._classroomMinimumSize.height,
-        };
-      }
-      this.classroomViewportSize.h5Width = scopeSize.width;
-      this.classroomViewportSize.h5Height = scopeSize.height;
+      this.landscapeBoardSize = scopeSize;
     });
   }
   @bound

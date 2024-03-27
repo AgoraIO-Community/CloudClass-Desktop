@@ -1,4 +1,4 @@
-import { ClassroomState } from 'agora-edu-core';
+import { ClassState, ClassroomState, RecordStatus } from 'agora-edu-core';
 import { action, computed, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { Scheduler, bound } from 'agora-rte-sdk';
@@ -10,6 +10,11 @@ import { AgoraExtensionWidgetEvent } from '@classroom/protocol/events';
 import { transI18n } from 'agora-common-libs';
 import { ToastTypeEnum } from '../share';
 import { ConfirmDialogProps } from '@classroom/containers/confirm-dialog/confirm-dialog';
+import dayjs from 'dayjs';
+export enum TimeFormatType {
+  Timeboard,
+  Message,
+}
 export class LayoutUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
   @observable landscapeToolBarVisible = true;
@@ -25,6 +30,59 @@ export class LayoutUIStore extends EduUIStoreBase {
   @action.bound
   setHandsUpActionSheetVisible(visible: boolean) {
     this.handsUpActionSheetVisible = visible;
+  }
+  formatCountDown(time: number, mode: TimeFormatType): string {
+    const seconds = Math.floor(time / 1000);
+    const duration = dayjs.duration(time);
+    let formatItems: string[] = [];
+
+    const hours_text = duration.hours() === 0 ? '' : `H :`;
+    const mins_text = duration.minutes() === 0 ? '' : duration.seconds() === 0 ? `m :` : `m :`;
+    const seconds_text = duration.seconds() === 0 ? '' : `s`;
+    const short_hours_text = `HH :`;
+    const short_mins_text = `mm :`;
+    const short_seconds_text = `ss`;
+    if (mode === TimeFormatType.Timeboard) {
+      // always display all time segment
+      if (seconds < 60 * 60) {
+        // less than a min
+        formatItems = [short_mins_text, short_seconds_text];
+      } else {
+        formatItems = [short_hours_text, short_mins_text, short_seconds_text];
+      }
+    } else {
+      // do not display time segment if it's 0
+      if (seconds < 60) {
+        // less than a min
+        formatItems = [seconds_text];
+      } else if (seconds < 60 * 60) {
+        [mins_text, seconds_text].forEach((item) => item && formatItems.push(item));
+      } else {
+        [hours_text, mins_text, seconds_text].forEach((item) => item && formatItems.push(item));
+      }
+    }
+    return duration.format(formatItems.join(' '));
+  }
+  @computed
+  get classStatusText() {
+    const duration = this.getters.classTimeDuration || 0;
+
+    if (duration < 0) {
+      // return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
+      return `-- : --`;
+    }
+
+    switch (this.classroomStore.roomStore.classroomSchedule.state) {
+      case ClassState.beforeClass:
+        return `${this.formatCountDown(duration, TimeFormatType.Timeboard)}`;
+      case ClassState.ongoing:
+        return `${this.formatCountDown(duration, TimeFormatType.Timeboard)}`;
+      case ClassState.afterClass:
+        return `${this.formatCountDown(duration, TimeFormatType.Timeboard)}`;
+      default:
+        // return `-- ${transI18n('nav.short.minutes')} -- ${transI18n('nav.short.seconds')}`;
+        return `-- : --`;
+    }
   }
   @observable
   awardAnims: { id: string }[] = [];
@@ -180,6 +238,27 @@ export class LayoutUIStore extends EduUIStoreBase {
       return false;
     }
     return true;
+  }
+  @computed
+  get recordStatus() {
+    if (
+      this.classroomStore.roomStore.recordStatus === RecordStatus.started &&
+      this.classroomStore.roomStore.recordReady
+    ) {
+      return RecordStatus.started;
+    } else if (
+      this.classroomStore.roomStore.recordStatus === RecordStatus.starting ||
+      (this.classroomStore.roomStore.recordStatus === RecordStatus.started &&
+        !this.classroomStore.roomStore.recordReady)
+    ) {
+      return RecordStatus.starting;
+    } else {
+      return RecordStatus.stopped;
+    }
+  }
+  @computed
+  get isRecording() {
+    return this.recordStatus === RecordStatus.started;
   }
   @computed
   get h5ContainerCls() {

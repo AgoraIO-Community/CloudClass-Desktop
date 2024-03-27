@@ -1,0 +1,50 @@
+.landscape-tool-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.landscape-tools {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+.hands-up-action-sheet-mobile-prepare-options-item {
+  width: 52px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+.landscape-info-classroom-name {
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+.landscape-classroom-info {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  margin-left: 16px;
+}
+.landscape-classroom-status {
+  display: flex;
+  flex-direction: row;
+  width: 112px;
+  height: 10px;
+  font-size: 12px;
+  align-items: center;
+  margin-top: 4px;
+}
+.landscape-info-classroom-recording {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.landscape-info-classroom-time {
+  width: 70px;
+}

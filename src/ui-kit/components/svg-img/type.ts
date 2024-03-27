@@ -185,4 +185,5 @@ export enum SvgIconEnum {
   FCR_QUESTION = 'fcr_question',
   USER_COUNT = 'user-count',
   FCR_RIGHT2 = 'fcr_right2',
+  FCR_RECORDING_STOP = 'fcr_recording_stop',
 }
