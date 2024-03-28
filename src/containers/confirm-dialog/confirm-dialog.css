@@ -27,6 +27,17 @@
 .fcr-dialog-wrap-middle {
   bottom: 50%;
   transform: translateY(50%);
+  z-index: 2000;
+}
+.fcr-dialog-wrap-landscape {
+  left: 10px;
+  right: 10px;
+  padding: 24px 20px;
+  border-radius: 20px;
+  background: #3c3c3c;
+  bottom: 50% !important;
+  transform: translateY(50%) !important;
+  z-index: 2000;
 }
 .fcr-confirm-dialog-title {
   @apply fcr-font-title fcr-text-1;
@@ -59,7 +70,7 @@
   opacity: 0.8;
 }
 .fcr-confirm-dialog-footer {
-  display: flex;
+  /* display: flex; */
   justify-content: space-between;
 }
 .fcr-confirm-dialog-footer-btns {

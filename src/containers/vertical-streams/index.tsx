@@ -68,7 +68,7 @@ const StudentStreams = observer(() => {
       )}
       style={{
         overflow: 'hidden',
-        transition: 'height .2s',
+        transition: 'width .2s',
         height: '100vh',
         width: swapperRight,
         flexShrink: 0,

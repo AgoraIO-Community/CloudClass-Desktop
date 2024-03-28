@@ -20,6 +20,8 @@ type StreamPlayerMobileProps = {
 export const StreamPlayer = observer<FC<StreamPlayerMobileProps>>(
   ({ stream, className = '', style, onClick, visible = true }) => {
     const {
+      getters: { isBoardWidgetActive },
+
       shareUIStore: { isLandscape },
       classroomStore: {
         streamStore: { setRemoteVideoStreamType },
@@ -49,7 +51,8 @@ export const StreamPlayer = observer<FC<StreamPlayerMobileProps>>(
           className={classNames('fcr-stream-player-mobil-placeholder', {
             'fcr-stream-player-mobil-placeholder-teacher': isTeacher,
             'fcr-stream-player-mobil-placeholder-teacher-pip': isTeacher && isPiP,
-            // 'fcr-stream-player-mobil-placeholder-teacher-bar': isTeacher
+            'fcr-stream-player-mobil-placeholder-teacher-vertical-swiper':
+              isTeacher && isBoardWidgetActive,
           })}>
           {`${first}${last}`}
         </div>

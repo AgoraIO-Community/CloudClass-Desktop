@@ -76,7 +76,7 @@ export const Scenario = observer(() => {
             <AfterClassDialog></AfterClassDialog>
           ) : (
             <>
-              <GroupInfoPanel />
+              {!isLandscape ? <GroupInfoPanel /> : null}
               {isLandscape ? (
                 <>
                   {<Whiteboard />}

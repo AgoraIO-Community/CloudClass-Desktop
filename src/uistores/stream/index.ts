@@ -298,9 +298,14 @@ export class StreamUIStore extends EduUIStoreBase {
   }
 
   @computed get allVerticalStreams(): EduStreamUI[] {
+    const boardActive = this.getters.isBoardWidgetActive;
     if (this.teacherCameraStream) {
-      const allUIStreams = [this.teacherCameraStream, ...this.studentCameraStreams.slice()];
-      return allUIStreams;
+      if (!boardActive) {
+        return this.studentCameraStreams;
+      } else {
+        const allUIStreams = [this.teacherCameraStream, ...this.studentCameraStreams.slice()];
+        return allUIStreams;
+      }
     } else {
       return this.studentCameraStreams;
     }

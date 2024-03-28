@@ -4,6 +4,7 @@ import { FC, ReactNode } from 'react';
 import { Button, ButtonProps } from '@classroom/ui-kit';
 import './confirm-dialog.css';
 import { toJS } from 'mobx';
+import { useStore } from '@classroom/hooks/ui-store';
 export interface ConfirmDialogProps {
   /**
    * 对话框标题
@@ -105,8 +106,13 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
     cancelButtonVisible = true,
     // getContainer,
   } = props;
-
-  const cls = classNames('fcr-dialog-wrap', { 'fcr-dialog-wrap-middle': position === 'middle' });
+  const {
+    shareUIStore: { isLandscape },
+  } = useStore();
+  const cls = classNames('fcr-dialog-wrap', {
+    'fcr-dialog-wrap-middle': position === 'middle',
+    'fcr-dialog-wrap-landscape': isLandscape,
+  });
   // const footerCls = classNames('fcr-confirm-dialog-footer', {
   //   'fcr-confirm-dialog-footer-block': buttonStyle === 'block',
   // });
