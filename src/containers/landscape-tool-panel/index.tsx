@@ -188,7 +188,7 @@ export const LandscapeToolPanel = observer(() => {
 
           {teacherCameraStream && (
             <div className="landscape-info-classroom-name">
-              {teacherCameraStream.fromUser.userName} &#39;s Classroom
+              {EduClassroomConfig.shared.sessionInfo.roomName}
             </div>
           )}
           <div className="landscape-classroom-status">
