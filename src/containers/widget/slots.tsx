@@ -75,8 +75,6 @@ export const Whiteboard = observer(function Board() {
       onClick={() => {
         toggleTool();
       }}>
-      {!isBoardWidgetActive && <TeacherStream />}
-
       <div
         onClick={toggleLandscapeToolBarVisible}
         style={{

@@ -78,11 +78,12 @@ export const Scenario = observer(() => {
             <>
               {!isLandscape ? <GroupInfoPanel /> : null}
               {isLandscape ? (
-                <>
+                <div className="landscape-mobile-container">
                   {<Whiteboard />}
                   <LandscapeToolPanel />
+                  {!isBoardWidgetActive && <TeacherStream />}
                   <StreamsSwiper />
-                </>
+                </div>
               ) : (
                 <>
                   <Whiteboard />
