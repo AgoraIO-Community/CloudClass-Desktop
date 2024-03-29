@@ -81,7 +81,11 @@ export const Scenario = observer(() => {
                   <>
                     <Whiteboard key={'board'} />
                     <LandscapeToolPanel />
-                    {!isBoardWidgetActive && <TeacherStream />}
+                    {!isBoardWidgetActive && (
+                      <div className="landscape-teacher-stream">
+                        <TeacherStream />
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
