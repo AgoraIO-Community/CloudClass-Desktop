@@ -184,25 +184,30 @@ export const LandscapeToolPanel = observer(() => {
           backgroundColor: 'rgba(38, 40, 44, 1)',
         }}>
         <div className="landscape-classroom-info">
-          {groupInfo && <div className="group-name">{groupInfo && groupInfo.groupName}</div>}
-
-          {teacherCameraStream && (
-            <div className="landscape-info-classroom-name">
-              {EduClassroomConfig.shared.sessionInfo.roomName}
-            </div>
-          )}
-          <div className="landscape-classroom-status">
-            <div className="landscape-info-classroom-time">{classStatusText}</div>
-            {isRecording && (
-              <div className="landscape-info-classroom-recording">
-                <SvgImg
-                  type={SvgIconEnum.FCR_RECORDING_STOP}
-                  size={12}
-                  colors={{ iconPrimary: 'red' }}></SvgImg>
-                REC
+          {groupInfo ? (
+            <div className="group-name">{groupInfo && groupInfo.groupName}</div>
+          ) : (
+            <>
+              {teacherCameraStream && (
+                <div className="landscape-info-classroom-name">
+                  {EduClassroomConfig.shared.sessionInfo.roomName}
+                </div>
+              )}
+              <div className="landscape-classroom-status">
+                <div className="landscape-info-classroom-time">{classStatusText}</div>
+                {isRecording && (
+                  <div className="landscape-info-classroom-recording">
+                    <SvgImg
+                      className="recording-icon"
+                      type={SvgIconEnum.FCR_RECORDING_STOP}
+                      size={16}
+                      colors={{ iconPrimary: 'red' }}></SvgImg>
+                    REC
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
         <div className="landscape-tools">
           <div className="hands-up-action-sheet-mobile-prepare-options-item" onClick={toggleMic}>
@@ -217,7 +222,7 @@ export const LandscapeToolPanel = observer(() => {
           </div>
           <div className="hands-up-action-sheet-mobile-prepare-options-item" onClick={toggleCamera}>
             <SvgImg
-              type={cameraOn ? SvgIconEnum.CAMERA_ON_MOBILE : SvgIconEnum.CAMERA_OFF_MOBILE}
+              type={cameraOn ? SvgIconEnum.CAMERA_ON_MOBILE_NEW : SvgIconEnum.CAMERA_OFF_MOBILE_NEW}
               size={32}></SvgImg>
           </div>
 

@@ -29,7 +29,7 @@ export const ShareActionSheet = observer(() => {
   return (
     <>
       <div
-        className="share-action-sheet-mobile-trigger"
+        className="hands-up-action-sheet-mobile-prepare-options-item"
         style={{
           zIndex: ComponentLevelRules.Level2,
           visibility: 'visible',

@@ -1,3 +1,7 @@
+.test-div {
+  width: 100vw;
+  height: 100vh;
+}
 .fcr-mobile-landscape-container {
   width: 100vw;
   position: relative;

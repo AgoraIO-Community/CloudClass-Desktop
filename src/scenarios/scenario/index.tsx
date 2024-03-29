@@ -80,9 +80,7 @@ export const Scenario = observer(() => {
               {isLandscape ? (
                 <>
                   {<Whiteboard />}
-
                   <LandscapeToolPanel />
-
                   <StreamsSwiper />
                 </>
               ) : (

@@ -186,4 +186,6 @@ export enum SvgIconEnum {
   USER_COUNT = 'user-count',
   FCR_RIGHT2 = 'fcr_right2',
   FCR_RECORDING_STOP = 'fcr_recording_stop',
+  CAMERA_OFF_MOBILE_NEW = 'camera-off-mobile-new',
+  CAMERA_ON_MOBILE_NEW = 'camera-on-mobile-new',
 }

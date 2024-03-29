@@ -45,6 +45,18 @@
   flex-direction: row;
   align-items: center;
 }
+.recording-icon {
+  animation: breath 3s infinite;
+}
 .landscape-info-classroom-time {
   width: 70px;
+}
+@keyframes breath {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
 }
