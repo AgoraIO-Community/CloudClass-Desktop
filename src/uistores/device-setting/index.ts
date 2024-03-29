@@ -1,7 +1,7 @@
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, Lambda, observable, reaction, toJS } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { DEVICE_DISABLE, EduClassroomConfig } from 'agora-edu-core';
+import { ClassroomState, DEVICE_DISABLE, EduClassroomConfig } from 'agora-edu-core';
 
 import { transI18n } from 'agora-common-libs';
 import { runInAction } from 'mobx';
@@ -30,6 +30,10 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   private _cameraDeviceEnabled = false;
   @observable
   private _audioRecordingDeviceEnabled = false;
+
+  private _audioRecordingDeviceEnabledCache = false;
+  private _cameraDeviceEnabledCache = false;
+
   @observable facingMode: 'user' | 'environment' = 'user';
   @action.bound
   toggleFacingMode() {
@@ -357,6 +361,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
         },
       ),
     );
+
     this._disposers.push(
       reaction(
         () => this.cameraAccessors,
@@ -367,9 +372,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             track.setDeviceId(cameraDeviceId);
             this.logger.info('enableLocalVideo => true. Reason: camera device selected');
             this.enableLocalVideo(true);
-          } else {
-            this.logger.info('enableLocalVideo => false. Reason: camera device not selected');
-            this.enableLocalVideo(false);
           }
         },
       ),
@@ -385,9 +387,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             track.setRecordingDevice(recordingDeviceId);
             this.logger.info('enableLocalAudio => true. Reason: mic device selected');
             this.enableLocalAudio(true);
-          } else {
-            this.logger.info('enableLocalAudio => false. Reason: mic device not selected');
-            this.enableLocalAudio(false);
           }
         },
       ),
