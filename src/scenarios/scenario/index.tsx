@@ -76,35 +76,35 @@ export const Scenario = observer(() => {
             <AfterClassDialog></AfterClassDialog>
           ) : (
             <>
-              {!isLandscape ? <GroupInfoPanel /> : null}
-              {isLandscape ? (
-                <div className="landscape-mobile-container">
-                  {<Whiteboard />}
-                  <LandscapeToolPanel />
-                  {!isBoardWidgetActive && <TeacherStream />}
-                  <StreamsSwiper />
-                </div>
-              ) : (
-                <>
-                  <Whiteboard />
-                  {!isLandscape && <RoomPlaceholder></RoomPlaceholder>}
-                  {!isLandscape && <ScreenShareContainer></ScreenShareContainer>}
-                  <TeacherStream />
-                  {<StudentStreamsContainer></StudentStreamsContainer>}
-                  {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
-                  <HandsUpActionSheet></HandsUpActionSheet>
-                  <Poll></Poll>
-                </>
-              )}
-
-              {groupUIStore.joiningSubRoom ? <GroupLoading /> : <Chat />}
-
-              <CountDown></CountDown>
-              <AutoPlayFailedTip></AutoPlayFailedTip>
-              {!isLandscape && <ShareActionSheet></ShareActionSheet>}
-              <DialogContainer></DialogContainer>
-              <ToastContainer></ToastContainer>
-              <ClassRoomDialogContainer></ClassRoomDialogContainer>
+              <div className="fct-mobile-main-container">
+                {isLandscape ? (
+                  <>
+                    <Whiteboard key={'board'} />
+                    <LandscapeToolPanel />
+                    {!isBoardWidgetActive && <TeacherStream />}
+                  </>
+                ) : (
+                  <>
+                    <GroupInfoPanel />
+                    <Whiteboard key={'board'} />
+                    {!isLandscape && <RoomPlaceholder></RoomPlaceholder>}
+                    {!isLandscape && <ScreenShareContainer></ScreenShareContainer>}
+                    <TeacherStream />
+                    {<StudentStreamsContainer></StudentStreamsContainer>}
+                    {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
+                    <HandsUpActionSheet></HandsUpActionSheet>
+                    <Poll></Poll>
+                    <ShareActionSheet></ShareActionSheet>
+                  </>
+                )}
+                {groupUIStore.joiningSubRoom ? <GroupLoading /> : <Chat />}
+                <CountDown></CountDown>
+                <AutoPlayFailedTip></AutoPlayFailedTip>
+                <DialogContainer></DialogContainer>
+                <ToastContainer></ToastContainer>
+                <ClassRoomDialogContainer></ClassRoomDialogContainer>
+              </div>
+              {isLandscape && <StreamsSwiper />}
             </>
           )}
         </LayoutOrientation>

@@ -50,7 +50,7 @@ export const Whiteboard = observer(function Board() {
   const width = studentStreamsVisible
     ? isLandscape
       ? boardContainerWidth - 143
-      : 0
+      : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
     updateWhiteBoardViewportSize(width, boardContainerHeight);
