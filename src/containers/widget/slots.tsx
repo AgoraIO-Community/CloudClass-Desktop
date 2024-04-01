@@ -85,8 +85,6 @@ export const Whiteboard = observer(function Board() {
         }}
         className="widget-slot-board"
       />
-
-      {isLandscape ? <div className="landscape-bottom-tools"></div> : ''}
     </div>
   );
 });

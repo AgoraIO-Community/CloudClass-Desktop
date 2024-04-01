@@ -107,6 +107,7 @@ export const Scenario = observer(() => {
                 <DialogContainer></DialogContainer>
                 <ToastContainer></ToastContainer>
                 <ClassRoomDialogContainer></ClassRoomDialogContainer>
+                <div className="landscape-bottom-tools"></div>
               </div>
               {isLandscape && <StreamsSwiper />}
             </>
