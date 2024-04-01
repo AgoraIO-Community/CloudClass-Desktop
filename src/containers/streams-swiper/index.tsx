@@ -28,7 +28,7 @@ export const StreamsSwiper: FC<Props> = observer(() => {
       className="streams-swiper-vertical"
       style={{
         width: swapperRight,
-        height: '100vh',
+        height: window.innerHeight,
         backgroundColor: 'rgba(53, 54, 56, 0.95)',
       }}>
       <VerticalStreamsContainer></VerticalStreamsContainer>

@@ -69,7 +69,7 @@ const StudentStreams = observer(() => {
       style={{
         overflow: 'hidden',
         transition: 'width .2s',
-        height: '100vh',
+        height: window.innerHeight,
         width: swapperRight,
         flexShrink: 0,
         background: 'rgba(56, 56, 67, 1)',
@@ -190,7 +190,11 @@ const StreamCollapse = observer(() => {
   return (
     <>
       {
-        <div className="fcr-stream-collapse-mobile-wrapper-vert">
+        <div
+          className="fcr-stream-collapse-mobile-wrapper-vert"
+          style={{
+            height: window.innerHeight,
+          }}>
           <div
             className="fcr-stream-collapse-mobile-vert"
             style={{

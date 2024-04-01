@@ -2,7 +2,7 @@
   width: 100vw;
   position: relative;
   overflow: hidden;
-  height: 100vh;
+  height: 100%;
   background-color: black;
   background-image: linear-gradient(90deg, grey 1%, transparent 1%),
     linear-gradient(0deg, grey 1%, transparent 1%);
