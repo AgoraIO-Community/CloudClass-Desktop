@@ -1,12 +1,8 @@
-.landscape-mobile-container {
-  width: 100vw;
-  height: 100vh;
-}
 .fcr-mobile-landscape-container {
   width: 100vw;
   position: relative;
   overflow: hidden;
-  height: 100%;
+  height: 100vh;
   background-color: black;
   background-image: linear-gradient(90deg, grey 1%, transparent 1%),
     linear-gradient(0deg, grey 1%, transparent 1%);
