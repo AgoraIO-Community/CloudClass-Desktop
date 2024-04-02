@@ -34,7 +34,7 @@
 .pagination-buttons {
   width: 30px;
   position: absolute;
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
   flex-direction: column;
 
@@ -65,7 +65,7 @@
   margin-top: 50px;
 }
 .vert-swiper-button-next {
-  margin-top: calc(100vh - 33px);
+  /* margin-top: calc(100vh - 33px); */
 }
 .swiper-slide {
   overflow: hidden;

@@ -56,7 +56,8 @@ const StudentStreams = observer(() => {
   useEffect(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
-
+  const viewHeight = window.innerHeight;
+  const nextButtonHeight = viewHeight - 33;
   return (
     <div
       className={classnames(
@@ -74,7 +75,11 @@ const StudentStreams = observer(() => {
         flexShrink: 0,
         background: 'rgba(56, 56, 67, 1)',
       }}>
-      <div className="pagination-buttons">
+      <div
+        className="pagination-buttons"
+        style={{
+          height: window.innerHeight,
+        }}>
         {current !== 0 && (
           <div
             className={classnames('vert-swiper-button-prev vertical-streams-button', {
@@ -95,7 +100,7 @@ const StudentStreams = observer(() => {
               'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
             })}
             onClick={handleNext}
-            style={{ transform: 'rotateZ( 90deg)' }}>
+            style={{ transform: 'rotateZ( 90deg)', marginTop: nextButtonHeight }}>
             <SvgImg
               type={SvgIconEnum.FCR_MOBILE_RIGHT}
               size={16}
