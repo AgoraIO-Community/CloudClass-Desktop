@@ -81,7 +81,7 @@ export const Scenario = observer(() => {
                   <>
                     <Whiteboard key={'board'} />
                     <LandscapeToolPanel />
-                    {(!isBoardWidgetActive || !isScreenSharing) && (
+                    {!isBoardWidgetActive && !isScreenSharing && (
                       <div className="landscape-teacher-stream">
                         <TeacherStream />
                       </div>
