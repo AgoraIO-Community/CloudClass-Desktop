@@ -299,8 +299,9 @@ export class StreamUIStore extends EduUIStoreBase {
 
   @computed get allVerticalStreams(): EduStreamUI[] {
     const boardActive = this.getters.isBoardWidgetActive;
+    const isScreenSharing = this.getters.isScreenSharing;
     if (this.teacherCameraStream) {
-      if (!boardActive) {
+      if (!boardActive && !isScreenSharing) {
         return this.studentCameraStreams;
       } else {
         const allUIStreams = [this.teacherCameraStream, ...this.studentCameraStreams.slice()];

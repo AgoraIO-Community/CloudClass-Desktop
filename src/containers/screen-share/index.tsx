@@ -11,7 +11,8 @@ export const ScreenShareContainer = observer(() => {
   const {
     shareUIStore: { isLandscape },
     boardUIStore: { boardContainerHeight },
-    streamUIStore: { screenShareStream },
+    streamUIStore: { screenShareStream, toggleTool },
+    layoutUIStore: { toggleLandscapeToolBarVisible },
   } = useStore();
   const { renderKey } = useForceRenderWhenVisibilityChanged();
   const remotecls = classnames('remote-screen-share-container', 'fcr-t-0', {
@@ -19,7 +20,10 @@ export const ScreenShareContainer = observer(() => {
   });
 
   return screenShareStream ? (
-    <div className={remotecls} style={{ height: boardContainerHeight }}>
+    <div
+      className={remotecls}
+      style={{ height: boardContainerHeight }}
+      onClick={toggleLandscapeToolBarVisible}>
       <ScreenShareRemoteTrackPlayer key={renderKey} stream={screenShareStream} />
     </div>
   ) : null;

@@ -39,7 +39,7 @@ export const Scenario = observer(() => {
         classroomSchedule: { state },
       },
     },
-    getters: { isBoardWidgetActive },
+    getters: { isBoardWidgetActive, isScreenSharing },
     shareUIStore: { isLandscape, forceLandscape },
     shareUIStore,
     groupUIStore,
@@ -81,18 +81,19 @@ export const Scenario = observer(() => {
                   <>
                     <Whiteboard key={'board'} />
                     <LandscapeToolPanel />
-                    {!isBoardWidgetActive && (
+                    {(!isBoardWidgetActive || !isScreenSharing) && (
                       <div className="landscape-teacher-stream">
                         <TeacherStream />
                       </div>
                     )}
+                    <ScreenShareContainer></ScreenShareContainer>
                   </>
                 ) : (
                   <>
                     <GroupInfoPanel />
                     <Whiteboard key={'board'} />
                     {!isLandscape && <RoomPlaceholder></RoomPlaceholder>}
-                    {!isLandscape && <ScreenShareContainer></ScreenShareContainer>}
+                    <ScreenShareContainer></ScreenShareContainer>
                     <TeacherStream />
                     {<StudentStreamsContainer></StudentStreamsContainer>}
                     {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
