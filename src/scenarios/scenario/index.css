@@ -83,8 +83,8 @@
 }
 .fcr-countdown-mobile-widget-landscape {
   position: fixed;
-  top: 0;
-  right: 0;
+  /* top: 0;
+  right: 0; */
   z-index: 9;
 }
 /* .fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile {

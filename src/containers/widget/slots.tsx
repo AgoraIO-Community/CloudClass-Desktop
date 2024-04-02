@@ -24,7 +24,7 @@ export const CountDown = observer(() => {
   return (
     <div
       ref={ref}
-      className={classNames({
+      className={classNames('fcr-countdown-mobile-widget-slot', {
         'fcr-countdown-mobile-widget-landscape': isLandscape,
         'fcr-countdown-mobile-widget': !isLandscape,
       })}
