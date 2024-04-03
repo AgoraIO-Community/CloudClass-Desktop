@@ -21,14 +21,18 @@ type Props = {
 };
 
 export const StreamsSwiper: FC<Props> = observer(() => {
-  const { streamUIStore } = useStore();
+  const {
+    streamUIStore,
+    shareUIStore: { landscapeInnerHeight },
+  } = useStore();
   const { swapperRight } = streamUIStore;
+
   return (
     <div
       className="streams-swiper-vertical"
       style={{
         width: swapperRight,
-        height: window.innerHeight,
+        height: landscapeInnerHeight,
         backgroundColor: 'rgba(53, 54, 56, 0.95)',
       }}>
       <VerticalStreamsContainer></VerticalStreamsContainer>

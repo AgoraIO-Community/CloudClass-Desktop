@@ -40,7 +40,7 @@ export const Scenario = observer(() => {
       },
     },
     getters: { isBoardWidgetActive, isScreenSharing },
-    shareUIStore: { isLandscape, forceLandscape },
+    shareUIStore: { isLandscape, forceLandscape, getLandscapeInnerHeight, landscapeInnerHeight },
     shareUIStore,
     groupUIStore,
   } = useStore();
@@ -51,6 +51,7 @@ export const Scenario = observer(() => {
   useEffect(() => {
     shareUIStore.setLayoutReady(!groupUIStore.joiningSubRoom);
   }, [groupUIStore.joiningSubRoom]);
+
   return (
     <Room>
       <LoadingContainer></LoadingContainer>

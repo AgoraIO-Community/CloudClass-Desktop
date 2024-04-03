@@ -1069,7 +1069,7 @@ export class StreamUIStore extends EduUIStoreBase {
   @computed
   get studentVideoStreamSize() {
     const width = this.shareUIStore.isLandscape
-      ? window.document.documentElement.clientWidth / 5
+      ? 143
       : window.document.documentElement.clientWidth * (119 / 375);
     console.log('elemnt client width', width);
 

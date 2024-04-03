@@ -81,7 +81,8 @@ export class EduShareUIStore {
     h5Width: 1024,
     h5Height: 576,
   };
-
+  @observable
+  landscapeInnerHeight = 0;
   /**
    * 横屏下白板尺寸
    */
@@ -100,6 +101,14 @@ export class EduShareUIStore {
   @computed
   get isLandscape() {
     return this.orientation === OrientationEnum.landscape || this.forceLandscape;
+  }
+  @bound
+  async getLandscapeInnerHeight() {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    runInAction(() => {
+      this.landscapeInnerHeight = window.innerHeight;
+    });
   }
 
   @action.bound
@@ -361,6 +370,7 @@ export class EduShareUIStore {
         // Landscape orientation
         this.orientation = OrientationEnum.landscape;
         this.updateClassroomViewportSize();
+        this.getLandscapeInnerHeight();
       }
     });
   }

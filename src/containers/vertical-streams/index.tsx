@@ -26,6 +26,7 @@ const StudentStreams = observer(() => {
       userStore: { rewards },
     },
     layoutUIStore: {},
+    shareUIStore: { landscapeInnerHeight },
   } = useStore();
   const [current, setCurrent] = useState(0);
   const {
@@ -56,7 +57,7 @@ const StudentStreams = observer(() => {
   useEffect(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
-  const viewHeight = window.innerHeight;
+  const viewHeight = landscapeInnerHeight;
   const nextButtonHeight = viewHeight - 33;
   return (
     <div
@@ -70,7 +71,7 @@ const StudentStreams = observer(() => {
       style={{
         overflow: 'hidden',
         transition: 'width .2s',
-        height: window.innerHeight,
+        height: landscapeInnerHeight,
         width: swapperRight,
         flexShrink: 0,
         background: 'rgba(56, 56, 67, 1)',
@@ -78,7 +79,7 @@ const StudentStreams = observer(() => {
       <div
         className="pagination-buttons"
         style={{
-          height: window.innerHeight,
+          height: landscapeInnerHeight,
         }}>
         {current !== 0 && (
           <div
@@ -190,7 +191,7 @@ const StreamCollapse = observer(() => {
       studentStreamsVisible,
       swapperRight,
     },
-    shareUIStore: { isLandscape },
+    shareUIStore: { landscapeInnerHeight },
   } = useStore();
   return (
     <>
@@ -198,7 +199,7 @@ const StreamCollapse = observer(() => {
         <div
           className="fcr-stream-collapse-mobile-wrapper-vert"
           style={{
-            height: window.innerHeight,
+            height: landscapeInnerHeight,
           }}>
           <div
             className="fcr-stream-collapse-mobile-vert"
