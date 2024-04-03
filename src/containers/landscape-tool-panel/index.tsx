@@ -32,6 +32,7 @@ export const LandscapeToolPanel = observer(() => {
     },
     layoutUIStore: { handsUpActionSheetVisible, classStatusText, broadcastCallState },
   } = useStore();
+  console.log('classStatusText', classStatusText)
   const {
     groupUIStore: { getUserGroupInfo, leaveSubRoom, teacherGroupUuid },
     classroomStore,
