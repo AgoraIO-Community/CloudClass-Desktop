@@ -19,8 +19,8 @@
   position: fixed;
   bottom: 10px;
   width: 335px;
-  left: 10px;
-  right: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 24px 20px;
   border-radius: 20px;
   background: #3c3c3c;
@@ -95,7 +95,7 @@
 }
 
 .fcr-btn-mobile-block {
-  min-width: 315px !important;
+  min-width: 295px !important;
   width: 100% !important;
   height: 40px !important;
   font-size: 15px !important;
