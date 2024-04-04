@@ -43,6 +43,7 @@
 }
 
 .vertical-streams-button {
+  position: fixed;
   width: 30px;
   height: 30px;
   /* Note: backdrop-filter has minimal browser support */
@@ -57,11 +58,11 @@
   transition: all 0.2s;
   opacity: 0.8;
   z-index: 2;
-  right: 0;
+  right: 10px;
   /* bottom: 0; */
 }
 .vert-swiper-button-prev {
-  margin-top: 50px;
+  top: 50px;
 }
 .vert-swiper-button-next {
   /* margin-top: calc(100vh - 33px); */

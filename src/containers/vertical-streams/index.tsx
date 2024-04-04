@@ -125,7 +125,7 @@ const StudentStreams = observer(() => {
         }}
         allowTouchMove={false}
         onSwiper={(swiper: SwiperType) => (swiperRef.current = swiper)}
-        slidesPerView={4}
+        slidesPerView={4.7}
         spaceBetween={1}
         direction="vertical">
         {allVerticalStreams.map((stream) => {
