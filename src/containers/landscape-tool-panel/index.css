@@ -49,7 +49,12 @@
   animation: breath 3s infinite;
 }
 .landscape-info-classroom-time {
-  width: 70px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.landscape-info-classroom-totaltime{
+  font-weight: 300;
+  color: rgba(255,255,255,.8);
 }
 @keyframes breath {
   0%,
