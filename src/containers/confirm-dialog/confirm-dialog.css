@@ -18,25 +18,26 @@
 .fcr-dialog-wrap {
   position: fixed;
   bottom: 10px;
-  left: 10px;
-  right: 10px;
+  width: 335px;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 24px 20px;
   border-radius: 20px;
   background: #3c3c3c;
 }
 .fcr-dialog-wrap-middle {
   bottom: 50%;
-  transform: translateY(50%);
+  left: 50%;
+  transform: translate(-50%, 50%);
   z-index: 2000;
 }
 .fcr-dialog-wrap-landscape {
-  left: 10px;
-  right: 10px;
   padding: 24px 20px;
   border-radius: 20px;
   background: #3c3c3c;
   bottom: 50% !important;
-  transform: translateY(50%) !important;
+  left: 50% !important;
+  transform: translate(-50%, 50%) !important;
   z-index: 2000;
 }
 .fcr-confirm-dialog-title {
@@ -94,7 +95,7 @@
 }
 
 .fcr-btn-mobile-block {
-  min-width: 315px !important;
+  min-width: 295px !important;
   width: 100% !important;
   height: 40px !important;
   font-size: 15px !important;

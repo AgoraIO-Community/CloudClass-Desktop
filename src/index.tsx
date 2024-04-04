@@ -266,7 +266,6 @@ export class AgoraEduSDK {
       startTime,
       roomTemplate: RoomTemplate.FINITY_CLOUD_CLASS,
     };
-
     this._shareUrl = shareUrl;
     this._language = language;
 
