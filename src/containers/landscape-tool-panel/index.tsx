@@ -172,6 +172,8 @@ export const LandscapeToolPanel = observer(() => {
       cancelText: transI18n('fcr_group_button_cancel'),
     });
   };
+  const totalTime = dayjs.duration(EduClassroomConfig.shared.sessionInfo.duration, 'seconds').asMinutes()
+
   return landscapeToolBarVisible ? (
     <>
       <div
@@ -196,7 +198,10 @@ export const LandscapeToolPanel = observer(() => {
                 </div>
               )}
               <div className="landscape-classroom-status">
-                <div className="landscape-info-classroom-time">{classStatusText}</div>
+                <div className="landscape-info-classroom-time">
+                  <span>{classStatusText}</span>
+                  <span className='landscape-info-classroom-totaltime'>({totalTime}{transI18n('nav.short.minutes')})</span>
+                </div>
                 {isRecording && (
                   <div className="landscape-info-classroom-recording">
                     <SvgImg
