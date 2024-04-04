@@ -13,6 +13,7 @@ import { MicrophoneIndicator } from './mic';
 import { MobileCallState } from '@classroom/uistores/type';
 import { AGError, AgoraRteMediaPublishState } from 'agora-rte-sdk';
 import { ShareActionSheet } from './share';
+import dayjs from 'dayjs';
 
 export const LandscapeToolPanel = observer(() => {
   const transI18n = useI18n();

@@ -50,15 +50,19 @@ const StudentStreams = observer(() => {
 
   const handlePrev = () => {
     swiperRef.current?.slideTo(current - 4);
+    setCurrent(current - 4)
   };
   const handleNext = () => {
     swiperRef.current?.slideTo(current + 4);
+    setCurrent(current + 4)
+    console.log(current, studentCameraStreams.length)
   };
   useEffect(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
   const viewHeight = landscapeInnerHeight;
-  const nextButtonHeight = viewHeight - 33;
+  const nextButtonHeight = viewHeight - 33 - 20;
+  const nextButtonHeightPosition = 20;
   return (
     <div
       className={classnames(
@@ -95,13 +99,13 @@ const StudentStreams = observer(() => {
             />
           </div>
         )}
-        {current + 3 < studentCameraStreams.length && (
+        {current + 4 < studentCameraStreams.length && (
           <div
             className={classnames('vert-swiper-button-next vertical-streams-button', {
               'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
             })}
             onClick={handleNext}
-            style={{ transform: 'rotateZ( 90deg)', marginTop: nextButtonHeight }}>
+            style={{ transform: 'rotateZ( 90deg)', marginTop: current === 0 ? nextButtonHeight : 'auto', marginBottom: current !== 0 ? nextButtonHeightPosition : 'auto'}}>
             <SvgImg
               type={SvgIconEnum.FCR_MOBILE_RIGHT}
               size={16}
