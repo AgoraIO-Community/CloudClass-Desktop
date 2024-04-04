@@ -58,7 +58,7 @@ const StudentStreams = observer(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
   const viewHeight = landscapeInnerHeight;
-  const nextButtonHeight = viewHeight - 33;
+  const nextButtonHeight = viewHeight - 40;
   return (
     <div
       className={classnames(
@@ -95,13 +95,13 @@ const StudentStreams = observer(() => {
             />
           </div>
         )}
-        {current + 3 < studentCameraStreams.length && (
+        {current + 4 < studentCameraStreams.length && (
           <div
             className={classnames('vert-swiper-button-next vertical-streams-button', {
               'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
             })}
             onClick={handleNext}
-            style={{ transform: 'rotateZ( 90deg)', marginTop: nextButtonHeight }}>
+            style={{ transform: 'rotateZ( 90deg)', top: nextButtonHeight }}>
             <SvgImg
               type={SvgIconEnum.FCR_MOBILE_RIGHT}
               size={16}
@@ -121,7 +121,7 @@ const StudentStreams = observer(() => {
         }}
         allowTouchMove={false}
         onSwiper={(swiper: SwiperType) => (swiperRef.current = swiper)}
-        slidesPerView={4}
+        slidesPerView={4.7}
         spaceBetween={1}
         direction="vertical">
         {allVerticalStreams.map((stream) => {
