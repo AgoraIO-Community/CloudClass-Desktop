@@ -130,13 +130,14 @@ const StudentStreams = observer(() => {
         }}
         allowTouchMove={false}
         onSwiper={(swiper: SwiperType) => (swiperRef.current = swiper)}
-        slidesPerView={4.7}
+        slidesPerView={'auto'}
         spaceBetween={1}
         direction="vertical">
         {allVerticalStreams.map((stream) => {
           // const isLocal = stream.stream.isLocal;
           // if (!stream) return;
           const reward = rewards.get(stream.fromUser.userUuid);
+          console.log('-----vertical streams', studentVideoStreamSize);
 
           return (
             <SwiperSlide key={stream.stream.streamUuid}>
