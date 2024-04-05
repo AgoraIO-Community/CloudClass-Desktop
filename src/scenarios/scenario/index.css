@@ -19,7 +19,7 @@
 }
 .fcr-mobile-landscape-container video,
 .fcr-mobile-landscape-container-rotate video {
-  object-fit: contain !important;
+  /* object-fit: contain !important; */
 }
 .landscape-container {
   position: absolute;
