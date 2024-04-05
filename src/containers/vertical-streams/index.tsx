@@ -25,7 +25,7 @@ const StudentStreams = observer(() => {
     classroomStore: {
       userStore: { rewards },
     },
-    layoutUIStore: {},
+    layoutUIStore: { landscapeToolBarVisible },
     shareUIStore: { landscapeInnerHeight },
   } = useStore();
   const [current, setCurrent] = useState(0);
@@ -43,19 +43,20 @@ const StudentStreams = observer(() => {
     subscribeMass,
     allVerticalStreams,
     toolVisible,
+
     toggleTool,
   } = streamUIStore;
-  const visible = toolVisible && studentStreamsVisible;
+  const visible = landscapeToolBarVisible && studentStreamsVisible;
   const swiperRef = useRef<SwiperType | null>(null);
 
   const handlePrev = () => {
     swiperRef.current?.slideTo(current - 4);
-    setCurrent(current - 4)
+    setCurrent(current - 4);
   };
   const handleNext = () => {
     swiperRef.current?.slideTo(current + 4);
-    setCurrent(current + 4)
-    console.log(current, studentCameraStreams.length)
+    setCurrent(current + 4);
+    console.log(current, studentCameraStreams.length);
   };
   useEffect(() => {
     swiperRef.current?.update();
@@ -105,7 +106,11 @@ const StudentStreams = observer(() => {
               'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
             })}
             onClick={handleNext}
-            style={{ transform: 'rotateZ( 90deg)', marginTop: current === 0 ? nextButtonHeight : 'auto', marginBottom: current !== 0 ? nextButtonHeightPosition : 'auto'}}>
+            style={{
+              transform: 'rotateZ( 90deg)',
+              marginTop: current === 0 ? nextButtonHeight : 'auto',
+              marginBottom: current !== 0 ? nextButtonHeightPosition : 'auto',
+            }}>
             <SvgImg
               type={SvgIconEnum.FCR_MOBILE_RIGHT}
               size={16}
