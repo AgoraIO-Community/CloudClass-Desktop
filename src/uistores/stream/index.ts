@@ -1072,8 +1072,8 @@ export class StreamUIStore extends EduUIStoreBase {
       ? 143
       : window.document.documentElement.clientWidth * (119 / 375);
     console.log('elemnt client width', width);
-
-    const height = (68 / 119) * width;
+    const ratio = this.shareUIStore.isLandscape ? 83 / 143 : 68 / 119;
+    const height = ratio * width;
 
     return { width, height };
   }

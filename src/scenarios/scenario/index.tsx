@@ -99,11 +99,12 @@ export const Scenario = observer(() => {
                     {<StudentStreamsContainer></StudentStreamsContainer>}
                     {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
                     <HandsUpActionSheet></HandsUpActionSheet>
-                    <Poll></Poll>
+
                     <ShareActionSheet></ShareActionSheet>
                   </>
                 )}
                 {groupUIStore.joiningSubRoom ? <GroupLoading /> : <Chat />}
+                <Poll></Poll>
                 <CountDown></CountDown>
                 <AutoPlayFailedTip></AutoPlayFailedTip>
                 <DialogContainer></DialogContainer>
