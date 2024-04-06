@@ -62,8 +62,6 @@ const StudentStreams = observer(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
   const viewHeight = landscapeInnerHeight;
-  const nextButtonHeight = viewHeight - 33 - 20;
-  const nextButtonHeightPosition = 20;
   return (
     <div
       className={classnames(
@@ -108,8 +106,6 @@ const StudentStreams = observer(() => {
             onClick={handleNext}
             style={{
               transform: 'rotateZ( 90deg)',
-              marginTop: current === 0 ? nextButtonHeight : 'auto',
-              marginBottom: current !== 0 ? nextButtonHeightPosition : 'auto',
             }}>
             <SvgImg
               type={SvgIconEnum.FCR_MOBILE_RIGHT}
