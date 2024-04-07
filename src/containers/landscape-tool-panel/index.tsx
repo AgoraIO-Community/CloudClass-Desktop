@@ -171,10 +171,7 @@ export const LandscapeToolPanel = observer(() => {
       cancelText: transI18n('fcr_group_button_cancel'),
     });
   };
-  const totalTime = dayjs
-    .duration(classroomStore.roomStore.classroomSchedule.duration || 0, 'seconds')
-    .asMinutes()
-    .toFixed(1);
+  const totalTime = Math.round(dayjs.duration(classroomStore.roomStore.classroomSchedule.duration || 0, 'seconds').asMinutes());
 
   return landscapeToolBarVisible ? (
     <>
