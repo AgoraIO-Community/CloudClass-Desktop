@@ -49,11 +49,7 @@ const StudentStreams = observer(() => {
   const viewHeight = landscapeInnerHeight;
   const visible = landscapeToolBarVisible && studentStreamsVisible;
   const swiperRef = useRef<SwiperType | null>(null);
-<<<<<<< HEAD
-  const sliderCount = Math.floor(viewHeight / studentVideoStreamSize.height)
-=======
   const sliderCount = Math.floor(viewHeight / studentVideoStreamSize.height);
->>>>>>> e6fe59348e63ce5bd86a36a4a78e848d3f337f89
   const handlePrev = () => {
     swiperRef.current?.slideTo(current - sliderCount);
     setCurrent(current - sliderCount);
@@ -66,11 +62,6 @@ const StudentStreams = observer(() => {
   useEffect(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> e6fe59348e63ce5bd86a36a4a78e848d3f337f89
   return (
     <div
       className={classnames(
