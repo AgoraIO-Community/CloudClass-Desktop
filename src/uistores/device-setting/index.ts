@@ -41,6 +41,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
     const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();
     track.setFacingMode(this.facingMode);
   }
+
   get isCameraDeviceEnabled() {
     return this._cameraDeviceEnabled;
   }

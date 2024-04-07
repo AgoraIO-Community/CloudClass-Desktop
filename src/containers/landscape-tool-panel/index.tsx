@@ -33,7 +33,6 @@ export const LandscapeToolPanel = observer(() => {
     },
     layoutUIStore: { handsUpActionSheetVisible, classStatusText, broadcastCallState },
   } = useStore();
-  console.log('classStatusText', classStatusText)
   const {
     groupUIStore: { getUserGroupInfo, leaveSubRoom, teacherGroupUuid },
     classroomStore,
@@ -172,7 +171,9 @@ export const LandscapeToolPanel = observer(() => {
       cancelText: transI18n('fcr_group_button_cancel'),
     });
   };
-  const totalTime = dayjs.duration(EduClassroomConfig.shared.sessionInfo.duration, 'seconds').asMinutes()
+  const totalTime = dayjs
+    .duration(EduClassroomConfig.shared.sessionInfo.duration, 'seconds')
+    .asMinutes();
 
   return landscapeToolBarVisible ? (
     <>
@@ -200,7 +201,10 @@ export const LandscapeToolPanel = observer(() => {
               <div className="landscape-classroom-status">
                 <div className="landscape-info-classroom-time">
                   <span>{classStatusText}</span>
-                  <span className='landscape-info-classroom-totaltime'>({totalTime}{transI18n('nav.short.minutes')})</span>
+                  <span className="landscape-info-classroom-totaltime">
+                    ({totalTime}
+                    {transI18n('nav.short.minutes')})
+                  </span>
                 </div>
                 {isRecording && (
                   <div className="landscape-info-classroom-recording">
