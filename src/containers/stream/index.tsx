@@ -20,7 +20,7 @@ type StreamPlayerMobileProps = {
 export const StreamPlayer = observer<FC<StreamPlayerMobileProps>>(
   ({ stream, className = '', style, onClick, visible = true }) => {
     const {
-      getters: { isBoardWidgetActive, isScreenSharing },
+      getters: { isBoardWidgetActive, isScreenSharing, teacherCameraStream },
 
       shareUIStore: { isLandscape },
       classroomStore: {
@@ -28,13 +28,18 @@ export const StreamPlayer = observer<FC<StreamPlayerMobileProps>>(
         connectionStore: { rtcState },
       },
       streamUIStore: { isPiP },
+      layoutUIStore: {},
     } = useStore();
     useEffect(() => {
       if (
         rtcState === AGRtcState.Connected &&
         stream.stream.videoState === AgoraRteMediaPublishState.Published
       ) {
-        if (isLandscape) {
+        if (
+          isLandscape &&
+          stream.fromUser.userUuid === teacherCameraStream?.fromUser.userUuid &&
+          !isBoardWidgetActive
+        ) {
           setRemoteVideoStreamType(stream.stream.streamUuid, AGRemoteVideoStreamType.HIGH_STREAM);
         } else {
           setRemoteVideoStreamType(stream.stream.streamUuid, AGRemoteVideoStreamType.LOW_STREAM);

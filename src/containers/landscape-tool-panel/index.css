@@ -34,7 +34,6 @@
 .landscape-classroom-status {
   display: flex;
   flex-direction: row;
-  width: 112px;
   height: 10px;
   font-size: 12px;
   align-items: center;
@@ -52,9 +51,9 @@
   font-size: 10px;
   font-weight: 700;
 }
-.landscape-info-classroom-totaltime{
+.landscape-info-classroom-totaltime {
   font-weight: 300;
-  color: rgba(255,255,255,.8);
+  color: rgba(255, 255, 255, 0.8);
 }
 @keyframes breath {
   0%,
