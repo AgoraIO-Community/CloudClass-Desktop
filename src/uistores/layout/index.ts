@@ -181,6 +181,10 @@ export class LayoutUIStore extends EduUIStoreBase {
             messageType: AgoraExtensionWidgetEvent.AddSingletonToast,
             onMessage: this._addSingletonToast,
           });
+          widgetController.removeBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.QueryMobileCallState,
+            onMessage: this._handleQueryMobileCallState,
+          });
         }
         if (newValue.widgetController) {
           const widgetController = newValue.widgetController;
@@ -207,6 +211,10 @@ export class LayoutUIStore extends EduUIStoreBase {
           widgetController.addBroadcastListener({
             messageType: AgoraExtensionWidgetEvent.AddSingletonToast,
             onMessage: this._addSingletonToast,
+          });
+          widgetController.addBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.QueryMobileCallState,
+            onMessage: this._handleQueryMobileCallState,
           });
           this._updateOrientationStates();
         }
@@ -328,9 +336,15 @@ export class LayoutUIStore extends EduUIStoreBase {
   private _handleTouchStart() {
     this._landscapeToolBarVisibleTask?.stop();
   }
+  private _callState: MobileCallState = MobileCallState.Processing;
   @bound
   broadcastCallState(callState: MobileCallState) {
+    this._callState = callState;
     this.extensionApi.updateMobileCallState(callState);
+  }
+  @bound
+  _handleQueryMobileCallState() {
+    this.extensionApi.updateMobileCallState(this._callState);
   }
   @observable dialogMap: Map<string, { type: DialogType }> = new Map();
 

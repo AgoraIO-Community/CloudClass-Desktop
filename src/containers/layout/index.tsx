@@ -57,16 +57,31 @@ export const RoomInfo = observer(() => {
   const {
     getters: { userCount, classStatusText },
     streamUIStore: { toolVisible },
+    layoutUIStore: { isRecording },
   } = useStore();
   return toolVisible ? (
-    <div className="fcr-mobile-room-info-container">
-      <div className="fcr-mobile-room-info-user-count-container">
-        <SvgImg type={SvgIconEnum.USER_COUNT} size={18} />
-        <span>{userCount} </span>
-      </div>
-      {classStatusText && (
-        <div className="fcr-mobile-room-info-time-container">{classStatusText}</div>
+    <>
+      {isRecording && (
+        <div className="fcr-mobile-room-info-record-container">
+          <SvgImg
+            className="recording-icon"
+            type={SvgIconEnum.FCR_RECORDING_STOP}
+            size={18}
+            colors={{ iconPrimary: 'red' }}></SvgImg>
+          <span>REC</span>
+        </div>
       )}
-    </div>
+
+      <div className="fcr-mobile-room-info-container">
+        <div className="fcr-mobile-room-info-user-count-container">
+          <SvgImg type={SvgIconEnum.USER_COUNT} size={18} />
+          <span>{userCount} </span>
+        </div>
+
+        {classStatusText && (
+          <div className="fcr-mobile-room-info-time-container">{classStatusText}</div>
+        )}
+      </div>
+    </>
   ) : null;
 });

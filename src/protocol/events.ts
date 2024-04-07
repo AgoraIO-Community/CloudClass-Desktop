@@ -122,4 +122,5 @@ export enum AgoraExtensionWidgetEvent {
   RaiseHand = 'raise-hand',
   //取消举手
   LowerHand = 'lower-hand',
+  QueryMobileCallState = 'query-mobile-call-state',
 }

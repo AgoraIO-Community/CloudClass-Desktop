@@ -102,6 +102,25 @@
   align-items: flex-end;
   z-index: 1;
 }
+.fcr-mobile-room-info-record-container {
+  position: fixed;
+  top: 8px;
+  left: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.15);
+  height: 24px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 50px;
+}
+.fcr-mobile-room-info-record-container span {
+  line-height: 18px;
+}
 .fcr-mobile-room-info-container .fcr-mobile-room-info-user-count-container,
 .fcr-mobile-room-info-container .fcr-mobile-room-info-time-container {
   height: 24px;
