@@ -104,7 +104,7 @@ export class EduShareUIStore {
   }
   @bound
   async getLandscapeInnerHeight() {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     runInAction(() => {
       this.landscapeInnerHeight = window.innerHeight;
@@ -302,6 +302,7 @@ export class EduShareUIStore {
   @bound
   @Lodash.debounced(500)
   updateClassroomViewportSize() {
+    this.getLandscapeInnerHeight();
     const { width, height } = getRootDimensions(this._containerNode);
 
     const aspectRatio = this._viewportAspectRatio;

@@ -62,6 +62,7 @@ const StudentStreams = observer(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
   const viewHeight = landscapeInnerHeight;
+
   return (
     <div
       className={classnames(
