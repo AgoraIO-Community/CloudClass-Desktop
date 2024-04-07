@@ -53,10 +53,11 @@ export const Whiteboard = observer(function Board() {
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
-    updateWhiteBoardViewportSize(width, boardContainerHeight);
-  }, [studentStreamsVisible, width]);
+    setTimeout(() => {
+      updateWhiteBoardViewportSize(width, width * (714 / 1548));
+    }, 500);
+  }, [studentStreamsVisible, width, isLandscape]);
   const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
-  const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
   document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
   useEffect(() => {
