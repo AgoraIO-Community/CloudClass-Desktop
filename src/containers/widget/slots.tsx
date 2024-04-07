@@ -122,8 +122,8 @@ export const Chat = observer(function Chat() {
           : classRoomPlacholderHeight
         : 0) -
       (mounted ? boardContainerHeight : 0) -
-      (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
-        ? teacherVideoStreamSize.height || 0
+      (!isLandscape && teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
+        ? (teacherVideoStreamSize.height as number) || 0
         : 0) -
       (studentCameraStreams.length > 0 && studentStreamsVisible
         ? studentVideoStreamSize.height
