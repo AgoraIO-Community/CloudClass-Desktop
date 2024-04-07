@@ -46,22 +46,23 @@ const StudentStreams = observer(() => {
 
     toggleTool,
   } = streamUIStore;
+  const viewHeight = landscapeInnerHeight;
   const visible = landscapeToolBarVisible && studentStreamsVisible;
   const swiperRef = useRef<SwiperType | null>(null);
-
+  const sliderCount = Math.floor(viewHeight / studentVideoStreamSize.height)
   const handlePrev = () => {
-    swiperRef.current?.slideTo(current - 4);
-    setCurrent(current - 4);
+    swiperRef.current?.slideTo(current - sliderCount);
+    setCurrent(current - sliderCount);
   };
   const handleNext = () => {
-    swiperRef.current?.slideTo(current + 4);
-    setCurrent(current + 4);
+    swiperRef.current?.slideTo(current + sliderCount);
+    setCurrent(current + sliderCount);
     console.log(current, studentCameraStreams.length);
   };
   useEffect(() => {
     swiperRef.current?.update();
   }, [studentCameraStreams]);
-  const viewHeight = landscapeInnerHeight;
+ 
   return (
     <div
       className={classnames(
@@ -98,7 +99,7 @@ const StudentStreams = observer(() => {
             />
           </div>
         )}
-        {current + 4 < studentCameraStreams.length && (
+        {current + sliderCount < studentCameraStreams.length && (
           <div
             className={classnames('vert-swiper-button-next vertical-streams-button', {
               'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
@@ -126,7 +127,7 @@ const StudentStreams = observer(() => {
         }}
         allowTouchMove={false}
         onSwiper={(swiper: SwiperType) => (swiperRef.current = swiper)}
-        slidesPerView={viewHeight / studentVideoStreamSize.height}
+        slidesPerView={sliderCount}
         spaceBetween={1}
         direction="vertical">
         {allVerticalStreams.map((stream) => {
