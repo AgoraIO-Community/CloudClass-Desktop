@@ -55,7 +55,7 @@ export const Whiteboard = observer(function Board() {
   useEffect(() => {
     updateWhiteBoardViewportSize(width, boardContainerHeight);
   }, [studentStreamsVisible, width]);
-  const boardHeight = isBoardWidgetActive ? boardContainerHeight : 0;
+  const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
   const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
   document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
@@ -70,7 +70,7 @@ export const Whiteboard = observer(function Board() {
         containerH5VisibleCls,
       })}
       style={{
-        height: boardHeight + 'px',
+        height: boardHeight,
         width: width + 'px',
       }}
       onClick={() => {
@@ -122,8 +122,8 @@ export const Chat = observer(function Chat() {
           : classRoomPlacholderHeight
         : 0) -
       (mounted ? boardContainerHeight : 0) -
-      (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
-        ? teacherVideoStreamSize.height || 0
+      (!isLandscape && teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
+        ? (teacherVideoStreamSize.height as number) || 0
         : 0) -
       (studentCameraStreams.length > 0 && studentStreamsVisible
         ? studentVideoStreamSize.height
