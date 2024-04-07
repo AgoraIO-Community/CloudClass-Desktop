@@ -379,6 +379,7 @@ export class NotificationUIStore extends EduUIStoreBase {
           title: transI18n('fcr_group_help_title'),
           content: transI18n('fcr_group_help_teacher_busy_msg'),
           cancelButtonVisible: false,
+          okText: transI18n('fcr_group_back_sure'),
         });
       }
     }
