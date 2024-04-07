@@ -173,7 +173,8 @@ export const LandscapeToolPanel = observer(() => {
   };
   const totalTime = dayjs
     .duration(classroomStore.roomStore.classroomSchedule.duration || 0, 'seconds')
-    .asMinutes();
+    .asMinutes()
+    .toFixed(1);
 
   return landscapeToolBarVisible ? (
     <>
