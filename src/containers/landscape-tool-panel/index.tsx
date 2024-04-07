@@ -172,7 +172,7 @@ export const LandscapeToolPanel = observer(() => {
     });
   };
   const totalTime = dayjs
-    .duration(EduClassroomConfig.shared.sessionInfo.duration, 'seconds')
+    .duration(classroomStore.roomStore.classroomSchedule.duration || 0, 'seconds')
     .asMinutes();
 
   return landscapeToolBarVisible ? (

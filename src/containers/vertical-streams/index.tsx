@@ -80,6 +80,7 @@ const StudentStreams = observer(() => {
         flexShrink: 0,
         background: 'rgba(56, 56, 67, 1)',
       }}>
+      {visible && (
       <div
         className="pagination-buttons"
         style={{
@@ -115,7 +116,8 @@ const StudentStreams = observer(() => {
             />
           </div>
         )}
-      </div>
+      </div>)
+      }
 
       <Swiper
         style={{
