@@ -79,7 +79,9 @@ export class BoardUIStore extends EduUIStoreBase {
 
   @computed
   get boardContainerHeight() {
-    return this.boardContainerWidth * (714 / 1548);
+    return this.shareUIStore.isLandscape
+      ? window.document.documentElement.clientHeight
+      : this.boardContainerWidth * (714 / 1548);
   }
   onInstall() {
     const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;

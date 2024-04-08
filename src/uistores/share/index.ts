@@ -345,8 +345,7 @@ export class EduShareUIStore {
 
     if (curAspectRatio > aspectRatio) {
       // shrink height
-      const clientHeight = document.documentElement.clientHeight;
-      scopeSize.height = width * aspectRatio > clientHeight ? clientHeight : width * aspectRatio;
+      scopeSize.height = width * aspectRatio;
     } else if (curAspectRatio < aspectRatio) {
       // shrink width
       scopeSize.width = height / aspectRatio;
