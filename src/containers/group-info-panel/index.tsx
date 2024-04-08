@@ -28,6 +28,10 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
     shareUIStore: { addToast },
     streamUIStore,
   } = useStore();
+  const teacherGroupUuidRef = useRef<string | undefined>(teacherGroupUuid);
+  useEffect(() => {
+    teacherGroupUuidRef.current = teacherGroupUuid;
+  }, [teacherGroupUuid]);
   const transI18n = useI18n();
   const groupInfo = getUserGroupInfo(userUuid);
   const { toolVisible, toggleTool, showTool } = streamUIStore;
@@ -55,6 +59,10 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
       content: transI18n('fcr_group_help_content'),
       buttonStyle: 'block',
       onOk: () => {
+        if (teacherGroupUuidRef.current === currentSubRoom) {
+          addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
+          return;
+        }
         updateGroupUsers(
           [
             {

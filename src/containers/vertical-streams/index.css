@@ -1,6 +1,7 @@
 .fcr-stream-collapse-mobile-wrapper-vert {
   height: 100vh;
   position: relative;
+  transition: width 0.2s;
 }
 
 .fcr-stream-collapse-mobile-vert {
