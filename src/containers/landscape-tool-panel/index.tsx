@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { ComponentLevelRules } from '../../configs/config';
 
 import './index.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AGServiceErrorCode, EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
 import { LocalTrackPlayer, splitName } from '../stream';
@@ -40,6 +40,10 @@ export const LandscapeToolPanel = observer(() => {
     shareUIStore: { addToast },
     streamUIStore,
   } = useStore();
+  const teacherGroupUuidRef = useRef<string | undefined>(teacherGroupUuid);
+  useEffect(() => {
+    teacherGroupUuidRef.current = teacherGroupUuid;
+  }, [teacherGroupUuid]);
   const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
 
   const groupInfo = getUserGroupInfo(userUuid);
@@ -128,7 +132,7 @@ export const LandscapeToolPanel = observer(() => {
       });
       return;
     }
-    if (teacherGroupUuid === currentSubRoom) {
+    if (teacherGroupUuidRef.current === currentSubRoom) {
       addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
       return;
     }
@@ -137,6 +141,10 @@ export const LandscapeToolPanel = observer(() => {
       content: transI18n('fcr_group_help_content'),
       buttonStyle: 'block',
       onOk: () => {
+        if (teacherGroupUuidRef.current === currentSubRoom) {
+          addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
+          return;
+        }
         updateGroupUsers(
           [
             {
@@ -171,7 +179,9 @@ export const LandscapeToolPanel = observer(() => {
       cancelText: transI18n('fcr_group_button_cancel'),
     });
   };
-  const totalTime = Math.round(dayjs.duration(classroomStore.roomStore.classroomSchedule.duration || 0, 'seconds').asMinutes());
+  const totalTime = Math.round(
+    dayjs.duration(classroomStore.roomStore.classroomSchedule.duration || 0, 'seconds').asMinutes(),
+  );
 
   return landscapeToolBarVisible ? (
     <>

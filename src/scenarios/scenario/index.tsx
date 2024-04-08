@@ -78,9 +78,9 @@ export const Scenario = observer(() => {
           ) : (
             <>
               <div className="fct-mobile-main-container">
+                <Whiteboard key={'board'} />
                 {isLandscape ? (
                   <>
-                    <Whiteboard key={'board'} />
                     <LandscapeToolPanel />
                     {!isBoardWidgetActive && !isScreenSharing && (
                       <div className="landscape-teacher-stream">
@@ -92,7 +92,7 @@ export const Scenario = observer(() => {
                 ) : (
                   <>
                     <GroupInfoPanel />
-                    <Whiteboard key={'board'} />
+
                     {!isLandscape && <RoomPlaceholder></RoomPlaceholder>}
                     <ScreenShareContainer></ScreenShareContainer>
                     <TeacherStream />

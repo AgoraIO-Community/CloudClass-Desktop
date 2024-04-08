@@ -80,43 +80,43 @@ const StudentStreams = observer(() => {
         background: 'rgba(56, 56, 67, 1)',
       }}>
       {visible && (
-      <div
-        className="pagination-buttons"
-        style={{
-          height: landscapeInnerHeight,
-        }}>
-        {current !== 0 && (
-          <div
-            className={classnames('vert-swiper-button-prev vertical-streams-button', {
-              'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
-            })}
-            style={{ transform: 'rotateZ( 90deg)' }}
-            onClick={handlePrev}>
-            <SvgImg
-              type={SvgIconEnum.FCR_MOBILE_LEFT}
-              size={16}
-              colors={{ iconPrimary: '#000000' }}
-            />
-          </div>
-        )}
-        {current + sliderCount < studentCameraStreams.length && (
-          <div
-            className={classnames('vert-swiper-button-next vertical-streams-button', {
-              'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
-            })}
-            onClick={handleNext}
-            style={{
-              transform: 'rotateZ( 90deg)',
-            }}>
-            <SvgImg
-              type={SvgIconEnum.FCR_MOBILE_RIGHT}
-              size={16}
-              colors={{ iconPrimary: '#000000' }}
-            />
-          </div>
-        )}
-      </div>)
-      }
+        <div
+          className="pagination-buttons"
+          style={{
+            height: landscapeInnerHeight,
+          }}>
+          {current !== 0 && (
+            <div
+              className={classnames('vert-swiper-button-prev vertical-streams-button', {
+                'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
+              })}
+              style={{ transform: 'rotateZ( 90deg)' }}
+              onClick={handlePrev}>
+              <SvgImg
+                type={SvgIconEnum.FCR_MOBILE_LEFT}
+                size={16}
+                colors={{ iconPrimary: '#000000' }}
+              />
+            </div>
+          )}
+          {current + sliderCount < studentCameraStreams.length && (
+            <div
+              className={classnames('vert-swiper-button-next vertical-streams-button', {
+                'fcr-pagination-mobile-float__btn__lowlight': !toolVisible,
+              })}
+              onClick={handleNext}
+              style={{
+                transform: 'rotateZ( 90deg)',
+              }}>
+              <SvgImg
+                type={SvgIconEnum.FCR_MOBILE_RIGHT}
+                size={16}
+                colors={{ iconPrimary: '#000000' }}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       <Swiper
         style={{
@@ -192,12 +192,7 @@ const StudentStreams = observer(() => {
 });
 const StreamCollapse = observer(() => {
   const {
-    streamUIStore: {
-      studentCameraStreams,
-      toggleStudentStreamsVisible,
-      studentStreamsVisible,
-      swapperRight,
-    },
+    streamUIStore: { toggleStudentStreamsVisible, studentStreamsVisible, swapperRight },
     shareUIStore: { landscapeInnerHeight },
   } = useStore();
   return (
