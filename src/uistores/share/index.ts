@@ -107,7 +107,7 @@ export class EduShareUIStore {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     runInAction(() => {
-      this.landscapeInnerHeight = window.innerHeight;
+      this.landscapeInnerHeight = window.document.documentElement.clientHeight;
     });
   }
 

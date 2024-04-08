@@ -3,7 +3,6 @@ import React from 'react';
 import { PathOptions } from '../svg-dict';
 
 export const path = ({ iconPrimary }: PathOptions) => {
-  console.log('iconPrimary', iconPrimary);
   return (
     <>
       <g opacity="1">

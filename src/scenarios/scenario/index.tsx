@@ -77,7 +77,9 @@ export const Scenario = observer(() => {
             <AfterClassDialog></AfterClassDialog>
           ) : (
             <>
-              <div className="fct-mobile-main-container">
+              <div
+                className="fct-mobile-main-container"
+                style={{ height: isLandscape ? landscapeInnerHeight : undefined }}>
                 <Whiteboard key={'board'} />
                 {isLandscape ? (
                   <>

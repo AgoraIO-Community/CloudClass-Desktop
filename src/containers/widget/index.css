@@ -48,7 +48,7 @@
   z-index: 1;
 }
 .fcr-poll-mobile-widget {
-  position: fixed;
+  position: absolute;
   padding-left: 20px;
   bottom: 56px;
   display: flex;
