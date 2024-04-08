@@ -80,7 +80,7 @@ export class BoardUIStore extends EduUIStoreBase {
   @computed
   get boardContainerHeight() {
     return this.shareUIStore.isLandscape
-      ? window.document.documentElement.clientHeight
+      ? window.innerHeight
       : this.boardContainerWidth * (714 / 1548);
   }
   onInstall() {
