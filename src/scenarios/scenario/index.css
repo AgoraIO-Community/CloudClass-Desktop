@@ -4,10 +4,6 @@
   overflow: hidden;
   height: 100%;
   background-color: black;
-  background-image: linear-gradient(90deg, grey 1%, transparent 1%),
-    linear-gradient(0deg, grey 1%, transparent 1%);
-  background-size: 64px 64px;
-  background-position: 0 0, 32px 32px;
   justify-content: flex-end;
 }
 .fcr-mobile-landscape-container-rotate {
