@@ -528,6 +528,8 @@ export const en = {
   fcr_group_help_content: 'You can invite the teacher to this group for assistance.',
   fcr_group_help_teacher_busy_msg:
     'The teacher is currently helping others. Please try again later.',
+  fcr_group_help_cancel: 'Request for help canceled',
+  fcr_group_help_send: 'Invitation was sent',
   fcr_group_teacher_is_helping_others_msg:
     'The teacher is helping other group, Please wait for minutes.',
   fcr_group_teacher_exist_hint: 'The teacher is already in the group',
@@ -844,5 +846,6 @@ export const en = {
   fcr_group_button_leave_group: 'Return to main Classroom',
   fcr_group_teacher_not_in_classroom: 'Teacher is not in this classroom',
   fcr_group_tool_help: 'Help',
+  fcr_group_tool_cancel_help: 'Cancel Help',
   fcr_group_tool_leave_group: 'Leave group',
 };

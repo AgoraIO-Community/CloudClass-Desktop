@@ -55,6 +55,49 @@
   font-weight: 300;
   color: rgba(255, 255, 255, 0.8);
 }
+.landscape-group-buttons{
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  height: 30px;
+  overflow: hidden;
+  margin-right: 9px;
+}
+.landscape-help-button{
+  display: flex;
+  align-items: center;
+  background-color: #0D1433;
+  padding: 0px 7px;
+  height: 100%;
+  
+}
+.landscape-help-button.active{
+  background-color: rgba(13,20,51,.5)
+}
+
+.landscape-help-button.active .landscape-help-button-value {
+  color: rgba(255, 255, 255, 0.5);
+}
+.landscape-help-button-value{
+  color: #fff;
+  font-family: "PingFang HK";
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 11px; /* 100% */
+}
+.landscape-leave-group-button{
+  padding: 0px 13px;
+  color: #FFF;
+  text-align: center;
+  font-family: "PingFang HK";
+  font-size: 11px;
+  font-style: normal;
+  background-color: #4262FF;
+  font-weight: 600;
+  line-height: 30px; /* 218.182% */
+}
+
 @keyframes breath {
   0%,
   100% {

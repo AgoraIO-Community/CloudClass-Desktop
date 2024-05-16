@@ -29,7 +29,6 @@
   word-wrap: break-word;
   text-overflow: ellipsis;
 }
-
 .group-buttons {
   display: flex;
   flex-direction: row;
@@ -51,6 +50,12 @@
   font-size: 11px;
   line-height: 24px;
   margin-right: 8px;
+}
+.help-button.active{
+  background-color: rgba(13,20,51,.5)
+}
+.help-button.active .help-button-value {
+  color: rgba(255, 255, 255, 0.5);
 }
 .leave-group-button {
   display: flex;

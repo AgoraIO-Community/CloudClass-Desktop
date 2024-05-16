@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { ComponentLevelRules } from '../../configs/config';
 
 import './index.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AGServiceErrorCode, EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
 import { LocalTrackPlayer, splitName } from '../stream';
@@ -19,7 +19,6 @@ export const LandscapeToolPanel = observer(() => {
   const transI18n = useI18n();
   const {
     getters: { userCount, classTimeDuration, teacherCameraStream },
-
     classroomStore: {
       streamStore: { updateRemotePublishState },
     },
@@ -49,14 +48,15 @@ export const LandscapeToolPanel = observer(() => {
   const groupInfo = getUserGroupInfo(userUuid);
   const [devicePreviewViewVisible, setDevicePreviewViewVisible] = useState(false);
   const [callState, setCallState] = useState(MobileCallState.Processing);
-
+  const [isHasRequest, setIsHasRequest] = useState(false);
   const { userName } = EduClassroomConfig.shared.sessionInfo;
   const micOn = isAudioRecordingDeviceEnabled;
   const cameraOn = isCameraDeviceEnabled;
   const [first, last] = splitName(userName);
 
   const volume = localVolume;
-
+  const { currentSubRoom } = classroomStore.groupStore;
+  const isTeacherIn = useMemo(() => teacherGroupUuid === currentSubRoom, [teacherGroupUuid, currentSubRoom]);
   useEffect(() => {
     if (micOn && cameraOn) {
       setCallState(MobileCallState.VideoAndVoiceCall);
@@ -118,54 +118,65 @@ export const LandscapeToolPanel = observer(() => {
     }
   };
   const handleHelp = () => {
-    const { updateGroupUsers, currentSubRoom } = classroomStore.groupStore;
-    const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
-    const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
-
-    const teacherUuid = teachers.keys().next().value;
-    const assistantUuids = Array.from(assistants.keys());
-    if (!teachers.size && !assistants.size) {
-      addDialog('confirm', {
-        title: transI18n('fcr_group_help_title'),
-        content: transI18n('fcr_group_teacher_not_in_classroom'),
-        cancelButtonVisible: false,
-      });
-      return;
-    }
-    if (teacherGroupUuidRef.current === currentSubRoom) {
+    if (teacherGroupUuid && isTeacherIn) {
       addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
       return;
     }
-    addDialog('confirm', {
-      title: transI18n('fcr_group_help_title'),
-      content: transI18n('fcr_group_help_content'),
-      buttonStyle: 'block',
-      onOk: () => {
-        if (teacherGroupUuidRef.current === currentSubRoom) {
-          addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
-          return;
-        }
-        updateGroupUsers(
-          [
-            {
-              groupUuid: currentSubRoom as string,
-              addUsers: [teacherUuid].concat(assistantUuids),
-            },
-          ],
-          true,
-        ).catch((e) => {
-          if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
-            addDialog('confirm', {
-              title: transI18n('fcr_group_help_title'),
-              content: transI18n('fcr_group_teacher_is_helping_others_msg'),
-              cancelButtonVisible: false,
-            });
-          }
+    if (!isHasRequest) {
+      const { updateGroupUsers, currentSubRoom } = classroomStore.groupStore;
+      const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
+      const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
+      const teacherUuid = teachers.keys().next().value;
+      const assistantUuids = Array.from(assistants.keys());
+      if (!teachers.size && !assistants.size) {
+        addDialog('confirm', {
+          title: transI18n('fcr_group_help_title'),
+          content: transI18n('fcr_group_teacher_not_in_classroom'),
+          cancelButtonVisible: false,
         });
-      },
-      okText: transI18n('fcr_group_button_invite'),
-      cancelText: transI18n('fcr_group_button_cancel'),
-    });
+        return;
+      }
+      if (teacherGroupUuidRef.current === currentSubRoom) {
+        addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
+        return;
+      }
+      addDialog('confirm', {
+        title: transI18n('fcr_group_help_title'),
+        content: transI18n('fcr_group_help_content'),
+        buttonStyle: 'block',
+        onOk: () => {
+          setIsHasRequest(true)
+          if (teacherGroupUuidRef.current === currentSubRoom) {
+            addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
+            return;
+          }
+          updateGroupUsers(
+            [
+              {
+                groupUuid: currentSubRoom as string,
+                addUsers: [teacherUuid].concat(assistantUuids),
+              },
+            ],
+            true,
+          ).catch((e) => {
+            if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
+              addDialog('confirm', {
+                title: transI18n('fcr_group_help_title'),
+                content: transI18n('fcr_group_teacher_is_helping_others_msg'),
+                cancelButtonVisible: false,
+              });
+            }
+          });
+          addToast(transI18n('fcr_group_help_send'), 'info');
+        },
+        okText: transI18n('fcr_group_button_invite'),
+        cancelText: transI18n('fcr_group_button_cancel'),
+      });
+    } else {
+      // TODO: 取消邀请
+      addToast(transI18n('fcr_group_help_cancel'), 'info');
+      setIsHasRequest(false);
+    }
   };
 
   const handleLeaveGroup = () => {
@@ -263,16 +274,16 @@ export const LandscapeToolPanel = observer(() => {
           </div>
           <ShareActionSheet />
           {groupInfo && (
-            <div className="group-buttons">
-              <div className="help-button" onClick={handleHelp}>
+            <div className="landscape-group-buttons">
+              <div className={classNames('landscape-help-button', isTeacherIn && 'active')} onClick={handleHelp}>
                 <SvgImg
                   type={SvgIconEnum.FCR_QUESTION}
-                  size={26}
-                  colors={{ iconPrimary: '#fff' }}
+                  size={20}
+                  colors={{ iconPrimary: isTeacherIn ? 'rgba(255,255,255, .5)' : '#fff' }}
                 />
-                <span style={{ color: 'white' }}>{transI18n('fcr_group_tool_help')}</span>
+                <span className='landscape-help-button-value'>{isHasRequest && !isTeacherIn ? transI18n('fcr_group_tool_cancel_help') : transI18n('fcr_group_tool_help')}</span>
               </div>
-              <div className="leave-group-button" onClick={handleLeaveGroup}>
+              <div className="landscape-leave-group-button" onClick={handleLeaveGroup}>
                 {transI18n('fcr_group_tool_leave_group')}
               </div>
             </div>
