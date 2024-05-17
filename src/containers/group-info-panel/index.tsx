@@ -14,7 +14,6 @@ import './index.css';
 import { Button, SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import classNames from 'classnames';
-
 type Props = {
   children?: React.ReactNode;
 };
@@ -23,6 +22,7 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
   const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
   const isTeacher = EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
   const [isHasRequest, setIsHasRequest] = useState(false);
+  
   const {
     groupUIStore: { getUserGroupInfo, leaveSubRoom, teacherGroupUuid },
     classroomStore,
@@ -44,13 +44,13 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
       addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
       return;
     }
+    const { updateGroupUsers, currentSubRoom, rejectGroupInvite } = classroomStore.groupStore;
+    const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
+    const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
+
+    const teacherUuid = teachers.keys().next().value;
+    const assistantUuids = Array.from(assistants.keys());
     if (!isHasRequest) {
-      const { updateGroupUsers, currentSubRoom } = classroomStore.groupStore;
-      const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
-      const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
-  
-      const teacherUuid = teachers.keys().next().value;
-      const assistantUuids = Array.from(assistants.keys());
       if (!teachers.size && !assistants.size) {
         addDialog('confirm', {
           title: transI18n('fcr_group_help_title'),
@@ -81,7 +81,9 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
               },
             ],
             true,
-          ).catch((e) => {
+          ).then(() => {
+            addToast(transI18n('fcr_group_help_send'), 'info');
+          }).catch((e) => {
             if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
               addDialog('confirm', {
                 title: transI18n('fcr_group_help_title'),
@@ -90,15 +92,16 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
               });
             }
           });
-          addToast(transI18n('fcr_group_help_send'), 'info');
+          
         },
         okText: transI18n('fcr_group_button_invite'),
         cancelText: transI18n('fcr_group_button_cancel'),
       });
     } else {
-        // TODO: 取消邀请
-        addToast(transI18n('fcr_group_help_cancel'), 'info');
-        setIsHasRequest(false);
+        rejectGroupInvite(currentSubRoom as string).then(() => {
+          addToast(transI18n('fcr_group_help_cancel'), 'info');
+          setIsHasRequest(false);
+        })
     }
   };
 
