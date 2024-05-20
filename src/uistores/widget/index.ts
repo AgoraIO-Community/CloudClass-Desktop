@@ -14,7 +14,7 @@ import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
-import { AgoraExtensionWidgetEvent } from '@classroom/protocol/events';
+import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '@classroom/protocol/events';
 
 @Log.attach({ proxyMethods: false })
 export class WidgetUIStore extends EduUIStoreBase {
@@ -22,8 +22,9 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _registeredWidgets: Record<string, typeof AgoraWidgetBase> = {};
   private _viewportResizeObserver?: ResizeObserver;
   @observable
+  private _currentWidget: any;
+  @observable
   private _widgetInstances: Record<string, AgoraWidgetBase> = {};
-
   private _stateListener = {
     onActive: this._handleWidgetActive,
     onInactive: this._handleWidgetInactive,
@@ -46,7 +47,10 @@ export class WidgetUIStore extends EduUIStoreBase {
   get widgetInstanceList() {
     return Object.values(this._widgetInstances);
   }
-
+  @computed
+  get currentWidget() {
+    return this._currentWidget;
+  }
   @computed
   get z0Widgets() {
     return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0);
@@ -55,7 +59,19 @@ export class WidgetUIStore extends EduUIStoreBase {
   get z10Widgets() {
     return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
   }
-
+  @action.bound
+  setDefaultWidget(widget: any) {
+    const { widgetController } = this.classroomStore.widgetStore
+    if (widgetController) {
+      console.log('this._defaultWidget', widget)
+      widgetController.broadcast(AgoraExtensionRoomEvent.DefaultCurrentApplication, widget)
+    }
+  }
+  @action.bound
+  private _setCurrentWidget(widget: any) {
+    console.log('setCurrentWidget', widget)
+    this._currentWidget = widget
+  }
   @action.bound
   createWidget(
     widgetId: string,
@@ -119,7 +135,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
         this.logger.info('set widget track controller:', trackController);
       }
-
+      
       const props =
         widgetController?.getWidgetProperties(widget.widgetId) || (defaults?.properties ?? {});
 
@@ -132,7 +148,8 @@ export class WidgetUIStore extends EduUIStoreBase {
       this._callWidgetCreate(widget, props, userProps);
 
       this._widgetInstances[widgetId] = widget;
-
+      widgetController.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
+      
       this.logger.info(`widget [${widgetId}] is ready to render`);
     } else {
       this.logger.info('widget controller not ready for creating widget');
@@ -283,6 +300,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       trackProperties: any;
     };
   }) {
+    console.log('_handleBecomeActive', widgetId)
     this.createWidget(widgetId, defaults);
   }
 
@@ -312,6 +330,12 @@ export class WidgetUIStore extends EduUIStoreBase {
       if (!boardEnabled(AgoraEduSDK.uiConfig) && key === 'netlessBoard') {
         return prev;
       }
+      if (!boardEnabled(AgoraEduSDK.uiConfig) && key.includes('mediaPlayer')) {
+        return prev;
+      }
+      if (!boardEnabled(AgoraEduSDK.uiConfig) && key.includes('webView')) {
+        return prev;
+      }
       prev[key] = value;
 
       return prev;
@@ -319,7 +343,6 @@ export class WidgetUIStore extends EduUIStoreBase {
 
     return widgets;
   }
-
   @bound
   private _notifyViewportChange() {
     this.widgetInstanceList.forEach((instance) => {
@@ -337,7 +360,6 @@ export class WidgetUIStore extends EduUIStoreBase {
       }
     });
   }
-
   private _createUiCapable() {
     return {
       addToast: (message: string, type: 'error' | 'success' | 'warning') => {
@@ -349,7 +371,6 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
-
     // switch between widget controllers of scenes
     this._disposers.push(
       reaction(
@@ -392,6 +413,10 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
             });
+            oldController.removeBroadcastListener({
+              messageType: AgoraExtensionRoomEvent.SetCurrentApplication,
+              onMessage: this._setCurrentWidget,
+            });
             oldController.removeWidgetStateListener(this._stateListener);
           }
           // install widgets
@@ -399,7 +424,6 @@ export class WidgetUIStore extends EduUIStoreBase {
             this.boardApi.install(controller);
             this.extensionApi.install(controller);
             this._installWidgets(controller);
-
             controller.addBroadcastListener({
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeActive,
               onMessage: this._handleBecomeActive,
@@ -408,7 +432,10 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionWidgetEvent.WidgetBecomeInactive,
               onMessage: this._handleBecomeInactive,
             });
-
+            controller.addBroadcastListener({
+              messageType: AgoraExtensionRoomEvent.SetCurrentApplication,
+              onMessage: this._setCurrentWidget,
+            });
             controller.addWidgetStateListener(this._stateListener);
           }
         },

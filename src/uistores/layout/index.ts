@@ -330,6 +330,7 @@ export class LayoutUIStore extends EduUIStoreBase {
     if (!this.shareUIStore.isLandscape) return;
     this._landscapeToolBarVisibleTask?.stop();
     this.landscapeToolBarVisible = !this.landscapeToolBarVisible;
+    console.log('this.landscapeToolBarVisible', this.landscapeToolBarVisible)
     this._updateMobileLandscapeToolBarVisible();
   }
   @bound

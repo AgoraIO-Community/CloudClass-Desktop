@@ -57,7 +57,7 @@ export const Whiteboard = observer(function Board() {
   }, [studentStreamsVisible, width]);
   const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
   const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
-  document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
+  // document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
   useEffect(() => {
     whiteBoardRef.current?.style.setProperty('--board-height', maskHeight + 'px');
@@ -89,7 +89,109 @@ export const Whiteboard = observer(function Board() {
     </div>
   );
 });
+export const MadiaPlayer = observer(function Media() {
+  const mediaPlayerRef = useRef<HTMLDivElement>(null);
+  const {
+    getters: { isMediaPlayerWidgetActive },
+    layoutUIStore: { toggleLandscapeToolBarVisible },
+    boardUIStore,
+    streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
+    shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
+  } = useStore();
 
+  const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
+  const width = studentStreamsVisible
+    ? isLandscape
+      ? boardContainerWidth - 143
+      : boardContainerWidth
+    : boardContainerWidth;
+  useEffect(() => {
+    updateWhiteBoardViewportSize(width, boardContainerHeight);
+  }, [studentStreamsVisible, width]);
+  const boardHeight = isMediaPlayerWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
+  const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
+  const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
+  useEffect(() => {
+    mediaPlayerRef.current?.style.setProperty('--board-height', maskHeight + 'px');
+  }, [maskHeight]);
+  return (
+    <div
+      ref={mediaPlayerRef}
+      className={classnames('whiteboard-mobile-container fcr-relative', 'fcr-w-full', {
+        'whiteboard-mobile-container-landscape': isLandscape,
+        containerH5VisibleCls,
+      })}
+      style={{
+        height: boardHeight,
+        width: width + 'px',
+      }}
+      onClick={() => {
+        toggleTool();
+      }}>
+      <div
+        onClick={toggleLandscapeToolBarVisible}
+        style={{
+          height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+          zIndex: ComponentLevelRules.Level0,
+          width: landscapeBoardSize.width,
+          // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+        }}
+        className="widget-slot-media-player"
+      />
+    </div>
+  );
+});
+export const WebView = observer(function View() {
+  const webViewRef = useRef<HTMLDivElement>(null);
+  const {
+    getters: { isWebViewWidgetActive },
+    layoutUIStore: { toggleLandscapeToolBarVisible },
+    boardUIStore,
+    streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
+    shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
+  } = useStore();
+
+  const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
+  const width = studentStreamsVisible
+    ? isLandscape
+      ? boardContainerWidth - 143
+      : boardContainerWidth
+    : boardContainerWidth;
+  useEffect(() => {
+    updateWhiteBoardViewportSize(width, boardContainerHeight);
+  }, [studentStreamsVisible, width]);
+  const boardHeight = isWebViewWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
+  const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
+  useEffect(() => {
+    webViewRef.current?.style.setProperty('--board-height', maskHeight + 'px');
+  }, [maskHeight]);
+  return (
+    <div
+      ref={webViewRef}
+      className={classnames('whiteboard-mobile-container fcr-relative', 'fcr-w-full', {
+        'whiteboard-mobile-container-landscape': isLandscape,
+        containerH5VisibleCls,
+      })}
+      style={{
+        height: boardHeight,
+        width: width + 'px',
+      }}
+      onClick={() => {
+        toggleTool();
+      }}>
+      <div
+        onClick={toggleLandscapeToolBarVisible}
+        style={{
+          height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+          zIndex: ComponentLevelRules.Level0,
+          width: landscapeBoardSize.width,
+          // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+        }}
+        className="widget-slot-web-view"
+      />
+    </div>
+  );
+});
 export const Chat = observer(function Chat() {
   const {
     widgetUIStore,
