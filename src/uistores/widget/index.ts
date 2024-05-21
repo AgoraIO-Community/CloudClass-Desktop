@@ -53,7 +53,8 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @computed
   get z0Widgets() {
-    return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0);
+    const widgets = this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0)
+    return widgets;
   }
 
   get z10Widgets() {
@@ -63,13 +64,11 @@ export class WidgetUIStore extends EduUIStoreBase {
   setDefaultWidget(widget: any) {
     const { widgetController } = this.classroomStore.widgetStore
     if (widgetController) {
-      console.log('this._defaultWidget', widget)
       widgetController.broadcast(AgoraExtensionRoomEvent.DefaultCurrentApplication, widget)
     }
   }
   @action.bound
   private _setCurrentWidget(widget: any) {
-    console.log('setCurrentWidget', widget)
     this._currentWidget = widget
   }
   @action.bound
@@ -148,6 +147,12 @@ export class WidgetUIStore extends EduUIStoreBase {
       this._callWidgetCreate(widget, props, userProps);
 
       this._widgetInstances[widgetId] = widget;
+      const widgets =  Object.values(this._widgetInstances).filter(({ zContainer }) => zContainer === 0)
+      const allWidgets =widgets.filter((v) => v.widgetName !== 'easemobIM')
+      if (allWidgets.length) {
+        this._setCurrentWidget(allWidgets[allWidgets.length - 1])
+      }
+      console.log('_widgetInstances', this._widgetInstances)
       widgetController.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
       
       this.logger.info(`widget [${widgetId}] is ready to render`);

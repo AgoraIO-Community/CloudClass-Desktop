@@ -18,6 +18,7 @@ import uuidv4 from 'uuid';
 import { transI18n } from 'agora-common-libs';
 import { DialogCategory } from '../share';
 import { RejectToGroupArgs } from '../type';
+import { AgoraExtensionRoomEvent } from '@classroom/protocol/events';
 
 export enum GroupMethod {
   AUTO,
@@ -25,7 +26,20 @@ export enum GroupMethod {
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
+interface GroupProps {
+  groupId: string;
+  groupName: string;
+  children: { id: string, name: string, isInvite: boolean}[]
+}
+interface GroupInfoProps {
+  groupId: string;
+  groupName: string;
+}
+interface StudentInfoProps {
+  id: string,
+  name: string,
+  isInvite: boolean
+}
 @Log.attach({ proxyMethods: false })
 export class GroupUIStore extends EduUIStoreBase {
   private _disposers: IReactionDisposer[] = [];
@@ -44,7 +58,7 @@ export class GroupUIStore extends EduUIStoreBase {
   private _dialogsMap = new Map();
 
   MAX_USER_COUNT = 15; // 学生最大15人
-
+  @observable studentGroupInvites: GroupProps[] = []
   /**
    * 分组列表
    */
@@ -404,7 +418,30 @@ export class GroupUIStore extends EduUIStoreBase {
       'warning',
     );
   };
-
+  @action.bound
+  studentInviteTeacher(groupInfo: GroupInfoProps, studentInfo: StudentInfoProps) {
+    console.log('studentInviteTeacher',groupInfo, studentInfo)
+    const item = this.studentGroupInvites.find((v) => v.groupId === groupInfo.groupId);
+    if (item) {
+      const stu = item.children.find((v) => v.id === studentInfo.id);
+      if (stu) {
+        stu.isInvite = !stu.isInvite;
+      } else {
+        item.children.push(studentInfo)
+      }
+    } else {
+      this.studentGroupInvites.push({
+        groupId: groupInfo.groupId,
+        groupName: groupInfo.groupName,
+        children: [studentInfo],
+      })
+    }
+    console.log('this.studentGroupInvites', this.studentGroupInvites)
+    const { widgetController } = this.classroomStore.widgetStore
+    if (widgetController) {
+      widgetController.broadcast(AgoraExtensionRoomEvent.StudentGroupInvites, this.studentGroupInvites)
+    }
+  }
   /**
    * 用户组互换
    * @param userUuid1
@@ -833,6 +870,7 @@ export class GroupUIStore extends EduUIStoreBase {
         },
       ),
     );
+   
     EduEventCenter.shared.onClassroomEvents(this._handleClassroomEvent);
   }
 

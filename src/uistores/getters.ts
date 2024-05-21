@@ -217,7 +217,6 @@ export class Getters {
     });
   }
   get isMediaPlayerWidgetActive() {
-    console.log('this._classroomUIStore.widgetUIStore.widgetInstanceList', this._classroomUIStore.widgetUIStore.widgetInstanceList)
     return this._classroomUIStore.widgetUIStore.widgetInstanceList.some((widget) => {
       return widget.widgetName === 'mediaPlayer';
     });

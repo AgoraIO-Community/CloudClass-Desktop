@@ -55,6 +55,7 @@ export const Scenario = observer(() => {
     const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM')
     setDefaultWidget(widgets[widgets.length - 1])
   }, [z0Widgets])
+  console.log('isBoardWidgetActive-isBoardWidgetActive',currentWidget, isBoardWidgetActive ,isMediaPlayerWidgetActive ,isWebViewWidgetActive ,isScreenSharing)
   return (
     <Room>
       <LoadingContainer></LoadingContainer>
@@ -83,13 +84,13 @@ export const Scenario = observer(() => {
               <div
                 className="fct-mobile-main-container"
                 style={{ height: isLandscape ? landscapeInnerHeight : undefined }}>
-                <div style={{display: currentWidget?.widgetName === 'netlessBoard' ? 'block' : 'none', height: '100%'}}><Whiteboard key={'board'} /></div>
-                <div style={{display: currentWidget?.widgetName === 'mediaPlayer' ? 'block' : 'none', height: '100%'}}><MadiaPlayer key={'media'} /></div>
-                <div style={{display: currentWidget?.widgetName === 'webView' ? 'block' : 'none', height: '100%'}}> <WebView key={'webview'} /></div>
+                <div style={{ opacity: currentWidget?.widgetName === 'netlessBoard' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'netlessBoard' ? isLandscape ? '100%' : 'auto' : 0}}><Whiteboard key={'board'} /></div>
+                <div style={{ opacity: currentWidget?.widgetName === 'mediaPlayer' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'mediaPlayer' ? isLandscape ? '100%' : 'auto' : 0}}><MadiaPlayer key={'media'} /></div>
+                <div style={{ opacity: currentWidget?.widgetName === 'webView' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'webView' ? isLandscape ? '100%' : 'auto' : 0}}> <WebView key={'webview'} /></div>
                 {isLandscape ? (
                   <>
                     <LandscapeToolPanel />
-                    {(!isBoardWidgetActive || !isMediaPlayerWidgetActive || !isWebViewWidgetActive) && !isScreenSharing && (
+                    {!isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive && !isScreenSharing && (
                       <div className="landscape-teacher-stream">
                         <TeacherStream />
                       </div>

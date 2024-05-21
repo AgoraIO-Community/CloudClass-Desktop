@@ -33,7 +33,7 @@ export const LandscapeToolPanel = observer(() => {
     layoutUIStore: { handsUpActionSheetVisible, classStatusText, broadcastCallState },
   } = useStore();
   const {
-    groupUIStore: { getUserGroupInfo, leaveSubRoom, teacherGroupUuid },
+    groupUIStore: { getUserGroupInfo, leaveSubRoom, teacherGroupUuid, studentInviteTeacher },
     classroomStore,
     layoutUIStore: { addDialog, isRecording, landscapeToolBarVisible },
     shareUIStore: { addToast },
@@ -150,34 +150,55 @@ export const LandscapeToolPanel = observer(() => {
             addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
             return;
           }
-          updateGroupUsers(
-            [
-              {
-                groupUuid: currentSubRoom as string,
-                addUsers: [teacherUuid].concat(assistantUuids),
-              },
-            ],
-            true,
-          ).then(() => {
-            addToast(transI18n('fcr_group_help_send'), 'info');
-          }).catch((e) => {
-            if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
-              addDialog('confirm', {
-                title: transI18n('fcr_group_help_title'),
-                content: transI18n('fcr_group_teacher_is_helping_others_msg'),
-                cancelButtonVisible: false,
-              });
-            }
-          });
+          const studentGroupInfo = {
+            groupId: currentSubRoom as string,
+            groupName: groupInfo && groupInfo.groupName || '',
+          }
+          const studentInfo = {
+            id: userUuid,
+            name: userName,
+            isInvite: true,
+          }
+          studentInviteTeacher(studentGroupInfo, studentInfo)
+          // updateGroupUsers(
+          //   [
+          //     {
+          //       groupUuid: currentSubRoom as string,
+          //       addUsers: [teacherUuid].concat(assistantUuids),
+          //     },
+          //   ],
+          //   true,
+          // ).then(() => {
+          //   addToast(transI18n('fcr_group_help_send'), 'info');
+          // }).catch((e) => {
+          //   if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
+          //     addDialog('confirm', {
+          //       title: transI18n('fcr_group_help_title'),
+          //       content: transI18n('fcr_group_teacher_is_helping_others_msg'),
+          //       cancelButtonVisible: false,
+          //     });
+          //   }
+          // });
         },
         okText: transI18n('fcr_group_button_invite'),
         cancelText: transI18n('fcr_group_button_cancel'),
       });
     } else {
-      rejectGroupInvite(currentSubRoom as string).then(() => {
-        addToast(transI18n('fcr_group_help_cancel'), 'info');
-        setIsHasRequest(false);
-      })
+      const studentGroupInfo = {
+        groupId: currentSubRoom as string,
+        groupName: groupInfo && groupInfo.groupName || '',
+      }
+      const studentInfo = {
+        id: userUuid,
+        name: userName,
+        isInvite: false,
+      }
+      studentInviteTeacher(studentGroupInfo, studentInfo)
+      setIsHasRequest(false);
+      // rejectGroupInvite(currentSubRoom as string).then(() => {
+      //   addToast(transI18n('fcr_group_help_cancel'), 'info');
+      //   setIsHasRequest(false);
+      // })
     }
   };
 
@@ -205,6 +226,8 @@ export const LandscapeToolPanel = observer(() => {
           zIndex: ComponentLevelRules.Level3,
           position: 'absolute',
           top: 0,
+          right: 0,
+          left: 0,
           width: '100vw',
           height: '40px',
           backgroundColor: 'rgba(38, 40, 44, 1)',

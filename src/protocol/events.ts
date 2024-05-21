@@ -70,6 +70,8 @@ export enum AgoraExtensionRoomEvent {
   SetCurrentApplication = 'set-current-application',
   //默认当前应用
   DefaultCurrentApplication = 'default-current-application',
+  // 学生邀请
+  StudentGroupInvites = 'student-group-invites',
 }
 
 /**
