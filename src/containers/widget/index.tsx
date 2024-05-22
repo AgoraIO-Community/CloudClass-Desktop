@@ -8,7 +8,6 @@ export const WidgetContainer = observer(() => {
   const {
     widgetUIStore: { z0Widgets, z10Widgets },
   } = useStore();
-
   return (
     <>
       <div className="widget-container fcr-z-0">
@@ -25,14 +24,15 @@ export const WidgetContainer = observer(() => {
   );
 });
 export const Widget = observer(({ widget }: { widget: AgoraWidgetBase }) => {
+  
   const containerDom = useRef<HTMLElement>();
 
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const locatedNode = widget.locate();
-
     if (locatedNode) {
+      
       containerDom.current = locatedNode;
     }
 

@@ -278,6 +278,7 @@ export const RoomPlaceholder = observer(() => {
     layoutUIStore: { classRoomPlacholderHeight, classRoomPlacholderIngroupHeight },
     boardUIStore: { mounted },
     groupUIStore: { isInGroup },
+    getters: { isBoardWidgetActive, isMediaPlayerWidgetActive, isWebViewWidgetActive },
     classroomStore: {
       roomStore: {
         classroomSchedule: { startTime, duration },
@@ -288,7 +289,7 @@ export const RoomPlaceholder = observer(() => {
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
   return (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
-    !mounted &&
+    !isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive &&
     !screenShareStream ? (
     !isInGroup ? (
       <div className="fcr-mobile-room-placeholder" style={{ height: classRoomPlacholderHeight }}>

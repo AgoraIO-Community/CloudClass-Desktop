@@ -1,13 +1,13 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { Layout } from '@classroom/ui-kit/components/layout';
 import { RoomPlaceholder, TeacherStreamContainer } from '@classroom/containers/stream/player';
 import { WidgetContainer } from '../../containers/widget';
-import { Chat, CountDown, Poll, Watermark, Whiteboard } from '../../containers/widget/slots';
-import { transI18n } from 'agora-common-libs';
+import { Chat, CountDown, MadiaPlayer, Poll, Watermark, WebView, Whiteboard } from '../../containers/widget/slots';
+import { AgoraCloudClassWidget, transI18n } from 'agora-common-libs';
 
 import './index.css';
 import { ToastContainer } from '../../containers/toast';
@@ -39,19 +39,22 @@ export const Scenario = observer(() => {
         classroomSchedule: { state },
       },
     },
-    getters: { isBoardWidgetActive, isScreenSharing },
+    getters: { isBoardWidgetActive, isMediaPlayerWidgetActive, isWebViewWidgetActive, isScreenSharing },
     shareUIStore: { isLandscape, forceLandscape, getLandscapeInnerHeight, landscapeInnerHeight },
+    widgetUIStore: { z0Widgets, setDefaultWidget, currentWidget },
     shareUIStore,
     groupUIStore,
   } = useStore();
   const { getUserGroupInfo } = groupUIStore;
   const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
   const groupInfo = getUserGroupInfo(userUuid);
-
   useEffect(() => {
     shareUIStore.setLayoutReady(!groupUIStore.joiningSubRoom);
   }, [groupUIStore.joiningSubRoom]);
-
+  useEffect(() => {
+    const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM')
+    setDefaultWidget(widgets[widgets.length - 1])
+  }, [z0Widgets])
   return (
     <Room>
       <LoadingContainer></LoadingContainer>
@@ -80,11 +83,13 @@ export const Scenario = observer(() => {
               <div
                 className="fct-mobile-main-container"
                 style={{ height: isLandscape ? landscapeInnerHeight : undefined }}>
-                <Whiteboard key={'board'} />
+                <div style={{ opacity: currentWidget?.widgetName === 'netlessBoard' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'netlessBoard' ? isLandscape ? '100%' : 'auto' : 0}}><Whiteboard key={'board'} /></div>
+                <div style={{ opacity: currentWidget?.widgetName === 'mediaPlayer' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'mediaPlayer' ? isLandscape ? '100%' : 'auto' : 0}}><MadiaPlayer key={'media'} /></div>
+                <div style={{ opacity: currentWidget?.widgetName === 'webView' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'webView' ? isLandscape ? '100%' : 'auto' : 0}}> <WebView key={'webview'} /></div>
                 {isLandscape ? (
                   <>
                     <LandscapeToolPanel />
-                    {!isBoardWidgetActive && !isScreenSharing && (
+                    {!isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive && !isScreenSharing && (
                       <div className="landscape-teacher-stream">
                         <TeacherStream />
                       </div>

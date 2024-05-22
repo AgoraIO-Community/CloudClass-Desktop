@@ -211,6 +211,16 @@ export class Getters {
       return widget.widgetName === 'netlessBoard';
     });
   }
+  get isWebViewWidgetActive() {
+    return this._classroomUIStore.widgetUIStore.widgetInstanceList.some((widget) => {
+      return widget.widgetName === 'webView';
+    });
+  }
+  get isMediaPlayerWidgetActive() {
+    return this._classroomUIStore.widgetUIStore.widgetInstanceList.some((widget) => {
+      return widget.widgetName === 'mediaPlayer';
+    });
+  }
   @computed
   get teacherUIStream() {
     return this.cameraUIStreams.find((stream) => {

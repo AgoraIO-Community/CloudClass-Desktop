@@ -15,12 +15,40 @@ export enum CustomMessageCommandType {
   deviceSwitchBatch = 'deviceSwitchBatch',
   handsUp = 'handsUp',
   handsUpAll = 'handsUpAll',
+  inviteTeacher = 'inviteTeacher',
+  cancelInvite = 'cancelInvite',
+  teacherRejectInvite = 'teacherRejectInvite',
+  teacherAcceptInvite = 'teacherAcceptInvite',
 }
+export type CustomMessageCancelInviteType = {
+  groupUuid: string;
+  groupName: string;
+  isInvite: boolean;
+  userUuid: string;
+  userName: string;
+};
+export type CustomMessageRejectInviteType = {
+  groupUuid: string;
+};
+export type CustomMessageAcceptInviteType = {
+  groupUuid: string;
+};
 export type DialogType = 'confirm' | 'class-info';
 
 export type CustomMessageData<T> = {
   cmd: CustomMessageCommandType;
   data: T;
+};
+export type CustomMessageInviteType = {
+  groupUuid: string;
+  groupName: string;
+  isInvite: boolean;
+  children: {
+    id: string;
+    name: string;
+    isInvite: boolean;
+  }[];
+
 };
 export type CustomMessageHandsUpType = {
   userUuid: string;

@@ -64,6 +64,14 @@ export enum AgoraExtensionRoomEvent {
   MobileCallStateChanged = 'mobile-call-state-changed',
   //举手状态变更
   RaiseHandStateChanged = 'raise-hand-state-changed',
+  //获取应用列表
+  GetApplications = 'get-applications',
+  //设置当前应用
+  SetCurrentApplication = 'set-current-application',
+  //默认当前应用
+  DefaultCurrentApplication = 'default-current-application',
+  // 学生邀请
+  StudentGroupInvites = 'student-group-invites',
 }
 
 /**

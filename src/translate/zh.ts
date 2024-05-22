@@ -511,7 +511,10 @@ export const zh = {
   /** Breakout Room  */
   fcr_group_help_title: '请求帮助',
   fcr_group_help_content: '你可以邀请老师进入小组帮助你',
-  fcr_group_help_teacher_busy_msg: '老师正在忙，请稍后重试',
+  fcr_group_helzhenp_teacher_busy_msg: '老师正在忙，请稍后重试',
+  fcr_group_help_cancel: '已经取消帮助',
+  fcr_group_help_send: '邀请已经发送',
+  fcr_group_teacher_join: '老师加入分组',
   fcr_group_teacher_is_helping_others_msg: '老师正在帮助其他讨论组，请稍后重试',
   fcr_group_teacher_exist_hint: '老师已在小组内',
   fcr_group_invite: '邀请',
@@ -829,5 +832,6 @@ export const zh = {
   fcr_group_button_leave_group: '回到主教室',
   fcr_group_teacher_not_in_classroom: '老师不在房间内',
   fcr_group_tool_help: '帮助',
+  fcr_group_tool_cancel_help: '取消帮助',
   fcr_group_tool_leave_group: '离开小组',
 };
