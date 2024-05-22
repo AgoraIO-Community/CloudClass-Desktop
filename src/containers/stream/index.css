@@ -443,24 +443,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.fcr-stream-mobile-stu-top-left {
-  position: absolute;
-  left: 2px;
-  top: 2px;
-  /* width: 71px; */
+.fcr-stream-mobile-stu-bgwhite {
   height: 20px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.55);
   color: rgba(55, 60, 66, 1);
-  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
   z-index: 1;
-  padding-right: 4px;
-  max-width: 100%;
   transition: all 0.2s;
+}
+.fcr-stream-mobile-stu-top-left {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  display: flex;
+  gap: 3px;
+  font-weight: 700;
+  color: rgba(55, 60, 66, 1);
+  font-size: 12px;
+  max-width: 100%;
 }
 .fcr-stream-mobile-stu-x {
   font-weight: 300;
@@ -487,6 +490,7 @@
   justify-content: center;
   flex-direction: column;
   background: url('./assets/room-placholder-bg.jpg') no-repeat top left / cover;
+  position: relative;
 }
 .fcr-mobile-room-placeholder > p {
   font-weight: 400;

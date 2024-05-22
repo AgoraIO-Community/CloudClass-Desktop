@@ -1,0 +1,7 @@
+.fcr-mobile-board-expand {
+  border-radius: var(--fcr_cornerradius_s, 8px);
+  background: var(--fcr_ui_scene_ramp_brand6, #4262ff);
+  width: 40px;
+  height: 40px;
+  align-items: center;
+}

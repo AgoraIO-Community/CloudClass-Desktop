@@ -31,7 +31,7 @@
   background-color: #fff;
 
   border-color: #fff;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 .widget-slot-board .netless-whiteboard-wrapper {
   /* height: 100%; */

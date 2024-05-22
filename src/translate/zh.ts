@@ -581,6 +581,12 @@ export const zh = {
   fcr_alert_cancel: '取消',
   fcr_stage_label_title: '是否显示讲台区域',
   fcr_share_title_share_audio: '同时共享电脑声音',
+  fcr_board_tool: '白板工具',
+  fcr_board_edit: '白板编辑',
+  fcr_board_rotate_tip: '请把手机的自动旋转打开，并把手机横向放置，在横屏下使用白板编辑。',
+  fcr_board_rotate_lock: '锁定旋转',
+  fcr_board_rotate_auto: '自动旋转',
+  fcr_board_enable: '启用',
 
   /** Remote Control */
   begin_class: '开始上课',

@@ -4,7 +4,7 @@ import { FC, MutableRefObject, useContext, useEffect, useRef, useState } from 'r
 import { EduClassroomConfig, EduStream } from 'agora-edu-core';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
-import { SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
+import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import dayjs from 'dayjs';
 import { Scheduler } from 'agora-rte-sdk';
 import { EduStreamUI } from '@classroom/uistores/stream/struct';
@@ -15,6 +15,7 @@ import { MicrophoneIndicator } from '../action-sheet/mic';
 import { StreamContext, convertStreamUIStatus } from './context';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
+import { FixedBoardTips } from './fixed-board-tips';
 
 import 'swiper/css';
 const TeacherStreamH5Tool = ({
@@ -298,6 +299,7 @@ export const RoomPlaceholder = observer(() => {
         <p>
           {dayjs(startTime).format('YYYY.MM.DD HH:mm')}-{dayjs(endTime).format('HH:mm')}
         </p>
+        <FixedBoardTips />
       </div>
     ) : (
       <div

@@ -599,6 +599,13 @@ export const en = {
   fcr_alert_cancel: 'Cancel',
   fcr_stage_label_title: 'Whether to show the stage',
   fcr_share_title_share_audio: 'Share PC audio',
+  fcr_board_tool: 'Whiteboard tools',
+  fcr_board_edit: 'Whiteboard edit',
+  fcr_board_rotate_tip:
+    'Please enable the auto-rotate function on your phone and place it horizontally. Use the whiteboard tool in landscape mode.',
+  fcr_board_rotate_lock: 'Lock screen rotation',
+  fcr_board_rotate_auto: 'auto rotate',
+  fcr_board_enable: 'Enable',
 
   /** Remote Control */
   begin_class: 'Begin class',

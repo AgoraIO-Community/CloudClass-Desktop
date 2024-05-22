@@ -233,6 +233,9 @@ body {
 .fcr-flex {
   display: flex;
 }
+.fcr-flex1 {
+  flex: 1;
+}
 .fcr-h-full {
   height: 100%;
 }
