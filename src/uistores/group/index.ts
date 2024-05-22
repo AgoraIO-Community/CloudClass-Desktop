@@ -449,7 +449,6 @@ export class GroupUIStore extends EduUIStoreBase {
       this._handsInviteTask = Scheduler.shared.addIntervalTask(
         () => {
           this._studentInvite.inviteTask = this._handsInviteTask
-          console.log('this._handsInviteTask', this._handsInviteTask)
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
             data: item,
@@ -896,7 +895,6 @@ export class GroupUIStore extends EduUIStoreBase {
   private _onReceiveChannelMessage(message: AgoraRteCustomMessage) {
     const data: any = message.payload;
     const cmd = data.cmd;
-    console.log('_onReceiveChannelMessage', data?.data?.groupUuid, this.classroomStore.groupStore.currentSubRoom)
     switch (cmd) {
       case CustomMessageCommandType.teacherRejectInvite: {
         const groupUuid = data?.data?.groupUuid || '';
@@ -915,7 +913,6 @@ export class GroupUIStore extends EduUIStoreBase {
         break;
       }
     }
-    console.log('_onReceiveChannelMessage', message)
   }
   @action.bound
   private _onReceivePeerMessage(message: AgoraRteCustomMessage) {}

@@ -57,7 +57,6 @@ const StudentStreams = observer(() => {
   const handleNext = () => {
     swiperRef.current?.slideTo(current + sliderCount);
     setCurrent(current + sliderCount);
-    console.log(current, studentCameraStreams.length);
   };
   useEffect(() => {
     swiperRef.current?.update();
