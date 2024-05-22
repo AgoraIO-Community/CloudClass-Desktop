@@ -33,7 +33,7 @@ export const LandscapeToolPanel = observer(() => {
     layoutUIStore: { handsUpActionSheetVisible, classStatusText, broadcastCallState },
   } = useStore();
   const {
-    groupUIStore: { getUserGroupInfo, leaveSubRoom, teacherGroupUuid, studentInviteTeacher },
+    groupUIStore: { getUserGroupInfo, leaveSubRoom, studentInvite, teacherGroupUuid, studentInviteTeacher },
     classroomStore,
     layoutUIStore: { addDialog, isRecording, landscapeToolBarVisible },
     shareUIStore: { addToast },
@@ -48,7 +48,6 @@ export const LandscapeToolPanel = observer(() => {
   const groupInfo = getUserGroupInfo(userUuid);
   const [devicePreviewViewVisible, setDevicePreviewViewVisible] = useState(false);
   const [callState, setCallState] = useState(MobileCallState.Processing);
-  const [isHasRequest, setIsHasRequest] = useState(false);
   const { userName } = EduClassroomConfig.shared.sessionInfo;
   const micOn = isAudioRecordingDeviceEnabled;
   const cameraOn = isCameraDeviceEnabled;
@@ -127,7 +126,7 @@ export const LandscapeToolPanel = observer(() => {
     const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
     const teacherUuid = teachers.keys().next().value;
     const assistantUuids = Array.from(assistants.keys());
-    if (!isHasRequest) {
+    if (!studentInvite.isInvite) {
       if (!teachers.size && !assistants.size) {
         addDialog('confirm', {
           title: transI18n('fcr_group_help_title'),
@@ -145,13 +144,12 @@ export const LandscapeToolPanel = observer(() => {
         content: transI18n('fcr_group_help_content'),
         buttonStyle: 'block',
         onOk: () => {
-          setIsHasRequest(true)
           if (teacherGroupUuidRef.current === currentSubRoom) {
             addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
             return;
           }
           const studentGroupInfo = {
-            groupId: currentSubRoom as string,
+            groupUuid: currentSubRoom as string,
             groupName: groupInfo && groupInfo.groupName || '',
           }
           const studentInfo = {
@@ -159,33 +157,15 @@ export const LandscapeToolPanel = observer(() => {
             name: userName,
             isInvite: true,
           }
-          studentInviteTeacher(studentGroupInfo, studentInfo)
-          // updateGroupUsers(
-          //   [
-          //     {
-          //       groupUuid: currentSubRoom as string,
-          //       addUsers: [teacherUuid].concat(assistantUuids),
-          //     },
-          //   ],
-          //   true,
-          // ).then(() => {
-          //   addToast(transI18n('fcr_group_help_send'), 'info');
-          // }).catch((e) => {
-          //   if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
-          //     addDialog('confirm', {
-          //       title: transI18n('fcr_group_help_title'),
-          //       content: transI18n('fcr_group_teacher_is_helping_others_msg'),
-          //       cancelButtonVisible: false,
-          //     });
-          //   }
-          // });
+          studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
+          addToast(transI18n('fcr_group_help_send'), 'info');
         },
         okText: transI18n('fcr_group_button_invite'),
         cancelText: transI18n('fcr_group_button_cancel'),
       });
     } else {
       const studentGroupInfo = {
-        groupId: currentSubRoom as string,
+        groupUuid: currentSubRoom as string,
         groupName: groupInfo && groupInfo.groupName || '',
       }
       const studentInfo = {
@@ -193,12 +173,8 @@ export const LandscapeToolPanel = observer(() => {
         name: userName,
         isInvite: false,
       }
-      studentInviteTeacher(studentGroupInfo, studentInfo)
-      setIsHasRequest(false);
-      // rejectGroupInvite(currentSubRoom as string).then(() => {
-      //   addToast(transI18n('fcr_group_help_cancel'), 'info');
-      //   setIsHasRequest(false);
-      // })
+      addToast(transI18n('fcr_group_help_cancel'), 'info');
+      studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
     }
   };
 
@@ -306,7 +282,7 @@ export const LandscapeToolPanel = observer(() => {
                   size={20}
                   colors={{ iconPrimary: isTeacherIn ? 'rgba(255,255,255, .5)' : '#fff' }}
                 />
-                <span className='landscape-help-button-value'>{isHasRequest && !isTeacherIn ? transI18n('fcr_group_tool_cancel_help') : transI18n('fcr_group_tool_help')}</span>
+                <span className='landscape-help-button-value'>{studentInvite.isInvite && !isTeacherIn ? transI18n('fcr_group_tool_cancel_help') : transI18n('fcr_group_tool_help')}</span>
               </div>
               <div className="landscape-leave-group-button" onClick={handleLeaveGroup}>
                 {transI18n('fcr_group_tool_leave_group')}

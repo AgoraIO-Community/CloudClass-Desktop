@@ -21,10 +21,9 @@ type Props = {
 export const GroupInfoPanel: FC<Props> = observer(() => {
   const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
   const isTeacher = EduClassroomConfig.shared.sessionInfo.role === EduRoleTypeEnum.teacher;
-  const [isHasRequest, setIsHasRequest] = useState(false);
   
   const {
-    groupUIStore: { getUserGroupInfo, leaveSubRoom, teacherGroupUuid },
+    groupUIStore: { getUserGroupInfo, studentInvite, studentInviteTeacher, leaveSubRoom, teacherGroupUuid },
     classroomStore,
     layoutUIStore: { addDialog },
     shareUIStore: { addToast },
@@ -34,23 +33,23 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
   useEffect(() => {
     teacherGroupUuidRef.current = teacherGroupUuid;
   }, [teacherGroupUuid]);
+  const { userName } = EduClassroomConfig.shared.sessionInfo;
   const { currentSubRoom } = classroomStore.groupStore;
   const isTeacherIn = useMemo(() => teacherGroupUuid === currentSubRoom, [teacherGroupUuid, currentSubRoom]);
   const transI18n = useI18n();
   const groupInfo = getUserGroupInfo(userUuid);
-  const { toolVisible, toggleTool, showTool } = streamUIStore;
+  const { toolVisible } = streamUIStore;
   const handleHelp = () => {
     if (teacherGroupUuid && isTeacherIn) {
       addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
       return;
     }
-    const { updateGroupUsers, currentSubRoom, rejectGroupInvite } = classroomStore.groupStore;
+    const { currentSubRoom } = classroomStore.groupStore;
     const teachers = classroomStore.userStore.mainRoomDataStore.teacherList;
     const assistants = classroomStore.userStore.mainRoomDataStore.assistantList;
-
     const teacherUuid = teachers.keys().next().value;
     const assistantUuids = Array.from(assistants.keys());
-    if (!isHasRequest) {
+    if (!studentInvite.isInvite) {
       if (!teachers.size && !assistants.size) {
         addDialog('confirm', {
           title: transI18n('fcr_group_help_title'),
@@ -59,7 +58,7 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
         });
         return;
       }
-      if (teacherGroupUuid === currentSubRoom) {
+      if (teacherGroupUuidRef.current === currentSubRoom) {
         addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
         return;
       }
@@ -68,40 +67,37 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
         content: transI18n('fcr_group_help_content'),
         buttonStyle: 'block',
         onOk: () => {
-          setIsHasRequest(true)
           if (teacherGroupUuidRef.current === currentSubRoom) {
             addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
             return;
           }
-          updateGroupUsers(
-            [
-              {
-                groupUuid: currentSubRoom as string,
-                addUsers: [teacherUuid].concat(assistantUuids),
-              },
-            ],
-            true,
-          ).then(() => {
-            addToast(transI18n('fcr_group_help_send'), 'info');
-          }).catch((e) => {
-            if (AGError.isOf(e, AGServiceErrorCode.SERV_USER_BEING_INVITED)) {
-              addDialog('confirm', {
-                title: transI18n('fcr_group_help_title'),
-                content: transI18n('fcr_group_teacher_is_helping_others_msg'),
-                cancelButtonVisible: false,
-              });
-            }
-          });
-          
+          const studentGroupInfo = {
+            groupUuid: currentSubRoom as string,
+            groupName: groupInfo && groupInfo.groupName || '',
+          }
+          const studentInfo = {
+            id: userUuid,
+            name: userName,
+            isInvite: true,
+          }
+          studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
+          addToast(transI18n('fcr_group_help_send'), 'info');
         },
         okText: transI18n('fcr_group_button_invite'),
         cancelText: transI18n('fcr_group_button_cancel'),
       });
     } else {
-        rejectGroupInvite(currentSubRoom as string).then(() => {
-          addToast(transI18n('fcr_group_help_cancel'), 'info');
-          setIsHasRequest(false);
-        })
+      const studentGroupInfo = {
+        groupUuid: currentSubRoom as string,
+        groupName: groupInfo && groupInfo.groupName || '',
+      }
+      const studentInfo = {
+        id: userUuid,
+        name: userName,
+        isInvite: false,
+      }
+      addToast(transI18n('fcr_group_help_cancel'), 'info');
+      studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
     }
   };
 
@@ -128,7 +124,7 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
       <div className="group-buttons">
         <div className={classNames("help-button", isTeacherIn && 'active')} onClick={handleHelp}>
           <SvgImg type={SvgIconEnum.FCR_QUESTION} size={26}  colors={{ iconPrimary: isTeacherIn ? 'rgba(255,255,255, .5)' : '#fff' }} />
-          <span style={{ color: 'white' }}>{isHasRequest && !isTeacherIn ? transI18n('fcr_group_tool_cancel_help') : transI18n('fcr_group_tool_help')}</span>
+          <span style={{ color: 'white' }}>{studentInvite.isInvite && !isTeacherIn ? transI18n('fcr_group_tool_cancel_help') : transI18n('fcr_group_tool_help')}</span>
         </div>
         <div className="leave-group-button" onClick={handleLeaveGroup}>
           {transI18n('fcr_group_tool_leave_group')}

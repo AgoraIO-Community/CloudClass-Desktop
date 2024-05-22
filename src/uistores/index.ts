@@ -20,6 +20,7 @@ import { ConvertMediaOptionsConfig } from '@classroom/index';
 import { SubscriptionUIStore } from './subscription';
 import { transI18n } from 'agora-common-libs';
 import { Getters } from './getters';
+import { AgoraExtensionRoomEvent } from '@classroom/protocol/events';
 
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;

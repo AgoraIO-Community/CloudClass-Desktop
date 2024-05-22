@@ -95,6 +95,7 @@ export const MadiaPlayer = observer(function Media() {
     getters: { isMediaPlayerWidgetActive },
     layoutUIStore: { toggleLandscapeToolBarVisible },
     boardUIStore,
+    widgetUIStore: { z0Widgets, currentWidget },
     streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
     shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
   } = useStore();
@@ -114,6 +115,7 @@ export const MadiaPlayer = observer(function Media() {
   useEffect(() => {
     mediaPlayerRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
+  const mediaPlayerWidget = z0Widgets.filter((widget) => widget.widgetName === 'mediaPlayer');
   return (
     <div
       ref={mediaPlayerRef}
@@ -128,16 +130,24 @@ export const MadiaPlayer = observer(function Media() {
       onClick={() => {
         toggleTool();
       }}>
-      <div
-        onClick={toggleLandscapeToolBarVisible}
-        style={{
-          height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
-          zIndex: ComponentLevelRules.Level0,
-          width: landscapeBoardSize.width,
-          // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
-        }}
-        className="widget-slot-media-player"
-      />
+        {
+          mediaPlayerWidget.length > 0 && mediaPlayerWidget.map((item) => {
+            return (
+              <div key={item.widgetId}
+                onClick={toggleLandscapeToolBarVisible}
+                style={{
+                  display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
+                  height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+                  zIndex: ComponentLevelRules.Level0,
+                  width: landscapeBoardSize.width,
+                  // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+                }}
+                className={`widget-slot-media-player widget-slot-media-player-${item.widgetId}`}
+              />
+            )
+          })
+        }
+      
     </div>
   );
 });
@@ -147,6 +157,7 @@ export const WebView = observer(function View() {
     getters: { isWebViewWidgetActive },
     layoutUIStore: { toggleLandscapeToolBarVisible },
     boardUIStore,
+    widgetUIStore: { z0Widgets, currentWidget },
     streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
     shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
   } = useStore();
@@ -162,6 +173,7 @@ export const WebView = observer(function View() {
   }, [studentStreamsVisible, width]);
   const boardHeight = isWebViewWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
+  const webViewWidget = z0Widgets.filter((widget) => widget.widgetName === 'webView');
   useEffect(() => {
     webViewRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
@@ -179,22 +191,30 @@ export const WebView = observer(function View() {
       onClick={() => {
         toggleTool();
       }}>
-      <div
-        onClick={toggleLandscapeToolBarVisible}
-        style={{
-          height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
-          zIndex: ComponentLevelRules.Level0,
-          width: landscapeBoardSize.width,
-          // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
-        }}
-        className="widget-slot-web-view"
-      />
+        {
+          webViewWidget.length > 0 && webViewWidget.map((item) => {
+            return (
+              <div key={item.widgetId}
+                onClick={toggleLandscapeToolBarVisible}
+                style={{
+                  display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
+                  height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+                  zIndex: ComponentLevelRules.Level0,
+                  width: landscapeBoardSize.width,
+                  // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+                }}
+                className={`widget-slot-web-view widget-slot-web-view-${item.widgetId}`}
+              />
+            )
+          })
+        }
     </div>
   );
 });
 export const Chat = observer(function Chat() {
   const {
     widgetUIStore,
+    widgetUIStore: { z0Widgets },
     streamUIStore: {
       teacherCameraStream,
       studentCameraStreams,
@@ -204,7 +224,7 @@ export const Chat = observer(function Chat() {
       screenShareStream,
       teacherVideoStreamSize,
     },
-    boardUIStore: { boardContainerHeight, mounted },
+    boardUIStore: { boardContainerHeight },
     shareUIStore: { isLandscape, forceLandscape },
     layoutUIStore: { classRoomPlacholderHeight, classRoomPlacholderIngroupHeight },
     groupUIStore: { isInGroup },
@@ -213,29 +233,30 @@ export const Chat = observer(function Chat() {
   const [chatH5Height, setChatH5Height] = useState(0);
 
   const calcHeight = () => {
+    const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM')
     const h5Height = document.body.clientHeight;
     //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
     const height =
       h5Height -
       (screenShareStream ? boardContainerHeight : 0) -
-      (!mounted && (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !screenShareStream
+      (!widgets.length && (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !screenShareStream
         ? isInGroup
           ? classRoomPlacholderIngroupHeight
           : classRoomPlacholderHeight
         : 0) -
-      (mounted ? boardContainerHeight : 0) -
+      (widgets.length > 0 ? boardContainerHeight : 0) -
       (!isLandscape && teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
         ? (teacherVideoStreamSize.height as number) || 0
         : 0) -
       (studentCameraStreams.length > 0 && studentStreamsVisible
         ? studentVideoStreamSize.height
         : 0);
+        
     setChatH5Height(height);
   };
   useEffect(calcHeight, [
     isLandscape,
     forceLandscape,
-    mounted,
     teacherCameraStream,
     boardContainerHeight,
     isPiP,
@@ -243,6 +264,7 @@ export const Chat = observer(function Chat() {
     studentVideoStreamSize.height,
     teacherCameraStream?.isCameraMuted,
     screenShareStream,
+    z0Widgets,
     studentStreamsVisible,
   ]);
 

@@ -335,12 +335,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       if (!boardEnabled(AgoraEduSDK.uiConfig) && key === 'netlessBoard') {
         return prev;
       }
-      if (!boardEnabled(AgoraEduSDK.uiConfig) && key.includes('mediaPlayer')) {
-        return prev;
-      }
-      if (!boardEnabled(AgoraEduSDK.uiConfig) && key.includes('webView')) {
-        return prev;
-      }
+
       prev[key] = value;
 
       return prev;
@@ -350,6 +345,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @bound
   private _notifyViewportChange() {
+    this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
     this.widgetInstanceList.forEach((instance) => {
       const clientRect = document
         .querySelector(`.${this.shareUIStore.classroomViewportClassName}`)

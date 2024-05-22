@@ -55,7 +55,6 @@ export const Scenario = observer(() => {
     const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM')
     setDefaultWidget(widgets[widgets.length - 1])
   }, [z0Widgets])
-  console.log('isBoardWidgetActive-isBoardWidgetActive',currentWidget, isBoardWidgetActive ,isMediaPlayerWidgetActive ,isWebViewWidgetActive ,isScreenSharing)
   return (
     <Room>
       <LoadingContainer></LoadingContainer>

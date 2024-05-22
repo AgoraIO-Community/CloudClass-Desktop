@@ -8,7 +8,6 @@ export const WidgetContainer = observer(() => {
   const {
     widgetUIStore: { z0Widgets, z10Widgets },
   } = useStore();
-  console.log('z0Widgetsz0Widgets', z0Widgets)
   return (
     <>
       <div className="widget-container fcr-z-0">
