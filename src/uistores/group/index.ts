@@ -52,6 +52,7 @@ export class GroupUIStore extends EduUIStoreBase {
   private _studentInvite: any = {}
   private _groupNum = 0;
   private _dialogsMap = new Map();
+  private _inviteStudentTasks = new Map()
 
   MAX_USER_COUNT = 15; // 学生最大15人
   @observable studentGroupInvites: CustomMessageInviteType = {
@@ -422,7 +423,6 @@ export class GroupUIStore extends EduUIStoreBase {
       'warning',
     );
   };
-  private _handsInviteTask: Scheduler.Task | null = null;
   @action.bound
   studentInviteTeacher(groupInfo: GroupInfoProps, studentInfo: StudentInfoProps, teacherUuid: string) {
     const item = this.studentGroupInvites;
@@ -432,7 +432,7 @@ export class GroupUIStore extends EduUIStoreBase {
     const stu = item.children.find((v) => v.id === studentInfo.id);
     if (stu) {
       stu.isInvite = studentInfo.isInvite;
-      this._handsInviteTask?.stop()
+      this._inviteStudentTasks.get(`${studentInfo.id}`)?.stop()
     } else {
       item.children.push(studentInfo)
     }
@@ -442,13 +442,12 @@ export class GroupUIStore extends EduUIStoreBase {
       isInvite: studentInfo.isInvite,
       id: studentInfo.id,
       name: studentInfo.name,
-      inviteTask: this._handsInviteTask
     }
     if (studentInfo.isInvite) {
       const intervalInMs = getRandomInt(2000, 4000);
-      this._handsInviteTask = Scheduler.shared.addIntervalTask(
+      const inviteTask = Scheduler.shared.addIntervalTask(
         () => {
-          this._studentInvite.inviteTask = this._handsInviteTask
+          this._inviteStudentTasks.get(`${studentInfo.id}`)?.stop()
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
             data: item,
@@ -458,8 +457,9 @@ export class GroupUIStore extends EduUIStoreBase {
         intervalInMs,
         true,
       );
+      this._inviteStudentTasks.set(`${studentInfo.id}`, inviteTask)
     } else {
-      this._handsInviteTask?.stop()
+      this._inviteStudentTasks.get(`${studentInfo.id}`)?.stop()
       const message: CustomMessageData<CustomMessageCancelInviteType> = {
         cmd: CustomMessageCommandType.cancelInvite,
         data: {
@@ -895,20 +895,27 @@ export class GroupUIStore extends EduUIStoreBase {
   private _onReceiveChannelMessage(message: AgoraRteCustomMessage) {
     const data: any = message.payload;
     const cmd = data.cmd;
+    const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid
     switch (cmd) {
       case CustomMessageCommandType.teacherRejectInvite: {
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
-          // this._handsInviteTask?.stop()
+          if (this._inviteStudentTasks.has(`${userUuid}`)) {
+            this._inviteStudentTasks.get(`${userUuid}`)?.stop()
+            this.shareUIStore.addToast(transI18n('fcr_group_helzhenp_teacher_busy_msg'));
+          }
           this._studentInvite.isInvite = false
-          this.shareUIStore.addToast(transI18n('fcr_group_helzhenp_teacher_busy_msg'));
         }
         break;
       }
       case CustomMessageCommandType.teacherAcceptInvite: {
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
+          if (this._inviteStudentTasks.has(`${userUuid}`)) {
+            this._inviteStudentTasks.get(`${userUuid}`)?.stop()
+          }
           this.shareUIStore.addToast(transI18n('fcr_group_teacher_join'));
+          this._studentInvite.isInvite = false
         }
         break;
       }
