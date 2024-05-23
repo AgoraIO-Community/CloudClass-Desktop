@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { ComponentLevelRules } from '../../configs/config';
 
 import './index.css';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AGServiceErrorCode, EduClassroomConfig } from 'agora-edu-core';
 import classNames from 'classnames';
 import { LocalTrackPlayer, splitName } from '../stream';
@@ -55,7 +55,7 @@ export const LandscapeToolPanel = observer(() => {
 
   const volume = localVolume;
   const { currentSubRoom } = classroomStore.groupStore;
-  const isTeacherIn = useMemo(() => teacherGroupUuid === currentSubRoom, [teacherGroupUuid, currentSubRoom]);
+  const isTeacherIn = teacherGroupUuid === currentSubRoom;
   useEffect(() => {
     if (micOn && cameraOn) {
       setCallState(MobileCallState.VideoAndVoiceCall);
