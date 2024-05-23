@@ -1,7 +1,7 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import { AGError, Scheduler } from 'agora-rte-sdk';
 import { observer } from 'mobx-react';
-import { useEffect, useRef, useState, FC, useMemo } from 'react';
+import { useEffect, useRef, useState, FC } from 'react';
 import {
   AGServiceErrorCode,
   EduClassroomConfig,
@@ -35,7 +35,7 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
   }, [teacherGroupUuid]);
   const { userName } = EduClassroomConfig.shared.sessionInfo;
   const { currentSubRoom } = classroomStore.groupStore;
-  const isTeacherIn = useMemo(() => teacherGroupUuid === currentSubRoom, [teacherGroupUuid, currentSubRoom]);
+  const isTeacherIn = teacherGroupUuid === currentSubRoom;
   const transI18n = useI18n();
   const groupInfo = getUserGroupInfo(userUuid);
   const { toolVisible } = streamUIStore;

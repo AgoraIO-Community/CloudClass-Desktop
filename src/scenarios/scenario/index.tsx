@@ -1,7 +1,7 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Layout } from '@classroom/ui-kit/components/layout';
 import { RoomPlaceholder, TeacherStreamContainer } from '@classroom/containers/stream/player';
