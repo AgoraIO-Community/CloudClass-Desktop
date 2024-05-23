@@ -447,7 +447,6 @@ export class GroupUIStore extends EduUIStoreBase {
       const intervalInMs = getRandomInt(2000, 4000);
       const inviteTask = Scheduler.shared.addIntervalTask(
         () => {
-          this._inviteStudentTasks.get(`${studentInfo.id}`)?.stop()
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
             data: item,
