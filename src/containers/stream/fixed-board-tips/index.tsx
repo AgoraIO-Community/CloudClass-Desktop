@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { SvgIconEnum, Button } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { Drawer } from 'antd';
-import { GuideToolTip } from '../../../../../fcr-ui-kit/src/components/tooltip/guide';
+import { GuideToolTip } from '../../tooltip/guide';
 import { BoardExpand } from '../../board-expand';
 
 import './index.css';

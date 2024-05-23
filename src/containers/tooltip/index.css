@@ -1,0 +1,312 @@
+.fcr-tooltip.fcr-tooltip-zoom-appear,
+.fcr-tooltip.fcr-tooltip-zoom-enter {
+  opacity: 0;
+}
+.fcr-tooltip.fcr-tooltip-zoom-enter,
+.fcr-tooltip.fcr-tooltip-zoom-leave {
+  display: block;
+}
+.fcr-tooltip-zoom-enter,
+.fcr-tooltip-zoom-appear {
+  opacity: 0;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  animation-play-state: paused;
+}
+.fcr-tooltip-zoom-leave {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.6, -0.3, 0.74, 0.05);
+  animation-play-state: paused;
+}
+.fcr-tooltip-zoom-enter.fcr-tooltip-zoom-enter-active,
+.fcr-tooltip-zoom-appear.fcr-tooltip-zoom-appear-active {
+  animation-name: rcToolTipZoomIn;
+  animation-play-state: running;
+}
+.fcr-tooltip-zoom-leave.fcr-tooltip-zoom-leave-active {
+  animation-name: rcToolTipZoomOut;
+  animation-play-state: running;
+}
+@keyframes rcToolTipZoomIn {
+  0% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+  }
+}
+@keyframes rcToolTipZoomOut {
+  0% {
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+  }
+  100% {
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(0, 0);
+  }
+}
+.fcr-tooltip {
+  position: absolute;
+  z-index: 1070;
+  display: block;
+  visibility: visible;
+  line-height: 1.5;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1px;
+  font-weight: 300;
+}
+.fcr-tooltip-hidden {
+  display: none;
+}
+.fcr-tooltip-inner {
+  padding: 8px 10px;
+  color: #333333;
+  text-align: left;
+  text-decoration: none;
+  background-color: #ffffff;
+  border-radius: 3px;
+  min-height: 34px;
+  border: 1px solid #b1b1b1;
+}
+.fcr-tooltip-arrow,
+.fcr-tooltip-arrow-inner {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.fcr-tooltip-placement-top .fcr-tooltip-arrow,
+.fcr-tooltip-placement-topLeft .fcr-tooltip-arrow,
+.fcr-tooltip-placement-topRight .fcr-tooltip-arrow {
+  bottom: -5px;
+  margin-left: -6px;
+  border-width: 6px 6px 0;
+  border-top-color: #b1b1b1;
+}
+.fcr-tooltip-placement-top .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-topLeft .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-topRight .fcr-tooltip-arrow-inner {
+  bottom: 1px;
+  margin-left: -6px;
+  border-width: 6px 6px 0;
+  border-top-color: #ffffff;
+}
+.fcr-tooltip-placement-top .fcr-tooltip-arrow {
+  left: 50%;
+}
+.fcr-tooltip-placement-topLeft .fcr-tooltip-arrow {
+  left: 15%;
+}
+.fcr-tooltip-placement-topRight .fcr-tooltip-arrow {
+  right: 15%;
+}
+.fcr-tooltip-placement-right .fcr-tooltip-arrow,
+.fcr-tooltip-placement-rightTop .fcr-tooltip-arrow,
+.fcr-tooltip-placement-rightBottom .fcr-tooltip-arrow {
+  left: -5px;
+  margin-top: -6px;
+  border-width: 6px 6px 6px 0;
+  border-right-color: #b1b1b1;
+}
+.fcr-tooltip-placement-right .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-rightTop .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-rightBottom .fcr-tooltip-arrow-inner {
+  left: 1px;
+  margin-top: -6px;
+  border-width: 6px 6px 6px 0;
+  border-right-color: #ffffff;
+}
+.fcr-tooltip-placement-right .fcr-tooltip-arrow {
+  top: 50%;
+}
+.fcr-tooltip-placement-rightTop .fcr-tooltip-arrow {
+  top: 15%;
+  margin-top: 0;
+}
+.fcr-tooltip-placement-rightBottom .fcr-tooltip-arrow {
+  bottom: 15%;
+}
+.fcr-tooltip-placement-left .fcr-tooltip-arrow,
+.fcr-tooltip-placement-leftTop .fcr-tooltip-arrow,
+.fcr-tooltip-placement-leftBottom .fcr-tooltip-arrow {
+  right: -5px;
+  margin-top: -6px;
+  border-width: 6px 0 6px 6px;
+  border-left-color: #b1b1b1;
+}
+.fcr-tooltip-placement-left .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-leftTop .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-leftBottom .fcr-tooltip-arrow-inner {
+  right: 1px;
+  margin-top: -6px;
+  border-width: 6px 0 6px 6px;
+  border-left-color: #ffffff;
+}
+.fcr-tooltip-placement-left .fcr-tooltip-arrow {
+  top: 50%;
+}
+.fcr-tooltip-placement-leftTop .fcr-tooltip-arrow {
+  top: 15%;
+  margin-top: 0;
+}
+.fcr-tooltip-placement-leftBottom .fcr-tooltip-arrow {
+  bottom: 15%;
+}
+.fcr-tooltip-placement-bottom .fcr-tooltip-arrow,
+.fcr-tooltip-placement-bottomLeft .fcr-tooltip-arrow,
+.fcr-tooltip-placement-bottomRight .fcr-tooltip-arrow {
+  top: -5px;
+  margin-left: -6px;
+  border-width: 0 6px 6px;
+  border-bottom-color: #b1b1b1;
+}
+.fcr-tooltip-placement-bottom .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-bottomLeft .fcr-tooltip-arrow-inner,
+.fcr-tooltip-placement-bottomRight .fcr-tooltip-arrow-inner {
+  top: 1px;
+  margin-left: -6px;
+  border-width: 0 6px 6px;
+  border-bottom-color: #ffffff;
+}
+.fcr-tooltip-placement-bottom .fcr-tooltip-arrow {
+  left: 50%;
+}
+.fcr-tooltip-placement-bottomLeft .fcr-tooltip-arrow {
+  left: 15%;
+}
+.fcr-tooltip-placement-bottomRight .fcr-tooltip-arrow {
+  right: 15%;
+}
+
+.fcr-tooltip {
+  background: transparent;
+}
+.fcr-tooltip .fcr-tooltip-arrow {
+  border-color: transparent;
+}
+
+.fcr-tooltip-content {
+  background: transparent;
+}
+
+/** Guide ToolTip **/
+.fcr-guide-tooltip-overlay-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.fcr-guide-tooltip-overlay-content-inner {
+  flex: 1;
+  flex-shrink: 0;
+}
+.fcr-guide-tooltip-overlay-content-closable {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+/** Dialog ToolTip **/
+.fcr-dialog-tooltip .fcr-tooltip-inner {
+  overflow: hidden;
+}
+.fcr-dialog-tooltip-overlay-content {
+  padding: 15px 12px;
+  position: relative;
+  backdrop-filter: blur(25px);
+}
+.fcr-dialog-tooltip-overlay-close {
+  @apply fcr-rounded-full fcr-bg-3;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 7px;
+  right: 7px;
+}
+.fcr-dialog-tooltip-overlay-close:hover {
+  @apply fcr-bg-brand-6;
+}
+
+.fcr-dialog-tooltip-overlay-content-inner {
+  line-height: 1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+.fcr-tooltip-anim-appear {
+  opacity: 0;
+}
+.fcr-tooltip-anim-appear-active {
+  animation: 0.1s linear zoomIn;
+}
+.fcr-tooltip-anim-enter {
+  opacity: 0;
+}
+.fcr-tooltip-anim-enter-active {
+  animation: 0.1s linear zoomIn;
+}
+.fcr-tooltip-anim-leave {
+  opacity: 1;
+}
+.fcr-tooltip-anim-leave-active {
+  animation: 0.1s linear zoomOut;
+}

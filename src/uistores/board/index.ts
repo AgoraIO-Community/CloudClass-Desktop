@@ -92,7 +92,7 @@ export class BoardUIStore extends EduUIStoreBase {
     //     computed(() => this.boardApi.grantedUsers).observe(async ({ newValue, oldValue }) => {
     //       const oldGranted = oldValue;
     //       const newGranted = newValue;
-    //       const isInGroup = this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
+    //       // const isInGroup = this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
     //       if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
     //         this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
     //       }
