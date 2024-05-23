@@ -289,7 +289,9 @@ export const RoomPlaceholder = observer(() => {
 
   const endTime = (startTime || 0) + ((duration && duration * 1000) || 0);
   return (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
-    !isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive &&
+    !isBoardWidgetActive &&
+    !isMediaPlayerWidgetActive &&
+    !isWebViewWidgetActive &&
     !screenShareStream ? (
     !isInGroup ? (
       <div className="fcr-mobile-room-placeholder" style={{ height: classRoomPlacholderHeight }}>
