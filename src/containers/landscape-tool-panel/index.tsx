@@ -200,7 +200,7 @@ export const LandscapeToolPanel = observer(() => {
         style={{
           //   transform: `translate3d(0, ${handsUpActionSheetVisible ? '-100%' : 0}, 0)`,
           zIndex: ComponentLevelRules.Level3,
-          position: 'absolute',
+          position: 'fixed',
           top: 0,
           right: 0,
           left: 0,
