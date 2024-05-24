@@ -147,6 +147,7 @@ export const en = {
       title: 'Screen Share',
     },
     close_ppt: 'Close CourseWare',
+    tec_close_board: 'Teacher closed whiteboard',
     sure_close_ppt: 'Are you sure to close?',
     end_class: 'End Class',
     quit_from_room: 'Leave Class Room',

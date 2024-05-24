@@ -1,12 +1,13 @@
 import 'rc-tooltip/assets/bootstrap_white.css';
-import { CSSProperties, FC } from 'react';
+import { CSSProperties, FC, ReactElement, ReactNode } from 'react';
 import RcToolTip from 'rc-tooltip';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import './index.css';
 import './arrow.css';
 
 import classNames from 'classnames';
-// import { ToolTip,  } from '.';
+
+type ToolTipActionType = 'hover' | 'focus' | 'click' | 'contextMenu';
 
 export interface ToolTipProps {
   /**
@@ -95,7 +96,6 @@ export interface ToolTipProps {
    */
   showArrow?: boolean;
   onVisibleChange?: (visible: boolean) => void;
-  motion?: CSSMotionProps;
   getTooltipContainer?: (node: HTMLElement) => HTMLElement;
   children?: React.ReactNode;
   mouseEnterDelay?: number;
@@ -130,7 +130,6 @@ export const ToolTip: FC<ToolTipProps> = (props) => {
     overlayClassName,
     showArrow = true,
     onVisibleChange,
-    motion,
     getTooltipContainer,
     mouseEnterDelay,
     mouseLeaveDelay,
@@ -176,12 +175,6 @@ export const ToolTip: FC<ToolTipProps> = (props) => {
       placement={placement}
       overlay={content}
       overlayInnerStyle={{ ...defaultOverlayInnerStyle, ...overlayInnerStyle }}
-      motion={
-        motion || {
-          motionAppear: true,
-          motionName: 'fcr-tooltip-anim',
-        }
-      }
       {...others}>
       {(children as ReactElement) || <></>}
     </RcToolTip>
@@ -243,7 +236,7 @@ export const GuideToolTip: FC<GuideToolTipProps> = (props) => {
     color: 'white',
     borderRadius: `8px`,
   };
-  const iconColor = props.overlayInnerStyle?.background || colors['brand'][6];
+  const iconColor = props.overlayInnerStyle?.background;
   return (
     <ToolTip
       arrowContent={

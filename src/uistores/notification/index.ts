@@ -131,7 +131,13 @@ export class NotificationUIStore extends EduUIStoreBase {
         },
       ),
     );
-
+    this._disposers.push(
+      computed(() => this.boardApi.mounted).observe(async ({ newValue, oldValue }) => {
+        if (oldValue && newValue != oldValue) {
+          this.shareUIStore.addToast(transI18n('toast.tec_close_board'));
+        }
+      }),
+    );
     // class is end
     this._disposers.push(
       reaction(

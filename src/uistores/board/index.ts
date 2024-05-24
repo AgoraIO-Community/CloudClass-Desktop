@@ -2,6 +2,9 @@ import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { action, computed, IReactionDisposer, Lambda, observable } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { transI18n } from 'agora-common-libs';
+// import { ToastApi } from '../../containers/toast';
+// import { ToastApi } from '@components/toast';
+// import { SvgIconEnum } from '@components/svg-img';
 
 export class BoardUIStore extends EduUIStoreBase {
   protected _disposers: (IReactionDisposer | Lambda)[] = [];
@@ -86,22 +89,36 @@ export class BoardUIStore extends EduUIStoreBase {
   onInstall() {
     const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
 
-    // if (role === EduRoleTypeEnum.student) {
-    //   // only student
-    //   this._disposers.push(
-    //     computed(() => this.boardApi.grantedUsers).observe(async ({ newValue, oldValue }) => {
-    //       const oldGranted = oldValue;
-    //       const newGranted = newValue;
-    //       // const isInGroup = this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
-    //       if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
-    //         this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
-    //       }
-    //       if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
-    //         this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
-    //       }
-    //     }),
-    //   );
-    // }
+    if (role === EduRoleTypeEnum.student) {
+      // only student
+      this._disposers.push(
+        computed(() => this.boardApi.grantedUsers).observe(async ({ newValue, oldValue }) => {
+          const oldGranted = oldValue;
+          const newGranted = newValue;
+          // const isInGroup = this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
+          if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
+            this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
+            // this.shareUIStore.addSingletonToast(
+            //   transI18n('toast2.teacher.grant.permission'),
+            //   'normal',
+            // );
+            // ToastApi.open({
+            //   persist: true,
+            //   duration: 15000,
+            //   toastProps: {
+            //     type: 'warn',
+            //     icon: SvgIconEnum.FCR_HOST,
+            //     content: transI18n('fcr_board_granted'),
+            //     closable: true,
+            //   },
+            // });
+          }
+          if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
+            this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
+          }
+        }),
+      );
+    }
   }
 
   @action.bound

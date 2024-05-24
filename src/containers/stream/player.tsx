@@ -276,7 +276,7 @@ export const RoomPlaceholder = observer(() => {
   const {
     streamUIStore: { teacherCameraStream, screenShareStream },
     layoutUIStore: { classRoomPlacholderHeight, classRoomPlacholderIngroupHeight },
-    boardUIStore: { mounted },
+    boardUIStore: { mounted, isGrantedBoard },
     groupUIStore: { isInGroup },
     getters: { isBoardWidgetActive, isMediaPlayerWidgetActive, isWebViewWidgetActive },
     classroomStore: {
@@ -302,7 +302,7 @@ export const RoomPlaceholder = observer(() => {
         <p>
           {dayjs(startTime).format('YYYY.MM.DD HH:mm')}-{dayjs(endTime).format('HH:mm')}
         </p>
-        <FixedBoardTips />
+        {isGrantedBoard && <FixedBoardTips />}
       </div>
     ) : (
       <div

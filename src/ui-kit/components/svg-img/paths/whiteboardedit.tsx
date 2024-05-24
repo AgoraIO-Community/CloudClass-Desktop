@@ -1,3 +1,4 @@
+import React from 'react';
 import { PathOptions } from '../svg-dict';
 
 export const path = ({ iconPrimary }: PathOptions) => (
