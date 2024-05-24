@@ -276,7 +276,7 @@ export class LayoutUIStore extends EduUIStoreBase {
   }
   @computed
   get classRoomPlacholderHeight() {
-    const innerWidth = window.innerWidth;
+    const innerWidth = this.shareUIStore.isLandscape ? window.innerWidth : window.innerWidth;
     return innerWidth * (190 / 375);
   }
   @computed
