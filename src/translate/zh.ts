@@ -446,6 +446,8 @@ export const zh = {
     'teacher.turn.on.my.cam': '老师已打开你的摄像头',
     'teacher.grant.permission': '你已被老师授权，请使用白板工具互动',
     'teacher.revoke.permission': '你已被老师收回授权，无法使用白板工具互动',
+    'teacher.grant.permission2': '老师授权给你使用白板',
+    'teacher.revoke.permission2': '老师已收回你的白板操作权限',
     'teacher.accept.onpodium': '老师邀请你上台了，与大家积极互动吧',
     'teacher.revoke.onpodium': '你离开讲台了，暂时无法与大家互动',
     'teacher.reward': '祝贺{reason}获得奖励',
