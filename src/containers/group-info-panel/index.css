@@ -48,7 +48,7 @@
   cursor: pointer;
   color: #fff;
   font-size: 11px;
-  line-height: 24px;
+  white-space: nowrap;
   margin-right: 8px;
 }
 .help-button.active{
@@ -59,13 +59,14 @@
 }
 .leave-group-button {
   display: flex;
-  height: 26px;
   padding: 0 13px;
   background-color: #4262ff;
   border-radius: 8px;
   justify-content: center;
   color: #fff;
   font-size: 11px;
-  line-height: 24px;
+  height: 26px;
+  align-items: center;
   margin-right: 7px;
+  white-space: nowrap;
 }
