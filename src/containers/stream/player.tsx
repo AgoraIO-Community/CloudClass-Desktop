@@ -15,7 +15,6 @@ import { MicrophoneIndicator } from '../action-sheet/mic';
 import { StreamContext, convertStreamUIStatus } from './context';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
-import { FixedBoardTips } from './fixed-board-tips';
 
 import 'swiper/css';
 const TeacherStreamH5Tool = ({
@@ -302,7 +301,6 @@ export const RoomPlaceholder = observer(() => {
         <p>
           {dayjs(startTime).format('YYYY.MM.DD HH:mm')}-{dayjs(endTime).format('HH:mm')}
         </p>
-        {isGrantedBoard && <FixedBoardTips />}
       </div>
     ) : (
       <div
