@@ -25,6 +25,7 @@ const StudentStreams = observer(() => {
       userStore: { rewards },
     },
     layoutUIStore: {},
+    boardUIStore: { isGrantedBoard },
   } = useStore();
   const [current, setCurrent] = useState(0);
   const {
@@ -142,21 +143,24 @@ const StudentStreams = observer(() => {
                           stream={stream}></StreamPlayer>
                       </StreamContext.Provider>
                     )}
-                    <div className="fcr-stream-mobile-stu-top-left">
-                      {/* <div className="fcr-stream-mobile-stu-bgwhite">
-                        <SvgImg
-                          type={SvgIconEnum.FCR_HOST}
-                          colors={{ iconPrimary: '#FFC700' }}
-                          size={20}
-                        />
-                      </div> */}
+                    <div
+                      className="fcr-stream-mobile-stu-top-left"
+                      style={{
+                        opacity: visible ? 1 : 0,
+                        visibility: visible ? 'visible' : 'hidden',
+                      }}>
+                      {isGrantedBoard && (
+                        <div className="fcr-stream-mobile-stu-bgwhite">
+                          <SvgImg
+                            type={SvgIconEnum.FCR_HOST}
+                            colors={{ iconPrimary: '#FFC700' }}
+                            size={20}
+                          />
+                        </div>
+                      )}
                       <div
                         className="fcr-stream-mobile-stu-bgwhite"
-                        style={{
-                          paddingRight: '4px',
-                          opacity: visible ? 1 : 0,
-                          visibility: visible ? 'visible' : 'hidden',
-                        }}>
+                        style={{ paddingRight: '4px' }}>
                         <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
                         <span className="fcr-stream-mobile-stu-x">x</span>
                         <span>{reward || 0}</span>

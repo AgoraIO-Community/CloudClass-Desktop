@@ -2,9 +2,9 @@ import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 import { action, computed, IReactionDisposer, Lambda, observable } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { transI18n } from 'agora-common-libs';
-// import { ToastApi } from '../../containers/toast';
-// import { ToastApi } from '@components/toast';
-// import { SvgIconEnum } from '@components/svg-img';
+import { ToastApi } from '../../containers/toast';
+import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
+// import { ToastApi } from "@components/toast";
 
 export class BoardUIStore extends EduUIStoreBase {
   protected _disposers: (IReactionDisposer | Lambda)[] = [];
@@ -95,26 +95,22 @@ export class BoardUIStore extends EduUIStoreBase {
         computed(() => this.boardApi.grantedUsers).observe(async ({ newValue, oldValue }) => {
           const oldGranted = oldValue;
           const newGranted = newValue;
-          // const isInGroup = this.classroomStore.groupStore.groupUuidByUserUuid.get(userUuid);
           if (newGranted.has(userUuid) && !oldGranted?.has(userUuid)) {
-            this.shareUIStore.addToast(transI18n('toast2.teacher.grant.permission'));
-            // this.shareUIStore.addSingletonToast(
-            //   transI18n('toast2.teacher.grant.permission'),
-            //   'normal',
-            // );
-            // ToastApi.open({
-            //   persist: true,
-            //   duration: 15000,
-            //   toastProps: {
-            //     type: 'warn',
-            //     icon: SvgIconEnum.FCR_HOST,
-            //     content: transI18n('fcr_board_granted'),
-            //     closable: true,
-            //   },
-            // });
+            ToastApi.open({
+              persist: true,
+              duration: 86400000,
+              toastProps: {
+                type: 'warn',
+                icon: SvgIconEnum.FCR_HOST,
+                iconColor: '#020065',
+                content: transI18n('toast2.teacher.grant.permission2'),
+                closable: true,
+              },
+            });
           }
           if (!newGranted.has(userUuid) && oldGranted?.has(userUuid)) {
-            this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission'));
+            ToastApi.destroyAll();
+            this.shareUIStore.addToast(transI18n('toast2.teacher.revoke.permission2'));
           }
         }),
       );

@@ -457,6 +457,8 @@ export const en = {
     'teacher.turn.on.my.cam': 'The teacher has turned on your camera',
     'teacher.grant.permission': 'You can now annotate on the whiteboard',
     'teacher.revoke.permission': 'Your access to the whiteboard has been revoked by the teacher',
+    'teacher.grant.permission2': 'You can now annotate on the whiteboard',
+    'teacher.revoke.permission2': 'Your access to the whiteboard has been revoked by the teacher',
     'teacher.accept.onpodium':
       'You are on stage now, you are in presentation mode now. Please feel free to interact with others',
     'teacher.revoke.onpodium': 'You are off the stage now, you are no longer in presentation mode',

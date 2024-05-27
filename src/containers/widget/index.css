@@ -36,7 +36,7 @@
   /* pointer-events: none; */
 }
 .widget-slot-media-player .fcr-h-full,
-.widget-slot-web-view .fcr-h-full{
+.widget-slot-web-view .fcr-h-full {
   pointer-events: none;
 }
 .widget-slot-board .netless-whiteboard-wrapper {
