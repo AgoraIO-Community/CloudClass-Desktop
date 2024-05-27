@@ -460,10 +460,13 @@
   top: 2px;
   display: flex;
   gap: 3px;
+  border-radius: 3px;
   font-weight: 700;
   color: rgba(55, 60, 66, 1);
   font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.55);
   max-width: 100%;
+  padding: 0 3px;
 }
 .fcr-stream-mobile-stu-x {
   font-weight: 300;

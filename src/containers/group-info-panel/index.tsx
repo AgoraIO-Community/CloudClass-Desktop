@@ -35,7 +35,7 @@ export const GroupInfoPanel: FC<Props> = observer(() => {
   }, [teacherGroupUuid]);
   const { userName } = EduClassroomConfig.shared.sessionInfo;
   const { currentSubRoom } = classroomStore.groupStore;
-  const isTeacherIn = teacherGroupUuid === currentSubRoom;
+  const isTeacherIn = teacherGroupUuid !== undefined && teacherGroupUuid === currentSubRoom;
   const transI18n = useI18n();
   const groupInfo = getUserGroupInfo(userUuid);
   const { toolVisible } = streamUIStore;

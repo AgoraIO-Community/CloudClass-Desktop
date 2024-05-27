@@ -55,7 +55,7 @@ export const LandscapeToolPanel = observer(() => {
 
   const volume = localVolume;
   const { currentSubRoom } = classroomStore.groupStore;
-  const isTeacherIn = teacherGroupUuid === currentSubRoom;
+  const isTeacherIn = teacherGroupUuid !== undefined && teacherGroupUuid === currentSubRoom;
   useEffect(() => {
     if (micOn && cameraOn) {
       setCallState(MobileCallState.VideoAndVoiceCall);
@@ -206,7 +206,7 @@ export const LandscapeToolPanel = observer(() => {
           left: 0,
           width: '100vw',
           height: '40px',
-          backgroundColor: 'rgba(38, 40, 44, 1)',
+          backgroundColor: 'rgba(38, 40, 44, .9)',
         }}>
         <div className="landscape-classroom-info">
           {groupInfo ? (
