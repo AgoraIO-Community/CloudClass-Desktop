@@ -314,6 +314,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   private _getEnabledWidgets() {
     const widgets = Object.entries(AgoraEduSDK.widgets).reduce((prev, [key, value]) => {
+      console.log('_getEnabledWidgets', prev, key, value)
       if (!popupQuizEnabled(AgoraEduSDK.uiConfig) && key === 'popupQuiz') {
         return prev;
       }
