@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { observer } from 'mobx-react-lite';
 import { SvgIconEnum, Button } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { Drawer } from 'antd';
@@ -9,7 +8,7 @@ import { BoardExpand } from '../../board-expand';
 import './index.css';
 import 'antd/es/drawer/style/index.css';
 
-export const FixedBoardTips = observer(() => {
+export const FixedBoardTips = () => {
   const transI18n = useI18n();
   const [warning, setWarn] = useState<boolean>(true);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
@@ -21,7 +20,8 @@ export const FixedBoardTips = observer(() => {
     return () => clearTimeout(timer);
   }, []);
 
-  const toogleBoardTipsPopup = () => {
+  const toogleBoardTipsPopup = (e?: Event) => {
+    e?.stopPropagation();
     setDrawerVisible((pre) => !pre);
   };
 
@@ -90,7 +90,7 @@ export const FixedBoardTips = observer(() => {
                 size={47}
                 style={{ background: 'none' }}
               />
-              <span style={{ transform: 'translateY(-28px)' }}>
+              <span style={{ transform: 'translateY(-20px)' }}>
                 {transI18n('fcr_board_enable')}
               </span>
             </div>
@@ -121,4 +121,4 @@ export const FixedBoardTips = observer(() => {
       </Drawer>
     </>
   );
-});
+};

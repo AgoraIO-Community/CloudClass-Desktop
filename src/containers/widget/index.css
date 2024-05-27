@@ -33,7 +33,7 @@
   background-color: #fff;
 
   border-color: #fff;
-  /* pointer-events: none; */
+  pointer-events: none;
 }
 .widget-slot-media-player .fcr-h-full,
 .widget-slot-web-view .fcr-h-full {

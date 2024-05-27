@@ -6,6 +6,7 @@ import React, { MutableRefObject, useEffect, useRef, useState, useLayoutEffect }
 import { ComponentLevelRules } from '../../configs/config';
 import classNames from 'classnames';
 import { useMobileStreamDrag } from '../stream/player';
+import { FixedBoardTips } from './fixed-board-tips';
 import './index.css';
 import { TeacherStream } from '../teacher-stream';
 
@@ -46,7 +47,7 @@ export const Whiteboard = observer(function Board() {
     shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
   } = useStore();
 
-  const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
+  const { boardContainerHeight, mounted, boardContainerWidth, isGrantedBoard } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
       ? boardContainerWidth - 143
@@ -76,6 +77,7 @@ export const Whiteboard = observer(function Board() {
       onClick={() => {
         toggleTool();
       }}>
+      {!isLandscape && isGrantedBoard && <FixedBoardTips />}
       <div
         onClick={toggleLandscapeToolBarVisible}
         style={{
@@ -130,24 +132,23 @@ export const MadiaPlayer = observer(function Media() {
       onClick={() => {
         toggleTool();
       }}>
-        {
-          mediaPlayerWidget.length > 0 && mediaPlayerWidget.map((item) => {
-            return (
-              <div key={item.widgetId}
-                onClick={toggleLandscapeToolBarVisible}
-                style={{
-                  display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
-                  height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
-                  zIndex: ComponentLevelRules.Level0,
-                  width: landscapeBoardSize.width,
-                  // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
-                }}
-                className={`widget-slot-media-player widget-slot-media-player-${item.widgetId}`}
-              />
-            )
-          })
-        }
-      
+      {mediaPlayerWidget.length > 0 &&
+        mediaPlayerWidget.map((item) => {
+          return (
+            <div
+              key={item.widgetId}
+              onClick={toggleLandscapeToolBarVisible}
+              style={{
+                display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
+                height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+                zIndex: ComponentLevelRules.Level0,
+                width: landscapeBoardSize.width,
+                // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+              }}
+              className={`widget-slot-media-player widget-slot-media-player-${item.widgetId}`}
+            />
+          );
+        })}
     </div>
   );
 });
@@ -191,23 +192,23 @@ export const WebView = observer(function View() {
       onClick={() => {
         toggleTool();
       }}>
-        {
-          webViewWidget.length > 0 && webViewWidget.map((item) => {
-            return (
-              <div key={item.widgetId}
-                onClick={toggleLandscapeToolBarVisible}
-                style={{
-                  display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
-                  height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
-                  zIndex: ComponentLevelRules.Level0,
-                  width: landscapeBoardSize.width,
-                  // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
-                }}
-                className={`widget-slot-web-view widget-slot-web-view-${item.widgetId}`}
-              />
-            )
-          })
-        }
+      {webViewWidget.length > 0 &&
+        webViewWidget.map((item) => {
+          return (
+            <div
+              key={item.widgetId}
+              onClick={toggleLandscapeToolBarVisible}
+              style={{
+                display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
+                height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+                zIndex: ComponentLevelRules.Level0,
+                width: landscapeBoardSize.width,
+                // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
+              }}
+              className={`widget-slot-web-view widget-slot-web-view-${item.widgetId}`}
+            />
+          );
+        })}
     </div>
   );
 });
@@ -233,13 +234,15 @@ export const Chat = observer(function Chat() {
   const [chatH5Height, setChatH5Height] = useState(0);
 
   const calcHeight = () => {
-    const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM')
+    const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM');
     const h5Height = document.body.clientHeight;
     //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
     const height =
       h5Height -
       (screenShareStream ? boardContainerHeight : 0) -
-      (!widgets.length && (!teacherCameraStream || teacherCameraStream.isCameraMuted) && !screenShareStream
+      (!widgets.length &&
+      (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
+      !screenShareStream
         ? isInGroup
           ? classRoomPlacholderIngroupHeight
           : classRoomPlacholderHeight
@@ -251,7 +254,7 @@ export const Chat = observer(function Chat() {
       (studentCameraStreams.length > 0 && studentStreamsVisible
         ? studentVideoStreamSize.height
         : 0);
-        
+
     setChatH5Height(height);
   };
   useEffect(calcHeight, [
@@ -306,7 +309,7 @@ export const Chat = observer(function Chat() {
         flex: 1,
         flexShrink: 0,
         background: '#27292f',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     />
   );
