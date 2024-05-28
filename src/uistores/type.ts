@@ -19,6 +19,7 @@ export enum CustomMessageCommandType {
   cancelInvite = 'cancelInvite',
   teacherRejectInvite = 'teacherRejectInvite',
   teacherAcceptInvite = 'teacherAcceptInvite',
+  teacherCloseGroup = 'teacherCloseGroup'
 }
 export type CustomMessageCancelInviteType = {
   groupUuid: string;
