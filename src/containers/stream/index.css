@@ -490,6 +490,7 @@
 .fcr-mobile-room-placeholder {
   display: flex;
   padding-left: 23px;
+  height: 190px;
   justify-content: center;
   flex-direction: column;
   background: url('./assets/room-placholder-bg.jpg') no-repeat top left / cover;

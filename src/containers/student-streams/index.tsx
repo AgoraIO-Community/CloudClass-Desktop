@@ -56,6 +56,7 @@ const StudentStreams = observer(() => {
   return (
     <div
       className={classnames(
+        'fcr-student-streams',
         'fcr-items-center',
         'fcr-relative',
         containerH5Extend,
