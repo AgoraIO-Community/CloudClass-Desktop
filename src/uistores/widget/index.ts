@@ -152,6 +152,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       if (allWidgets.length) {
         this._setCurrentWidget(allWidgets[allWidgets.length - 1])
       }
+      console.log('AgoraExtensionRoomEvent.GetApplications', this._widgetInstances)
       widgetController.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
       
       this.logger.info(`widget [${widgetId}] is ready to render`);
@@ -314,7 +315,6 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   private _getEnabledWidgets() {
     const widgets = Object.entries(AgoraEduSDK.widgets).reduce((prev, [key, value]) => {
-      console.log('_getEnabledWidgets', prev, key, value)
       if (!popupQuizEnabled(AgoraEduSDK.uiConfig) && key === 'popupQuiz') {
         return prev;
       }

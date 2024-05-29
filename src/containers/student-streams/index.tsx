@@ -56,6 +56,7 @@ const StudentStreams = observer(() => {
   return (
     <div
       className={classnames(
+        'fcr-student-streams',
         'fcr-items-center',
         'fcr-relative',
         containerH5Extend,
@@ -148,6 +149,7 @@ const StudentStreams = observer(() => {
                       style={{
                         opacity: visible ? 1 : 0,
                         visibility: visible ? 'visible' : 'hidden',
+                        background: 'transparent',
                       }}>
                       {isGrantedBoard && (
                         <div className="fcr-stream-mobile-stu-bgwhite">

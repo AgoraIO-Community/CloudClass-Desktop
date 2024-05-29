@@ -52,6 +52,7 @@ export class GroupUIStore extends EduUIStoreBase {
   private _studentInvite: any = {}
   private _groupNum = 0;
   private _dialogsMap = new Map();
+  @observable
   private _inviteStudentTasks = new Map()
 
   MAX_USER_COUNT = 15; // 学生最大15人
@@ -445,10 +446,6 @@ export class GroupUIStore extends EduUIStoreBase {
       name: studentInfo.name,
     }
     if (studentInfo.isInvite) {
-      if (this._inviteStudentTasks.has(`${userUuid}`)) {
-        this._inviteStudentTasks.get(`${userUuid}`)?.stop()
-        this._inviteStudentTasks.delete(`${userUuid}`)
-      }
       const intervalInMs = getRandomInt(2000, 4000);
       const inviteTask = Scheduler.shared.addIntervalTask(
         () => {
@@ -470,7 +467,6 @@ export class GroupUIStore extends EduUIStoreBase {
         this._inviteStudentTasks.get(`${userUuid}`)?.stop()
         this._inviteStudentTasks.delete(`${userUuid}`)
       }
-     
       const message: CustomMessageData<CustomMessageCancelInviteType> = {
         cmd: CustomMessageCommandType.cancelInvite,
         data: {
@@ -483,8 +479,6 @@ export class GroupUIStore extends EduUIStoreBase {
       };
       this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
     }
-   
-   
   }
   /**
    * 用户组互换
@@ -930,6 +924,14 @@ export class GroupUIStore extends EduUIStoreBase {
           this.shareUIStore.addToast(transI18n('fcr_group_teacher_join'));
           this._studentInvite.isInvite = false
         }
+        break;
+      }
+      case CustomMessageCommandType.teacherCloseGroup: {
+        const tasks = [...this._inviteStudentTasks.keys()]
+        for (let i = 0; i < tasks.length; i++) { 
+          this._inviteStudentTasks.get(tasks[i])?.stop()
+        }
+        this._inviteStudentTasks.clear()
         break;
       }
     }

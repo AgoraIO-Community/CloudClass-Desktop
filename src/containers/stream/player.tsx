@@ -293,7 +293,7 @@ export const RoomPlaceholder = observer(() => {
     !isWebViewWidgetActive &&
     !screenShareStream ? (
     !isInGroup ? (
-      <div className="fcr-mobile-room-placeholder" style={{ height: classRoomPlacholderHeight }}>
+      <div className="fcr-mobile-room-placeholder" style={{ height: '190px'}}>
         <p>
           {transI18n('fcr_copy_room_id')} {EduClassroomConfig.shared.sessionInfo.roomUuid}
         </p>

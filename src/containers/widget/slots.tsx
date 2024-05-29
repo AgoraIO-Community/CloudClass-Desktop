@@ -245,7 +245,7 @@ export const Chat = observer(function Chat() {
       !screenShareStream
         ? isInGroup
           ? classRoomPlacholderIngroupHeight
-          : classRoomPlacholderHeight
+          : 190
         : 0) -
       (widgets.length > 0 ? boardContainerHeight : 0) -
       (!isLandscape && teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP
@@ -254,7 +254,6 @@ export const Chat = observer(function Chat() {
       (studentCameraStreams.length > 0 && studentStreamsVisible
         ? studentVideoStreamSize.height
         : 0);
-
     setChatH5Height(height);
   };
   useEffect(calcHeight, [
@@ -305,10 +304,12 @@ export const Chat = observer(function Chat() {
     <div
       className="widget-slot-chat-mobile"
       style={{
-        // height: chatH5Height < 190 ? 190 : chatH5Height,
-        flex: 1,
+        height: chatH5Height < 230 ? 230 : chatH5Height,
+        position: isLandscape ? 'absolute' : 'inherit',
+        bottom: isLandscape ? 0 : undefined,
+        width: isLandscape ? '270px' : 'auto',
         flexShrink: 0,
-        background: '#27292f',
+        background: isLandscape ? 'transparent' : '#27292f',
         overflow: 'hidden',
       }}
     />
