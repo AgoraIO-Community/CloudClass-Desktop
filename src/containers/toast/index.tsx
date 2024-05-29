@@ -241,7 +241,7 @@ export class ToastApi {
   private static get _classroomViewport() {
     return document.querySelector(`.${this._boardroomViewportClassName}`);
   }
-  private static _maxPresistToastRenderCount = 1;
+  private static _maxPresistToastRenderCount = 2;
   private static _presistToastRenderCount = 0;
 
   private static _presistToasts: RenderableToast[] = [];
@@ -292,7 +292,7 @@ export class ToastApi {
     }
   };
   private static _scanRenderableToast = () => {
-    if (!this._preCheck()) return;
+    // if (!this._preCheck()) return;
 
     const renderableToast = this._presistToasts.shift();
     if (renderableToast) {

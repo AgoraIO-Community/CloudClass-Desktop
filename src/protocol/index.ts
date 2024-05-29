@@ -43,6 +43,7 @@ export class Extension {
   updateOrientationStates(param: OrientationStates) {
     this._broadcastMessage(AgoraExtensionRoomEvent.OrientationStatesChanged, param);
   }
+
   updateMobileLandscapeToolBarVisible(visible: boolean) {
     this._broadcastMessage(AgoraExtensionRoomEvent.MobileLandscapeToolBarVisibleChanged, visible);
   }

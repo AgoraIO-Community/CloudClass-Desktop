@@ -82,6 +82,7 @@ export enum AgoraExtensionRoomEvent {
  */
 export enum AgoraExtensionWidgetEvent {
   /** 白板 */
+  OrientationStatesChangedAgain = 'orientation-states-changed-again',
   // 连接状态变更
   BoardConnStateChanged = 'board-connection-state-changed',
   // 挂载状态变更
