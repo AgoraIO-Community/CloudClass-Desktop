@@ -5,8 +5,8 @@ import { Drawer } from 'antd';
 import { GuideToolTip } from '../../tooltip/guide';
 import { BoardExpand } from '../../board-expand';
 
-import './index.css';
 import 'antd/es/drawer/style/index.css';
+import './index.css';
 
 export const FixedBoardTips = () => {
   const transI18n = useI18n();
@@ -63,7 +63,7 @@ export const FixedBoardTips = () => {
               size={48}
               style={{ width: '48px', height: '48px' }}
             />
-            <div className="fcr-flex fcr-flex1 column">
+            <div className="fcr-flex fcr-flex1 column pl-19">
               <div className="whiteboard-title">{transI18n('fcr_board_edit')}</div>
               <div className="whiteboard-instructions">{transI18n('fcr_board_rotate_tip')}</div>
             </div>
@@ -103,7 +103,7 @@ export const FixedBoardTips = () => {
                   width: '60px',
                   height: '60px',
                   borderRadius: '50%',
-                  rotate: '-45deg',
+                  transform: 'rotate(-45deg)',
                 }}
               />
 

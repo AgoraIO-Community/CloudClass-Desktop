@@ -185,6 +185,10 @@ export class LayoutUIStore extends EduUIStoreBase {
             messageType: AgoraExtensionWidgetEvent.QueryMobileCallState,
             onMessage: this._handleQueryMobileCallState,
           });
+          widgetController.removeBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.OrientationStatesChangedAgain,
+            onMessage: this._updateOrientationStates,
+          });
         }
         if (newValue.widgetController) {
           const widgetController = newValue.widgetController;
@@ -215,6 +219,10 @@ export class LayoutUIStore extends EduUIStoreBase {
           widgetController.addBroadcastListener({
             messageType: AgoraExtensionWidgetEvent.QueryMobileCallState,
             onMessage: this._handleQueryMobileCallState,
+          });
+          widgetController.addBroadcastListener({
+            messageType: AgoraExtensionWidgetEvent.OrientationStatesChangedAgain,
+            onMessage: this._updateOrientationStates,
           });
           this._updateOrientationStates();
         }
