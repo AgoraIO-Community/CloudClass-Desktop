@@ -84,7 +84,7 @@ export const Scenario = observer(() => {
               <div
                 className="fct-mobile-main-container"
                 style={{ height: isLandscape ? landscapeInnerHeight : window.innerHeight }}>
-                <div className='fct-mobile-main-top'>
+                <div className={isLandscape ? 'fct-mobile-main-top' : ''}>
                   <div style={{ opacity: currentWidget?.widgetName === 'netlessBoard' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'netlessBoard' ? isLandscape ? '100%' : 'auto' : 0}}><Whiteboard key={'board'} /></div>
                   <div style={{ opacity: currentWidget?.widgetName === 'mediaPlayer' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'mediaPlayer' ? isLandscape ? '100%' : 'auto' : 0}}><MadiaPlayer key={'media'} /></div>
                   <div style={{ opacity: currentWidget?.widgetName === 'webView' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'webView' ? isLandscape ? '100%' : 'auto' : 0}}> <WebView key={'webview'} /></div>

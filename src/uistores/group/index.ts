@@ -53,7 +53,7 @@ export class GroupUIStore extends EduUIStoreBase {
   private _groupNum = 0;
   private _dialogsMap = new Map();
   @observable
-  private _inviteStudentTasks = new Map()
+  private _inviteStudentTask: any = undefined
 
   MAX_USER_COUNT = 15; // 学生最大15人
   @observable studentGroupInvites: CustomMessageInviteType = {
@@ -434,7 +434,7 @@ export class GroupUIStore extends EduUIStoreBase {
     const stu = item.children.find((v) => v.id === userUuid);
     if (stu) {
       stu.isInvite = studentInfo.isInvite;
-      this._inviteStudentTasks.get(`${userUuid}`)?.stop()
+      this._inviteStudentTask?.stop()
     } else {
       item.children.push(studentInfo)
     }
@@ -447,26 +447,33 @@ export class GroupUIStore extends EduUIStoreBase {
     }
     if (studentInfo.isInvite) {
       const intervalInMs = getRandomInt(2000, 4000);
-      const inviteTask = Scheduler.shared.addIntervalTask(
+      if (!this._inviteStudentTask?.isStopped) {
+        this._inviteStudentTask?.stop()
+      }
+      this._inviteStudentTask = Scheduler.shared.addIntervalTask(
         () => {
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
             data: item,
           };
-          this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
+          if (this._studentInvite.isInvite) {
+            this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
+          } else {
+            if (this._inviteStudentTask) {
+              this._inviteStudentTask?.stop()
+            }
+          }
+         
         },
         intervalInMs,
         true,
       );
-      if (!this._inviteStudentTasks.has(`${userUuid}`)) {
-        this._inviteStudentTasks.set(`${userUuid}`, inviteTask)
-      }
      
     } else {
-      if (!this._inviteStudentTasks.has(`${userUuid}`)) {
-        this._inviteStudentTasks.get(`${userUuid}`)?.stop()
-        this._inviteStudentTasks.delete(`${userUuid}`)
+      if (this._inviteStudentTask) {
+        this._inviteStudentTask?.stop()
       }
+      this._studentInvite.isInvite = false
       const message: CustomMessageData<CustomMessageCancelInviteType> = {
         cmd: CustomMessageCommandType.cancelInvite,
         data: {
@@ -905,33 +912,24 @@ export class GroupUIStore extends EduUIStoreBase {
       case CustomMessageCommandType.teacherRejectInvite: {
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
-          if (this._inviteStudentTasks.has(`${userUuid}`)) {
-            this._inviteStudentTasks.get(`${userUuid}`)?.stop()
-            this._inviteStudentTasks.delete(`${userUuid}`)
+            // debugger
+            this._studentInvite.isInvite = false
             this.shareUIStore.addToast(transI18n('fcr_group_helzhenp_teacher_busy_msg'));
-          }
-          this._studentInvite.isInvite = false
+            this._inviteStudentTask?.stop()
         }
         break;
       }
       case CustomMessageCommandType.teacherAcceptInvite: {
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
-          if (this._inviteStudentTasks.has(`${userUuid}`)) {
-            this._inviteStudentTasks.get(`${userUuid}`)?.stop()
-            this._inviteStudentTasks.delete(`${userUuid}`)
-          }
+          this._inviteStudentTask?.stop()
           this.shareUIStore.addToast(transI18n('fcr_group_teacher_join'));
           this._studentInvite.isInvite = false
         }
         break;
       }
       case CustomMessageCommandType.teacherCloseGroup: {
-        const tasks = [...this._inviteStudentTasks.keys()]
-        for (let i = 0; i < tasks.length; i++) { 
-          this._inviteStudentTasks.get(tasks[i])?.stop()
-        }
-        this._inviteStudentTasks.clear()
+        this._inviteStudentTask?.stop()
         break;
       }
     }
