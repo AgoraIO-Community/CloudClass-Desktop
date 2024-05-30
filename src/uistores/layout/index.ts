@@ -325,7 +325,11 @@ export class LayoutUIStore extends EduUIStoreBase {
     }
   }
   @bound
-  private _updateMobileLandscapeToolBarVisible() {
+  private _updateMobileLandscapeToolBarVisible(visible?: boolean) {
+    if (visible) {
+      this._setLandscapeToolBarVisible(false);
+      return;
+    }
     this.extensionApi.updateMobileLandscapeToolBarVisible(this.landscapeToolBarVisible);
   }
   @action.bound
