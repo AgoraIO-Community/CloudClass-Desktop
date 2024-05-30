@@ -25,7 +25,7 @@ const StudentStreams = observer(() => {
       userStore: { rewards },
     },
     layoutUIStore: {},
-    boardUIStore: { isGrantedBoard },
+    boardUIStore: { grantedUsers },
   } = useStore();
   const [current, setCurrent] = useState(0);
   const {
@@ -115,6 +115,7 @@ const StudentStreams = observer(() => {
         {studentCameraStreams.map((stream) => {
           const isLocal = stream.stream.isLocal;
           const reward = rewards.get(stream.fromUser.userUuid);
+          const hasBoardOption = grantedUsers.has(stream.fromUser.userUuid);
           return (
             <SwiperSlide key={stream.stream.streamUuid}>
               {({ isVisible }) => {
@@ -151,7 +152,7 @@ const StudentStreams = observer(() => {
                         visibility: visible ? 'visible' : 'hidden',
                         background: 'transparent',
                       }}>
-                      {isGrantedBoard && (
+                      {hasBoardOption && (
                         <div className="fcr-stream-mobile-stu-bgwhite">
                           <SvgImg
                             type={SvgIconEnum.FCR_HOST}

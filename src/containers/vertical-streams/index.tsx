@@ -27,6 +27,7 @@ const StudentStreams = observer(() => {
     },
     layoutUIStore: { landscapeToolBarVisible },
     shareUIStore: { landscapeInnerHeight },
+    boardUIStore: { grantedUsers },
   } = useStore();
   const [current, setCurrent] = useState(0);
   const {
@@ -134,6 +135,7 @@ const StudentStreams = observer(() => {
           // const isLocal = stream.stream.isLocal;
           // if (!stream) return;
           const reward = rewards.get(stream.fromUser.userUuid);
+          const hasBoardOption = grantedUsers.has(stream.fromUser.userUuid);
 
           return (
             <SwiperSlide key={stream.stream.streamUuid}>
@@ -164,10 +166,26 @@ const StudentStreams = observer(() => {
                       style={{
                         opacity: visible ? 1 : 0,
                         visibility: visible ? 'visible' : 'hidden',
+                        background: 'transparent',
+                        paddingLeft: 0,
                       }}>
-                      <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
-                      <span className="fcr-stream-mobile-stu-x">x</span>
-                      <span>{reward || 0}</span>
+                      {hasBoardOption && (
+                        <div className="fcr-stream-mobile-stu-bgwhite">
+                          <SvgImg
+                            type={SvgIconEnum.FCR_HOST}
+                            colors={{ iconPrimary: '#FFC700' }}
+                            size={20}
+                          />
+                        </div>
+                      )}
+
+                      <div
+                        className="fcr-stream-mobile-stu-bgwhite"
+                        style={{ paddingRight: '4px' }}>
+                        <SvgImg type={SvgIconEnum.FCR_REWARD} size={20}></SvgImg>
+                        <span className="fcr-stream-mobile-stu-x">x</span>
+                        <span>{reward || 0}</span>
+                      </div>
                     </div>
                     <div
                       className="fcr-stream-mobile-stu-bottom-left"
