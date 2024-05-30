@@ -489,7 +489,8 @@
 
 .fcr-mobile-room-placeholder {
   display: flex;
-  padding-left: 23px;
+  padding: 0 23px;
+  max-width: 100vw;
   height: 190px;
   justify-content: center;
   flex-direction: column;
@@ -508,6 +509,8 @@
   font-size: 18px;
   line-height: 150%;
   color: #000000;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 .fcr-stream-placeholder-mobile {
   width: 80px;

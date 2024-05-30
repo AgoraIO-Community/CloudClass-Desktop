@@ -342,7 +342,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
     return widgets;
   }
-  @bound
+  @action.bound
   private _notifyViewportChange() {
     this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
     this.widgetInstanceList.forEach((instance) => {

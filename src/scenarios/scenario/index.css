@@ -145,6 +145,10 @@
   left: 0;
   top: 0;
 }
+.fct-mobile-main-top{
+  width: 100%;
+  height: 100%;
+}
 .fct-mobile-main-container {
   position: relative;
   flex:1;
