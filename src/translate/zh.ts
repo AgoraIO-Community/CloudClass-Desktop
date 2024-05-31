@@ -539,6 +539,7 @@ export const zh = {
   fcr_group_exit_room: '离开教室',
   fcr_group_student_not_in_room: '用户未进入分组',
   fcr_group_sure: '确定',
+  fcr_move_group_tips: '你已被换到{reason}，求助将取消，请重新申请求助',
   /** Breakout Room  */
   /** Remote Control */
   fcr_share_title_teacher: '教师屏幕共享',
