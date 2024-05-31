@@ -291,7 +291,7 @@ export const Chat = observer(function Chat() {
       document.body.style.overflowY = 'hidden';
       return;
     }
-    if (chatH5Height < 190) {
+    if (chatH5Height < 230) {
       document.body.style.overflowY = 'auto';
     } else {
       document.body.style.overflowY = 'hidden';

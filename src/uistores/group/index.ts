@@ -62,6 +62,8 @@ export class GroupUIStore extends EduUIStoreBase {
     isInvite: false,
     children: []
   }
+  @observable
+  private _initGroupInfo: any
   /**
    * 分组列表
    */
@@ -140,6 +142,7 @@ export class GroupUIStore extends EduUIStoreBase {
    */
   @bound
   getUserGroupUuid(userUuid: string) {
+   
     const map: Map<string, string> = new Map();
 
     this.groupDetails.forEach((group, groupUuid) => {
@@ -149,7 +152,6 @@ export class GroupUIStore extends EduUIStoreBase {
         }
       });
     });
-
     return map.get(userUuid);
   }
 
@@ -438,6 +440,7 @@ export class GroupUIStore extends EduUIStoreBase {
     } else {
       item.children.push(studentInfo)
     }
+    this._initGroupInfo = groupInfo
     this._studentInvite = {
       groupUuid: this.classroomStore.groupStore.currentSubRoom as string,
       groupName: groupInfo.groupName,
@@ -765,7 +768,6 @@ export class GroupUIStore extends EduUIStoreBase {
     this.setConnectionState(true);
 
     const roomUuid = this.classroomStore.groupStore.currentSubRoom;
-
     if (!roomUuid) {
       this.logger.error('cannot find roomUuid');
       this.setConnectionState(false);
@@ -883,7 +885,6 @@ export class GroupUIStore extends EduUIStoreBase {
         }
         break;
       }
-
       joinSuccess = true;
     } catch (e) {
       this.logger.error('cannot change sub room', e);
@@ -956,7 +957,7 @@ export class GroupUIStore extends EduUIStoreBase {
   }
 
   @bound
-  private _handleClassroomEvent(type: AgoraEduClassroomEvent, args: any) {
+private async  _handleClassroomEvent(type: AgoraEduClassroomEvent, args: any) {
     if (type === AgoraEduClassroomEvent.JoinSubRoom) {
       this._joinSubRoom();
     }
@@ -1016,9 +1017,35 @@ export class GroupUIStore extends EduUIStoreBase {
         this.getters.classroomUIStore.layoutUIStore.deleteDialog(dialogId);
       }
     }
-
+    const userUuid = EduClassroomConfig.shared.sessionInfo.userUuid;
     if (type === AgoraEduClassroomEvent.MoveToOtherGroup) {
-      this._changeSubRoom();
+      if (this._studentInvite?.isInvite) {
+        this.shareUIStore.addToast(transI18n('fcr_move_group_tips', { reason: this._initGroupInfo?.groupName }));
+        this._studentInvite.isInvite = false;
+        this._inviteStudentTask?.stop();
+       
+        const userName = EduClassroomConfig.shared.sessionInfo.userName;
+        const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
+        const teacherUuid = teachers.keys().next().value;
+        const message: CustomMessageData<CustomMessageCancelInviteType> = {
+          cmd: CustomMessageCommandType.cancelInvite,
+          data: {
+            groupUuid: this._initGroupInfo && this._initGroupInfo.groupUuid,
+            groupName: this._initGroupInfo && this._initGroupInfo?.groupName || '',
+            isInvite: false,
+            userUuid: userUuid,
+            userName: userName,
+          },
+        };
+        this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
+        await sleep(2000)
+        this._changeSubRoom();
+       
+        
+      } else {
+        this._changeSubRoom();
+      }
+      
     }
   }
 
