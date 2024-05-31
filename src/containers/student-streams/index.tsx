@@ -153,7 +153,7 @@ const StudentStreams = observer(() => {
                         background: 'transparent',
                       }}>
                       {hasBoardOption && (
-                        <div className="fcr-stream-mobile-stu-bgwhite">
+                        <div className="fcr-stream-mobile-stu-bgwhite width20">
                           <SvgImg
                             type={SvgIconEnum.FCR_HOST}
                             colors={{ iconPrimary: '#FFC700' }}

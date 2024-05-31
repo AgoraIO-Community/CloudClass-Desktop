@@ -1,6 +1,7 @@
 /** large size **/
 .fcr-toast-container {
   @apply fcr-rounded-full fcr-shadow-2;
+  border-radius: 12px;
   min-height: 42px;
   max-width: 800px;
   min-width: 200px;
