@@ -302,7 +302,7 @@ export const Chat = observer(function Chat() {
   }, [chatH5Height, isLandscape]);
   return (
     <div
-      className="widget-slot-chat-mobile"
+      className={classNames("widget-slot-chat-mobile", isLandscape && 'active')}
       style={{
         height: chatH5Height < 230 ? 230 : chatH5Height,
         position: isLandscape ? 'absolute' : 'inherit',

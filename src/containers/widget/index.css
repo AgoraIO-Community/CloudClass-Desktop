@@ -64,6 +64,9 @@
 }
 .widget-slot-chat-mobile {
   transition: height 0.2s;
+  padding-bottom: 80px;
+}
+.widget-slot-chat-mobile.active {
   pointer-events: none;
 }
 .fcr-countdown-mobile-widget-slot {
