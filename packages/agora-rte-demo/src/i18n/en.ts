@@ -501,6 +501,11 @@ const en = {
     'group_down_platform': 'Please let the group go first',
     'groupText': 'Group: maximum number of students in a group. For a classroom with 5 students, 2 divides the group into 3 groups (2,2,1), 4 divides the students into 2 groups (4,1), 6 leaves the students into just one group(5)'
   },
+  "teacherWhetherJoinTimeOut":{
+    'title':'Notice',
+    'content':'The tutor has been absent for over 10 minutes now.\nThe system will refund this class period within 1 hour(Don\'t deduct class hours)\nYou can exit the classroom now',
+    'options':'Got it',
+  },
   'class_ended': 'Class session is ended, please click confirm leave room',
   'course_recording': 'course recording',
   'build_version': `build version: ${build_version}`,

@@ -35,7 +35,7 @@ import { ListenerCallback, AgoraEduEvent } from '@/edu-sdk/declare';
 import { get, isEmpty } from 'lodash';
 import { eduSDKApi } from '@/services/edu-sdk-api';
 import { MemoryStorage } from '@/utils/custom-storage';
-import { AcadsocRoomStore } from './acadsoc-room';
+import {AcadsocRoomStore, removeAllTimer} from './acadsoc-room';
 import { UploadService } from '@/services/upload-service';
 import { reportService } from '@/services/report-service';
 import { ClassRoomAbstractStore, controller } from '@/edu-sdk/controller';
@@ -739,6 +739,7 @@ export class AppStore implements ClassRoomAbstractStore {
 
   async destroyRoom() {
     dialogManager.removeAll()
+    removeAllTimer()
     await controller.appController.destroy()
   }
 }
