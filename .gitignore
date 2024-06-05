@@ -17,3 +17,5 @@ package-lock.json
 yarn.lock
 *.log
 .vscode/
+.idea/
+/.idea/

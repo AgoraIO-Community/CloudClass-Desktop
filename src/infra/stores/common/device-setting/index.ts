@@ -8,6 +8,7 @@ import {
   EduClassroomConfig,
   EduRoleTypeEnum,
   EduRoomTypeEnum,
+  Platform,
 } from 'agora-edu-core';
 import { LayoutMaskCode } from '../type';
 import { matchVirtualSoundCardPattern } from '../pretest/helper';
@@ -37,7 +38,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const track = mediaControl.createCameraVideoTrack();
             track.setDeviceId(cameraDeviceId);
           }
-          if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
+          if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle && EduClassroomConfig.shared.platform !== Platform.H5) {
             // if idle, e.g. pretest
             if (cameraDeviceId && cameraDeviceId !== DEVICE_DISABLE) {
               this._enableLocalVideo(true);
@@ -76,7 +77,7 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
             const track = mediaControl.createMicrophoneAudioTrack();
             track.setRecordingDevice(recordingDeviceId);
           }
-          if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle) {
+          if (this.classroomStore.connectionStore.classroomState === ClassroomState.Idle && EduClassroomConfig.shared.platform !== Platform.H5) {
             // if idle, e.g. pretest
             if (recordingDeviceId && recordingDeviceId !== DEVICE_DISABLE) {
               this._enableLocalAudio(true);
