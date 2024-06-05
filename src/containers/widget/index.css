@@ -56,7 +56,7 @@
 .fcr-poll-mobile-widget {
   position: absolute;
   padding-left: 20px;
-  bottom: 56px;
+  bottom: 90px;
   display: flex;
   flex-direction: row-reverse;
   gap: 10px;
