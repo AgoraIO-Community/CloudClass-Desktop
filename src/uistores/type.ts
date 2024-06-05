@@ -44,12 +44,9 @@ export type CustomMessageInviteType = {
   groupUuid: string;
   groupName: string;
   isInvite: boolean;
-  children: {
-    id: string;
-    name: string;
-    isInvite: boolean;
-  }[];
-
+  userUuid: string;
+  userName: string;
+  inviteStudentTask: any;
 };
 export type CustomMessageHandsUpType = {
   userUuid: string;
