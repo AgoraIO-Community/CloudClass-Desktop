@@ -687,11 +687,14 @@ export class GroupUIStore extends EduUIStoreBase {
     return undefined;
   }
 
-  @bound
+  @action.bound
   async leaveSubRoom() {
     // this._leaveSubRoom();
     const currentRoomUuid = this.classroomStore.groupStore.currentSubRoom;
     const { userUuid, userName } = EduClassroomConfig.shared.sessionInfo;
+    if (this._studentInvite) {
+      this._studentInvite.isInvite = false
+    }
     if (this._inviteStudentTask) {
       this._inviteStudentTask?.stop()
     }
