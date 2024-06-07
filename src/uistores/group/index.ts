@@ -938,8 +938,8 @@ export class GroupUIStore extends EduUIStoreBase {
         break;
       }
       case CustomMessageCommandType.teacherCloseGroup: {
-        this._studentInvite = undefined
         this._inviteStudentTask?.stop()
+        this._studentInvite.isInvite = false
         break;
       }
     }
