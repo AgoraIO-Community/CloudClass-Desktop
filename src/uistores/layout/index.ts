@@ -18,7 +18,7 @@ export enum TimeFormatType {
 export class LayoutUIStore extends EduUIStoreBase {
   private _disposers: (() => void)[] = [];
   @observable landscapeToolBarVisible = true;
-  private _landscapeToolBarVisibleTask: Scheduler.Task | null = null;
+  // private _landscapeToolBarVisibleTask: Scheduler.Task | null = null;
   @observable shareActionSheetVisible = false;
 
   @action.bound
@@ -124,15 +124,15 @@ export class LayoutUIStore extends EduUIStoreBase {
         },
         ({ isLandscape, isConnected }) => {
           if (isLandscape && isConnected) {
-            this._setLandscapeToolBarVisible(true);
+            this._setLandscapeToolBarVisible(false);
             window.addEventListener('touchstart', this._handleTouchStart, { once: true });
-            this._landscapeToolBarVisibleTask = Scheduler.shared.addDelayTask(() => {
-              window.removeEventListener('touchstart', this._handleTouchStart);
-              this._setLandscapeToolBarVisible(false);
-            }, 4000);
+            // this._landscapeToolBarVisibleTask = Scheduler.shared.addDelayTask(() => {
+            //   window.removeEventListener('touchstart', this._handleTouchStart);
+            //   this._setLandscapeToolBarVisible(false);
+            // }, 4000);
           } else {
             window.removeEventListener('touchstart', this._handleTouchStart);
-            this._landscapeToolBarVisibleTask?.stop();
+            // this._landscapeToolBarVisibleTask?.stop();
             this._setLandscapeToolBarVisible(true);
             this.setShareActionSheetVisible(false);
           }
@@ -340,13 +340,13 @@ export class LayoutUIStore extends EduUIStoreBase {
   @action.bound
   toggleLandscapeToolBarVisible() {
     if (!this.shareUIStore.isLandscape) return;
-    this._landscapeToolBarVisibleTask?.stop();
+    // this._landscapeToolBarVisibleTask?.stop();
     this.landscapeToolBarVisible = !this.landscapeToolBarVisible;
     this._updateMobileLandscapeToolBarVisible();
   }
   @bound
   private _handleTouchStart() {
-    this._landscapeToolBarVisibleTask?.stop();
+    // this._landscapeToolBarVisibleTask?.stop();
   }
   private _callState: MobileCallState = MobileCallState.Processing;
   @bound
