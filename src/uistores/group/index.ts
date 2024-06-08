@@ -923,7 +923,7 @@ export class GroupUIStore extends EduUIStoreBase {
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
             this._studentInvite.isInvite = false
-            this.shareUIStore.addToast(transI18n('fcr_group_helzhenp_teacher_busy_msg'));
+            this.shareUIStore.addToast(transI18n('fcr_group_help_teacher_busy_msg'));
             this._inviteStudentTask?.stop()
         }
         break;

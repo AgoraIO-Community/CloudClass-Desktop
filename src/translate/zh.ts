@@ -514,7 +514,7 @@ export const zh = {
   /** Breakout Room  */
   fcr_group_help_title: '请求帮助',
   fcr_group_help_content: '你可以邀请老师进入小组帮助你',
-  fcr_group_helzhenp_teacher_busy_msg: '老师正在忙，请稍后重试',
+  fcr_group_help_teacher_busy_msg: '老师正在忙，请稍后重试',
   fcr_group_help_cancel: '已经取消帮助',
   fcr_group_help_send: '邀请已经发送',
   fcr_group_teacher_join: '老师加入分组',

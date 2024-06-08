@@ -141,7 +141,7 @@ export class LayoutUIStore extends EduUIStoreBase {
     );
     this._disposers.push(
       computed(() => {
-        return this.classroomStore.userStore.teacherList.size;
+        return this.classroomStore.userStore.mainRoomDataStore.teacherList.size;
       }).observe(({ oldValue, newValue }) => {
         if (oldValue && oldValue > 0 && newValue <= 0) {
           this.shareUIStore.addSingletonToast(transI18n('fcr_home_status_teacher_leave'), 'info');

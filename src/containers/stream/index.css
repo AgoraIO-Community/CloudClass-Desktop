@@ -485,7 +485,7 @@
   overflow: hidden;
   right: 0;
   top: 50%;
-  z-index: 9;
+  z-index: 11;
 }
 .fcr-stream-mobile {
   /* transition: all 0.2s; */
