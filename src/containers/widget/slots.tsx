@@ -306,7 +306,7 @@ export const Chat = observer(function Chat() {
       style={{
         height: chatH5Height < 230 ? 230 : chatH5Height,
         position: isLandscape ? 'absolute' : 'inherit',
-        bottom: isLandscape ? 0 : undefined,
+        bottom: isLandscape ? 56 : undefined,
         width: isLandscape ? '270px' : 'auto',
         flexShrink: 0,
         background: isLandscape ? 'transparent' : '#27292f',

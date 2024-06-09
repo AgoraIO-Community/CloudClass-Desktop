@@ -49,21 +49,29 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @computed
   get currentWidget() {
+    console.log('currentWidgetcurrentWidget', this._currentWidget)
     return this._currentWidget;
   }
   @computed
   get z0Widgets() {
     const widgets = this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0)
-    return widgets;
+    const arr: any = []
+    for (let i = 0; i < widgets.length; i++) {
+        const item = widgets[i];
+        arr.unshift(item)
+    }
+    return arr
   }
 
   get z10Widgets() {
     return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
   }
   @action.bound
-  setDefaultWidget(widget: any) {
+  setCurrentWidget(widget: any) {
+    console.log('setCurrentWidgetsetCurrentWidget', widget)
     const { widgetController } = this.classroomStore.widgetStore
     if (widgetController) {
+      console.log('setCurrentWidgetsetCurrentWidget', widget)
       widgetController.broadcast(AgoraExtensionRoomEvent.DefaultCurrentApplication, widget)
     }
   }
@@ -149,7 +157,7 @@ export class WidgetUIStore extends EduUIStoreBase {
       this._widgetInstances[widgetId] = widget;
       const widgets =  Object.values(this._widgetInstances).filter(({ zContainer }) => zContainer === 0)
       const allWidgets =widgets.filter((v) => v.widgetName !== 'easemobIM')
-      if (allWidgets.length) {
+      if (allWidgets.length && !this._currentWidget) {
         this._setCurrentWidget(allWidgets[allWidgets.length - 1])
       }
       console.log('AgoraExtensionRoomEvent.GetApplications', this._widgetInstances)
@@ -180,12 +188,29 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   @bound
   private _handleWidgetActive(widgetId: string) {
+    
     this.createWidget(widgetId);
+    const widgetInstances = Object.values(this._widgetInstances)
+    const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0)
+    const item = z0Widgets.find((v) => v.widgetId === widgetId)
+    console.log('_handleWidgetActive_handleWidgetActive',item)
+    this.setCurrentWidget(item || z0Widgets[z0Widgets.length -1]);
+    this._setCurrentWidget(item || z0Widgets[z0Widgets.length -1])
   }
 
   @bound
   private _handleWidgetInactive(widgetId: string) {
+    console.log('_handleWidgetInactive_handleWidgetInactive', this.z0Widgets, widgetId)
+    const arr = this.z0Widgets.filter((v) => v.widgetId !== widgetId);
+    const index = arr.findIndex((v) => v.widgetId === this._currentWidget.widgetId);
+    if (index === -1) {
+      this.setCurrentWidget(arr[0]);
+      this._setCurrentWidget(arr[0])
+    }
+   
     this.destroyWidget(widgetId);
+   
+    
   }
 
   @bound
@@ -310,6 +335,9 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   @bound
   private _handleBecomeInactive(widgetId: string) {
+    if (this._currentWidget.widgetId === widgetId) {
+      this._setCurrentWidget(this.z0Widgets[0])
+    }
     this.destroyWidget(widgetId);
   }
 

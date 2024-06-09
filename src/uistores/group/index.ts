@@ -445,6 +445,7 @@ export class GroupUIStore extends EduUIStoreBase {
       id: userUuid,
       name: studentInfo.name,
     }
+    console.log('studentInviteTeacherstudentInviteTeacher')
     if (studentInfo.isInvite) {
       const intervalInMs = getRandomInt(2000, 4000);
       if (this._inviteStudentTask) {
@@ -452,7 +453,6 @@ export class GroupUIStore extends EduUIStoreBase {
       }
       this._inviteStudentTask = Scheduler.shared.addIntervalTask(
         () => {
-          if (this._inviteStudentTask?.isStopped) return;
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
             data: { ...item, inviteStudentTask: this._inviteStudentTask },
@@ -929,6 +929,7 @@ export class GroupUIStore extends EduUIStoreBase {
         break;
       }
       case CustomMessageCommandType.teacherAcceptInvite: {
+        console.log('CustomMessageCommandType.teacherAcceptInvite')
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
           this._studentInvite.isInvite = false

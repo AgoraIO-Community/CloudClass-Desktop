@@ -41,7 +41,7 @@ export const Scenario = observer(() => {
     },
     getters: { isBoardWidgetActive, isMediaPlayerWidgetActive, isWebViewWidgetActive, isScreenSharing },
     shareUIStore: { isLandscape, forceLandscape, getLandscapeInnerHeight, landscapeInnerHeight },
-    widgetUIStore: { z0Widgets, setDefaultWidget, currentWidget },
+    widgetUIStore: { z0Widgets, setCurrentWidget, currentWidget },
     shareUIStore,
     groupUIStore,
   } = useStore();
@@ -51,10 +51,14 @@ export const Scenario = observer(() => {
   useEffect(() => {
     shareUIStore.setLayoutReady(!groupUIStore.joiningSubRoom);
   }, [groupUIStore.joiningSubRoom]);
-  useEffect(() => {
-    const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM')
-    setDefaultWidget(widgets[widgets.length - 1])
-  }, [z0Widgets])
+  // useEffect(() => {
+  //   const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM')
+  //   const index = widgets.findIndex((v) => v.widgetName === currentWidget?.widgetName)
+  //   if (index === -1) {
+  //     setCurrentWidget(widgets[widgets.length - 1])
+  //   }
+   
+  // }, [z0Widgets])
 
   return (
     <Room>
