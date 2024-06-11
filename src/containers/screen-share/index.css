@@ -4,7 +4,7 @@
 }
 .remote-screen-share-container-landscape {
   width: 100%;
-  height: 100vh !important;
+  /* height: 100vh !important; */
 }
 
 .local-screen-share-container {
