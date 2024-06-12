@@ -35,8 +35,7 @@
   border-color: #fff;
   /* pointer-events: none; */
 }
-.widget-slot-media-player .fcr-h-full,
-.widget-slot-web-view .fcr-h-full {
+.widget-slot-media-player .fcr-h-full{
   pointer-events: none;
 }
 .widget-slot-board .netless-whiteboard-wrapper {
@@ -53,6 +52,9 @@
   position: absolute;
   z-index: 1;
 }
+.whiteboard-mobile-container.webview::before {
+  display: none;
+}
 .fcr-poll-mobile-widget {
   position: absolute;
   padding-left: 20px;
@@ -63,7 +65,7 @@
   z-index: 2;
 }
 .widget-slot-chat-mobile {
-  transition: height 0.2s;
+  /* transition: height 0.2s; */
   padding-bottom: 80px;
 }
 .widget-slot-chat-mobile.active {
