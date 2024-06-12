@@ -46,6 +46,7 @@ export type CustomMessageInviteType = {
   isInvite: boolean;
   userUuid: string;
   userName: string;
+  inviteStudentTask: any;
 };
 export type CustomMessageHandsUpType = {
   userUuid: string;

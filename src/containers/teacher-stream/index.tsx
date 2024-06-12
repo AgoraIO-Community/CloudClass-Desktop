@@ -36,7 +36,7 @@ export const TeacherStream = observer(() => {
       style={{
         flexShrink: 0,
         height: enabled ? teacherVideoStreamSize.height : 0,
-        transition: 'height .2s',
+        // transition: 'height .2s',
         overflow: 'hidden',
       }}
       className={classnames(containerH5VisibleCls)}>

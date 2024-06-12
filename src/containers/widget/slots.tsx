@@ -181,7 +181,7 @@ export const WebView = observer(function View() {
   return (
     <div
       ref={webViewRef}
-      className={classnames('whiteboard-mobile-container fcr-relative', 'fcr-w-full', {
+      className={classnames('whiteboard-mobile-container webview fcr-relative', 'fcr-w-full', {
         'whiteboard-mobile-container-landscape': isLandscape,
         containerH5VisibleCls,
       })}

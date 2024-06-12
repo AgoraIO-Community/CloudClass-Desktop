@@ -55,6 +55,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   @computed
   get z0Widgets() {
     const widgets = this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0)
+    console.log('z0Widgetsz0Widgetsz0Widgets', widgets)
     const arr: any = []
     for (let i = 0; i < widgets.length; i++) {
         const item = widgets[i];
@@ -68,7 +69,6 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @action.bound
   setCurrentWidget(widget: any) {
-    console.log('setCurrentWidgetsetCurrentWidget', widget)
     const { widgetController } = this.classroomStore.widgetStore
     if (widgetController) {
       console.log('setCurrentWidgetsetCurrentWidget', widget)
@@ -160,8 +160,8 @@ export class WidgetUIStore extends EduUIStoreBase {
       if (allWidgets.length && !this._currentWidget) {
         this._setCurrentWidget(allWidgets[allWidgets.length - 1])
       }
-      console.log('AgoraExtensionRoomEvent.GetApplications', this._widgetInstances)
-      widgetController.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
+      // console.log('AgoraExtensionRoomEvent.GetApplications', this._widgetInstances)
+      // widgetController.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
       
       this.logger.info(`widget [${widgetId}] is ready to render`);
     } else {
@@ -372,6 +372,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @action.bound
   private _notifyViewportChange() {
+    console.log('_notifyViewportChange_notifyViewportChange',this.classroomStore.widgetStore.widgetController)
     this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
     this.widgetInstanceList.forEach((instance) => {
       const clientRect = document
@@ -395,6 +396,11 @@ export class WidgetUIStore extends EduUIStoreBase {
       },
       addConfirmDialog: (params: AgoraUiCapableConfirmDialogProps) => {},
     };
+  }
+  @action.bound
+  private _handleChangeRoom(controller: AgoraWidgetController) {
+      controller.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
+    
   }
 
   onInstall() {
@@ -464,7 +470,14 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionRoomEvent.SetCurrentApplication,
               onMessage: this._setCurrentWidget,
             });
+            console.log('this.classroomStore.widgetStore.widgetControllerthis.classroomStore.widgetStore.widgetController', controller)
+            controller.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
             controller.addWidgetStateListener(this._stateListener);
+            controller.addBroadcastListener({
+              messageType: AgoraExtensionRoomEvent.ChangeRoom,
+              onMessage: () => this._handleChangeRoom(controller),
+            });
+            
           }
         },
       ),
