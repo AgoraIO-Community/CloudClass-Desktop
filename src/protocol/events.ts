@@ -66,6 +66,7 @@ export enum AgoraExtensionRoomEvent {
   RaiseHandStateChanged = 'raise-hand-state-changed',
   //获取应用列表
   GetApplications = 'get-applications',
+  ChangeRoom = 'change-room',
   //设置当前应用
   SetCurrentApplication = 'set-current-application',
   //默认当前应用
