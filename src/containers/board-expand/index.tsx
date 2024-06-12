@@ -8,8 +8,8 @@ type Iprops = {
   iconEnum: SvgIconEnum;
   size?: number;
   iconColor?: string;
-  style?: object;
-  onClick?: () => void;
+  style?: any;
+  onClick?: (e: any) => void;
 };
 
 export const BoardExpand = observer((props: Iprops) => {

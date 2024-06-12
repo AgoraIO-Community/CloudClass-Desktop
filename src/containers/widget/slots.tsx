@@ -117,7 +117,7 @@ export const MadiaPlayer = observer(function Media() {
   useEffect(() => {
     mediaPlayerRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
-  const mediaPlayerWidget = z0Widgets.filter((widget) => widget.widgetName === 'mediaPlayer');
+  const mediaPlayerWidget = z0Widgets.filter((widget: { widgetName: string; }) => widget.widgetName === 'mediaPlayer');
   return (
     <div
       ref={mediaPlayerRef}
@@ -133,7 +133,7 @@ export const MadiaPlayer = observer(function Media() {
         toggleTool();
       }}>
       {mediaPlayerWidget.length > 0 &&
-        mediaPlayerWidget.map((item) => {
+        mediaPlayerWidget.map((item: { widgetId: React.Key | null | undefined; }) => {
           return (
             <div
               key={item.widgetId}
@@ -174,7 +174,7 @@ export const WebView = observer(function View() {
   }, [studentStreamsVisible, width]);
   const boardHeight = isWebViewWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
-  const webViewWidget = z0Widgets.filter((widget) => widget.widgetName === 'webView');
+  const webViewWidget = z0Widgets.filter((widget: { widgetName: string; }) => widget.widgetName === 'webView');
   useEffect(() => {
     webViewRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
@@ -193,7 +193,7 @@ export const WebView = observer(function View() {
         toggleTool();
       }}>
       {webViewWidget.length > 0 &&
-        webViewWidget.map((item) => {
+        webViewWidget.map((item: { widgetId: React.Key | null | undefined; }) => {
           return (
             <div
               key={item.widgetId}
@@ -234,7 +234,7 @@ export const Chat = observer(function Chat() {
   const [chatH5Height, setChatH5Height] = useState(0);
 
   const calcHeight = () => {
-    const widgets = z0Widgets.filter((v) => v.widgetName !== 'easemobIM');
+    const widgets = z0Widgets.filter((v: { widgetName: string; }) => v.widgetName !== 'easemobIM');
     const h5Height = document.body.clientHeight;
     //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
     const height =
