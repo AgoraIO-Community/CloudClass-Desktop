@@ -61,7 +61,6 @@ export class GroupUIStore extends EduUIStoreBase {
     groupName: '',
     userName: '',
     userUuid: '',
-    inviteStudentTask: undefined,
     isInvite: false,
   }
   @observable
@@ -455,7 +454,7 @@ export class GroupUIStore extends EduUIStoreBase {
         () => {
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
-            data: { ...item, inviteStudentTask: this._inviteStudentTask },
+            data: { ...item },
           };
           this.classroomStore.connectionStore.mainRoomScene?.localUser?.sendCustomPeerMessage('flexMsg', message, teacherUuid, false);
         },

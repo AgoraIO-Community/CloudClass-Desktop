@@ -20,7 +20,7 @@ export const FixedBoardTips = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const toogleBoardTipsPopup = (e?: Event) => {
+  const toogleBoardTipsPopup = (e: { stopPropagation: () => void; }) => {
     e?.stopPropagation();
     setDrawerVisible((pre) => !pre);
   };
