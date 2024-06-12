@@ -68,6 +68,7 @@
 }
 .widget-slot-chat-mobile.active {
   pointer-events: none;
+  padding-bottom: 0;
 }
 .fcr-countdown-mobile-widget-slot {
   position: absolute;

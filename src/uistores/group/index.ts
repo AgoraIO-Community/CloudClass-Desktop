@@ -445,14 +445,14 @@ export class GroupUIStore extends EduUIStoreBase {
       id: userUuid,
       name: studentInfo.name,
     }
+    console.log('studentInviteTeacherstudentInviteTeacher')
     if (studentInfo.isInvite) {
       const intervalInMs = getRandomInt(2000, 4000);
-      if (this._inviteStudentTask) {
+      if (this._inviteStudentTask?.stop) {
         this._inviteStudentTask?.stop()
       }
       this._inviteStudentTask = Scheduler.shared.addIntervalTask(
         () => {
-          if (this._inviteStudentTask?.isStopped) return;
           const message: CustomMessageData<CustomMessageInviteType> = {
             cmd: CustomMessageCommandType.inviteTeacher,
             data: { ...item, inviteStudentTask: this._inviteStudentTask },
@@ -464,7 +464,7 @@ export class GroupUIStore extends EduUIStoreBase {
       );
      
     } else {
-      if (this._inviteStudentTask) {
+      if (this._inviteStudentTask?.stop) {
         this._inviteStudentTask?.stop()
       }
       this._studentInvite.isInvite = false
@@ -695,7 +695,7 @@ export class GroupUIStore extends EduUIStoreBase {
     if (this._studentInvite) {
       this._studentInvite.isInvite = false
     }
-    if (this._inviteStudentTask) {
+    if (this._inviteStudentTask?.stop) {
       this._inviteStudentTask?.stop()
     }
     const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;
@@ -924,21 +924,28 @@ export class GroupUIStore extends EduUIStoreBase {
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
             this._studentInvite.isInvite = false
             this.shareUIStore.addToast(transI18n('fcr_group_help_teacher_busy_msg'));
-            this._inviteStudentTask?.stop()
+            if (this._inviteStudentTask?.stop) {
+              this._inviteStudentTask?.stop()
+            }
         }
         break;
       }
       case CustomMessageCommandType.teacherAcceptInvite: {
+        console.log('CustomMessageCommandType.teacherAcceptInvite')
         const groupUuid = data?.data?.groupUuid || '';
         if (groupUuid === this.classroomStore.groupStore.currentSubRoom) {
           this._studentInvite.isInvite = false
           this.shareUIStore.addToast(transI18n('fcr_group_teacher_join'));
-          this._inviteStudentTask?.stop()
+          if (this._inviteStudentTask?.stop) {
+            this._inviteStudentTask?.stop()
+          }
         }
         break;
       }
       case CustomMessageCommandType.teacherCloseGroup: {
-        this._inviteStudentTask?.stop()
+        if (this._inviteStudentTask?.stop) {
+          this._inviteStudentTask?.stop()
+        }
         this._studentInvite.isInvite = false
         break;
       }
@@ -1031,7 +1038,9 @@ private async  _handleClassroomEvent(type: AgoraEduClassroomEvent, args: any) {
       if (this._studentInvite?.isInvite) {
         this.shareUIStore.addToast(transI18n('fcr_move_group_tips', { reason: this._initGroupInfo?.groupName }));
         this._studentInvite.isInvite = false;
-        this._inviteStudentTask?.stop();
+        if (this._inviteStudentTask?.stop) {
+          this._inviteStudentTask?.stop()
+        }
        
         const userName = EduClassroomConfig.shared.sessionInfo.userName;
         const teachers = this.classroomStore.userStore.mainRoomDataStore.teacherList;

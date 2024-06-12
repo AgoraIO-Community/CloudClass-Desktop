@@ -291,7 +291,7 @@ export const Chat = observer(function Chat() {
       document.body.style.overflowY = 'hidden';
       return;
     }
-    if (chatH5Height < 230) {
+    if (chatH5Height < 190) {
       document.body.style.overflowY = 'auto';
     } else {
       document.body.style.overflowY = 'hidden';
@@ -304,9 +304,10 @@ export const Chat = observer(function Chat() {
     <div
       className={classNames("widget-slot-chat-mobile", isLandscape && 'active')}
       style={{
-        height: chatH5Height < 230 ? 230 : chatH5Height,
+        // height: chatH5Height < 190 ? 190 : chatH5Height,
+        flex: 1,
         position: isLandscape ? 'absolute' : 'inherit',
-        bottom: isLandscape ? 0 : undefined,
+        bottom: isLandscape ? 56 : undefined,
         width: isLandscape ? '270px' : 'auto',
         flexShrink: 0,
         background: isLandscape ? 'transparent' : '#27292f',
