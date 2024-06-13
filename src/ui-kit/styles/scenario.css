@@ -1,6 +1,12 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 html {
   @apply fcr-font-scenario;
-
+  padding: 0;
+  margin: 0;
   background-color: unset !important;
 }
 body {
@@ -10,6 +16,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   background-color: #27292f !important;
+  padding: 0;
+  margin: 0;
 }
 
 .btn-pin {
@@ -295,4 +303,10 @@ body {
 }
 .fcr-m-auto {
   margin: auto;
+}
+.fcr-rounded-full {
+  border-radius: 9999px;
+}
+.fcr-text-center {
+  text-align: center;
 }

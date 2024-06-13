@@ -49,19 +49,19 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @computed
   get currentWidget() {
-    console.log('currentWidgetcurrentWidget', this._currentWidget)
+    console.log('currentWidgetcurrentWidget', this._currentWidget);
     return this._currentWidget;
   }
   @computed
   get z0Widgets() {
-    const widgets = this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0)
-    console.log('z0Widgetsz0Widgetsz0Widgets', widgets)
-    const arr: any = []
+    const widgets = this.widgetInstanceList.filter(({ zContainer }) => zContainer === 0);
+    console.log('z0Widgetsz0Widgetsz0Widgets', widgets);
+    const arr: any = [];
     for (let i = 0; i < widgets.length; i++) {
-        const item = widgets[i];
-        arr.unshift(item)
+      const item = widgets[i];
+      arr.unshift(item);
     }
-    return arr
+    return arr;
   }
 
   get z10Widgets() {
@@ -69,15 +69,15 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @action.bound
   setCurrentWidget(widget: any) {
-    const { widgetController } = this.classroomStore.widgetStore
+    const { widgetController } = this.classroomStore.widgetStore;
     if (widgetController) {
-      console.log('setCurrentWidgetsetCurrentWidget', widget)
-      widgetController.broadcast(AgoraExtensionRoomEvent.DefaultCurrentApplication, widget)
+      console.log('setCurrentWidgetsetCurrentWidget', widget);
+      widgetController.broadcast(AgoraExtensionRoomEvent.DefaultCurrentApplication, widget);
     }
   }
   @action.bound
   private _setCurrentWidget(widget: any) {
-    this._currentWidget = widget
+    this._currentWidget = widget;
   }
   @action.bound
   createWidget(
@@ -142,7 +142,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
         this.logger.info('set widget track controller:', trackController);
       }
-      
+
       const props =
         widgetController?.getWidgetProperties(widget.widgetId) || (defaults?.properties ?? {});
 
@@ -155,14 +155,16 @@ export class WidgetUIStore extends EduUIStoreBase {
       this._callWidgetCreate(widget, props, userProps);
 
       this._widgetInstances[widgetId] = widget;
-      const widgets =  Object.values(this._widgetInstances).filter(({ zContainer }) => zContainer === 0)
-      const allWidgets =widgets.filter((v) => v.widgetName !== 'easemobIM')
+      const widgets = Object.values(this._widgetInstances).filter(
+        ({ zContainer }) => zContainer === 0,
+      );
+      const allWidgets = widgets.filter((v) => v.widgetName !== 'easemobIM');
       if (allWidgets.length && !this._currentWidget) {
-        this._setCurrentWidget(allWidgets[allWidgets.length - 1])
+        this._setCurrentWidget(allWidgets[allWidgets.length - 1]);
       }
       // console.log('AgoraExtensionRoomEvent.GetApplications', this._widgetInstances)
       // widgetController.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
-      
+
       this.logger.info(`widget [${widgetId}] is ready to render`);
     } else {
       this.logger.info('widget controller not ready for creating widget');
@@ -188,29 +190,28 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   @bound
   private _handleWidgetActive(widgetId: string) {
-    
     this.createWidget(widgetId);
-    const widgetInstances = Object.values(this._widgetInstances)
-    const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0)
-    const item = z0Widgets.find((v) => v.widgetId === widgetId)
-    console.log('_handleWidgetActive_handleWidgetActive',item)
-    this.setCurrentWidget(item || z0Widgets[z0Widgets.length -1]);
-    this._setCurrentWidget(item || z0Widgets[z0Widgets.length -1])
+    const widgetInstances = Object.values(this._widgetInstances);
+    const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
+    const item = z0Widgets.find((v) => v.widgetId === widgetId);
+    console.log('_handleWidgetActive_handleWidgetActive', item);
+    this.setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
+    this._setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
   }
 
   @bound
   private _handleWidgetInactive(widgetId: string) {
-    console.log('_handleWidgetInactive_handleWidgetInactive', this.z0Widgets, widgetId)
-    const arr = this.z0Widgets.filter((v: { widgetId: string; }) => v.widgetId !== widgetId);
-    const index = arr.findIndex((v: { widgetId: any; }) => v.widgetId === this._currentWidget.widgetId);
+    console.log('_handleWidgetInactive_handleWidgetInactive', this.z0Widgets, widgetId);
+    const arr = this.z0Widgets.filter((v: { widgetId: string }) => v.widgetId !== widgetId);
+    const index = arr.findIndex(
+      (v: { widgetId: any }) => v.widgetId === this._currentWidget.widgetId,
+    );
     if (index === -1) {
       this.setCurrentWidget(arr[0]);
-      this._setCurrentWidget(arr[0])
+      this._setCurrentWidget(arr[0]);
     }
-   
+
     this.destroyWidget(widgetId);
-   
-    
   }
 
   @bound
@@ -336,32 +337,32 @@ export class WidgetUIStore extends EduUIStoreBase {
   @bound
   private _handleBecomeInactive(widgetId: string) {
     if (this._currentWidget.widgetId === widgetId) {
-      this._setCurrentWidget(this.z0Widgets[0])
+      this._setCurrentWidget(this.z0Widgets[0]);
     }
     this.destroyWidget(widgetId);
   }
 
   private _getEnabledWidgets() {
     const widgets = Object.entries(AgoraEduSDK.widgets).reduce((prev, [key, value]) => {
-      if (!popupQuizEnabled(AgoraEduSDK.uiConfig) && key === 'popupQuiz') {
-        return prev;
-      }
+      // if (!popupQuizEnabled(AgoraEduSDK.uiConfig) && key === 'popupQuiz') {
+      //   return prev;
+      // }
 
-      if (!counterEnabled(AgoraEduSDK.uiConfig) && key === 'countdownTimer') {
-        return prev;
-      }
+      // if (!counterEnabled(AgoraEduSDK.uiConfig) && key === 'countdownTimer') {
+      //   return prev;
+      // }
 
-      if (!pollEnabled(AgoraEduSDK.uiConfig) && key === 'poll') {
-        return prev;
-      }
+      // if (!pollEnabled(AgoraEduSDK.uiConfig) && key === 'poll') {
+      //   return prev;
+      // }
 
-      if (!chatEnabled(AgoraEduSDK.uiConfig) && key === 'easemobIM') {
-        return prev;
-      }
+      // if (!chatEnabled(AgoraEduSDK.uiConfig) && key === 'easemobIM') {
+      //   return prev;
+      // }
 
-      if (!boardEnabled(AgoraEduSDK.uiConfig) && key === 'netlessBoard') {
-        return prev;
-      }
+      // if (!boardEnabled(AgoraEduSDK.uiConfig) && key === 'netlessBoard') {
+      //   return prev;
+      // }
 
       prev[key] = value;
 
@@ -372,8 +373,14 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @action.bound
   private _notifyViewportChange() {
-    console.log('_notifyViewportChange_notifyViewportChange',this.classroomStore.widgetStore.widgetController)
-    this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
+    console.log(
+      '_notifyViewportChange_notifyViewportChange',
+      this.classroomStore.widgetStore.widgetController,
+    );
+    this.classroomStore.widgetStore.widgetController?.broadcast(
+      AgoraExtensionRoomEvent.GetApplications,
+      this._widgetInstances,
+    );
     this.widgetInstanceList.forEach((instance) => {
       const clientRect = document
         .querySelector(`.${this.shareUIStore.classroomViewportClassName}`)
@@ -399,8 +406,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   }
   @action.bound
   private _handleChangeRoom(controller: AgoraWidgetController) {
-      controller.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
-    
+    controller.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances);
   }
 
   onInstall() {
@@ -470,14 +476,16 @@ export class WidgetUIStore extends EduUIStoreBase {
               messageType: AgoraExtensionRoomEvent.SetCurrentApplication,
               onMessage: this._setCurrentWidget,
             });
-            console.log('this.classroomStore.widgetStore.widgetControllerthis.classroomStore.widgetStore.widgetController', controller)
-            controller.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances)
+            console.log(
+              'this.classroomStore.widgetStore.widgetControllerthis.classroomStore.widgetStore.widgetController',
+              controller,
+            );
+            controller.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances);
             controller.addWidgetStateListener(this._stateListener);
             controller.addBroadcastListener({
               messageType: AgoraExtensionRoomEvent.ChangeRoom,
               onMessage: () => this._handleChangeRoom(controller),
             });
-            
           }
         },
       ),
