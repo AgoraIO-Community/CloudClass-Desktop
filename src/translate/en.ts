@@ -146,6 +146,7 @@ export const en = {
     screen_share: {
       title: 'Screen Share',
     },
+    webview_tip: 'Swipe left and right to turn pages of courseware',
     close_ppt: 'Close CourseWare',
     tec_close_board: 'Teacher closed whiteboard',
     sure_close_ppt: 'Are you sure to close?',

@@ -144,6 +144,7 @@ export const zh = {
     screen_share: {
       title: '屏幕共享',
     },
+    webview_tip: '左右滑动可翻页课件',
     close_ppt: '关闭当前课件',
     tec_close_board: '老师已关闭白板',
     sure_close_ppt: '你确定要关闭吗？',

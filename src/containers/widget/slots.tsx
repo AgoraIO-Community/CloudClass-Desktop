@@ -9,6 +9,7 @@ import { useMobileStreamDrag } from '../stream/player';
 import { FixedBoardTips } from './fixed-board-tips';
 import './index.css';
 import { TeacherStream } from '../teacher-stream';
+import { useI18n } from 'agora-common-libs';
 
 export const CountDown = observer(() => {
   const ref = useRef<HTMLDivElement>(null);
@@ -154,13 +155,14 @@ export const MadiaPlayer = observer(function Media() {
 });
 export const WebView = observer(function View() {
   const webViewRef = useRef<HTMLDivElement>(null);
+  const transI18n = useI18n()
   const {
     getters: { isWebViewWidgetActive },
     layoutUIStore: { toggleLandscapeToolBarVisible },
     boardUIStore,
     widgetUIStore: { z0Widgets, currentWidget },
     streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
-    shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
+    shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize, addToast },
   } = useStore();
 
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
@@ -178,6 +180,11 @@ export const WebView = observer(function View() {
   useEffect(() => {
     webViewRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
+  useEffect(() => {
+    if (isLandscape && currentWidget?.widgetName === 'webView') {
+      addToast(transI18n('toast.webview_tip'), 'info')
+    }
+  }, [isLandscape, currentWidget?.widgetName])
   return (
     <div
       ref={webViewRef}
