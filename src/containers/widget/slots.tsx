@@ -118,7 +118,9 @@ export const MadiaPlayer = observer(function Media() {
   useEffect(() => {
     mediaPlayerRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
-  const mediaPlayerWidget = z0Widgets.filter((widget: { widgetName: string; }) => widget.widgetName === 'mediaPlayer');
+  const mediaPlayerWidget = z0Widgets.filter(
+    (widget: { widgetName: string }) => widget.widgetName === 'mediaPlayer',
+  );
   return (
     <div
       ref={mediaPlayerRef}
@@ -134,7 +136,7 @@ export const MadiaPlayer = observer(function Media() {
         toggleTool();
       }}>
       {mediaPlayerWidget.length > 0 &&
-        mediaPlayerWidget.map((item: { widgetId: React.Key | null | undefined; }) => {
+        mediaPlayerWidget.map((item: { widgetId: React.Key | null | undefined }) => {
           return (
             <div
               key={item.widgetId}
@@ -142,7 +144,7 @@ export const MadiaPlayer = observer(function Media() {
               style={{
                 display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
                 height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
-                zIndex: ComponentLevelRules.Level0,
+                zIndex: ComponentLevelRules.Level1,
                 width: landscapeBoardSize.width,
                 // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
               }}
@@ -155,7 +157,7 @@ export const MadiaPlayer = observer(function Media() {
 });
 export const WebView = observer(function View() {
   const webViewRef = useRef<HTMLDivElement>(null);
-  const transI18n = useI18n()
+  const transI18n = useI18n();
   const {
     getters: { isWebViewWidgetActive },
     layoutUIStore: { toggleLandscapeToolBarVisible },
@@ -176,15 +178,17 @@ export const WebView = observer(function View() {
   }, [studentStreamsVisible, width]);
   const boardHeight = isWebViewWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
-  const webViewWidget = z0Widgets.filter((widget: { widgetName: string; }) => widget.widgetName === 'webView');
+  const webViewWidget = z0Widgets.filter(
+    (widget: { widgetName: string }) => widget.widgetName === 'webView',
+  );
   useEffect(() => {
     webViewRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
   useEffect(() => {
     if (isLandscape && currentWidget?.widgetName === 'webView') {
-      addToast(transI18n('toast.webview_tip'), 'info')
+      addToast(transI18n('toast.webview_tip'), 'info');
     }
-  }, [isLandscape, currentWidget?.widgetName])
+  }, [isLandscape, currentWidget?.widgetName]);
   return (
     <div
       ref={webViewRef}
@@ -200,7 +204,7 @@ export const WebView = observer(function View() {
         toggleTool();
       }}>
       {webViewWidget.length > 0 &&
-        webViewWidget.map((item: { widgetId: React.Key | null | undefined; }) => {
+        webViewWidget.map((item: { widgetId: React.Key | null | undefined }) => {
           return (
             <div
               key={item.widgetId}
@@ -241,7 +245,7 @@ export const Chat = observer(function Chat() {
   const [chatH5Height, setChatH5Height] = useState(0);
 
   const calcHeight = () => {
-    const widgets = z0Widgets.filter((v: { widgetName: string; }) => v.widgetName !== 'easemobIM');
+    const widgets = z0Widgets.filter((v: { widgetName: string }) => v.widgetName !== 'easemobIM');
     const h5Height = document.body.clientHeight;
     //页面高度-课堂占位符高度-白板高度-老师视频高度-学生视频高度
     const height =
@@ -309,7 +313,7 @@ export const Chat = observer(function Chat() {
   }, [chatH5Height, isLandscape]);
   return (
     <div
-      className={classNames("widget-slot-chat-mobile", isLandscape && 'active')}
+      className={classNames('widget-slot-chat-mobile', isLandscape && 'active')}
       style={{
         // height: chatH5Height < 190 ? 190 : chatH5Height,
         flex: 1,
