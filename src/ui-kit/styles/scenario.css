@@ -9,7 +9,7 @@ body {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #27292f !important;
+  background-color: unset !important;
 }
 
 .btn-pin {
