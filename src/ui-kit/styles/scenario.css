@@ -16,6 +16,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   background-color: unset !important;
+  padding: 0;
+  margin: 0;
 }
 
 .btn-pin {
