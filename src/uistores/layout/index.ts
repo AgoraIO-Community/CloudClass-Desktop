@@ -338,6 +338,13 @@ export class LayoutUIStore extends EduUIStoreBase {
     this._updateMobileLandscapeToolBarVisible();
   }
   @action.bound
+  forceLandscapeToolBarTrue() {
+    if (!this.shareUIStore.isLandscape) return;
+    // this._landscapeToolBarVisibleTask?.stop();
+    this.landscapeToolBarVisible = true;
+    this._updateMobileLandscapeToolBarVisible();
+  }
+  @action.bound
   toggleLandscapeToolBarVisible() {
     if (!this.shareUIStore.isLandscape) return;
     // this._landscapeToolBarVisibleTask?.stop();

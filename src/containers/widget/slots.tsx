@@ -160,7 +160,7 @@ export const WebView = observer(function View() {
   const transI18n = useI18n();
   const {
     getters: { isWebViewWidgetActive },
-    layoutUIStore: { toggleLandscapeToolBarVisible },
+    layoutUIStore: { forceLandscapeToolBarTrue },
     boardUIStore,
     widgetUIStore: { z0Widgets, currentWidget },
     streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
@@ -187,8 +187,9 @@ export const WebView = observer(function View() {
   useEffect(() => {
     if (isLandscape && currentWidget?.widgetName === 'webView') {
       addToast(transI18n('toast.webview_tip'), 'info');
+      forceLandscapeToolBarTrue()
     }
-  }, [isLandscape, currentWidget?.widgetName]);
+  }, [isLandscape, currentWidget?.widgetName, forceLandscapeToolBarTrue]);
   return (
     <div
       ref={webViewRef}
@@ -208,7 +209,6 @@ export const WebView = observer(function View() {
           return (
             <div
               key={item.widgetId}
-              onClick={toggleLandscapeToolBarVisible}
               style={{
                 display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
                 height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
