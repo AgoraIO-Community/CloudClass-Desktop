@@ -163,6 +163,15 @@
   position: absolute;
   top: 0;
 }
+.landscape-teacher-stream.active {
+ color: #000;
+ font-size: 20px;
+ font-weight: 500;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ background: url('./assets/room-placholder-bg.jpg') no-repeat top left / cover;
+}
 .landscape-bottom-tools {
   position: absolute;
   /* height: 50px; */

@@ -238,6 +238,10 @@ export class Getters {
     return Math.max(userCount - (isTeacherInClass ? 1 : 0), 0);
   }
   @computed
+  get isTeacherInClass() {
+    return this._classroomUIStore.classroomStore.userStore.teacherList.size > 0;
+  }
+  @computed
   get calibratedTime() {
     const { clockTime, clientServerTimeShift } = this._classroomUIStore.classroomStore.roomStore;
     return clockTime + clientServerTimeShift;

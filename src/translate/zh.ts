@@ -595,7 +595,7 @@ export const zh = {
   fcr_board_rotate_lock: '锁定旋转',
   fcr_board_rotate_auto: '自动旋转',
   fcr_board_enable: '启用',
-
+  fcr_student_no_teacher_show: '当前无教学内容',
   /** Remote Control */
   begin_class: '开始上课',
   edu_error: {

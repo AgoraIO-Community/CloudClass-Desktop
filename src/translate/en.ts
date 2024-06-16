@@ -614,7 +614,7 @@ export const en = {
   fcr_board_rotate_lock: 'Lock screen rotation',
   fcr_board_rotate_auto: 'auto rotate',
   fcr_board_enable: 'Enable',
-
+  fcr_student_no_teacher_show : "No teaching content currently available",
   /** Remote Control */
   begin_class: 'Begin class',
   edu_error: {

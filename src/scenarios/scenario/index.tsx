@@ -7,7 +7,7 @@ import { Layout } from '@classroom/ui-kit/components/layout';
 import { RoomPlaceholder, TeacherStreamContainer } from '@classroom/containers/stream/player';
 import { WidgetContainer } from '../../containers/widget';
 import { Chat, CountDown, MadiaPlayer, Poll, Watermark, WebView, Whiteboard } from '../../containers/widget/slots';
-import { AgoraCloudClassWidget, transI18n } from 'agora-common-libs';
+import { AgoraCloudClassWidget } from 'agora-common-libs';
 
 import './index.css';
 import { ToastContainer } from '../../containers/toast';
@@ -39,7 +39,8 @@ export const Scenario = observer(() => {
         classroomSchedule: { state },
       },
     },
-    getters: { isBoardWidgetActive, isMediaPlayerWidgetActive, isWebViewWidgetActive, isScreenSharing },
+    layoutUIStore: {toggleLandscapeToolBarVisible},
+    getters: { isBoardWidgetActive, isMediaPlayerWidgetActive, isWebViewWidgetActive, isScreenSharing, isTeacherInClass },
     shareUIStore: { isLandscape, forceLandscape, getLandscapeInnerHeight, landscapeInnerHeight },
     widgetUIStore: { z0Widgets, setCurrentWidget, currentWidget },
     shareUIStore,
@@ -59,7 +60,7 @@ export const Scenario = observer(() => {
   //   }
    
   // }, [z0Widgets])
-
+  const transI18n = useI18n()
   return (
     <Room>
       <LoadingContainer></LoadingContainer>
@@ -96,9 +97,14 @@ export const Scenario = observer(() => {
                 {isLandscape ? (
                   <>
                     <LandscapeToolPanel />
-                    {!isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive && !isScreenSharing && (
+                    {isTeacherInClass && !isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive && !isScreenSharing && (
                       <div className="landscape-teacher-stream">
                         <TeacherStream />
+                      </div>
+                    )}
+                    {!isTeacherInClass && !isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive && !isScreenSharing && (
+                      <div className="landscape-teacher-stream active" onClick={toggleLandscapeToolBarVisible}>
+                        {transI18n('fcr_student_no_teacher_show')}
                       </div>
                     )}
                     <ScreenShareContainer></ScreenShareContainer>
