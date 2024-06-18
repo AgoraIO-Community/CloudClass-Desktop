@@ -500,6 +500,11 @@ const zhCN: any = {
     'group_down_platform': '请先让台上小组下台',
     'groupText': '分组使用说明：选择每组人数上限进行分组。例如：教室内共5名学生，选择每组上限2人则分成3组（2 2 1），选择每组上限4人则分成两组（4 1），选择每组上限6人则分成1组（5）。',
   },
+  "teacherWhetherJoinTimeOut":{
+    'title':'提示',
+    'content':'老师没来超过10分钟啦\n系统会在1小时内返还这节课(不扣除课时)\n您现在可以退出教室了哦',
+    'options':'知道了',
+  },
   'class_ended': '课程已结束，请点击确定离开教室',
   'course_recording': '录制回放',
   'build_version': `构建版本: ${build_version}`,

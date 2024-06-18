@@ -59,6 +59,9 @@ type AcadsocRoomProperties = {
   reward: RoomRewardType,
   state: number,
   students: Record<string, ProcessType>,
+  flexProps: {
+    teacherWhetherJoinRoom?: boolean
+  }
 }
 
 type MinimizeType = {
@@ -145,6 +148,9 @@ export class AcadsocRoomStore extends SimpleInterval {
 
   history: any
 
+  //超时任务id
+  timeOutIntervalId: any
+
   setHistory(history: any) {
     this.history = history
   }
@@ -170,6 +176,9 @@ export class AcadsocRoomStore extends SimpleInterval {
         }
       },
       students: {},
+      flexProps: {
+        teacherWhetherJoinRoom: undefined
+      }
     }
   }
 
@@ -194,6 +203,9 @@ export class AcadsocRoomStore extends SimpleInterval {
       }
     },
     students: {},
+    flexProps: {
+      teacherWhetherJoinRoom: undefined
+    }
   }
 
   @observable
@@ -1430,4 +1442,26 @@ export class AcadsocRoomStore extends SimpleInterval {
     }
     return duration.format(formatItems.join(' '))
   }
+}
+
+//定时器列表
+let timeOutTimerList: any[] = []
+/**
+ * 新增定时器
+ * @param id 定时器id
+ */
+export function addTimeOutTimer(id:any){
+  timeOutTimerList.push(id)
+}
+//移除指定定时器
+export function removeTimeOutTimer(id:any){
+  timeOutTimerList = timeOutTimerList.splice(timeOutTimerList.indexOf(id),1)
+  clearTimeout(id);
+}
+//移除所有定时器
+export function removeAllTimer(){
+  for (let id of timeOutTimerList) {
+    clearTimeout(id);
+  }
+  timeOutTimerList = []
 }
