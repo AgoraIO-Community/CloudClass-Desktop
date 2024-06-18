@@ -132,7 +132,8 @@ export const AcadsocOneToOne = observer(() => {
       let startTime = appStore.acadsocStore.classroomSchedule?.startTime
       startTime = startTime ? startTime : 0
       //剩余超时时间
-      const reduceTimeOut = 600000 - (new Date().getTime() - startTime)
+      // const reduceTimeOut = 600000 - (new Date().getTime() - startTime)
+      const reduceTimeOut = 30000 - (new Date().getTime() - startTime)
       if (!whetherJoin && reduceTimeOut > 0) {
         //开始倒计时
         if (acadsocStore.timeOutIntervalId == null) {
@@ -148,19 +149,19 @@ export const AcadsocOneToOne = observer(() => {
               onConfirm: async () => {
                 releaseTimeOut()
                 dialogManager.removeAll()
-                //退出教室弹窗
-                appStore.isNotInvisible && dialogManager.show({
-                  title: t(`aclass.confirm.endClass`),
-                  text: t(`aclass.confirm.exit`),
-                  confirmText: t(`aclass.confirm.yes`),
-                  visible: true,
-                  cancelText: t(`aclass.confirm.no`),
-                  onConfirm: async () => {
-                    await appStore.destroyRoom()
-                  },
-                  onCancel: () => {
-                  }
-                })
+                // //退出教室弹窗
+                // appStore.isNotInvisible && dialogManager.show({
+                //   title: t(`aclass.confirm.endClass`),
+                //   text: t(`aclass.confirm.exit`),
+                //   confirmText: t(`aclass.confirm.yes`),
+                //   visible: true,
+                //   cancelText: t(`aclass.confirm.no`),
+                //   onConfirm: async () => {
+                //     await appStore.destroyRoom()
+                //   },
+                //   onCancel: () => {
+                //   }
+                // })
               }
             })
           }, reduceTimeOut + 1000)
