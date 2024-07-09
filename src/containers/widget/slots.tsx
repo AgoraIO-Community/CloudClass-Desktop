@@ -323,7 +323,7 @@ export const Chat = observer(function Chat() {
         flexShrink: 0,
         background: isLandscape ? 'transparent' : '#27292f',
         overflow: 'hidden',
-        zIndex: ComponentLevelRules.Level1,
+        zIndex: ComponentLevelRules.Level3,
       }}
     />
   );
