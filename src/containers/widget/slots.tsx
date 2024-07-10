@@ -187,7 +187,7 @@ export const WebView = observer(function View() {
   useEffect(() => {
     if (isLandscape && currentWidget?.widgetName === 'webView') {
       addToast(transI18n('toast.webview_tip'), 'info');
-      forceLandscapeToolBarTrue();
+      forceLandscapeToolBarTrue()
     }
   }, [isLandscape, currentWidget?.widgetName, forceLandscapeToolBarTrue]);
   return (
@@ -323,7 +323,7 @@ export const Chat = observer(function Chat() {
         flexShrink: 0,
         background: isLandscape ? 'transparent' : '#27292f',
         overflow: 'hidden',
-        zIndex: ComponentLevelRules.Level1,
+        zIndex: ComponentLevelRules.Level3,
       }}
     />
   );
