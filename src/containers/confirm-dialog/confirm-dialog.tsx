@@ -110,7 +110,6 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = ob
   const {
     shareUIStore: { isLandscape },
   } = useStore();
-  debugger
   const cls = classNames('fcr-dialog-wrap ', {
     'fcr-dialog-wrap-middle': position === 'middle',
     'fcr-dialog-wrap-landscape': isLandscape,
