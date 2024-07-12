@@ -5,6 +5,7 @@ import { Button, ButtonProps } from '@classroom/ui-kit';
 import './confirm-dialog.css';
 import { toJS } from 'mobx';
 import { useStore } from '@classroom/hooks/ui-store';
+import { observer } from 'mobx-react';
 export interface ConfirmDialogProps {
   /**
    * 对话框标题
@@ -85,7 +86,7 @@ export interface ConfirmDialogProps {
   cancelButtonVisible?: boolean;
   onCancel?: () => void;
 }
-export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (props) => {
+export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = observer((props) => {
   const {
     onCancel,
     // visible,
@@ -109,7 +110,7 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
   const {
     shareUIStore: { isLandscape },
   } = useStore();
-  const cls = classNames('fcr-dialog-wrap', {
+  const cls = classNames('fcr-dialog-wrap ', {
     'fcr-dialog-wrap-middle': position === 'middle',
     'fcr-dialog-wrap-landscape': isLandscape,
   });
@@ -171,4 +172,4 @@ export const ConfirmDialog: FC<React.PropsWithChildren<ConfirmDialogProps>> = (p
       </div>
     </div>
   );
-};
+});

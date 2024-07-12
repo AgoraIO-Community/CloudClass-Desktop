@@ -187,7 +187,7 @@ export const WebView = observer(function View() {
   useEffect(() => {
     if (isLandscape && currentWidget?.widgetName === 'webView') {
       addToast(transI18n('toast.webview_tip'), 'info');
-      forceLandscapeToolBarTrue()
+      forceLandscapeToolBarTrue();
     }
   }, [isLandscape, currentWidget?.widgetName, forceLandscapeToolBarTrue]);
   return (
