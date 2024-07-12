@@ -521,6 +521,7 @@ export class WidgetUIStore extends EduUIStoreBase {
     );
     this._disposers.forEach((d) => d());
     this._disposers = [];
-    window.imManager.destory()
+    //@ts-ignore
+    window.imManager.destory();
   }
 }
