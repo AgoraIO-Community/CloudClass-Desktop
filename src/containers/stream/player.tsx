@@ -124,12 +124,12 @@ export const useMobileStreamDrag = ({
       if (diffY <= boundsRef.current.top) {
         diffY = boundsRef.current.top;
       }
-      if (diffY >= boundsRef.current.bottom - 160) {
-        diffY = boundsRef.current.bottom - 160;
+      if (diffY >= boundsRef.current.bottom) {
+        diffY = boundsRef.current.bottom;
       }
       let diffX = clientX - touchPosRef.current.x;
-      if (diffX >= boundsRef.current.right - 130) {
-        diffX = boundsRef.current.right - 130;
+      if (diffX >= boundsRef.current.right) {
+        diffX = boundsRef.current.right;
       }
       if (diffX <= boundsRef.current.left) {
         diffX = boundsRef.current.left;
