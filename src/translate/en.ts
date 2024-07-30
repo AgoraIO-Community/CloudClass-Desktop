@@ -861,4 +861,5 @@ export const en = {
   fcr_group_tool_help: 'Help',
   fcr_group_tool_cancel_help: 'Cancel Help',
   fcr_group_tool_leave_group: 'Leave group',
+  fcr_rct_no_driver: 'The browser you are using does not support the FCR classroom. Please switch to the Chrome browser.',
 };
