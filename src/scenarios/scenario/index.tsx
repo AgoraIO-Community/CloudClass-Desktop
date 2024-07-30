@@ -106,8 +106,11 @@ export const Scenario = observer(() => {
                       <div className="landscape-teacher-stream active" onClick={toggleLandscapeToolBarVisible}>
                         {transI18n('fcr_student_no_teacher_show')}
                       </div>
-                    )}
-                    <ScreenShareContainer></ScreenShareContainer>
+                      )}
+                      <div style={{ opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'screenShare' ? isLandscape ? '100%' : 'auto' : 0 }}>
+                        <ScreenShareContainer key={'webview'}></ScreenShareContainer>
+                      </div>
+
                   </>
                 ) : (
                   <>
