@@ -119,17 +119,17 @@ export const useMobileStreamDrag = ({
     const target = e.targetTouches[0];
     if (target) {
       const { clientX, clientY } = target;
-
+      const smallWindow = triggerRef.current.className.indexOf("fcr-stream-mobil") >= 0;
       let diffY = clientY - touchPosRef.current.y;
       if (diffY <= boundsRef.current.top) {
         diffY = boundsRef.current.top;
       }
-      if (diffY >= boundsRef.current.bottom) {
-        diffY = boundsRef.current.bottom;
+      if (diffY >= boundsRef.current.bottom - (smallWindow ? 0 : 160)) {
+        diffY = boundsRef.current.bottom - (smallWindow ? 0 : 160);
       }
       let diffX = clientX - touchPosRef.current.x;
-      if (diffX >= boundsRef.current.right) {
-        diffX = boundsRef.current.right;
+      if (diffX >= boundsRef.current.right - (smallWindow ? 0 : 130)) {
+        diffX = boundsRef.current.right - (smallWindow ? 0 : 130);
       }
       if (diffX <= boundsRef.current.left) {
         diffX = boundsRef.current.left;
