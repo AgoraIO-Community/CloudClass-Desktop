@@ -16,6 +16,7 @@ export const CountDown = observer(() => {
   const { pos, initData } = useMobileStreamDrag({
     isPiP: true,
     triggerRef: ref as MutableRefObject<HTMLDivElement>,
+     type:"countDown"
   });
   const {
     shareUIStore: { isLandscape },

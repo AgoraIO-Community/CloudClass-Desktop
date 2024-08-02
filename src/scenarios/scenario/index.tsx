@@ -107,10 +107,13 @@ export const Scenario = observer(() => {
                         {transI18n('fcr_student_no_teacher_show')}
                       </div>
                       )}
-                      <div style={{ opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'screenShare' ? isLandscape ? '100%' : 'auto' : 0 }}>
-                        <ScreenShareContainer key={'webview'}></ScreenShareContainer>
-                      </div>
-
+                      {
+                        isLandscape?
+                        <div style={{ opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'screenShare' ? isLandscape ? '100%' : 'auto' : 0 }}>
+                        <ScreenShareContainer key={'sceenShare'}></ScreenShareContainer>
+                      </div>:
+                      <ScreenShareContainer></ScreenShareContainer>
+                     }
                   </>
                 ) : (
                   <>
