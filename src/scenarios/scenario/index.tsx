@@ -61,6 +61,7 @@ export const Scenario = observer(() => {
    
   // }, [z0Widgets])
   const transI18n = useI18n()
+  const defaultShowShare = isLandscape && (!currentWidget || currentWidget.widgetId === "easemobIM");
   return (
     <Room>
       <LoadingContainer></LoadingContainer>
@@ -109,7 +110,7 @@ export const Scenario = observer(() => {
                       )}
                       {
                         isLandscape?
-                        <div style={{ opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'screenShare' ? isLandscape ? '100%' : 'auto' : 0 }}>
+                        <div style={{ opacity: currentWidget?.widgetName === 'screenShare' || defaultShowShare ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'screenShare' || defaultShowShare ? isLandscape ? '100%' : 'auto' : 0 }}>
                         <ScreenShareContainer key={'sceenShare'}></ScreenShareContainer>
                       </div>:
                       <ScreenShareContainer></ScreenShareContainer>

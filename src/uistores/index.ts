@@ -178,6 +178,7 @@ export class EduClassroomUIStore {
         await joinRTC();
       }else{
         this.shareUIStore.addToast(transI18n('fcr_rct_no_driver'));
+        this.groupUIStore.leaveSubRoom()
       }
     } catch (e) {
       this.shareUIStore.addGenericErrorDialog(e as AGError);
