@@ -61,6 +61,13 @@ export class WidgetUIStore extends EduUIStoreBase {
       const item = widgets[i];
       arr.unshift(item);
     }
+    const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
+    if (this.shareUIStore.isLandscape && !shareWidget) {
+      arr.push({
+        widgetId: "screenShare",
+        widgetName: "screenShare",
+      })
+    }
     return arr;
   }
 
@@ -203,6 +210,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _handleWidgetInactive(widgetId: string) {
     console.log('_handleWidgetInactive_handleWidgetInactive', this.z0Widgets, widgetId);
     const arr = this.z0Widgets.filter((v: { widgetId: string }) => v.widgetId !== widgetId);
+    debugger
     const index = arr.findIndex(
       (v: { widgetId: any }) => v.widgetId === this._currentWidget.widgetId,
     );
