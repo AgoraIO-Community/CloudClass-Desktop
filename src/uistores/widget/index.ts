@@ -61,6 +61,13 @@ export class WidgetUIStore extends EduUIStoreBase {
       const item = widgets[i];
       arr.unshift(item);
     }
+    const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
+    if (this.shareUIStore.isLandscape && !shareWidget) {
+      arr.push({
+        widgetId: "screenShare",
+        widgetName: "screenShare",
+      })
+    }
     return arr;
   }
 
