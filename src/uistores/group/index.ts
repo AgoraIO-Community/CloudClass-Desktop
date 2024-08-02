@@ -840,12 +840,7 @@ export class GroupUIStore extends EduUIStoreBase {
           await this.getters.classroomUIStore.enableDualStream(
             this.classroomStore.connectionStore.scene,
           );
-          if (window.RTCPeerConnection && window.WebSocket) {
-            await this.classroomStore.connectionStore.joinRTC();
-          }else{
-            this.shareUIStore.addToast(transI18n('fcr_rct_no_driver'));
-            this.leaveSubRoom()
-          }
+          await this.classroomStore.connectionStore.joinRTC();
         } catch (e) {
           this.logger.error('change sub room err', e);
           await sleep(1000);
@@ -879,12 +874,7 @@ export class GroupUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.leaveSubRoom();
 
       await when(() => this.classroomStore.connectionStore.rtcState === AGRtcState.Idle);
-      if (window.RTCPeerConnection && window.WebSocket) {
-        await this.classroomStore.connectionStore.joinRTC();
-      }else{
-        this.shareUIStore.addToast(transI18n('fcr_rct_no_driver'));
-        this.leaveSubRoom()
-      }
+      await this.classroomStore.connectionStore.joinRTC();
       //@ts-ignore
       await this.classroomStore.connectionStore._entry(
         EduClassroomConfig.shared.sessionInfo,
@@ -926,12 +916,7 @@ export class GroupUIStore extends EduUIStoreBase {
       while (true) {
         try {
           await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
-          if (window.RTCPeerConnection && window.WebSocket) {
-            await this.classroomStore.connectionStore.joinRTC();
-          } else {
-            this.shareUIStore.addToast(transI18n('fcr_rct_no_driver'));
-            this.leaveSubRoom()
-          }
+          await this.classroomStore.connectionStore.joinRTC();
         } catch (e) {
           this.logger.error('join sub room err', e);
           await sleep(1000);
