@@ -210,7 +210,6 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _handleWidgetInactive(widgetId: string) {
     console.log('_handleWidgetInactive_handleWidgetInactive', this.z0Widgets, widgetId);
     const arr = this.z0Widgets.filter((v: { widgetId: string }) => v.widgetId !== widgetId);
-    debugger
     const index = arr.findIndex(
       (v: { widgetId: any }) => v.widgetId === this._currentWidget.widgetId,
     );
