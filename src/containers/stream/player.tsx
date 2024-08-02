@@ -83,10 +83,12 @@ export const useMobileStreamDrag = ({
   bounds = 'body',
   isPiP,
   triggerRef,
+  type,
 }: {
   bounds?: string;
   isPiP: boolean;
   triggerRef: MutableRefObject<HTMLDivElement>;
+  type:string;
 }) => {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const touchPosRef = useRef({ x: 0, y: 0 });
@@ -119,17 +121,17 @@ export const useMobileStreamDrag = ({
     const target = e.targetTouches[0];
     if (target) {
       const { clientX, clientY } = target;
-
+      const teacherView = "teacherView" == type;
       let diffY = clientY - touchPosRef.current.y;
       if (diffY <= boundsRef.current.top) {
         diffY = boundsRef.current.top;
       }
-      if (diffY >= boundsRef.current.bottom) {
-        diffY = boundsRef.current.bottom;
+      if (diffY >= boundsRef.current.bottom - (teacherView ? 0 : 160)) {
+        diffY = boundsRef.current.bottom - (teacherView ? 0 : 160);
       }
       let diffX = clientX - touchPosRef.current.x;
-      if (diffX >= boundsRef.current.right) {
-        diffX = boundsRef.current.right;
+      if (diffX >= boundsRef.current.right - (teacherView ? 0 : 130)) {
+        diffX = boundsRef.current.right - (teacherView ? 0 : 130);
       }
       if (diffX <= boundsRef.current.left) {
         diffX = boundsRef.current.left;
@@ -191,6 +193,7 @@ export const TeacherStreamContainer = observer(({ stream }: { stream: EduStreamU
   const { pos } = useMobileStreamDrag({
     isPiP,
     triggerRef: ref as MutableRefObject<HTMLDivElement>,
+    type:"teacherView"
   });
   const onLandspce = () => {
     setForceLandscape(true);
