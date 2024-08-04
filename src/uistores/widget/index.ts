@@ -10,9 +10,9 @@ import {
   AgoraWidgetTrackController,
   AgoraUiCapableConfirmDialogProps,
 } from 'agora-common-libs';
-import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
+import { WidgetState, AgoraWidgetTrack, AgoraWidgetController, EduStream } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
+import { action, computed, IReactionDisposer, Lambda, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '@classroom/protocol/events';
 
@@ -61,19 +61,33 @@ export class WidgetUIStore extends EduUIStoreBase {
       const item = widgets[i];
       arr.unshift(item);
     }
-    const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
-    if (this.shareUIStore.isLandscape && !shareWidget) {
-      arr.push({
-        widgetId: "screenShare",
-        widgetName: "screenShare",
-      })
-    }
+    runInAction(() => {
+      const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
+      if (this.screenShareStream && this.shareUIStore.isLandscape && shareWidget.length == 0) {
+        arr.push({
+          widgetId: "screenShare",
+          widgetName: "screenShare",
+        })
+      }
+    })
     return arr;
   }
 
   get z10Widgets() {
     return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
   }
+
+  /**
+    * 屏幕共享流
+    * @returns
+    */
+  @computed 
+  get screenShareStream(): EduStream | undefined {
+    const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid as string;
+    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
+    return stream;
+  }
+  
   @action.bound
   setCurrentWidget(widget: any) {
     const { widgetController } = this.classroomStore.widgetStore;
@@ -199,11 +213,36 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _handleWidgetActive(widgetId: string) {
     this.createWidget(widgetId);
     const widgetInstances = Object.values(this._widgetInstances);
-    const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
-    const item = z0Widgets.find((v) => v.widgetId === widgetId);
-    console.log('_handleWidgetActive_handleWidgetActive', item);
-    this.setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
-    this._setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
+    const widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
+    const arr: any = []
+    for (let i = 0; i < widgets.length; i++) {
+        const item = widgets[i];
+        arr.unshift(item)
+    }
+    const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
+    if (this.screenShareStream && this.shareUIStore.isLandscape && shareWidget.length == 0) {
+      arr.push({
+        widgetId: "screenShare",
+        widgetName: "screenShare",
+      })
+    }
+    const allWidgets = arr.filter((v) => v.widgetName !== 'easemobIM');
+    const item = allWidgets.find((v) => v.widgetId === widgetId);
+    debugger
+    if (!this.currentWidget || 'easemobIM' === this.currentWidget?.widgetId) {
+      this.setCurrentWidget(allWidgets[allWidgets.length - 1]);
+      this._setCurrentWidget(allWidgets[allWidgets.length - 1]);
+    }else{
+      this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+      this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+    }
+
+    // const widgetInstances = Object.values(this._widgetInstances);
+    // const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
+    // const item = z0Widgets.find((v) => v.widgetId === widgetId);
+    // console.log('_handleWidgetActive_handleWidgetActive', item);
+    // this.setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
+    // this._setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
   }
 
   @bound
