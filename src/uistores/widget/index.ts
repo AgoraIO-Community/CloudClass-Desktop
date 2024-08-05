@@ -61,15 +61,6 @@ export class WidgetUIStore extends EduUIStoreBase {
       const item = widgets[i];
       arr.unshift(item);
     }
-    runInAction(() => {
-      const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
-      if (this.screenShareStream && this.shareUIStore.isLandscape && shareWidget.length === 0) {
-        arr.push({
-          widgetId: "screenShare",
-          widgetName: "screenShare",
-        })
-      }
-    })
     return arr;
   }
 
@@ -77,17 +68,6 @@ export class WidgetUIStore extends EduUIStoreBase {
     return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
   }
 
-  /**
-    * 屏幕共享流
-    * @returns
-    */
-  @computed 
-  get screenShareStream(): EduStream | undefined {
-    const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid as string;
-    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-    return stream;
-  }
-  
   @action.bound
   setCurrentWidget(widget: any) {
     const { widgetController } = this.classroomStore.widgetStore;
@@ -219,22 +199,23 @@ export class WidgetUIStore extends EduUIStoreBase {
         const item = widgets[i];
         arr.unshift(item)
     }
-    const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
-    if (this.screenShareStream && this.shareUIStore.isLandscape && shareWidget.length === 0) {
-      arr.push({
-        widgetId: "screenShare",
-        widgetName: "screenShare",
-      })
-    }
     const allWidgets = arr.filter((v) => v.widgetName !== 'easemobIM');
-    const item = allWidgets.find((v) => v.widgetId === widgetId);
-    if (!this.currentWidget || 'easemobIM' === this.currentWidget?.widgetId) {
-      this.setCurrentWidget(allWidgets[allWidgets.length - 1]);
-      this._setCurrentWidget(allWidgets[allWidgets.length - 1]);
-    }else{
-      this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
-      this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+    let item = allWidgets.find((v) => v.widgetId === widgetId);
+    if(!this.currentWidget || 'easemobIM' === this.currentWidget?.widgetId){
+      if(!item && this.shareUIStore.isLandscape){
+        item = {widgetId: "screenShare",widgetName: "screenShare",}
+      }
     }
+    this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+    this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+
+    // if (!this.currentWidget || 'easemobIM' === this.currentWidget?.widgetId) {
+    //   this.setCurrentWidget(allWidgets[allWidgets.length - 1]);
+    //   this._setCurrentWidget(allWidgets[allWidgets.length - 1]);
+    // }else{
+    //   this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+    //   this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+    // }
   }
 
   @bound
