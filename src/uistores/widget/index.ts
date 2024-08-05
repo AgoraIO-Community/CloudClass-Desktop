@@ -10,9 +10,9 @@ import {
   AgoraWidgetTrackController,
   AgoraUiCapableConfirmDialogProps,
 } from 'agora-common-libs';
-import { WidgetState, AgoraWidgetTrack, AgoraWidgetController, EduStream } from 'agora-edu-core';
+import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
-import { action, computed, IReactionDisposer, Lambda, observable, reaction, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { AgoraExtensionRoomEvent, AgoraExtensionWidgetEvent } from '@classroom/protocol/events';
 
@@ -67,7 +67,6 @@ export class WidgetUIStore extends EduUIStoreBase {
   get z10Widgets() {
     return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
   }
-
   @action.bound
   setCurrentWidget(widget: any) {
     const { widgetController } = this.classroomStore.widgetStore;
