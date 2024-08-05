@@ -61,13 +61,6 @@ export class WidgetUIStore extends EduUIStoreBase {
       const item = widgets[i];
       arr.unshift(item);
     }
-    const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
-    if (this.shareUIStore.isLandscape && !shareWidget) {
-      arr.push({
-        widgetId: "screenShare",
-        widgetName: "screenShare",
-      })
-    }
     return arr;
   }
 
@@ -199,11 +192,21 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _handleWidgetActive(widgetId: string) {
     this.createWidget(widgetId);
     const widgetInstances = Object.values(this._widgetInstances);
-    const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
-    const item = z0Widgets.find((v) => v.widgetId === widgetId);
-    console.log('_handleWidgetActive_handleWidgetActive', item);
-    this.setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
-    this._setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
+    const widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
+    const arr: any = []
+    for (let i = 0; i < widgets.length; i++) {
+        const item = widgets[i];
+        arr.unshift(item)
+    }
+    const allWidgets = arr.filter((v) => v.widgetName !== 'easemobIM');
+    let item = allWidgets.find((v) => v.widgetId === widgetId);
+    if(!this.currentWidget || 'easemobIM' === this.currentWidget?.widgetId){
+      if(!item && this.shareUIStore.isLandscape){
+        item = {widgetId: "screenShare",widgetName: "screenShare",}
+      }
+    }
+    this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
+    this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
   }
 
   @bound
