@@ -25,6 +25,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _currentWidget: any;
   @observable
   private _widgetInstances: Record<string, AgoraWidgetBase> = {};
+  private _screenShareAddPosi = -1
   private _stateListener = {
     onActive: this._handleWidgetActive,
     onInactive: this._handleWidgetInactive,
@@ -199,11 +200,20 @@ export class WidgetUIStore extends EduUIStoreBase {
         arr.unshift(item)
     }
     const allWidgets = arr.filter((v) => v.widgetName !== 'easemobIM');
-    if(this.screenShareStream && this.shareUIStore.isLandscape){
-      allWidgets.push({widgetId: "screenShare",widgetName: "screenShare",})
+    const item = allWidgets.find((v) => v.widgetId === widgetId);
+    if(this.screenShareStream && this.shareUIStore.isLandscape ){
+      if(this._screenShareAddPosi < 0){
+        this._screenShareAddPosi = allWidgets.length
+        allWidgets.push({widgetId: "screenShare",widgetName: "screenShare",})
+      }
+    }else{
+      this._screenShareAddPosi = -1
     }
-    this.setCurrentWidget( allWidgets[allWidgets.length - 1]);
-    this._setCurrentWidget( allWidgets[allWidgets.length - 1]);
+    debugger
+    const current = this._screenShareAddPosi >=0 &&  this._screenShareAddPosi >= allWidgets.length - 1 ?
+    allWidgets[allWidgets.length - 1] : item || allWidgets[allWidgets.length - 1]
+    this.setCurrentWidget(current);
+    this._setCurrentWidget(current);
   }
 
   @bound
@@ -448,7 +458,14 @@ export class WidgetUIStore extends EduUIStoreBase {
         },
       ),
     );
-
+    this._disposers.push(reaction(
+      () => this.screenShareStream,
+      () => {
+        if (this.screenShareStream && this.shareUIStore.isLandscape) {
+          this._handleWidgetActive("screenShare")
+        }
+      }
+    ))
     this._disposers.push(
       computed(() => this.classroomStore.widgetStore.widgetController).observe(
         ({ oldValue: oldController, newValue: controller }) => {
