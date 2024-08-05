@@ -208,14 +208,6 @@ export class WidgetUIStore extends EduUIStoreBase {
     }
     this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
     this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
-
-    // if (!this.currentWidget || 'easemobIM' === this.currentWidget?.widgetId) {
-    //   this.setCurrentWidget(allWidgets[allWidgets.length - 1]);
-    //   this._setCurrentWidget(allWidgets[allWidgets.length - 1]);
-    // }else{
-    //   this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
-    //   this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
-    // }
   }
 
   @bound
