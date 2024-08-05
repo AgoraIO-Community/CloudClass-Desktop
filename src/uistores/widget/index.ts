@@ -209,7 +209,6 @@ export class WidgetUIStore extends EduUIStoreBase {
     }else{
       this._screenShareAddPosi = -1
     }
-    debugger
     const current = this._screenShareAddPosi >=0 &&  this._screenShareAddPosi >= allWidgets.length - 1 ?
     allWidgets[allWidgets.length - 1] : item || allWidgets[allWidgets.length - 1]
     this.setCurrentWidget(current);
