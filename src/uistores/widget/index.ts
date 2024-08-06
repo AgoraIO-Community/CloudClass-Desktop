@@ -10,7 +10,7 @@ import {
   AgoraWidgetTrackController,
   AgoraUiCapableConfirmDialogProps,
 } from 'agora-common-libs';
-import { WidgetState, AgoraWidgetTrack, AgoraWidgetController, EduStream } from 'agora-edu-core';
+import { WidgetState, AgoraWidgetTrack, AgoraWidgetController } from 'agora-edu-core';
 import { bound, Log } from 'agora-rte-sdk';
 import { action, computed, IReactionDisposer, Lambda, observable, reaction } from 'mobx';
 import { EduUIStoreBase } from '../base';
@@ -25,7 +25,6 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _currentWidget: any;
   @observable
   private _widgetInstances: Record<string, AgoraWidgetBase> = {};
-  private _screenShareAddPosi = -1
   private _stateListener = {
     onActive: this._handleWidgetActive,
     onInactive: this._handleWidgetInactive,
@@ -61,6 +60,13 @@ export class WidgetUIStore extends EduUIStoreBase {
     for (let i = 0; i < widgets.length; i++) {
       const item = widgets[i];
       arr.unshift(item);
+    }
+    const shareWidget = arr.filter((item: { widgetId: string; }) => item.widgetId === "screenShare");
+    if (this.shareUIStore.isLandscape && !shareWidget) {
+      arr.push({
+        widgetId: "screenShare",
+        widgetName: "screenShare",
+      })
     }
     return arr;
   }
@@ -193,26 +199,11 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _handleWidgetActive(widgetId: string) {
     this.createWidget(widgetId);
     const widgetInstances = Object.values(this._widgetInstances);
-    const widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
-    const arr: any = []
-    for (let i = 0; i < widgets.length; i++) {
-        const item = widgets[i];
-        arr.unshift(item)
-    }
-    const allWidgets = arr.filter((v) => v.widgetName !== 'easemobIM');
-    const item = allWidgets.find((v) => v.widgetId === widgetId);
-    if(this.screenShareStream && this.shareUIStore.isLandscape ){
-      if(this._screenShareAddPosi < 0){
-        this._screenShareAddPosi = allWidgets.length
-        allWidgets.push({widgetId: "screenShare",widgetName: "screenShare",})
-      }
-    }else{
-      this._screenShareAddPosi = -1
-    }
-    const current = this._screenShareAddPosi >=0 &&  this._screenShareAddPosi >= allWidgets.length - 1 ?
-    allWidgets[allWidgets.length - 1] : item || allWidgets[allWidgets.length - 1]
-    this.setCurrentWidget(current);
-    this._setCurrentWidget(current);
+    const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
+    const item = z0Widgets.find((v) => v.widgetId === widgetId);
+    console.log('_handleWidgetActive_handleWidgetActive', item);
+    this.setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
+    this._setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
   }
 
   @bound
@@ -425,16 +416,6 @@ export class WidgetUIStore extends EduUIStoreBase {
     controller.broadcast(AgoraExtensionRoomEvent.GetApplications, this._widgetInstances);
   }
 
-  /**
-    * 屏幕共享流
-    * @returns
-    */
-  @computed 
-  get screenShareStream(): EduStream | undefined {
-    const streamUuid = this.classroomStore.roomStore.screenShareStreamUuid as string;
-    const stream = this.classroomStore.streamStore.streamByStreamUuid.get(streamUuid);
-    return stream;
-  }
   onInstall() {
     this._registeredWidgets = this._getEnabledWidgets();
     // switch between widget controllers of scenes
@@ -457,14 +438,7 @@ export class WidgetUIStore extends EduUIStoreBase {
         },
       ),
     );
-    this._disposers.push(reaction(
-      () => this.screenShareStream,
-      () => {
-        if (this.screenShareStream && this.shareUIStore.isLandscape) {
-          this._handleWidgetActive("screenShare")
-        }
-      }
-    ))
+
     this._disposers.push(
       computed(() => this.classroomStore.widgetStore.widgetController).observe(
         ({ oldValue: oldController, newValue: controller }) => {
