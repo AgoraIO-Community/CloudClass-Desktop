@@ -191,22 +191,6 @@ export class WidgetUIStore extends EduUIStoreBase {
   @bound
   private _handleWidgetActive(widgetId: string) {
     this.createWidget(widgetId);
-    const widgetInstances = Object.values(this._widgetInstances);
-    const widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
-    const arr: any = []
-    for (let i = 0; i < widgets.length; i++) {
-        const item = widgets[i];
-        arr.unshift(item)
-    }
-    const allWidgets = arr.filter((v) => v.widgetName !== 'easemobIM');
-    let item = allWidgets.find((v) => v.widgetId === widgetId);
-    if(!this.currentWidget || 'easemobIM' === this.currentWidget?.widgetId){
-      if(!item && this.shareUIStore.isLandscape){
-        item = {widgetId: "screenShare",widgetName: "screenShare",}
-      }
-    }
-    this.setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
-    this._setCurrentWidget(item || allWidgets[allWidgets.length - 1]);
   }
 
   @bound
@@ -214,7 +198,7 @@ export class WidgetUIStore extends EduUIStoreBase {
     console.log('_handleWidgetInactive_handleWidgetInactive', this.z0Widgets, widgetId);
     const arr = this.z0Widgets.filter((v: { widgetId: string }) => v.widgetId !== widgetId);
     const index = arr.findIndex(
-      (v: { widgetId: any }) => v.widgetId === this._currentWidget.widgetId,
+      (v: { widgetId: string }) => v.widgetId === this._currentWidget.widgetId,
     );
     if (index === -1) {
       this.setCurrentWidget(arr[0]);

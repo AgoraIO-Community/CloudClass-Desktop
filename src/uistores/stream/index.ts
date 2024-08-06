@@ -300,8 +300,15 @@ export class StreamUIStore extends EduUIStoreBase {
   @computed get allVerticalStreams(): EduStreamUI[] {
     const boardActive = this.getters.isBoardWidgetActive;
     const isScreenSharing = this.getters.isScreenSharing;
+    const isWebViewWidgetActive = this.getters.isWebViewWidgetActive;
+    const isMediaPlayerWidgetActive = this.getters.isMediaPlayerWidgetActive;
     if (this.teacherCameraStream) {
-      if (!boardActive && !isScreenSharing) {
+      if (
+        !boardActive &&
+        !isScreenSharing &&
+        !isWebViewWidgetActive &&
+        !isMediaPlayerWidgetActive
+      ) {
         return this.studentCameraStreams;
       } else {
         const allUIStreams = [this.teacherCameraStream, ...this.studentCameraStreams.slice()];
