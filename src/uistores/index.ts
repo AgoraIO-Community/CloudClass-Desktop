@@ -2,7 +2,7 @@ import { AGError, AgoraRteScene, AGRtcConnectionType, bound, Log } from 'agora-r
 import { BoardUIStore } from './board';
 import { DeviceSettingUIStore } from './device-setting/index';
 import { HandUpUIStore } from './hand-up';
-import { EduShareUIStore } from './share';
+import { DialogCategory, EduShareUIStore } from './share';
 import { StreamUIStore } from './stream';
 import { LayoutUIStore } from './layout';
 import { EduUIStoreBase } from './base';
@@ -20,7 +20,7 @@ import { ConvertMediaOptionsConfig } from '@classroom/index';
 import { SubscriptionUIStore } from './subscription';
 import { transI18n } from 'agora-common-libs';
 import { Getters } from './getters';
-import { AgoraExtensionRoomEvent } from '@classroom/protocol/events';
+import { v4 as uuidv4 } from 'uuid';
 
 export class EduClassroomUIStore {
   protected _classroomStore: EduClassroomStore;
@@ -154,6 +154,24 @@ export class EduClassroomUIStore {
   @bound
   @Log.trace
   async join() {
+    if (!window.RTCPeerConnection || !window.WebSocket) {
+      return this.classroomStore.connectionStore.leaveClassroom(
+        LeaveReason.leave,
+        new Promise((resolve) => {
+          const id = uuidv4();
+          this.shareUIStore.addDialog(DialogCategory.ErrorGeneric, {
+            id,
+            title: transI18n('toast.failed_to_join_the_room'),
+            content: transI18n('fcr_rtc_no_driver'),
+            okBtnText: transI18n('toast.leave_room'),
+            onOK: () => {
+              resolve();
+              this.shareUIStore.removeDialog(id);
+            },
+          });
+        }),
+      );
+    }
     const { joinClassroom, joinRTC } = this.classroomStore.connectionStore;
     try {
       await joinClassroom();

@@ -31,13 +31,10 @@ const StudentStreams = observer(() => {
   } = useStore();
   const [current, setCurrent] = useState(0);
   const {
-    teacherCameraStream,
     studentVideoStreamSize,
     studentCameraStreams,
     containerH5VisibleCls,
-    streamsContainerHeight,
     containerH5Extend,
-    streamWidthVertical,
     swapperRight,
     studentStreamsVisible,
     visibleStreams,

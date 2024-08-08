@@ -1,13 +1,19 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import React, { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { Layout } from '@classroom/ui-kit/components/layout';
-import { RoomPlaceholder, TeacherStreamContainer } from '@classroom/containers/stream/player';
+import { RoomPlaceholder } from '@classroom/containers/stream/player';
 import { WidgetContainer } from '../../containers/widget';
-import { Chat, CountDown, MadiaPlayer, Poll, Watermark, WebView, Whiteboard } from '../../containers/widget/slots';
-import { AgoraCloudClassWidget } from 'agora-common-libs';
+import {
+  Chat,
+  CountDown,
+  MadiaPlayer,
+  Poll,
+  Watermark,
+  WebView,
+  Whiteboard,
+} from '../../containers/widget/slots';
 
 import './index.css';
 import { ToastContainer } from '../../containers/toast';
@@ -39,10 +45,16 @@ export const Scenario = observer(() => {
         classroomSchedule: { state },
       },
     },
-    layoutUIStore: {toggleLandscapeToolBarVisible},
-    getters: { isBoardWidgetActive, isMediaPlayerWidgetActive, isWebViewWidgetActive, isScreenSharing, isTeacherInClass },
-    shareUIStore: { isLandscape, forceLandscape, getLandscapeInnerHeight, landscapeInnerHeight },
-    widgetUIStore: { z0Widgets, setCurrentWidget, currentWidget },
+    layoutUIStore: { toggleLandscapeToolBarVisible },
+    getters: {
+      isBoardWidgetActive,
+      isMediaPlayerWidgetActive,
+      isWebViewWidgetActive,
+      isScreenSharing,
+      isTeacherInClass,
+    },
+    shareUIStore: { isLandscape, forceLandscape, landscapeInnerHeight },
+    widgetUIStore: { currentWidget },
     shareUIStore,
     groupUIStore,
   } = useStore();
@@ -58,9 +70,9 @@ export const Scenario = observer(() => {
   //   if (index === -1) {
   //     setCurrentWidget(widgets[widgets.length - 1])
   //   }
-   
+
   // }, [z0Widgets])
-  const transI18n = useI18n()
+  const transI18n = useI18n();
   return (
     <Room>
       <LoadingContainer></LoadingContainer>
@@ -90,24 +102,83 @@ export const Scenario = observer(() => {
                 className="fct-mobile-main-container"
                 style={{ height: isLandscape ? landscapeInnerHeight : window.innerHeight }}>
                 <div className={isLandscape ? 'fct-mobile-main-top' : ''}>
-                  <div style={{ opacity: currentWidget?.widgetName === 'netlessBoard' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'netlessBoard' ? isLandscape ? '100%' : 'auto' : 0}}><Whiteboard key={'board'} /></div>
-                  <div style={{ opacity: currentWidget?.widgetName === 'mediaPlayer' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'mediaPlayer' ? isLandscape ? '100%' : 'auto' : 0}}><MadiaPlayer key={'media'} /></div>
-                  <div style={{ opacity: currentWidget?.widgetName === 'webView' ? 1 : 0, transition: 'opacity 0.2s linear', height: currentWidget?.widgetName === 'webView' ? isLandscape ? '100%' : 'auto' : 0}}> <WebView key={'webview'} /></div>
+                  <div
+                    style={{
+                      opacity: currentWidget?.widgetName === 'netlessBoard' ? 1 : 0,
+                      transition: 'opacity 0.2s linear',
+                      height:
+                        currentWidget?.widgetName === 'netlessBoard'
+                          ? isLandscape
+                            ? '100%'
+                            : 'auto'
+                          : 0,
+                    }}>
+                    <Whiteboard key={'board'} />
+                  </div>
+                  <div
+                    style={{
+                      opacity: currentWidget?.widgetName === 'mediaPlayer' ? 1 : 0,
+                      transition: 'opacity 0.2s linear',
+                      height:
+                        currentWidget?.widgetName === 'mediaPlayer'
+                          ? isLandscape
+                            ? '100%'
+                            : 'auto'
+                          : 0,
+                    }}>
+                    <MadiaPlayer key={'media'} />
+                  </div>
+                  <div
+                    style={{
+                      opacity: currentWidget?.widgetName === 'webView' ? 1 : 0,
+                      transition: 'opacity 0.2s linear',
+                      height:
+                        currentWidget?.widgetName === 'webView'
+                          ? isLandscape
+                            ? '100%'
+                            : 'auto'
+                          : 0,
+                    }}>
+                    {' '}
+                    <WebView key={'webview'} />
+                  </div>
                 </div>
                 {isLandscape ? (
                   <>
                     <LandscapeToolPanel />
-                    {isTeacherInClass && !isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive && !isScreenSharing && (
-                      <div className="landscape-teacher-stream">
-                        <TeacherStream />
-                      </div>
-                    )}
-                    {!isTeacherInClass && !isBoardWidgetActive && !isMediaPlayerWidgetActive && !isWebViewWidgetActive && !isScreenSharing && (
-                      <div className="landscape-teacher-stream active" onClick={toggleLandscapeToolBarVisible}>
-                        {transI18n('fcr_student_no_teacher_show')}
-                      </div>
-                    )}
-                    <ScreenShareContainer></ScreenShareContainer>
+                    {isTeacherInClass &&
+                      !isBoardWidgetActive &&
+                      !isMediaPlayerWidgetActive &&
+                      !isWebViewWidgetActive &&
+                      !isScreenSharing && (
+                        <div className="landscape-teacher-stream">
+                          <TeacherStream />
+                        </div>
+                      )}
+                    {!isTeacherInClass &&
+                      !isBoardWidgetActive &&
+                      !isMediaPlayerWidgetActive &&
+                      !isWebViewWidgetActive &&
+                      !isScreenSharing && (
+                        <div
+                          className="landscape-teacher-stream active"
+                          onClick={toggleLandscapeToolBarVisible}>
+                          {transI18n('fcr_student_no_teacher_show')}
+                        </div>
+                      )}
+                    <div
+                      style={{
+                        opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0,
+                        transition: 'opacity 0.2s linear',
+                        height:
+                          currentWidget?.widgetName === 'screenShare'
+                            ? isLandscape
+                              ? '100%'
+                              : 'auto'
+                            : 0,
+                      }}>
+                      <ScreenShareContainer key={'sceenShare'}></ScreenShareContainer>
+                    </div>
                   </>
                 ) : (
                   <>

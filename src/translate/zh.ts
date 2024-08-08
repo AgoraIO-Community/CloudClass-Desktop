@@ -839,4 +839,5 @@ export const zh = {
   fcr_group_tool_help: '帮助',
   fcr_group_tool_cancel_help: '取消帮助',
   fcr_group_tool_leave_group: '离开小组',
+  fcr_rtc_no_driver: '您使用的浏览器不支持在线教室，请更换chrome浏览器',
 };

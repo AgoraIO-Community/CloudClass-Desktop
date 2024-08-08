@@ -557,7 +557,8 @@ export const en = {
   fcr_group_exit_room: 'Leave Room',
   fcr_group_student_not_in_room: 'The user didn‘t enter the group',
   fcr_group_sure: 'Sure',
-  fcr_move_group_tips: 'You have been transferred to {reason} and your request for help will be cancelled. Please reapply for help',
+  fcr_move_group_tips:
+    'You have been transferred to {reason} and your request for help will be cancelled. Please reapply for help',
   /** Breakout Room  */
   /** Remote Control */
   fcr_share_title_teacher: 'Teacher Screen Share',
@@ -614,7 +615,7 @@ export const en = {
   fcr_board_rotate_lock: 'Lock screen rotation',
   fcr_board_rotate_auto: 'auto rotate',
   fcr_board_enable: 'Enable',
-  fcr_student_no_teacher_show : "No teaching content currently available",
+  fcr_student_no_teacher_show: 'No teaching content currently available',
   /** Remote Control */
   begin_class: 'Begin class',
   edu_error: {
@@ -861,4 +862,6 @@ export const en = {
   fcr_group_tool_help: 'Help',
   fcr_group_tool_cancel_help: 'Cancel Help',
   fcr_group_tool_leave_group: 'Leave group',
+  fcr_rtc_no_driver:
+    'The browser you are using does not support the FCR classroom. Please switch to the Chrome browser.',
 };

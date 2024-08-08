@@ -22,7 +22,7 @@ export class WidgetUIStore extends EduUIStoreBase {
   private _registeredWidgets: Record<string, typeof AgoraWidgetBase> = {};
   private _viewportResizeObserver?: ResizeObserver;
   @observable
-  private _currentWidget: any;
+  private _currentWidget?: AgoraWidgetBase;
   @observable
   private _widgetInstances: Record<string, AgoraWidgetBase> = {};
   private _stateListener = {
@@ -68,7 +68,7 @@ export class WidgetUIStore extends EduUIStoreBase {
     return this.widgetInstanceList.filter(({ zContainer }) => zContainer === 10);
   }
   @action.bound
-  setCurrentWidget(widget: any) {
+  setCurrentWidget(widget: AgoraWidgetBase) {
     const { widgetController } = this.classroomStore.widgetStore;
     if (widgetController) {
       console.log('setCurrentWidgetsetCurrentWidget', widget);
@@ -76,7 +76,7 @@ export class WidgetUIStore extends EduUIStoreBase {
     }
   }
   @action.bound
-  private _setCurrentWidget(widget: any) {
+  private _setCurrentWidget(widget: AgoraWidgetBase) {
     this._currentWidget = widget;
   }
   @action.bound
@@ -191,12 +191,6 @@ export class WidgetUIStore extends EduUIStoreBase {
   @bound
   private _handleWidgetActive(widgetId: string) {
     this.createWidget(widgetId);
-    const widgetInstances = Object.values(this._widgetInstances);
-    const z0Widgets = widgetInstances.filter(({ zContainer }) => zContainer === 0);
-    const item = z0Widgets.find((v) => v.widgetId === widgetId);
-    console.log('_handleWidgetActive_handleWidgetActive', item);
-    this.setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
-    this._setCurrentWidget(item || z0Widgets[z0Widgets.length - 1]);
   }
 
   @bound
@@ -204,7 +198,7 @@ export class WidgetUIStore extends EduUIStoreBase {
     console.log('_handleWidgetInactive_handleWidgetInactive', this.z0Widgets, widgetId);
     const arr = this.z0Widgets.filter((v: { widgetId: string }) => v.widgetId !== widgetId);
     const index = arr.findIndex(
-      (v: { widgetId: any }) => v.widgetId === this._currentWidget.widgetId,
+      (v: { widgetId: string }) => v.widgetId === this._currentWidget?.widgetId,
     );
     if (index === -1) {
       this.setCurrentWidget(arr[0]);
@@ -336,7 +330,7 @@ export class WidgetUIStore extends EduUIStoreBase {
 
   @bound
   private _handleBecomeInactive(widgetId: string) {
-    if (this._currentWidget.widgetId === widgetId) {
+    if (this._currentWidget?.widgetId === widgetId) {
       this._setCurrentWidget(this.z0Widgets[0]);
     }
     this.destroyWidget(widgetId);

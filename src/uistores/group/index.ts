@@ -874,7 +874,6 @@ export class GroupUIStore extends EduUIStoreBase {
       await this.classroomStore.connectionStore.leaveSubRoom();
 
       await when(() => this.classroomStore.connectionStore.rtcState === AGRtcState.Idle);
-
       await this.classroomStore.connectionStore.joinRTC();
       //@ts-ignore
       await this.classroomStore.connectionStore._entry(
@@ -917,7 +916,6 @@ export class GroupUIStore extends EduUIStoreBase {
       while (true) {
         try {
           await this.classroomStore.connectionStore.joinSubRoom(roomUuid);
-
           await this.classroomStore.connectionStore.joinRTC();
         } catch (e) {
           this.logger.error('join sub room err', e);
