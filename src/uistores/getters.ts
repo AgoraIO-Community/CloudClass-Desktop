@@ -18,7 +18,7 @@ import { computedFn } from 'mobx-utils';
 import dayjs from 'dayjs';
 
 export class Getters {
-  constructor(private _classroomUIStore: EduClassroomUIStore) {}
+  constructor(private _classroomUIStore: EduClassroomUIStore) { }
   private formatCountDown(ms: number): string {
     const duration = dayjs.duration(ms);
 
@@ -187,13 +187,15 @@ export class Getters {
   }
   @computed
   get cameraUIStreams() {
+    const {
+      classroomStore: { groupStore: { groupUuidByUserUuid } }
+    } = this._classroomUIStore;
+    const isInMainroom = groupUuidByUserUuid?.size === 0 || !this.isInGroup;
     return Array.from(this.cameraStreams)
       .filter((stream) => {
-        return this.isInGroup
-          ? true
-          : !this._classroomUIStore.classroomStore.groupStore.groupUuidByUserUuid.get(
-              stream.fromUser.userUuid,
-            );
+        return isInMainroom
+          ? !groupUuidByUserUuid.get(stream.fromUser.userUuid)
+          : !!groupUuidByUserUuid.get(stream.fromUser.userUuid) && this.isInGroup === groupUuidByUserUuid.get(stream.fromUser.userUuid)
       })
       .map((stream) => new EduStreamUI(stream));
   }
