@@ -13,7 +13,7 @@ import { AudioRecordinDeviceIcon } from '../stream/player';
 export const StudentStreamsContainer = () => {
   return (
     <>
-      <StudentStreamCollapse></StudentStreamCollapse>
+      {/* <StudentStreamCollapse></StudentStreamCollapse> */}
       <StudentStreams></StudentStreams>
     </>
   );

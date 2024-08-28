@@ -71,7 +71,7 @@ export const RoomInfo = observer(() => {
         </div>
       )}
 
-      <div className="fcr-mobile-room-info-container">
+      {/* <div className="fcr-mobile-room-info-container">
         <div className="fcr-mobile-room-info-user-count-container">
           <SvgImg type={SvgIconEnum.USER_COUNT} size={18} />
           <span>{userCount} </span>
@@ -80,7 +80,7 @@ export const RoomInfo = observer(() => {
         {classStatusText && (
           <div className="fcr-mobile-room-info-time-container">{classStatusText}</div>
         )}
-      </div>
+      </div> */}
     </>
   ) : null;
 });

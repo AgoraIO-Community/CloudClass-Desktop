@@ -1,0 +1,139 @@
+.fcr-pretest {
+  background: var(--background-dark, #151515);
+  height: 100vh;
+  padding-top: 85px;
+}
+
+.fcr-pretest .fcr-pretest__video-portal {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #FEFEFE;
+  gap: 70px;
+}
+
+.fcr-pretest .fcr-pretest__video-portal .fcr-pretest__video-portal-item {
+  /* flex: 1; */
+
+}
+
+.fcr-pretest__video-portal__video_control-wrapped {
+  text-align: center;
+  margin-top: 20px;
+
+}
+
+
+.fcr-pretest__video-portal__video_control-wrapped .fcr-pretest__video-portal__video_control-wrapped-item {
+  width: 82px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.fcr-pretest__video-portal__video_control-wrapped .fcr-pretest__video-portal__video_control-wrapped-item:first-of-type {
+  margin-right: 40px;
+}
+
+.fcr-pretest__video-portal__video_control-wrapped-item .ant-switch {
+  width: 46px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  background: var(--color-monochrome-15, #EEEEEE);
+}
+
+.fcr-pretest__video-portal__video_control-wrapped-item .ant-switch-checked {
+  background: var(--interactive-primary, #9E007E);
+}
+
+.fcr-pretest__video-portal__video_control-wrapped-item .ant-switch .ant-switch-handle {
+  /* width: 20px;
+  height: 20px; */
+}
+
+.fcr-pretest__video-portal__video_control-wrapped-item .ant-switch .ant-switch-handle::before {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: 2px;
+  bottom: -2px;
+  background: var(--color-monochrome-50, #777E80);
+}
+
+.fcr-pretest__video-portal__video_control-wrapped-item .ant-switch-checked .ant-switch-handle::before {
+  top: 2px;
+  bottom: -2px;
+  left: auto;
+  background-image: url(./assets/checked.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-color: #FFFFFF;
+}
+
+
+.fcr-pretest .fcr-pretest__video-portal .fcr-pretest__video-portal__header {
+  height: 76px;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 28px;
+  font-weight: 400;
+}
+
+
+/* 视频窗口 */
+.fcr-pretest .fcr-pretest__video-portal .fcr-pretest__video-portal__video {
+  height: 279px;
+}
+
+.fcr-pretest__video-portal__video .fcr-video-player-wrapper {
+  width: 343px;
+  height: 227px;
+  @apply fcr-bg-4;
+  position: relative;
+}
+
+.fcr-pretest__video-portal__video .fcr-video-player-wrapper .fcr-video-player {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  background-color: #ca4c4c;
+}
+
+.fcr-pretest__video-portal__video .fcr-video-player-wrapper .fcr-video-player__placeholder {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 加入课程 */
+.fcr-pretest .fcr-pretest__video-portal .fcr-pretest__video-portal__footer {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  height: 89px;
+}
+
+.fcr-pretest .fcr-pretest__video-portal .fcr-pretest__video-portal__footer .fcr-btn {
+  width: 100%;
+  height: 48px;
+
+  background: var(--interactive-primary, #9E007E);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 20px;
+}

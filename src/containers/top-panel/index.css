@@ -1,0 +1,26 @@
+.top-operation-panel {
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+}
+
+.top-operation-panel .top-operation-panel-device {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 106px;
+}
+
+.top-operation-panel-device-item{
+  background-color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.top-operation-panel .top-operation-panel-button .fcr-btn {
+  background: var(--leave, #BD0101);
+}

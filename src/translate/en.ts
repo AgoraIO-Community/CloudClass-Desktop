@@ -56,6 +56,8 @@ export const en = {
     microphone_volume: 'Microphone Volume',
     speaker_volume: 'Speaker Volume',
     stage_area: 'Stage',
+    device_button_join: 'Join lesson',
+    joinText: 'By joining the lesson, you consent to being recorded'
   },
   roster: {
     chat: 'Mute Chat',
@@ -862,6 +864,7 @@ export const en = {
   fcr_group_tool_help: 'Help',
   fcr_group_tool_cancel_help: 'Cancel Help',
   fcr_group_tool_leave_group: 'Leave group',
+  fcr_group_tool_leave: 'Leave',
   fcr_rtc_no_driver:
     'The browser you are using does not support the FCR classroom. Please switch to the Chrome browser.',
 };

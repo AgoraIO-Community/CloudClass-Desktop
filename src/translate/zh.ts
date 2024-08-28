@@ -56,6 +56,8 @@ export const zh = {
     microphone_volume: '麦克风音量',
     speaker_volume: '扬声器音量',
     stage_area: '讲台区域',
+    device_button_join: '加入房间',
+    joinText: '加入房间后，您将默认同意被录音'
   },
   roster: {
     chat: '禁言',
@@ -839,5 +841,6 @@ export const zh = {
   fcr_group_tool_help: '帮助',
   fcr_group_tool_cancel_help: '取消帮助',
   fcr_group_tool_leave_group: '离开小组',
+  fcr_group_tool_leave: '离开',
   fcr_rtc_no_driver: '您使用的浏览器不支持在线教室，请更换chrome浏览器',
 };
