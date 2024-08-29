@@ -105,6 +105,19 @@ export const Scenario = observer(() => {
                 style={{ height: isLandscape ? landscapeInnerHeight : window.innerHeight }}>
                 <div className={isLandscape ? 'fct-mobile-main-top' : ''}>
                   <div
+                      style={{
+                        opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0,
+                        transition: 'opacity 0.2s linear',
+                        height:
+                          currentWidget?.widgetName === 'screenShare'
+                            ? isLandscape
+                              ? '100%'
+                              : 'auto'
+                            : 0,
+                      }}>
+                      <ScreenShareContainer key={'sceenShare'}></ScreenShareContainer>
+                  </div>
+                  <div
                     style={{
                       opacity: currentWidget?.widgetName === 'netlessBoard' ? 1 : 0,
                       transition: 'opacity 0.2s linear',
@@ -159,26 +172,14 @@ export const Scenario = observer(() => {
                           {transI18n('fcr_student_no_teacher_show')}
                         </div>
                       )}
-                    <div
-                      style={{
-                        opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0,
-                        transition: 'opacity 0.2s linear',
-                        height:
-                          currentWidget?.widgetName === 'screenShare'
-                            ? isLandscape
-                              ? '100%'
-                              : 'auto'
-                            : 0,
-                      }}>
-                      <ScreenShareContainer key={'sceenShare'}></ScreenShareContainer>
-                    </div>
+                  
                   </>
                 ) : (
                   <>
                     <TopPanel />
                     <GroupInfoPanel />
                     {/* {!isLandscape && <RoomPlaceholder></RoomPlaceholder>} */}
-                    <ScreenShareContainer></ScreenShareContainer>
+                    {/* <ScreenShareContainer></ScreenShareContainer> */}
                     <AllStream isTeacherInClass={false} isBoardWidgetActive={false} 
                     isMediaPlayerWidgetActive={false} isWebViewWidgetActive={false} 
                     isScreenSharing={false}></AllStream>
