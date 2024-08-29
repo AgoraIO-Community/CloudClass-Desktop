@@ -1,19 +1,18 @@
 /* 竖屏情况下的容器 */
 .all-streams-portrait-container{
     width: 100%;
-    height: 100%;
+    position: relative;
 }
 /* 文本样式提示 */
 .all-streams-portrait-container .placeholder-text{
     position: absolute;
-    background: rgba(66, 98, 255, 1);
     width: 93px;
     height: 93px;
     border-radius: 50%;
     line-height: 93px;
     text-align: center;
     color: #fff;
-    font-size: 3.2vw;
+    font-size: 18px;
     font-weight: 600;
     top: 0;
     left: 0;
@@ -21,10 +20,19 @@
     bottom: 0;
     margin: auto;
 }
-.all-streams-portrait-container .show-stream{
+/* 文本样式提示 */
+.all-streams-portrait-container .placeholder-text-students{
+    background: var(--head-2, rgba(255, 117, 122, 1));
+}
+/* 文本样式提示 */
+.all-streams-portrait-container .placeholder-text-teacher{
+    background: var(--head-4, rgba(210, 219, 14, 1));
+}
+
+.all-streams-portrait-container .show-stream {
     width: 100%;
     height: 100%;
-    background-color: aquamarine;
+    background: var(--background-dark, rgba(21, 21, 21, 1));
     display: grid;
     flex-direction: column;
     align-items: center;
@@ -32,18 +40,19 @@
     box-sizing: border-box;
     overflow-y: auto;
 }
-.all-streams-portrait-container .grid-item{
-    background-color: #f1f1f1;
+
+.all-streams-portrait-container .grid-item {
+    background: var(--color-windowview, rgba(44, 44, 44, 1));
     text-align: center;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    border: 1px solid var(--background-dark, rgba(21, 21, 21, 1));
 }
 
 .all-streams-portrait-container .pagination {
     position: absolute;
     bottom: 0px;
-    justify-content: center;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -57,7 +66,7 @@
     opacity: 0px;
     text-align: center;
     text-decoration: none;
-    background: rgba(21, 21, 21, 0.8);
+    background: var(--ui-03-80, rgba(21, 21, 21, 0.8));
 }
 .left-btn{
     margin: auto auto auto 8px;

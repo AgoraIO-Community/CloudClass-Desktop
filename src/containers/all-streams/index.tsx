@@ -47,6 +47,7 @@ export const AllStream = observer((
         },
         layoutUIStore: { },
         boardUIStore: { grantedUsers },
+        widgetUIStore:{currentWidget}
     } = useStore();
 
     //监听教师流变更
@@ -58,6 +59,8 @@ export const AllStream = observer((
     }, [teacherCameraStream]);
     //展示的视频流
     const streamList: EduStreamUI[] = []
+    //是否有白板、屏幕共享等widget
+    const haveWidget = currentWidget && currentWidget !== undefined
     //是否显示学生
     const showStudents = toolVisible && studentStreamsVisible;
     //是否显示老师
@@ -72,15 +75,11 @@ export const AllStream = observer((
     return (
         <>
             {
-                // isLandscape ? (<LandscapeShow></LandscapeShow>) : (<PortraitShow streamList={streamList}></PortraitShow>)
                 isLandscape ? (<>
                     <GridListShow streamList={streamList} columnRowCount={1} pageSize={2} orientationUpToDown={true}></GridListShow>
-                </>) : (<>
-                <GridListShow streamList={streamList} columnRowCount={2} pageSize={6} orientationUpToDown={true}></GridListShow>
-                        {/* <PortraitShow streamList={streamList}></PortraitShow> */}
-                    {/* <TeacherStream /> */}
-                    {/* {<StudentStreamsContainer></StudentStreamsContainer>} */}
-                </>)
+                </>) : <div style={{height:haveWidget ? '100px' : '100%'}}>
+                    <GridListShow streamList={streamList} columnRowCount={haveWidget ? 1 : 2} pageSize={haveWidget ? 2 : 6} orientationUpToDown={!haveWidget}></GridListShow>
+                </div>
             }
         </>
     );
@@ -121,7 +120,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     const isTeacher = RteRole2EduRole(roomType, stream.fromUser.role) === EduRoleTypeEnum.teacher;
     return (
         <div style={{ width: "100%", height: '100%', position: 'relative' }}>
-            <div className={classNames('placeholder-text')}>{`${first}${last}`}</div>
+            <div className={classNames('placeholder-text', { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
             {
                 isLocal ? !stream?.isCameraMuted && (
                     <LocalTrackPlayer
@@ -154,28 +153,34 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
       } = useStore();
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
+    //当前使用的每页数量
+    const currentPageSize = isLandscape ? pageSize : orientationUpToDown ? columnRowCount : pageSize;
     //显示的数据列表
     const [currentPageShowStreamList, setCurrentPageShowStreamList] = useState<EduStreamUI[]>([]);
     //最后一页页码
-    const lastPageIndex = Number(Number(streamList.length / pageSize).toFixed(0)) + (streamList.length % length !== 0 ? 1 : 0);
+    const lastPageIndex = Number(Number(streamList.length / currentPageSize).toFixed(0)) + (streamList.length % currentPageSize !== 0 ? 1 : 0);
     //重置显示列表
     const resetShowList = () => {
         //当前页面显示的流列表
-        let startIndex = currentPage ? currentPage * pageSize : 0
-        if (Math.min(streamList.length, startIndex + pageSize) - startIndex < pageSize) {
-            startIndex = Math.min(streamList.length, startIndex + pageSize) - pageSize
+        let startIndex = currentPage ? currentPage * currentPageSize : 0
+        if (Math.min(streamList.length, startIndex + currentPageSize) - startIndex < currentPageSize) {
+            startIndex = Math.min(streamList.length, startIndex + currentPageSize) - currentPageSize
         }
-        setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + pageSize))])
+        setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + currentPageSize))])
     }
     useEffect(resetShowList, [currentPage])
     //当前页面显示的流列表
     if (currentPageShowStreamList.length == 0 && streamList.length > 0) {
         resetShowList()
     }
-    return (<div className='all-streams-portrait-container'>
+    //翻页按钮样式
+    const pageLeftStyle = { display: currentPage > 0 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? '8px 9px auto auto' : orientationUpToDown ? 'auto auto auto 8px' : '9px auto auto 8px' }
+    const pageRightStyle = { display: currentPage < lastPageIndex - 1 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? 'auto 9px 8px auto' : orientationUpToDown ? 'auto 8px auto auto' : '9px 8px auto auto' }
+
+
+    return (<div className='all-streams-portrait-container' style={{height:isLandscape ? 'unset' : '100%'}}>
         <div className='show-stream' style={{
-            gridTemplateColumns: orientationUpToDown ? `repeat(${columnRowCount}, 1fr)` : 'unset',
-            gridTemplateRows: orientationUpToDown ? 'unset' : `repeat(${columnRowCount}, 1fr)`
+            gridTemplateColumns: `repeat(${isLandscape ? 1 : currentPageSize}, 1fr)`,
         }}>
             {
                 currentPageShowStreamList.map((stream, index) => {
@@ -188,16 +193,13 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
                 })
             }
         </div>
+
         <div className="pagination" style={{display:isLandscape ? 'grid' : 'flex'}}>
-            {<div className="page-btn left-btn"
-                style={{ display: currentPage > 0 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? '8px auto auto auto' : 'auto auto auto 8px' }}
-                onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
+            {<div className="page-btn left-btn" style={pageLeftStyle} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
                 <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24}
-                    style={{ margin: 'auto', height: '100%', transform: isLandscape ?  'rotate(-90deg)': 'rotate(180deg)' }}></SvgImg>
+                    style={{ margin: 'auto', height: '100%', transform: isLandscape ? 'rotate(-90deg)' : 'rotate(180deg)' }}></SvgImg>
             </div>}
-            {<div className="page-btn right-btn" 
-                style={{ display: currentPage < lastPageIndex - 1 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? 'auto auto 8px auto' : 'auto 8px auto auto' }}
-                onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
+            {<div className="page-btn right-btn" style={pageRightStyle} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
                 <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24}
                     style={{ margin: 'auto', height: '100%', transform: isLandscape ? 'rotate(90deg)' : 'unset' }}></SvgImg>
             </div>}
