@@ -5,6 +5,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
+  z-index: 999;
 }
 
 .top-operation-panel .top-operation-panel-device {
@@ -17,16 +18,44 @@
 .top-operation-panel-device-item {
   background: var(--field, #FFFFFF);
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  width: 35px;
+  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
+  /* box-shadow: inset 0 0 2px 1px var(--background-dark, #151515); */
+  border: 1px solid var(--background-dark, #151515);
+  animation: blink 1s infinite;
 }
 
-.top-operation-panel-device-mute{
+.top-operation-panel-device-mute {
+  width: 38px;
+  height: 38px;
   background: var(--background-dark, #151515);
-  border: 1px solid var(--inverse-icon-primary, #FEFEFE)
+  border: 1px solid var(--inverse-icon-primary, #FEFEFE);
+  animation: none;
+}
+
+.top-operation-panel-camera-on{
+  animation: none;
+  width: 38px;
+  height: 38px;
+}
+
+@keyframes blink {
+  0% {
+    box-shadow: none;
+  }
+
+  50% {
+    box-shadow: 0 0 0 1px var(--head-5, #84BD00);
+    ;
+  }
+
+  100% {
+    box-shadow: 0 0 0 2px var(--head-5, #84BD00);
+
+  }
 }
 
 .top-operation-panel .top-operation-panel-screen-shared {

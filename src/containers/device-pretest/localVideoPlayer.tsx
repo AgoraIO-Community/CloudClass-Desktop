@@ -71,7 +71,7 @@ export const LocalVideoPlayer = observer(() => {
                 <LocalTrackPlayer renderAt="Preview" style={{ height: '100%', zIndex: 10, position: 'relative' }}></LocalTrackPlayer>
             )}
             <div className="fcr-video-player__placeholder">
-                <Avatar textSize={24} borderRadius='0' nickName={userName} style={{ background: '#FF757A' }} />
+                <Avatar size={93.5} textSize={18} borderRadius='50%' nickName={userName} style={{ background: '#FF757A', fontWeight: 600 }} />
             </div>
         </div>
     );

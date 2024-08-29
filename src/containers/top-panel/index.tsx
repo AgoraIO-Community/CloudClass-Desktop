@@ -40,7 +40,8 @@ export const TopPanel: FC<Props> = observer(() => {
   });
 
   const cameraClas = classNames('top-operation-panel-device-item ', {
-    'top-operation-panel-device-mute': !isCameraDeviceEnabled
+    'top-operation-panel-device-mute': !isCameraDeviceEnabled,
+    'top-operation-panel-camera-on': isCameraDeviceEnabled
   });
 
   // const teacherGroupUuidRef = useRef<string | undefined>(teacherGroupUuid);
