@@ -76,3 +76,9 @@
   position: absolute;
   top: 0;
 }
+.whiteboard-popup-container .fcr-btn{
+  background: var(--interactive-primary, #9E007E);
+}
+.frc-arrow-enable-color span{
+  color: var(--inverse-text-tertiary, #F5F5F5)
+}

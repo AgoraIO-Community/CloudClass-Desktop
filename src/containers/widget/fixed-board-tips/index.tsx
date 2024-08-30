@@ -61,7 +61,7 @@ export const FixedBoardTips = () => {
             <BoardExpand
               iconEnum={SvgIconEnum.WHITEBOARDEDIT}
               size={48}
-              style={{ width: '48px', height: '48px' }}
+              style={{ width: '48px', height: '48px',backgroundColor:'#AE367E' }}
             />
             <div className="fcr-flex fcr-flex1 column pl-19">
               <div className="whiteboard-title">{transI18n('fcr_board_edit')}</div>
@@ -75,7 +75,7 @@ export const FixedBoardTips = () => {
                 iconColor="#FB584E"
                 size={48}
                 style={{
-                  background: 'rgba(91, 89, 152, 0.2)',
+                  background: '#E6E6E6',
                   width: '60px',
                   height: '60px',
                   borderRadius: '50%',
@@ -83,10 +83,10 @@ export const FixedBoardTips = () => {
               />
               <span>{transI18n('fcr_board_rotate_lock')}</span>
             </div>
-            <div>
+            <div className='frc-arrow-enable-color'>
               <BoardExpand
                 iconEnum={SvgIconEnum.RIGHTPOINT}
-                iconColor="#BBB"
+                iconColor="#F5F5F5"
                 size={47}
                 style={{ background: 'none' }}
               />
@@ -97,9 +97,10 @@ export const FixedBoardTips = () => {
             <div>
               <BoardExpand
                 iconEnum={SvgIconEnum.MOBILEROTATESCAPE}
+                iconColor="#151515"
                 size={48}
                 style={{
-                  background: '#4262FF',
+                  background: '#FFFFFF',
                   width: '60px',
                   height: '60px',
                   borderRadius: '50%',

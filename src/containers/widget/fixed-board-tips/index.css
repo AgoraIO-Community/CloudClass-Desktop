@@ -20,7 +20,7 @@
 }
 .fct-mobile-board-drawer .ant-drawer-content {
   border-radius: 20px;
-  background: var(--fcr_mobile_ui_scene_color_popup_fill2, #3c3c3c);
+  background: var(--background-dark, #151515);
 }
 .fct-mobile-board-drawer .whiteboard-popup-header {
   color: #fff;
@@ -49,7 +49,7 @@
   padding: 35px 51px;
   color: var(--fcr_ui_scene_icontext2, rgba(255, 255, 255, 0.7));
   border-radius: var(--fcr_cornerradius_xl, 16px);
-  background: var(--fcr_mobile_ui_scene_color_popup_block2, rgba(53, 54, 56, 0.95));
+  background: var(--color-monochrome-100, #383D3E);
 }
 .fct-mobile-board-drawer .whiteboard-tips-container > div {
   flex: 1;
