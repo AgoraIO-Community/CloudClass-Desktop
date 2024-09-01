@@ -188,7 +188,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //显示的数据列表
     const [currentPageShowStreamList, setCurrentPageShowStreamList] = useState<EduStreamUI[]>([]);
     //最后一页页码
-    const lastPageIndex = Number(Number(streamList.length / currentPageSize).toFixed(0)) + (streamList.length % currentPageSize !== 0 ? 1 : 0);
+    const lastPageIndex = Math.floor(Number(streamList.length / currentPageSize))+ (streamList.length % currentPageSize !== 0 ? 1 : 0);
     //重置显示列表
     const resetShowList = () => {
         //当前页面显示的流列表
