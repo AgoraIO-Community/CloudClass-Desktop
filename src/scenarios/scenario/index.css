@@ -175,12 +175,12 @@
   flex-direction: column;
   justify-content: space-between;
   background: var(--background-dark, #151515);
-  padding: 0 14px;
   width: calc(100% - 142px -14px);
 }
 
 .fct-mobile-main-container.fct-mobile-main-container-landscape {
   flex-direction: row; 
+  padding: 0 14px;
 }
 
 .all-streams-portrait-container {
