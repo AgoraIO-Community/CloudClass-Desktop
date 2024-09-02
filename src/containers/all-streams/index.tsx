@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useStore } from '@classroom/hooks/ui-store';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { EduStreamUI } from '@classroom/uistores/stream/struct';
 import { LocalTrackPlayer, splitName } from '../stream';
 import './index.css'
@@ -89,9 +89,10 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
             streamStore: { setRemoteVideoStreamType },
             connectionStore: { rtcState },
         },
-        streamUIStore: { screenShareStream },
-        layoutUIStore: { },
-        handUpUIStore:{handsUpMap}
+        streamUIStore: { screenShareStream,localVolume, remoteStreamVolume, cameraUIStreams },
+        layoutUIStore: {  },
+        handUpUIStore:{handsUpMap},
+        deviceSettingUIStore: { isAudioRecordingDeviceEnabled },
     } = useStore();
     useEffect(() => {
         if (
@@ -111,6 +112,8 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     }, [isLandscape, stream.stream.videoState, rtcState]);
     const userName = stream.fromUser.userName;
     const [first, last] = splitName(userName);
+   const duration = 3000;
+   const minTriggerVolume = 35;
     //是否是本地的流
     const isLocal = stream.stream.isLocal;
     //教室类型
@@ -122,15 +125,49 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     //是否举手
     const isLiftHand = handsUpMap.has(stream.fromUser.userUuid);
     //是否讲话
-    const isSpeak = true;
+    const [isSpeak, setIsSpeak] = useState(false);
+    const timer = useRef<number | null>(null);
+    const showAudioEffect = () => {
+        setIsSpeak(true);
+        if (timer.current) {
+            window.clearTimeout(timer.current);
+        }
+        timer.current = window.setTimeout(() => {
+            setIsSpeak(false);
+            timer.current = null;
+        }, duration);
+    };
+    //动态监听变量
+    useEffect(() => {
+        if (stream?.stream.isLocal) {
+            if (localVolume > minTriggerVolume && isAudioRecordingDeviceEnabled) {
+                showAudioEffect();
+            }
+        } else {
+            const remoteVolume = remoteStreamVolume(stream);
+            if (remoteVolume > minTriggerVolume && stream?.isMicStreamPublished) {
+                showAudioEffect();
+            }
+        }
+    }, [
+        localVolume,
+        remoteStreamVolume(stream),
+        isAudioRecordingDeviceEnabled,
+        stream?.isMicStreamPublished,
+    ]);
+    //当前布局
+    const ref = useRef<HTMLDivElement | null>(null);
 
     return (
         <div style={{ width: "100%", height: '100%', position: 'relative' }}
+        ref={ref}
             className={classNames(
                 { 'all-streams-portrait-stream-speak': isSpeak && isLiftHand },
                 { 'all-streams-portrait-stream-lift-hand': isLiftHand }
             )}>
-            <div className={classNames('placeholder-text', { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
+            <div className={classNames('placeholder-text',
+                { 'placeholder-text-small': 100 >= (ref.current?.clientHeight ? ref.current?.clientHeight : 100) },
+                { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
             {
                 isLocal ? !stream?.isCameraMuted && (
                     <LocalTrackPlayer

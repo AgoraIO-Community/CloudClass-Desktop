@@ -66,6 +66,10 @@ export class EduStreamUI {
   setRenderAt(at: VideoPlacement) {
     this._renderAt = at;
   }
+
+  get isMicStreamPublished() {
+    return this.stream.audioState === AgoraRteMediaPublishState.Published;
+  }
 }
 
 export interface StreamBounds {

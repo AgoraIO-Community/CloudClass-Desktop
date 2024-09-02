@@ -31,6 +31,13 @@
 }
 
 /* 文本样式提示 */
+.all-streams-portrait-container .placeholder-text-small {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+}
+
+/* 文本样式提示 */
 .all-streams-portrait-container .placeholder-text-students {
     background: var(--head-2, rgba(255, 117, 122, 1));
 }
@@ -39,20 +46,24 @@
 .all-streams-portrait-container .placeholder-text-teacher {
     background: var(--head-4, rgba(210, 219, 14, 1));
 }
+
 /* 举手样式边框 */
 .all-streams-portrait-stream-lift-hand {
     border: 2px solid var(--interactive-action, rgba(255, 187, 28, 1))
 }
+
 /* 讲话样式边框 */
 .all-streams-portrait-stream-speak {
     border: 2px solid var(--head-5, rgba(132, 189, 0, 1));
 }
+
 /* 举手的图标样式 */
 .all-streams-portrait-stream-lift-hand-container {
     position: absolute;
     left: 5px;
     top: 5px;
 }
+
 /* 视频流左下角姓名容器 */
 .all-streams-portrait-stream-name-container {
     height: 28px;
@@ -66,6 +77,7 @@
     left: 5px;
     display: block;
 }
+
 /* 视频流左下角姓名容器-姓名 */
 .all-streams-portrait-stream-name-container-name {
     font-family: Open Sans;
@@ -77,12 +89,14 @@
     display: inline-block;
     color: var(--inverse-text-primary, rgba(254, 254, 254, 1));
 }
+
 /* 视频流左下角姓名容器-教师图标 */
 .all-streams-portrait-stream-name-container-icon {
     display: inline-block;
     margin-left: 5px;
     margin-top: -3px;
 }
+
 /* 视频流左下角姓名容器-共享图标 */
 .all-streams-portrait-stream-name-container-screen-share {
     margin-left: 10px;
