@@ -177,7 +177,7 @@ export const Scenario = observer(() => {
                   </>
                 ) : (
                   <>
-                    <GroupInfoPanel />
+                    {/* <GroupInfoPanel /> */}
                     {/* {!isLandscape && <RoomPlaceholder></RoomPlaceholder>} */}
                     {/* <ScreenShareContainer></ScreenShareContainer> */}
                     <AllStream isTeacherInClass={false} isBoardWidgetActive={false}
