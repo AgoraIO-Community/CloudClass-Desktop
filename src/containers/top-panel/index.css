@@ -11,7 +11,7 @@
 }
 
 .fcr-mobile-landscape-container .top-operation-panel {
-  height: 52px; 
+  height: 52px;
 }
 
 .top-operation-panel .top-operation-panel-device {
@@ -64,13 +64,85 @@
   }
 }
 
-.top-operation-panel .top-operation-panel-screen-shared {
+.top-operation-panel .top-operation-panel-screen-shared,
+.top-operation-panel-groupName {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
+.top-operation-panel-groupName {
+  font-family: Helvetica Neue;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: left;
+  color: var(--inverse-text-primary, #FEFEFE);
+}
+
 .top-operation-panel .top-operation-panel-button .fcr-btn {
   background: var(--leave, #BD0101);
   height: 32px;
+}
+
+.top-operation-panel .group-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  width: 191px;
+  height: 32px;
+  justify-content: flex-end;
+}
+
+.top-operation-panel .group-buttons .help-button {
+  right: 105px;
+  width: 80px;
+  height: 32px;
+  border-radius: 16px 0 0 16px;
+  background: var(--text-secondary, #333333);
+
+  font-family: PingFang HK;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 14px;
+  text-align: center;
+
+  padding: 0 9px 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--inverse-icon-primary, #FEFEFE);
+  white-space: nowrap;
+}
+
+.top-operation-panel .group-buttons .help-button.active {
+  background-color: rgba(13, 20, 51, .5)
+}
+
+.top-operation-panel .group-buttons .help-button.active .help-button-value {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.top-operation-panel .group-buttons .leave-group-button {
+  display: flex;
+  align-items: center;
+  padding: 0 13px;
+  background: var(--leave, #BD0101);
+  border-radius: 0 16px 16px 0;
+  justify-content: center;
+  color: #fff;
+  width: 111px;
+  height: 32px;
+  left: 80px;
+  /* padding: 1px 13px 1px 13px;  */
+  border-radius: 0px 16px 16px 0px;
+
+  font-family: PingFang HK;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 14px;
+  text-align: center;
+
+  white-space: nowrap;
 }

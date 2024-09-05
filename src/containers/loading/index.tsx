@@ -1,31 +1,50 @@
 import { ComponentLevelRules } from '@classroom/configs/config';
 import { useStore } from '@classroom/hooks/ui-store';
-import { Card, Loading } from '@classroom/ui-kit';
+import { Card, Loading, SvgIconEnum, SvgImgMobile } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
 import { ClassroomState } from 'agora-edu-core';
 import { observer } from 'mobx-react';
 
-export const GroupLoading = () => {
-  const { layoutUIStore } = useStore();
+import classNames from 'classnames';
+import './index.css';
 
+export const GroupLoading = () => {
+  const {
+    layoutUIStore,
+    shareUIStore: { isLandscape, forceLandscape },
+  } = useStore();
+  const breakoutLoadClas = classNames('scene-switch-loading', {
+    'scene-switch-loading-breakout-open': layoutUIStore.currentSubRoomName,
+    'scene-switch-loading-breakout-open-landscape':isLandscape
+  });
+
+  const breakoutLoadWrapClas = classNames('fcr-w-full fcr-h-full', {
+    'fcr-bg-white': !layoutUIStore.currentSubRoomName,
+    'fcr-bg-black': layoutUIStore.currentSubRoomName,
+  });
+  
   return (
-    <div className="fcr-w-full fcr-h-full fcr-bg-white">
-      <div className="scene-switch-loading">
+    <div className={breakoutLoadWrapClas}>
+      <div className={breakoutLoadClas}>
         <Card
           className="fcr-absolute fcr-inline-flex fcr-flex-col fcr-inset-auto fcr-p-4"
           style={{
             width: 'unset!important',
             height: 'unset!important',
-            borderRadius: 12,
+            borderRadius: 12, 
           }}>
-          <Loading />
-          <p className="fcr-m-0 fcr-text-level1">
-            {layoutUIStore.currentSubRoomName
-              ? transI18n('fcr_group_joining', {
-                  reason: layoutUIStore.currentSubRoomName,
-                })
-              : transI18n('fcr_group_back_main_room')}
-          </p>
+          {!layoutUIStore.currentSubRoomName && <Loading />}
+          {layoutUIStore.currentSubRoomName && <SvgImgMobile
+            landscape={isLandscape}
+            forceLandscape={forceLandscape}
+            type={SvgIconEnum.BREAK_OUT_LOADING}
+            size={24}
+          />}
+          {layoutUIStore.currentSubRoomName
+            ? <p className='breakout-join-text' >{transI18n('fcr_group_joining', {
+              reason: layoutUIStore.currentSubRoomName,
+            })}</p>
+            : <p className="fcr-m-0 fcr-text-level1">{transI18n('fcr_group_back_main_room')}</p>}
         </Card>
       </div>
     </div>

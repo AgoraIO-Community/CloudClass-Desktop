@@ -148,19 +148,6 @@
   margin-left: 5px;
 }
 
-.scene-switch-loading {
-  @apply fcr-bg-background;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  height: 100%;
-  position: fixed;
-  width: 100%;
-  z-index: 999999;
-  left: 0;
-  top: 0;
-}
 
 .fct-mobile-main-top {
   width: 550px;

@@ -10,6 +10,7 @@ export enum SvgIconEnum {
   BACKWARD = 'backward',
   BAD_SIGNAL = 'bad-signal',
   BOARD_NOT_GRANTED = 'board-not-granted',
+  BREAK_OUT_LOADING='break-out-loading',
   BUFFING = 'buffing',
   CALENDAR = 'calendar',
   CAMERA = 'camera',
