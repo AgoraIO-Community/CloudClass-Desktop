@@ -5,7 +5,7 @@
   bottom: 8px;
   width: 40px;
   height: 40px;
-  z-index: 3;
+  z-index: 1;
 }
 .fcr-guide-tooltip-overlay-content-inner {
   padding: 0 8px !important;

@@ -23,13 +23,14 @@ export const TopPanel: FC<Props> = observer(() => {
     classroomStore: {
       roomStore: { updateClassState },
       groupStore: { currentSubRoom },
-      // userStore: {
-      //   mainRoomDataStore: {
-      //     teacherList,
-      //     assistantList
-      //   }
-      // }
+      userStore: {
+        // mainRoomDataStore: {
+        //   teacherList,
+        //    assistantList
+        // }
+      }
     },
+    classroomStore,
     layoutUIStore: { isRecording, addDialog },
     shareUIStore: { forceLandscape, isLandscape, addToast },
     leaveClassroom,
@@ -79,58 +80,62 @@ export const TopPanel: FC<Props> = observer(() => {
       addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
       return;
     }
-    // const teacherUuid = teacherList.keys().next().value;
-    // const assistantUuids = Array.from(assistantList.keys());
-    // if (!studentInvite.isInvite) {
-    //   if (!teacherList.size && !assistantList.size) {
-    //     addDialog('confirm', {
-    //       title: transI18n('fcr_group_help_title'),
-    //       content: transI18n('fcr_group_teacher_not_in_classroom'),
-    //       cancelButtonVisible: false,
-    //     });
-    //     return;
-    //   }
-    //   if (teacherGroupUuidRef.current === currentSubRoom) {
-    //     addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
-    //     return;
-    //   }
-    //   addDialog('confirm', {
-    //     title: transI18n('fcr_group_help_title'),
-    //     content: transI18n('fcr_group_help_content'),
-    //     buttonStyle: 'block',
-    //     onOk: () => {
-    //       if (teacherGroupUuidRef.current === currentSubRoom) {
-    //         addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
-    //         return;
-    //       }
-    //       const studentGroupInfo = {
-    //         groupUuid: currentSubRoom as string,
-    //         groupName: groupInfo && groupInfo.groupName || '',
-    //       }
-    //       const studentInfo = {
-    //         id: userUuid,
-    //         name: userName,
-    //         isInvite: true,
-    //       }
-    //       studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
-    //       addToast(transI18n('fcr_group_help_send'), 'info');
-    //     },
-    //     okText: transI18n('fcr_group_button_invite'),
-    //     cancelText: transI18n('fcr_group_button_cancel'),
-    //   });
-    // } else {
-    //   const studentGroupInfo = {
-    //     groupUuid: currentSubRoom as string,
-    //     groupName: groupInfo && groupInfo.groupName || '',
-    //   }
-    //   const studentInfo = {
-    //     id: userUuid,
-    //     name: userName,
-    //     isInvite: false,
-    //   }
-    //   addToast(transI18n('fcr_group_help_cancel'), 'info');
-    //   studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
-    // }
+
+    const teacherList = classroomStore?.userStore?.mainRoomDataStore?.teacherList;
+    const assistantList = classroomStore.userStore.mainRoomDataStore.assistantList;
+    
+    const teacherUuid = teacherList.keys().next().value;
+    const assistantUuids = Array.from(assistantList.keys());
+    if (!studentInvite.isInvite) {
+      if (!teacherList.size && !assistantList.size) {
+        addDialog('confirm', {
+          title: transI18n('fcr_group_help_title'),
+          content: transI18n('fcr_group_teacher_not_in_classroom'),
+          cancelButtonVisible: false,
+        });
+        return;
+      }
+      if (teacherGroupUuidRef.current === currentSubRoom) {
+        addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
+        return;
+      }
+      addDialog('confirm', {
+        title: transI18n('fcr_group_help_title'),
+        content: transI18n('fcr_group_help_content'),
+        buttonStyle: 'block',
+        onOk: () => {
+          if (teacherGroupUuidRef.current === currentSubRoom) {
+            addToast(transI18n('fcr_group_teacher_exist_hint'), 'info');
+            return;
+          }
+          const studentGroupInfo = {
+            groupUuid: currentSubRoom as string,
+            groupName: groupInfo && groupInfo.groupName || '',
+          }
+          const studentInfo = {
+            id: userUuid,
+            name: userName,
+            isInvite: true,
+          }
+          studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
+          addToast(transI18n('fcr_group_help_send'), 'info');
+        },
+        okText: transI18n('fcr_group_button_invite'),
+        cancelText: transI18n('fcr_group_button_cancel'),
+      });
+    } else {
+      const studentGroupInfo = {
+        groupUuid: currentSubRoom as string,
+        groupName: groupInfo && groupInfo.groupName || '',
+      }
+      const studentInfo = {
+        id: userUuid,
+        name: userName,
+        isInvite: false,
+      }
+      addToast(transI18n('fcr_group_help_cancel'), 'info');
+      studentInviteTeacher(studentGroupInfo, studentInfo, teacherUuid)
+    }
   };
 
   const handleLeaveGroup = () => {

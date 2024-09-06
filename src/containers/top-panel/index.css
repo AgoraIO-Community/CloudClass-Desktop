@@ -6,7 +6,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  z-index: 999;
+  z-index: 3;
   background: var(--background-dark, #151515);
 }
 

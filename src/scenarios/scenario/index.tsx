@@ -190,6 +190,7 @@ export const Scenario = observer(() => {
                   </>
                 )}
                 {groupUIStore.joiningSubRoom ? <GroupLoading /> : <Chat />}
+                {/* {groupUIStore.joiningSubRoom && <GroupLoading /> } */}
                 <Poll></Poll>
                 <CountDown></CountDown>
                 <AutoPlayFailedTip></AutoPlayFailedTip>

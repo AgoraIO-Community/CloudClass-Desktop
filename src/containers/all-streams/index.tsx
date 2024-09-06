@@ -62,7 +62,7 @@ export const AllStream = observer((
             {
                 isLandscape ? (<>
                     <GridListShow streamList={streamList} columnRowCount={1} pageSize={2} orientationUpToDown={true}></GridListShow>
-                </>) : <div style={{ height: haveWidget ? '100px' : '100%' }}>
+                </>) : <div style={{ height: haveWidget ? '96px' : '100%' }}>
                     <GridListShow streamList={streamList} columnRowCount={haveWidget ? 1 : 2} pageSize={haveWidget ? 2 : 6} orientationUpToDown={!haveWidget}></GridListShow>
                 </div>
             }
