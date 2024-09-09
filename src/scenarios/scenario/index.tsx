@@ -161,7 +161,7 @@ export const Scenario = observer(() => {
                 </div>
                 {isLandscape ? (
                   <>
-                    <LandscapeToolPanel />
+                    {/* <LandscapeToolPanel /> */}
                     {!isTeacherInClass &&
                       !isBoardWidgetActive &&
                       !isMediaPlayerWidgetActive &&
