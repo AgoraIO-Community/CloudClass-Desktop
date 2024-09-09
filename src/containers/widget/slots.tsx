@@ -50,7 +50,6 @@ export const Whiteboard = observer(function Board() {
   } = useStore();
 
   const { boardContainerHeight, mounted, boardContainerWidth, isGrantedBoard } = boardUIStore;
-  debugger
   const width = studentStreamsVisible
     ? isLandscape
       ? (boardContainerWidth - 143 - 75 - 14 - 14)
