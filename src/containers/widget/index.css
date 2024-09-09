@@ -17,6 +17,9 @@
   flex-shrink: 0;
   width: 100%;
   overflow: hidden;
+
+  background: #151515;
+
 }
 .widget-slot-board,
 .widget-slot-media-player,
@@ -38,10 +41,19 @@
 .widget-slot-media-player .fcr-h-full{
   pointer-events: none;
 }
+
+.whiteboard-mobile-container .widget-slot-board{
+  margin: auto;
+}
 .widget-slot-board .netless-whiteboard-wrapper {
   /* height: 100%; */
-  background-color: rgba(35, 37, 41, 1);
-  border-color: rgba(35, 37, 41, 1);
+  /* background-color: rgba(35, 37, 41, 1);
+  border-color: rgba(35, 37, 41, 1); */
+  border: none;
+}
+
+.fcr-widget-dialog-zindex-wrapper.fcr-widget-dialog {
+  border-radius: 0;
 }
 .whiteboard-mobile-container::before {
   content: '';

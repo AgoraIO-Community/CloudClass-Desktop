@@ -6,7 +6,18 @@
   width: 40px;
   height: 40px;
   z-index: 1;
+
 }
+
+
+.fct-mobile-board-btn .fcr-mobile-board-expand,
+.fcr-board-toolbar-fold .fcr-mobile-board-expand {
+  border-radius: 50%;
+  background: var(--background-light, #FFFFFF);
+  box-shadow: 0px 0px 15px 0px #97979740;
+}
+
+
 .fcr-guide-tooltip-overlay-content-inner {
   padding: 0 8px !important;
 }
@@ -15,19 +26,24 @@
   padding: 10px;
   padding-bottom: 13px;
 }
+
 .fct-mobile-board-drawer .ant-drawer-body {
   padding: 25px 20px 18px;
 }
+
 .fct-mobile-board-drawer .ant-drawer-content {
   border-radius: 20px;
   background: var(--background-dark, #151515);
 }
+
 .fct-mobile-board-drawer .whiteboard-popup-header {
   color: #fff;
 }
+
 .whiteboard-popup-header .pl-19 {
   padding-left: 19px;
 }
+
 .fct-mobile-board-drawer .whiteboard-title {
   font-family: 'Helvetica Neue';
   font-size: 16px;
@@ -36,12 +52,14 @@
   line-height: 130%;
   margin-bottom: 9px;
 }
+
 .fct-mobile-board-drawer .whiteboard-instructions {
   color: var(--fcr_ui_scene_icontext2, rgba(255, 255, 255, 0.7));
   font-family: 'PingFang HK';
   font-size: 14px;
   line-height: 130%;
 }
+
 .fct-mobile-board-drawer .whiteboard-tips-container {
   margin-top: 18px;
   margin-bottom: 21px;
@@ -51,7 +69,8 @@
   border-radius: var(--fcr_cornerradius_xl, 16px);
   background: var(--color-monochrome-100, #383D3E);
 }
-.fct-mobile-board-drawer .whiteboard-tips-container > div {
+
+.fct-mobile-board-drawer .whiteboard-tips-container>div {
   flex: 1;
   display: flex;
   flex-direction: column;

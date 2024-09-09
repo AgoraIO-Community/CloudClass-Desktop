@@ -16,7 +16,7 @@ export const CountDown = observer(() => {
   const { pos, initData } = useMobileStreamDrag({
     isPiP: true,
     triggerRef: ref as MutableRefObject<HTMLDivElement>,
-     type:"countDown"
+    type: "countDown"
   });
   const {
     shareUIStore: { isLandscape },
@@ -50,15 +50,16 @@ export const Whiteboard = observer(function Board() {
   } = useStore();
 
   const { boardContainerHeight, mounted, boardContainerWidth, isGrantedBoard } = boardUIStore;
+  debugger
   const width = studentStreamsVisible
     ? isLandscape
-      ? boardContainerWidth - 143
+      ? (boardContainerWidth - 143 - 75 - 14 - 14)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
     updateWhiteBoardViewportSize(width, boardContainerHeight);
   }, [studentStreamsVisible, width]);
-  const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
+  const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : 511) : 0;
   const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
   // document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
@@ -83,7 +84,7 @@ export const Whiteboard = observer(function Board() {
       <div
         onClick={toggleLandscapeToolBarVisible}
         style={{
-          height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+          height: isLandscape ? '100%' : boardContainerHeight,
           zIndex: ComponentLevelRules.Level0,
           width: landscapeBoardSize.width,
           // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
@@ -107,7 +108,7 @@ export const MadiaPlayer = observer(function Media() {
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? boardContainerWidth - 143
+      ? (boardContainerWidth - 143 - 75 - 14 - 14)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
@@ -171,7 +172,7 @@ export const WebView = observer(function View() {
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? boardContainerWidth - 143
+      ? (boardContainerWidth - 143 - 75 - 14 - 14)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
@@ -253,8 +254,8 @@ export const Chat = observer(function Chat() {
       h5Height -
       (screenShareStream ? boardContainerHeight : 0) -
       (!widgets.length &&
-      (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
-      !screenShareStream
+        (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
+        !screenShareStream
         ? isInGroup
           ? classRoomPlacholderIngroupHeight
           : 190

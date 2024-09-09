@@ -11,7 +11,7 @@
 }
 
 .fcr-mobile-landscape-container .top-operation-panel {
-  height: 52px;
+  height: 52px; 
 }
 
 .top-operation-panel .top-operation-panel-device {
@@ -117,7 +117,7 @@
 }
 
 .top-operation-panel .group-buttons .help-button.active {
-  background-color: rgba(13, 20, 51, .5)
+  /* background-color: rgba(13, 20, 51, .5) */
 }
 
 .top-operation-panel .group-buttons .help-button.active .help-button-value {

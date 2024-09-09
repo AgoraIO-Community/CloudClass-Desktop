@@ -39,7 +39,7 @@ export const FixedBoardTips = () => {
             color: '#000',
           }}
           content={transI18n('fcr_board_edit')}>
-          <BoardExpand iconEnum={SvgIconEnum.WHITEBOARDEDIT} onClick={toogleBoardTipsPopup} />
+          <BoardExpand iconEnum={SvgIconEnum.WHITEBOARDEDIT} iconColor='var(--icon-primary, #151515)' onClick={toogleBoardTipsPopup} />
         </GuideToolTip>
       </div>
 

@@ -339,6 +339,7 @@ export class EduShareUIStore {
   @bound
   @Lodash.debounced(500)
   updateWhiteBoardViewportSize(width: number, height: number) {
+    debugger
     const aspectRatio = 714 / 1548;
     const curAspectRatio = height / width;
     const scopeSize = { height, width };
