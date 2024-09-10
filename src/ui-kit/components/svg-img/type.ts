@@ -1,5 +1,7 @@
 export enum SvgIconEnum {
   ADD_SCENE = 'add-scene',
+  ALL_STREAM_FOLD='all-stream-fold',
+  ALL_STREAM_FOLD_NOT='all-stream-fold-not',
   ALF = 'alf',
   ANSWER = 'answer',
   ARROW = 'arrow',
@@ -10,7 +12,7 @@ export enum SvgIconEnum {
   BACKWARD = 'backward',
   BAD_SIGNAL = 'bad-signal',
   BOARD_NOT_GRANTED = 'board-not-granted',
-  BREAK_OUT_LOADING='break-out-loading',
+  BREAK_OUT_LOADING = 'break-out-loading',
   BUFFING = 'buffing',
   CALENDAR = 'calendar',
   CAMERA = 'camera',
@@ -157,7 +159,9 @@ export enum SvgIconEnum {
   VOTE = 'vote',
   RIGHTPOINT = 'rightpoint',
   WHITEBOARD = 'whiteboard',
-  WHITEBOARDEDIT = 'whiteboardedit',
+  WHITEBOARDEDIT = 'whiteboardedit', 
+  WHITEBOARDFULLSCREEN_LANDSCAPE_CLOSE = 'whiteboard-fullscreen-landscape-close',
+  WHITEBOARDFULLSCREEN_LANDSCAPE = 'whiteboard-fullscreen-landscape',
   FCR_TOOLTIP_ARROW = 'fcr_tooltip_arrow',
   WHITENING = 'whitening',
   WORD = 'word',
@@ -203,8 +207,8 @@ export enum SvgIconEnum {
   MIC_NOMUTED = 'mic-nomute',
   MIC_MUTED = 'mic-mute',
   ARROW_BACK = 'arrow_back',
-  ICON_ROLE_TYPE_TEACHER='icon_role_type_teacher',
-  ICON_SCREEN_SHARE='icon_screen_share',
+  ICON_ROLE_TYPE_TEACHER = 'icon_role_type_teacher',
+  ICON_SCREEN_SHARE = 'icon_screen_share',
   HANDS_UP_NEW = 'hands-up-new',
 
 }

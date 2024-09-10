@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SvgIconEnum, Button } from '@classroom/ui-kit';
+import { SvgIconEnum, Button, SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { Drawer } from 'antd';
 import { GuideToolTip } from '../../tooltip/guide';
@@ -7,11 +7,14 @@ import { BoardExpand } from '../../board-expand';
 
 import 'antd/es/drawer/style/index.css';
 import './index.css';
+import { observer } from 'mobx-react';
 
-export const FixedBoardTips = () => {
+export const FixedBoardTips = observer(() => {
   const transI18n = useI18n();
   const [warning, setWarn] = useState<boolean>(true);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setWarn(false);
@@ -61,7 +64,7 @@ export const FixedBoardTips = () => {
             <BoardExpand
               iconEnum={SvgIconEnum.WHITEBOARDEDIT}
               size={48}
-              style={{ width: '48px', height: '48px',backgroundColor:'#AE367E' }}
+              style={{ width: '48px', height: '48px', backgroundColor: '#AE367E' }}
             />
             <div className="fcr-flex fcr-flex1 column pl-19">
               <div className="whiteboard-title">{transI18n('fcr_board_edit')}</div>
@@ -122,4 +125,4 @@ export const FixedBoardTips = () => {
       </Drawer>
     </>
   );
-};
+})

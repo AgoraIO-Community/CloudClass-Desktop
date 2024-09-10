@@ -1,14 +1,13 @@
 .fct-mobile-board-btn {
   position: absolute;
   display: flex;
-  right: 10px;
-  bottom: 8px;
+  right: 8px;
+  bottom: 9px;
   width: 40px;
   height: 40px;
   z-index: 1;
 
 }
-
 
 .fct-mobile-board-btn .fcr-mobile-board-expand,
 .fcr-board-toolbar-fold .fcr-mobile-board-expand {

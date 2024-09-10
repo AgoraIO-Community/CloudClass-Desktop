@@ -150,15 +150,50 @@
 
 
 .fct-mobile-main-top {
-  width: 550px;
+  width: 100%;
   height: 100%;
-  order: 2;
   flex: 1;
+  position: relative;
+  background: var(--ui-03, #151515);
+
+  order: 0;
+}
+
+
+.fct-mobile-main-top .fct-mobile-board-fullscreen-btn {
+  position: absolute;
+  display: flex;
+  left: 20px;
+  top: 24px;
+  z-index: 3;
+}
+
+.fct-mobile-main-container.fct-mobile-main-container-landscape .fct-mobile-main-top {
+  order: 2;
+  width: 550px;
+}
+
+.fct-mobile-main-container.fct-mobile-main-container-landscape .fct-mobile-main-top .fct-mobile-board-fullscreen-btn {
+  left: 11px;
+}
+
+.all-stream-fold-icon-wrapped {
+  order: 3;
+  width: 17px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.all-stream-fold-icon-wrapped svg {
+  width: 12px;
+  height: 28px;
 }
 
 .fct-mobile-main-container {
   position: relative;
-  /* flex:1; */
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -168,7 +203,7 @@
 }
 
 .fct-mobile-main-container.fct-mobile-main-container-landscape {
-  flex-direction: row; 
+  flex-direction: row;
   padding: 0 14px;
 }
 
@@ -196,17 +231,16 @@
 }
 
 .landscape-bottom-tools {
-  position: absolute;
+  /* position: absolute; */
   height: 57px;
-  bottom: 0;
+  /* bottom: 0; */
   width: 100%;
-  display: flex;
+  /* display: flex;
   flex-direction: row;
-  display: flex;
-  align-items: center;
+  align-items: center; */
 
   background: var(--background-dark, #151515);
-
+  padding: 9px 0;
   /* z-index: 19; */
   /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.00) 8.07%, rgba(0, 0, 0, 0.01) 15.54%, rgba(0, 0, 0, 0.02) 22.5%, rgba(0, 0, 0, 0.04) 29.04%, rgba(0, 0, 0, 0.05) 35.26%, rgba(0, 0, 0, 0.07) 41.25%, rgba(0, 0, 0, 0.09) 47.1%, rgba(0, 0, 0, 0.11) 52.9%, rgba(0, 0, 0, 0.13) 58.75%, rgba(0, 0, 0, 0.15) 64.74%, rgba(0, 0, 0, 0.16) 70.96%, rgba(0, 0, 0, 0.18) 77.5%, rgba(0, 0, 0, 0.19) 84.46%, rgba(0, 0, 0, 0.20) 91.93%, rgba(0, 0, 0, 0.20) 100%); */
 }
@@ -220,4 +254,12 @@
 
 .landscape-bottom-tools-horizontal .fcr-chatroom-mobile-landscape-input-container {
   height: 100%;
+}
+
+.landscape-bottom-tools-notfullScreen {
+  display: block;
+}
+
+.landscape-bottom-tools-fullScreen {
+  display: none;
 }

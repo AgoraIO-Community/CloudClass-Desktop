@@ -12,6 +12,12 @@ export class BoardUIStore extends EduUIStoreBase {
   @observable
   isCopying = false;
 
+  @observable
+  isFullScreen = false;
+
+  @observable
+  isFoldStream=false;
+  
   get isTeacherOrAssistant() {
     const role = EduClassroomConfig.shared.sessionInfo.role;
     const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
@@ -115,6 +121,17 @@ export class BoardUIStore extends EduUIStoreBase {
         }),
       );
     }
+  }
+
+  
+  @action.bound
+  setIsFullScreen(value: boolean) {
+    this.isFullScreen = value;
+  }
+
+  @action.bound
+  setFoldStream(value: boolean) {
+    this.isFoldStream = value;
   }
 
   @action.bound

@@ -17,6 +17,7 @@
   flex-shrink: 0;
   width: 100%;
   overflow: hidden;
+  margin: auto;
 
   background: #151515;
 
@@ -33,7 +34,7 @@
   margin:0 auto;
 }
 .whiteboard-mobile-container .netless-whiteboard-wrapper {
-  background-color: #fff;
+  /* background-color: #fff; */
 
   border-color: #fff;
   /* pointer-events: none; */
@@ -78,7 +79,7 @@
 }
 .widget-slot-chat-mobile {
   /* transition: height 0.2s; */
-  padding-bottom: 80px;
+  /* padding-bottom: 80px; */
 }
 .widget-slot-chat-mobile.active {
   pointer-events: none;
