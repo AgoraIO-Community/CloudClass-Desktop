@@ -449,6 +449,7 @@ export const en = {
     'placeholder.broken': 'Camera is broken',
     'placeholder.notpresent.teacher': 'Teacher is not in the classroom',
     'placeholder.notpresent.student': 'Student is not in the classroom',
+    teacher: 'Turtor',
   },
   screenshare: {
     display: 'Display {reason}',

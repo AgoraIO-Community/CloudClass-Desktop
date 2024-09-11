@@ -15,12 +15,12 @@
 /* 文本样式提示 */
 .all-streams-portrait-container .placeholder-text {
     position: absolute;
-    width: 93px;
-    height: 93px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    line-height: 93px;
+    line-height: 80px;
     text-align: center;
-    color: #fff;
+    color: #FFFFFF;
     font-size: 18px;
     font-weight: 600;
     top: 0;
@@ -67,41 +67,44 @@
 /* 视频流左下角姓名容器 */
 .all-streams-portrait-stream-name-container {
     height: 28px;
-    gap: 10px;
     border-radius: 4px;
-    padding-right: 5px;
+    /* padding-right: 5px; */
     opacity: 0px;
     background: var(--background-dark, rgba(21, 21, 21, 1));
     position: absolute;
     bottom: 7px;
     left: 5px;
     display: block;
+
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 0 5px;
+    overflow: hidden;
+    max-width: calc(100% - 10px);
 }
 
 /* 视频流左下角姓名容器-姓名 */
-.all-streams-portrait-stream-name-container-name {
+.all-streams-portrait-stream-name-container-name,
+.all-streams-portrait-stream-name-container-name-suffix {
     font-family: Open Sans;
     line-height: 28px;
     font-size: 12px;
     font-weight: 400;
     text-align: center;
     padding-left: 5px;
-    display: inline-block;
     color: var(--inverse-text-primary, rgba(254, 254, 254, 1));
 }
 
-/* 视频流左下角姓名容器-教师图标 */
-.all-streams-portrait-stream-name-container-icon {
-    display: inline-block;
-    margin-left: 5px;
-    margin-top: -3px;
+.all-streams-portrait-stream-name-container-name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
 }
 
-/* 视频流左下角姓名容器-共享图标 */
-.all-streams-portrait-stream-name-container-screen-share {
-    margin-left: 10px;
-    display: inline-block;
-    margin-top: -3px;
+.all-streams-portrait-stream-name-container-icon {
+    flex-shrink: 0;
 }
 
 .all-streams-portrait-container .show-stream {

@@ -438,6 +438,7 @@ export const zh = {
     'placeholder.broken': '摄像头损坏',
     'placeholder.notpresent.teacher': '老师不在教室',
     'placeholder.notpresent.student': '学生不在教室',
+    teacher: '老师',
   },
   screenshare: {
     display: '屏幕{reason}',
@@ -837,7 +838,7 @@ export const zh = {
   fcr_group_button_invite: '邀请',
   fcr_group_button_cancel: '取消',
   fcr_group_tips_leave_content: '确定要退出分组吗？',
-  fcr_tips_leave_content:'确定要离开教室吗？',
+  fcr_tips_leave_content: '确定要离开教室吗？',
   fcr_group_button_leave_group: '回到主教室',
   fcr_group_teacher_not_in_classroom: '老师不在房间内',
   fcr_group_tool_help: '帮助',

@@ -180,7 +180,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
                     size={18}
                     colors={{ iconPrimary: 'rgba(255, 255, 255, 1)' }} />}
                 <span className='all-streams-portrait-stream-name-container-name'>{userName}</span>
-                {isTeacher && <span className='all-streams-portrait-stream-name-container-name'>({transI18n('chat.teacher')})</span>}
+                {isTeacher && <span className='all-streams-portrait-stream-name-container-name-suffix'>({transI18n('stream.teacher')})</span>}
                 {isScreenShare && isTeacher && <SvgImg
                     className='all-streams-portrait-stream-name-container-screen-share'
                     type={SvgIconEnum.ICON_SCREEN_SHARE}

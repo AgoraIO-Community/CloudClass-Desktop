@@ -90,7 +90,6 @@ export const FixedBoardTips = observer(() => {
               <BoardExpand
                 iconEnum={SvgIconEnum.RIGHTPOINT}
                 iconColor="#F5F5F5"
-                size={47}
                 style={{ background: 'none' }}
               />
               <span style={{ transform: 'translateY(-20px)' }}>
