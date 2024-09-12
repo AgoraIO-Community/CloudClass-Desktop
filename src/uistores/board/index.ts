@@ -4,6 +4,7 @@ import { EduUIStoreBase } from '../base';
 import { transI18n } from 'agora-common-libs';
 import { ToastApi } from '../../containers/toast';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
+import { AgoraExtensionWidgetEvent } from '@classroom/protocol/events';
 // import { ToastApi } from "@components/toast";
 
 export class BoardUIStore extends EduUIStoreBase {
@@ -16,8 +17,8 @@ export class BoardUIStore extends EduUIStoreBase {
   isFullScreen = false;
 
   @observable
-  isFoldStream=false;
-  
+  isFoldStream = false;
+
   get isTeacherOrAssistant() {
     const role = EduClassroomConfig.shared.sessionInfo.role;
     const isTeacherOrAssistant = [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(
@@ -92,6 +93,7 @@ export class BoardUIStore extends EduUIStoreBase {
       ? window.document.documentElement.clientHeight
       : this.boardContainerWidth * (714 / 1548);
   }
+
   onInstall() {
     const { role, userUuid } = EduClassroomConfig.shared.sessionInfo;
 
@@ -121,9 +123,30 @@ export class BoardUIStore extends EduUIStoreBase {
         }),
       );
     }
+
+    this._disposers.push(
+      computed(() => this.classroomStore.widgetStore.widgetController).observe(
+        ({ newValue, oldValue }) => {
+          if (oldValue) {
+            const widgetController = oldValue;
+            widgetController.removeBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.BoardFullScreen,
+              onMessage: this.setIsFullScreen,
+
+            });
+          }
+          if (newValue) {
+            const widgetController = newValue;
+            widgetController.addBroadcastListener({
+              messageType: AgoraExtensionWidgetEvent.BoardFullScreen,
+              onMessage: this.setIsFullScreen,
+            });
+          }
+        },
+      ),
+    );
   }
 
-  
   @action.bound
   setIsFullScreen(value: boolean) {
     this.isFullScreen = value;
