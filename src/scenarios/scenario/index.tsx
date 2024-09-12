@@ -117,20 +117,24 @@ export const Scenario = observer(() => {
               // style={{ height: isLandscape ? landscapeInnerHeight : window.innerHeight }}
               >
                 <div className={'fct-mobile-main-top'}>
-                  <div className="fct-mobile-board-fullscreen-btn" onClick={handleFullScreen}>
-                    {!isFullScreen
-                      ? <SvgImg
-                        type={SvgIconEnum.WHITEBOARDFULLSCREEN_LANDSCAPE}
-                        colors={{ iconPrimary: '#FFFFFF' }}
-                        size={38}
-                      />
-                      : <SvgImg
-                        type={SvgIconEnum.WHITEBOARDFULLSCREEN_LANDSCAPE_CLOSE}
-                        colors={{ iconPrimary: '#FFFFFF' }}
-                        size={38}
-                      />
-                    }
-                  </div>
+                  {(isBoardWidgetActive ||
+                    isMediaPlayerWidgetActive ||
+                    isWebViewWidgetActive ||
+                    isScreenSharing)
+                    && <div className="fct-mobile-board-fullscreen-btn" onClick={handleFullScreen}>
+                      {!isFullScreen
+                        ? <SvgImg
+                          type={SvgIconEnum.WHITEBOARDFULLSCREEN_LANDSCAPE}
+                          colors={{ iconPrimary: '#FFFFFF' }}
+                          size={38}
+                        />
+                        : <SvgImg
+                          type={SvgIconEnum.WHITEBOARDFULLSCREEN_LANDSCAPE_CLOSE}
+                          colors={{ iconPrimary: '#FFFFFF' }}
+                          size={38}
+                        />
+                      }
+                    </div>}
                   <div
                     style={{
                       opacity: currentWidget?.widgetName === 'screenShare' ? 1 : 0,

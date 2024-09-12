@@ -52,10 +52,12 @@ export class Board {
 
   enable() {
     this._sendBoardCommandMessage(AgoraExtensionRoomEvent.ToggleBoard, true);
+    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.OpenWidget, true);
   }
 
   disable() {
     this._sendBoardCommandMessage(AgoraExtensionRoomEvent.ToggleBoard, false);
+    this._sendBoardCommandMessage(AgoraExtensionRoomEvent.OpenWidget, false);
   }
   @bound
   addPage() {

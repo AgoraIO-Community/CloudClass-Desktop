@@ -1,8 +1,8 @@
 .fct-mobile-board-btn {
-  position: absolute;
+  position: fixed;
   display: flex;
   right: 8px;
-  bottom: 9px;
+  bottom: 163px;
   width: 40px;
   height: 40px;
   z-index: 1;

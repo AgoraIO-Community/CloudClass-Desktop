@@ -73,6 +73,8 @@ export enum AgoraExtensionRoomEvent {
   DefaultCurrentApplication = 'default-current-application',
   // 学生邀请
   StudentGroupInvites = 'student-group-invites',
+  //打开share || whiteboard 等widget
+  OpenWidget = 'open-widget',
 }
 
 /**
