@@ -2,7 +2,6 @@ import { observer } from 'mobx-react';
 import { useStore } from '@classroom/hooks/ui-store';
 import { useEffect, useRef, useState } from 'react';
 import { EduStreamUI } from '@classroom/uistores/stream/struct';
-import { LocalTrackPlayer, splitName } from '../stream';
 import './index.css'
 import classNames from 'classnames';
 import { AgoraRteMediaPublishState, AGRemoteVideoStreamType, AGRtcState } from 'agora-rte-sdk';
@@ -10,6 +9,7 @@ import { EduClassroomConfig, EduRoleTypeEnum, RteRole2EduRole } from 'agora-edu-
 import { TrackPlayer } from '../stream/track-player';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
+import { splitName } from '../stream';
 
 export const AllStream = observer((
     { }: {
@@ -27,10 +27,7 @@ export const AllStream = observer((
             teacherCameraStream,
             visibleStreams,
             subscribeMass,
-            isPiP,
-            studentCameraStreams,
-            studentStreamsVisible,
-            toolVisible,
+            sortStreamList
         },
         widgetUIStore: { currentWidget }
     } = useStore();
@@ -43,32 +40,24 @@ export const AllStream = observer((
         subscribeMass(visibleStreams);
     }, [teacherCameraStream]);
     //展示的视频流
-    const streamList: EduStreamUI[] = []
+    const streamList = sortStreamList
     //是否有白板、屏幕共享等widget
     const haveWidget = currentWidget && currentWidget !== undefined
-    //是否显示学生
-    const showStudents = toolVisible && studentStreamsVisible;
-    //是否显示老师
-    const showTeacher = teacherCameraStream && !isPiP
-    if (showTeacher) {
-        streamList.push(teacherCameraStream)
-    }
-    if (showStudents) {
-        streamList.push(...studentCameraStreams)
-    }
-
     return (
         <>
             {
                 isLandscape ? (<>
                     <GridListShow streamList={streamList} columnRowCount={1} pageSize={2} orientationUpToDown={true}></GridListShow>
                 </>) : <div style={{ height: haveWidget ? '96px' : '100%' }}>
-                    <GridListShow streamList={streamList} columnRowCount={haveWidget ? 1 : 2} pageSize={haveWidget ? 2 : 6} orientationUpToDown={!haveWidget}></GridListShow>
+                    <GridListShow streamList={streamList} columnRowCount={2} pageSize={haveWidget ? 2 : 6} orientationUpToDown={!haveWidget}></GridListShow>
                 </div>
             }
         </>
     );
 });
+
+
+
 //所有的视频流的显示逻辑
 const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     const {
@@ -103,8 +92,6 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     const [first, last] = splitName(userName);
     const duration = 3000;
     const minTriggerVolume = 35;
-    //是否是本地的流
-    const isLocal = stream.stream.isLocal;
     //教室类型
     const roomType = EduClassroomConfig.shared.sessionInfo.roomType;
     //是否是教师
@@ -151,23 +138,13 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
         <div style={{ width: "100%", height: '100%', position: 'relative' }}
             ref={ref}
             className={classNames(
-                { 'all-streams-portrait-stream-speak': isSpeak && isLiftHand },
+                { 'all-streams-portrait-stream-speak': isSpeak },
                 { 'all-streams-portrait-stream-lift-hand': isLiftHand }
             )}>
             <div className={classNames('placeholder-text',
                 { 'placeholder-text-small': 100 >= (ref.current?.clientHeight ? ref.current?.clientHeight : 100) },
                 { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
-            {
-                isLocal ? !stream?.isCameraMuted && (
-                    <LocalTrackPlayer
-                        renderAt="Window"
-                        style={{
-                            position: 'relative',
-                            flexShrink: 0,
-                        }}
-                    />
-                ) : <TrackPlayer stream={stream} />
-            }
+            {<TrackPlayer stream={stream} />}
             {isLiftHand && <SvgImg
                 className='all-streams-portrait-stream-lift-hand-container'
                 type={SvgIconEnum.HANDS_UP_NEW}
@@ -192,7 +169,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
 },
 );
 //宫格列表显示组件
-const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpToDown = true, pageSize = 6 }: {
+const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpToDown, pageSize = 6 }: {
     //所有的流数据列表
     streamList: EduStreamUI[],
     //列或者行数量
@@ -209,7 +186,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
     //当前使用的每页数量
-    const currentPageSize = isLandscape ? pageSize : orientationUpToDown ? columnRowCount : pageSize;
+    const currentPageSize = isLandscape ? pageSize : (orientationUpToDown ? pageSize : columnRowCount);
     //显示的数据列表
     const [currentPageShowStreamList, setCurrentPageShowStreamList] = useState<EduStreamUI[]>([]);
     //最后一页页码
@@ -217,17 +194,15 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //重置显示列表
     const resetShowList = () => {
         //当前页面显示的流列表
-        let startIndex = currentPage ? currentPage * currentPageSize : 0
-        if (Math.min(streamList.length, startIndex + currentPageSize) - startIndex < currentPageSize) {
-            startIndex = Math.min(streamList.length, startIndex + currentPageSize) - currentPageSize
-        }
+        const startIndex = currentPage ? currentPage * currentPageSize : 0
         setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + currentPageSize))])
     }
-    useEffect(resetShowList, [currentPage])
-    //当前页面显示的流列表
-    if (currentPageShowStreamList.length == 0 && streamList.length > 0) {
-        resetShowList()
-    }
+    useEffect(resetShowList, [currentPage,streamList])
+    useEffect(()=>{resetShowList()}, [])
+    // //当前页面显示的流列表
+    // if (currentPage === 0) {
+    //     resetShowList()
+    // }
     //翻页按钮样式
     const pageLeftStyle = { display: currentPage > 0 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? '8px 9px auto auto' : orientationUpToDown ? 'auto auto auto 8px' : '9px auto auto 8px' }
     const pageRightStyle = { display: currentPage < lastPageIndex - 1 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? 'auto 9px 8px auto' : orientationUpToDown ? 'auto 8px auto auto' : '9px 8px auto auto' }
@@ -235,7 +210,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
 
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         <div className='show-stream' style={{
-            gridTemplateColumns: `repeat(${isLandscape ? 1 : currentPageSize}, 1fr)`,
+            gridTemplateColumns: `repeat(${isLandscape ? 1 : columnRowCount}, 1fr)`,
         }}>
             {
                 currentPageShowStreamList.map((stream, index) => {

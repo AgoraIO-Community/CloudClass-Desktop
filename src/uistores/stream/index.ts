@@ -46,6 +46,7 @@ import { SvgIconEnum } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
 import { ShareStreamStateKeeper } from './state-keeper';
 import type { Swiper } from 'swiper';
+import { map } from 'lodash';
 export enum StreamIconColor {
   active = '#357bf6',
   deactive = '#bdbdca',
@@ -76,6 +77,9 @@ export class StreamUIStore extends EduUIStoreBase {
    */
   @observable
   streamsBounds: Map<string, StreamBounds> = new Map();
+
+  //所有流加入的时间
+  streamJoinTimeMap:Map<string,number> = new Map()
 
   shareScreenStateKeeperMap: Map<string, ShareStreamStateKeeper> = new Map();
 
@@ -356,11 +360,24 @@ export class StreamUIStore extends EduUIStoreBase {
   @computed get studentCameraStreams(): EduStreamUI[] {
     const { studentCameraStreams } = this.getters;
 
+    const currentList:string[] = []
     const streams = studentCameraStreams.map((stream) => {
       const streamUI = new EduStreamUI(stream);
+      currentList.push(stream.fromUser.userUuid)
+      //添加没记录的
+      if (!this.streamJoinTimeMap.has(stream.fromUser.userUuid)) {
+        this.streamJoinTimeMap.set(stream.fromUser.userUuid, new Date().getTime())
+      }
       return streamUI;
     });
-
+    //移除不存在的
+    const map = new Map()
+    this.streamJoinTimeMap.forEach((value,key)=>{
+      if(currentList.includes(key)){
+        map.set(key,value)
+      }
+    })
+    this.streamJoinTimeMap = map;
     return streams;
   }
 
@@ -1191,6 +1208,38 @@ export class StreamUIStore extends EduUIStoreBase {
       this.classroomStore.streamStore.localCameraStreamUuid || '',
     );
     return stream ? new EduStreamUI(stream) : stream;
+  }
+  //视频流排序
+  @computed
+  get sortStreamList(){
+    /*1、固定老师;2、开摄像头的人（自己排第1位）;3、未开摄像头的人（自己排第1位）
+      每个序列根据加入时间倒序排列，举手和说话不影响排序规则 */
+    const streamList: EduStreamUI[] = [];
+    //是否显示学生
+    const showStudents = this.toolVisible && this.studentStreamsVisible;
+    //是否显示老师
+    const showTeacher = this.teacherCameraStream && !this.isPiP
+    if (showTeacher) {
+      streamList.push(this.teacherCameraStream)
+    }
+    if (showStudents) {
+      //所有视频流
+      const list = this.studentCameraStreams;
+      //本地视频流
+      const userStream = this.localStream
+      //筛选已经开了摄像头的
+      if (userStream?.isVideoStreamPublished) { streamList.push(userStream) }
+      let resultList = list.filter(item => !item.isCameraMuted && item.fromUser.userUuid !== userStream?.fromUser?.userUuid);
+      resultList.sort((item1, item2) => (Number(this.streamJoinTimeMap.get(item2.fromUser.userUuid)) - Number(this.streamJoinTimeMap.get(item1.fromUser.userUuid))))
+      streamList.push(...resultList)
+      //筛选未开启摄像头的
+      if (userStream && !userStream?.isVideoStreamPublished) { streamList.push(userStream) }
+      resultList = list.filter(item => item.isCameraMuted && item.fromUser.userUuid !== userStream?.fromUser?.userUuid)
+      resultList.sort((item1, item2) => (Number(this.streamJoinTimeMap.get(item2.fromUser.userUuid)) - Number(this.streamJoinTimeMap.get(item1.fromUser.userUuid))))
+      streamList.push(...resultList)
+    }
+
+    return streamList;
   }
 
   visibleStreams = new Map<string, EduStream>();
