@@ -46,7 +46,6 @@ import { SvgIconEnum } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
 import { ShareStreamStateKeeper } from './state-keeper';
 import type { Swiper } from 'swiper';
-import { map } from 'lodash';
 export enum StreamIconColor {
   active = '#357bf6',
   deactive = '#bdbdca',

@@ -31,6 +31,12 @@ export const AllStream = observer((
         },
         widgetUIStore: { currentWidget }
     } = useStore();
+    //是否有白板、屏幕共享等widget
+    const [haveWidget, setHaveWidget] = useState(false);
+    //监听教师流变更
+    useEffect(() => {
+        setHaveWidget(currentWidget !== null && currentWidget !== undefined)
+    }, [currentWidget]);
 
     //监听教师流变更
     useEffect(() => {
@@ -41,8 +47,6 @@ export const AllStream = observer((
     }, [teacherCameraStream]);
     //展示的视频流
     const streamList = sortStreamList
-    //是否有白板、屏幕共享等widget
-    const haveWidget = currentWidget && currentWidget !== undefined
     return (
         <>
             {
@@ -199,40 +203,67 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     }
     useEffect(resetShowList, [currentPage,streamList])
     useEffect(()=>{resetShowList()}, [])
-    // //当前页面显示的流列表
-    // if (currentPage === 0) {
-    //     resetShowList()
-    // }
-    //翻页按钮样式
-    const pageLeftStyle = { display: currentPage > 0 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? '8px 9px auto auto' : orientationUpToDown ? 'auto auto auto 8px' : '9px auto auto 8px' }
-    const pageRightStyle = { display: currentPage < lastPageIndex - 1 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? 'auto 9px 8px auto' : orientationUpToDown ? 'auto 8px auto auto' : '9px 8px auto auto' }
-
-
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
-        <div className='show-stream' style={{
-            gridTemplateColumns: `repeat(${isLandscape ? 1 : columnRowCount}, 1fr)`,
-        }}>
-            {
-                currentPageShowStreamList.map((stream, index) => {
-                    const length = currentPageShowStreamList.length;
-                    return <div key={index} className="grid-item"
-                        style={{ gridColumn: (length % columnRowCount !== 0 && index == 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1' }}
-                    >
-                        <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
-                    </div>;
-                })
-            }
-        </div>
+        {
+            isLandscape && <>
+                <div className='show-stream' style={{ gridTemplateColumns: `repeat(1, 1fr)` }}> {
+                    currentPageShowStreamList.map((stream, index) => {
+                        return <div key={index} className="grid-item" style={{ gridColumn: 'span 1' }}>
+                            <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
+                        </div>;
+                    })}
+                </div>
 
-        <div className="pagination" style={{ display: isLandscape ? 'grid' : 'flex' }}>
-            {<div className="page-btn left-btn" style={pageLeftStyle} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
-                <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24}
-                    style={{ margin: 'auto', height: '100%', transform: isLandscape ? 'rotate(-90deg)' : 'rotate(180deg)' }}></SvgImg>
-            </div>}
-            {<div className="page-btn right-btn" style={pageRightStyle} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
-                <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24}
-                    style={{ margin: 'auto', height: '100%', transform: isLandscape ? 'rotate(90deg)' : 'unset' }}></SvgImg>
-            </div>}
-        </div>
+                <div className="pagination" style={{ display: 'grid' }}>
+                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'unset' : 'none', margin: '8px 9px auto auto' }} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
+                        <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'rotate(-90deg)' }}></SvgImg>
+                    </div>}
+                    {<div className="page-btn right-btn" style={{ display: currentPage < lastPageIndex - 1 ? 'unset' : 'none', margin: 'auto 9px 8px auto' }} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
+                        <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'rotate(90deg)' }}></SvgImg>
+                    </div>}
+                </div>
+            </>
+        }
+        {
+            !isLandscape && !orientationUpToDown && <>
+                <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
+                    currentPageShowStreamList.map((stream, index) => {
+                        return <div key={index} className="grid-item" style={{ gridColumn: `span 1` }}>
+                            <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
+                        </div>;
+                    })}
+                </div>
+
+                <div className="pagination" style={{ display: 'flex' }}>
+                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none', margin: 'auto auto auto 8px' }} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
+                        <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'rotate(180deg)' }}></SvgImg>
+                    </div>}
+                    {<div className="page-btn right-btn" style={{ display: currentPage < lastPageIndex - 1 ? 'inline-block' : 'none', margin: 'auto 8px auto auto' }} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
+                        <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'unset' }}></SvgImg>
+                    </div>}
+                </div>
+            </>
+        }
+        {
+            !isLandscape && orientationUpToDown && <>
+                <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
+                    currentPageShowStreamList.map((stream, index) => {
+                        const length = currentPageShowStreamList.length;
+                        return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index == 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1' }}>
+                            <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
+                        </div>;
+                    })}
+                </div>
+
+                <div className="pagination" style={{ display: 'flex' }}>
+                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none', margin: '9px auto auto 8px' }} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
+                        <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'rotate(180deg)' }}></SvgImg>
+                    </div>}
+                    {<div className="page-btn right-btn" style={{ display: currentPage < lastPageIndex - 1 ? 'inline-block' : 'none', margin: '9px 8px auto auto' }} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
+                        <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'unset' }}></SvgImg>
+                    </div>}
+                </div>
+            </>
+        }
     </div>)
 });
