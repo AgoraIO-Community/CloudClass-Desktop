@@ -70,9 +70,12 @@ export class HandUpUIStore extends EduUIStoreBase {
   }
   @bound
   private _handleLowerHand(userUuid?: string) {
-    const localUserUuid = this.classroomStore.userStore.localUser!.userUuid;
+    const localUserUuid = this.classroomStore.userStore.localUser?.userUuid;
 
     const uuid = userUuid || localUserUuid;
+    if (!uuid) {
+      return
+    }
     this._isRaiseHand = false;
     this.extensionApi.updateRaiseHandState(CustomMessageHandsUpState.lowerHand);
     this._handsUpTask?.stop();
