@@ -212,7 +212,8 @@ export const WebView = observer(function View() {
         containerH5VisibleCls,
       })}
       style={{
-        height: boardHeight,
+        // height: boardHeight,
+        height: '100%',
         width: width + 'px',
       }}
       onClick={() => {

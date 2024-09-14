@@ -159,7 +159,7 @@ export class WidgetUIStore extends EduUIStoreBase {
         ({ zContainer }) => zContainer === 0,
       );
       const allWidgets = widgets.filter((v) => v.widgetName !== 'easemobIM');
-      if (allWidgets.length && !this._currentWidget) {
+      if (allWidgets.length) {
         this._setCurrentWidget(allWidgets[allWidgets.length - 1]);
       }
       // console.log('AgoraExtensionRoomEvent.GetApplications', this._widgetInstances)

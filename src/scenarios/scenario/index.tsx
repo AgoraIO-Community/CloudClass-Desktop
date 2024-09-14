@@ -178,7 +178,7 @@ export const Scenario = observer(() => {
                           : 0,
                     }}>
                     {' '}
-                    {/* <WebView key={'webview'} /> */}
+                    <WebView key={'webview'} />
                   </div>
                 </div>
                 {isLandscape ? (
