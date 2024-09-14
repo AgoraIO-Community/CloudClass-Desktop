@@ -142,7 +142,8 @@ export const MadiaPlayer = observer(function Media() {
         containerH5VisibleCls,
       })}
       style={{
-        height: boardHeight,
+        // height: boardHeight,
+        height: '100%',
         width: width + 'px',
       }}
       onClick={() => {
