@@ -40,6 +40,7 @@ const StudentStreams = observer(() => {
     toolVisible,
     toggleTool,
   } = streamUIStore;
+  
   const visible = toolVisible && studentStreamsVisible;
   const swiperRef = useRef<SwiperType | null>(null);
 

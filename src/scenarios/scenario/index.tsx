@@ -39,6 +39,7 @@ import { TeacherStream } from '@classroom/containers/teacher-stream';
 import { StreamsSwiper } from '@classroom/containers/streams-swiper';
 import { LandscapeToolPanel } from '@classroom/containers/landscape-tool-panel';
 import { TopPanel } from '@classroom/containers/top-panel';
+import { AllStream } from '@classroom/containers/all-streams';
 export const Scenario = observer(() => {
   const {
     classroomStore: {
@@ -147,15 +148,6 @@ export const Scenario = observer(() => {
                 {isLandscape ? (
                   <>
                     <LandscapeToolPanel />
-                    {isTeacherInClass &&
-                      !isBoardWidgetActive &&
-                      !isMediaPlayerWidgetActive &&
-                      !isWebViewWidgetActive &&
-                      !isScreenSharing && (
-                        <div className="landscape-teacher-stream">
-                          <TeacherStream />
-                        </div>
-                      )}
                     {!isTeacherInClass &&
                       !isBoardWidgetActive &&
                       !isMediaPlayerWidgetActive &&
@@ -187,8 +179,9 @@ export const Scenario = observer(() => {
                     <GroupInfoPanel />
                     {/* {!isLandscape && <RoomPlaceholder></RoomPlaceholder>} */}
                     <ScreenShareContainer></ScreenShareContainer>
-                    <TeacherStream />
-                    {<StudentStreamsContainer></StudentStreamsContainer>}
+                    <AllStream isTeacherInClass={false} isBoardWidgetActive={false} 
+                    isMediaPlayerWidgetActive={false} isWebViewWidgetActive={false} 
+                    isScreenSharing={false}></AllStream>
                     {!isLandscape && !groupInfo && <RoomInfo></RoomInfo>}
                     <HandsUpActionSheet></HandsUpActionSheet>
 
@@ -204,7 +197,14 @@ export const Scenario = observer(() => {
                 <ClassRoomDialogContainer></ClassRoomDialogContainer>
                 <div className="landscape-bottom-tools"></div>
               </div>
-              {isLandscape && <StreamsSwiper />}
+              {/* {isLandscape && <StreamsSwiper />} */}
+                {isLandscape && <AllStream
+                  isTeacherInClass={isTeacherInClass}
+                  isBoardWidgetActive={isBoardWidgetActive}
+                  isMediaPlayerWidgetActive={isMediaPlayerWidgetActive}
+                  isWebViewWidgetActive={isWebViewWidgetActive}
+                  isScreenSharing={isScreenSharing}
+                ></AllStream>}
             </>
           )}
         </LayoutOrientation>
