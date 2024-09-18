@@ -198,6 +198,8 @@ export enum SvgIconEnum {
   CAMERA_ON_MOBILE_NEW = 'camera-on-mobile-new',
   SCREEN_SHARED = 'screen-shared',
   CREAMA_ON = 'creama-on',
+  CREAMA_OFF = 'creama-off',
   MIC_NOMUTED = 'mic-nomute',
-  ARROW_BACK = 'arrow_back',
+  MIC_MUTED = 'mic-mute',
+  ARROW_BACK = 'arrow_back'
 }

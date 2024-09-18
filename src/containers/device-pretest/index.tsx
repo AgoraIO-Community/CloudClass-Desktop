@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Switch } from 'antd';
 
@@ -8,10 +8,10 @@ import { useI18n } from 'agora-common-libs';
 import { EduClassroomConfig } from 'agora-edu-core';
 import { SvgIconEnum, SvgImgMobile } from '@classroom/ui-kit';
 import { LocalVideoPlayer } from './localVideoPlayer';
+import { MicrophoneIndicatorNew } from '../action-sheet/mic-new';
 
 import 'antd/lib/switch/style/css';
 import './index.css';
-
 
 export const DevicePretest = observer(() => {
   const transI18n = useI18n();
@@ -21,27 +21,18 @@ export const DevicePretest = observer(() => {
     shareUIStore: { forceLandscape, isLandscape },
     deviceSettingUIStore: {
       setDevicePretestFinished,
-      startCameraPreview,
-      startRecordingDeviceTest,
-      stopCameraPreview,
-      stopRecordingDeviceTest,
       isCameraDeviceEnabled,
       isAudioRecordingDeviceEnabled,
-      toggleCameraPreview,
       toggleCameraEnabled,
-      enableLocalVideo,
-      enableLocalAudio
-    } } = useStore();
+      toggleMicEnabled,
+    },
+    streamUIStore: { localVolume }
+  } = useStore();
 
   useEffect(() => {
-    startCameraPreview();
-    startRecordingDeviceTest();
-    return () => {
-      stopCameraPreview();
-      stopRecordingDeviceTest();
-    };
-  }, []);
- 
+    toggleCameraEnabled();
+  }, [])
+
 
   return (
     <div className='fcr-pretest'>
@@ -62,12 +53,17 @@ export const DevicePretest = observer(() => {
               <Switch checked={isCameraDeviceEnabled} onChange={toggleCameraEnabled} />
             </div>
             <div className='fcr-pretest__video-portal__video_control-wrapped-item'>
-              <SvgImgMobile
-                forceLandscape={forceLandscape}
-                landscape={isLandscape}
-                type={SvgIconEnum.MIC_NEW}
-              />
-              <Switch checked={isAudioRecordingDeviceEnabled} onChange={enableLocalAudio} />
+              {isAudioRecordingDeviceEnabled
+                ? (<MicrophoneIndicatorNew voicePercent={localVolume} />
+                )
+                : (
+                  <SvgImgMobile
+                    forceLandscape={forceLandscape}
+                    landscape={isLandscape}
+                    type={SvgIconEnum.MIC_NEW}
+                  />
+                )}
+              <Switch checked={isAudioRecordingDeviceEnabled} onChange={toggleMicEnabled} />
             </div>
           </div>
         </div>

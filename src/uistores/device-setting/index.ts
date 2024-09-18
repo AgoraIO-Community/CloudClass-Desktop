@@ -115,15 +115,6 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
   }
 
   @bound
-  toggleCameraPreview() {
-    if (this._cameraDeviceEnabled) {
-      this.stopCameraPreview();
-    } else {
-      this.startCameraPreview();
-    }
-  }
-
-  @bound
   toggleCameraEnabled() {
     if (this._cameraDeviceEnabled) {
       this.enableLocalVideo(false);
@@ -131,6 +122,15 @@ export class DeviceSettingUIStore extends EduUIStoreBase {
       this.enableLocalVideo(true);
     }
   }
+
+  @bound
+  toggleMicEnabled() {
+    if (this._audioRecordingDeviceEnabled) {
+      this.enableLocalAudio(false);
+    } else {
+      this.enableLocalAudio(true);
+    }
+  };
 
   enableLocalVideo = (value: boolean) => {
     const track = this.classroomStore.mediaStore.mediaControl.createCameraVideoTrack();

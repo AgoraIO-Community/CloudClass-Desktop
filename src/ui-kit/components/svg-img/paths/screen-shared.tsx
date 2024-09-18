@@ -8,4 +8,4 @@ export const path = (props: PathOptions) =>
         <circle cx="8.5" cy="8" r="4" fill="#E6E6E6" />
     </svg>
 
-export const viewBox = '0 0 16 16';
+export const viewBox = '0 0 17 16';

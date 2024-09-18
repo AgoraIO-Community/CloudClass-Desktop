@@ -1,4 +1,5 @@
 .top-operation-panel {
+  position: relative;
   height: 48px;
   display: flex;
   justify-content: space-between;
@@ -10,17 +11,30 @@
   display: inline-flex;
   justify-content: space-between;
   width: 106px;
+  padding: 5px;
 }
 
-.top-operation-panel-device-item{
-  background-color: #fff;
+.top-operation-panel-device-item {
+  background: var(--field, #FFFFFF);
+  border-radius: 50%;
   width: 38px;
   height: 38px;
-  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
+.top-operation-panel-device-mute{
+  background: var(--background-dark, #151515);
+  border: 1px solid var(--inverse-icon-primary, #FEFEFE)
+}
+
+.top-operation-panel .top-operation-panel-screen-shared {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .top-operation-panel .top-operation-panel-button .fcr-btn {
   background: var(--leave, #BD0101);
 }
