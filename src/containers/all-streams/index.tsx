@@ -2,20 +2,17 @@ import { observer } from 'mobx-react';
 import { useStore } from '@classroom/hooks/ui-store';
 import { useEffect, useState } from 'react';
 import { EduStreamUI } from '@classroom/uistores/stream/struct';
-import { LocalTrackPlayer, LocalTrackPlayerContainer, splitName, StreamPlayer } from '../stream';
+import { LocalTrackPlayer, splitName } from '../stream';
 import './index.css'
 import classNames from 'classnames';
 import { AgoraRteMediaPublishState, AGRemoteVideoStreamType, AGRtcState } from 'agora-rte-sdk';
 import { EduClassroomConfig, EduRoleTypeEnum, RteRole2EduRole } from 'agora-edu-core';
 import { TrackPlayer } from '../stream/track-player';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
+import { transI18n } from 'agora-common-libs';
 
 export const AllStream = observer((
-    { isTeacherInClass,
-        isBoardWidgetActive,
-        isMediaPlayerWidgetActive,
-        isWebViewWidgetActive,
-        isScreenSharing }: {
+    {  }: {
             isTeacherInClass: boolean,
             isBoardWidgetActive: boolean,
             isMediaPlayerWidgetActive: boolean,
@@ -28,7 +25,6 @@ export const AllStream = observer((
         shareUIStore: { isLandscape },
         streamUIStore: {
             teacherCameraStream,
-            containerH5VisibleCls,
             showTool,
             visibleStreams,
             subscribeMass,
@@ -40,7 +36,7 @@ export const AllStream = observer((
             containerH5Extend,
             studentStreamsVisible,
             toolVisible,
-            toggleTool,
+            screenShareStream,
         },
         classroomStore: {
             userStore: { rewards },
@@ -93,8 +89,9 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
             streamStore: { setRemoteVideoStreamType },
             connectionStore: { rtcState },
         },
-        streamUIStore: { isPiP },
+        streamUIStore: { screenShareStream },
         layoutUIStore: { },
+        handUpUIStore:{handsUpMap}
     } = useStore();
     useEffect(() => {
         if (
@@ -116,10 +113,23 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     const [first, last] = splitName(userName);
     //是否是本地的流
     const isLocal = stream.stream.isLocal;
+    //教室类型
     const roomType = EduClassroomConfig.shared.sessionInfo.roomType;
+    //是否是教师
     const isTeacher = RteRole2EduRole(roomType, stream.fromUser.role) === EduRoleTypeEnum.teacher;
+    //是否开启了屏幕共享
+    const isScreenShare = !!screenShareStream 
+    //是否举手
+    const isLiftHand = handsUpMap.has(stream.fromUser.userUuid);
+    //是否讲话
+    const isSpeak = true;
+
     return (
-        <div style={{ width: "100%", height: '100%', position: 'relative' }}>
+        <div style={{ width: "100%", height: '100%', position: 'relative' }}
+            className={classNames(
+                { 'all-streams-portrait-stream-speak': isSpeak && isLiftHand },
+                { 'all-streams-portrait-stream-lift-hand': isLiftHand }
+            )}>
             <div className={classNames('placeholder-text', { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
             {
                 isLocal ? !stream?.isCameraMuted && (
@@ -132,6 +142,25 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
                     />
                 ) : <TrackPlayer stream={stream} />
             }
+            {isLiftHand && <SvgImg
+                    className='all-streams-portrait-stream-lift-hand-container'
+                    type={SvgIconEnum.HANDS_UP_NEW}
+                    size={24}
+                    colors={{ iconPrimary: 'rgba(255, 255, 255, 1)' }} />}
+            <div className='all-streams-portrait-stream-name-container'>
+                {isTeacher && <SvgImg
+                    className='all-streams-portrait-stream-name-container-icon'
+                    type={SvgIconEnum.ICON_ROLE_TYPE_TEACHER}
+                    size={18}
+                    colors={{ iconPrimary: 'rgba(255, 255, 255, 1)' }} />}
+                <span className='all-streams-portrait-stream-name-container-name'>{userName}</span>
+                {isTeacher && <span className='all-streams-portrait-stream-name-container-name'>({transI18n('chat.teacher')})</span>}
+                {isScreenShare && isTeacher && <SvgImg
+                    className='all-streams-portrait-stream-name-container-screen-share'
+                    type={SvgIconEnum.ICON_SCREEN_SHARE}
+                    size={18}
+                    colors={{ iconPrimary: 'var(--head-5, rgba(132, 189, 0, 1))' }} />}
+            </div>
         </div>
     );
 },
@@ -150,7 +179,8 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //store参数配置信息
     const {
         shareUIStore: { isLandscape },
-    } = useStore();
+        streamUIStore:{screenShareStream}
+      } = useStore();
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
     //当前使用的每页数量

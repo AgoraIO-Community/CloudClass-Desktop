@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import { EduUIStoreBase } from '../base';
 import { Scheduler, bound, transI18n } from 'agora-common-libs';
 import { OnPodiumStateEnum } from './type';
@@ -17,7 +17,35 @@ import { EduClassroomConfig, EduRoleTypeEnum } from 'agora-edu-core';
 export class HandUpUIStore extends EduUIStoreBase {
   private _handsUpTask: Scheduler.Task | null = null;
   private _isRaiseHand = false;
-
+  @observable
+  handsUpMap: Map<string, number> = new Map();
+  private _handsUpListScanTask: Scheduler.Task | null = null;
+  @action.bound
+  addHandsUpStudent(userUuid: string) {
+    this.handsUpMap.set(userUuid, Date.now());
+  }
+  @action.bound
+  removeHandsUpStudent(userUuid: string) {
+    this.handsUpMap.delete(userUuid);
+  }
+  @action.bound
+  startHandsUpMapScan() {
+    const gapInMs = 6000;
+    this._handsUpListScanTask = Scheduler.shared.addIntervalTask(() => {
+      const now = Date.now();
+      this.handsUpMap.forEach((time, key) => {
+        if (now - time > gapInMs) {
+          runInAction(() => {
+            this.removeHandsUpStudent(key);
+          });
+        }
+      });
+    }, gapInMs);
+  }
+  @action.bound
+  stopHandsUpListScan() {
+    this._handsUpListScanTask?.stop();
+  }
   @bound
   private _handleRaiseHand() {
     if (this._isRaiseHand) return;
@@ -65,11 +93,30 @@ export class HandUpUIStore extends EduUIStoreBase {
     const cmd = message.payload.cmd as CustomMessageCommandType;
     const localUserUuid = this.classroomStore.userStore.localUser?.userUuid;
 
+    switch (cmd) {
+      case CustomMessageCommandType.handsUp: {
+        const data = message.payload.data as CustomMessageHandsUpType;
+        const { userUuid, state } = data;
+        if (state === CustomMessageHandsUpState.raiseHand) {
+          this.addHandsUpStudent(userUuid);
+        } else if (state === CustomMessageHandsUpState.lowerHand) {
+          this.removeHandsUpStudent(userUuid);
+        }
+      }
+    }
+
+
     if (message.fromUser.userUuid !== localUserUuid) {
       switch (cmd) {
         case CustomMessageCommandType.handsUp: {
           const data = message.payload.data as CustomMessageHandsUpType;
           const { userUuid, state } = data;
+
+          if (state === CustomMessageHandsUpState.raiseHand) {
+            this.addHandsUpStudent(userUuid);
+          } else if (state === CustomMessageHandsUpState.lowerHand) {
+            this.removeHandsUpStudent(userUuid);
+          }
 
           if (state === CustomMessageHandsUpState.lowerHand) {
             const localUserUuid = this.classroomStore.userStore.localUser?.userUuid;
