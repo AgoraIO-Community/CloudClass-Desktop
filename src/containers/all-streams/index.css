@@ -1,10 +1,19 @@
 /* 竖屏情况下的容器 */
-.all-streams-portrait-container{
-    width: 100%;
+.all-streams-portrait-container {
     position: relative;
+    background: var(--background-dark, #151515);
+    height: calc(100vh - 57px - 48px);
+    width: 100%;
 }
+
+
+.all-streams-portrait-container.all-streams-portrait-container-landscape {
+    height: calc(100% - 52px);
+    width: 142px;
+}
+
 /* 文本样式提示 */
-.all-streams-portrait-container .placeholder-text{
+.all-streams-portrait-container .placeholder-text {
     position: absolute;
     width: 93px;
     height: 93px;
@@ -20,12 +29,14 @@
     bottom: 0;
     margin: auto;
 }
+
 /* 文本样式提示 */
-.all-streams-portrait-container .placeholder-text-students{
+.all-streams-portrait-container .placeholder-text-students {
     background: var(--head-2, rgba(255, 117, 122, 1));
 }
+
 /* 文本样式提示 */
-.all-streams-portrait-container .placeholder-text-teacher{
+.all-streams-portrait-container .placeholder-text-teacher {
     background: var(--head-4, rgba(210, 219, 14, 1));
 }
 
@@ -41,6 +52,10 @@
     overflow-y: auto;
 }
 
+.all-streams-portrait-container.all-streams-portrait-container-landscape .show-stream {
+    height: unset;
+}
+
 .all-streams-portrait-container .grid-item {
     background: var(--color-windowview, rgba(44, 44, 44, 1));
     text-align: center;
@@ -50,6 +65,10 @@
     border: 1px solid var(--background-dark, rgba(21, 21, 21, 1));
 }
 
+.all-streams-portrait-container.all-streams-portrait-container-landscape .grid-item {
+    height: 159.5px;
+}
+
 .all-streams-portrait-container .pagination {
     position: absolute;
     bottom: 0px;
@@ -57,6 +76,7 @@
     height: 100%;
     box-sizing: border-box;
 }
+
 .all-streams-portrait-container .page-btn {
     width: 40px;
     height: 40px;
@@ -68,9 +88,11 @@
     text-decoration: none;
     background: var(--ui-03-80, rgba(21, 21, 21, 0.8));
 }
-.left-btn{
+
+.left-btn {
     margin: auto auto auto 8px;
 }
+
 .right-btn {
     margin: auto 8px auto auto;
 }

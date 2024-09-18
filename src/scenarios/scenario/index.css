@@ -6,17 +6,21 @@
   background-color: black;
   justify-content: flex-end;
 }
+
 .fcr-mobile-landscape-container-rotate {
   height: 100vw;
   transform: rotate(90deg);
   transform-origin: 50vw center;
   position: relative;
   flex-shrink: 0;
+
 }
+
 .fcr-mobile-landscape-container video,
 .fcr-mobile-landscape-container-rotate video {
   /* object-fit: contain !important; */
 }
+
 .landscape-container {
   position: absolute;
   top: 0;
@@ -32,27 +36,32 @@
   background-size: 64px 64px;
   background-position: 0 0, 32px 32px;
 }
+
 .landscape-whiteboard-container {
   height: 100%;
   width: 50%;
   background-color: black;
 }
+
 .fcr-mobile-auto-play-failed {
   position: fixed;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
-.fcr-mobile-auto-play-failed > div {
+
+.fcr-mobile-auto-play-failed>div {
   position: relative;
   padding-top: 130px;
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
 }
-.fcr-mobile-auto-play-failed.fcr-mobile-auto-play-failed-no-board > div {
+
+.fcr-mobile-auto-play-failed.fcr-mobile-auto-play-failed-no-board>div {
   padding-top: 20px;
 }
-.fcr-mobile-auto-play-failed.fcr-mobile-auto-play-failed-landscape > div {
+
+.fcr-mobile-auto-play-failed.fcr-mobile-auto-play-failed-landscape>div {
   padding-top: 0;
   justify-content: center;
 }
@@ -77,12 +86,14 @@
   left: 0;
   z-index: 9;
 }
+
 .fcr-countdown-mobile-widget-landscape {
   position: fixed;
   /* top: 0;
   right: 0; */
   z-index: 9;
 }
+
 /* .fcr-countdown-mobile-widget-have-stream .fcr-countdown-mobile {
   bottom: 162px;
 } */
@@ -98,6 +109,7 @@
   align-items: flex-end;
   z-index: 1;
 }
+
 .fcr-mobile-room-info-record-container {
   position: fixed;
   top: 8px;
@@ -114,9 +126,11 @@
   padding: 3px 8px 3px 6px;
   border-radius: 50px;
 }
+
 .fcr-mobile-room-info-record-container span {
   line-height: 18px;
 }
+
 .fcr-mobile-room-info-container .fcr-mobile-room-info-user-count-container,
 .fcr-mobile-room-info-container .fcr-mobile-room-info-time-container {
   height: 24px;
@@ -127,11 +141,13 @@
   justify-content: center;
   align-items: center;
 }
-.fcr-mobile-room-info-user-count-container {
-}
+
+.fcr-mobile-room-info-user-count-container {}
+
 .fcr-mobile-room-info-time-container {
   margin-left: 5px;
 }
+
 .scene-switch-loading {
   @apply fcr-bg-background;
   display: flex;
@@ -145,17 +161,33 @@
   left: 0;
   top: 0;
 }
-.fct-mobile-main-top{
-  width: 100%;
+
+.fct-mobile-main-top {
+  width: 550px;
   height: 100%;
+  order: 2;
 }
+
 .fct-mobile-main-container {
   position: relative;
   /* flex:1; */
   display: flex;
   flex-direction: column;
-  background-color: #27292f;
+  justify-content: space-between;
+  background: var(--background-dark, #151515);
+  padding: 0 14px;
+  width: calc(100% - 142px -14px);
 }
+
+.fct-mobile-main-container.fct-mobile-main-container-landscape {
+  flex-direction: row; 
+}
+
+.all-streams-portrait-container {
+  width: 142px;
+  order: 3;
+}
+
 .landscape-teacher-stream {
   height: 100%;
   width: 100%;
@@ -163,19 +195,21 @@
   position: absolute;
   top: 0;
 }
+
 .landscape-teacher-stream.active {
- color: #000;
- font-size: 20px;
- font-weight: 500;
- display: flex;
- align-items: center;
- justify-content: center;
- background: url('./assets/room-placholder-bg.jpg') no-repeat top left / cover;
+  color: #000;
+  font-size: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('./assets/room-placholder-bg.jpg') no-repeat top left / cover;
 }
+
 .landscape-bottom-tools {
   position: absolute;
   /* height: 50px; */
-  bottom: 0px;
+  /* bottom: 30px; */
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -183,4 +217,15 @@
   align-items: center;
   z-index: 19;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.00) 8.07%, rgba(0, 0, 0, 0.01) 15.54%, rgba(0, 0, 0, 0.02) 22.5%, rgba(0, 0, 0, 0.04) 29.04%, rgba(0, 0, 0, 0.05) 35.26%, rgba(0, 0, 0, 0.07) 41.25%, rgba(0, 0, 0, 0.09) 47.1%, rgba(0, 0, 0, 0.11) 52.9%, rgba(0, 0, 0, 0.13) 58.75%, rgba(0, 0, 0, 0.15) 64.74%, rgba(0, 0, 0, 0.16) 70.96%, rgba(0, 0, 0, 0.18) 77.5%, rgba(0, 0, 0, 0.19) 84.46%, rgba(0, 0, 0, 0.20) 91.93%, rgba(0, 0, 0, 0.20) 100%);
+}
+
+.landscape-bottom-tools-horizontal {
+  order: 1;
+  position: static;
+  width: 75px;
+  height: calc(100vh - 52px);
+}
+
+.landscape-bottom-tools-horizontal .fcr-chatroom-mobile-landscape-input-container {
+  height: 100%;
 }

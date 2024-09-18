@@ -1,11 +1,17 @@
 .top-operation-panel {
   position: relative;
   height: 48px;
+  width: 100vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
   z-index: 999;
+  background: var(--background-dark, #151515);
+}
+
+.fcr-mobile-landscape-container .top-operation-panel {
+  height: 52px; 
 }
 
 .top-operation-panel .top-operation-panel-device {
@@ -36,7 +42,7 @@
   animation: none;
 }
 
-.top-operation-panel-camera-on{
+.top-operation-panel-camera-on {
   animation: none;
   width: 38px;
   height: 38px;
@@ -66,4 +72,5 @@
 
 .top-operation-panel .top-operation-panel-button .fcr-btn {
   background: var(--leave, #BD0101);
+  height: 32px;
 }

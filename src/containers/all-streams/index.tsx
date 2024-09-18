@@ -47,7 +47,7 @@ export const AllStream = observer((
         },
         layoutUIStore: { },
         boardUIStore: { grantedUsers },
-        widgetUIStore:{currentWidget}
+        widgetUIStore: { currentWidget }
     } = useStore();
 
     //监听教师流变更
@@ -77,7 +77,7 @@ export const AllStream = observer((
             {
                 isLandscape ? (<>
                     <GridListShow streamList={streamList} columnRowCount={1} pageSize={2} orientationUpToDown={true}></GridListShow>
-                </>) : <div style={{height:haveWidget ? '100px' : '100%'}}>
+                </>) : <div style={{ height: haveWidget ? '100px' : '100%' }}>
                     <GridListShow streamList={streamList} columnRowCount={haveWidget ? 1 : 2} pageSize={haveWidget ? 2 : 6} orientationUpToDown={!haveWidget}></GridListShow>
                 </div>
             }
@@ -147,10 +147,10 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //每页数量
     pageSize: number,
 }) => {
-      //store参数配置信息
-      const {
+    //store参数配置信息
+    const {
         shareUIStore: { isLandscape },
-      } = useStore();
+    } = useStore();
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
     //当前使用的每页数量
@@ -178,7 +178,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     const pageRightStyle = { display: currentPage < lastPageIndex - 1 ? isLandscape ? 'unset' : 'inline-block' : 'none', margin: isLandscape ? 'auto 9px 8px auto' : orientationUpToDown ? 'auto 8px auto auto' : '9px 8px auto auto' }
 
 
-    return (<div className='all-streams-portrait-container' style={{height:isLandscape ? 'unset' : '100%'}}>
+    return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         <div className='show-stream' style={{
             gridTemplateColumns: `repeat(${isLandscape ? 1 : currentPageSize}, 1fr)`,
         }}>
@@ -194,7 +194,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
             }
         </div>
 
-        <div className="pagination" style={{display:isLandscape ? 'grid' : 'flex'}}>
+        <div className="pagination" style={{ display: isLandscape ? 'grid' : 'flex' }}>
             {<div className="page-btn left-btn" style={pageLeftStyle} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
                 <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24}
                     style={{ margin: 'auto', height: '100%', transform: isLandscape ? 'rotate(-90deg)' : 'rotate(180deg)' }}></SvgImg>

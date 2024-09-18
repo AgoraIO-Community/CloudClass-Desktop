@@ -4,6 +4,16 @@
   padding-top: 85px;
 }
 
+@media screen and (min-width: 375px) {
+  .fcr-bg-background {
+    background: var(--background-dark, #151515);
+  }
+  .fcr-pretest {
+    width: 375px;
+    height: 100vh;
+  }
+}
+
 .fcr-pretest .fcr-pretest__video-portal {
   padding: 0 16px;
   display: flex;
@@ -87,7 +97,7 @@
 }
 
 .fcr-pretest__video-portal__video .fcr-video-player-wrapper {
-  width: 343px;
+  width: 100%;
   height: 227px;
   @apply fcr-bg-4;
   position: relative;

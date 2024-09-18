@@ -3,7 +3,7 @@
 }
 
 .fcr-layout-row {
-  @apply fcr-flex-row;
+  @apply fcr-flex-col;
 }
 
 .fcr-layout-col {

@@ -21,7 +21,7 @@ export const TopPanel: FC<Props> = observer(() => {
   const {
     groupUIStore: { leaveSubRoom, teacherGroupUuid },
     classroomStore: { roomStore: { updateClassState } },
-    // layoutUIStore: { addDialog },
+    layoutUIStore: { isRecording },
     shareUIStore: { forceLandscape, isLandscape },
     leaveClassroom,
     deviceSettingUIStore: {
@@ -52,7 +52,7 @@ export const TopPanel: FC<Props> = observer(() => {
     // await updateClassState(ClassState.close);
     leaveClassroom();
   }
- 
+
   return (
     <div
       className="top-operation-panel" >
@@ -88,14 +88,14 @@ export const TopPanel: FC<Props> = observer(() => {
           }
         </div>
       </div>
-      <div className='top-operation-panel-screen-shared'>
+      {isRecording && <div className='top-operation-panel-screen-shared'>
         <SvgImgMobile
           forceLandscape={forceLandscape}
           landscape={isLandscape}
           type={SvgIconEnum.SCREEN_SHARED}
           size={16}
         />
-      </div>
+      </div>}
       <div className="top-operation-panel-button" onClick={handleLeaveGroup}>
         <Button> {transI18n('fcr_group_tool_leave')}</Button>
       </div>

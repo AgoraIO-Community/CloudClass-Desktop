@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Switch } from 'antd';
 
@@ -31,11 +31,30 @@ export const DevicePretest = observer(() => {
 
   useEffect(() => {
     toggleCameraEnabled();
+    const elem = document.querySelector('.fcr-pretest') as HTMLImageElement;
+    if (window.orientation === 90 || window.orientation === -90) {
+      elem.style.transform = `rotate(${-window.orientation}deg)`;
+    } else {
+      elem.style.transform = 'none';
+    }
+
+    window.addEventListener('orientationchange', async function () {
+      const elem = document.querySelector('.fcr-pretest') as HTMLImageElement;
+      if (window.orientation === 90 || window.orientation === -90) {
+        elem.style.transform = `rotate(${-window.orientation}deg)`;
+      } else {
+        elem.style.transform = 'none';
+      }
+    })
+
+    return () => {
+      window.removeEventListener('orientationchange', function () {
+      })
+    }
   }, [])
 
-
   return (
-    <div className='fcr-pretest'>
+    <div className={'fcr-pretest'} >
       <div className="fcr-pretest__video-portal">
         <div className="fcr-pretest__video-portal__header fcr-pretest__video-portal-item">
           {roomName}
