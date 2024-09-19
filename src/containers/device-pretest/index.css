@@ -1,13 +1,16 @@
 .fcr-pretest {
-  background: var(--background-dark, #151515);
   height: 100vh;
   padding-top: 85px;
 }
 
-@media screen and (min-width: 375px) {
-  .fcr-bg-background {
-    background: var(--background-dark, #151515);
+@media screen and (min-width: 375px), screen and (orientation:landscape) {
+  .fcr-pretest {
+    width: 100%;
+    height: 100vh;
   }
+}
+
+@media screen and (min-width: 375px), screen and (orientation:portrait) {
   .fcr-pretest {
     width: 375px;
     height: 100vh;
