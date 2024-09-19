@@ -65,17 +65,18 @@ export const AllStream = observer((
 //所有的视频流的显示逻辑
 const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     const {
-        getters: { isBoardWidgetActive, teacherCameraStream },
+        getters: { isBoardWidgetActive, teacherCameraStream, calibratedTime },
         shareUIStore: { isLandscape },
         classroomStore: {
             streamStore: { setRemoteVideoStreamType },
             connectionStore: { rtcState },
         },
-        streamUIStore: { screenShareStream, localVolume, remoteStreamVolume },
+        streamUIStore: { screenShareStream, localVolume, remoteStreamVolume, handleReportDuration },
         layoutUIStore: { },
         handUpUIStore: { handsUpMap },
-        deviceSettingUIStore: { isAudioRecordingDeviceEnabled },
+        deviceSettingUIStore: { isAudioRecordingDeviceEnabled }
     } = useStore();
+
     useEffect(() => {
         if (
             rtcState === AGRtcState.Connected &&
@@ -106,27 +107,61 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     const isLiftHand = handsUpMap.has(stream.fromUser.userUuid);
     //是否讲话
     const [isSpeak, setIsSpeak] = useState(false);
+
+    const startTime = useRef<number | null>(0);
+
+    const reportDuration = useRef<Array<{ startTime: number | null, endTime: number }>>([]);
+
     const timer = useRef<number | null>(null);
-    const showAudioEffect = () => {
+    const reportTimer = useRef<number | null>(null);
+
+    const showAudioEffect = (isLocal: boolean) => {
         setIsSpeak(true);
+
+        if (isLocal) {
+            if (!startTime.current) {
+                startTime.current = calibratedTime;
+            }
+
+            if (!reportTimer.current) {
+                reportTimer.current = window.setTimeout(async () => {
+                    reportTimer.current = null;
+
+                    const params = { events: timer.current ? [...reportDuration?.current, { startTime: startTime?.current, endTime: calibratedTime }] : [...reportDuration?.current], cmd: 1700 };
+                    await handleReportDuration(params);
+
+                    reportDuration.current = [];
+                    startTime.current = 0;
+                    reportTimer?.current && window.clearTimeout(reportTimer?.current);
+                }, 1000 * 60);
+            }
+        }
+
         if (timer.current) {
             window.clearTimeout(timer.current);
         }
         timer.current = window.setTimeout(() => {
             setIsSpeak(false);
             timer.current = null;
+
+            if (isLocal && reportTimer.current) {
+                //记录一次开口
+                reportDuration.current = [...reportDuration.current, { startTime: startTime?.current, endTime: calibratedTime }];
+                startTime.current = 0;
+            }
+
         }, duration);
     };
     //动态监听变量
     useEffect(() => {
         if (stream?.stream.isLocal) {
             if (localVolume > minTriggerVolume && isAudioRecordingDeviceEnabled) {
-                showAudioEffect();
+                showAudioEffect(true);
             }
         } else {
             const remoteVolume = remoteStreamVolume(stream);
             if (remoteVolume > minTriggerVolume && stream?.isMicStreamPublished) {
-                showAudioEffect();
+                showAudioEffect(false);
             }
         }
     }, [
@@ -201,8 +236,8 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         const startIndex = currentPage ? currentPage * currentPageSize : 0
         setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + currentPageSize))])
     }
-    useEffect(resetShowList, [currentPage,streamList])
-    useEffect(()=>{resetShowList()}, [])
+    useEffect(resetShowList, [currentPage, streamList])
+    useEffect(() => { resetShowList() }, [])
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {
             isLandscape && <>
