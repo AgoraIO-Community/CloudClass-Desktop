@@ -206,6 +206,10 @@ export class WidgetUIStore extends EduUIStoreBase {
     }
 
     this.destroyWidget(widgetId);
+    //取消全屏
+    if("netlessBoard" === widgetId){
+      this.classroomStore.widgetStore.widgetController?.broadcast(AgoraExtensionWidgetEvent.BoardFullScreen,false);
+    }
   }
 
   @bound
