@@ -399,6 +399,22 @@ export class StreamUIStore extends EduUIStoreBase {
     return volume * 100;
   });
 
+
+  @action.bound
+  async handleReportDuration(params: { events: Array<{ startTime: number | null, endTime: number }>, cmd: number }) {
+    const {
+      sessionInfo: { roomUuid, userUuid },
+      //@ts-ignore
+    } = window.EduClassroomConfig;
+
+    //@ts-ignore
+    window.globalStore.classroomStore.connectionStore.scene._apiService.fetch({
+      path: `/v1/rooms/${roomUuid}/users/${userUuid}/client/events`,
+      method: 'POST',
+      data: { ...params },
+    })
+  }
+  
   /**
    * 本地音量
    * @returns
