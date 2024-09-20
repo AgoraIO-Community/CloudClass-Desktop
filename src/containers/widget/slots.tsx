@@ -53,28 +53,18 @@ export const Whiteboard = observer(function Board() {
   const { boardContainerHeight, mounted, boardContainerWidth, isGrantedBoard } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? (boardContainerWidth - 143 - 75 - 14 - 14 -17)
+      ? (boardContainerWidth - 143 - 75 - 14 - 14 - 17)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
     updateWhiteBoardViewportSize(width, boardContainerHeight);
   }, [studentStreamsVisible, width]);
   const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : 511) : 0;
-  const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
-  const whiteboard = document.querySelector('.netless-whiteboard-wrapper') as HTMLElement;
   // document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
   useEffect(() => {
     whiteBoardRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
-
-  useEffect(() => {
-    if (!whiteboard) return;
-    const color = isLandscape ? 'var(--ui-02, #FEFEFE)' : '#151515';
-    whiteboard.style.backgroundColor = color;
-  }, [isLandscape, whiteboard])
-
-
 
   return (
     <div
@@ -119,7 +109,7 @@ export const MadiaPlayer = observer(function Media() {
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? (boardContainerWidth - 143 - 75 - 14 - 14 -17)
+      ? (boardContainerWidth - 143 - 75 - 14 - 14 - 17)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
@@ -184,7 +174,7 @@ export const WebView = observer(function View() {
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? (boardContainerWidth - 143 - 75 - 14 - 14 -17)
+      ? (boardContainerWidth - 143 - 75 - 14 - 14 - 17)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {

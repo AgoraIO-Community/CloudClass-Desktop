@@ -43,6 +43,10 @@
   padding-left: 19px;
 }
 
+.whiteboard-popup-header .fcr-mobile-board-expand {
+  border-radius: 10px;
+}
+
 .fct-mobile-board-drawer .whiteboard-title {
   font-family: 'Helvetica Neue';
   font-size: 16px;
@@ -79,11 +83,11 @@
   gap: 7px;
 }
 
- 
+
 
 .fct-mobile-board-drawer .whiteboard-tips-container>div>span {
-   /* flex: 1; */
-  text-wrap: nowrap; 
+  /* flex: 1; */
+  text-wrap: nowrap;
 }
 
 

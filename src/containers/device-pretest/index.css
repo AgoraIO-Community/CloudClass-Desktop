@@ -75,7 +75,7 @@
 
 
 .fcr-pretest .fcr-pretest__video-portal .fcr-pretest__video-portal__header {
-  height: 76px;
+  /* height: 76px; */
   text-align: center;
   display: -webkit-box;
   -webkit-line-clamp: 2;
