@@ -1,12 +1,12 @@
 .fcr-pretest {
-  height: 100vh;
-  padding-top: 85px;
+  height: 100%;
+  padding-top: 40px;
 }
 
 @media screen and (orientation:landscape) {
   .fcr-pretest {
     width: 375px;
-    height: 100vh;
+    height: 100%;
   }
 }
 
