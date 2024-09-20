@@ -28,7 +28,7 @@ export const Scenarios: React.FC<ScenariosProps> = observer(() => {
 
   return (
     <React.Fragment>
-      {!isDevicePretestFinished && <div style={{background:'var(--background-dark, #151515)'}}><DevicePretest /></div>}
+      {!isDevicePretestFinished && <div style={{background:'var(--background-dark, #151515)',width:'100vw',height:'100vh'}}><DevicePretest /></div>}
       {isDevicePretestFinished && <Scenario />}
     </React.Fragment>
   );
