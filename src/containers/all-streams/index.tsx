@@ -236,7 +236,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         const startIndex = currentPage ? currentPage * currentPageSize : 0
         setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + currentPageSize))])
     }
-    useEffect(resetShowList, [currentPage, streamList])
+    useEffect(resetShowList, [currentPage, streamList,isLandscape,orientationUpToDown])
     useEffect(() => { resetShowList() }, [])
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {

@@ -1231,7 +1231,7 @@ export class StreamUIStore extends EduUIStoreBase {
       每个序列根据加入时间倒序排列，举手和说话不影响排序规则 */
     const streamList: EduStreamUI[] = [];
     //是否显示学生
-    const showStudents = this.toolVisible && this.studentStreamsVisible;
+    const showStudents = this.studentStreamsVisible;
     //是否显示老师
     const showTeacher = this.teacherCameraStream && !this.isPiP
     if (showTeacher) {
@@ -1253,7 +1253,6 @@ export class StreamUIStore extends EduUIStoreBase {
       resultList.sort((item1, item2) => (Number(this.streamJoinTimeMap.get(item2.fromUser.userUuid)) - Number(this.streamJoinTimeMap.get(item1.fromUser.userUuid))))
       streamList.push(...resultList)
     }
-
     return streamList;
   }
 

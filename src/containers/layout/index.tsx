@@ -60,7 +60,7 @@ export const RoomInfo = observer(() => {
   } = useStore();
   return toolVisible ? (
     <>
-      {isRecording && (
+      {/* {isRecording && (
         <div className="fcr-mobile-room-info-record-container">
           <SvgImg
             className="recording-icon"
@@ -69,7 +69,7 @@ export const RoomInfo = observer(() => {
             colors={{ iconPrimary: 'red' }}></SvgImg>
           <span>REC</span>
         </div>
-      )}
+      )} */}
 
       {/* <div className="fcr-mobile-room-info-container">
         <div className="fcr-mobile-room-info-user-count-container">
