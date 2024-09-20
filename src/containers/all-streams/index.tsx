@@ -224,20 +224,33 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     } = useStore();
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
-    //当前使用的每页数量
-    const currentPageSize = isLandscape ? pageSize : (orientationUpToDown ? pageSize : columnRowCount);
+    const [lastPageIndex, setLastPageIndex] = useState<number>(0);
     //显示的数据列表
     const [currentPageShowStreamList, setCurrentPageShowStreamList] = useState<EduStreamUI[]>([]);
-    //最后一页页码
-    const lastPageIndex = Math.floor(Number(streamList.length / currentPageSize)) + (streamList.length % currentPageSize !== 0 ? 1 : 0);
     //重置显示列表
     const resetShowList = () => {
+        //当前使用的每页数量
+        const currentPageSize = isLandscape ? pageSize : (orientationUpToDown ? pageSize : columnRowCount);
+        //最后一页页码
+        const lastPageIndex = Math.floor(Number(streamList.length / currentPageSize)) + (streamList.length % currentPageSize !== 0 ? 1 : 0);
+        setLastPageIndex(lastPageIndex)
         //当前页面显示的流列表
         const startIndex = currentPage ? currentPage * currentPageSize : 0
         setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + currentPageSize))])
     }
     useEffect(resetShowList, [currentPage, streamList,isLandscape,orientationUpToDown])
-    useEffect(() => { resetShowList() }, [])
+    useEffect(() => {
+         resetShowList() 
+         const observer = new ResizeObserver(()=>{
+            setCurrentPageShowStreamList([])
+            setCurrentPage(0)
+            resetShowList()
+         });
+         const viewport = document.querySelector(`.all-streams-portrait-container`);
+         if (viewport) {
+           observer.observe(viewport);
+         }
+    }, [])
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {
             isLandscape && <>
