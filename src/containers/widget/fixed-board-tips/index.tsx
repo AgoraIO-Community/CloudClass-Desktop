@@ -32,7 +32,7 @@ export const FixedBoardTips = observer(() => {
     <>
       <div className="fct-mobile-board-btn">
         <GuideToolTip
-          placement="right"
+          placement="left"
           overlayOffset={8}
           visible={warning}
           overlayInnerStyle={{
@@ -63,6 +63,7 @@ export const FixedBoardTips = observer(() => {
           <div className="whiteboard-popup-header fcr-flex">
             <BoardExpand
               iconEnum={SvgIconEnum.WHITEBOARDEDIT}
+              iconColor="var(--inverse-icon-primary, #FEFEFE)"
               size={48}
               style={{ width: '48px', height: '48px', backgroundColor: '#AE367E' }}
             />
@@ -75,7 +76,7 @@ export const FixedBoardTips = observer(() => {
             <div>
               <BoardExpand
                 iconEnum={SvgIconEnum.MOBILEROTATESCAPE}
-                iconColor="#FB584E"
+                iconColor="var(--error, #D30018)"
                 size={48}
                 style={{
                   background: '#E6E6E6',
