@@ -74,7 +74,8 @@ export const Whiteboard = observer(function Board() {
         containerH5VisibleCls,
       })}
       style={{
-        height: boardHeight,
+        // height: boardHeight,
+        height: '100%',
         // width: width + 'px',
         width: '100%',
       }}

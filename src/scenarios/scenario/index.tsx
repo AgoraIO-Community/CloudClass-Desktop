@@ -215,7 +215,7 @@ export const Scenario = observer(() => {
                 {/* {groupUIStore.joiningSubRoom && <GroupLoading /> } */}
                 <Poll></Poll>
                 <CountDown></CountDown>
-                <AutoPlayFailedTip></AutoPlayFailedTip>
+                {/* <AutoPlayFailedTip></AutoPlayFailedTip> */}
                 <DialogContainer></DialogContainer>
                 <ToastContainer></ToastContainer>
                 <ClassRoomDialogContainer></ClassRoomDialogContainer>
