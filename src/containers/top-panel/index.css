@@ -1,7 +1,8 @@
 .top-operation-panel {
   position: relative;
   height: 48px;
-  width: 100vw;
+  /* width: 100vw; */
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

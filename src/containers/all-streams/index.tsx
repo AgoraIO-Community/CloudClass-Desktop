@@ -238,18 +238,18 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         const startIndex = currentPage ? currentPage * currentPageSize : 0
         setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + currentPageSize))])
     }
-    useEffect(resetShowList, [currentPage, streamList,isLandscape,orientationUpToDown])
+    useEffect(resetShowList, [currentPage, streamList, isLandscape, orientationUpToDown])
     useEffect(() => {
-         resetShowList() 
-         const observer = new ResizeObserver(()=>{
+        resetShowList()
+        const observer = new ResizeObserver(() => {
             setCurrentPageShowStreamList([])
             setCurrentPage(0)
             resetShowList()
-         });
-         const viewport = document.querySelector(`.all-streams-portrait-container`);
-         if (viewport) {
-           observer.observe(viewport);
-         }
+        });
+        const viewport = document.querySelector(`.all-streams-portrait-container`);
+        if (viewport) {
+            observer.observe(viewport);
+        }
     }, [])
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {
@@ -276,7 +276,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
             !isLandscape && !orientationUpToDown && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
                     currentPageShowStreamList.map((stream, index) => {
-                        return <div key={index} className="grid-item" style={{ gridColumn: `span 1` }}>
+                        return <div key={index} className="grid-item" style={{ gridRow: 1, gridColumn: `span 1` }}>
                             <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
                         </div>;
                     })}

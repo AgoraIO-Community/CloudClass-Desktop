@@ -1,5 +1,7 @@
 .fcr-layout {
   @apply fcr-flex;
+  padding-top: calc(env(safe-area-inset-top) * var(--multiple));
+  padding-bottom: calc(env(safe-area-inset-bottom) * var(--multiple));
 }
 
 .fcr-layout-row {
@@ -9,6 +11,7 @@
 .fcr-layout-col {
   @apply fcr-flex-col;
 }
+
 .fcr-layout-col-reverse {
   @apply fcr-flex-col-reverse;
 }
