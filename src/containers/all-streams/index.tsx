@@ -254,7 +254,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {
             isLandscape && <>
-                <div className='show-stream' style={{ gridTemplateColumns: `repeat(1, 1fr)` }}> {
+                <div className='show-stream' style={{ gridTemplateColumns: `repeat(1, 1fr)`, gridTemplateRows: `repeat(${currentPageShowStreamList?.length},50%)` }}> {
                     currentPageShowStreamList.map((stream, index) => {
                         return <div key={index} className="grid-item" style={{ gridColumn: 'span 1' }}>
                             <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
