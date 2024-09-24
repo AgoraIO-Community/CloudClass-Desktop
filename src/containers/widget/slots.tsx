@@ -88,7 +88,8 @@ export const Whiteboard = observer(function Board() {
         style={{
           height: isLandscape ? '100%' : boardContainerHeight,
           zIndex: ComponentLevelRules.Level0,
-          width: landscapeBoardSize.width,
+          // width: landscapeBoardSize.width,
+          width: '100%',
           // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
         }}
         className="widget-slot-board"
@@ -135,7 +136,8 @@ export const MadiaPlayer = observer(function Media() {
       style={{
         // height: boardHeight,
         height: '100%',
-        width: width + 'px',
+        width: '100%',
+        // width: width + 'px',
       }}
       onClick={() => {
         toggleTool();
@@ -150,7 +152,8 @@ export const MadiaPlayer = observer(function Media() {
                 display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
                 height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
                 zIndex: ComponentLevelRules.Level1,
-                width: landscapeBoardSize.width,
+                // width: landscapeBoardSize.width,
+                width: '100%',
                 // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
               }}
               className={`widget-slot-media-player widget-slot-media-player-${item.widgetId}`}
@@ -205,7 +208,8 @@ export const WebView = observer(function View() {
       style={{
         // height: boardHeight,
         height: '100%',
-        width: width + 'px',
+        // width: width + 'px',
+        width: '100%',
       }}
       onClick={() => {
         toggleTool();
@@ -219,7 +223,8 @@ export const WebView = observer(function View() {
                 display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
                 height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
                 zIndex: ComponentLevelRules.Level0,
-                width: landscapeBoardSize.width,
+                // width: landscapeBoardSize.width,
+                width: '100%',
                 // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
               }}
               className={`widget-slot-web-view widget-slot-web-view-${item.widgetId}`}

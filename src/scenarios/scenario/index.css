@@ -249,7 +249,8 @@
   order: 1;
   position: static;
   width: 75px;
-  height: calc(100vh - 52px);
+  height: calc(100% - 52px);
+  margin: auto 0;
 }
 
 .landscape-bottom-tools-horizontal .fcr-chatroom-mobile-landscape-input-container {
