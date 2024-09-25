@@ -4,6 +4,7 @@
   padding-bottom: calc(env(safe-area-inset-bottom) * var(--multiple));
   padding-left: calc(env(safe-area-inset-left) * var(--multiple));
   padding-right: calc(env(safe-area-inset-right) * var(--multiple));
+  width: 100%;
 }
 
 .fcr-layout-row {
