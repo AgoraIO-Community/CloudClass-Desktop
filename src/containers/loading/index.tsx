@@ -17,7 +17,6 @@ export const GroupLoading = () => {
     'scene-switch-loading-breakout-open': layoutUIStore.currentSubRoomName,
     'scene-switch-loading-breakout-open-landscape':isLandscape
   });
-
   const breakoutLoadWrapClas = classNames('fcr-w-full fcr-h-full', {
     'fcr-bg-white': !layoutUIStore.currentSubRoomName,
     'fcr-bg-black': layoutUIStore.currentSubRoomName,
@@ -58,7 +57,7 @@ export const LoadingContainer = observer(() => {
   } = useStore();
   return classroomState !== ClassroomState.Connected ? (
     <div
-      style={{ zIndex: ComponentLevelRules.Level3 }}
+      style={{ zIndex: ComponentLevelRules.Level3,backgroundColor:'#151515' }}
       className="fcr-w-screen fcr-h-screen fcr-fixed fcr-left-0 fcr-t-0 fcr-flex fcr-items-center fcr-justify-center">
       <Card width={90} height={90}>
         <Loading></Loading>

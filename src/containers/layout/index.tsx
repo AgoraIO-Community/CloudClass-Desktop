@@ -46,7 +46,9 @@ export const LayoutContainer: FC<Props> = observer(({ children }) => {
   } = useStore();
   return (
     <section
-      className={`h5-layout-container fcr-flex fcr-h-full ${h5ContainerCls} ${classroomViewportClassName}`}>
+      className={`h5-layout-container fcr-flex fcr-h-full ${h5ContainerCls} ${classroomViewportClassName}`}
+      style={{backgroundColor:'#151515'}}
+      >
       {children}
     </section>
   );
