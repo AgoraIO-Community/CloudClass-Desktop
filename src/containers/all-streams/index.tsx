@@ -297,7 +297,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
                     currentPageShowStreamList.map((stream, index) => {
                         const length = currentPageShowStreamList.length;
-                        return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index == 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1' }}>
+                        return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index === 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1' }}>
                             <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
                         </div>;
                     })}
