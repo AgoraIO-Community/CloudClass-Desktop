@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Switch } from 'antd';
 
@@ -28,22 +28,77 @@ export const DevicePretest = observer(() => {
     },
     streamUIStore: { localVolume }
   } = useStore();
+  const initOrientation = (window.orientation === 90 || window.orientation === -90);
+  const initWidth = window.document.documentElement.clientWidth;
+  const initHeight = window.document.documentElement.clientHeight;
+
+
+  const getBrowserInfo = () => {
+    const userAgent = navigator.userAgent || navigator.vendor;
+    if (/macintosh|mac os x/i.test(userAgent)) {
+      return 'Safari';
+    } else if (/android/i.test(userAgent)) {
+      return 'Android Browser';
+    } else {
+      return 'Unknown';
+    }
+  }
 
   useEffect(() => {
     toggleCameraEnabled();
+    const elemwrapped = document.querySelector('.fcr-pretest-wrapped') as HTMLImageElement;
     const elem = document.querySelector('.fcr-pretest') as HTMLImageElement;
+
+    const height = window.document.documentElement.clientHeight;
+    const width = window.document.documentElement.clientWidth;
+
+
+    const isSafari = getBrowserInfo() == 'Safari';
+
+    //初始值
     if (window.orientation === 90 || window.orientation === -90) {
       elem.style.transform = `rotate(${-window.orientation}deg)`;
+
+      elemwrapped.style.width = width + 'px';
+      elemwrapped.style.height = height + 'px';
+      //内容
+      elem.style.width = height + 'px';
+      elem.style.height = width + 'px';
     } else {
       elem.style.transform = 'none';
+      elemwrapped.style.width = width + 'px';
+      elemwrapped.style.height = height + 'px';
+      //内容
+      elem.style.width = width + 'px';
+      elem.style.height = height + 'px';
     }
 
+    //旋转后
     window.addEventListener('orientationchange', async function () {
+      const elemwrapped = document.querySelector('.fcr-pretest-wrapped') as HTMLImageElement;
       const elem = document.querySelector('.fcr-pretest') as HTMLImageElement;
+
       if (window.orientation === 90 || window.orientation === -90) {
         elem.style.transform = `rotate(${-window.orientation}deg)`;
+
+        //内容
+        elem.style.width = (isSafari ? (initOrientation ? initHeight : width - 75) : width) + 'px';
+        elem.style.height = (isSafari ? (initOrientation ? initWidth : height) + 75 : height) + 'px';
+        //容器
+        elemwrapped.style.width = (isSafari ? (initOrientation ? initWidth : height + 75) : height) + 'px';
+        elemwrapped.style.height = (isSafari ? (initOrientation ? initHeight : width - 75) : width) + 'px';
+
       } else {
+
+        //内容
         elem.style.transform = 'none';
+
+        elem.style.width = (initOrientation ? height + 85 : initWidth) + 'px';
+        elem.style.height = (initOrientation ? width : initHeight) + 'px';
+
+        //容器 
+        elemwrapped.style.width = (initOrientation ? height + 85 : initWidth) + 'px';
+        elemwrapped.style.height = (initOrientation ? width : initHeight) + 'px';
       }
     })
 
@@ -52,6 +107,8 @@ export const DevicePretest = observer(() => {
       })
     }
   }, [])
+
+
 
   return (
     <div className={'fcr-pretest'} >
