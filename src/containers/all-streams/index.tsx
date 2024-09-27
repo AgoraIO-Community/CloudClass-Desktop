@@ -29,13 +29,16 @@ export const AllStream = observer((
             subscribeMass,
             sortStreamList
         },
-        widgetUIStore: { currentWidget }
+        widgetUIStore: { currentWidget,z0Widgets }
     } = useStore();
     //是否有白板、屏幕共享等widget
     const [haveWidget, setHaveWidget] = useState(false);
+    const [haveBoard, setHaveBoard] = useState(false);
     //监听教师流变更
     useEffect(() => {
-        setHaveWidget(currentWidget !== null && currentWidget !== undefined)
+        setHaveWidget(!!currentWidget && 'easemobIM' !== currentWidget.widgetName)
+        const board = z0Widgets.find((item: { widgetName: string; })=>item.widgetName === 'netlessBoard')
+        setHaveBoard(board)
     }, [currentWidget]);
 
     //监听教师流变更
@@ -51,9 +54,9 @@ export const AllStream = observer((
         <>
             {
                 isLandscape ? (<>
-                    <GridListShow streamList={streamList} columnRowCount={1} pageSize={2} orientationUpToDown={true}></GridListShow>
+                    <GridListShow streamList={streamList} columnRowCount={1} pageSize={2} orientationUpToDown={true} haveBoard={haveBoard}></GridListShow>
                 </>) : <div style={{ height: haveWidget ? '96px' : '100%' }}>
-                    <GridListShow streamList={streamList} columnRowCount={2} pageSize={haveWidget ? 2 : 6} orientationUpToDown={!haveWidget}></GridListShow>
+                    <GridListShow streamList={streamList} columnRowCount={2} pageSize={haveWidget ? 2 : 6} orientationUpToDown={!haveWidget} haveBoard={haveBoard}></GridListShow>
                 </div>
             }
         </>
@@ -63,7 +66,7 @@ export const AllStream = observer((
 
 
 //所有的视频流的显示逻辑
-const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
+const ALlStreamPlayer = observer(({ stream,haveBoard }: { stream: EduStreamUI,haveBoard:boolean }) => {
     const {
         getters: { isBoardWidgetActive, teacherCameraStream, calibratedTime },
         shareUIStore: { isLandscape },
@@ -71,7 +74,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
             streamStore: { setRemoteVideoStreamType },
             connectionStore: { rtcState },
         },
-        streamUIStore: { screenShareStream, localVolume, remoteStreamVolume, handleReportDuration,visibleStreams,subscribeMass },
+        streamUIStore: { screenShareStream, localVolume, remoteStreamVolume, handleReportDuration },
         layoutUIStore: { },
         handUpUIStore: { handsUpMap },
         deviceSettingUIStore: { isAudioRecordingDeviceEnabled }
@@ -102,7 +105,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     //是否是教师
     const isTeacher = RteRole2EduRole(roomType, stream.fromUser.role) === EduRoleTypeEnum.teacher;
     //是否开启了屏幕共享
-    const isScreenShare = !!screenShareStream
+    const isScreenShare = !!screenShareStream || haveBoard
     //是否举手
     const isLiftHand = handsUpMap.has(stream.fromUser.userUuid);
     //是否讲话
@@ -172,9 +175,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     ]);
     //当前布局
     const ref = useRef<HTMLDivElement | null>(null);
-    //显示当前的
-    visibleStreams.set(stream.stream.streamUuid, stream.stream);
-    subscribeMass(visibleStreams);
+
     return (
         <div style={{ width: "100%", height: '100%', position: 'relative' }}
             ref={ref}
@@ -210,7 +211,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
 },
 );
 //宫格列表显示组件
-const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpToDown, pageSize = 6 }: {
+const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpToDown, pageSize = 6, haveBoard = false }: {
     //所有的流数据列表
     streamList: EduStreamUI[],
     //列或者行数量
@@ -219,6 +220,8 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     orientationUpToDown: boolean,
     //每页数量
     pageSize: number,
+    //是否有白板
+    haveBoard: boolean,
 }) => {
     //store参数配置信息
     const {
@@ -255,25 +258,14 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         subscribeMass(visibleStreams);
     }
     useEffect(resetShowList, [currentPage, streamList, isLandscape, orientationUpToDown])
-    useEffect(() => {
-        resetShowList()
-        const observer = new ResizeObserver(() => {
-            setCurrentPageShowStreamList([])
-            setCurrentPage(0)
-            resetShowList()
-        });
-        const viewport = document.querySelector(`.all-streams-portrait-container`);
-        if (viewport) {
-            observer.observe(viewport);
-        }
-    }, [])
+    useEffect(() => { resetShowList() }, [])
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {
             isLandscape && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(1, 1fr)`, gridTemplateRows: `repeat(${currentPageShowStreamList?.length},50%)` }}> {
                     currentPageShowStreamList.map((stream, index) => {
                         return <div key={index} className="grid-item" style={{ gridColumn: 'span 1' }}>
-                            <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
@@ -293,7 +285,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
                     currentPageShowStreamList.map((stream, index) => {
                         return <div key={index} className="grid-item" style={{ gridRow: 1, gridColumn: `span 1` }}>
-                            <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
@@ -314,7 +306,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
                     currentPageShowStreamList.map((stream, index) => {
                         const length = currentPageShowStreamList.length;
                         return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index === 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1' }}>
-                            <ALlStreamPlayer stream={stream}></ALlStreamPlayer>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
