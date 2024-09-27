@@ -598,6 +598,7 @@ export const zh = {
   fcr_board_rotate_tip: '请把手机的自动旋转打开，并把手机横向放置，在横屏下使用白板编辑。',
   fcr_board_rotate_lock: '锁定旋转',
   fcr_board_rotate_auto: '自动旋转',
+  fcr_board_rotate_msg: '明白了',
   fcr_board_enable: '启用',
   fcr_student_no_teacher_show: '当前无教学内容',
   /** Remote Control */
