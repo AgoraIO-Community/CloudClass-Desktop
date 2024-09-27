@@ -249,11 +249,9 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         streamList.forEach((item,index)=>{
             if(index < startIndex || index >= endIndex){
                 visibleStreams.delete(item.stream.streamUuid);
+            }else{
+                visibleStreams.set(item.stream.streamUuid, item.stream);
             }
-        })
-        //显示当前的
-        currentPageShowStreamList.forEach((item) => {
-            visibleStreams.set(item.stream.streamUuid, item.stream);
         })
         subscribeMass(visibleStreams);
     }
