@@ -71,7 +71,7 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
             streamStore: { setRemoteVideoStreamType },
             connectionStore: { rtcState },
         },
-        streamUIStore: { screenShareStream, localVolume, remoteStreamVolume, handleReportDuration },
+        streamUIStore: { screenShareStream, localVolume, remoteStreamVolume, handleReportDuration,visibleStreams,subscribeMass },
         layoutUIStore: { },
         handUpUIStore: { handsUpMap },
         deviceSettingUIStore: { isAudioRecordingDeviceEnabled }
@@ -172,7 +172,9 @@ const ALlStreamPlayer = observer(({ stream }: { stream: EduStreamUI }) => {
     ]);
     //当前布局
     const ref = useRef<HTMLDivElement | null>(null);
-
+    //显示当前的
+    visibleStreams.set(stream.stream.streamUuid, stream.stream);
+    subscribeMass(visibleStreams);
     return (
         <div style={{ width: "100%", height: '100%', position: 'relative' }}
             ref={ref}
@@ -221,6 +223,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //store参数配置信息
     const {
         shareUIStore: { isLandscape },
+        streamUIStore: {visibleStreams,subscribeMass },
     } = useStore();
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
@@ -236,7 +239,20 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         setLastPageIndex(lastPageIndex)
         //当前页面显示的流列表
         const startIndex = currentPage ? currentPage * currentPageSize : 0
-        setCurrentPageShowStreamList([...streamList.slice(startIndex, Math.min(streamList.length, startIndex + currentPageSize))])
+        const endIndex = Math.min(streamList.length, startIndex + currentPageSize)
+        
+        setCurrentPageShowStreamList([...streamList.slice(startIndex, endIndex)])
+        //隐藏其他的
+        streamList.forEach((item,index)=>{
+            if(index < startIndex || index >= endIndex){
+                visibleStreams.delete(item.stream.streamUuid);
+            }
+        })
+        //显示当前的
+        currentPageShowStreamList.forEach((item) => {
+            visibleStreams.set(item.stream.streamUuid, item.stream);
+        })
+        subscribeMass(visibleStreams);
     }
     useEffect(resetShowList, [currentPage, streamList, isLandscape, orientationUpToDown])
     useEffect(() => {
