@@ -119,7 +119,7 @@ export const FixedBoardTips = observer(() => {
             type="primary"
             size="lg"
             style={{ width: '100%', fontSize: '15px', fontWeight: 700 }}>
-            Got It
+            {transI18n('fcr_board_rotate_msg')}
           </Button>
         </div>
       </Drawer>
