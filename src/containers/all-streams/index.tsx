@@ -320,10 +320,10 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
                 </div>
 
                 <div className="pagination" style={{ display: 'flex' }}>
-                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none', margin: '9px auto auto 8px' }} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
+                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none'}} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
                         <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'rotate(180deg)' }}></SvgImg>
                     </div>}
-                    {<div className="page-btn right-btn" style={{ display: currentPage < lastPageIndex - 1 ? 'inline-block' : 'none', margin: '9px 8px auto auto' }} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
+                    {<div className="page-btn right-btn" style={{ display: currentPage < lastPageIndex - 1 ? 'inline-block' : 'none' }} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
                         <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'unset' }}></SvgImg>
                     </div>}
                 </div>

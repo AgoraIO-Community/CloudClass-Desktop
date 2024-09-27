@@ -1243,12 +1243,12 @@ export class StreamUIStore extends EduUIStoreBase {
       //本地视频流
       const userStream = this.localStream
       //筛选已经开了摄像头的
-      if (userStream?.isVideoStreamPublished) { streamList.push(userStream) }
+      if (userStream && !userStream?.isCameraMuted) { streamList.push(userStream) }
       let resultList = list.filter(item => !item.isCameraMuted && item.fromUser.userUuid !== userStream?.fromUser?.userUuid);
       resultList.sort((item1, item2) => (Number(this.streamJoinTimeMap.get(item2.fromUser.userUuid)) - Number(this.streamJoinTimeMap.get(item1.fromUser.userUuid))))
       streamList.push(...resultList)
       //筛选未开启摄像头的
-      if (userStream && !userStream?.isVideoStreamPublished) { streamList.push(userStream) }
+      if (userStream && userStream?.isCameraMuted) { streamList.push(userStream) }
       resultList = list.filter(item => item.isCameraMuted && item.fromUser.userUuid !== userStream?.fromUser?.userUuid)
       resultList.sort((item1, item2) => (Number(this.streamJoinTimeMap.get(item2.fromUser.userUuid)) - Number(this.streamJoinTimeMap.get(item1.fromUser.userUuid))))
       streamList.push(...resultList)
