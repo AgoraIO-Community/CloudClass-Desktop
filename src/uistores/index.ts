@@ -95,6 +95,11 @@ export class EduClassroomUIStore {
     return this._getters;
   }
 
+  @bound
+  leaveClassroom() {
+    this._classroomStore.connectionStore.leaveClassroom(LeaveReason.leave);
+  }
+
   /**
    * 初始化所有 UIStore
    * @returns

@@ -14,7 +14,7 @@ import { EduStreamUI } from '@classroom/uistores/stream/struct';
 export const VerticalStreamsContainer = () => {
   return (
     <>
-      <StreamCollapse></StreamCollapse>
+      {/* <StreamCollapse></StreamCollapse> */}
       <StudentStreams></StudentStreams>
     </>
   );

@@ -28,7 +28,7 @@ export const BoardExpand = observer((props: Iprops) => {
           landscape={isLandscape}
           forceLandscape={forceLandscape}
           type={props.iconEnum}
-          colors={{ iconPrimary: props.iconColor || 'white' }}
+          colors={{ iconPrimary: props.iconColor || '#151515' }}
           size={props.size || 32}></SvgImgMobile>
       </div>
     </div>

@@ -28,6 +28,7 @@ export const TeacherStream = observer(() => {
     }
     subscribeMass(visibleStreams);
   }, [teacherCameraStream]);
+  
   const enabled =
     isLandscape || (teacherCameraStream && !teacherCameraStream.isCameraMuted && !isPiP);
   return (
