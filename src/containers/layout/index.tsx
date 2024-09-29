@@ -46,7 +46,9 @@ export const LayoutContainer: FC<Props> = observer(({ children }) => {
   } = useStore();
   return (
     <section
-      className={`h5-layout-container fcr-flex fcr-h-full ${h5ContainerCls} ${classroomViewportClassName}`}>
+      className={`h5-layout-container fcr-flex fcr-h-full ${h5ContainerCls} ${classroomViewportClassName}`}
+      style={{ backgroundColor: '#151515', width: '100%' }}
+    >
       {children}
     </section>
   );
@@ -60,7 +62,7 @@ export const RoomInfo = observer(() => {
   } = useStore();
   return toolVisible ? (
     <>
-      {isRecording && (
+      {/* {isRecording && (
         <div className="fcr-mobile-room-info-record-container">
           <SvgImg
             className="recording-icon"
@@ -69,9 +71,9 @@ export const RoomInfo = observer(() => {
             colors={{ iconPrimary: 'red' }}></SvgImg>
           <span>REC</span>
         </div>
-      )}
+      )} */}
 
-      <div className="fcr-mobile-room-info-container">
+      {/* <div className="fcr-mobile-room-info-container">
         <div className="fcr-mobile-room-info-user-count-container">
           <SvgImg type={SvgIconEnum.USER_COUNT} size={18} />
           <span>{userCount} </span>
@@ -80,7 +82,7 @@ export const RoomInfo = observer(() => {
         {classStatusText && (
           <div className="fcr-mobile-room-info-time-container">{classStatusText}</div>
         )}
-      </div>
+      </div> */}
     </>
   ) : null;
 });

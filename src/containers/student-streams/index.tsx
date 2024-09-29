@@ -13,7 +13,7 @@ import { AudioRecordinDeviceIcon } from '../stream/player';
 export const StudentStreamsContainer = () => {
   return (
     <>
-      <StudentStreamCollapse></StudentStreamCollapse>
+      {/* <StudentStreamCollapse></StudentStreamCollapse> */}
       <StudentStreams></StudentStreams>
     </>
   );
@@ -40,6 +40,7 @@ const StudentStreams = observer(() => {
     toolVisible,
     toggleTool,
   } = streamUIStore;
+  
   const visible = toolVisible && studentStreamsVisible;
   const swiperRef = useRef<SwiperType | null>(null);
 

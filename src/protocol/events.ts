@@ -72,7 +72,7 @@ export enum AgoraExtensionRoomEvent {
   //默认当前应用
   DefaultCurrentApplication = 'default-current-application',
   // 学生邀请
-  StudentGroupInvites = 'student-group-invites',
+  StudentGroupInvites = 'student-group-invites', 
 }
 
 /**
@@ -100,6 +100,8 @@ export enum AgoraExtensionWidgetEvent {
   BoardGrantedUsersUpdated = 'board-granted-users-updated',
   // 收到白板截图
   BoardSnapshotImageReceived = 'board-snapshot-image-received',
+  // 白板全屏事件
+  BoardFullScreen = 'board-full-screen',
   // 白板文件拖入事件
   BoardDragOver = 'board-drag-over',
   // 白板文件放入事件

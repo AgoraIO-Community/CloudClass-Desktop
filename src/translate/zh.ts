@@ -56,6 +56,8 @@ export const zh = {
     microphone_volume: '麦克风音量',
     speaker_volume: '扬声器音量',
     stage_area: '讲台区域',
+    device_button_join: '加入房间',
+    joinText: '加入房间后，您将默认同意被录音'
   },
   roster: {
     chat: '禁言',
@@ -436,6 +438,7 @@ export const zh = {
     'placeholder.broken': '摄像头损坏',
     'placeholder.notpresent.teacher': '老师不在教室',
     'placeholder.notpresent.student': '学生不在教室',
+    teacher: '老师',
   },
   screenshare: {
     display: '屏幕{reason}',
@@ -525,7 +528,8 @@ export const zh = {
   fcr_group_invitation: '老师邀请您加入{reason}',
   fcr_group_button_join: '加入',
   fcr_group_button_later: '稍后',
-  fcr_group_joining: '正在加入{reason}',
+  // fcr_group_joining: '正在加入{reason}',
+  fcr_group_joining: '正在准备你的分组房间...',
   fcr_group_join: '加入讨论组',
   fcr_group_enter_welcome: '欢迎加入{reason}与大家互动讨论',
   fcr_group_enter_group: '{reason1}{reason2}进入小组',
@@ -594,6 +598,7 @@ export const zh = {
   fcr_board_rotate_tip: '请把手机的自动旋转打开，并把手机横向放置，在横屏下使用白板编辑。',
   fcr_board_rotate_lock: '锁定旋转',
   fcr_board_rotate_auto: '自动旋转',
+  fcr_board_rotate_msg: '明白了',
   fcr_board_enable: '启用',
   fcr_student_no_teacher_show: '当前无教学内容',
   /** Remote Control */
@@ -834,10 +839,12 @@ export const zh = {
   fcr_group_button_invite: '邀请',
   fcr_group_button_cancel: '取消',
   fcr_group_tips_leave_content: '确定要退出分组吗？',
+  fcr_tips_leave_content: '确定要离开教室吗？',
   fcr_group_button_leave_group: '回到主教室',
   fcr_group_teacher_not_in_classroom: '老师不在房间内',
   fcr_group_tool_help: '帮助',
   fcr_group_tool_cancel_help: '取消帮助',
   fcr_group_tool_leave_group: '离开小组',
+  fcr_group_tool_leave: '离开',
   fcr_rtc_no_driver: '您使用的浏览器不支持在线教室，请更换chrome浏览器',
 };

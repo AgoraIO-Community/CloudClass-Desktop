@@ -3,6 +3,7 @@ import { EduClassroomConfig } from 'agora-edu-core';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
 import React, { MutableRefObject, useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { SvgIconEnum, Button, SvgImg } from '@classroom/ui-kit';
 import { ComponentLevelRules } from '../../configs/config';
 import classNames from 'classnames';
 import { useMobileStreamDrag } from '../stream/player';
@@ -16,7 +17,7 @@ export const CountDown = observer(() => {
   const { pos, initData } = useMobileStreamDrag({
     isPiP: true,
     triggerRef: ref as MutableRefObject<HTMLDivElement>,
-     type:"countDown"
+    type: "countDown"
   });
   const {
     shareUIStore: { isLandscape },
@@ -52,19 +53,19 @@ export const Whiteboard = observer(function Board() {
   const { boardContainerHeight, mounted, boardContainerWidth, isGrantedBoard } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? boardContainerWidth - 143
+      ? (boardContainerWidth - 143 - 75 - 14 - 14 - 17)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
     updateWhiteBoardViewportSize(width, boardContainerHeight);
   }, [studentStreamsVisible, width]);
-  const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : boardContainerHeight) : 0;
-  const right = studentStreamsVisible ? (isLandscape ? '161px' : '') : 0;
+  const boardHeight = isBoardWidgetActive ? (isLandscape ? '100%' : 511) : 0;
   // document.querySelector('.netless-whiteboard-wrapper')?.setAttribute('backgroundColor', 'black');
   const maskHeight = (mounted || screenShareStream) && !isLandscape ? boardContainerHeight : 0;
   useEffect(() => {
     whiteBoardRef.current?.style.setProperty('--board-height', maskHeight + 'px');
   }, [maskHeight]);
+
   return (
     <div
       ref={whiteBoardRef}
@@ -73,8 +74,10 @@ export const Whiteboard = observer(function Board() {
         containerH5VisibleCls,
       })}
       style={{
-        height: boardHeight,
-        width: width + 'px',
+        // height: boardHeight,
+        height: '100%',
+        // width: width + 'px',
+        width: '100%',
       }}
       onClick={() => {
         toggleTool();
@@ -83,9 +86,10 @@ export const Whiteboard = observer(function Board() {
       <div
         onClick={toggleLandscapeToolBarVisible}
         style={{
-          height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
+          height: isLandscape ? '100%' : boardContainerHeight,
           zIndex: ComponentLevelRules.Level0,
-          width: landscapeBoardSize.width,
+          // width: landscapeBoardSize.width,
+          width: '100%',
           // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
         }}
         className="widget-slot-board"
@@ -107,7 +111,7 @@ export const MadiaPlayer = observer(function Media() {
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? boardContainerWidth - 143
+      ? (boardContainerWidth - 143 - 75 - 14 - 14 - 17)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
@@ -130,8 +134,10 @@ export const MadiaPlayer = observer(function Media() {
         containerH5VisibleCls,
       })}
       style={{
-        height: boardHeight,
-        width: width + 'px',
+        // height: boardHeight,
+        height: '100%',
+        width: '100%',
+        // width: width + 'px',
       }}
       onClick={() => {
         toggleTool();
@@ -146,7 +152,8 @@ export const MadiaPlayer = observer(function Media() {
                 display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
                 height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
                 zIndex: ComponentLevelRules.Level1,
-                width: landscapeBoardSize.width,
+                // width: landscapeBoardSize.width,
+                width: '100%',
                 // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
               }}
               className={`widget-slot-media-player widget-slot-media-player-${item.widgetId}`}
@@ -171,7 +178,7 @@ export const WebView = observer(function View() {
   const { boardContainerHeight, mounted, boardContainerWidth } = boardUIStore;
   const width = studentStreamsVisible
     ? isLandscape
-      ? boardContainerWidth - 143
+      ? (boardContainerWidth - 143 - 75 - 14 - 14 - 17)
       : boardContainerWidth
     : boardContainerWidth;
   useEffect(() => {
@@ -199,8 +206,10 @@ export const WebView = observer(function View() {
         containerH5VisibleCls,
       })}
       style={{
-        height: boardHeight,
-        width: width + 'px',
+        // height: boardHeight,
+        height: '100%',
+        // width: width + 'px',
+        width: '100%',
       }}
       onClick={() => {
         toggleTool();
@@ -214,7 +223,8 @@ export const WebView = observer(function View() {
                 display: item.widgetId === currentWidget?.widgetId ? 'block' : 'none',
                 height: isLandscape ? landscapeBoardSize.height : boardContainerHeight,
                 zIndex: ComponentLevelRules.Level0,
-                width: landscapeBoardSize.width,
+                // width: landscapeBoardSize.width,
+                width: '100%',
                 // backgroundColor: isLandscape ? 'rgba(35, 37, 41, 1)' : '',
               }}
               className={`widget-slot-web-view widget-slot-web-view-${item.widgetId}`}
@@ -253,8 +263,8 @@ export const Chat = observer(function Chat() {
       h5Height -
       (screenShareStream ? boardContainerHeight : 0) -
       (!widgets.length &&
-      (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
-      !screenShareStream
+        (!teacherCameraStream || teacherCameraStream.isCameraMuted) &&
+        !screenShareStream
         ? isInGroup
           ? classRoomPlacholderIngroupHeight
           : 190
@@ -317,7 +327,7 @@ export const Chat = observer(function Chat() {
       className={classNames('widget-slot-chat-mobile', isLandscape && 'active')}
       style={{
         // height: chatH5Height < 190 ? 190 : chatH5Height,
-        flex: 1,
+        // flex: 1,
         position: isLandscape ? 'absolute' : 'inherit',
         bottom: isLandscape ? 56 : undefined,
         width: isLandscape ? '270px' : 'auto',
