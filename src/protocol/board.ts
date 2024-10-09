@@ -47,7 +47,12 @@ export class Board {
 
   @computed
   get granted() {
-    return this.hasPrivilege();
+    const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
+
+    return (
+      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) ||
+      this.grantedUsers.has(userUuid)
+    );
   }
 
   enable() {
@@ -139,15 +144,7 @@ export class Board {
   setDelay(delay: number) {
     this._sendBoardCommandMessage(AgoraExtensionRoomEvent.BoardSetDelay, [delay]);
   }
-  @bound
-  hasPrivilege() {
-    const { userUuid, role } = EduClassroomConfig.shared.sessionInfo;
-
-    return (
-      [EduRoleTypeEnum.teacher, EduRoleTypeEnum.assistant].includes(role) ||
-      this.grantedUsers.has(userUuid)
-    );
-  }
+  hasPrivilege() {}
 
   install(controller: AgoraWidgetController) {
     this._controller = controller;
