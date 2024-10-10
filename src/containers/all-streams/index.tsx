@@ -10,6 +10,7 @@ import { TrackPlayer } from '../stream/track-player';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
 import { splitName } from '../stream';
+import Award from '../award';
 
 export const AllStream = observer((
     { }: {
@@ -29,7 +30,7 @@ export const AllStream = observer((
             subscribeMass,
             sortStreamList
         },
-        widgetUIStore: { currentWidget,z0Widgets }
+        widgetUIStore: { currentWidget, z0Widgets }
     } = useStore();
     //是否有白板、屏幕共享等widget
     const [haveWidget, setHaveWidget] = useState(false);
@@ -37,7 +38,7 @@ export const AllStream = observer((
     //监听教师流变更
     useEffect(() => {
         setHaveWidget(!!currentWidget && 'easemobIM' !== currentWidget.widgetName)
-        const board = z0Widgets.find((item: { widgetName: string; })=>item.widgetName === 'netlessBoard')
+        const board = z0Widgets.find((item: { widgetName: string; }) => item.widgetName === 'netlessBoard')
         setHaveBoard(board)
     }, [currentWidget]);
 
@@ -186,7 +187,9 @@ const ALlStreamPlayer = observer(({ stream,haveBoard,visible }: { stream: EduStr
             <div className={classNames('placeholder-text',
                 { 'placeholder-text-small': 100 >= (ref.current?.clientHeight ? ref.current?.clientHeight : 100) },
                 { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
+
             {<TrackPlayer stream={stream} visible={visible} />}
+            {/* <Award stream={stream} /> */}
             {isLiftHand && <SvgImg
                 className='all-streams-portrait-stream-lift-hand-container'
                 type={SvgIconEnum.HANDS_UP_NEW}
@@ -226,7 +229,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //store参数配置信息
     const {
         shareUIStore: { isLandscape },
-        streamUIStore: {visibleStreams,subscribeMass },
+        streamUIStore: { visibleStreams, subscribeMass },
     } = useStore();
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
@@ -243,7 +246,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         //当前页面显示的流列表
         const startIndex = currentPage ? currentPage * currentPageSize : 0
         const endIndex = Math.min(streamList.length, startIndex + currentPageSize)
-        
+
         setCurrentPageShowStreamList([...streamList.slice(startIndex, endIndex)])
         //隐藏其他的
         streamList.forEach((item,index)=>{
@@ -316,7 +319,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
                 </div>
 
                 <div className="pagination" style={{ display: 'flex' }}>
-                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none'}} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
+                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none' }} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
                         <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'rotate(180deg)' }}></SvgImg>
                     </div>}
                     {<div className="page-btn right-btn" style={{ display: currentPage < lastPageIndex - 1 ? 'inline-block' : 'none' }} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
