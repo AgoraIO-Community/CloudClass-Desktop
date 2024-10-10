@@ -67,7 +67,7 @@ export const AllStream = observer((
 
 
 //所有的视频流的显示逻辑
-const ALlStreamPlayer = observer(({ stream, haveBoard }: { stream: EduStreamUI, haveBoard: boolean }) => {
+const ALlStreamPlayer = observer(({ stream,haveBoard,visible }: { stream: EduStreamUI,haveBoard:boolean,visible?: boolean; }) => {
     const {
         getters: { isBoardWidgetActive, teacherCameraStream, calibratedTime },
         shareUIStore: { isLandscape },
@@ -187,7 +187,8 @@ const ALlStreamPlayer = observer(({ stream, haveBoard }: { stream: EduStreamUI, 
             <div className={classNames('placeholder-text',
                 { 'placeholder-text-small': 100 >= (ref.current?.clientHeight ? ref.current?.clientHeight : 100) },
                 { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
-            {<TrackPlayer stream={stream} />}
+
+            {<TrackPlayer stream={stream} visible={visible} />}
             {/* <Award stream={stream} /> */}
             {isLiftHand && <SvgImg
                 className='all-streams-portrait-stream-lift-hand-container'
@@ -248,24 +249,30 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
 
         setCurrentPageShowStreamList([...streamList.slice(startIndex, endIndex)])
         //隐藏其他的
-        streamList.forEach((item, index) => {
-            if (index < startIndex || index >= endIndex) {
-                visibleStreams.delete(item.stream.streamUuid);
-            } else {
-                visibleStreams.set(item.stream.streamUuid, item.stream);
-            }
+        streamList.forEach((item,index)=>{
+            visibleStreams.set(item.stream.streamUuid, item.stream);
+            // if(index < startIndex || index >= endIndex){
+            //     visibleStreams.delete(item.stream.streamUuid);
+            // }else{
+            //     visibleStreams.set(item.stream.streamUuid, item.stream);
+            // }
         })
         subscribeMass(visibleStreams);
     }
     useEffect(resetShowList, [currentPage, streamList, isLandscape, orientationUpToDown])
     useEffect(() => { resetShowList() }, [])
+    //检测是否显示item
+    const checkShowItem = (stream: EduStreamUI) => {
+        return !!currentPageShowStreamList.find((item) => item.stream.streamUuid === stream.stream.streamUuid)
+    }
+
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {
             isLandscape && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(1, 1fr)`, gridTemplateRows: `repeat(${currentPageShowStreamList?.length},50%)` }}> {
-                    currentPageShowStreamList.map((stream, index) => {
-                        return <div key={index} className="grid-item" style={{ gridColumn: 'span 1' }}>
-                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
+                    streamList.map((stream, index) => {
+                        return <div key={index} className="grid-item" style={{ gridColumn: 'span 1',display:checkShowItem(stream) ? 'unset':'none' }}>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}  visible={checkShowItem(stream)}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
@@ -283,9 +290,9 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         {
             !isLandscape && !orientationUpToDown && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
-                    currentPageShowStreamList.map((stream, index) => {
-                        return <div key={index} className="grid-item" style={{ gridRow: 1, gridColumn: `span 1` }}>
-                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
+                    streamList.map((stream, index) => {
+                        return <div key={index} className="grid-item" style={{ gridRow: 1, gridColumn: `span 1`,display:checkShowItem(stream) ? 'unset':'none' }}>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}  visible={checkShowItem(stream)}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
@@ -303,10 +310,10 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         {
             !isLandscape && orientationUpToDown && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
-                    currentPageShowStreamList.map((stream, index) => {
+                    streamList.map((stream, index) => {
                         const length = currentPageShowStreamList.length;
-                        return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index === 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1' }}>
-                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
+                        return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index === 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1',display:checkShowItem(stream) ? 'unset':'none' }}>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}  visible={checkShowItem(stream)}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
