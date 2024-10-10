@@ -88,7 +88,7 @@ export const useMobileStreamDrag = ({
   bounds?: string;
   isPiP: boolean;
   triggerRef: MutableRefObject<HTMLDivElement>;
-  type:string;
+  type: string;
 }) => {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const touchPosRef = useRef({ x: 0, y: 0 });
@@ -112,7 +112,7 @@ export const useMobileStreamDrag = ({
     boundsRef.current.top = -rect.top;
     boundsRef.current.bottom = (boundsContainer?.clientHeight || 0) - rect.bottom;
     boundsRef.current.left = -rect.left;
-    boundsRef.current.right = (boundsContainer?.clientWidth || 0) - rect.right;
+    boundsRef.current.right = (boundsContainer?.clientWidth || 0) - rect.right - (window.orientation == 0 ? 0 : 75 + 16);
   };
 
   const handleTouchMove = (e: TouchEvent) => {
@@ -193,7 +193,7 @@ export const TeacherStreamContainer = observer(({ stream }: { stream: EduStreamU
   const { pos } = useMobileStreamDrag({
     isPiP,
     triggerRef: ref as MutableRefObject<HTMLDivElement>,
-    type:"teacherView"
+    type: "teacherView"
   });
   const onLandspce = () => {
     setForceLandscape(true);
@@ -296,7 +296,7 @@ export const RoomPlaceholder = observer(() => {
     !isWebViewWidgetActive &&
     !screenShareStream ? (
     !isInGroup ? (
-      <div className="fcr-mobile-room-placeholder" style={{ height: '190px'}}>
+      <div className="fcr-mobile-room-placeholder" style={{ height: '190px' }}>
         <p>
           {transI18n('fcr_copy_room_id')} {EduClassroomConfig.shared.sessionInfo.roomUuid}
         </p>
