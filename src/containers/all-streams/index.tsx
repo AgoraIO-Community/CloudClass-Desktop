@@ -37,7 +37,7 @@ export const AllStream = observer((
     const [haveBoard, setHaveBoard] = useState(false);
     //监听教师流变更
     useEffect(() => {
-        setHaveWidget(!!currentWidget && 'easemobIM' !== currentWidget.widgetName)
+        setHaveWidget(!!currentWidget && !['easemobIM','countdownTimer'].includes(currentWidget.widgetName));
         const board = z0Widgets.find((item: { widgetName: string; }) => item.widgetName === 'netlessBoard')
         setHaveBoard(board)
     }, [currentWidget]);
