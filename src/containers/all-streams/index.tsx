@@ -10,6 +10,7 @@ import { TrackPlayer } from '../stream/track-player';
 import { SvgIconEnum, SvgImg } from '@classroom/ui-kit';
 import { transI18n } from 'agora-common-libs';
 import { splitName } from '../stream';
+import Award from '../award';
 
 export const AllStream = observer((
     { }: {
@@ -29,7 +30,7 @@ export const AllStream = observer((
             subscribeMass,
             sortStreamList
         },
-        widgetUIStore: { currentWidget,z0Widgets }
+        widgetUIStore: { currentWidget, z0Widgets }
     } = useStore();
     //是否有白板、屏幕共享等widget
     const [haveWidget, setHaveWidget] = useState(false);
@@ -37,7 +38,7 @@ export const AllStream = observer((
     //监听教师流变更
     useEffect(() => {
         setHaveWidget(!!currentWidget && 'easemobIM' !== currentWidget.widgetName)
-        const board = z0Widgets.find((item: { widgetName: string; })=>item.widgetName === 'netlessBoard')
+        const board = z0Widgets.find((item: { widgetName: string; }) => item.widgetName === 'netlessBoard')
         setHaveBoard(board)
     }, [currentWidget]);
 
@@ -66,7 +67,7 @@ export const AllStream = observer((
 
 
 //所有的视频流的显示逻辑
-const ALlStreamPlayer = observer(({ stream,haveBoard }: { stream: EduStreamUI,haveBoard:boolean }) => {
+const ALlStreamPlayer = observer(({ stream,haveBoard,visible }: { stream: EduStreamUI,haveBoard:boolean,visible?: boolean; }) => {
     const {
         getters: { isBoardWidgetActive, teacherCameraStream, calibratedTime },
         shareUIStore: { isLandscape },
@@ -186,7 +187,9 @@ const ALlStreamPlayer = observer(({ stream,haveBoard }: { stream: EduStreamUI,ha
             <div className={classNames('placeholder-text',
                 { 'placeholder-text-small': 100 >= (ref.current?.clientHeight ? ref.current?.clientHeight : 100) },
                 { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
-            {<TrackPlayer stream={stream} />}
+
+            {<TrackPlayer stream={stream} visible={visible} />}
+            {/* <Award stream={stream} /> */}
             {isLiftHand && <SvgImg
                 className='all-streams-portrait-stream-lift-hand-container'
                 type={SvgIconEnum.HANDS_UP_NEW}
@@ -226,7 +229,7 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
     //store参数配置信息
     const {
         shareUIStore: { isLandscape },
-        streamUIStore: {visibleStreams,subscribeMass },
+        streamUIStore: { visibleStreams, subscribeMass },
     } = useStore();
     //当前页码
     const [currentPage, setCurrentPage] = useState<number>(0);
@@ -243,27 +246,33 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         //当前页面显示的流列表
         const startIndex = currentPage ? currentPage * currentPageSize : 0
         const endIndex = Math.min(streamList.length, startIndex + currentPageSize)
-        
+
         setCurrentPageShowStreamList([...streamList.slice(startIndex, endIndex)])
         //隐藏其他的
         streamList.forEach((item,index)=>{
-            if(index < startIndex || index >= endIndex){
-                visibleStreams.delete(item.stream.streamUuid);
-            }else{
-                visibleStreams.set(item.stream.streamUuid, item.stream);
-            }
+            visibleStreams.set(item.stream.streamUuid, item.stream);
+            // if(index < startIndex || index >= endIndex){
+            //     visibleStreams.delete(item.stream.streamUuid);
+            // }else{
+            //     visibleStreams.set(item.stream.streamUuid, item.stream);
+            // }
         })
         subscribeMass(visibleStreams);
     }
     useEffect(resetShowList, [currentPage, streamList, isLandscape, orientationUpToDown])
     useEffect(() => { resetShowList() }, [])
+    //检测是否显示item
+    const checkShowItem = (stream: EduStreamUI) => {
+        return !!currentPageShowStreamList.find((item) => item.stream.streamUuid === stream.stream.streamUuid)
+    }
+
     return (<div className={isLandscape ? 'all-streams-portrait-container all-streams-portrait-container-landscape' : 'all-streams-portrait-container'} style={{ height: isLandscape ? 'unset' : '100%' }}>
         {
             isLandscape && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(1, 1fr)`, gridTemplateRows: `repeat(${currentPageShowStreamList?.length},50%)` }}> {
-                    currentPageShowStreamList.map((stream, index) => {
-                        return <div key={index} className="grid-item" style={{ gridColumn: 'span 1' }}>
-                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
+                    streamList.map((stream, index) => {
+                        return <div key={index} className="grid-item" style={{ gridColumn: 'span 1',display:checkShowItem(stream) ? 'unset':'none' }}>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}  visible={checkShowItem(stream)}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
@@ -281,9 +290,9 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         {
             !isLandscape && !orientationUpToDown && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
-                    currentPageShowStreamList.map((stream, index) => {
-                        return <div key={index} className="grid-item" style={{ gridRow: 1, gridColumn: `span 1` }}>
-                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
+                    streamList.map((stream, index) => {
+                        return <div key={index} className="grid-item" style={{ gridRow: 1, gridColumn: `span 1`,display:checkShowItem(stream) ? 'unset':'none' }}>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}  visible={checkShowItem(stream)}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
@@ -301,16 +310,16 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         {
             !isLandscape && orientationUpToDown && <>
                 <div className='show-stream' style={{ gridTemplateColumns: `repeat(${columnRowCount}, 1fr)` }}> {
-                    currentPageShowStreamList.map((stream, index) => {
+                    streamList.map((stream, index) => {
                         const length = currentPageShowStreamList.length;
-                        return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index === 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1' }}>
-                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}></ALlStreamPlayer>
+                        return <div key={index} className="grid-item" style={{ gridColumn: (length % columnRowCount !== 0 && index === 0 || length <= columnRowCount) ? `span ${columnRowCount}` : 'span 1',display:checkShowItem(stream) ? 'unset':'none' }}>
+                            <ALlStreamPlayer stream={stream} haveBoard={haveBoard}  visible={checkShowItem(stream)}></ALlStreamPlayer>
                         </div>;
                     })}
                 </div>
 
                 <div className="pagination" style={{ display: 'flex' }}>
-                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none'}} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
+                    {<div className="page-btn left-btn" style={{ display: currentPage > 0 ? 'inline-block' : 'none' }} onClick={() => { setCurrentPage(Math.max(currentPage - 1, 0)) }}>
                         <SvgImg colors={{ iconPrimary: '#fff' }} type={SvgIconEnum.ARROW_BACK} size={24} style={{ margin: 'auto', height: '100%', transform: 'rotate(180deg)' }}></SvgImg>
                     </div>}
                     {<div className="page-btn right-btn" style={{ display: currentPage < lastPageIndex - 1 ? 'inline-block' : 'none' }} onClick={() => { setCurrentPage(Math.min(currentPage + 1, lastPageIndex - 1)) }}>
