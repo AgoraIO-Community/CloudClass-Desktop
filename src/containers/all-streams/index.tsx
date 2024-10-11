@@ -188,7 +188,7 @@ const ALlStreamPlayer = observer(({ stream,haveBoard,visible }: { stream: EduStr
                 { 'placeholder-text-small': 100 >= (ref.current?.clientHeight ? ref.current?.clientHeight : 100) },
                 { 'placeholder-text-students': !isTeacher }, { 'placeholder-text-teacher': isTeacher })}>{`${first}${last}`}</div>
 
-            {<TrackPlayer stream={stream} visible={visible} />}
+            {visible && <TrackPlayer stream={stream} visible={visible} />}
             {/* <Award stream={stream} /> */}
             {isLiftHand && <SvgImg
                 className='all-streams-portrait-stream-lift-hand-container'
@@ -250,12 +250,12 @@ const GridListShow = observer(({ streamList, columnRowCount = 2, orientationUpTo
         setCurrentPageShowStreamList([...streamList.slice(startIndex, endIndex)])
         //隐藏其他的
         streamList.forEach((item,index)=>{
-            visibleStreams.set(item.stream.streamUuid, item.stream);
-            // if(index < startIndex || index >= endIndex){
-            //     visibleStreams.delete(item.stream.streamUuid);
-            // }else{
-            //     visibleStreams.set(item.stream.streamUuid, item.stream);
-            // }
+            // visibleStreams.set(item.stream.streamUuid, item.stream);
+            if(index < startIndex || index >= endIndex){
+                visibleStreams.delete(item.stream.streamUuid);
+            }else{
+                visibleStreams.set(item.stream.streamUuid, item.stream);
+            }
         })
         subscribeMass(visibleStreams);
     }
