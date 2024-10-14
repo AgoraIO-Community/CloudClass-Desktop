@@ -48,6 +48,7 @@ export const Whiteboard = observer(function Board() {
     boardUIStore,
     streamUIStore: { containerH5VisibleCls, toggleTool, screenShareStream, studentStreamsVisible },
     shareUIStore: { isLandscape, updateWhiteBoardViewportSize, landscapeBoardSize },
+    widgetUIStore:{z0Widgets}
   } = useStore();
 
   const { boardContainerHeight, mounted, boardContainerWidth, isGrantedBoard } = boardUIStore;
@@ -82,7 +83,7 @@ export const Whiteboard = observer(function Board() {
       onClick={() => {
         toggleTool();
       }}>
-      {!isLandscape && isGrantedBoard && <FixedBoardTips />}
+      {!isLandscape && isGrantedBoard && z0Widgets.find((item: { widgetName: string; })=>item.widgetName === 'netlessBoard') && <FixedBoardTips />}
       <div
         onClick={toggleLandscapeToolBarVisible}
         style={{
