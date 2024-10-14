@@ -1,6 +1,6 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import { observer } from 'mobx-react';
-import { useRef, FC } from 'react';
+import { useRef, FC, useState, useEffect } from 'react';
 import {
   // AGServiceErrorCode,
   // ClassState,
@@ -12,6 +12,9 @@ import './index.css';
 import { Button, SvgIconEnum, SvgImg, SvgImgMobile } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import classNames from 'classnames';
+import { MobileCallState } from '@classroom/uistores/type';
+import { AgoraRteMediaPublishState } from 'agora-rte-sdk';
+
 type Props = {
   children?: React.ReactNode;
 };
@@ -28,10 +31,11 @@ export const TopPanel: FC<Props> = observer(() => {
         //   teacherList,
         //    assistantList
         // }
-      }
+      },
+      streamStore: { updateRemotePublishState },
     },
     classroomStore,
-    layoutUIStore: { isRecording, addDialog },
+    layoutUIStore: { isRecording, addDialog, broadcastCallState },
     shareUIStore: { forceLandscape, isLandscape, addToast },
     leaveClassroom,
     deviceSettingUIStore: {
@@ -40,9 +44,11 @@ export const TopPanel: FC<Props> = observer(() => {
       toggleCameraEnabled,
       toggleMicEnabled,
     },
+    streamUIStore: { localStream },
   } = useStore();
   const { userName, userUuid } = EduClassroomConfig.shared.sessionInfo;
   const teacherGroupUuidRef = useRef<string | undefined>(teacherGroupUuid);
+  const [callState, setCallState] = useState(MobileCallState.Processing);
   const groupInfo = getUserGroupInfo(userUuid);
   const currentGroupId = getUserGroupUuid(userUuid);
 
@@ -83,7 +89,7 @@ export const TopPanel: FC<Props> = observer(() => {
 
     const teacherList = classroomStore?.userStore?.mainRoomDataStore?.teacherList;
     const assistantList = classroomStore.userStore.mainRoomDataStore.assistantList;
-    
+
     const teacherUuid = teacherList.keys().next().value;
     const assistantUuids = Array.from(assistantList.keys());
     if (!studentInvite.isInvite) {
@@ -138,6 +144,43 @@ export const TopPanel: FC<Props> = observer(() => {
     }
   };
 
+  useEffect(() => {
+    if (isAudioRecordingDeviceEnabled && isCameraDeviceEnabled) {
+      setCallState(MobileCallState.VideoAndVoiceCall);
+    } else if (isAudioRecordingDeviceEnabled) {
+      setCallState(MobileCallState.VoiceCall);
+    } else if (isCameraDeviceEnabled) {
+      setCallState(MobileCallState.VideoCall);
+    } else {
+      setCallState(MobileCallState.Initialize);
+    }
+  }, [isCameraDeviceEnabled, isAudioRecordingDeviceEnabled]);
+  
+  useEffect(() => {
+    if (isAudioRecordingDeviceEnabled && localStream && localStream.isMicMuted) {
+      updateRemotePublishState(
+        EduClassroomConfig.shared.sessionInfo.userUuid,
+        localStream.stream.streamUuid,
+        {
+          audioState: AgoraRteMediaPublishState.Published,
+        },
+      );
+    }
+    if (isCameraDeviceEnabled && localStream && localStream.isCameraMuted) {
+      updateRemotePublishState(
+        EduClassroomConfig.shared.sessionInfo.userUuid,
+        localStream.stream.streamUuid,
+        {
+          videoState: AgoraRteMediaPublishState.Published,
+        },
+      );
+    }
+  }, [callState, isCameraDeviceEnabled, isAudioRecordingDeviceEnabled]);
+
+  useEffect(() => {
+    broadcastCallState(callState);
+  }, [callState]);
+ 
   const handleLeaveGroup = () => {
     addDialog('confirm', {
       content: transI18n('fcr_group_tips_leave_content'),
