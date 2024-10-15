@@ -1,11 +1,12 @@
 import { useStore } from '@classroom/hooks/ui-store';
 import classnames from 'classnames';
 import { observer } from 'mobx-react';
-import './index.css';
 import { CSSProperties, useEffect, useRef } from 'react';
 import { EduStream } from 'agora-edu-core';
 import { AGRenderMode } from 'agora-rte-sdk';
 import { useForceRenderWhenVisibilityChanged } from '@classroom/utils/force-render';
+
+import './index.css';
 
 export const ScreenShareContainer = observer(() => {
   const {
@@ -22,7 +23,7 @@ export const ScreenShareContainer = observer(() => {
   return screenShareStream ? (
     <div
       className={remotecls}
-      style={{ height: boardContainerHeight }}
+      // style={{ height: boardContainerHeight }}
       onClick={toggleLandscapeToolBarVisible}>
       <ScreenShareRemoteTrackPlayer key={renderKey} stream={screenShareStream} />
     </div>

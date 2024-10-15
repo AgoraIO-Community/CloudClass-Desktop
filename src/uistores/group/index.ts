@@ -989,9 +989,9 @@ export class GroupUIStore extends EduUIStoreBase {
     });
     this._disposers.push(
       reaction(
-        () => this.boardApi.mounted,
+        () => this.boardApi.mounted && this.boardApi.granted,
         (mounted) => {
-          if (mounted && this.boardApi.hasPrivilege()) {
+          if (mounted) {
             this._copyRoomContent();
           }
         },

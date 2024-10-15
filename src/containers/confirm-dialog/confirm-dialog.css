@@ -8,13 +8,16 @@
   height: 100%;
   z-index: 1050;
 }
+
 .fcr-dialog-mask-hidden {
   display: none;
 }
+
 .fcr-dialog-root .fcr-confirm-dialog-wrap.fcr-dialog-wrap,
 .fcr-dialog-root:has(.fcr-confirm-dialog-wrap) .fcr-dialog-mask {
   z-index: 2000;
 }
+
 .fcr-dialog-wrap {
   position: fixed;
   bottom: 10px;
@@ -25,12 +28,14 @@
   border-radius: 20px;
   background: #3c3c3c;
 }
+
 .fcr-dialog-wrap-middle {
   bottom: 50%;
   left: 50%;
   transform: translate(-50%, 50%);
   z-index: 2000;
 }
+
 .fcr-dialog-wrap-landscape {
   padding: 24px 20px;
   border-radius: 20px;
@@ -40,6 +45,7 @@
   transform: translate(-50%, 50%) !important;
   z-index: 2000;
 }
+
 .fcr-confirm-dialog-title {
   @apply fcr-font-title fcr-text-1;
 
@@ -54,9 +60,11 @@
   /* display: flex;
   flex-direction: row; */
 }
+
 .fcr-confirm-dialog-inner-icon {
   padding-right: 20px;
 }
+
 .fcr-confirm-dialog-inner {
   @apply fcr-text-1;
   font-size: 14px;
@@ -70,10 +78,12 @@
   margin: 20px 0;
   opacity: 0.8;
 }
+
 .fcr-confirm-dialog-footer {
   /* display: flex; */
   justify-content: space-between;
 }
+
 .fcr-confirm-dialog-footer-btns {
   display: flex;
   justify-content: center;
@@ -81,11 +91,26 @@
   width: 100%;
   /* margin-left: auto; */
 }
+
+.fcr-confirm-dialog-footer-btns .fcr-btn {
+  background: var(--interactive-primary, #9E007E);
+}
+
+.fcr-btn.fcr-btn-mobile-cancel,
+.fcr-btn {
+  font-family: Helvetica Neue;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: center;
+}
+
 .fcr-confirm-dialog-footer-block {
   display: flex;
   flex-direction: column-reverse;
   align-content: space-between;
 }
+
 .fcr-btn-mobile {
   min-width: 153px !important;
   height: 40px !important;
@@ -102,10 +127,12 @@
   font-weight: 700 !important;
   border-radius: 50px !important;
 }
+
 .fcr-btn-mobile-cancel {
   background-color: #555b69 !important;
   color: rgba(255, 255, 255, 0.8) !important;
 }
+
 .fcr-btn-mobile-cancel-block {
   background-color: #555b69 !important;
   color: rgba(255, 255, 255, 0.8) !important;

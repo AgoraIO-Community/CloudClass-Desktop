@@ -1,14 +1,20 @@
 .fcr-layout {
   @apply fcr-flex;
+  padding-top: calc(env(safe-area-inset-top) * var(--multiple));
+  padding-bottom: calc(env(safe-area-inset-bottom) * var(--multiple));
+  padding-left: calc(env(safe-area-inset-left) * var(--multiple));
+  padding-right: calc(env(safe-area-inset-right) * var(--multiple));
+  width: 100%;
 }
 
 .fcr-layout-row {
-  @apply fcr-flex-row;
+  @apply fcr-flex-col;
 }
 
 .fcr-layout-col {
   @apply fcr-flex-col;
 }
+
 .fcr-layout-col-reverse {
   @apply fcr-flex-col-reverse;
 }

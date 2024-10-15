@@ -1,0 +1,9 @@
+.fcr-avatar {
+  @apply fcr-rounded-full;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+}

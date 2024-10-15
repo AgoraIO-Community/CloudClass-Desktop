@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SvgIconEnum, Button } from '@classroom/ui-kit';
+import { SvgIconEnum, Button, SvgImg } from '@classroom/ui-kit';
 import { useI18n } from 'agora-common-libs';
 import { Drawer } from 'antd';
 import { GuideToolTip } from '../../tooltip/guide';
@@ -7,11 +7,14 @@ import { BoardExpand } from '../../board-expand';
 
 import 'antd/es/drawer/style/index.css';
 import './index.css';
+import { observer } from 'mobx-react';
 
-export const FixedBoardTips = () => {
+export const FixedBoardTips = observer(() => {
   const transI18n = useI18n();
   const [warning, setWarn] = useState<boolean>(true);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setWarn(false);
@@ -29,7 +32,7 @@ export const FixedBoardTips = () => {
     <>
       <div className="fct-mobile-board-btn">
         <GuideToolTip
-          placement="right"
+          placement="left"
           overlayOffset={8}
           visible={warning}
           overlayInnerStyle={{
@@ -39,7 +42,7 @@ export const FixedBoardTips = () => {
             color: '#000',
           }}
           content={transI18n('fcr_board_edit')}>
-          <BoardExpand iconEnum={SvgIconEnum.WHITEBOARDEDIT} onClick={toogleBoardTipsPopup} />
+          <BoardExpand iconEnum={SvgIconEnum.WHITEBOARDEDIT} iconColor='var(--icon-primary, #151515)' onClick={toogleBoardTipsPopup} />
         </GuideToolTip>
       </div>
 
@@ -60,8 +63,9 @@ export const FixedBoardTips = () => {
           <div className="whiteboard-popup-header fcr-flex">
             <BoardExpand
               iconEnum={SvgIconEnum.WHITEBOARDEDIT}
+              iconColor="var(--inverse-icon-primary, #FEFEFE)"
               size={48}
-              style={{ width: '48px', height: '48px' }}
+              style={{ width: '48px', height: '48px', backgroundColor: '#AE367E' }}
             />
             <div className="fcr-flex fcr-flex1 column pl-19">
               <div className="whiteboard-title">{transI18n('fcr_board_edit')}</div>
@@ -72,10 +76,10 @@ export const FixedBoardTips = () => {
             <div>
               <BoardExpand
                 iconEnum={SvgIconEnum.MOBILEROTATESCAPE}
-                iconColor="#FB584E"
+                iconColor="var(--error, #D30018)"
                 size={48}
                 style={{
-                  background: 'rgba(91, 89, 152, 0.2)',
+                  background: '#E6E6E6',
                   width: '60px',
                   height: '60px',
                   borderRadius: '50%',
@@ -83,11 +87,10 @@ export const FixedBoardTips = () => {
               />
               <span>{transI18n('fcr_board_rotate_lock')}</span>
             </div>
-            <div>
+            <div className='frc-arrow-enable-color'>
               <BoardExpand
                 iconEnum={SvgIconEnum.RIGHTPOINT}
-                iconColor="#BBB"
-                size={47}
+                iconColor="#F5F5F5"
                 style={{ background: 'none' }}
               />
               <span style={{ transform: 'translateY(-20px)' }}>
@@ -97,9 +100,10 @@ export const FixedBoardTips = () => {
             <div>
               <BoardExpand
                 iconEnum={SvgIconEnum.MOBILEROTATESCAPE}
+                iconColor="#151515"
                 size={48}
                 style={{
-                  background: '#4262FF',
+                  background: '#FFFFFF',
                   width: '60px',
                   height: '60px',
                   borderRadius: '50%',
@@ -115,10 +119,10 @@ export const FixedBoardTips = () => {
             type="primary"
             size="lg"
             style={{ width: '100%', fontSize: '15px', fontWeight: 700 }}>
-            Got It
+            {transI18n('fcr_board_rotate_msg')}
           </Button>
         </div>
       </Drawer>
     </>
   );
-};
+})
