@@ -72,7 +72,7 @@ export type LaunchOption = {
   roomName: string; // 房间名称
   listener: ListenerCallback; // launch状态
   pretest: boolean; // 开启设备检测
-  rtmToken: string; // rtmToken
+  token: string; // token
   language: LanguageEnum; // 国际化
   startTime?: number; // 房间开始时间
   duration: number; // 课程时长

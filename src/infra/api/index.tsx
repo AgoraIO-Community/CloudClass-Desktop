@@ -262,7 +262,7 @@ export class AgoraEduSDK {
       userUuid,
       userName,
       roleType,
-      rtmToken,
+      token,
       roomUuid,
       roomName,
       roomType,
@@ -289,7 +289,7 @@ export class AgoraEduSDK {
       roomType,
       duration,
       flexProperties: userFlexProperties,
-      token: rtmToken,
+      token,
       startTime,
     };
 
