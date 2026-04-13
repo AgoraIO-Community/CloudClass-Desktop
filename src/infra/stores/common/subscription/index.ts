@@ -66,6 +66,9 @@ export class SubscriptionUIStore extends EduUIStoreBase {
             this.setActive(scene.sceneId);
           }
         },
+        {
+          fireImmediately: true,
+        },
       ),
     );
     this._disposers.push(
