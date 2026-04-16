@@ -4,10 +4,25 @@ build_branch=$cloudclass_desktop_branch
 
 ci_script_version=v1
 
-# . ../apaas-cicd-web/versions.sh
-. ../apaas-cicd-web/utilities/tools.sh
+. ../apaas-cicd-web/utilities/$ci_script_version/tools.sh
 . ../apaas-cicd-web/build/$ci_script_version/dependency.sh
 . ../apaas-cicd-web/build/$ci_script_version/build.sh
+
+lib_dependencies=(
+    agora-rte-sdk
+    agora-edu-core
+    agora-common-libs
+)
+lib_versions=(
+    2.9.50
+    2.9.50
+    2.9.41
+)
+lib_branches=(
+    release/2.9.50
+    release/2.9.50
+    release/2.9.41
+)
 
 # pick up agora-rte-sdk agora-edu-core agora-common-libs
 lib_dependencies=(${lib_dependencies[@]:0:3})
