@@ -346,7 +346,7 @@ export class AgoraEduSDK {
       config.host = this._config.host;
     }
 
-    config.ignoreUrlRegionPrefix = ['dev', 'pre'].some((v) =>
+    config.ignoreUrlRegionPrefix = ['dev', 'pre', 'test'].some((v) =>
       this._config.host ? this._config.host.includes(v) : false,
     );
 
