@@ -14,14 +14,14 @@ lib_dependencies=(
     agora-common-libs
 )
 lib_versions=(
-    2.9.51
-    2.9.51
-    2.9.51
+    2.9.52
+    2.9.52
+    2.9.52
 )
 lib_branches=(
-    release/2.9.51
-    release/2.9.51
-    release/2.9.51
+    release/2.9.52
+    release/2.9.52
+    release/2.9.52
 )
 
 # pick up agora-rte-sdk agora-edu-core agora-common-libs
