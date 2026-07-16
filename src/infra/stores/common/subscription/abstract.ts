@@ -57,7 +57,6 @@ export abstract class SceneSubscription {
 
     scene.on(AgoraRteEventType.UserRemoved, (users: AgoraUser[], type?: number) => {
       this.logger.info(`user-removed [${users.join(',')}]`);
-      this._handleUserRemoved(users, scene, type);
     });
 
     scene.on(
@@ -172,30 +171,6 @@ export abstract class SceneSubscription {
       }
     });
     this.logger.info(pad('', 60, '-'));
-  }
-
-  private _handleUserRemoved(users: AgoraUser[], scene: AgoraRteScene, type?: number) {
-    let removedLocalStreams: AgoraStream[] = [];
-    let removedRemoteStreams: AgoraStream[] = [];
-
-    users.forEach((u) => {
-      if (scene.localUser?.userUuid === u.userUuid) {
-        // local user added
-        const streams = scene.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          removedLocalStreams = removedLocalStreams.concat(streams);
-        }
-      } else {
-        // remote user added
-        const streams = scene.dataStore.findUserStreams(u.userUuid);
-        if (streams) {
-          removedRemoteStreams = removedRemoteStreams.concat(streams);
-        }
-      }
-    });
-
-    this.handleLocalStreamRemoved(removedLocalStreams);
-    this.handleRemoteStreamRemoved(removedRemoteStreams);
   }
 
   protected putRegistry(
